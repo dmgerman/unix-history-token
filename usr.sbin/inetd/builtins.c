@@ -150,6 +150,7 @@ file|"inetd.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|chargen_dg
 parameter_list|(
@@ -163,6 +164,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|chargen_stream
 parameter_list|(
@@ -176,6 +178,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|daytime_dg
 parameter_list|(
@@ -189,6 +192,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|daytime_stream
 parameter_list|(
@@ -202,6 +206,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|discard_dg
 parameter_list|(
@@ -215,6 +220,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|discard_stream
 parameter_list|(
@@ -228,6 +234,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|echo_dg
 parameter_list|(
@@ -241,6 +248,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|echo_stream
 parameter_list|(
@@ -269,6 +277,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iderror
 parameter_list|(
@@ -286,6 +295,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ident_stream
 parameter_list|(
@@ -299,6 +309,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|initring
 parameter_list|(
@@ -308,6 +319,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|uint32_t
 name|machtime
 parameter_list|(
@@ -317,6 +329,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|machtime_dg
 parameter_list|(
@@ -330,6 +343,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|machtime_stream
 parameter_list|(
@@ -343,6 +357,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|char
 name|ring
 index|[
@@ -352,6 +367,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|endring
@@ -545,6 +561,7 @@ comment|/*  * RFC864 Character Generator Protocol. Generates character data with
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|initring
 parameter_list|(
@@ -596,6 +613,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|chargen_dg
 parameter_list|(
@@ -811,6 +829,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|chargen_stream
 parameter_list|(
@@ -984,6 +1003,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|daytime_dg
 parameter_list|(
@@ -1131,6 +1151,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|daytime_stream
 parameter_list|(
@@ -1213,6 +1234,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|discard_dg
 parameter_list|(
@@ -1259,6 +1281,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|discard_stream
 parameter_list|(
@@ -1348,6 +1371,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|echo_dg
 parameter_list|(
@@ -1470,6 +1494,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|echo_stream
 parameter_list|(
@@ -1601,6 +1626,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iderror
 parameter_list|(
@@ -1693,6 +1719,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ident_stream
 parameter_list|(
@@ -3426,6 +3453,7 @@ comment|/*  * RFC738/868 Time Server.  * Return a machine readable date and time
 end_comment
 
 begin_function
+specifier|static
 name|uint32_t
 name|machtime
 parameter_list|(
@@ -3465,6 +3493,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|machtime_dg
 parameter_list|(
@@ -3590,6 +3619,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|machtime_stream
 parameter_list|(

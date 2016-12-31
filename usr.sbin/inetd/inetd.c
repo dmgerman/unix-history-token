@@ -543,7 +543,59 @@ name|SIGBLOCK
 value|(sigmask(SIGCHLD)|sigmask(SIGHUP)|sigmask(SIGALRM))
 end_define
 
+begin_define
+define|#
+directive|define
+name|satosin
+parameter_list|(
+name|sa
+parameter_list|)
+value|((struct sockaddr_in *)(void *)sa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|csatosin
+parameter_list|(
+name|sa
+parameter_list|)
+value|((const struct sockaddr_in *)(const void *)sa)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|satosin6
+parameter_list|(
+name|sa
+parameter_list|)
+value|((struct sockaddr_in6 *)(void *)sa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|csatosin6
+parameter_list|(
+name|sa
+parameter_list|)
+value|((const struct sockaddr_in6 *)(const void *)sa)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
+specifier|static
 name|void
 name|close_sep
 parameter_list|(
@@ -555,6 +607,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flag_signal
 parameter_list|(
@@ -564,6 +617,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flag_config
 parameter_list|(
@@ -573,6 +627,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|config
 parameter_list|(
@@ -582,6 +637,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|cpmip
 parameter_list|(
@@ -596,6 +652,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|endconfig
 parameter_list|(
@@ -605,6 +662,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|servtab
 modifier|*
@@ -618,6 +676,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|freeconfig
 parameter_list|(
@@ -629,6 +688,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|servtab
 modifier|*
@@ -640,6 +700,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|matchservent
 parameter_list|(
@@ -659,6 +720,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|nextline
@@ -670,6 +732,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|addchild
 parameter_list|(
@@ -683,6 +746,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flag_reapchild
 parameter_list|(
@@ -692,6 +756,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
@@ -701,6 +766,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|enable
 parameter_list|(
@@ -712,6 +778,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|disable
 parameter_list|(
@@ -723,6 +790,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flag_retry
 parameter_list|(
@@ -732,6 +800,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|retry
 parameter_list|(
@@ -741,6 +810,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|setconfig
 parameter_list|(
@@ -750,6 +820,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setup
 parameter_list|(
@@ -767,6 +838,7 @@ name|IPSEC
 end_ifdef
 
 begin_function_decl
+specifier|static
 name|void
 name|ipsecsetup
 parameter_list|(
@@ -783,6 +855,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|void
 name|unregisterrpc
 parameter_list|(
@@ -943,6 +1016,66 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|skip
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|sskip
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|newstr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_service
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|servtab
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* tcpd.h */
+end_comment
+
 begin_decl_stmt
 name|int
 name|allow_severity
@@ -956,6 +1089,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|wrap_ex
 init|=
@@ -964,6 +1098,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|wrap_bi
 init|=
@@ -980,6 +1115,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dolog
 init|=
@@ -988,6 +1124,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxsock
 decl_stmt|;
@@ -998,24 +1135,28 @@ comment|/* highest-numbered descriptor */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|fd_set
 name|allsock
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|options
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|timingout
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|toomany
 init|=
@@ -1024,6 +1165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxchild
 init|=
@@ -1032,6 +1174,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxcpm
 init|=
@@ -1040,6 +1183,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxperip
 init|=
@@ -1048,6 +1192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|servent
 modifier|*
@@ -1056,6 +1201,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|rpcent
 modifier|*
@@ -1064,6 +1210,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|hostname
@@ -1073,6 +1220,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in
 modifier|*
@@ -1081,6 +1229,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|v4bind_ok
 init|=
@@ -1095,6 +1244,7 @@ name|INET6
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -1103,6 +1253,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|v6bind_ok
 init|=
@@ -1116,6 +1267,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|signalpipe
 index|[
@@ -1131,6 +1283,7 @@ name|SANITY_CHECK
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nsock
 decl_stmt|;
@@ -1142,18 +1295,21 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|uid_t
 name|euid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|gid_t
 name|egid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|mode_t
 name|mask
 decl_stmt|;
@@ -1168,15 +1324,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|biltin
-name|biltins
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1187,6 +1335,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1197,6 +1346,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pidfh
 modifier|*
@@ -1207,6 +1357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|netconfig
 modifier|*
@@ -1238,6 +1389,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|int
 name|getvalue
 parameter_list|(
@@ -1360,14 +1512,10 @@ operator|&&
 name|IN6_IS_ADDR_V4MAPPED
 argument_list|(
 operator|&
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
+name|satosin6
+argument_list|(
 name|sa
-operator|)
+argument_list|)
 operator|->
 name|sin6_addr
 argument_list|)
@@ -1799,14 +1947,12 @@ condition|)
 continue|continue;
 name|bind_sa4
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
+name|satosin
+argument_list|(
 name|res
 operator|->
 name|ai_addr
+argument_list|)
 expr_stmt|;
 comment|/* init port num in case servname is dummy */
 name|bind_sa4
@@ -1833,14 +1979,12 @@ condition|)
 continue|continue;
 name|bind_sa6
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
+name|satosin6
+argument_list|(
 name|res
 operator|->
 name|ai_addr
+argument_list|)
 expr_stmt|;
 comment|/* init port num in case servname is dummy */
 name|bind_sa6
@@ -4355,6 +4499,7 @@ comment|/*  * Add a signal flag to the signal flag queue for later handling  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|flag_signal
 parameter_list|(
@@ -4406,6 +4551,7 @@ comment|/*  * Record a new child pid for this service. If we've reached the  * l
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|addchild
 parameter_list|(
@@ -4501,6 +4647,7 @@ comment|/*  * Some child process has exited. See if it's on somebody's list.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|flag_reapchild
 parameter_list|(
@@ -4518,6 +4665,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
@@ -4746,6 +4894,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|flag_config
 parameter_list|(
@@ -4763,6 +4912,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|config
 parameter_list|(
@@ -5979,6 +6129,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|unregisterrpc
 parameter_list|(
@@ -6266,6 +6417,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|flag_retry
 parameter_list|(
@@ -6283,6 +6435,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|retry
 parameter_list|(
@@ -6336,6 +6489,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|setup
 parameter_list|(
@@ -7190,6 +7344,7 @@ name|IPSEC
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|ipsecsetup
 parameter_list|(
@@ -7538,6 +7693,7 @@ comment|/*  * Finish with a service and its socket.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|close_sep
 parameter_list|(
@@ -7608,6 +7764,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|matchservent
 parameter_list|(
@@ -7786,6 +7943,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|servtab
 modifier|*
@@ -7890,6 +8048,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|enable
 parameter_list|(
@@ -8039,6 +8198,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|disable
 parameter_list|(
@@ -8208,6 +8368,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|fconfig
@@ -8217,6 +8378,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|servtab
 name|serv
@@ -8224,6 +8386,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|line
 index|[
@@ -8233,6 +8396,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|setconfig
 parameter_list|(
@@ -8281,6 +8445,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|endconfig
 parameter_list|(
@@ -8309,6 +8474,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|servtab
 modifier|*
@@ -10544,6 +10710,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|freeconfig
 parameter_list|(
@@ -10715,6 +10882,7 @@ comment|/*  * Safe skip - if skip returns null, log a syntax error in the  * con
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|sskip
@@ -10767,6 +10935,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|skip
@@ -10966,6 +11135,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|nextline
@@ -11031,6 +11201,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|newstr
@@ -11274,15 +11445,10 @@ name|AF_INET
 case|:
 if|if
 condition|(
-operator|(
-operator|(
-specifier|const
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
+name|csatosin
+argument_list|(
 name|sa
-operator|)
+argument_list|)
 operator|->
 name|sin_port
 operator|==
@@ -11304,15 +11470,10 @@ name|AF_INET6
 case|:
 if|if
 condition|(
-operator|(
-operator|(
-specifier|const
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
+name|csatosin6
+argument_list|(
 name|sa
-operator|)
+argument_list|)
 operator|->
 name|sin6_port
 operator|==
@@ -11395,6 +11556,7 @@ comment|/*  * print_service:  *	Dump relevant information to stderr  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_service
 parameter_list|(
@@ -11591,6 +11753,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|CHash
 name|CHashAry
 index|[
@@ -11600,6 +11763,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|cpmip
 parameter_list|(
