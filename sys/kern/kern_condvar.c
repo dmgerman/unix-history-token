@@ -1662,6 +1662,15 @@ block|{
 name|int
 name|wakeup_swapper
 decl_stmt|;
+if|if
+condition|(
+name|cvp
+operator|->
+name|cv_waiters
+operator|==
+literal|0
+condition|)
+return|return;
 name|wakeup_swapper
 operator|=
 literal|0
@@ -1768,6 +1777,15 @@ block|{
 name|int
 name|wakeup_swapper
 decl_stmt|;
+if|if
+condition|(
+name|cvp
+operator|->
+name|cv_waiters
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* 	 * XXX sleepq_broadcast pri argument changed from -1 meaning 	 * no pri to 0 meaning no pri. 	 */
 name|wakeup_swapper
 operator|=
