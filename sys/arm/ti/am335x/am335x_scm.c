@@ -354,27 +354,46 @@ decl_stmt|;
 name|uint32_t
 name|reg
 decl_stmt|;
-comment|/* Set ADC to continous mode, clear output reset. */
-name|reg
-operator|=
-name|SCM_BGAP_CLRZ
-operator||
-name|SCM_BGAP_CONTCONV
-expr_stmt|;
+comment|/* Reset the digital outputs. */
 name|ti_scm_reg_write_4
 argument_list|(
 name|SCM_BGAP_CTRL
 argument_list|,
-name|reg
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Flush write. */
 name|ti_scm_reg_read_4
 argument_list|(
 name|SCM_BGAP_CTRL
 argument_list|,
 operator|&
 name|reg
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500
+argument_list|)
+expr_stmt|;
+comment|/* Set continous mode. */
+name|ti_scm_reg_write_4
+argument_list|(
+name|SCM_BGAP_CTRL
+argument_list|,
+name|SCM_BGAP_CONTCONV
+argument_list|)
+expr_stmt|;
+name|ti_scm_reg_read_4
+argument_list|(
+name|SCM_BGAP_CTRL
+argument_list|,
+operator|&
+name|reg
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500
 argument_list|)
 expr_stmt|;
 comment|/* Start the ADC conversion. */
