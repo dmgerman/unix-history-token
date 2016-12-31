@@ -3581,7 +3581,7 @@ name|_enp
 parameter_list|,
 name|_reg
 parameter_list|)
-value|do {					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while(B_FALSE)
+value|do {					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 endif|#
 directive|endif
 define|#
