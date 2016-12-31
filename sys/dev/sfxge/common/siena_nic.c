@@ -41,6 +41,14 @@ directive|if
 name|EFSYS_OPT_SIENA
 end_if
 
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_VPD
+operator|||
+name|EFSYS_OPT_NVRAM
+end_if
+
 begin_function
 specifier|static
 name|__checkReturn
@@ -205,6 +213,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_VPD || EFSYS_OPT_NVRAM */
+end_comment
 
 begin_function
 specifier|static
