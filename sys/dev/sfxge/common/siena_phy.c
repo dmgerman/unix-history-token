@@ -1860,7 +1860,7 @@ parameter_list|,
 name|_record
 parameter_list|)
 define|\
-value|SIENA_SIMPLE_STAT_SET(_vmask, _esmp, _smask, _stat, 		\ 			    MC_CMD_ ## _record,				\ 			    EFX_PHY_STAT_ ## _record)
+value|SIENA_SIMPLE_STAT_SET(_vmask, _esmp, _smask, _stat,		\ 			    MC_CMD_ ## _record,				\ 			    EFX_PHY_STAT_ ## _record)
 end_define
 
 begin_decl_stmt
