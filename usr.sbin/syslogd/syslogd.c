@@ -3708,10 +3708,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|fdsr
-condition|)
 name|free
 argument_list|(
 name|fdsr
