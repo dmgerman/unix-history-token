@@ -599,7 +599,7 @@ index|[
 name|CTLTYPE_U32
 index|]
 operator|=
-literal|"uint16_t"
+literal|"uint32_t"
 block|,
 index|[
 name|CTLTYPE_U64
