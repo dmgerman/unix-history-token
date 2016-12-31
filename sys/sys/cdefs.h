@@ -4058,6 +4058,44 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Nullability qualifiers: currently only supported by Clang.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|&&
+name|__has_feature
+argument_list|(
+name|nullability
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_Nonnull
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Nullable
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Type Safety Checking  *  * Clang provides additional attributes to enable checking type safety  * properties that cannot be enforced by the C type system.   */
 end_comment
 
