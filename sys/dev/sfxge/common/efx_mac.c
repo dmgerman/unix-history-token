@@ -2014,7 +2014,7 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED EfxMacStatNamesBlock 054d43a31d2d7a45 */
+comment|/* START MKCONFIG GENERATED EfxMacStatNamesBlock c11b91b42f922516 */
 end_comment
 
 begin_decl_stmt
@@ -2022,6 +2022,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|__efx_mac_stat_name
 index|[]
 init|=

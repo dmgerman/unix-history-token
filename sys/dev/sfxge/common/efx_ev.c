@@ -5498,7 +5498,7 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED EfxEventQueueStatNamesBlock b693ddf85aee1bfd */
+comment|/* START MKCONFIG GENERATED EfxEventQueueStatNamesBlock c0f3bc5083b40532 */
 end_comment
 
 begin_decl_stmt
@@ -5506,6 +5506,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|__efx_ev_qstat_name
 index|[]
 init|=

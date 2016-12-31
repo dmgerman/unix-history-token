@@ -380,7 +380,7 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock 31f437eafb0b0437 */
+comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock 5daa2a5725ba734b */
 end_comment
 
 begin_decl_stmt
@@ -388,6 +388,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|__mon_stat_name
 index|[]
 init|=
