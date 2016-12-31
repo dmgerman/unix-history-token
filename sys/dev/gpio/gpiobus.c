@@ -650,30 +650,11 @@ name|uint32_t
 name|flags
 parameter_list|)
 block|{
-comment|/* Check for unwanted flags. */
-if|if
-condition|(
-operator|(
+comment|/* Filter unwanted flags. */
 name|flags
-operator|&
+operator|&=
 name|caps
-operator|)
-operator|==
-literal|0
-operator|||
-operator|(
-name|flags
-operator|&
-name|caps
-operator|)
-operator|!=
-name|flags
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+expr_stmt|;
 comment|/* Cannot mix input/output together. */
 if|if
 condition|(
