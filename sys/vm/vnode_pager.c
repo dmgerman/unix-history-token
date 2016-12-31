@@ -1083,7 +1083,7 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
-name|vref
+name|vrefact
 argument_list|(
 name|vp
 argument_list|)
