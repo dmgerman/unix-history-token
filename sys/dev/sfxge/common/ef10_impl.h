@@ -2812,7 +2812,7 @@ index|[
 name|EFX_EF10_FILTER_UNICAST_FILTERS_MAX
 index|]
 decl_stmt|;
-name|boolean_t
+name|uint32_t
 name|eft_unicst_filter_count
 decl_stmt|;
 name|uint32_t
