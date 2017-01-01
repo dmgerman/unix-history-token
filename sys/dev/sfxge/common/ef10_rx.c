@@ -1131,11 +1131,7 @@ argument_list|,
 operator|(
 name|type
 operator|&
-operator|(
-literal|1U
-operator|<<
 name|EFX_RX_HASH_IPV4
-operator|)
 operator|)
 condition|?
 literal|1
@@ -1147,11 +1143,7 @@ argument_list|,
 operator|(
 name|type
 operator|&
-operator|(
-literal|1U
-operator|<<
 name|EFX_RX_HASH_TCPIPV4
-operator|)
 operator|)
 condition|?
 literal|1
@@ -1163,11 +1155,7 @@ argument_list|,
 operator|(
 name|type
 operator|&
-operator|(
-literal|1U
-operator|<<
 name|EFX_RX_HASH_IPV6
-operator|)
 operator|)
 condition|?
 literal|1
@@ -1179,11 +1167,7 @@ argument_list|,
 operator|(
 name|type
 operator|&
-operator|(
-literal|1U
-operator|<<
 name|EFX_RX_HASH_TCPIPV6
-operator|)
 operator|)
 condition|?
 literal|1

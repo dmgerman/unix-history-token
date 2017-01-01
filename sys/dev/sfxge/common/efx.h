@@ -4992,20 +4992,25 @@ name|EFX_RX_HASHALG_TOEPLITZ
 block|}
 name|efx_rx_hash_alg_t
 typedef|;
-typedef|typedef
-enum|enum
-name|efx_rx_hash_type_e
-block|{
+define|#
+directive|define
 name|EFX_RX_HASH_IPV4
-init|=
-literal|0
-block|,
+value|(1U<< 0)
+define|#
+directive|define
 name|EFX_RX_HASH_TCPIPV4
-block|,
+value|(1U<< 1)
+define|#
+directive|define
 name|EFX_RX_HASH_IPV6
-block|,
+value|(1U<< 2)
+define|#
+directive|define
 name|EFX_RX_HASH_TCPIPV6
-block|, }
+value|(1U<< 3)
+typedef|typedef
+name|unsigned
+name|int
 name|efx_rx_hash_type_t
 typedef|;
 typedef|typedef
