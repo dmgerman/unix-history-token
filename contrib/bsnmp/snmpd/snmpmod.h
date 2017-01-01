@@ -769,10 +769,10 @@ name|u_char
 modifier|*
 name|location
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|services
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|or_last_change
 decl_stmt|;
 block|}
