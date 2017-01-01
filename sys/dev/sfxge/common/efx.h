@@ -251,18 +251,6 @@ name|struct
 name|efx_nic_s
 name|efx_nic_t
 typedef|;
-define|#
-directive|define
-name|EFX_NIC_FUNC_PRIMARY
-value|0x00000001
-define|#
-directive|define
-name|EFX_NIC_FUNC_LINKCTRL
-value|0x00000002
-define|#
-directive|define
-name|EFX_NIC_FUNC_TRUSTED
-value|0x00000004
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
@@ -2731,9 +2719,6 @@ name|uint8_t
 name|enc_port
 decl_stmt|;
 comment|/* PHY port number */
-name|uint32_t
-name|enc_func_flags
-decl_stmt|;
 name|uint32_t
 name|enc_intr_vec_base
 decl_stmt|;
