@@ -2872,6 +2872,10 @@ decl_stmt|;
 name|boolean_t
 name|enc_hw_tx_insert_vlan_enabled
 decl_stmt|;
+comment|/* Number of PFs on the NIC */
+name|uint32_t
+name|enc_hw_pf_count
+decl_stmt|;
 comment|/* Datapath firmware vadapter/vport/vswitch support */
 name|boolean_t
 name|enc_datapath_cap_evb
