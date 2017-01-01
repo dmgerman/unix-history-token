@@ -1843,6 +1843,10 @@ name|_eslp
 parameter_list|)
 define|\
 value|mtx_assert(&(_eslp)->lock, MA_OWNED)
+typedef|typedef
+name|int
+name|efsys_lock_state_t
+typedef|;
 define|#
 directive|define
 name|EFSYS_LOCK_MAGIC
