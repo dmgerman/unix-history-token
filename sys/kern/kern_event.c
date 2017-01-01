@@ -2637,7 +2637,9 @@ name|SBT_1S
 operator|)
 condition|)
 return|return
+operator|(
 name|SBT_MAX
+operator|)
 return|;
 endif|#
 directive|endif
@@ -2686,7 +2688,9 @@ name|SBT_1S
 operator|)
 condition|)
 return|return
+operator|(
 name|SBT_MAX
+operator|)
 return|;
 endif|#
 directive|endif
@@ -2742,7 +2746,9 @@ name|SBT_1S
 operator|)
 condition|)
 return|return
+operator|(
 name|SBT_MAX
+operator|)
 return|;
 endif|#
 directive|endif
@@ -2798,7 +2804,9 @@ name|SBT_1S
 operator|)
 condition|)
 return|return
+operator|(
 name|SBT_MAX
+operator|)
 return|;
 endif|#
 directive|endif
@@ -2818,10 +2826,12 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 name|NS_TO_SBT
 argument_list|(
 name|data
 argument_list|)
+operator|)
 return|;
 default|default:
 break|break;
