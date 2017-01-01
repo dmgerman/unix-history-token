@@ -1115,6 +1115,11 @@ modifier|*
 name|p_nexttime
 decl_stmt|;
 comment|/* next timer event fires at */
+name|void
+modifier|*
+name|p_v
+decl_stmt|;
+comment|/* generic other pointer */
 block|}
 name|kn_ptr
 union|;
