@@ -5974,37 +5974,35 @@ define|#
 directive|define
 name|EFX_IPPROTO_UDP
 value|17
-typedef|typedef
-enum|enum
-name|efx_filter_flag_e
-block|{
+comment|/* Use RSS to spread across multiple queues */
+define|#
+directive|define
 name|EFX_FILTER_FLAG_RX_RSS
-init|=
-literal|0x01
-block|,
-comment|/* use RSS to spread across 						 * multiple queues */
+value|0x01
+comment|/* Enable RX scatter */
+define|#
+directive|define
 name|EFX_FILTER_FLAG_RX_SCATTER
-init|=
-literal|0x02
-block|,
-comment|/* enable RX scatter */
+value|0x02
+comment|/*  * Override an automatic filter (priority EFX_FILTER_PRI_AUTO).  * May only be set by the filter implementation for each type.  * A removal request will restore the automatic filter in its place.  */
+define|#
+directive|define
 name|EFX_FILTER_FLAG_RX_OVER_AUTO
-init|=
-literal|0x04
-block|,
-comment|/* Override an automatic filter 						 * (priority EFX_FILTER_PRI_AUTO). 						 * May only be set by the filter 						 * implementation for each type. 						 * A removal request will 						 * restore the automatic filter 						 * in its place. */
-name|EFX_FILTER_FLAG_RX
-init|=
-literal|0x08
-block|,
+value|0x04
 comment|/* Filter is for RX */
-name|EFX_FILTER_FLAG_TX
-init|=
-literal|0x10
-block|,
+define|#
+directive|define
+name|EFX_FILTER_FLAG_RX
+value|0x08
 comment|/* Filter is for TX */
-block|}
-name|efx_filter_flag_t
+define|#
+directive|define
+name|EFX_FILTER_FLAG_TX
+value|0x10
+typedef|typedef
+name|unsigned
+name|int
+name|efx_filter_flags_t
 typedef|;
 typedef|typedef
 enum|enum
@@ -6268,7 +6266,7 @@ name|efx_filter_priority_t
 name|priority
 parameter_list|,
 name|__in
-name|efx_filter_flag_t
+name|efx_filter_flags_t
 name|flags
 parameter_list|,
 name|__in

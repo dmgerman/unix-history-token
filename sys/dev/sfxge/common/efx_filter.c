@@ -1037,7 +1037,7 @@ name|efx_filter_priority_t
 name|priority
 parameter_list|,
 name|__in
-name|efx_filter_flag_t
+name|efx_filter_flags_t
 name|flags
 parameter_list|,
 name|__in
