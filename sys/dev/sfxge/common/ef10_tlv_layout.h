@@ -787,6 +787,10 @@ directive|define
 name|TLV_FIRMWARE_VARIANT_PACKED_STREAM_HASH_MODE_1
 define|\
 value|MC_CMD_FW_PACKED_STREAM_HASH_MODE_1
+define|#
+directive|define
+name|TLV_FIRMWARE_VARIANT_RULES_ENGINE
+value|MC_CMD_FW_RULES_ENGINE
 block|}
 struct|;
 end_struct
@@ -1759,38 +1763,6 @@ value|(0xffffffff)
 end_define
 
 begin_comment
-comment|/* Tx vFIFO Low latency configuration   *   * To keep the desired booting behaviour for the switch, it just requires to  * know if the low latency mode is enabled.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TLV_TAG_TX_VFIFO_ULL_MODE
-value|(0x10270000)
-end_define
-
-begin_struct
-struct|struct
-name|tlv_tx_vfifo_ull_mode
-block|{
-name|uint32_t
-name|tag
-decl_stmt|;
-name|uint32_t
-name|length
-decl_stmt|;
-name|uint8_t
-name|mode
-decl_stmt|;
-define|#
-directive|define
-name|TLV_TX_VFIFO_ULL_MODE_DEFAULT
-value|0
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/* BIU mode  *  * Medford2 tag for selecting VI window decode (see values below)  */
 end_comment
 
@@ -1921,9 +1893,11 @@ decl_stmt|;
 name|uint32_t
 name|bind_retry
 decl_stmt|;
+comment|/* DEPRECATED */
 name|uint32_t
 name|bind_bkout
 decl_stmt|;
+comment|/* DEPRECATED */
 block|}
 name|tlv_tsan_config_t
 typedef|;
@@ -2010,7 +1984,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Solarflare private key  *  * Sets the Solareflare private key used for signing during the binding process  *  * NOTE: This TAG is temporarily placed in the dynamic config partition and will  * be moved to a private partition during TSA development. It is not used in any  * released code yet.  */
+comment|/* Solarflare private key  (DEPRECATED)  *  * Sets the Solareflare private key used for signing during the binding process  *  * NOTE: This TAG is temporarily placed in the dynamic config partition and will  * be moved to a private partition during TSA development. It is not used in any  * released code yet.  */
 end_comment
 
 begin_define
@@ -2019,6 +1993,10 @@ directive|define
 name|TLV_TAG_TMP_PIK_SF
 value|(0x10250000)
 end_define
+
+begin_comment
+comment|/* DEPRECATED */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -2070,6 +2048,38 @@ block|}
 name|tlv_ca_root_cert_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Tx vFIFO Low latency configuration  *  * To keep the desired booting behaviour for the switch, it just requires to  * know if the low latency mode is enabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_TX_VFIFO_ULL_MODE
+value|(0x10270000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_tx_vfifo_ull_mode
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|mode
+decl_stmt|;
+define|#
+directive|define
+name|TLV_TX_VFIFO_ULL_MODE_DEFAULT
+value|0
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
