@@ -2865,6 +2865,10 @@ decl_stmt|;
 name|boolean_t
 name|enc_fw_assisted_tso_v2_enabled
 decl_stmt|;
+comment|/* Number of TSO contexts on the NIC (FATSOv2) */
+name|uint32_t
+name|enc_fw_assisted_tso_v2_n_contexts
+decl_stmt|;
 name|boolean_t
 name|enc_hw_tx_insert_vlan_enabled
 decl_stmt|;
