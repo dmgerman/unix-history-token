@@ -222,12 +222,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Twine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Regex.h"
 end_include
 
@@ -286,57 +280,6 @@ name|ID
 operator|)
 return|;
 block|}
-comment|/// \brief Deprecated. Please use \c getNodeAs instead.
-comment|/// @{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-specifier|const
-name|T
-operator|*
-name|getDeclAs
-argument_list|(
-argument|StringRef ID
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getNodeAs
-operator|<
-name|T
-operator|>
-operator|(
-name|ID
-operator|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-specifier|const
-name|T
-operator|*
-name|getStmtAs
-argument_list|(
-argument|StringRef ID
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getNodeAs
-operator|<
-name|T
-operator|>
-operator|(
-name|ID
-operator|)
-return|;
-block|}
-comment|/// @}
 comment|/// \brief Type of mapping from binding identifiers to bound nodes. This type
 comment|/// is an associative container with a key type of \c std::string and a value
 comment|/// type of \c clang::ast_type_traits::DynTypedNode
@@ -479,6 +422,15 @@ operator|<
 name|NestedNameSpecifierLoc
 operator|>
 name|NestedNameSpecifierLocMatcher
+expr_stmt|;
+typedef|typedef
+name|internal
+operator|::
+name|Matcher
+operator|<
+name|CXXCtorInitializer
+operator|>
+name|CXXCtorInitializerMatcher
 expr_stmt|;
 comment|/// @}
 comment|/// \brief Matches any node.
@@ -1113,6 +1065,24 @@ name|TemplateArgument
 operator|>
 name|templateArgument
 expr_stmt|;
+comment|/// \brief Matches template name.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   template<typename T> class X { };
+comment|///   X<int> xi;
+comment|/// \endcode
+comment|/// templateName()
+comment|///   matches 'X' in X<int>.
+specifier|const
+name|internal
+operator|::
+name|VariadicAllOfMatcher
+operator|<
+name|TemplateName
+operator|>
+name|templateName
+expr_stmt|;
 comment|/// \brief Matches non-type template parameter declarations.
 comment|///
 comment|/// Given
@@ -1260,7 +1230,8 @@ name|isBitField
 argument_list|()
 return|;
 block|}
-comment|/// \brief Matches non-static data members that are bit-fields.
+comment|/// \brief Matches non-static data members that are bit-fields of the specified
+comment|/// bit width.
 comment|///
 comment|/// Given
 comment|/// \code
@@ -1270,7 +1241,7 @@ comment|///     int b : 4;
 comment|///     int c : 2;
 comment|///   };
 comment|/// \endcode
-comment|/// fieldDecl(isBitField())
+comment|/// fieldDecl(hasBitWidth(2))
 comment|///   matches 'int a;' and 'int c;' but not 'int b;'.
 name|AST_MATCHER_P
 argument_list|(
@@ -1302,6 +1273,61 @@ operator|==
 name|Width
 return|;
 block|}
+comment|/// \brief Matches non-static data members that have an in-class initializer.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   class C {
+comment|///     int a = 2;
+comment|///     int b = 3;
+comment|///     int c;
+comment|///   };
+comment|/// \endcode
+comment|/// fieldDecl(hasInClassInitializer(integerLiteral(equals(2))))
+comment|///   matches 'int a;' but not 'int b;'.
+comment|/// fieldDecl(hasInClassInitializer(anything()))
+comment|///   matches 'int a;' and 'int b;' but not 'int c;'.
+name|AST_MATCHER_P
+argument_list|(
+argument|FieldDecl
+argument_list|,
+argument|hasInClassInitializer
+argument_list|,
+argument|internal::Matcher<Expr>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+specifier|const
+name|Expr
+modifier|*
+name|Initializer
+init|=
+name|Node
+operator|.
+name|getInClassInitializer
+argument_list|()
+decl_stmt|;
+return|return
+operator|(
+name|Initializer
+operator|!=
+name|nullptr
+operator|&&
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Initializer
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+operator|)
+return|;
+block|}
 comment|/// \brief Matches a declaration that has been implicitly added
 comment|/// by the compiler (eg. implicit default/copy constructors).
 name|AST_MATCHER
@@ -1318,23 +1344,32 @@ name|isImplicit
 argument_list|()
 return|;
 block|}
-comment|/// \brief Matches classTemplateSpecializations that have at least one
-comment|/// TemplateArgument matching the given InnerMatcher.
+comment|/// \brief Matches classTemplateSpecializations, templateSpecializationType and
+comment|/// functionDecl that have at least one TemplateArgument matching the given
+comment|/// InnerMatcher.
 comment|///
 comment|/// Given
 comment|/// \code
 comment|///   template<typename T> class A {};
 comment|///   template<> class A<double> {};
 comment|///   A<int> a;
+comment|///
+comment|///   template<typename T> f() {};
+comment|///   void func() { f<int>(); };
+comment|/// \endcode
+comment|///
 comment|/// \endcode
 comment|/// classTemplateSpecializationDecl(hasAnyTemplateArgument(
 comment|///     refersToType(asString("int"))))
 comment|///   matches the specialization \c A<int>
+comment|///
+comment|/// functionDecl(hasAnyTemplateArgument(refersToType(asString("int"))))
+comment|///   matches the specialization \c f<int>
 name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|hasAnyTemplateArgument
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES(ClassTemplateSpecializationDecl,                                     TemplateSpecializationType)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(ClassTemplateSpecializationDecl,                                     TemplateSpecializationType,                                     FunctionDecl)
 argument_list|,
 argument|internal::Matcher<TemplateArgument>
 argument_list|,
@@ -1609,23 +1644,29 @@ name|Builder
 argument_list|)
 return|;
 block|}
-comment|/// \brief Matches classTemplateSpecializations where the n'th TemplateArgument
-comment|/// matches the given InnerMatcher.
+comment|/// \brief Matches classTemplateSpecializations, templateSpecializationType and
+comment|/// functionDecl where the n'th TemplateArgument matches the given InnerMatcher.
 comment|///
 comment|/// Given
 comment|/// \code
 comment|///   template<typename T, typename U> class A {};
 comment|///   A<bool, int> b;
 comment|///   A<int, bool> c;
+comment|///
+comment|///   template<typename T> f() {};
+comment|///   void func() { f<int>(); };
 comment|/// \endcode
 comment|/// classTemplateSpecializationDecl(hasTemplateArgument(
 comment|///     1, refersToType(asString("int"))))
 comment|///   matches the specialization \c A<bool, int>
+comment|///
+comment|/// functionDecl(hasTemplateArgument(0, refersToType(asString("int"))))
+comment|///   matches the specialization \c f<int>
 name|AST_POLYMORPHIC_MATCHER_P2
 argument_list|(
 argument|hasTemplateArgument
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES(ClassTemplateSpecializationDecl,                                     TemplateSpecializationType)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(ClassTemplateSpecializationDecl,                                     TemplateSpecializationType,                                     FunctionDecl)
 argument_list|,
 argument|unsigned
 argument_list|,
@@ -1755,6 +1796,58 @@ argument_list|(
 name|Node
 operator|.
 name|getAsType
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
+comment|/// \brief Matches a TemplateArgument that refers to a certain template.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   template<template<typename> class S> class X {};
+comment|///   template<typename T> class Y {};"
+comment|///   X<Y> xi;
+comment|/// \endcode
+comment|/// classTemplateSpecializationDecl(hasAnyTemplateArgument(
+comment|///     refersToTemplate(templateName())))
+comment|///   matches the specialization \c X<Y>
+name|AST_MATCHER_P
+argument_list|(
+argument|TemplateArgument
+argument_list|,
+argument|refersToTemplate
+argument_list|,
+argument|internal::Matcher<TemplateName>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+if|if
+condition|(
+name|Node
+operator|.
+name|getKind
+argument_list|()
+operator|!=
+name|TemplateArgument
+operator|::
+name|Template
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+name|Node
+operator|.
+name|getAsTemplate
 argument_list|()
 argument_list|,
 name|Finder
@@ -3875,7 +3968,7 @@ name|cxxConstCastExpr
 expr_stmt|;
 comment|/// \brief Matches a C-style cast expression.
 comment|///
-comment|/// Example: Matches (int*) 2.2f in
+comment|/// Example: Matches (int) 2.2f in
 comment|/// \code
 comment|///   int i = (int) 2.2f;
 comment|/// \endcode
@@ -5101,16 +5194,18 @@ comment|/// - for type nodes, the declaration of the underlying type
 comment|/// - for CallExpr, the declaration of the callee
 comment|/// - for MemberExpr, the declaration of the referenced member
 comment|/// - for CXXConstructExpr, the declaration of the constructor
+comment|/// - for CXXNewExpr, the declaration of the operator new
 comment|///
 comment|/// Also usable as Matcher<T> for any T supporting the getDecl() member
 comment|/// function. e.g. various subtypes of clang::Type and various expressions.
 comment|///
-comment|/// Usable as: Matcher<CallExpr>, Matcher<CXXConstructExpr>,
-comment|///   Matcher<DeclRefExpr>, Matcher<EnumType>, Matcher<InjectedClassNameType>,
-comment|///   Matcher<LabelStmt>, Matcher<AddrLabelExpr>, Matcher<MemberExpr>,
-comment|///   Matcher<QualType>, Matcher<RecordType>, Matcher<TagType>,
-comment|///   Matcher<TemplateSpecializationType>, Matcher<TemplateTypeParmType>,
-comment|///   Matcher<TypedefType>, Matcher<UnresolvedUsingType>
+comment|/// Usable as: Matcher<AddrLabelExpr>, Matcher<CallExpr>,
+comment|///   Matcher<CXXConstructExpr>, Matcher<CXXNewExpr>, Matcher<DeclRefExpr>,
+comment|///   Matcher<EnumType>, Matcher<InjectedClassNameType>, Matcher<LabelStmt>,
+comment|///   Matcher<MemberExpr>, Matcher<QualType>, Matcher<RecordType>,
+comment|///   Matcher<TagType>, Matcher<TemplateSpecializationType>,
+comment|///   Matcher<TemplateTypeParmType>, Matcher<TypedefType>,
+comment|///   Matcher<UnresolvedUsingType>
 specifier|inline
 name|internal
 operator|::
@@ -5165,6 +5260,56 @@ operator|>
 operator|(
 name|InnerMatcher
 operator|)
+return|;
+block|}
+comment|/// \brief Matches a \c NamedDecl whose underlying declaration matches the given
+comment|/// matcher.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   namespace N { template<class T> void f(T t); }
+comment|///   template<class T> void g() { using N::f; f(T()); }
+comment|/// \endcode
+comment|/// \c unresolvedLookupExpr(hasAnyDeclaration(
+comment|///     namedDecl(hasUnderlyingDecl(hasName("::N::f")))))
+comment|///   matches the use of \c f in \c g() .
+name|AST_MATCHER_P
+argument_list|(
+argument|NamedDecl
+argument_list|,
+argument|hasUnderlyingDecl
+argument_list|,
+argument|internal::Matcher<NamedDecl>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+specifier|const
+name|NamedDecl
+modifier|*
+name|UnderlyingDecl
+init|=
+name|Node
+operator|.
+name|getUnderlyingDecl
+argument_list|()
+decl_stmt|;
+return|return
+name|UnderlyingDecl
+operator|!=
+name|nullptr
+operator|&&
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|UnderlyingDecl
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
 return|;
 block|}
 comment|/// \brief Matches on the implicit object argument of a member call expression.
@@ -5830,6 +5975,44 @@ name|Builder
 argument_list|)
 return|;
 block|}
+comment|/// \brief Matches if the matched type matches the unqualified desugared
+comment|/// type of the matched node.
+comment|///
+comment|/// For example, in:
+comment|/// \code
+comment|///   class A {};
+comment|///   using B = A;
+comment|/// \endcode
+comment|/// The matcher type(hasUniqualifeidDesugaredType(recordType())) matches
+comment|/// both B and A.
+name|AST_MATCHER_P
+argument_list|(
+argument|Type
+argument_list|,
+argument|hasUnqualifiedDesugaredType
+argument_list|,
+argument|internal::Matcher<Type>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Node
+operator|.
+name|getUnqualifiedDesugaredType
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
 comment|/// \brief Matches if the matched type is a reference type and the referenced
 comment|/// type matches the specified matcher.
 comment|///
@@ -6215,6 +6398,53 @@ return|return
 name|false
 return|;
 block|}
+comment|/// \brief Matches an \c OverloadExpr if any of the declarations in the set of
+comment|/// overloads matches the given matcher.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   template<typename T> void foo(T);
+comment|///   template<typename T> void bar(T);
+comment|///   template<typename T> void baz(T t) {
+comment|///     foo(t);
+comment|///     bar(t);
+comment|///   }
+comment|/// \endcode
+comment|/// unresolvedLookupExpr(hasAnyDeclaration(
+comment|///     functionTemplateDecl(hasName("foo"))))
+comment|///   matches \c foo in \c foo(t); but not \c bar in \c bar(t);
+name|AST_MATCHER_P
+argument_list|(
+argument|OverloadExpr
+argument_list|,
+argument|hasAnyDeclaration
+argument_list|,
+argument|internal::Matcher<Decl>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+return|return
+name|matchesFirstInPointerRange
+argument_list|(
+name|InnerMatcher
+argument_list|,
+name|Node
+operator|.
+name|decls_begin
+argument_list|()
+argument_list|,
+name|Node
+operator|.
+name|decls_end
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
 comment|/// \brief Matches the Decl of a DeclStmt which has a single declaration.
 comment|///
 comment|/// Given
@@ -6398,9 +6628,9 @@ name|SD_Automatic
 return|;
 block|}
 comment|/// \brief Matches a variable declaration that has static storage duration.
+comment|/// It includes the variable declared at namespace scope and those declared
+comment|/// with "static" and "extern" storage class specifiers.
 comment|///
-comment|/// Example matches y and a, but not x or z.
-comment|/// (matcher = varDecl(hasStaticStorageDuration())
 comment|/// \code
 comment|/// void f() {
 comment|///   int x;
@@ -6408,6 +6638,10 @@ comment|///   static int y;
 comment|///   thread_local int z;
 comment|/// }
 comment|/// int a;
+comment|/// static int b;
+comment|/// extern int c;
+comment|/// varDecl(hasStaticStorageDuration())
+comment|///   matches the function declaration y, a, b and c.
 comment|/// \endcode
 name|AST_MATCHER
 argument_list|(
@@ -7479,11 +7713,11 @@ comment|///   void h() {}
 comment|/// \endcode
 comment|/// functionDecl(isExternC())
 comment|///   matches the declaration of f and g, but not the declaration h
-name|AST_MATCHER
+name|AST_POLYMORPHIC_MATCHER
 argument_list|(
-argument|FunctionDecl
-argument_list|,
 argument|isExternC
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(FunctionDecl,                                                                    VarDecl)
 argument_list|)
 block|{
 return|return
@@ -7491,6 +7725,36 @@ name|Node
 operator|.
 name|isExternC
 argument_list|()
+return|;
+block|}
+comment|/// \brief Matches variable/function declarations that have "static" storage
+comment|/// class specifier ("static" keyword) written in the source.
+comment|///
+comment|/// Given:
+comment|/// \code
+comment|///   static void f() {}
+comment|///   static int i = 0;
+comment|///   extern int j;
+comment|///   int k;
+comment|/// \endcode
+comment|/// functionDecl(isStaticStorageClass())
+comment|///   matches the function declaration f.
+comment|/// varDecl(isStaticStorageClass())
+comment|///   matches the variable declaration i.
+name|AST_POLYMORPHIC_MATCHER
+argument_list|(
+argument|isStaticStorageClass
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES(FunctionDecl,                                                         VarDecl)
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|getStorageClass
+argument_list|()
+operator|==
+name|SC_Static
 return|;
 block|}
 comment|/// \brief Matches deleted function declarations.
@@ -9303,7 +9567,7 @@ comment|///   void a(int);
 comment|///   void b(unsigned long);
 comment|///   void c(double);
 comment|/// \endcode
-comment|/// functionDecl(hasAnyParameter(hasType(isInteger())))
+comment|/// functionDecl(hasAnyParameter(hasType(isUnsignedInteger())))
 comment|/// matches "b(unsigned long)", but not "a(int)" and "c(double)".
 name|AST_MATCHER
 argument_list|(
@@ -9327,7 +9591,7 @@ comment|///   void a(int);
 comment|///   void b(unsigned long);
 comment|///   void c(double);
 comment|/// \endcode
-comment|/// functionDecl(hasAnyParameter(hasType(isInteger())))
+comment|/// functionDecl(hasAnyParameter(hasType(isSignedInteger())))
 comment|/// matches "a(int)", but not "b(unsigned long)" and "c(double)".
 name|AST_MATCHER
 argument_list|(
@@ -10707,6 +10971,30 @@ argument_list|,
 name|substTemplateTypeParmType
 argument_list|)
 expr_stmt|;
+comment|/// \brief Matches template type parameter substitutions that have a replacement
+comment|/// type that matches the provided matcher.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   template<typename T>
+comment|///   double F(T t);
+comment|///   int i;
+comment|///   double j = F(i);
+comment|/// \endcode
+comment|///
+comment|/// \c substTemplateTypeParmType(hasReplacementType(type())) matches int
+name|AST_TYPE_TRAVERSE_MATCHER
+argument_list|(
+name|hasReplacementType
+argument_list|,
+name|getReplacementType
+argument_list|,
+name|AST_POLYMORPHIC_SUPPORTED_TYPES
+argument_list|(
+name|SubstTemplateTypeParmType
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/// \brief Matches template type parameter types.
 comment|///
 comment|/// Example matches T, but not int.
@@ -12076,6 +12364,40 @@ block|}
 block|}
 return|return
 name|false
+return|;
+block|}
+comment|/// \brief Matches a declaration that has external formal linkage.
+comment|///
+comment|/// Example matches only z (matcher = varDecl(hasExternalFormalLinkage()))
+comment|/// \code
+comment|/// void f() {
+comment|///   int x;
+comment|///   static int y;
+comment|/// }
+comment|/// int z;
+comment|/// \endcode
+comment|///
+comment|/// Example matches f() because it has external formal linkage despite being
+comment|/// unique to the translation unit as though it has internal likage
+comment|/// (matcher = functionDecl(hasExternalFormalLinkage()))
+comment|///
+comment|/// \code
+comment|/// namespace {
+comment|/// void f() {}
+comment|/// }
+comment|/// \endcode
+name|AST_MATCHER
+argument_list|(
+argument|NamedDecl
+argument_list|,
+argument|hasExternalFormalLinkage
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|hasExternalFormalLinkage
+argument_list|()
 return|;
 block|}
 block|}

@@ -60,7 +60,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCLMULQDQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPCLMULQDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -92,31 +92,27 @@ comment|///    An immediate value specifying which 64-bit values to select from 
 end_comment
 
 begin_comment
-comment|///    operands.
+comment|///    operands. Bit 0 is used to select a value from operand \a __X, and bit
 end_comment
 
 begin_comment
-comment|///    Bit 0 is used to select a value from operand __X,
+comment|///    4 is used to select a value from operand \a __Y: \n
 end_comment
 
 begin_comment
-comment|///    and bit 4 is used to select a value from operand __Y:
+comment|///    Bit[0]=0 indicates that bits[63:0] of operand \a __X are used. \n
 end_comment
 
 begin_comment
-comment|///    Bit[0]=0 indicates that bits[63:0] of operand __X are used.
+comment|///    Bit[0]=1 indicates that bits[127:64] of operand \a __X are used. \n
 end_comment
 
 begin_comment
-comment|///    Bit[0]=1 indicates that bits[127:64] of operand __X are used.
+comment|///    Bit[4]=0 indicates that bits[63:0] of operand \a __Y are used. \n
 end_comment
 
 begin_comment
-comment|///    Bit[4]=0 indicates that bits[63:0] of operand __Y are used.
-end_comment
-
-begin_comment
-comment|///    Bit[4]=1 indicates that bits[127:64] of operand __Y are used.
+comment|///    Bit[4]=1 indicates that bits[127:64] of operand \a __Y are used.
 end_comment
 
 begin_comment

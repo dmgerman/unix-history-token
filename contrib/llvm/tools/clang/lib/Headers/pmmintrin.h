@@ -62,7 +62,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VLDDQU instruction.
+comment|/// This intrinsic corresponds to the<c> VLDDQU</c> instruction.
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VADDSUBPS instruction.
+comment|/// This intrinsic corresponds to the<c> VADDSUBPS</c> instruction.
 end_comment
 
 begin_comment
@@ -215,7 +215,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VHADDPS instruction.
+comment|/// This intrinsic corresponds to the<c> VHADDPS</c> instruction.
 end_comment
 
 begin_comment
@@ -314,7 +314,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VHSUBPS instruction.
+comment|/// This intrinsic corresponds to the<c> VHSUBPS</c> instruction.
 end_comment
 
 begin_comment
@@ -405,22 +405,6 @@ comment|///    [4 x float].
 end_comment
 
 begin_comment
-comment|///    Bits [127:96] of the source are written to bits [127:96] and [95:64] of
-end_comment
-
-begin_comment
-comment|///    the destination.
-end_comment
-
-begin_comment
-comment|///    Bits [63:32] of the source are written to bits [63:32] and [31:0] of the
-end_comment
-
-begin_comment
-comment|///    destination.
-end_comment
-
-begin_comment
 comment|///
 end_comment
 
@@ -433,7 +417,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVSHDUP instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVSHDUP</c> instruction.
 end_comment
 
 begin_comment
@@ -445,7 +429,23 @@ comment|/// \param __a
 end_comment
 
 begin_comment
-comment|///    A 128-bit vector of [4 x float].
+comment|///    A 128-bit vector of [4 x float]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:96] of the source are written to bits [127:96] and [95:64] of
+end_comment
+
+begin_comment
+comment|///    the destination. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:32] of the source are written to bits [63:32] and [31:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
 end_comment
 
 begin_comment
@@ -493,31 +493,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Duplicates low-order (even-indexed) values from a 128-bit
+comment|/// \brief Duplicates low-order (even-indexed) values from a 128-bit vector of
 end_comment
 
 begin_comment
-comment|///    vector of [4 x float] to float values stored in a 128-bit vector of
-end_comment
-
-begin_comment
-comment|///    [4 x float].
-end_comment
-
-begin_comment
-comment|///    Bits [95:64] of the source are written to bits [127:96] and [95:64] of
-end_comment
-
-begin_comment
-comment|///    the destination.
-end_comment
-
-begin_comment
-comment|///    Bits [31:0] of the source are written to bits [63:32] and [31:0] of the
-end_comment
-
-begin_comment
-comment|///    destination.
+comment|///    [4 x float] to float values stored in a 128-bit vector of [4 x float].
 end_comment
 
 begin_comment
@@ -533,7 +513,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVSLDUP instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVSLDUP</c> instruction.
 end_comment
 
 begin_comment
@@ -545,7 +525,23 @@ comment|/// \param __a
 end_comment
 
 begin_comment
-comment|///    A 128-bit vector of [4 x float].
+comment|///    A 128-bit vector of [4 x float] \n
+end_comment
+
+begin_comment
+comment|///    Bits [95:64] of the source are written to bits [127:96] and [95:64] of
+end_comment
+
+begin_comment
+comment|///    the destination. \n
+end_comment
+
+begin_comment
+comment|///    Bits [31:0] of the source are written to bits [63:32] and [31:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
 end_comment
 
 begin_comment
@@ -613,7 +609,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VADDSUBPD instruction.
+comment|/// This intrinsic corresponds to the<c> VADDSUBPD</c> instruction.
 end_comment
 
 begin_comment
@@ -696,7 +692,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VHADDPD instruction.
+comment|/// This intrinsic corresponds to the<c> VHADDPD</c> instruction.
 end_comment
 
 begin_comment
@@ -795,7 +791,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VHSUBPD instruction.
+comment|/// This intrinsic corresponds to the<c> VHSUBPD</c> instruction.
 end_comment
 
 begin_comment
@@ -910,7 +906,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVDDUP instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVDDUP</c> instruction.
 end_comment
 
 begin_comment
@@ -968,7 +964,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVDDUP instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVDDUP</c> instruction.
 end_comment
 
 begin_comment
@@ -1091,7 +1087,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c MONITOR instruction.
+comment|/// This intrinsic corresponds to the<c> MONITOR</c> instruction.
 end_comment
 
 begin_comment
@@ -1186,7 +1182,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c MWAIT instruction.
+comment|/// This intrinsic corresponds to the<c> MWAIT</c> instruction.
 end_comment
 
 begin_comment

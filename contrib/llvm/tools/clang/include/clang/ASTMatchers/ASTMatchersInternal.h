@@ -3035,6 +3035,49 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Extracts the operator new of the new call and returns whether the
+end_comment
+
+begin_comment
+comment|/// inner matcher matches on it.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|matchesSpecialized
+argument_list|(
+specifier|const
+name|CXXNewExpr
+operator|&
+name|Node
+argument_list|,
+name|ASTMatchFinder
+operator|*
+name|Finder
+argument_list|,
+name|BoundNodesTreeBuilder
+operator|*
+name|Builder
+argument_list|)
+decl|const
+block|{
+return|return
+name|matchesDecl
+argument_list|(
+name|Node
+operator|.
+name|getOperatorNew
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Extracts the \c ValueDecl a \c MemberExpr refers to and returns
 end_comment
 
@@ -4167,6 +4210,8 @@ operator|<
 name|CallExpr
 operator|,
 name|CXXConstructExpr
+operator|,
+name|CXXNewExpr
 operator|,
 name|DeclRefExpr
 operator|,
@@ -6335,6 +6380,7 @@ operator|::
 name|APFloat
 operator|::
 name|IEEEsingle
+argument_list|()
 condition|)
 return|return
 name|Node
@@ -6366,6 +6412,7 @@ operator|::
 name|APFloat
 operator|::
 name|IEEEdouble
+argument_list|()
 condition|)
 return|return
 name|Node
@@ -6421,6 +6468,7 @@ operator|::
 name|APFloat
 operator|::
 name|IEEEsingle
+argument_list|()
 condition|)
 return|return
 name|Node
@@ -6452,6 +6500,7 @@ operator|::
 name|APFloat
 operator|::
 name|IEEEdouble
+argument_list|()
 condition|)
 return|return
 name|Node
@@ -7584,9 +7633,54 @@ return|;
 block|}
 end_expr_stmt
 
-begin_struct
-struct|struct
+begin_expr_stmt
+specifier|inline
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|getTemplateSpecializationArgs
+argument_list|(
+argument|const FunctionDecl&FD
+argument_list|)
+block|{
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|TemplateArgs
+init|=
+name|FD
+operator|.
+name|getTemplateSpecializationArgs
+argument_list|()
+condition|)
+return|return
+name|TemplateArgs
+operator|->
+name|asArray
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+operator|(
+operator|)
+return|;
+end_return
+
+begin_macro
+unit|}  struct
 name|NotEqualsBoundNodePredicate
+end_macro
+
+begin_block
 block|{
 name|bool
 name|operator
@@ -7623,8 +7717,11 @@ name|DynTypedNode
 name|Node
 expr_stmt|;
 block|}
-struct|;
-end_struct
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
 name|template

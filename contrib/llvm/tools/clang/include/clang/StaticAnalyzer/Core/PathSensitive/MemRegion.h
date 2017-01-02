@@ -4965,46 +4965,11 @@ name|A1
 operator|>
 name|RegionTy
 operator|*
-name|getRegion
-argument_list|(
-argument|const A1 a1
-argument_list|)
-block|;
-name|template
-operator|<
-name|typename
-name|RegionTy
-block|,
-name|typename
-name|A1
-operator|>
-name|RegionTy
-operator|*
 name|getSubRegion
 argument_list|(
 argument|const A1 a1
 argument_list|,
 argument|const MemRegion* superRegion
-argument_list|)
-block|;
-name|template
-operator|<
-name|typename
-name|RegionTy
-block|,
-name|typename
-name|A1
-block|,
-name|typename
-name|A2
-operator|>
-name|RegionTy
-operator|*
-name|getRegion
-argument_list|(
-argument|const A1 a1
-argument_list|,
-argument|const A2 a2
 argument_list|)
 block|;
 name|template

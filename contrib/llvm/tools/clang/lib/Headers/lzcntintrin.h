@@ -49,6 +49,46 @@ name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("lzcnt")))
 end_define
 
+begin_comment
+comment|/// \brief Counts the number of leading zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c LZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 16-bit integer whose leading zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 16-bit integer containing the number of leading zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -75,6 +115,46 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Counts the number of leading zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c LZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 32-bit integer whose leading zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 32-bit integer containing the number of leading zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -100,6 +180,46 @@ literal|32
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Counts the number of leading zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c LZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 32-bit integer whose leading zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 32-bit integer containing the number of leading zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
 
 begin_function
 specifier|static
@@ -133,6 +253,46 @@ directive|ifdef
 name|__x86_64__
 end_ifdef
 
+begin_comment
+comment|/// \brief Counts the number of leading zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c LZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer whose leading zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the number of leading zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -160,6 +320,46 @@ literal|64
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Counts the number of leading zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c LZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer whose leading zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the number of leading zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
 
 begin_function
 specifier|static

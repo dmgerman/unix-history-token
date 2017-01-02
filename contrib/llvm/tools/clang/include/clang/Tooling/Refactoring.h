@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -154,9 +160,18 @@ operator|(
 operator|)
 argument_list|)
 block|;
-comment|/// \brief Returns the set of replacements to which replacements should
-comment|/// be added during the run of the tool.
+comment|/// \brief Returns the file path to replacements map to which replacements
+comment|/// should be added during the run of the tool.
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+block|,
 name|Replacements
+operator|>
 operator|&
 name|getReplacements
 argument_list|()
@@ -174,6 +189,9 @@ name|ActionFactory
 argument_list|)
 block|;
 comment|/// \brief Apply all stored replacements to the given Rewriter.
+comment|///
+comment|/// FileToReplaces will be deduplicated with `groupReplacementsByFile` before
+comment|/// application.
 comment|///
 comment|/// Replacement applications happen independently of the success of other
 comment|/// applications.
@@ -200,8 +218,17 @@ argument_list|)
 block|;
 name|private
 operator|:
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+block|,
 name|Replacements
-name|Replace
+operator|>
+name|FileToReplaces
 block|; }
 decl_stmt|;
 comment|/// \brief Groups \p Replaces by the file path and applies each group of
@@ -210,10 +237,13 @@ comment|/// given Replacements, this function also formats the changed code.
 comment|///
 comment|/// \pre Replacements must be conflict-free.
 comment|///
+comment|/// FileToReplaces will be deduplicated with `groupReplacementsByFile` before
+comment|/// application.
+comment|///
 comment|/// Replacement applications happen independently of the success of other
 comment|/// applications.
 comment|///
-comment|/// \param[in] Replaces Replacements to apply.
+comment|/// \param[in] FileToReplaces Replacements (grouped by files) to apply.
 comment|/// \param[in] Rewrite The `Rewritter` to apply replacements on.
 comment|/// \param[in] Style The style name used for reformatting. See ```getStyle``` in
 comment|/// "include/clang/Format/Format.h" for all possible style forms.
@@ -221,22 +251,31 @@ comment|///
 comment|/// \returns true if all replacements applied and formatted. false otherwise.
 name|bool
 name|formatAndApplyAllReplacements
-parameter_list|(
+argument_list|(
 specifier|const
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+argument_list|,
 name|Replacements
-modifier|&
-name|Replaces
-parameter_list|,
+operator|>
+operator|&
+name|FileToReplaces
+argument_list|,
 name|Rewriter
-modifier|&
+operator|&
 name|Rewrite
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Style
-init|=
+operator|=
 literal|"file"
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 comment|// end namespace tooling
 block|}

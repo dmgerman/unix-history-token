@@ -43,7 +43,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c POPCNT instruction.
+comment|/// This intrinsic corresponds to the<c> POPCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c POPCNT instruction.
+comment|/// This intrinsic corresponds to the<c> POPCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -170,7 +170,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c POPCNT instruction.
+comment|/// This intrinsic corresponds to the<c> POPCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -233,7 +233,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c POPCNT instruction.
+comment|/// This intrinsic corresponds to the<c> POPCNT</c> instruction.
 end_comment
 
 begin_comment

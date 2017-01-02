@@ -110,6 +110,9 @@ name|class
 name|CXXCtorInitializer
 decl_stmt|;
 name|class
+name|CXXBaseSpecifier
+decl_stmt|;
+name|class
 name|Decl
 decl_stmt|;
 name|class
@@ -160,6 +163,20 @@ operator|*
 operator|>
 expr|>
 name|NonEquivalentDeclSet
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXBaseSpecifier
+operator|*
+operator|,
+name|CXXBaseSpecifier
+operator|*
+operator|>
+name|ImportedCXXBaseSpecifierMap
 expr_stmt|;
 name|private
 label|:
@@ -243,6 +260,12 @@ name|FileID
 operator|>
 name|ImportedFileIDs
 expr_stmt|;
+comment|/// \brief Mapping from the already-imported CXXBasesSpecifier in
+comment|///  the "from" source manager to the corresponding CXXBasesSpecifier
+comment|///  in the "to" source manager.
+name|ImportedCXXBaseSpecifierMap
+name|ImportedCXXBaseSpecifiers
+decl_stmt|;
 comment|/// \brief Imported, anonymous tag declarations that are missing their
 comment|/// corresponding typedefs.
 name|SmallVector
@@ -515,6 +538,21 @@ parameter_list|(
 name|CXXCtorInitializer
 modifier|*
 name|FromInit
+parameter_list|)
+function_decl|;
+comment|/// \brief Import the given CXXBaseSpecifier from the "from" context into
+comment|/// the "to" context.
+comment|///
+comment|/// \returns the equivalent CXXBaseSpecifier in the source manager of the
+comment|/// "to" context.
+name|CXXBaseSpecifier
+modifier|*
+name|Import
+parameter_list|(
+specifier|const
+name|CXXBaseSpecifier
+modifier|*
+name|FromSpec
 parameter_list|)
 function_decl|;
 comment|/// \brief Import the definition of the given declaration, including all of

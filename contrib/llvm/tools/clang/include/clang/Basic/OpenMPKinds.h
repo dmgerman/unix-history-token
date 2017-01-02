@@ -474,10 +474,23 @@ name|OpenMPDirectiveKind
 name|DKind
 parameter_list|)
 function_decl|;
-comment|/// \brief Checks if the specified directive is a teams-kind directive.
+comment|/// Checks if the specified composite/combined directive constitutes a teams
+comment|/// directive in the outermost nest.  For example
+comment|/// 'omp teams distribute' or 'omp teams distribute parallel for'.
 comment|/// \param DKind Specified directive.
-comment|/// \return true - the directive is a teams-like directive like 'omp teams',
-comment|/// otherwise - false.
+comment|/// \return true - the directive has teams on the outermost nest, otherwise -
+comment|/// false.
+name|bool
+name|isOpenMPNestingTeamsDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
+comment|/// Checks if the specified directive is a teams-kind directive.  For example,
+comment|/// 'omp teams distribute' or 'omp target teams'.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a teams-like directive, otherwise - false.
 name|bool
 name|isOpenMPTeamsDirective
 parameter_list|(
@@ -503,6 +516,19 @@ comment|/// distribute',
 comment|/// otherwise - false.
 name|bool
 name|isOpenMPDistributeDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
+comment|/// Checks if the specified composite/combined directive constitutes a
+comment|/// distribute directive in the outermost nest.  For example,
+comment|/// 'omp distribute parallel for' or 'omp distribute'.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive has distribute on the outermost nest.
+comment|/// otherwise - false.
+name|bool
+name|isOpenMPNestingDistributeDirective
 parameter_list|(
 name|OpenMPDirectiveKind
 name|DKind

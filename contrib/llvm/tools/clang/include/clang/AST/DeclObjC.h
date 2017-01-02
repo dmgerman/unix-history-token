@@ -1880,7 +1880,7 @@ comment|/// implict parameters. This must be called prior to using getSelfDecl()
 end_comment
 
 begin_comment
-comment|/// or getCmdDecl(). The call is ignored if the implicit paramters
+comment|/// or getCmdDecl(). The call is ignored if the implicit parameters
 end_comment
 
 begin_comment
@@ -2328,6 +2328,21 @@ name|ImplementationControl
 argument_list|(
 name|DeclImplementation
 argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isOptional
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getImplementationControl
+argument_list|()
+operator|==
+name|Optional
 return|;
 block|}
 end_expr_stmt
@@ -4043,6 +4058,23 @@ name|PropertyControl
 argument_list|(
 name|PropertyImplementation
 argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isOptional
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPropertyImplementation
+argument_list|()
+operator|==
+name|PropertyControl
+operator|::
+name|Optional
 return|;
 block|}
 end_expr_stmt

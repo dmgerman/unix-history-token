@@ -61,7 +61,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VAESENC instruction.
+comment|/// This intrinsic corresponds to the<c> VAESENC</c> instruction.
 end_comment
 
 begin_comment
@@ -151,7 +151,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VAESENCLAST instruction.
+comment|/// This intrinsic corresponds to the<c> VAESENCLAST</c> instruction.
 end_comment
 
 begin_comment
@@ -241,7 +241,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VAESDEC instruction.
+comment|/// This intrinsic corresponds to the<c> VAESDEC</c> instruction.
 end_comment
 
 begin_comment
@@ -331,7 +331,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VAESDECLAST instruction.
+comment|/// This intrinsic corresponds to the<c> VAESDECLAST</c> instruction.
 end_comment
 
 begin_comment
@@ -417,7 +417,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VAESIMC instruction.
+comment|/// This intrinsic corresponds to the<c> VAESIMC</c> instruction.
 end_comment
 
 begin_comment
@@ -507,7 +507,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c AESKEYGENASSIST instruction.
+comment|/// This intrinsic corresponds to the<c> AESKEYGENASSIST</c> instruction.
 end_comment
 
 begin_comment

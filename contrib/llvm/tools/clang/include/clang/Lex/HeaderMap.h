@@ -182,9 +182,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Return the filename of the headermap.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getFileName
 argument_list|()
 specifier|const

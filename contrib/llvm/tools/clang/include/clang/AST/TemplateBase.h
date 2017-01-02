@@ -1031,6 +1031,13 @@ name|getAsOpaquePtr
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// \brief If this is a non-type template argument, get its type. Otherwise,
+comment|/// returns a null QualType.
+name|QualType
+name|getNonTypeTemplateArgumentType
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Retrieve the template argument as an expression.
 name|Expr
 operator|*
@@ -1116,11 +1123,9 @@ return|;
 block|}
 comment|/// \brief Iterator range referencing all of the elements of a template
 comment|/// argument pack.
-name|llvm
-operator|::
-name|iterator_range
+name|ArrayRef
 operator|<
-name|pack_iterator
+name|TemplateArgument
 operator|>
 name|pack_elements
 argument_list|()
@@ -1129,7 +1134,7 @@ block|{
 return|return
 name|llvm
 operator|::
-name|make_range
+name|makeArrayRef
 argument_list|(
 name|pack_begin
 argument_list|()
@@ -2214,6 +2219,28 @@ operator|(
 operator|)
 return|;
 block|}
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|TemplateArgumentLoc
+operator|>
+name|arguments
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getTemplateArgs
+argument_list|()
+argument_list|,
+name|NumTemplateArgs
+argument_list|)
+return|;
+block|}
 specifier|const
 name|TemplateArgumentLoc
 modifier|&
@@ -2286,9 +2313,9 @@ end_comment
 
 begin_struct
 struct|struct
-name|LLVM_ALIGNAS
+name|alignas
 argument_list|(
-argument|LLVM_PTR_SIZE
+argument|void *
 argument_list|)
 name|ASTTemplateKWAndArgsInfo
 block|{

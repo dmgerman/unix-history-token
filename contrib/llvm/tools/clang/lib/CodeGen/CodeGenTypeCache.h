@@ -255,6 +255,11 @@ name|unsigned
 name|char
 name|PointerSizeInBytes
 decl_stmt|;
+block|}
+union|;
+comment|/// The size and alignment of size_t.
+union|union
+block|{
 name|unsigned
 name|char
 name|SizeSizeInBytes

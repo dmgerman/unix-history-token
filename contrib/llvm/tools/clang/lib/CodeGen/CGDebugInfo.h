@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclCXX.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Expr.h"
 end_include
 
@@ -99,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -145,9 +157,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|CXXMethodDecl
-decl_stmt|;
 name|class
 name|ClassTemplateSpecializationDecl
 decl_stmt|;
@@ -286,6 +295,14 @@ value|llvm::DIType *SingletonId = nullptr;
 include|#
 directive|include
 file|"clang/Basic/OpenCLImageTypes.def"
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|OCLSamplerDITy
+operator|=
+name|nullptr
+expr_stmt|;
 name|llvm
 operator|::
 name|DIType
@@ -448,8 +465,7 @@ operator|*
 operator|>
 name|RetainedTypes
 expr_stmt|;
-comment|/// Cache of forward declared types to RAUW at the end of
-comment|/// compilation.
+comment|/// Cache of forward declared types to RAUW at the end of compilation.
 name|std
 operator|::
 name|vector
@@ -890,6 +906,24 @@ operator|*
 name|CreateType
 argument_list|(
 specifier|const
+name|ObjCTypeParamType
+operator|*
+name|Ty
+argument_list|,
+name|llvm
+operator|::
+name|DIFile
+operator|*
+name|Unit
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|CreateType
+argument_list|(
+specifier|const
 name|VectorType
 operator|*
 name|Ty
@@ -1266,6 +1300,65 @@ operator|*
 name|RecordTy
 argument_list|)
 decl_stmt|;
+comment|/// Helper function for CollectCXXBases.
+comment|/// Adds debug info entries for types in Bases that are not in SeenTypes.
+name|void
+name|CollectCXXBasesAux
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|,
+name|llvm
+operator|::
+name|DIFile
+operator|*
+name|Unit
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|Metadata
+operator|*
+operator|>
+operator|&
+name|EltTys
+argument_list|,
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|RecordTy
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|::
+name|base_class_const_range
+operator|&
+name|Bases
+argument_list|,
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|CanonicalDeclPtr
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|>>
+operator|&
+name|SeenTypes
+argument_list|,
+name|llvm
+operator|::
+name|DINode
+operator|::
+name|DIFlags
+name|StartingFlags
+argument_list|)
+decl_stmt|;
 comment|/// A helper function to collect template parameters.
 name|llvm
 operator|::
@@ -1344,6 +1437,8 @@ argument|AccessSpecifier AS
 argument_list|,
 argument|uint64_t offsetInBits
 argument_list|,
+argument|uint32_t AlignInBits
+argument_list|,
 argument|llvm::DIFile *tunit
 argument_list|,
 argument|llvm::DIScope *scope
@@ -1351,6 +1446,52 @@ argument_list|,
 argument|const RecordDecl *RD = nullptr
 argument_list|)
 expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|createFieldType
+argument_list|(
+argument|StringRef name
+argument_list|,
+argument|QualType type
+argument_list|,
+argument|SourceLocation loc
+argument_list|,
+argument|AccessSpecifier AS
+argument_list|,
+argument|uint64_t offsetInBits
+argument_list|,
+argument|llvm::DIFile *tunit
+argument_list|,
+argument|llvm::DIScope *scope
+argument_list|,
+argument|const RecordDecl *RD = nullptr
+argument_list|)
+block|{
+return|return
+name|createFieldType
+argument_list|(
+name|name
+argument_list|,
+name|type
+argument_list|,
+name|loc
+argument_list|,
+name|AS
+argument_list|,
+name|offsetInBits
+argument_list|,
+literal|0
+argument_list|,
+name|tunit
+argument_list|,
+name|scope
+argument_list|,
+name|RD
+argument_list|)
+return|;
+block|}
 comment|/// Create new bit field member.
 name|llvm
 operator|::
@@ -1465,6 +1606,25 @@ name|RD
 argument_list|)
 decl_stmt|;
 name|void
+name|CollectRecordNestedRecord
+argument_list|(
+specifier|const
+name|RecordDecl
+operator|*
+name|RD
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|Metadata
+operator|*
+operator|>
+operator|&
+name|E
+argument_list|)
+decl_stmt|;
+name|void
 name|CollectRecordFields
 argument_list|(
 specifier|const
@@ -1520,6 +1680,12 @@ operator|*
 operator|>
 operator|&
 name|EltTys
+argument_list|,
+name|llvm
+operator|::
+name|DICompositeType
+operator|*
+name|RecordTy
 argument_list|)
 decl_stmt|;
 comment|/// @}
@@ -1602,6 +1768,15 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
+comment|// Converts a SourceLocation to a DebugLoc
+name|llvm
+operator|::
+name|DebugLoc
+name|SourceLocToDebugLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+expr_stmt|;
 comment|/// Emit metadata to indicate a change in line/column information in
 comment|/// the source file. If the location is invalid, the previous
 comment|/// location will be reused.
@@ -1820,22 +1995,21 @@ operator|*
 name|Decl
 argument_list|)
 decl_stmt|;
-comment|/// Emit global variable's debug info.
+comment|/// Emit a constant global variable's debug info.
 name|void
 name|EmitGlobalVariable
-argument_list|(
+parameter_list|(
 specifier|const
 name|ValueDecl
-operator|*
+modifier|*
 name|VD
-argument_list|,
-name|llvm
-operator|::
-name|Constant
-operator|*
+parameter_list|,
+specifier|const
+name|APValue
+modifier|&
 name|Init
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Emit C++ using directive.
 name|void
 name|EmitUsingDirective
@@ -2096,6 +2270,22 @@ argument|StringRef
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Compute the file checksum debug info for input file ID.
+name|llvm
+operator|::
+name|DIFile
+operator|::
+name|ChecksumKind
+name|computeChecksum
+argument_list|(
+argument|FileID FID
+argument_list|,
+argument|SmallString<
+literal|32
+argument|>&Checksum
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// Get the file debug info descriptor for the input location.
 name|llvm
 operator|::
@@ -2272,8 +2462,8 @@ operator|*
 name|VD
 argument_list|)
 expr_stmt|;
-comment|/// \brief Return a global variable that represents one of the
-comment|/// collection of global variables created for an anonmyous union.
+comment|/// Return a global variable that represents one of the collection of global
+comment|/// variables created for an anonmyous union.
 comment|///
 comment|/// Recursively collect all of the member fields of a global
 comment|/// anonymous decl and create static variables for them. The first
@@ -2281,7 +2471,7 @@ comment|/// time this is called it needs to be on a union and then from
 comment|/// there we can have additional unnamed fields.
 name|llvm
 operator|::
-name|DIGlobalVariable
+name|DIGlobalVariableExpression
 operator|*
 name|CollectAnonRecordDecls
 argument_list|(
@@ -2409,7 +2599,11 @@ name|DINodeArray
 operator|&
 name|TParamsArray
 argument_list|,
-name|unsigned
+name|llvm
+operator|::
+name|DINode
+operator|::
+name|DIFlags
 operator|&
 name|Flags
 argument_list|)

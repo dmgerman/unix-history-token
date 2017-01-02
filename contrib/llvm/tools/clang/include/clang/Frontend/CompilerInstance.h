@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/PCHContainerOperations.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -76,7 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/PCHContainerOperations.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Frontend/Utils.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/HeaderSearchOptions.h"
 end_include
 
 begin_include
@@ -161,9 +167,6 @@ name|clang
 block|{
 name|class
 name|ASTContext
-decl_stmt|;
-name|class
-name|ASTConsumer
 decl_stmt|;
 name|class
 name|ASTReader
@@ -292,6 +295,13 @@ operator|<
 name|ASTContext
 operator|>
 name|Context
+block|;
+comment|/// An optional sema source that will be attached to sema.
+name|IntrusiveRefCntPtr
+operator|<
+name|ExternalSemaSource
+operator|>
+name|ExternalSemaSrc
 block|;
 comment|/// The AST consumer.
 name|std
@@ -2176,7 +2186,16 @@ name|Listener
 argument_list|)
 argument_list|)
 block|;   }
-block|}
+name|void
+name|setExternalSemaSource
+argument_list|(
+name|IntrusiveRefCntPtr
+operator|<
+name|ExternalSemaSource
+operator|>
+name|ESS
+argument_list|)
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

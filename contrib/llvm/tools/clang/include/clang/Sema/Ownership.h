@@ -77,12 +77,6 @@ directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/PointerIntPair.h"
-end_include
-
 begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment

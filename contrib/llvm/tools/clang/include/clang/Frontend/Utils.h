@@ -494,6 +494,9 @@ name|error_code
 name|copyToRoot
 argument_list|(
 argument|StringRef Src
+argument_list|,
+argument|StringRef Dst =
+literal|""
 argument_list|)
 block|;
 name|public
@@ -527,6 +530,9 @@ name|void
 name|addFile
 argument_list|(
 argument|StringRef Filename
+argument_list|,
+argument|StringRef FileDst =
+literal|""
 argument_list|)
 block|;
 name|void

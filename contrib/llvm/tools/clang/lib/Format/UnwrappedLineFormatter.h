@@ -85,18 +85,6 @@ directive|include
 file|<map>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<queue>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang

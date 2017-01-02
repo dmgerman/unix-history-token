@@ -1122,6 +1122,9 @@ block|{
 case|case
 name|MacOSX
 case|:
+case|case
+name|FragileMacOSX
+case|:
 return|return
 name|getVersion
 argument_list|()

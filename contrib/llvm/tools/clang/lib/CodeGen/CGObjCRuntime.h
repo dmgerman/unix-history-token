@@ -1103,20 +1103,6 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|virtual
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|GetClassGlobal
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|bool Weak = false
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
 struct|struct
 name|MessageSendInfo
 block|{

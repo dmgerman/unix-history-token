@@ -992,6 +992,40 @@ operator|=
 name|Req
 expr_stmt|;
 block|}
+comment|/// Extra diagnostics are printed after the first diagnostic for the typo.
+comment|/// This can be used to attach external notes to the diag.
+name|void
+name|addExtraDiagnostic
+parameter_list|(
+name|PartialDiagnostic
+name|PD
+parameter_list|)
+block|{
+name|ExtraDiagnostics
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|PD
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|ArrayRef
+operator|<
+name|PartialDiagnostic
+operator|>
+name|getExtraDiagnostics
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExtraDiagnostics
+return|;
+block|}
 name|private
 label|:
 name|bool
@@ -1048,6 +1082,14 @@ decl_stmt|;
 name|bool
 name|RequiresImport
 decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|PartialDiagnostic
+operator|>
+name|ExtraDiagnostics
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// @brief Base class for callback objects used by Sema::CorrectTypo to check

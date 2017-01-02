@@ -143,9 +143,10 @@ name|CXX
 operator|,
 block|}
 empty_stmt|;
+comment|/// Set of properties that provide additional info about a symbol.
 name|enum
 name|class
-name|SymbolSubKind
+name|SymbolProperty
 range|:
 name|uint8_t
 block|{
@@ -184,18 +185,24 @@ operator|=
 literal|1
 operator|<<
 literal|5
+block|,
+name|GKInspectable
+operator|=
+literal|1
+operator|<<
+literal|6
 block|, }
 decl_stmt|;
 specifier|static
 specifier|const
 name|unsigned
-name|SymbolSubKindBitNum
+name|SymbolPropertyBitNum
 init|=
-literal|6
+literal|7
 decl_stmt|;
 typedef|typedef
 name|unsigned
-name|SymbolSubKindSet
+name|SymbolPropertySet
 typedef|;
 comment|/// Set of roles that are attributed to symbol occurrences.
 name|enum
@@ -288,6 +295,18 @@ operator|=
 literal|1
 operator|<<
 literal|13
+block|,
+name|RelationExtendedBy
+operator|=
+literal|1
+operator|<<
+literal|14
+block|,
+name|RelationAccessorOf
+operator|=
+literal|1
+operator|<<
+literal|15
 block|, }
 decl_stmt|;
 specifier|static
@@ -295,7 +314,7 @@ specifier|const
 name|unsigned
 name|SymbolRoleBitNum
 init|=
-literal|14
+literal|16
 decl_stmt|;
 typedef|typedef
 name|unsigned
@@ -338,8 +357,8 @@ block|{
 name|SymbolKind
 name|Kind
 decl_stmt|;
-name|SymbolSubKindSet
-name|SubKinds
+name|SymbolPropertySet
+name|Properties
 decl_stmt|;
 name|SymbolLanguage
 name|Lang
@@ -418,10 +437,10 @@ name|K
 parameter_list|)
 function_decl|;
 name|void
-name|applyForEachSymbolSubKind
+name|applyForEachSymbolProperty
 argument_list|(
-name|SymbolSubKindSet
-name|SubKinds
+name|SymbolPropertySet
+name|Props
 argument_list|,
 name|llvm
 operator|::
@@ -429,17 +448,17 @@ name|function_ref
 operator|<
 name|void
 argument_list|(
-name|SymbolSubKind
+name|SymbolProperty
 argument_list|)
 operator|>
 name|Fn
 argument_list|)
 decl_stmt|;
 name|void
-name|printSymbolSubKinds
+name|printSymbolProperties
 parameter_list|(
-name|SymbolSubKindSet
-name|SubKinds
+name|SymbolPropertySet
+name|Props
 parameter_list|,
 name|raw_ostream
 modifier|&

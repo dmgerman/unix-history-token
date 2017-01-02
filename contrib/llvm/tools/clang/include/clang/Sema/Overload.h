@@ -204,9 +204,9 @@ comment|///< Array-to-pointer conversion (C++ 4.2)
 name|ICK_Function_To_Pointer
 block|,
 comment|///< Function-to-pointer (C++ 4.3)
-name|ICK_NoReturn_Adjustment
+name|ICK_Function_Conversion
 block|,
-comment|///< Removal of noreturn from a type (Clang)
+comment|///< Function pointer conversion (C++17 4.13)
 name|ICK_Qualification
 block|,
 comment|///< Qualification conversions (C++ 4.4)
@@ -267,9 +267,16 @@ comment|///< Objective-C ARC writeback conversion
 name|ICK_Zero_Event_Conversion
 block|,
 comment|///< Zero constant to event (OpenCL1.2 6.12.10)
+name|ICK_Zero_Queue_Conversion
+block|,
+comment|///< Zero constant to queue
 name|ICK_C_Only_Conversion
 block|,
 comment|///< Conversions allowed in C, but not C++
+name|ICK_Incompatible_Pointer_Conversion
+block|,
+comment|///< C-only conversion between pointers
+comment|///  with incompatible types
 name|ICK_Num_Conversion_Kinds
 block|,
 comment|///< The number of conversion kinds
@@ -300,8 +307,12 @@ name|ICR_Writeback_Conversion
 block|,
 comment|///< ObjC ARC writeback conversion
 name|ICR_C_Conversion
+block|,
 comment|///< Conversion only allowed in the C standard.
 comment|///  (e.g. void* to char*)
+name|ICR_C_Conversion_Extension
+comment|///< Conversion not allowed by the C standard,
+comment|///  but that we accept as an extension anyway.
 block|}
 enum|;
 name|ImplicitConversionRank
@@ -328,7 +339,11 @@ block|,
 comment|/// A narrowing conversion, because a non-constant-expression variable might
 comment|/// have got narrowed.
 name|NK_Variable_Narrowing
-block|}
+block|,
+comment|/// Cannot tell whether this is a narrowing conversion because the
+comment|/// expression is value-dependent.
+name|NK_Dependent_Narrowing
+block|,   }
 enum|;
 comment|/// StandardConversionSequence - represents a standard conversion
 comment|/// sequence (C++ 13.3.3.1.1). A standard conversion sequence
@@ -360,7 +375,8 @@ name|Second
 range|:
 literal|8
 decl_stmt|;
-comment|/// Third - The third conversion can be a qualification conversion.
+comment|/// Third - The third conversion can be a qualification conversion
+comment|/// or a function conversion.
 name|ImplicitConversionKind
 name|Third
 range|:
@@ -1269,7 +1285,12 @@ name|StdInitializerListElement
 argument_list|(
 argument|false
 argument_list|)
-block|{}
+block|{
+name|Standard
+operator|.
+name|setAsIdentityConversion
+argument_list|()
+block|;     }
 operator|~
 name|ImplicitConversionSequence
 argument_list|()
@@ -1775,7 +1796,10 @@ name|ovl_fail_enable_if
 block|,
 comment|/// This candidate was not viable because its address could not be taken.
 name|ovl_fail_addr_not_available
-block|}
+block|,
+comment|/// This candidate was not viable because its OpenCL extension is disabled.
+name|ovl_fail_ext_disabled
+block|,   }
 enum|;
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).
 struct|struct
@@ -2141,14 +2165,10 @@ name|llvm
 operator|::
 name|AlignedCharArray
 operator|<
-name|llvm
-operator|::
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|ImplicitConversionSequence
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|,
 literal|16
 operator|*
@@ -2483,16 +2503,35 @@ name|Loc
 operator|=
 name|SourceLocation
 argument_list|()
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|OverloadCandidate
+operator|&
 argument_list|)
-decl_stmt|;
+operator|>
+name|Filter
+operator|=
+index|[]
+operator|(
+name|OverloadCandidate
+operator|&
+operator|)
+block|{
+return|return
+name|true
+return|;
 block|}
+block|)
+decl_stmt|;
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function_decl
+unit|};
 name|bool
 name|isBetterOverloadCandidate
 parameter_list|(

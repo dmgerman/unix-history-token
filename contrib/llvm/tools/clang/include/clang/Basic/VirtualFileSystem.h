@@ -76,6 +76,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Chrono.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorOr.h"
 end_include
 
@@ -100,7 +124,61 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctime>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stack>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -112,6 +190,10 @@ name|MemoryBuffer
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -142,7 +224,9 @@ name|llvm
 operator|::
 name|sys
 operator|::
-name|TimeValue
+name|TimePoint
+operator|<
+operator|>
 name|MTime
 expr_stmt|;
 name|uint32_t
@@ -208,7 +292,7 @@ argument|StringRef Name
 argument_list|,
 argument|llvm::sys::fs::UniqueID UID
 argument_list|,
-argument|llvm::sys::TimeValue MTime
+argument|llvm::sys::TimePoint<> MTime
 argument_list|,
 argument|uint32_t User
 argument_list|,
@@ -300,7 +384,9 @@ name|llvm
 operator|::
 name|sys
 operator|::
-name|TimeValue
+name|TimePoint
+operator|<
+operator|>
 name|getLastModificationTime
 argument_list|()
 specifier|const
@@ -602,7 +688,9 @@ block|}
 comment|/// \brief Construct an 'end' iterator.
 name|directory_iterator
 argument_list|()
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 comment|/// \brief Equivalent to operator++, with an error code.
 name|directory_iterator
 modifier|&
@@ -823,7 +911,9 @@ expr_stmt|;
 comment|/// \brief Construct an 'end' iterator.
 name|recursive_directory_iterator
 argument_list|()
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 comment|/// \brief Equivalent to operator++, with an error code.
 name|recursive_directory_iterator
 modifier|&
@@ -1642,6 +1732,67 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/// \brief Collect all pairs of<virtual path, real path> entries from the
+end_comment
+
+begin_comment
+comment|/// \p YAMLFilePath. This is used by the module dependency collector to forward
+end_comment
+
+begin_comment
+comment|/// the entries into the reproducer output VFS YAML file.
+end_comment
+
+begin_decl_stmt
+name|void
+name|collectVFSFromYAML
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|>
+name|Buffer
+argument_list|,
+name|llvm
+operator|::
+name|SourceMgr
+operator|::
+name|DiagHandlerTy
+name|DiagHandler
+argument_list|,
+name|StringRef
+name|YAMLFilePath
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|YAMLVFSEntry
+operator|>
+operator|&
+name|CollectedEntries
+argument_list|,
+name|void
+operator|*
+name|DiagContext
+operator|=
+name|nullptr
+argument_list|,
+name|IntrusiveRefCntPtr
+operator|<
+name|FileSystem
+operator|>
+name|ExternalFS
+operator|=
+name|getRealFileSystem
+argument_list|()
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|class
 name|YAMLVFSWriter
@@ -1672,6 +1823,12 @@ name|bool
 operator|>
 name|UseExternalNames
 expr_stmt|;
+name|Optional
+operator|<
+name|bool
+operator|>
+name|IgnoreNonExistentContents
+expr_stmt|;
 name|std
 operator|::
 name|string
@@ -1681,7 +1838,9 @@ name|public
 label|:
 name|YAMLVFSWriter
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|addFileMapping
 parameter_list|(
@@ -1714,6 +1873,18 @@ block|{
 name|UseExternalNames
 operator|=
 name|UseExtNames
+expr_stmt|;
+block|}
+name|void
+name|setIgnoreNonExistentContents
+parameter_list|(
+name|bool
+name|IgnoreContents
+parameter_list|)
+block|{
+name|IgnoreNonExistentContents
+operator|=
+name|IgnoreContents
 expr_stmt|;
 block|}
 name|void
@@ -1769,6 +1940,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_BASIC_VIRTUALFILESYSTEM_H
+end_comment
 
 end_unit
 

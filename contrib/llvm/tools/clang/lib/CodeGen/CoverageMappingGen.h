@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/GlobalValue.h"
 end_include
 

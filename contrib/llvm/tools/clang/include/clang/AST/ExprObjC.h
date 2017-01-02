@@ -449,7 +449,7 @@ block|;
 comment|/// ObjCBoxedExpr - used for generalized expression boxing.
 comment|/// as in: @(strdup("hello world")), @(random()) or @(view.frame)
 comment|/// Also used for boxing non-parenthesized numeric literals;
-comment|/// as in: @42 or \@true (c++/objc++) or \@__yes (c/objc).
+comment|/// as in: @42 or \@true (c++/objc++) or \@__objc_yes (c/objc).
 name|class
 name|ObjCBoxedExpr
 operator|:

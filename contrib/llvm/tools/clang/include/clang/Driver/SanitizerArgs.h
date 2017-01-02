@@ -171,6 +171,21 @@ name|Stats
 init|=
 name|false
 decl_stmt|;
+name|bool
+name|TsanMemoryAccess
+init|=
+name|true
+decl_stmt|;
+name|bool
+name|TsanFuncEntryExit
+init|=
+name|true
+decl_stmt|;
+name|bool
+name|TsanAtomics
+init|=
+name|true
+decl_stmt|;
 name|public
 label|:
 comment|/// Parses the sanitizer arguments from an argument list.
@@ -363,6 +378,15 @@ specifier|const
 block|{
 return|return
 name|LinkCXXRuntimes
+return|;
+block|}
+name|bool
+name|hasCrossDsoCfi
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CfiCrossDso
 return|;
 block|}
 name|void

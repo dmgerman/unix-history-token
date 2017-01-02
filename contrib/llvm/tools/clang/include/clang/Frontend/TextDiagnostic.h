@@ -279,6 +279,14 @@ block|;
 name|private
 operator|:
 name|void
+name|emitFilename
+argument_list|(
+argument|StringRef Filename
+argument_list|,
+argument|const SourceManager&SM
+argument_list|)
+block|;
+name|void
 name|emitSnippetAndCaret
 argument_list|(
 argument|SourceLocation Loc

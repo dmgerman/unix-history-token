@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/iterator.h"
 end_include
 
@@ -163,7 +157,7 @@ name|alignment
 operator|=
 literal|8
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +182,7 @@ name|PR
 argument_list|,
 name|unsigned
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 decl_stmt|;
 end_decl_stmt
 
@@ -327,7 +321,7 @@ name|alignment
 init|=
 literal|8
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{
 return|return
 operator|::
@@ -354,7 +348,7 @@ name|void
 modifier|*
 name|mem
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{
 return|return
 name|mem
@@ -375,7 +369,7 @@ parameter_list|,
 name|unsigned
 name|alignment
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{
 return|return
 operator|::
@@ -401,7 +395,7 @@ name|std
 operator|::
 name|size_t
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{}
 name|void
 name|operator
@@ -413,7 +407,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{}
 name|private
 label|:
@@ -426,7 +420,7 @@ argument_list|(
 name|size_t
 name|bytes
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 decl_stmt|;
 name|void
 name|operator
@@ -436,7 +430,7 @@ name|void
 operator|*
 name|data
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1776,7 +1770,7 @@ argument|clang::PreprocessingRecord&PR
 argument_list|,
 argument|unsigned alignment
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 return|return
 name|PR
@@ -1800,7 +1794,7 @@ argument|clang::PreprocessingRecord&PR
 argument_list|,
 argument|unsigned
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 name|PR
 operator|.

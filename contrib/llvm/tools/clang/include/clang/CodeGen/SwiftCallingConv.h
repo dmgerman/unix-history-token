@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/FoldingSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/TrailingObjects.h"
 end_include
 
@@ -340,6 +334,8 @@ operator|<
 name|void
 argument_list|(
 argument|CharUnits offset
+argument_list|,
+argument|CharUnits end
 argument_list|,
 argument|llvm::Type *type
 argument_list|)
@@ -624,6 +620,15 @@ parameter_list|,
 name|CGFunctionInfo
 modifier|&
 name|FI
+parameter_list|)
+function_decl|;
+comment|/// Is swifterror lowered to a register by the target ABI.
+name|bool
+name|isSwiftErrorLoweredInRegister
+parameter_list|(
+name|CodeGenModule
+modifier|&
+name|CGM
 parameter_list|)
 function_decl|;
 block|}

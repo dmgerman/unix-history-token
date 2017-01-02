@@ -467,6 +467,14 @@ argument|unsigned elts
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|isSwiftErrorInRegister
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
 specifier|static
 name|bool
 name|classof

@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclarationName.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -117,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|<list>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_decl_stmt
@@ -420,6 +408,9 @@ argument_list|,
 argument|bool DetectVirtual = true
 argument_list|)
 block|:
+name|Origin
+argument_list|()
+operator|,
 name|FindAmbiguities
 argument_list|(
 name|FindAmbiguities

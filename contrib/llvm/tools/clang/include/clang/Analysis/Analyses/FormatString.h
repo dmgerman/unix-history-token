@@ -125,6 +125,7 @@ block|{}
 name|bool
 name|isSet
 argument_list|()
+specifier|const
 block|{
 return|return
 name|flag
@@ -520,6 +521,11 @@ name|CArg
 block|,
 name|SArg
 block|,
+comment|// Apple extension: P specifies to os_log that the data being pointed to is
+comment|// to be copied by os_log. The precision indicates the number of bytes to
+comment|// copy.
+name|PArg
+block|,
 comment|// ** Printf-specific **
 name|ZArg
 block|,
@@ -674,6 +680,12 @@ name|false
 return|;
 case|case
 name|PercentArg
+case|:
+return|return
+name|false
+return|;
+case|case
+name|InvalidSpecifier
 case|:
 return|return
 name|false
@@ -1709,6 +1721,14 @@ name|OptionalFlag
 name|HasObjCTechnicalTerm
 block|;
 comment|// '[tt]'
+name|OptionalFlag
+name|IsPrivate
+block|;
+comment|// '{private}'
+name|OptionalFlag
+name|IsPublic
+block|;
+comment|// '{public}'
 name|OptionalAmount
 name|Precision
 block|;
@@ -1756,6 +1776,16 @@ block|,
 name|HasObjCTechnicalTerm
 argument_list|(
 literal|"tt"
+argument_list|)
+block|,
+name|IsPrivate
+argument_list|(
+literal|"private"
+argument_list|)
+block|,
+name|IsPublic
+argument_list|(
+literal|"public"
 argument_list|)
 block|{}
 specifier|static
@@ -1875,6 +1905,32 @@ argument_list|(
 name|position
 argument_list|)
 block|;   }
+name|void
+name|setIsPrivate
+argument_list|(
+argument|const char *position
+argument_list|)
+block|{
+name|IsPrivate
+operator|.
+name|setPosition
+argument_list|(
+name|position
+argument_list|)
+block|; }
+name|void
+name|setIsPublic
+argument_list|(
+argument|const char *position
+argument_list|)
+block|{
+name|IsPublic
+operator|.
+name|setPosition
+argument_list|(
+name|position
+argument_list|)
+block|; }
 name|void
 name|setUsesPositionalArg
 argument_list|()
@@ -2029,6 +2085,28 @@ specifier|const
 block|{
 return|return
 name|HasObjCTechnicalTerm
+return|;
+block|}
+specifier|const
+name|OptionalFlag
+operator|&
+name|isPrivate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPrivate
+return|;
+block|}
+specifier|const
+name|OptionalFlag
+operator|&
+name|isPublic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPublic
 return|;
 block|}
 name|bool

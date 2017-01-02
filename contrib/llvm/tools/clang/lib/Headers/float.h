@@ -16,12 +16,18 @@ name|__FLOAT_H
 end_define
 
 begin_comment
-comment|/* If we're on MinGW, fall back to the system's float.h, which might have  * additional definitions provided for Windows.  * For more details see http://msdn.microsoft.com/en-us/library/y0ybw9fy.aspx  */
+comment|/* If we're on MinGW, fall back to the system's float.h, which might have  * additional definitions provided for Windows.  * For more details see http://msdn.microsoft.com/en-us/library/y0ybw9fy.aspx  *  * Also fall back on Darwin to allow additional definitions and  * implementation-defined values.  */
 end_comment
 
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|||
 operator|(
 name|defined
 argument_list|(
@@ -33,10 +39,11 @@ argument_list|(
 name|_MSC_VER
 argument_list|)
 operator|)
-operator|&&
-name|__STDC_HOSTED__
+operator|)
 operator|&&
 expr|\
+name|__STDC_HOSTED__
+operator|&&
 name|__has_include_next
 argument_list|(
 operator|<

@@ -78,19 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/AnalyzerOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/BugReporter/PathDiagnostic.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -112,6 +100,9 @@ decl_stmt|;
 name|namespace
 name|ento
 block|{
+name|class
+name|PathDiagnosticConsumer
+decl_stmt|;
 name|class
 name|CheckerManager
 decl_stmt|;

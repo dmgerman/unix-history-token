@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Lex/DirectoryLookup.h"
+file|"clang/Basic/SourceManager.h"
 end_include
 
 begin_include
@@ -99,19 +99,10 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|SourceLocation
-decl_stmt|;
 name|class
 name|Token
 decl_stmt|;

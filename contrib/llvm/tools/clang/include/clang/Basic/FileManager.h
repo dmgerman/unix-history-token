@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/VirtualFileSystem.h"
 end_include
 
@@ -120,6 +114,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FileSystem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctime>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -127,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -139,13 +157,14 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|FileManager
-decl_stmt|;
 name|class
 name|FileSystemStatCache
 decl_stmt|;
@@ -154,29 +173,17 @@ comment|/// the virtual file system).
 name|class
 name|DirectoryEntry
 block|{
-specifier|const
-name|char
-modifier|*
-name|Name
-decl_stmt|;
-comment|// Name of the directory.
 name|friend
 name|class
 name|FileManager
 decl_stmt|;
+name|StringRef
+name|Name
+decl_stmt|;
+comment|// Name of the directory.
 name|public
 label|:
-name|DirectoryEntry
-argument_list|()
-operator|:
-name|Name
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -195,9 +202,11 @@ comment|/// descriptor for the file.
 name|class
 name|FileEntry
 block|{
-specifier|const
-name|char
-modifier|*
+name|friend
+name|class
+name|FileManager
+decl_stmt|;
+name|StringRef
 name|Name
 decl_stmt|;
 comment|// Name of the file.
@@ -256,21 +265,6 @@ name|File
 operator|>
 name|File
 expr_stmt|;
-name|friend
-name|class
-name|FileManager
-decl_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|FileEntry
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|public
 label|:
 name|FileEntry
@@ -298,56 +292,28 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-comment|// FIXME: this is here to allow putting FileEntry in std::map.  Once we have
-comment|// emplace, we shouldn't need a copy constructor anymore.
-comment|/// Intentionally does not copy fields that are not set in an uninitialized
-comment|/// \c FileEntry.
 name|FileEntry
 argument_list|(
 specifier|const
 name|FileEntry
 operator|&
-name|FE
 argument_list|)
-operator|:
-name|UniqueID
-argument_list|(
-name|FE
-operator|.
-name|UniqueID
-argument_list|)
-operator|,
-name|IsNamedPipe
-argument_list|(
-name|FE
-operator|.
-name|IsNamedPipe
-argument_list|)
-operator|,
-name|InPCH
-argument_list|(
-name|FE
-operator|.
-name|InPCH
-argument_list|)
-operator|,
-name|IsValid
-argument_list|(
-argument|FE.IsValid
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|isValid
-argument_list|()
-operator|&&
-literal|"Cannot copy an initialized FileEntry"
-argument_list|)
-block|;   }
+operator|=
+name|delete
+expr_stmt|;
+name|FileEntry
+modifier|&
+name|operator
+init|=
+operator|(
 specifier|const
-name|char
-operator|*
+name|FileEntry
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -665,7 +631,7 @@ block|;
 name|bool
 name|getStatValue
 argument_list|(
-argument|const char *Path
+argument|StringRef Path
 argument_list|,
 argument|FileData&Data
 argument_list|,
@@ -966,6 +932,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_BASIC_FILEMANAGER_H
+end_comment
 
 end_unit
 

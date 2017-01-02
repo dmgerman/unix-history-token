@@ -71,7 +71,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+comment|/// This intrinsic corresponds to the<c> TZCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c ANDN instruction.
+comment|/// This intrinsic corresponds to the<c> ANDN</c> instruction.
 end_comment
 
 begin_comment
@@ -225,7 +225,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSI instruction.
+comment|/// This intrinsic corresponds to the<c> BLSI</c> instruction.
 end_comment
 
 begin_comment
@@ -299,7 +299,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSMSK instruction.
+comment|/// This intrinsic corresponds to the<c> BLSMSK</c> instruction.
 end_comment
 
 begin_comment
@@ -365,7 +365,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSR instruction.
+comment|/// This intrinsic corresponds to the<c> BLSR</c> instruction.
 end_comment
 
 begin_comment
@@ -431,7 +431,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+comment|/// This intrinsic corresponds to the<c> TZCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -503,7 +503,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+comment|/// This intrinsic corresponds to the<c> TZCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -573,7 +573,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c ANDN instruction.
+comment|/// This intrinsic corresponds to the<c> ANDN</c> instruction.
 end_comment
 
 begin_comment
@@ -655,7 +655,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BEXTR instruction.
+comment|/// This intrinsic corresponds to the<c> BEXTR</c> instruction.
 end_comment
 
 begin_comment
@@ -747,7 +747,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BEXTR instruction.
+comment|/// This intrinsic corresponds to the<c> BEXTR</c> instruction.
 end_comment
 
 begin_comment
@@ -863,7 +863,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSI instruction.
+comment|/// This intrinsic corresponds to the<c> BLSI</c> instruction.
 end_comment
 
 begin_comment
@@ -933,7 +933,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSMSK instruction.
+comment|/// This intrinsic corresponds to the<c> BLSMSK</c> instruction.
 end_comment
 
 begin_comment
@@ -998,7 +998,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSR instruction.
+comment|/// This intrinsic corresponds to the<c> BLSR</c> instruction.
 end_comment
 
 begin_comment
@@ -1063,7 +1063,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+comment|/// This intrinsic corresponds to the<c> TZCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -1129,7 +1129,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+comment|/// This intrinsic corresponds to the<c> TZCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -1145,11 +1145,11 @@ comment|///    An unsigned 32-bit integer whose trailing zeros are to be counted
 end_comment
 
 begin_comment
-comment|/// \returns An 32-bit integer containing the number of trailing zero
+comment|/// \returns An 32-bit integer containing the number of trailing zero bits in
 end_comment
 
 begin_comment
-comment|///    bits in the operand.
+comment|///    the operand.
 end_comment
 
 begin_function
@@ -1220,7 +1220,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c ANDN instruction.
+comment|/// This intrinsic corresponds to the<c> ANDN</c> instruction.
 end_comment
 
 begin_comment
@@ -1304,7 +1304,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSI instruction.
+comment|/// This intrinsic corresponds to the<c> BLSI</c> instruction.
 end_comment
 
 begin_comment
@@ -1378,7 +1378,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSMSK instruction.
+comment|/// This intrinsic corresponds to the<c> BLSMSK</c> instruction.
 end_comment
 
 begin_comment
@@ -1444,7 +1444,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSR instruction.
+comment|/// This intrinsic corresponds to the<c> BLSR</c> instruction.
 end_comment
 
 begin_comment
@@ -1510,7 +1510,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+comment|/// This intrinsic corresponds to the<c> TZCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -1564,7 +1564,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c ANDN instruction.
+comment|/// This intrinsic corresponds to the<c> ANDN</c> instruction.
 end_comment
 
 begin_comment
@@ -1649,7 +1649,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BEXTR instruction.
+comment|/// This intrinsic corresponds to the<c> BEXTR</c> instruction.
 end_comment
 
 begin_comment
@@ -1744,7 +1744,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BEXTR instruction.
+comment|/// This intrinsic corresponds to the<c> BEXTR</c> instruction.
 end_comment
 
 begin_comment
@@ -1862,7 +1862,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSI instruction.
+comment|/// This intrinsic corresponds to the<c> BLSI</c> instruction.
 end_comment
 
 begin_comment
@@ -1934,7 +1934,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSMSK instruction.
+comment|/// This intrinsic corresponds to the<c> BLSMSK</c> instruction.
 end_comment
 
 begin_comment
@@ -2001,7 +2001,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c BLSR instruction.
+comment|/// This intrinsic corresponds to the<c> BLSR</c> instruction.
 end_comment
 
 begin_comment
@@ -2068,7 +2068,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+comment|/// This intrinsic corresponds to the<c> TZCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -2136,7 +2136,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+comment|/// This intrinsic corresponds to the<c> TZCNT</c> instruction.
 end_comment
 
 begin_comment
@@ -2152,11 +2152,11 @@ comment|///    An unsigned 64-bit integer whose trailing zeros are to be counted
 end_comment
 
 begin_comment
-comment|/// \returns An 64-bit integer containing the number of trailing zero
+comment|/// \returns An 64-bit integer containing the number of trailing zero bits in
 end_comment
 
 begin_comment
-comment|///    bits in the operand.
+comment|///    the operand.
 end_comment
 
 begin_function

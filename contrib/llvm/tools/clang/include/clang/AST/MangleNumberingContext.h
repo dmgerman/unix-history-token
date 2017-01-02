@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
@@ -111,15 +105,9 @@ comment|/// \brief Keeps track of the mangled names of lambda expressions and bl
 comment|/// literals within a particular context.
 name|class
 name|MangleNumberingContext
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|MangleNumberingContext
-operator|>
 block|{
 name|public
-operator|:
+label|:
 name|virtual
 operator|~
 name|MangleNumberingContext
@@ -138,61 +126,70 @@ name|CallOperator
 argument_list|)
 operator|=
 literal|0
-block|;
+expr_stmt|;
 comment|/// \brief Retrieve the mangling number of a new block literal within this
 comment|/// context.
 name|virtual
 name|unsigned
 name|getManglingNumber
-argument_list|(
+parameter_list|(
 specifier|const
 name|BlockDecl
-operator|*
+modifier|*
 name|BD
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 comment|/// Static locals are numbered by source order.
 name|virtual
 name|unsigned
 name|getStaticLocalNumber
-argument_list|(
+parameter_list|(
 specifier|const
 name|VarDecl
-operator|*
+modifier|*
 name|VD
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 comment|/// \brief Retrieve the mangling number of a static local variable within
 comment|/// this context.
 name|virtual
 name|unsigned
 name|getManglingNumber
-argument_list|(
-argument|const VarDecl *VD
-argument_list|,
-argument|unsigned MSLocalManglingNumber
-argument_list|)
-operator|=
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|VD
+parameter_list|,
+name|unsigned
+name|MSLocalManglingNumber
+parameter_list|)
+init|=
 literal|0
-block|;
+function_decl|;
 comment|/// \brief Retrieve the mangling number of a static local variable within
 comment|/// this context.
 name|virtual
 name|unsigned
 name|getManglingNumber
-argument_list|(
-argument|const TagDecl *TD
-argument_list|,
-argument|unsigned MSLocalManglingNumber
-argument_list|)
-operator|=
+parameter_list|(
+specifier|const
+name|TagDecl
+modifier|*
+name|TD
+parameter_list|,
+name|unsigned
+name|MSLocalManglingNumber
+parameter_list|)
+init|=
 literal|0
-block|; }
-decl_stmt|;
+function_decl|;
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

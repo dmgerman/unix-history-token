@@ -830,6 +830,12 @@ comment|/// \brief True if we hit the code-completion point.
 name|bool
 name|CodeCompletionReached
 block|;
+comment|/// \brief The code completion token containing the information
+comment|/// on the stem that is to be code completed.
+name|IdentifierInfo
+operator|*
+name|CodeCompletionII
+block|;
 comment|/// \brief The directory that the main file should be considered to occupy,
 comment|/// if it does not correspond to a real file (as happens when building a
 comment|/// module).
@@ -1058,90 +1064,6 @@ argument_list|(
 argument|std::move(TheDirLookup)
 argument_list|)
 block|{}
-name|IncludeStackInfo
-argument_list|(
-name|IncludeStackInfo
-operator|&&
-name|RHS
-argument_list|)
-operator|:
-name|CurLexerKind
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|CurLexerKind
-argument_list|)
-argument_list|)
-block|,
-name|TheSubmodule
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|TheSubmodule
-argument_list|)
-argument_list|)
-block|,
-name|TheLexer
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|TheLexer
-argument_list|)
-argument_list|)
-block|,
-name|ThePTHLexer
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|ThePTHLexer
-argument_list|)
-argument_list|)
-block|,
-name|ThePPLexer
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|ThePPLexer
-argument_list|)
-argument_list|)
-block|,
-name|TheTokenLexer
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|TheTokenLexer
-argument_list|)
-argument_list|)
-block|,
-name|TheDirLookup
-argument_list|(
-argument|std::move(RHS.TheDirLookup)
-argument_list|)
-block|{}
 block|}
 block|;
 name|std
@@ -1295,6 +1217,28 @@ argument|const IdentifierInfo *II
 argument_list|)
 specifier|const
 block|{
+if|if
+condition|(
+name|II
+operator|->
+name|isOutOfDate
+argument_list|()
+condition|)
+name|PP
+operator|.
+name|updateOutOfDateIdentifier
+argument_list|(
+name|const_cast
+operator|<
+name|IdentifierInfo
+operator|&
+operator|>
+operator|(
+operator|*
+name|II
+operator|)
+argument_list|)
+expr_stmt|;
 comment|// FIXME: Find a spare bit on IdentifierInfo and store a
 comment|//        HasModuleMacros flag.
 if|if
@@ -1409,8 +1353,14 @@ return|return
 name|Info
 return|;
 block|}
+end_decl_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_expr_stmt
 name|MacroState
 argument_list|()
 operator|:
@@ -1435,7 +1385,7 @@ name|MacroState
 argument_list|(
 argument|MacroState&&O
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 operator|:
 name|State
 argument_list|(
@@ -1461,7 +1411,7 @@ name|MacroState
 operator|&&
 name|O
 operator|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 name|auto
 name|S
@@ -1489,6 +1439,9 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 operator|~
 name|MacroState
 argument_list|()
@@ -1516,6 +1469,9 @@ name|ModuleMacroInfo
 argument_list|()
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|MacroDirective
 operator|*
 name|getLatest
@@ -1543,6 +1499,9 @@ name|Info
 operator|->
 name|MD
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|State
 operator|.
@@ -1554,17 +1513,17 @@ operator|>
 operator|(
 operator|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
-begin_function
-name|void
+begin_macro
+unit|}     void
 name|setLatest
-parameter_list|(
-name|MacroDirective
-modifier|*
-name|MD
-parameter_list|)
+argument_list|(
+argument|MacroDirective *MD
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1594,7 +1553,7 @@ operator|=
 name|MD
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_decl_stmt
 name|bool
@@ -2632,6 +2591,18 @@ begin_decl_stmt
 name|DeserializedMacroInfoChain
 modifier|*
 name|DeserialMIChainHead
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|updateOutOfDateIdentifier
+argument_list|(
+name|IdentifierInfo
+operator|&
+name|II
+argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 
@@ -4042,6 +4013,10 @@ name|II
 parameter_list|,
 name|MacroDirective
 modifier|*
+name|ED
+parameter_list|,
+name|MacroDirective
+modifier|*
 name|MD
 parameter_list|)
 function_decl|;
@@ -4114,6 +4089,26 @@ argument|const IdentifierInfo *II
 argument_list|)
 specifier|const
 block|{
+if|if
+condition|(
+name|II
+operator|->
+name|isOutOfDate
+argument_list|()
+condition|)
+name|updateOutOfDateIdentifier
+argument_list|(
+name|const_cast
+operator|<
+name|IdentifierInfo
+operator|&
+operator|>
+operator|(
+operator|*
+name|II
+operator|)
+argument_list|)
+expr_stmt|;
 name|auto
 name|I
 operator|=
@@ -4123,7 +4118,10 @@ name|find
 argument_list|(
 name|II
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|I
@@ -4138,7 +4136,7 @@ name|I
 operator|->
 name|second
 return|;
-end_expr_stmt
+end_if
 
 begin_return
 return|return
@@ -4574,6 +4572,51 @@ name|CodeCompleteNaturalLanguage
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Set the code completion token for filtering purposes.
+end_comment
+
+begin_function
+name|void
+name|setCodeCompletionIdentifierInfo
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|Filter
+parameter_list|)
+block|{
+name|CodeCompletionII
+operator|=
+name|Filter
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Get the code completion token for filtering purposes.
+end_comment
+
+begin_function
+name|StringRef
+name|getCodeCompletionFilter
+parameter_list|()
+block|{
+if|if
+condition|(
+name|CodeCompletionII
+condition|)
+return|return
+name|CodeCompletionII
+operator|->
+name|getName
+argument_list|()
+return|;
+return|return
+block|{}
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Retrieve the preprocessing record, or NULL if there is no
@@ -8926,11 +8969,7 @@ end_comment
 begin_function_decl
 name|void
 name|HandleLineDirective
-parameter_list|(
-name|Token
-modifier|&
-name|Tok
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -8984,11 +9023,7 @@ end_function_decl
 begin_function_decl
 name|void
 name|HandleMacroPrivateDirective
-parameter_list|(
-name|Token
-modifier|&
-name|Tok
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -9214,11 +9249,7 @@ end_function_decl
 begin_function_decl
 name|void
 name|HandleUndefDirective
-parameter_list|(
-name|Token
-modifier|&
-name|Tok
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -9333,11 +9364,7 @@ end_function_decl
 begin_function_decl
 name|void
 name|HandlePragmaPoison
-parameter_list|(
-name|Token
-modifier|&
-name|PoisonTok
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -9512,21 +9539,6 @@ begin_comment
 unit|}
 comment|// end namespace clang
 end_comment
-
-begin_expr_stmt
-unit|extern
-name|template
-name|class
-name|llvm
-operator|::
-name|Registry
-operator|<
-name|clang
-operator|::
-name|PragmaHandler
-operator|>
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#

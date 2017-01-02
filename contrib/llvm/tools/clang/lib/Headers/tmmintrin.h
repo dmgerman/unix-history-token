@@ -1981,39 +1981,39 @@ comment|/// \returns A 128-bit integer vector containing the sums of products of
 end_comment
 
 begin_comment
-comment|///    operands:
+comment|///    operands: \n
 end_comment
 
 begin_comment
-comment|///    R0 := (__a0 * __b0) + (__a1 * __b1)
+comment|///    \a R0 := (\a __a0 * \a __b0) + (\a __a1 * \a __b1) \n
 end_comment
 
 begin_comment
-comment|///    R1 := (__a2 * __b2) + (__a3 * __b3)
+comment|///    \a R1 := (\a __a2 * \a __b2) + (\a __a3 * \a __b3) \n
 end_comment
 
 begin_comment
-comment|///    R2 := (__a4 * __b4) + (__a5 * __b5)
+comment|///    \a R2 := (\a __a4 * \a __b4) + (\a __a5 * \a __b5) \n
 end_comment
 
 begin_comment
-comment|///    R3 := (__a6 * __b6) + (__a7 * __b7)
+comment|///    \a R3 := (\a __a6 * \a __b6) + (\a __a7 * \a __b7) \n
 end_comment
 
 begin_comment
-comment|///    R4 := (__a8 * __b8) + (__a9 * __b9)
+comment|///    \a R4 := (\a __a8 * \a __b8) + (\a __a9 * \a __b9) \n
 end_comment
 
 begin_comment
-comment|///    R5 := (__a10 * __b10) + (__a11 * __b11)
+comment|///    \a R5 := (\a __a10 * \a __b10) + (\a __a11 * \a __b11) \n
 end_comment
 
 begin_comment
-comment|///    R6 := (__a12 * __b12) + (__a13 * __b13)
+comment|///    \a R6 := (\a __a12 * \a __b12) + (\a __a13 * \a __b13) \n
 end_comment
 
 begin_comment
-comment|///    R7 := (__a14 * __b14) + (__a15 * __b15)
+comment|///    \a R7 := (\a __a14 * \a __b14) + (\a __a15 * \a __b15)
 end_comment
 
 begin_function
@@ -2123,23 +2123,23 @@ comment|/// \returns A 64-bit integer vector containing the sums of products of 
 end_comment
 
 begin_comment
-comment|///    operands:
+comment|///    operands: \n
 end_comment
 
 begin_comment
-comment|///    R0 := (__a0 * __b0) + (__a1 * __b1)
+comment|///    \a R0 := (\a __a0 * \a __b0) + (\a __a1 * \a __b1) \n
 end_comment
 
 begin_comment
-comment|///    R1 := (__a2 * __b2) + (__a3 * __b3)
+comment|///    \a R1 := (\a __a2 * \a __b2) + (\a __a3 * \a __b3) \n
 end_comment
 
 begin_comment
-comment|///    R2 := (__a4 * __b4) + (__a5 * __b5)
+comment|///    \a R2 := (\a __a4 * \a __b4) + (\a __a5 * \a __b5) \n
 end_comment
 
 begin_comment
-comment|///    R3 := (__a6 * __b6) + (__a7 * __b7)
+comment|///    \a R3 := (\a __a6 * \a __b6) + (\a __a7 * \a __b7)
 end_comment
 
 begin_function
@@ -2409,11 +2409,11 @@ comment|///    positions in the destination:
 end_comment
 
 begin_comment
-comment|///    Bit 7:
+comment|///    Bit 7: \n
 end_comment
 
 begin_comment
-comment|///    1: Clear the corresponding byte in the destination.
+comment|///    1: Clear the corresponding byte in the destination. \n
 end_comment
 
 begin_comment
@@ -2421,11 +2421,11 @@ comment|///    0: Copy the selected source byte to the corresponding byte in the
 end_comment
 
 begin_comment
-comment|///    destination.
+comment|///    destination. \n
 end_comment
 
 begin_comment
-comment|///    Bits [6:4] Reserved.
+comment|///    Bits [6:4] Reserved.  \n
 end_comment
 
 begin_comment
@@ -2523,11 +2523,11 @@ comment|///    positions in the destination:
 end_comment
 
 begin_comment
-comment|///    Bit 7:
+comment|///    Bit 7: \n
 end_comment
 
 begin_comment
-comment|///    1: Clear the corresponding byte in the destination.
+comment|///    1: Clear the corresponding byte in the destination. \n
 end_comment
 
 begin_comment
@@ -2535,7 +2535,7 @@ comment|///    0: Copy the selected source byte to the corresponding byte in the
 end_comment
 
 begin_comment
-comment|///    destination.
+comment|///    destination. \n
 end_comment
 
 begin_comment

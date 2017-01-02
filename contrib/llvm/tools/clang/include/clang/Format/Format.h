@@ -140,7 +140,7 @@ operator|*
 name|name
 argument_list|()
 specifier|const
-name|LLVM_NOEXCEPT
+name|noexcept
 name|override
 block|;
 name|std
@@ -752,6 +752,9 @@ block|,
 comment|/// Should be used for JavaScript.
 name|LK_JavaScript
 block|,
+comment|/// Should be used for ObjC code.
+name|LK_ObjC
+block|,
 comment|/// Should be used for Protocol Buffers
 comment|/// (https://developers.google.com/protocol-buffers/).
 name|LK_Proto
@@ -866,6 +869,10 @@ decl_stmt|;
 comment|/// \brief If ``true``, a space may be inserted after C style casts.
 name|bool
 name|SpaceAfterCStyleCast
+decl_stmt|;
+comment|/// \brief If \c true, a space will be inserted after the 'template' keyword.
+name|bool
+name|SpaceAfterTemplateKeyword
 decl_stmt|;
 comment|/// \brief If ``false``, spaces will be removed before assignment operators.
 name|bool
@@ -1327,6 +1334,12 @@ name|R
 operator|.
 name|SpaceAfterCStyleCast
 operator|&&
+name|SpaceAfterTemplateKeyword
+operator|==
+name|R
+operator|.
+name|SpaceAfterTemplateKeyword
+operator|&&
 name|SpaceBeforeAssignmentOperators
 operator|==
 name|R
@@ -1547,8 +1560,20 @@ expr_stmt|;
 comment|/// \brief Returns the replacements corresponding to applying \p Replaces and
 comment|/// cleaning up the code after that on success; otherwise, return an llvm::Error
 comment|/// carrying llvm::StringError.
-comment|/// This also inserts a C++ #include directive into the correct block if the
-comment|/// replacement corresponding to the header insertion has offset UINT_MAX.
+comment|/// This also supports inserting/deleting C++ #include directives:
+comment|/// - If a replacement has offset UINT_MAX, length 0, and a replacement text
+comment|///   that is an #include directive, this will insert the #include into the
+comment|///   correct block in the \p Code. When searching for points to insert new
+comment|///   header, this ignores #include's after the #include block(s) in the
+comment|///   beginning of a file to avoid inserting headers into code sections where
+comment|///   new #include's should not be added by default. These code sections
+comment|///   include:
+comment|///     - raw string literals (containing #include).
+comment|///     - #if blocks.
+comment|///     - Special #include's among declarations (e.g. functions).
+comment|/// - If a replacement has offset UINT_MAX, length 1, and a replacement text
+comment|///   that is the name of the header to be removed, the header will be removed
+comment|///   from \p Code if it exists.
 name|llvm
 operator|::
 name|Expected
@@ -1566,7 +1591,7 @@ argument_list|,
 argument|const FormatStyle&Style
 argument_list|)
 expr_stmt|;
-comment|/// \brief Reformats the given \p Ranges in the file \p ID.
+comment|/// \brief Reformats the given \p Ranges in \p Code.
 comment|///
 comment|/// Each range is extended on either end to its next bigger logic unit, i.e.
 comment|/// everything that might influence its formatting or might be influenced by its
@@ -1585,25 +1610,6 @@ name|reformat
 argument_list|(
 argument|const FormatStyle&Style
 argument_list|,
-argument|SourceManager&SourceMgr
-argument_list|,
-argument|FileID ID
-argument_list|,
-argument|ArrayRef<CharSourceRange> Ranges
-argument_list|,
-argument|bool *IncompleteFormat = nullptr
-argument_list|)
-expr_stmt|;
-comment|/// \brief Reformats the given \p Ranges in \p Code.
-comment|///
-comment|/// Otherwise identical to the reformat() function using a file ID.
-name|tooling
-operator|::
-name|Replacements
-name|reformat
-argument_list|(
-argument|const FormatStyle&Style
-argument_list|,
 argument|StringRef Code
 argument_list|,
 argument|ArrayRef<tooling::Range> Ranges
@@ -1614,28 +1620,10 @@ argument_list|,
 argument|bool *IncompleteFormat = nullptr
 argument_list|)
 expr_stmt|;
-comment|/// \brief Clean up any erroneous/redundant code in the given \p Ranges in the
-comment|/// file \p ID.
-comment|///
-comment|/// Returns the ``Replacements`` that clean up all \p Ranges in the file \p ID.
-name|tooling
-operator|::
-name|Replacements
-name|cleanup
-argument_list|(
-argument|const FormatStyle&Style
-argument_list|,
-argument|SourceManager&SourceMgr
-argument_list|,
-argument|FileID ID
-argument_list|,
-argument|ArrayRef<CharSourceRange> Ranges
-argument_list|)
-expr_stmt|;
 comment|/// \brief Clean up any erroneous/redundant code in the given \p Ranges in \p
 comment|/// Code.
 comment|///
-comment|/// Otherwise identical to the cleanup() function using a file ID.
+comment|/// Returns the ``Replacements`` that clean up all \p Ranges in \p Code.
 name|tooling
 operator|::
 name|Replacements
@@ -1691,6 +1679,8 @@ comment|/// \param[in] FileName Path to start search for .clang-format if ``Styl
 comment|/// == "file".
 comment|/// \param[in] FallbackStyle The name of a predefined style used to fallback to
 comment|/// in case the style can't be determined from \p StyleName.
+comment|/// \param[in] Code The actual code to be formatted. Used to determine the
+comment|/// language if the filename isn't sufficient.
 comment|/// \param[in] FS The underlying file system, in which the file resides. By
 comment|/// default, the file system is the real file system.
 comment|///
@@ -1707,6 +1697,11 @@ name|FileName
 argument_list|,
 name|StringRef
 name|FallbackStyle
+argument_list|,
+name|StringRef
+name|Code
+operator|=
+literal|""
 argument_list|,
 name|vfs
 operator|::

@@ -611,6 +611,47 @@ name|getOpenCLKernelCallingConv
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Get target specific null pointer.
+comment|/// \param T is the LLVM type of the null pointer.
+comment|/// \param QT is the clang QualType of the null pointer.
+comment|/// \return ConstantPointerNull with the given type \p T.
+comment|/// Each target can override it to return its own desired constant value.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getNullPointer
+argument_list|(
+argument|const CodeGen::CodeGenModule&CGM
+argument_list|,
+argument|llvm::PointerType *T
+argument_list|,
+argument|QualType QT
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// Perform address space cast of an expression of pointer type.
+comment|/// \param V is the LLVM value to be casted to another address space.
+comment|/// \param SrcTy is the QualType of \p V.
+comment|/// \param DestTy is the destination QualType.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|performAddrSpaceCast
+argument_list|(
+argument|CodeGen::CodeGenFunction&CGF
+argument_list|,
+argument|llvm::Value *V
+argument_list|,
+argument|QualType SrcTy
+argument_list|,
+argument|QualType DestTy
+argument_list|)
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}
