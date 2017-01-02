@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
+file|"lldb/lldb-types.h"
 end_include
 
 begin_include
@@ -107,14 +107,17 @@ comment|/// @brief A module cache class.
 comment|///
 comment|/// Caches locally modules that are downloaded from remote targets.
 comment|/// Each cached module maintains 2 views:
-comment|///  - UUID view:    /${CACHE_ROOT}/${PLATFORM_NAME}/.cache/${UUID}/${MODULE_FILENAME}
-comment|///  - Sysroot view: /${CACHE_ROOT}/${PLATFORM_NAME}/${HOSTNAME}/${MODULE_FULL_FILEPATH}
+comment|///  - UUID view:
+comment|///  /${CACHE_ROOT}/${PLATFORM_NAME}/.cache/${UUID}/${MODULE_FILENAME}
+comment|///  - Sysroot view:
+comment|///  /${CACHE_ROOT}/${PLATFORM_NAME}/${HOSTNAME}/${MODULE_FULL_FILEPATH}
 comment|///
 comment|/// UUID views stores a real module file, whereas Sysroot view holds a symbolic
 comment|/// link to UUID-view file.
 comment|///
 comment|/// Example:
-comment|/// UUID view   : /tmp/lldb/remote-linux/.cache/30C94DC6-6A1F-E951-80C3-D68D2B89E576-D5AE213C/libc.so.6
+comment|/// UUID view   :
+comment|/// /tmp/lldb/remote-linux/.cache/30C94DC6-6A1F-E951-80C3-D68D2B89E576-D5AE213C/libc.so.6
 comment|/// Sysroot view: /tmp/lldb/remote-linux/ubuntu/lib/x86_64-linux-gnu/libc.so.6
 comment|//----------------------------------------------------------------------
 name|class

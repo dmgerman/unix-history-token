@@ -58,7 +58,11 @@ file|"MIUtilString.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment

@@ -51,15 +51,15 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
 
 begin_comment
 comment|// Project includes
@@ -83,22 +83,20 @@ specifier|static
 name|bool
 name|Parse
 argument_list|(
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|uri
 argument_list|,
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 operator|&
 name|scheme
 argument_list|,
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 operator|&
 name|hostname
 argument_list|,
@@ -106,9 +104,9 @@ name|int
 operator|&
 name|port
 argument_list|,
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 operator|&
 name|path
 argument_list|)

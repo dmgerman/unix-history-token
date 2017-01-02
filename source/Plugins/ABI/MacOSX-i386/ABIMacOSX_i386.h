@@ -62,7 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/Value.h"
 end_include
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Value.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -165,7 +165,8 @@ comment|// code, we've seen that the stack pointer is often not aligned properly
 comment|// before the handler is invoked.  This means that lldb will stop the unwind
 comment|// early -- before the function which caused the trap.
 comment|//
-comment|// To work around this, we relax that alignment to be just word-size (4-bytes).
+comment|// To work around this, we relax that alignment to be just word-size
+comment|// (4-bytes).
 comment|// Whitelisting the trap handlers for user space would be easy (_sigtramp) but
 comment|// in other environments there can be a large number of different functions
 comment|// involved in async traps.
@@ -216,7 +217,7 @@ return|;
 end_return
 
 begin_macro
-unit|}      bool
+unit|}    bool
 name|CodeAddressIsValid
 argument_list|(
 argument|lldb::addr_t pc

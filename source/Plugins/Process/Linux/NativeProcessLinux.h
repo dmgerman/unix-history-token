@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/Debug.h"
 end_include
 
@@ -96,13 +90,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/common/NativeProcessProtocol.h"
+file|"lldb/lldb-types.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"NativeThreadLinux.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/common/NativeProcessProtocol.h"
 end_include
 
 begin_decl_stmt
@@ -315,18 +315,18 @@ block|;
 name|Error
 name|GetLoadedModuleFileSpec
 argument_list|(
-argument|const char* module_path
+argument|const char *module_path
 argument_list|,
-argument|FileSpec& file_spec
+argument|FileSpec&file_spec
 argument_list|)
 name|override
 block|;
 name|Error
 name|GetFileLoadAddress
 argument_list|(
-argument|const llvm::StringRef& file_name
+argument|const llvm::StringRef&file_name
 argument_list|,
-argument|lldb::addr_t& load_addr
+argument|lldb::addr_t&load_addr
 argument_list|)
 name|override
 block|;
@@ -460,14 +460,6 @@ argument|Error&error
 argument_list|)
 block|;
 specifier|static
-name|void
-name|ChildFunc
-argument_list|(
-argument|const ProcessLaunchInfo&launch_info
-argument_list|)
-name|LLVM_ATTRIBUTE_NORETURN
-block|;
-specifier|static
 name|Error
 name|SetDefaultPtraceOpts
 argument_list|(
@@ -475,17 +467,6 @@ specifier|const
 name|lldb
 operator|::
 name|pid_t
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|DupDescriptor
-argument_list|(
-argument|const FileSpec&file_spec
-argument_list|,
-argument|int fd
-argument_list|,
-argument|int flags
 argument_list|)
 block|;
 specifier|static
@@ -644,8 +625,10 @@ argument_list|(
 argument|lldb::tid_t tid
 argument_list|)
 block|;
-comment|// This method is requests a stop on all threads which are still running. It sets up a
-comment|// deferred delegate notification, which will fire once threads report as stopped. The
+comment|// This method is requests a stop on all threads which are still running. It
+comment|// sets up a
+comment|// deferred delegate notification, which will fire once threads report as
+comment|// stopped. The
 comment|// triggerring_tid will be set as the current thread (main stop reason).
 name|void
 name|StopRunningThreads
@@ -658,7 +641,8 @@ name|void
 name|SignalIfAllThreadsStopped
 argument_list|()
 block|;
-comment|// Resume the given thread, optionally passing it the given signal. The type of resume
+comment|// Resume the given thread, optionally passing it the given signal. The type
+comment|// of resume
 comment|// operation (continue, single-step) depends on the state parameter.
 name|Error
 name|ResumeThread
@@ -681,7 +665,7 @@ block|;
 name|void
 name|SigchldHandler
 argument_list|()
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 comment|// namespace process_linux

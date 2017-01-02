@@ -202,10 +202,15 @@ name|IsPlanComplete
 parameter_list|()
 function_decl|;
 name|bool
+name|IsPlanStale
+parameter_list|()
+function_decl|;
+name|bool
 name|IsValid
 parameter_list|()
 function_decl|;
-comment|// This section allows an SBThreadPlan to push another of the common types of plans...
+comment|// This section allows an SBThreadPlan to push another of the common types of
+comment|// plans...
 name|SBThreadPlan
 name|QueueThreadPlanForStepOverRange
 argument_list|(

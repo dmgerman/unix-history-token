@@ -129,7 +129,7 @@ argument_list|()
 operator|,
 name|m_name_to_index
 argument_list|()
-block|{     }
+block|{}
 name|OptionValueProperties
 argument_list|(
 specifier|const
@@ -221,25 +221,25 @@ block|}
 name|virtual
 name|Error
 name|DumpPropertyValue
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExecutionContext
-modifier|*
+operator|*
 name|exe_ctx
-parameter_list|,
+argument_list|,
 name|Stream
-modifier|&
+operator|&
 name|strm
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|property_path
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|dump_mask
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|virtual
 name|void
 name|DumpAllDescriptions
@@ -257,9 +257,9 @@ decl_stmt|;
 name|void
 name|Apropos
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|keyword
 argument_list|,
 name|std
@@ -295,26 +295,6 @@ name|GetNumProperties
 argument_list|()
 specifier|const
 expr_stmt|;
-name|virtual
-name|ConstString
-name|GetPropertyNameAtIndex
-argument_list|(
-name|uint32_t
-name|idx
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
-specifier|const
-name|char
-modifier|*
-name|GetPropertyDescriptionAtIndex
-argument_list|(
-name|uint32_t
-name|idx
-argument_list|)
-decl|const
-decl_stmt|;
 comment|//---------------------------------------------------------------------
 comment|// Get the index of a property given its exact name in this property
 comment|// collection, "name" can't be a path to a property path that refers
@@ -377,7 +357,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|//---------------------------------------------------------------------
-comment|// Property can be be a property path like "target.process.extra-startup-command"
+comment|// Property can be be a property path like
+comment|// "target.process.extra-startup-command"
 comment|//---------------------------------------------------------------------
 name|virtual
 specifier|const
@@ -393,9 +374,9 @@ argument_list|,
 name|bool
 name|will_modify
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|property_path
 argument_list|)
 decl|const
@@ -435,7 +416,7 @@ name|GetSubValue
 argument_list|(
 argument|const ExecutionContext *exe_ctx
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
 argument|bool value_will_be_modified
 argument_list|,
@@ -455,14 +436,14 @@ argument_list|,
 name|VarSetOperationType
 name|op
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|path
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|value
 argument_list|)
 name|override
@@ -476,9 +457,9 @@ name|ExecutionContext
 operator|*
 name|exe_ctx
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|predicate
 argument_list|)
 decl|const
@@ -728,10 +709,21 @@ name|uint64_t
 name|new_value
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
+name|llvm
+operator|::
+name|StringRef
 name|GetPropertyAtIndexAsString
+argument_list|(
+argument|const ExecutionContext *exe_ctx
+argument_list|,
+argument|uint32_t idx
+argument_list|,
+argument|llvm::StringRef fail_value
+argument_list|)
+specifier|const
+expr_stmt|;
+name|bool
+name|SetPropertyAtIndexAsString
 argument_list|(
 specifier|const
 name|ExecutionContext
@@ -741,30 +733,12 @@ argument_list|,
 name|uint32_t
 name|idx
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|fail_value
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|SetPropertyAtIndexAsString
-parameter_list|(
-specifier|const
-name|ExecutionContext
-modifier|*
-name|exe_ctx
-parameter_list|,
-name|uint32_t
-name|idx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|llvm
+operator|::
+name|StringRef
 name|new_value
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|OptionValueString
 modifier|*
 name|GetPropertyAtIndexAsOptionValueString

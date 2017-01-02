@@ -44,6 +44,26 @@ name|liblldb_Connection_h_
 end_define
 
 begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Timeout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
+begin_comment
 comment|// C Includes
 end_comment
 
@@ -55,20 +75,6 @@ begin_include
 include|#
 directive|include
 file|<string>
-end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -144,14 +150,9 @@ operator|::
 name|ConnectionStatus
 name|Connect
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|url
+argument|llvm::StringRef url
 argument_list|,
-name|Error
-operator|*
-name|error_ptr
+argument|Error *error_ptr
 argument_list|)
 operator|=
 literal|0
@@ -211,7 +212,7 @@ comment|/// @param[in] dst_len
 comment|///     The number of bytes to attempt to read, and also the max
 comment|///     number of bytes that can be placed into \a dst.
 comment|///
-comment|/// @param[in] timeout_usec
+comment|/// @param[in] timeout
 comment|///     The number of microseconds to wait for the data.
 comment|///
 comment|/// @param[out] status
@@ -239,8 +240,15 @@ argument_list|,
 name|size_t
 name|dst_len
 argument_list|,
-name|uint32_t
-name|timeout_usec
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
+name|timeout
 argument_list|,
 name|lldb
 operator|::

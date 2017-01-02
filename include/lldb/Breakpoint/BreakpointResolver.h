@@ -62,18 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Address.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Breakpoint/Breakpoint.h"
 end_include
 
@@ -86,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Core/Address.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
@@ -104,7 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -112,18 +112,24 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class BreakpointResolver BreakpointResolver.h "lldb/Breakpoint/BreakpointResolver.h"
-comment|/// @brief This class works with SearchFilter to resolve logical breakpoints to their
+comment|/// @class BreakpointResolver BreakpointResolver.h
+comment|/// "lldb/Breakpoint/BreakpointResolver.h"
+comment|/// @brief This class works with SearchFilter to resolve logical breakpoints to
+comment|/// their
 comment|/// of concrete breakpoint locations.
 comment|//----------------------------------------------------------------------
 comment|//----------------------------------------------------------------------
 comment|/// General Outline:
 comment|/// The BreakpointResolver is a Searcher.  In that protocol,
 comment|/// the SearchFilter asks the question "At what depth of the symbol context
-comment|/// descent do you want your callback to get called?" of the filter.  The resolver
-comment|/// answers this question (in the GetDepth method) and provides the resolution callback.
-comment|/// Each Breakpoint has a BreakpointResolver, and it calls either ResolveBreakpoint
-comment|/// or ResolveBreakpointInModules to tell it to look for new breakpoint locations.
+comment|/// descent do you want your callback to get called?" of the filter.  The
+comment|/// resolver
+comment|/// answers this question (in the GetDepth method) and provides the resolution
+comment|/// callback.
+comment|/// Each Breakpoint has a BreakpointResolver, and it calls either
+comment|/// ResolveBreakpoint
+comment|/// or ResolveBreakpointInModules to tell it to look for new breakpoint
+comment|/// locations.
 comment|//----------------------------------------------------------------------
 name|class
 name|BreakpointResolver
@@ -139,7 +145,8 @@ name|public
 operator|:
 comment|//------------------------------------------------------------------
 comment|/// The breakpoint resolver need to have a breakpoint for "ResolveBreakpoint
-comment|/// to make sense.  It can be constructed without a breakpoint, but you have to
+comment|/// to make sense.  It can be constructed without a breakpoint, but you have
+comment|/// to
 comment|/// call SetBreakpoint before ResolveBreakpoint.
 comment|///
 comment|/// @param[in] bkpt
@@ -185,7 +192,8 @@ argument_list|)
 block|;
 comment|//------------------------------------------------------------------
 comment|/// This updates the offset for this breakpoint.  All the locations currently
-comment|/// set for this breakpoint will have their offset adjusted when this is called.
+comment|/// set for this breakpoint will have their offset adjusted when this is
+comment|/// called.
 comment|///
 comment|/// @param[in] offset
 comment|///   The offset to add to all locations.
@@ -198,7 +206,8 @@ argument_list|)
 block|;
 comment|//------------------------------------------------------------------
 comment|/// This updates the offset for this breakpoint.  All the locations currently
-comment|/// set for this breakpoint will have their offset adjusted when this is called.
+comment|/// set for this breakpoint will have their offset adjusted when this is
+comment|/// called.
 comment|///
 comment|/// @param[in] offset
 comment|///   The offset to add to all locations.
@@ -215,7 +224,8 @@ name|m_offset
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// In response to this method the resolver scans all the modules in the breakpoint's
+comment|/// In response to this method the resolver scans all the modules in the
+comment|/// breakpoint's
 comment|/// target, and adds any new locations it finds.
 comment|///
 comment|/// @param[in] filter
@@ -231,7 +241,8 @@ name|filter
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|/// In response to this method the resolver scans the modules in the module list
+comment|/// In response to this method the resolver scans the modules in the module
+comment|/// list
 comment|/// \a modules, and adds any new locations it finds.
 comment|///
 comment|/// @param[in] filter
@@ -278,6 +289,82 @@ specifier|const
 operator|=
 literal|0
 block|;
+comment|/// This section handles serializing and deserializing from StructuredData
+comment|/// objects.
+specifier|static
+name|lldb
+operator|::
+name|BreakpointResolverSP
+name|CreateFromStructuredData
+argument_list|(
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|resolver_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|virtual
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
+block|{
+return|return
+name|StructuredData
+operator|::
+name|ObjectSP
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|const
+name|char
+operator|*
+name|GetSerializationKey
+argument_list|()
+block|{
+return|return
+literal|"BKPTResolver"
+return|;
+block|}
+specifier|static
+specifier|const
+name|char
+operator|*
+name|GetSerializationSubclassKey
+argument_list|()
+block|{
+return|return
+literal|"Type"
+return|;
+block|}
+specifier|static
+specifier|const
+name|char
+operator|*
+name|GetSerializationSubclassOptionsKey
+argument_list|()
+block|{
+return|return
+literal|"Options"
+return|;
+block|}
+name|StructuredData
+operator|::
+name|DictionarySP
+name|WrapOptionsDict
+argument_list|(
+argument|StructuredData::DictionarySP options_dict_sp
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
 comment|//------------------------------------------------------------------
 comment|/// An enumeration for keeping track of the concrete subclass that
 comment|/// is actually instantiated. Values of this enumeration are kept in the
@@ -287,6 +374,8 @@ block|enum
 name|ResolverTy
 block|{
 name|FileLineResolver
+operator|=
+literal|0
 block|,
 comment|// This is an instance of BreakpointResolverFileLine
 name|AddressResolver
@@ -302,7 +391,22 @@ block|,
 name|LastKnownResolverType
 operator|=
 name|ExceptionResolver
+block|,
+name|UnknownResolver
 block|}
+block|;
+comment|// Translate the Ty to name for serialization,
+comment|// the "+2" is one for size vrs. index, and one for UnknownResolver.
+specifier|static
+specifier|const
+name|char
+operator|*
+name|g_ty_to_name
+index|[
+name|LastKnownResolverType
+operator|+
+literal|2
+index|]
 block|;
 comment|//------------------------------------------------------------------
 comment|/// getResolverID - Return an ID for the concrete type of this object.  This
@@ -317,6 +421,67 @@ return|return
 name|SubclassID
 return|;
 block|}
+expr|enum
+name|ResolverTy
+name|GetResolverTy
+argument_list|()
+block|{
+if|if
+condition|(
+name|SubclassID
+operator|>
+name|ResolverTy
+operator|::
+name|LastKnownResolverType
+condition|)
+return|return
+name|ResolverTy
+operator|::
+name|UnknownResolver
+return|;
+else|else
+return|return
+operator|(
+expr|enum
+name|ResolverTy
+operator|)
+name|SubclassID
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|GetResolverName
+argument_list|()
+block|{
+return|return
+name|ResolverTyToName
+argument_list|(
+name|GetResolverTy
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|const
+name|char
+operator|*
+name|ResolverTyToName
+argument_list|(
+expr|enum
+name|ResolverTy
+argument_list|)
+block|;
+specifier|static
+name|ResolverTy
+name|NameToResolverTy
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|)
+block|;
 name|virtual
 name|lldb
 operator|::
@@ -332,10 +497,96 @@ literal|0
 block|;
 name|protected
 operator|:
+comment|// Used for serializing resolver options:
+comment|// The options in this enum and the strings in the
+comment|// g_option_names must be kept in sync.
+expr|enum
+name|class
+name|OptionNames
+operator|:
+name|uint32_t
+block|{
+name|AddressOffset
+operator|=
+literal|0
+block|,
+name|ExactMatch
+block|,
+name|FileName
+block|,
+name|Inlines
+block|,
+name|LanguageName
+block|,
+name|LineNumber
+block|,
+name|ModuleName
+block|,
+name|NameMaskArray
+block|,
+name|Offset
+block|,
+name|RegexString
+block|,
+name|SectionName
+block|,
+name|SkipPrologue
+block|,
+name|SymbolNameArray
+block|,
+name|LastOptionName
+block|}
+block|;
+specifier|static
+specifier|const
+name|char
+operator|*
+name|g_option_names
+index|[
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|OptionNames
+operator|::
+name|LastOptionName
+operator|)
+index|]
+block|;
+name|public
+operator|:
+specifier|static
+specifier|const
+name|char
+operator|*
+name|GetKey
+argument_list|(
+argument|OptionNames enum_value
+argument_list|)
+block|{
+return|return
+name|g_option_names
+index|[
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|enum_value
+operator|)
+index|]
+return|;
+block|}
+name|protected
+operator|:
 comment|//------------------------------------------------------------------
-comment|/// SetSCMatchesByLine - Takes a symbol context list of matches which supposedly represent the same file and
-comment|/// line number in a CU, and find the nearest actual line number that matches, and then filter down the
-comment|/// matching addresses to unique entries, and skip the prologue if asked to do so, and then set
+comment|/// SetSCMatchesByLine - Takes a symbol context list of matches which
+comment|/// supposedly represent the same file and
+comment|/// line number in a CU, and find the nearest actual line number that matches,
+comment|/// and then filter down the
+comment|/// matching addresses to unique entries, and skip the prologue if asked to do
+comment|/// so, and then set
 comment|/// breakpoint locations in this breakpoint for all the resultant addresses.
 name|void
 name|SetSCMatchesByLine
@@ -346,8 +597,26 @@ argument|SymbolContextList&sc_list
 argument_list|,
 argument|bool skip_prologue
 argument_list|,
-argument|const char *log_ident
+argument|llvm::StringRef log_ident
 argument_list|)
+block|;
+name|void
+name|SetSCMatchesByLine
+argument_list|(
+name|SearchFilter
+operator|&
+argument_list|,
+name|SymbolContextList
+operator|&
+argument_list|,
+name|bool
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+operator|=
+name|delete
 block|;
 name|lldb
 operator|::
@@ -369,7 +638,8 @@ operator|::
 name|addr_t
 name|m_offset
 block|;
-comment|// A random offset the user asked us to add to any breakpoints we set.
+comment|// A random offset the user asked us to add to any
+comment|// breakpoints we set.
 name|private
 operator|:
 comment|// Subclass identifier (for llvm isa/dyn_cast)

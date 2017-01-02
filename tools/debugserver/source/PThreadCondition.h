@@ -94,7 +94,7 @@ argument_list|(
 operator|&
 name|m_condition
 argument_list|)
-block|;     }
+block|; }
 name|pthread_cond_t
 operator|*
 name|Condition

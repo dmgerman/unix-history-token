@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -97,7 +97,7 @@ literal|0
 argument_list|)
 endif|#
 directive|endif
-block|{     }
+block|{   }
 comment|//------------------------------------------------------------------
 comment|/// Construct with file specification, and optional line and column.
 comment|///
@@ -115,7 +115,7 @@ comment|///     Set to zero if there is no column number information.
 comment|//------------------------------------------------------------------
 name|Declaration
 argument_list|(
-argument|const FileSpec& file_spec
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t line =
 literal|0
@@ -143,7 +143,7 @@ argument|column
 argument_list|)
 endif|#
 directive|endif
-block|{     }
+block|{   }
 comment|//------------------------------------------------------------------
 comment|/// Construct with a reference to another Declaration object.
 comment|//------------------------------------------------------------------
@@ -178,7 +178,7 @@ argument|rhs.m_column
 argument_list|)
 endif|#
 directive|endif
-block|{              }
+block|{   }
 comment|//------------------------------------------------------------------
 comment|/// Construct with a pointer to another Declaration object.
 comment|//------------------------------------------------------------------

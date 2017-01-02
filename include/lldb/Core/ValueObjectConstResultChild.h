@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ValueObjectConstResultChild.h -------------------------------*- C++ -*-===//
+comment|//===-- ValueObjectConstResultChild.h -------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -156,7 +160,7 @@ name|GetSyntheticChildAtOffset
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const CompilerType& type
+argument|const CompilerType&type
 argument_list|,
 argument|bool can_create
 argument_list|,
@@ -176,7 +180,7 @@ block|;
 name|size_t
 name|GetPointeeData
 argument_list|(
-argument|DataExtractor& data
+argument|DataExtractor&data
 argument_list|,
 argument|uint32_t item_idx =
 literal|0

@@ -372,6 +372,13 @@ modifier|*
 name|arg
 parameter_list|)
 function_decl|;
+name|void
+name|TaskPortChanged
+parameter_list|(
+name|task_t
+name|task
+parameter_list|)
+function_decl|;
 name|task_t
 name|TaskPort
 argument_list|()
@@ -453,7 +460,8 @@ decl_stmt|;
 name|MachVMMemory
 name|m_vm_memory
 decl_stmt|;
-comment|// Special mach memory reading class that will take care of watching for page and region boundaries
+comment|// Special mach memory reading class that will take
+comment|// care of watching for page and region boundaries
 name|MachException
 operator|::
 name|PortInfo
@@ -463,11 +471,13 @@ comment|// Saved settings for all exception ports
 name|pthread_t
 name|m_exception_thread
 decl_stmt|;
-comment|// Thread ID for the exception thread in case we need it
+comment|// Thread ID for the exception thread in case we
+comment|// need it
 name|mach_port_t
 name|m_exception_port
 decl_stmt|;
-comment|// Exception port on which we will receive child exceptions
+comment|// Exception port on which we will receive child
+comment|// exceptions
 typedef|typedef
 name|std
 operator|::

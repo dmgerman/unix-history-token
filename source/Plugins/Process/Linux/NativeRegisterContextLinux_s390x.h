@@ -305,7 +305,7 @@ name|first_fpr
 block|;
 name|uint32_t
 name|last_fpr
-block|;     }
+block|;   }
 block|;
 comment|// Private member variables.
 name|RegInfo

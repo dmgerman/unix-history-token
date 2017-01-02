@@ -46,24 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/DebugMacros.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/Function.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/FileSpecList.h"
 end_include
 
@@ -83,6 +65,24 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/UserID.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/DebugMacros.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_decl_stmt
@@ -411,8 +411,10 @@ comment|///     else if NULL, search for line entries that match the compile
 comment|///     unit file.
 comment|///
 comment|/// @param[in] exact
-comment|///     If \btrue match only if there is a line table entry for this line number.
-comment|///     If \bfalse, find the line table entry equal to or after this line number.
+comment|///     If \btrue match only if there is a line table entry for this line
+comment|///     number.
+comment|///     If \bfalse, find the line table entry equal to or after this line
+comment|///     number.
 comment|///
 comment|/// @param[out] line_entry
 comment|///     If non-NULL, a copy of the line entry that was found.
@@ -709,7 +711,8 @@ name|void
 modifier|*
 name|m_user_data
 decl_stmt|;
-comment|///< User data for the SymbolFile parser to store information into.
+comment|///< User data for the SymbolFile parser to store
+comment|///information into.
 name|lldb
 operator|::
 name|LanguageType
@@ -730,7 +733,8 @@ name|FunctionSP
 operator|>
 name|m_functions
 expr_stmt|;
-comment|///< The sparsely populated list of shared pointers to functions
+comment|///< The sparsely populated list of
+comment|///shared pointers to functions
 comment|///< that gets populated as functions get partially parsed.
 name|std
 operator|::
@@ -740,12 +744,15 @@ name|ConstString
 operator|>
 name|m_imported_modules
 expr_stmt|;
-comment|///< All modules, including the current module, imported by this
+comment|///< All modules, including the
+comment|///current module, imported by
+comment|///this
 comment|///< compile unit.
 name|FileSpecList
 name|m_support_files
 decl_stmt|;
-comment|///< Files associated with this compile unit's line table and declarations.
+comment|///< Files associated with this compile unit's
+comment|///line table and declarations.
 name|std
 operator|::
 name|unique_ptr
@@ -764,13 +771,15 @@ operator|::
 name|VariableListSP
 name|m_variables
 expr_stmt|;
-comment|///< Global and static variable list that will get parsed on demand.
+comment|///< Global and static variable list that
+comment|///will get parsed on demand.
 name|lldb_private
 operator|::
 name|LazyBool
 name|m_is_optimized
 expr_stmt|;
-comment|/// eLazyBoolYes if this compile unit was compiled with optimization.
+comment|/// eLazyBoolYes if this compile unit
+comment|/// was compiled with optimization.
 name|private
 label|:
 enum|enum
@@ -801,7 +810,8 @@ operator|<<
 literal|2
 operator|)
 block|,
-comment|///< Have we already parsed the support files for this compile unit?
+comment|///< Have we already parsed the support
+comment|///files for this compile unit?
 name|flagsParsedLineTable
 init|=
 operator|(

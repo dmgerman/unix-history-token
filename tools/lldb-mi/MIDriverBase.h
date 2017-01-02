@@ -44,13 +44,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDebugger.h"
+file|"lldb/API/SBBroadcaster.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBBroadcaster.h"
+file|"lldb/API/SBDebugger.h"
 end_include
 
 begin_comment
@@ -78,7 +78,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -241,12 +245,14 @@ name|CMIDriverBase
 modifier|*
 name|m_pDriverFallThru
 decl_stmt|;
-comment|// Child driver to use should *this driver not be able to handle client input
+comment|// Child driver to use should *this driver
+comment|// not be able to handle client input
 name|CMIDriverBase
 modifier|*
 name|m_pDriverParent
 decl_stmt|;
-comment|// The parent driver who passes work to *this driver to do work
+comment|// The parent driver who passes work to *this
+comment|// driver to do work
 name|CMIUtilString
 name|m_strDriverId
 decl_stmt|;

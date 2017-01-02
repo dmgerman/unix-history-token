@@ -92,13 +92,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_include
@@ -215,14 +215,14 @@ argument_list|)
 operator|:
 name|m_exact_sp
 argument_list|(
-argument|new ExactMatchContainer(std::string(exact_name),clist)
+argument|new ExactMatchContainer(std::string(exact_name), clist)
 argument_list|)
 operator|,
 name|m_regex_sp
 argument_list|(
-argument|new RegexMatchContainer(std::string(regex_name),clist)
+argument|new RegexMatchContainer(std::string(regex_name), clist)
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|FormatterContainerPair
 argument_list|()
@@ -1026,11 +1026,11 @@ name|ValidatorContainer
 operator|::
 name|RegexMatchForEachCallback
 name|m_validator_regex
-block|;         }
+block|;   }
 expr_stmt|;
 name|TypeCategoryImpl
 argument_list|(
-argument|IFormatChangeListener* clist
+argument|IFormatChangeListener *clist
 argument_list|,
 argument|ConstString name
 argument_list|,
@@ -1163,7 +1163,7 @@ operator|.
 name|GetValidatorRegexCallback
 argument_list|()
 argument_list|)
-block|;         }
+block|;   }
 name|FormatContainerSP
 name|GetTypeFormatsContainer
 argument_list|()

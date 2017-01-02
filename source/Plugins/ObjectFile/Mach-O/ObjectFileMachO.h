@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/SafeMachO.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Address.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/ObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/SafeMachO.h"
 end_include
 
 begin_comment
@@ -126,11 +126,11 @@ name|ObjectFileMachO
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
-argument|const lldb_private::FileSpec* file
+argument|const lldb_private::FileSpec *file
 argument_list|,
 argument|lldb::offset_t offset
 argument_list|,
@@ -141,7 +141,7 @@ name|ObjectFileMachO
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|const lldb::ProcessSP&process_sp
 argument_list|,
@@ -191,11 +191,11 @@ name|CreateInstance
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
-argument|const lldb_private::FileSpec* file
+argument|const lldb_private::FileSpec *file
 argument_list|,
 argument|lldb::offset_t file_offset
 argument_list|,
@@ -211,7 +211,7 @@ name|CreateMemoryInstance
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|const lldb::ProcessSP&process_sp
 argument_list|,
@@ -222,9 +222,9 @@ specifier|static
 name|size_t
 name|GetModuleSpecifications
 argument_list|(
-argument|const lldb_private::FileSpec& file
+argument|const lldb_private::FileSpec&file
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -264,7 +264,7 @@ specifier|static
 name|bool
 name|MagicBytesMatch
 argument_list|(
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::addr_t offset
 argument_list|,
@@ -356,14 +356,14 @@ block|;
 name|bool
 name|GetUUID
 argument_list|(
-argument|lldb_private::UUID* uuid
+argument|lldb_private::UUID *uuid
 argument_list|)
 name|override
 block|;
 name|uint32_t
 name|GetDependentModules
 argument_list|(
-argument|lldb_private::FileSpecList& files
+argument|lldb_private::FileSpecList&files
 argument_list|)
 name|override
 block|;
@@ -512,7 +512,7 @@ argument_list|,
 argument|lldb::offset_t lc_offset
 argument_list|,
 comment|// Offset to the first load command
-argument|lldb_private::UUID& uuid
+argument|lldb_private::UUID&uuid
 argument_list|)
 block|;
 specifier|static

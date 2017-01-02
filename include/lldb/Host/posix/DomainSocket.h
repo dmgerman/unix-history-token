@@ -125,7 +125,7 @@ name|DomainSocket
 argument_list|(
 argument|NativeSocket socket
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

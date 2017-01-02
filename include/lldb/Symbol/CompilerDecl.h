@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -85,7 +85,7 @@ name|m_opaque_decl
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{     }
+block|{}
 name|CompilerDecl
 argument_list|(
 name|TypeSystem
@@ -106,11 +106,11 @@ name|m_opaque_decl
 argument_list|(
 argument|decl
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|CompilerDecl
 argument_list|()
-block|{     }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|// Tests
 comment|//----------------------------------------------------------------------
@@ -257,13 +257,15 @@ name|GetFunctionReturnType
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// If this decl represents a function, return the number of arguments for the function
+comment|// If this decl represents a function, return the number of arguments for the
+comment|// function
 name|size_t
 name|GetNumFunctionArguments
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// If this decl represents a function, return the argument type given a zero based argument index
+comment|// If this decl represents a function, return the argument type given a zero
+comment|// based argument index
 name|CompilerType
 name|GetFunctionArgumentType
 argument_list|(

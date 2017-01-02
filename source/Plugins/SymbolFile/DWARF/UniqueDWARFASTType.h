@@ -74,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/Declaration.h"
+file|"DWARFDIE.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DWARFDIE.h"
+file|"lldb/Symbol/Declaration.h"
 end_include
 
 begin_decl_stmt
@@ -110,7 +110,7 @@ argument|-
 literal|1
 argument_list|)
 comment|// Set to negative value to make sure we have a valid value
-block|{     }
+block|{}
 name|UniqueDWARFASTType
 argument_list|(
 argument|lldb::TypeSP&type_sp
@@ -141,7 +141,7 @@ name|m_byte_size
 argument_list|(
 argument|byte_size
 argument_list|)
-block|{     }
+block|{}
 name|UniqueDWARFASTType
 argument_list|(
 specifier|const
@@ -175,11 +175,11 @@ name|m_byte_size
 argument_list|(
 argument|rhs.m_byte_size
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|UniqueDWARFASTType
 argument_list|()
-block|{     }
+block|{}
 name|UniqueDWARFASTType
 operator|&
 name|operator
@@ -263,11 +263,11 @@ argument_list|()
 operator|:
 name|m_collection
 argument_list|()
-block|{     }
+block|{}
 operator|~
 name|UniqueDWARFASTTypeList
 argument_list|()
-block|{     }
+block|{}
 name|uint32_t
 name|GetSize
 argument_list|()
@@ -356,11 +356,11 @@ argument_list|()
 operator|:
 name|m_collection
 argument_list|()
-block|{     }
+block|{}
 operator|~
 name|UniqueDWARFASTTypeMap
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Insert
 argument_list|(
@@ -381,7 +381,7 @@ name|Append
 argument_list|(
 name|entry
 argument_list|)
-block|;     }
+block|;   }
 name|bool
 name|Find
 argument_list|(

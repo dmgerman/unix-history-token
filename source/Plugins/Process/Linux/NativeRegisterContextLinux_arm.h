@@ -94,7 +94,7 @@ name|public
 operator|:
 name|NativeRegisterContextLinux_arm
 argument_list|(
-argument|const ArchSpec& target_arch
+argument|const ArchSpec&target_arch
 argument_list|,
 argument|NativeThreadProtocol&native_thread
 argument_list|,
@@ -259,7 +259,7 @@ name|DoReadRegisterValue
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const char* reg_name
+argument|const char *reg_name
 argument_list|,
 argument|uint32_t size
 argument_list|,
@@ -272,7 +272,7 @@ name|DoWriteRegisterValue
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const char* reg_name
+argument|const char *reg_name
 argument_list|,
 argument|const RegisterValue&value
 argument_list|)
@@ -379,8 +379,8 @@ name|last_fpr_v
 block|;
 name|uint32_t
 name|gpr_flags
-block|;         }
-block|;          struct
+block|;   }
+block|;    struct
 name|QReg
 block|{
 name|uint8_t
@@ -388,8 +388,8 @@ name|bytes
 index|[
 literal|16
 index|]
-block|;         }
-block|;          struct
+block|;   }
+block|;    struct
 name|FPU
 block|{
 expr|union
@@ -418,7 +418,7 @@ name|floats
 block|;
 name|uint32_t
 name|fpscr
-block|;         }
+block|;   }
 block|;
 name|uint32_t
 name|m_gpr_arm
@@ -447,7 +447,8 @@ operator|::
 name|addr_t
 name|hit_addr
 block|;
-comment|// Address at which last watchpoint trigger exception occurred.
+comment|// Address at which last watchpoint trigger exception
+comment|// occurred.
 name|lldb
 operator|::
 name|addr_t
@@ -463,7 +464,7 @@ name|refcount
 block|;
 comment|// Serves as enable/disable and refernce counter.
 block|}
-block|;          struct
+block|;    struct
 name|DREG
 name|m_hbr_regs
 index|[
@@ -517,10 +518,10 @@ block|;
 name|uint32_t
 name|CalculateFprOffset
 argument_list|(
-argument|const RegisterInfo* reg_info
+argument|const RegisterInfo *reg_info
 argument_list|)
 specifier|const
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 comment|// namespace process_linux

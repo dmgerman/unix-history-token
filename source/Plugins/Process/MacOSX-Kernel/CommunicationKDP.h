@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Communication.h"
 end_include
 
@@ -110,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/TimeValue.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -435,44 +429,45 @@ begin_comment
 comment|//------------------------------------------------------------------
 end_comment
 
-begin_function
-name|uint32_t
+begin_expr_stmt
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
 name|SetPacketTimeout
-parameter_list|(
-name|uint32_t
-name|packet_timeout
-parameter_list|)
+argument_list|(
+argument|std::chrono::seconds packet_timeout
+argument_list|)
 block|{
 specifier|const
-name|uint32_t
+name|auto
 name|old_packet_timeout
-init|=
+operator|=
 name|m_packet_timeout
-decl_stmt|;
+block|;
 name|m_packet_timeout
 operator|=
 name|packet_timeout
-expr_stmt|;
+block|;
 return|return
 name|old_packet_timeout
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_expr_stmt
-name|uint32_t
-name|GetPacketTimeoutInMicroSeconds
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
+name|GetPacketTimeout
 argument_list|()
 specifier|const
 block|{
 return|return
 name|m_packet_timeout
-operator|*
-name|lldb_private
-operator|::
-name|TimeValue
-operator|::
-name|MicroSecPerSec
 return|;
 block|}
 end_expr_stmt
@@ -831,11 +826,13 @@ name|bool
 name|WaitForNotRunningPrivate
 argument_list|(
 specifier|const
-name|lldb_private
+name|std
 operator|::
-name|TimeValue
-operator|*
-name|timeout_ptr
+name|chrono
+operator|::
+name|microseconds
+operator|&
+name|timeout
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -899,11 +896,11 @@ comment|// Disable KDP_IMAGEPATH for now, it seems to hang the KDP connection...
 end_comment
 
 begin_comment
-comment|//bool
+comment|// bool
 end_comment
 
 begin_comment
-comment|//SendRequestImagePath ();
+comment|// SendRequestImagePath ();
 end_comment
 
 begin_decl_stmt
@@ -1088,11 +1085,15 @@ name|m_byte_order
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|uint32_t
+begin_expr_stmt
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
 name|m_packet_timeout
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|std
@@ -1103,7 +1104,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// Restrict access to sending/receiving packets to a single thread at a time
+comment|// Restrict access to sending/receiving
+end_comment
+
+begin_comment
+comment|// packets to a single thread at a time
 end_comment
 
 begin_expr_stmt
@@ -1174,7 +1179,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|//std::string m_image_path; // Disable KDP_IMAGEPATH for now, it seems to hang the KDP connection...
+comment|// std::string m_image_path; // Disable KDP_IMAGEPATH for now, it seems to
+end_comment
+
+begin_comment
+comment|// hang the KDP connection...
 end_comment
 
 begin_expr_stmt

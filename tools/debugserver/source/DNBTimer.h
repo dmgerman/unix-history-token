@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|"DNBDefs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|"PThreadMutex.h"
 end_include
 
 begin_include
@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DNBDefs.h"
+file|<stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"PThreadMutex.h"
+file|<sys/time.h>
 end_include
 
 begin_decl_stmt
@@ -201,13 +201,13 @@ return|;
 end_return
 
 begin_macro
-unit|}      ~
+unit|}    ~
 name|DNBTimer
 argument_list|()
 end_macro
 
 begin_block
-block|{         }
+block|{}
 end_block
 
 begin_expr_stmt

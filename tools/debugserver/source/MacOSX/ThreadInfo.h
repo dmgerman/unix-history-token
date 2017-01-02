@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ThreadInfo.h -----------------------------------------------*- C++ -*-===//
+comment|//===-- ThreadInfo.h -----------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -65,7 +69,7 @@ name|enum_value
 argument_list|(
 argument|UINT32_MAX
 argument_list|)
-block|{ }
+block|{}
 name|bool
 name|IsValid
 argument_list|()

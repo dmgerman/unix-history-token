@@ -80,13 +80,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Host/IOObject.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/IOObject.h"
+file|"lldb/Host/PosixApi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -116,7 +122,7 @@ specifier|static
 name|FILE
 operator|*
 name|kInvalidStream
-block|;      enum
+block|;    enum
 name|OpenOptions
 block|{
 name|eOpenOptionRead
@@ -246,7 +252,7 @@ name|m_is_real_terminal
 argument_list|(
 argument|eLazyBoolCalculate
 argument_list|)
-block|{     }
+block|{}
 name|File
 argument_list|(
 argument|FILE *fh
@@ -290,7 +296,7 @@ name|m_is_real_terminal
 argument_list|(
 argument|eLazyBoolCalculate
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Constructor with path.
 comment|///
@@ -321,7 +327,8 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor with FileSpec.
 comment|///
-comment|/// Takes a FileSpec pointing to a file which can be just a filename, or a full
+comment|/// Takes a FileSpec pointing to a file which can be just a filename, or a
+comment|/// full
 comment|/// path. If \a path is not nullptr or empty, this function will call
 comment|/// File::Open (const char *path, uint32_t options, uint32_t permissions).
 comment|///
@@ -338,7 +345,7 @@ comment|/// @see File::Open (const char *path, uint32_t options, uint32_t permis
 comment|//------------------------------------------------------------------
 name|File
 argument_list|(
-argument|const FileSpec& filespec
+argument|const FileSpec&filespec
 argument_list|,
 argument|uint32_t options
 argument_list|,
@@ -388,7 +395,7 @@ name|m_is_real_terminal
 argument_list|(
 argument|eLazyBoolCalculate
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Destructor.
 comment|///
@@ -946,7 +953,7 @@ block|{
 name|m_options
 operator|=
 name|options
-block|;     }
+block|; }
 name|protected
 operator|:
 name|bool

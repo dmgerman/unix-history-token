@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<stdint.h>
 end_include
 
 begin_include
@@ -119,6 +119,7 @@ argument_list|(
 name|__arm64__
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__aarch64__
@@ -169,6 +170,7 @@ argument_list|(
 name|__ppc__
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__arm__
@@ -438,7 +440,8 @@ name|NUB_STATE_IS_RUNNING
 parameter_list|(
 name|s
 parameter_list|)
-value|((s) == eStateAttaching ||\                                  (s) == eStateLaunching ||\                                  (s) == eStateRunning ||\                                  (s) == eStateStepping ||\                                  (s) == eStateDetached)
+define|\
+value|((s) == eStateAttaching || (s) == eStateLaunching || (s) == eStateRunning || \    (s) == eStateStepping || (s) == eStateDetached)
 end_define
 
 begin_define
@@ -448,7 +451,8 @@ name|NUB_STATE_IS_STOPPED
 parameter_list|(
 name|s
 parameter_list|)
-value|((s) == eStateUnloaded ||\                                  (s) == eStateStopped ||\                                  (s) == eStateCrashed ||\                                  (s) == eStateExited)
+define|\
+value|((s) == eStateUnloaded || (s) == eStateStopped || (s) == eStateCrashed ||    \    (s) == eStateExited)
 end_define
 
 begin_enum
@@ -621,6 +625,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOG_DARWIN_LOG
+value|(1u<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LOG_LO_USER
 value|(1u<< 16)
 end_define
@@ -643,7 +654,8 @@ begin_define
 define|#
 directive|define
 name|LOG_DEFAULT
-value|((LOG_PROCESS) |\                                  (LOG_TASK) |\                                  (LOG_THREAD) |\                                  (LOG_EXCEPTIONS) |\                                  (LOG_SHLIB) |\                                  (LOG_MEMORY) |\                                  (LOG_BREAKPOINTS) |\                                  (LOG_WATCHPOINTS) |\                                  (LOG_STEP))
+define|\
+value|((LOG_PROCESS) | (LOG_TASK) | (LOG_THREAD) | (LOG_EXCEPTIONS) |              \    (LOG_SHLIB) | (LOG_MEMORY) | (LOG_BREAKPOINTS) | (LOG_WATCHPOINTS) |        \    (LOG_STEP))
 end_define
 
 begin_define
@@ -727,6 +739,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_REGNUM_ARG1
+define|\
 value|5
 end_define
 
@@ -738,6 +751,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_REGNUM_ARG2
+define|\
 value|6
 end_define
 
@@ -749,6 +763,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_REGNUM_ARG3
+define|\
 value|7
 end_define
 
@@ -760,6 +775,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_REGNUM_ARG4
+define|\
 value|8
 end_define
 
@@ -771,6 +787,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_REGNUM_ARG5
+define|\
 value|9
 end_define
 
@@ -782,6 +799,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_REGNUM_ARG6
+define|\
 value|10
 end_define
 
@@ -793,6 +811,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_REGNUM_ARG7
+define|\
 value|11
 end_define
 
@@ -804,6 +823,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_REGNUM_ARG8
+define|\
 value|12
 end_define
 
@@ -924,21 +944,26 @@ comment|// Generic register number (INVALID_NUB_REGNUM when none)
 name|uint32_t
 name|reg_debugserver
 decl_stmt|;
-comment|// The debugserver register number we'll use over gdb-remote protocol (INVALID_NUB_REGNUM when none)
+comment|// The debugserver register number we'll use over
+comment|// gdb-remote protocol (INVALID_NUB_REGNUM when
+comment|// none)
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|value_regs
 decl_stmt|;
-comment|// If this register is a part of other registers, list the register names terminated by NULL
+comment|// If this register is a part of other registers,
+comment|// list the register names terminated by NULL
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|update_regs
 decl_stmt|;
-comment|// If modifying this register will invalidate other registers, list the register names terminated by NULL
+comment|// If modifying this register will invalidate other
+comment|// registers, list the register names terminated by
+comment|// NULL
 block|}
 struct|;
 end_struct
@@ -975,11 +1000,13 @@ block|{
 name|nub_thread_t
 name|tid
 decl_stmt|;
-comment|// The thread ID that this action applies to, INVALID_NUB_THREAD for the default thread action
+comment|// The thread ID that this action applies to,
+comment|// INVALID_NUB_THREAD for the default thread action
 name|nub_state_t
 name|state
 decl_stmt|;
-comment|// Valid values are eStateStopped/eStateSuspended, eStateRunning, and eStateStepping.
+comment|// Valid values are eStateStopped/eStateSuspended,
+comment|// eStateRunning, and eStateStepping.
 name|int
 name|signal
 decl_stmt|;
@@ -987,7 +1014,8 @@ comment|// When resuming this thread, resume it with this signal
 name|nub_addr_t
 name|addr
 decl_stmt|;
-comment|// If not INVALID_NUB_ADDRESS, then set the PC for the thread to ADDR before resuming/stepping
+comment|// If not INVALID_NUB_ADDRESS, then set the PC for the thread
+comment|// to ADDR before resuming/stepping
 block|}
 struct|;
 end_struct

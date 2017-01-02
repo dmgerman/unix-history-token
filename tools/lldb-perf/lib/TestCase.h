@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/API/LLDB.h"
+file|"Measurement.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Measurement.h"
+file|"lldb/API/LLDB.h"
 end_include
 
 begin_include
@@ -126,7 +126,7 @@ name|launch_info
 argument_list|(
 argument|NULL
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|None
 argument_list|()
@@ -143,7 +143,7 @@ name|lldb
 operator|::
 name|SBThread
 argument_list|()
-block|;         }
+block|;     }
 name|void
 name|Continue
 argument_list|()
@@ -160,7 +160,7 @@ name|lldb
 operator|::
 name|SBThread
 argument_list|()
-block|;         }
+block|;     }
 name|void
 name|StepOver
 argument_list|(
@@ -176,7 +176,7 @@ block|;
 name|thread
 operator|=
 name|t
-block|;         }
+block|;     }
 name|void
 name|StepOut
 argument_list|(
@@ -192,7 +192,7 @@ block|;
 name|thread
 operator|=
 name|t
-block|;         }
+block|;     }
 name|void
 name|Relaunch
 argument_list|(
@@ -215,7 +215,7 @@ block|;
 name|launch_info
 operator|=
 name|l
-block|;         }
+block|;     }
 name|void
 name|Kill
 argument_list|()
@@ -232,7 +232,7 @@ name|lldb
 operator|::
 name|SBThread
 argument_list|()
-block|;         }
+block|;     }
 name|void
 name|CallNext
 argument_list|()
@@ -249,14 +249,14 @@ name|lldb
 operator|::
 name|SBThread
 argument_list|()
-block|;         }
+block|;     }
 block|}
 struct|;
 name|virtual
 operator|~
 name|TestCase
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 name|bool
 name|Setup
@@ -356,9 +356,9 @@ name|CreateMeasurement
 argument_list|(
 argument|A a
 argument_list|,
-argument|const char* name = NULL
+argument|const char *name = NULL
 argument_list|,
-argument|const char* description = NULL
+argument|const char *description = NULL
 argument_list|)
 block|{
 return|return
@@ -390,9 +390,9 @@ name|CreateTimeMeasurement
 argument_list|(
 argument|A a
 argument_list|,
-argument|const char* name = NULL
+argument|const char *name = NULL
 argument_list|,
-argument|const char* description = NULL
+argument|const char *description = NULL
 argument_list|)
 block|{
 return|return
@@ -422,9 +422,9 @@ name|CreateMemoryMeasurement
 argument_list|(
 argument|A a
 argument_list|,
-argument|const char* name = NULL
+argument|const char *name = NULL
 argument_list|,
-argument|const char* description = NULL
+argument|const char *description = NULL
 argument_list|)
 block|{
 return|return

@@ -111,6 +111,8 @@ argument_list|,
 argument|LazyBool step_out_avoids_code_without_debug_info
 argument_list|,
 argument|bool continue_to_next_branch = false
+argument_list|,
+argument|bool gather_return_value = true
 argument_list|)
 empty_stmt|;
 operator|~
@@ -246,7 +248,8 @@ specifier|static
 name|uint32_t
 name|s_default_flag_values
 decl_stmt|;
-comment|// These are the default flag values for the ThreadPlanStepThrough.
+comment|// These are the default flag values
+comment|// for the ThreadPlanStepThrough.
 name|lldb
 operator|::
 name|addr_t
@@ -276,20 +279,25 @@ operator|::
 name|ThreadPlanSP
 name|m_step_out_to_inline_plan_sp
 expr_stmt|;
-comment|// This plan implements step out to the real function containing
+comment|// This plan implements step
+comment|// out to the real function
+comment|// containing
 comment|// an inlined frame so we can then step out of that.
 name|lldb
 operator|::
 name|ThreadPlanSP
 name|m_step_through_inline_plan_sp
 expr_stmt|;
-comment|// This plan then steps past the inlined frame(s).
+comment|// This plan then steps past
+comment|// the inlined frame(s).
 name|lldb
 operator|::
 name|ThreadPlanSP
 name|m_step_out_further_plan_sp
 expr_stmt|;
-comment|// This plan keeps stepping out if ShouldStopHere told us to.
+comment|// This plan keeps stepping out
+comment|// if ShouldStopHere told us
+comment|// to.
 name|Function
 modifier|*
 name|m_immediate_step_from_function
@@ -299,6 +307,9 @@ operator|::
 name|ValueObjectSP
 name|m_return_valobj_sp
 expr_stmt|;
+name|bool
+name|m_calculate_return_value
+decl_stmt|;
 name|friend
 name|lldb
 operator|::

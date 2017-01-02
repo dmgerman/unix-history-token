@@ -77,7 +77,8 @@ operator|&
 name|rhs
 argument_list|)
 block|;
-comment|// This will copy the array contents into a new array
+comment|// This will copy the array
+comment|// contents into a new array
 name|CFCMutableArray
 operator|&
 name|operator
@@ -89,7 +90,10 @@ operator|&
 name|rhs
 operator|)
 block|;
-comment|// This will re-use the same array and just bump the ref count
+comment|// This will re-use
+comment|// the same array and
+comment|// just bump the ref
+comment|// count
 name|virtual
 operator|~
 name|CFCMutableArray
@@ -141,7 +145,9 @@ argument_list|,
 argument|bool can_create = true
 argument_list|)
 block|;
-comment|// Appends value and optionally creates a CFCMutableArray if this class doesn't contain one
+comment|// Appends value and optionally
+comment|// creates a CFCMutableArray if this
+comment|// class doesn't contain one
 name|bool
 name|AppendCStringAsCFString
 argument_list|(

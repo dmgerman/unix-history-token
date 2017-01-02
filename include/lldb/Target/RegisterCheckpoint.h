@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/StackID.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -109,11 +109,11 @@ name|m_reason
 argument_list|(
 argument|reason
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|RegisterCheckpoint
 argument_list|()
-block|{         }
+block|{}
 name|lldb
 operator|::
 name|DataBufferSP
@@ -153,7 +153,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|RegisterCheckpoint
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/Debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private-forward.h"
 end_include
 
@@ -59,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Debug.h"
 end_include
 
 begin_decl_stmt
@@ -98,7 +98,7 @@ name|virtual
 operator|~
 name|NativeThreadProtocol
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 name|std
 operator|::
@@ -232,7 +232,7 @@ name|lldb
 operator|::
 name|tid_t
 name|m_tid
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

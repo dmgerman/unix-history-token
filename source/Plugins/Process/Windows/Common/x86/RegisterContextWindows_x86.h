@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
+file|"RegisterContextWindows.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"RegisterContextWindows.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_decl_stmt
@@ -122,6 +122,15 @@ argument_list|(
 argument|const RegisterInfo *reg_info
 argument_list|,
 argument|RegisterValue&reg_value
+argument_list|)
+name|override
+block|;
+name|bool
+name|WriteRegister
+argument_list|(
+argument|const RegisterInfo *reg_info
+argument_list|,
+argument|const RegisterValue&reg_value
 argument_list|)
 name|override
 block|;

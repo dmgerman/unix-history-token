@@ -65,13 +65,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|<map>
+file|<mach/thread_status.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mach/thread_status.h>
+file|<map>
 end_include
 
 begin_if
@@ -167,12 +167,12 @@ argument_list|(
 name|m_dbg_save
 argument_list|)
 argument_list|)
-block|;     }
+block|;   }
 name|virtual
 operator|~
 name|DNBArchMachARM64
 argument_list|()
-block|{     }
+block|{}
 specifier|static
 name|void
 name|Initialize
@@ -635,7 +635,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-function|void         InvalidateAllRegisterStates
+function|void InvalidateAllRegisterStates
 parameter_list|()
 block|{
 name|SetError
@@ -722,7 +722,7 @@ index|[
 name|err_idx
 index|]
 return|;
-comment|//case e_regSetDBG:   return dbg_errs[err_idx];
+comment|// case e_regSetDBG:   return dbg_errs[err_idx];
 default|default:
 break|break;
 block|}
@@ -1020,7 +1020,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// arm64 doesn't keep the disabled watchpoint values in the debug register context like armv7;
+comment|// arm64 doesn't keep the disabled watchpoint values in the debug register
+end_comment
+
+begin_comment
+comment|// context like armv7;
 end_comment
 
 begin_comment

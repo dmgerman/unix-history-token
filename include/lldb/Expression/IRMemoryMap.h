@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/DataBufferHeap.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/UserID.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_include
@@ -111,14 +111,18 @@ block|,
 comment|///< It is an error for an allocation to have this policy.
 name|eAllocationPolicyHostOnly
 block|,
-comment|///< This allocation was created in the host and will never make it into the process.
-comment|///< It is an error to create other types of allocations while such allocations exist.
+comment|///< This allocation was created in the host and
+comment|///will never make it into the process.
+comment|///< It is an error to create other types of allocations while such
+comment|///allocations exist.
 name|eAllocationPolicyMirror
 block|,
-comment|///< The intent is that this allocation exist both in the host and the process and have
+comment|///< The intent is that this allocation exist both
+comment|///in the host and the process and have
 comment|///< the same content in both.
 name|eAllocationPolicyProcessOnly
-comment|///< The intent is that this allocation exist only in the process.
+comment|///< The intent is that this allocation exist
+comment|///only in the process.
 block|}
 enum|;
 name|lldb
@@ -385,7 +389,9 @@ comment|///< The size of the requested allocation
 name|uint32_t
 name|m_permissions
 decl_stmt|;
-comment|///< The access permissions on the memory in the process.  In the host, the memory is always read/write.
+comment|///< The access permissions on the memory in the
+comment|///process.  In the host, the memory is always
+comment|///read/write.
 name|uint8_t
 name|m_alignment
 decl_stmt|;
@@ -457,7 +463,7 @@ name|m_leak
 argument_list|(
 argument|false
 argument_list|)
-block|{         }
+block|{}
 block|}
 struct|;
 name|lldb
@@ -508,7 +514,8 @@ argument_list|,
 argument|size_t size
 argument_list|)
 expr_stmt|;
-comment|// Returns true if the given allocation intersects any allocation in the memory map.
+comment|// Returns true if the given allocation intersects any allocation in the
+comment|// memory map.
 name|bool
 name|IntersectsAllocation
 argument_list|(

@@ -167,7 +167,7 @@ name|UTF8
 argument_list|(
 argument|CFStringRef cf_str
 argument_list|,
-argument|std::string& str
+argument|std::string&str
 argument_list|)
 block|;
 specifier|static
@@ -178,7 +178,7 @@ name|FileSystemRepresentation
 argument_list|(
 argument|CFStringRef cf_str
 argument_list|,
-argument|std::string& str
+argument|std::string&str
 argument_list|)
 block|;
 specifier|static
@@ -198,7 +198,7 @@ name|string
 operator|&
 name|expanded_path
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

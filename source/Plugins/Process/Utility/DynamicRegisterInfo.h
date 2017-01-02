@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<vector>
 end_include
 
 begin_comment
@@ -74,12 +74,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -385,7 +385,8 @@ decl_stmt|;
 name|size_t
 name|m_reg_data_byte_size
 decl_stmt|;
-comment|// The number of bytes required to store all registers
+comment|// The number of bytes required to store all
+comment|// registers
 name|bool
 name|m_finalized
 decl_stmt|;

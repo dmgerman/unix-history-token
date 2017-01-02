@@ -634,7 +634,7 @@ end_comment
 begin_struct
 struct|struct
 name|EditLine
-block|{ }
+block|{}
 struct|;
 end_struct
 
@@ -664,7 +664,7 @@ end_struct
 begin_struct
 struct|struct
 name|History
-block|{ }
+block|{}
 struct|;
 end_struct
 

@@ -44,13 +44,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<map>
+file|"lldb/API/SBValue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBValue.h"
+file|<map>
 end_include
 
 begin_comment
@@ -64,7 +64,11 @@ file|"MIUtilString.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment

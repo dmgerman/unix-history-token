@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|<assert.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<pthread.h>
 end_include
 
 begin_include
@@ -99,6 +99,7 @@ name|var
 parameter_list|,
 name|mutex
 parameter_list|)
+define|\
 value|PThreadMutex::Locker var(mutex, __FUNCTION__, __FILE__, __LINE__)
 end_define
 
@@ -143,7 +144,7 @@ name|DEBUG_PTHREAD_MUTEX_DEADLOCKS
 argument_list|)
 name|Locker
 argument_list|(
-argument|PThreadMutex& m
+argument|PThreadMutex&m
 argument_list|,
 argument|const char *function
 argument_list|,
@@ -154,7 +155,7 @@ argument_list|)
 empty_stmt|;
 name|Locker
 argument_list|(
-argument|PThreadMutex* m
+argument|PThreadMutex *m
 argument_list|,
 argument|const char *function
 argument_list|,
@@ -202,7 +203,7 @@ argument_list|)
 block|{
 name|Lock
 argument_list|()
-block|;         }
+block|; }
 name|Locker
 argument_list|(
 name|PThreadMutex
@@ -217,7 +218,7 @@ argument_list|)
 block|{
 name|Lock
 argument_list|()
-block|;         }
+block|; }
 name|Locker
 argument_list|(
 name|pthread_mutex_t
@@ -232,7 +233,7 @@ argument_list|)
 block|{
 name|Lock
 argument_list|()
-block|;         }
+block|; }
 name|void
 name|Lock
 argument_list|()
@@ -269,7 +270,7 @@ argument_list|()
 block|{
 name|Unlock
 argument_list|()
-block|;         }
+block|; }
 endif|#
 directive|endif
 comment|// unlock any the current mutex and lock the new one if it is valid
@@ -288,7 +289,7 @@ name|pMutex
 block|;
 name|Lock
 argument_list|()
-block|;         }
+block|;     }
 name|pthread_mutex_t
 operator|*
 name|m_pMutex

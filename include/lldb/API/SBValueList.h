@@ -132,7 +132,7 @@ operator|::
 name|SBValue
 name|GetFirstValueByName
 argument_list|(
-argument|const char* name
+argument|const char *name
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -253,7 +253,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};   }
+unit|};  }
 comment|// namespace lldb
 end_comment
 

@@ -43,6 +43,12 @@ directive|define
 name|LLDB_lldb_Host_windows_AutoHandle_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/windows/windows.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -68,7 +74,7 @@ name|m_invalid_value
 argument_list|(
 argument|invalid_value
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|AutoHandle
 argument_list|()

@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -145,9 +145,9 @@ return|return
 name|m_arg
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetPath
 argument_list|()
 specifier|const

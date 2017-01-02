@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/DataBuffer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/DataBuffer.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -209,6 +209,25 @@ argument_list|,
 argument|lldb::offset_t src_len
 argument_list|)
 block|;
+name|void
+name|CopyData
+argument_list|(
+argument|llvm::StringRef src
+argument_list|)
+block|{
+name|CopyData
+argument_list|(
+name|src
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|src
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|; }
 name|void
 name|AppendData
 argument_list|(

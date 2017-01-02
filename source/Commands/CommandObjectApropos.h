@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- CommandObjectApropos.h -----------------------------------*- C++ -*-===//
+comment|//===-- CommandObjectApropos.h -----------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -97,7 +101,7 @@ operator|:
 name|bool
 name|DoExecute
 argument_list|(
-argument|Args& command
+argument|Args&command
 argument_list|,
 argument|CommandReturnObject&result
 argument_list|)

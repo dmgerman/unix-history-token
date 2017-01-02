@@ -62,7 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"DNBTimer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"RNBDefs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -75,18 +87,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DNBTimer.h"
 end_include
 
 begin_ifdef
@@ -155,7 +155,7 @@ argument_list|(
 argument|true
 argument_list|)
 comment|// Make a thread safe timer
-block|{     }
+block|{   }
 operator|~
 name|RNBSocket
 argument_list|(
@@ -166,7 +166,7 @@ name|Disconnect
 argument_list|(
 name|false
 argument_list|)
-block|;     }
+block|; }
 name|rnb_err_t
 name|Listen
 argument_list|(

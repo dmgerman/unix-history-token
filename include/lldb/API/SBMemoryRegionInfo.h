@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
+file|"lldb/API/SBData.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBData.h"
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_decl_stmt
@@ -165,6 +165,21 @@ comment|///     true if this memory address is in the process address space.
 comment|//------------------------------------------------------------------
 name|bool
 name|IsMapped
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Returns the name of the memory region mapped at the given
+comment|/// address.
+comment|///
+comment|/// @return
+comment|///     In case of memory mapped files it is the absolute path of
+comment|///     the file otherwise it is a name associated with the memory
+comment|///     region. If no name can be determined the returns nullptr.
+comment|//------------------------------------------------------------------
+specifier|const
+name|char
+modifier|*
+name|GetName
 parameter_list|()
 function_decl|;
 name|bool

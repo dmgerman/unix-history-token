@@ -56,17 +56,21 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MIUtilString.h"
+file|"MICmdArgSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MICmdArgSet.h"
+file|"MIUtilString.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -110,7 +114,11 @@ comment|//          Note the code is written such that a command will produce an
 end_comment
 
 begin_comment
-comment|//          should it be presented with arguments or options it does not understand.
+comment|//          should it be presented with arguments or options it does not
+end_comment
+
+begin_comment
+comment|//          understand.
 end_comment
 
 begin_comment
@@ -247,7 +255,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -313,7 +325,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
@@ -329,11 +345,19 @@ comment|// Args:    vrArgName       - (R) Argument's name to search by.
 end_comment
 
 begin_comment
-comment|//          vbMandatory     - (R) True = Yes must be present, false = optional argument.
+comment|//          vbMandatory     - (R) True = Yes must be present, false = optional
 end_comment
 
 begin_comment
-comment|//          vbHandleByCmd   - (R) True = Command processes *this option, false = not handled.
+comment|//          argument.
+end_comment
+
+begin_comment
+comment|//          vbHandleByCmd   - (R) True = Command processes *this option, false =
+end_comment
+
+begin_comment
+comment|//          not handled.
 end_comment
 
 begin_comment
@@ -376,9 +400,11 @@ argument|vbMandatory
 argument_list|,
 argument|vbHandleByCmd
 argument_list|)
-block|{ }
-comment|//++ ------------------------------------------------------------------------------------
-comment|// Details: Retrieve the value the argument parsed from the command's argument / options
+block|{}
+comment|//++
+comment|//------------------------------------------------------------------------------------
+comment|// Details: Retrieve the value the argument parsed from the command's argument /
+comment|// options
 comment|//          text string.
 comment|// Type:    Method.
 comment|// Args:    None.

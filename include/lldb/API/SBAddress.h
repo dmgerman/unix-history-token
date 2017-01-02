@@ -203,8 +203,10 @@ comment|// The following functions grab individual objects for a given address a
 comment|// are less efficient if you want more than one symbol related objects.
 comment|// Use one of the following when you want multiple debug symbol related
 comment|// objects for an address:
-comment|//    lldb::SBSymbolContext SBAddress::GetSymbolContext (uint32_t resolve_scope);
-comment|//    lldb::SBSymbolContext SBTarget::ResolveSymbolContextForAddress (const SBAddress&addr, uint32_t resolve_scope);
+comment|//    lldb::SBSymbolContext SBAddress::GetSymbolContext (uint32_t
+comment|//    resolve_scope);
+comment|//    lldb::SBSymbolContext SBTarget::ResolveSymbolContextForAddress (const
+comment|//    SBAddress&addr, uint32_t resolve_scope);
 comment|// One or more bits from the SymbolContextItem enumerations can be logically
 comment|// OR'ed together to more efficiently retrieve multiple symbol objects.
 name|lldb
@@ -423,7 +425,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};   }
+unit|};  }
 comment|// namespace lldb
 end_comment
 

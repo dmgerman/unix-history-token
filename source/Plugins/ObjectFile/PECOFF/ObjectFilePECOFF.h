@@ -180,15 +180,26 @@ name|ObjectFilePECOFF
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
-argument|const lldb_private::FileSpec* file
+argument|const lldb_private::FileSpec *file
 argument_list|,
 argument|lldb::offset_t file_offset
 argument_list|,
 argument|lldb::offset_t length
+argument_list|)
+empty_stmt|;
+name|ObjectFilePECOFF
+argument_list|(
+argument|const lldb::ModuleSP&module_sp
+argument_list|,
+argument|lldb::DataBufferSP&header_data_sp
+argument_list|,
+argument|const lldb::ProcessSP&process_sp
+argument_list|,
+argument|lldb::addr_t header_addr
 argument_list|)
 empty_stmt|;
 operator|~
@@ -272,7 +283,7 @@ name|CreateMemoryInstance
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|const lldb::ProcessSP&process_sp
 argument_list|,
@@ -594,6 +605,26 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+name|bool
+name|IsWindowsSubsystem
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|lldb_private
+operator|::
+name|DataExtractor
+name|ReadImageData
+argument_list|(
+argument|uint32_t offset
+argument_list|,
+argument|size_t size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_label
 name|protected
 label|:
@@ -866,7 +897,7 @@ block|,
 name|coff_data_dir_import_table
 init|=
 literal|1
-block|,     }
+block|,   }
 name|coff_data_dir_type
 typedef|;
 end_typedef

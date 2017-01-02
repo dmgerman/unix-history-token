@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/lldb-enumerations.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -258,7 +258,7 @@ block|{
 name|m_item_that_enqueued_this_ref
 operator|=
 name|address_of_item
-block|;     }
+block|;   }
 name|lldb
 operator|::
 name|addr_t
@@ -274,7 +274,7 @@ block|{
 name|m_enqueueing_thread_id
 operator|=
 name|tid
-block|;     }
+block|; }
 name|lldb
 operator|::
 name|tid_t
@@ -290,7 +290,7 @@ block|{
 name|m_enqueueing_queue_id
 operator|=
 name|qid
-block|;     }
+block|;   }
 name|lldb
 operator|::
 name|queue_id_t
@@ -306,7 +306,7 @@ block|{
 name|m_target_queue_id
 operator|=
 name|qid
-block|;     }
+block|; }
 name|void
 name|SetStopID
 argument_list|(
@@ -316,7 +316,7 @@ block|{
 name|m_stop_id
 operator|=
 name|stop_id
-block|;     }
+block|; }
 name|uint32_t
 name|GetStopID
 argument_list|()
@@ -330,7 +330,7 @@ block|{
 name|m_backtrace
 operator|=
 name|backtrace
-block|;     }
+block|;   }
 name|std
 operator|::
 name|vector
@@ -352,7 +352,7 @@ block|{
 name|m_thread_label
 operator|=
 name|thread_name
-block|;     }
+block|; }
 name|std
 operator|::
 name|string
@@ -368,7 +368,7 @@ block|{
 name|m_queue_label
 operator|=
 name|queue_name
-block|;     }
+block|; }
 name|std
 operator|::
 name|string
@@ -384,7 +384,7 @@ block|{
 name|m_target_queue_label
 operator|=
 name|queue_name
-block|;     }
+block|;   }
 name|lldb
 operator|::
 name|ProcessSP
@@ -412,7 +412,8 @@ operator|::
 name|addr_t
 name|m_item_ref
 block|;
-comment|// the token we can be used to fetch more information about this queue item
+comment|// the token we can be used to fetch more information
+comment|// about this queue item
 name|lldb_private
 operator|::
 name|Address
@@ -431,7 +432,8 @@ operator|::
 name|addr_t
 name|m_item_that_enqueued_this_ref
 block|;
-comment|// a handle that we can pass into libBacktraceRecording
+comment|// a handle that we can pass into
+comment|// libBacktraceRecording
 comment|// to get the QueueItem that enqueued this item
 name|lldb
 operator|::

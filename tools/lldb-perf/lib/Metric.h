@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<mach/task_info.h>
 end_include
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mach/task_info.h>
+file|<vector>
 end_include
 
 begin_decl_stmt

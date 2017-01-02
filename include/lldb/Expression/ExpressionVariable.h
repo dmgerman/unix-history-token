@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/ValueObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -153,7 +153,7 @@ name|m_kind
 argument_list|(
 argument|kind
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|ExpressionVariable
@@ -206,7 +206,7 @@ name|m_frozen_sp
 operator|->
 name|ValueUpdated
 argument_list|()
-block|;     }
+block|; }
 name|RegisterInfo
 operator|*
 name|GetRegisterInfo
@@ -277,7 +277,7 @@ name|SetCompilerType
 argument_list|(
 name|compiler_type
 argument_list|)
-block|;     }
+block|;   }
 name|void
 name|SetName
 argument_list|(
@@ -290,12 +290,16 @@ name|SetName
 argument_list|(
 name|name
 argument_list|)
-block|;     }
+block|; }
 comment|// this function is used to copy the address-of m_live_sp into m_frozen_sp
-comment|// this is necessary because the results of certain cast and pointer-arithmetic
-comment|// operations (such as those described in bugzilla issues 11588 and 11618) generate
-comment|// frozen objects that do not have a valid address-of, which can be troublesome when
-comment|// using synthetic children providers. Transferring the address-of the live object
+comment|// this is necessary because the results of certain cast and
+comment|// pointer-arithmetic
+comment|// operations (such as those described in bugzilla issues 11588 and 11618)
+comment|// generate
+comment|// frozen objects that do not have a valid address-of, which can be
+comment|// troublesome when
+comment|// using synthetic children providers. Transferring the address-of the live
+comment|// object
 comment|// solves these issues and provides the expected user-level behavior
 name|void
 name|TransferAddress
@@ -363,28 +367,35 @@ literal|1
 operator|<<
 literal|0
 block|,
-comment|///< This variable is resident in a location specifically allocated for it by LLDB in the target process
+comment|///< This variable is resident in a location
+comment|///specifically allocated for it by LLDB in the
+comment|///target process
 name|EVIsProgramReference
 init|=
 literal|1
 operator|<<
 literal|1
 block|,
-comment|///< This variable is a reference to a (possibly invalid) area managed by the target program
+comment|///< This variable is a reference to a
+comment|///(possibly invalid) area managed by the
+comment|///target program
 name|EVNeedsAllocation
 init|=
 literal|1
 operator|<<
 literal|2
 block|,
-comment|///< Space for this variable has yet to be allocated in the target process
+comment|///< Space for this variable has yet to be
+comment|///allocated in the target process
 name|EVIsFreezeDried
 init|=
 literal|1
 operator|<<
 literal|3
 block|,
-comment|///< This variable's authoritative version is in m_frozen_sp (for example, for statically-computed results)
+comment|///< This variable's authoritative version is in
+comment|///m_frozen_sp (for example, for
+comment|///statically-computed results)
 name|EVNeedsFreezeDry
 init|=
 literal|1
@@ -398,27 +409,33 @@ literal|1
 operator|<<
 literal|5
 block|,
-comment|///< Keep the allocation after the expression is complete rather than freeze drying its contents and freeing it
+comment|///< Keep the allocation after the expression is
+comment|///complete rather than freeze drying its contents
+comment|///and freeing it
 name|EVTypeIsReference
 init|=
 literal|1
 operator|<<
 literal|6
 block|,
-comment|///< The original type of this variable is a reference, so materialize the value rather than the location
+comment|///< The original type of this variable is a
+comment|///reference, so materialize the value rather
+comment|///than the location
 name|EVUnknownType
 init|=
 literal|1
 operator|<<
 literal|7
 block|,
-comment|///< This is a symbol of unknown type, and the type must be resolved after parsing is complete
+comment|///< This is a symbol of unknown type, and the type
+comment|///must be resolved after parsing is complete
 name|EVBareRegister
 init|=
 literal|1
 operator|<<
 literal|8
-comment|///< This variable is a direct reference to $pc or some other entity.
+comment|///< This variable is a direct reference to $pc or
+comment|///some other entity.
 block|}
 enum|;
 end_enum
@@ -472,7 +489,11 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// @class ExpressionVariableList ExpressionVariable.h "lldb/Expression/ExpressionVariable.h"
+comment|/// @class ExpressionVariableList ExpressionVariable.h
+end_comment
+
+begin_comment
+comment|/// "lldb/Expression/ExpressionVariable.h"
 end_comment
 
 begin_comment
@@ -699,7 +720,11 @@ comment|/// @return
 end_comment
 
 begin_comment
-comment|///     The variable requested, or nullptr if that variable is not in the list.
+comment|///     The variable requested, or nullptr if that variable is not in the
+end_comment
+
+begin_comment
+comment|///     list.
 end_comment
 
 begin_comment
@@ -774,29 +799,27 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}      lldb
+unit|}    lldb
 operator|::
 name|ExpressionVariableSP
 name|GetVariable
 argument_list|(
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|)
 block|{
-name|lldb
-operator|::
-name|ExpressionVariableSP
-name|var_sp
-block|;
 if|if
 condition|(
 name|name
-operator|&&
-name|name
-index|[
-literal|0
-index|]
+operator|.
+name|empty
+argument_list|()
 condition|)
-block|{
+return|return
+name|nullptr
+return|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|size_t
@@ -817,66 +840,47 @@ operator|++
 name|index
 control|)
 block|{
+name|auto
 name|var_sp
-operator|=
+init|=
 name|GetVariableAtIndex
 argument_list|(
 name|index
 argument_list|)
-expr_stmt|;
-specifier|const
-name|char
-modifier|*
-name|var_name_cstr
-init|=
+decl_stmt|;
+name|llvm
+operator|::
+name|StringRef
+name|var_name_str
+operator|=
 name|var_sp
 operator|->
 name|GetName
 argument_list|()
 operator|.
-name|GetCString
+name|GetStringRef
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-operator|!
-name|var_name_cstr
-operator|||
-operator|!
-name|name
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|::
-name|strcmp
-argument_list|(
-name|var_name_cstr
-argument_list|,
-name|name
-argument_list|)
+name|var_name_str
 operator|==
-literal|0
+name|name
 condition|)
 return|return
 name|var_sp
 return|;
 block|}
-name|var_sp
-operator|.
-name|reset
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+end_for
 
-begin_expr_stmt
-unit|}         return
-name|var_sp
-expr_stmt|;
-end_expr_stmt
+begin_return
+return|return
+name|nullptr
+return|;
+end_return
 
 begin_macro
-unit|}          void
+unit|}    void
 name|RemoveVariable
 argument_list|(
 argument|lldb::ExpressionVariableSP var_sp
@@ -1019,7 +1023,7 @@ name|m_kind
 argument_list|(
 argument|kind
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|PersistentExpressionState
@@ -1152,7 +1156,7 @@ comment|///< The addresses of the symbols in m_execution_units.
 end_comment
 
 begin_comment
-unit|};      }
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

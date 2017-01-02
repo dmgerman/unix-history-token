@@ -51,12 +51,6 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -68,13 +62,31 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"Plugins/Platform/POSIX/PlatformPOSIX.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Plugins/Platform/POSIX/PlatformPOSIX.h"
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tuple>
 end_include
 
 begin_decl_stmt
@@ -134,7 +146,7 @@ argument|lldb_private::Target *target
 argument_list|,
 argument|lldb_private::Module&module
 argument_list|,
-argument|lldb_private::Stream* feedback_stream
+argument|lldb_private::Stream *feedback_stream
 argument_list|)
 name|override
 block|;
@@ -145,7 +157,7 @@ name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
 argument_list|,
-argument|lldb_private::Process* process
+argument|lldb_private::Process *process
 argument_list|,
 argument|lldb::ModuleSP&module_sp
 argument_list|,
@@ -279,6 +291,26 @@ argument|lldb_private::ProcessLaunchInfo&launch_info
 argument_list|)
 name|override
 block|;
+specifier|static
+name|std
+operator|::
+name|tuple
+operator|<
+name|uint32_t
+block|,
+name|uint32_t
+block|,
+name|uint32_t
+block|,
+name|llvm
+operator|::
+name|StringRef
+operator|>
+name|ParseVersionBuildDir
+argument_list|(
+argument|llvm::StringRef str
+argument_list|)
+block|;
 name|protected
 operator|:
 name|void
@@ -337,7 +369,7 @@ name|bool
 operator|*
 name|did_create_ptr
 argument_list|)
-block|;      enum
+block|;    enum
 name|class
 name|SDKType
 block|{
@@ -348,7 +380,7 @@ block|,
 name|iPhoneSimulator
 block|,
 name|iPhoneOS
-block|,     }
+block|,   }
 block|;
 specifier|static
 name|bool
@@ -371,7 +403,7 @@ argument|SDKType desired_type
 argument_list|,
 argument|const lldb_private::FileSpec&sdk_path
 argument_list|)
-block|;          struct
+block|;    struct
 name|SDKEnumeratorInfo
 block|{
 name|lldb_private
@@ -381,7 +413,7 @@ name|found_path
 block|;
 name|SDKType
 name|sdk_type
-block|;     }
+block|;   }
 block|;
 specifier|static
 name|lldb_private

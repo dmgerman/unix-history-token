@@ -155,7 +155,7 @@ name|m_flavor
 argument_list|(
 argument|flavor
 argument_list|)
-block|{     }
+block|{}
 specifier|const
 name|char
 operator|*

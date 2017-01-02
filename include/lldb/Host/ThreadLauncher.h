@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ThreadLauncher.h -----------------------------------------*- C++ -*-===//
+comment|//===-- ThreadLauncher.h -----------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -105,7 +109,10 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|// Minimum stack size in bytes, set stack size to zero for default platform thread stack size
+comment|// Minimum stack size in bytes,
+comment|// set stack size to zero for
+comment|// default platform thread stack
+comment|// size
 struct|struct
 name|HostThreadCreateInfo
 block|{
@@ -151,7 +158,7 @@ name|thread_arg
 argument_list|(
 argument|arg
 argument_list|)
-block|{         }
+block|{}
 block|}
 struct|;
 block|}

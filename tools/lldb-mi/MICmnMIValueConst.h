@@ -48,7 +48,11 @@ file|"MICmnMIValue.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -100,7 +104,11 @@ comment|//          tuple ==>  "{}" | "{" result ( "," result )* "}"
 end_comment
 
 begin_comment
-comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( "," result )* "]"
+comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( ","
+end_comment
+
+begin_comment
+comment|//          result )* "]"
 end_comment
 
 begin_comment
@@ -116,7 +124,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|//          The text formed in *this Result class is stripped of any '\n' characters.
+comment|//          The text formed in *this Result class is stripped of any '\n'
+end_comment
+
+begin_comment
+comment|//          characters.
 end_comment
 
 begin_comment
@@ -182,7 +194,8 @@ block|;
 name|bool
 name|m_bNoQuotes
 block|;
-comment|// True = return string not surrounded with quotes, false = use quotes
+comment|// True = return string not surrounded with quotes, false =
+comment|// use quotes
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ThreadPlanTracer.h --------------------------------------------*- C++ -*-===//
+comment|//===-- ThreadPlanTracer.h --------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -62,12 +66,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/RegisterValue.h"
 end_include
 
@@ -81,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Thread.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -143,12 +147,12 @@ name|virtual
 name|void
 name|TracingStarted
 parameter_list|()
-block|{     }
+block|{}
 name|virtual
 name|void
 name|TracingEnded
 parameter_list|()
-block|{     }
+block|{}
 name|bool
 name|EnableTracing
 parameter_list|(

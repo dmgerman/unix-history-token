@@ -46,19 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/windows/windows.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<DbgHelp.h>
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dbghelp.h>
 end_include
 
 begin_include
@@ -228,7 +228,7 @@ name|m_next_exception
 operator|.
 name|reset
 argument_list|(
-argument|new ExceptionRecord(*reinterpret_cast<const MINIDUMP_EXCEPTION *>(record.ExceptionRecord),                                                        thread_id)
+argument|new ExceptionRecord(           *reinterpret_cast<const MINIDUMP_EXCEPTION *>(record.ExceptionRecord),           thread_id)
 argument_list|)
 expr_stmt|;
 block|}

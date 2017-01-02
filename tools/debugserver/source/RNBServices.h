@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|"RNBDefs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"RNBDefs.h"
+file|<string>
 end_include
 
 begin_define

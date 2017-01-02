@@ -134,12 +134,12 @@ argument_list|)
 block|,
 name|m_saved_register_states
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|DNBArchImplX86_64
 argument_list|()
-block|{     }
+block|{}
 specifier|static
 name|void
 name|Initialize
@@ -1204,7 +1204,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Is transaction of DBG state change: Pedning (0), Done (1), or Rolled Back (2)?
+comment|// Is transaction of DBG state change: Pedning
+end_comment
+
+begin_comment
+comment|// (0), Done (1), or Rolled Back (2)?
 end_comment
 
 begin_typedef

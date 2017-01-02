@@ -141,7 +141,7 @@ name|size
 argument_list|(
 literal|0
 argument_list|)
-block|{         }
+block|{}
 name|Range
 argument_list|(
 argument|BaseType b
@@ -158,7 +158,7 @@ name|size
 argument_list|(
 argument|s
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|Clear
 argument_list|(
@@ -173,7 +173,7 @@ block|;
 name|size
 operator|=
 literal|0
-block|;         }
+block|;   }
 comment|// Set the start value for the range, and keep the same size
 name|BaseType
 name|GetRangeBase
@@ -1293,7 +1293,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Clients must ensure that "i" is a valid index prior to calling this function
+comment|// Clients must ensure that "i" is a valid index prior to calling this
+end_comment
+
+begin_comment
+comment|// function
 end_comment
 
 begin_decl_stmt
@@ -2539,7 +2543,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Clients must ensure that "i" is a valid index prior to calling this function
+comment|// Clients must ensure that "i" is a valid index prior to calling this
+end_comment
+
+begin_comment
+comment|// function
 end_comment
 
 begin_decl_stmt
@@ -3136,7 +3144,7 @@ operator|)
 operator|,
 name|data
 argument_list|()
-block|{         }
+block|{}
 name|RangeData
 argument_list|(
 argument|B base
@@ -3158,7 +3166,7 @@ operator|)
 operator|,
 name|data
 argument_list|()
-block|{         }
+block|{}
 name|RangeData
 argument_list|(
 argument|B base
@@ -3184,7 +3192,7 @@ name|data
 argument_list|(
 argument|d
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|operator
 operator|<
@@ -3252,7 +3260,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}                  bool
+unit|}    bool
 name|operator
 operator|==
 operator|(
@@ -3805,7 +3813,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Clients must ensure that "i" is a valid index prior to calling this function
+comment|// Clients must ensure that "i" is a valid index prior to calling this
+end_comment
+
+begin_comment
+comment|// function
 end_comment
 
 begin_decl_stmt
@@ -5170,7 +5182,11 @@ block|}
 end_function
 
 begin_comment
-comment|// Clients must ensure that "i" is a valid index prior to calling this function
+comment|// Clients must ensure that "i" is a valid index prior to calling this
+end_comment
+
+begin_comment
+comment|// function
 end_comment
 
 begin_decl_stmt
@@ -5918,6 +5934,42 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// This method will return the entry that contains the given address, or the
+end_comment
+
+begin_comment
+comment|// entry following that address.  If you give it an address of 0 and the first
+end_comment
+
+begin_comment
+comment|// entry starts at address 0x100, you will get the entry at 0x100.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// For most uses, FindEntryThatContains is the correct one to use, this is a
+end_comment
+
+begin_comment
+comment|// less commonly needed behavior.  It was added for core file memory regions,
+end_comment
+
+begin_comment
+comment|// where we want to present a gap in the memory regions as a distinct region,
+end_comment
+
+begin_comment
+comment|// so we need to know the start address of the next memory section that
+end_comment
+
+begin_comment
+comment|// exists.
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|Entry
@@ -5953,6 +6005,17 @@ name|typename
 name|Collection
 operator|::
 name|const_iterator
+name|begin
+operator|=
+name|m_entries
+operator|.
+name|begin
+argument_list|()
+expr_stmt|;
+name|typename
+name|Collection
+operator|::
+name|const_iterator
 name|end
 operator|=
 name|m_entries
@@ -5976,8 +6039,28 @@ argument|end
 argument_list|,
 argument|addr
 argument_list|,
-argument|[](const Entry&lhs, B rhs_base) -> bool {                         return lhs.GetRangeEnd()<= rhs_base;                     }
+argument|[](const Entry&lhs, B rhs_base) -> bool {                              return lhs.GetRangeEnd()<= rhs_base;                            }
 argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|pos
+operator|!=
+name|begin
+operator|&&
+name|pos
+index|[
+operator|-
+literal|1
+index|]
+operator|.
+name|Contains
+argument_list|(
+name|addr
+argument_list|)
+condition|)
+operator|--
+name|pos
 expr_stmt|;
 if|if
 condition|(
@@ -6129,7 +6212,7 @@ argument_list|()
 operator|,
 name|data
 argument_list|()
-block|{         }
+block|{}
 name|AddressData
 argument_list|(
 argument|B a
@@ -6146,7 +6229,7 @@ name|data
 argument_list|(
 argument|d
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|operator
 operator|<
@@ -6192,7 +6275,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}                  bool
+unit|}    bool
 name|operator
 operator|==
 operator|(
@@ -6532,7 +6615,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Clients must ensure that "i" is a valid index prior to calling this function
+comment|// Clients must ensure that "i" is a valid index prior to calling this
+end_comment
+
+begin_comment
+comment|// function
 end_comment
 
 begin_decl_stmt

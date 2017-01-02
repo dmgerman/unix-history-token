@@ -179,8 +179,10 @@ name|exe_ctx
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Given a string returned by GetText, find the beginning and end of the body passed to CreateWrapped.
-comment|// Return true if the bounds could be found.  This will also work on text with FixItHints applied.
+comment|// Given a string returned by GetText, find the beginning and end of the body
+comment|// passed to CreateWrapped.
+comment|// Return true if the bounds could be found.  This will also work on text with
+comment|// FixItHints applied.
 specifier|static
 name|bool
 name|GetOriginalBodyBounds
@@ -236,7 +238,7 @@ name|m_wrap
 argument_list|(
 argument|wrap
 argument_list|)
-block|{     }
+block|{}
 name|std
 operator|::
 name|string

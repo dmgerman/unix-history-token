@@ -43,13 +43,17 @@ directive|define
 name|liblldb_AdbClient_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Error.h"
+end_include
 
-begin_comment
-comment|// C++ Includes
-end_comment
+begin_include
+include|#
+directive|include
+file|<chrono>
+end_include
 
 begin_include
 include|#
@@ -81,20 +85,6 @@ directive|include
 file|<vector>
 end_include
 
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Error.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -116,7 +106,7 @@ block|{
 name|UnixSocketNamespaceAbstract
 block|,
 name|UnixSocketNamespaceFileSystem
-block|,     }
+block|,   }
 enum|;
 name|using
 name|DeviceIDList
@@ -411,21 +401,21 @@ parameter_list|)
 function_decl|;
 name|Error
 name|SetPortForwarding
-parameter_list|(
+argument_list|(
 specifier|const
 name|uint16_t
 name|local_port
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|remote_socket_name
-parameter_list|,
+argument_list|,
 specifier|const
 name|UnixSocketNamespace
 name|socket_namespace
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|Error
 name|DeletePortForwarding
 parameter_list|(
@@ -442,8 +432,12 @@ name|char
 operator|*
 name|command
 argument_list|,
-name|uint32_t
-name|timeout_ms
+name|std
+operator|::
+name|chrono
+operator|::
+name|milliseconds
+name|timeout
 argument_list|,
 name|std
 operator|::
@@ -454,21 +448,25 @@ argument_list|)
 decl_stmt|;
 name|Error
 name|ShellToFile
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|command
-parameter_list|,
-name|uint32_t
-name|timeout_ms
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|chrono
+operator|::
+name|milliseconds
+name|timeout
+argument_list|,
 specifier|const
 name|FileSpec
-modifier|&
+operator|&
 name|output_file_spec
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -556,8 +554,12 @@ operator|>
 operator|&
 name|message
 argument_list|,
-name|uint32_t
-name|timeout_ms
+name|std
+operator|::
+name|chrono
+operator|::
+name|milliseconds
+name|timeout
 argument_list|)
 decl_stmt|;
 name|Error
@@ -589,8 +591,12 @@ name|char
 operator|*
 name|command
 argument_list|,
-name|uint32_t
-name|timeout_ms
+name|std
+operator|::
+name|chrono
+operator|::
+name|milliseconds
+name|timeout
 argument_list|,
 name|std
 operator|::

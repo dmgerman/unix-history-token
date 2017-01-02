@@ -115,7 +115,7 @@ name|m_should_close_fd
 argument_list|(
 argument|should_close
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|IOObject
@@ -191,7 +191,8 @@ decl_stmt|;
 name|bool
 name|m_should_close_fd
 decl_stmt|;
-comment|// True if this class should close the file descriptor when it goes away.
+comment|// True if this class should close the file descriptor
+comment|// when it goes away.
 name|private
 label|:
 name|DISALLOW_COPY_AND_ASSIGN

@@ -74,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-forward.h"
+file|"GDBRemoteCommunication.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"GDBRemoteCommunication.h"
+file|"lldb/lldb-private-forward.h"
 end_include
 
 begin_decl_stmt
@@ -177,13 +177,25 @@ block|;
 name|PacketResult
 name|GetPacketAndSendResponse
 argument_list|(
-argument|uint32_t timeout_usec
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+name|timeout
 argument_list|,
-argument|Error&error
+name|Error
+operator|&
+name|error
 argument_list|,
-argument|bool&interrupt
+name|bool
+operator|&
+name|interrupt
 argument_list|,
-argument|bool&quit
+name|bool
+operator|&
+name|quit
 argument_list|)
 block|;
 comment|// After connecting, do a little handshake with the client to make sure
@@ -209,7 +221,8 @@ block|;
 name|bool
 name|m_exit_now
 block|;
-comment|// use in asynchronous handling to indicate process should exit.
+comment|// use in asynchronous handling to indicate process should
+comment|// exit.
 name|PacketResult
 name|SendUnimplementedResponse
 argument_list|(

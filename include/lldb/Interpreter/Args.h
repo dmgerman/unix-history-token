@@ -66,18 +66,24 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<utility>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<vector>
 end_include
 
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
 
 begin_include
 include|#
@@ -92,18 +98,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Error.h"
 end_include
 
@@ -113,6 +107,18 @@ directive|include
 file|"lldb/Host/OptionParser.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -120,36 +126,22 @@ block|{
 typedef|typedef
 name|std
 operator|::
-name|pair
+name|vector
 operator|<
+name|std
+operator|::
+name|tuple
+operator|<
+name|std
+operator|::
+name|string
+operator|,
 name|int
 operator|,
 name|std
 operator|::
 name|string
-operator|>
-name|OptionArgValue
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|OptionArgValue
-operator|>
-name|OptionArgPair
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|OptionArgPair
-operator|>
+operator|>>
 name|OptionArgVector
 expr_stmt|;
 typedef|typedef
@@ -205,7 +197,7 @@ name|opt_arg_pos
 argument_list|(
 argument|arg_pos
 argument_list|)
-block|{     }
+block|{}
 name|int
 name|opt_defs_index
 expr_stmt|;
@@ -242,6 +234,74 @@ name|Args
 block|{
 name|public
 label|:
+struct|struct
+name|ArgEntry
+block|{
+name|private
+label|:
+name|friend
+name|class
+name|Args
+decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|char
+index|[]
+operator|>
+name|ptr
+expr_stmt|;
+name|char
+modifier|*
+name|data
+parameter_list|()
+block|{
+return|return
+name|ptr
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+name|public
+label|:
+name|ArgEntry
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|ArgEntry
+argument_list|(
+argument|llvm::StringRef str
+argument_list|,
+argument|char quote
+argument_list|)
+empty_stmt|;
+name|llvm
+operator|::
+name|StringRef
+name|ref
+expr_stmt|;
+name|char
+name|quote
+decl_stmt|;
+specifier|const
+name|char
+operator|*
+name|c_str
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ptr
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+block|}
+struct|;
 comment|//------------------------------------------------------------------
 comment|/// Construct with an option command string.
 comment|///
@@ -264,7 +324,6 @@ operator|&
 name|rhs
 argument_list|)
 expr_stmt|;
-specifier|const
 name|Args
 modifier|&
 name|operator
@@ -370,6 +429,18 @@ name|GetArgumentCount
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetArgumentCount
+argument_list|()
+operator|==
+literal|0
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|/// Gets the NULL terminated C string argument pointer for the
 comment|/// argument at index \a idx.
@@ -388,6 +459,20 @@ name|idx
 argument_list|)
 decl|const
 decl_stmt|;
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|ArgEntry
+operator|>
+name|entries
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_entries
+return|;
+block|}
 name|char
 name|GetArgumentQuoteCharAtIndex
 argument_list|(
@@ -396,6 +481,72 @@ name|idx
 argument_list|)
 decl|const
 decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|ArgEntry
+operator|>
+operator|::
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_entries
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|std
+operator|::
+name|vector
+operator|<
+name|ArgEntry
+operator|>
+operator|::
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_entries
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|size_t
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetArgumentCount
+argument_list|()
+return|;
+block|}
+specifier|const
+name|ArgEntry
+modifier|&
+name|operator
+index|[]
+argument_list|(
+name|size_t
+name|n
+argument_list|)
+decl|const
+block|{
+return|return
+name|m_entries
+index|[
+name|n
+index|]
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|/// Gets the argument vector.
 comment|///
@@ -446,26 +597,21 @@ comment|///     The new argument as a NULL terminated C string.
 comment|///
 comment|/// @param[in] quote_char
 comment|///     If the argument was originally quoted, put in the quote char here.
-comment|///
-comment|/// @return
-comment|///     The NULL terminated C string of the copy of \a arg_cstr.
 comment|//------------------------------------------------------------------
-specifier|const
-name|char
-modifier|*
+name|void
 name|AppendArgument
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|arg_cstr
-parameter_list|,
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|arg_str
+argument_list|,
 name|char
 name|quote_char
-init|=
+operator|=
 literal|'\0'
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|AppendArguments
 parameter_list|(
@@ -500,25 +646,23 @@ comment|///
 comment|/// @return
 comment|///     The NULL terminated C string of the copy of \a arg_cstr.
 comment|//------------------------------------------------------------------
-specifier|const
-name|char
-modifier|*
+name|void
 name|InsertArgumentAtIndex
-parameter_list|(
+argument_list|(
 name|size_t
 name|idx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|arg_cstr
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|arg_str
+argument_list|,
 name|char
 name|quote_char
-init|=
+operator|=
 literal|'\0'
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Replaces the argument value at index \a idx to \a arg_cstr
 comment|/// if \a idx is a valid argument index.
@@ -531,30 +675,24 @@ comment|///     The new argument as a NULL terminated C string.
 comment|///
 comment|/// @param[in] quote_char
 comment|///     If the argument was originally quoted, put in the quote char here.
-comment|///
-comment|/// @return
-comment|///     The NULL terminated C string of the copy of \a arg_cstr if
-comment|///     \a idx was a valid index, NULL otherwise.
 comment|//------------------------------------------------------------------
-specifier|const
-name|char
-modifier|*
+name|void
 name|ReplaceArgumentAtIndex
-parameter_list|(
+argument_list|(
 name|size_t
 name|idx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|arg_cstr
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|arg_str
+argument_list|,
 name|char
 name|quote_char
-init|=
+operator|=
 literal|'\0'
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Deletes the argument value at index
 comment|/// if \a idx is a valid argument index.
@@ -628,26 +766,21 @@ comment|///     The argument to push on the front of the argument stack.
 comment|///
 comment|/// @param[in] quote_char
 comment|///     If the argument was originally quoted, put in the quote char here.
-comment|///
-comment|/// @return
-comment|///     A pointer to the copy of \a arg_cstr that was made.
 comment|//------------------------------------------------------------------
-specifier|const
-name|char
-modifier|*
+name|void
 name|Unshift
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|arg_cstr
-parameter_list|,
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|arg_str
+argument_list|,
 name|char
 name|quote_char
-init|=
+operator|=
 literal|'\0'
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Parse the arguments in the contained arguments.
 comment|///
@@ -656,27 +789,39 @@ comment|/// will be removed from the argument vector. The arguments that
 comment|/// get processed start at the second argument. The first argument
 comment|/// is assumed to be the command and will not be touched.
 comment|///
+comment|/// param[in] platform_sp
+comment|///   The platform used for option validation.  This is necessary
+comment|///   because an empty execution_context is not enough to get us
+comment|///   to a reasonable platform.  If the platform isn't given,
+comment|///   we'll try to get it from the execution context.  If we can't
+comment|///   get it from the execution context, we'll skip validation.
+comment|///
+comment|/// param[in] require_validation
+comment|///   When true, it will fail option parsing if validation could
+comment|///   not occur due to not having a platform.
+comment|///
 comment|/// @see class Options
 comment|//------------------------------------------------------------------
 name|Error
 name|ParseOptions
-parameter_list|(
+argument_list|(
 name|Options
-modifier|&
+operator|&
 name|options
-parameter_list|)
-function_decl|;
-name|size_t
-name|FindArgumentIndexForOption
-parameter_list|(
-name|Option
-modifier|*
-name|long_options
-parameter_list|,
-name|int
-name|long_options_index
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ExecutionContext
+operator|*
+name|execution_context
+argument_list|,
+name|lldb
+operator|::
+name|PlatformSP
+name|platform_sp
+argument_list|,
+name|bool
+name|require_validation
+argument_list|)
+decl_stmt|;
 name|bool
 name|IsPositionalArgument
 parameter_list|(
@@ -686,30 +831,23 @@ modifier|*
 name|arg
 parameter_list|)
 function_decl|;
-comment|// The following works almost identically to ParseOptions, except that no option is required to have arguments,
-comment|// and it builds up the option_arg_vector as it parses the options.
-name|void
-name|ParseAliasOptions
-argument_list|(
-name|Options
-operator|&
-name|options
-argument_list|,
-name|CommandReturnObject
-operator|&
-name|result
-argument_list|,
-name|OptionArgVector
-operator|*
-name|option_arg_vector
-argument_list|,
+comment|// The following works almost identically to ParseOptions, except that no
+comment|// option is required to have arguments, and it builds up the
+comment|// option_arg_vector as it parses the options.
 name|std
 operator|::
 name|string
-operator|&
-name|raw_input_line
+name|ParseAliasOptions
+argument_list|(
+argument|Options&options
+argument_list|,
+argument|CommandReturnObject&result
+argument_list|,
+argument|OptionArgVector *option_arg_vector
+argument_list|,
+argument|llvm::StringRef raw_input_line
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|void
 name|ParseArgsForCompletion
 parameter_list|(
@@ -899,7 +1037,7 @@ name|StringToAddress
 argument_list|(
 argument|const ExecutionContext *exe_ctx
 argument_list|,
-argument|const char *s
+argument|llvm::StringRef s
 argument_list|,
 argument|lldb::addr_t fail_value
 argument_list|,
@@ -909,71 +1047,72 @@ expr_stmt|;
 specifier|static
 name|bool
 name|StringToBoolean
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|s
-parameter_list|,
+argument_list|,
 name|bool
 name|fail_value
-parameter_list|,
+argument_list|,
 name|bool
-modifier|*
+operator|*
 name|success_ptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|char
 name|StringToChar
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|s
-parameter_list|,
+argument_list|,
 name|char
 name|fail_value
-parameter_list|,
+argument_list|,
 name|bool
-modifier|*
+operator|*
 name|success_ptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|int64_t
 name|StringToOptionEnum
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|s
-parameter_list|,
+argument_list|,
 name|OptionEnumValueElement
-modifier|*
+operator|*
 name|enum_values
-parameter_list|,
+argument_list|,
 name|int32_t
 name|fail_value
-parameter_list|,
+argument_list|,
 name|Error
-modifier|&
+operator|&
 name|error
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|lldb
 operator|::
 name|ScriptLanguage
 name|StringToScriptLanguage
 argument_list|(
-argument|const char *s
+argument|llvm::StringRef s
 argument_list|,
 argument|lldb::ScriptLanguage fail_value
 argument_list|,
 argument|bool *success_ptr
 argument_list|)
 expr_stmt|;
+comment|// TODO: Use StringRef
 specifier|static
 name|Error
 name|StringToFormat
@@ -994,14 +1133,16 @@ operator|*
 name|byte_size_ptr
 argument_list|)
 decl_stmt|;
-comment|// If non-NULL, then a byte size can precede the format character
+comment|// If non-NULL, then a
+comment|// byte size can precede
+comment|// the format character
 specifier|static
 name|lldb
 operator|::
 name|Encoding
 name|StringToEncoding
 argument_list|(
-argument|const char *s
+argument|llvm::StringRef s
 argument_list|,
 argument|lldb::Encoding fail_value = lldb::eEncodingInvalid
 argument_list|)
@@ -1009,37 +1150,35 @@ expr_stmt|;
 specifier|static
 name|uint32_t
 name|StringToGenericRegister
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|s
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|bool
 name|StringToVersion
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|,
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|string
+argument_list|,
 name|uint32_t
-modifier|&
+operator|&
 name|major
-parameter_list|,
+argument_list|,
 name|uint32_t
-modifier|&
+operator|&
 name|minor
-parameter_list|,
+argument_list|,
 name|uint32_t
-modifier|&
+operator|&
 name|update
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 specifier|const
 name|char
@@ -1113,24 +1252,33 @@ operator|::
 name|string
 name|EscapeLLDBCommandArgument
 argument_list|(
-argument|const std::string& arg
+argument|const std::string&arg
 argument_list|,
 argument|char quote_char
 argument_list|)
 expr_stmt|;
-comment|// This one isn't really relevant to Arguments per se, but we're using the Args as a
-comment|// general strings container, so...
+comment|//------------------------------------------------------------------
+comment|/// Add or replace an environment variable with the given value.
+comment|///
+comment|/// This command adds the environment variable if it is not already
+comment|/// present using the given value.  If the environment variable is
+comment|/// already in the list, it replaces the first such occurrence
+comment|/// with the new value.
+comment|//------------------------------------------------------------------
 name|void
-name|LongestCommonPrefix
+name|AddOrReplaceEnvironmentVariable
 argument_list|(
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
-name|common_prefix
+name|StringRef
+name|env_var_name
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|new_value
 argument_list|)
 decl_stmt|;
-comment|//------------------------------------------------------------------
 comment|/// Return whether a given environment variable exists.
 comment|///
 comment|/// This command treats Args like a list of environment variables,
@@ -1140,6 +1288,11 @@ comment|///
 comment|/// @param[in] env_var_name
 comment|///     Specifies the name of the environment variable to check.
 comment|///
+comment|/// @param[out] argument_index
+comment|///     If non-null, then when the environment variable is found,
+comment|///     the index of the argument position will be returned in
+comment|///     the size_t pointed to by this argument.
+comment|///
 comment|/// @return
 comment|///     true if the specified env var name exists in the list in
 comment|///     either of the above-mentioned formats; otherwise, false.
@@ -1147,75 +1300,54 @@ comment|//------------------------------------------------------------------
 name|bool
 name|ContainsEnvironmentVariable
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|env_var_name
+argument_list|,
+name|size_t
+operator|*
+name|argument_index
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-name|protected
+name|private
 label|:
-comment|//------------------------------------------------------------------
-comment|// Classes that inherit from Args can see and modify these
-comment|//------------------------------------------------------------------
-typedef|typedef
-name|std
-operator|::
-name|list
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|arg_sstr_collection
-expr_stmt|;
-typedef|typedef
+name|size_t
+name|FindArgumentIndexForOption
+argument_list|(
+name|Option
+operator|*
+name|long_options
+argument_list|,
+name|int
+name|long_options_index
+argument_list|)
+decl|const
+decl_stmt|;
 name|std
 operator|::
 name|vector
 operator|<
-specifier|const
+name|ArgEntry
+operator|>
+name|m_entries
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
 name|char
 operator|*
 operator|>
-name|arg_cstr_collection
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|char
-operator|>
-name|arg_quote_char_collection
-expr_stmt|;
-name|arg_sstr_collection
-name|m_args
-decl_stmt|;
-name|arg_cstr_collection
 name|m_argv
-decl_stmt|;
-comment|///< The current argument vector.
-name|arg_quote_char_collection
-name|m_args_quote_char
-decl_stmt|;
+expr_stmt|;
 name|void
 name|UpdateArgsAfterOptionParsing
 parameter_list|()
 function_decl|;
-name|void
-name|UpdateArgvFromArgs
-parameter_list|()
-function_decl|;
-name|llvm
-operator|::
-name|StringRef
-name|ParseSingleArgument
-argument_list|(
-argument|llvm::StringRef command
-argument_list|)
-expr_stmt|;
 block|}
 empty_stmt|;
 block|}

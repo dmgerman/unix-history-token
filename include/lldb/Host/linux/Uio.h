@@ -50,7 +50,11 @@ file|<sys/uio.h>
 end_include
 
 begin_comment
-comment|// We shall provide our own implementation of process_vm_readv if it is not present
+comment|// We shall provide our own implementation of process_vm_readv if it is not
+end_comment
+
+begin_comment
+comment|// present
 end_comment
 
 begin_ifndef

@@ -62,13 +62,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/FileSpecList.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/FileSpecList.h"
+file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -186,10 +192,13 @@ comment|//----------------------------------------------------------------------
 comment|/// General Outline:
 comment|/// Provides the callback and search depth for the SearchFilter search.
 comment|///
-comment|/// The search is done by cooperation between the search filter and the searcher.
+comment|/// The search is done by cooperation between the search filter and the
+comment|/// searcher.
 comment|/// The search filter does the heavy work of recursing through the SymbolContext
-comment|/// space of the target program's symbol space.  The Searcher specifies the depth
-comment|/// at which it wants its callback to be invoked.  Note that since the resolution
+comment|/// space of the target program's symbol space.  The Searcher specifies the
+comment|/// depth
+comment|/// at which it wants its callback to be invoked.  Note that since the
+comment|/// resolution
 comment|/// of the Searcher may be greater than that of the SearchFilter, before the
 comment|/// Searcher qualifies an address it should pass it to "AddressPasses."
 comment|/// The default implementation is "Everything Passes."
@@ -223,6 +232,13 @@ operator|&
 name|rhs
 argument_list|)
 expr_stmt|;
+name|SearchFilter
+argument_list|(
+argument|const lldb::TargetSP&target_sp
+argument_list|,
+argument|unsigned char filterType
+argument_list|)
+empty_stmt|;
 name|virtual
 operator|~
 name|SearchFilter
@@ -316,7 +332,8 @@ name|fileSpec
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Call this method with a CompileUnit to see if \a comp unit passes the filter.
+comment|/// Call this method with a CompileUnit to see if \a comp unit passes the
+comment|/// filter.
 comment|///
 comment|/// @param[in] compUnit
 comment|///    The CompileUnit to check against the filter.
@@ -376,7 +393,8 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// This determines which items are REQUIRED for the filter to pass.
 comment|/// For instance, if you are filtering by Compilation Unit, obviously
-comment|/// symbols that have no compilation unit can't pass  So return eSymbolContextCU
+comment|/// symbols that have no compilation unit can't pass  So return
+comment|/// eSymbolContextCU
 comment|/// and search callbacks can then short cut the search to avoid looking at
 comment|/// things that obviously won't pass.
 comment|///
@@ -428,9 +446,240 @@ operator|&
 name|breakpoint
 argument_list|)
 expr_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|SearchFilterSP
+name|CreateFromStructuredData
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|,
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|data_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+expr_stmt|;
+name|virtual
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
+block|{
+return|return
+name|StructuredData
+operator|::
+name|ObjectSP
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|GetSerializationKey
+parameter_list|()
+block|{
+return|return
+literal|"SearchFilter"
+return|;
+block|}
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|GetSerializationSubclassKey
+parameter_list|()
+block|{
+return|return
+literal|"Type"
+return|;
+block|}
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|GetSerializationSubclassOptionsKey
+parameter_list|()
+block|{
+return|return
+literal|"Options"
+return|;
+block|}
+enum|enum
+name|FilterTy
+block|{
+name|Unconstrained
+init|=
+literal|0
+block|,
+name|Exception
+block|,
+name|ByModule
+block|,
+name|ByModules
+block|,
+name|ByModulesAndCU
+block|,
+name|LastKnownFilterType
+init|=
+name|ByModulesAndCU
+block|,
+name|UnknownFilter
+block|}
+enum|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|g_ty_to_name
+index|[
+name|LastKnownFilterType
+operator|+
+literal|2
+index|]
+decl_stmt|;
+name|enum
+name|FilterTy
+name|GetFilterTy
+parameter_list|()
+block|{
+if|if
+condition|(
+name|SubclassID
+operator|>
+name|FilterTy
+operator|::
+name|LastKnownFilterType
+condition|)
+return|return
+name|FilterTy
+operator|::
+name|UnknownFilter
+return|;
+else|else
+return|return
+operator|(
+expr|enum
+name|FilterTy
+operator|)
+name|SubclassID
+return|;
+block|}
+specifier|const
+name|char
+modifier|*
+name|GetFilterName
+parameter_list|()
+block|{
+return|return
+name|FilterTyToName
+argument_list|(
+name|GetFilterTy
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|FilterTyToName
+parameter_list|(
+name|enum
+name|FilterTy
+parameter_list|)
+function_decl|;
+specifier|static
+name|FilterTy
+name|NameToFilterTy
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
 name|protected
 label|:
-comment|// These are utility functions to assist with the search iteration.  They are used by the
+comment|// Serialization of SearchFilter options:
+enum|enum
+name|OptionNames
+block|{
+name|ModList
+init|=
+literal|0
+block|,
+name|CUList
+block|,
+name|LanguageName
+block|,
+name|LastOptionName
+block|}
+enum|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|g_option_names
+index|[
+name|LastOptionName
+index|]
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|GetKey
+parameter_list|(
+name|enum
+name|OptionNames
+name|enum_value
+parameter_list|)
+block|{
+return|return
+name|g_option_names
+index|[
+name|enum_value
+index|]
+return|;
+block|}
+name|StructuredData
+operator|::
+name|DictionarySP
+name|WrapOptionsDict
+argument_list|(
+argument|StructuredData::DictionarySP options_dict_sp
+argument_list|)
+expr_stmt|;
+name|void
+name|SerializeFileSpecList
+argument_list|(
+name|StructuredData
+operator|::
+name|DictionarySP
+operator|&
+name|options_dict_sp
+argument_list|,
+name|OptionNames
+name|name
+argument_list|,
+name|FileSpecList
+operator|&
+name|file_list
+argument_list|)
+decl_stmt|;
+comment|// These are utility functions to assist with the search iteration.  They are
+comment|// used by the
 comment|// default Search method.
 name|Searcher
 operator|::
@@ -540,11 +789,19 @@ name|m_target_sp
 expr_stmt|;
 comment|// Every filter has to be associated with a target for
 comment|// now since you need a starting place for the search.
+name|private
+label|:
+name|unsigned
+name|char
+name|SubclassID
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------
-comment|/// @class SearchFilterForUnconstrainedSearches SearchFilter.h "lldb/Core/SearchFilter.h"
-comment|/// @brief This is a SearchFilter that searches through all modules.  It also consults the Target::ModuleIsExcludedForUnconstrainedSearches.
+comment|/// @class SearchFilterForUnconstrainedSearches SearchFilter.h
+comment|/// "lldb/Core/SearchFilter.h"
+comment|/// @brief This is a SearchFilter that searches through all modules.  It also
+comment|/// consults the Target::ModuleIsExcludedForUnconstrainedSearches.
 comment|//----------------------------------------------------------------------
 name|class
 name|SearchFilterForUnconstrainedSearches
@@ -567,6 +824,8 @@ operator|:
 name|SearchFilter
 argument_list|(
 argument|target_sp
+argument_list|,
+argument|FilterTy::Unconstrained
 argument_list|)
 block|{}
 operator|~
@@ -588,6 +847,35 @@ name|ModulePasses
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|)
+name|override
+block|;
+specifier|static
+name|lldb
+operator|::
+name|SearchFilterSP
+name|CreateFromStructuredData
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|,
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|data_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
 name|override
 block|;
 name|protected
@@ -725,6 +1013,35 @@ argument|Searcher&searcher
 argument_list|)
 name|override
 block|;
+specifier|static
+name|lldb
+operator|::
+name|SearchFilterSP
+name|CreateFromStructuredData
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|,
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|data_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
+name|override
+block|;
 name|protected
 operator|:
 name|lldb
@@ -773,6 +1090,15 @@ specifier|const
 name|FileSpecList
 operator|&
 name|module_list
+argument_list|)
+block|;
+name|SearchFilterByModuleList
+argument_list|(
+argument|const lldb::TargetSP&targetSP
+argument_list|,
+argument|const FileSpecList&module_list
+argument_list|,
+argument|enum FilterTy filter_ty
 argument_list|)
 block|;
 name|SearchFilterByModuleList
@@ -860,6 +1186,45 @@ argument_list|(
 argument|Searcher&searcher
 argument_list|)
 name|override
+block|;
+specifier|static
+name|lldb
+operator|::
+name|SearchFilterSP
+name|CreateFromStructuredData
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|,
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|data_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
+name|override
+block|;
+name|void
+name|SerializeUnwrapped
+argument_list|(
+name|StructuredData
+operator|::
+name|DictionarySP
+operator|&
+name|options_dict_sp
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -986,6 +1351,35 @@ name|Search
 argument_list|(
 argument|Searcher&searcher
 argument_list|)
+name|override
+block|;
+specifier|static
+name|lldb
+operator|::
+name|SearchFilterSP
+name|CreateFromStructuredData
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|,
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|data_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
 name|override
 block|;
 name|protected

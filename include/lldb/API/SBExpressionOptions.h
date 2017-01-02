@@ -178,8 +178,10 @@ name|GetOneThreadTimeoutInMicroSeconds
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// Set the timeout for running on one thread, 0 means use the default behavior.
-comment|// If you set this higher than the overall timeout, you'll get an error when you
+comment|// Set the timeout for running on one thread, 0 means use the default
+comment|// behavior.
+comment|// If you set this higher than the overall timeout, you'll get an error when
+comment|// you
 comment|// try to run the expression.
 name|void
 name|SetOneThreadTimeoutInMicroSeconds

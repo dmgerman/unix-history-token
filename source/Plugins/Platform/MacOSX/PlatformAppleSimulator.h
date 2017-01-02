@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -62,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"PlatformDarwin.h"
 end_include
 
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"PlatformiOSSimulatorCoreSimulatorSupport.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
@@ -137,7 +143,7 @@ operator|::
 name|Error
 name|ConnectRemote
 argument_list|(
-argument|lldb_private::Args& args
+argument|lldb_private::Args&args
 argument_list|)
 name|override
 block|;
@@ -165,6 +171,11 @@ name|override
 block|;
 name|protected
 operator|:
+name|std
+operator|::
+name|mutex
+name|m_core_sim_path_mutex
+block|;
 name|llvm
 operator|::
 name|Optional
@@ -215,7 +226,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformAppleSimulator
 argument_list|)
-block|;      }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

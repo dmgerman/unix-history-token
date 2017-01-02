@@ -77,12 +77,6 @@ directive|include
 file|"lldb/lldb-defines.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Condition.h"
-end_include
-
 begin_comment
 comment|//----------------------------------------------------------------------
 end_comment
@@ -149,14 +143,14 @@ name|m_lock
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|ProcessRunLocker
 argument_list|()
 block|{
 name|Unlock
 argument_list|()
-block|;         }
+block|; }
 comment|// Try to lock the read lock, but only do so if there are no writers.
 name|bool
 name|TryLock

@@ -62,13 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MacOSX/Genealogy.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MacOSX/ThreadInfo.h"
+file|"DNBDefs.h"
 end_include
 
 begin_include
@@ -80,7 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DNBDefs.h"
+file|"MacOSX/DarwinLog/DarwinLogEvent.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MacOSX/Genealogy.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MacOSX/ThreadInfo.h"
 end_include
 
 begin_include
@@ -112,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|CPU_TYPE_ARM64
-value|((cpu_type_t) 12 | 0x01000000)
+value|((cpu_type_t)12 | 0x01000000)
 end_define
 
 begin_endif
@@ -198,7 +204,8 @@ name|char
 modifier|*
 name|working_directory
 parameter_list|,
-comment|// NULL => don't change, non-NULL => set working directory for inferior to this
+comment|// NULL => don't change, non-NULL => set
+comment|// working directory for inferior to this
 specifier|const
 name|char
 modifier|*
@@ -654,6 +661,16 @@ argument_list|)
 name|DNB_EXPORT
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|DarwinLogEventVector
+name|DNBProcessGetAvailableDarwinLogEvents
+parameter_list|(
+name|nub_process_t
+name|pid
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//----------------------------------------------------------------------

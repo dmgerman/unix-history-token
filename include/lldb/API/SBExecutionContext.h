@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SBExecutionContext.h -----------------------------------------*- C++ -*-===//
+comment|//===-- SBExecutionContext.h -----------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -118,7 +122,9 @@ argument_list|(
 argument|lldb::SBThread thread
 argument_list|)
 empty_stmt|;
-comment|// can't be a const& because SBThread::get() isn't itself a const function
+comment|// can't be a const& because
+comment|// SBThread::get() isn't itself a
+comment|// const function
 name|SBExecutionContext
 argument_list|(
 specifier|const

@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -219,7 +225,7 @@ name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
 argument_list|,
-argument|lldb_private::Process* process
+argument|lldb_private::Process *process
 argument_list|,
 argument|lldb::ModuleSP&module_sp
 argument_list|,
@@ -277,6 +283,11 @@ return|;
 block|}
 name|protected
 operator|:
+name|std
+operator|::
+name|mutex
+name|m_sdk_dir_mutex
+block|;
 name|std
 operator|::
 name|string

@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/AddressRange.h"
 end_include
 
@@ -73,6 +67,12 @@ directive|include
 file|"lldb/Symbol/SymbolContextScope.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -85,8 +85,10 @@ name|SymbolContextScope
 block|{
 name|public
 operator|:
-comment|// ObjectFile readers can classify their symbol table entries and searches can be made
-comment|// on specific types where the symbol values will have drastically different meanings
+comment|// ObjectFile readers can classify their symbol table entries and searches can
+comment|// be made
+comment|// on specific types where the symbol values will have drastically different
+comment|// meanings
 comment|// and sorting requirements.
 name|Symbol
 argument_list|()
@@ -174,7 +176,7 @@ block|;
 name|bool
 name|Compare
 argument_list|(
-argument|const ConstString& name
+argument|const ConstString&name
 argument_list|,
 argument|lldb::SymbolType type
 argument_list|)
@@ -310,7 +312,8 @@ name|ValueIsAddress
 argument_list|()
 condition|)
 block|{
-comment|// This symbol's value is an address. Use Symbol::GetAddress() to get the address.
+comment|// This symbol's value is an address. Use Symbol::GetAddress() to get the
+comment|// address.
 return|return
 name|fail_value
 return|;
@@ -369,7 +372,8 @@ name|GetLanguage
 argument_list|()
 specifier|const
 block|{
-comment|// TODO: See if there is a way to determine the language for a symbol somehow, for now just return our best guess
+comment|// TODO: See if there is a way to determine the language for a symbol
+comment|// somehow, for now just return our best guess
 return|return
 name|m_mangled
 operator|.
@@ -386,7 +390,7 @@ block|{
 name|m_uid
 operator|=
 name|uid
-block|;     }
+block|; }
 name|Mangled
 operator|&
 name|GetMangled
@@ -478,7 +482,7 @@ operator|::
 name|SymbolType
 operator|)
 name|type
-block|;     }
+block|; }
 specifier|const
 name|char
 operator|*
@@ -504,7 +508,7 @@ block|{
 name|m_flags
 operator|=
 name|flags
-block|;     }
+block|; }
 name|void
 name|GetDescription
 argument_list|(
@@ -534,7 +538,7 @@ block|{
 name|m_is_synthetic
 operator|=
 name|b
-block|;     }
+block|; }
 name|bool
 name|GetSizeIsSynthesized
 argument_list|()
@@ -553,7 +557,7 @@ block|{
 name|m_size_is_synthesized
 operator|=
 name|b
-block|;     }
+block|; }
 name|bool
 name|IsDebug
 argument_list|()
@@ -572,7 +576,7 @@ block|{
 name|m_is_debug
 operator|=
 name|b
-block|;     }
+block|; }
 name|bool
 name|IsExternal
 argument_list|()
@@ -591,7 +595,7 @@ block|{
 name|m_is_external
 operator|=
 name|b
-block|;     }
+block|; }
 name|bool
 name|IsTrampoline
 argument_list|()
@@ -636,7 +640,7 @@ name|SetByteSize
 argument_list|(
 name|size
 argument_list|)
-block|;     }
+block|;   }
 name|bool
 name|GetSizeIsSibling
 argument_list|()
@@ -655,7 +659,7 @@ block|{
 name|m_size_is_sibling
 operator|=
 name|b
-block|;     }
+block|; }
 comment|// If m_type is "Code" or "Function" then this will return the prologue size
 comment|// in bytes, else it will return zero.
 name|uint32_t
@@ -680,7 +684,7 @@ block|{
 name|m_demangled_is_synthesized
 operator|=
 name|b
-block|;     }
+block|; }
 name|bool
 name|ContainsLinkerAnnotations
 argument_list|()
@@ -699,7 +703,7 @@ block|{
 name|m_contains_linker_annotations
 operator|=
 name|b
-block|;     }
+block|;   }
 comment|//------------------------------------------------------------------
 comment|/// @copydoc SymbolContextScope::CalculateSymbolContext(SymbolContext*)
 comment|///
@@ -770,8 +774,10 @@ specifier|const
 block|;
 name|protected
 operator|:
-comment|// This is the internal guts of ResolveReExportedSymbol, it assumes reexport_name is not null, and that module_spec
-comment|// is valid.  We track the modules we've already seen to make sure we don't get caught in a cycle.
+comment|// This is the internal guts of ResolveReExportedSymbol, it assumes
+comment|// reexport_name is not null, and that module_spec
+comment|// is valid.  We track the modules we've already seen to make sure we don't
+comment|// get caught in a cycle.
 name|Symbol
 operator|*
 name|ResolveReExportedSymbolInModuleSpec
@@ -799,17 +805,21 @@ name|m_type_data_resolved
 operator|:
 literal|1
 block|,
-comment|// True if the data in m_type_data has already been calculated
+comment|// True if the data in m_type_data has
+comment|// already been calculated
 name|m_is_synthetic
 operator|:
 literal|1
 block|,
-comment|// non-zero if this symbol is not actually in the symbol table, but synthesized from other info in the object file.
+comment|// non-zero if this symbol is not actually in the
+comment|// symbol table, but synthesized from other info in
+comment|// the object file.
 name|m_is_debug
 operator|:
 literal|1
 block|,
-comment|// non-zero if this symbol is debug information in a symbol
+comment|// non-zero if this symbol is debug information in a
+comment|// symbol
 name|m_is_external
 operator|:
 literal|1
@@ -819,12 +829,15 @@ name|m_size_is_sibling
 operator|:
 literal|1
 block|,
-comment|// m_size contains the index of this symbol's sibling
+comment|// m_size contains the index of this symbol's
+comment|// sibling
 name|m_size_is_synthesized
 operator|:
 literal|1
 block|,
-comment|// non-zero if this symbol's size was calculated using a delta between this symbol and the next
+comment|// non-zero if this symbol's size was
+comment|// calculated using a delta between this symbol
+comment|// and the next
 name|m_size_is_valid
 operator|:
 literal|1
@@ -833,12 +846,16 @@ name|m_demangled_is_synthesized
 operator|:
 literal|1
 block|,
-comment|// The demangled name was created should not be used for expressions or other lookups
+comment|// The demangled name was created should
+comment|// not be used for expressions or other
+comment|// lookups
 name|m_contains_linker_annotations
 operator|:
 literal|1
 block|,
-comment|// The symbol name contains linker annotations, which are optional when doing name lookups
+comment|// The symbol name contains linker
+comment|// annotations, which are optional when
+comment|// doing name lookups
 name|m_type
 operator|:
 literal|7
@@ -850,11 +867,14 @@ comment|// uniqued symbol name/mangled name pair
 name|AddressRange
 name|m_addr_range
 block|;
-comment|// Contains the value, or the section offset address when the value is an address in a section, and the size (if any)
+comment|// Contains the value, or the section offset
+comment|// address when the value is an address in a
+comment|// section, and the size (if any)
 name|uint32_t
 name|m_flags
 block|;
-comment|// A copy of the flags from the original symbol table, the ObjectFile plug-in can interpret these
+comment|// A copy of the flags from the original symbol table, the
+comment|// ObjectFile plug-in can interpret these
 block|}
 decl_stmt|;
 block|}

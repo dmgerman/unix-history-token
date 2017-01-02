@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- DynamicLoaderHexagon.h ----------------------------------*- C++ -*-===//
+comment|//===-- DynamicLoaderHexagonDYLD.h ------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -275,7 +275,8 @@ comment|/// Updates the load address of every allocatable section in @p module.
 comment|///
 comment|/// @param module The module to traverse.
 comment|///
-comment|/// @param link_map_addr The virtual address of the link map for the @p module.
+comment|/// @param link_map_addr The virtual address of the link map for the @p
+comment|/// module.
 comment|///
 comment|/// @param base_addr The virtual base address @p module is loaded at.
 name|void
@@ -354,7 +355,7 @@ name|lldb
 operator|::
 name|addr_t
 name|FindRendezvousBreakpointAddress
-argument_list|( )
+argument_list|()
 block|;
 name|private
 operator|:

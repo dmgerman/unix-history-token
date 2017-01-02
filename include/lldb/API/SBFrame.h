@@ -230,7 +230,8 @@ modifier|*
 name|GetFunctionName
 parameter_list|()
 function_decl|;
-comment|// Get an appropriate function name for this frame that is suitable for display to a user
+comment|// Get an appropriate function name for this frame that is suitable for
+comment|// display to a user
 specifier|const
 name|char
 modifier|*
@@ -406,7 +407,7 @@ argument|bool statics
 argument_list|,
 argument|bool in_scope_only
 argument_list|,
-argument|lldb::DynamicValueType  use_dynamic
+argument|lldb::DynamicValueType use_dynamic
 argument_list|)
 expr_stmt|;
 name|lldb

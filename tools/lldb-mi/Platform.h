@@ -49,12 +49,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<io.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<eh.h>
 end_include
 
@@ -67,38 +61,26 @@ end_include
 begin_include
 include|#
 directive|include
+file|<io.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/Host/windows/Windows.h>
+file|"lldb/Host/HostGetOpt.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lldb/Host/HostGetOpt.h>
+file|"lldb/Host/windows/windows.h"
 end_include
-
-begin_comment
-comment|// This is not used by MI
-end_comment
-
-begin_struct
-struct|struct
-name|timeval
-block|{
-name|long
-name|tv_sec
-decl_stmt|;
-name|long
-name|tv_usec
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct

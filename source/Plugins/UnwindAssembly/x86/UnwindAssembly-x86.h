@@ -58,7 +58,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm-c/Disassembler.h"
+file|"x86AssemblyInspectionEngine.h"
 end_include
 
 begin_comment
@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/UnwindAssembly.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/UnwindAssembly.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -96,45 +96,46 @@ block|;
 name|bool
 name|GetNonCallSiteUnwindPlanFromAssembly
 argument_list|(
-argument|lldb_private::AddressRange& func
+argument|lldb_private::AddressRange&func
 argument_list|,
-argument|lldb_private::Thread& thread
+argument|lldb_private::Thread&thread
 argument_list|,
-argument|lldb_private::UnwindPlan& unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
 name|override
 block|;
 name|bool
 name|AugmentUnwindPlanFromCallSite
 argument_list|(
-argument|lldb_private::AddressRange& func
+argument|lldb_private::AddressRange&func
 argument_list|,
-argument|lldb_private::Thread& thread
+argument|lldb_private::Thread&thread
 argument_list|,
-argument|lldb_private::UnwindPlan& unwind_plan
+argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
 name|override
 block|;
 name|bool
 name|GetFastUnwindPlan
 argument_list|(
-argument|lldb_private::AddressRange& func
+argument|lldb_private::AddressRange&func
 argument_list|,
-argument|lldb_private::Thread& thread
+argument|lldb_private::Thread&thread
 argument_list|,
 argument|lldb_private::UnwindPlan&unwind_plan
 argument_list|)
 name|override
 block|;
-comment|// thread may be NULL in which case we only use the Target (e.g. if this is called pre-process-launch).
+comment|// thread may be NULL in which case we only use the Target (e.g. if this is
+comment|// called pre-process-launch).
 name|bool
 name|FirstNonPrologueInsn
 argument_list|(
-argument|lldb_private::AddressRange& func
+argument|lldb_private::AddressRange&func
 argument_list|,
 argument|const lldb_private::ExecutionContext&exe_ctx
 argument_list|,
-argument|lldb_private::Address& first_non_prologue_insn
+argument|lldb_private::Address&first_non_prologue_insn
 argument_list|)
 name|override
 block|;
@@ -196,18 +197,24 @@ name|private
 operator|:
 name|UnwindAssembly_x86
 argument_list|(
-argument|const lldb_private::ArchSpec&arch
-argument_list|,
-argument|int cpu
+specifier|const
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch
 argument_list|)
-block|;
-name|int
-name|m_cpu
 block|;
 name|lldb_private
 operator|::
 name|ArchSpec
 name|m_arch
+block|;
+name|lldb_private
+operator|::
+name|x86AssemblyInspectionEngine
+operator|*
+name|m_assembly_inspection_engine
 block|; }
 decl_stmt|;
 end_decl_stmt

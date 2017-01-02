@@ -62,6 +62,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"Plugins/Process/Utility/ARMDefines.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/EmulateInstruction.h"
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/OptionValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Plugins/Process/Utility/ARMDefines.h"
 end_include
 
 begin_decl_stmt
@@ -119,7 +119,7 @@ name|m_ignore_conditions
 argument_list|(
 argument|false
 argument_list|)
-block|{     }
+block|{}
 specifier|static
 name|void
 name|Initialize
@@ -509,7 +509,8 @@ name|Z
 operator|:
 literal|1
 operator|,
-comment|// condition code flags â can also be accessed as PSTATE.[N,Z,C,V]
+comment|// condition code flags â can also be accessed as
+comment|// PSTATE.[N,Z,C,V]
 name|Q
 operator|:
 literal|1
@@ -581,7 +582,8 @@ name|SP
 operator|:
 literal|1
 expr_stmt|;
-comment|// AArch64 only - Stack Pointer selection (see StackPointerSelection enum)
+comment|// AArch64 only - Stack Pointer selection (see
+comment|// StackPointerSelection enum)
 block|}
 name|ProcState
 expr_stmt|;

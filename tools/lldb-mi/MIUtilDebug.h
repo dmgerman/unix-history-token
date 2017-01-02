@@ -68,7 +68,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -121,7 +125,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -198,7 +206,8 @@ specifier|static
 name|MIuint
 name|ms_fnDepthCnt
 decl_stmt|;
-comment|// Increment count as fn depth increases, decrement count as fn stack pops off
+comment|// Increment count as fn depth increases,
+comment|// decrement count as fn stack pops off
 block|}
 end_decl_stmt
 
@@ -207,11 +216,19 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Take the given text and send it to the server's Logger to output to the
+comment|//============================================================================
+end_comment
+
+begin_comment
+comment|// Details: Take the given text and send it to the server's Logger to output to
+end_comment
+
+begin_comment
+comment|// the
 end_comment
 
 begin_comment

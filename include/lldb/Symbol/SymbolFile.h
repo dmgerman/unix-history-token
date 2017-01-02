@@ -46,19 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/PluginInterface.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
@@ -76,7 +64,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Symbol/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -211,12 +211,12 @@ name|m_calculated_abilities
 argument_list|(
 argument|false
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|SymbolFile
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Get a mask of what this symbol file supports for the object file
 comment|/// that it was constructed with.
@@ -515,11 +515,11 @@ name|virtual
 name|uint32_t
 name|ResolveSymbolContext
 argument_list|(
-argument|const Address& so_addr
+argument|const Address&so_addr
 argument_list|,
 argument|uint32_t resolve_scope
 argument_list|,
-argument|SymbolContext& sc
+argument|SymbolContext&sc
 argument_list|)
 operator|=
 literal|0
@@ -528,7 +528,7 @@ name|virtual
 name|uint32_t
 name|ResolveSymbolContext
 argument_list|(
-argument|const FileSpec& file_spec
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t line
 argument_list|,
@@ -536,7 +536,7 @@ argument|bool check_inlines
 argument_list|,
 argument|uint32_t resolve_scope
 argument_list|,
-argument|SymbolContextList& sc_list
+argument|SymbolContextList&sc_list
 argument_list|)
 block|;
 name|virtual
@@ -551,20 +551,20 @@ argument|bool append
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
-argument|VariableList& variables
+argument|VariableList&variables
 argument_list|)
 block|;
 name|virtual
 name|uint32_t
 name|FindGlobalVariables
 argument_list|(
-argument|const RegularExpression& regex
+argument|const RegularExpression&regex
 argument_list|,
 argument|bool append
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
-argument|VariableList& variables
+argument|VariableList&variables
 argument_list|)
 block|;
 name|virtual
@@ -581,27 +581,27 @@ argument|bool include_inlines
 argument_list|,
 argument|bool append
 argument_list|,
-argument|SymbolContextList& sc_list
+argument|SymbolContextList&sc_list
 argument_list|)
 block|;
 name|virtual
 name|uint32_t
 name|FindFunctions
 argument_list|(
-argument|const RegularExpression& regex
+argument|const RegularExpression&regex
 argument_list|,
 argument|bool include_inlines
 argument_list|,
 argument|bool append
 argument_list|,
-argument|SymbolContextList& sc_list
+argument|SymbolContextList&sc_list
 argument_list|)
 block|;
 name|virtual
 name|uint32_t
 name|FindTypes
 argument_list|(
-argument|const SymbolContext& sc
+argument|const SymbolContext&sc
 argument_list|,
 argument|const ConstString&name
 argument_list|,
@@ -613,7 +613,7 @@ argument|uint32_t max_matches
 argument_list|,
 argument|llvm::DenseSet<lldb_private::SymbolFile *>&searched_symbol_files
 argument_list|,
-argument|TypeMap& types
+argument|TypeMap&types
 argument_list|)
 block|;
 name|virtual
@@ -624,7 +624,7 @@ argument|const std::vector<CompilerContext>&context
 argument_list|,
 argument|bool append
 argument_list|,
-argument|TypeMap& types
+argument|TypeMap&types
 argument_list|)
 block|;
 name|virtual
@@ -648,7 +648,9 @@ operator|&
 name|mangled_names
 argument_list|)
 block|;
-comment|//  virtual uint32_t        FindTypes (const SymbolContext& sc, const RegularExpression& regex, bool append, uint32_t max_matches, TypeList& types) = 0;
+comment|//  virtual uint32_t        FindTypes (const SymbolContext& sc, const
+comment|//  RegularExpression& regex, bool append, uint32_t max_matches, TypeList&
+comment|//  types) = 0;
 name|virtual
 name|TypeList
 operator|*
@@ -682,7 +684,7 @@ name|virtual
 name|CompilerDeclContext
 name|FindNamespace
 argument_list|(
-argument|const SymbolContext& sc
+argument|const SymbolContext&sc
 argument_list|,
 argument|const ConstString&name
 argument_list|,
@@ -722,7 +724,7 @@ name|virtual
 name|void
 name|SectionFileAddressesChanged
 argument_list|()
-block|{      }
+block|{}
 name|protected
 operator|:
 name|ObjectFile

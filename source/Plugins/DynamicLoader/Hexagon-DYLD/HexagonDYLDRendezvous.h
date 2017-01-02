@@ -176,7 +176,7 @@ name|ldbase
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 block|}
 struct|;
 name|public
@@ -412,7 +412,7 @@ block|,
 name|eAdd
 block|,
 name|eDelete
-block|,     }
+block|,   }
 enum|;
 comment|/// @brief Structure representing the shared objects currently loaded into
 comment|/// the inferior process.

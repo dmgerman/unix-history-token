@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Broadcaster.h"
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/HostThread.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Timeout.h"
 end_include
 
 begin_include
@@ -231,7 +231,9 @@ operator|<<
 literal|5
 operator|)
 block|,
-comment|///< Sent by the read thread to indicate all pending input has been processed.
+comment|///< Sent by the read thread
+comment|///to indicate all pending
+comment|///input has been processed.
 name|kLoUserBroadcastBit
 operator|=
 operator|(
@@ -415,8 +417,8 @@ comment|/// @param[in] dst_len
 comment|///     The number of bytes to attempt to read, and also the max
 comment|///     number of bytes that can be placed into \a dst.
 comment|///
-comment|/// @param[in] timeout_usec
-comment|///     A timeout value in micro-seconds.
+comment|/// @param[in] timeout
+comment|///     A timeout value or llvm::None for no timeout.
 comment|///
 comment|/// @return
 comment|///     The number of bytes actually read.
@@ -433,8 +435,15 @@ argument_list|,
 name|size_t
 name|dst_len
 argument_list|,
-name|uint32_t
-name|timeout_usec
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
+name|timeout
 argument_list|,
 name|lldb
 operator|::
@@ -518,7 +527,8 @@ comment|/// size_t Connection::Read (void *, size_t);
 comment|///
 comment|/// When bytes are read and cached, this function will call:
 comment|///
-comment|/// Communication::AppendBytesToCache (const uint8_t * bytes, size_t len, bool broadcast);
+comment|/// Communication::AppendBytesToCache (const uint8_t * bytes, size_t len, bool
+comment|/// broadcast);
 comment|///
 comment|/// Subclasses should override this function if they wish to override
 comment|/// the default action of caching the bytes and broadcasting a \b
@@ -529,7 +539,8 @@ comment|///     \b True if the read thread was successfully started, \b
 comment|///     false otherwise.
 comment|///
 comment|/// @see size_t Connection::Read (void *, size_t);
-comment|/// @see void Communication::AppendBytesToCache (const uint8_t * bytes, size_t len, bool broadcast);
+comment|/// @see void Communication::AppendBytesToCache (const uint8_t * bytes, size_t
+comment|/// len, bool broadcast);
 comment|//------------------------------------------------------------------
 name|virtual
 name|bool
@@ -685,11 +696,13 @@ operator|::
 name|ConnectionSP
 name|m_connection_sp
 expr_stmt|;
-comment|///< The connection that is current in use by this communications class.
+comment|///< The connection that is current in use
+comment|///by this communications class.
 name|HostThread
 name|m_read_thread
 decl_stmt|;
-comment|///< The read thread handle in case we need to cancel the thread.
+comment|///< The read thread handle in case we need to
+comment|///cancel the thread.
 name|std
 operator|::
 name|atomic
@@ -717,7 +730,8 @@ operator|::
 name|recursive_mutex
 name|m_bytes_mutex
 expr_stmt|;
-comment|///< A mutex to protect multi-threaded access to the cached bytes.
+comment|///< A mutex to protect multi-threaded
+comment|///access to the cached bytes.
 name|std
 operator|::
 name|mutex
@@ -749,8 +763,15 @@ argument_list|,
 name|size_t
 name|dst_len
 argument_list|,
-name|uint32_t
-name|timeout_usec
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
+name|timeout
 argument_list|,
 name|lldb
 operator|::

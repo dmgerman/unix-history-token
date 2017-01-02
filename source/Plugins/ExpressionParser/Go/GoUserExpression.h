@@ -68,13 +68,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Expression/ExpressionVariable.h"
 end_include
 
 begin_include
@@ -86,13 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Expression/ExpressionVariable.h"
+file|"lldb/Target/ExecutionContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/ExecutionContext.h"
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -161,11 +161,13 @@ operator|:
 name|uint32_t
 name|m_next_persistent_variable_id
 block|;
-comment|///< The counter used by GetNextResultName().
+comment|///< The counter used by
+comment|///GetNextResultName().
 block|}
 decl_stmt|;
 comment|//----------------------------------------------------------------------
-comment|/// @class GoUserExpression GoUserExpression.h "lldb/Expression/GoUserExpression.h"
+comment|/// @class GoUserExpression GoUserExpression.h
+comment|/// "lldb/Expression/GoUserExpression.h"
 comment|/// @brief Encapsulates a single expression for use with Go
 comment|///
 comment|/// LLDB uses expressions for various purposes, notably to call functions
@@ -184,9 +186,9 @@ name|GoUserExpression
 argument_list|(
 argument|ExecutionContextScope&exe_scope
 argument_list|,
-argument|const char *expr
+argument|llvm::StringRef expr
 argument_list|,
-argument|const char *expr_prefix
+argument|llvm::StringRef prefix
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,

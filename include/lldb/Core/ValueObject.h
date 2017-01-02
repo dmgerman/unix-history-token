@@ -98,7 +98,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
@@ -117,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Flags.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
@@ -173,36 +167,61 @@ directive|include
 file|"lldb/Utility/SharedCluster.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
 comment|/// ValueObject:
 comment|///
-comment|/// This abstract class provides an interface to a particular value, be it a register, a local or global variable,
-comment|/// that is evaluated in some particular scope.  The ValueObject also has the capability of being the "child" of
+comment|/// This abstract class provides an interface to a particular value, be it a
+comment|/// register, a local or global variable,
+comment|/// that is evaluated in some particular scope.  The ValueObject also has the
+comment|/// capability of being the "child" of
 comment|/// some other variable object, and in turn of having children.
-comment|/// If a ValueObject is a root variable object - having no parent - then it must be constructed with respect to some
-comment|/// particular ExecutionContextScope.  If it is a child, it inherits the ExecutionContextScope from its parent.
-comment|/// The ValueObject will update itself if necessary before fetching its value, summary, object description, etc.
-comment|/// But it will always update itself in the ExecutionContextScope with which it was originally created.
-comment|/// A brief note on life cycle management for ValueObjects.  This is a little tricky because a ValueObject can contain
-comment|/// various other ValueObjects - the Dynamic Value, its children, the dereference value, etc.  Any one of these can be
-comment|/// handed out as a shared pointer, but for that contained value object to be valid, the root object and potentially other
+comment|/// If a ValueObject is a root variable object - having no parent - then it must
+comment|/// be constructed with respect to some
+comment|/// particular ExecutionContextScope.  If it is a child, it inherits the
+comment|/// ExecutionContextScope from its parent.
+comment|/// The ValueObject will update itself if necessary before fetching its value,
+comment|/// summary, object description, etc.
+comment|/// But it will always update itself in the ExecutionContextScope with which it
+comment|/// was originally created.
+comment|/// A brief note on life cycle management for ValueObjects.  This is a little
+comment|/// tricky because a ValueObject can contain
+comment|/// various other ValueObjects - the Dynamic Value, its children, the
+comment|/// dereference value, etc.  Any one of these can be
+comment|/// handed out as a shared pointer, but for that contained value object to be
+comment|/// valid, the root object and potentially other
 comment|/// of the value objects need to stay around.
-comment|/// We solve this problem by handing out shared pointers to the Value Object and any of its dependents using a shared
-comment|/// ClusterManager.  This treats each shared pointer handed out for the entire cluster as a reference to the whole
-comment|/// cluster.  The whole cluster will stay around until the last reference is released.
+comment|/// We solve this problem by handing out shared pointers to the Value Object and
+comment|/// any of its dependents using a shared
+comment|/// ClusterManager.  This treats each shared pointer handed out for the entire
+comment|/// cluster as a reference to the whole
+comment|/// cluster.  The whole cluster will stay around until the last reference is
+comment|/// released.
 comment|///
-comment|/// The ValueObject mostly handle this automatically, if a value object is made with a Parent ValueObject, then it adds
+comment|/// The ValueObject mostly handle this automatically, if a value object is made
+comment|/// with a Parent ValueObject, then it adds
 comment|/// itself to the ClusterManager of the parent.
-comment|/// It does mean that external to the ValueObjects we should only ever make available ValueObjectSP's, never ValueObjects
-comment|/// or pointers to them.  So all the "Root level" ValueObject derived constructors should be private, and
-comment|/// should implement a Create function that new's up object and returns a Shared Pointer that it gets from the GetSP() method.
+comment|/// It does mean that external to the ValueObjects we should only ever make
+comment|/// available ValueObjectSP's, never ValueObjects
+comment|/// or pointers to them.  So all the "Root level" ValueObject derived
+comment|/// constructors should be private, and
+comment|/// should implement a Create function that new's up object and returns a Shared
+comment|/// Pointer that it gets from the GetSP() method.
 comment|///
-comment|/// However, if you are making an derived ValueObject that will be contained in a parent value object, you should just
-comment|/// hold onto a pointer to it internally, and by virtue of passing the parent ValueObject into its constructor, it will
-comment|/// be added to the ClusterManager for the parent.  Then if you ever hand out a Shared Pointer to the contained ValueObject,
+comment|/// However, if you are making an derived ValueObject that will be contained in
+comment|/// a parent value object, you should just
+comment|/// hold onto a pointer to it internally, and by virtue of passing the parent
+comment|/// ValueObject into its constructor, it will
+comment|/// be added to the ClusterManager for the parent.  Then if you ever hand out a
+comment|/// Shared Pointer to the contained ValueObject,
 comment|/// just do so by calling GetSP() on the contained object.
 name|class
 name|ValueObject
@@ -221,7 +240,7 @@ literal|1
 block|,
 name|eGetExpressionPathFormatHonorPointers
 block|}
-block|;          enum
+block|;    enum
 name|ValueObjectRepresentationStyle
 block|{
 name|eValueObjectRepresentationStyleValue
@@ -242,7 +261,7 @@ name|eValueObjectRepresentationStyleName
 block|,
 name|eValueObjectRepresentationStyleExpressionPath
 block|}
-block|;          enum
+block|;    enum
 name|ExpressionPathScanEndReason
 block|{
 name|eExpressionPathScanEndReasonEndOfString
@@ -255,51 +274,68 @@ block|,
 comment|// child element not found
 name|eExpressionPathScanEndReasonNoSuchSyntheticChild
 block|,
-comment|// (synthetic) child element not found
+comment|// (synthetic) child
+comment|// element not found
 name|eExpressionPathScanEndReasonEmptyRangeNotAllowed
 block|,
-comment|// [] only allowed for arrays
+comment|// [] only allowed for
+comment|// arrays
 name|eExpressionPathScanEndReasonDotInsteadOfArrow
 block|,
-comment|// . used when -> should be used
+comment|// . used when -> should be
+comment|// used
 name|eExpressionPathScanEndReasonArrowInsteadOfDot
 block|,
-comment|// -> used when . should be used
+comment|// -> used when . should be
+comment|// used
 name|eExpressionPathScanEndReasonFragileIVarNotAllowed
 block|,
-comment|// ObjC ivar expansion not allowed
+comment|// ObjC ivar expansion
+comment|// not allowed
 name|eExpressionPathScanEndReasonRangeOperatorNotAllowed
 block|,
-comment|// [] not allowed by options
+comment|// [] not allowed by
+comment|// options
 name|eExpressionPathScanEndReasonRangeOperatorInvalid
 block|,
-comment|// [] not valid on objects other than scalars, pointers or arrays
+comment|// [] not valid on objects
+comment|// other than scalars,
+comment|// pointers or arrays
 name|eExpressionPathScanEndReasonArrayRangeOperatorMet
 block|,
-comment|// [] is good for arrays, but I cannot parse it
+comment|// [] is good for arrays,
+comment|// but I cannot parse it
 name|eExpressionPathScanEndReasonBitfieldRangeOperatorMet
 block|,
-comment|// [] is good for bitfields, but I cannot parse after it
+comment|// [] is good for
+comment|// bitfields, but I
+comment|// cannot parse after
+comment|// it
 name|eExpressionPathScanEndReasonUnexpectedSymbol
 block|,
-comment|// something is malformed in the expression
+comment|// something is malformed in
+comment|// the expression
 name|eExpressionPathScanEndReasonTakingAddressFailed
 block|,
-comment|// impossible to apply& operator
+comment|// impossible to apply&
+comment|// operator
 name|eExpressionPathScanEndReasonDereferencingFailed
 block|,
-comment|// impossible to apply * operator
+comment|// impossible to apply *
+comment|// operator
 name|eExpressionPathScanEndReasonRangeOperatorExpanded
 block|,
-comment|// [] was expanded into a VOList
+comment|// [] was expanded into a
+comment|// VOList
 name|eExpressionPathScanEndReasonSyntheticValueMissing
 block|,
-comment|// getting the synthetic children failed
+comment|// getting the synthetic
+comment|// children failed
 name|eExpressionPathScanEndReasonUnknown
 operator|=
 literal|0xFFFF
 block|}
-block|;          enum
+block|;    enum
 name|ExpressionPathEndResultType
 block|{
 name|eExpressionPathEndResultTypePlain
@@ -323,7 +359,7 @@ name|eExpressionPathEndResultTypeInvalid
 operator|=
 literal|0xFFFF
 block|}
-block|;          enum
+block|;    enum
 name|ExpressionPathAftermath
 block|{
 name|eExpressionPathAftermathNothing
@@ -337,7 +373,7 @@ comment|// dereference the target
 name|eExpressionPathAftermathTakeAddress
 comment|// take target's address
 block|}
-block|;          enum
+block|;    enum
 name|ClearUserVisibleDataItems
 block|{
 name|eClearUserVisibleDataItemsNothing
@@ -396,9 +432,9 @@ name|eClearUserVisibleDataItemsAll
 operator|=
 literal|0xFFFF
 block|}
-block|;          struct
+block|;    struct
 name|GetValueForExpressionPathOptions
-block|{         enum
+block|{     enum
 name|class
 name|SyntheticChildrenTraversal
 block|{
@@ -431,7 +467,7 @@ argument|bool no_ivar = false
 argument_list|,
 argument|bool bitfield = true
 argument_list|,
-argument|SyntheticChildrenTraversal synth_traverse = SyntheticChildrenTraversal::ToSynthetic
+argument|SyntheticChildrenTraversal synth_traverse =             SyntheticChildrenTraversal::ToSynthetic
 argument_list|)
 operator|:
 name|m_check_dot_vs_arrow_syntax
@@ -453,7 +489,7 @@ name|m_synthetic_children_traversal
 argument_list|(
 argument|synth_traverse
 argument_list|)
-block|{         }
+block|{}
 name|GetValueForExpressionPathOptions
 operator|&
 name|DoCheckDotVsArrowSyntax
@@ -625,7 +661,7 @@ name|m_mod_id
 operator|.
 name|SetInvalid
 argument_list|()
-block|;         }
+block|;     }
 name|bool
 name|IsConstant
 argument_list|()
@@ -657,7 +693,7 @@ block|{
 name|m_mod_id
 operator|=
 name|new_id
-block|;         }
+block|; }
 name|void
 name|SetNeedsUpdate
 argument_list|()
@@ -665,7 +701,7 @@ block|{
 name|m_needs_update
 operator|=
 name|true
-block|;         }
+block|; }
 name|void
 name|SetUpdated
 argument_list|()
@@ -735,7 +771,8 @@ name|void
 name|SetInvalid
 argument_list|()
 block|{
-comment|// Use the stop id to mark us as invalid, leave the thread id and the stack id around for logging and
+comment|// Use the stop id to mark us as invalid, leave the thread id and the
+comment|// stack id around for logging and
 comment|// history purposes.
 name|m_mod_id
 operator|.
@@ -746,7 +783,7 @@ comment|// Can't update an invalid state.
 name|m_needs_update
 operator|=
 name|false
-block|;                      }
+block|;     }
 name|private
 operator|:
 name|bool
@@ -758,13 +795,14 @@ block|;
 name|ProcessModID
 name|m_mod_id
 block|;
-comment|// This is the stop id when this ValueObject was last evaluated.
+comment|// This is the stop id when this ValueObject was last
+comment|// evaluated.
 name|ExecutionContextRef
 name|m_exe_ctx_ref
 block|;
 name|bool
 name|m_needs_update
-block|;     }
+block|;   }
 block|;
 name|virtual
 operator|~
@@ -1040,97 +1078,15 @@ operator|::
 name|ValueObjectSP
 name|GetValueForExpressionPath
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|expression
+argument|llvm::StringRef expression
 argument_list|,
-specifier|const
-name|char
-operator|*
-operator|*
-name|first_unparsed
-operator|=
-name|nullptr
+argument|ExpressionPathScanEndReason *reason_to_stop = nullptr
 argument_list|,
-name|ExpressionPathScanEndReason
-operator|*
-name|reason_to_stop
-operator|=
-name|nullptr
+argument|ExpressionPathEndResultType *final_value_type = nullptr
 argument_list|,
-name|ExpressionPathEndResultType
-operator|*
-name|final_value_type
-operator|=
-name|nullptr
+argument|const GetValueForExpressionPathOptions&options =           GetValueForExpressionPathOptions::DefaultOptions()
 argument_list|,
-specifier|const
-name|GetValueForExpressionPathOptions
-operator|&
-name|options
-operator|=
-name|GetValueForExpressionPathOptions
-operator|::
-name|DefaultOptions
-argument_list|()
-argument_list|,
-name|ExpressionPathAftermath
-operator|*
-name|final_task_on_target
-operator|=
-name|nullptr
-argument_list|)
-block|;
-name|int
-name|GetValuesForExpressionPath
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|expression
-argument_list|,
-name|lldb
-operator|::
-name|ValueObjectListSP
-operator|&
-name|list
-argument_list|,
-specifier|const
-name|char
-operator|*
-operator|*
-name|first_unparsed
-operator|=
-name|nullptr
-argument_list|,
-name|ExpressionPathScanEndReason
-operator|*
-name|reason_to_stop
-operator|=
-name|nullptr
-argument_list|,
-name|ExpressionPathEndResultType
-operator|*
-name|final_value_type
-operator|=
-name|nullptr
-argument_list|,
-specifier|const
-name|GetValueForExpressionPathOptions
-operator|&
-name|options
-operator|=
-name|GetValueForExpressionPathOptions
-operator|::
-name|DefaultOptions
-argument_list|()
-argument_list|,
-name|ExpressionPathAftermath
-operator|*
-name|final_task_on_target
-operator|=
-name|nullptr
+argument|ExpressionPathAftermath *final_task_on_target = nullptr
 argument_list|)
 block|;
 name|virtual
@@ -1230,7 +1186,7 @@ name|GetValueAsCString
 argument_list|(
 argument|lldb::Format format
 argument_list|,
-argument|std::string& destination
+argument|std::string&destination
 argument_list|)
 block|;
 name|virtual
@@ -1280,8 +1236,10 @@ operator|*
 name|GetRoot
 argument_list|()
 block|;
-comment|// Given a ValueObject, loop over itself and its parent, and its parent's parent, ..
-comment|// until either the given callback returns false, or you end up at a null pointer
+comment|// Given a ValueObject, loop over itself and its parent, and its parent's
+comment|// parent, ..
+comment|// until either the given callback returns false, or you end up at a null
+comment|// pointer
 name|ValueObject
 operator|*
 name|FollowParentChain
@@ -1396,8 +1354,7 @@ operator|<
 name|size_t
 argument_list|,
 name|bool
-operator|>
-expr|>
+operator|>>
 operator|&
 name|idxs
 argument_list|,
@@ -1425,8 +1382,7 @@ operator|<
 name|size_t
 argument_list|,
 name|bool
-operator|>
-expr|>
+operator|>>
 operator|&
 name|idxs
 argument_list|,
@@ -1499,8 +1455,7 @@ operator|<
 name|ConstString
 argument_list|,
 name|bool
-operator|>
-expr|>
+operator|>>
 operator|&
 name|names
 argument_list|,
@@ -1528,8 +1483,7 @@ operator|<
 name|ConstString
 argument_list|,
 name|bool
-operator|>
-expr|>
+operator|>>
 operator|&
 name|names
 argument_list|,
@@ -1564,7 +1518,7 @@ block|;
 name|size_t
 name|GetNumChildren
 argument_list|(
-argument|uint32_t max=UINT32_MAX
+argument|uint32_t max = UINT32_MAX
 argument_list|)
 block|;
 specifier|const
@@ -1618,9 +1572,9 @@ block|;
 name|bool
 name|GetSummaryAsCString
 argument_list|(
-argument|TypeSummaryImpl* summary_ptr
+argument|TypeSummaryImpl *summary_ptr
 argument_list|,
-argument|std::string& destination
+argument|std::string&destination
 argument_list|,
 argument|lldb::LanguageType lang = lldb::eLanguageTypeUnknown
 argument_list|)
@@ -1685,32 +1639,31 @@ argument|ValueObjectRepresentationStyle val_obj_display
 argument_list|,
 argument|lldb::Format custom_format
 argument_list|)
-block|;          enum
+block|;    enum
+name|class
 name|PrintableRepresentationSpecialCases
+operator|:
+name|bool
 block|{
-name|ePrintableRepresentationSpecialCasesDisable
+name|eDisable
 operator|=
-literal|0
+name|false
 block|,
-name|ePrintableRepresentationSpecialCasesAllow
+name|eAllow
 operator|=
-literal|1
-block|,
-name|ePrintableRepresentationSpecialCasesOnly
-operator|=
-literal|3
+name|true
 block|}
 block|;
 name|bool
 name|DumpPrintableRepresentation
 argument_list|(
-argument|Stream& s
+argument|Stream&s
 argument_list|,
-argument|ValueObjectRepresentationStyle val_obj_display = eValueObjectRepresentationStyleSummary
+argument|ValueObjectRepresentationStyle val_obj_display =                                   eValueObjectRepresentationStyleSummary
 argument_list|,
 argument|lldb::Format custom_format = lldb::eFormatInvalid
 argument_list|,
-argument|PrintableRepresentationSpecialCases special = ePrintableRepresentationSpecialCasesAllow
+argument|PrintableRepresentationSpecialCases special =                                   PrintableRepresentationSpecialCases::eAllow
 argument_list|,
 argument|bool do_dump_error = true
 argument_list|)
@@ -1720,7 +1673,8 @@ name|GetValueIsValid
 argument_list|()
 specifier|const
 block|;
-comment|// If you call this on a newly created ValueObject, it will always return false.
+comment|// If you call this on a newly created ValueObject, it will always return
+comment|// false.
 name|bool
 name|GetValueDidChange
 argument_list|()
@@ -1818,7 +1772,7 @@ operator|::
 name|ValueObjectSP
 name|GetSyntheticExpressionPathChild
 argument_list|(
-argument|const char* expression
+argument|const char *expression
 argument_list|,
 argument|bool can_create
 argument_list|)
@@ -1831,7 +1785,7 @@ name|GetSyntheticChildAtOffset
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const CompilerType& type
+argument|const CompilerType&type
 argument_list|,
 argument|bool can_create
 argument_list|,
@@ -1846,7 +1800,7 @@ name|GetSyntheticBase
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const CompilerType& type
+argument|const CompilerType&type
 argument_list|,
 argument|bool can_create
 argument_list|,
@@ -1967,7 +1921,7 @@ argument|lldb::addr_t addr = LLDB_INVALID_ADDRESS
 argument_list|,
 argument|AddressType address_type = eAddressTypeLoad
 argument_list|)
-block|{     }
+block|{}
 comment|// Find the address of the C++ vtable pointer
 name|virtual
 name|lldb
@@ -2041,7 +1995,7 @@ name|eClearUserVisibleDataItemsSummary
 operator||
 name|eClearUserVisibleDataItemsDescription
 argument_list|)
-block|;     }
+block|;   }
 name|virtual
 name|bool
 name|IsDynamic
@@ -2105,20 +2059,11 @@ operator|::
 name|ValueObjectSP
 name|CreateValueObjectFromExpression
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|expression
+argument|llvm::StringRef expression
 argument_list|,
-specifier|const
-name|ExecutionContext
-operator|&
-name|exe_ctx
+argument|const ExecutionContext&exe_ctx
 argument_list|)
 block|;
 specifier|static
@@ -2127,25 +2072,13 @@ operator|::
 name|ValueObjectSP
 name|CreateValueObjectFromExpression
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|expression
+argument|llvm::StringRef expression
 argument_list|,
-specifier|const
-name|ExecutionContext
-operator|&
-name|exe_ctx
+argument|const ExecutionContext&exe_ctx
 argument_list|,
-specifier|const
-name|EvaluateExpressionOptions
-operator|&
-name|options
+argument|const EvaluateExpressionOptions&options
 argument_list|)
 block|;
 specifier|static
@@ -2154,11 +2087,11 @@ operator|::
 name|ValueObjectSP
 name|CreateValueObjectFromAddress
 argument_list|(
-argument|const char* name
+argument|llvm::StringRef name
 argument_list|,
 argument|uint64_t address
 argument_list|,
-argument|const ExecutionContext& exe_ctx
+argument|const ExecutionContext&exe_ctx
 argument_list|,
 argument|CompilerType type
 argument_list|)
@@ -2169,11 +2102,11 @@ operator|::
 name|ValueObjectSP
 name|CreateValueObjectFromData
 argument_list|(
-argument|const char* name
+argument|llvm::StringRef name
 argument_list|,
-argument|const DataExtractor& data
+argument|const DataExtractor&data
 argument_list|,
-argument|const ExecutionContext& exe_ctx
+argument|const ExecutionContext&exe_ctx
 argument_list|,
 argument|CompilerType type
 argument_list|)
@@ -2224,9 +2157,9 @@ name|bool
 operator|>
 name|ReadPointedString
 argument_list|(
-argument|lldb::DataBufferSP& buffer_sp
+argument|lldb::DataBufferSP&buffer_sp
 argument_list|,
-argument|Error& error
+argument|Error&error
 argument_list|,
 argument|uint32_t max_length =
 literal|0
@@ -2240,7 +2173,7 @@ name|virtual
 name|size_t
 name|GetPointeeData
 argument_list|(
-argument|DataExtractor& data
+argument|DataExtractor&data
 argument_list|,
 argument|uint32_t item_idx =
 literal|0
@@ -2320,7 +2253,7 @@ name|m_update_point
 operator|.
 name|SetIsConstant
 argument_list|()
-block|;     }
+block|; }
 name|lldb
 operator|::
 name|Format
@@ -2349,7 +2282,7 @@ expr_stmt|;
 name|m_format
 operator|=
 name|format
-block|;     }
+block|;   }
 name|virtual
 name|lldb
 operator|::
@@ -2392,7 +2325,7 @@ name|ClearUserVisibleData
 argument_list|(
 name|eClearUserVisibleDataItemsSummary
 argument_list|)
-block|;     }
+block|;   }
 name|lldb
 operator|::
 name|TypeValidatorImplSP
@@ -2420,7 +2353,7 @@ name|ClearUserVisibleData
 argument_list|(
 name|eClearUserVisibleDataItemsValidator
 argument_list|)
-block|;     }
+block|;   }
 name|void
 name|SetValueFormat
 argument_list|(
@@ -2435,7 +2368,7 @@ name|ClearUserVisibleData
 argument_list|(
 name|eClearUserVisibleDataItemsValue
 argument_list|)
-block|;     }
+block|;   }
 name|lldb
 operator|::
 name|TypeFormatImplSP
@@ -2476,7 +2409,7 @@ block|;
 name|m_synthetic_children_sp
 operator|=
 name|synth_sp
-block|;     }
+block|;   }
 name|lldb
 operator|::
 name|SyntheticChildrenSP
@@ -2490,9 +2423,12 @@ return|return
 name|m_synthetic_children_sp
 return|;
 block|}
-comment|// Use GetParent for display purposes, but if you want to tell the parent to update itself
-comment|// then use m_parent.  The ValueObjectDynamicValue's parent is not the correct parent for
-comment|// displaying, they are really siblings, so for display it needs to route through to its grandparent.
+comment|// Use GetParent for display purposes, but if you want to tell the parent to
+comment|// update itself
+comment|// then use m_parent.  The ValueObjectDynamicValue's parent is not the correct
+comment|// parent for
+comment|// displaying, they are really siblings, so for display it needs to route
+comment|// through to its grandparent.
 name|virtual
 name|ValueObject
 modifier|*
@@ -2854,11 +2790,13 @@ name|ValueObject
 modifier|*
 name|m_root
 decl_stmt|;
-comment|// The root of the hierarchy for this ValueObject (or nullptr if never calculated)
+comment|// The root of the hierarchy for this ValueObject (or
+comment|// nullptr if never calculated)
 name|EvaluationPoint
 name|m_update_point
 decl_stmt|;
-comment|// Stores both the stop id and the full context at which this value was last
+comment|// Stores both the stop id and the full
+comment|// context at which this value was last
 comment|// updated.  When we are asked to update the value object, we check whether
 comment|// the context& stop id are the same before updating.
 name|ConstString
@@ -2875,37 +2813,43 @@ decl_stmt|;
 name|Error
 name|m_error
 decl_stmt|;
-comment|// An error object that can describe any errors that occur when updating values.
+comment|// An error object that can describe any errors that occur when
+comment|// updating values.
 name|std
 operator|::
 name|string
 name|m_value_str
 expr_stmt|;
-comment|// Cached value string that will get cleared if/when the value is updated.
+comment|// Cached value string that will get cleared if/when
+comment|// the value is updated.
 name|std
 operator|::
 name|string
 name|m_old_value_str
 expr_stmt|;
-comment|// Cached old value string from the last time the value was gotten
+comment|// Cached old value string from the last time the
+comment|// value was gotten
 name|std
 operator|::
 name|string
 name|m_location_str
 expr_stmt|;
-comment|// Cached location string that will get cleared if/when the value is updated.
+comment|// Cached location string that will get cleared
+comment|// if/when the value is updated.
 name|std
 operator|::
 name|string
 name|m_summary_str
 expr_stmt|;
-comment|// Cached summary string that will get cleared if/when the value is updated.
+comment|// Cached summary string that will get cleared
+comment|// if/when the value is updated.
 name|std
 operator|::
 name|string
 name|m_object_desc_str
 expr_stmt|;
-comment|// Cached result of the "object printer".  This differs from the summary
+comment|// Cached result of the "object printer".  This
+comment|// differs from the summary
 comment|// in that the summary is consed up by us, the object_desc_string is builtin.
 name|llvm
 operator|::
@@ -2926,12 +2870,14 @@ expr_stmt|;
 name|CompilerType
 name|m_override_type
 decl_stmt|;
-comment|// If the type of the value object should be overridden, the type to impose.
+comment|// If the type of the value object should be
+comment|// overridden, the type to impose.
 name|ValueObjectManager
 modifier|*
 name|m_manager
 decl_stmt|;
-comment|// This object is managed by the root object (any ValueObject that gets created
+comment|// This object is managed by the root object
+comment|// (any ValueObject that gets created
 comment|// without a parent.)  The manager gets passed through all the generations of
 comment|// dependent objects, and will keep the whole cluster of objects alive as long
 comment|// as a shared pointer to any of them has been handed out.  Shared pointers to
@@ -2967,7 +2913,9 @@ operator|::
 name|ValueObjectSP
 name|m_addr_of_valobj_sp
 expr_stmt|;
-comment|// We have to hold onto a shared pointer to this one because it is created
+comment|// We have to hold onto a shared
+comment|// pointer to this one because it is
+comment|// created
 comment|// as an independent ValueObjectConstResult, which isn't managed by us.
 name|lldb
 operator|::
@@ -3102,11 +3050,13 @@ comment|// For ClearUserVisibleData
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
-comment|// Use the no-argument constructor to make a constant variable object (with no ExecutionContextScope.)
+comment|// Use the no-argument constructor to make a constant variable object (with no
+comment|// ExecutionContextScope.)
 name|ValueObject
 argument_list|()
 expr_stmt|;
-comment|// Use this constructor to create a "root variable object".  The ValueObject will be locked to this context
+comment|// Use this constructor to create a "root variable object".  The ValueObject
+comment|// will be locked to this context
 comment|// through-out its lifespan.
 name|ValueObject
 argument_list|(
@@ -3115,7 +3065,8 @@ argument_list|,
 argument|AddressType child_ptr_or_ref_addr_type = eAddressTypeLoad
 argument_list|)
 empty_stmt|;
-comment|// Use this constructor to create a ValueObject owned by another ValueObject.  It will inherit the ExecutionContext
+comment|// Use this constructor to create a ValueObject owned by another ValueObject.
+comment|// It will inherit the ExecutionContext
 comment|// of its parent.
 name|ValueObject
 argument_list|(
@@ -3325,86 +3276,188 @@ operator|::
 name|ValueObjectSP
 name|GetValueForExpressionPath_Impl
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|expression_cstr
+argument|llvm::StringRef expression_cstr
 argument_list|,
-specifier|const
-name|char
-operator|*
-operator|*
-name|first_unparsed
+argument|ExpressionPathScanEndReason *reason_to_stop
 argument_list|,
-name|ExpressionPathScanEndReason
-operator|*
-name|reason_to_stop
+argument|ExpressionPathEndResultType *final_value_type
 argument_list|,
-name|ExpressionPathEndResultType
-operator|*
-name|final_value_type
+argument|const GetValueForExpressionPathOptions&options
 argument_list|,
-specifier|const
-name|GetValueForExpressionPathOptions
-operator|&
-name|options
-argument_list|,
-name|ExpressionPathAftermath
-operator|*
-name|final_task_on_target
+argument|ExpressionPathAftermath *final_task_on_target
 argument_list|)
 expr_stmt|;
-comment|// this method will ONLY expand [] expressions into a VOList and return
-comment|// the number of elements it added to the VOList
-comment|// it will NOT loop through expanding the follow-up of the expression_cstr
-comment|// for all objects in the list
-name|int
-name|ExpandArraySliceExpression
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|expression_cstr
-argument_list|,
-specifier|const
-name|char
-operator|*
-operator|*
-name|first_unparsed
-argument_list|,
-name|lldb
-operator|::
-name|ValueObjectSP
-name|root
-argument_list|,
-name|lldb
-operator|::
-name|ValueObjectListSP
-operator|&
-name|list
-argument_list|,
-name|ExpressionPathScanEndReason
-operator|*
-name|reason_to_stop
-argument_list|,
-name|ExpressionPathEndResultType
-operator|*
-name|final_value_type
-argument_list|,
-specifier|const
-name|GetValueForExpressionPathOptions
-operator|&
-name|options
-argument_list|,
-name|ExpressionPathAftermath
-operator|*
-name|final_task_on_target
-argument_list|)
-decl_stmt|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ValueObject
 argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//------------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|// A value object manager class that is seeded with the static variable value
+end_comment
+
+begin_comment
+comment|// and it vends the user facing value object. If the type is dynamic it can
+end_comment
+
+begin_comment
+comment|// vend the dynamic type. If this user type also has a synthetic type associated
+end_comment
+
+begin_comment
+comment|// with it, it will vend the synthetic type. The class watches the process' stop
+end_comment
+
+begin_comment
+comment|// ID and will update the user type when needed.
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------------------
+end_comment
+
+begin_decl_stmt
+name|class
+name|ValueObjectManager
+block|{
+comment|// The root value object is the static typed variable object.
+name|lldb
+operator|::
+name|ValueObjectSP
+name|m_root_valobj_sp
+expr_stmt|;
+comment|// The user value object is the value object the user wants to see.
+name|lldb
+operator|::
+name|ValueObjectSP
+name|m_user_valobj_sp
+expr_stmt|;
+name|lldb
+operator|::
+name|DynamicValueType
+name|m_use_dynamic
+expr_stmt|;
+name|uint32_t
+name|m_stop_id
+decl_stmt|;
+comment|// The stop ID that m_user_valobj_sp is valid for.
+name|bool
+name|m_use_synthetic
+decl_stmt|;
+name|public
+label|:
+name|ValueObjectManager
+argument_list|()
+block|{}
+name|ValueObjectManager
+argument_list|(
+argument|lldb::ValueObjectSP in_valobj_sp
+argument_list|,
+argument|lldb::DynamicValueType use_dynamic
+argument_list|,
+argument|bool use_synthetic
+argument_list|)
+empty_stmt|;
+name|bool
+name|IsValid
+argument_list|()
+specifier|const
+expr_stmt|;
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetRootSP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_root_valobj_sp
+return|;
+block|}
+comment|// Gets the correct value object from the root object for a given process
+comment|// stop ID. If dynamic values are enabled, or if synthetic children are
+comment|// enabled, the value object that the user wants to see might change while
+comment|// debugging.
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetSP
+argument_list|()
+expr_stmt|;
+name|void
+name|SetUseDynamic
+argument_list|(
+name|lldb
+operator|::
+name|DynamicValueType
+name|use_dynamic
+argument_list|)
+decl_stmt|;
+name|void
+name|SetUseSynthetic
+parameter_list|(
+name|bool
+name|use_synthetic
+parameter_list|)
+function_decl|;
+name|lldb
+operator|::
+name|DynamicValueType
+name|GetUseDynamic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_use_dynamic
+return|;
+block|}
+name|bool
+name|GetUseSynthetic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_use_synthetic
+return|;
+block|}
+name|lldb
+operator|::
+name|TargetSP
+name|GetTargetSP
+argument_list|()
+specifier|const
+expr_stmt|;
+name|lldb
+operator|::
+name|ProcessSP
+name|GetProcessSP
+argument_list|()
+specifier|const
+expr_stmt|;
+name|lldb
+operator|::
+name|ThreadSP
+name|GetThreadSP
+argument_list|()
+specifier|const
+expr_stmt|;
+name|lldb
+operator|::
+name|StackFrameSP
+name|GetFrameSP
+argument_list|()
+specifier|const
 expr_stmt|;
 block|}
 end_decl_stmt

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- AppleGetThreadItemInfoHandler.h ----------------------------*- C++ -*-===//
+comment|//===-- AppleGetThreadItemInfoHandler.h ----------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -80,12 +84,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Error.h"
 end_include
 
@@ -95,12 +93,22 @@ directive|include
 file|"lldb/Symbol/CompilerType.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
+end_include
+
 begin_comment
 comment|// This class will insert a UtilityFunction into the inferior process for
 end_comment
 
 begin_comment
-comment|// calling libBacktraceRecording's __introspection_dispatch_thread_get_item_info()
+comment|// calling libBacktraceRecording's
+end_comment
+
+begin_comment
+comment|// __introspection_dispatch_thread_get_item_info()
 end_comment
 
 begin_comment
@@ -156,7 +164,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// The AppleGetThreadItemInfoHandler object should persist so that the UtilityFunction
+comment|// The AppleGetThreadItemInfoHandler object should persist so that the
+end_comment
+
+begin_comment
+comment|// UtilityFunction
 end_comment
 
 begin_comment
@@ -193,13 +205,13 @@ operator|::
 name|addr_t
 name|item_buffer_ptr
 expr_stmt|;
-comment|/* the address of the item buffer from libBacktraceRecording */
+comment|/* the address of the item buffer from                                       libBacktraceRecording */
 name|lldb
 operator|::
 name|addr_t
 name|item_buffer_size
 expr_stmt|;
-comment|/* the size of the item buffer from libBacktraceRecording */
+comment|/* the size of the item buffer from                                       libBacktraceRecording */
 name|GetThreadItemInfoReturnInfo
 argument_list|()
 operator|:
@@ -225,7 +237,8 @@ comment|/// @param [in] thread_id
 comment|///     The thread to get the extended backtrace for.
 comment|///
 comment|/// @param [in] page_to_free
-comment|///     An address of an inferior process vm page that needs to be deallocated,
+comment|///     An address of an inferior process vm page that needs to be
+comment|///     deallocated,
 comment|///     LLDB_INVALID_ADDRESS if this is not needed.
 comment|///
 comment|/// @param [in] page_to_free_size
@@ -233,11 +246,14 @@ comment|///     The size of the vm page that needs to be deallocated if an addre
 comment|///     passed in to page_to_free.
 comment|///
 comment|/// @param [out] error
-comment|///     This object will be updated with the error status / error string from any failures encountered.
+comment|///     This object will be updated with the error status / error string from
+comment|///     any failures encountered.
 comment|///
 comment|/// @returns
-comment|///     The result of the inferior function call execution.  If there was a failure of any kind while getting
-comment|///     the information, the item_buffer_ptr value will be LLDB_INVALID_ADDRESS.
+comment|///     The result of the inferior function call execution.  If there was a
+comment|///     failure of any kind while getting
+comment|///     the information, the item_buffer_ptr value will be
+comment|///     LLDB_INVALID_ADDRESS.
 comment|//----------------------------------------------------------
 name|GetThreadItemInfoReturnInfo
 name|GetThreadItemInfo

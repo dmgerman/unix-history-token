@@ -98,25 +98,13 @@ operator|::
 name|ValueObjectSP
 name|Create
 argument_list|(
-name|ExecutionContextScope
-operator|*
-name|exe_scope
+argument|ExecutionContextScope *exe_scope
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|,
-specifier|const
-name|Address
-operator|&
-name|address
+argument|const Address&address
 argument_list|,
-name|lldb
-operator|::
-name|TypeSP
-operator|&
-name|type_sp
+argument|lldb::TypeSP&type_sp
 argument_list|)
 block|;
 specifier|static
@@ -125,24 +113,13 @@ operator|::
 name|ValueObjectSP
 name|Create
 argument_list|(
-name|ExecutionContextScope
-operator|*
-name|exe_scope
+argument|ExecutionContextScope *exe_scope
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|,
-specifier|const
-name|Address
-operator|&
-name|address
+argument|const Address&address
 argument_list|,
-specifier|const
-name|CompilerType
-operator|&
-name|ast_type
+argument|const CompilerType&ast_type
 argument_list|)
 block|;
 name|uint64_t
@@ -215,47 +192,24 @@ name|private
 operator|:
 name|ValueObjectMemory
 argument_list|(
-name|ExecutionContextScope
-operator|*
-name|exe_scope
+argument|ExecutionContextScope *exe_scope
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|,
-specifier|const
-name|Address
-operator|&
-name|address
+argument|const Address&address
 argument_list|,
-name|lldb
-operator|::
-name|TypeSP
-operator|&
-name|type_sp
+argument|lldb::TypeSP&type_sp
 argument_list|)
 block|;
 name|ValueObjectMemory
 argument_list|(
-name|ExecutionContextScope
-operator|*
-name|exe_scope
+argument|ExecutionContextScope *exe_scope
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|,
-specifier|const
-name|Address
-operator|&
-name|address
+argument|const Address&address
 argument_list|,
-specifier|const
-name|CompilerType
-operator|&
-name|ast_type
+argument|const CompilerType&ast_type
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------

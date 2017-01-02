@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Broadcaster.h"
 end_include
 
@@ -113,13 +107,20 @@ directive|include
 file|"lldb/Target/Thread.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
 comment|/// @class HistoryThread HistoryThread.h "HistoryThread.h"
-comment|/// @brief A thread object representing a backtrace from a previous point in the process execution
+comment|/// @brief A thread object representing a backtrace from a previous point in the
+comment|/// process execution
 comment|///
 comment|/// This subclass of Thread is used to provide a backtrace from earlier in
 comment|/// process execution.  It is given a backtrace list of pc addresses and
@@ -174,7 +175,7 @@ name|void
 name|RefreshStateAfterStop
 argument_list|()
 name|override
-block|{ }
+block|{}
 name|bool
 name|CalculateStopInfo
 argument_list|()
@@ -194,7 +195,7 @@ block|{
 name|m_extended_unwind_token
 operator|=
 name|token
-block|;     }
+block|;   }
 name|uint64_t
 name|GetExtendedBacktraceToken
 argument_list|()
@@ -228,7 +229,7 @@ block|{
 name|m_queue_name
 operator|=
 name|name
-block|;     }
+block|; }
 name|lldb
 operator|::
 name|queue_id_t
@@ -250,7 +251,7 @@ block|{
 name|m_queue_id
 operator|=
 name|queue
-block|;     }
+block|; }
 specifier|const
 name|char
 operator|*
@@ -278,7 +279,7 @@ block|{
 name|m_thread_name
 operator|=
 name|name
-block|;     }
+block|; }
 specifier|const
 name|char
 operator|*
@@ -303,7 +304,7 @@ block|{
 name|m_thread_name
 operator|=
 name|name
-block|;     }
+block|; }
 name|protected
 operator|:
 name|virtual

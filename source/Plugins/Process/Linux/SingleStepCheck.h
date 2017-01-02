@@ -59,13 +59,18 @@ name|SingleStepWorkaroundNeeded
 parameter_list|()
 function_decl|;
 block|}
-comment|// arm64 linux had a bug which prevented single-stepping and watchpoints from working on non-boot
-comment|// cpus, due to them being incorrectly initialized after coming out of suspend.  This issue is
-comment|// particularly affecting android M, which uses suspend ("doze mode") quite aggressively. This
-comment|// code detects that situation and makes single-stepping work by doing all the step operations on
+comment|// arm64 linux had a bug which prevented single-stepping and watchpoints from
+comment|// working on non-boot
+comment|// cpus, due to them being incorrectly initialized after coming out of suspend.
+comment|// This issue is
+comment|// particularly affecting android M, which uses suspend ("doze mode") quite
+comment|// aggressively. This
+comment|// code detects that situation and makes single-stepping work by doing all the
+comment|// step operations on
 comment|// the boot cpu.
 comment|//
-comment|// The underlying issue has been fixed in android N and linux 4.4. This code can be removed once
+comment|// The underlying issue has been fixed in android N and linux 4.4. This code can
+comment|// be removed once
 comment|// these systems become obsolete.
 specifier|inline
 name|bool

@@ -55,7 +55,19 @@ end_if
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
 end_include
 
 begin_include
@@ -402,6 +414,36 @@ name|interpreter
 argument_list|)
 expr_stmt|;
 typedef|typedef
+name|lldb
+operator|::
+name|StructuredDataPluginSP
+argument_list|(
+operator|*
+name|StructuredDataPluginCreateInstance
+argument_list|)
+argument_list|(
+name|Process
+operator|&
+name|process
+argument_list|)
+expr_stmt|;
+typedef|typedef
+name|Error
+function_decl|(
+modifier|*
+name|StructuredDataFilterLaunchInfo
+function_decl|)
+parameter_list|(
+name|ProcessLaunchInfo
+modifier|&
+name|launch_info
+parameter_list|,
+name|Target
+modifier|*
+name|target
+parameter_list|)
+function_decl|;
+typedef|typedef
 name|SystemRuntime
 modifier|*
 function_decl|(
@@ -529,7 +571,7 @@ operator|::
 name|user_id_t
 name|break_loc_id
 operator|)
-argument_list|;     typedef
+argument_list|; typedef
 name|bool
 argument_list|(
 argument|*WatchpointHitCallback
@@ -548,7 +590,7 @@ operator|::
 name|user_id_t
 name|watch_id
 operator|)
-argument_list|;     typedef
+argument_list|; typedef
 name|void
 argument_list|(
 operator|*
@@ -563,7 +605,7 @@ name|OptionValue
 operator|*
 name|option_value
 argument_list|)
-argument_list|;     typedef
+argument_list|; typedef
 name|bool
 argument_list|(
 argument|*ThreadPlanShouldStopHereCallback
@@ -586,7 +628,7 @@ name|void
 operator|*
 name|baton
 operator|)
-argument_list|;     typedef
+argument_list|; typedef
 name|lldb
 operator|::
 name|ThreadPlanSP
@@ -611,7 +653,7 @@ name|void
 operator|*
 name|baton
 operator|)
-argument_list|;     typedef
+argument_list|; typedef
 name|UnwindAssembly
 operator|*
 call|(
@@ -624,7 +666,7 @@ name|ArchSpec
 operator|&
 name|arch
 argument_list|)
-argument_list|;     typedef
+argument_list|; typedef
 name|lldb
 operator|::
 name|MemoryHistorySP
@@ -640,7 +682,7 @@ name|ProcessSP
 operator|&
 name|process_sp
 argument_list|)
-argument_list|;     typedef
+argument_list|; typedef
 name|lldb
 operator|::
 name|InstrumentationRuntimeType
@@ -649,7 +691,7 @@ operator|*
 name|InstrumentationRuntimeGetType
 argument_list|)
 argument_list|()
-argument_list|;     typedef
+argument_list|; typedef
 name|lldb
 operator|::
 name|InstrumentationRuntimeSP
@@ -665,7 +707,7 @@ name|ProcessSP
 operator|&
 name|process_sp
 argument_list|)
-argument_list|;     typedef
+argument_list|; typedef
 name|lldb
 operator|::
 name|TypeSystemSP
@@ -686,7 +728,7 @@ name|Target
 operator|*
 name|target
 operator|)
-argument_list|;     typedef
+argument_list|; typedef
 name|lldb
 operator|::
 name|REPLSP
@@ -716,7 +758,7 @@ name|char
 operator|*
 name|repl_options
 operator|)
-argument_list|;     typedef
+argument_list|; typedef
 name|void
 argument_list|(
 operator|*
@@ -745,7 +787,7 @@ operator|>
 operator|&
 name|languages_for_expressions
 argument_list|)
-argument_list|;     typedef
+argument_list|; typedef
 name|void
 argument_list|(
 operator|*
@@ -763,7 +805,7 @@ operator|>
 operator|&
 name|languages
 argument_list|)
-argument_list|;     typedef
+argument_list|; typedef
 name|int
 argument_list|(
 operator|*
@@ -778,7 +820,7 @@ specifier|const
 name|void
 operator|*
 argument_list|)
-argument_list|;     typedef
+argument_list|; typedef
 name|void
 argument_list|(
 operator|*

@@ -138,12 +138,12 @@ argument_list|()
 operator|,
 name|m_validator_baton
 argument_list|()
-block|{     }
+block|{}
 name|OptionValueString
 argument_list|(
 argument|ValidatorCallback validator
 argument_list|,
-argument|void* baton = nullptr
+argument|void *baton = nullptr
 argument_list|)
 operator|:
 name|OptionValue
@@ -167,7 +167,7 @@ name|m_validator_baton
 argument_list|(
 argument|baton
 argument_list|)
-block|{     }
+block|{}
 name|OptionValueString
 argument_list|(
 specifier|const
@@ -293,7 +293,7 @@ argument|const char *value
 argument_list|,
 argument|ValidatorCallback validator
 argument_list|,
-argument|void* baton = nullptr
+argument|void *baton = nullptr
 argument_list|)
 end_macro
 
@@ -349,7 +349,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}          OptionValueString
+unit|}    OptionValueString
 operator|(
 specifier|const
 name|char
@@ -431,7 +431,7 @@ expr_stmt|;
 end_if
 
 begin_macro
-unit|}          ~
+unit|}    ~
 name|OptionValueString
 argument_list|()
 end_macro
@@ -507,6 +507,23 @@ argument_list|)
 name|override
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|Error
+name|SetValueFromString
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|VarSetOperationType
+init|=
+name|eVarSetOperationAssign
+parameter_list|)
+init|=
+name|delete
+function_decl|;
+end_function_decl
 
 begin_function
 name|bool
@@ -592,7 +609,14 @@ operator|)
 block|{
 name|SetCurrentValue
 argument_list|(
+name|llvm
+operator|::
+name|StringRef
+operator|::
+name|withNullAsEmpty
+argument_list|(
 name|value
+argument_list|)
 argument_list|)
 block|;
 return|return
@@ -622,6 +646,20 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|llvm
+operator|::
+name|StringRef
+name|GetCurrentValueAsRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_current_value
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|char
 operator|*
@@ -638,6 +676,20 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|StringRef
+name|GetDefaultValueAsRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_default_value
+return|;
+block|}
+end_expr_stmt
+
 begin_function_decl
 name|Error
 name|SetCurrentValue
@@ -645,10 +697,23 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|value
 parameter_list|)
+init|=
+name|delete
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|Error
+name|SetCurrentValue
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|value
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|Error

@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -830,17 +830,17 @@ function_decl|;
 specifier|static
 name|size_t
 name|AutoCompletePlatformName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|partial_name
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Process
 comment|//------------------------------------------------------------------
@@ -966,6 +966,109 @@ argument_list|,
 argument|CommandInterpreter&interpreter
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|// StructuredDataPlugin
+comment|//------------------------------------------------------------------
+comment|//------------------------------------------------------------------
+comment|/// Register a StructuredDataPlugin class along with optional
+comment|/// callbacks for debugger initialization and Process launch info
+comment|/// filtering and manipulation.
+comment|///
+comment|/// @param[in] name
+comment|///    The name of the plugin.
+comment|///
+comment|/// @param[in] description
+comment|///    A description string for the plugin.
+comment|///
+comment|/// @param[in] create_callback
+comment|///    The callback that will be invoked to create an instance of
+comment|///    the callback.  This may not be nullptr.
+comment|///
+comment|/// @param[in] debugger_init_callback
+comment|///    An optional callback that will be made when a Debugger
+comment|///    instance is initialized.
+comment|///
+comment|/// @param[in] filter_callback
+comment|///    An optional callback that will be invoked before LLDB
+comment|///    launches a process for debugging.  The callback must
+comment|///    do the following:
+comment|///    1. Only do something if the plugin's behavior is enabled.
+comment|///    2. Only make changes for processes that are relevant to the
+comment|///       plugin.  The callback gets a pointer to the Target, which
+comment|///       can be inspected as needed.  The ProcessLaunchInfo is
+comment|///       provided in read-write mode, and may be modified by the
+comment|///       plugin if, for instance, additional environment variables
+comment|///       are needed to support the feature when enabled.
+comment|///
+comment|/// @return
+comment|///    Returns true upon success; otherwise, false.
+comment|//------------------------------------------------------------------
+specifier|static
+name|bool
+name|RegisterPlugin
+parameter_list|(
+specifier|const
+name|ConstString
+modifier|&
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|description
+parameter_list|,
+name|StructuredDataPluginCreateInstance
+name|create_callback
+parameter_list|,
+name|DebuggerInitializeCallback
+name|debugger_init_callback
+init|=
+name|nullptr
+parameter_list|,
+name|StructuredDataFilterLaunchInfo
+name|filter_callback
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+specifier|static
+name|bool
+name|UnregisterPlugin
+parameter_list|(
+name|StructuredDataPluginCreateInstance
+name|create_callback
+parameter_list|)
+function_decl|;
+specifier|static
+name|StructuredDataPluginCreateInstance
+name|GetStructuredDataPluginCreateCallbackAtIndex
+parameter_list|(
+name|uint32_t
+name|idx
+parameter_list|)
+function_decl|;
+specifier|static
+name|StructuredDataPluginCreateInstance
+name|GetStructuredDataPluginCreateCallbackForPluginName
+parameter_list|(
+specifier|const
+name|ConstString
+modifier|&
+name|name
+parameter_list|)
+function_decl|;
+specifier|static
+name|StructuredDataFilterLaunchInfo
+name|GetStructuredDataFilterCallbackAtIndex
+parameter_list|(
+name|uint32_t
+name|idx
+parameter_list|,
+name|bool
+modifier|&
+name|iteration_complete
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|// SymbolFile
 comment|//------------------------------------------------------------------
@@ -1588,6 +1691,46 @@ expr_stmt|;
 specifier|static
 name|bool
 name|CreateSettingForOperatingSystemPlugin
+argument_list|(
+name|Debugger
+operator|&
+name|debugger
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|OptionValuePropertiesSP
+operator|&
+name|properties_sp
+argument_list|,
+specifier|const
+name|ConstString
+operator|&
+name|description
+argument_list|,
+name|bool
+name|is_global_property
+argument_list|)
+decl_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|OptionValuePropertiesSP
+name|GetSettingForStructuredDataPlugin
+argument_list|(
+name|Debugger
+operator|&
+name|debugger
+argument_list|,
+specifier|const
+name|ConstString
+operator|&
+name|setting_name
+argument_list|)
+expr_stmt|;
+specifier|static
+name|bool
+name|CreateSettingForStructuredDataPlugin
 argument_list|(
 name|Debugger
 operator|&

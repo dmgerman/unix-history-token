@@ -170,7 +170,8 @@ block|,
 comment|///< Process is object is valid, but not currently loaded
 name|eStateConnected
 block|,
-comment|///< Process is connected to remote debug services, but not launched or attached to anything yet
+comment|///< Process is connected to remote debug services, but not
+comment|///launched or attached to anything yet
 name|eStateAttaching
 block|,
 comment|///< Process is currently trying to attach
@@ -185,7 +186,8 @@ block|,
 comment|///< Process or thread is running and can't be examined.
 name|eStateStepping
 block|,
-comment|///< Process or thread is in the process of stepping and can not be examined.
+comment|///< Process or thread is in the process of stepping and can
+comment|///not be examined.
 name|eStateCrashed
 block|,
 comment|///< Process or thread has crashed and can be examined.
@@ -221,7 +223,8 @@ operator|<<
 literal|0
 operator|)
 operator|,
-comment|///< Exec when launching and turn the calling process into a new process
+comment|///< Exec when launching and turn the calling
+comment|///process into a new process
 name|eLaunchFlagDebug
 operator|=
 operator|(
@@ -230,7 +233,8 @@ operator|<<
 literal|1
 operator|)
 operator|,
-comment|///< Stop as soon as the process launches to allow the process to be debugged
+comment|///< Stop as soon as the process launches to
+comment|///allow the process to be debugged
 name|eLaunchFlagStopAtEntry
 operator|=
 operator|(
@@ -239,7 +243,9 @@ operator|<<
 literal|2
 operator|)
 operator|,
-comment|///< Stop at the program entry point instead of auto-continuing when launching or attaching at entry point
+comment|///< Stop at the program entry point
+comment|///instead of auto-continuing when
+comment|///launching or attaching at entry point
 name|eLaunchFlagDisableASLR
 operator|=
 operator|(
@@ -293,7 +299,9 @@ operator|<<
 literal|8
 operator|)
 operator|,
-comment|///< If you are going to hand the process off (e.g. to debugserver)
+comment|///< If you are going to hand the
+comment|///process off (e.g. to
+comment|///debugserver)
 comment|///< set this flag so lldb& the handee don't race to set its exit status.
 name|eLaunchFlagDetachOnError
 operator|=
@@ -303,7 +311,9 @@ operator|<<
 literal|9
 operator|)
 operator|,
-comment|///< If set, then the client stub should detach rather than killing the debugee
+comment|///< If set, then the client stub
+comment|///should detach rather than killing
+comment|///the debugee
 comment|///< if it loses connection with lldb.
 name|eLaunchFlagShellExpandArguments
 operator|=
@@ -435,7 +445,8 @@ name|eFormatOctal
 block|,
 name|eFormatOSType
 block|,
-comment|// OS character codes encoded into an integer 'PICT' 'text' etc...
+comment|// OS character codes encoded into an integer 'PICT' 'text'
+comment|// etc...
 name|eFormatUnicode16
 block|,
 name|eFormatUnicode32
@@ -475,10 +486,13 @@ block|,
 comment|// Integer complex type
 name|eFormatCharArray
 block|,
-comment|// Print characters with no single quotes, used for character arrays that can contain non printable characters
+comment|// Print characters with no single quotes, used for
+comment|// character arrays that can contain non printable
+comment|// characters
 name|eFormatAddressInfo
 block|,
-comment|// Describe what an address points to (func + offset with file/line, symbol + offset, data, etc)
+comment|// Describe what an address points to (func + offset with
+comment|// file/line, symbol + offset, data, etc)
 name|eFormatHexFloat
 block|,
 comment|// ISO C99 hex float string
@@ -492,7 +506,8 @@ name|kNumFormats
 block|}
 enum|;
 comment|//----------------------------------------------------------------------
-comment|// Description levels for "void GetDescription(Stream *, DescriptionLevel)" calls
+comment|// Description levels for "void GetDescription(Stream *, DescriptionLevel)"
+comment|// calls
 comment|//----------------------------------------------------------------------
 enum|enum
 name|DescriptionLevel
@@ -523,6 +538,8 @@ block|,
 name|eScriptLanguageDefault
 init|=
 name|eScriptLanguagePython
+block|,
+name|eScriptLanguageUnknown
 block|}
 enum|;
 comment|//----------------------------------------------------------------------
@@ -544,10 +561,12 @@ block|,
 comment|// the register numbers seen DWARF
 name|eRegisterKindGeneric
 block|,
-comment|// insn ptr reg, stack ptr reg, etc not specific to any particular target
+comment|// insn ptr reg, stack ptr reg, etc not specific to any
+comment|// particular target
 name|eRegisterKindProcessPlugin
 block|,
-comment|// num used by the process plugin - e.g. by the remote gdb-protocol stub program
+comment|// num used by the process plugin - e.g. by the
+comment|// remote gdb-protocol stub program
 name|eRegisterKindLLDB
 block|,
 comment|// lldb's internal register numbers
@@ -659,7 +678,8 @@ block|,
 comment|// No connection
 name|eConnectionStatusLostConnection
 block|,
-comment|// Lost connection while connected to a valid connection
+comment|// Lost connection while connected to a valid
+comment|// connection
 name|eConnectionStatusInterrupted
 comment|// Interrupted read
 block|}
@@ -775,7 +795,9 @@ operator|<<
 literal|0
 operator|)
 operator|,
-comment|///< Set when \a target is requested from a query, or was located in query results
+comment|///< Set when \a target is requested from
+comment|///a query, or was located in query
+comment|///results
 name|eSymbolContextModule
 operator|=
 operator|(
@@ -784,7 +806,9 @@ operator|<<
 literal|1
 operator|)
 operator|,
-comment|///< Set when \a module is requested from a query, or was located in query results
+comment|///< Set when \a module is requested from
+comment|///a query, or was located in query
+comment|///results
 name|eSymbolContextCompUnit
 operator|=
 operator|(
@@ -793,7 +817,9 @@ operator|<<
 literal|2
 operator|)
 operator|,
-comment|///< Set when \a comp_unit is requested from a query, or was located in query results
+comment|///< Set when \a comp_unit is requested
+comment|///from a query, or was located in query
+comment|///results
 name|eSymbolContextFunction
 operator|=
 operator|(
@@ -802,7 +828,9 @@ operator|<<
 literal|3
 operator|)
 operator|,
-comment|///< Set when \a function is requested from a query, or was located in query results
+comment|///< Set when \a function is requested
+comment|///from a query, or was located in query
+comment|///results
 name|eSymbolContextBlock
 operator|=
 operator|(
@@ -811,7 +839,9 @@ operator|<<
 literal|4
 operator|)
 operator|,
-comment|///< Set when the deepest \a block is requested from a query, or was located in query results
+comment|///< Set when the deepest \a block is
+comment|///requested from a query, or was located
+comment|///in query results
 name|eSymbolContextLineEntry
 operator|=
 operator|(
@@ -820,7 +850,9 @@ operator|<<
 literal|5
 operator|)
 operator|,
-comment|///< Set when \a line_entry is requested from a query, or was located in query results
+comment|///< Set when \a line_entry is
+comment|///requested from a query, or was
+comment|///located in query results
 name|eSymbolContextSymbol
 operator|=
 operator|(
@@ -829,7 +861,9 @@ operator|<<
 literal|6
 operator|)
 operator|,
-comment|///< Set when \a symbol is requested from a query, or was located in query results
+comment|///< Set when \a symbol is requested from
+comment|///a query, or was located in query
+comment|///results
 name|eSymbolContextEverything
 operator|=
 operator|(
@@ -842,7 +876,9 @@ operator|-
 literal|1u
 operator|)
 operator|,
-comment|///< Indicates to try and lookup everything up during a routine symbol context query.
+comment|///< Indicates to try and lookup everything
+comment|///up during a routine symbol context
+comment|///query.
 name|eSymbolContextVariable
 operator|=
 operator|(
@@ -850,9 +886,13 @@ literal|1u
 operator|<<
 literal|7
 operator|)
-comment|///< Set when \a global or static variable is requested from a query, or was located in query results.
-comment|///< eSymbolContextVariable is potentially expensive to lookup so it isn't included in
-comment|///< eSymbolContextEverything which stops it from being used during frame PC lookups and
+comment|///< Set when \a global or static
+comment|///variable is requested from a query, or
+comment|///was located in query results.
+comment|///< eSymbolContextVariable is potentially expensive to lookup so it isn't
+comment|///included in
+comment|///< eSymbolContextEverything which stops it from being used during frame PC
+comment|///lookups and
 comment|///< many other potential address to symbol context lookups.
 block|}
 empty_stmt|;
@@ -894,10 +934,12 @@ block|,
 comment|// reader is newly pushed onto the reader stack
 name|eInputReaderAsynchronousOutputWritten
 block|,
-comment|// an async output event occurred; the reader may want to do something
+comment|// an async output event occurred; the
+comment|// reader may want to do something
 name|eInputReaderReactivate
 block|,
-comment|// reader is on top of the stack again after another reader was popped off
+comment|// reader is on top of the stack again after another
+comment|// reader was popped off
 name|eInputReaderDeactivate
 block|,
 comment|// another reader was pushed on the stack
@@ -906,10 +948,12 @@ block|,
 comment|// reader got one of its tokens (granularity)
 name|eInputReaderInterrupt
 block|,
-comment|// reader received an interrupt signal (probably from a control-c)
+comment|// reader received an interrupt signal (probably from a
+comment|// control-c)
 name|eInputReaderEndOfFile
 block|,
-comment|// reader received an EOF char (probably from a control-d)
+comment|// reader received an EOF char (probably from a
+comment|// control-d)
 name|eInputReaderDone
 comment|// reader was just popped off the stack and is done
 block|}
@@ -951,7 +995,9 @@ operator|<<
 literal|3
 operator|)
 operator|,
-comment|// Locations added doesn't get sent when the breakpoint is created
+comment|// Locations added doesn't
+comment|// get sent when the
+comment|// breakpoint is created
 name|eBreakpointEventTypeLocationsRemoved
 operator|=
 operator|(
@@ -1345,6 +1391,26 @@ literal|2
 block|}
 enum|;
 enum|enum
+name|StopShowColumn
+block|{
+name|eStopShowColumnAnsiOrCaret
+init|=
+literal|0
+block|,
+name|eStopShowColumnAnsi
+init|=
+literal|1
+block|,
+name|eStopShowColumnCaret
+init|=
+literal|2
+block|,
+name|eStopShowColumnNone
+init|=
+literal|3
+block|}
+enum|;
+enum|enum
 name|AccessType
 block|{
 name|eAccessNone
@@ -1532,7 +1598,8 @@ block|,
 name|eArgRawInput
 block|,
 name|eArgTypeLastArg
-comment|// Always keep this entry as the last entry in this enumeration!!
+comment|// Always keep this entry as the last entry in this
+comment|// enumeration!!
 block|}
 enum|;
 comment|//----------------------------------------------------------------------
@@ -1591,7 +1658,8 @@ name|eSymbolTypeScopeEnd
 block|,
 name|eSymbolTypeAdditional
 block|,
-comment|// When symbols take more than one entry, the extra entries get this type
+comment|// When symbols take more than one entry, the extra
+comment|// entries get this type
 name|eSymbolTypeCompiler
 block|,
 name|eSymbolTypeInstrumentation
@@ -1702,12 +1770,14 @@ name|eSectionTypeARMextab
 block|,
 name|eSectionTypeCompactUnwind
 block|,
-comment|// compact unwind section in Mach-O, __TEXT,__unwind_info
+comment|// compact unwind section in Mach-O,
+comment|// __TEXT,__unwind_info
 name|eSectionTypeGoSymtab
 block|,
 name|eSectionTypeAbsoluteAddress
 block|,
-comment|// Dummy section for symbols with absolute address
+comment|// Dummy section for symbols with absolute
+comment|// address
 name|eSectionTypeOther
 block|}
 enum|;
@@ -1779,7 +1849,8 @@ operator|<<
 literal|3
 operator|)
 operator|,
-comment|// The function name only, no namespaces or arguments and no class
+comment|// The function name only, no namespaces
+comment|// or arguments and no class
 comment|// methods or selectors will be searched.
 name|eFunctionNameTypeMethod
 operator|=
@@ -1789,7 +1860,8 @@ operator|<<
 literal|4
 operator|)
 operator|,
-comment|// Find function by method name (C++) with no namespace or arguments
+comment|// Find function by method name (C++)
+comment|// with no namespace or arguments
 name|eFunctionNameTypeSelector
 operator|=
 operator|(
@@ -2165,14 +2237,19 @@ operator|)
 block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------
-comment|// This is the return value for frame comparisons.  If you are comparing frame A to frame B
+comment|// This is the return value for frame comparisons.  If you are comparing frame A
+comment|// to frame B
 comment|// the following cases arise:
-comment|// 1) When frame A pushes frame B (or a frame that ends up pushing B) A is Older than B.
-comment|// 2) When frame A pushed frame B (or if frame A is on the stack but B is not) A is Younger than B
+comment|// 1) When frame A pushes frame B (or a frame that ends up pushing B) A is Older
+comment|// than B.
+comment|// 2) When frame A pushed frame B (or if frame A is on the stack but B is not) A
+comment|// is Younger than B
 comment|// 3) When frame A and frame B have the same StackID, they are Equal.
-comment|// 4) When frame A and frame B have the same immediate parent frame, but are not equal, the comparision yields
+comment|// 4) When frame A and frame B have the same immediate parent frame, but are not
+comment|// equal, the comparison yields
 comment|//    SameParent.
-comment|// 5) If the two frames are on different threads or processes the comparision is Invalid
+comment|// 5) If the two frames are on different threads or processes the comparison is
+comment|// Invalid
 comment|// 6) If for some reason we can't figure out what went on, we return Unknown.
 comment|//----------------------------------------------------------------------
 enum|enum
@@ -2583,10 +2660,12 @@ name|PathType
 block|{
 name|ePathTypeLLDBShlibDir
 block|,
-comment|// The directory where the lldb.so (unix) or LLDB mach-o file in LLDB.framework (MacOSX) exists
+comment|// The directory where the lldb.so (unix) or LLDB
+comment|// mach-o file in LLDB.framework (MacOSX) exists
 name|ePathTypeSupportExecutableDir
 block|,
-comment|// Find LLDB support executable directory (debugserver, etc)
+comment|// Find LLDB support executable directory
+comment|// (debugserver, etc)
 name|ePathTypeHeaderDir
 block|,
 comment|// Find LLDB header file directory
@@ -2601,10 +2680,12 @@ block|,
 comment|// User plug-ins directory
 name|ePathTypeLLDBTempSystemDir
 block|,
-comment|// The LLDB temp directory for this system that will be cleaned up on exit
+comment|// The LLDB temp directory for this system that
+comment|// will be cleaned up on exit
 name|ePathTypeGlobalLLDBTempSystemDir
 block|,
-comment|// The LLDB temp directory for this system, NOT cleaned up on a process exit.
+comment|// The LLDB temp directory for this system,
+comment|// NOT cleaned up on a process exit.
 name|ePathTypeClangDir
 comment|// Find path to Clang builtin headers
 block|}
@@ -2626,12 +2707,15 @@ block|,
 comment|// A function used to create instances
 name|eMemberFunctionKindDestructor
 block|,
-comment|// A function used to tear down existing instances
+comment|// A function used to tear down existing
+comment|// instances
 name|eMemberFunctionKindInstanceMethod
 block|,
-comment|// A function that applies to a specific instance
+comment|// A function that applies to a specific
+comment|// instance
 name|eMemberFunctionKindStaticMethod
-comment|// A function that applies to a type rather than any instance
+comment|// A function that applies to a type rather
+comment|// than any instance
 block|}
 enum|;
 comment|//----------------------------------------------------------------------

@@ -95,7 +95,7 @@ name|public
 operator|:
 name|NativeRegisterContextLinux_x86_64
 argument_list|(
-argument|const ArchSpec& target_arch
+argument|const ArchSpec&target_arch
 argument_list|,
 argument|NativeThreadProtocol&native_thread
 argument_list|,
@@ -270,15 +270,26 @@ name|private
 operator|:
 comment|// Private member types.
 expr|enum
-name|FPRType
+name|class
+name|XStateType
 block|{
-name|eFPRTypeNotValid
-operator|=
-literal|0
+name|Invalid
 block|,
-name|eFPRTypeFXSAVE
+name|FXSAVE
 block|,
-name|eFPRTypeXSAVE
+name|XSAVE
+block|}
+block|;   enum
+name|class
+name|RegSet
+block|{
+name|gpr
+block|,
+name|fpu
+block|,
+name|avx
+block|,
+name|mpx
 block|}
 block|;
 comment|// Info about register ranges.
@@ -296,6 +307,9 @@ name|num_fpr_registers
 block|;
 name|uint32_t
 name|num_avx_registers
+block|;
+name|uint32_t
+name|num_mpx_registers
 block|;
 name|uint32_t
 name|last_gpr
@@ -331,25 +345,41 @@ name|uint32_t
 name|last_ymm
 block|;
 name|uint32_t
+name|first_mpxr
+block|;
+name|uint32_t
+name|last_mpxr
+block|;
+name|uint32_t
+name|first_mpxc
+block|;
+name|uint32_t
+name|last_mpxc
+block|;
+name|uint32_t
 name|first_dr
 block|;
 name|uint32_t
 name|gpr_flags
-block|;         }
+block|;   }
 block|;
 comment|// Private member variables.
 name|mutable
-name|FPRType
-name|m_fpr_type
+name|XStateType
+name|m_xstate_type
 block|;
 name|FPR
 name|m_fpr
 block|;
+comment|// Extended States Area, named FPR for historical reasons.
 name|IOVEC
 name|m_iovec
 block|;
 name|YMM
 name|m_ymm_set
+block|;
+name|MPX
+name|m_mpx_set
 block|;
 name|RegInfo
 name|m_reg_info
@@ -365,6 +395,13 @@ name|m_fctrl_offset_in_userarea
 block|;
 comment|// Private member methods.
 name|bool
+name|IsCPUFeatureAvailable
+argument_list|(
+argument|RegSet feature_code
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|IsRegisterSetAvailable
 argument_list|(
 argument|uint32_t set_index
@@ -378,24 +415,10 @@ argument|uint32_t reg_index
 argument_list|)
 specifier|const
 block|;
-name|FPRType
-name|GetFPRType
-argument_list|()
-specifier|const
-block|;
 name|bool
 name|IsFPR
 argument_list|(
 argument|uint32_t reg_index
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|IsFPR
-argument_list|(
-argument|uint32_t reg_index
-argument_list|,
-argument|FPRType fpr_type
 argument_list|)
 specifier|const
 block|;
@@ -421,7 +444,26 @@ argument_list|(
 argument|uint32_t reg_index
 argument_list|)
 specifier|const
-block|;     }
+block|;
+name|bool
+name|CopyXSTATEtoMPX
+argument_list|(
+argument|uint32_t reg
+argument_list|)
+block|;
+name|bool
+name|CopyMPXtoXSTATE
+argument_list|(
+argument|uint32_t reg
+argument_list|)
+block|;
+name|bool
+name|IsMPX
+argument_list|(
+argument|uint32_t reg_index
+argument_list|)
+specifier|const
+block|; }
 decl_stmt|;
 block|}
 comment|// namespace process_linux

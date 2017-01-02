@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/dwarf.h"
+file|"DIERef.h"
 end_include
 
 begin_include
@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-defines.h"
+file|"lldb/Core/dwarf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DIERef.h"
+file|"lldb/lldb-defines.h"
 end_include
 
 begin_decl_stmt
@@ -90,11 +90,11 @@ argument_list|()
 operator|:
 name|m_map
 argument_list|()
-block|{     }
+block|{}
 operator|~
 name|NameToDIE
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Dump
 argument_list|(
@@ -187,15 +187,9 @@ name|function
 operator|<
 name|bool
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|,
-specifier|const
-name|DIERef
-operator|&
-name|die_ref
+argument|const DIERef&die_ref
 argument_list|)
 operator|>
 specifier|const

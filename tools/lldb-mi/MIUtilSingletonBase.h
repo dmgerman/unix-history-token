@@ -54,7 +54,8 @@ comment|//       // From MI::ISingleton
 comment|//       bool Initialize() override;
 comment|//       bool Shutdown() override;
 comment|//   };
-comment|//++ ============================================================================
+comment|//++
+comment|//============================================================================
 comment|// Details: Base class for the singleton pattern.
 comment|// Gotchas: Derived class must specify MI::ISingleton<> as a friend class.
 comment|//--

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SBTypeNameSpecifier.h --------------------------------------*- C++ -*-===//
+comment|//===-- SBTypeNameSpecifier.h --------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -64,7 +68,7 @@ argument_list|()
 expr_stmt|;
 name|SBTypeNameSpecifier
 argument_list|(
-argument|const char* name
+argument|const char *name
 argument_list|,
 argument|bool is_regex = false
 argument_list|)

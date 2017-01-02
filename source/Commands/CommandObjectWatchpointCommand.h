@@ -62,7 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
+file|"lldb/Interpreter/CommandObjectMultiword.h"
 end_include
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/CommandObjectMultiword.h"
+file|"lldb/lldb-types.h"
 end_include
 
 begin_decl_stmt

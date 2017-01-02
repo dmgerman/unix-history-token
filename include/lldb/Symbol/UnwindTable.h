@@ -122,12 +122,17 @@ name|bool
 name|GetAllowAssemblyEmulationUnwindPlans
 parameter_list|()
 function_decl|;
-comment|// Normally when we create a new FuncUnwinders object we track it in this UnwindTable so it can
-comment|// be reused later.  But for the target modules show-unwind we want to create brand new
-comment|// UnwindPlans for the function of interest - so ignore any existing FuncUnwinders for that
+comment|// Normally when we create a new FuncUnwinders object we track it in this
+comment|// UnwindTable so it can
+comment|// be reused later.  But for the target modules show-unwind we want to create
+comment|// brand new
+comment|// UnwindPlans for the function of interest - so ignore any existing
+comment|// FuncUnwinders for that
 comment|// function and don't add this new one to our UnwindTable.
-comment|// This FuncUnwinders object does have a reference to the UnwindTable but the lifetime of this
-comment|// uncached FuncUnwinders is expected to be short so in practice this will not be a problem.
+comment|// This FuncUnwinders object does have a reference to the UnwindTable but the
+comment|// lifetime of this
+comment|// uncached FuncUnwinders is expected to be short so in practice this will not
+comment|// be a problem.
 name|lldb
 operator|::
 name|FuncUnwindersSP

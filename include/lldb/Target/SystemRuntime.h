@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -98,19 +92,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/QueueList.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/QueueItem.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"lldb/Target/QueueList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -366,12 +366,14 @@ name|PopulateQueueList
 argument_list|(
 argument|lldb_private::QueueList&queue_list
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Get the queue name for a thread given a thread's dispatch_qaddr.
 comment|///
-comment|/// On systems using libdispatch queues, a thread may be associated with a queue.
-comment|/// There will be a call to get the thread's dispatch_qaddr.  At the dispatch_qaddr
+comment|/// On systems using libdispatch queues, a thread may be associated with a
+comment|/// queue.
+comment|/// There will be a call to get the thread's dispatch_qaddr.  At the
+comment|/// dispatch_qaddr
 comment|/// we will find the address of this thread's dispatch_queue_t structure.
 comment|/// Given the address of the dispatch_queue_t structure for a thread,
 comment|/// get the queue name and return it.
@@ -397,10 +399,13 @@ literal|""
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Get the QueueID for the libdispatch queue given the thread's dispatch_qaddr.
+comment|/// Get the QueueID for the libdispatch queue given the thread's
+comment|/// dispatch_qaddr.
 comment|///
-comment|/// On systems using libdispatch queues, a thread may be associated with a queue.
-comment|/// There will be a call to get the thread's dispatch_qaddr.  At the dispatch_qaddr
+comment|/// On systems using libdispatch queues, a thread may be associated with a
+comment|/// queue.
+comment|/// There will be a call to get the thread's dispatch_qaddr.  At the
+comment|/// dispatch_qaddr
 comment|/// we will find the address of this thread's dispatch_queue_t structure.
 comment|/// Given the address of the dispatch_queue_t structure for a thread,
 comment|/// get the queue ID and return it.
@@ -425,18 +430,22 @@ name|LLDB_INVALID_QUEUE_ID
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Get the libdispatch_queue_t address for the queue given the thread's dispatch_qaddr.
+comment|/// Get the libdispatch_queue_t address for the queue given the thread's
+comment|/// dispatch_qaddr.
 comment|///
-comment|/// On systems using libdispatch queues, a thread may be associated with a queue.
+comment|/// On systems using libdispatch queues, a thread may be associated with a
+comment|/// queue.
 comment|/// There will be a call to get the thread's dispatch_qaddr.
-comment|/// Given the thread's dispatch_qaddr, find the libdispatch_queue_t address and
+comment|/// Given the thread's dispatch_qaddr, find the libdispatch_queue_t address
+comment|/// and
 comment|/// return it.
 comment|///
 comment|/// @param [in] dispatch_qaddr
 comment|///     The address of the dispatch_qaddr pointer for this thread.
 comment|///
 comment|/// @return
-comment|///     The libdispatch_queue_t address, or LLDB_INVALID_ADDRESS if unavailable/not found.
+comment|///     The libdispatch_queue_t address, or LLDB_INVALID_ADDRESS if
+comment|///     unavailable/not found.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -492,7 +501,7 @@ name|PopulatePendingItemsForQueue
 argument_list|(
 argument|lldb_private::Queue *queue
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Complete the fields in a QueueItem
 comment|///
@@ -515,10 +524,11 @@ argument|lldb_private::QueueItem *queue_item
 argument_list|,
 argument|lldb::addr_t item_ref
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Add key-value pairs to the StructuredData dictionary object with
-comment|/// information debugserver  may need when constructing the jThreadExtendedInfo
+comment|/// information debugserver  may need when constructing the
+comment|/// jThreadExtendedInfo
 comment|/// packet.
 comment|///
 comment|/// @param [out] dict
@@ -532,7 +542,7 @@ name|AddThreadExtendedInfoPacketHints
 argument_list|(
 argument|lldb_private::StructuredData::ObjectSP dict
 argument_list|)
-block|{     }
+block|{}
 comment|/// Determine whether it is safe to run an expression on a given thread
 comment|///
 comment|/// If a system must not run functions on a thread in some particular state,

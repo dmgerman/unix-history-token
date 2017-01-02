@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ObjectContainer.h"
+file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Symbol/ObjectContainer.h"
 end_include
 
 begin_include
@@ -92,7 +92,7 @@ name|ObjectContainerUniversalMachO
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -144,7 +144,7 @@ name|CreateInstance
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -159,9 +159,9 @@ specifier|static
 name|size_t
 name|GetModuleSpecifications
 argument_list|(
-argument|const lldb_private::FileSpec& file
+argument|const lldb_private::FileSpec&file
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -211,7 +211,7 @@ name|GetArchitectureAtIndex
 argument_list|(
 argument|uint32_t cpu_idx
 argument_list|,
-argument|lldb_private::ArchSpec& arch
+argument|lldb_private::ArchSpec&arch
 argument_list|)
 specifier|const
 name|override

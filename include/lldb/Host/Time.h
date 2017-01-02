@@ -50,7 +50,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__ANDROID_NDK__
+name|__ANDROID__
 end_ifdef
 
 begin_include

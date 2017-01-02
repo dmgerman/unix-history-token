@@ -46,13 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
+file|"lldb/Core/Stream.h"
 end_include
 
 begin_include
@@ -64,7 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Stream.h"
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -100,7 +100,7 @@ argument_list|)
 block|,
 name|m_packet
 argument_list|()
-block|{     }
+block|{}
 name|StreamBuffer
 argument_list|(
 argument|uint32_t flags
@@ -121,12 +121,12 @@ argument_list|)
 block|,
 name|m_packet
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|StreamBuffer
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 name|void
 name|Flush
@@ -188,7 +188,8 @@ expr_stmt|;
 block|}
 comment|// Beware, this might not be NULL terminated as you can expect from
 comment|// StringString as there may be random bits in the llvm::SmallVector. If
-comment|// you are using this class to create a C string, be sure the call PutChar ('\0')
+comment|// you are using this class to create a C string, be sure the call PutChar
+comment|// ('\0')
 comment|// after you have created your string, or use StreamString.
 specifier|const
 name|char

@@ -106,12 +106,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/StreamString.h"
 end_include
 
@@ -119,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -526,11 +526,9 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|GetErrors
 argument_list|()
 specifier|const
@@ -595,11 +593,9 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|GetErrors
 argument_list|()
 specifier|const

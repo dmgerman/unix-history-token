@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"DWARFDefines.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DWARFDefines.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -95,7 +95,7 @@ name|m_form
 argument_list|(
 argument|form
 argument_list|)
-block|{     }
+block|{}
 name|void
 name|set
 argument_list|(
@@ -111,7 +111,7 @@ block|;
 name|m_form
 operator|=
 name|form
-block|; }
+block|;   }
 name|void
 name|set_attr
 argument_list|(
@@ -429,7 +429,8 @@ name|DWARFCompileUnit
 modifier|*
 name|cu
 decl_stmt|;
-comment|// Keep the compile unit with each attribute in case we have DW_FORM_ref_addr values
+comment|// Keep the compile unit with each attribute in
+comment|// case we have DW_FORM_ref_addr values
 name|dw_offset_t
 name|die_offset
 decl_stmt|;

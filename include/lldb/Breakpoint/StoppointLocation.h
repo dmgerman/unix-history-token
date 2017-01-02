@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/UserID.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UserID.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_comment
@@ -215,7 +215,7 @@ operator|*
 name|stream
 argument_list|)
 decl|const
-block|{     }
+block|{}
 name|void
 name|SetHardwareIndex
 parameter_list|(
@@ -260,22 +260,26 @@ comment|// store a full Address since that's not needed for the breakpoint sites
 name|bool
 name|m_hardware
 decl_stmt|;
-comment|// True if this point has been is required to use hardware (which may fail due to lack of resources)
+comment|// True if this point has been is required to use hardware
+comment|// (which may fail due to lack of resources)
 name|uint32_t
 name|m_hardware_index
 decl_stmt|;
-comment|// The hardware resource index for this breakpoint/watchpoint
+comment|// The hardware resource index for this
+comment|// breakpoint/watchpoint
 name|uint32_t
 name|m_byte_size
 decl_stmt|;
-comment|// The size in bytes of stop location.  e.g. the length of the trap opcode for
+comment|// The size in bytes of stop location.  e.g. the length
+comment|// of the trap opcode for
 comment|// software breakpoints, or the optional length in bytes for
 comment|// hardware breakpoints, or the length of the watchpoint.
 name|uint32_t
 name|m_hit_count
 decl_stmt|;
 comment|// Number of times this breakpoint/watchpoint has been hit
-comment|// If you override this, be sure to call the base class to increment the internal counter.
+comment|// If you override this, be sure to call the base class to increment the
+comment|// internal counter.
 name|void
 name|IncrementHitCount
 parameter_list|()

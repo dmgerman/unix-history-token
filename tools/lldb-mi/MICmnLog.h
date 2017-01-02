@@ -54,12 +54,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MIUtilString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MICmnBase.h"
 end_include
 
@@ -69,8 +63,18 @@ directive|include
 file|"MIUtilSingletonBase.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MIUtilString.h"
+end_include
+
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -133,14 +137,17 @@ comment|// Enumeration:
 name|public
 operator|:
 comment|//++
-comment|// Description: Data given to the Logger can be of several types. The Logger can be
-comment|//              set at levels of verbosity. Can determine how data is sent to one or
+comment|// Description: Data given to the Logger can be of several types. The Logger
+comment|// can be
+comment|//              set at levels of verbosity. Can determine how data is sent to
+comment|//              one or
 comment|//              mediums.
 comment|//--
 expr|enum
 name|ELogVerbosity
 block|{
-comment|// Descriptions of what 'may' occur, depends ultimately on the medium itself. See the medium.
+comment|// Descriptions of what 'may' occur, depends ultimately
+comment|// on the medium itself. See the medium.
 name|eLogVerbosity_FnTrace
 operator|=
 literal|0x00000004
@@ -150,12 +157,15 @@ name|eLogVerbosity_DbgOp
 operator|=
 literal|0x00000008
 block|,
-comment|// Send a string to the debugger for display (not implemented)
+comment|// Send a string to the debugger for
+comment|// display (not implemented)
 name|eLogVerbosity_ClientMsg
 operator|=
 literal|0x00000010
 block|,
-comment|// A client using MI can insert messages into the log (not implemented)
+comment|// A client using MI can insert
+comment|// messages into the log (not
+comment|// implemented)
 name|eLogVerbosity_Log
 operator|=
 literal|0x00000020
@@ -285,7 +295,8 @@ name|GetEnabled
 argument_list|()
 specifier|const
 block|;
-comment|// MI common object handling - duplicate of CMICmnBase functions, necessary for LINUX build
+comment|// MI common object handling - duplicate of CMICmnBase functions, necessary
+comment|// for LINUX build
 comment|// Done to stop locking on object construction init circular dependency.
 specifier|const
 name|CMIUtilString
@@ -447,7 +458,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = Logger enabled for writing to mediums, false = medium not written to
+comment|// True = Logger enabled for writing to mediums, false =
+end_comment
+
+begin_comment
+comment|// medium not written to
 end_comment
 
 begin_decl_stmt
@@ -457,7 +472,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = Yes in process of initing *this logger, false = not initing
+comment|// True = Yes in process of initing *this logger,
+end_comment
+
+begin_comment
+comment|// false = not initing
 end_comment
 
 begin_comment
@@ -465,7 +484,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MI common object handling - duplicate of CMICmnBase functions, necessary for LINUX build
+comment|// MI common object handling - duplicate of CMICmnBase functions, necessary
+end_comment
+
+begin_comment
+comment|// for LINUX build
 end_comment
 
 begin_decl_stmt
@@ -475,7 +498,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = yes successfully initialized, false = no yet or failed
+comment|// True = yes successfully initialized, false = no yet or
+end_comment
+
+begin_comment
+comment|// failed
 end_comment
 
 begin_decl_stmt
@@ -492,7 +519,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Count of client using *this object so not shutdown() object to early
+comment|// Count of client using *this object so not
+end_comment
+
+begin_comment
+comment|// shutdown() object to early
 end_comment
 
 unit|};

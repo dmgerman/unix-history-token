@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Address.h"
 end_include
 
@@ -95,13 +89,21 @@ directive|include
 file|"lldb/Utility/Iterable.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class BreakpointLocationList BreakpointLocationList.h "lldb/Breakpoint/BreakpointLocationList.h"
-comment|/// @brief This class is used by Breakpoint to manage a list of breakpoint locations,
+comment|/// @class BreakpointLocationList BreakpointLocationList.h
+comment|/// "lldb/Breakpoint/BreakpointLocationList.h"
+comment|/// @brief This class is used by Breakpoint to manage a list of breakpoint
+comment|/// locations,
 comment|//  each breakpoint location in the list
 comment|/// has a unique ID, and is unique by Address as well.
 comment|//----------------------------------------------------------------------
@@ -109,9 +111,12 @@ name|class
 name|BreakpointLocationList
 block|{
 comment|// Only Breakpoints can make the location list, or add elements to it.
-comment|// This is not just some random collection of locations.  Rather, the act of adding the location
-comment|// to this list sets its ID, and implicitly all the locations have the same breakpoint ID as
-comment|// well.  If you need a generic container for breakpoint locations, use BreakpointLocationCollection.
+comment|// This is not just some random collection of locations.  Rather, the act of
+comment|// adding the location
+comment|// to this list sets its ID, and implicitly all the locations have the same
+comment|// breakpoint ID as
+comment|// well.  If you need a generic container for breakpoint locations, use
+comment|// BreakpointLocationCollection.
 name|friend
 name|class
 name|Breakpoint

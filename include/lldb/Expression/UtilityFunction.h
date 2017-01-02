@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- UtilityFunction.h ----------------------------------------*- C++ -*-===//
+comment|//===-- UtilityFunction.h ----------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -74,6 +78,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Expression/Expression.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-forward.h"
 end_include
 
@@ -83,19 +93,14 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lldb/Expression/Expression.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
 comment|/// @class UtilityFunction UtilityFunction.h "lldb/Expression/UtilityFunction.h"
-comment|/// @brief Encapsulates a bit of source code that provides a function that is callable
+comment|/// @brief Encapsulates a bit of source code that provides a function that is
+comment|/// callable
 comment|///
 comment|/// LLDB uses expressions for various purposes, notably to call functions
 comment|/// and as a backend for the expr command.  UtilityFunction encapsulates
@@ -171,7 +176,8 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Check whether the given PC is inside the function
 comment|///
-comment|/// Especially useful if the function dereferences nullptr to indicate a failed
+comment|/// Especially useful if the function dereferences nullptr to indicate a
+comment|/// failed
 comment|/// assert.
 comment|///
 comment|/// @param[in] pc
@@ -278,7 +284,8 @@ name|false
 return|;
 block|}
 comment|// This makes the function caller function.
-comment|// Pass in the ThreadSP if you have one available, compilation can end up calling code (e.g. to look up indirect
+comment|// Pass in the ThreadSP if you have one available, compilation can end up
+comment|// calling code (e.g. to look up indirect
 comment|// functions) and we don't want this to wander onto another thread.
 name|FunctionCaller
 operator|*
@@ -293,7 +300,8 @@ argument_list|,
 argument|Error&error
 argument_list|)
 block|;
-comment|// This one retrieves the function caller that is already made.  If you haven't made it yet, this returns nullptr
+comment|// This one retrieves the function caller that is already made.  If you
+comment|// haven't made it yet, this returns nullptr
 name|FunctionCaller
 operator|*
 name|GetFunctionCaller
@@ -326,7 +334,8 @@ operator|::
 name|string
 name|m_function_text
 block|;
-comment|///< The text of the function.  Must be a well-formed translation unit.
+comment|///< The text of the function.  Must be a
+comment|///well-formed translation unit.
 name|std
 operator|::
 name|string

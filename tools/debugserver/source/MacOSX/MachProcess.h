@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<mach/mach.h>
+file|<CoreFoundation/CoreFoundation.h>
 end_include
 
 begin_include
@@ -74,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<mach/mach.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -98,19 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<CoreFoundation/CoreFoundation.h>
+file|"DNBBreakpoint.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"DNBDefs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DNBBreakpoint.h"
 end_include
 
 begin_include
@@ -128,13 +128,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MachException.h"
+file|"Genealogy.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MachVMMemory.h"
+file|"JSONGenerator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MachException.h"
 end_include
 
 begin_include
@@ -147,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|"MachThreadList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MachVMMemory.h"
 end_include
 
 begin_include
@@ -170,19 +182,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Genealogy.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ThreadInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"JSONGenerator.h"
 end_include
 
 begin_decl_stmt
@@ -308,7 +308,7 @@ name|mod_date
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 block|}
 struct|;
 comment|//----------------------------------------------------------------------
@@ -2032,7 +2032,8 @@ comment|// A count of many times have we stopped
 name|pthread_t
 name|m_stdio_thread
 decl_stmt|;
-comment|// Thread ID for the thread that watches for child process stdio
+comment|// Thread ID for the thread that watches for child
+comment|// process stdio
 name|PThreadMutex
 name|m_stdio_mutex
 decl_stmt|;
@@ -2049,7 +2050,8 @@ comment|// A flag to indicate if profiling is enabled
 name|useconds_t
 name|m_profile_interval_usec
 decl_stmt|;
-comment|// If enable, the profiling interval in microseconds
+comment|// If enable, the profiling interval in
+comment|// microseconds
 name|DNBProfileDataScanType
 name|m_profile_scan_type
 decl_stmt|;
@@ -2076,7 +2078,8 @@ comment|// Profile data, must be protected by m_profile_data_mutex
 name|DNBThreadResumeActions
 name|m_thread_actions
 decl_stmt|;
-comment|// The thread actions for the current MachProcess::Resume() call
+comment|// The thread actions for the current
+comment|// MachProcess::Resume() call
 name|MachException
 operator|::
 name|Message
@@ -2084,19 +2087,26 @@ operator|::
 name|collection
 name|m_exception_messages
 expr_stmt|;
-comment|// A collection of exception messages caught when listening to the exception port
+comment|// A collection of
+comment|// exception messages
+comment|// caught when
+comment|// listening to the
+comment|// exception port
 name|PThreadMutex
 name|m_exception_messages_mutex
 decl_stmt|;
-comment|// Multithreaded protection for m_exception_messages
+comment|// Multithreaded protection for
+comment|// m_exception_messages
 name|MachThreadList
 name|m_thread_list
 decl_stmt|;
-comment|// A list of threads that is maintained/updated after each stop
+comment|// A list of threads that is maintained/updated
+comment|// after each stop
 name|Genealogy
 name|m_activities
 decl_stmt|;
-comment|// A list of activities that is updated after every stop lazily
+comment|// A list of activities that is updated after every
+comment|// stop lazily
 name|nub_state_t
 name|m_state
 decl_stmt|;
@@ -2108,11 +2118,13 @@ comment|// Multithreaded protection for m_state
 name|PThreadEvent
 name|m_events
 decl_stmt|;
-comment|// Process related events in the child processes lifetime can be waited upon
+comment|// Process related events in the child processes
+comment|// lifetime can be waited upon
 name|PThreadEvent
 name|m_private_events
 decl_stmt|;
-comment|// Used to coordinate running and stopping the process without affecting m_events
+comment|// Used to coordinate running and stopping the
+comment|// process without affecting m_events
 name|DNBBreakpointList
 name|m_breakpoints
 decl_stmt|;
@@ -2144,7 +2156,8 @@ comment|// If we are a SB or BKS process, this will be our bundle ID.
 name|int
 name|m_sent_interrupt_signo
 decl_stmt|;
-comment|// When we call MachProcess::Interrupt(), we want to send a single signal
+comment|// When we call MachProcess::Interrupt(), we want
+comment|// to send a single signal
 comment|// to the inferior and only send the signal if we aren't already stopped.
 comment|// If we end up sending a signal to stop the process we store it until we
 comment|// receive an exception with this signal. This helps us to verify we got
@@ -2154,7 +2167,8 @@ comment|// we don't report a spurious stop on the next resume.
 name|int
 name|m_auto_resume_signo
 decl_stmt|;
-comment|// If we resume the process and still haven't received our interrupt signal
+comment|// If we resume the process and still haven't
+comment|// received our interrupt signal
 comment|// acknownledgement, we will shortly after the next resume. We store the
 comment|// interrupt signal in this variable so when we get the interrupt signal
 comment|// as the sole reason for the process being stopped, we can auto resume

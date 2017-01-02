@@ -92,18 +92,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-enumerations.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -141,6 +129,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/Predicate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -341,18 +341,28 @@ block|}
 name|virtual
 name|bool
 name|SetPrompt
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|prompt
-parameter_list|)
+argument_list|)
 block|{
 comment|// Prompt support isn't mandatory
 return|return
 name|false
 return|;
 block|}
+name|bool
+name|SetPrompt
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 name|virtual
 name|ConstString
 name|GetControlSequence
@@ -643,7 +653,7 @@ name|m_io_handler_done
 argument_list|(
 argument|false
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|IOHandlerDelegate
@@ -659,7 +669,7 @@ name|IOHandler
 modifier|&
 name|io_handler
 parameter_list|)
-block|{         }
+block|{}
 name|virtual
 name|void
 name|IOHandlerDeactivated
@@ -668,7 +678,7 @@ name|IOHandler
 modifier|&
 name|io_handler
 parameter_list|)
-block|{         }
+block|{}
 name|virtual
 name|int
 name|IOHandlerComplete
@@ -799,7 +809,7 @@ name|string
 operator|&
 name|data
 argument_list|)
-block|{         }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Called to determine whether typing enter after the last line in
 comment|/// \a lines should end input.  This function will not be called on
@@ -934,7 +944,7 @@ literal|0
 argument|]) ? end_line :
 literal|""
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|IOHandlerDelegateMultiline
 argument_list|()
@@ -1056,9 +1066,9 @@ argument_list|,
 argument|const char *editline_name
 argument_list|,
 comment|// Used for saving history files
-argument|const char *prompt
+argument|llvm::StringRef prompt
 argument_list|,
-argument|const char *continuation_prompt
+argument|llvm::StringRef continuation_prompt
 argument_list|,
 argument|bool multi_line
 argument_list|,
@@ -1066,7 +1076,9 @@ argument|bool color_prompts
 argument_list|,
 argument|uint32_t line_number_start
 argument_list|,
-comment|// If non-zero show line numbers starting at 'line_number_start'
+comment|// If non-zero show line numbers
+comment|// starting at
+comment|// 'line_number_start'
 argument|IOHandlerDelegate&delegate
 argument_list|)
 block|;
@@ -1087,9 +1099,9 @@ argument_list|,
 argument|const char *editline_name
 argument_list|,
 comment|// Used for saving history files
-argument|const char *prompt
+argument|llvm::StringRef prompt
 argument_list|,
-argument|const char *continuation_prompt
+argument|llvm::StringRef continuation_prompt
 argument_list|,
 argument|bool multi_line
 argument_list|,
@@ -1097,9 +1109,97 @@ argument|bool color_prompts
 argument_list|,
 argument|uint32_t line_number_start
 argument_list|,
-comment|// If non-zero show line numbers starting at 'line_number_start'
+comment|// If non-zero show line numbers
+comment|// starting at
+comment|// 'line_number_start'
 argument|IOHandlerDelegate&delegate
 argument_list|)
+block|;
+name|IOHandlerEditline
+argument_list|(
+name|Debugger
+operator|&
+argument_list|,
+name|IOHandler
+operator|::
+name|Type
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|bool
+argument_list|,
+name|bool
+argument_list|,
+name|uint32_t
+argument_list|,
+name|IOHandlerDelegate
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|IOHandlerEditline
+argument_list|(
+name|Debugger
+operator|&
+argument_list|,
+name|IOHandler
+operator|::
+name|Type
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|StreamFileSP
+operator|&
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|StreamFileSP
+operator|&
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|StreamFileSP
+operator|&
+argument_list|,
+name|uint32_t
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|bool
+argument_list|,
+name|bool
+argument_list|,
+name|uint32_t
+argument_list|,
+name|IOHandlerDelegate
+operator|&
+argument_list|)
+operator|=
+name|delete
 block|;
 operator|~
 name|IOHandlerEditline
@@ -1190,9 +1290,20 @@ block|;
 name|bool
 name|SetPrompt
 argument_list|(
-argument|const char *prompt
+argument|llvm::StringRef prompt
 argument_list|)
 name|override
+block|;
+name|bool
+name|SetPrompt
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|prompt
+argument_list|)
+operator|=
+name|delete
 block|;
 specifier|const
 name|char
@@ -1203,11 +1314,18 @@ block|;
 name|void
 name|SetContinuationPrompt
 argument_list|(
+argument|llvm::StringRef prompt
+argument_list|)
+block|;
+name|void
+name|SetContinuationPrompt
+argument_list|(
 specifier|const
 name|char
 operator|*
-name|prompt
 argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|GetLine
@@ -1258,7 +1376,7 @@ block|{
 name|m_interrupt_exits
 operator|=
 name|b
-block|;         }
+block|; }
 specifier|const
 name|StringList
 operator|*
@@ -1394,13 +1512,18 @@ block|;
 name|bool
 name|m_editing
 block|;
-comment|// Set to true when fetching a line manually (not using libedit)
+comment|// Set to true when fetching a line manually (not using
+comment|// libedit)
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The order of base classes is important. Look at the constructor of IOHandlerConfirm
+comment|// The order of base classes is important. Look at the constructor of
+end_comment
+
+begin_comment
+comment|// IOHandlerConfirm
 end_comment
 
 begin_comment
@@ -1423,7 +1546,7 @@ name|IOHandlerConfirm
 argument_list|(
 argument|Debugger&debugger
 argument_list|,
-argument|const char *prompt
+argument|llvm::StringRef prompt
 argument_list|,
 argument|bool default_response
 argument_list|)
@@ -1564,7 +1687,7 @@ name|curses
 operator|::
 name|ApplicationAP
 name|m_app_ap
-block|;     }
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -1607,7 +1730,7 @@ name|protected
 operator|:
 name|ValueObjectList
 name|m_valobj_list
-block|;     }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

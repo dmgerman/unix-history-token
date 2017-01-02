@@ -216,7 +216,7 @@ name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
 argument_list|,
-argument|lldb_private::Process* process
+argument|lldb_private::Process *process
 argument_list|,
 argument|lldb::ModuleSP&module_sp
 argument_list|,
@@ -276,6 +276,11 @@ name|protected
 operator|:
 name|std
 operator|::
+name|mutex
+name|m_sdk_dir_mutex
+block|;
+name|std
+operator|::
 name|string
 name|m_sdk_directory
 block|;
@@ -296,7 +301,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformAppleTVSimulator
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

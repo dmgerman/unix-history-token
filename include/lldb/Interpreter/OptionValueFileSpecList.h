@@ -91,7 +91,7 @@ argument_list|()
 block|,
 name|m_current_value
 argument_list|()
-block|{     }
+block|{}
 name|OptionValueFileSpecList
 argument_list|(
 specifier|const
@@ -107,12 +107,12 @@ name|m_current_value
 argument_list|(
 argument|current_value
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueFileSpecList
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -147,6 +147,20 @@ argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|Clear
@@ -216,7 +230,7 @@ block|{
 name|m_current_value
 operator|=
 name|value
-block|;     }
+block|; }
 name|protected
 operator|:
 name|FileSpecList

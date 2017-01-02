@@ -73,6 +73,8 @@ name|eInvalidAddress
 operator|,
 name|ePrivilegedAddress
 operator|,
+name|eBoundViolation
+operator|,
 comment|// SIGILL crash reasons.
 name|eIllegalOpcode
 operator|,
@@ -129,6 +131,19 @@ argument_list|(
 argument|CrashReason reason
 argument_list|,
 argument|lldb::addr_t fault_addr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|GetCrashReasonString
+argument_list|(
+argument|CrashReason reason
+argument_list|,
+argument|const siginfo_t&info
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -46,19 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/DataExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
@@ -88,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Symbol/Symtab.h"
 end_include
 
@@ -95,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/UnwindTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -108,12 +108,12 @@ name|public
 label|:
 name|ObjectFileJITDelegate
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|ObjectFileJITDelegate
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 name|lldb
 operator|::
@@ -235,7 +235,8 @@ literal|0
 block|,
 name|eTypeCoreFile
 block|,
-comment|/// A core file that has a checkpoint of a program's execution state
+comment|/// A core file that has a checkpoint of a program's
+comment|/// execution state
 name|eTypeExecutable
 block|,
 comment|/// A normal executable
@@ -253,7 +254,8 @@ block|,
 comment|/// A shared library that can be used during execution
 name|eTypeStubLibrary
 block|,
-comment|/// A library that can be linked against but not used for execution
+comment|/// A library that can be linked against but not used for
+comment|/// execution
 name|eTypeJIT
 block|,
 comment|/// JIT code that has symbols, sections and possibly debug info
@@ -297,7 +299,7 @@ argument|lldb::offset_t file_offset
 argument_list|,
 argument|lldb::offset_t length
 argument_list|,
-argument|const lldb::DataBufferSP& data_sp
+argument|const lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|)
@@ -310,7 +312,7 @@ argument|const lldb::ProcessSP&process_sp
 argument_list|,
 argument|lldb::addr_t header_addr
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -379,7 +381,7 @@ name|FindPlugin
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|const FileSpec* file_spec
+argument|const FileSpec *file_spec
 argument_list|,
 argument|lldb::offset_t file_offset
 argument_list|,
@@ -754,7 +756,7 @@ name|virtual
 name|void
 name|SectionFileAddressesChanged
 parameter_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Gets the symbol table for the currently selected architecture
 comment|/// (and object for archives).
@@ -893,7 +895,8 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Gets the file spec list of libraries re-exported by this object file.
 comment|///
-comment|/// If the object file format has the notion of one library re-exporting the symbols from another,
+comment|/// If the object file format has the notion of one library re-exporting the
+comment|/// symbols from another,
 comment|/// the re-exported libraries will be returned in the FileSpecList.
 comment|///
 comment|/// @return
@@ -1632,13 +1635,16 @@ operator|::
 name|addr_t
 name|m_file_offset
 expr_stmt|;
-comment|///< The offset in bytes into the file, or the address in memory
+comment|///< The offset in bytes into the file, or the
+comment|///address in memory
 name|lldb
 operator|::
 name|addr_t
 name|m_length
 expr_stmt|;
-comment|///< The length of this object file if it is known (can be zero if length is unknown or can't be determined).
+comment|///< The length of this object file if it is known (can
+comment|///be zero if length is unknown or can't be
+comment|///determined).
 name|DataExtractor
 name|m_data
 decl_stmt|;
@@ -1648,7 +1654,9 @@ operator|::
 name|UnwindTable
 name|m_unwind_table
 expr_stmt|;
-comment|///< Table of FuncUnwinders objects created for this ObjectFile's functions
+comment|///< Table of FuncUnwinders objects
+comment|/// created for this ObjectFile's
+comment|/// functions
 name|lldb
 operator|::
 name|ProcessWP

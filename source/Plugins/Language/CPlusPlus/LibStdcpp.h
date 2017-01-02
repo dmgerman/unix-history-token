@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- LibStdCpp.h ---------------------------------------------------*- C++ -*-===//
+comment|//===-- LibStdcpp.h ---------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -128,9 +128,39 @@ name|options
 parameter_list|)
 function_decl|;
 comment|// libstdc++ std::shared_ptr<> and std::weak_ptr<>
+name|bool
+name|LibStdcppUniquePointerSummaryProvider
+parameter_list|(
+name|ValueObject
+modifier|&
+name|valobj
+parameter_list|,
+name|Stream
+modifier|&
+name|stream
+parameter_list|,
+specifier|const
+name|TypeSummaryOptions
+modifier|&
+name|options
+parameter_list|)
+function_decl|;
+comment|// libstdc++ std::unique_ptr<>
 name|SyntheticChildrenFrontEnd
 modifier|*
 name|LibstdcppMapIteratorSyntheticFrontEndCreator
+argument_list|(
+name|CXXSyntheticChildren
+operator|*
+argument_list|,
+name|lldb
+operator|::
+name|ValueObjectSP
+argument_list|)
+decl_stmt|;
+name|SyntheticChildrenFrontEnd
+modifier|*
+name|LibStdcppTupleSyntheticFrontEndCreator
 argument_list|(
 name|CXXSyntheticChildren
 operator|*
@@ -155,6 +185,18 @@ decl_stmt|;
 name|SyntheticChildrenFrontEnd
 modifier|*
 name|LibStdcppSharedPtrSyntheticFrontEndCreator
+argument_list|(
+name|CXXSyntheticChildren
+operator|*
+argument_list|,
+name|lldb
+operator|::
+name|ValueObjectSP
+argument_list|)
+decl_stmt|;
+name|SyntheticChildrenFrontEnd
+modifier|*
+name|LibStdcppUniquePtrSyntheticFrontEndCreator
 argument_list|(
 name|CXXSyntheticChildren
 operator|*

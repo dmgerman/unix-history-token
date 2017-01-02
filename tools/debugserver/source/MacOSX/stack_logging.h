@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2007 Apple Inc. All rights reserved.  *  * @APPLE_LICENSE_HEADER_START@  *   * This file contains Original Code and/or Modifications of Original Code  * as defined in and that are subject to the Apple Public Source License  * Version 2.0 (the 'License'). You may not use this file except in  * compliance with the License. Please obtain a copy of the License at  * http://www.opensource.apple.com/apsl/ and read it before using this  * file.  *   * The Original Code and all software distributed under the License are  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,  * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.  * Please see the License for the specific language governing rights and  * limitations under the License.  *   * @APPLE_LICENSE_HEADER_END@  */
+comment|/*  * Copyright (c) 1999-2007 Apple Inc. All rights reserved.  *  * @APPLE_LICENSE_HEADER_START@  *  * This file contains Original Code and/or Modifications of Original Code  * as defined in and that are subject to the Apple Public Source License  * Version 2.0 (the 'License'). You may not use this file except in  * compliance with the License. Please obtain a copy of the License at  * http://www.opensource.apple.com/apsl/ and read it before using this  * file.  *  * The Original Code and all software distributed under the License are  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,  * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.  * Please see the License for the specific language governing rights and  * limitations under the License.  *  * @APPLE_LICENSE_HEADER_END@  */
 end_comment
 
 begin_ifndef
@@ -30,6 +30,7 @@ begin_define
 define|#
 directive|define
 name|stack_logging_type_generic
+define|\
 value|1
 end_define
 
@@ -89,6 +90,7 @@ begin_define
 define|#
 directive|define
 name|stack_logging_flag_object
+define|\
 value|32
 end_define
 
@@ -115,13 +117,14 @@ value|128
 end_define
 
 begin_comment
-comment|/* for Handle (de-)allocation routines */
+comment|/* for Handle (de-)allocation routines   \                                          */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|stack_logging_flag_set_handle_size
+define|\
 value|256
 end_define
 
@@ -140,6 +143,7 @@ name|STACK_LOGGING_DISGUISE
 parameter_list|(
 name|address
 parameter_list|)
+define|\
 value|((address) ^ 0x00005555)
 end_define
 
@@ -168,7 +172,7 @@ decl_stmt|;
 end_extern
 
 begin_comment
-comment|/* default is to compact; when set does not compact alloc/free logs; useful for tracing history */
+comment|/* default is to compact; when set                                              does not compact alloc/free logs;                                              useful for tracing history */
 end_comment
 
 begin_extern
@@ -199,7 +203,7 @@ function_decl|;
 end_extern
 
 begin_comment
-comment|/* This is the old log-to-memory logger, which is now deprecated.  It remains for compatibility with performance tools that haven't been updated to disk_stack_logging_log_stack() yet. */
+comment|/* This is the old log-to-memory logger, which is now deprecated.  It remains  * for compatibility with performance tools that haven't been updated to  * disk_stack_logging_log_stack() yet. */
 end_comment
 
 begin_extern
@@ -230,7 +234,7 @@ function_decl|;
 end_extern
 
 begin_comment
-comment|/* Fits as the malloc_logger; logs malloc/free/realloc events and can log custom events if called directly */
+comment|/* Fits as the malloc_logger; logs malloc/free/realloc events and can log custom  * events if called directly */
 end_comment
 
 begin_comment
@@ -317,7 +321,7 @@ function_decl|;
 end_extern
 
 begin_comment
-comment|/* Applies enumerator to all records involving address sending context as enumerator's second parameter; if !address, applies enumerator to all records */
+comment|/* Applies enumerator to all records involving address sending context as  * enumerator's second parameter; if !address, applies enumerator to all records  */
 end_comment
 
 begin_extern
@@ -365,7 +369,7 @@ name|Legacy
 end_pragma
 
 begin_comment
-comment|/* The following is the old 32-bit-only, in-process-memory stack logging.  This is deprecated and clients should move to the above 64-bit-aware disk stack logging SPI. */
+comment|/* The following is the old 32-bit-only, in-process-memory stack logging.  This  * is deprecated and clients should move to the above 64-bit-aware disk stack  * logging SPI. */
 end_comment
 
 begin_typedef
@@ -409,7 +413,7 @@ modifier|*
 name|uniquing_table
 decl_stmt|;
 comment|/* allocated using vm_allocate() */
-comment|/* hashtable organized as (PC, uniqued parent)      Only the second half of the table is active      To enable us to grow dynamically */
+comment|/* hashtable organized as (PC, uniqued parent)    Only the second half of the table is active    To enable us to grow dynamically */
 name|unsigned
 name|uniquing_table_num_pages
 decl_stmt|;
@@ -487,6 +491,7 @@ begin_define
 define|#
 directive|define
 name|STACK_LOGGING_ENUMERATION_PROVIDED
+define|\
 value|1
 end_define
 
@@ -583,7 +588,7 @@ function_decl|;
 end_extern
 
 begin_comment
-comment|/* Convenience to fill buffer with the PCs of the frames, starting with the hot frames;  num: returned number of frames  */
+comment|/* Convenience to fill buffer with the PCs of the frames, starting with the hot  frames;  num: returned number of frames  */
 end_comment
 
 begin_endif

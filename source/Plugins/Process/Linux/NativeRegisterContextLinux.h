@@ -85,16 +85,19 @@ argument_list|,
 argument|RegisterInfoInterface *reg_info_interface_p
 argument_list|)
 block|;
-comment|// This function is implemented in the NativeRegisterContextLinux_* subclasses to create a new
-comment|// instance of the host specific NativeRegisterContextLinux. The implementations can't collide
-comment|// as only one NativeRegisterContextLinux_* variant should be compiled into the final
+comment|// This function is implemented in the NativeRegisterContextLinux_* subclasses
+comment|// to create a new
+comment|// instance of the host specific NativeRegisterContextLinux. The
+comment|// implementations can't collide
+comment|// as only one NativeRegisterContextLinux_* variant should be compiled into
+comment|// the final
 comment|// executable.
 specifier|static
 name|NativeRegisterContextLinux
 operator|*
 name|CreateHostNativeRegisterContextLinux
 argument_list|(
-argument|const ArchSpec& target_arch
+argument|const ArchSpec&target_arch
 argument_list|,
 argument|NativeThreadProtocol&native_thread
 argument_list|,
@@ -116,7 +119,7 @@ name|ReadRegisterRaw
 argument_list|(
 argument|uint32_t reg_index
 argument_list|,
-argument|RegisterValue& reg_value
+argument|RegisterValue&reg_value
 argument_list|)
 block|;
 name|virtual
@@ -125,7 +128,7 @@ name|WriteRegisterRaw
 argument_list|(
 argument|uint32_t reg_index
 argument_list|,
-argument|const RegisterValue& reg_value
+argument|const RegisterValue&reg_value
 argument_list|)
 block|;
 name|virtual
@@ -212,7 +215,8 @@ return|return
 literal|0
 return|;
 block|}
-comment|// The Do*** functions are executed on the privileged thread and can perform ptrace
+comment|// The Do*** functions are executed on the privileged thread and can perform
+comment|// ptrace
 comment|// operations directly.
 name|virtual
 name|Error
@@ -220,7 +224,7 @@ name|DoReadRegisterValue
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const char* reg_name
+argument|const char *reg_name
 argument_list|,
 argument|uint32_t size
 argument_list|,
@@ -233,7 +237,7 @@ name|DoWriteRegisterValue
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const char* reg_name
+argument|const char *reg_name
 argument_list|,
 argument|const RegisterValue&value
 argument_list|)

@@ -41,7 +41,8 @@ begin_decl_stmt
 name|namespace
 name|MICmnCommands
 block|{
-comment|//++ ============================================================================
+comment|//++
+comment|//============================================================================
 comment|// Details: MI Command are instantiated and registered automatically with the
 comment|//          Command Factory
 comment|//--

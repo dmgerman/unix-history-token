@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- PlatformiOSSimulatorCoreSimulatorSupport.h ----------------*- C++ -*-===//
+comment|//===-- PlatformiOSSimulatorCoreSimulatorSupport.h ----------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -60,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|<ostream>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ostream>
+file|<string>
 end_include
 
 begin_include
@@ -790,12 +794,22 @@ label|:
 specifier|static
 name|DeviceSet
 name|GetAllDevices
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|developer_dir
+parameter_list|)
 function_decl|;
 specifier|static
 name|DeviceSet
 name|GetAvailableDevices
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|developer_dir
+parameter_list|)
 function_decl|;
 name|size_t
 name|GetNumDevices
@@ -869,7 +883,7 @@ name|m_dev
 argument_list|(
 argument|arr
 argument_list|)
-block|{         }
+block|{}
 name|id
 name|m_dev
 decl_stmt|;

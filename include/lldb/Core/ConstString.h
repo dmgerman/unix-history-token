@@ -106,7 +106,7 @@ name|m_string
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Copy constructor
 comment|///
@@ -127,7 +127,7 @@ name|m_string
 argument_list|(
 argument|rhs.m_string
 argument_list|)
-block|{     }
+block|{}
 name|explicit
 name|ConstString
 argument_list|(

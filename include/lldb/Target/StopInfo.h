@@ -68,7 +68,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/Core/StructuredData.h"
 end_include
 
 begin_include
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -116,7 +116,7 @@ name|virtual
 operator|~
 name|StopInfo
 argument_list|()
-block|{     }
+block|{}
 name|bool
 name|IsValid
 argument_list|()
@@ -178,8 +178,10 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|// ShouldStopSynchronous will get called before any thread plans are consulted, and if it says we should
-comment|// resume the target, then we will just immediately resume.  This should not run any code in or resume the
+comment|// ShouldStopSynchronous will get called before any thread plans are
+comment|// consulted, and if it says we should
+comment|// resume the target, then we will just immediately resume.  This should not
+comment|// run any code in or resume the
 comment|// target.
 name|virtual
 name|bool
@@ -311,10 +313,14 @@ return|return
 name|true
 return|;
 block|}
-comment|// Sometimes the thread plan logic will know that it wants a given stop to stop or not,
-comment|// regardless of what the ordinary logic for that StopInfo would dictate.  The main example
-comment|// of this is the ThreadPlanCallFunction, which for instance knows - based on how that particular
-comment|// expression was executed - whether it wants all breakpoints to auto-continue or not.
+comment|// Sometimes the thread plan logic will know that it wants a given stop to
+comment|// stop or not,
+comment|// regardless of what the ordinary logic for that StopInfo would dictate.  The
+comment|// main example
+comment|// of this is the ThreadPlanCallFunction, which for instance knows - based on
+comment|// how that particular
+comment|// expression was executed - whether it wants all breakpoints to auto-continue
+comment|// or not.
 comment|// Use OverrideShouldStop on the StopInfo to implement this.
 name|void
 name|OverrideShouldStop
@@ -373,7 +379,8 @@ argument_list|,
 argument|lldb::break_id_t break_id
 argument_list|)
 expr_stmt|;
-comment|// This creates a StopInfo for the thread where the should_stop is already set, and won't be recalculated.
+comment|// This creates a StopInfo for the thread where the should_stop is already
+comment|// set, and won't be recalculated.
 specifier|static
 name|lldb
 operator|::
@@ -490,10 +497,32 @@ operator|&
 name|stop_info_sp
 argument_list|)
 expr_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetCrashingDereference
+argument_list|(
+name|lldb
+operator|::
+name|StopInfoSP
+operator|&
+name|stop_info_sp
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|*
+name|crashing_address
+operator|=
+name|nullptr
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
 comment|// Perform any action that is associated with this stop.  This is done as the
-comment|// Event is removed from the event queue.  ProcessEventData::DoOnRemoval does the job.
+comment|// Event is removed from the event queue.  ProcessEventData::DoOnRemoval does
+comment|// the job.
 name|virtual
 name|void
 name|PerformAction
@@ -502,7 +531,7 @@ name|Event
 modifier|*
 name|event_ptr
 parameter_list|)
-block|{     }
+block|{}
 name|virtual
 name|bool
 name|DoShouldNotify
@@ -517,11 +546,14 @@ name|false
 return|;
 block|}
 comment|// Stop the thread by default. Subclasses can override this to allow
-comment|// the thread to continue if desired.  The ShouldStop method should not do anything
+comment|// the thread to continue if desired.  The ShouldStop method should not do
+comment|// anything
 comment|// that might run code.  If you need to run code when deciding whether to stop
 comment|// at this StopInfo, that must be done in the PerformAction.
-comment|// The PerformAction will always get called before the ShouldStop.  This is done by the
-comment|// ProcessEventData::DoOnRemoval, though the ThreadPlanBase needs to consult this later on.
+comment|// The PerformAction will always get called before the ShouldStop.  This is
+comment|// done by the
+comment|// ProcessEventData::DoOnRemoval, though the ThreadPlanBase needs to consult
+comment|// this later on.
 name|virtual
 name|bool
 name|ShouldStop
@@ -555,7 +587,8 @@ comment|// This is the resume ID when we made this stop ID.
 name|uint64_t
 name|m_value
 decl_stmt|;
-comment|// A generic value that can be used for things pertaining to this stop info
+comment|// A generic value that can be used for things pertaining to
+comment|// this stop info
 name|std
 operator|::
 name|string
@@ -580,8 +613,10 @@ name|bool
 name|HasTargetRunSinceMe
 parameter_list|()
 function_decl|;
-comment|// MakeStopInfoValid is necessary to allow saved stop infos to resurrect themselves as valid.
-comment|// It should only be used by Thread::RestoreThreadStateFromCheckpoint and to make sure the one-step
+comment|// MakeStopInfoValid is necessary to allow saved stop infos to resurrect
+comment|// themselves as valid.
+comment|// It should only be used by Thread::RestoreThreadStateFromCheckpoint and to
+comment|// make sure the one-step
 comment|// needed for before-the-fact watchpoints does not prevent us from stopping
 name|void
 name|MakeStopInfoValid

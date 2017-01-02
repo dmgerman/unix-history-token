@@ -141,7 +141,7 @@ name|RAW_HEX
 parameter_list|(
 name|x
 parameter_list|)
-value|RAW_HEXBASE<< std::setw(sizeof(x)*2)<< (x)
+value|RAW_HEXBASE<< std::setw(sizeof(x) * 2)<< (x)
 end_define
 
 begin_define
@@ -151,7 +151,7 @@ name|HEX
 parameter_list|(
 name|x
 parameter_list|)
-value|HEXBASE<< std::setw(sizeof(x)*2)<< (x)
+value|HEXBASE<< std::setw(sizeof(x) * 2)<< (x)
 end_define
 
 begin_define
@@ -185,6 +185,7 @@ name|s
 parameter_list|,
 name|w
 parameter_list|)
+define|\
 value|std::left<< std::setfill(' ')<< std::setw(w)<< (s)<< std::right
 end_define
 
@@ -206,7 +207,11 @@ value|DECIMAL<< std::setw(w)
 end_define
 
 begin_comment
-comment|//#define FLOAT(n, d)       std::setfill(' ')<< std::setw((n)+(d)+1)<< std::setprecision(d)<< std::showpoint<< std::fixed
+comment|//#define FLOAT(n, d)       std::setfill(' ')<< std::setw((n)+(d)+1)<<
+end_comment
+
+begin_comment
+comment|//std::setprecision(d)<< std::showpoint<< std::fixed
 end_comment
 
 begin_define
@@ -216,6 +221,7 @@ name|INDENT_WITH_SPACES
 parameter_list|(
 name|iword_idx
 parameter_list|)
+define|\
 value|std::setfill(' ')<< std::setw((iword_idx))<< ""
 end_define
 
@@ -226,6 +232,7 @@ name|INDENT_WITH_TABS
 parameter_list|(
 name|iword_idx
 parameter_list|)
+define|\
 value|std::setfill('\t')<< std::setw((iword_idx))<< ""
 end_define
 

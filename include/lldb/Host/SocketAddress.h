@@ -92,12 +92,6 @@ end_else
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_endif
@@ -378,13 +378,16 @@ name|char
 modifier|*
 name|host
 parameter_list|,
-comment|// Hostname ("foo.bar.com" or "foo" or IP address string ("123.234.12.1" or "2001:0db8:85a3:0000:0000:8a2e:0370:7334")
+comment|// Hostname ("foo.bar.com" or "foo" or IP
+comment|// address string ("123.234.12.1" or
+comment|// "2001:0db8:85a3:0000:0000:8a2e:0370:7334")
 specifier|const
 name|char
 modifier|*
 name|service
 parameter_list|,
-comment|// Protocol name ("tcp", "http", etc) or a raw port number string ("81")
+comment|// Protocol name ("tcp", "http", etc) or a
+comment|// raw port number string ("81")
 name|int
 name|ai_family
 init|=

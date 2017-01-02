@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Utility/Iterable.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Iterable.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -116,7 +116,7 @@ name|virtual
 operator|~
 name|ThreadCollection
 argument_list|()
-block|{     }
+block|{}
 name|uint32_t
 name|GetSize
 argument_list|()
@@ -190,6 +190,7 @@ name|recursive_mutex
 operator|&
 name|GetMutex
 argument_list|()
+specifier|const
 block|{
 return|return
 name|m_mutex
@@ -200,6 +201,7 @@ label|:
 name|collection
 name|m_threads
 decl_stmt|;
+name|mutable
 name|std
 operator|::
 name|recursive_mutex

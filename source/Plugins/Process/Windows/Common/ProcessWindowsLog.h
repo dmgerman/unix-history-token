@@ -308,7 +308,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|{                                                    \         if (ProcessWindowsLog::TestLogFlags(Flags, Req)) \         {                                                \             Log *log = ProcessWindowsLog::GetLog();      \             if (log)                                     \                 log->Method(__VA_ARGS__);                \         }                                                \     }
+value|{                                                                            \     if (ProcessWindowsLog::TestLogFlags(Flags, Req)) {                         \       Log *log = ProcessWindowsLog::GetLog();                                  \       if (log)                                                                 \         log->Method(__VA_ARGS__);                                              \     }                                                                          \   }
 end_define
 
 begin_define
@@ -320,6 +320,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::Any, Printf, __VA_ARGS__)
 end_define
 
@@ -332,6 +333,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::All, Printf, __VA_ARGS__)
 end_define
 
@@ -344,6 +346,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::Any, Verbose, __VA_ARGS__)
 end_define
 
@@ -356,6 +359,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::All, Verbose, __VA_ARGS__)
 end_define
 
@@ -368,6 +372,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::Any, Debug, __VA_ARGS__)
 end_define
 
@@ -380,6 +385,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::All, Debug, __VA_ARGS__)
 end_define
 
@@ -392,6 +398,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::Any, Error, __VA_ARGS__)
 end_define
 
@@ -404,6 +411,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::All, Error, __VA_ARGS__)
 end_define
 
@@ -416,6 +424,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::Any, Warning, __VA_ARGS__)
 end_define
 
@@ -428,6 +437,7 @@ name|Flags
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
 value|WINLOGF_IF(Flags, LogMaskReq::All, Warning, __VA_ARGS__)
 end_define
 

@@ -105,7 +105,7 @@ argument|llvm::StringRef prefix
 argument_list|,
 argument|bool child_process_inherit
 argument_list|,
-argument|llvm::SmallVectorImpl<char>& name
+argument|llvm::SmallVectorImpl<char>&name
 argument_list|)
 name|override
 block|;
@@ -209,7 +209,8 @@ argument|size_t&bytes_read
 argument_list|)
 name|override
 block|;
-comment|// PipeWindows specific methods.  These allow access to the underlying OS handle.
+comment|// PipeWindows specific methods.  These allow access to the underlying OS
+comment|// handle.
 name|HANDLE
 name|GetReadNativeHandle
 argument_list|()

@@ -82,27 +82,51 @@ comment|// All host systems must define:
 end_comment
 
 begin_comment
-comment|//  lldb::condition_t       The native condition type (or a substitute class) for conditions on the host system.
+comment|//  lldb::condition_t       The native condition type (or a substitute class)
 end_comment
 
 begin_comment
-comment|//  lldb::mutex_t           The native mutex type for mutex objects on the host system.
+comment|//  for conditions on the host system.
 end_comment
 
 begin_comment
-comment|//  lldb::thread_t          The native thread type for spawned threads on the system
+comment|//  lldb::mutex_t           The native mutex type for mutex objects on the host
 end_comment
 
 begin_comment
-comment|//  lldb::thread_arg_t      The type of the one any only thread creation argument for the host system
+comment|//  system.
 end_comment
 
 begin_comment
-comment|//  lldb::thread_result_t   The return type that gets returned when a thread finishes.
+comment|//  lldb::thread_t          The native thread type for spawned threads on the
 end_comment
 
 begin_comment
-comment|//  lldb::thread_func_t     The function prototype used to spawn a thread on the host system.
+comment|//  system
+end_comment
+
+begin_comment
+comment|//  lldb::thread_arg_t      The type of the one any only thread creation
+end_comment
+
+begin_comment
+comment|//  argument for the host system
+end_comment
+
+begin_comment
+comment|//  lldb::thread_result_t   The return type that gets returned when a thread
+end_comment
+
+begin_comment
+comment|//  finishes.
+end_comment
+
+begin_comment
+comment|//  lldb::thread_func_t     The function prototype used to spawn a thread on the
+end_comment
+
+begin_comment
+comment|//  host system.
 end_comment
 
 begin_comment
@@ -457,6 +481,7 @@ begin_define
 define|#
 directive|define
 name|LLDB_INVALID_HOST_TIME
+define|\
 value|{ 0, 0 }
 end_define
 

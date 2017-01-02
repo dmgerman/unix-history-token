@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-forward.h"
+file|"lldb/Target/Process.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Process.h"
+file|"lldb/lldb-private-forward.h"
 end_include
 
 begin_include
@@ -320,6 +320,14 @@ name|packet
 argument_list|)
 block|;
 name|PacketResult
+name|Handle_jModulesInfo
+argument_list|(
+name|StringExtractorGDBRemote
+operator|&
+name|packet
+argument_list|)
+block|;
+name|PacketResult
 name|Handle_qPlatform_shell
 argument_list|(
 name|StringExtractorGDBRemote
@@ -477,7 +485,7 @@ name|RegisterMemberFunctionHandler
 argument_list|(
 argument|StringExtractorGDBRemote::ServerPacketType packet_type
 argument_list|,
-argument|PacketResult (T::*handler) (StringExtractorGDBRemote& packet)
+argument|PacketResult (T::*handler)(StringExtractorGDBRemote&packet)
 argument_list|)
 block|{
 name|RegisterPacketHandler
@@ -525,16 +533,7 @@ operator|)
 return|;
 block|}
 argument_list|)
-block|;     }
-name|bool
-name|GetThreadSuffixSupported
-argument_list|()
-name|override
-block|{
-return|return
-name|true
-return|;
-block|}
+block|;   }
 comment|//------------------------------------------------------------------
 comment|/// Launch a process with the current launch settings.
 comment|///
@@ -568,6 +567,26 @@ specifier|const
 name|ArchSpec
 operator|&
 name|arch
+argument_list|)
+block|;
+name|private
+operator|:
+name|ModuleSpec
+name|GetModuleInfo
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|module_path
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|triple
 argument_list|)
 block|; }
 decl_stmt|;

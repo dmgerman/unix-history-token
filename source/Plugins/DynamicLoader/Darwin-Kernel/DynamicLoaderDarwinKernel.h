@@ -80,7 +80,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/DynamicLoader.h"
+file|"lldb/Core/UUID.h"
 end_include
 
 begin_include
@@ -92,13 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/TimeValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UUID.h"
+file|"lldb/Target/DynamicLoader.h"
 end_include
 
 begin_include
@@ -325,7 +319,7 @@ name|GetByteOrderFromMagic
 argument_list|(
 argument|uint32_t magic
 argument_list|)
-block|;      enum
+block|;    enum
 block|{
 name|KERNEL_MODULE_MAX_NAME
 operator|=
@@ -353,9 +347,12 @@ literal|4u
 block|}
 block|;
 comment|// class KextImageInfo represents a single kext or kernel binary image.
-comment|// The class was designed to hold the information from the OSKextLoadedKextSummary
-comment|// structure (in libkern/libkern/OSKextLibPrivate.h from xnu).  The kernel maintains
-comment|// a list of loded kexts in memory (the OSKextLoadedKextSummaryHeader structure,
+comment|// The class was designed to hold the information from the
+comment|// OSKextLoadedKextSummary
+comment|// structure (in libkern/libkern/OSKextLibPrivate.h from xnu).  The kernel
+comment|// maintains
+comment|// a list of loded kexts in memory (the OSKextLoadedKextSummaryHeader
+comment|// structure,
 comment|// which points to an array of OSKextLoadedKextSummary's).
 comment|//
 comment|// A KextImageInfos may have -
@@ -364,12 +361,16 @@ comment|// 1. The load address, name, UUID, and size of a kext/kernel binary in 
 comment|//    (read straight out of the kernel's list-of-kexts loaded)
 comment|// 2. A ModuleSP based on a MemoryModule read out of the kernel's memory
 comment|//    (very unlikely to have any symbolic information)
-comment|// 3. A ModuleSP for an on-disk copy of the kext binary, possibly with debug info
+comment|// 3. A ModuleSP for an on-disk copy of the kext binary, possibly with debug
+comment|// info
 comment|//    or a dSYM
 comment|//
-comment|// For performance reasons, the developer may prefer that lldb not load the kexts out
-comment|// of memory at the start of a kernel session.  But we should build up / maintain a
-comment|// list of kexts that the kernel has told us about so we can relocate a kext module
+comment|// For performance reasons, the developer may prefer that lldb not load the
+comment|// kexts out
+comment|// of memory at the start of a kernel session.  But we should build up /
+comment|// maintain a
+comment|// list of kexts that the kernel has told us about so we can relocate a kext
+comment|// module
 comment|// later if the user explicitly adds it to the target.
 name|class
 name|KextImageInfo
@@ -410,7 +411,7 @@ name|m_kernel_image
 argument_list|(
 argument|false
 argument_list|)
-block|{ }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -446,7 +447,7 @@ block|;
 name|m_load_process_stop_id
 operator|=
 name|UINT32_MAX
-block|;         }
+block|;     }
 name|bool
 name|LoadImageAtFileAddress
 argument_list|(
@@ -682,7 +683,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// the stop-id when this module was added to the Target
+comment|// the stop-id when this module was added
+end_comment
+
+begin_comment
+comment|// to the Target
 end_comment
 
 begin_expr_stmt
@@ -762,7 +767,7 @@ name|image_infos_addr
 argument_list|(
 argument|LLDB_INVALID_ADDRESS
 argument_list|)
-block|{         }
+block|{}
 name|uint32_t
 name|GetSize
 argument_list|()

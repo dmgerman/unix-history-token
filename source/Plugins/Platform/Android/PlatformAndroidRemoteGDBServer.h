@@ -117,7 +117,7 @@ block|;
 name|Error
 name|ConnectRemote
 argument_list|(
-argument|Args& args
+argument|Args&args
 argument_list|)
 name|override
 block|;
@@ -131,9 +131,9 @@ operator|::
 name|ProcessSP
 name|ConnectProcess
 argument_list|(
-argument|const char* connect_url
+argument|llvm::StringRef connect_url
 argument_list|,
-argument|const char* plugin_name
+argument|llvm::StringRef plugin_name
 argument_list|,
 argument|lldb_private::Debugger&debugger
 argument_list|,
@@ -201,9 +201,9 @@ argument|const lldb::pid_t pid
 argument_list|,
 argument|const uint16_t remote_port
 argument_list|,
-argument|const char* remote_socket_name
+argument|llvm::StringRef remote_socket_name
 argument_list|,
-argument|std::string& connect_url
+argument|std::string&connect_url
 argument_list|)
 block|;
 name|private

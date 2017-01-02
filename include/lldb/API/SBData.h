@@ -175,7 +175,7 @@ operator|::
 name|addr_t
 name|GetAddress
 argument_list|(
-argument|lldb::SBError& error
+argument|lldb::SBError&error
 argument_list|,
 argument|lldb::offset_t offset
 argument_list|)
@@ -356,9 +356,12 @@ operator|=
 name|LLDB_INVALID_ADDRESS
 argument_list|)
 decl_stmt|;
-comment|// it would be nice to have SetData(SBError, const void*, size_t) when endianness and address size can be
-comment|// inferred from the existing DataExtractor, but having two SetData() signatures triggers a SWIG bug where
-comment|// the typemap isn't applied before resolving the overload, and thus the right function never gets called
+comment|// it would be nice to have SetData(SBError, const void*, size_t) when
+comment|// endianness and address size can be
+comment|// inferred from the existing DataExtractor, but having two SetData()
+comment|// signatures triggers a SWIG bug where
+comment|// the typemap isn't applied before resolving the overload, and thus the right
+comment|// function never gets called
 name|void
 name|SetData
 argument_list|(
@@ -405,11 +408,13 @@ argument|lldb::ByteOrder endian
 argument_list|,
 argument|uint32_t addr_byte_size
 argument_list|,
-argument|const char* data
+argument|const char *data
 argument_list|)
 expr_stmt|;
-comment|// in the following CreateData*() and SetData*() prototypes, the two parameters array and array_len
-comment|// should not be renamed or rearranged, because doing so will break the SWIG typemap
+comment|// in the following CreateData*() and SetData*() prototypes, the two
+comment|// parameters array and array_len
+comment|// should not be renamed or rearranged, because doing so will break the SWIG
+comment|// typemap
 specifier|static
 name|lldb
 operator|::
@@ -420,7 +425,7 @@ argument|lldb::ByteOrder endian
 argument_list|,
 argument|uint32_t addr_byte_size
 argument_list|,
-argument|uint64_t* array
+argument|uint64_t *array
 argument_list|,
 argument|size_t array_len
 argument_list|)
@@ -435,7 +440,7 @@ argument|lldb::ByteOrder endian
 argument_list|,
 argument|uint32_t addr_byte_size
 argument_list|,
-argument|uint32_t* array
+argument|uint32_t *array
 argument_list|,
 argument|size_t array_len
 argument_list|)
@@ -450,7 +455,7 @@ argument|lldb::ByteOrder endian
 argument_list|,
 argument|uint32_t addr_byte_size
 argument_list|,
-argument|int64_t* array
+argument|int64_t *array
 argument_list|,
 argument|size_t array_len
 argument_list|)
@@ -465,7 +470,7 @@ argument|lldb::ByteOrder endian
 argument_list|,
 argument|uint32_t addr_byte_size
 argument_list|,
-argument|int32_t* array
+argument|int32_t *array
 argument_list|,
 argument|size_t array_len
 argument_list|)
@@ -480,7 +485,7 @@ argument|lldb::ByteOrder endian
 argument_list|,
 argument|uint32_t addr_byte_size
 argument_list|,
-argument|double* array
+argument|double *array
 argument_list|,
 argument|size_t array_len
 argument_list|)

@@ -23,6 +23,14 @@ directive|include
 file|<pthread.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|finished_enqueueing_work
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|doing_the_work_1
@@ -211,6 +219,10 @@ name|doing_the_work_2
 argument_list|)
 expr_stmt|;
 block|}
+name|finished_enqueueing_work
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -604,6 +616,12 @@ expr_stmt|;
 block|}
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|finished_enqueueing_work
+operator|==
+literal|0
+condition|)
 name|sleep
 argument_list|(
 literal|1

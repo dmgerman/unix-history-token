@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ThreadPlanPython.h --------------------------------------------*- C++ -*-===//
+comment|//===-- ThreadPlanPython.h --------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -68,12 +72,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/StructuredData.h"
 end_include
 
@@ -87,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Process.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/StopInfo.h"
 end_include
 
 begin_include
@@ -116,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/StopInfo.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -192,6 +196,11 @@ name|override
 block|;
 name|void
 name|DidPush
+argument_list|()
+name|override
+block|;
+name|bool
+name|IsPlanStale
 argument_list|()
 name|override
 block|;

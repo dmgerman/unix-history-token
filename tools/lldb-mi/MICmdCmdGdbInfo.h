@@ -40,11 +40,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|//              To implement new MI commands derive a new command class from the command base
+comment|//              To implement new MI commands derive a new command class from the
 end_comment
 
 begin_comment
-comment|//              class. To enable the new command for interpretation add the new command class
+comment|//              command base
+end_comment
+
+begin_comment
+comment|//              class. To enable the new command for interpretation add the new
+end_comment
+
+begin_comment
+comment|//              command class
 end_comment
 
 begin_comment
@@ -64,7 +72,11 @@ comment|//                  MICmdCmd.h / .cpp
 end_comment
 
 begin_comment
-comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+comment|//              For an introduction to adding a new command see
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdSupportInfoMiCmdQuery
 end_comment
 
 begin_comment
@@ -98,7 +110,11 @@ file|"MICmdBase.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -122,7 +138,11 @@ comment|//          the task of information gathering and printing to stdout is 
 end_comment
 
 begin_comment
-comment|//          *this class. Should the request function become more complicated then
+comment|//          *this class. Should the request function become more complicated
+end_comment
+
+begin_comment
+comment|//          then
 end_comment
 
 begin_comment
@@ -130,7 +150,11 @@ comment|//          that request should really reside in a command type class. T
 end_comment
 
 begin_comment
-comment|//          class instantiates a request info command for a matching request. The
+comment|//          class instantiates a request info command for a matching request.
+end_comment
+
+begin_comment
+comment|//          The
 end_comment
 
 begin_comment
@@ -292,7 +316,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = This command has a function with a name that matches the Print argument, false = not found
+comment|// True = This command has a function with a name
+end_comment
+
+begin_comment
+comment|// that matches the Print argument, false = not
+end_comment
+
+begin_comment
+comment|// found
 end_comment
 
 begin_decl_stmt
@@ -302,7 +334,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// True = The print function completed its task ok, false = function failed for some reason
+comment|// True = The print function completed its task ok,
+end_comment
+
+begin_comment
+comment|// false = function failed for some reason
 end_comment
 
 begin_decl_stmt

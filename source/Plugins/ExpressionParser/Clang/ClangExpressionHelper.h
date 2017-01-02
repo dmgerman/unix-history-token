@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ClangExpression.h ---------------------------------------*- C++ -*-===//
+comment|//===-- ClangExpressionHelper.h ---------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string>
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<string>
 end_include
 
 begin_include
@@ -80,18 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ClangForward.h"
 end_include
 
@@ -99,6 +87,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Expression/ExpressionTypeSystemHelper.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -142,7 +142,7 @@ name|ExpressionTypeSystemHelper
 argument_list|(
 argument|ExpressionTypeSystemHelper::LLVMCastKind::eKindClangHelper
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Destructor
 comment|//------------------------------------------------------------------
@@ -150,7 +150,7 @@ name|virtual
 operator|~
 name|ClangExpressionHelper
 argument_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Return the object that the parser should use when resolving external
 comment|/// values.  May be NULL if everything should be self-contained.
@@ -191,7 +191,7 @@ name|virtual
 name|void
 name|CommitPersistentDecls
 argument_list|()
-block|{     }
+block|{}
 name|protected
 operator|:
 block|}

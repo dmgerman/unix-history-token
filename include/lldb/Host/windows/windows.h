@@ -50,6 +50,16 @@ name|NTDDI_VERSION
 value|NTDDI_VISTA
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|_WIN32_WINNT
+end_undef
+
+begin_comment
+comment|// undef a previous definition to avoid warning
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -68,6 +78,16 @@ define|#
 directive|define
 name|NOGDI
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NOMINMAX
+end_undef
+
+begin_comment
+comment|// undef a previous definition to avoid warning
+end_comment
 
 begin_define
 define|#

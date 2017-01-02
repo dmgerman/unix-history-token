@@ -271,7 +271,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformKalimba
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

@@ -74,12 +74,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Baton.h"
 end_include
 
@@ -89,12 +83,19 @@ directive|include
 file|"lldb/Core/StringList.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class WatchpointOptions WatchpointOptions.h "lldb/Breakpoint/WatchpointOptions.h"
+comment|/// @class WatchpointOptions WatchpointOptions.h
+comment|/// "lldb/Breakpoint/WatchpointOptions.h"
 comment|/// @brief Class that manages the options on a watchpoint.
 comment|//----------------------------------------------------------------------
 name|class
@@ -134,7 +135,8 @@ comment|//------------------------------------------------------------------
 comment|/// This constructor allows you to specify all the watchpoint options.
 comment|///
 comment|/// @param[in] callback
-comment|///    This is the plugin for some code that gets run, returns \b true if we are to stop.
+comment|///    This is the plugin for some code that gets run, returns \b true if we
+comment|///    are to stop.
 comment|///
 comment|/// @param[in] baton
 comment|///    Client data that will get passed to the callback.
@@ -174,20 +176,31 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Callbacks
 comment|//
-comment|// Watchpoint callbacks come in two forms, synchronous and asynchronous.  Synchronous callbacks will get
-comment|// run before any of the thread plans are consulted, and if they return false the target will continue
-comment|// "under the radar" of the thread plans.  There are a couple of restrictions to synchronous callbacks:
-comment|// 1) They should NOT resume the target themselves.  Just return false if you want the target to restart.
-comment|// 2) Watchpoints with synchronous callbacks can't have conditions (or rather, they can have them, but they
-comment|//    won't do anything.  Ditto with ignore counts, etc...  You are supposed to control that all through the
+comment|// Watchpoint callbacks come in two forms, synchronous and asynchronous.
+comment|// Synchronous callbacks will get
+comment|// run before any of the thread plans are consulted, and if they return false
+comment|// the target will continue
+comment|// "under the radar" of the thread plans.  There are a couple of restrictions
+comment|// to synchronous callbacks:
+comment|// 1) They should NOT resume the target themselves.  Just return false if you
+comment|// want the target to restart.
+comment|// 2) Watchpoints with synchronous callbacks can't have conditions (or rather,
+comment|// they can have them, but they
+comment|//    won't do anything.  Ditto with ignore counts, etc...  You are supposed
+comment|//    to control that all through the
 comment|//    callback.
-comment|// Asynchronous callbacks get run as part of the "ShouldStop" logic in the thread plan.  The logic there is:
-comment|//   a) If the watchpoint is thread specific and not for this thread, continue w/o running the callback.
+comment|// Asynchronous callbacks get run as part of the "ShouldStop" logic in the
+comment|// thread plan.  The logic there is:
+comment|//   a) If the watchpoint is thread specific and not for this thread, continue
+comment|//   w/o running the callback.
 comment|//   b) If the ignore count says we shouldn't stop, then ditto.
 comment|//   c) If the condition says we shouldn't stop, then ditto.
-comment|//   d) Otherwise, the callback will get run, and if it returns true we will stop, and if false we won't.
-comment|//  The asynchronous callback can run the target itself, but at present that should be the last action the
-comment|//  callback does.  We will relax this condition at some point, but it will take a bit of plumbing to get
+comment|//   d) Otherwise, the callback will get run, and if it returns true we will
+comment|//   stop, and if false we won't.
+comment|//  The asynchronous callback can run the target itself, but at present that
+comment|//  should be the last action the
+comment|//  callback does.  We will relax this condition at some point, but it will
+comment|//  take a bit of plumbing to get
 comment|//  that to work.
 comment|//
 comment|//------------------------------------------------------------------
@@ -201,7 +214,8 @@ comment|/// @param[in] baton_sp
 comment|///    A baton which will get passed back to the callback when it is invoked.
 comment|///
 comment|/// @param[in] synchronous
-comment|///    Whether this is a synchronous or asynchronous callback.  See discussion above.
+comment|///    Whether this is a synchronous or asynchronous callback.  See discussion
+comment|///    above.
 comment|//------------------------------------------------------------------
 name|void
 name|SetCallback
@@ -229,14 +243,18 @@ name|void
 name|ClearCallback
 parameter_list|()
 function_decl|;
-comment|// The rest of these functions are meant to be used only within the watchpoint handling mechanism.
+comment|// The rest of these functions are meant to be used only within the watchpoint
+comment|// handling mechanism.
 comment|//------------------------------------------------------------------
 comment|/// Use this function to invoke the callback for a specific stop.
 comment|///
 comment|/// @param[in] context
-comment|///    The context in which the callback is to be invoked.  This includes the stop event, the
-comment|///    execution context of the stop (since you might hit the same watchpoint on multiple threads) and
-comment|///    whether we are currently executing synchronous or asynchronous callbacks.
+comment|///    The context in which the callback is to be invoked.  This includes the
+comment|///    stop event, the
+comment|///    execution context of the stop (since you might hit the same watchpoint
+comment|///    on multiple threads) and
+comment|///    whether we are currently executing synchronous or asynchronous
+comment|///    callbacks.
 comment|///
 comment|/// @param[in] watch_id
 comment|///    The watchpoint ID that owns this option set.
@@ -258,7 +276,8 @@ name|watch_id
 argument_list|)
 decl_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Used in InvokeCallback to tell whether it is the right time to run this kind of callback.
+comment|/// Used in InvokeCallback to tell whether it is the right time to run this
+comment|/// kind of callback.
 comment|///
 comment|/// @return
 comment|///     The synchronicity of our callback.
@@ -296,10 +315,12 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Return the current thread spec for this option. This will return nullptr if the no thread
+comment|/// Return the current thread spec for this option. This will return nullptr
+comment|/// if the no thread
 comment|/// specifications have been set for this Option yet.
 comment|/// @return
-comment|///     The thread specification pointer for this option, or nullptr if none has
+comment|///     The thread specification pointer for this option, or nullptr if none
+comment|///     has
 comment|///     been set yet.
 comment|//------------------------------------------------------------------
 specifier|const
@@ -406,7 +427,7 @@ name|stop_on_error
 argument_list|(
 argument|true
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|CommandData
 argument_list|()
@@ -430,40 +451,29 @@ name|class
 name|CommandBaton
 range|:
 name|public
-name|Baton
+name|TypedBaton
+operator|<
+name|CommandData
+operator|>
 block|{
 name|public
 operator|:
 name|CommandBaton
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CommandData
-operator|*
-name|data
+operator|>
+name|Data
 argument_list|)
 operator|:
-name|Baton
+name|TypedBaton
 argument_list|(
-argument|data
+argument|std::move(Data)
 argument_list|)
-block|{         }
-operator|~
-name|CommandBaton
-argument_list|()
-name|override
-block|{
-name|delete
-argument_list|(
-operator|(
-name|CommandData
-operator|*
-operator|)
-name|m_data
-argument_list|)
-block|;
-name|m_data
-operator|=
-name|nullptr
-block|;         }
+block|{}
 name|void
 name|GetDescription
 argument_list|(
@@ -473,7 +483,7 @@ argument|lldb::DescriptionLevel level
 argument_list|)
 specifier|const
 name|override
-block|;     }
+block|;   }
 decl_stmt|;
 name|protected
 label|:

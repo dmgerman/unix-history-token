@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/Thread.h"
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/ThreadPlan.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -93,7 +93,8 @@ range|:
 name|public
 name|ThreadPlan
 block|{
-comment|// Create a thread plan to call a function at the address passed in the "function"
+comment|// Create a thread plan to call a function at the address passed in the
+comment|// "function"
 comment|// argument.  If you plan to call GetReturnValueObject, then pass in the
 comment|// return type, otherwise just pass in an invalid CompilerType.
 name|public
@@ -250,11 +251,16 @@ name|WillPop
 argument_list|()
 name|override
 block|;
-comment|// If the thread plan stops mid-course, this will be the stop reason that interrupted us.
-comment|// Once DoTakedown is called, this will be the real stop reason at the end of the function call.
-comment|// If it hasn't been set for one or the other of these reasons, we'll return the PrivateStopReason.
-comment|// This is needed because we want the CallFunction thread plans not to show up as the stop reason.
-comment|// But if something bad goes wrong, it is nice to be able to tell the user what really happened.
+comment|// If the thread plan stops mid-course, this will be the stop reason that
+comment|// interrupted us.
+comment|// Once DoTakedown is called, this will be the real stop reason at the end of
+comment|// the function call.
+comment|// If it hasn't been set for one or the other of these reasons, we'll return
+comment|// the PrivateStopReason.
+comment|// This is needed because we want the CallFunction thread plans not to show up
+comment|// as the stop reason.
+comment|// But if something bad goes wrong, it is nice to be able to tell the user
+comment|// what really happened.
 name|lldb
 operator|::
 name|StopInfoSP
@@ -298,7 +304,7 @@ block|{
 name|m_takedown_done
 operator|=
 name|true
-block|;     }
+block|; }
 name|void
 name|SetStopOthers
 argument_list|(
@@ -436,11 +442,14 @@ operator|::
 name|ValueObjectSP
 name|m_return_valobj_sp
 block|;
-comment|// If this contains a valid pointer, use the ABI to extract values when complete
+comment|// If this contains a valid pointer,
+comment|// use the ABI to extract values when
+comment|// complete
 name|bool
 name|m_takedown_done
 block|;
-comment|// We want to ensure we only do the takedown once.  This ensures that.
+comment|// We want to ensure we only do the takedown once.  This
+comment|// ensures that.
 name|bool
 name|m_should_clear_objc_exception_bp
 block|;
@@ -452,7 +461,8 @@ operator|::
 name|addr_t
 name|m_stop_address
 block|;
-comment|// This is the address we stopped at.  Also set in DoTakedown;
+comment|// This is the address we stopped at.  Also set
+comment|// in DoTakedown;
 name|private
 operator|:
 name|CompilerType

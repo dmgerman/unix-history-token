@@ -125,7 +125,7 @@ name|_ptr
 argument_list|(
 argument|ptr
 argument_list|)
-block|{     }
+block|{}
 comment|//----------------------------------------------------------
 comment|// Copy constructor
 comment|//
@@ -171,7 +171,7 @@ argument_list|()
 block|{
 name|reset
 argument_list|()
-block|;     }
+block|; }
 comment|//----------------------------------------------------------
 comment|// Assignment operator.
 comment|//

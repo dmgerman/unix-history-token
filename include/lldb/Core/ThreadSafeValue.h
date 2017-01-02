@@ -110,7 +110,7 @@ block|{}
 operator|~
 name|ThreadSafeValue
 argument_list|()
-block|{     }
+block|{}
 name|T
 name|GetValue
 argument_list|()
@@ -136,7 +136,7 @@ block|;
 name|value
 operator|=
 name|m_value
-block|;         }
+block|;     }
 return|return
 name|value
 return|;
@@ -176,19 +176,19 @@ block|;
 name|m_value
 operator|=
 name|value
-block|;     }
+block|;   }
 comment|// Call this if you have already manually locked the mutex using the
 comment|// GetMutex() accessor
 name|void
 name|SetValueNoLock
 argument_list|(
-argument|const T& value
+argument|const T&value
 argument_list|)
 block|{
 name|m_value
 operator|=
 name|value
-block|;     }
+block|; }
 name|std
 operator|::
 name|recursive_mutex

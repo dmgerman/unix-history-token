@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"SymbolFileDWARF.h"
+file|"DWARFAttribute.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DWARFAttribute.h"
+file|"SymbolFileDWARF.h"
 end_include
 
 begin_decl_stmt

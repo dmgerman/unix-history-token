@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/RegisterContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/RegisterContext.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -178,7 +178,7 @@ argument_list|(
 argument|bool enable
 argument_list|)
 name|override
-block|;      struct
+block|;    struct
 name|GPR
 block|{
 name|uint64_t
@@ -243,8 +243,8 @@ name|fs
 block|;
 name|uint64_t
 name|gs
-block|;     }
-block|;      struct
+block|;   }
+block|;    struct
 name|MMSReg
 block|{
 name|uint8_t
@@ -258,8 +258,8 @@ name|pad
 index|[
 literal|6
 index|]
-block|;     }
-block|;      struct
+block|;   }
+block|;    struct
 name|XMMReg
 block|{
 name|uint8_t
@@ -267,8 +267,8 @@ name|bytes
 index|[
 literal|16
 index|]
-block|;     }
-block|;      struct
+block|;   }
+block|;    struct
 name|FPU
 block|{
 name|uint32_t
@@ -346,8 +346,8 @@ index|]
 block|;
 name|int
 name|pad5
-block|;     }
-block|;      struct
+block|;   }
+block|;    struct
 name|EXC
 block|{
 name|uint32_t
@@ -358,7 +358,7 @@ name|err
 block|;
 name|uint64_t
 name|faultvaddr
-block|;     }
+block|;   }
 block|;
 name|protected
 operator|:
@@ -376,7 +376,7 @@ name|EXCRegSet
 operator|=
 literal|6
 block|}
-block|;      enum
+block|;    enum
 block|{
 name|GPRWordCount
 operator|=
@@ -414,7 +414,7 @@ operator|(
 name|uint32_t
 operator|)
 block|}
-block|;      enum
+block|;    enum
 block|{
 name|Read
 operator|=
@@ -492,7 +492,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-block|;     }
+block|;   }
 name|int
 name|GetError
 argument_list|(

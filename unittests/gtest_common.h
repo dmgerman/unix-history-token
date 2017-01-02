@@ -86,11 +86,19 @@ operator|)
 end_if
 
 begin_comment
-comment|// Due to a bug in<thread>, when _HAS_EXCEPTIONS == 0 the header will try to call
+comment|// Due to a bug in<thread>, when _HAS_EXCEPTIONS == 0 the header will try to
 end_comment
 
 begin_comment
-comment|// uncaught_exception() without having a declaration for it.  The fix for this is
+comment|// call
+end_comment
+
+begin_comment
+comment|// uncaught_exception() without having a declaration for it.  The fix for this
+end_comment
+
+begin_comment
+comment|// is
 end_comment
 
 begin_comment

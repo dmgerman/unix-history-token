@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-forward.h"
+file|"lldb/Host/common/NativeThreadProtocol.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/common/NativeThreadProtocol.h"
+file|"lldb/lldb-private-forward.h"
 end_include
 
 begin_include
@@ -130,7 +130,7 @@ name|GetStopReason
 argument_list|(
 argument|ThreadStopInfo&stop_info
 argument_list|,
-argument|std::string& description
+argument|std::string&description
 argument_list|)
 name|override
 block|;

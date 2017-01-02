@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- TypeFormat.h ----------------------------------------------*- C++ -*-===//
+comment|//===-- TypeFormat.h ----------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -80,13 +84,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_include
@@ -628,8 +632,10 @@ operator|::
 name|eTypeUnknown
 return|;
 block|}
-comment|// we are using a ValueObject* instead of a ValueObjectSP because we do not need to hold on to this for
-comment|// extended periods of time and we trust the ValueObject to stay around for as long as it is required
+comment|// we are using a ValueObject* instead of a ValueObjectSP because we do not
+comment|// need to hold on to this for
+comment|// extended periods of time and we trust the ValueObject to stay around for as
+comment|// long as it is required
 comment|// for us to generate its value
 name|virtual
 name|bool
@@ -693,7 +699,7 @@ name|TypeFormatImpl_Format
 argument_list|(
 argument|lldb::Format f = lldb::eFormatInvalid
 argument_list|,
-argument|const TypeFormatImpl::Flags& flags = Flags()
+argument|const TypeFormatImpl::Flags&flags = Flags()
 argument_list|)
 block|;
 typedef|typedef
@@ -832,7 +838,7 @@ argument|ConstString type_name = ConstString(
 literal|""
 argument|)
 argument_list|,
-argument|const TypeFormatImpl::Flags& flags = Flags()
+argument|const TypeFormatImpl::Flags&flags = Flags()
 argument_list|)
 block|;
 typedef|typedef

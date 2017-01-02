@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<termios.h>
+file|<stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<termios.h>
 end_include
 
 begin_decl_stmt

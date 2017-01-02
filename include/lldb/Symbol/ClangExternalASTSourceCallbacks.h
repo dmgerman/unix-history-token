@@ -64,13 +64,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"clang/AST/CharUnits.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/CharUnits.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_comment
@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
+file|"lldb/Core/ClangForward.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ClangForward.h"
+file|"lldb/Symbol/ClangExternalASTSourceCommon.h"
 end_include
 
 begin_include
@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangExternalASTSourceCommon.h"
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_decl_stmt
@@ -295,7 +295,7 @@ name|m_callback_baton
 argument_list|(
 argument|callback_baton
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|// clang::ExternalASTSource
 comment|//------------------------------------------------------------------
@@ -384,7 +384,7 @@ name|DeclContext
 operator|*
 name|decl_ctx
 argument_list|)
-block|{     }
+block|{}
 name|void
 name|FindExternalLexicalDecls
 argument_list|(
@@ -609,7 +609,8 @@ block|}
 name|protected
 label|:
 comment|//------------------------------------------------------------------
-comment|// Classes that inherit from ClangExternalASTSourceCallbacks can see and modify these
+comment|// Classes that inherit from ClangExternalASTSourceCallbacks can see and
+comment|// modify these
 comment|//------------------------------------------------------------------
 name|CompleteTagDeclCallback
 name|m_callback_tag_decl

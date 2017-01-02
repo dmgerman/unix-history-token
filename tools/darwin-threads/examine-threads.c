@@ -2,6 +2,42 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dispatch/dispatch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libproc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mach/mach.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mach/task_info.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -20,49 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mach/mach.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mach/task_info.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libproc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dispatch/dispatch.h>
+file|<time.h>
 end_include
 
 begin_comment
@@ -113,7 +113,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Step through the process table, find a matching process name, return    the pid of that matched process.    If there are multiple processes with that name, issue a warning on stdout    and return the highest numbered process.    The proc_pidpath() call is used which gets the full process name including    directories to the executable and the full (longer than 16 character)     executable name. */
+comment|/* Step through the process table, find a matching process name, return    the pid of that matched process.    If there are multiple processes with that name, issue a warning on stdout    and return the highest numbered process.    The proc_pidpath() call is used which gets the full process name including    directories to the executable and the full (longer than 16 character)    executable name. */
 end_comment
 
 begin_function
@@ -193,7 +193,8 @@ argument_list|(
 name|all_pids_size
 argument_list|)
 decl_stmt|;
-comment|// re-set process_count in case the number of processes changed (got smaller; we won't do bigger)
+comment|// re-set process_count in case the number of processes changed (got smaller;
+comment|// we won't do bigger)
 name|process_count
 operator|=
 name|proc_listpids
@@ -391,7 +392,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a pid, get the full executable name (including directory     paths and the longer-than-16-chars executable name) and return    the basename of that (i.e. do not include the directory components).    This function mallocs the memory for the string it returns;    the caller must free this memory. */
+comment|/* Given a pid, get the full executable name (including directory    paths and the longer-than-16-chars executable name) and return    the basename of that (i.e. do not include the directory components).    This function mallocs the memory for the string it returns;    the caller must free this memory. */
 end_comment
 
 begin_function
@@ -476,7 +477,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get a struct kinfo_proc structure for a given pid.    Process name is required for error printing.    Gives you the current state of the process and whether it is being debugged by anyone.    memory is malloc()'ed for the returned struct kinfo_proc    and must be freed by the caller.  */
+comment|/* Get a struct kinfo_proc structure for a given pid.    Process name is required for error printing.    Gives you the current state of the process and whether it is being debugged    by anyone.    memory is malloc()'ed for the returned struct kinfo_proc    and must be freed by the caller.  */
 end_comment
 
 begin_function
@@ -600,7 +601,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the basic information (thread_basic_info_t) about a given    thread.      Gives you the suspend count; thread state; user time; system time; sleep time; etc.    The return value is a pointer to malloc'ed memory - it is the caller's    responsibility to free it.  */
+comment|/* Get the basic information (thread_basic_info_t) about a given    thread.    Gives you the suspend count; thread state; user time; system time; sleep    time; etc.    The return value is a pointer to malloc'ed memory - it is the caller's    responsibility to free it.  */
 end_comment
 
 begin_function
@@ -682,7 +683,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the thread identifier info (thread_identifier_info_data_t)     about a given thread.     Gives you the system-wide unique thread number; the pthread identifier number  */
+comment|/* Get the thread identifier info (thread_identifier_info_data_t)    about a given thread.    Gives you the system-wide unique thread number; the pthread identifier number */
 end_comment
 
 begin_function
@@ -747,7 +748,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a mach port # (in the examine-threads mach port namespace) for a thread,    find the mach port # in the inferior program's port namespace.      Sets inferior_port if successful.    Returns true if successful, false if unable to find the port number.  */
+comment|/* Given a mach port # (in the examine-threads mach port namespace) for a    thread,    find the mach port # in the inferior program's port namespace.    Sets inferior_port if successful.    Returns true if successful, false if unable to find the port number.  */
 end_comment
 
 begin_function
@@ -1230,7 +1231,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the proc_threadinfo for a given thread.    Gives you the thread name, if set; current and max priorities.      Returns 1 if successful    Returns 0 if proc_pidinfo() failed */
+comment|/* Get the proc_threadinfo for a given thread.    Gives you the thread name, if set; current and max priorities.    Returns 1 if successful    Returns 0 if proc_pidinfo() failed */
 end_comment
 
 begin_function
@@ -1603,8 +1604,10 @@ argument_list|(
 name|pid
 argument_list|)
 decl_stmt|;
-comment|// At this point "pid" is the process id and "process_name" is the process name
-comment|// Now we have to get the process list from the kernel (which only has the truncated
+comment|// At this point "pid" is the process id and "process_name" is the process
+comment|// name
+comment|// Now we have to get the process list from the kernel (which only has the
+comment|// truncated
 comment|// 16 char names)
 name|struct
 name|kinfo_proc
@@ -2108,7 +2111,8 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"           pthread handle id 0x%llx (not the same value as pthread_self() returns)\n"
+literal|"           pthread handle id 0x%llx (not the same value as "
+literal|"pthread_self() returns)\n"
 argument_list|,
 operator|(
 name|uint64_t
@@ -2161,7 +2165,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"           libdispatch qaddr 0x%llx (not the same as the dispatch_queue_t token)\n"
+literal|"           libdispatch qaddr 0x%llx (not the same as the "
+literal|"dispatch_queue_t token)\n"
 argument_list|,
 operator|(
 name|uint64_t

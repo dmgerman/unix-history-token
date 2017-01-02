@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Symbol/SymbolVendor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/SymbolVendor.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt

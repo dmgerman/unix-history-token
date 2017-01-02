@@ -58,25 +58,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"RNBDefs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"DNB.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"RNBContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"RNBSocket.h"
 end_include
 
 begin_include
@@ -88,13 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|"RNBContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"RNBDefs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"RNBSocket.h"
 end_include
 
 begin_include
@@ -107,6 +95,18 @@ begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -254,13 +254,16 @@ block|,
 comment|// 'vAttach;pid'
 name|vattachwait
 block|,
-comment|// 'vAttachWait:XX...' where XX is one or more hex encoded process name ASCII bytes
+comment|// 'vAttachWait:XX...' where XX is one or more hex encoded
+comment|// process name ASCII bytes
 name|vattachorwait
 block|,
-comment|// 'vAttachOrWait:XX...' where XX is one or more hex encoded process name ASCII bytes
+comment|// 'vAttachOrWait:XX...' where XX is one or more hex encoded
+comment|// process name ASCII bytes
 name|vattachname
 block|,
-comment|// 'vAttachName:XX...' where XX is one or more hex encoded process name ASCII bytes
+comment|// 'vAttachName:XX...' where XX is one or more hex encoded
+comment|// process name ASCII bytes
 name|vcont
 block|,
 comment|// 'vCont'
@@ -462,6 +465,12 @@ comment|// 'QSetDetachOnError:'
 name|query_transfer
 block|,
 comment|// 'qXfer:'
+name|query_supported_async_json_packets
+block|,
+comment|// 'QSupportedAsyncJSONPackets'
+name|configure_darwin_log
+block|,
+comment|// 'ConfigureDarwinLog:'
 name|unknown_type
 block|}
 name|PacketEnum
@@ -1516,6 +1525,30 @@ end_function_decl
 
 begin_function_decl
 name|rnb_err_t
+name|HandlePacket_qStructuredDataPlugins
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rnb_err_t
+name|HandlePacket_QConfigureDarwinLog
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|rnb_err_t
 name|SendStopReplyPacketForThread
 parameter_list|(
 name|nub_thread_t
@@ -1604,6 +1637,27 @@ name|buf_size
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|SendAsyncDarwinLogData
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|rnb_err_t
+name|SendAsyncJSONPacket
+argument_list|(
+specifier|const
+name|JSONGenerator
+operator|::
+name|Dictionary
+operator|&
+name|dictionary
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|RNBContext
@@ -1769,7 +1823,7 @@ argument_list|()
 struct|,
 name|printable_name
 argument_list|()
-block|{         }
+block|{}
 name|Packet
 argument_list|(
 name|PacketEnum
@@ -1816,7 +1870,7 @@ name|printable_name
 argument_list|(
 name|in_printable_name
 argument_list|)
-block|{         }
+block|{}
 end_struct
 
 begin_struct
@@ -1860,19 +1914,23 @@ decl_stmt|;
 name|uint16_t
 name|dqo_suspend_cnt
 decl_stmt|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS X
+comment|// 10.10/iOS 8
 name|uint16_t
 name|dqo_suspend_cnt_size
 decl_stmt|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS
+comment|// X 10.10/iOS 8
 name|uint16_t
 name|dqo_target_queue
 decl_stmt|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS X
+comment|// 10.10/iOS 8
 name|uint16_t
 name|dqo_target_queue_size
 decl_stmt|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS
+comment|// X 10.10/iOS 8
 name|uint16_t
 name|dqo_priority
 decl_stmt|;
@@ -1880,7 +1938,8 @@ comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
 name|uint16_t
 name|dqo_priority_size
 decl_stmt|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS X
+comment|// 10.10/iOS 8
 name|DispatchQueueOffsets
 argument_list|()
 block|{
@@ -2234,7 +2293,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// For packets that may come in more than one batch, anything left over can be left here
+comment|// For packets that may come in more than one
+end_comment
+
+begin_comment
+comment|// batch, anything left over can be left here
 end_comment
 
 begin_decl_stmt
@@ -2280,7 +2343,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Set to true if the 'p', 'P', 'g', and 'G' packets should be prefixed with the thread ID and colon:
+comment|// Set to true if the 'p', 'P', 'g', and 'G'
+end_comment
+
+begin_comment
+comment|// packets should be prefixed with the thread
+end_comment
+
+begin_comment
+comment|// ID and colon:
 end_comment
 
 begin_comment
@@ -2312,7 +2383,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// only packets larger than this size will be compressed
+comment|// only packets larger than this size will be
+end_comment
+
+begin_comment
+comment|// compressed
 end_comment
 
 begin_decl_stmt

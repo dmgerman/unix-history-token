@@ -80,7 +80,11 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -168,7 +172,8 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|// virtual CMICmdBase *         CreateSelf( void ) = 0;             // Not possible as require a static creator
+comment|// virtual CMICmdBase *         CreateSelf( void ) = 0;             // Not
+comment|// possible as require a static creator
 comment|// function in the command class, here for awareness
 comment|/* dtor */
 name|virtual

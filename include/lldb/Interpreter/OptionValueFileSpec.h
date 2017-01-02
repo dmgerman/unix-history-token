@@ -43,21 +43,11 @@ directive|define
 name|liblldb_OptionValueFileSpec_h_
 end_define
 
-begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
+begin_include
+include|#
+directive|include
+file|"lldb/Interpreter/OptionValue.h"
+end_include
 
 begin_include
 include|#
@@ -68,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/OptionValue.h"
+file|"llvm/Support/Chrono.h"
 end_include
 
 begin_decl_stmt
@@ -108,7 +98,7 @@ operator|~
 name|OptionValueFileSpec
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -144,6 +134,20 @@ argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
 block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
+block|;
 name|bool
 name|Clear
 argument_list|()
@@ -163,9 +167,16 @@ name|reset
 argument_list|()
 block|;
 name|m_data_mod_time
-operator|.
-name|Clear
-argument_list|()
+operator|=
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
+operator|(
+operator|)
 block|;
 return|return
 name|true
@@ -184,7 +195,7 @@ name|AutoComplete
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *s
+argument|llvm::StringRef s
 argument_list|,
 argument|int match_start_point
 argument_list|,
@@ -254,7 +265,7 @@ name|m_data_sp
 operator|.
 name|reset
 argument_list|()
-block|;     }
+block|;   }
 name|void
 name|SetDefaultValue
 argument_list|(
@@ -264,7 +275,7 @@ block|{
 name|m_default_value
 operator|=
 name|value
-block|;     }
+block|; }
 specifier|const
 name|lldb
 operator|::
@@ -300,9 +311,15 @@ operator|::
 name|DataBufferSP
 name|m_data_sp
 expr_stmt|;
-name|TimeValue
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 name|m_data_mod_time
-decl_stmt|;
+expr_stmt|;
 name|uint32_t
 name|m_completion_mask
 decl_stmt|;

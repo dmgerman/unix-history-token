@@ -206,7 +206,7 @@ block|{
 name|m_thread_dispatch_qaddr
 operator|=
 name|thread_dispatch_qaddr
-block|;     }
+block|;   }
 name|void
 name|SetStopInfoFrom_KDP_EXCEPTION
 argument_list|(

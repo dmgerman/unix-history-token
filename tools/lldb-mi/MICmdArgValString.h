@@ -58,7 +58,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -74,7 +78,11 @@ comment|//          An argument knows what type of argument it is and how it is 
 end_comment
 
 begin_comment
-comment|//          interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a
+end_comment
+
+begin_comment
+comment|//          matching
 end_comment
 
 begin_comment
@@ -134,6 +142,22 @@ argument_list|,
 argument|const bool vbHandleQuotes = false
 argument_list|,
 argument|const bool vbAcceptNumbers = false
+argument_list|)
+block|;
+comment|/* ctor */
+name|CMICmdArgValString
+argument_list|(
+argument|const CMIUtilString&vrArgName
+argument_list|,
+argument|const bool vbMandatory
+argument_list|,
+argument|const bool vbHandleByCmd
+argument_list|,
+argument|const bool vbHandleQuotes
+argument_list|,
+argument|const bool vbAcceptNumbers
+argument_list|,
+argument|const bool vbHandleDirPaths
 argument_list|)
 block|;
 comment|//
@@ -231,21 +255,28 @@ operator|:
 name|bool
 name|m_bHandleQuotedString
 block|;
-comment|// True = Parse a string surrounded by quotes spaces are not delimiters, false = only text up to next
+comment|// True = Parse a string surrounded by quotes
+comment|// spaces are not delimiters, false = only text up
+comment|// to next
 comment|// delimiting space character
 name|bool
 name|m_bAcceptNumbers
 block|;
-comment|// True = Parse a string and accept as a number if number, false = numbers not recognised as string types
+comment|// True = Parse a string and accept as a number if
+comment|// number, false = numbers not recognised as string
+comment|// types
 name|bool
 name|m_bHandleDirPaths
 block|;
-comment|// True = Parse a string and accept directory file style string if present, false = directory file path not
+comment|// True = Parse a string and accept directory file
+comment|// style string if present, false = directory file
+comment|// path not
 comment|// accepted
 name|bool
 name|m_bHandleAnything
 block|;
-comment|// True = Parse a string and accept anything if present, false = validate for criteria matches
+comment|// True = Parse a string and accept anything if
+comment|// present, false = validate for criteria matches
 block|}
 decl_stmt|;
 end_decl_stmt

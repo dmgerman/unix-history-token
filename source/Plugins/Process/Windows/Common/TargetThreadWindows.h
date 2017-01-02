@@ -50,12 +50,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/HostThread.h"
 end_include
 
@@ -63,6 +57,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Thread.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"RegisterContextWindows.h"
 end_include
 
 begin_decl_stmt
@@ -123,6 +129,22 @@ name|DidStop
 argument_list|()
 name|override
 block|;
+name|lldb
+operator|::
+name|RegisterContextSP
+name|GetRegisterContext
+argument_list|()
+name|override
+block|;
+name|lldb
+operator|::
+name|RegisterContextSP
+name|CreateRegisterContextForFrame
+argument_list|(
+argument|StackFrame *frame
+argument_list|)
+name|override
+block|;
 name|bool
 name|CalculateStopInfo
 argument_list|()
@@ -149,6 +171,14 @@ return|;
 block|}
 name|private
 operator|:
+name|lldb
+operator|::
+name|RegisterContextSP
+name|CreateRegisterContextForFrameIndex
+argument_list|(
+argument|uint32_t idx
+argument_list|)
+block|;
 name|HostThread
 name|m_host_thread
 block|; }

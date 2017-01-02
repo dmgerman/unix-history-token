@@ -86,7 +86,7 @@ name|virtual
 operator|~
 name|TimeGauge
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Start
 argument_list|()

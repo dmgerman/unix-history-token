@@ -198,7 +198,7 @@ name|virtual
 operator|~
 name|DNBArchMachARM
 argument_list|()
-block|{     }
+block|{}
 specifier|static
 name|void
 name|Initialize
@@ -1318,7 +1318,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// armv8 doesn't keep the disabled watchpoint values in the debug register context like armv7;
+comment|// armv8 doesn't keep the disabled watchpoint values in the debug register
+end_comment
+
+begin_comment
+comment|// context like armv7;
 end_comment
 
 begin_comment

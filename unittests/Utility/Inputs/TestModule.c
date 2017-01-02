@@ -4,7 +4,11 @@ comment|// Compile with $CC -nostdlib -shared TestModule.c -o TestModule.so
 end_comment
 
 begin_comment
-comment|// The actual contents of the test module is not important here. I am using this because it
+comment|// The actual contents of the test module is not important here. I am using this
+end_comment
+
+begin_comment
+comment|// because it
 end_comment
 
 begin_comment

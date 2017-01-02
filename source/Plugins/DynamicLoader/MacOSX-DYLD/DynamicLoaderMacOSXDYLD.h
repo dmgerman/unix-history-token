@@ -31,6 +31,46 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|// This is the DynamicLoader plugin for Darwin (macOS / iPhoneOS / tvOS /
+end_comment
+
+begin_comment
+comment|// watchOS)
+end_comment
+
+begin_comment
+comment|// platforms earlier than 2016, where lldb would read the "dyld_all_image_infos"
+end_comment
+
+begin_comment
+comment|// dyld internal structure to understand where things were loaded and the
+end_comment
+
+begin_comment
+comment|// solib loaded/unloaded notification function we put a breakpoint on gives us
+end_comment
+
+begin_comment
+comment|// an array of (load address, mod time, file path) tuples.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// As of late 2016, the new DynamicLoaderMacOS plugin should be used, which uses
+end_comment
+
+begin_comment
+comment|// dyld SPI functions to get the same information without reading internal dyld
+end_comment
+
+begin_comment
+comment|// data structures.
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -54,13 +94,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mutex>
+file|<vector>
 end_include
 
 begin_comment
@@ -74,7 +114,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/DynamicLoader.h"
+file|"lldb/Core/StructuredData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/UUID.h"
 end_include
 
 begin_include
@@ -86,13 +132,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StructuredData.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UUID.h"
+file|"lldb/Target/DynamicLoader.h"
 end_include
 
 begin_include
@@ -196,6 +236,19 @@ name|CanLoadImage
 argument_list|()
 name|override
 block|;
+name|bool
+name|GetSharedCacheInformation
+argument_list|(
+argument|lldb::addr_t&base_address
+argument_list|,
+argument|lldb_private::UUID&uuid
+argument_list|,
+argument|lldb_private::LazyBool&using_shared_cache
+argument_list|,
+argument|lldb_private::LazyBool&private_shared_cache
+argument_list|)
+name|override
+block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
@@ -293,7 +346,7 @@ name|FileSpec
 operator|*
 name|lc_id_dylinker
 argument_list|)
-block|;      struct
+block|;    struct
 name|DYLDAllImageInfos
 block|{
 name|uint32_t
@@ -366,7 +419,7 @@ name|dyldImageLoadAddress
 argument_list|(
 argument|LLDB_INVALID_ADDRESS
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -398,7 +451,7 @@ block|;
 name|dyldImageLoadAddress
 operator|=
 name|LLDB_INVALID_ADDRESS
-block|;         }
+block|;     }
 name|bool
 name|IsValid
 argument_list|()
@@ -435,13 +488,19 @@ name|ClearNotificationBreakpoint
 argument_list|()
 name|override
 block|;
-comment|// There is a little tricky bit where you might initially attach while dyld is updating
-comment|// the all_image_infos, and you can't read the infos, so you have to continue and pick it
-comment|// up when you hit the update breakpoint.  At that point, you need to run this initialize
-comment|// function, but when you do it that way you DON'T need to do the extra work you would at
+comment|// There is a little tricky bit where you might initially attach while dyld is
+comment|// updating
+comment|// the all_image_infos, and you can't read the infos, so you have to continue
+comment|// and pick it
+comment|// up when you hit the update breakpoint.  At that point, you need to run this
+comment|// initialize
+comment|// function, but when you do it that way you DON'T need to do the extra work
+comment|// you would at
 comment|// the breakpoint.
-comment|// So this function will only do actual work if the image infos haven't been read yet.
-comment|// If it does do any work, then it will return true, and false otherwise.  That way you can
+comment|// So this function will only do actual work if the image infos haven't been
+comment|// read yet.
+comment|// If it does do any work, then it will return true, and false otherwise.
+comment|// That way you can
 comment|// call it in the breakpoint action, and if it returns true you're done.
 name|bool
 name|InitializeFromAllImageInfos

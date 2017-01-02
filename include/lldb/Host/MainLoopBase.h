@@ -71,15 +71,21 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
-comment|// The purpose of this class is to enable multiplexed processing of data from different sources
-comment|// without resorting to multi-threading. Clients can register IOObjects, which will be monitored
-comment|// for readability, and when they become ready, the specified callback will be invoked.
-comment|// Monitoring for writability is not supported, but can be easily added if needed.
+comment|// The purpose of this class is to enable multiplexed processing of data from
+comment|// different sources
+comment|// without resorting to multi-threading. Clients can register IOObjects, which
+comment|// will be monitored
+comment|// for readability, and when they become ready, the specified callback will be
+comment|// invoked.
+comment|// Monitoring for writability is not supported, but can be easily added if
+comment|// needed.
 comment|//
-comment|// The RegisterReadObject function return a handle, which controls the duration of the monitoring. When
+comment|// The RegisterReadObject function return a handle, which controls the duration
+comment|// of the monitoring. When
 comment|// this handle is destroyed, the callback is deregistered.
 comment|//
-comment|// This class simply defines the interface common for all platforms, actual implementations are
+comment|// This class simply defines the interface common for all platforms, actual
+comment|// implementations are
 comment|// platform-specific.
 name|class
 name|MainLoopBase
@@ -93,12 +99,12 @@ name|public
 label|:
 name|MainLoopBase
 argument_list|()
-block|{ }
+block|{}
 name|virtual
 operator|~
 name|MainLoopBase
 argument_list|()
-block|{ }
+block|{}
 typedef|typedef
 name|std
 operator|::
@@ -148,7 +154,8 @@ literal|"Not implemented"
 argument_list|)
 expr_stmt|;
 block|}
-comment|// Waits for registered events and invoke the proper callbacks. Returns when all callbacks
+comment|// Waits for registered events and invoke the proper callbacks. Returns when
+comment|// all callbacks
 comment|// deregister themselves or when someone requests termination.
 name|virtual
 name|Error
@@ -245,7 +252,7 @@ name|m_handle
 argument_list|(
 argument|handle
 argument_list|)
-block|{ }
+block|{}
 name|MainLoopBase
 operator|&
 name|m_mainloop

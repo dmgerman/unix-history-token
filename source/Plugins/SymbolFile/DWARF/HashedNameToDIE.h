@@ -52,13 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-defines.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/dwarf.h"
+file|"lldb/Core/MappedHash.h"
 end_include
 
 begin_include
@@ -70,7 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/MappedHash.h"
+file|"lldb/Core/dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
 end_include
 
 begin_include
@@ -133,12 +133,14 @@ name|eAtomTypeCUOffset
 init|=
 literal|2u
 block|,
-comment|// DIE offset of the compiler unit header that contains the item in question
+comment|// DIE offset of the compiler unit header that
+comment|// contains the item in question
 name|eAtomTypeTag
 init|=
 literal|3u
 block|,
-comment|// DW_TAG_xxx value, should be encoded as DW_FORM_data1 (if no tags exceed 255) or DW_FORM_data2
+comment|// DW_TAG_xxx value, should be encoded as DW_FORM_data1
+comment|// (if no tags exceed 255) or DW_FORM_data2
 name|eAtomTypeNameFlags
 init|=
 literal|4u
@@ -152,9 +154,12 @@ comment|// Flags from enum TypeFlags,
 name|eAtomTypeQualNameHash
 init|=
 literal|6u
-comment|// A 32 bit hash of the full qualified name (since all hash entries are basename only)
-comment|// For example a type like "std::vector<int>::iterator" would have a name of "iterator"
-comment|// and a 32 bit hash for "std::vector<int>::iterator" to allow us to not have to pull
+comment|// A 32 bit hash of the full qualified name
+comment|// (since all hash entries are basename only)
+comment|// For example a type like "std::vector<int>::iterator" would have a name of
+comment|// "iterator"
+comment|// and a 32 bit hash for "std::vector<int>::iterator" to allow us to not
+comment|// have to pull
 comment|// in debug info for a type when we know the fully qualified name.
 block|}
 enum|;
@@ -366,12 +371,12 @@ block|;
 name|void
 name|Dump
 argument_list|(
-argument|lldb_private::Stream& strm
+argument|lldb_private::Stream&strm
 argument_list|,
 argument|const DIEInfo&hash_data
 argument_list|)
 specifier|const
-block|;     }
+block|;   }
 decl_stmt|;
 comment|// A class for reading and using a saved hash table from a block of data
 comment|// in memory

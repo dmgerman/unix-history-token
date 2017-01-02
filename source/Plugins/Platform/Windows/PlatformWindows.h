@@ -151,9 +151,9 @@ comment|//------------------------------------------------------------
 name|bool
 name|GetModuleSpec
 argument_list|(
-argument|const lldb_private::FileSpec& module_file_spec
+argument|const lldb_private::FileSpec&module_file_spec
 argument_list|,
-argument|const lldb_private::ArchSpec& arch
+argument|const lldb_private::ArchSpec&arch
 argument_list|,
 argument|lldb_private::ModuleSpec&module_spec
 argument_list|)
@@ -223,7 +223,7 @@ operator|::
 name|Error
 name|ConnectRemote
 argument_list|(
-argument|lldb_private::Args& args
+argument|lldb_private::Args&args
 argument_list|)
 name|override
 block|;
@@ -323,7 +323,7 @@ name|GetFileWithUUID
 argument_list|(
 argument|const lldb_private::FileSpec&platform_file
 argument_list|,
-argument|const lldb_private::UUID* uuid
+argument|const lldb_private::UUID *uuid
 argument_list|,
 argument|lldb_private::FileSpec&local_file
 argument_list|)
@@ -336,7 +336,7 @@ name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
 argument_list|,
-argument|lldb_private::Process* process
+argument|lldb_private::Process *process
 argument_list|,
 argument|lldb::ModuleSP&module_sp
 argument_list|,
@@ -381,7 +381,7 @@ name|void
 name|CalculateTrapHandlerSymbolNames
 argument_list|()
 name|override
-block|{     }
+block|{}
 name|ConstString
 name|GetFullNameForDylib
 argument_list|(

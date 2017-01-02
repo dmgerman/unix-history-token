@@ -92,13 +92,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_include
@@ -141,10 +141,13 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
-comment|// this file (and its. cpp) contain the low-level implementation of LLDB Data Visualization
+comment|// this file (and its. cpp) contain the low-level implementation of LLDB Data
+comment|// Visualization
 comment|// class DataVisualization is the high-level front-end of this feature
-comment|// clients should refer to that class as the entry-point into the data formatters
-comment|// unless they have a good reason to bypass it and prefer to use this file's objects directly
+comment|// clients should refer to that class as the entry-point into the data
+comment|// formatters
+comment|// unless they have a good reason to bypass it and prefer to use this file's
+comment|// objects directly
 name|class
 name|FormatManager
 range|:
@@ -506,7 +509,7 @@ operator|::
 name|TypeCategoryImplSP
 name|GetCategory
 argument_list|(
-argument|const char* category_name = nullptr
+argument|const char *category_name = nullptr
 argument_list|,
 argument|bool can_create = true
 argument_list|)
@@ -540,7 +543,7 @@ operator|::
 name|TypeCategoryImplSP
 name|GetCategory
 argument_list|(
-argument|const ConstString& category_name
+argument|const ConstString&category_name
 argument_list|,
 argument|bool can_create = true
 argument_list|)
@@ -641,7 +644,7 @@ operator|::
 name|TypeFormatImplSP
 name|GetFormat
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)
@@ -654,7 +657,7 @@ operator|::
 name|TypeSummaryImplSP
 name|GetSummaryFormat
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)
@@ -673,7 +676,7 @@ operator|::
 name|SyntheticChildrenSP
 name|GetSyntheticChildren
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)
@@ -691,7 +694,7 @@ operator|::
 name|TypeValidatorImplSP
 name|GetValidator
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)
@@ -810,11 +813,19 @@ comment|// if the user tries to add formatters for, say, "struct Foo"
 end_comment
 
 begin_comment
-comment|// those will not match any type because of the way we strip qualifiers from typenames
+comment|// those will not match any type because of the way we strip qualifiers from
 end_comment
 
 begin_comment
-comment|// this method looks for the case where the user is adding a "class","struct","enum" or "union" Foo
+comment|// typenames
+end_comment
+
+begin_comment
+comment|// this method looks for the case where the user is adding a
+end_comment
+
+begin_comment
+comment|// "class","struct","enum" or "union" Foo
 end_comment
 
 begin_comment
@@ -835,11 +846,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// when DataExtractor dumps a vectorOfT, it uses a predefined format for each item
+comment|// when DataExtractor dumps a vectorOfT, it uses a predefined format for each
 end_comment
 
 begin_comment
-comment|// this method returns it, or eFormatInvalid if vector_format is not a vectorOf
+comment|// item
+end_comment
+
+begin_comment
+comment|// this method returns it, or eFormatInvalid if vector_format is not a
+end_comment
+
+begin_comment
+comment|// vectorOf
 end_comment
 
 begin_expr_stmt
@@ -1183,19 +1202,35 @@ block|}
 end_function
 
 begin_comment
-comment|// These functions are meant to initialize formatters that are very low-level/global in nature
+comment|// These functions are meant to initialize formatters that are very
 end_comment
 
 begin_comment
-comment|// and do not naturally belong in any language. The intent is that most formatters go in
+comment|// low-level/global in nature
 end_comment
 
 begin_comment
-comment|// language-specific categories. Eventually, the runtimes should also be allowed to vend their
+comment|// and do not naturally belong in any language. The intent is that most
 end_comment
 
 begin_comment
-comment|// own formatters, and then one could put formatters that depend on specific library load events
+comment|// formatters go in
+end_comment
+
+begin_comment
+comment|// language-specific categories. Eventually, the runtimes should also be
+end_comment
+
+begin_comment
+comment|// allowed to vend their
+end_comment
+
+begin_comment
+comment|// own formatters, and then one could put formatters that depend on specific
+end_comment
+
+begin_comment
+comment|// library load events
 end_comment
 
 begin_comment
@@ -1224,7 +1259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|};      }
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

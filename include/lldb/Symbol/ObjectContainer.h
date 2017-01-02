@@ -62,19 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/DataExtractor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
@@ -93,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -138,7 +138,7 @@ argument|lldb::offset_t file_offset
 argument_list|,
 argument|lldb::offset_t length
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|)
@@ -445,7 +445,8 @@ comment|//------------------------------------------------------------------
 name|FileSpec
 name|m_file
 decl_stmt|;
-comment|///< The file that represents this container objects (which can be different from the module's file).
+comment|///< The file that represents this container objects (which
+comment|///can be different from the module's file).
 name|lldb
 operator|::
 name|addr_t

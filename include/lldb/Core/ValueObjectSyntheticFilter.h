@@ -214,7 +214,7 @@ argument_list|(
 argument|bool use_synthetic
 argument_list|)
 name|override
-block|{     }
+block|{}
 name|bool
 name|IsDynamic
 argument_list|()
@@ -379,7 +379,7 @@ name|SetValueFromCString
 argument_list|(
 argument|const char *value_str
 argument_list|,
-argument|Error& error
+argument|Error&error
 argument_list|)
 name|override
 block|;
@@ -462,7 +462,8 @@ name|void
 name|CreateSynthFilter
 argument_list|()
 block|;
-comment|// we need to hold on to the SyntheticChildren because someone might delete the type binding while we are alive
+comment|// we need to hold on to the SyntheticChildren because someone might delete
+comment|// the type binding while we are alive
 name|lldb
 operator|::
 name|SyntheticChildrenSP
@@ -527,7 +528,9 @@ decl_stmt|;
 name|uint32_t
 name|m_synthetic_children_count
 decl_stmt|;
-comment|// FIXME use the ValueObject's ChildrenManager instead of a special purpose solution
+comment|// FIXME use the ValueObject's
+comment|// ChildrenManager instead of a special
+comment|// purpose solution
 name|SyntheticChildrenCache
 name|m_synthetic_children_cache
 decl_stmt|;

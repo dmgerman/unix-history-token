@@ -77,13 +77,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<getopt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<getopt.h>
+file|<unistd.h>
 end_include
 
 begin_else

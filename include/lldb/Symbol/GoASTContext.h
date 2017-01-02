@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/TypeSystem.h"
+file|"lldb/Symbol/CompilerType.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/CompilerType.h"
+file|"lldb/Symbol/TypeSystem.h"
 end_include
 
 begin_decl_stmt
@@ -216,7 +216,7 @@ block|{
 name|m_pointer_byte_size
 operator|=
 name|byte_size
-block|;     }
+block|; }
 comment|//------------------------------------------------------------------
 comment|// llvm casting support
 comment|//------------------------------------------------------------------
@@ -661,7 +661,8 @@ argument|lldb::opaque_compiler_type_t type
 argument_list|)
 name|override
 block|;
-comment|// Returns -1 if this isn't a function of if the function doesn't have a prototype
+comment|// Returns -1 if this isn't a function of if the function doesn't have a
+comment|// prototype
 comment|// Returns a value>= 0 if there is a prototype.
 name|int
 name|GetFunctionArgumentCount
@@ -904,7 +905,8 @@ block|;
 comment|// Lookup a child member given a name. This function will match member names
 comment|// only and will descend into "clang_type" children in search for the first
 comment|// member in this class, or any base class that matches "name".
-comment|// TODO: Return all matches for a given name by returning a vector<vector<uint32_t>>
+comment|// TODO: Return all matches for a given name by returning a
+comment|// vector<vector<uint32_t>>
 comment|// so we catch all names that match a given child name, not just the first.
 name|size_t
 name|GetIndexOfChildMemberWithName
@@ -1276,9 +1278,9 @@ name|UserExpression
 operator|*
 name|GetUserExpression
 argument_list|(
-argument|const char *expr
+argument|llvm::StringRef expr
 argument_list|,
-argument|const char *expr_prefix
+argument|llvm::StringRef prefix
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,

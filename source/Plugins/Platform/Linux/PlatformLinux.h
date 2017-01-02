@@ -194,7 +194,7 @@ name|GetFileWithUUID
 argument_list|(
 argument|const FileSpec&platform_file
 argument_list|,
-argument|const UUID* uuid
+argument|const UUID *uuid
 argument_list|,
 argument|FileSpec&local_file
 argument_list|)
@@ -281,7 +281,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformLinux
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 comment|// namespace platform_linux

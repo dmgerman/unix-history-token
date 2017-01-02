@@ -46,18 +46,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"DWARFDataExtractor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
 begin_comment
 comment|// for NULL
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"DWARFDataExtractor.h"
-end_include
 
 begin_decl_stmt
 name|class
@@ -91,7 +91,7 @@ operator|.
 name|uval
 operator|=
 literal|0
-block|;         }
+block|; }
 expr|union
 block|{
 name|uint64_t
@@ -104,7 +104,7 @@ specifier|const
 name|char
 operator|*
 name|cstr
-block|;         }
+block|;     }
 name|value
 expr_stmt|;
 specifier|const
@@ -135,7 +135,7 @@ argument_list|)
 block|{}
 name|FixedFormSizes
 argument_list|(
-argument|const uint8_t* fix_sizes
+argument|const uint8_t *fix_sizes
 argument_list|,
 argument|size_t size
 argument_list|)
@@ -213,7 +213,7 @@ argument_list|()
 expr_stmt|;
 name|DWARFFormValue
 argument_list|(
-argument|const DWARFCompileUnit* cu
+argument|const DWARFCompileUnit *cu
 argument_list|,
 argument|dw_form_t form
 argument_list|)

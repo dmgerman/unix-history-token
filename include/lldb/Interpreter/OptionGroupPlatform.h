@@ -121,7 +121,7 @@ name|m_include_platform_option
 argument_list|(
 argument|include_platform_option
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionGroupPlatform
 argument_list|()
@@ -129,14 +129,12 @@ name|override
 operator|=
 expr|default
 block|;
-name|uint32_t
-name|GetNumDefinitions
-argument_list|()
-name|override
-block|;
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
@@ -144,18 +142,33 @@ block|;
 name|Error
 name|SetOptionValue
 argument_list|(
-argument|CommandInterpreter&interpreter
-argument_list|,
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_value
+argument|llvm::StringRef option_value
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetOptionValue
+argument_list|(
+name|uint32_t
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|ExecutionContext
+operator|*
+argument_list|)
+operator|=
+name|delete
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-argument|CommandInterpreter&interpreter
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
@@ -170,7 +183,7 @@ argument|const ArchSpec&arch
 argument_list|,
 argument|bool make_selected
 argument_list|,
-argument|Error& error
+argument|Error&error
 argument_list|,
 argument|ArchSpec&platform_arch
 argument_list|)
@@ -238,7 +251,7 @@ block|{
 name|m_sdk_sysroot
 operator|=
 name|sdk_root_directory
-block|;     }
+block|;   }
 specifier|const
 name|ConstString
 operator|&
@@ -259,7 +272,7 @@ block|{
 name|m_sdk_build
 operator|=
 name|sdk_build
-block|;     }
+block|; }
 name|bool
 name|PlatformMatches
 argument_list|(

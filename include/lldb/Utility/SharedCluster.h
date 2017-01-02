@@ -119,7 +119,7 @@ operator|~
 name|shared_ptr_refcount
 argument_list|()
 name|override
-block|{         }
+block|{}
 name|void
 name|on_zero_shared
 argument_list|()
@@ -129,13 +129,13 @@ name|manager
 operator|->
 name|DecrementRefCount
 argument_list|()
-block|;         }
+block|; }
 name|private
 operator|:
 name|T
 operator|*
 name|manager
-block|;     }
+block|; }
 expr_stmt|;
 block|}
 comment|// namespace imp
@@ -248,7 +248,7 @@ name|insert
 argument_list|(
 name|new_object
 argument_list|)
-block|;     }
+block|;   }
 name|typename
 name|lldb_private
 operator|::

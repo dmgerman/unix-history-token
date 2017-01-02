@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/API/SBAddress.h"
 end_include
 
@@ -80,7 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/API/SBBreakpoint.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/API/SBBroadcaster.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_include
@@ -413,7 +419,7 @@ argument_list|,
 comment|// See LaunchFlags
 argument|bool stop_at_entry
 argument_list|,
-argument|lldb::SBError& error
+argument|lldb::SBError&error
 argument_list|)
 expr_stmt|;
 name|SBProcess
@@ -523,7 +529,7 @@ argument|SBListener&listener
 argument_list|,
 argument|lldb::pid_t pid
 argument_list|,
-argument|lldb::SBError& error
+argument|lldb::SBError&error
 argument_list|)
 expr_stmt|;
 if|#
@@ -544,7 +550,7 @@ argument_list|,
 argument|::pid_t pid
 argument_list|,
 comment|// 32 bit int process ID
-argument|lldb::SBError& error
+argument|lldb::SBError&error
 argument_list|)
 expr_stmt|;
 comment|// DEPRECATED
@@ -582,7 +588,7 @@ argument|const char *name
 argument_list|,
 argument|bool wait_for
 argument_list|,
-argument|lldb::SBError& error
+argument|lldb::SBError&error
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -1163,6 +1169,20 @@ expr_stmt|;
 name|lldb
 operator|::
 name|SBBreakpoint
+name|BreakpointCreateByLocation
+argument_list|(
+argument|const lldb::SBFileSpec&file_spec
+argument_list|,
+argument|uint32_t line
+argument_list|,
+argument|lldb::addr_t offset
+argument_list|,
+argument|SBFileSpecList&module_list
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBBreakpoint
 name|BreakpointCreateByName
 argument_list|(
 specifier|const
@@ -1207,7 +1227,7 @@ name|BreakpointCreateByName
 argument_list|(
 argument|const char *symbol_name
 argument_list|,
-argument|uint32_t name_type_mask
+argument|uint32_t           name_type_mask
 argument_list|,
 comment|// Logical OR one or more FunctionNameType enum bits
 argument|const SBFileSpecList&module_list
@@ -1222,7 +1242,7 @@ name|BreakpointCreateByName
 argument_list|(
 argument|const char *symbol_name
 argument_list|,
-argument|uint32_t name_type_mask
+argument|uint32_t           name_type_mask
 argument_list|,
 comment|// Logical OR one or more FunctionNameType enum bits
 argument|lldb::LanguageType symbol_language
@@ -1241,7 +1261,7 @@ argument|const char *symbol_name[]
 argument_list|,
 argument|uint32_t num_names
 argument_list|,
-argument|uint32_t name_type_mask
+argument|uint32_t           name_type_mask
 argument_list|,
 comment|// Logical OR one or more FunctionNameType enum bits
 argument|const SBFileSpecList&module_list
@@ -1258,7 +1278,7 @@ argument|const char *symbol_name[]
 argument_list|,
 argument|uint32_t num_names
 argument_list|,
-argument|uint32_t name_type_mask
+argument|uint32_t           name_type_mask
 argument_list|,
 comment|// Logical OR one or more FunctionNameType enum bits
 argument|lldb::LanguageType symbol_language
@@ -1277,7 +1297,7 @@ argument|const char *symbol_name[]
 argument_list|,
 argument|uint32_t num_names
 argument_list|,
-argument|uint32_t name_type_mask
+argument|uint32_t           name_type_mask
 argument_list|,
 comment|// Logical OR one or more FunctionNameType enum bits
 argument|lldb::LanguageType symbol_language
@@ -1442,6 +1462,116 @@ operator|&
 name|address
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Read breakpoints from source_file and return the newly created
+comment|/// breakpoints in bkpt_list.
+comment|///
+comment|/// @param[in] source_file
+comment|///    The file from which to read the breakpoints.
+comment|///
+comment|/// @param[out] bkpt_list
+comment|///    A list of the newly created breakpoints.
+comment|///
+comment|/// @return
+comment|///     An SBError detailing any errors in reading in the breakpoints.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBError
+name|BreakpointsCreateFromFile
+argument_list|(
+name|SBFileSpec
+operator|&
+name|source_file
+argument_list|,
+name|SBBreakpointList
+operator|&
+name|new_bps
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Read breakpoints from source_file and return the newly created
+comment|/// breakpoints in bkpt_list.
+comment|///
+comment|/// @param[in] source_file
+comment|///    The file from which to read the breakpoints.
+comment|///
+comment|/// @param[in] matching_names
+comment|///    Only read in breakpoints whose names match one of the names in this
+comment|///    list.
+comment|///
+comment|/// @param[out] bkpt_list
+comment|///    A list of the newly created breakpoints.
+comment|///
+comment|/// @return
+comment|///     An SBError detailing any errors in reading in the breakpoints.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBError
+name|BreakpointsCreateFromFile
+argument_list|(
+name|SBFileSpec
+operator|&
+name|source_file
+argument_list|,
+name|SBStringList
+operator|&
+name|matching_names
+argument_list|,
+name|SBBreakpointList
+operator|&
+name|new_bps
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Write breakpoints to dest_file.
+comment|///
+comment|/// @param[in] dest_file
+comment|///    The file to which to write the breakpoints.
+comment|///
+comment|/// @return
+comment|///     An SBError detailing any errors in writing in the breakpoints.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBError
+name|BreakpointsWriteToFile
+argument_list|(
+name|SBFileSpec
+operator|&
+name|dest_file
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Write breakpoints listed in bkpt_list to dest_file.
+comment|///
+comment|/// @param[in] dest_file
+comment|///    The file to which to write the breakpoints.
+comment|///
+comment|/// @param[in] bkpt_list
+comment|///    Only write breakpoints from this list.
+comment|///
+comment|/// @param[in] append
+comment|///    If \btrue, append the breakpoints in bkpt_list to the others
+comment|///    serialized in dest_file.  If dest_file doesn't exist, then a new
+comment|///    file will be created and the breakpoints in bkpt_list written to it.
+comment|///
+comment|/// @return
+comment|///     An SBError detailing any errors in writing in the breakpoints.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBError
+name|BreakpointsWriteToFile
+argument_list|(
+argument|SBFileSpec&dest_file
+argument_list|,
+argument|SBBreakpointList&bkpt_list
+argument_list|,
+argument|bool append = false
+argument_list|)
+expr_stmt|;
 name|uint32_t
 name|GetNumBreakpoints
 argument_list|()
@@ -1471,6 +1601,21 @@ argument_list|(
 argument|break_id_t break_id
 argument_list|)
 expr_stmt|;
+comment|// Finds all breakpoints by name, returning the list in bkpt_list.  Returns
+comment|// false if the name is not a valid breakpoint name, true otherwise.
+name|bool
+name|FindBreakpointsByName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|SBBreakpointList
+modifier|&
+name|bkpt_list
+parameter_list|)
+function_decl|;
 name|bool
 name|EnableAllBreakpoints
 parameter_list|()
@@ -1527,7 +1672,7 @@ argument|bool read
 argument_list|,
 argument|bool write
 argument_list|,
-argument|SBError& error
+argument|SBError&error
 argument_list|)
 expr_stmt|;
 name|bool
@@ -1657,7 +1802,8 @@ argument_list|,
 argument|size_t size
 argument_list|)
 expr_stmt|;
-comment|// The "WithFlavor" is necessary to keep SWIG from getting confused about overloaded arguments when
+comment|// The "WithFlavor" is necessary to keep SWIG from getting confused about
+comment|// overloaded arguments when
 comment|// using the buf + size -> Python Object magic.
 name|lldb
 operator|::
@@ -1810,6 +1956,10 @@ decl_stmt|;
 name|friend
 name|class
 name|SBBlock
+decl_stmt|;
+name|friend
+name|class
+name|SBBreakpointList
 decl_stmt|;
 name|friend
 name|class

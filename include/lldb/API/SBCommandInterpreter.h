@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
+file|"lldb/API/SBDebugger.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDebugger.h"
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_decl_stmt
@@ -415,6 +415,33 @@ operator|*
 name|help
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|SBCommand
+name|AddCommand
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+name|lldb
+operator|::
+name|SBCommandPluginInterface
+operator|*
+name|impl
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|help
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|syntax
+argument_list|)
+expr_stmt|;
 name|void
 name|SourceInitFileInHomeDirectory
 argument_list|(
@@ -488,15 +515,23 @@ name|SBCommandReturnObject
 name|result
 argument_list|)
 decl_stmt|;
-comment|// The pointer based interface is not useful in SWIG, since the cursor& last_char arguments are string pointers INTO current_line
+comment|// The pointer based interface is not useful in SWIG, since the cursor&
+comment|// last_char arguments are string pointers INTO current_line
 comment|// and you can't do that in a scripting language interface in general...
-comment|// In either case, the way this works is that the you give it a line and cursor position in the line.  The function
-comment|// will return the number of completions.  The matches list will contain number_of_completions + 1 elements.  The first
-comment|// element is the common substring after the cursor position for all the matches.  The rest of the elements are the
-comment|// matches.  The first element is useful if you are emulating the common shell behavior where the tab completes
-comment|// to the string that is common among all the matches, then you should first check if the first element is non-empty,
-comment|// and if so just insert it and move the cursor to the end of the insertion.  The next tab will return an empty
-comment|// common substring, and a list of choices (if any), at which point you should display the choices and let the user
+comment|// In either case, the way this works is that the you give it a line and
+comment|// cursor position in the line.  The function
+comment|// will return the number of completions.  The matches list will contain
+comment|// number_of_completions + 1 elements.  The first
+comment|// element is the common substring after the cursor position for all the
+comment|// matches.  The rest of the elements are the
+comment|// matches.  The first element is useful if you are emulating the common shell
+comment|// behavior where the tab completes
+comment|// to the string that is common among all the matches, then you should first
+comment|// check if the first element is non-empty,
+comment|// and if so just insert it and move the cursor to the end of the insertion.
+comment|// The next tab will return an empty
+comment|// common substring, and a list of choices (if any), at which point you should
+comment|// display the choices and let the user
 comment|// type further to disambiguate.
 name|int
 name|HandleCompletion
@@ -831,6 +866,33 @@ operator|*
 name|help
 operator|=
 name|nullptr
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBCommand
+name|AddCommand
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+name|lldb
+operator|::
+name|SBCommandPluginInterface
+operator|*
+name|impl
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|help
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|syntax
 argument_list|)
 expr_stmt|;
 name|private

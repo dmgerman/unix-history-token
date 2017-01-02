@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -117,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
 end_include
 
 begin_decl_stmt
@@ -484,7 +484,8 @@ name|offset_ptr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|//  uint64_t        GetDwarfEHPtr(offset_t *offset_ptr, uint32_t eh_ptr_enc) const;
+comment|//  uint64_t        GetDwarfEHPtr(offset_t *offset_ptr, uint32_t eh_ptr_enc)
+comment|//  const;
 specifier|const
 name|char
 modifier|*

@@ -530,7 +530,9 @@ label|:
 name|uint32_t
 name|m_retain_count
 decl_stmt|;
-comment|// Each breakpoint is maintained by address and is ref counted in case multiple people set a breakpoint at the same address
+comment|// Each breakpoint is maintained by address and is
+comment|// ref counted in case multiple people set a
+comment|// breakpoint at the same address
 name|uint32_t
 name|m_byte_size
 decl_stmt|;
@@ -556,7 +558,8 @@ name|m_hw_preferred
 range|:
 literal|1
 decl_stmt|,
-comment|// 1 if this point has been requested to be set using hardware (which may fail due to lack of resources)
+comment|// 1 if this point has been requested to be set using
+comment|// hardware (which may fail due to lack of resources)
 name|m_is_watchpoint
 range|:
 literal|1

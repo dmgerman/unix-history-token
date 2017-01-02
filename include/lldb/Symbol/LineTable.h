@@ -68,19 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/LineEntry.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ModuleChild.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/RangeMap.h"
 end_include
 
 begin_include
@@ -92,7 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/RangeMap.h"
+file|"lldb/Symbol/LineEntry.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -621,7 +621,7 @@ name|is_terminal_entry
 argument_list|(
 argument|false
 argument_list|)
-block|{         }
+block|{}
 name|Entry
 argument_list|(
 argument|lldb::addr_t _file_addr
@@ -687,7 +687,7 @@ name|is_terminal_entry
 argument_list|(
 argument|_is_terminal_entry
 argument_list|)
-block|{         }
+block|{}
 name|int
 name|bsearch_compare
 argument_list|(
@@ -767,7 +767,8 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|if (a< b) return -1; if (a> b) return +1
+define|\
+value|if (a< b)                                                                   \     return -1;                                                                 \   if (a> b)                                                                   \   return +1
 name|SCALAR_COMPARE
 argument_list|(
 name|lhs
@@ -951,42 +952,53 @@ comment|///< The file address for this line entry
 name|uint32_t
 name|line
 decl_stmt|;
-comment|///< The source line number, or zero if there is no line number information.
+comment|///< The source line number, or zero if there is no line
+comment|///number information.
 name|uint16_t
 name|column
 decl_stmt|;
-comment|///< The column number of the source line, or zero if there is no column information.
+comment|///< The column number of the source line, or zero if there
+comment|///is no column information.
 name|uint16_t
 name|file_idx
 range|:
 literal|11
 decl_stmt|,
-comment|///< The file index into CompileUnit's file table, or zero if there is no file information.
+comment|///< The file index into CompileUnit's file table,
+comment|///or zero if there is no file information.
 name|is_start_of_statement
 range|:
 literal|1
 decl_stmt|,
-comment|///< Indicates this entry is the beginning of a statement.
+comment|///< Indicates this entry is the beginning of
+comment|///a statement.
 name|is_start_of_basic_block
 range|:
 literal|1
 decl_stmt|,
-comment|///< Indicates this entry is the beginning of a basic block.
+comment|///< Indicates this entry is the beginning
+comment|///of a basic block.
 name|is_prologue_end
 range|:
 literal|1
 decl_stmt|,
-comment|///< Indicates this entry is one (of possibly many) where execution should be suspended for an entry breakpoint of a function.
+comment|///< Indicates this entry is one (of possibly many)
+comment|///where execution should be suspended for an entry
+comment|///breakpoint of a function.
 name|is_epilogue_begin
 range|:
 literal|1
 decl_stmt|,
-comment|///< Indicates this entry is one (of possibly many) where execution should be suspended for an exit breakpoint of a function.
+comment|///< Indicates this entry is one (of possibly
+comment|///many) where execution should be suspended for
+comment|///an exit breakpoint of a function.
 name|is_terminal_entry
 range|:
 literal|1
 decl_stmt|;
-comment|///< Indicates this entry is that of the first byte after the end of a sequence of target machine instructions.
+comment|///< Indicates this entry is that of the first
+comment|///byte after the end of a sequence of target
+comment|///machine instructions.
 block|}
 struct|;
 struct|struct

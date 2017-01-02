@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Activity.h -----------------------------------------------*- C++ -*-===//
+comment|//===-- Activity.h -----------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -46,13 +50,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
+file|<mach/task.h>
 end_include
 
 begin_include
@@ -70,7 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mach/task.h>
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_include
@@ -97,7 +101,7 @@ expr_stmt|;
 operator|~
 name|Genealogy
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -163,11 +167,13 @@ decl_stmt|;
 name|uint8_t
 name|type
 decl_stmt|;
-comment|// OS_TRACE_TYPE_RELEASE, OS_TRACE_TYPE_DEBUG, OS_TRACE_TYPE_ERROR, OS_TRACE_TYPE_FAULT
+comment|// OS_TRACE_TYPE_RELEASE, OS_TRACE_TYPE_DEBUG,
+comment|// OS_TRACE_TYPE_ERROR, OS_TRACE_TYPE_FAULT
 name|uint32_t
 name|process_info_index
 decl_stmt|;
-comment|// index # of the image uuid/file path, 0 means unknown
+comment|// index # of the image uuid/file path, 0 means
+comment|// unknown
 name|std
 operator|::
 name|string
@@ -214,7 +220,8 @@ decl_stmt|;
 name|BreadcrumbList
 name|breadcrumbs
 decl_stmt|;
-comment|// should be 0 or 1 breadcrumbs; no more than 1 BC for any given activity
+comment|// should be 0 or 1 breadcrumbs; no more than 1
+comment|// BC for any given activity
 block|}
 struct|;
 typedef|typedef

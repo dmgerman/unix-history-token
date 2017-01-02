@@ -76,11 +76,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|//              To implement new MI commands derive a new command class from the command base
+comment|//              To implement new MI commands derive a new command class from the
 end_comment
 
 begin_comment
-comment|//              class. To enable the new command for interpretation add the new command class
+comment|//              command base
+end_comment
+
+begin_comment
+comment|//              class. To enable the new command for interpretation add the new
+end_comment
+
+begin_comment
+comment|//              command class
 end_comment
 
 begin_comment
@@ -100,7 +108,11 @@ comment|//                  MICmdCmd.h / .cpp
 end_comment
 
 begin_comment
-comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+comment|//              For an introduction to adding a new command see
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdSupportInfoMiCmdQuery
 end_comment
 
 begin_comment
@@ -134,7 +146,11 @@ file|"MICmdBase.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -206,7 +222,8 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgStart
 block|;
-comment|// StopAtEntry - run to first instruction or main() if specified
+comment|// StopAtEntry - run to first
+comment|// instruction or main() if specified
 name|lldb
 operator|::
 name|SBCommandReturnObject
@@ -216,7 +233,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -288,7 +309,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -365,13 +390,18 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgNumber
 block|;
-comment|// Not specified in MI spec but Eclipse gives this option
+comment|// Not specified in MI spec but
+comment|// Eclipse gives this option
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -448,13 +478,18 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgNumber
 block|;
-comment|// Not specified in MI spec but Eclipse gives this option
+comment|// Not specified in MI spec but
+comment|// Eclipse gives this option
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -531,13 +566,18 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgNumber
 block|;
-comment|// Not specified in MI spec but Eclipse gives this option
+comment|// Not specified in MI spec but
+comment|// Eclipse gives this option
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -614,13 +654,18 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgNumber
 block|;
-comment|// Not specified in MI spec but Eclipse gives this option
+comment|// Not specified in MI spec but
+comment|// Eclipse gives this option
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -701,7 +746,11 @@ comment|// CODETAG_DEBUG_SESSION_RUNNING_PROG_RECEIVED_SIGINT_PAUSE_PROGRAM
 end_comment
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -713,7 +762,11 @@ comment|//          *this class implements MI command "exec-interrupt".
 end_comment
 
 begin_comment
-comment|// Gotchas: Using Eclipse this command is injected into the command system when a
+comment|// Gotchas: Using Eclipse this command is injected into the command system when
+end_comment
+
+begin_comment
+comment|// a
 end_comment
 
 begin_comment
@@ -781,7 +834,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -857,7 +914,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment

@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"RNBDefs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"DNBError.h"
 end_include
 
@@ -80,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"RNBDefs.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -99,37 +99,41 @@ enum|enum
 block|{
 name|event_proc_state_changed
 init|=
-literal|0x01
+literal|0x001
 block|,
 name|event_proc_thread_running
 init|=
-literal|0x02
+literal|0x002
 block|,
 comment|// Sticky
 name|event_proc_thread_exiting
 init|=
-literal|0x04
+literal|0x004
 block|,
 name|event_proc_stdio_available
 init|=
-literal|0x08
+literal|0x008
 block|,
 name|event_proc_profile_data
 init|=
-literal|0x10
+literal|0x010
 block|,
 name|event_read_packet_available
 init|=
-literal|0x20
+literal|0x020
 block|,
 name|event_read_thread_running
 init|=
-literal|0x40
+literal|0x040
 block|,
 comment|// Sticky
 name|event_read_thread_exiting
 init|=
-literal|0x80
+literal|0x080
+block|,
+name|event_darwin_log_data_available
+init|=
+literal|0x100
 block|,
 name|normal_event_bits
 init|=
@@ -144,6 +148,8 @@ operator||
 name|event_read_packet_available
 operator||
 name|event_read_thread_exiting
+operator||
+name|event_darwin_log_data_available
 block|,
 name|sticky_event_bits
 init|=
@@ -198,7 +204,7 @@ name|m_detach_on_error
 argument_list|(
 argument|false
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|RNBContext
@@ -275,7 +281,7 @@ expr_stmt|;
 name|PThreadEvent
 modifier|&
 name|Events
-parameter_list|( )
+parameter_list|()
 block|{
 return|return
 name|m_events

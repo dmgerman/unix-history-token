@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -68,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Breakpoint/BreakpointID.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Breakpoint/BreakpointID.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -89,6 +95,7 @@ name|BreakpointIDList
 block|{
 name|public
 label|:
+comment|// TODO: Convert this class to StringRef.
 typedef|typedef
 name|std
 operator|::
@@ -108,16 +115,19 @@ argument_list|()
 expr_stmt|;
 name|size_t
 name|GetSize
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
 name|BreakpointID
 modifier|&
 name|GetBreakpointIDAtIndex
-parameter_list|(
+argument_list|(
 name|size_t
 name|index
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|RemoveBreakpointIDAtIndex
 parameter_list|(
@@ -145,31 +155,34 @@ modifier|*
 name|bp_id
 parameter_list|)
 function_decl|;
+comment|// TODO: This should take a const BreakpointID.
 name|bool
 name|FindBreakpointID
-parameter_list|(
+argument_list|(
 name|BreakpointID
-modifier|&
+operator|&
 name|bp_id
-parameter_list|,
+argument_list|,
 name|size_t
-modifier|*
+operator|*
 name|position
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|FindBreakpointID
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|bp_id
-parameter_list|,
+argument_list|,
 name|size_t
-modifier|*
+operator|*
 name|position
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|InsertStringArray
 parameter_list|(
@@ -187,24 +200,27 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
+comment|// Returns a pair consisting of the beginning and end of a breakpoint
+comment|// ID range expression.  If the input string is not a valid specification,
+comment|// returns an empty pair.
 specifier|static
-name|bool
-name|StringContainsIDRangeExpression
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|in_string
-parameter_list|,
-name|size_t
-modifier|*
-name|range_start_len
-parameter_list|,
-name|size_t
-modifier|*
-name|range_end_pos
-parameter_list|)
-function_decl|;
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|,
+name|llvm
+operator|::
+name|StringRef
+operator|>
+name|SplitIDRangeExpression
+argument_list|(
+argument|llvm::StringRef in_string
+argument_list|)
+expr_stmt|;
 specifier|static
 name|void
 name|FindAndReplaceIDRanges

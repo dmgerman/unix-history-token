@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -58,18 +64,6 @@ end_comment
 begin_comment
 comment|// Project includes
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
 
 begin_include
 include|#
@@ -86,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/Event.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/IOHandler.h"
 end_include
 
@@ -93,6 +93,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/StringList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Interpreter/Args.h"
 end_include
 
 begin_include
@@ -122,19 +134,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Event.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/Args.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StringList.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -148,24 +154,32 @@ name|public
 label|:
 comment|//------------------------------------------------------------------
 comment|/// Construct a CommandInterpreterRunOptions object.
-comment|/// This class is used to control all the instances where we run multiple commands, e.g.
+comment|/// This class is used to control all the instances where we run multiple
+comment|/// commands, e.g.
 comment|/// HandleCommands, HandleCommandsFromFile, RunCommandInterpreter.
 comment|/// The meanings of the options in this object are:
 comment|///
 comment|/// @param[in] stop_on_continue
-comment|///    If \b true execution will end on the first command that causes the process in the
-comment|///    execution context to continue.  If \false, we won't check the execution status.
+comment|///    If \b true execution will end on the first command that causes the
+comment|///    process in the
+comment|///    execution context to continue.  If \false, we won't check the execution
+comment|///    status.
 comment|/// @param[in] stop_on_error
-comment|///    If \b true execution will end on the first command that causes an error.
+comment|///    If \b true execution will end on the first command that causes an
+comment|///    error.
 comment|/// @param[in] stop_on_crash
-comment|///    If \b true when a command causes the target to run, and the end of the run is a
+comment|///    If \b true when a command causes the target to run, and the end of the
+comment|///    run is a
 comment|///    signal or exception, stop executing the commands.
 comment|/// @param[in] echo_commands
-comment|///    If \b true echo the command before executing it.  If \false, execute silently.
+comment|///    If \b true echo the command before executing it.  If \false, execute
+comment|///    silently.
 comment|/// @param[in] print_results
-comment|///    If \b true print the results of the command after executing it.  If \false, execute silently.
+comment|///    If \b true print the results of the command after executing it.  If
+comment|///    \false, execute silently.
 comment|/// @param[in] add_to_history
-comment|///    If \b true add the commands to the command history.  If \false, don't add them.
+comment|///    If \b true add the commands to the command history.  If \false, don't
+comment|///    add them.
 comment|//------------------------------------------------------------------
 name|CommandInterpreterRunOptions
 argument_list|(
@@ -271,10 +285,12 @@ block|;
 name|m_add_to_history
 operator|=
 name|value
-block|;     }
-comment|// These return the default behaviors if the behavior is not eLazyBoolCalculate.
+block|;   }
+comment|// These return the default behaviors if the behavior is not
+comment|// eLazyBoolCalculate.
 comment|// But I've also left the ivars public since for different ways of running the
-comment|// interpreter you might want to force different defaults...  In that case, just grab
+comment|// interpreter you might want to force different defaults...  In that case,
+comment|// just grab
 comment|// the LazyBool ivars directly and do what you want with eLazyBoolCalculate.
 name|bool
 name|GetStopOnContinue
@@ -576,7 +592,8 @@ block|}
 enum|;
 enum|enum
 name|ChildrenTruncatedWarningStatus
-comment|// tristate boolean to manage children truncation warning
+comment|// tristate boolean to manage children
+comment|// truncation warning
 block|{
 name|eNoTruncation
 init|=
@@ -670,9 +687,9 @@ function_decl|;
 name|bool
 name|AddCommand
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|name
 argument_list|,
 specifier|const
@@ -689,9 +706,9 @@ decl_stmt|;
 name|bool
 name|AddUserCommand
 argument_list|(
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 name|name
 argument_list|,
 specifier|const
@@ -710,74 +727,66 @@ operator|::
 name|CommandObjectSP
 name|GetCommandSPExact
 argument_list|(
-argument|const char *cmd
+argument|llvm::StringRef cmd
 argument_list|,
 argument|bool include_aliases
 argument_list|)
+specifier|const
 expr_stmt|;
 name|CommandObject
 modifier|*
-name|GetCommandObjectExact
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|cmd_cstr
-parameter_list|,
-name|bool
-name|include_aliases
-parameter_list|)
-function_decl|;
-name|CommandObject
-modifier|*
 name|GetCommandObject
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|cmd
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|*
+operator|*
 name|matches
-init|=
+operator|=
 name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|CommandExists
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|cmd
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|AliasExists
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|cmd
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|UserCommandExists
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|cmd
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|CommandAlias
 modifier|*
 name|AddAlias
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|alias_name
 argument_list|,
 name|lldb
@@ -786,39 +795,42 @@ name|CommandObjectSP
 operator|&
 name|command_obj_sp
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|args_string
 operator|=
-name|nullptr
+name|llvm
+operator|::
+name|StringRef
+argument_list|()
 argument_list|)
 decl_stmt|;
 comment|// Remove a command if it is removable (python or regex command)
 name|bool
 name|RemoveCommand
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|cmd
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|RemoveAlias
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|alias_name
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|GetAliasFullName
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|cmd
 argument_list|,
 name|std
@@ -827,16 +839,17 @@ name|string
 operator|&
 name|full_name
 argument_list|)
+decl|const
 decl_stmt|;
 name|bool
 name|RemoveUser
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|alias_name
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|RemoveAllUser
 parameter_list|()
@@ -847,23 +860,25 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
+specifier|const
 name|CommandAlias
 modifier|*
 name|GetAlias
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|alias_name
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|CommandObject
 modifier|*
 name|BuildAliasResult
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|alias_name
 argument_list|,
 name|std
@@ -921,14 +936,18 @@ comment|///
 comment|/// @param[in] commands
 comment|///    The list of commands to execute.
 comment|/// @param[in,out] context
-comment|///    The execution context in which to run the commands. Can be nullptr in which case the default
+comment|///    The execution context in which to run the commands. Can be nullptr in
+comment|///    which case the default
 comment|///    context will be used.
 comment|/// @param[in] options
-comment|///    This object holds the options used to control when to stop, whether to execute commands,
+comment|///    This object holds the options used to control when to stop, whether to
+comment|///    execute commands,
 comment|///    etc.
 comment|/// @param[out] result
-comment|///    This is marked as succeeding with no output if all commands execute safely,
-comment|///    and failed with some explanation if we aborted executing the commands at some point.
+comment|///    This is marked as succeeding with no output if all commands execute
+comment|///    safely,
+comment|///    and failed with some explanation if we aborted executing the commands
+comment|///    at some point.
 comment|//------------------------------------------------------------------
 name|void
 name|HandleCommands
@@ -957,14 +976,18 @@ comment|///
 comment|/// @param[in] file
 comment|///    The file from which to read in commands.
 comment|/// @param[in,out] context
-comment|///    The execution context in which to run the commands. Can be nullptr in which case the default
+comment|///    The execution context in which to run the commands. Can be nullptr in
+comment|///    which case the default
 comment|///    context will be used.
 comment|/// @param[in] options
-comment|///    This object holds the options used to control when to stop, whether to execute commands,
+comment|///    This object holds the options used to control when to stop, whether to
+comment|///    execute commands,
 comment|///    etc.
 comment|/// @param[out] result
-comment|///    This is marked as succeeding with no output if all commands execute safely,
-comment|///    and failed with some explanation if we aborted executing the commands at some point.
+comment|///    This is marked as succeeding with no output if all commands execute
+comment|///    safely,
+comment|///    and failed with some explanation if we aborted executing the commands
+comment|///    at some point.
 comment|//------------------------------------------------------------------
 name|void
 name|HandleCommandsFromFile
@@ -990,26 +1013,33 @@ name|CommandObject
 modifier|*
 name|GetCommandObjectForCommand
 argument_list|(
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 operator|&
 name|command_line
 argument_list|)
 decl_stmt|;
-comment|// This handles command line completion.  You are given a pointer to the command string buffer, to the current cursor,
+comment|// This handles command line completion.  You are given a pointer to the
+comment|// command string buffer, to the current cursor,
 comment|// and to the end of the string (in case it is not NULL terminated).
 comment|// You also passed in an StringList object to fill with the returns.
-comment|// The first element of the array will be filled with the string that you would need to insert at
-comment|// the cursor point to complete the cursor point to the longest common matching prefix.
-comment|// If you want to limit the number of elements returned, set max_return_elements to the number of elements
+comment|// The first element of the array will be filled with the string that you
+comment|// would need to insert at
+comment|// the cursor point to complete the cursor point to the longest common
+comment|// matching prefix.
+comment|// If you want to limit the number of elements returned, set
+comment|// max_return_elements to the number of elements
 comment|// you want returned.  Otherwise set max_return_elements to -1.
-comment|// If you want to start some way into the match list, then set match_start_point to the desired start
+comment|// If you want to start some way into the match list, then set
+comment|// match_start_point to the desired start
 comment|// point.
 comment|// Returns:
 comment|// -1 if the completion character should be inserted
-comment|// -2 if the entire command line should be deleted and replaced with matches.GetStringAtIndex(0)
-comment|// INT_MAX if the number of matches is> max_return_elements, but it is expensive to compute.
+comment|// -2 if the entire command line should be deleted and replaced with
+comment|// matches.GetStringAtIndex(0)
+comment|// INT_MAX if the number of matches is> max_return_elements, but it is
+comment|// expensive to compute.
 comment|// Otherwise, returns the number of matches.
 comment|//
 comment|// FIXME: Only max_return_elements == -1 is supported at present.
@@ -1042,9 +1072,11 @@ modifier|&
 name|matches
 parameter_list|)
 function_decl|;
-comment|// This version just returns matches, and doesn't compute the substring.  It is here so the
+comment|// This version just returns matches, and doesn't compute the substring.  It
+comment|// is here so the
 comment|// Help command can call it for the first argument.
-comment|// word_complete tells whether the completions are considered a "complete" response (so the
+comment|// word_complete tells whether the completions are considered a "complete"
+comment|// response (so the
 comment|// completer should complete the quote& put a space after the word.
 name|int
 name|HandleCompletionMatches
@@ -1120,79 +1152,80 @@ parameter_list|)
 function_decl|;
 name|void
 name|OutputFormattedHelpText
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|&
+operator|&
 name|strm
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|prefix
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|help_text
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|OutputFormattedHelpText
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|&
+operator|&
 name|stream
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|command_word
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|separator
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|help_text
-parameter_list|,
+argument_list|,
 name|size_t
 name|max_word_len
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|// this mimics OutputFormattedHelpText but it does perform a much simpler
-comment|// formatting, basically ensuring line alignment. This is only good if you have
-comment|// some complicated layout for your help text and want as little help as reasonable
-comment|// in properly displaying it. Most of the times, you simply want to type some text
-comment|// and have it printed in a reasonable way on screen. If so, use OutputFormattedHelpText
+comment|// formatting, basically ensuring line alignment. This is only good if you
+comment|// have some complicated layout for your help text and want as little help as
+comment|// reasonable in properly displaying it. Most of the times, you simply want
+comment|// to type some text and have it printed in a reasonable way on screen. If
+comment|// so, use OutputFormattedHelpText
 name|void
 name|OutputHelpText
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|&
+operator|&
 name|stream
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|command_word
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|separator
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|help_text
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|max_word_len
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|Debugger
 modifier|&
 name|GetDebugger
@@ -1250,24 +1283,25 @@ parameter_list|)
 function_decl|;
 name|void
 name|UpdatePrompt
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|prompt
+argument_list|)
+decl_stmt|;
 name|bool
 name|Confirm
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|message
-parameter_list|,
+argument_list|,
 name|bool
 name|default_answer
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|LoadCommandDictionary
 parameter_list|()
@@ -1291,20 +1325,24 @@ argument_list|)
 decl_stmt|;
 name|bool
 name|HasCommands
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|HasAliases
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|HasUserCommands
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|HasAliasOptions
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
 name|BuildAliasCommandArgs
 argument_list|(
@@ -1385,30 +1423,30 @@ parameter_list|()
 function_decl|;
 name|void
 name|FindCommandsForApropos
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|word
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|commands_found
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|commands_help
-parameter_list|,
+argument_list|,
 name|bool
 name|search_builtin_commands
-parameter_list|,
+argument_list|,
 name|bool
 name|search_user_commands
-parameter_list|,
+argument_list|,
 name|bool
 name|search_alias_commands
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|GetBatchCommandMode
 parameter_list|()
@@ -1481,7 +1519,10 @@ name|TruncationWarningText
 parameter_list|()
 block|{
 return|return
-literal|"*** Some of your variables have more members than the debugger will show by default. To show all of them, you can either use the --show-all-children option to %s or raise the limit by changing the target.max-children-count setting.\n"
+literal|"*** Some of your variables have more members than the debugger "
+literal|"will show by default. To show all of them, you can either use the "
+literal|"--show-all-children option to %s or raise the limit by changing "
+literal|"the target.max-children-count setting.\n"
 return|;
 block|}
 specifier|const
@@ -1722,7 +1763,7 @@ operator|::
 name|CommandObjectSP
 name|GetCommandSP
 argument_list|(
-argument|const char *cmd
+argument|llvm::StringRef cmd
 argument_list|,
 argument|bool include_aliases = true
 argument_list|,
@@ -1730,6 +1771,7 @@ argument|bool exact = true
 argument_list|,
 argument|StringList *matches = nullptr
 argument_list|)
+specifier|const
 expr_stmt|;
 name|private
 label|:
@@ -1764,9 +1806,9 @@ decl_stmt|;
 name|void
 name|FindCommandsForApropos
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|word
 argument_list|,
 name|StringList
@@ -1788,11 +1830,13 @@ name|Debugger
 modifier|&
 name|m_debugger
 decl_stmt|;
-comment|// The debugger session that this interpreter is associated with
+comment|// The debugger session that this interpreter is
+comment|// associated with
 name|ExecutionContextRef
 name|m_exe_ctx_ref
 decl_stmt|;
-comment|// The current execution context to use when handling commands
+comment|// The current execution context to use
+comment|// when handling commands
 name|bool
 name|m_synchronous_execution
 decl_stmt|;
@@ -1807,7 +1851,9 @@ operator|::
 name|CommandMap
 name|m_command_dict
 expr_stmt|;
-comment|// Stores basic built-in commands (they cannot be deleted, removed or overwritten).
+comment|// Stores basic built-in commands
+comment|// (they cannot be deleted, removed
+comment|// or overwritten).
 name|CommandObject
 operator|::
 name|CommandMap
@@ -1828,11 +1874,17 @@ operator|::
 name|string
 name|m_repeat_command
 expr_stmt|;
-comment|// Stores the command that will be executed for an empty command string.
+comment|// Stores the command that will be executed for
+comment|// an empty command string.
 name|lldb
 operator|::
 name|ScriptInterpreterSP
 name|m_script_interpreter_sp
+expr_stmt|;
+name|std
+operator|::
+name|mutex
+name|m_script_interpreter_mutex
 expr_stmt|;
 name|lldb
 operator|::
@@ -1848,7 +1900,9 @@ decl_stmt|;
 name|ChildrenTruncatedWarningStatus
 name|m_truncation_warning
 decl_stmt|;
-comment|// Whether we truncated children and whether the user has been told
+comment|// Whether we truncated
+comment|// children and whether
+comment|// the user has been told
 name|uint32_t
 name|m_command_source_depth
 decl_stmt|;

@@ -160,7 +160,7 @@ name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
 argument_list|,
-argument|lldb_private::Process* process
+argument|lldb_private::Process *process
 argument_list|,
 argument|lldb::ModuleSP&module_sp
 argument_list|,
@@ -218,9 +218,9 @@ operator|::
 name|Error
 name|GetFile
 argument_list|(
-argument|const lldb_private::FileSpec& source
+argument|const lldb_private::FileSpec&source
 argument_list|,
-argument|const lldb_private::FileSpec& destination
+argument|const lldb_private::FileSpec&destination
 argument_list|)
 name|override
 block|{

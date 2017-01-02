@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
+file|"RegisterContextWindows.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"RegisterContextWindows.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_decl_stmt

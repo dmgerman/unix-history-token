@@ -92,12 +92,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/PluginInterface.h"
 end_include
 
@@ -129,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/LanguageRuntime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -188,7 +188,8 @@ operator|>
 name|ClassDescriptorSP
 expr_stmt|;
 comment|// the information that we want to support retrieving from an ObjC class
-comment|// this needs to be pure virtual since there are at least 2 different implementations
+comment|// this needs to be pure virtual since there are at least 2 different
+comment|// implementations
 comment|// of the runtime, and more might come
 name|class
 name|ClassDescriptor
@@ -210,7 +211,7 @@ argument_list|)
 operator|,
 name|m_type_wp
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|ClassDescriptor
@@ -766,7 +767,7 @@ operator|::
 name|string
 operator|>
 name|m_class_names
-block|;     }
+block|;   }
 decl_stmt|;
 name|class
 name|TaggedPointerVendor
@@ -1142,7 +1143,8 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|// Finds the byte offset of the child_type ivar in parent_type.  If it can't find the
+comment|// Finds the byte offset of the child_type ivar in parent_type.  If it can't
+comment|// find the
 comment|// offset, returns LLDB_INVALID_IVAR_OFFSET.
 name|virtual
 name|size_t
@@ -1385,9 +1387,11 @@ return|;
 block|}
 name|private
 label|:
-comment|// We keep a map of<Class,Selector>->Implementation so we don't have to call the resolver
+comment|// We keep a map of<Class,Selector>->Implementation so we don't have to call
+comment|// the resolver
 comment|// function over and over.
-comment|// FIXME: We need to watch for the loading of Protocols, and flush the cache for any
+comment|// FIXME: We need to watch for the loading of Protocols, and flush the cache
+comment|// for any
 comment|// class that we see so changed.
 struct|struct
 name|ClassAndSel
@@ -1420,7 +1424,7 @@ name|sel_addr
 argument_list|(
 argument|in_sel_addr
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|operator
 operator|==

@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"PThreadMutex.h"
+file|"PThreadCondition.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"PThreadCondition.h"
+file|"PThreadMutex.h"
 end_include
 
 begin_include

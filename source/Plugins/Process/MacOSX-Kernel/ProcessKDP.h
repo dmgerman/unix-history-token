@@ -211,15 +211,14 @@ argument_list|,
 argument|lldb::ListenerSP listener
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ProcessKDP
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Check if a given Process
 comment|//------------------------------------------------------------------
-name|virtual
 name|bool
 name|CanDebug
 argument_list|(
@@ -227,51 +226,39 @@ argument|lldb::TargetSP target_sp
 argument_list|,
 argument|bool plugin_specified_by_name
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|CommandObject
 operator|*
 name|GetPluginCommandObject
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Creating a new process, or attaching to an existing one
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|WillLaunch
 argument_list|(
-name|lldb_private
-operator|::
-name|Module
-operator|*
-name|module
+argument|lldb_private::Module *module
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|DoLaunch
 argument_list|(
-name|lldb_private
-operator|::
-name|Module
-operator|*
-name|exe_module
+argument|lldb_private::Module *exe_module
 argument_list|,
-name|lldb_private
-operator|::
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+argument|lldb_private::ProcessLaunchInfo&launch_info
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -279,8 +266,8 @@ name|WillAttachToProcessWithID
 argument_list|(
 argument|lldb::pid_t pid
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -290,26 +277,19 @@ argument|const char *process_name
 argument_list|,
 argument|bool wait_for_launch
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|DoConnectRemote
 argument_list|(
-name|lldb_private
-operator|::
-name|Stream
-operator|*
-name|strm
+argument|lldb_private::Stream *strm
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|remote_url
+argument|llvm::StringRef remote_url
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -319,42 +299,32 @@ argument|lldb::pid_t pid
 argument_list|,
 argument|const lldb_private::ProcessAttachInfo&attach_info
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|DoAttachToProcessWithName
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|process_name
+argument|const char *process_name
 argument_list|,
-specifier|const
-name|lldb_private
-operator|::
-name|ProcessAttachInfo
-operator|&
-name|attach_info
+argument|const lldb_private::ProcessAttachInfo&attach_info
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|DidAttach
 argument_list|(
-name|lldb_private
-operator|::
-name|ArchSpec
-operator|&
-name|process_arch
+argument|lldb_private::ArchSpec&process_arch
 argument_list|)
+name|override
 block|;
 name|lldb
 operator|::
 name|addr_t
 name|GetImageInfoAddress
 argument_list|()
+name|override
 block|;
 name|lldb_private
 operator|::
@@ -362,51 +332,49 @@ name|DynamicLoader
 operator|*
 name|GetDynamicLoader
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|ConstString
 name|GetPluginName
 argument_list|()
+name|override
 block|;
-name|virtual
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process Control
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|WillResume
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|DoResume
 argument_list|()
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|DoHalt
 argument_list|(
-name|bool
-operator|&
-name|caused_stop
+argument|bool&caused_stop
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -414,8 +382,8 @@ name|DoDetach
 argument_list|(
 argument|bool keep_stopped
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -423,31 +391,31 @@ name|DoSignal
 argument_list|(
 argument|int signal
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|DoDestroy
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|RefreshStateAfterStop
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process Queries
 comment|//------------------------------------------------------------------
-name|virtual
 name|bool
 name|IsAlive
 argument_list|()
+name|override
 block|;
 comment|//------------------------------------------------------------------
 comment|// Process Memory
 comment|//------------------------------------------------------------------
-name|virtual
 name|size_t
 name|DoReadMemory
 argument_list|(
@@ -459,8 +427,8 @@ argument|size_t size
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|size_t
 name|DoWriteMemory
 argument_list|(
@@ -472,8 +440,8 @@ argument|size_t size
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb
 operator|::
 name|addr_t
@@ -485,8 +453,8 @@ argument|uint32_t permissions
 argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -494,40 +462,32 @@ name|DoDeallocateMemory
 argument_list|(
 argument|lldb::addr_t ptr
 argument_list|)
+name|override
 block|;
 comment|//----------------------------------------------------------------------
 comment|// Process Breakpoints
 comment|//----------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|EnableBreakpointSite
 argument_list|(
-name|lldb_private
-operator|::
-name|BreakpointSite
-operator|*
-name|bp_site
+argument|lldb_private::BreakpointSite *bp_site
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
 name|DisableBreakpointSite
 argument_list|(
-name|lldb_private
-operator|::
-name|BreakpointSite
-operator|*
-name|bp_site
+argument|lldb_private::BreakpointSite *bp_site
 argument_list|)
+name|override
 block|;
 comment|//----------------------------------------------------------------------
 comment|// Process Watchpoints
 comment|//----------------------------------------------------------------------
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -537,8 +497,8 @@ argument|lldb_private::Watchpoint *wp
 argument_list|,
 argument|bool notify = true
 argument_list|)
+name|override
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -548,6 +508,7 @@ argument|lldb_private::Watchpoint *wp
 argument_list|,
 argument|bool notify = true
 argument_list|)
+name|override
 block|;
 name|CommunicationKDP
 operator|&
@@ -644,30 +605,22 @@ argument_list|)
 block|;
 name|bool
 name|ProcessIDIsValid
-argument_list|( )
+argument_list|()
 specifier|const
 block|;
 name|void
 name|Clear
-argument_list|( )
+argument_list|()
 block|;
-name|virtual
 name|bool
 name|UpdateThreadList
 argument_list|(
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|old_thread_list
+argument|lldb_private::ThreadList&old_thread_list
 argument_list|,
-name|lldb_private
-operator|::
-name|ThreadList
-operator|&
-name|new_thread_list
+argument|lldb_private::ThreadList&new_thread_list
 argument_list|)
-block|;          enum
+name|override
+block|;    enum
 block|{
 name|eBroadcastBitAsyncContinue
 operator|=
@@ -755,7 +708,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ProcessKDP
 argument_list|)
-block|;      }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

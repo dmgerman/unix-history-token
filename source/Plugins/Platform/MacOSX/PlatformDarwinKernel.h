@@ -59,7 +59,11 @@ argument_list|)
 end_if
 
 begin_comment
-comment|// This Plugin uses the Mac-specific source/Host/macosx/cfcpp utilities
+comment|// This Plugin uses the Mac-specific
+end_comment
+
+begin_comment
+comment|// source/Host/macosx/cfcpp utilities
 end_comment
 
 begin_comment
@@ -251,7 +255,8 @@ name|override
 block|;
 name|protected
 operator|:
-comment|// Map from kext bundle ID ("com.apple.filesystems.exfat") to FileSpec for the kext bundle on
+comment|// Map from kext bundle ID ("com.apple.filesystems.exfat") to FileSpec for the
+comment|// kext bundle on
 comment|// the host ("/System/Library/Extensions/exfat.kext/Contents/Info.plist").
 typedef|typedef
 name|std
@@ -294,7 +299,11 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|// Array of directories that were searched for kext bundles (used only for reporting to user)
+comment|// Array of directories that were searched for kext bundles (used only for
+end_comment
+
+begin_comment
+comment|// reporting to user)
 end_comment
 
 begin_typedef
@@ -320,44 +329,12 @@ name|DirectoriesSearchedIterator
 expr_stmt|;
 end_typedef
 
-begin_expr_stmt
-specifier|static
-name|lldb_private
-operator|::
-name|FileSpec
-operator|::
-name|EnumerateDirectoryResult
-name|GetKextDirectoriesInSDK
-argument_list|(
-argument|void *baton
-argument_list|,
-argument|lldb_private::FileSpec::FileType file_type
-argument_list|,
-argument|const lldb_private::FileSpec&file_spec
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|lldb_private
-operator|::
-name|FileSpec
-operator|::
-name|EnumerateDirectoryResult
-name|GetKextsInDirectory
-argument_list|(
-argument|void *baton
-argument_list|,
-argument|lldb_private::FileSpec::FileType file_type
-argument_list|,
-argument|const lldb_private::FileSpec&file_spec
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|// Populate m_search_directories and m_search_directories_no_recursing vectors
+end_comment
 
 begin_comment
-comment|// Populate m_search_directories vector of directories
+comment|// of directories
 end_comment
 
 begin_function_decl
@@ -367,313 +344,45 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|// Directories where we may find iOS SDKs with kext bundles in them
-end_comment
-
-begin_decl_stmt
-name|void
-name|GetiOSSDKDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Directories where we may find AppleTVOS SDKs with kext bundles in them
-end_comment
-
-begin_decl_stmt
-name|void
-name|GetAppleTVOSSDKDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Directories where we may find WatchOS SDKs with kext bundles in them
-end_comment
-
-begin_decl_stmt
-name|void
-name|GetWatchOSSDKDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Directories where we may find Mac OS X SDKs with kext bundles in them
-end_comment
-
-begin_decl_stmt
-name|void
-name|GetMacSDKDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Directories where we may find Mac OS X or iOS SDKs with kext bundles in them
-end_comment
-
-begin_decl_stmt
-name|void
-name|GetGenericSDKDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Directories where we may find iOS kext bundles
-end_comment
-
-begin_decl_stmt
-name|void
-name|GetiOSDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Directories where we may find MacOSX kext bundles
-end_comment
-
-begin_decl_stmt
-name|void
-name|GetMacDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Directories where we may find iOS or MacOSX kext bundles
-end_comment
-
-begin_decl_stmt
-name|void
-name|GetGenericDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Directories specified via the "kext-directories" setting - maybe KDK/SDKs, may be plain directories
-end_comment
-
-begin_decl_stmt
+begin_function_decl
 name|void
 name|GetUserSpecifiedDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
-name|GetCurrentDirectoryToSearch
+name|AddRootSubdirsToSearchPaths
 argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Directories where we may find kernels exclusively
-end_comment
-
-begin_decl_stmt
-name|void
-name|GetKernelDirectoriesToSearch
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-operator|&
-name|directories
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Search through a vector of SDK FileSpecs, add any directories that may contain kexts
-end_comment
-
-begin_comment
-comment|// to the vector of kext dir FileSpecs
-end_comment
-
-begin_decl_stmt
-name|void
-name|SearchSDKsForKextDirectories
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
-name|sdk_dirs
+name|PlatformDarwinKernel
+operator|*
+name|thisp
 argument_list|,
+specifier|const
 name|std
 operator|::
-name|vector
-operator|<
-name|lldb_private
-operator|::
-name|FileSpec
-operator|>
+name|string
 operator|&
-name|kext_dirs
+name|dir
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// Search through all of the directories passed in, find all .kext bundles in those directories,
-end_comment
-
-begin_comment
-comment|// get the CFBundleIDs out of the Info.plists and add the bundle ID and kext path to m_name_to_kext_path_map.
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 name|void
-name|IndexKextsInDirectories
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|// Search through all of the directories passed in, find all kernel binaries in those directories
-end_comment
-
-begin_comment
-comment|// (look for "kernel*", "mach.*", assume those are kernels.  False positives aren't a huge problem.)
-end_comment
-
-begin_function_decl
-name|void
-name|IndexKernelsInDirectories
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|// Callback which iterates over all the files in a given directory, looking for kernel binaries
-end_comment
+name|AddSDKSubdirsToSearchPaths
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|dir
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 specifier|static
@@ -682,7 +391,7 @@ operator|::
 name|FileSpec
 operator|::
 name|EnumerateDirectoryResult
-name|GetKernelsInDirectory
+name|FindKDKandSDKDirectoriesInDirectory
 argument_list|(
 argument|void *baton
 argument_list|,
@@ -692,6 +401,130 @@ argument|const lldb_private::FileSpec&file_spec
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|void
+name|SearchForKextsAndKernelsRecursively
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|static
+name|lldb_private
+operator|::
+name|FileSpec
+operator|::
+name|EnumerateDirectoryResult
+name|GetKernelsAndKextsInDirectoryWithRecursion
+argument_list|(
+argument|void *baton
+argument_list|,
+argument|lldb_private::FileSpec::FileType file_type
+argument_list|,
+argument|const lldb_private::FileSpec&file_spec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|lldb_private
+operator|::
+name|FileSpec
+operator|::
+name|EnumerateDirectoryResult
+name|GetKernelsAndKextsInDirectoryNoRecursion
+argument_list|(
+argument|void *baton
+argument_list|,
+argument|lldb_private::FileSpec::FileType file_type
+argument_list|,
+argument|const lldb_private::FileSpec&file_spec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|lldb_private
+operator|::
+name|FileSpec
+operator|::
+name|EnumerateDirectoryResult
+name|GetKernelsAndKextsInDirectoryHelper
+argument_list|(
+argument|void *baton
+argument_list|,
+argument|lldb_private::FileSpec::FileType file_type
+argument_list|,
+argument|const lldb_private::FileSpec&file_spec
+argument_list|,
+argument|bool recurse
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|AddKextToMap
+argument_list|(
+name|PlatformDarwinKernel
+operator|*
+name|thisp
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Returns true if there is a .dSYM bundle next to the kext, or next to the
+end_comment
+
+begin_comment
+comment|// binary inside the kext.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|KextHasdSYMSibling
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|kext_bundle_filepath
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Returns true if there is a .dSYM bundle next to the kernel
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|KernelHasdSYMSibling
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|kext_bundle_filepath
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|lldb_private
@@ -729,19 +562,97 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// Most of the ivars are assembled under FileSpec::EnumerateDirectory calls
+end_comment
+
+begin_comment
+comment|// where the
+end_comment
+
+begin_comment
+comment|// function being called for each file/directory must be static.  We'll pass a
+end_comment
+
+begin_comment
+comment|// this pointer
+end_comment
+
+begin_comment
+comment|// as a baton and access the ivars directly.  Toss-up whether this should just
+end_comment
+
+begin_comment
+comment|// be a struct
+end_comment
+
+begin_comment
+comment|// at this point.
+end_comment
+
 begin_label
-name|private
+name|public
 label|:
 end_label
 
 begin_decl_stmt
 name|BundleIDToKextMap
-name|m_name_to_kext_path_map
+name|m_name_to_kext_path_map_with_dsyms
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// multimap of CFBundleID to FileSpec on local filesystem
+comment|// multimap of
+end_comment
+
+begin_comment
+comment|// CFBundleID to
+end_comment
+
+begin_comment
+comment|// FileSpec on local
+end_comment
+
+begin_comment
+comment|// filesystem, kexts
+end_comment
+
+begin_comment
+comment|// with dSYMs next to
+end_comment
+
+begin_comment
+comment|// them
+end_comment
+
+begin_decl_stmt
+name|BundleIDToKextMap
+name|m_name_to_kext_path_map_without_dsyms
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// multimap of
+end_comment
+
+begin_comment
+comment|// CFBundleID to
+end_comment
+
+begin_comment
+comment|// FileSpec on local
+end_comment
+
+begin_comment
+comment|// filesystem, kexts
+end_comment
+
+begin_comment
+comment|// without dSYMs next
+end_comment
+
+begin_comment
+comment|// to them
 end_comment
 
 begin_decl_stmt
@@ -755,13 +666,69 @@ comment|// list of directories we search for kexts/kernels
 end_comment
 
 begin_decl_stmt
-name|KernelBinaryCollection
-name|m_kernel_binaries
+name|DirectoriesSearchedCollection
+name|m_search_directories_no_recursing
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// list of kernel binaries we found on local filesystem
+comment|// list of directories we search for
+end_comment
+
+begin_comment
+comment|// kexts/kernels, no recursion
+end_comment
+
+begin_decl_stmt
+name|KernelBinaryCollection
+name|m_kernel_binaries_with_dsyms
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// list of kernel
+end_comment
+
+begin_comment
+comment|// binaries we found on
+end_comment
+
+begin_comment
+comment|// local filesystem,
+end_comment
+
+begin_comment
+comment|// without dSYMs next to
+end_comment
+
+begin_comment
+comment|// them
+end_comment
+
+begin_decl_stmt
+name|KernelBinaryCollection
+name|m_kernel_binaries_without_dsyms
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// list of kernel
+end_comment
+
+begin_comment
+comment|// binaries we found
+end_comment
+
+begin_comment
+comment|// on local
+end_comment
+
+begin_comment
+comment|// filesystem, with
+end_comment
+
+begin_comment
+comment|// dSYMs next to them
 end_comment
 
 begin_expr_stmt
@@ -795,19 +762,35 @@ comment|// Since DynamicLoaderDarwinKernel is compiled in for all systems, and r
 end_comment
 
 begin_comment
-comment|// PlatformDarwinKernel for the plug-in name, we compile just the plug-in name in
+comment|// PlatformDarwinKernel for the plug-in name, we compile just the plug-in name
 end_comment
 
 begin_comment
-comment|// here to avoid issues. We are tracking an internal bug to resolve this issue by
+comment|// in
 end_comment
 
 begin_comment
-comment|// either not compiling in DynamicLoaderDarwinKernel for non-apple builds, or to make
+comment|// here to avoid issues. We are tracking an internal bug to resolve this issue
 end_comment
 
 begin_comment
-comment|// PlatformDarwinKernel build on all systems. PlatformDarwinKernel is currently not
+comment|// by
+end_comment
+
+begin_comment
+comment|// either not compiling in DynamicLoaderDarwinKernel for non-apple builds, or to
+end_comment
+
+begin_comment
+comment|// make
+end_comment
+
+begin_comment
+comment|// PlatformDarwinKernel build on all systems. PlatformDarwinKernel is currently
+end_comment
+
+begin_comment
+comment|// not
 end_comment
 
 begin_comment

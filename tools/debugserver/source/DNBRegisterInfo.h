@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"DNBDefs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DNBDefs.h"
 end_include
 
 begin_decl_stmt

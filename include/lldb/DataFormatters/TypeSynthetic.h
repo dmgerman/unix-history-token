@@ -60,13 +60,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<initializer_list>
+file|<functional>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<functional>
+file|<initializer_list>
 end_include
 
 begin_include
@@ -98,13 +98,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_include
@@ -232,11 +232,16 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|// this function is assumed to always succeed and it if fails, the front-end should know to deal
-comment|// with it in the correct way (most probably, by refusing to return any children)
-comment|// the return value of Update() should actually be interpreted as "ValueObjectSyntheticFilter cache is good/bad"
-comment|// if =true, ValueObjectSyntheticFilter is allowed to use the children it fetched previously and cached
-comment|// if =false, ValueObjectSyntheticFilter must throw away its cache, and query again for children
+comment|// this function is assumed to always succeed and it if fails, the front-end
+comment|// should know to deal
+comment|// with it in the correct way (most probably, by refusing to return any
+comment|// children)
+comment|// the return value of Update() should actually be interpreted as
+comment|// "ValueObjectSyntheticFilter cache is good/bad"
+comment|// if =true, ValueObjectSyntheticFilter is allowed to use the children it
+comment|// fetched previously and cached
+comment|// if =false, ValueObjectSyntheticFilter must throw away its cache, and query
+comment|// again for children
 name|virtual
 name|bool
 name|Update
@@ -244,9 +249,12 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|// if this function returns false, then CalculateNumChildren() MUST return 0 since UI frontends
-comment|// might validly decide not to inquire for children given a false return value from this call
-comment|// if it returns true, then CalculateNumChildren() can return any number>= 0 (0 being valid)
+comment|// if this function returns false, then CalculateNumChildren() MUST return 0
+comment|// since UI frontends
+comment|// might validly decide not to inquire for children given a false return value
+comment|// from this call
+comment|// if it returns true, then CalculateNumChildren() can return any number>= 0
+comment|// (0 being valid)
 comment|// it should if at all possible be more efficient than CalculateNumChildren()
 name|virtual
 name|bool
@@ -255,7 +263,8 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|// if this function returns a non-null ValueObject, then the returned ValueObject will stand
+comment|// if this function returns a non-null ValueObject, then the returned
+comment|// ValueObject will stand
 comment|// for this ValueObject whenever a "value" request is made to this ValueObject
 name|virtual
 name|lldb
@@ -268,7 +277,8 @@ return|return
 name|nullptr
 return|;
 block|}
-comment|// if this function returns a non-empty ConstString, then clients are expected to use the return
+comment|// if this function returns a non-empty ConstString, then clients are expected
+comment|// to use the return
 comment|// as the name of the type of this ValueObject for display purposes
 name|virtual
 name|ConstString
@@ -305,20 +315,11 @@ operator|::
 name|ValueObjectSP
 name|CreateValueObjectFromExpression
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|expression
+argument|llvm::StringRef expression
 argument_list|,
-specifier|const
-name|ExecutionContext
-operator|&
-name|exe_ctx
+argument|const ExecutionContext&exe_ctx
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -326,11 +327,11 @@ operator|::
 name|ValueObjectSP
 name|CreateValueObjectFromAddress
 argument_list|(
-argument|const char* name
+argument|llvm::StringRef name
 argument_list|,
 argument|uint64_t address
 argument_list|,
-argument|const ExecutionContext& exe_ctx
+argument|const ExecutionContext&exe_ctx
 argument_list|,
 argument|CompilerType type
 argument_list|)
@@ -340,11 +341,11 @@ operator|::
 name|ValueObjectSP
 name|CreateValueObjectFromData
 argument_list|(
-argument|const char* name
+argument|llvm::StringRef name
 argument_list|,
-argument|const DataExtractor& data
+argument|const DataExtractor&data
 argument_list|,
-argument|const ExecutionContext& exe_ctx
+argument|const ExecutionContext&exe_ctx
 argument_list|,
 argument|CompilerType type
 argument_list|)
@@ -454,7 +455,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|SyntheticValueProviderFrontEnd
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 name|class
 name|SyntheticChildren
@@ -807,7 +808,7 @@ name|m_flags
 argument_list|(
 argument|flags
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|SyntheticChildren
@@ -1054,7 +1055,7 @@ argument_list|)
 block|,
 name|m_expression_paths
 argument_list|()
-block|{         }
+block|{}
 name|TypeFilterImpl
 argument_list|(
 specifier|const
@@ -1100,7 +1101,7 @@ block|}
 name|void
 name|AddExpressionPath
 argument_list|(
-argument|const char* path
+argument|const char *path
 argument_list|)
 block|{
 name|AddExpressionPath
@@ -1112,7 +1113,7 @@ argument_list|(
 name|path
 argument_list|)
 argument_list|)
-block|;         }
+block|;   }
 name|void
 name|Clear
 argument_list|()
@@ -1121,7 +1122,7 @@ name|m_expression_paths
 operator|.
 name|clear
 argument_list|()
-block|;         }
+block|; }
 name|size_t
 name|GetCount
 argument_list|()
@@ -1158,7 +1159,7 @@ name|SetExpressionPathAtIndex
 argument_list|(
 argument|size_t i
 argument_list|,
-argument|const char* path
+argument|const char *path
 argument_list|)
 block|{
 return|return
@@ -1191,7 +1192,7 @@ name|SetExpressionPathAtIndex
 argument_list|(
 argument|size_t i
 argument_list|,
-argument|const std::string& path
+argument|const std::string&path
 argument_list|)
 block|;
 name|bool
@@ -1430,9 +1431,9 @@ name|CreateFrontEndCallback
 expr_stmt|;
 name|CXXSyntheticChildren
 argument_list|(
-argument|const SyntheticChildren::Flags& flags
+argument|const SyntheticChildren::Flags&flags
 argument_list|,
-argument|const char* description
+argument|const char *description
 argument_list|,
 argument|CreateFrontEndCallback callback
 argument_list|)
@@ -1452,7 +1453,7 @@ argument_list|(
 argument|description ? description :
 literal|""
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|IsScripted
 argument_list|()
@@ -1879,7 +1880,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}              private:
+unit|}  private:
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ScriptedSyntheticChildren

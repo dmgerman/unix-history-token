@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/ThreadPlanStepRange.h"
+file|"lldb/Target/ThreadPlanShouldStopHere.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/ThreadPlanShouldStopHere.h"
+file|"lldb/Target/ThreadPlanStepRange.h"
 end_include
 
 begin_decl_stmt
@@ -354,13 +354,15 @@ specifier|static
 name|uint32_t
 name|s_default_flag_values
 decl_stmt|;
-comment|// These are the default flag values for the ThreadPlanStepThrough.
+comment|// These are the default flag values
+comment|// for the ThreadPlanStepThrough.
 name|lldb
 operator|::
 name|ThreadPlanSP
 name|m_sub_plan_sp
 expr_stmt|;
-comment|// Keep track of the last plan we were running.  If it fails, we should stop.
+comment|// Keep track of the last plan we were
+comment|// running.  If it fails, we should stop.
 name|std
 operator|::
 name|unique_ptr
@@ -372,12 +374,14 @@ expr_stmt|;
 name|bool
 name|m_step_past_prologue
 decl_stmt|;
-comment|// FIXME: For now hard-coded to true, we could put a switch in for this if there's
+comment|// FIXME: For now hard-coded to true, we could put
+comment|// a switch in for this if there's
 comment|// demand for that.
 name|bool
 name|m_virtual_step
 decl_stmt|;
-comment|// true if we've just done a "virtual step", i.e. just moved the inline stack depth.
+comment|// true if we've just done a "virtual step", i.e. just
+comment|// moved the inline stack depth.
 name|ConstString
 name|m_step_into_target
 decl_stmt|;

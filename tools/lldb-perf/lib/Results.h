@@ -164,7 +164,7 @@ name|virtual
 operator|~
 name|Result
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 name|void
 name|Write
@@ -428,12 +428,12 @@ argument|name
 argument_list|,
 argument|description
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Array
 argument_list|()
-block|{         }
+block|{}
 name|ResultSP
 name|Append
 argument_list|(
@@ -468,7 +468,7 @@ name|Write
 argument_list|(
 argument|Results&results
 argument_list|)
-block|{         }
+block|{}
 name|protected
 operator|:
 typedef|typedef
@@ -506,7 +506,7 @@ argument|NULL
 argument_list|,
 argument|NULL
 argument_list|)
-block|{         }
+block|{}
 name|Dictionary
 argument_list|(
 specifier|const
@@ -528,19 +528,19 @@ argument|name
 argument_list|,
 argument|description
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Dictionary
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 name|void
 name|Write
 argument_list|(
 argument|Results&results
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|ForEach
 argument_list|(
@@ -704,14 +704,14 @@ name|virtual
 operator|~
 name|String
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 name|void
 name|Write
 argument_list|(
 argument|Results&results
 argument_list|)
-block|{         }
+block|{}
 specifier|const
 name|char
 operator|*
@@ -739,7 +739,7 @@ name|std
 operator|::
 name|string
 name|m_string
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -776,19 +776,19 @@ name|m_double
 argument_list|(
 argument|value
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Double
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 name|void
 name|Write
 argument_list|(
 argument|Results&results
 argument_list|)
-block|{         }
+block|{}
 name|double
 name|GetValue
 argument_list|()
@@ -802,7 +802,7 @@ name|protected
 operator|:
 name|double
 name|m_double
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -839,19 +839,19 @@ name|m_unsigned
 argument_list|(
 argument|value
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Unsigned
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 name|void
 name|Write
 argument_list|(
 argument|Results&results
 argument_list|)
-block|{         }
+block|{}
 name|uint64_t
 name|GetValue
 argument_list|()
@@ -865,7 +865,7 @@ name|protected
 operator|:
 name|uint64_t
 name|m_unsigned
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -875,11 +875,11 @@ argument_list|()
 operator|:
 name|m_results
 argument_list|()
-block|{     }
+block|{}
 operator|~
 name|Results
 argument_list|()
-block|{     }
+block|{}
 name|Dictionary
 operator|&
 name|GetDictionary
@@ -915,7 +915,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|};      }
+unit|};  }
 comment|// namespace lldb_perf
 end_comment
 

@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<termios.h>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<termios.h>
 end_include
 
 begin_decl_stmt

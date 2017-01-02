@@ -52,44 +52,10 @@ name|__cplusplus
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_WIN32
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"lldb/Host/windows/win32.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ANDROID_NDK__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/android/Android.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/lldb-private-defines.h"
 end_include
 
 begin_include
@@ -113,7 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-defines.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt

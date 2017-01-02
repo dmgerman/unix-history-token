@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/PluginInterface.h"
+file|"DWARFASTParser.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/GoASTContext.h"
+file|"DWARFDIE.h"
 end_include
 
 begin_include
@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DWARFASTParser.h"
+file|"lldb/Core/PluginInterface.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DWARFDIE.h"
+file|"lldb/Symbol/GoASTContext.h"
 end_include
 
 begin_decl_stmt

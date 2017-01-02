@@ -269,12 +269,12 @@ name|m_type
 argument_list|(
 argument|t
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Object
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 name|bool
 name|IsValid
@@ -295,7 +295,7 @@ operator|=
 name|Type
 operator|::
 name|eTypeInvalid
-block|;         }
+block|; }
 name|Type
 name|GetType
 argument_list|()
@@ -314,7 +314,7 @@ block|{
 name|m_type
 operator|=
 name|t
-block|;         }
+block|; }
 name|Array
 operator|*
 name|GetAsArray
@@ -525,12 +525,12 @@ name|Object
 argument_list|(
 argument|Type::eTypeArray
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Array
 argument_list|()
-block|{         }
+block|{}
 name|void
 name|AddItem
 argument_list|(
@@ -543,7 +543,7 @@ name|push_back
 argument_list|(
 name|item
 argument_list|)
-block|;         }
+block|; }
 name|void
 name|Dump
 argument_list|(
@@ -651,12 +651,12 @@ name|m_value
 argument_list|(
 argument|value
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Integer
 argument_list|()
-block|{         }
+block|{}
 name|void
 name|SetValue
 argument_list|(
@@ -666,7 +666,7 @@ block|{
 name|m_value
 operator|=
 name|value
-block|;         }
+block|; }
 name|void
 name|Dump
 argument_list|(
@@ -678,12 +678,12 @@ block|{
 name|s
 operator|<<
 name|m_value
-block|;         }
+block|; }
 name|protected
 operator|:
 name|uint64_t
 name|m_value
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -713,12 +713,12 @@ name|m_value
 argument_list|(
 argument|d
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Float
 argument_list|()
-block|{         }
+block|{}
 name|void
 name|SetValue
 argument_list|(
@@ -728,7 +728,7 @@ block|{
 name|m_value
 operator|=
 name|value
-block|;         }
+block|; }
 name|void
 name|Dump
 argument_list|(
@@ -740,12 +740,12 @@ block|{
 name|s
 operator|<<
 name|m_value
-block|;         }
+block|; }
 name|protected
 operator|:
 name|double
 name|m_value
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -774,12 +774,12 @@ name|m_value
 argument_list|(
 argument|b
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Boolean
 argument_list|()
-block|{         }
+block|{}
 name|void
 name|SetValue
 argument_list|(
@@ -789,7 +789,7 @@ block|{
 name|m_value
 operator|=
 name|value
-block|;         }
+block|; }
 name|void
 name|Dump
 argument_list|(
@@ -818,7 +818,7 @@ name|protected
 operator|:
 name|bool
 name|m_value
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -843,7 +843,7 @@ argument_list|)
 block|,
 name|m_value
 argument_list|()
-block|{         }
+block|{}
 name|String
 argument_list|(
 specifier|const
@@ -865,7 +865,7 @@ name|m_value
 argument_list|(
 argument|s
 argument_list|)
-block|{         }
+block|{}
 name|String
 argument_list|(
 specifier|const
@@ -887,7 +887,7 @@ name|m_value
 argument_list|(
 argument|s
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|SetValue
 argument_list|(
@@ -897,7 +897,7 @@ block|{
 name|m_value
 operator|=
 name|string
-block|;         }
+block|; }
 name|void
 name|Dump
 argument_list|(
@@ -982,7 +982,7 @@ name|std
 operator|::
 name|string
 name|m_value
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -1007,12 +1007,12 @@ argument_list|)
 block|,
 name|m_dict
 argument_list|()
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Dictionary
 argument_list|()
-block|{         }
+block|{}
 name|void
 name|AddItem
 argument_list|(
@@ -1032,7 +1032,7 @@ argument_list|,
 name|value
 argument_list|)
 argument_list|)
-block|;         }
+block|;     }
 name|void
 name|AddIntegerItem
 argument_list|(
@@ -1050,7 +1050,7 @@ argument_list|(
 argument|new Integer(value)
 argument_list|)
 argument_list|)
-block|;         }
+block|;     }
 name|void
 name|AddFloatItem
 argument_list|(
@@ -1068,7 +1068,7 @@ argument_list|(
 argument|new Float(value)
 argument_list|)
 argument_list|)
-block|;         }
+block|;     }
 name|void
 name|AddStringItem
 argument_list|(
@@ -1086,7 +1086,7 @@ argument_list|(
 argument|new String(std::move(value))
 argument_list|)
 argument_list|)
-block|;         }
+block|;     }
 name|void
 name|AddBytesAsHexASCIIString
 argument_list|(
@@ -1201,7 +1201,7 @@ argument_list|(
 argument|new Boolean(value)
 argument_list|)
 argument_list|)
-block|;         }
+block|;     }
 name|void
 name|Dump
 argument_list|(
@@ -1291,7 +1291,8 @@ expr_stmt|;
 block|}
 name|protected
 operator|:
-comment|// Keep the dictionary as a vector so the dictionary doesn't reorder itself when you dump it
+comment|// Keep the dictionary as a vector so the dictionary doesn't reorder itself
+comment|// when you dump it
 comment|// We aren't accessing keys by name, so this won't affect performance
 typedef|typedef
 name|std
@@ -1343,12 +1344,12 @@ name|Object
 argument_list|(
 argument|Type::eTypeNull
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Null
 argument_list|()
-block|{         }
+block|{}
 name|bool
 name|IsValid
 argument_list|()
@@ -1370,7 +1371,7 @@ block|{
 name|s
 operator|<<
 literal|"null"
-block|;         }
+block|; }
 name|protected
 operator|:
 expr|}
@@ -1404,7 +1405,7 @@ name|m_object
 argument_list|(
 argument|object
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|SetValue
 argument_list|(
@@ -1414,7 +1415,7 @@ block|{
 name|m_object
 operator|=
 name|value
-block|;         }
+block|; }
 name|void
 operator|*
 name|GetValue
@@ -1450,7 +1451,7 @@ operator|:
 name|void
 operator|*
 name|m_object
-block|;     }
+block|;   }
 block|;  }
 decl_stmt|;
 end_decl_stmt

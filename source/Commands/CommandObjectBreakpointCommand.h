@@ -62,19 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Interpreter/Options.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Interpreter/CommandObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Interpreter/CommandObjectMultiword.h"
 end_include
 
 begin_include
@@ -86,7 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/CommandObjectMultiword.h"
+file|"lldb/Interpreter/Options.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
 end_include
 
 begin_decl_stmt

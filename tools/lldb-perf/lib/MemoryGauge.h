@@ -255,7 +255,7 @@ name|virtual
 operator|~
 name|MemoryGauge
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Start
 argument_list|()

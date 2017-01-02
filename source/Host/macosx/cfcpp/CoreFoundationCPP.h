@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<CoreFoundationCPP/CFCReleaser.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<CoreFoundationCPP/CFCMutableArray.h>
 end_include
 
@@ -113,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<CoreFoundationCPP/CFCMutableSet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<CoreFoundationCPP/CFCReleaser.h>
 end_include
 
 begin_include

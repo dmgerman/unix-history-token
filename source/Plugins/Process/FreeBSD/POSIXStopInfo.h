@@ -123,7 +123,7 @@ argument|thread
 argument_list|,
 argument|status
 argument_list|)
-block|{ }
+block|{}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -166,7 +166,7 @@ argument|thread
 argument_list|,
 literal|0
 argument_list|)
-block|{ }
+block|{}
 operator|~
 name|POSIXLimboStopInfo
 argument_list|()
@@ -295,7 +295,7 @@ argument|thread
 argument_list|,
 literal|0
 argument_list|)
-block|{ }
+block|{}
 operator|~
 name|POSIXNewThreadStopInfo
 argument_list|()

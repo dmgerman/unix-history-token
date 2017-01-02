@@ -68,13 +68,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Core/Flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Flags.h"
+file|"llvm/Support/FormatVariadic.h"
 end_include
 
 begin_decl_stmt
@@ -121,7 +127,8 @@ operator|<<
 literal|2
 operator|)
 block|,
-comment|///< Add number prefixes for binary, octal and hex when eBinary is clear
+comment|///< Add number prefixes for binary, octal and hex
+comment|///when eBinary is clear
 name|eBinary
 init|=
 operator|(
@@ -129,7 +136,8 @@ literal|1
 operator|<<
 literal|3
 operator|)
-comment|///< Get and put data as binary instead of as the default string mode.
+comment|///< Get and put data as binary instead of as the default
+comment|///string mode.
 block|}
 enum|;
 comment|//------------------------------------------------------------------
@@ -266,9 +274,9 @@ modifier|...
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(format
+function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|2
 operator|,
@@ -646,6 +654,20 @@ specifier|const
 name|char
 operator|*
 name|cstr
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|Stream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|llvm
+operator|::
+name|StringRef
+name|str
 operator|)
 expr_stmt|;
 end_expr_stmt
@@ -1417,17 +1439,17 @@ begin_comment
 comment|//------------------------------------------------------------------
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|size_t
 name|PutCString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|cstr
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -1742,6 +1764,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|size_t
+name|Indent
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|s
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|//------------------------------------------------------------------
 end_comment
@@ -1945,72 +1979,74 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+operator|...
+name|Args
+operator|>
+name|void
+name|Format
+argument_list|(
+argument|const char *format
+argument_list|,
+argument|Args&&... args
+argument_list|)
+block|{
+name|PutCString
+argument_list|(
+name|llvm
+operator|::
+name|formatv
+argument_list|(
+name|format
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|Args
+operator|>
+operator|(
+name|args
+operator|)
+operator|...
+argument_list|)
+operator|.
+name|str
+argument_list|()
+argument_list|)
+block|;   }
 comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
 comment|/// Output a quoted C string value to the stream.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Print a double quoted NULL terminated C string to the stream
-end_comment
-
-begin_comment
 comment|/// using the printf format in \a format.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @param[in] cstr
-end_comment
-
-begin_comment
 comment|///     A NULL terminated C string value.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @param[in] format
-end_comment
-
-begin_comment
 comment|///     The optional C string format that can be overridden.
-end_comment
-
-begin_comment
 comment|//------------------------------------------------------------------
-end_comment
-
-begin_function_decl
 name|void
 name|QuotedCString
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|cstr
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|format
-init|=
+operator|=
 literal|"\"%s\""
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------

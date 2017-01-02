@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Timer.h"
+file|"MemoryGauge.h"
 end_include
 
 begin_include
@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MemoryGauge.h"
+file|"Timer.h"
 end_include
 
 begin_decl_stmt
@@ -95,14 +95,14 @@ argument_list|()
 block|,
 name|m_metric
 argument_list|()
-block|{     }
+block|{}
 name|Measurement
 argument_list|(
 argument|Callable callable
 argument_list|,
-argument|const char* name
+argument|const char *name
 argument_list|,
-argument|const char* desc
+argument|const char *desc
 argument_list|)
 operator|:
 name|m_gauge
@@ -117,7 +117,7 @@ name|m_metric
 argument_list|(
 argument|Metric<typename GaugeType::ValueType>(name, desc)
 argument_list|)
-block|{     }
+block|{}
 name|Measurement
 argument_list|(
 specifier|const
@@ -141,7 +141,7 @@ name|m_metric
 argument_list|(
 argument|Metric<typename GaugeType::ValueType>(name, desc)
 argument_list|)
-block|{     }
+block|{}
 name|template
 operator|<
 name|typename
@@ -183,7 +183,7 @@ name|m_metric
 argument_list|(
 argument|rhs.GetMetric()
 argument_list|)
-block|{     }
+block|{}
 name|template
 operator|<
 name|typename
@@ -219,7 +219,7 @@ operator|.
 name|Stop
 argument_list|()
 argument_list|)
-block|;     }
+block|;   }
 name|virtual
 specifier|const
 name|Callable
@@ -270,7 +270,7 @@ name|m_gauge
 operator|.
 name|Start
 argument_list|()
-block|;     }
+block|; }
 name|typename
 name|GaugeType
 operator|::
@@ -320,9 +320,9 @@ argument|metric.GetName()
 argument_list|,
 argument|metric.GetDescription()
 argument_list|,
-argument|lldb_perf::GetResult<typename GaugeType::ValueType> (NULL, metric.GetStartValue())
+argument|lldb_perf::GetResult<typename GaugeType::ValueType>(             NULL, metric.GetStartValue())
 argument_list|)
-block|;     }
+block|;   }
 name|void
 name|WriteStopValue
 argument_list|(
@@ -346,9 +346,9 @@ argument|metric.GetName()
 argument_list|,
 argument|metric.GetDescription()
 argument_list|,
-argument|lldb_perf::GetResult<typename GaugeType::ValueType> (NULL, metric.GetStopValue())
+argument|lldb_perf::GetResult<typename GaugeType::ValueType>(             NULL, metric.GetStopValue())
 argument_list|)
-block|;     }
+block|;   }
 name|void
 name|WriteAverageValue
 argument_list|(
@@ -372,9 +372,9 @@ argument|metric.GetName()
 argument_list|,
 argument|metric.GetDescription()
 argument_list|,
-argument|lldb_perf::GetResult<typename GaugeType::ValueType> (NULL, metric.GetAverage())
+argument|lldb_perf::GetResult<typename GaugeType::ValueType>(             NULL, metric.GetAverage())
 argument_list|)
-block|;     }
+block|;   }
 name|void
 name|WriteAverageAndStandardDeviation
 argument_list|(
@@ -407,7 +407,7 @@ argument|metric.GetName()
 argument_list|,
 argument|metric.GetDescription()
 argument_list|,
-argument|lldb_perf::GetResult<typename GaugeType::ValueType> (NULL, metric.GetAverage())
+argument|lldb_perf::GetResult<typename GaugeType::ValueType>(                      NULL, metric.GetAverage())
 argument_list|)
 operator|.
 name|get
@@ -426,7 +426,7 @@ literal|"stddev"
 argument_list|,
 argument|NULL
 argument_list|,
-argument|lldb_perf::GetResult<typename GaugeType::ValueType> (NULL, metric.GetStandardDeviation())
+argument|lldb_perf::GetResult<typename GaugeType::ValueType>(                           NULL, metric.GetStandardDeviation())
 argument_list|)
 expr_stmt|;
 block|}
@@ -454,9 +454,9 @@ argument|metric.GetName()
 argument_list|,
 argument|metric.GetDescription()
 argument_list|,
-argument|lldb_perf::GetResult<typename GaugeType::ValueType> (NULL, metric.GetStandardDeviation())
+argument|lldb_perf::GetResult<typename GaugeType::ValueType>(             NULL, metric.GetStandardDeviation())
 argument_list|)
-block|;     }
+block|;   }
 name|protected
 operator|:
 name|GaugeType
@@ -504,14 +504,14 @@ name|Callable
 operator|>
 operator|(
 operator|)
-block|{     }
+block|{}
 name|TimeMeasurement
 argument_list|(
 argument|Callable callable
 argument_list|,
-argument|const char* name = NULL
+argument|const char *name = NULL
 argument_list|,
-argument|const char* descr = NULL
+argument|const char *descr = NULL
 argument_list|)
 operator|:
 name|Measurement
@@ -527,7 +527,7 @@ name|name
 operator|,
 name|descr
 operator|)
-block|{     }
+block|{}
 name|template
 operator|<
 name|typename
@@ -553,7 +553,7 @@ operator|>
 operator|(
 name|rhs
 operator|)
-block|{     }
+block|{}
 name|template
 operator|<
 name|typename
@@ -584,7 +584,7 @@ operator|>
 operator|(
 name|rhs
 operator|)
-block|{     }
+block|{}
 name|template
 operator|<
 name|typename
@@ -613,7 +613,7 @@ argument_list|(
 name|args
 operator|...
 argument_list|)
-block|;     }
+block|;   }
 block|}
 expr_stmt|;
 name|template
@@ -645,14 +645,14 @@ name|Callable
 operator|>
 operator|(
 operator|)
-block|{     }
+block|{}
 name|MemoryMeasurement
 argument_list|(
 argument|Callable callable
 argument_list|,
-argument|const char* name
+argument|const char *name
 argument_list|,
-argument|const char* descr
+argument|const char *descr
 argument_list|)
 operator|:
 name|Measurement
@@ -668,7 +668,7 @@ name|name
 operator|,
 name|descr
 operator|)
-block|{     }
+block|{}
 name|MemoryMeasurement
 argument_list|(
 specifier|const
@@ -693,7 +693,7 @@ name|name
 operator|,
 name|descr
 operator|)
-block|{     }
+block|{}
 name|template
 operator|<
 name|typename
@@ -719,7 +719,7 @@ operator|>
 operator|(
 name|rhs
 operator|)
-block|{     }
+block|{}
 name|template
 operator|<
 name|typename
@@ -750,7 +750,7 @@ operator|>
 operator|(
 name|rhs
 operator|)
-block|{     }
+block|{}
 name|template
 operator|<
 name|typename
@@ -779,7 +779,7 @@ argument_list|(
 name|args
 operator|...
 argument_list|)
-block|;     }
+block|;   }
 block|}
 expr_stmt|;
 block|}

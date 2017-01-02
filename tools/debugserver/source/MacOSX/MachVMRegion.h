@@ -271,7 +271,8 @@ decl_stmt|;
 name|vm_prot_t
 name|m_curr_protection
 decl_stmt|;
-comment|// The current, possibly modified protections. Original value is saved in m_data.protections.
+comment|// The current, possibly modified protections.
+comment|// Original value is saved in m_data.protections.
 name|mach_vm_address_t
 name|m_protection_addr
 decl_stmt|;

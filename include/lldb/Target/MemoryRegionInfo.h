@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MemoryRegionInfo.h ---------------------------------------*- C++ -*-===//
+comment|//===-- MemoryRegionInfo.h ---------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -42,6 +46,12 @@ define|#
 directive|define
 name|lldb_MemoryRegionInfo_h
 end_define
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/ConstString.h"
+end_include
 
 begin_include
 include|#
@@ -119,11 +129,11 @@ name|m_mapped
 argument_list|(
 argument|eDontKnow
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|MemoryRegionInfo
 argument_list|()
-block|{         }
+block|{}
 name|RangeType
 operator|&
 name|GetRange
@@ -198,6 +208,17 @@ return|return
 name|m_mapped
 return|;
 block|}
+specifier|const
+name|ConstString
+operator|&
+name|GetName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_name
+return|;
+block|}
 name|void
 name|SetReadable
 parameter_list|(
@@ -244,6 +265,23 @@ block|{
 name|m_mapped
 operator|=
 name|val
+expr_stmt|;
+block|}
+name|void
+name|SetName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|m_name
+operator|=
+name|ConstString
+argument_list|(
+name|name
+argument_list|)
 expr_stmt|;
 block|}
 comment|//----------------------------------------------------------------------
@@ -428,6 +466,9 @@ name|m_execute
 decl_stmt|;
 name|OptionalBool
 name|m_mapped
+decl_stmt|;
+name|ConstString
+name|m_name
 decl_stmt|;
 block|}
 end_decl_stmt

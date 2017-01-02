@@ -250,12 +250,12 @@ name|m_save_id
 argument_list|(
 literal|0
 argument_list|)
-block|{              }
+block|{}
 name|virtual
 operator|~
 name|DNBArchProtocol
 argument_list|()
-block|{              }
+block|{}
 name|virtual
 name|bool
 name|GetRegisterValue
@@ -560,11 +560,13 @@ name|Trans_Done
 init|=
 literal|1
 block|,
-comment|// Transaction is done, the current state is committed, and checkpoint state is irrelevant.
+comment|// Transaction is done, the current state is committed, and
+comment|// checkpoint state is irrelevant.
 name|Trans_Rolled_Back
 init|=
 literal|2
-comment|// Transaction is done, the current state has been rolled back to the checkpoint state.
+comment|// Transaction is done, the current state has been
+comment|// rolled back to the checkpoint state.
 block|}
 enum|;
 name|virtual
@@ -597,7 +599,8 @@ block|}
 name|uint32_t
 name|m_save_id
 decl_stmt|;
-comment|// An always incrementing integer ID used with SaveRegisterState/RestoreRegisterState
+comment|// An always incrementing integer ID used with
+comment|// SaveRegisterState/RestoreRegisterState
 block|}
 end_decl_stmt
 
@@ -626,13 +629,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MacOSX/x86_64/DNBArchImplX86_64.h"
+file|"MacOSX/ppc/DNBArchImpl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MacOSX/ppc/DNBArchImpl.h"
+file|"MacOSX/x86_64/DNBArchImplX86_64.h"
 end_include
 
 begin_endif

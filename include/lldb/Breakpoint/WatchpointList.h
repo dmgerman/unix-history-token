@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/Address.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Address.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -142,7 +142,7 @@ operator|::
 name|watch_id_t
 name|Add
 argument_list|(
-argument|const lldb::WatchpointSP& wp_sp
+argument|const lldb::WatchpointSP&wp_sp
 argument_list|,
 argument|bool notify
 argument_list|)

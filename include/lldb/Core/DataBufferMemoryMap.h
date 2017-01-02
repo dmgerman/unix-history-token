@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/DataBuffer.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -72,7 +72,8 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class DataBufferMemoryMap DataBufferMemoryMap.h "lldb/Core/DataBufferMemoryMap.h"
+comment|/// @class DataBufferMemoryMap DataBufferMemoryMap.h
+comment|/// "lldb/Core/DataBufferMemoryMap.h"
 comment|/// @brief A subclass of DataBuffer that memory maps data.
 comment|///
 comment|/// This class memory maps data and stores any needed data for the
@@ -191,7 +192,7 @@ comment|//------------------------------------------------------------------
 name|size_t
 name|MemoryMapFromFileSpec
 argument_list|(
-argument|const FileSpec* file
+argument|const FileSpec *file
 argument_list|,
 argument|lldb::offset_t offset =
 literal|0
@@ -251,12 +252,14 @@ comment|///< The actual pointer that was returned from \c mmap()
 name|size_t
 name|m_mmap_size
 block|;
-comment|///< The actual number of bytes that were mapped when \c mmap() was called
+comment|///< The actual number of bytes that were mapped when \c
+comment|///mmap() was called
 name|uint8_t
 operator|*
 name|m_data
 block|;
-comment|///< The data the user requested somewhere within the memory mapped data.
+comment|///< The data the user requested somewhere within the memory
+comment|///mapped data.
 name|lldb
 operator|::
 name|offset_t

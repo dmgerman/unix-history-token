@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/Block.h"
+file|"lldb/Core/Mangled.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/Declaration.h"
+file|"lldb/Core/UserID.h"
 end_include
 
 begin_include
@@ -70,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Mangled.h"
+file|"lldb/Symbol/Block.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UserID.h"
+file|"lldb/Symbol/Declaration.h"
 end_include
 
 begin_decl_stmt
@@ -272,7 +272,8 @@ comment|///< Function method name (not a mangled name).
 name|Declaration
 name|m_declaration
 decl_stmt|;
-comment|///< Information describing where this function information was defined.
+comment|///< Information describing where this function
+comment|///information was defined.
 block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------
@@ -528,7 +529,8 @@ comment|//------------------------------------------------------------------
 name|Mangled
 name|m_mangled
 block|;
-comment|///< Mangled inlined function name (can be empty if there is no mangled information).
+comment|///< Mangled inlined function name (can be empty if there
+comment|///is no mangled information).
 name|Declaration
 name|m_call_decl
 block|; }
@@ -609,9 +611,9 @@ argument|lldb::user_id_t func_type_uid
 argument_list|,
 argument|const Mangled&mangled
 argument_list|,
-argument|Type * func_type
+argument|Type *func_type
 argument_list|,
-argument|const AddressRange& range
+argument|const AddressRange&range
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -655,9 +657,9 @@ argument|lldb::user_id_t func_type_uid
 argument_list|,
 argument|const char *mangled
 argument_list|,
-argument|Type * func_type
+argument|Type *func_type
 argument_list|,
-argument|const AddressRange& range
+argument|const AddressRange&range
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -923,8 +925,10 @@ name|GetCompilerType
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Get the size of the prologue instructions for this function.  The "prologue"
-comment|/// instructions include any instructions given line number 0 immediately following
+comment|/// Get the size of the prologue instructions for this function.  The
+comment|/// "prologue"
+comment|/// instructions include any instructions given line number 0 immediately
+comment|/// following
 comment|/// the prologue end.
 comment|///
 comment|/// @return
@@ -1091,11 +1095,13 @@ name|Type
 modifier|*
 name|m_type
 decl_stmt|;
-comment|///< The function prototype type for this function that include the function info (FunctionInfo), return type and parameters.
+comment|///< The function prototype type for this function that include
+comment|///the function info (FunctionInfo), return type and parameters.
 name|Mangled
 name|m_mangled
 decl_stmt|;
-comment|///< The mangled function name if any, if empty, there is no mangled information.
+comment|///< The mangled function name if any, if empty, there is
+comment|///no mangled information.
 name|Block
 name|m_block
 decl_stmt|;
@@ -1103,11 +1109,13 @@ comment|///< All lexical blocks contained in this function.
 name|AddressRange
 name|m_range
 decl_stmt|;
-comment|///< The function address range that covers the widest range needed to contain all blocks
+comment|///< The function address range that covers the widest
+comment|///range needed to contain all blocks
 name|DWARFExpression
 name|m_frame_base
 decl_stmt|;
-comment|///< The frame base expression for variables that are relative to the frame pointer.
+comment|///< The frame base expression for variables
+comment|///that are relative to the frame pointer.
 name|Flags
 name|m_flags
 decl_stmt|;

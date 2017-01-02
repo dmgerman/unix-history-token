@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Breakpoint/BreakpointOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/Broadcaster.h"
 end_include
 
@@ -202,7 +208,7 @@ name|m_maskout_errors
 argument_list|(
 argument|true
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|GetEnableIO
 argument_list|()
@@ -300,7 +306,7 @@ return|return
 name|false
 return|;
 block|}
-function|virtual bool     ExecuteOneLine
+function|virtual bool ExecuteOneLine
 parameter_list|(
 specifier|const
 name|char
@@ -358,7 +364,7 @@ return|return
 name|true
 return|;
 block|}
-function|virtual Error     ExecuteMultipleLines
+function|virtual Error ExecuteMultipleLines
 parameter_list|(
 specifier|const
 name|char
@@ -388,7 +394,7 @@ return|return
 name|error
 return|;
 block|}
-function|virtual Error     ExportFunctionDefinitionToInterpreter
+function|virtual Error   ExportFunctionDefinitionToInterpreter
 parameter_list|(
 name|StringList
 modifier|&
@@ -414,7 +420,7 @@ name|Error
 name|GenerateBreakpointCommandCallbackData
 function|(StringList&input
 operator|,
-function|std::string& output
+function|std::string&output
 block|)
 block|{
 name|Error
@@ -804,6 +810,28 @@ name|true
 return|;
 block|}
 name|virtual
+name|bool
+name|ScriptedThreadPlanIsStale
+typedef|(
+name|StructuredData
+typedef|::
+name|ObjectSP
+name|implementor_sp
+operator|,
+name|bool
+typedef|&
+name|script_error
+typedef|)
+block|{
+name|script_error
+operator|=
+name|true
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+name|virtual
 name|lldb
 typedef|::
 name|StateType
@@ -992,6 +1020,41 @@ return|return
 name|error
 return|;
 block|}
+comment|/// This one is for deserialization:
+name|virtual
+name|Error
+name|SetBreakpointCommandCallback
+argument_list|(
+name|BreakpointOptions
+operator|*
+name|bp_options
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|BreakpointOptions
+operator|::
+name|CommandData
+operator|>
+operator|&
+name|data_up
+argument_list|)
+block|{
+name|Error
+name|error
+decl_stmt|;
+name|error
+operator|.
+name|SetErrorString
+argument_list|(
+literal|"unimplemented"
+argument_list|)
+expr_stmt|;
+return|return
+name|error
+return|;
+block|}
 name|void
 name|SetBreakpointCommandCallbackFunction
 argument_list|(
@@ -1025,7 +1088,7 @@ name|char
 modifier|*
 name|function_name
 parameter_list|)
-block|{     }
+block|{}
 comment|/// Set a one-liner as the callback for the watchpoint.
 name|virtual
 name|void
@@ -1040,7 +1103,7 @@ name|char
 modifier|*
 name|oneliner
 parameter_list|)
-block|{     }
+block|{}
 name|virtual
 name|bool
 name|GetScriptedSummary
@@ -1649,6 +1712,20 @@ argument_list|(
 argument|lldb::ScriptLanguage language
 argument_list|)
 expr_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|ScriptLanguage
+name|StringToLanguage
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|StringRef
+operator|&
+name|string
+argument_list|)
+expr_stmt|;
 name|virtual
 name|void
 name|ResetOutputFileHandle
@@ -1657,8 +1734,18 @@ name|FILE
 modifier|*
 name|new_fh
 parameter_list|)
-block|{ }
-comment|//By default, do nothing.
+block|{}
+comment|// By default, do nothing.
+name|lldb
+operator|::
+name|ScriptLanguage
+name|GetLanguage
+argument_list|()
+block|{
+return|return
+name|m_script_lang
+return|;
+block|}
 name|protected
 label|:
 name|CommandInterpreter

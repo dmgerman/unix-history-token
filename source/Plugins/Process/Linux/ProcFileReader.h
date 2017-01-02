@@ -84,7 +84,8 @@ argument_list|,
 argument|const char *name
 argument_list|)
 expr_stmt|;
-comment|/// Parse the /proc/{@a pid}/{@a name} file line by line, passing each line to line_parser, until
+comment|/// Parse the /proc/{@a pid}/{@a name} file line by line, passing each line to
+comment|/// line_parser, until
 comment|/// either end of file or until line_parser returns false.
 specifier|static
 name|Error

@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"PThreadCondition.h"
+file|"DNBArch.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"PThreadMutex.h"
+file|"DNBRegisterInfo.h"
 end_include
 
 begin_include
@@ -116,13 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DNBArch.h"
+file|"PThreadCondition.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DNBRegisterInfo.h"
+file|"PThreadMutex.h"
 end_include
 
 begin_include
@@ -253,7 +253,9 @@ name|thread_t
 name|thread
 parameter_list|)
 function_decl|;
-comment|// The mach port # for this thread in debugserver namespace
+comment|// The mach port # for
+comment|// this thread in
+comment|// debugserver namespace
 name|void
 name|Resume
 parameter_list|(
@@ -564,7 +566,7 @@ name|DNBBreakpoint
 modifier|*
 name|bp
 parameter_list|)
-block|{                     }
+block|{}
 name|bool
 name|IsUserReady
 parameter_list|()
@@ -673,7 +675,8 @@ comment|// The globally unique ID for this thread (nub_thread_t)
 name|thread_t
 name|m_mach_port_number
 decl_stmt|;
-comment|// The mach port # for this thread in debugserver namesp.
+comment|// The mach port # for this thread in debugserver
+comment|// namesp.
 name|uint32_t
 name|m_seq_id
 decl_stmt|;
@@ -690,18 +693,22 @@ name|struct
 name|thread_basic_info
 name|m_basic_info
 decl_stmt|;
-comment|// Basic information for a thread used to see if a thread is valid
+comment|// Basic information for a thread used
+comment|// to see if a thread is valid
 name|int32_t
 name|m_suspend_count
 decl_stmt|;
-comment|// The current suspend count> 0 means we have suspended m_suspendCount times,
-comment|//< 0 means we have resumed it m_suspendCount times.
+comment|// The current suspend count> 0 means we have
+comment|// suspended m_suspendCount times,
+comment|//< 0 means we have resumed it m_suspendCount
+comment|//                           times.
 name|MachException
 operator|::
 name|Data
 name|m_stop_exception
 expr_stmt|;
-comment|// The best exception that describes why this thread is stopped
+comment|// The best exception that describes why
+comment|// this thread is stopped
 name|std
 operator|::
 name|unique_ptr
@@ -735,7 +742,8 @@ expr_stmt|;
 name|bool
 name|m_is_64_bit
 decl_stmt|;
-comment|// qos_class_t _pthread_qos_class_decode(pthread_priority_t priority, int *, unsigned long *);
+comment|// qos_class_t _pthread_qos_class_decode(pthread_priority_t priority, int *,
+comment|// unsigned long *);
 name|unsigned
 name|int
 function_decl|(

@@ -98,13 +98,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Core/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_decl_stmt
@@ -138,7 +144,7 @@ name|m_event_bits
 argument_list|(
 argument|event_bits
 argument_list|)
-block|{     }
+block|{}
 name|BroadcastEventSpec
 argument_list|(
 specifier|const
@@ -299,7 +305,8 @@ argument_list|()
 block|;
 name|public
 operator|:
-comment|// Listeners hold onto weak pointers to their broadcaster managers.  So they must be
+comment|// Listeners hold onto weak pointers to their broadcaster managers.  So they
+comment|// must be
 comment|// made into shared pointers, which you do with MakeBroadcasterManager.
 specifier|static
 name|lldb
@@ -439,7 +446,7 @@ name|m_broadcaster_class
 argument_list|(
 argument|broadcaster_class
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|BroadcasterClassMatches
 argument_list|()
@@ -490,7 +497,7 @@ name|m_broadcaster_spec
 argument_list|(
 argument|broadcaster_spec
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|BroadcastEventSpecMatches
 argument_list|()
@@ -554,7 +561,7 @@ name|m_listener_sp
 argument_list|(
 name|listener_sp
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|ListenerMatchesAndSharedBits
 argument_list|()
@@ -641,7 +648,7 @@ name|m_listener_sp
 argument_list|(
 argument|in_listener_sp
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|ListenerMatches
 argument_list|()
@@ -701,7 +708,7 @@ name|m_listener
 argument_list|(
 argument|in_listener
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|ListenerMatchesPointer
 argument_list|()
@@ -883,23 +890,19 @@ comment|///         {
 end_comment
 
 begin_comment
-comment|///             eBroadcastBitStateChanged   = (1<< 0),
+comment|///             eBroadcastBitOne   = (1<< 0),
 end_comment
 
 begin_comment
-comment|///             eBroadcastBitInterrupt      = (1<< 1),
+comment|///             eBroadcastBitTwo   = (1<< 1),
 end_comment
 
 begin_comment
-comment|///             eBroadcastBitSTDOUT         = (1<< 2),
+comment|///             eBroadcastBitThree = (1<< 2),
 end_comment
 
 begin_comment
-comment|///             eBroadcastBitSTDERR         = (1<< 3),
-end_comment
-
-begin_comment
-comment|///             eBroadcastBitProfileData    = (1<< 4)
+comment|///             ...
 end_comment
 
 begin_comment
@@ -1395,9 +1398,11 @@ name|RestoreBroadcaster
 argument_list|()
 expr_stmt|;
 block|}
-comment|// This needs to be filled in if you are going to register the broadcaster with the broadcaster
+comment|// This needs to be filled in if you are going to register the broadcaster
+comment|// with the broadcaster
 comment|// manager and do broadcaster class matching.
-comment|// FIXME: Probably should make a ManagedBroadcaster subclass with all the bits needed to work
+comment|// FIXME: Probably should make a ManagedBroadcaster subclass with all the bits
+comment|// needed to work
 comment|// with the BroadcasterManager, so that it is clearer how to add one.
 name|virtual
 name|ConstString
@@ -1414,15 +1419,21 @@ argument_list|()
 expr_stmt|;
 name|protected
 label|:
-comment|// BroadcasterImpl contains the actual Broadcaster implementation.  The Broadcaster makes a BroadcasterImpl
-comment|// which lives as long as it does.  The Listeners& the Events hold a weak pointer to the BroadcasterImpl,
-comment|// so that they can survive if a Broadcaster they were listening to is destroyed w/o their being able to
-comment|// unregister from it (which can happen if the Broadcasters& Listeners are being destroyed on separate threads
+comment|// BroadcasterImpl contains the actual Broadcaster implementation.  The
+comment|// Broadcaster makes a BroadcasterImpl
+comment|// which lives as long as it does.  The Listeners& the Events hold a weak
+comment|// pointer to the BroadcasterImpl,
+comment|// so that they can survive if a Broadcaster they were listening to is
+comment|// destroyed w/o their being able to
+comment|// unregister from it (which can happen if the Broadcasters& Listeners are
+comment|// being destroyed on separate threads
 comment|// simultaneously.
-comment|// The Broadcaster itself can't be shared out as a weak pointer, because some things that are broadcasters
+comment|// The Broadcaster itself can't be shared out as a weak pointer, because some
+comment|// things that are broadcasters
 comment|// (e.g. the Target and the Process) are shared in their own right.
 comment|//
-comment|// For the most part, the Broadcaster functions dispatch to the BroadcasterImpl, and are documented in the
+comment|// For the most part, the Broadcaster functions dispatch to the
+comment|// BroadcasterImpl, and are documented in the
 comment|// public Broadcaster API above.
 name|class
 name|BroadcasterImpl
@@ -1718,9 +1729,9 @@ comment|//------------------------------------------------------------------
 comment|//
 comment|//------------------------------------------------------------------
 typedef|typedef
-name|std
+name|llvm
 operator|::
-name|list
+name|SmallVector
 operator|<
 name|std
 operator|::
@@ -1732,7 +1743,9 @@ name|ListenerWP
 operator|,
 name|uint32_t
 operator|>
-expr|>
+operator|,
+literal|4
+operator|>
 name|collection
 expr_stmt|;
 typedef|typedef
@@ -1748,32 +1761,27 @@ name|string
 operator|>
 name|event_names_map
 expr_stmt|;
-name|void
-name|ListenerIterator
-argument_list|(
+name|llvm
+operator|::
+name|SmallVector
+operator|<
 name|std
 operator|::
-name|function
+name|pair
 operator|<
-name|bool
-argument_list|(
-specifier|const
 name|lldb
 operator|::
 name|ListenerSP
-operator|&
-name|listener_sp
-argument_list|,
+operator|,
 name|uint32_t
 operator|&
-name|event_mask
-argument_list|)
 operator|>
-specifier|const
-operator|&
-name|callback
-argument_list|)
-decl_stmt|;
+operator|,
+literal|4
+operator|>
+name|GetListeners
+argument_list|()
+expr_stmt|;
 name|Broadcaster
 modifier|&
 name|m_broadcaster
@@ -1782,11 +1790,13 @@ comment|///< The broadcsater that this implements
 name|event_names_map
 name|m_event_names
 decl_stmt|;
-comment|///< Optionally define event names for readability and logging for each event bit
+comment|///< Optionally define event names for
+comment|///readability and logging for each event bit
 name|collection
 name|m_listeners
 decl_stmt|;
-comment|///< A list of Listener / event_mask pairs that are listening to this broadcaster.
+comment|///< A list of Listener / event_mask pairs that are
+comment|///listening to this broadcaster.
 name|std
 operator|::
 name|recursive_mutex
@@ -1803,7 +1813,9 @@ name|ListenerSP
 operator|>
 name|m_hijacking_listeners
 expr_stmt|;
-comment|// A simple mechanism to intercept events from a broadcaster
+comment|// A simple mechanism
+comment|// to intercept events
+comment|// from a broadcaster
 name|std
 operator|::
 name|vector
@@ -1812,7 +1824,8 @@ name|uint32_t
 operator|>
 name|m_hijacking_masks
 expr_stmt|;
-comment|// At some point we may want to have a stack or Listener
+comment|// At some point we may want to
+comment|// have a stack or Listener
 comment|// collections, but for now this is just for private hijacking.
 name|private
 label|:

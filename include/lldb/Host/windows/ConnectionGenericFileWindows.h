@@ -104,7 +104,7 @@ operator|::
 name|ConnectionStatus
 name|Connect
 argument_list|(
-argument|const char *s
+argument|llvm::StringRef s
 argument_list|,
 argument|Error *error_ptr
 argument_list|)
@@ -126,7 +126,7 @@ argument|void *dst
 argument_list|,
 argument|size_t dst_len
 argument_list|,
-argument|uint32_t timeout_usec
+argument|const Timeout<std::micro>&timeout
 argument_list|,
 argument|lldb::ConnectionStatus&status
 argument_list|,
@@ -178,7 +178,7 @@ name|m_owns_file
 block|;
 name|LARGE_INTEGER
 name|m_file_position
-block|;      enum
+block|;    enum
 block|{
 name|kBytesAvailableEvent
 block|,

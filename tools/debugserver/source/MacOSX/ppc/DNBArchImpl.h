@@ -113,12 +113,12 @@ argument_list|)
 block|,
 name|m_state
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|DNBArchMachPPC
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 specifier|const
 name|DNBRegisterSetInfo

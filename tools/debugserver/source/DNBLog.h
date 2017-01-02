@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"DNBDefs.h"
 end_include
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DNBDefs.h"
+file|<stdio.h>
 end_include
 
 begin_ifdef
@@ -89,7 +89,8 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|// Flags that get filled in automatically before calling the log callback function
+comment|// Flags that get filled in automatically before calling the log callback
+comment|// function
 define|#
 directive|define
 name|DNBLOG_FLAG_FATAL
@@ -510,7 +511,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabled()) { _DNBLog(0, fmt, ## __VA_ARGS__);                 } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabled()) {                                                     \       _DNBLog(0, fmt, ##__VA_ARGS__);                                          \     }                                                                          \   } while (0)
 end_define
 
 begin_define
@@ -522,7 +524,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabled()) { _DNBLogDebug(fmt, ## __VA_ARGS__);               } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabled()) {                                                     \       _DNBLogDebug(fmt, ##__VA_ARGS__);                                        \     }                                                                          \   } while (0)
 end_define
 
 begin_define
@@ -534,7 +537,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabled()) { _DNBLogDebugVerbose(fmt, ## __VA_ARGS__);        } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabled()) {                                                     \       _DNBLogDebugVerbose(fmt, ##__VA_ARGS__);                                 \     }                                                                          \   } while (0)
 end_define
 
 begin_define
@@ -546,7 +550,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabled()) { _DNBLogThreaded(fmt, ## __VA_ARGS__);            } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabled()) {                                                     \       _DNBLogThreaded(fmt, ##__VA_ARGS__);                                     \     }                                                                          \   } while (0)
 end_define
 
 begin_define
@@ -560,7 +565,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabledForAny(mask)) { _DNBLogThreaded(fmt, ## __VA_ARGS__);  } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabledForAny(mask)) {                                           \       _DNBLogThreaded(fmt, ##__VA_ARGS__);                                     \     }                                                                          \   } while (0)
 end_define
 
 begin_define
@@ -572,7 +578,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabled()) { _DNBLogError(fmt, ## __VA_ARGS__);               } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabled()) {                                                     \       _DNBLogError(fmt, ##__VA_ARGS__);                                        \     }                                                                          \   } while (0)
 end_define
 
 begin_define
@@ -586,7 +593,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabled()) { _DNBLogFatalError(err, fmt, ## __VA_ARGS__);     } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabled()) {                                                     \       _DNBLogFatalError(err, fmt, ##__VA_ARGS__);                              \     }                                                                          \   } while (0)
 end_define
 
 begin_define
@@ -598,7 +606,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabled()) { _DNBLogVerbose(fmt, ## __VA_ARGS__);             } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabled()) {                                                     \       _DNBLogVerbose(fmt, ##__VA_ARGS__);                                      \     }                                                                          \   } while (0)
 end_define
 
 begin_define
@@ -610,7 +619,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabled()) { _DNBLogWarning(fmt, ## __VA_ARGS__);             } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabled()) {                                                     \       _DNBLogWarning(fmt, ##__VA_ARGS__);                                      \     }                                                                          \   } while (0)
 end_define
 
 begin_define
@@ -622,7 +632,8 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { if (DNBLogEnabled()) { _DNBLogWarningVerbose(fmt, ## __VA_ARGS__);      } } while (0)
+define|\
+value|do {                                                                         \     if (DNBLogEnabled()) {                                                     \       _DNBLogWarningVerbose(fmt, ##__VA_ARGS__);                               \     }                                                                          \   } while (0)
 end_define
 
 begin_else

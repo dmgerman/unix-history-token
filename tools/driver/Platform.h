@@ -93,13 +93,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
+file|"lldb/Host/windows/windows.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/windows/windows.h"
+file|<inttypes.h>
 end_include
 
 begin_struct

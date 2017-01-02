@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
+file|"DWARFDIE.h"
 end_include
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DWARFDIE.h"
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_decl_stmt
@@ -288,7 +288,7 @@ operator|-
 name|Size
 argument_list|()
 return|;
-comment|/* Size in bytes of the .debug_info data associated with this compile unit. */
+comment|/* Size in bytes of the                                                            .debug_info data                                                            associated with this                                                            compile unit. */
 block|}
 name|uint32_t
 name|GetLength
@@ -351,11 +351,23 @@ return|return
 name|m_addr_base
 return|;
 block|}
+name|dw_addr_t
+name|GetRangesBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_ranges_base
+return|;
+block|}
 name|void
 name|SetAddrBase
 parameter_list|(
 name|dw_addr_t
 name|addr_base
+parameter_list|,
+name|dw_addr_t
+name|ranges_base
 parameter_list|,
 name|dw_offset_t
 name|base_obj_offset
@@ -724,7 +736,12 @@ name|DWARFDebugAranges
 operator|>
 name|m_func_aranges_ap
 expr_stmt|;
-comment|// A table similar to the .debug_aranges table, but this one points to the exact DW_TAG_subprogram DIEs
+comment|// A table similar to
+comment|// the .debug_aranges
+comment|// table, but this one
+comment|// points to the exact
+comment|// DW_TAG_subprogram
+comment|// DIEs
 name|dw_addr_t
 name|m_base_addr
 decl_stmt|;
@@ -769,11 +786,16 @@ name|dw_addr_t
 name|m_addr_base
 decl_stmt|;
 comment|// Value of DW_AT_addr_base
+name|dw_addr_t
+name|m_ranges_base
+decl_stmt|;
+comment|// Value of DW_AT_ranges_base
 name|dw_offset_t
 name|m_base_obj_offset
 decl_stmt|;
-comment|// If this is a dwo compile unit this is the offset of
-comment|// the base compile unit in the main object file
+comment|// If this is a dwo compile unit this is the
+comment|// offset of the base compile unit in the main
+comment|// object file
 name|void
 name|ParseProducerInfo
 parameter_list|()

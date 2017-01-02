@@ -68,7 +68,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -84,7 +88,11 @@ comment|//          require a list of options associated with them derive from t
 end_comment
 
 begin_comment
-comment|//          CMICmdArgValListBase class. Additional options are also extracted from
+comment|//          CMICmdArgValListBase class. Additional options are also extracted
+end_comment
+
+begin_comment
+comment|//          from
 end_comment
 
 begin_comment
@@ -96,7 +104,11 @@ comment|//          An argument knows what type of argument it is and how it is 
 end_comment
 
 begin_comment
-comment|//          interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a
+end_comment
+
+begin_comment
+comment|//          matching
 end_comment
 
 begin_comment
@@ -104,11 +116,19 @@ comment|//          options and so extract a values from it .
 end_comment
 
 begin_comment
-comment|//          The CMICmdArgValBase objects are added to the derived argument class's
+comment|//          The CMICmdArgValBase objects are added to the derived argument
 end_comment
 
 begin_comment
-comment|//          container. The option arguments belong to that derived class and will
+comment|//          class's
+end_comment
+
+begin_comment
+comment|//          container. The option arguments belong to that derived class and
+end_comment
+
+begin_comment
+comment|//          will
 end_comment
 
 begin_comment
@@ -154,9 +174,12 @@ expr_stmt|;
 comment|// Enums:
 name|public
 operator|:
-comment|//++ ---------------------------------------------------------------------------------
-comment|// Details: CMICmdArgValListBase needs to know what type of argument to look for in
-comment|//          the command options text. It also needs to create argument objects of
+comment|//++
+comment|//---------------------------------------------------------------------------------
+comment|// Details: CMICmdArgValListBase needs to know what type of argument to look
+comment|// for in
+comment|//          the command options text. It also needs to create argument objects
+comment|//          of
 comment|//          a specific type.
 comment|//--
 block|enum
@@ -184,7 +207,8 @@ name|eArgValType_StringQuotedNumberPath
 block|,
 name|eArgValType_StringAnything
 block|,
-comment|// Accept any words for a string 'type' even if they look like --longOptions for example
+comment|// Accept any words for a string 'type' even if
+comment|// they look like --longOptions for example
 name|eArgValType_ThreadGrp
 block|,
 name|eArgValType_count

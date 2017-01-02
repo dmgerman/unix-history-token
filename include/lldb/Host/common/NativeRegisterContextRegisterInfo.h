@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- NativeRegisterContextRegisterInfo.h ----------------------*- C++ -*-===//
+comment|//===-- NativeRegisterContextRegisterInfo.h ----------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -124,7 +128,7 @@ operator|<
 name|RegisterInfoInterface
 operator|>
 name|m_register_info_interface_up
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

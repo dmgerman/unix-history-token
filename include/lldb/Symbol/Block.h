@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/AddressRange.h"
 end_include
 
@@ -98,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Symbol/LineEntry.h"
 end_include
 
@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/CompilerType.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -935,13 +935,16 @@ operator|::
 name|VariableListSP
 name|m_variable_list_sp
 expr_stmt|;
-comment|///< The variable list for all local, static and parameter variables scoped to this block.
+comment|///< The variable list for all local,
+comment|///static and parameter variables
+comment|///scoped to this block.
 name|bool
 name|m_parsed_block_info
 range|:
 literal|1
 decl_stmt|,
-comment|///< Set to true if this block and it's children have all been parsed
+comment|///< Set to true if this block and it's children
+comment|///have all been parsed
 name|m_parsed_block_variables
 range|:
 literal|1

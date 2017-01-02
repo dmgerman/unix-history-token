@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterContextDarwin_arm64.h -----------------------------*- C++ -*-===//
+comment|//===-- RegisterContextDarwin_arm64.h -----------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -62,13 +66,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/RegisterContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/RegisterContext.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_comment
@@ -286,7 +290,7 @@ name|cpsr
 block|;
 comment|// cpsr
 block|}
-block|;      struct
+block|;    struct
 name|VReg
 block|{
 name|uint8_t
@@ -294,7 +298,7 @@ name|bytes
 index|[
 literal|16
 index|]
-block|;     }
+block|;   }
 block|;
 comment|// mirrors<mach/arm/thread_status.h> arm_neon_state64_t
 block|struct
@@ -311,7 +315,7 @@ name|fpsr
 block|;
 name|uint32_t
 name|fpcr
-block|;     }
+block|;   }
 block|;
 comment|// mirrors<mach/arm/thread_status.h> arm_exception_state64_t
 block|struct
@@ -361,7 +365,7 @@ index|]
 block|;
 name|uint64_t
 name|mdscr_el1
-block|;     }
+block|;   }
 block|;
 specifier|static
 name|void
@@ -403,7 +407,7 @@ operator|=
 literal|15
 comment|// ARM_DEBUG_STATE64
 block|}
-block|;      enum
+block|;    enum
 block|{
 name|GPRWordCount
 operator|=
@@ -457,7 +461,7 @@ name|uint32_t
 operator|)
 comment|// ARM_DEBUG_STATE64_COUNT
 block|}
-block|;      enum
+block|;    enum
 block|{
 name|Read
 operator|=
@@ -545,7 +549,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-block|;     }
+block|;   }
 name|int
 name|GetError
 argument_list|(

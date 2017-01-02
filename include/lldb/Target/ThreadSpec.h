@@ -81,10 +81,13 @@ comment|//   Thread Index
 comment|//   Thread Name
 comment|//   Thread Queue Name
 comment|//
-comment|//  But if we need more generality, we can hang a key/value map off of this structure.
-comment|//  That's why the thread matches spec test is done as a virtual method in Thread::MatchesSpec,
+comment|//  But if we need more generality, we can hang a key/value map off of this
+comment|//  structure.
+comment|//  That's why the thread matches spec test is done as a virtual method in
+comment|//  Thread::MatchesSpec,
 comment|//  since it is the native thread that would know how to interpret the keys.
-comment|//  I was going to do the Queue Name this way out of sheer orneriness, but that seems a
+comment|//  I was going to do the Queue Name this way out of sheer orneriness, but that
+comment|//  seems a
 comment|//  sufficiently general concept, so I put it in here on its own.
 name|class
 name|ThreadSpec
@@ -114,6 +117,44 @@ operator|&
 name|rhs
 operator|)
 decl_stmt|;
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ThreadSpec
+operator|>
+name|CreateFromStructuredData
+argument_list|(
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|data_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+expr_stmt|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
+expr_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|GetSerializationKey
+parameter_list|()
+block|{
+return|return
+literal|"ThreadSpec"
+return|;
+block|}
 name|void
 name|SetIndex
 parameter_list|(
@@ -400,6 +441,57 @@ decl|const
 decl_stmt|;
 name|private
 label|:
+name|enum
+name|class
+name|OptionNames
+block|{
+name|ThreadIndex
+operator|=
+literal|0
+operator|,
+name|ThreadID
+operator|,
+name|ThreadName
+operator|,
+name|QueueName
+operator|,
+name|LastOptionName
+block|}
+empty_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|g_option_names
+index|[
+operator|(
+name|size_t
+operator|)
+name|OptionNames
+operator|::
+name|LastOptionName
+index|]
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|GetKey
+parameter_list|(
+name|OptionNames
+name|enum_value
+parameter_list|)
+block|{
+return|return
+name|g_option_names
+index|[
+operator|(
+name|size_t
+operator|)
+name|enum_value
+index|]
+return|;
+block|}
 name|uint32_t
 name|m_index
 decl_stmt|;

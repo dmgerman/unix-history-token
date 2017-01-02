@@ -80,7 +80,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|a ## b
+value|a##b
 end_define
 
 begin_define
@@ -92,7 +92,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|CONCAT2(a,b)
+value|CONCAT2(a, b)
 end_define
 
 begin_define
@@ -185,6 +185,7 @@ begin_define
 define|#
 directive|define
 name|DEBUGSERVER_VERSION_NUM
+define|\
 value|CONCAT(DEBUGSERVER_PROGRAM_SYMBOL, VersionNumber)
 end_define
 
@@ -217,6 +218,7 @@ begin_define
 define|#
 directive|define
 name|DEBUGSERVER_VERSION_STR
+define|\
 value|CONCAT(DEBUGSERVER_PROGRAM_SYMBOL, VersionString)
 end_define
 
@@ -397,6 +399,7 @@ begin_define
 define|#
 directive|define
 name|LOG_RNB_MINIMAL
+define|\
 value|((LOG_LO_USER)<< 0)
 end_define
 
@@ -408,6 +411,7 @@ begin_define
 define|#
 directive|define
 name|LOG_RNB_MEDIUM
+define|\
 value|((LOG_LO_USER)<< 1)
 end_define
 
@@ -452,6 +456,7 @@ begin_define
 define|#
 directive|define
 name|LOG_RNB_EVENTS
+define|\
 value|((LOG_LO_USER)<< 5)
 end_define
 
@@ -485,7 +490,7 @@ begin_define
 define|#
 directive|define
 name|LOG_RNB_ALL
-value|(~((LOG_LO_USER) - 1))
+value|(~((LOG_LO_USER)-1))
 end_define
 
 begin_define

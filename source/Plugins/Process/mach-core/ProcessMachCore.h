@@ -289,7 +289,7 @@ name|ThreadMachCore
 block|;
 name|void
 name|Clear
-argument_list|( )
+argument_list|()
 block|;
 name|bool
 name|UpdateThreadList

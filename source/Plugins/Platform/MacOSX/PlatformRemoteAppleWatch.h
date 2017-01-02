@@ -236,7 +236,7 @@ name|GetSharedModule
 argument_list|(
 argument|const lldb_private::ModuleSpec&module_spec
 argument_list|,
-argument|lldb_private::Process* process
+argument|lldb_private::Process *process
 argument_list|,
 argument|lldb::ModuleSP&module_sp
 argument_list|,
@@ -319,7 +319,7 @@ name|version_update
 block|;
 name|bool
 name|user_cached
-block|;     }
+block|;   }
 block|;
 typedef|typedef
 name|std
@@ -330,6 +330,14 @@ name|SDKDirectoryInfo
 operator|>
 name|SDKDirectoryInfoCollection
 expr_stmt|;
+name|std
+operator|::
+name|mutex
+name|m_sdk_dir_mutex
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|SDKDirectoryInfoCollection
 name|m_sdk_directory_infos
 decl_stmt|;
@@ -461,32 +469,6 @@ name|platform_file_path
 argument_list|,
 name|uint32_t
 name|sdk_idx
-argument_list|,
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|local_file
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|GetFileInSDKRoot
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|platform_file_path
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|sdkroot_path
-argument_list|,
-name|bool
-name|symbols_dirs_only
 argument_list|,
 name|lldb_private
 operator|::

@@ -58,6 +58,12 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -137,8 +143,10 @@ comment|// Size in bytes of the register
 name|uint32_t
 name|byte_offset
 decl_stmt|;
-comment|// The byte offset in the register context data where this register's value is found.
-comment|// This is optional, and can be 0 if a particular RegisterContext does not need to
+comment|// The byte offset in the register context data where
+comment|// this register's value is found.
+comment|// This is optional, and can be 0 if a particular RegisterContext does not
+comment|// need to
 comment|// address its registers by byte offset.
 name|lldb
 operator|::
@@ -160,20 +168,24 @@ operator|::
 name|kNumRegisterKinds
 index|]
 decl_stmt|;
-comment|// Holds all of the various register numbers for all register kinds
+comment|// Holds all of the various register
+comment|// numbers for all register kinds
 name|uint32_t
 modifier|*
 name|value_regs
 decl_stmt|;
-comment|// List of registers (terminated with LLDB_INVALID_REGNUM).  If this value is not
-comment|// null, all registers in this list will be read first, at which point the value
+comment|// List of registers (terminated with
+comment|// LLDB_INVALID_REGNUM).  If this value is not
+comment|// null, all registers in this list will be read first, at which point the
+comment|// value
 comment|// for this register will be valid.  For example, the value list for ah
 comment|// would be eax (x86) or rax (x64).
 name|uint32_t
 modifier|*
 name|invalidate_regs
 decl_stmt|;
-comment|// List of registers (terminated with LLDB_INVALID_REGNUM).  If this value is not
+comment|// List of registers (terminated with
+comment|// LLDB_INVALID_REGNUM).  If this value is not
 comment|// null, all registers in this list will be invalidated when the value of this
 comment|// register changes.  For example, the invalidate list for eax would be rax
 comment|// ax, ah, and al.
@@ -182,13 +194,70 @@ name|uint8_t
 modifier|*
 name|dynamic_size_dwarf_expr_bytes
 decl_stmt|;
-comment|// A DWARF expression that when evaluated gives
+comment|// A DWARF expression that when
+comment|// evaluated gives
 comment|// the byte size of this register.
 name|size_t
 name|dynamic_size_dwarf_len
 decl_stmt|;
 comment|// The length of the DWARF expression in bytes
 comment|// in the dynamic_size_dwarf_expr_bytes member.
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|data
+argument_list|(
+argument|const uint8_t *context_base
+argument_list|)
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+operator|(
+name|context_base
+operator|+
+name|byte_offset
+operator|,
+name|byte_size
+operator|)
+return|;
+block|}
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|mutable_data
+argument_list|(
+argument|uint8_t *context_base
+argument_list|)
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
+name|uint8_t
+operator|>
+operator|(
+name|context_base
+operator|+
+name|byte_offset
+operator|,
+name|byte_size
+operator|)
+return|;
+block|}
 block|}
 struct|;
 comment|//----------------------------------------------------------------------
@@ -218,7 +287,8 @@ name|uint32_t
 modifier|*
 name|registers
 decl_stmt|;
-comment|// An array of register indices in this set.  The values in this array are
+comment|// An array of register indices in this set.  The
+comment|// values in this array are
 comment|// *indices* (not register numbers) into a particular RegisterContext's
 comment|// register array.  For example, if eax is defined at index 4 for a
 comment|// particular RegisterContext, eax would be included in this RegisterSet
@@ -250,7 +320,7 @@ name|virtual
 operator|~
 name|OptionValidator
 argument_list|()
-block|{ }
+block|{}
 name|virtual
 name|bool
 name|IsValid
@@ -291,7 +361,8 @@ block|{
 name|uint32_t
 name|usage_mask
 decl_stmt|;
-comment|// Used to mark options that can be used together.  If (1<< n& usage_mask) != 0
+comment|// Used to mark options that can be used together.  If (1
+comment|//<< n& usage_mask) != 0
 comment|// then this option belongs to option set n.
 name|bool
 name|required
@@ -315,7 +386,8 @@ name|OptionValidator
 modifier|*
 name|validator
 decl_stmt|;
-comment|// If non-NULL, option is valid iff |validator->IsValid()|, otherwise always valid.
+comment|// If non-NULL, option is valid iff
+comment|// |validator->IsValid()|, otherwise always valid.
 name|OptionEnumValueElement
 modifier|*
 name|enum_values
@@ -324,7 +396,8 @@ comment|// If non-NULL an array of enum values.
 name|uint32_t
 name|completion_type
 decl_stmt|;
-comment|// Cookie the option class can use to do define the argument completion.
+comment|// Cookie the option class can use to do define the
+comment|// argument completion.
 name|lldb
 operator|::
 name|CommandArgumentType
@@ -336,7 +409,8 @@ name|char
 modifier|*
 name|usage_text
 decl_stmt|;
-comment|// Full text explaining what this options does and what (if any) argument to
+comment|// Full text explaining what this options does and
+comment|// what (if any) argument to
 comment|// pass it.
 block|}
 struct|;

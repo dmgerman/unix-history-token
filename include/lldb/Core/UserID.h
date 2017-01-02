@@ -90,7 +90,7 @@ comment|//------------------------------------------------------------------
 operator|~
 name|UserID
 argument_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Clears the object state.
 comment|///

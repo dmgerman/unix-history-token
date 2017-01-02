@@ -361,6 +361,13 @@ end_decl_stmt
 begin_decl_stmt
 name|friend
 name|class
+name|SBStructuredData
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
 name|SBSymbol
 decl_stmt|;
 end_decl_stmt

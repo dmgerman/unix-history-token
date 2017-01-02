@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/SystemRuntime.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -128,19 +122,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Target/SystemRuntime.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"AppleGetItemInfoHandler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"AppleGetQueuesHandler.h"
+file|"AppleGetPendingItemsHandler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"AppleGetPendingItemsHandler.h"
+file|"AppleGetQueuesHandler.h"
 end_include
 
 begin_include
@@ -494,13 +494,15 @@ name|std
 operator|::
 name|string
 name|target_queue_label
-block|;     }
+block|;   }
 block|;
 comment|// The offsets of different fields of the dispatch_queue_t structure in
 comment|// a thread/queue process.
 comment|// Based on libdispatch src/queue_private.h, struct dispatch_queue_offsets_s
-comment|// With dqo_version 1-3, the dqo_label field is a per-queue value and cannot be cached.
-comment|// With dqo_version 4 (Mac OS X 10.9 / iOS 7), dqo_label is a constant value that can be cached.
+comment|// With dqo_version 1-3, the dqo_label field is a per-queue value and cannot
+comment|// be cached.
+comment|// With dqo_version 4 (Mac OS X 10.9 / iOS 7), dqo_label is a constant value
+comment|// that can be cached.
 block|struct
 name|LibdispatchOffsets
 block|{
@@ -540,19 +542,23 @@ block|;
 name|uint16_t
 name|dqo_suspend_cnt
 block|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS X
+comment|// 10.10/iOS 8
 name|uint16_t
 name|dqo_suspend_cnt_size
 block|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS
+comment|// X 10.10/iOS 8
 name|uint16_t
 name|dqo_target_queue
 block|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS X
+comment|// 10.10/iOS 8
 name|uint16_t
 name|dqo_target_queue_size
 block|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS
+comment|// X 10.10/iOS 8
 name|uint16_t
 name|dqo_priority
 block|;
@@ -560,7 +566,8 @@ comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
 name|uint16_t
 name|dqo_priority_size
 block|;
-comment|// version 5 and later, starting with Mac OS X 10.10/iOS 8
+comment|// version 5 and later, starting with Mac OS X
+comment|// 10.10/iOS 8
 name|LibdispatchOffsets
 argument_list|()
 block|{
@@ -603,7 +610,7 @@ block|;
 name|dqo_priority
 operator|=
 name|UINT16_MAX
-block|;         }
+block|;     }
 name|bool
 name|IsValid
 argument_list|()
@@ -625,7 +632,7 @@ name|UINT16_MAX
 return|;
 block|}
 expr|}
-block|;      struct
+block|;    struct
 name|LibdispatchVoucherOffsets
 block|{
 name|uint16_t
@@ -670,7 +677,7 @@ name|vo_activity_ids_array_entry_size
 argument_list|(
 argument|UINT16_MAX
 argument_list|)
-block|{ }
+block|{}
 name|bool
 name|IsValid
 argument_list|()
@@ -682,7 +689,7 @@ name|UINT16_MAX
 return|;
 block|}
 expr|}
-block|;      struct
+block|;    struct
 name|LibdispatchTSDIndexes
 block|{
 name|uint16_t
@@ -719,7 +726,7 @@ name|dti_qos_class_index
 argument_list|(
 argument|UINT64_MAX
 argument_list|)
-block|{ }
+block|{}
 name|bool
 name|IsValid
 argument_list|()
@@ -731,7 +738,7 @@ name|UINT16_MAX
 return|;
 block|}
 expr|}
-block|;      struct
+block|;    struct
 name|LibpthreadOffsets
 block|{
 name|uint16_t
@@ -768,7 +775,7 @@ name|plo_pthread_tsd_entry_size
 argument_list|(
 argument|UINT16_MAX
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|IsValid
 argument_list|()
@@ -781,9 +788,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|// The libBacktraceRecording function __introspection_dispatch_queue_get_pending_items has
-comment|// two forms.  It can either return a simple array of item_refs (void *) size or it can return
-comment|// a header with uint32_t version, a uint32_t size of item, and then an array of item_refs (void*)
+comment|// The libBacktraceRecording function
+comment|// __introspection_dispatch_queue_get_pending_items has
+comment|// two forms.  It can either return a simple array of item_refs (void *) size
+comment|// or it can return
+comment|// a header with uint32_t version, a uint32_t size of item, and then an array
+comment|// of item_refs (void*)
 comment|// and code addresses (void*) for all the pending blocks.
 block|struct
 name|ItemRefAndCodeAddress
@@ -797,8 +807,8 @@ name|lldb
 operator|::
 name|addr_t
 name|code_address
-block|;     }
-block|;        struct
+block|;   }
+block|;    struct
 name|PendingItemsForQueue
 block|{
 name|bool
@@ -813,7 +823,7 @@ operator|<
 name|ItemRefAndCodeAddress
 operator|>
 name|item_refs_and_code_addresses
-block|;     }
+block|;   }
 block|;
 name|bool
 name|BacktraceRecordingHeadersInitialized
@@ -894,7 +904,7 @@ name|lldb
 operator|::
 name|addr_t
 name|m_dispatch_queue_offsets_addr
-block|;     struct
+block|;   struct
 name|LibdispatchOffsets
 name|m_libdispatch_offsets
 block|;
@@ -902,7 +912,7 @@ name|lldb
 operator|::
 name|addr_t
 name|m_libpthread_layout_offsets_addr
-block|;     struct
+block|;   struct
 name|LibpthreadOffsets
 name|m_libpthread_offsets
 block|;
@@ -910,7 +920,7 @@ name|lldb
 operator|::
 name|addr_t
 name|m_dispatch_tsd_indexes_addr
-block|;     struct
+block|;   struct
 name|LibdispatchTSDIndexes
 name|m_libdispatch_tsd_indexes
 block|;
@@ -918,7 +928,7 @@ name|lldb
 operator|::
 name|addr_t
 name|m_dispatch_voucher_offsets_addr
-block|;     struct
+block|;   struct
 name|LibdispatchVoucherOffsets
 name|m_libdispatch_voucher_offsets
 block|;

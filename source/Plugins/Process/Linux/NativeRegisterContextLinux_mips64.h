@@ -97,7 +97,7 @@ name|public
 operator|:
 name|NativeRegisterContextLinux_mips64
 argument_list|(
-argument|const ArchSpec& target_arch
+argument|const ArchSpec&target_arch
 argument_list|,
 argument|NativeThreadProtocol&native_thread
 argument_list|,
@@ -178,15 +178,6 @@ name|Error
 name|WriteCP1
 argument_list|()
 block|;
-name|Error
-name|IsWatchpointHit
-argument_list|(
-argument|uint32_t wp_index
-argument_list|,
-argument|bool&is_hit
-argument_list|)
-name|override
-block|;
 name|uint8_t
 operator|*
 name|ReturnFPOffset
@@ -195,6 +186,15 @@ argument|uint8_t reg_index
 argument_list|,
 argument|uint32_t byte_offset
 argument_list|)
+block|;
+name|Error
+name|IsWatchpointHit
+argument_list|(
+argument|uint32_t wp_index
+argument_list|,
+argument|bool&is_hit
+argument_list|)
+name|override
 block|;
 name|Error
 name|GetWatchpointHitIndex
@@ -292,14 +292,6 @@ argument_list|)
 name|override
 block|;
 name|Error
-name|DoReadWatchPointRegisterValue
-argument_list|(
-argument|lldb::tid_t tid
-argument_list|,
-argument|void* watch_readback
-argument_list|)
-block|;
-name|Error
 name|WriteRegisterRaw
 argument_list|(
 argument|uint32_t reg_index
@@ -309,11 +301,19 @@ argument_list|)
 name|override
 block|;
 name|Error
+name|DoReadWatchPointRegisterValue
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|,
+argument|void *watch_readback
+argument_list|)
+block|;
+name|Error
 name|DoWriteWatchPointRegisterValue
 argument_list|(
 argument|lldb::tid_t tid
 argument_list|,
-argument|void* watch_readback
+argument|void *watch_readback
 argument_list|)
 block|;
 name|bool
@@ -401,7 +401,7 @@ name|first_msa
 block|;
 name|uint32_t
 name|last_msa
-block|;         }
+block|;   }
 block|;
 name|RegInfo
 name|m_reg_info
@@ -425,7 +425,7 @@ index|]
 block|;
 name|IOVEC_mips
 name|m_iovec
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 comment|// namespace process_linux

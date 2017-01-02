@@ -170,25 +170,25 @@ comment|//------------------------------------------------------------
 name|Error
 name|ConnectRemote
 argument_list|(
-argument|Args& args
+argument|Args&args
 argument_list|)
 name|override
 block|;
 name|Error
 name|GetFile
 argument_list|(
-argument|const FileSpec& source
+argument|const FileSpec&source
 argument_list|,
-argument|const FileSpec& destination
+argument|const FileSpec&destination
 argument_list|)
 name|override
 block|;
 name|Error
 name|PutFile
 argument_list|(
-argument|const FileSpec& source
+argument|const FileSpec&source
 argument_list|,
-argument|const FileSpec& destination
+argument|const FileSpec&destination
 argument_list|,
 argument|uint32_t uid = UINT32_MAX
 argument_list|,
@@ -240,9 +240,9 @@ block|;
 name|Error
 name|DownloadSymbolFile
 argument_list|(
-argument|const lldb::ModuleSP& module_sp
+argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|const FileSpec& dst_file_spec
+argument|const FileSpec&dst_file_spec
 argument_list|)
 name|override
 block|;
@@ -289,7 +289,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformAndroid
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 comment|// namespace platofor_android

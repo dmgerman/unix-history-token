@@ -114,7 +114,8 @@ block|{
 name|exception_mask_t
 name|mask
 decl_stmt|;
-comment|// the exception mask for this device which may be a subset of EXC_MASK_ALL...
+comment|// the exception mask for this device which may be a
+comment|// subset of EXC_MASK_ALL...
 name|exception_mask_t
 name|masks
 index|[
@@ -198,7 +199,7 @@ argument_list|)
 operator|,
 name|exc_data
 argument_list|()
-block|{             }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -219,7 +220,7 @@ name|exc_data
 operator|.
 name|clear
 argument_list|()
-block|;         }
+block|;     }
 name|bool
 name|IsValid
 argument_list|()
@@ -239,7 +240,8 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|// Return the SoftSignal for this MachException data, or zero if there is none
+comment|// Return the SoftSignal for this MachException data, or zero if there is
+comment|// none
 name|int
 name|SoftSignal
 argument_list|()
@@ -380,7 +382,7 @@ argument_list|(
 name|reply_msg
 argument_list|)
 argument_list|)
-block|;         }
+block|;     }
 name|bool
 name|CatchExceptionRaise
 argument_list|(
@@ -483,7 +485,11 @@ name|mach_exception_data_type_t
 operator|>
 name|exc_data_mask
 expr_stmt|;
-comment|// Mask to apply to exception data, or empty to ignore exc_data value for exception
+comment|// Mask to apply to
+comment|// exception data, or
+comment|// empty to ignore
+comment|// exc_data value for
+comment|// exception
 name|std
 operator|::
 name|vector
@@ -492,7 +498,12 @@ name|mach_exception_data_type_t
 operator|>
 name|exc_data_value
 expr_stmt|;
-comment|// Value to compare to exception data after masking, or empty to ignore exc_data value for exception
+comment|// Value to compare
+comment|// to exception data
+comment|// after masking, or
+comment|// empty to ignore
+comment|// exc_data value
+comment|// for exception
 name|uint8_t
 name|flags
 decl_stmt|;

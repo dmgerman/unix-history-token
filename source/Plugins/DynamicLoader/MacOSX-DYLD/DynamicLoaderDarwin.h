@@ -80,18 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/DynamicLoader.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/StructuredData.h"
 end_include
 
@@ -104,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/DynamicLoader.h"
 end_include
 
 begin_include
@@ -117,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Utility/SafeMachO.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_decl_stmt
@@ -320,7 +320,7 @@ name|flags
 argument_list|(
 literal|0
 argument_list|)
-block|{         }
+block|{}
 name|lldb_private
 operator|::
 name|ConstString
@@ -397,8 +397,8 @@ argument_list|,
 argument|lldb::addr_t slide
 argument_list|)
 specifier|const
-block|;      }
-block|;      struct
+block|;   }
+block|;    struct
 name|ImageInfo
 block|{
 name|lldb
@@ -412,7 +412,8 @@ operator|::
 name|addr_t
 name|slide
 block|;
-comment|// The amount to slide all segments by if there is a global slide.
+comment|// The amount to slide all segments by if there is a
+comment|// global slide.
 name|lldb
 operator|::
 name|addr_t
@@ -447,11 +448,27 @@ name|Segment
 operator|>
 name|segments
 block|;
-comment|// All segment vmaddr and vmsize pairs for this executable (from memory of inferior)
+comment|// All segment vmaddr and vmsize pairs for
+comment|// this executable (from memory of inferior)
 name|uint32_t
 name|load_stop_id
 block|;
-comment|// The process stop ID that the sections for this image were loaded
+comment|// The process stop ID that the sections for this
+comment|// image were loaded
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|OSType
+name|os_type
+block|;
+comment|// LC_VERSION_MIN_... load command os type
+name|std
+operator|::
+name|string
+name|min_version_os_sdk
+block|;
+comment|// LC_VERSION_MIN_... sdk value
 name|ImageInfo
 argument_list|()
 operator|:
@@ -486,7 +503,21 @@ name|load_stop_id
 argument_list|(
 literal|0
 argument_list|)
-block|{         }
+block|,
+name|os_type
+argument_list|(
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|OSType
+operator|::
+name|UnknownOS
+argument_list|)
+block|,
+name|min_version_os_sdk
+argument_list|()
+block|{}
 name|void
 name|Clear
 argument_list|(
@@ -544,7 +575,22 @@ block|;
 name|load_stop_id
 operator|=
 literal|0
-block|;         }
+block|;
+name|os_type
+operator|=
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|OSType
+operator|::
+name|UnknownOS
+block|;
+name|min_version_os_sdk
+operator|.
+name|clear
+argument_list|()
+block|;     }
 name|bool
 name|operator
 operator|==
@@ -610,6 +656,12 @@ operator|==
 name|rhs
 operator|.
 name|segments
+operator|&&
+name|os_type
+operator|==
+name|rhs
+operator|.
+name|os_type
 return|;
 block|}
 name|bool
@@ -763,19 +815,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|ImageInfo
-modifier|*
-name|FindImageInfoForAddress
-argument_list|(
-name|lldb
-operator|::
-name|addr_t
-name|load_address
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|lldb
 operator|::
@@ -809,6 +848,13 @@ name|solib_addresses
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|UnloadAllImages
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|virtual
@@ -926,16 +972,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// If image_infos contains / may contain dyld image, call this method
+comment|// If image_infos contains / may contain dyld or executable image, call this
 end_comment
 
 begin_comment
-comment|// to keep our internal record keeping of the special dyld binary up-to-date.
+comment|// method
+end_comment
+
+begin_comment
+comment|// to keep our internal record keeping of the special binaries up-to-date.
 end_comment
 
 begin_decl_stmt
 name|void
-name|UpdateDYLDImageInfoFromNewImageInfos
+name|UpdateSpecialBinariesFromNewImageInfos
 argument_list|(
 name|ImageInfo
 operator|::
@@ -995,6 +1045,40 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// Whether we should use the new dyld SPI to get shared library information,
+end_comment
+
+begin_comment
+comment|// or read
+end_comment
+
+begin_comment
+comment|// it directly out of the dyld_all_image_infos.  Whether we use the (newer)
+end_comment
+
+begin_comment
+comment|// DynamicLoaderMacOS
+end_comment
+
+begin_comment
+comment|// plugin or the (older) DynamicLoaderMacOSX plugin.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|UseDYLDSPI
+argument_list|(
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|lldb
 operator|::
@@ -1002,6 +1086,14 @@ name|ModuleWP
 name|m_dyld_module_wp
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// the dyld whose file type (mac, ios, etc)
+end_comment
+
+begin_comment
+comment|// matches the process
+end_comment
 
 begin_expr_stmt
 name|lldb
@@ -1044,7 +1136,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The process stop ID that "m_dyld_image_infos" is valid for
+comment|// The process stop ID that
+end_comment
+
+begin_comment
+comment|// "m_dyld_image_infos" is valid for
 end_comment
 
 begin_decl_stmt

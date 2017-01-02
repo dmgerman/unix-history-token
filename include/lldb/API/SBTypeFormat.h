@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SBTypeFormat.h --------------------------------------------*- C++ -*-===//
+comment|//===-- SBTypeFormat.h --------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -73,7 +77,7 @@ empty_stmt|;
 comment|// see lldb::eTypeOption values
 name|SBTypeFormat
 argument_list|(
-argument|const char* type
+argument|const char *type
 argument_list|,
 argument|uint32_t options =
 literal|0

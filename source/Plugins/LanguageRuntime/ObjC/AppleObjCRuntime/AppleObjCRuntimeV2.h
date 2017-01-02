@@ -80,7 +80,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"AppleObjCRuntime.h"
 end_include
 
 begin_include
@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"AppleObjCRuntime.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -156,7 +156,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ObjCLanguageRuntime* runtime
+argument|const ObjCLanguageRuntime *runtime
 argument_list|)
 block|{
 switch|switch
@@ -254,7 +254,7 @@ block|;
 name|ClassDescriptorSP
 name|GetClassDescriptor
 argument_list|(
-argument|ValueObject& in_value
+argument|ValueObject&in_value
 argument_list|)
 name|override
 block|;
@@ -298,6 +298,15 @@ name|get
 argument_list|()
 return|;
 block|}
+name|void
+name|GetValuesForGlobalCFBooleans
+argument_list|(
+argument|lldb::addr_t&cf_true
+argument_list|,
+argument|lldb::addr_t&cf_false
+argument_list|)
+name|override
+block|;
 comment|// none of these are valid ISAs - we use them to infer the type
 comment|// of tagged pointers - if we have something meaningful to say
 comment|// we report an actual type - otherwise, we just say tagged
@@ -418,7 +427,7 @@ name|lldb
 operator|::
 name|addr_t
 name|m_buckets_ptr
-block|;     }
+block|;   }
 block|;
 name|class
 name|NonPointerISACache
@@ -454,7 +463,7 @@ name|private
 operator|:
 name|NonPointerISACache
 argument_list|(
-argument|AppleObjCRuntimeV2& runtime
+argument|AppleObjCRuntimeV2&runtime
 argument_list|,
 argument|uint64_t objc_debug_isa_class_mask
 argument_list|,
@@ -468,7 +477,7 @@ name|EvaluateNonPointerISA
 argument_list|(
 argument|ObjCISA isa
 argument_list|,
-argument|ObjCISA& ret_isa
+argument|ObjCISA&ret_isa
 argument_list|)
 block|;
 name|AppleObjCRuntimeV2
@@ -504,7 +513,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|NonPointerISACache
 argument_list|)
-block|;     }
+block|;   }
 block|;
 name|class
 name|TaggedPointerVendorV2
@@ -560,14 +569,14 @@ name|m_runtime
 argument_list|(
 argument|runtime
 argument_list|)
-block|{         }
+block|{}
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|TaggedPointerVendorV2
 argument_list|)
-block|;     }
+block|;   }
 block|;
 name|class
 name|TaggedPointerVendorRuntimeAssisted
@@ -597,7 +606,7 @@ name|protected
 operator|:
 name|TaggedPointerVendorRuntimeAssisted
 argument_list|(
-argument|AppleObjCRuntimeV2& runtime
+argument|AppleObjCRuntimeV2&runtime
 argument_list|,
 argument|uint64_t objc_debug_taggedpointer_mask
 argument_list|,
@@ -694,7 +703,7 @@ name|protected
 operator|:
 name|TaggedPointerVendorExtended
 argument_list|(
-argument|AppleObjCRuntimeV2& runtime
+argument|AppleObjCRuntimeV2&runtime
 argument_list|,
 argument|uint64_t objc_debug_taggedpointer_mask
 argument_list|,
@@ -851,7 +860,7 @@ name|TaggedPointerVendorV2
 argument_list|(
 argument|runtime
 argument_list|)
-block|{         }
+block|{}
 name|friend
 name|class
 name|AppleObjCRuntimeV2
@@ -862,7 +871,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|TaggedPointerVendorLegacy
 argument_list|)
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -871,23 +880,23 @@ struct|struct
 name|DescriptorMapUpdateResult
 block|{
 name|bool
-name|update_ran
+name|m_update_ran
 decl_stmt|;
-name|bool
-name|any_found
+name|uint32_t
+name|m_num_found
 decl_stmt|;
 name|DescriptorMapUpdateResult
 argument_list|(
 argument|bool ran
 argument_list|,
-argument|bool found
+argument|uint32_t found
 argument_list|)
 block|{
-name|update_ran
+name|m_update_ran
 operator|=
 name|ran
 expr_stmt|;
-name|any_found
+name|m_num_found
 operator|=
 name|found
 expr_stmt|;
@@ -901,20 +910,23 @@ return|return
 block|{
 name|false
 block|,
-name|false
+literal|0
 block|}
 return|;
 block|}
 specifier|static
 name|DescriptorMapUpdateResult
 name|Success
-parameter_list|()
+parameter_list|(
+name|uint32_t
+name|found
+parameter_list|)
 block|{
 return|return
 block|{
 name|true
 block|,
-name|true
+name|found
 block|}
 return|;
 block|}
@@ -982,7 +994,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|DescriptorMapUpdateResult
 name|UpdateISAToDescriptorMapDynamic
 parameter_list|(
 name|RemoteNXMapTable
@@ -1016,10 +1028,28 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|enum
+name|class
+name|SharedCacheWarningReason
+block|{
+name|eExpressionExecutionFailure
+operator|,
+name|eNotEnoughClassesRead
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
 name|void
 name|WarnIfNoClassesCached
-parameter_list|()
+parameter_list|(
+name|SharedCacheWarningReason
+name|reason
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1031,6 +1061,13 @@ name|GetSharedCacheReadOnlyAddress
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|bool
+name|GetCFBooleanValuesIfNeeded
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|friend
@@ -1164,8 +1201,29 @@ name|m_noclasses_warning_emitted
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|,
+name|lldb
+operator|::
+name|addr_t
+operator|>>
+name|m_CFBoolean_values
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-unit|};      }
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

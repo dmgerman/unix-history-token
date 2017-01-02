@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Error.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_comment
@@ -197,13 +197,13 @@ operator|::
 name|addr_t
 name|queues_buffer_ptr
 expr_stmt|;
-comment|/* the address of the queues buffer from libBacktraceRecording */
+comment|/* the address of the queues buffer from                                         libBacktraceRecording */
 name|lldb
 operator|::
 name|addr_t
 name|queues_buffer_size
 expr_stmt|;
-comment|/* the size of the queues buffer from libBacktraceRecording */
+comment|/* the size of the queues buffer from                                         libBacktraceRecording */
 name|uint64_t
 name|count
 decl_stmt|;
@@ -238,7 +238,8 @@ comment|/// @param [in] thread
 comment|///     The thread to run this plan on.
 comment|///
 comment|/// @param [in] page_to_free
-comment|///     An address of an inferior process vm page that needs to be deallocated,
+comment|///     An address of an inferior process vm page that needs to be
+comment|///     deallocated,
 comment|///     LLDB_INVALID_ADDRESS if this is not needed.
 comment|///
 comment|/// @param [in] page_to_free_size
@@ -246,11 +247,14 @@ comment|///     The size of the vm page that needs to be deallocated if an addre
 comment|///     passed in to page_to_free.
 comment|///
 comment|/// @param [out] error
-comment|///     This object will be updated with the error status / error string from any failures encountered.
+comment|///     This object will be updated with the error status / error string from
+comment|///     any failures encountered.
 comment|///
 comment|/// @returns
-comment|///     The result of the inferior function call execution.  If there was a failure of any kind while getting
-comment|///     the information, the queues_buffer_ptr value will be LLDB_INVALID_ADDRESS.
+comment|///     The result of the inferior function call execution.  If there was a
+comment|///     failure of any kind while getting
+comment|///     the information, the queues_buffer_ptr value will be
+comment|///     LLDB_INVALID_ADDRESS.
 comment|//----------------------------------------------------------
 name|GetQueuesReturnInfo
 name|GetCurrentQueues
