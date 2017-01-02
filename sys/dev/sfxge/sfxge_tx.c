@@ -2509,7 +2509,8 @@ name|uintptr_t
 name|new
 decl_stmt|;
 name|unsigned
-name|old_len
+name|int
+name|put_count
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -2576,7 +2577,7 @@ operator|*
 operator|)
 name|old
 decl_stmt|;
-name|old_len
+name|put_count
 operator|=
 name|mp
 operator|->
@@ -2586,13 +2587,13 @@ name|csum_data
 expr_stmt|;
 block|}
 else|else
-name|old_len
+name|put_count
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
-name|old_len
+name|put_count
 operator|>=
 name|stdp
 operator|->
@@ -2621,7 +2622,7 @@ name|m_pkthdr
 operator|.
 name|csum_data
 operator|=
-name|old_len
+name|put_count
 operator|+
 literal|1
 expr_stmt|;
