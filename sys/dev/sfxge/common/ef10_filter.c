@@ -4903,6 +4903,7 @@ name|efx_filter_flag_t
 name|filter_flags
 decl_stmt|;
 name|unsigned
+name|int
 name|i
 decl_stmt|;
 name|efx_rc_t

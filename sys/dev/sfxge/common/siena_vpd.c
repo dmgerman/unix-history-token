@@ -567,6 +567,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|unsigned
+name|int
 name|partn
 decl_stmt|;
 name|size_t
