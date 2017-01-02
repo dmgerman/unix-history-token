@@ -34,26 +34,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HEXAGONMCELFSTREAMER_H
+name|LLVM_LIB_TARGET_HEXAGON_MCTARGETDESC_HEXAGONMCELFSTREAMER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HEXAGONMCELFSTREAMER_H
+name|LLVM_LIB_TARGET_HEXAGON_MCTARGETDESC_HEXAGONMCELFSTREAMER_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"MCTargetDesc/HexagonMCCodeEmitter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MCTargetDesc/HexagonMCInstrInfo.h"
-end_include
 
 begin_include
 include|#
@@ -70,7 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"HexagonTargetStreamer.h"
+file|"llvm/MC/MCInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -128,7 +128,6 @@ argument_list|(
 argument|createHexagonMCInstrInfo()
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|EmitInstruction
 argument_list|(
@@ -197,13 +196,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_MCTARGETDESC_HEXAGONMCELFSTREAMER_H
+end_comment
 
 end_unit
 

@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -86,6 +86,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Config/abi-breaking.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/AlignOf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
@@ -104,6 +122,72 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdlib>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -112,10 +196,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Error
-decl_stmt|;
-name|class
-name|ErrorList
+name|ErrorSuccess
 decl_stmt|;
 comment|/// Base class for error info classes. Do not extend this directly: Extend
 comment|/// the ErrorInfo template subclass instead.
@@ -128,18 +209,22 @@ name|virtual
 operator|~
 name|ErrorInfoBase
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Print an error message to an output stream.
 name|virtual
 name|void
 name|log
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|/// Return the error message as a string.
 name|virtual
 name|std
@@ -270,12 +355,14 @@ comment|/// There are two ways to set the checked flag, depending on what state 
 comment|/// Error instance is in. For Error instances indicating success, it
 comment|/// is sufficient to invoke the boolean conversion operator. E.g.:
 comment|///
+comment|///   @code{.cpp}
 comment|///   Error foo(<...>);
 comment|///
 comment|///   if (auto E = foo(<...>))
 comment|///     return E; //<- Return E if it is in the error state.
 comment|///   // We have verified that E was in the success state. It can now be safely
 comment|///   // destroyed.
+comment|///   @endcode
 comment|///
 comment|/// A success value *can not* be dropped. For example, just calling 'foo(<...>)'
 comment|/// without testing the return value will raise a runtime error, even if foo
@@ -284,6 +371,7 @@ comment|///
 comment|/// For Error instances representing failure, you must use either the
 comment|/// handleErrors or handleAllErrors function with a typed handler. E.g.:
 comment|///
+comment|///   @code{.cpp}
 comment|///   class MyErrorInfo : public ErrorInfo<MyErrorInfo> {
 comment|///     // Custom error info.
 comment|///   };
@@ -306,6 +394,7 @@ comment|///         return Error(std::move(M));
 comment|///       );
 comment|///   // Note - we must check or return NewE in case any of the handlers
 comment|///   // returned a new error.
+comment|///   @endcode
 comment|///
 comment|/// The handleAllErrors function is identical to handleErrors, except
 comment|/// that it has a void return type, and requires all errors to be handled and
@@ -316,6 +405,7 @@ comment|/// *All* Error instances must be checked before destruction, even if
 comment|/// they're moved-assigned or constructed from Success values that have already
 comment|/// been checked. This enforces checking through all levels of the call stack.
 name|class
+name|LLVM_NODISCARD
 name|Error
 block|{
 comment|// ErrorList needs to be able to yank ErrorInfoBase pointers out of this
@@ -347,39 +437,39 @@ operator|<
 name|typename
 name|T
 operator|>
+name|friend
 name|class
 name|Expected
 expr_stmt|;
-name|public
+name|protected
 label|:
 comment|/// Create a success value. Prefer using 'Error::success()' for readability
-comment|/// where possible.
 name|Error
 argument_list|()
+operator|:
+name|Payload
+argument_list|(
+argument|nullptr
+argument_list|)
 block|{
 name|setPtr
 argument_list|(
 name|nullptr
 argument_list|)
-expr_stmt|;
+block|;
 name|setChecked
 argument_list|(
 name|false
 argument_list|)
-expr_stmt|;
-block|}
-comment|/// Create a success value. This is equivalent to calling the default
-comment|/// constructor, but should be preferred for readability where possible.
+block|;   }
+name|public
+operator|:
+comment|/// Create a success value.
 specifier|static
-name|Error
+name|ErrorSuccess
 name|success
-parameter_list|()
-block|{
-return|return
-name|Error
 argument_list|()
-return|;
-block|}
+expr_stmt|;
 comment|// Errors are not copy-constructable.
 name|Error
 argument_list|(
@@ -396,14 +486,21 @@ comment|/// unchecked, even if the source error had been checked. The original e
 comment|/// becomes a checked Success value, regardless of its original state.
 name|Error
 argument_list|(
-argument|Error&&Other
+name|Error
+operator|&&
+name|Other
+argument_list|)
+operator|:
+name|Payload
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{
 name|setChecked
 argument_list|(
 name|true
 argument_list|)
-expr_stmt|;
+block|;
 operator|*
 name|this
 operator|=
@@ -413,8 +510,7 @@ name|move
 argument_list|(
 name|Other
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Create an error value. Prefer using the 'make_error' function, but
 comment|/// this constructor can be useful when "re-throwing" errors from handlers.
 name|Error
@@ -429,18 +525,17 @@ operator|.
 name|release
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 name|setChecked
 argument_list|(
 name|false
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|// Errors are not copy-assignable.
 name|Error
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|Error
@@ -449,7 +544,7 @@ name|Other
 operator|)
 operator|=
 name|delete
-decl_stmt|;
+expr_stmt|;
 comment|/// Move-assign an error value. The current error must represent success, you
 comment|/// you cannot overwrite an unhandled error. The current error is then
 comment|/// considered unchecked. The source error becomes a checked success value,
@@ -571,9 +666,9 @@ name|void
 name|assertIsChecked
 parameter_list|()
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
 if|if
 condition|(
 operator|!
@@ -623,22 +718,31 @@ name|getPtr
 argument_list|()
 specifier|const
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
 return|return
-name|PayloadAndCheckedBit
-operator|.
-name|getPointer
-argument_list|()
-return|;
-else|#
-directive|else
-return|return
+name|reinterpret_cast
+operator|<
+name|ErrorInfoBase
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
 name|Payload
+operator|)
+operator|&
+operator|~
+name|static_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+literal|0x1
+operator|)
+operator|)
 return|;
-endif|#
-directive|endif
 block|}
 name|void
 name|setPtr
@@ -648,15 +752,48 @@ modifier|*
 name|EI
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|PayloadAndCheckedBit
-operator|.
-name|setPointer
-argument_list|(
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+name|Payload
+operator|=
+name|reinterpret_cast
+operator|<
+name|ErrorInfoBase
+operator|*
+operator|>
+operator|(
+operator|(
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
 name|EI
-argument_list|)
+operator|)
+operator|&
+operator|~
+name|static_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+literal|0x1
+operator|)
+operator|)
+operator||
+operator|(
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|Payload
+operator|)
+operator|&
+literal|0x1
+operator|)
+operator|)
 expr_stmt|;
 else|#
 directive|else
@@ -672,14 +809,23 @@ name|getChecked
 argument_list|()
 specifier|const
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
 return|return
-name|PayloadAndCheckedBit
-operator|.
-name|getInt
-argument_list|()
+operator|(
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|Payload
+operator|)
+operator|&
+literal|0x1
+operator|)
+operator|==
+literal|0
 return|;
 else|#
 directive|else
@@ -689,9 +835,6 @@ return|;
 endif|#
 directive|endif
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|setChecked
 parameter_list|(
@@ -699,22 +842,43 @@ name|bool
 name|V
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|PayloadAndCheckedBit
-operator|.
-name|setInt
-argument_list|(
+name|Payload
+operator|=
+name|reinterpret_cast
+operator|<
+name|ErrorInfoBase
+operator|*
+operator|>
+operator|(
+operator|(
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|Payload
+operator|)
+operator|&
+operator|~
+name|static_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+literal|0x1
+operator|)
+operator|)
+operator||
+operator|(
 name|V
-argument_list|)
+condition|?
+literal|0
+else|:
+literal|1
+operator|)
+operator|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
-end_function
-
-begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
@@ -750,45 +914,55 @@ return|return
 name|Tmp
 return|;
 block|}
-end_expr_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
-
-begin_expr_stmt
-name|PointerIntPair
-operator|<
-name|ErrorInfoBase
-operator|*
-operator|,
-literal|1
-operator|>
-name|PayloadAndCheckedBit
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
 name|ErrorInfoBase
 modifier|*
 name|Payload
 decl_stmt|;
+block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
+comment|/// Subclass of Error for the sole purpose of identifying the success path in
+end_comment
+
+begin_comment
+comment|/// the type system. This allows to catch invalid conversion to Expected<T> at
+end_comment
+
+begin_comment
+comment|/// compile time.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ErrorSuccess
+range|:
+name|public
+name|Error
+block|{}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+specifier|inline
+name|ErrorSuccess
+name|Error
+operator|::
+name|success
+argument_list|()
+block|{
+return|return
+name|ErrorSuccess
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Make a Error instance representing failure using the given error info
 end_comment
 
@@ -2671,23 +2845,59 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Result foo(Error&Err) {
+comment|///   @code{.cpp}
 end_comment
 
 begin_comment
-comment|///   ErrorAsOutParameter ErrAsOutParam(Err); // 'Checked' flag set
+comment|///   Result foo(Error&Err) {
 end_comment
 
 begin_comment
-comment|///   //<body of foo>
+comment|///     ErrorAsOutParameter ErrAsOutParam(&Err); // 'Checked' flag set
 end_comment
 
 begin_comment
-comment|///   //<- 'Checked' flag auto-cleared when ErrAsOutParam is destructed.
+comment|///     //<body of foo>
 end_comment
 
 begin_comment
-comment|/// }
+comment|///     //<- 'Checked' flag auto-cleared when ErrAsOutParam is destructed.
+end_comment
+
+begin_comment
+comment|///   }
+end_comment
+
+begin_comment
+comment|///   @endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// ErrorAsOutParameter takes an Error* rather than Error& so that it can be
+end_comment
+
+begin_comment
+comment|/// used with optional Errors (Error pointers that are allowed to be null). If
+end_comment
+
+begin_comment
+comment|/// ErrorAsOutParameter took an Error reference, an instance would have to be
+end_comment
+
+begin_comment
+comment|/// created inside every condition that verified that Error was non-null. By
+end_comment
+
+begin_comment
+comment|/// taking an Error pointer we can just create one instance at the top of the
+end_comment
+
+begin_comment
+comment|/// function.
 end_comment
 
 begin_decl_stmt
@@ -2699,7 +2909,7 @@ label|:
 name|ErrorAsOutParameter
 argument_list|(
 name|Error
-operator|&
+operator|*
 name|Err
 argument_list|)
 operator|:
@@ -2709,13 +2919,19 @@ argument|Err
 argument_list|)
 block|{
 comment|// Raise the checked bit if Err is success.
+if|if
+condition|(
+name|Err
+condition|)
 operator|(
 name|void
 operator|)
 operator|!
 operator|!
+operator|*
 name|Err
-block|;   }
+expr_stmt|;
+block|}
 operator|~
 name|ErrorAsOutParameter
 argument_list|()
@@ -2723,9 +2939,13 @@ block|{
 comment|// Clear the checked bit.
 if|if
 condition|(
+name|Err
+operator|&&
 operator|!
+operator|*
 name|Err
 condition|)
+operator|*
 name|Err
 operator|=
 name|Error
@@ -2737,7 +2957,7 @@ block|}
 name|private
 label|:
 name|Error
-modifier|&
+modifier|*
 name|Err
 decl_stmt|;
 block|}
@@ -2778,6 +2998,7 @@ name|class
 name|T
 operator|>
 name|class
+name|LLVM_NODISCARD
 name|Expected
 block|{
 name|template
@@ -2956,13 +3177,14 @@ name|HasError
 argument_list|(
 name|true
 argument_list|)
-ifndef|#
-directive|ifndef
-name|NDEBUG
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+comment|// Expected is unchecked upon construction in Debug builds.
 operator|,
-name|Checked
+name|Unchecked
 argument_list|(
-argument|false
+argument|true
 argument_list|)
 endif|#
 directive|endif
@@ -2978,18 +3200,35 @@ name|new
 argument_list|(
 argument|getErrorStorage()
 argument_list|)
-name|Error
-argument_list|(
-name|std
-operator|::
-name|move
+name|error_type
 argument_list|(
 name|Err
-argument_list|)
+operator|.
+name|takePayload
+argument_list|()
 argument_list|)
 block|;   }
+comment|/// Forbid to convert from Error::success() implicitly, this avoids having
+comment|/// Expected<T> foo() { return Error::success(); } which compiles otherwise
+comment|/// but triggers the assertion above.
+name|Expected
+argument_list|(
+name|ErrorSuccess
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Create an Expected<T> success value from the given OtherT value, which
+end_comment
+
+begin_comment
 comment|/// must be convertible to T.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3008,13 +3247,14 @@ name|HasError
 argument_list|(
 name|false
 argument_list|)
-ifndef|#
-directive|ifndef
-name|NDEBUG
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+comment|// Expected is unchecked upon construction in Debug builds.
 operator|,
-name|Checked
+name|Unchecked
 argument_list|(
-argument|false
+argument|true
 argument_list|)
 endif|#
 directive|endif
@@ -3178,12 +3418,11 @@ name|operator
 name|bool
 parameter_list|()
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|Checked
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+name|Unchecked
 operator|=
-operator|!
 name|HasError
 expr_stmt|;
 endif|#
@@ -3300,12 +3539,12 @@ name|Error
 name|takeError
 parameter_list|()
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|Checked
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+name|Unchecked
 operator|=
-name|true
+name|false
 expr_stmt|;
 endif|#
 directive|endif
@@ -3503,18 +3742,18 @@ name|Other
 operator|.
 name|HasError
 block|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|Checked
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+name|Unchecked
 operator|=
-name|false
+name|true
 block|;
 name|Other
 operator|.
-name|Checked
+name|Unchecked
 operator|=
-name|true
+name|false
 block|;
 endif|#
 directive|endif
@@ -3782,13 +4021,12 @@ name|void
 name|assertIsChecked
 parameter_list|()
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
 if|if
 condition|(
-operator|!
-name|Checked
+name|Unchecked
 condition|)
 block|{
 name|dbgs
@@ -3863,15 +4101,15 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
+begin_if
+if|#
+directive|if
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+end_if
 
 begin_decl_stmt
 name|bool
-name|Checked
+name|Unchecked
 range|:
 literal|1
 decl_stmt|;
@@ -4523,7 +4761,7 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

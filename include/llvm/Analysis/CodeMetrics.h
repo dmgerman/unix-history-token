@@ -227,6 +227,7 @@ name|TargetTransformInfo
 operator|&
 name|TTI
 argument_list|,
+specifier|const
 name|SmallPtrSetImpl
 operator|<
 specifier|const

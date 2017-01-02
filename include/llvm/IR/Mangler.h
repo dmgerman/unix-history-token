@@ -108,35 +108,28 @@ name|unsigned
 operator|>
 name|AnonGlobalIDs
 expr_stmt|;
-comment|/// This simple counter is used to unique value names.
-name|mutable
-name|unsigned
-name|NextAnonGlobalID
-decl_stmt|;
 name|public
 label|:
-name|Mangler
-argument_list|()
-operator|:
-name|NextAnonGlobalID
-argument_list|(
-literal|1
-argument_list|)
-block|{}
 comment|/// Print the appropriate prefix and the specified global variable's name.
 comment|/// If the global variable doesn't have a name, this fills in a unique name
 comment|/// for the global.
 name|void
 name|getNameWithPrefix
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|,
-argument|const GlobalValue *GV
-argument_list|,
-argument|bool CannotUsePrivateLabel
-argument_list|)
 specifier|const
-expr_stmt|;
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|bool
+name|CannotUsePrivateLabel
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|getNameWithPrefix
 argument_list|(

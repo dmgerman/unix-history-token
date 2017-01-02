@@ -120,7 +120,7 @@ name|false
 decl_stmt|;
 comment|/// Check if we should promote the given local value to global scope.
 name|bool
-name|doPromoteLocalToGlobal
+name|shouldPromoteLocalToGlobal
 parameter_list|(
 specifier|const
 name|GlobalValue
@@ -163,16 +163,16 @@ parameter_list|)
 function_decl|;
 comment|/// Get the name for SGV that should be used in the linked destination
 comment|/// module. Specifically, this handles the case where we need to rename
-comment|/// a local that is being promoted to global scope.
+comment|/// a local that is being promoted to global scope, which it will always
+comment|/// do when \p DoPromote is true (or when importing a local).
 name|std
 operator|::
 name|string
 name|getName
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|SGV
+argument|const GlobalValue *SGV
+argument_list|,
+argument|bool DoPromote
 argument_list|)
 expr_stmt|;
 comment|/// Process globals so that they can be used in ThinLTO. This includes
@@ -193,16 +193,16 @@ parameter_list|)
 function_decl|;
 comment|/// Get the new linkage for SGV that should be used in the linked destination
 comment|/// module. Specifically, for ThinLTO importing or exporting it may need
-comment|/// to be adjusted.
+comment|/// to be adjusted. When \p DoPromote is true then we must adjust the
+comment|/// linkage for a required promotion of a local to global scope.
 name|GlobalValue
 operator|::
 name|LinkageTypes
 name|getLinkage
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|SGV
+argument|const GlobalValue *SGV
+argument_list|,
+argument|bool DoPromote
 argument_list|)
 expr_stmt|;
 name|public

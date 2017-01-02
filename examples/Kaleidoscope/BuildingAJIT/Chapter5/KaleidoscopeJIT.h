@@ -68,7 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
@@ -80,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/SectionMemoryManager.h"
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
 begin_include
@@ -99,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ExecutionEngine/Orc/CompileUtils.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/Orc/JITSymbol.h"
 end_include
 
 begin_include
@@ -146,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/LegacyPassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Mangler.h"
 end_include
 
@@ -153,6 +165,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DynamicLibrary.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
@@ -170,7 +188,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Transforms/Scalar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Scalar/GVN.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdlib>
 end_include
 
 begin_include
@@ -455,7 +497,30 @@ name|EngineBuilder
 argument_list|()
 operator|.
 name|selectTarget
+argument_list|(
+name|Triple
+argument_list|(
+name|Remote
+operator|.
+name|getTargetTriple
 argument_list|()
+argument_list|)
+argument_list|,
+literal|""
+argument_list|,
+literal|""
+argument_list|,
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|string
+argument_list|,
+literal|0
+operator|>
+operator|(
+operator|)
+argument_list|)
 argument_list|)
 operator|,
 name|DL
@@ -678,9 +743,6 @@ argument_list|)
 condition|)
 return|return
 name|Sym
-operator|.
-name|toRuntimeDyldSymbol
-argument_list|()
 return|;
 if|if
 condition|(
@@ -698,14 +760,9 @@ argument_list|)
 condition|)
 return|return
 name|Sym
-operator|.
-name|toRuntimeDyldSymbol
-argument_list|()
 return|;
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|nullptr
 argument_list|)
@@ -737,9 +794,7 @@ name|Name
 argument_list|)
 condition|)
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 operator|*
 name|AddrOrErr
@@ -771,9 +826,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|nullptr
 argument_list|)
@@ -825,7 +878,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|// Build a singlton module set to hold our module.
+comment|// Build a singleton module set to hold our module.
 name|std
 operator|::
 name|vector
@@ -1031,7 +1084,7 @@ operator|&&
 literal|"Couldn't find compiled function?"
 argument_list|)
 block|;
-name|TargetAddress
+name|JITTargetAddress
 name|SymAddr
 operator|=
 name|Sym
@@ -1102,7 +1155,7 @@ begin_macro
 unit|}    Error
 name|executeRemoteExpr
 argument_list|(
-argument|TargetAddress ExprAddr
+argument|JITTargetAddress ExprAddr
 argument_list|)
 end_macro
 
@@ -1305,7 +1358,7 @@ return|;
 end_return
 
 begin_empty_stmt
-unit|}  }
+unit|} }
 empty_stmt|;
 end_empty_stmt
 

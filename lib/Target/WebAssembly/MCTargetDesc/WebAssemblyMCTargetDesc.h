@@ -98,6 +98,9 @@ name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
+name|MVT
+decl_stmt|;
+name|class
 name|Target
 decl_stmt|;
 name|class
@@ -106,14 +109,16 @@ decl_stmt|;
 name|class
 name|raw_pwrite_stream
 decl_stmt|;
-specifier|extern
 name|Target
-name|TheWebAssemblyTarget32
-decl_stmt|;
-specifier|extern
+modifier|&
+name|getTheWebAssemblyTarget32
+parameter_list|()
+function_decl|;
 name|Target
-name|TheWebAssemblyTarget64
-decl_stmt|;
+modifier|&
+name|getTheWebAssemblyTarget64
+parameter_list|()
+function_decl|;
 name|MCCodeEmitter
 modifier|*
 name|createWebAssemblyMCCodeEmitter
@@ -162,49 +167,32 @@ name|MCOI
 operator|::
 name|OPERAND_FIRST_TARGET
 block|,
+comment|/// Local index.
+name|OPERAND_LOCAL
+block|,
+comment|/// 32-bit integer immediates.
+name|OPERAND_I32IMM
+block|,
+comment|/// 64-bit integer immediates.
+name|OPERAND_I64IMM
+block|,
 comment|/// 32-bit floating-point immediates.
-name|OPERAND_FP32IMM
+name|OPERAND_F32IMM
 block|,
 comment|/// 64-bit floating-point immediates.
-name|OPERAND_FP64IMM
+name|OPERAND_F64IMM
+block|,
+comment|/// 32-bit unsigned function indices.
+name|OPERAND_FUNCTION32
+block|,
+comment|/// 32-bit unsigned memory offsets.
+name|OPERAND_OFFSET32
 block|,
 comment|/// p2align immediate for load and store address alignment.
 name|OPERAND_P2ALIGN
-block|}
-enum|;
-comment|/// WebAssembly-specific directive identifiers.
-enum|enum
-name|Directive
-block|{
-comment|// FIXME: This is not the real binary encoding.
-name|DotParam
-init|=
-name|UINT64_MAX
-operator|-
-literal|0
 block|,
-comment|///< .param
-name|DotResult
-init|=
-name|UINT64_MAX
-operator|-
-literal|1
-block|,
-comment|///< .result
-name|DotLocal
-init|=
-name|UINT64_MAX
-operator|-
-literal|2
-block|,
-comment|///< .local
-name|DotEndFunc
-init|=
-name|UINT64_MAX
-operator|-
-literal|3
-block|,
-comment|///< .endfunc
+comment|/// signature immediate for block/loop.
+name|OPERAND_SIGNATURE
 block|}
 enum|;
 block|}
@@ -233,7 +221,7 @@ literal|1
 operator|<<
 literal|1
 operator|)
-block|, }
+block|}
 enum|;
 block|}
 comment|// end namespace WebAssemblyII
@@ -460,18 +448,160 @@ comment|/// The operand number of the load or store address in load/store instru
 specifier|static
 specifier|const
 name|unsigned
-name|MemOpAddressOperandNo
+name|LoadAddressOperandNo
 init|=
-literal|2
+literal|3
 decl_stmt|;
-comment|/// The operand number of the stored value in a store instruction.
 specifier|static
 specifier|const
 name|unsigned
-name|StoreValueOperandNo
+name|StoreAddressOperandNo
 init|=
-literal|4
+literal|2
 decl_stmt|;
+comment|/// The operand number of the load or store p2align in load/store instructions.
+specifier|static
+specifier|const
+name|unsigned
+name|LoadP2AlignOperandNo
+init|=
+literal|1
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|StoreP2AlignOperandNo
+init|=
+literal|0
+decl_stmt|;
+comment|/// This is used to indicate block signatures.
+name|enum
+name|class
+name|ExprType
+block|{
+name|Void
+operator|=
+literal|0x40
+operator|,
+name|I32
+operator|=
+literal|0x7f
+operator|,
+name|I64
+operator|=
+literal|0x7e
+operator|,
+name|F32
+operator|=
+literal|0x7d
+operator|,
+name|F64
+operator|=
+literal|0x7c
+operator|,
+name|I8x16
+operator|=
+literal|0x7b
+operator|,
+name|I16x8
+operator|=
+literal|0x7a
+operator|,
+name|I32x4
+operator|=
+literal|0x79
+operator|,
+name|F32x4
+operator|=
+literal|0x78
+operator|,
+name|B8x16
+operator|=
+literal|0x77
+operator|,
+name|B16x8
+operator|=
+literal|0x76
+operator|,
+name|B32x4
+operator|=
+literal|0x75
+block|}
+empty_stmt|;
+comment|/// This is used to indicate local types.
+name|enum
+name|class
+name|ValType
+block|{
+name|I32
+operator|=
+literal|0x7f
+operator|,
+name|I64
+operator|=
+literal|0x7e
+operator|,
+name|F32
+operator|=
+literal|0x7d
+operator|,
+name|F64
+operator|=
+literal|0x7c
+operator|,
+name|I8x16
+operator|=
+literal|0x7b
+operator|,
+name|I16x8
+operator|=
+literal|0x7a
+operator|,
+name|I32x4
+operator|=
+literal|0x79
+operator|,
+name|F32x4
+operator|=
+literal|0x78
+operator|,
+name|B8x16
+operator|=
+literal|0x77
+operator|,
+name|B16x8
+operator|=
+literal|0x76
+operator|,
+name|B32x4
+operator|=
+literal|0x75
+block|}
+empty_stmt|;
+comment|/// Instruction opcodes emitted via means other than CodeGen.
+specifier|static
+specifier|const
+name|unsigned
+name|Nop
+init|=
+literal|0x01
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|End
+init|=
+literal|0x0b
+decl_stmt|;
+name|ValType
+name|toValType
+parameter_list|(
+specifier|const
+name|MVT
+modifier|&
+name|Ty
+parameter_list|)
+function_decl|;
 block|}
 comment|// end namespace WebAssembly
 block|}

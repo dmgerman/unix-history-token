@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/JITSymbolFlags.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
@@ -105,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ExecutionEngine/Orc/CompileUtils.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/Orc/JITSymbol.h"
 end_include
 
 begin_include
@@ -308,14 +302,9 @@ argument_list|)
 condition|)
 return|return
 name|Sym
-operator|.
-name|toRuntimeDyldSymbol
-argument_list|()
 return|;
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|nullptr
 argument_list|)
@@ -392,19 +381,9 @@ name|ModuleHandles
 operator|.
 name|erase
 argument_list|(
-name|std
-operator|::
 name|find
 argument_list|(
 name|ModuleHandles
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|ModuleHandles
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|H
 argument_list|)

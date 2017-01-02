@@ -200,16 +200,77 @@ argument_list|,
 argument|StringRef VersionCheckName = StringRef()
 argument_list|)
 expr_stmt|;
-comment|/// Rename all the anon functions in the module using a hash computed from
+comment|/// Rename all the anon globals in the module using a hash computed from
 comment|/// the list of public globals in the module.
 name|bool
-name|nameUnamedFunctions
+name|nameUnamedGlobals
 parameter_list|(
 name|Module
 modifier|&
 name|M
 parameter_list|)
 function_decl|;
+comment|/// \brief Adds global values to the llvm.used list.
+name|void
+name|appendToUsed
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|ArrayRef
+operator|<
+name|GlobalValue
+operator|*
+operator|>
+name|Values
+argument_list|)
+decl_stmt|;
+comment|/// \brief Adds global values to the llvm.compiler.used list.
+name|void
+name|appendToCompilerUsed
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|ArrayRef
+operator|<
+name|GlobalValue
+operator|*
+operator|>
+name|Values
+argument_list|)
+decl_stmt|;
+comment|/// Filter out potentially dead comdat functions where other entries keep the
+comment|/// entire comdat group alive.
+comment|///
+comment|/// This is designed for cases where functions appear to become dead but remain
+comment|/// alive due to other live entries in their comdat group.
+comment|///
+comment|/// The \p DeadComdatFunctions container should only have pointers to
+comment|/// `Function`s which are members of a comdat group and are believed to be
+comment|/// dead.
+comment|///
+comment|/// After this routine finishes, the only remaining `Function`s in \p
+comment|/// DeadComdatFunctions are those where every member of the comdat is listed
+comment|/// and thus removing them is safe (provided *all* are removed).
+name|void
+name|filterDeadComdatFunctions
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Function
+operator|*
+operator|>
+operator|&
+name|DeadComdatFunctions
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

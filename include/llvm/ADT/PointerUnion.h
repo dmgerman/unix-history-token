@@ -78,7 +78,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Support/PointerLikeTypeTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
 end_include
 
 begin_decl_stmt
@@ -390,7 +408,9 @@ name|public
 label|:
 name|PointerUnion
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|PointerUnion
 argument_list|(
 argument|PT1 V
@@ -1332,14 +1352,13 @@ name|public
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|PointerUnion3
 argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 name|PointerUnion3
@@ -1986,14 +2005,13 @@ name|public
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|PointerUnion4
 argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 name|PointerUnion4
@@ -2844,11 +2862,19 @@ return|;
 block|}
 end_function
 
-begin_endif
+begin_comment
 unit|};  }
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_POINTERUNION_H
+end_comment
 
 end_unit
 

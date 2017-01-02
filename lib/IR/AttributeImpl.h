@@ -70,13 +70,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"AttributeSetNode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -88,13 +100,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"AttributeSetNode.h"
+file|"llvm/Support/TrailingObjects.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_include
@@ -106,16 +124,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Constant
-decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
@@ -134,27 +167,6 @@ name|char
 name|KindID
 block|;
 comment|///< Holds the AttrEntryKind of the attribute
-comment|// AttributesImpl is uniqued, these should not be publicly available.
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|AttributeImpl
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
-name|AttributeImpl
-argument_list|(
-specifier|const
-name|AttributeImpl
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
 name|protected
 operator|:
 expr|enum
@@ -179,6 +191,28 @@ argument_list|)
 block|{}
 name|public
 operator|:
+comment|// AttributesImpl is uniqued, these should not be available.
+name|AttributeImpl
+argument_list|(
+specifier|const
+name|AttributeImpl
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|AttributeImpl
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|AttributeImpl
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 name|virtual
 operator|~
 name|AttributeImpl
@@ -381,15 +415,8 @@ name|Values
 argument_list|)
 expr_stmt|;
 block|}
-comment|// FIXME: Remove this!
-specifier|static
-name|uint64_t
-name|getAttrMask
-argument_list|(
-argument|Attribute::AttrKind Val
-argument_list|)
-block|; }
-decl_stmt|;
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// \class
 comment|/// \brief A set of classes that contain the value of the
@@ -398,7 +425,7 @@ comment|/// represented by Attribute::AttrKind; alignment attribute entries; and
 comment|/// attribute enties, which are for target-dependent attributes.
 name|class
 name|EnumAttributeImpl
-range|:
+operator|:
 name|public
 name|AttributeImpl
 block|{
@@ -693,27 +720,6 @@ operator|+
 name|Slot
 return|;
 block|}
-comment|// AttributesSet is uniqued, these should not be publicly available.
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|AttributeSetImpl
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
-name|AttributeSetImpl
-argument_list|(
-specifier|const
-name|AttributeSetImpl
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
 name|AttributeSetImpl
@@ -732,8 +738,7 @@ name|unsigned
 argument_list|,
 name|AttributeSetNode
 operator|*
-operator|>
-expr|>
+operator|>>
 name|Slots
 argument_list|)
 operator|:
@@ -959,6 +964,28 @@ block|}
 block|}
 block|}
 block|}
+comment|// AttributesSetImpt is uniqued, these should not be available.
+name|AttributeSetImpl
+argument_list|(
+specifier|const
+name|AttributeSetImpl
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|AttributeSetImpl
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|AttributeSetImpl
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 name|void
 name|operator
 name|delete
@@ -1157,34 +1184,19 @@ argument_list|)
 block|{
 for|for
 control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
+specifier|const
+specifier|auto
+modifier|&
+name|Node
+range|:
 name|Nodes
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
 block|{
 name|ID
 operator|.
 name|AddInteger
 argument_list|(
-name|Nodes
-index|[
-name|i
-index|]
+name|Node
 operator|.
 name|first
 argument_list|)
@@ -1193,41 +1205,33 @@ name|ID
 operator|.
 name|AddPointer
 argument_list|(
-name|Nodes
-index|[
-name|i
-index|]
+name|Node
 operator|.
 name|second
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|// FIXME: This atrocity is temporary.
-name|uint64_t
-name|Raw
-argument_list|(
-argument|unsigned Index
-argument_list|)
-specifier|const
-block|;
 name|void
 name|dump
 argument_list|()
 specifier|const
 block|; }
-decl_stmt|;
-block|}
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_IR_ATTRIBUTEIMPL_H
+end_comment
 
 end_unit
 

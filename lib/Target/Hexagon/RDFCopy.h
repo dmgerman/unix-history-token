@@ -135,6 +135,15 @@ return|return
 name|Trace
 return|;
 block|}
+name|DataFlowGraph
+modifier|&
+name|getDFG
+parameter_list|()
+block|{
+return|return
+name|DFG
+return|;
+block|}
 typedef|typedef
 name|std
 operator|::

@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/JITSymbol.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
@@ -540,8 +540,6 @@ argument_list|(
 name|H
 argument_list|)
 block|;   }
-name|orc
-operator|::
 name|JITSymbol
 name|findSymbol
 argument_list|(
@@ -559,8 +557,6 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-name|orc
-operator|::
 name|JITSymbol
 name|findSymbolIn
 argument_list|(

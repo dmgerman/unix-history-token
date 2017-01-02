@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/CVDebugRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/ObjectFile.h"
 end_include
 
@@ -701,36 +707,6 @@ expr_stmt|;
 block|}
 struct|;
 struct|struct
-name|import_directory_table_entry
-block|{
-name|support
-operator|::
-name|ulittle32_t
-name|ImportLookupTableRVA
-expr_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|TimeDateStamp
-expr_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|ForwarderChain
-expr_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|NameRVA
-expr_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|ImportAddressTableRVA
-expr_stmt|;
-block|}
-struct|;
-struct|struct
 name|debug_directory
 block|{
 name|support
@@ -773,30 +749,6 @@ operator|::
 name|ulittle32_t
 name|PointerToRawData
 expr_stmt|;
-block|}
-struct|;
-comment|/// Information that is resent in debug_directory::AddressOfRawData if Type is
-comment|/// IMAGE_DEBUG_TYPE_CODEVIEW.
-struct|struct
-name|debug_pdb_info
-block|{
-name|support
-operator|::
-name|ulittle32_t
-name|Signature
-expr_stmt|;
-name|uint8_t
-name|Guid
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|Age
-expr_stmt|;
-comment|// PDBFileName: The null-terminated PDB file name follows.
 block|}
 struct|;
 name|template
@@ -2326,6 +2278,33 @@ operator|::
 name|ulittle32_t
 name|ImportAddressTableRVA
 expr_stmt|;
+name|bool
+name|isNull
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ImportLookupTableRVA
+operator|==
+literal|0
+operator|&&
+name|TimeDateStamp
+operator|==
+literal|0
+operator|&&
+name|ForwarderChain
+operator|==
+literal|0
+operator|&&
+name|NameRVA
+operator|==
+literal|0
+operator|&&
+name|ImportAddressTableRVA
+operator|==
+literal|0
+return|;
+block|}
 block|}
 struct|;
 end_struct
@@ -2790,7 +2769,7 @@ name|uint32_t
 name|StringTableSize
 block|;
 specifier|const
-name|import_directory_table_entry
+name|coff_import_directory_table_entry
 operator|*
 name|ImportDirectory
 block|;
@@ -3228,7 +3207,7 @@ end_expr_stmt
 
 begin_macro
 unit|}   uint32_t
-name|getNumberOfSymbols
+name|getRawNumberOfSymbols
 argument_list|()
 end_macro
 
@@ -3273,6 +3252,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_macro
+unit|}   uint32_t
+name|getNumberOfSymbols
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|SymbolTable16
+operator|&&
+operator|!
+name|SymbolTable32
+condition|)
+return|return
+literal|0
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getRawNumberOfSymbols
+argument_list|()
+return|;
+end_return
+
 begin_decl_stmt
 unit|} protected:
 name|void
@@ -3314,6 +3322,18 @@ specifier|const
 name|override
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|getSymbolAlignment
+argument_list|(
+name|DataRefImpl
+name|Symb
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|uint64_t
@@ -3632,7 +3652,7 @@ end_empty_stmt
 
 begin_expr_stmt
 name|basic_symbol_iterator
-name|symbol_begin_impl
+name|symbol_begin
 argument_list|()
 specifier|const
 name|override
@@ -3641,7 +3661,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|basic_symbol_iterator
-name|symbol_end_impl
+name|symbol_end
 argument_list|()
 specifier|const
 name|override
@@ -4480,7 +4500,7 @@ name|getDebugPDBInfo
 argument_list|(
 argument|const debug_directory *DebugDir
 argument_list|,
-argument|const debug_pdb_info *&Info
+argument|const codeview::DebugInfo *&Info
 argument_list|,
 argument|StringRef&PDBFileName
 argument_list|)
@@ -4510,7 +4530,7 @@ operator|::
 name|error_code
 name|getDebugPDBInfo
 argument_list|(
-argument|const debug_pdb_info *&Info
+argument|const codeview::DebugInfo *&Info
 argument_list|,
 argument|StringRef&PDBFileName
 argument_list|)
@@ -4581,7 +4601,7 @@ argument_list|)
 block|{}
 name|ImportDirectoryEntryRef
 argument_list|(
-argument|const import_directory_table_entry *Table
+argument|const coff_import_directory_table_entry *Table
 argument_list|,
 argument|uint32_t I
 argument_list|,
@@ -4636,6 +4656,24 @@ name|imported_symbols
 argument_list|()
 specifier|const
 expr_stmt|;
+name|imported_symbol_iterator
+name|lookup_table_begin
+argument_list|()
+specifier|const
+expr_stmt|;
+name|imported_symbol_iterator
+name|lookup_table_end
+argument_list|()
+specifier|const
+expr_stmt|;
+name|iterator_range
+operator|<
+name|imported_symbol_iterator
+operator|>
+name|lookup_table_symbols
+argument_list|()
+specifier|const
+expr_stmt|;
 name|std
 operator|::
 name|error_code
@@ -4668,14 +4706,14 @@ operator|::
 name|error_code
 name|getImportTableEntry
 argument_list|(
-argument|const import_directory_table_entry *&Result
+argument|const coff_import_directory_table_entry *&Result
 argument_list|)
 specifier|const
 expr_stmt|;
 name|private
 label|:
 specifier|const
-name|import_directory_table_entry
+name|coff_import_directory_table_entry
 modifier|*
 name|ImportTable
 decl_stmt|;

@@ -149,9 +149,6 @@ name|class
 name|BranchProbabilityInfo
 decl_stmt|;
 name|class
-name|CallInst
-decl_stmt|;
-name|class
 name|Function
 decl_stmt|;
 name|class
@@ -244,15 +241,59 @@ operator|*
 operator|>
 name|MBBMap
 expr_stmt|;
-typedef|typedef
-name|SmallVector
+comment|/// A map from swifterror value in a basic block to the virtual register it is
+comment|/// currently represented by.
+name|llvm
+operator|::
+name|DenseMap
 operator|<
-name|unsigned
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MachineBasicBlock
+operator|*
 operator|,
-literal|1
+specifier|const
+name|Value
+operator|*
 operator|>
-name|SwiftErrorVRegs
+operator|,
+name|unsigned
+operator|>
+name|SwiftErrorVRegDefMap
 expr_stmt|;
+comment|/// A list of upward exposed vreg uses that need to be satisfied by either a
+comment|/// copy def or a phi node at the beginning of the basic block representing
+comment|/// the predecessor(s) swifterror value.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MachineBasicBlock
+operator|*
+operator|,
+specifier|const
+name|Value
+operator|*
+operator|>
+operator|,
+name|unsigned
+operator|>
+name|SwiftErrorVRegUpwardsUse
+expr_stmt|;
+comment|/// The swifterror argument of the current function.
+specifier|const
+name|Value
+modifier|*
+name|SwiftErrorArg
+decl_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
@@ -270,61 +311,24 @@ comment|/// SwiftErrorVals.
 name|SwiftErrorValues
 name|SwiftErrorVals
 decl_stmt|;
-comment|/// Track the virtual register for each swifterror value in a given basic
-comment|/// block. Entries in SwiftErrorVRegs have the same ordering as entries
-comment|/// in SwiftErrorVals.
-comment|/// Note that another choice that is more straight-forward is to use
-comment|/// Map<const MachineBasicBlock*, Map<Value*, unsigned/*VReg*/>>. It
-comment|/// maintains a map from swifterror values to virtual registers for each
-comment|/// machine basic block. This choice does not require a one-to-one
-comment|/// correspondence between SwiftErrorValues and SwiftErrorVRegs. But because
-comment|/// of efficiency concern, we do not choose it.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|MachineBasicBlock
-operator|*
-operator|,
-name|SwiftErrorVRegs
-operator|>
-name|SwiftErrorMap
-expr_stmt|;
-comment|/// Track the virtual register for each swifterror value at the end of a basic
-comment|/// block when we need the assignment of a virtual register before the basic
-comment|/// block is visited. When we actually visit the basic block, we will make
-comment|/// sure the swifterror value is in the correct virtual register.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|MachineBasicBlock
-operator|*
-operator|,
-name|SwiftErrorVRegs
-operator|>
-name|SwiftErrorWorklist
-expr_stmt|;
-comment|/// Find the swifterror virtual register in SwiftErrorMap. We will assert
-comment|/// failure when the value does not exist in swifterror map.
+comment|/// Get or create the swifterror value virtual register in
+comment|/// SwiftErrorVRegDefMap for this basic block.
 name|unsigned
-name|findSwiftErrorVReg
-argument_list|(
+name|getOrCreateSwiftErrorVReg
+parameter_list|(
 specifier|const
 name|MachineBasicBlock
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 specifier|const
 name|Value
-operator|*
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// Set the swifterror virtual register in SwiftErrorMap.
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// Set the swifterror virtual register in the SwiftErrorVRegDefMap for this
+comment|/// basic block.
 name|void
-name|setSwiftErrorVReg
+name|setCurrentSwiftErrorVReg
 parameter_list|(
 specifier|const
 name|MachineBasicBlock
@@ -1046,70 +1050,6 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|/// ComputeUsesVAFloatArgument - Determine if any floating-point values are
-end_comment
-
-begin_comment
-comment|/// being passed to this variadic function, and set the MachineModuleInfo's
-end_comment
-
-begin_comment
-comment|/// usesVAFloatArgument flag if so. This flag is used to emit an undefined
-end_comment
-
-begin_comment
-comment|/// reference to _fltused on Windows, which will link in MSVCRT's
-end_comment
-
-begin_comment
-comment|/// floating-point support.
-end_comment
-
-begin_function_decl
-name|void
-name|ComputeUsesVAFloatArgument
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|I
-parameter_list|,
-name|MachineModuleInfo
-modifier|*
-name|MMI
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// AddLandingPadInfo - Extract the exception handling information from the
-end_comment
-
-begin_comment
-comment|/// landingpad instruction and add them to the specified machine module info.
-end_comment
-
-begin_function_decl
-name|void
-name|AddLandingPadInfo
-parameter_list|(
-specifier|const
-name|LandingPadInst
-modifier|&
-name|I
-parameter_list|,
-name|MachineModuleInfo
-modifier|&
-name|MMI
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|MBB
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 unit|}

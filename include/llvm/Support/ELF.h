@@ -1391,6 +1391,11 @@ init|=
 literal|224
 block|,
 comment|// AMD GPU architecture
+name|EM_RISCV
+init|=
+literal|243
+block|,
+comment|// RISC-V
 name|EM_LANAI
 init|=
 literal|244
@@ -2352,6 +2357,14 @@ directive|include
 file|"ELFRelocs/Lanai.def"
 block|}
 enum|;
+comment|// ELF Relocation types for RISC-V
+enum|enum
+block|{
+include|#
+directive|include
+file|"ELFRelocs/RISCV.def"
+block|}
+enum|;
 comment|// ELF Relocation types for S390/zSeries
 enum|enum
 block|{
@@ -2872,6 +2885,11 @@ comment|// Section data is string data by default.
 name|SHF_MIPS_STRING
 init|=
 literal|0x80000000
+block|,
+comment|// Make code section unreadable when in execute-only mode
+name|SHF_ARM_PURECODE
+init|=
+literal|0x20000000
 block|,
 name|SHF_AMDGPU_HSA_GLOBAL
 init|=
@@ -3919,6 +3937,21 @@ init|=
 literal|0x6474e552
 block|,
 comment|// Read-only after relocation.
+name|PT_OPENBSD_RANDOMIZE
+init|=
+literal|0x65a3dbe6
+block|,
+comment|// Fill with random data.
+name|PT_OPENBSD_WXNEEDED
+init|=
+literal|0x65a3dbe7
+block|,
+comment|// Program does W^X violations.
+name|PT_OPENBSD_BOOTDATA
+init|=
+literal|0x65a41be6
+block|,
+comment|// Section for boot arguments.
 comment|// ARM program header types.
 name|PT_ARM_ARCHEXT
 init|=
@@ -4266,7 +4299,8 @@ name|DT_TLSDESC_GOT
 init|=
 literal|0x6FFFFEF7
 block|,
-comment|// Location of GOT entry used by TLS descriptor resolver PLT entry.
+comment|// Location of GOT entry used by TLS descriptor
+comment|// resolver PLT entry.
 name|DT_RELACOUNT
 init|=
 literal|0x6FFFFFF9
@@ -4307,6 +4341,19 @@ init|=
 literal|0X6FFFFFFF
 block|,
 comment|// The number of entries in DT_VERNEED.
+comment|// Hexagon specific dynamic table entries
+name|DT_HEXAGON_SYMSZ
+init|=
+literal|0x70000000
+block|,
+name|DT_HEXAGON_VER
+init|=
+literal|0x70000001
+block|,
+name|DT_HEXAGON_PLT
+init|=
+literal|0x70000002
+block|,
 comment|// Mips specific dynamic table entry tags.
 name|DT_MIPS_RLD_VERSION
 init|=
@@ -4892,10 +4939,53 @@ enum|;
 comment|// SHT_NOTE section types
 enum|enum
 block|{
+name|NT_GNU_ABI_TAG
+init|=
+literal|1
+block|,
+name|NT_GNU_HWCAP
+init|=
+literal|2
+block|,
 name|NT_GNU_BUILD_ID
 init|=
 literal|3
-block|}
+block|,
+name|NT_GNU_GOLD_VERSION
+init|=
+literal|4
+block|, }
+enum|;
+enum|enum
+block|{
+name|GNU_ABI_TAG_LINUX
+init|=
+literal|0
+block|,
+name|GNU_ABI_TAG_HURD
+init|=
+literal|1
+block|,
+name|GNU_ABI_TAG_SOLARIS
+init|=
+literal|2
+block|,
+name|GNU_ABI_TAG_FREEBSD
+init|=
+literal|3
+block|,
+name|GNU_ABI_TAG_NETBSD
+init|=
+literal|4
+block|,
+name|GNU_ABI_TAG_SYLLABLE
+init|=
+literal|5
+block|,
+name|GNU_ABI_TAG_NACL
+init|=
+literal|6
+block|, }
 enum|;
 comment|// Compressed section header for ELF32.
 struct|struct

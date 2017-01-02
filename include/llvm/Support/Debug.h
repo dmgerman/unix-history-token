@@ -159,6 +159,23 @@ modifier|*
 name|Type
 parameter_list|)
 function_decl|;
+comment|/// setCurrentDebugTypes - Set the current debug type, as if the
+comment|/// -debug-only=X,Y,Z option were specified. Note that DebugFlag
+comment|/// also needs to be set to true for debug output to be produced.
+comment|///
+name|void
+name|setCurrentDebugTypes
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|Types
+parameter_list|,
+name|unsigned
+name|Count
+parameter_list|)
+function_decl|;
 comment|/// DEBUG_WITH_TYPE macro - This macro should be used by passes to emit debug
 comment|/// information.  In the '-debug' option is specified on the commandline, and if
 comment|/// this is a debug build, then the code specified as the option to the macro
@@ -177,7 +194,7 @@ parameter_list|,
 name|X
 parameter_list|)
 define|\
-value|do { if (::llvm::DebugFlag&& ::llvm::isCurrentDebugType(TYPE)) { X; } \   } while (0)
+value|do { if (::llvm::DebugFlag&& ::llvm::isCurrentDebugType(TYPE)) { X; } \   } while (false)
 else|#
 directive|else
 define|#
@@ -195,13 +212,21 @@ name|X
 parameter_list|)
 define|#
 directive|define
+name|setCurrentDebugTypes
+parameter_list|(
+name|X
+parameter_list|,
+name|N
+parameter_list|)
+define|#
+directive|define
 name|DEBUG_WITH_TYPE
 parameter_list|(
 name|TYPE
 parameter_list|,
 name|X
 parameter_list|)
-value|do { } while (0)
+value|do { } while (false)
 endif|#
 directive|endif
 comment|/// EnableDebugBuffering - This defaults to false.  If true, the debug
@@ -240,13 +265,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_DEBUG_H
+end_comment
 
 end_unit
 

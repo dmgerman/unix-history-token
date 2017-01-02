@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -79,6 +73,18 @@ begin_include
 include|#
 directive|include
 file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_include
@@ -460,14 +466,13 @@ name|public
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|EquivalenceClasses
 argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 name|EquivalenceClasses
@@ -1260,7 +1265,9 @@ expr_stmt|;
 name|explicit
 name|member_iterator
 parameter_list|()
-block|{}
+init|=
+init|default
+function_decl|;
 name|explicit
 name|member_iterator
 argument_list|(
@@ -1417,13 +1424,17 @@ end_expr_stmt
 
 begin_comment
 unit|}; };  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_EQUIVALENCECLASSES_H
+end_comment
 
 end_unit
 

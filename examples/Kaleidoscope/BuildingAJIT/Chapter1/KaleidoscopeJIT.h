@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ExecutionEngine/Orc/CompileUtils.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/Orc/JITSymbol.h"
 end_include
 
 begin_include
@@ -313,14 +313,9 @@ argument_list|)
 condition|)
 return|return
 name|Sym
-operator|.
-name|toRuntimeDyldSymbol
-argument_list|()
 return|;
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|nullptr
 argument_list|)
@@ -350,9 +345,7 @@ name|Name
 argument_list|)
 condition|)
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|SymAddr
 argument_list|,
@@ -362,9 +355,7 @@ name|Exported
 argument_list|)
 return|;
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|nullptr
 argument_list|)
@@ -372,7 +363,7 @@ return|;
 block|}
 block|)
 decl_stmt|;
-comment|// Build a singlton module set to hold our module.
+comment|// Build a singleton module set to hold our module.
 name|std
 operator|::
 name|vector

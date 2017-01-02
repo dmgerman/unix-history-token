@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|LTO_API_VERSION
-value|20
+value|21
 end_define
 
 begin_comment
@@ -377,7 +377,7 @@ name|size_t
 name|length
 parameter_list|)
 function_decl|;
-comment|/** * Checks if a buffer is a loadable object file. * * \since prior to LTO_API_VERSION=3 */
+comment|/**  * Checks if a buffer is a loadable object file.  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
 name|lto_module_is_object_file_in_memory
@@ -1014,6 +1014,29 @@ name|int
 name|index
 parameter_list|)
 function_decl|;
+comment|/**  * Returns the number of object files produced by the ThinLTO CodeGenerator.  *  * It usually matches the number of input files, but this is not a guarantee of  * the API and may change in future implementation, so the client should not  * assume it.  *  * \since LTO_API_VERSION=21  */
+name|unsigned
+name|int
+name|thinlto_module_get_num_object_files
+parameter_list|(
+name|thinlto_code_gen_t
+name|cg
+parameter_list|)
+function_decl|;
+comment|/**  * Returns the path to the ith object file produced by the ThinLTO  * CodeGenerator.  *  * Client should use \p thinlto_module_get_num_object_files() to get the number  * of available objects.  *  * \since LTO_API_VERSION=21  */
+specifier|const
+name|char
+modifier|*
+name|thinlto_module_get_object_file
+parameter_list|(
+name|thinlto_code_gen_t
+name|cg
+parameter_list|,
+name|unsigned
+name|int
+name|index
+parameter_list|)
+function_decl|;
 comment|/**  * Sets which PIC code model to generate.  * Returns true on error (check lto_get_error_message() for details).  *  * \since LTO_API_VERSION=18  */
 specifier|extern
 name|lto_bool_t
@@ -1081,6 +1104,19 @@ comment|/**  * Sets the path to a directory to use as a storage for temporary bi
 specifier|extern
 name|void
 name|thinlto_codegen_set_savetemps_dir
+parameter_list|(
+name|thinlto_code_gen_t
+name|cg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|save_temps_dir
+parameter_list|)
+function_decl|;
+comment|/**  * Set the path to a directory where to save generated object files. This  * path can be used by a linker to request on-disk files instead of in-memory  * buffers. When set, results are available through  * thinlto_module_get_object_file() instead of thinlto_module_get_object().  *  * \since LTO_API_VERSION=21  */
+name|void
+name|thinlto_set_generated_objects_dir
 parameter_list|(
 name|thinlto_code_gen_t
 name|cg

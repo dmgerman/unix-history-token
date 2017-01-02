@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/LowLevelType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
@@ -190,6 +196,7 @@ modifier|*
 name|TheDelegate
 decl_stmt|;
 comment|/// True if subregister liveness is tracked.
+specifier|const
 name|bool
 name|TracksSubRegLiveness
 decl_stmt|;
@@ -366,9 +373,9 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
-name|unsigned
+name|LLT
 operator|>
-name|VRegToSizeMap
+name|VRegToTypeMap
 expr_stmt|;
 comment|/// Map generic virtual registers to their actual size.
 name|mutable
@@ -376,38 +383,10 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|VRegToSizeMap
+name|VRegToTypeMap
 operator|>
-name|VRegToSize
+name|VRegToType
 expr_stmt|;
-comment|/// Accessor for VRegToSize. This accessor should only be used
-comment|/// by global-isel related work.
-name|VRegToSizeMap
-operator|&
-name|getVRegToSize
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|VRegToSize
-condition|)
-name|VRegToSize
-operator|.
-name|reset
-argument_list|(
-argument|new VRegToSizeMap
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|VRegToSize
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
 comment|/// Keep track of the physical registers that are live in to the function.
 comment|/// Live in values are typically arguments in registers.  LiveIn values are
 comment|/// allowed to have virtual registers associated with them, stored in the
@@ -564,7 +543,7 @@ operator|->
 name|getProperties
 argument_list|()
 operator|.
-name|clear
+name|reset
 argument_list|(
 name|MachineFunctionProperties
 operator|::
@@ -611,7 +590,7 @@ operator|->
 name|getProperties
 argument_list|()
 operator|.
-name|clear
+name|reset
 argument_list|(
 name|MachineFunctionProperties
 operator|::
@@ -681,20 +660,6 @@ block|{
 return|return
 name|TracksSubRegLiveness
 return|;
-block|}
-name|void
-name|enableSubRegLiveness
-parameter_list|(
-name|bool
-name|Enable
-init|=
-name|true
-parameter_list|)
-block|{
-name|TracksSubRegLiveness
-operator|=
-name|Enable
-expr_stmt|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Register Info
@@ -2187,19 +2152,13 @@ decl|const
 decl_stmt|;
 endif|#
 directive|endif
-comment|/// isConstantPhysReg - Returns true if PhysReg is unallocatable and constant
-comment|/// throughout the function.  It is safe to move instructions that read such
-comment|/// a physreg.
+comment|/// Returns true if PhysReg is unallocatable and constant throughout the
+comment|/// function. Writing to a constant register has no effect.
 name|bool
 name|isConstantPhysReg
 argument_list|(
 name|unsigned
 name|PhysReg
-argument_list|,
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2460,37 +2419,78 @@ modifier|*
 name|RegClass
 parameter_list|)
 function_decl|;
-comment|/// Get the size in bits of \p VReg or 0 if VReg is not a generic
+comment|/// Accessor for VRegToType. This accessor should only be used
+comment|/// by global-isel related work.
+name|VRegToTypeMap
+operator|&
+name|getVRegToType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|VRegToType
+condition|)
+name|VRegToType
+operator|.
+name|reset
+argument_list|(
+argument|new VRegToTypeMap
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|VRegToType
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+comment|/// Get the low-level type of \p VReg or LLT{} if VReg is not a generic
 comment|/// (target independent) virtual register.
-name|unsigned
-name|getSize
+name|LLT
+name|getType
 argument_list|(
 name|unsigned
 name|VReg
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Set the size in bits of \p VReg to \p Size.
-comment|/// Although the size should be set at build time, mir infrastructure
-comment|/// is not yet able to do it.
+comment|/// Set the low-level type of \p VReg to \p Ty.
 name|void
-name|setSize
+name|setType
 parameter_list|(
 name|unsigned
 name|VReg
 parameter_list|,
-name|unsigned
-name|Size
+name|LLT
+name|Ty
 parameter_list|)
 function_decl|;
-comment|/// Create and return a new generic virtual register with a size of \p Size.
-comment|/// \pre Size> 0.
+comment|/// Create and return a new generic virtual register with low-level
+comment|/// type \p Ty.
 name|unsigned
 name|createGenericVirtualRegister
 parameter_list|(
-name|unsigned
-name|Size
+name|LLT
+name|Ty
 parameter_list|)
+function_decl|;
+comment|/// Remove all types associated to virtual registers (after instruction
+comment|/// selection and constraining of all generic virtual registers).
+name|void
+name|clearVirtRegTypes
+parameter_list|()
+function_decl|;
+comment|/// Creates a new virtual register that has no register class, register bank
+comment|/// or size assigned yet. This is only allowed to be used
+comment|/// temporarily while constructing machine instructions. Most operations are
+comment|/// undefined on an incomplete register until one of setRegClass(),
+comment|/// setRegBank() or setSize() has been called on it.
+name|unsigned
+name|createIncompleteVirtualRegister
+parameter_list|()
 function_decl|;
 comment|/// getNumVirtRegs - Return the number of virtual registers created.
 comment|///
@@ -3378,19 +3378,22 @@ empty_stmt|;
 do|} else if (ByBundle
 block|)
 block|{
-name|MachineInstr
-modifier|&
+name|MachineBasicBlock
+operator|::
+name|instr_iterator
 name|P
-init|=
+operator|=
 name|getBundleStart
 argument_list|(
-operator|*
 name|Op
 operator|->
 name|getParent
 argument_list|()
+operator|->
+name|getIterator
+argument_list|()
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 do|do
 block|{
 name|advance
@@ -3401,17 +3404,17 @@ while|while
 condition|(
 name|Op
 operator|&&
-operator|&
 name|getBundleStart
 argument_list|(
-operator|*
 name|Op
 operator|->
 name|getParent
 argument_list|()
+operator|->
+name|getIterator
+argument_list|()
 argument_list|)
 operator|==
-operator|&
 name|P
 condition|)
 empty_stmt|;
@@ -3916,19 +3919,22 @@ condition|(
 name|ByBundle
 condition|)
 block|{
-name|MachineInstr
-modifier|&
+name|MachineBasicBlock
+operator|::
+name|instr_iterator
 name|P
-init|=
+operator|=
 name|getBundleStart
 argument_list|(
-operator|*
 name|Op
 operator|->
 name|getParent
 argument_list|()
+operator|->
+name|getIterator
+argument_list|()
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 do|do
 block|{
 name|advance
@@ -3939,17 +3945,17 @@ do|while
 condition|(
 name|Op
 operator|&&
-operator|&
 name|getBundleStart
 argument_list|(
-operator|*
 name|Op
 operator|->
 name|getParent
 argument_list|()
+operator|->
+name|getIterator
+argument_list|()
 argument_list|)
 operator|==
-operator|&
 name|P
 condition|)
 do|;
@@ -4013,12 +4019,15 @@ condition|(
 name|ByBundle
 condition|)
 return|return
+operator|*
 name|getBundleStart
 argument_list|(
-operator|*
 name|Op
 operator|->
 name|getParent
+argument_list|()
+operator|->
+name|getIterator
 argument_list|()
 argument_list|)
 return|;

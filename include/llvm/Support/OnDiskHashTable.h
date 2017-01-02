@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -976,12 +970,10 @@ name|OffsetToAlignment
 argument_list|(
 name|TableOff
 argument_list|,
-name|alignOf
-operator|<
+name|alignof
+argument_list|(
 name|offset_type
-operator|>
-operator|(
-operator|)
+argument_list|)
 argument_list|)
 decl_stmt|;
 name|TableOff

@@ -80,7 +80,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdlib>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<initializer_list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
 end_include
 
 begin_include
@@ -489,15 +525,6 @@ operator|:
 name|public
 name|StringMapEntryBase
 block|{
-name|StringMapEntry
-argument_list|(
-name|StringMapEntry
-operator|&
-name|E
-argument_list|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
 name|ValueTy
@@ -540,6 +567,15 @@ argument_list|(
 argument|std::forward<InitTy>(InitVals)...
 argument_list|)
 block|{}
+name|StringMapEntry
+argument_list|(
+name|StringMapEntry
+operator|&
+name|E
+argument_list|)
+operator|=
+name|delete
+block|;
 name|StringRef
 name|getKey
 argument_list|()
@@ -680,12 +716,10 @@ block|;
 name|unsigned
 name|Alignment
 operator|=
-name|alignOf
-operator|<
+name|alignof
+argument_list|(
 name|StringMapEntry
-operator|>
-operator|(
-operator|)
+argument_list|)
 block|;
 name|StringMapEntry
 operator|*
@@ -1695,7 +1729,7 @@ name|Key
 parameter_list|)
 block|{
 return|return
-name|emplace_second
+name|try_emplace
 argument_list|(
 name|Key
 argument_list|)
@@ -1859,7 +1893,7 @@ argument|ValueTy> KV
 argument_list|)
 block|{
 return|return
-name|emplace_second
+name|try_emplace
 argument_list|(
 name|KV
 operator|.
@@ -1909,7 +1943,7 @@ name|iterator
 operator|,
 name|bool
 operator|>
-name|emplace_second
+name|try_emplace
 argument_list|(
 argument|StringRef Key
 argument_list|,
@@ -2335,6 +2369,8 @@ name|StringMapEntryBase
 operator|*
 operator|*
 name|Ptr
+operator|=
+name|nullptr
 block|;
 name|public
 operator|:
@@ -2347,24 +2383,33 @@ name|value_type
 expr_stmt|;
 name|StringMapConstIterator
 argument_list|()
-operator|:
-name|Ptr
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{ }
+operator|=
+block|default
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|explicit
+end_macro
+
+begin_macro
 name|StringMapConstIterator
 argument_list|(
 argument|StringMapEntryBase **Bucket
 argument_list|,
 argument|bool NoAdvance = false
 argument_list|)
-operator|:
+end_macro
+
+begin_macro
+unit|:
 name|Ptr
 argument_list|(
 argument|Bucket
 argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -2375,7 +2420,7 @@ name|AdvancePastEmptyBuckets
 argument_list|()
 expr_stmt|;
 block|}
-end_expr_stmt
+end_block
 
 begin_expr_stmt
 specifier|const
@@ -2578,7 +2623,9 @@ name|public
 operator|:
 name|StringMapIterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|explicit
 name|StringMapIterator
 argument_list|(
@@ -2659,11 +2706,19 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+unit|};  }
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}; }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_STRINGMAP_H
+end_comment
 
 end_unit
 

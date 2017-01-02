@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Error.h"
 end_include
 
@@ -79,7 +85,6 @@ name|IPDBSession
 block|{
 name|public
 operator|:
-name|explicit
 name|RawSession
 argument_list|(
 name|std
@@ -89,6 +94,14 @@ operator|<
 name|PDBFile
 operator|>
 name|PdbFile
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|BumpPtrAllocator
+operator|>
+name|Allocator
 argument_list|)
 block|;
 operator|~
@@ -341,6 +354,14 @@ operator|<
 name|PDBFile
 operator|>
 name|Pdb
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|BumpPtrAllocator
+operator|>
+name|Allocator
 block|; }
 decl_stmt|;
 block|}

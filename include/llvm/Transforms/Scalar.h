@@ -258,6 +258,16 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// LoopSink - This pass sinks invariants from preheader to loop body where
+comment|// frequency is lower than loop preheader.
+comment|//
+name|Pass
+modifier|*
+name|createLoopSinkPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// LoopInterchange - This pass interchanges loops to provide a more
 comment|// cache-friendly memory access patterns.
 comment|//
@@ -330,9 +340,15 @@ name|Runtime
 init|=
 operator|-
 literal|1
+parameter_list|,
+name|int
+name|UpperBound
+init|=
+operator|-
+literal|1
 parameter_list|)
 function_decl|;
-comment|// Create an unrolling pass for full unrolling only.
+comment|// Create an unrolling pass for full unrolling that uses exact trip count only.
 name|Pass
 modifier|*
 name|createSimpleLoopUnrollPass
@@ -602,7 +618,12 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createEarlyCSEPass
-parameter_list|()
+parameter_list|(
+name|bool
+name|UseMemorySSA
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -622,6 +643,16 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createMergedLoadStoreMotionPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// GVN - This pass performs global value numbering and redundant load
+comment|// elimination cotemporaneously.
+comment|//
+name|FunctionPass
+modifier|*
+name|createNewGVNPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -835,6 +866,16 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// StripGCRelocates - Remove GC relocates that have been inserted by
+comment|// RewriteStatepointsForGC. The resulting IR is incorrect, but this is useful
+comment|// for manual inspection.
+name|FunctionPass
+modifier|*
+name|createStripGCRelocatesPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// Float2Int - Demote floats to ints where possible.
 comment|//
 name|FunctionPass
@@ -855,16 +896,10 @@ comment|//===-------------------------------------------------------------------
 comment|//
 comment|// LoopDistribute - Distribute loops.
 comment|//
-comment|// ProcessAllLoopsByDefault instructs the pass to look for distribution
-comment|// opportunities in all loops unless -enable-loop-distribute or the
-comment|// llvm.loop.distribute.enable metadata data override this default.
 name|FunctionPass
 modifier|*
 name|createLoopDistributePass
-parameter_list|(
-name|bool
-name|ProcessAllLoopsByDefault
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -906,7 +941,17 @@ function_decl|;
 comment|///===---------------------------------------------------------------------===//
 name|ModulePass
 modifier|*
-name|createNameAnonFunctionPass
+name|createNameAnonGlobalPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LibCallsShrinkWrap - Shrink-wraps a call to function if the result is not
+comment|// used.
+comment|//
+name|FunctionPass
+modifier|*
+name|createLibCallsShrinkWrapPass
 parameter_list|()
 function_decl|;
 block|}

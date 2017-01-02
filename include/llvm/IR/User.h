@@ -94,19 +94,55 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Use.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Value.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -145,15 +181,6 @@ range|:
 name|public
 name|Value
 block|{
-name|User
-argument_list|(
-specifier|const
-name|User
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
 name|template
 operator|<
 name|unsigned
@@ -303,11 +330,22 @@ argument_list|)
 block|;
 name|public
 operator|:
+name|User
+argument_list|(
+specifier|const
+name|User
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
 operator|~
 name|User
 argument_list|()
 name|override
-block|{   }
+operator|=
+expr|default
+block|;
 comment|/// \brief Free memory allocated for User and Use objects.
 name|void
 name|operator
@@ -1135,19 +1173,15 @@ end_comment
 begin_expr_stmt
 name|static_assert
 argument_list|(
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|Use
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|>=
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|User
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 argument_list|,
 literal|"Alignment is insufficient after objects prepended to User"
 argument_list|)
@@ -1157,20 +1191,16 @@ end_expr_stmt
 begin_expr_stmt
 name|static_assert
 argument_list|(
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|Use
 operator|*
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|>=
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|User
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 argument_list|,
 literal|"Alignment is insufficient after objects prepended to User"
 argument_list|)
@@ -1256,13 +1286,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_USER_H
+end_comment
 
 end_unit
 

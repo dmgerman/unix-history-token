@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
@@ -93,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ExecutionEngine/Orc/CompileUtils.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/Orc/JITSymbol.h"
 end_include
 
 begin_include
@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/LegacyPassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Mangler.h"
 end_include
 
@@ -158,6 +164,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Transforms/Scalar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Scalar/GVN.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<algorithm>
 end_include
 
@@ -165,6 +183,12 @@ begin_include
 include|#
 directive|include
 file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
 end_include
 
 begin_include
@@ -470,14 +494,9 @@ argument_list|)
 condition|)
 return|return
 name|Sym
-operator|.
-name|toRuntimeDyldSymbol
-argument_list|()
 return|;
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|nullptr
 argument_list|)
@@ -507,9 +526,7 @@ name|Name
 argument_list|)
 condition|)
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|SymAddr
 argument_list|,
@@ -519,9 +536,7 @@ name|Exported
 argument_list|)
 return|;
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|nullptr
 argument_list|)
@@ -535,7 +550,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// Build a singlton module set to hold our module.
+comment|// Build a singleton module set to hold our module.
 end_comment
 
 begin_expr_stmt
@@ -773,7 +788,7 @@ return|;
 end_return
 
 begin_empty_stmt
-unit|}  }
+unit|} }
 empty_stmt|;
 end_empty_stmt
 

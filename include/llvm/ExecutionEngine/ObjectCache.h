@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ObjectCache.h - Class definition for the ObjectCache -----C++ -*-===//
+comment|//===-- ObjectCache.h - Class definition for the ObjectCache ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -49,6 +49,12 @@ directive|include
 file|"llvm/Support/MemoryBuffer.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -71,24 +77,32 @@ name|public
 label|:
 name|ObjectCache
 argument_list|()
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 operator|~
 name|ObjectCache
 argument_list|()
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 comment|/// notifyObjectCompiled - Provides a pointer to compiled code for Module M.
 name|virtual
 name|void
 name|notifyObjectCompiled
-argument_list|(
-argument|const Module *M
-argument_list|,
-argument|MemoryBufferRef Obj
-argument_list|)
-operator|=
+parameter_list|(
+specifier|const
+name|Module
+modifier|*
+name|M
+parameter_list|,
+name|MemoryBufferRef
+name|Obj
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|/// Returns a pointer to a newly allocated MemoryBuffer that contains the
 comment|/// object which corresponds with Module M, or 0 if an object is not
 comment|/// available.
@@ -114,10 +128,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_EXECUTIONENGINE_OBJECTCACHE_H
+end_comment
 
 end_unit
 

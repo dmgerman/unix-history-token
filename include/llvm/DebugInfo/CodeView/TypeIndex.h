@@ -394,7 +394,7 @@ argument_list|()
 operator|:
 name|Index
 argument_list|(
-literal|0
+argument|static_cast<uint32_t>(SimpleTypeKind::None)
 argument_list|)
 block|{}
 name|explicit
@@ -439,6 +439,18 @@ block|{
 return|return
 name|Index
 return|;
+block|}
+name|void
+name|setIndex
+parameter_list|(
+name|uint32_t
+name|I
+parameter_list|)
+block|{
+name|Index
+operator|=
+name|I
+expr_stmt|;
 block|}
 name|bool
 name|isSimple

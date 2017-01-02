@@ -614,6 +614,11 @@ parameter_list|()
 function_decl|;
 name|MCSymbol
 modifier|*
+name|EmitCFILabel
+parameter_list|()
+function_decl|;
+name|MCSymbol
+modifier|*
 name|EmitCFICommon
 parameter_list|()
 function_decl|;
@@ -906,6 +911,10 @@ comment|/// verbose assembly output is enabled.
 comment|///
 comment|/// If the comment includes embedded \n's, they will each get the comment
 comment|/// prefix as appropriate.  The added comment should not end with a \n.
+comment|/// By default, each comment is terminated with an end of line, i.e. the
+comment|/// EOL param is set to true by default. If one prefers not to end the
+comment|/// comment with a new line then the EOL param should be passed
+comment|/// with a false value.
 name|virtual
 name|void
 name|AddComment
@@ -914,6 +923,11 @@ specifier|const
 name|Twine
 modifier|&
 name|T
+parameter_list|,
+name|bool
+name|EOL
+init|=
+name|true
 parameter_list|)
 block|{}
 comment|/// \brief Return a raw_ostream that comments can be written to. Unlike
@@ -1899,6 +1913,9 @@ name|MCSymbol
 specifier|const
 modifier|*
 name|Symbol
+parameter_list|,
+name|uint64_t
+name|Offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1924,7 +1941,7 @@ name|virtual
 name|void
 name|emitELFSize
 parameter_list|(
-name|MCSymbolELF
+name|MCSymbol
 modifier|*
 name|Symbol
 parameter_list|,
@@ -2411,6 +2428,138 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Emit the expression \p Value into the output as a dtprel
+end_comment
+
+begin_comment
+comment|/// (64-bit DTP relative) value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is used to implement assembler directives such as .dtpreldword on
+end_comment
+
+begin_comment
+comment|/// targets that support them.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitDTPRel64Value
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit the expression \p Value into the output as a dtprel
+end_comment
+
+begin_comment
+comment|/// (32-bit DTP relative) value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is used to implement assembler directives such as .dtprelword on
+end_comment
+
+begin_comment
+comment|/// targets that support them.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitDTPRel32Value
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit the expression \p Value into the output as a tprel
+end_comment
+
+begin_comment
+comment|/// (64-bit TP relative) value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is used to implement assembler directives such as .tpreldword on
+end_comment
+
+begin_comment
+comment|/// targets that support them.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitTPRel64Value
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit the expression \p Value into the output as a tprel
+end_comment
+
+begin_comment
+comment|/// (32-bit TP relative) value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is used to implement assembler directives such as .tprelword on
+end_comment
+
+begin_comment
+comment|/// targets that support them.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitTPRel32Value
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Emit the expression \p Value into the output as a gprel64 (64-bit
 end_comment
 
@@ -2835,8 +2984,9 @@ parameter_list|,
 name|unsigned
 name|char
 name|Value
-init|=
-literal|0
+parameter_list|,
+name|SMLoc
+name|Loc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2955,12 +3105,16 @@ comment|/// \brief Associate a filename with a specified logical file number.  T
 end_comment
 
 begin_comment
-comment|/// implements the '.cv_file 4 "foo.c"' assembler directive.
+comment|/// implements the '.cv_file 4 "foo.c"' assembler directive. Returns true on
+end_comment
+
+begin_comment
+comment|/// success.
 end_comment
 
 begin_function_decl
 name|virtual
-name|unsigned
+name|bool
 name|EmitCVFileDirective
 parameter_list|(
 name|unsigned
@@ -2968,6 +3122,55 @@ name|FileNo
 parameter_list|,
 name|StringRef
 name|Filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Introduces a function id for use with .cv_loc.
+end_comment
+
+begin_function_decl
+name|virtual
+name|bool
+name|EmitCVFuncIdDirective
+parameter_list|(
+name|unsigned
+name|FunctionId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Introduces an inline call site id for use with .cv_loc. Includes
+end_comment
+
+begin_comment
+comment|/// extra information for inline line table generation.
+end_comment
+
+begin_function_decl
+name|virtual
+name|bool
+name|EmitCVInlineSiteIdDirective
+parameter_list|(
+name|unsigned
+name|FunctionId
+parameter_list|,
+name|unsigned
+name|IAFunc
+parameter_list|,
+name|unsigned
+name|IAFile
+parameter_list|,
+name|unsigned
+name|IALine
+parameter_list|,
+name|unsigned
+name|IACol
+parameter_list|,
+name|SMLoc
+name|Loc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3001,6 +3204,9 @@ name|IsStmt
 parameter_list|,
 name|StringRef
 name|FileName
+parameter_list|,
+name|SMLoc
+name|Loc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3038,38 +3244,32 @@ begin_comment
 comment|/// directive.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|virtual
 name|void
 name|EmitCVInlineLinetableDirective
-argument_list|(
+parameter_list|(
 name|unsigned
 name|PrimaryFunctionId
-argument_list|,
+parameter_list|,
 name|unsigned
 name|SourceFileId
-argument_list|,
+parameter_list|,
 name|unsigned
 name|SourceLineNum
-argument_list|,
+parameter_list|,
 specifier|const
 name|MCSymbol
-operator|*
+modifier|*
 name|FnStartSym
-argument_list|,
+parameter_list|,
 specifier|const
 name|MCSymbol
-operator|*
+modifier|*
 name|FnEndSym
-argument_list|,
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|SecondaryFunctionIds
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief This implements the CodeView '.cv_def_range' assembler

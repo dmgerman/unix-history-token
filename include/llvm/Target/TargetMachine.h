@@ -698,21 +698,6 @@ operator|.
 name|PrintMachineCode
 return|;
 block|}
-comment|/// Returns the default value of asm verbosity.
-comment|///
-name|bool
-name|getAsmVerbosityDefault
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Options
-operator|.
-name|MCOptions
-operator|.
-name|AsmVerbose
-return|;
-block|}
 name|bool
 name|getUniqueSectionNames
 argument_list|()
@@ -817,6 +802,11 @@ init|=
 name|nullptr
 parameter_list|,
 name|AnalysisID
+comment|/*StopBefore*/
+init|=
+name|nullptr
+parameter_list|,
+name|AnalysisID
 comment|/*StopAfter*/
 init|=
 name|nullptr
@@ -911,10 +901,6 @@ specifier|const
 name|GlobalValue
 operator|*
 name|GV
-argument_list|,
-name|Mangler
-operator|&
-name|Mang
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1011,6 +997,8 @@ argument|AnalysisID StartBefore = nullptr
 argument_list|,
 argument|AnalysisID StartAfter = nullptr
 argument_list|,
+argument|AnalysisID StopBefore = nullptr
+argument_list|,
 argument|AnalysisID StopAfter = nullptr
 argument_list|,
 argument|MachineFunctionInitializer *MFInitializer = nullptr
@@ -1033,25 +1021,6 @@ argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
 name|override
-block|;
-comment|/// Add MachineModuleInfo pass to pass manager.
-name|MachineModuleInfo
-operator|&
-name|addMachineModuleInfo
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
-specifier|const
-block|;
-comment|/// Add MachineFunctionAnalysis pass to pass manager.
-name|void
-name|addMachineFunctionAnalysis
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|MachineFunctionInitializer *MFInitializer
-argument_list|)
-specifier|const
 block|; }
 decl_stmt|;
 block|}

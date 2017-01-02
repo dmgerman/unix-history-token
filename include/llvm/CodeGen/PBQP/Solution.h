@@ -143,113 +143,15 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-comment|/// \brief Number of nodes for which selections have been made.
-comment|/// @return Number of nodes for which selections have been made.
-name|unsigned
-name|numNodes
-argument_list|()
-specifier|const
-block|{
-return|return
-name|selections
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-comment|/// \brief Records a reduction via the R0 rule. Should be called from the
-comment|///        solver only.
-name|void
-name|recordR0
-parameter_list|()
-block|{
-operator|++
-name|r0Reductions
-expr_stmt|;
-block|}
-comment|/// \brief Returns the number of R0 reductions applied to solve the problem.
-name|unsigned
-name|numR0Reductions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|r0Reductions
-return|;
-block|}
-comment|/// \brief Records a reduction via the R1 rule. Should be called from the
-comment|///        solver only.
-name|void
-name|recordR1
-parameter_list|()
-block|{
-operator|++
-name|r1Reductions
-expr_stmt|;
-block|}
-comment|/// \brief Returns the number of R1 reductions applied to solve the problem.
-name|unsigned
-name|numR1Reductions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|r1Reductions
-return|;
-block|}
-comment|/// \brief Records a reduction via the R2 rule. Should be called from the
-comment|///        solver only.
-name|void
-name|recordR2
-parameter_list|()
-block|{
-operator|++
-name|r2Reductions
-expr_stmt|;
-block|}
-comment|/// \brief Returns the number of R2 reductions applied to solve the problem.
-name|unsigned
-name|numR2Reductions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|r2Reductions
-return|;
-block|}
-comment|/// \brief Records a reduction via the RN rule. Should be called from the
-comment|///        solver only.
-name|void
-name|recordRN
-parameter_list|()
-block|{
-operator|++
-name|rNReductions
-expr_stmt|;
-block|}
-comment|/// \brief Returns the number of RN reductions applied to solve the problem.
-name|unsigned
-name|numRNReductions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|rNReductions
-return|;
-block|}
 comment|/// \brief Set the selection for a given node.
 comment|/// @param nodeId Node id.
 comment|/// @param selection Selection for nodeId.
 name|void
 name|setSelection
 argument_list|(
-name|GraphBase
-operator|::
-name|NodeId
-name|nodeId
+argument|GraphBase::NodeId nodeId
 argument_list|,
-name|unsigned
-name|selection
+argument|unsigned selection
 argument_list|)
 block|{
 name|selections
@@ -258,20 +160,16 @@ name|nodeId
 index|]
 operator|=
 name|selection
-expr_stmt|;
-block|}
+block|;     }
 comment|/// \brief Get a node's selection.
 comment|/// @param nodeId Node id.
 comment|/// @return The selection for nodeId;
 name|unsigned
 name|getSelection
 argument_list|(
-name|GraphBase
-operator|::
-name|NodeId
-name|nodeId
+argument|GraphBase::NodeId nodeId
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|SelectionsMap
 operator|::
@@ -284,7 +182,7 @@ name|find
 argument_list|(
 name|nodeId
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|sItr
@@ -296,7 +194,7 @@ argument_list|()
 operator|&&
 literal|"No selection for node."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|sItr
 operator|->

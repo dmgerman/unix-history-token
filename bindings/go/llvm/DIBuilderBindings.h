@@ -273,6 +273,9 @@ name|AlwaysPreserve
 parameter_list|,
 name|unsigned
 name|Flags
+parameter_list|,
+name|uint32_t
+name|AlignInBits
 parameter_list|)
 function_decl|;
 name|LLVMMetadataRef
@@ -322,9 +325,6 @@ parameter_list|,
 name|uint64_t
 name|SizeInBits
 parameter_list|,
-name|uint64_t
-name|AlignInBits
-parameter_list|,
 name|unsigned
 name|Encoding
 parameter_list|)
@@ -341,7 +341,7 @@ parameter_list|,
 name|uint64_t
 name|SizeInBits
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 parameter_list|,
 specifier|const
@@ -386,7 +386,7 @@ parameter_list|,
 name|uint64_t
 name|SizeInBits
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 parameter_list|,
 name|unsigned
@@ -428,7 +428,7 @@ parameter_list|,
 name|uint64_t
 name|SizeInBits
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 parameter_list|,
 name|unsigned
@@ -458,7 +458,7 @@ parameter_list|,
 name|uint64_t
 name|SizeInBits
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 parameter_list|,
 name|uint64_t
@@ -480,7 +480,7 @@ parameter_list|,
 name|uint64_t
 name|SizeInBits
 parameter_list|,
-name|uint64_t
+name|uint32_t
 name|AlignInBits
 parameter_list|,
 name|LLVMMetadataRef

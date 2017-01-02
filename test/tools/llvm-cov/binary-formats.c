@@ -4,7 +4,7 @@ comment|// Checks for reading various formats.
 end_comment
 
 begin_comment
-comment|// CHECK: 100| [[@LINE+1]]|int main
+comment|// CHECK: [[@LINE+1]]| 100|int main
 end_comment
 
 begin_function
@@ -37,6 +37,18 @@ end_comment
 
 begin_comment
 comment|// RUN: llvm-cov show %S/Inputs/binary-formats.macho32b -instr-profile %t.profdata -filename-equivalence %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: llvm-cov export %S/Inputs/binary-formats.macho32l -instr-profile %t.profdata | FileCheck %S/Inputs/binary-formats.canonical.json
+end_comment
+
+begin_comment
+comment|// RUN: llvm-cov export %S/Inputs/binary-formats.macho64l -instr-profile %t.profdata | FileCheck %S/Inputs/binary-formats.canonical.json
+end_comment
+
+begin_comment
+comment|// RUN: llvm-cov export %S/Inputs/binary-formats.macho32b -instr-profile %t.profdata | FileCheck %S/Inputs/binary-formats.canonical.json
 end_comment
 
 end_unit

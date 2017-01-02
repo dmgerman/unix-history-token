@@ -24,6 +24,14 @@ comment|// RUN: FileCheck -input-file=%t.dir/index.txt %s
 end_comment
 
 begin_comment
+comment|// RUN: llvm-cov show -format=html %S/Inputs/double_dots.covmapping -instr-profile=%t.profdata -o %t.dir
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -input-file=%t.dir/index.html %s
+end_comment
+
+begin_comment
 comment|// CHECK-NOT: coverage{{.*}}dots{{.*}}..{{.*}}dots
 end_comment
 

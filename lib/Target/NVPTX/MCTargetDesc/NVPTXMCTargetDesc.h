@@ -72,14 +72,16 @@ block|{
 name|class
 name|Target
 decl_stmt|;
-specifier|extern
 name|Target
-name|TheNVPTXTarget32
-decl_stmt|;
-specifier|extern
+modifier|&
+name|getTheNVPTXTarget32
+parameter_list|()
+function_decl|;
 name|Target
-name|TheNVPTXTarget64
-decl_stmt|;
+modifier|&
+name|getTheNVPTXTarget64
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

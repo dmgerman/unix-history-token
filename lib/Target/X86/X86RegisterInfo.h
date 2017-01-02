@@ -262,7 +262,6 @@ argument_list|(
 argument|const MachineFunction *MF
 argument_list|)
 specifier|const
-name|override
 block|;
 specifier|const
 name|uint32_t
@@ -399,13 +398,6 @@ name|SlotSize
 return|;
 block|}
 expr|}
-block|;
-comment|//get512BitRegister - X86 utility - returns 512-bit super register
-name|unsigned
-name|get512BitSuperRegister
-argument_list|(
-argument|unsigned Reg
-argument_list|)
 block|;  }
 end_decl_stmt
 

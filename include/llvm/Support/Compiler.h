@@ -155,6 +155,27 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__has_cpp_attribute
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_cpp_attribute
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__has_builtin
 end_ifndef
 
@@ -296,10 +317,6 @@ comment|/// The common \param version values to check for are:
 end_comment
 
 begin_comment
-comment|///  * 1800: Microsoft Visual Studio 2013 / 12.0
-end_comment
-
-begin_comment
 comment|///  * 1900: Microsoft Visual Studio 2015 / 14.0
 end_comment
 
@@ -320,7 +337,7 @@ value|(_MSC_VER>= (version))
 end_define
 
 begin_comment
-comment|// We require at least MSVC 2013.
+comment|// We require at least MSVC 2015.
 end_comment
 
 begin_if
@@ -329,14 +346,14 @@ directive|if
 operator|!
 name|LLVM_MSC_PREREQ
 argument_list|(
-literal|1800
+literal|1900
 argument_list|)
 end_if
 
 begin_error
 error|#
 directive|error
-error|LLVM requires at least MSVC 2013.
+error|LLVM requires at least MSVC 2015.
 end_error
 
 begin_endif
@@ -357,50 +374,6 @@ parameter_list|(
 name|version
 parameter_list|)
 value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__clang__
-argument_list|)
-operator|||
-name|LLVM_MSC_PREREQ
-argument_list|(
-literal|1900
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_NOEXCEPT
-value|noexcept
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_NOEXCEPT
-value|throw()
 end_define
 
 begin_endif
@@ -511,48 +484,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|cxx_constexpr
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__GXX_EXPERIMENTAL_CXX0X__
-argument_list|)
-operator|||
-name|LLVM_MSC_PREREQ
-argument_list|(
-literal|1900
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_CONSTEXPR
-value|constexpr
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_CONSTEXPR
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/// LLVM_LIBRARY_VISIBILITY - If a class marked with this attribute is linked
 end_comment
@@ -628,6 +559,52 @@ begin_define
 define|#
 directive|define
 name|LLVM_LIBRARY_VISIBILITY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_PREFETCH
+parameter_list|(
+name|addr
+parameter_list|,
+name|rw
+parameter_list|,
+name|locality
+parameter_list|)
+value|__builtin_prefetch(addr, rw, locality)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_PREFETCH
+parameter_list|(
+name|addr
+parameter_list|,
+name|rw
+parameter_list|,
+name|locality
+parameter_list|)
 end_define
 
 begin_endif
@@ -717,45 +694,67 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/// LLVM_NODISCARD - Warn if a type or return value is discarded.
+end_comment
+
 begin_if
 if|#
 directive|if
-name|__has_attribute
+name|__cplusplus
+operator|>
+literal|201402L
+operator|&&
+name|__has_cpp_attribute
 argument_list|(
-name|warn_unused_result
-argument_list|)
-operator|||
-name|LLVM_GNUC_PREREQ
-argument_list|(
-literal|3
-operator|,
-literal|4
-operator|,
-literal|0
+name|nodiscard
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
-value|__attribute__((__warn_unused_result__))
+name|LLVM_NODISCARD
+value|[[nodiscard]]
 end_define
 
 begin_elif
 elif|#
 directive|elif
-name|defined
+operator|!
+name|__cplusplus
+end_elif
+
+begin_comment
+comment|// Workaround for llvm.org/PR23435, since clang 3.6 and below emit a spurious
+end_comment
+
+begin_comment
+comment|// error when __has_cpp_attribute is given a scoped attribute in C mode.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NODISCARD
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__has_cpp_attribute
 argument_list|(
-name|_MSC_VER
+name|clang
+operator|::
+name|warn_unused_result
 argument_list|)
 end_elif
 
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
-value|_Check_return_
+name|LLVM_NODISCARD
+value|[[clang::warn_unused_result]]
 end_define
 
 begin_else
@@ -766,7 +765,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
+name|LLVM_NODISCARD
 end_define
 
 begin_endif
@@ -1367,6 +1366,85 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/// LLVM_FALLTHROUGH - Mark fallthrough cases in switch statements.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__cplusplus
+operator|>
+literal|201402L
+operator|&&
+name|__has_cpp_attribute
+argument_list|(
+name|fallthrough
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_FALLTHROUGH
+value|[[fallthrough]]
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|__cplusplus
+end_elif
+
+begin_comment
+comment|// Workaround for llvm.org/PR23435, since clang 3.6 and below emit a spurious
+end_comment
+
+begin_comment
+comment|// error when __has_cpp_attribute is given a scoped attribute in C mode.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_FALLTHROUGH
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__has_cpp_attribute
+argument_list|(
+name|clang
+operator|::
+name|fallthrough
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_FALLTHROUGH
+value|[[clang::fallthrough]]
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_FALLTHROUGH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/// LLVM_EXTENSION - Support compilers where we have a keyword to suppress
 end_comment
 
@@ -1811,48 +1889,12 @@ comment|/// \macro LLVM_ALIGNAS
 end_comment
 
 begin_comment
-comment|/// \brief Used to specify a minimum alignment for a structure or variable. The
+comment|/// \brief Used to specify a minimum alignment for a structure or variable.
 end_comment
 
-begin_comment
-comment|/// alignment must be a constant integer. Use LLVM_PTR_SIZE to compute
-end_comment
-
-begin_comment
-comment|/// alignments in terms of the size of a pointer.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Note that __declspec(align) has special quirks, it's not legal to pass a
-end_comment
-
-begin_comment
-comment|/// structure with __declspec(align) as a formal parameter.
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LLVM_ALIGNAS
-parameter_list|(
-name|x
-parameter_list|)
-value|__declspec(align(x))
-end_define
-
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|__GNUC__
 operator|&&
 operator|!
@@ -1868,9 +1910,9 @@ literal|4
 operator|,
 literal|8
 operator|,
-literal|0
+literal|1
 argument_list|)
-end_elif
+end_if
 
 begin_define
 define|#
@@ -2132,51 +2174,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// \macro LLVM_FUNCTION_NAME
-end_comment
-
-begin_comment
-comment|/// \brief Expands to __func__ on compilers which support it.  Otherwise,
-end_comment
-
-begin_comment
-comment|/// expands to a compiler-dependent replacement.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_FUNCTION_NAME
-value|__FUNCTION__
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_FUNCTION_NAME
-value|__func__
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/// \macro LLVM_MEMORY_SANITIZER_BUILD
 end_comment
 
@@ -2383,10 +2380,18 @@ begin_comment
 comment|// tsan detects these exact functions by name.
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
 begin_extern
 extern|extern
 literal|"C"
 block|{
+endif|#
+directive|endif
 name|void
 name|AnnotateHappensAfter
 parameter_list|(
@@ -2447,8 +2452,16 @@ name|int
 name|line
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|__cplusplus
 block|}
 end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// This marker is used to define a happens-before arc. The race detector will
@@ -2642,6 +2655,80 @@ define|#
 directive|define
 name|LLVM_DUMP_METHOD
 value|LLVM_ATTRIBUTE_NOINLINE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_PRETTY_FUNCTION
+end_comment
+
+begin_comment
+comment|/// \brief Gets a user-friendly looking function signature for the current scope
+end_comment
+
+begin_comment
+comment|/// using the best available method on each platform.  The exact format of the
+end_comment
+
+begin_comment
+comment|/// resulting string is implementation specific and non-portable, so this should
+end_comment
+
+begin_comment
+comment|/// only be used, for example, for logging or diagnostics.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_PRETTY_FUNCTION
+value|__FUNCSIG__
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_PRETTY_FUNCTION
+value|__PRETTY_FUNCTION__
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_PRETTY_FUNCTION
+value|__func__
 end_define
 
 begin_endif

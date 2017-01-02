@@ -72,19 +72,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|"llvm/Support/Memory.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Memory.h"
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -110,6 +128,13 @@ range|:
 name|public
 name|RTDyldMemoryManager
 block|{
+name|public
+operator|:
+name|SectionMemoryManager
+argument_list|()
+operator|=
+expr|default
+block|;
 name|SectionMemoryManager
 argument_list|(
 specifier|const
@@ -130,11 +155,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
-name|SectionMemoryManager
-argument_list|()
-block|{ }
 operator|~
 name|SectionMemoryManager
 argument_list|()
@@ -303,6 +323,10 @@ block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

@@ -71,6 +71,12 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -98,7 +104,9 @@ operator|:
 comment|/// Default ctor - Initialize to empty.
 name|SmallString
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// Initialize from a StringRef.
 name|SmallString
 argument_list|(
@@ -990,10 +998,18 @@ expr|}
 block|;  }
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_SMALLSTRING_H
+end_comment
 
 end_unit
 

@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"PDBTypes.h"
+file|<cstdint>
 end_include
 
 begin_include
@@ -92,7 +92,9 @@ name|virtual
 operator|~
 name|IPDBEnumChildren
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|uint32_t
 name|getChildCount
@@ -140,11 +142,23 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// end namespace pdb
+end_comment
+
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_PDB_IPDBENUMCHILDREN_H
+end_comment
 
 end_unit
 

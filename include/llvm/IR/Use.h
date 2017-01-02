@@ -118,7 +118,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstddef>
+file|"llvm-c/Types.h"
 end_include
 
 begin_decl_stmt
@@ -140,63 +140,6 @@ name|typename
 operator|>
 expr|struct
 name|simplify_type
-expr_stmt|;
-comment|// Use** is only 4-byte aligned.
-name|template
-operator|<
-operator|>
-name|class
-name|PointerLikeTypeTraits
-operator|<
-name|Use
-operator|*
-operator|*
-operator|>
-block|{
-name|public
-operator|:
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|getAsVoidPointer
-argument_list|(
-argument|Use **P
-argument_list|)
-block|{
-return|return
-name|P
-return|;
-block|}
-specifier|static
-specifier|inline
-name|Use
-operator|*
-operator|*
-name|getFromVoidPointer
-argument_list|(
-argument|void *P
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|Use
-operator|*
-operator|*
-operator|>
-operator|(
-name|P
-operator|)
-return|;
-block|}
-expr|enum
-block|{
-name|NumLowBitsAvailable
-operator|=
-literal|2
-block|}
-block|; }
 expr_stmt|;
 comment|/// \brief A Use represents the edge between a Value definition and its users.
 comment|///
@@ -220,6 +163,16 @@ name|Use
 block|{
 name|public
 label|:
+name|Use
+argument_list|(
+specifier|const
+name|Use
+operator|&
+name|U
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
 comment|/// \brief Provide a fast substitute to std::swap<Use>
 comment|/// that also works with less standard-compliant compilers
 name|void
@@ -246,16 +199,6 @@ name|UserRef
 expr_stmt|;
 name|private
 label|:
-name|Use
-argument_list|(
-specifier|const
-name|Use
-operator|&
-name|U
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
 comment|/// Destructor - Only for zap()
 operator|~
 name|Use
@@ -721,11 +664,19 @@ argument|LLVMUseRef
 argument_list|)
 end_macro
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_USE_H
+end_comment
 
 end_unit
 

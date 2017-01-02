@@ -432,7 +432,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -522,6 +546,24 @@ operator|==
 name|b
 return|;
 block|}
+comment|/// nonEmpty - Return true if [a;b] is non-empty.
+comment|/// This is a<= b for a closed interval, a< b for [a;b) half-open intervals.
+specifier|static
+specifier|inline
+name|bool
+name|nonEmpty
+argument_list|(
+argument|const T&a
+argument_list|,
+argument|const T&b
+argument_list|)
+block|{
+return|return
+name|a
+operator|<=
+name|b
+return|;
+block|}
 expr|}
 block|;
 name|template
@@ -583,6 +625,23 @@ operator|==
 name|b
 return|;
 block|}
+comment|/// nonEmpty - Return true if [a;b) is non-empty.
+specifier|static
+specifier|inline
+name|bool
+name|nonEmpty
+argument_list|(
+argument|const T&a
+argument_list|,
+argument|const T&b
+argument_list|)
+block|{
+return|return
+name|a
+operator|<
+name|b
+return|;
+block|}
 expr|}
 block|;
 comment|/// IntervalMapImpl - Namespace used for IntervalMap implementation details.
@@ -590,33 +649,6 @@ comment|/// It should be considered private to the implementation.
 name|namespace
 name|IntervalMapImpl
 block|{
-comment|// Forward declarations.
-name|template
-operator|<
-name|typename
-block|,
-name|typename
-block|,
-name|unsigned
-block|,
-name|typename
-operator|>
-name|class
-name|LeafNode
-block|;
-name|template
-operator|<
-name|typename
-block|,
-name|typename
-block|,
-name|unsigned
-block|,
-name|typename
-operator|>
-name|class
-name|BranchNode
-block|;
 typedef|typedef
 name|std
 operator|::
@@ -1756,7 +1788,9 @@ label|:
 comment|/// NodeRef - Create a null ref.
 name|NodeRef
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// operator bool - Detect a null ref.
 name|explicit
 name|operator
@@ -4218,7 +4252,7 @@ end_function
 
 begin_comment
 unit|};  }
-comment|// namespace IntervalMapImpl
+comment|// end namespace IntervalMapImpl
 end_comment
 
 begin_comment
@@ -4262,8 +4296,7 @@ operator|=
 name|IntervalMapInfo
 operator|<
 name|KeyT
-operator|>
-expr|>
+operator|>>
 name|class
 name|IntervalMap
 block|{
@@ -4968,12 +5001,10 @@ name|buffer
 argument_list|)
 operator|&
 operator|(
-name|alignOf
-operator|<
+name|alignof
+argument_list|(
 name|RootLeaf
-operator|>
-operator|(
-operator|)
+argument_list|)
 operator|-
 literal|1
 operator|)
@@ -8213,14 +8244,13 @@ begin_comment
 comment|/// iterator - Create null iterator.
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|iterator
 argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// setStart - Move the start of the current interval.
@@ -9233,7 +9263,7 @@ name|assert
 argument_list|(
 name|Traits
 operator|::
-name|stopLess
+name|nonEmpty
 argument_list|(
 name|a
 argument_list|,
@@ -9354,7 +9384,7 @@ name|assert
 argument_list|(
 name|Traits
 operator|::
-name|stopLess
+name|nonEmpty
 argument_list|(
 name|this
 operator|->
@@ -10103,7 +10133,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   template
+unit|}  template
 operator|<
 name|typename
 name|KeyT
@@ -12526,13 +12556,17 @@ end_block
 
 begin_comment
 unit|};  }
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_INTERVALMAP_H
+end_comment
 
 end_unit
 

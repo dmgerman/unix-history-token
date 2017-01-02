@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -115,17 +121,11 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-specifier|const
-name|char
-modifier|*
-specifier|const
+name|StringRef
 name|PassName
 decl_stmt|;
 comment|// Nice name for Pass
-specifier|const
-name|char
-modifier|*
-specifier|const
+name|StringRef
 name|PassArgument
 decl_stmt|;
 comment|// Command Line argument to run this pass
@@ -172,9 +172,9 @@ comment|/// PassInfo ctor - Do not call this directly, this should only be invok
 comment|/// through RegisterPass.
 name|PassInfo
 argument_list|(
-argument|const char *name
+argument|StringRef name
 argument_list|,
-argument|const char *arg
+argument|StringRef arg
 argument_list|,
 argument|const void *pi
 argument_list|,
@@ -232,15 +232,9 @@ comment|/// through RegisterPass. This version is for use by analysis groups; it
 comment|/// does not auto-register the pass.
 name|PassInfo
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|StringRef name
 argument_list|,
-specifier|const
-name|void
-operator|*
-name|pi
+argument|const void *pi
 argument_list|)
 operator|:
 name|PassName
@@ -285,9 +279,7 @@ argument_list|)
 block|{}
 comment|/// getPassName - Return the friendly name for the pass, never returns null
 comment|///
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
@@ -300,9 +292,7 @@ comment|/// getPassArgument - Return the command line option that may be passed 
 comment|/// 'opt' that will cause this pass to be run.  This will return null if there
 comment|/// is no argument.
 comment|///
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassArgument
 argument_list|()
 specifier|const

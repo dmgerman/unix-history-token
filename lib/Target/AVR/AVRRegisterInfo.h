@@ -153,7 +153,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// Debug information queries.
 name|unsigned
 name|getFrameRegister
 argument_list|(
@@ -162,7 +161,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// Returns a TargetRegisterClass used for pointer values.
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -175,6 +173,19 @@ literal|0
 argument_list|)
 specifier|const
 name|override
+block|;
+comment|/// Splits a 16-bit `DREGS` register into the lo/hi register pair.
+comment|/// \param Reg A 16-bit register to split.
+name|void
+name|splitReg
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|unsigned&LoReg
+argument_list|,
+argument|unsigned&HiReg
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

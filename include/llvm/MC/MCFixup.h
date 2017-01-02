@@ -122,6 +122,18 @@ comment|///< A four-byte gp relative fixup.
 name|FK_GPRel_8
 block|,
 comment|///< A eight-byte gp relative fixup.
+name|FK_DTPRel_4
+block|,
+comment|///< A four-byte dtp relative fixup.
+name|FK_DTPRel_8
+block|,
+comment|///< A eight-byte dtp relative fixup.
+name|FK_TPRel_4
+block|,
+comment|///< A four-byte tp relative fixup.
+name|FK_TPRel_8
+block|,
+comment|///< A eight-byte tp relative fixup.
 name|FK_SecRel_1
 block|,
 comment|///< A one-byte section relative fixup.

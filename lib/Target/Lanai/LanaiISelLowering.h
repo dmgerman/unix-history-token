@@ -298,6 +298,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerSHL_PARTS
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerSRL_PARTS
 argument_list|(
 argument|SDValue Op

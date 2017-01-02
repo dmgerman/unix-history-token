@@ -137,6 +137,24 @@ directive|include
 file|<memory>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<new>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -241,8 +259,8 @@ name|BeginX
 argument_list|)
 return|;
 block|}
+name|LLVM_NODISCARD
 name|bool
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|empty
 argument_list|()
 specifier|const
@@ -255,17 +273,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|,
-name|unsigned
-name|N
-operator|>
-expr|struct
-name|SmallVectorStorage
-expr_stmt|;
 comment|/// This is the part of SmallVectorTemplateBase which does not depend on whether
 comment|/// the type T is a POD. The extra dummy template argument is used by ArrayRef
 comment|/// to avoid unnecessarily requiring T to be complete.
@@ -300,8 +307,6 @@ comment|// Allocate raw space for N elements of type T.  If T has a ctor or dtor
 comment|// don't want it to be automatically run, so we need to represent the space as
 comment|// something else.  Use an array of char of sufficient alignment.
 typedef|typedef
-name|llvm
-operator|::
 name|AlignedCharArrayUnion
 operator|<
 name|T
@@ -1634,21 +1639,9 @@ name|value
 operator|>
 name|SuperClass
 expr_stmt|;
-name|SmallVectorImpl
-argument_list|(
-specifier|const
-name|SmallVectorImpl
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|public
-label|:
-end_label
+operator|:
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -1724,6 +1717,18 @@ operator|)
 block|{   }
 name|public
 operator|:
+name|SmallVectorImpl
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|~
 name|SmallVectorImpl
 argument_list|()
@@ -2062,8 +2067,8 @@ block|}
 end_function
 
 begin_function
+name|LLVM_NODISCARD
 name|T
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|pop_back_val
 parameter_list|()
 block|{
@@ -5200,12 +5205,11 @@ name|explicit
 name|SmallVector
 argument_list|(
 specifier|const
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|RangeTy
 operator|>
+operator|&
 name|R
 argument_list|)
 operator|:
@@ -5551,7 +5555,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_macro
@@ -5615,10 +5619,18 @@ block|;   }
 block|}
 end_block
 
+begin_comment
+comment|// end namespace std
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_SMALLVECTOR_H
+end_comment
 
 end_unit
 

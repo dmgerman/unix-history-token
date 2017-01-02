@@ -238,6 +238,18 @@ operator|&
 name|MBB
 argument_list|)
 expr_stmt|;
+comment|/// Start tracking liveness from the end of basic block \p MBB.
+comment|/// Use backward() to move towards the beginning of the block. This is
+comment|/// preferred to enterBasicBlock() and forward() because it does not depend
+comment|/// on the presence of kill flags.
+name|void
+name|enterBasicBlockEnd
+parameter_list|(
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+function_decl|;
 comment|/// Move the internal MBB iterator and update register states.
 name|void
 name|forward
@@ -302,6 +314,33 @@ operator|!=
 name|I
 condition|)
 name|unprocess
+argument_list|()
+expr_stmt|;
+block|}
+comment|/// Update internal register state and move MBB iterator backwards.
+comment|/// Contrary to unprocess() this method gives precise results even in the
+comment|/// absence of kill flags.
+name|void
+name|backward
+parameter_list|()
+function_decl|;
+comment|/// Call backward() as long as the internal iterator does not point to \p I.
+name|void
+name|backward
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|)
+block|{
+while|while
+condition|(
+name|MBBI
+operator|!=
+name|I
+condition|)
+name|backward
 argument_list|()
 expr_stmt|;
 block|}
@@ -568,8 +607,10 @@ parameter_list|,
 name|LaneBitmask
 name|LaneMask
 init|=
-operator|~
-literal|0u
+name|LaneBitmask
+operator|::
+name|getAll
+argument_list|()
 parameter_list|)
 function_decl|;
 name|private
@@ -641,6 +682,18 @@ name|unsigned
 name|Reg
 parameter_list|)
 function_decl|;
+comment|/// Remove all Reg Units that \p Reg contains from \p BV.
+name|void
+name|removeRegUnits
+parameter_list|(
+name|BitVector
+modifier|&
+name|BV
+parameter_list|,
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
 comment|/// Return the candidate register that is unused for the longest after
 comment|/// StartMI. UseMI is set to the instruction where the search stopped.
 comment|///
@@ -667,11 +720,24 @@ operator|&
 name|UseMI
 argument_list|)
 decl_stmt|;
-comment|/// Allow resetting register state info for multiple
-comment|/// passes over/within the same function.
+comment|/// Initialize RegisterScavenger.
 name|void
-name|initRegState
-parameter_list|()
+name|init
+parameter_list|(
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+function_decl|;
+comment|/// Mark live-in registers of basic block as used.
+name|void
+name|setLiveInsUsed
+parameter_list|(
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;

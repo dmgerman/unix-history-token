@@ -106,7 +106,9 @@ name|virtual
 operator|~
 name|DiagnosticPrinter
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|// Simple types.
 name|virtual
 name|DiagnosticPrinter
@@ -589,13 +591,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_DIAGNOSTICPRINTER_H
+end_comment
 
 end_unit
 

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"AMDGPUMCInstLower.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
 end_include
 
@@ -79,6 +85,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MCOperand
+decl_stmt|;
 name|class
 name|AMDGPUAsmPrinter
 name|final
@@ -174,6 +183,16 @@ argument_list|(
 name|false
 argument_list|)
 block|,
+name|NumSGPRsForWavesPerEU
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumVGPRsForWavesPerEU
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|ReservedVGPRFirst
 argument_list|(
 literal|0
@@ -264,6 +283,14 @@ name|LDSSize
 block|;
 name|bool
 name|FlatUsed
+block|;
+comment|// Number of SGPRs that meets number of waves per execution unit request.
+name|uint32_t
+name|NumSGPRsForWavesPerEU
+block|;
+comment|// Number of VGPRs that meets number of waves per execution unit request.
+name|uint32_t
+name|NumVGPRsForWavesPerEU
 block|;
 comment|// If ReservedVGPRCount is 0 then must be 0. Otherwise, this is the first
 comment|// fixed VGPR number reserved.
@@ -372,18 +399,38 @@ argument|MachineFunction&MF
 argument_list|)
 name|override
 block|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
 name|override
-block|{
-return|return
-literal|"AMDGPU Assembly Printer"
-return|;
-block|}
+block|;
+comment|/// \brief Wrapper for MCInstLowering.lowerOperand() for the tblgen'erated
+comment|/// pseudo lowering.
+name|bool
+name|lowerOperand
+argument_list|(
+argument|const MachineOperand&MO
+argument_list|,
+argument|MCOperand&MCOp
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief tblgen'erated driver function for lowering simple MI->MC pseudo
+comment|/// instructions.
+name|bool
+name|emitPseudoExpansionLowering
+argument_list|(
+name|MCStreamer
+operator|&
+name|OutStreamer
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+block|;
 comment|/// Implemented in AMDGPUMCInstLower.cpp
 name|void
 name|EmitInstruction
@@ -417,6 +464,14 @@ argument_list|)
 name|override
 block|;
 name|bool
+name|isBlockOnlyReachableByFallthrough
+argument_list|(
+argument|const MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
 name|PrintAsmOperand
 argument_list|(
 argument|const MachineInstr *MI
@@ -430,24 +485,6 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 name|override
-block|;
-name|void
-name|emitStartOfRuntimeMetadata
-argument_list|(
-specifier|const
-name|Module
-operator|&
-name|M
-argument_list|)
-block|;
-name|void
-name|emitRuntimeMetadata
-argument_list|(
-specifier|const
-name|Function
-operator|&
-name|F
-argument_list|)
 block|;
 name|protected
 operator|:

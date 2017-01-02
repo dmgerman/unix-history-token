@@ -1163,6 +1163,29 @@ name|Id1
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// AddAllArgsExcept - Render all arguments matching any of the given ids
+comment|/// and not matching any of the excluded ids.
+name|void
+name|AddAllArgsExcept
+argument_list|(
+name|ArgStringList
+operator|&
+name|Output
+argument_list|,
+name|ArrayRef
+operator|<
+name|OptSpecifier
+operator|>
+name|Ids
+argument_list|,
+name|ArrayRef
+operator|<
+name|OptSpecifier
+operator|>
+name|ExcludeIds
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// AddAllArgs - Render all arguments matching any of the given ids.
 name|void
 name|AddAllArgs

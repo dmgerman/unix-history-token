@@ -2342,6 +2342,21 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getProfileCountFromFreq
+argument_list|(
+argument|const Function&F
+argument_list|,
+argument|uint64_t Freq
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|void
 name|setBlockFreq
@@ -4638,6 +4653,32 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getProfileCountFromFreq
+argument_list|(
+argument|const Function&F
+argument_list|,
+argument|uint64_t Freq
+argument_list|)
+specifier|const
+block|{
+return|return
+name|BlockFrequencyInfoImplBase
+operator|::
+name|getProfileCountFromFreq
+argument_list|(
+name|F
+argument_list|,
+name|Freq
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_function_decl
 name|void
 name|setBlockFreq
@@ -6726,8 +6767,8 @@ typedef|typedef
 name|typename
 name|GTraits
 operator|::
-name|NodeType
-name|NodeType
+name|NodeRef
+name|NodeRef
 expr_stmt|;
 end_typedef
 
@@ -6787,7 +6828,7 @@ operator|::
 name|string
 name|getNodeAttributes
 argument_list|(
-argument|const NodeType *Node
+argument|NodeRef Node
 argument_list|,
 argument|const BlockFrequencyInfoT *Graph
 argument_list|,
@@ -6850,8 +6891,7 @@ operator|++
 name|I
 control|)
 block|{
-name|NodeType
-modifier|&
+name|NodeRef
 name|N
 init|=
 operator|*
@@ -6869,7 +6909,6 @@ name|Graph
 operator|->
 name|getBlockFreq
 argument_list|(
-operator|&
 name|N
 argument_list|)
 operator|.
@@ -6964,7 +7003,7 @@ operator|::
 name|string
 name|getNodeLabel
 argument_list|(
-argument|const NodeType *Node
+argument|NodeRef Node
 argument_list|,
 argument|const BlockFrequencyInfoT *Graph
 argument_list|,
@@ -7089,7 +7128,7 @@ operator|::
 name|string
 name|getEdgeAttributes
 argument_list|(
-argument|const NodeType *Node
+argument|NodeRef Node
 argument_list|,
 argument|EdgeIter EI
 argument_list|,

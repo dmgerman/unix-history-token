@@ -59,6 +59,15 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+include|#
+directive|include
+file|"AMDGPUPTNote.h"
+name|class
+name|DataLayout
+decl_stmt|;
+name|class
+name|Function
+decl_stmt|;
 name|class
 name|MCELFStreamer
 decl_stmt|;
@@ -66,11 +75,35 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|Type
+decl_stmt|;
+name|class
 name|AMDGPUTargetStreamer
 range|:
 name|public
 name|MCTargetStreamer
 block|{
+name|protected
+operator|:
+name|MCContext
+operator|&
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Streamer
+operator|.
+name|getContext
+argument_list|()
+return|;
+block|}
 name|public
 operator|:
 name|AMDGPUTargetStreamer
@@ -148,6 +181,26 @@ argument|StringRef GlobalName
 argument_list|)
 operator|=
 literal|0
+block|;
+name|virtual
+name|void
+name|EmitRuntimeMetadata
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|EmitRuntimeMetadata
+argument_list|(
+argument|StringRef Metadata
+argument_list|)
+operator|=
+literal|0
 block|; }
 decl_stmt|;
 name|class
@@ -226,6 +279,20 @@ argument_list|(
 argument|StringRef GlobalName
 argument_list|)
 name|override
+block|;
+name|void
+name|EmitRuntimeMetadata
+argument_list|(
+argument|Module&M
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitRuntimeMetadata
+argument_list|(
+argument|StringRef Metadata
+argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -233,45 +300,20 @@ name|AMDGPUTargetELFStreamer
 range|:
 name|public
 name|AMDGPUTargetStreamer
-block|{    enum
-name|NoteType
 block|{
-name|NT_AMDGPU_HSA_CODE_OBJECT_VERSION
-operator|=
-literal|1
-block|,
-name|NT_AMDGPU_HSA_HSAIL
-operator|=
-literal|2
-block|,
-name|NT_AMDGPU_HSA_ISA
-operator|=
-literal|3
-block|,
-name|NT_AMDGPU_HSA_PRODUCER
-operator|=
-literal|4
-block|,
-name|NT_AMDGPU_HSA_PRODUCER_OPTIONS
-operator|=
-literal|5
-block|,
-name|NT_AMDGPU_HSA_EXTENSION
-operator|=
-literal|6
-block|,
-name|NT_AMDGPU_HSA_HLDEBUG_DEBUG
-operator|=
-literal|101
-block|,
-name|NT_AMDGPU_HSA_HLDEBUG_TARGET
-operator|=
-literal|102
-block|}
-block|;
 name|MCStreamer
 operator|&
 name|Streamer
+block|;
+name|void
+name|EmitAMDGPUNote
+argument_list|(
+argument|const MCExpr* DescSize
+argument_list|,
+argument|AMDGPU::PT_NOTE::NoteType Type
+argument_list|,
+argument|std::function<void(MCELFStreamer&)> EmitDesc
+argument_list|)
 block|;
 name|public
 operator|:
@@ -338,6 +380,20 @@ name|void
 name|EmitAMDGPUHsaProgramScopeGlobal
 argument_list|(
 argument|StringRef GlobalName
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitRuntimeMetadata
+argument_list|(
+argument|Module&M
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitRuntimeMetadata
+argument_list|(
+argument|StringRef Metadata
 argument_list|)
 name|override
 block|; }

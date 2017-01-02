@@ -83,6 +83,24 @@ directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -92,9 +110,6 @@ name|APInt
 decl_stmt|;
 name|class
 name|Argument
-decl_stmt|;
-name|class
-name|AssemblyAnnotationWriter
 decl_stmt|;
 name|class
 name|BasicBlock
@@ -148,6 +163,9 @@ name|class
 name|ModuleSlotTracker
 decl_stmt|;
 name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -155,15 +173,6 @@ name|Twine
 decl_stmt|;
 name|class
 name|Type
-decl_stmt|;
-name|class
-name|ValueHandleBase
-decl_stmt|;
-name|class
-name|ValueSymbolTable
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 name|template
 operator|<
@@ -551,7 +560,9 @@ name|public
 operator|:
 name|user_iterator_impl
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|bool
 name|operator
 operator|==
@@ -709,26 +720,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|Value
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-name|Value
-argument_list|(
-specifier|const
-name|Value
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
 name|protected
 label|:
 name|Value
@@ -740,6 +731,26 @@ argument_list|)
 empty_stmt|;
 name|public
 label|:
+name|Value
+argument_list|(
+specifier|const
+name|Value
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|Value
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|Value
@@ -880,6 +891,17 @@ name|destroyValueName
 parameter_list|()
 function_decl|;
 name|void
+name|doRAUW
+parameter_list|(
+name|Value
+modifier|*
+name|New
+parameter_list|,
+name|bool
+name|NoMetadata
+parameter_list|)
+function_decl|;
+name|void
 name|setNameImpl
 parameter_list|(
 specifier|const
@@ -892,8 +914,9 @@ name|public
 label|:
 comment|/// \brief Return a constant reference to the value's name.
 comment|///
-comment|/// This is cheap and guaranteed to return the same reference as long as the
-comment|/// value is not modified.
+comment|/// This guaranteed to return the same reference as long as the value is not
+comment|/// modified.  If the value has a name, this does a hashtable lookup, so it's
+comment|/// not free.
 name|StringRef
 name|getName
 argument_list|()
@@ -933,6 +956,18 @@ comment|/// "V" instead of "this".  After this completes, 'this's use list is
 comment|/// guaranteed to be empty.
 name|void
 name|replaceAllUsesWith
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+comment|/// \brief Change non-metadata uses of this to point to a new Value.
+comment|///
+comment|/// Go through the uses list for this definition and make each use point to
+comment|/// "V" instead of "this". This function skips metadata entries in the list.
+name|void
+name|replaceNonMetadataUsesWith
 parameter_list|(
 name|Value
 modifier|*
@@ -1517,23 +1552,6 @@ operator|->
 name|SubclassOptionalData
 return|;
 block|}
-comment|/// \brief Clear any optional flags not set in the given Value.
-name|void
-name|intersectOptionalDataWith
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
-block|{
-name|SubclassOptionalData
-operator|&=
-name|V
-operator|->
-name|SubclassOptionalData
-expr_stmt|;
-block|}
 comment|/// \brief Return true if there is a value handle associated with this value.
 name|bool
 name|hasValueHandle
@@ -1554,6 +1572,15 @@ return|return
 name|IsUsedByMD
 return|;
 block|}
+comment|/// \brief Return true if this value is a swifterror value.
+comment|///
+comment|/// swifterror values can be either a function argument or an alloca with a
+comment|/// swifterror attribute.
+name|bool
+name|isSwiftError
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Strip off pointer casts, all-zero GEPs, and aliases.
 comment|///
 comment|/// Returns the original uncasted value.  If this is called on a non-pointer
@@ -3042,69 +3069,6 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|// Value* is only 4-byte aligned.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-operator|>
-name|class
-name|PointerLikeTypeTraits
-operator|<
-name|Value
-operator|*
-operator|>
-block|{
-typedef|typedef
-name|Value
-modifier|*
-name|PT
-typedef|;
-name|public
-operator|:
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|getAsVoidPointer
-argument_list|(
-argument|PT P
-argument_list|)
-block|{
-return|return
-name|P
-return|;
-block|}
-specifier|static
-specifier|inline
-name|PT
-name|getFromVoidPointer
-argument_list|(
-argument|void *P
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|PT
-operator|>
-operator|(
-name|P
-operator|)
-return|;
-block|}
-block|enum
-block|{
-name|NumLowBitsAvailable
-operator|=
-literal|2
-block|}
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 end_comment
 
@@ -3164,9 +3128,9 @@ argument_list|,
 argument|unsigned Length
 argument_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
+ifndef|#
+directive|ifndef
+name|NDEBUG
 for|for
 control|(
 name|LLVMValueRef
@@ -3189,7 +3153,7 @@ condition|;
 operator|++
 name|I
 control|)
-name|cast
+name|unwrap
 operator|<
 name|T
 operator|>
@@ -3198,6 +3162,7 @@ operator|*
 name|I
 operator|)
 expr_stmt|;
+comment|// For side effect of calling assert on invalid usage.
 endif|#
 directive|endif
 operator|(
@@ -3257,13 +3222,17 @@ end_function
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_VALUE_H
+end_comment
 
 end_unit
 

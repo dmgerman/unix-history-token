@@ -149,6 +149,8 @@ name|FRAMEADDR
 block|,
 name|RETURNADDR
 block|,
+name|ADDROFRETURNADDR
+block|,
 comment|/// LOCAL_RECOVER - Represents the llvm.localrecover intrinsic.
 comment|/// Materializes the offset from the local object pointer of another
 comment|/// function to a particular local object passed to llvm.localescape. The
@@ -167,6 +169,11 @@ comment|/// FRAME_TO_ARGS_OFFSET - This node represents offset from frame pointe
 comment|/// first (possible) on-stack argument. This is needed for correct stack
 comment|/// adjustment during unwind.
 name|FRAME_TO_ARGS_OFFSET
+block|,
+comment|/// EH_DWARF_CFA - This node represents the pointer to the DWARF Canonical
+comment|/// Frame Address (CFA), generally the value of the stack pointer at the
+comment|/// call site in the previous frame.
+name|EH_DWARF_CFA
 block|,
 comment|/// OUTCHAIN = EH_RETURN(INCHAIN, OFFSET, HANDLER) - This node represents
 comment|/// 'eh_return' gcc dwarf builtin, which is used to return from

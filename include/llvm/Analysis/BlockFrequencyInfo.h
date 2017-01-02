@@ -238,6 +238,19 @@ argument|const BasicBlock *BB
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns the estimated profile count of \p Freq.
+comment|/// This uses the frequency \p Freq and multiplies it by
+comment|/// the enclosing function's count (if available) and returns the value.
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getProfileCountFromFreq
+argument_list|(
+argument|uint64_t Freq
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|// Set the frequency of the given basic block.
 name|void
 name|setBlockFreq
@@ -341,8 +354,8 @@ name|BlockFrequencyAnalysis
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -359,10 +372,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
@@ -414,10 +424,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

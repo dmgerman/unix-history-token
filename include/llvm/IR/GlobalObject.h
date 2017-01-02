@@ -66,13 +66,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DerivedTypes.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/IR/GlobalValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -89,23 +107,11 @@ name|class
 name|Metadata
 decl_stmt|;
 name|class
-name|Module
-decl_stmt|;
-name|class
 name|GlobalObject
 range|:
 name|public
 name|GlobalValue
 block|{
-name|GlobalObject
-argument_list|(
-specifier|const
-name|GlobalObject
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
 name|protected
 operator|:
 name|GlobalObject
@@ -221,6 +227,15 @@ literal|1
 block|;
 name|public
 operator|:
+name|GlobalObject
+argument_list|(
+specifier|const
+name|GlobalObject
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
 name|unsigned
 name|getAlignment
 argument_list|()
@@ -564,13 +579,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_GLOBALOBJECT_H
+end_comment
 
 end_unit
 

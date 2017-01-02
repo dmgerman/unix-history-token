@@ -274,12 +274,6 @@ name|MachineModuleInfo
 operator|*
 name|MMI
 block|;
-comment|/// Name-mangler for global names.
-comment|///
-name|Mangler
-operator|*
-name|Mang
-block|;
 comment|/// The symbol for the current function. This is recalculated at the beginning
 comment|/// of each call to runOnMachineFunction().
 comment|///
@@ -364,9 +358,21 @@ specifier|const
 name|char
 modifier|*
 name|TimerName
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|TimerDescription
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|TimerGroupName
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|TimerGroupDescription
 decl_stmt|;
 name|HandlerInfo
 argument_list|(
@@ -382,7 +388,17 @@ argument_list|,
 specifier|const
 name|char
 operator|*
+name|TimerDescription
+argument_list|,
+specifier|const
+name|char
+operator|*
 name|TimerGroupName
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|TimerGroupDescription
 argument_list|)
 operator|:
 name|Handler
@@ -395,9 +411,19 @@ argument_list|(
 name|TimerName
 argument_list|)
 operator|,
+name|TimerDescription
+argument_list|(
+name|TimerDescription
+argument_list|)
+operator|,
 name|TimerGroupName
 argument_list|(
-argument|TimerGroupName
+name|TimerGroupName
+argument_list|)
+operator|,
+name|TimerGroupDescription
+argument_list|(
+argument|TimerGroupDescription
 argument_list|)
 block|{}
 block|}
@@ -461,6 +487,18 @@ return|return
 name|DD
 return|;
 block|}
+name|uint16_t
+name|getDwarfVersion
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setDwarfVersion
+parameter_list|(
+name|uint16_t
+name|Version
+parameter_list|)
+function_decl|;
 name|bool
 name|isPositionIndependent
 argument_list|()
@@ -552,12 +590,6 @@ modifier|&
 name|Inst
 parameter_list|)
 function_decl|;
-comment|/// Return the target triple string.
-name|StringRef
-name|getTargetTriple
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// Return the current section we are emitting to.
 specifier|const
 name|MCSection
@@ -594,6 +626,87 @@ name|GV
 argument_list|)
 decl|const
 decl_stmt|;
+comment|//===------------------------------------------------------------------===//
+comment|// XRay instrumentation implementation.
+comment|//===------------------------------------------------------------------===//
+name|public
+label|:
+comment|// This describes the kind of sled we're storing in the XRay table.
+name|enum
+name|class
+name|SledKind
+range|:
+name|uint8_t
+block|{
+name|FUNCTION_ENTER
+operator|=
+literal|0
+block|,
+name|FUNCTION_EXIT
+operator|=
+literal|1
+block|,
+name|TAIL_CALL
+operator|=
+literal|2
+block|,   }
+decl_stmt|;
+comment|// The table will contain these structs that point to the sled, the function
+comment|// containing the sled, and what kind of sled (and whether they should always
+comment|// be instrumented).
+struct|struct
+name|XRayFunctionEntry
+block|{
+specifier|const
+name|MCSymbol
+modifier|*
+name|Sled
+decl_stmt|;
+specifier|const
+name|MCSymbol
+modifier|*
+name|Function
+decl_stmt|;
+name|SledKind
+name|Kind
+decl_stmt|;
+name|bool
+name|AlwaysInstrument
+decl_stmt|;
+specifier|const
+name|class
+name|Function
+modifier|*
+name|Fn
+decl_stmt|;
+block|}
+struct|;
+comment|// All the sleds to be emitted.
+name|std
+operator|::
+name|vector
+operator|<
+name|XRayFunctionEntry
+operator|>
+name|Sleds
+expr_stmt|;
+comment|// Helper function to record a given XRay sled.
+name|void
+name|recordSled
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Sled
+parameter_list|,
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+name|SledKind
+name|Kind
+parameter_list|)
+function_decl|;
 comment|//===------------------------------------------------------------------===//
 comment|// MachineFunctionPass Implementation.
 comment|//===------------------------------------------------------------------===//
@@ -1318,22 +1431,6 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// EmitDwarfRegOp - Emit a dwarf register operation.
-name|virtual
-name|void
-name|EmitDwarfRegOp
-argument_list|(
-name|ByteStreamer
-operator|&
-name|BS
-argument_list|,
-specifier|const
-name|MachineLocation
-operator|&
-name|MLoc
-argument_list|)
-decl|const
-decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Lowering Routines
 comment|//===------------------------------------------------------------------===//

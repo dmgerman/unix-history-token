@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -74,19 +80,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/ErrorOr.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -121,6 +139,32 @@ modifier|*
 name|BufferEnd
 decl_stmt|;
 comment|// End of the buffer.
+name|protected
+label|:
+name|MemoryBuffer
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|void
+name|init
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|BufStart
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BufEnd
+parameter_list|,
+name|bool
+name|RequiresNullTerminator
+parameter_list|)
+function_decl|;
+name|public
+label|:
 name|MemoryBuffer
 argument_list|(
 specifier|const
@@ -142,30 +186,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|protected
-label|:
-name|MemoryBuffer
-argument_list|()
-block|{}
-name|void
-name|init
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|BufStart
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|BufEnd
-parameter_list|,
-name|bool
-name|RequiresNullTerminator
-parameter_list|)
-function_decl|;
-name|public
-label|:
 name|virtual
 operator|~
 name|MemoryBuffer
@@ -222,9 +242,7 @@ block|}
 comment|/// Return an identifier for this buffer, typically the filename it was read
 comment|/// from.
 name|virtual
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getBufferIdentifier
 argument_list|()
 specifier|const
@@ -260,6 +278,26 @@ argument_list|,
 argument|bool RequiresNullTerminator = true
 argument_list|,
 argument|bool IsVolatileSize = false
+argument_list|)
+expr_stmt|;
+comment|/// Read all of the specified file into a MemoryBuffer as a stream
+comment|/// (i.e. until EOF reached). This is useful for special files that
+comment|/// look like a regular file but have 0 size (e.g. /proc/cpuinfo on Linux).
+specifier|static
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>>
+name|getFileAsStream
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|Filename
 argument_list|)
 expr_stmt|;
 comment|/// Given an already-open file descriptor, map some slice of it into a
@@ -494,7 +532,9 @@ name|public
 label|:
 name|MemoryBufferRef
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|MemoryBufferRef
 argument_list|(
 name|MemoryBuffer
@@ -610,6 +650,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_MEMORYBUFFER_H
+end_comment
 
 end_unit
 

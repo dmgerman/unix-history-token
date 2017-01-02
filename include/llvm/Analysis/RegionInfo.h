@@ -166,6 +166,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/CFG.h"
 end_include
 
@@ -1239,9 +1245,12 @@ operator|<
 name|BlockT
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RegionNodeT
-operator|*
-operator|>
+operator|>>
 name|BBNodeMapT
 expr_stmt|;
 end_typedef
@@ -2660,8 +2669,8 @@ typedef|typedef
 name|typename
 name|super
 operator|::
-name|pointer
-name|pointer
+name|value_type
+name|value_type
 expr_stmt|;
 end_typedef
 
@@ -2672,9 +2681,9 @@ end_comment
 begin_macro
 name|block_iterator_wrapper
 argument_list|(
-argument|pointer Entry
+argument|value_type Entry
 argument_list|,
-argument|pointer Exit
+argument|value_type Exit
 argument_list|)
 end_macro
 
@@ -2713,7 +2722,7 @@ argument_list|()
 operator|:
 name|super
 argument_list|(
-argument|df_end<pointer>((BlockT *)nullptr)
+argument|df_end<value_type>((BlockT *)nullptr)
 argument_list|)
 block|{}
 comment|/*implicit*/
@@ -2949,12 +2958,10 @@ operator|<
 name|RegionNodeT
 operator|*
 operator|,
-name|SmallPtrSet
+name|df_iterator_default_set
 operator|<
 name|RegionNodeT
 operator|*
-operator|,
-literal|8
 operator|>
 operator|,
 name|false
@@ -2976,13 +2983,11 @@ specifier|const
 name|RegionNodeT
 operator|*
 operator|,
-name|SmallPtrSet
+name|df_iterator_default_set
 operator|<
 specifier|const
 name|RegionNodeT
 operator|*
-operator|,
-literal|8
 operator|>
 operator|,
 name|false
@@ -3012,6 +3017,27 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
+name|iterator_range
+operator|<
+name|element_iterator
+operator|>
+name|elements
+argument_list|()
+block|{
+return|return
+name|make_range
+argument_list|(
+name|element_begin
+argument_list|()
+argument_list|,
+name|element_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|const_element_iterator
 name|element_begin
 argument_list|()
@@ -3025,6 +3051,28 @@ name|element_end
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|iterator_range
+operator|<
+name|const_element_iterator
+operator|>
+name|elements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|element_begin
+argument_list|()
+argument_list|,
+name|element_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -3258,19 +3306,6 @@ name|RegionT
 operator|*
 operator|>
 name|BBtoRegionMap
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|SmallPtrSet
-operator|<
-name|RegionT
-operator|*
-operator|,
-literal|4
-operator|>
-name|RegionSet
 expr_stmt|;
 end_typedef
 
@@ -4610,8 +4645,8 @@ name|RegionInfoAnalysis
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -4626,10 +4661,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
@@ -4672,10 +4704,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
@@ -4703,10 +4732,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

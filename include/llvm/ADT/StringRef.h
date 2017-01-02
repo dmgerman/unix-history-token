@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
@@ -144,6 +150,39 @@ modifier|&
 name|Result
 parameter_list|)
 function_decl|;
+name|bool
+name|consumeUnsignedInteger
+parameter_list|(
+name|StringRef
+modifier|&
+name|Str
+parameter_list|,
+name|unsigned
+name|Radix
+parameter_list|,
+name|unsigned
+name|long
+name|long
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
+name|bool
+name|consumeSignedInteger
+parameter_list|(
+name|StringRef
+modifier|&
+name|Str
+parameter_list|,
+name|unsigned
+name|Radix
+parameter_list|,
+name|long
+name|long
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
 comment|/// StringRef - Represent a constant reference to a string, i.e. a character
 comment|/// array and a length, which need not be null terminated.
 comment|///
@@ -190,10 +229,14 @@ specifier|const
 name|char
 modifier|*
 name|Data
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// The length of the string.
 name|size_t
 name|Length
+init|=
+literal|0
 decl_stmt|;
 comment|// Workaround memcmp issue with null pointers (undefined behavior)
 comment|// by providing a specialized version
@@ -247,18 +290,22 @@ comment|/// Construct an empty string ref.
 comment|/*implicit*/
 name|StringRef
 argument_list|()
-operator|:
-name|Data
+operator|=
+expr|default
+expr_stmt|;
+comment|/// Disable conversion from nullptr.  This prevents things like
+comment|/// if (S == nullptr)
+name|StringRef
 argument_list|(
-name|nullptr
+name|std
+operator|::
+name|nullptr_t
 argument_list|)
-operator|,
-name|Length
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+name|delete
+expr_stmt|;
 comment|/// Construct a string ref from a cstring.
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 comment|/*implicit*/
 name|StringRef
 argument_list|(
@@ -270,29 +317,19 @@ argument_list|)
 operator|:
 name|Data
 argument_list|(
-argument|Str
-argument_list|)
-block|{
-name|assert
-argument_list|(
 name|Str
-operator|&&
-literal|"StringRef cannot be built from a NULL argument"
 argument_list|)
-block|;
+operator|,
 name|Length
-operator|=
-operator|::
-name|strlen
 argument_list|(
-name|Str
+argument|Str ? ::strlen(Str) :
+literal|0
 argument_list|)
-block|;
-comment|// invoking strlen(NULL) is undefined behavior
-block|}
+block|{}
 comment|/// Construct a string ref from a pointer and length.
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 comment|/*implicit*/
+name|constexpr
 name|StringRef
 argument_list|(
 argument|const char *data
@@ -309,20 +346,7 @@ name|Length
 argument_list|(
 argument|length
 argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|data
-operator|||
-name|length
-operator|==
-literal|0
-operator|)
-operator|&&
-literal|"StringRef cannot be built from a NULL argument with non-null length"
-argument_list|)
-block|;       }
+block|{}
 comment|/// Construct a string ref from an std::string.
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 comment|/*implicit*/
@@ -349,6 +373,24 @@ argument_list|(
 argument|Str.length()
 argument_list|)
 block|{}
+specifier|static
+name|StringRef
+name|withNullAsEmpty
+argument_list|(
+argument|const char *data
+argument_list|)
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|data
+operator|?
+name|data
+operator|:
+literal|""
+argument_list|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name Iterators
 comment|/// @{
@@ -443,6 +485,7 @@ comment|/// @name String Operations
 comment|/// @{
 comment|/// data - Get a pointer to the start of the string (which may not be null
 comment|/// terminated).
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 specifier|const
 name|char
@@ -456,6 +499,7 @@ name|Data
 return|;
 block|}
 comment|/// empty - Check if the string is empty.
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|empty
@@ -469,6 +513,7 @@ literal|0
 return|;
 block|}
 comment|/// size - Get the string size.
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|size_t
 name|size
@@ -480,6 +525,7 @@ name|Length
 return|;
 block|}
 comment|/// front - Get the first character in the string.
+name|LLVM_NODISCARD
 name|char
 name|front
 argument_list|()
@@ -500,6 +546,7 @@ index|]
 return|;
 block|}
 comment|/// back - Get the last character in the string.
+name|LLVM_NODISCARD
 name|char
 name|back
 argument_list|()
@@ -527,6 +574,7 @@ operator|<
 name|typename
 name|Allocator
 operator|>
+name|LLVM_NODISCARD
 name|StringRef
 name|copy
 argument_list|(
@@ -583,6 +631,7 @@ return|;
 block|}
 comment|/// equals - Check for string equality, this is more efficient than
 comment|/// compare() when the relative ordering of inequal strings isn't needed.
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|equals
@@ -618,6 +667,7 @@ operator|)
 return|;
 block|}
 comment|/// equals_lower - Check for string equality, ignoring case.
+name|LLVM_NODISCARD
 name|bool
 name|equals_lower
 argument_list|(
@@ -643,6 +693,7 @@ return|;
 block|}
 comment|/// compare - Compare two strings; the result is -1, 0, or 1 if this string
 comment|/// is lexicographically less than, equal to, or greater than the \p RHS.
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|int
 name|compare
@@ -714,6 +765,7 @@ literal|1
 return|;
 block|}
 comment|/// compare_lower - Compare two strings, ignoring case.
+name|LLVM_NODISCARD
 name|int
 name|compare_lower
 argument_list|(
@@ -724,6 +776,7 @@ decl|const
 decl_stmt|;
 comment|/// compare_numeric - Compare two strings, treating sequences of digits as
 comment|/// numbers.
+name|LLVM_NODISCARD
 name|int
 name|compare_numeric
 argument_list|(
@@ -750,6 +803,7 @@ comment|/// \returns the minimum number of character insertions, removals,
 comment|/// or (if \p AllowReplacements is \c true) replacements needed to
 comment|/// transform one of the given strings into the other. If zero,
 comment|/// the strings are identical.
+name|LLVM_NODISCARD
 name|unsigned
 name|edit_distance
 argument_list|(
@@ -769,6 +823,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// str - Get the contents as an std::string.
+name|LLVM_NODISCARD
 name|std
 operator|::
 name|string
@@ -813,6 +868,7 @@ comment|/// @{
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|char
 name|operator
 index|[]
@@ -839,6 +895,63 @@ index|]
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Disallow accidental assignment from a temporary std::string.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The declaration here is extra complicated so that `stringRef = {}`
+end_comment
+
+begin_comment
+comment|/// and `stringRef = "abc"` continue to select the move assignment operator.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_same
+operator|<
+name|T
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+operator|::
+name|value
+operator|,
+name|StringRef
+operator|>
+operator|::
+name|type
+operator|&
+name|operator
+operator|=
+operator|(
+name|T
+operator|&&
+name|Str
+operator|)
+operator|=
+name|delete
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// @}
@@ -884,6 +997,7 @@ comment|/// Check if this string starts with the given \p Prefix.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|startswith
@@ -923,6 +1037,7 @@ comment|/// Check if this string starts with the given \p Prefix, ignoring case.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|bool
 name|startswith_lower
 argument_list|(
@@ -938,6 +1053,7 @@ comment|/// Check if this string ends with the given \p Suffix.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|endswith
@@ -982,6 +1098,7 @@ comment|/// Check if this string ends with the given \p Suffix, ignoring case.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|bool
 name|endswith_lower
 argument_list|(
@@ -1021,6 +1138,7 @@ comment|/// found.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|size_t
 name|find
@@ -1098,6 +1216,191 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Search for the first character \p C in the string, ignoring case.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The index of the first occurrence of \p C, or npos if not
+end_comment
+
+begin_comment
+comment|/// found.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|size_t
+name|find_lower
+argument_list|(
+name|char
+name|C
+argument_list|,
+name|size_t
+name|From
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Search for the first character satisfying the predicate \p F
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The index of the first character satisfying \p F starting from
+end_comment
+
+begin_comment
+comment|/// \p From, or npos if not found.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|size_t
+name|find_if
+argument_list|(
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|char
+argument_list|)
+operator|>
+name|F
+argument_list|,
+name|size_t
+name|From
+operator|=
+literal|0
+argument_list|)
+decl|const
+block|{
+name|StringRef
+name|S
+init|=
+name|drop_front
+argument_list|(
+name|From
+argument_list|)
+decl_stmt|;
+while|while
+condition|(
+operator|!
+name|S
+operator|.
+name|empty
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|F
+argument_list|(
+name|S
+operator|.
+name|front
+argument_list|()
+argument_list|)
+condition|)
+return|return
+name|size
+argument_list|()
+operator|-
+name|S
+operator|.
+name|size
+argument_list|()
+return|;
+name|S
+operator|=
+name|S
+operator|.
+name|drop_front
+argument_list|()
+expr_stmt|;
+block|}
+return|return
+name|npos
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Search for the first character not satisfying the predicate \p F
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The index of the first character not satisfying \p F starting
+end_comment
+
+begin_comment
+comment|/// from \p From, or npos if not found.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|size_t
+name|find_if_not
+argument_list|(
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|char
+argument_list|)
+operator|>
+name|F
+argument_list|,
+name|size_t
+name|From
+operator|=
+literal|0
+argument_list|)
+decl|const
+block|{
+return|return
+name|find_if
+argument_list|(
+index|[
+name|F
+index|]
+operator|(
+name|char
+name|c
+operator|)
+block|{
+return|return
+operator|!
+name|F
+argument_list|(
+name|c
+argument_list|)
+return|;
+block|}
+operator|,
+name|From
+block|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|}
 comment|/// Search for the first string \p Str in the string.
 end_comment
 
@@ -1114,8 +1417,42 @@ comment|/// found.
 end_comment
 
 begin_decl_stmt
+unit|LLVM_NODISCARD
 name|size_t
 name|find
+argument_list|(
+name|StringRef
+name|Str
+argument_list|,
+name|size_t
+name|From
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Search for the first string \p Str in the string, ignoring case.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The index of the first occurrence of \p Str, or npos if not
+end_comment
+
+begin_comment
+comment|/// found.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|size_t
+name|find_lower
 argument_list|(
 name|StringRef
 name|Str
@@ -1146,6 +1483,7 @@ comment|/// found.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|rfind
 argument_list|(
@@ -1205,6 +1543,39 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Search for the last character \p C in the string, ignoring case.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The index of the last occurrence of \p C, or npos if not
+end_comment
+
+begin_comment
+comment|/// found.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|size_t
+name|rfind_lower
+argument_list|(
+name|char
+name|C
+argument_list|,
+name|size_t
+name|From
+operator|=
+name|npos
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Search for the last string \p Str in the string.
 end_comment
 
@@ -1221,8 +1592,37 @@ comment|/// found.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|rfind
+argument_list|(
+name|StringRef
+name|Str
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Search for the last string \p Str in the string, ignoring case.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The index of the last occurrence of \p Str, or npos if not
+end_comment
+
+begin_comment
+comment|/// found.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|size_t
+name|rfind_lower
 argument_list|(
 name|StringRef
 name|Str
@@ -1240,6 +1640,7 @@ comment|/// found. Same as find.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|find_first_of
 argument_list|(
@@ -1281,6 +1682,7 @@ comment|/// Complexity: O(size() + Chars.size())
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|find_first_of
 argument_list|(
@@ -1305,6 +1707,7 @@ comment|/// found.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|find_first_not_of
 argument_list|(
@@ -1337,6 +1740,7 @@ comment|/// Complexity: O(size() + Chars.size())
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|find_first_not_of
 argument_list|(
@@ -1361,6 +1765,7 @@ comment|/// found.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|find_last_of
 argument_list|(
@@ -1402,6 +1807,7 @@ comment|/// Complexity: O(size() + Chars.size())
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|find_last_of
 argument_list|(
@@ -1426,6 +1832,7 @@ comment|/// found.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|find_last_not_of
 argument_list|(
@@ -1458,6 +1865,7 @@ comment|/// Complexity: O(size() + Chars.size())
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|find_last_not_of
 argument_list|(
@@ -1471,6 +1879,126 @@ name|npos
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Return true if the given string is a substring of *this, and false
+end_comment
+
+begin_comment
+comment|/// otherwise.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|bool
+name|contains
+argument_list|(
+name|StringRef
+name|Other
+argument_list|)
+decl|const
+block|{
+return|return
+name|find
+argument_list|(
+name|Other
+argument_list|)
+operator|!=
+name|npos
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Return true if the given character is contained in *this, and false
+end_comment
+
+begin_comment
+comment|/// otherwise.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|bool
+name|contains
+argument_list|(
+name|char
+name|C
+argument_list|)
+decl|const
+block|{
+return|return
+name|find_first_of
+argument_list|(
+name|C
+argument_list|)
+operator|!=
+name|npos
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Return true if the given string is a substring of *this, and false
+end_comment
+
+begin_comment
+comment|/// otherwise.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|bool
+name|contains_lower
+argument_list|(
+name|StringRef
+name|Other
+argument_list|)
+decl|const
+block|{
+return|return
+name|find_lower
+argument_list|(
+name|Other
+argument_list|)
+operator|!=
+name|npos
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Return true if the given character is contained in *this, and false
+end_comment
+
+begin_comment
+comment|/// otherwise.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|bool
+name|contains_lower
+argument_list|(
+name|char
+name|C
+argument_list|)
+decl|const
+block|{
+return|return
+name|find_lower
+argument_list|(
+name|C
+argument_list|)
+operator|!=
+name|npos
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -1490,6 +2018,7 @@ comment|/// Return the number of occurrences of \p C in the string.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|size_t
 name|count
 argument_list|(
@@ -1747,6 +2276,204 @@ end_return
 
 begin_comment
 unit|}
+comment|/// Parse the current string as an integer of the specified radix.  If
+end_comment
+
+begin_comment
+comment|/// \p Radix is specified as zero, this does radix autosensing using
+end_comment
+
+begin_comment
+comment|/// extended C rules: 0 is octal, 0x is hex, 0b is binary.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If the string does not begin with a number of the specified radix,
+end_comment
+
+begin_comment
+comment|/// this returns true to signify the error. The string is considered
+end_comment
+
+begin_comment
+comment|/// erroneous if empty or if it overflows T.
+end_comment
+
+begin_comment
+comment|/// The portion of the string representing the discovered numeric value
+end_comment
+
+begin_comment
+comment|/// is removed from the beginning of the string.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_signed
+operator|,
+name|bool
+operator|>
+operator|::
+name|type
+name|consumeInteger
+argument_list|(
+argument|unsigned Radix
+argument_list|,
+argument|T&Result
+argument_list|)
+block|{
+name|long
+name|long
+name|LLVal
+block|;
+if|if
+condition|(
+name|consumeSignedInteger
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|Radix
+argument_list|,
+name|LLVal
+argument_list|)
+operator|||
+name|static_cast
+operator|<
+name|long
+name|long
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|T
+operator|>
+operator|(
+name|LLVal
+operator|)
+operator|)
+operator|!=
+name|LLVal
+condition|)
+return|return
+name|true
+return|;
+name|Result
+operator|=
+name|LLVal
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|false
+return|;
+end_return
+
+begin_expr_stmt
+unit|}      template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+operator|!
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_signed
+operator|,
+name|bool
+operator|>
+operator|::
+name|type
+name|consumeInteger
+argument_list|(
+argument|unsigned Radix
+argument_list|,
+argument|T&Result
+argument_list|)
+block|{
+name|unsigned
+name|long
+name|long
+name|ULLVal
+block|;
+if|if
+condition|(
+name|consumeUnsignedInteger
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|Radix
+argument_list|,
+name|ULLVal
+argument_list|)
+operator|||
+name|static_cast
+operator|<
+name|unsigned
+name|long
+name|long
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|T
+operator|>
+operator|(
+name|ULLVal
+operator|)
+operator|)
+operator|!=
+name|ULLVal
+condition|)
+return|return
+name|true
+return|;
+name|Result
+operator|=
+name|ULLVal
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|false
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// Parse the current string as an integer of the specified \p Radix, or of
 end_comment
 
@@ -1818,6 +2545,7 @@ comment|// Convert the given ASCII string to lowercase.
 end_comment
 
 begin_expr_stmt
+name|LLVM_NODISCARD
 name|std
 operator|::
 name|string
@@ -1832,6 +2560,7 @@ comment|/// Convert the given ASCII string to uppercase.
 end_comment
 
 begin_expr_stmt
+name|LLVM_NODISCARD
 name|std
 operator|::
 name|string
@@ -1890,6 +2619,7 @@ comment|/// suffix (starting with \p Start) will be returned.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|StringRef
 name|substr
@@ -1938,6 +2668,180 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Return a StringRef equal to 'this' but with only the first \p N
+end_comment
+
+begin_comment
+comment|/// elements remaining.  If \p N is greater than the length of the
+end_comment
+
+begin_comment
+comment|/// string, the entire string is returned.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|StringRef
+name|take_front
+argument_list|(
+name|size_t
+name|N
+operator|=
+literal|1
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|N
+operator|>=
+name|size
+argument_list|()
+condition|)
+return|return
+operator|*
+name|this
+return|;
+return|return
+name|drop_back
+argument_list|(
+name|size
+argument_list|()
+operator|-
+name|N
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Return a StringRef equal to 'this' but with only the first \p N
+end_comment
+
+begin_comment
+comment|/// elements remaining.  If \p N is greater than the length of the
+end_comment
+
+begin_comment
+comment|/// string, the entire string is returned.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|StringRef
+name|take_back
+argument_list|(
+name|size_t
+name|N
+operator|=
+literal|1
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|N
+operator|>=
+name|size
+argument_list|()
+condition|)
+return|return
+operator|*
+name|this
+return|;
+return|return
+name|drop_front
+argument_list|(
+name|size
+argument_list|()
+operator|-
+name|N
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Return the longest prefix of 'this' such that every character
+end_comment
+
+begin_comment
+comment|/// in the prefix satisfies the given predicate.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|StringRef
+name|take_while
+argument_list|(
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|char
+argument_list|)
+operator|>
+name|F
+argument_list|)
+decl|const
+block|{
+return|return
+name|substr
+argument_list|(
+literal|0
+argument_list|,
+name|find_if_not
+argument_list|(
+name|F
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Return the longest prefix of 'this' such that no character in
+end_comment
+
+begin_comment
+comment|/// the prefix satisfies the given predicate.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|StringRef
+name|take_until
+argument_list|(
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|char
+argument_list|)
+operator|>
+name|F
+argument_list|)
+decl|const
+block|{
+return|return
+name|substr
+argument_list|(
+literal|0
+argument_list|,
+name|find_if
+argument_list|(
+name|F
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Return a StringRef equal to 'this' but with the first \p N elements
 end_comment
 
@@ -1946,6 +2850,7 @@ comment|/// dropped.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|StringRef
 name|drop_front
@@ -1985,6 +2890,7 @@ comment|/// dropped.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|StringRef
 name|drop_back
@@ -2019,6 +2925,170 @@ argument_list|)
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// Return a StringRef equal to 'this', but with all characters satisfying
+end_comment
+
+begin_comment
+comment|/// the given predicate dropped from the beginning of the string.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|StringRef
+name|drop_while
+argument_list|(
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|char
+argument_list|)
+operator|>
+name|F
+argument_list|)
+decl|const
+block|{
+return|return
+name|substr
+argument_list|(
+name|find_if_not
+argument_list|(
+name|F
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Return a StringRef equal to 'this', but with all characters not
+end_comment
+
+begin_comment
+comment|/// satisfying the given predicate dropped from the beginning of the string.
+end_comment
+
+begin_decl_stmt
+name|LLVM_NODISCARD
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|StringRef
+name|drop_until
+argument_list|(
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|char
+argument_list|)
+operator|>
+name|F
+argument_list|)
+decl|const
+block|{
+return|return
+name|substr
+argument_list|(
+name|find_if
+argument_list|(
+name|F
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Returns true if this StringRef has the given prefix and removes that
+end_comment
+
+begin_comment
+comment|/// prefix.
+end_comment
+
+begin_function
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|bool
+name|consume_front
+parameter_list|(
+name|StringRef
+name|Prefix
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|startswith
+argument_list|(
+name|Prefix
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+operator|*
+name|this
+operator|=
+name|drop_front
+argument_list|(
+name|Prefix
+operator|.
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Returns true if this StringRef has the given suffix and removes that
+end_comment
+
+begin_comment
+comment|/// suffix.
+end_comment
+
+begin_function
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+name|bool
+name|consume_back
+parameter_list|(
+name|StringRef
+name|Suffix
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|endswith
+argument_list|(
+name|Suffix
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+operator|*
+name|this
+operator|=
+name|drop_back
+argument_list|(
+name|Suffix
+operator|.
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// Return a reference to the substring from [Start, End).
@@ -2065,6 +3135,7 @@ comment|/// be returned.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|StringRef
 name|slice
@@ -2162,6 +3233,7 @@ comment|/// \returns The split substrings.
 end_comment
 
 begin_expr_stmt
+name|LLVM_NODISCARD
 name|std
 operator|::
 name|pair
@@ -2271,7 +3343,8 @@ comment|/// \return - The split substrings.
 end_comment
 
 begin_expr_stmt
-unit|std
+unit|LLVM_NODISCARD
+name|std
 operator|::
 name|pair
 operator|<
@@ -2544,6 +3617,7 @@ comment|/// \return - The split substrings.
 end_comment
 
 begin_expr_stmt
+name|LLVM_NODISCARD
 name|std
 operator|::
 name|pair
@@ -2620,16 +3694,15 @@ begin_comment
 comment|/// the left removed.
 end_comment
 
-begin_macro
-unit|StringRef
+begin_decl_stmt
+unit|LLVM_NODISCARD
+name|StringRef
 name|ltrim
 argument_list|(
-argument|char Char
+name|char
+name|Char
 argument_list|)
-end_macro
-
-begin_expr_stmt
-specifier|const
+decl|const
 block|{
 return|return
 name|drop_front
@@ -2648,7 +3721,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// Return string with consecutive characters in \p Chars starting from
@@ -2659,6 +3732,7 @@ comment|/// the left removed.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|StringRef
 name|ltrim
 argument_list|(
@@ -2697,6 +3771,7 @@ comment|/// right removed.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|StringRef
 name|rtrim
 argument_list|(
@@ -2737,6 +3812,7 @@ comment|/// the right removed.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|StringRef
 name|rtrim
 argument_list|(
@@ -2779,6 +3855,7 @@ comment|/// left and right removed.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|StringRef
 name|trim
 argument_list|(
@@ -2810,6 +3887,7 @@ comment|/// the left and right removed.
 end_comment
 
 begin_decl_stmt
+name|LLVM_NODISCARD
 name|StringRef
 name|trim
 argument_list|(
@@ -2840,6 +3918,113 @@ end_comment
 
 begin_comment
 unit|};
+comment|/// A wrapper around a string literal that serves as a proxy for constructing
+end_comment
+
+begin_comment
+comment|/// global tables of StringRefs with the length computed at compile time.
+end_comment
+
+begin_comment
+comment|/// In order to avoid the invocation of a global constructor, StringLiteral
+end_comment
+
+begin_comment
+comment|/// should *only* be used in a constexpr context, as such:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// constexpr StringLiteral S("test");
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|class
+name|StringLiteral
+range|:
+name|public
+name|StringRef
+block|{
+name|public
+operator|:
+name|template
+operator|<
+name|size_t
+name|N
+operator|>
+name|constexpr
+name|StringLiteral
+argument_list|(
+argument|const char (&Str)[N]
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|&&
+name|__has_attribute
+argument_list|(
+name|enable_if
+argument_list|)
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|push
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|ignored
+literal|"-Wgcc-compat"
+name|__attribute
+argument_list|(
+operator|(
+name|enable_if
+argument_list|(
+name|__builtin_strlen
+argument_list|(
+name|Str
+argument_list|)
+operator|==
+name|N
+operator|-
+literal|1
+argument_list|,
+literal|"invalid string literal"
+argument_list|)
+operator|)
+argument_list|)
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|pop
+endif|#
+directive|endif
+operator|:
+name|StringRef
+argument_list|(
+argument|Str
+argument_list|,
+argument|N -
+literal|1
+argument_list|)
+block|{     }
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @name StringRef Comparison Operators
 end_comment
 
@@ -3050,6 +4235,7 @@ comment|/// \brief Compute a hash_code for a StringRef.
 end_comment
 
 begin_function_decl
+name|LLVM_NODISCARD
 name|hash_code
 name|hash_value
 parameter_list|(

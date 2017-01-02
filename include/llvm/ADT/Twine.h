@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -76,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -83,6 +83,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|formatv_object_base
+decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
@@ -174,6 +177,9 @@ block|,
 comment|/// A pointer to a SmallString instance.
 name|SmallStringKind
 block|,
+comment|/// A pointer to a formatv_object_base instance.
+name|FormatvObjectKind
+block|,
 comment|/// A char value, to render as a character.
 name|CharKind
 block|,
@@ -235,6 +241,11 @@ operator|>
 operator|*
 name|smallString
 expr_stmt|;
+specifier|const
+name|formatv_object_base
+modifier|*
+name|formatvObject
+decl_stmt|;
 name|char
 name|character
 decl_stmt|;
@@ -276,8 +287,6 @@ name|uHex
 decl_stmt|;
 block|}
 union|;
-name|private
-label|:
 comment|/// LHS - The prefix in the concatenation, which may be uninitialized for
 comment|/// Null or Empty kinds.
 name|Child
@@ -296,8 +305,6 @@ comment|/// RHSKind - The NodeKind of the right hand side, \see getRHSKind().
 name|NodeKind
 name|RHSKind
 decl_stmt|;
-name|private
-label|:
 comment|/// Construct a nullary twine; the kind must be NullKind or EmptyKind.
 name|explicit
 name|Twine
@@ -415,21 +422,6 @@ operator|&&
 literal|"Invalid twine!"
 argument_list|)
 block|;     }
-comment|/// Since the intended use of twines is as temporary objects, assignments
-comment|/// when concatenating might cause undefined behavior or stack corruptions
-name|Twine
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|Twine
-operator|&
-name|Other
-operator|)
-operator|=
-name|delete
-expr_stmt|;
 comment|/// Check for the null twine.
 name|bool
 name|isNull
@@ -855,6 +847,41 @@ operator|&&
 literal|"Invalid twine!"
 argument_list|)
 block|;     }
+comment|/// Construct from a formatv_object_base.
+comment|/*implicit*/
+name|Twine
+argument_list|(
+specifier|const
+name|formatv_object_base
+operator|&
+name|Fmt
+argument_list|)
+operator|:
+name|LHSKind
+argument_list|(
+name|FormatvObjectKind
+argument_list|)
+operator|,
+name|RHSKind
+argument_list|(
+argument|EmptyKind
+argument_list|)
+block|{
+name|LHS
+operator|.
+name|formatvObject
+operator|=
+operator|&
+name|Fmt
+block|;
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+operator|&&
+literal|"Invalid twine!"
+argument_list|)
+block|;     }
 comment|/// Construct from a char.
 name|explicit
 name|Twine
@@ -1185,12 +1212,35 @@ operator|&&
 literal|"Invalid twine!"
 argument_list|)
 block|;     }
+comment|/// Since the intended use of twines is as temporary objects, assignments
+comment|/// when concatenating might cause undefined behavior or stack corruptions
+name|Twine
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Twine
+operator|&
+operator|)
+operator|=
+name|delete
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Create a 'null' string, which is an empty string that always
+end_comment
+
+begin_comment
 comment|/// concatenates to form another empty string.
+end_comment
+
+begin_function
 specifier|static
 name|Twine
 name|createNull
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Twine
@@ -1199,7 +1249,7 @@ name|NullKind
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/// @}
@@ -1983,11 +2033,19 @@ begin_comment
 comment|/// @}
 end_comment
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_TWINE_H
+end_comment
 
 end_unit
 

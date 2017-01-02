@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/ModuleSymbolTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/SymbolicFile.h"
 end_include
 
@@ -95,45 +107,28 @@ name|SymbolicFile
 block|{
 name|std
 operator|::
-name|unique_ptr
-operator|<
-name|Module
-operator|>
-name|M
-block|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Mangler
-operator|>
-name|Mang
-block|;
-name|std
-operator|::
 name|vector
 operator|<
 name|std
 operator|::
-name|pair
+name|unique_ptr
 operator|<
-name|std
-operator|::
-name|string
-block|,
-name|uint32_t
+name|Module
 operator|>>
-name|AsmSymbols
+name|Mods
 block|;
-name|public
-operator|:
+name|ModuleSymbolTable
+name|SymTab
+block|;
 name|IRObjectFile
 argument_list|(
 argument|MemoryBufferRef Object
 argument_list|,
-argument|std::unique_ptr<Module> M
+argument|std::vector<std::unique_ptr<Module>> Mods
 argument_list|)
 block|;
+name|public
+operator|:
 operator|~
 name|IRObjectFile
 argument_list|()
@@ -167,89 +162,22 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|GlobalValue
-operator|*
-name|getSymbolGV
-argument_list|(
-argument|DataRefImpl Symb
-argument_list|)
-block|;
-specifier|const
-name|GlobalValue
-operator|*
-name|getSymbolGV
-argument_list|(
-argument|DataRefImpl Symb
-argument_list|)
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|IRObjectFile
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getSymbolGV
-argument_list|(
-name|Symb
-argument_list|)
-return|;
-block|}
 name|basic_symbol_iterator
-name|symbol_begin_impl
+name|symbol_begin
 argument_list|()
 specifier|const
 name|override
 block|;
 name|basic_symbol_iterator
-name|symbol_end_impl
+name|symbol_end
 argument_list|()
 specifier|const
 name|override
 block|;
-specifier|const
-name|Module
-operator|&
-name|getModule
+name|StringRef
+name|getTargetTriple
 argument_list|()
 specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|IRObjectFile
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getModule
-argument_list|()
-return|;
-block|}
-name|Module
-operator|&
-name|getModule
-argument_list|()
-block|{
-return|return
-operator|*
-name|M
-return|;
-block|}
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|Module
-operator|>
-name|takeModule
-argument_list|()
 block|;
 specifier|static
 specifier|inline
@@ -281,22 +209,6 @@ operator|&
 name|Obj
 argument_list|)
 block|;
-comment|/// Parse inline ASM and collect the symbols that are not defined in
-comment|/// the current module.
-comment|///
-comment|/// For each found symbol, call \p AsmUndefinedRefs with the name of the
-comment|/// symbol found and the associated flags.
-specifier|static
-name|void
-name|CollectAsmUndefinedRefs
-argument_list|(
-argument|const Triple&TheTriple
-argument_list|,
-argument|StringRef InlineAsm
-argument_list|,
-argument|function_ref<void(StringRef, BasicSymbolRef::Flags)> AsmUndefinedRefs
-argument_list|)
-block|;
 comment|/// \brief Finds and returns bitcode in the given memory buffer (which may
 comment|/// be either a bitcode file or a native object file with embedded bitcode),
 comment|/// or an error code if not found.
@@ -311,7 +223,7 @@ argument|MemoryBufferRef Object
 argument_list|)
 block|;
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::

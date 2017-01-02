@@ -150,6 +150,9 @@ block|,
 name|UseHVXDblOps
 block|;
 name|bool
+name|UseLongCalls
+block|;
+name|bool
 name|ModeIEEERndNear
 block|;
 name|public
@@ -454,6 +457,15 @@ name|UseHVXDblOps
 return|;
 block|}
 name|bool
+name|useLongCalls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseLongCalls
+return|;
+block|}
+name|bool
 name|useBSBScheduling
 argument_list|()
 specifier|const
@@ -549,6 +561,14 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|void
+name|getSMSMutations
+argument_list|(
+argument|std::vector<std::unique_ptr<ScheduleDAGMutation>>&Mutations
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// \brief Perform target specific adjustments to the latency of a schedule
 comment|/// dependency.
 name|void
@@ -563,15 +583,25 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|unsigned
+name|getL1CacheLineSize
+argument_list|()
+specifier|const
+block|;
+name|unsigned
+name|getL1PrefetchDistance
+argument_list|()
+specifier|const
+block|;
 name|private
 operator|:
 comment|// Helper function responsible for increasing the latency only.
 name|void
 name|updateLatency
 argument_list|(
-argument|MachineInstr *SrcInst
+argument|MachineInstr&SrcInst
 argument_list|,
-argument|MachineInstr *DstInst
+argument|MachineInstr&DstInst
 argument_list|,
 argument|SDep&Dep
 argument_list|)
@@ -607,7 +637,7 @@ block|;
 name|void
 name|changePhiLatency
 argument_list|(
-argument|MachineInstr *SrcInst
+argument|MachineInstr&SrcInst
 argument_list|,
 argument|SUnit *Dst
 argument_list|,

@@ -79,13 +79,13 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-comment|/// getICmpCode - Encode a icmp predicate into a three bit mask.  These bits
-comment|/// are carefully arranged to allow folding of expressions such as:
+comment|/// Encode a icmp predicate into a three bit mask. These bits are carefully
+comment|/// arranged to allow folding of expressions such as:
 comment|///
 comment|///      (A< B) | (A> B) --> (A != B)
 comment|///
 comment|/// Note that this is only valid if the first and second predicates have the
-comment|/// same sign. Is illegal to do: (A u< B) | (A s> B)
+comment|/// same sign. It is illegal to do: (A u< B) | (A s> B)
 comment|///
 comment|/// Three bits are used to represent the condition, as follows:
 comment|///   0  A> B
@@ -116,13 +116,13 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// getICmpValue - This is the complement of getICmpCode, which turns an
-comment|/// opcode and two operands into either a constant true or false, or the
-comment|/// predicate for a new ICmp instruction. The sign is passed in to determine
-comment|/// which kind of predicate to use in the new icmp instruction.
+comment|/// This is the complement of getICmpCode, which turns an opcode and two
+comment|/// operands into either a constant true or false, or the predicate for a new
+comment|/// ICmp instruction. The sign is passed in to determine which kind of
+comment|/// predicate to use in the new icmp instruction.
 comment|/// Non-NULL return value will be a true or false constant.
-comment|/// NULL return means a new ICmp is needed.  The predicate for which is
-comment|/// output in NewICmpPred.
+comment|/// NULL return means a new ICmp is needed. The predicate for which is output
+comment|/// in NewICmpPred.
 name|Value
 modifier|*
 name|getICmpValue
@@ -148,8 +148,8 @@ operator|&
 name|NewICmpPred
 argument_list|)
 decl_stmt|;
-comment|/// PredicatesFoldable - Return true if both predicates match sign or if at
-comment|/// least one of them is an equality comparison (which is signless).
+comment|/// Return true if both predicates match sign or if at least one of them is an
+comment|/// equality comparison (which is signless).
 name|bool
 name|PredicatesFoldable
 argument_list|(
@@ -162,6 +162,38 @@ name|CmpInst
 operator|::
 name|Predicate
 name|p2
+argument_list|)
+decl_stmt|;
+comment|/// Decompose an icmp into the form ((X& Y) pred Z) if possible. The returned
+comment|/// predicate is either == or !=. Returns false if decomposition fails.
+name|bool
+name|decomposeBitTestICmp
+argument_list|(
+specifier|const
+name|ICmpInst
+operator|*
+name|I
+argument_list|,
+name|CmpInst
+operator|::
+name|Predicate
+operator|&
+name|Pred
+argument_list|,
+name|Value
+operator|*
+operator|&
+name|X
+argument_list|,
+name|Value
+operator|*
+operator|&
+name|Y
+argument_list|,
+name|Value
+operator|*
+operator|&
+name|Z
 argument_list|)
 decl_stmt|;
 block|}

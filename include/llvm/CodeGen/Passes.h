@@ -80,10 +80,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Function
+name|FunctionPass
 decl_stmt|;
 name|class
-name|FunctionPass
+name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineFunctionPass
@@ -139,6 +139,12 @@ modifier|*
 name|createUnreachableBlockEliminationPass
 parameter_list|()
 function_decl|;
+comment|/// Insert mcount-like function calls.
+name|FunctionPass
+modifier|*
+name|createCountingFunctionInserterPass
+parameter_list|()
+function_decl|;
 comment|/// MachineFunctionPrinter pass - This pass prints out the machine function to
 comment|/// the given stream as a debugging tool.
 name|MachineFunctionPass
@@ -168,6 +174,18 @@ parameter_list|(
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|)
+function_decl|;
+comment|/// This pass resets a MachineFunction when it has the FailedISel property
+comment|/// as if it was just created.
+comment|/// If EmitFallbackDiag is true, the pass will emit a
+comment|/// DiagnosticInfoISelFallback for every MachineFunction it resets.
+name|MachineFunctionPass
+modifier|*
+name|createResetMachineFunctionPass
+parameter_list|(
+name|bool
+name|EmitFallbackDiag
 parameter_list|)
 function_decl|;
 comment|/// createCodeGenPreparePass - Transform the code to expose more pattern
@@ -290,6 +308,12 @@ name|char
 modifier|&
 name|ShrinkWrapID
 decl_stmt|;
+comment|/// Greedy register allocator.
+specifier|extern
+name|char
+modifier|&
+name|RAGreedyID
+decl_stmt|;
 comment|/// VirtRegRewriter pass. Rewrite virtual registers to physical registers as
 comment|/// assigned in VirtRegMap.
 specifier|extern
@@ -395,6 +419,13 @@ name|char
 modifier|&
 name|BranchFolderPassID
 decl_stmt|;
+comment|/// BranchRelaxation - This pass replaces branches that need to jump further
+comment|/// than is supported by a branch instruction.
+specifier|extern
+name|char
+modifier|&
+name|BranchRelaxationPassID
+decl_stmt|;
 comment|/// MachineFunctionPrinterPass - This pass prints out MachineInstr's.
 specifier|extern
 name|char
@@ -460,7 +491,7 @@ operator|<
 name|bool
 argument_list|(
 specifier|const
-name|Function
+name|MachineFunction
 operator|&
 argument_list|)
 operator|>
@@ -695,7 +726,7 @@ operator|<
 name|bool
 argument_list|(
 specifier|const
-name|Function
+name|MachineFunction
 operator|&
 argument_list|)
 operator|>
@@ -832,6 +863,18 @@ comment|/// if available with PysicalRegisterUsageInfo pass.
 name|FunctionPass
 modifier|*
 name|createRegUsageInfoPropPass
+parameter_list|()
+function_decl|;
+comment|/// This pass performs software pipelining on machine instructions.
+specifier|extern
+name|char
+modifier|&
+name|MachinePipelinerID
+decl_stmt|;
+comment|/// This pass frees the memory occupied by the MachineFunction.
+name|FunctionPass
+modifier|*
+name|createFreeMachineFunctionPass
 parameter_list|()
 function_decl|;
 block|}

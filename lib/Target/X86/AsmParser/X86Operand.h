@@ -810,6 +810,8 @@ condition|)
 return|return
 name|false
 return|;
+comment|// If this isn't a constant expr, just assume it fits and let relaxation
+comment|// handle it.
 specifier|const
 name|MCConstantExpr
 operator|*
@@ -833,7 +835,7 @@ operator|!
 name|CE
 condition|)
 return|return
-name|false
+name|true
 return|;
 end_if
 

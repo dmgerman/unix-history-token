@@ -69,6 +69,12 @@ directive|include
 file|"llvm/CodeGen/GlobalISel/CallLowering.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ValueTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -109,18 +115,126 @@ name|lowerFormalArguments
 argument_list|(
 argument|MachineIRBuilder&MIRBuilder
 argument_list|,
-argument|const Function::ArgumentListType&Args
+argument|const Function&F
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&VRegs
+argument|ArrayRef<unsigned> VRegs
 argument_list|)
 specifier|const
 name|override
-block|; }
+block|;
+name|bool
+name|lowerCall
+argument_list|(
+argument|MachineIRBuilder&MIRBuilder
+argument_list|,
+argument|const MachineOperand&Callee
+argument_list|,
+argument|const ArgInfo&OrigRet
+argument_list|,
+argument|ArrayRef<ArgInfo> OrigArgs
+argument_list|)
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|MachineIRBuilder
+operator|&
+argument_list|,
+name|Type
+operator|*
+argument_list|,
+name|unsigned
+argument_list|,
+name|CCValAssign
+operator|&
+argument_list|)
+operator|>
+name|RegHandler
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|MachineIRBuilder
+operator|&
+argument_list|,
+name|int
+argument_list|,
+name|CCValAssign
+operator|&
+argument_list|)
+operator|>
+name|MemHandler
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+argument_list|,
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+argument_list|)
+operator|>
+name|SplitArgTy
+expr_stmt|;
+name|void
+name|splitToValueTypes
+argument_list|(
+specifier|const
+name|ArgInfo
+operator|&
+name|OrigArgInfo
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|ArgInfo
+operator|>
+operator|&
+name|SplitArgs
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+name|SplitArgTy
+name|SplitArg
+argument_list|)
+decl|const
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End of namespace llvm;
 end_comment
 

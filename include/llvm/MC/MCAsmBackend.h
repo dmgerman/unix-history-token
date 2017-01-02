@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCDwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCFixup.h"
 end_include
 
@@ -96,6 +90,9 @@ name|class
 name|MCAssembler
 decl_stmt|;
 name|class
+name|MCCFIInstruction
+decl_stmt|;
+name|class
 name|MCELFObjectTargetWriter
 decl_stmt|;
 struct_decl|struct
@@ -115,6 +112,9 @@ name|MCObjectWriter
 decl_stmt|;
 name|class
 name|MCSection
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|MCValue

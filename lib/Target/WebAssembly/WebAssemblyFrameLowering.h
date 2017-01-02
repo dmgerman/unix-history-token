@@ -173,6 +173,13 @@ block|;
 name|private
 operator|:
 name|bool
+name|hasBP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|needsSP
 argument_list|(
 argument|const MachineFunction&MF

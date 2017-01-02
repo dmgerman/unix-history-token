@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
@@ -233,91 +233,35 @@ comment|/// Output is captured to the specified OutputFile location.  The Shared
 comment|/// option specifies optional native shared objects that can be loaded into
 comment|/// the program for execution.
 comment|///
+name|Expected
+operator|<
 name|int
+operator|>
 name|ExecuteProgram
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|ProgramFile
+argument|const std::string&ProgramFile
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Args
+argument|const std::vector<std::string>&Args
 argument_list|,
-name|FileType
-name|fileType
+argument|FileType fileType
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|InputFile
+argument|const std::string&InputFile
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|OutputFile
+argument|const std::string&OutputFile
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|Error
-operator|=
-name|nullptr
+argument|const std::vector<std::string>&CCArgs = std::vector<std::string>()
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|CCArgs
-operator|=
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|(
-operator|)
-argument_list|,
-name|unsigned
-name|Timeout
-operator|=
+argument|unsigned Timeout =
 literal|0
 argument_list|,
-name|unsigned
-name|MemoryLimit
-operator|=
+argument|unsigned MemoryLimit =
 literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// MakeSharedObject - This compiles the specified file (which is either a .c
 comment|/// file or a .s file) into a shared object.
 comment|///
-name|int
+name|Error
 name|MakeSharedObject
 argument_list|(
 specifier|const
@@ -347,12 +291,6 @@ name|string
 operator|>
 operator|&
 name|ArgsForCC
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|Error
 argument_list|)
 decl_stmt|;
 block|}
@@ -538,35 +476,10 @@ comment|/// compileProgram - Compile the specified program from bitcode to execu
 comment|/// code.  This does not produce any output, it is only used when debugging
 comment|/// the code generator.  It returns false if the code generator fails.
 name|virtual
-name|void
+name|Error
 name|compileProgram
 argument_list|(
 argument|const std::string&Bitcode
-argument_list|,
-argument|std::string *Error
-argument_list|,
-argument|unsigned Timeout =
-literal|0
-argument_list|,
-argument|unsigned MemoryLimit =
-literal|0
-argument_list|)
-block|{}
-comment|/// OutputCode - Compile the specified program from bitcode to code
-comment|/// understood by the CC driver (either C or asm).  If the code generator
-comment|/// fails, it sets Error, otherwise, this function returns the type of code
-comment|/// emitted.
-name|virtual
-name|CC
-operator|::
-name|FileType
-name|OutputCode
-argument_list|(
-argument|const std::string&Bitcode
-argument_list|,
-argument|std::string&OutFile
-argument_list|,
-argument|std::string&Error
 argument_list|,
 argument|unsigned Timeout =
 literal|0
@@ -575,123 +488,82 @@ argument|unsigned MemoryLimit =
 literal|0
 argument_list|)
 block|{
-name|Error
-operator|=
-literal|"OutputCode not supported by this AbstractInterpreter!"
-block|;
 return|return
+name|Error
+operator|::
+name|success
+argument_list|()
+return|;
+block|}
+comment|/// Compile the specified program from bitcode to code understood by the CC
+comment|/// driver (either C or asm).  Returns an error if the code generator fails,,
+comment|/// otherwise, the type of code emitted.
+name|virtual
+name|Expected
+operator|<
 name|CC
 operator|::
-name|AsmFile
+name|FileType
+operator|>
+name|OutputCode
+argument_list|(
+argument|const std::string&Bitcode
+argument_list|,
+argument|std::string&OutFile
+argument_list|,
+argument|unsigned Timeout =
+literal|0
+argument_list|,
+argument|unsigned MemoryLimit =
+literal|0
+argument_list|)
+block|{
+return|return
+name|make_error
+operator|<
+name|StringError
+operator|>
+operator|(
+literal|"OutputCode not supported by this AbstractInterpreter!"
+operator|,
+name|inconvertibleErrorCode
+argument_list|()
+operator|)
 return|;
 block|}
 comment|/// ExecuteProgram - Run the specified bitcode file, emitting output to the
 comment|/// specified filename.  This sets RetVal to the exit code of the program or
-comment|/// returns false if a problem was encountered that prevented execution of
+comment|/// returns an Error if a problem was encountered that prevented execution of
 comment|/// the program.
 comment|///
 name|virtual
+name|Expected
+operator|<
 name|int
+operator|>
 name|ExecuteProgram
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Bitcode
+argument|const std::string&Bitcode
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Args
+argument|const std::vector<std::string>&Args
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|InputFile
+argument|const std::string&InputFile
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|OutputFile
+argument|const std::string&OutputFile
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|Error
+argument|const std::vector<std::string>&CCArgs = std::vector<std::string>()
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|CCArgs
-operator|=
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|(
-operator|)
+argument|const std::vector<std::string>&SharedLibs = std::vector<std::string>()
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|SharedLibs
-operator|=
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|(
-operator|)
-argument_list|,
-name|unsigned
-name|Timeout
-operator|=
+argument|unsigned Timeout =
 literal|0
 argument_list|,
-name|unsigned
-name|MemoryLimit
-operator|=
+argument|unsigned MemoryLimit =
 literal|0
 argument_list|)
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|//===---------------------------------------------------------------------===//
@@ -781,12 +653,10 @@ block|; }
 comment|/// compileProgram - Compile the specified program from bitcode to executable
 comment|/// code.  This does not produce any output, it is only used when debugging
 comment|/// the code generator.  Returns false if the code generator fails.
-name|void
+name|Error
 name|compileProgram
 argument_list|(
 argument|const std::string&Bitcode
-argument_list|,
-argument|std::string *Error
 argument_list|,
 argument|unsigned Timeout =
 literal|0
@@ -796,7 +666,10 @@ literal|0
 argument_list|)
 name|override
 block|;
+name|Expected
+operator|<
 name|int
+operator|>
 name|ExecuteProgram
 argument_list|(
 argument|const std::string&Bitcode
@@ -807,11 +680,9 @@ argument|const std::string&InputFile
 argument_list|,
 argument|const std::string&OutputFile
 argument_list|,
-argument|std::string *Error
+argument|const std::vector<std::string>&CCArgs = std::vector<std::string>()
 argument_list|,
-argument|const std::vector<std::string>&CCArgs =                        std::vector<std::string>()
-argument_list|,
-argument|const std::vector<std::string>&SharedLibs =                         std::vector<std::string>()
+argument|const std::vector<std::string>&SharedLibs = std::vector<std::string>()
 argument_list|,
 argument|unsigned Timeout =
 literal|0
@@ -821,20 +692,17 @@ literal|0
 argument_list|)
 name|override
 block|;
-comment|/// OutputCode - Compile the specified program from bitcode to code
-comment|/// understood by the CC driver (either C or asm).  If the code generator
-comment|/// fails, it sets Error, otherwise, this function returns the type of code
-comment|/// emitted.
+name|Expected
+operator|<
 name|CC
 operator|::
 name|FileType
+operator|>
 name|OutputCode
 argument_list|(
 argument|const std::string&Bitcode
 argument_list|,
 argument|std::string&OutFile
-argument_list|,
-argument|std::string&Error
 argument_list|,
 argument|unsigned Timeout =
 literal|0

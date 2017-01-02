@@ -197,6 +197,17 @@ operator|.
 name|CuOffset
 return|;
 block|}
+specifier|const
+name|Header
+operator|&
+name|getHeader
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HeaderData
+return|;
+block|}
 name|desc_iterator_range
 name|descriptors
 argument_list|()

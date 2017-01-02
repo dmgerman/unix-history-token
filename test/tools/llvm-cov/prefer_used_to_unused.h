@@ -52,27 +52,27 @@ name|int
 name|A
 parameter_list|)
 block|{
-comment|// CHECK:      1| [[@LINE]]|inline int sampleFunc(int A) {
+comment|// CHECK:      [[@LINE]]| 1|inline int sampleFunc(int A) {
 if|if
 condition|(
 name|A
 operator|>
 literal|0
 condition|)
-comment|// CHECK-NEXT: 1| [[@LINE]]|  if (A> 0)
+comment|// CHECK-NEXT: [[@LINE]]| 1|  if (A> 0)
 return|return
 name|A
 return|;
-comment|// CHECK-NEXT: 1| [[@LINE]]|    return A;
+comment|// CHECK-NEXT: [[@LINE]]| 1|    return A;
 return|return
 literal|0
 return|;
-comment|// CHECK-NEXT: 0| [[@LINE]]|  return 0;
+comment|// CHECK-NEXT: [[@LINE]]| 0|  return 0;
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-NEXT: 1| [[@LINE]]|}
+comment|// CHECK-NEXT: [[@LINE]]| 1|}
 end_comment
 
 begin_comment
@@ -88,16 +88,16 @@ name|int
 name|A
 parameter_list|)
 block|{
-comment|// CHECK:      1| [[@LINE]]|inline int simpleFunc(int A) {
+comment|// CHECK:      [[@LINE]]| 1|inline int simpleFunc(int A) {
 return|return
 name|A
 return|;
-comment|// CHECK-NEXT: 1| [[@LINE]]|  return A;
+comment|// CHECK-NEXT: [[@LINE]]| 1|  return A;
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-NEXT: 1| [[@LINE]]|}
+comment|// CHECK-NEXT: [[@LINE]]| 1|}
 end_comment
 
 end_unit

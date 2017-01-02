@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Chrono.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Errc.h"
 end_include
 
@@ -103,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorOr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/TimeValue.h"
 end_include
 
 begin_decl_stmt
@@ -206,7 +206,7 @@ name|GetArchiveMemberBuffers
 argument_list|(
 argument|StringRef Filename
 argument_list|,
-argument|sys::TimeValue Timestamp
+argument|sys::TimePoint<std::chrono::seconds> Timestamp
 argument_list|)
 expr_stmt|;
 comment|/// Interpret Filename as an archive member specification map the
@@ -226,7 +226,7 @@ name|MapArchiveAndGetMemberBuffers
 argument_list|(
 argument|StringRef Filename
 argument_list|,
-argument|sys::TimeValue Timestamp
+argument|sys::TimePoint<std::chrono::seconds> Timestamp
 argument_list|)
 expr_stmt|;
 comment|/// Return the MemoryBufferRef that holds the memory mapping for the
@@ -250,7 +250,7 @@ name|GetMemoryBuffersForFile
 argument_list|(
 argument|StringRef Filename
 argument_list|,
-argument|sys::TimeValue Timestamp
+argument|sys::TimePoint<std::chrono::seconds> Timestamp
 argument_list|)
 expr_stmt|;
 name|void
@@ -317,7 +317,7 @@ name|GetObjectFiles
 argument_list|(
 argument|StringRef Filename
 argument_list|,
-argument|sys::TimeValue Timestamp = sys::TimeValue::PosixZeroTime()
+argument|sys::TimePoint<std::chrono::seconds> Timestamp =                      sys::TimePoint<std::chrono::seconds>()
 argument_list|)
 expr_stmt|;
 comment|/// Wraps GetObjectFiles() to return a derived ObjectFile type.
@@ -340,7 +340,7 @@ name|GetFilesAs
 argument_list|(
 argument|StringRef Filename
 argument_list|,
-argument|sys::TimeValue Timestamp = sys::TimeValue::PosixZeroTime()
+argument|sys::TimePoint<std::chrono::seconds> Timestamp =                  sys::TimePoint<std::chrono::seconds>()
 argument_list|)
 block|{
 name|auto

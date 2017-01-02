@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/LoopPassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/PassManager.h"
 end_include
 
@@ -94,10 +100,7 @@ name|Loop
 operator|&
 name|L
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Loop
-operator|>
+name|LoopAnalysisManager
 operator|&
 name|AM
 argument_list|)

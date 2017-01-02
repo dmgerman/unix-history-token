@@ -122,6 +122,14 @@ name|Error
 name|dumpDbiStream
 argument_list|()
 block|;
+name|Error
+name|dumpTpiStream
+argument_list|()
+block|;
+name|Error
+name|dumpIpiStream
+argument_list|()
+block|;
 name|void
 name|flush
 argument_list|()

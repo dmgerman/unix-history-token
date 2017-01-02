@@ -83,7 +83,8 @@ name|EXPECT_UNEXPECTED
 parameter_list|(
 name|Exp
 parameter_list|)
-value|EXPECT_ERROR(Err)
+define|\
+value|{                                                                            \     auto E = Exp.takeError();                                                  \     EXPECT_TRUE(static_cast<bool>(E));                                         \     if (E) {                                                                   \       consumeError(std::move(E));                                              \       return;                                                                  \     }                                                                          \   }
 end_define
 
 begin_endif

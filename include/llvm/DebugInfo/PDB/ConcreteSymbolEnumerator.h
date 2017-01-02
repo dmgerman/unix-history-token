@@ -46,13 +46,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"IPDBEnumChildren.h"
+file|"llvm/DebugInfo/PDB/IPDBEnumChildren.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -104,7 +122,9 @@ operator|~
 name|ConcreteSymbolEnumerator
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 name|uint32_t
 name|getChildCount
 argument_list|()
@@ -294,13 +314,22 @@ name|Enumerator
 block|; }
 expr_stmt|;
 block|}
+comment|// end namespace pdb
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_PDB_CONCRETESYMBOLENUMERATOR_H
+end_comment
 
 end_unit
 

@@ -78,6 +78,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DebugLoc.h"
 end_include
 
@@ -93,41 +105,58 @@ directive|include
 file|"llvm/IR/User.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|FastMathFlags
+name|BasicBlock
 decl_stmt|;
 name|class
-name|LLVMContext
+name|FastMathFlags
 decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
-name|class
-name|BasicBlock
-decl_stmt|;
 struct_decl|struct
 name|AAMDNodes
 struct_decl|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|SymbolTableListSentinelTraits
-operator|<
-name|Instruction
-operator|>
-operator|:
-name|public
-name|ilist_half_embedded_sentinel_traits
-operator|<
-name|Instruction
-operator|>
-block|{}
-expr_stmt|;
 name|class
 name|Instruction
 range|:
@@ -142,26 +171,6 @@ decl_stmt|,
 name|BasicBlock
 decl|>
 block|{
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|Instruction
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-name|Instruction
-argument_list|(
-specifier|const
-name|Instruction
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
 name|BasicBlock
 modifier|*
 name|Parent
@@ -183,6 +192,27 @@ block|}
 enum|;
 name|public
 label|:
+name|Instruction
+argument_list|(
+specifier|const
+name|Instruction
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|Instruction
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|Instruction
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|// Out of line virtual method, so the vtable, etc has a home.
 operator|~
 name|Instruction
@@ -330,6 +360,25 @@ modifier|*
 name|MovePos
 parameter_list|)
 function_decl|;
+comment|/// Unlink this instruction and insert into BB before I.
+comment|///
+comment|/// \pre I is a valid iterator into BB.
+name|void
+name|moveBefore
+argument_list|(
+name|BasicBlock
+operator|&
+name|BB
+argument_list|,
+name|SymbolTableList
+operator|<
+name|Instruction
+operator|>
+operator|::
+name|iterator
+name|I
+argument_list|)
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Subclass classification.
 comment|//===--------------------------------------------------------------------===//
@@ -524,6 +573,30 @@ name|getOpcode
 argument_list|()
 operator|==
 name|AShr
+return|;
+block|}
+comment|/// Return true if this is and/or/xor.
+specifier|inline
+name|bool
+name|isBitwiseLogicOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOpcode
+argument_list|()
+operator|==
+name|And
+operator|||
+name|getOpcode
+argument_list|()
+operator|==
+name|Or
+operator|||
+name|getOpcode
+argument_list|()
+operator|==
+name|Xor
 return|;
 block|}
 comment|/// Determine if the OpCode is one of the CastInst instructions.
@@ -754,6 +827,38 @@ modifier|*
 name|Node
 parameter_list|)
 function_decl|;
+comment|/// Copy metadata from \p SrcInst to this instruction. \p WL, if not empty,
+comment|/// specifies the list of meta data that needs to be copied. If \p WL is
+comment|/// empty, all meta data will be copied.
+name|void
+name|copyMetadata
+argument_list|(
+specifier|const
+name|Instruction
+operator|&
+name|SrcInst
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|WL
+operator|=
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/// If the instruction has "branch_weights" MD_prof metadata and the MDNode
+comment|/// has three operands (including name string), swap the order of the
+comment|/// metadata.
+name|void
+name|swapProfMetadata
+parameter_list|()
+function_decl|;
 comment|/// Drop all unknown metadata except for debug locations.
 comment|/// @{
 comment|/// Passes are required to drop metadata they don't understand. This is a
@@ -839,27 +944,29 @@ comment|/// Returns true on success with profile weights filled in.
 comment|/// Returns false if no metadata or invalid metadata was found.
 name|bool
 name|extractProfMetadata
-parameter_list|(
+argument_list|(
 name|uint64_t
-modifier|&
+operator|&
 name|TrueVal
-parameter_list|,
+argument_list|,
 name|uint64_t
-modifier|&
+operator|&
 name|FalseVal
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Retrieve total raw weight values of a branch.
 comment|/// Returns true on success with profile total weights filled in.
 comment|/// Returns false if no metadata was found.
 name|bool
 name|extractProfTotalWeight
-parameter_list|(
+argument_list|(
 name|uint64_t
-modifier|&
+operator|&
 name|TotalVal
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Set the debug location information for this instruction.
 name|void
 name|setDebugLoc
@@ -1442,7 +1549,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// This is like isIdenticalTo, except that it ignores the
-comment|/// SubclassOptionalData flags, which specify conditions under which the
+comment|/// SubclassOptionalData flags, which may specify conditions under which the
 comment|/// instruction's result is undefined.
 name|bool
 name|isIdenticalToWhenDefined
@@ -1738,6 +1845,13 @@ block|}
 enum|;
 name|private
 label|:
+name|friend
+name|class
+name|SymbolTableListTraits
+operator|<
+name|Instruction
+operator|>
+expr_stmt|;
 comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
 comment|// subclasses cannot accidentally use it.
 name|void
@@ -1796,13 +1910,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|friend
-name|class
-name|SymbolTableListTraits
-operator|<
-name|Instruction
-operator|>
-expr_stmt|;
 name|void
 name|setParent
 parameter_list|(
@@ -1900,78 +2007,21 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|// Instruction* is only 4-byte aligned.
-name|template
-operator|<
-operator|>
-name|class
-name|PointerLikeTypeTraits
-operator|<
-name|Instruction
-operator|*
-operator|>
-block|{
-typedef|typedef
-name|Instruction
-modifier|*
-name|PT
-typedef|;
-name|public
-operator|:
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|getAsVoidPointer
-argument_list|(
-argument|PT P
-argument_list|)
-block|{
-return|return
-name|P
-return|;
-block|}
-specifier|static
-specifier|inline
-name|PT
-name|getFromVoidPointer
-argument_list|(
-argument|void *P
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|PT
-operator|>
-operator|(
-name|P
-operator|)
-return|;
-block|}
-block|enum
-block|{
-name|NumLowBitsAvailable
-operator|=
-literal|2
-block|}
-expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_INSTRUCTION_H
+end_comment
 
 end_unit
 

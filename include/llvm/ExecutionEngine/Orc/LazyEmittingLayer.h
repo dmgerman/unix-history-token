@@ -62,13 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"JITSymbol.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
@@ -92,19 +104,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -146,17 +182,16 @@ name|public
 operator|:
 name|EmissionDeferredSet
 argument_list|()
-operator|:
-name|EmitState
-argument_list|(
-argument|NotEmitted
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|virtual
 operator|~
 name|EmissionDeferredSet
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|JITSymbol
 name|find
 argument_list|(
@@ -201,9 +236,9 @@ expr_stmt|;
 name|JITSymbolFlags
 name|Flags
 init|=
-name|JITSymbolBase
+name|JITSymbolFlags
 operator|::
-name|flagsFromGlobalValue
+name|fromGlobalValue
 argument_list|(
 operator|*
 name|GV
@@ -225,7 +260,7 @@ index|]
 operator|(
 operator|)
 operator|->
-name|TargetAddress
+name|JITTargetAddress
 block|{
 if|if
 condition|(
@@ -481,6 +516,8 @@ block|,
 name|Emitted
 block|}
 name|EmitState
+init|=
+name|NotEmitted
 enum|;
 name|BaseLayerHandleT
 name|Handle
@@ -1385,12 +1422,12 @@ end_return
 
 begin_comment
 unit|}  }
-comment|// End namespace orc.
+comment|// end namespace orc
 end_comment
 
 begin_comment
 unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

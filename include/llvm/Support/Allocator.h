@@ -96,25 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/MathExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Memory.h"
 end_include
 
 begin_include
@@ -138,7 +126,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdlib>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -362,12 +374,10 @@ argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -535,7 +545,7 @@ name|TotalMemory
 parameter_list|)
 function_decl|;
 block|}
-comment|// End namespace detail.
+comment|// end namespace detail
 comment|/// \brief Allocate memory in an ever growing pool, as if by bump-pointer.
 comment|///
 comment|/// This isn't strictly a bump-pointer allocator as it uses backing slabs of
@@ -1808,10 +1818,9 @@ name|public
 operator|:
 name|SpecificBumpPtrAllocator
 argument_list|()
-operator|:
-name|Allocator
-argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|SpecificBumpPtrAllocator
 argument_list|(
 name|SpecificBumpPtrAllocator
@@ -1890,12 +1899,10 @@ name|alignAddr
 argument_list|(
 name|Begin
 argument_list|,
-name|alignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|(
-operator|)
+argument_list|)
 argument_list|)
 argument_list|)
 block|;
@@ -2005,12 +2012,10 @@ argument_list|(
 operator|*
 name|I
 argument_list|,
-name|alignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|(
-operator|)
+argument_list|)
 argument_list|)
 decl_stmt|;
 name|char
@@ -2087,12 +2092,10 @@ name|alignAddr
 argument_list|(
 name|Ptr
 argument_list|,
-name|alignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|(
-operator|)
+argument_list|)
 argument_list|)
 argument_list|,
 operator|(

@@ -84,13 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -120,7 +126,55 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -130,18 +184,21 @@ block|{
 name|class
 name|ListRecTy
 decl_stmt|;
-struct_decl|struct
-name|MultiClass
-struct_decl|;
 name|class
 name|Record
+decl_stmt|;
+name|class
+name|RecordKeeper
 decl_stmt|;
 name|class
 name|RecordVal
 decl_stmt|;
 name|class
-name|RecordKeeper
+name|StringInit
 decl_stmt|;
+struct_decl|struct
+name|MultiClass
+struct_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Type Classes
 comment|//===----------------------------------------------------------------------===//
@@ -176,25 +233,14 @@ label|:
 name|RecTyKind
 name|Kind
 decl_stmt|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|ListRecTy
-operator|>
+modifier|*
 name|ListTy
-expr_stmt|;
+init|=
+name|nullptr
+decl_stmt|;
 name|public
 label|:
-name|RecTyKind
-name|getRecTyKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-return|;
-block|}
 name|RecTy
 argument_list|(
 argument|RecTyKind K
@@ -209,7 +255,18 @@ name|virtual
 operator|~
 name|RecTy
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
+name|RecTyKind
+name|getRecTyKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
 name|virtual
 name|std
 operator|::
@@ -979,27 +1036,6 @@ block|;
 comment|// Used by UnOpInit, BinOpInit, and TernOpInit
 name|private
 operator|:
-name|Init
-argument_list|(
-specifier|const
-name|Init
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|Init
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|Init
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 name|virtual
 name|void
 name|anchor
@@ -1039,11 +1075,34 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|Init
+argument_list|(
+specifier|const
+name|Init
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|Init
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Init
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 name|virtual
 operator|~
 name|Init
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// This virtual method should be overridden by values that may
 comment|/// not be completely specified yet.
 name|virtual
@@ -1127,7 +1186,7 @@ name|Init
 operator|*
 name|convertInitializerBitRange
 argument_list|(
-argument|const std::vector<unsigned>&Bits
+argument|ArrayRef<unsigned> Bits
 argument_list|)
 specifier|const
 block|{
@@ -1145,7 +1204,7 @@ name|Init
 operator|*
 name|convertInitListSlice
 argument_list|(
-argument|const std::vector<unsigned>&Elements
+argument|ArrayRef<unsigned> Elements
 argument_list|)
 specifier|const
 block|{
@@ -1162,7 +1221,7 @@ name|RecTy
 operator|*
 name|getFieldType
 argument_list|(
-argument|const std::string&FieldName
+argument|StringInit *FieldName
 argument_list|)
 specifier|const
 block|{
@@ -1183,7 +1242,7 @@ argument|Record&R
 argument_list|,
 argument|const RecordVal *RV
 argument_list|,
-argument|const std::string&FieldName
+argument|StringInit *FieldName
 argument_list|)
 specifier|const
 block|{
@@ -1305,29 +1364,6 @@ name|RecTy
 operator|*
 name|Ty
 block|;
-name|TypedInit
-argument_list|(
-specifier|const
-name|TypedInit
-operator|&
-name|Other
-argument_list|)
-operator|=
-name|delete
-block|;
-name|TypedInit
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|TypedInit
-operator|&
-name|Other
-operator|)
-operator|=
-name|delete
-block|;
 name|protected
 operator|:
 name|explicit
@@ -1353,25 +1389,31 @@ argument_list|(
 argument|T
 argument_list|)
 block|{}
-operator|~
-name|TypedInit
-argument_list|()
-name|override
-block|{
-comment|// If this is a DefInit we need to delete the RecordRecTy.
-if|if
-condition|(
-name|getKind
-argument_list|()
-operator|==
-name|IK_DefInit
-condition|)
-name|delete
-name|Ty
-decl_stmt|;
-block|}
 name|public
 operator|:
+name|TypedInit
+argument_list|(
+specifier|const
+name|TypedInit
+operator|&
+name|Other
+argument_list|)
+operator|=
+name|delete
+block|;
+name|TypedInit
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|TypedInit
+operator|&
+name|Other
+operator|)
+operator|=
+name|delete
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1418,7 +1460,7 @@ name|Init
 operator|*
 name|convertInitializerBitRange
 argument_list|(
-argument|const std::vector<unsigned>&Bits
+argument|ArrayRef<unsigned> Bits
 argument_list|)
 specifier|const
 name|override
@@ -1427,7 +1469,7 @@ name|Init
 operator|*
 name|convertInitListSlice
 argument_list|(
-argument|const std::vector<unsigned>&Elements
+argument|ArrayRef<unsigned> Elements
 argument_list|)
 specifier|const
 name|override
@@ -1440,7 +1482,7 @@ name|RecTy
 operator|*
 name|getFieldType
 argument_list|(
-argument|const std::string&FieldName
+argument|StringInit *FieldName
 argument_list|)
 specifier|const
 name|override
@@ -1480,6 +1522,8 @@ argument_list|(
 argument|IK_UnsetInit
 argument_list|)
 block|{}
+name|public
+operator|:
 name|UnsetInit
 argument_list|(
 specifier|const
@@ -1502,8 +1546,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -1606,6 +1648,8 @@ argument_list|(
 argument|V
 argument_list|)
 block|{}
+name|public
+operator|:
 name|BitInit
 argument_list|(
 specifier|const
@@ -1628,8 +1672,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -1766,6 +1808,8 @@ argument_list|(
 argument|N
 argument_list|)
 block|{}
+name|public
+operator|:
 name|BitsInit
 argument_list|(
 specifier|const
@@ -1789,8 +1833,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 comment|// Do not use sized deallocation due to trailing objects.
 name|void
 name|operator
@@ -1864,7 +1906,7 @@ name|Init
 operator|*
 name|convertInitializerBitRange
 argument_list|(
-argument|const std::vector<unsigned>&Bits
+argument|ArrayRef<unsigned> Bits
 argument_list|)
 specifier|const
 name|override
@@ -2050,6 +2092,8 @@ argument_list|(
 argument|V
 argument_list|)
 block|{}
+name|public
+operator|:
 name|IntInit
 argument_list|(
 specifier|const
@@ -2073,8 +2117,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -2121,7 +2163,7 @@ name|Init
 operator|*
 name|convertInitializerBitRange
 argument_list|(
-argument|const std::vector<unsigned>&Bits
+argument|ArrayRef<unsigned> Bits
 argument_list|)
 specifier|const
 name|override
@@ -2193,9 +2235,7 @@ operator|:
 name|public
 name|TypedInit
 block|{
-name|std
-operator|::
-name|string
+name|StringRef
 name|Value
 block|;
 name|explicit
@@ -2219,6 +2259,8 @@ argument_list|(
 argument|V
 argument_list|)
 block|{}
+name|public
+operator|:
 name|StringInit
 argument_list|(
 specifier|const
@@ -2242,8 +2284,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -2268,11 +2308,7 @@ argument_list|(
 name|StringRef
 argument_list|)
 block|;
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getValue
 argument_list|()
 specifier|const
@@ -2302,6 +2338,9 @@ return|return
 literal|"\""
 operator|+
 name|Value
+operator|.
+name|str
+argument_list|()
 operator|+
 literal|"\""
 return|;
@@ -2361,9 +2400,7 @@ operator|:
 name|public
 name|TypedInit
 block|{
-name|std
-operator|::
-name|string
+name|StringRef
 name|Value
 block|;
 name|explicit
@@ -2394,6 +2431,8 @@ argument_list|(
 argument|V
 argument_list|)
 block|{}
+name|public
+operator|:
 name|CodeInit
 argument_list|(
 specifier|const
@@ -2417,8 +2456,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -2443,11 +2480,7 @@ argument_list|(
 name|StringRef
 argument_list|)
 block|;
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getValue
 argument_list|()
 specifier|const
@@ -2477,6 +2510,9 @@ return|return
 literal|"[{"
 operator|+
 name|Value
+operator|.
+name|str
+argument_list|()
 operator|+
 literal|"}]"
 return|;
@@ -2590,6 +2626,8 @@ argument_list|(
 argument|N
 argument_list|)
 block|{}
+name|public
+operator|:
 name|ListInit
 argument_list|(
 specifier|const
@@ -2613,8 +2651,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 comment|// Do not use sized deallocation due to trailing objects.
 name|void
 name|operator
@@ -2712,7 +2748,7 @@ name|Init
 operator|*
 name|convertInitListSlice
 argument_list|(
-argument|const std::vector<unsigned>&Elements
+argument|ArrayRef<unsigned> Elements
 argument_list|)
 specifier|const
 name|override
@@ -2861,28 +2897,6 @@ operator|:
 name|public
 name|TypedInit
 block|{
-name|OpInit
-argument_list|(
-specifier|const
-name|OpInit
-operator|&
-name|Other
-argument_list|)
-operator|=
-name|delete
-block|;
-name|OpInit
-operator|&
-name|operator
-operator|=
-operator|(
-name|OpInit
-operator|&
-name|Other
-operator|)
-operator|=
-name|delete
-block|;
 name|protected
 operator|:
 name|explicit
@@ -2906,6 +2920,28 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|OpInit
+argument_list|(
+specifier|const
+name|OpInit
+operator|&
+name|Other
+argument_list|)
+operator|=
+name|delete
+block|;
+name|OpInit
+operator|&
+name|operator
+operator|=
+operator|(
+name|OpInit
+operator|&
+name|Other
+operator|)
+operator|=
+name|delete
+block|;
 specifier|static
 name|bool
 name|classof
@@ -2935,7 +2971,7 @@ name|OpInit
 operator|*
 name|clone
 argument_list|(
-argument|std::vector<Init *>&Operands
+argument|ArrayRef<Init *> Operands
 argument_list|)
 specifier|const
 operator|=
@@ -3054,6 +3090,8 @@ argument_list|(
 argument|lhs
 argument_list|)
 block|{}
+name|public
+operator|:
 name|UnOpInit
 argument_list|(
 specifier|const
@@ -3077,8 +3115,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -3119,7 +3155,7 @@ name|OpInit
 operator|*
 name|clone
 argument_list|(
-argument|std::vector<Init *>&Operands
+argument|ArrayRef<Init *> Operands
 argument_list|)
 specifier|const
 name|override
@@ -3265,6 +3301,8 @@ name|ADD
 block|,
 name|AND
 block|,
+name|OR
+block|,
 name|SHL
 block|,
 name|SRA
@@ -3319,6 +3357,8 @@ argument_list|(
 argument|rhs
 argument_list|)
 block|{}
+name|public
+operator|:
 name|BinOpInit
 argument_list|(
 specifier|const
@@ -3342,8 +3382,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -3386,7 +3424,7 @@ name|OpInit
 operator|*
 name|clone
 argument_list|(
-argument|std::vector<Init *>&Operands
+argument|ArrayRef<Init *> Operands
 argument_list|)
 specifier|const
 name|override
@@ -3611,6 +3649,8 @@ argument_list|(
 argument|rhs
 argument_list|)
 block|{}
+name|public
+operator|:
 name|TernOpInit
 argument_list|(
 specifier|const
@@ -3634,8 +3674,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -3680,7 +3718,7 @@ name|OpInit
 operator|*
 name|clone
 argument_list|(
-argument|std::vector<Init *>&Operands
+argument|ArrayRef<Init *> Operands
 argument_list|)
 specifier|const
 name|override
@@ -3899,6 +3937,8 @@ argument_list|(
 argument|VN
 argument_list|)
 block|{}
+name|public
+operator|:
 name|VarInit
 argument_list|(
 specifier|const
@@ -3922,8 +3962,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -3945,16 +3983,9 @@ name|VarInit
 operator|*
 name|get
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|VN
+argument|StringRef VN
 argument_list|,
-name|RecTy
-operator|*
-name|T
+argument|RecTy *T
 argument_list|)
 block|;
 specifier|static
@@ -3971,11 +4002,7 @@ operator|*
 name|T
 argument_list|)
 block|;
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -4022,7 +4049,7 @@ name|RecTy
 operator|*
 name|getFieldType
 argument_list|(
-argument|const std::string&FieldName
+argument|StringInit *FieldName
 argument_list|)
 specifier|const
 name|override
@@ -4035,7 +4062,7 @@ argument|Record&R
 argument_list|,
 argument|const RecordVal *RV
 argument_list|,
-argument|const std::string&FieldName
+argument|StringInit *FieldName
 argument_list|)
 specifier|const
 name|override
@@ -4169,6 +4196,8 @@ operator|&&
 literal|"Illegal VarBitInit expression!"
 argument_list|)
 block|;   }
+name|public
+operator|:
 name|VarBitInit
 argument_list|(
 specifier|const
@@ -4192,8 +4221,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -4372,6 +4399,8 @@ operator|&&
 literal|"Illegal VarBitInit expression!"
 argument_list|)
 block|;   }
+name|public
+operator|:
 name|VarListElementInit
 argument_list|(
 specifier|const
@@ -4394,8 +4423,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -4525,6 +4552,8 @@ name|friend
 name|class
 name|Record
 block|;
+name|public
+operator|:
 name|DefInit
 argument_list|(
 specifier|const
@@ -4548,8 +4577,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -4594,12 +4621,12 @@ return|return
 name|Def
 return|;
 block|}
-comment|//virtual Init *convertInitializerBitRange(const std::vector<unsigned>&Bits);
+comment|//virtual Init *convertInitializerBitRange(ArrayRef<unsigned> Bits);
 name|RecTy
 operator|*
 name|getFieldType
 argument_list|(
-argument|const std::string&FieldName
+argument|StringInit *FieldName
 argument_list|)
 specifier|const
 name|override
@@ -4612,7 +4639,7 @@ argument|Record&R
 argument_list|,
 argument|const RecordVal *RV
 argument_list|,
-argument|const std::string&FieldName
+argument|StringInit *FieldName
 argument_list|)
 specifier|const
 name|override
@@ -4675,9 +4702,8 @@ operator|*
 name|Rec
 block|;
 comment|// Record we are referring to
-name|std
-operator|::
-name|string
+name|StringInit
+operator|*
 name|FieldName
 block|;
 comment|// Field we are accessing
@@ -4687,11 +4713,8 @@ name|Init
 operator|*
 name|R
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringInit
+operator|*
 name|FN
 argument_list|)
 operator|:
@@ -4725,6 +4748,8 @@ operator|&&
 literal|"FieldInit with non-record type!"
 argument_list|)
 block|;   }
+name|public
+operator|:
 name|FieldInit
 argument_list|(
 specifier|const
@@ -4748,8 +4773,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -4775,11 +4798,8 @@ name|Init
 operator|*
 name|R
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringInit
+operator|*
 name|FN
 argument_list|)
 block|;
@@ -4833,6 +4853,12 @@ operator|+
 literal|"."
 operator|+
 name|FieldName
+operator|->
+name|getValue
+argument_list|()
+operator|.
+name|str
+argument_list|()
 return|;
 block|}
 expr|}
@@ -4854,27 +4880,25 @@ name|Init
 operator|*
 name|Val
 block|;
-name|std
-operator|::
-name|string
+name|StringInit
+operator|*
 name|ValName
 block|;
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|Init
 operator|*
+block|,
+literal|4
 operator|>
 name|Args
 block|;
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
-name|std
-operator|::
-name|string
+name|StringInit
+operator|*
+block|,
+literal|4
 operator|>
 name|ArgNames
 block|;
@@ -4884,11 +4908,8 @@ name|Init
 operator|*
 name|V
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringInit
+operator|*
 name|VN
 argument_list|,
 name|ArrayRef
@@ -4900,9 +4921,8 @@ name|ArgRange
 argument_list|,
 name|ArrayRef
 operator|<
-name|std
-operator|::
-name|string
+name|StringInit
+operator|*
 operator|>
 name|NameRange
 argument_list|)
@@ -4947,6 +4967,8 @@ argument_list|,
 argument|NameRange.end()
 argument_list|)
 block|{}
+name|public
+operator|:
 name|DagInit
 argument_list|(
 specifier|const
@@ -4970,8 +4992,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 specifier|static
 name|bool
 name|classof
@@ -4997,11 +5017,8 @@ name|Init
 operator|*
 name|V
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringInit
+operator|*
 name|VN
 argument_list|,
 name|ArrayRef
@@ -5013,9 +5030,8 @@ name|ArgRange
 argument_list|,
 name|ArrayRef
 operator|<
-name|std
-operator|::
-name|string
+name|StringInit
+operator|*
 operator|>
 name|NameRange
 argument_list|)
@@ -5029,17 +5045,11 @@ name|Init
 operator|*
 name|V
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringInit
+operator|*
 name|VN
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|std
 operator|::
@@ -5048,13 +5058,10 @@ operator|<
 name|Init
 operator|*
 argument_list|,
-name|std
-operator|::
-name|string
-operator|>
-expr|>
-operator|&
-name|args
+name|StringInit
+operator|*
+operator|>>
+name|Args
 argument_list|)
 block|;
 name|void
@@ -5083,17 +5090,31 @@ return|return
 name|Val
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringInit
+operator|*
 name|getName
 argument_list|()
 specifier|const
 block|{
 return|return
 name|ValName
+return|;
+block|}
+name|StringRef
+name|getNameStr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ValName
+operator|?
+name|ValName
+operator|->
+name|getValue
+argument_list|()
+operator|:
+name|StringRef
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -5135,11 +5156,8 @@ name|Num
 index|]
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringInit
+operator|*
 name|getArgName
 argument_list|(
 argument|unsigned Num
@@ -5165,6 +5183,34 @@ name|Num
 index|]
 return|;
 block|}
+name|StringRef
+name|getArgNameStr
+argument_list|(
+argument|unsigned Num
+argument_list|)
+specifier|const
+block|{
+name|StringInit
+operator|*
+name|Init
+operator|=
+name|getArgName
+argument_list|(
+name|Num
+argument_list|)
+block|;
+return|return
+name|Init
+condition|?
+name|Init
+operator|->
+name|getValue
+argument_list|()
+else|:
+name|StringRef
+argument_list|()
+return|;
+block|}
 name|Init
 operator|*
 name|resolveReferences
@@ -5185,9 +5231,7 @@ specifier|const
 name|override
 block|;
 typedef|typedef
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|Init
 operator|*
@@ -5197,13 +5241,10 @@ name|const_iterator
 name|const_arg_iterator
 expr_stmt|;
 typedef|typedef
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
-name|std
-operator|::
-name|string
+name|StringInit
+operator|*
 operator|>
 operator|::
 name|const_iterator
@@ -5353,20 +5394,24 @@ comment|//===-------------------------------------------------------------------
 name|class
 name|RecordVal
 block|{
+name|friend
+name|class
+name|Record
+block|;
+name|Init
+operator|*
+name|Name
+block|;
 name|PointerIntPair
 operator|<
-name|Init
+name|RecTy
 operator|*
 block|,
 literal|1
 block|,
 name|bool
 operator|>
-name|NameAndPrefix
-block|;
-name|RecTy
-operator|*
-name|Ty
+name|TyAndPrefix
 block|;
 name|Init
 operator|*
@@ -5385,23 +5430,18 @@ argument_list|)
 block|;
 name|RecordVal
 argument_list|(
-argument|const std::string&N
+argument|StringRef N
 argument_list|,
 argument|RecTy *T
 argument_list|,
 argument|bool P
 argument_list|)
 block|;
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
 block|;
-specifier|const
 name|Init
 operator|*
 name|getNameInit
@@ -5409,10 +5449,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NameAndPrefix
-operator|.
-name|getPointer
-argument_list|()
+name|Name
 return|;
 block|}
 name|std
@@ -5436,7 +5473,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NameAndPrefix
+name|TyAndPrefix
 operator|.
 name|getInt
 argument_list|()
@@ -5449,7 +5486,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Ty
+name|TyAndPrefix
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 name|Init
@@ -5479,7 +5519,8 @@ name|V
 operator|->
 name|convertInitializerTo
 argument_list|(
-name|Ty
+name|getType
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return
@@ -5599,13 +5640,11 @@ name|RecordKeeper
 operator|&
 name|TrackedRecords
 block|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|DefInit
-operator|>
+operator|*
 name|TheInit
+operator|=
+name|nullptr
 block|;
 comment|// Unique record ID.
 name|unsigned
@@ -5695,7 +5734,7 @@ block|;   }
 name|explicit
 name|Record
 argument_list|(
-argument|const std::string&N
+argument|StringRef N
 argument_list|,
 argument|ArrayRef<SMLoc> locs
 argument_list|,
@@ -5805,11 +5844,7 @@ return|return
 name|ID
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -5852,12 +5887,7 @@ comment|// Also updates RecordKeeper.
 name|void
 name|setName
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|StringRef Name
 argument_list|)
 block|;
 comment|// Also updates RecordKeeper.
@@ -5992,8 +6022,7 @@ if|if
 condition|(
 name|Val
 operator|.
-name|getNameInit
-argument_list|()
+name|Name
 operator|==
 name|Name
 condition|)
@@ -6045,8 +6074,7 @@ if|if
 condition|(
 name|Val
 operator|.
-name|getNameInit
-argument_list|()
+name|Name
 operator|==
 name|Name
 condition|)
@@ -6692,7 +6720,7 @@ specifier|const
 block|;
 name|MultiClass
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
 argument|SMLoc Loc
 argument_list|,
@@ -6763,7 +6791,7 @@ name|Record
 operator|*
 name|getClass
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|)
 specifier|const
 block|{
@@ -6799,7 +6827,7 @@ name|Record
 operator|*
 name|getDef
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|)
 specifier|const
 block|{
@@ -6935,7 +6963,7 @@ operator|*
 operator|>
 name|getAllDerivedDefinitions
 argument_list|(
-argument|const std::string&ClassName
+argument|StringRef ClassName
 argument_list|)
 specifier|const
 block|;
@@ -7686,74 +7714,32 @@ begin_comment
 comment|/// to CurRec's name.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|Init
 modifier|*
 name|QualifyName
-argument_list|(
+parameter_list|(
 name|Record
-operator|&
+modifier|&
 name|CurRec
-argument_list|,
+parameter_list|,
 name|MultiClass
-operator|*
+modifier|*
 name|CurMultiClass
-argument_list|,
-name|Init
-operator|*
-name|Name
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Scoper
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Return an Init with a qualifier prefix referring
-end_comment
-
-begin_comment
-comment|/// to CurRec's name.
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|Init
 modifier|*
-name|QualifyName
-argument_list|(
-name|Record
-operator|&
-name|CurRec
-argument_list|,
-name|MultiClass
-operator|*
-name|CurMultiClass
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
 name|Name
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Scoper
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

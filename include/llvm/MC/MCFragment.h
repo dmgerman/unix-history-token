@@ -108,6 +108,11 @@ name|class
 name|MCAsmLayout
 decl_stmt|;
 name|MCFragment
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
+name|MCFragment
 argument_list|(
 specifier|const
 name|MCFragment
@@ -220,19 +225,6 @@ argument|MCSection *Parent = nullptr
 argument_list|)
 empty_stmt|;
 operator|~
-name|MCFragment
-argument_list|()
-expr_stmt|;
-name|private
-label|:
-comment|// This is a friend so that the sentinal can be created.
-name|friend
-block|struct
-name|ilist_sentinel_traits
-operator|<
-name|MCFragment
-operator|>
-expr_stmt|;
 name|MCFragment
 argument_list|()
 expr_stmt|;
@@ -1282,6 +1274,10 @@ comment|/// Value - Value to use for filling bytes.
 name|int8_t
 name|Value
 block|;
+comment|/// Loc - Source location of the directive that this fragment was created for.
+name|SMLoc
+name|Loc
+block|;
 name|public
 operator|:
 name|MCOrgFragment
@@ -1289,6 +1285,8 @@ argument_list|(
 argument|const MCExpr&Offset
 argument_list|,
 argument|int8_t Value
+argument_list|,
+argument|SMLoc Loc
 argument_list|,
 argument|MCSection *Sec = nullptr
 argument_list|)
@@ -1312,7 +1310,12 @@ argument_list|)
 block|,
 name|Value
 argument_list|(
-argument|Value
+name|Value
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+argument|Loc
 argument_list|)
 block|{}
 comment|/// \name Accessors
@@ -1336,6 +1339,15 @@ specifier|const
 block|{
 return|return
 name|Value
+return|;
+block|}
+name|SMLoc
+name|getLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
 return|;
 block|}
 comment|/// @}
@@ -1857,14 +1869,6 @@ name|MCSymbol
 operator|*
 name|FnEndSym
 block|;
-name|SmallVector
-operator|<
-name|unsigned
-block|,
-literal|3
-operator|>
-name|SecondaryFuncs
-block|;
 name|SmallString
 operator|<
 literal|8
@@ -1890,8 +1894,6 @@ argument_list|,
 argument|const MCSymbol *FnStartSym
 argument_list|,
 argument|const MCSymbol *FnEndSym
-argument_list|,
-argument|ArrayRef<unsigned> SecondaryFuncs
 argument_list|,
 argument|MCSection *Sec = nullptr
 argument_list|)
@@ -1929,14 +1931,7 @@ argument_list|)
 block|,
 name|FnEndSym
 argument_list|(
-name|FnEndSym
-argument_list|)
-block|,
-name|SecondaryFuncs
-argument_list|(
-argument|SecondaryFuncs.begin()
-argument_list|,
-argument|SecondaryFuncs.end()
+argument|FnEndSym
 argument_list|)
 block|{}
 comment|/// \name Accessors

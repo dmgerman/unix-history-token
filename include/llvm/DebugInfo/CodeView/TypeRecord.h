@@ -58,6 +58,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -82,19 +94,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorOr.h"
+file|"llvm/DebugInfo/MSF/StreamArray.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cinttypes>
+file|"llvm/Support/Endian.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -102,35 +126,69 @@ name|namespace
 name|llvm
 block|{
 name|namespace
+name|msf
+block|{
+name|class
+name|StreamReader
+decl_stmt|;
+block|}
+comment|// end namespace msf
+name|namespace
 name|codeview
 block|{
 name|using
-name|llvm
-operator|::
 name|support
 operator|::
 name|little32_t
 expr_stmt|;
 name|using
-name|llvm
-operator|::
 name|support
 operator|::
 name|ulittle16_t
 expr_stmt|;
 name|using
-name|llvm
-operator|::
 name|support
 operator|::
 name|ulittle32_t
+expr_stmt|;
+typedef|typedef
+name|CVRecord
+operator|<
+name|TypeLeafKind
+operator|>
+name|CVType
+expr_stmt|;
+struct|struct
+name|CVMemberRecord
+block|{
+name|TypeLeafKind
+name|Kind
+decl_stmt|;
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Data
+expr_stmt|;
+block|}
+struct|;
+typedef|typedef
+name|msf
+operator|::
+name|VarStreamArray
+operator|<
+name|CVType
+operator|>
+name|CVTypeArray
 expr_stmt|;
 comment|/// Equvalent to CV_fldattr_t in cvinfo.h.
 struct|struct
 name|MemberAttributes
 block|{
-name|ulittle16_t
+name|uint16_t
 name|Attrs
+init|=
+literal|0
 decl_stmt|;
 enum|enum
 block|{
@@ -139,6 +197,66 @@ init|=
 literal|2
 block|,   }
 enum|;
+name|MemberAttributes
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|explicit
+name|MemberAttributes
+argument_list|(
+argument|MemberAccess Access
+argument_list|)
+block|:
+name|Attrs
+argument_list|(
+argument|static_cast<uint16_t>(Access)
+argument_list|)
+block|{}
+name|MemberAttributes
+argument_list|(
+argument|MemberAccess Access
+argument_list|,
+argument|MethodKind Kind
+argument_list|,
+argument|MethodOptions Flags
+argument_list|)
+block|{
+name|Attrs
+operator|=
+name|static_cast
+operator|<
+name|uint16_t
+operator|>
+operator|(
+name|Access
+operator|)
+expr_stmt|;
+name|Attrs
+operator||=
+operator|(
+name|static_cast
+operator|<
+name|uint16_t
+operator|>
+operator|(
+name|Kind
+operator|)
+operator|<<
+name|MethodKindShift
+operator|)
+expr_stmt|;
+name|Attrs
+operator||=
+name|static_cast
+operator|<
+name|uint16_t
+operator|>
+operator|(
+name|Flags
+operator|)
+expr_stmt|;
+block|}
 comment|/// Get the access specifier. Valid for any kind of member.
 name|MemberAccess
 name|getAccess
@@ -287,7 +405,9 @@ name|public
 label|:
 name|MemberPointerInfo
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|MemberPointerInfo
 argument_list|(
 argument|TypeIndex ContainingType
@@ -317,21 +437,6 @@ operator|>
 name|IndexMap
 argument_list|)
 expr_stmt|;
-specifier|static
-name|ErrorOr
-operator|<
-name|MemberPointerInfo
-operator|>
-name|deserialize
-argument_list|(
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-operator|&
-name|Data
-argument_list|)
-expr_stmt|;
 name|TypeIndex
 name|getContainingType
 argument_list|()
@@ -350,20 +455,6 @@ return|return
 name|Representation
 return|;
 block|}
-name|private
-label|:
-struct|struct
-name|Layout
-block|{
-name|TypeIndex
-name|ClassType
-decl_stmt|;
-name|ulittle16_t
-name|Representation
-decl_stmt|;
-comment|// PointerToMemberRepresentation
-block|}
-struct|;
 name|TypeIndex
 name|ContainingType
 decl_stmt|;
@@ -377,6 +468,11 @@ name|TypeRecord
 block|{
 name|protected
 label|:
+name|TypeRecord
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|TypeRecord
 argument_list|(
@@ -415,6 +511,17 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|ModifierRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|ModifierRecord
 argument_list|(
 argument|TypeIndex ModifiedType
@@ -451,18 +558,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|ModifierRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getModifiedType
 argument_list|()
@@ -481,20 +576,6 @@ return|return
 name|Modifiers
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|ModifiedType
-block|;
-name|ulittle16_t
-name|Modifiers
-block|;
-comment|// ModifierOptions
-block|}
-block|;
 name|TypeIndex
 name|ModifiedType
 block|;
@@ -511,6 +592,17 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|ProcedureRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|ProcedureRecord
 argument_list|(
 argument|TypeIndex ReturnType
@@ -568,32 +660,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|ProcedureRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
-specifier|static
-name|uint32_t
-name|getLayoutSize
-argument_list|()
-block|{
-return|return
-literal|2
-operator|+
-sizeof|sizeof
-argument_list|(
-name|Layout
-argument_list|)
-return|;
-block|}
 name|TypeIndex
 name|getReturnType
 argument_list|()
@@ -639,27 +705,6 @@ return|return
 name|ArgumentList
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|ReturnType
-block|;
-name|CallingConvention
-name|CallConv
-block|;
-name|FunctionOptions
-name|Options
-block|;
-name|ulittle16_t
-name|NumParameters
-block|;
-name|TypeIndex
-name|ArgListType
-block|;   }
-block|;
 name|TypeIndex
 name|ReturnType
 block|;
@@ -685,6 +730,17 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|MemberFunctionRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|MemberFunctionRecord
 argument_list|(
 argument|TypeIndex ReturnType
@@ -763,18 +819,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|MemberFunctionRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getReturnType
 argument_list|()
@@ -847,36 +891,6 @@ return|return
 name|ThisPointerAdjustment
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|ReturnType
-block|;
-name|TypeIndex
-name|ClassType
-block|;
-name|TypeIndex
-name|ThisType
-block|;
-name|CallingConvention
-name|CallConv
-block|;
-name|FunctionOptions
-name|Options
-block|;
-name|ulittle16_t
-name|NumParameters
-block|;
-name|TypeIndex
-name|ArgListType
-block|;
-name|little32_t
-name|ThisAdjustment
-block|;   }
-block|;
 name|TypeIndex
 name|ReturnType
 block|;
@@ -911,6 +925,17 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|MemberFuncIdRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|MemberFuncIdRecord
 argument_list|(
 argument|TypeIndex ClassType
@@ -954,18 +979,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|MemberFuncIdRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getClassType
 argument_list|()
@@ -993,20 +1006,6 @@ return|return
 name|Name
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|ClassType
-block|;
-name|TypeIndex
-name|FunctionType
-block|;
-comment|// Name: The null-terminated name follows.
-block|}
-block|;
 name|TypeIndex
 name|ClassType
 block|;
@@ -1026,6 +1025,17 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|ArgListRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|ArgListRecord
 argument_list|(
 argument|TypeRecordKind Kind
@@ -1055,18 +1065,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|ArgListRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|TypeIndex
@@ -1079,32 +1077,6 @@ return|return
 name|StringIndices
 return|;
 block|}
-specifier|static
-name|uint32_t
-name|getLayoutSize
-argument_list|()
-block|{
-return|return
-literal|2
-operator|+
-sizeof|sizeof
-argument_list|(
-name|Layout
-argument_list|)
-return|;
-block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|ulittle32_t
-name|NumArgs
-block|;
-comment|// Number of arguments
-comment|// ArgTypes[]: Type indicies of arguments
-block|}
-block|;
 name|std
 operator|::
 name|vector
@@ -1154,6 +1126,13 @@ block|;
 specifier|static
 specifier|const
 name|uint32_t
+name|PointerOptionMask
+operator|=
+literal|0xFF
+block|;
+specifier|static
+specifier|const
+name|uint32_t
 name|PointerSizeShift
 operator|=
 literal|13
@@ -1165,43 +1144,80 @@ name|PointerSizeMask
 operator|=
 literal|0xFF
 block|;
+name|explicit
 name|PointerRecord
 argument_list|(
-argument|TypeIndex ReferentType
-argument_list|,
-argument|PointerKind Kind
-argument_list|,
-argument|PointerMode Mode
-argument_list|,
-argument|PointerOptions Options
-argument_list|,
-argument|uint8_t Size
+argument|TypeRecordKind Kind
 argument_list|)
 operator|:
-name|PointerRecord
+name|TypeRecord
 argument_list|(
-argument|ReferentType
-argument_list|,
 argument|Kind
-argument_list|,
-argument|Mode
-argument_list|,
-argument|Options
-argument_list|,
-argument|Size
-argument_list|,
-argument|MemberPointerInfo()
 argument_list|)
 block|{}
 name|PointerRecord
 argument_list|(
 argument|TypeIndex ReferentType
 argument_list|,
-argument|PointerKind Kind
+argument|uint32_t Attrs
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|Pointer
+argument_list|)
+block|,
+name|ReferentType
+argument_list|(
+name|ReferentType
+argument_list|)
+block|,
+name|Attrs
+argument_list|(
+argument|Attrs
+argument_list|)
+block|{}
+name|PointerRecord
+argument_list|(
+argument|TypeIndex ReferentType
 argument_list|,
-argument|PointerMode Mode
+argument|PointerKind PK
 argument_list|,
-argument|PointerOptions Options
+argument|PointerMode PM
+argument_list|,
+argument|PointerOptions PO
+argument_list|,
+argument|uint8_t Size
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|Pointer
+argument_list|)
+block|,
+name|ReferentType
+argument_list|(
+name|ReferentType
+argument_list|)
+block|,
+name|Attrs
+argument_list|(
+argument|calcAttrs(PK, PM, PO, Size)
+argument_list|)
+block|{}
+name|PointerRecord
+argument_list|(
+argument|TypeIndex ReferentType
+argument_list|,
+argument|PointerKind PK
+argument_list|,
+argument|PointerMode PM
+argument_list|,
+argument|PointerOptions PO
 argument_list|,
 argument|uint8_t Size
 argument_list|,
@@ -1220,24 +1236,49 @@ argument_list|(
 name|ReferentType
 argument_list|)
 block|,
-name|PtrKind
+name|Attrs
 argument_list|(
-name|Kind
-argument_list|)
-block|,
-name|Mode
+name|calcAttrs
 argument_list|(
-name|Mode
-argument_list|)
-block|,
-name|Options
-argument_list|(
-name|Options
-argument_list|)
-block|,
+name|PK
+argument_list|,
+name|PM
+argument_list|,
+name|PO
+argument_list|,
 name|Size
+argument_list|)
+argument_list|)
+block|,
+name|MemberInfo
 argument_list|(
-name|Size
+argument|Member
+argument_list|)
+block|{}
+name|PointerRecord
+argument_list|(
+argument|TypeIndex ReferentType
+argument_list|,
+argument|uint32_t Attrs
+argument_list|,
+argument|const MemberPointerInfo&Member
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|Pointer
+argument_list|)
+block|,
+name|ReferentType
+argument_list|(
+name|ReferentType
+argument_list|)
+block|,
+name|Attrs
+argument_list|(
+name|Attrs
 argument_list|)
 block|,
 name|MemberInfo
@@ -1257,18 +1298,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|PointerRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getReferentType
 argument_list|()
@@ -1284,7 +1313,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|PtrKind
+name|static_cast
+operator|<
+name|PointerKind
+operator|>
+operator|(
+operator|(
+name|Attrs
+operator|>>
+name|PointerKindShift
+operator|)
+operator|&
+name|PointerKindMask
+operator|)
 return|;
 block|}
 name|PointerMode
@@ -1293,7 +1334,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Mode
+name|static_cast
+operator|<
+name|PointerMode
+operator|>
+operator|(
+operator|(
+name|Attrs
+operator|>>
+name|PointerModeShift
+operator|)
+operator|&
+name|PointerModeMask
+operator|)
 return|;
 block|}
 name|PointerOptions
@@ -1302,7 +1355,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Options
+name|static_cast
+operator|<
+name|PointerOptions
+operator|>
+operator|(
+name|Attrs
+operator|)
 return|;
 block|}
 name|uint8_t
@@ -1311,7 +1370,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Size
+operator|(
+name|Attrs
+operator|>>
+name|PointerSizeShift
+operator|)
+operator|&
+name|PointerSizeMask
 return|;
 block|}
 name|MemberPointerInfo
@@ -1320,6 +1385,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|MemberInfo
 return|;
 block|}
@@ -1329,13 +1395,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Mode
+name|getMode
+argument_list|()
 operator|==
 name|PointerMode
 operator|::
 name|PointerToDataMember
 operator|||
-name|Mode
+name|getMode
+argument_list|()
 operator|==
 name|PointerMode
 operator|::
@@ -1351,10 +1419,7 @@ return|return
 operator|!
 operator|!
 operator|(
-name|uint32_t
-argument_list|(
-name|Options
-argument_list|)
+name|Attrs
 operator|&
 name|uint32_t
 argument_list|(
@@ -1374,10 +1439,7 @@ return|return
 operator|!
 operator|!
 operator|(
-name|uint32_t
-argument_list|(
-name|Options
-argument_list|)
+name|Attrs
 operator|&
 name|uint32_t
 argument_list|(
@@ -1397,10 +1459,7 @@ return|return
 operator|!
 operator|!
 operator|(
-name|uint32_t
-argument_list|(
-name|Options
-argument_list|)
+name|Attrs
 operator|&
 name|uint32_t
 argument_list|(
@@ -1420,10 +1479,7 @@ return|return
 operator|!
 operator|!
 operator|(
-name|uint32_t
-argument_list|(
-name|Options
-argument_list|)
+name|Attrs
 operator|&
 name|uint32_t
 argument_list|(
@@ -1434,188 +1490,91 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|PointeeType
-block|;
-name|ulittle32_t
-name|Attrs
-block|;
-comment|// pointer attributes
-comment|// if pointer to member:
-comment|//   PointerToMemberTail
-name|PointerKind
-name|getPtrKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PointerKind
-argument_list|(
-name|Attrs
-operator|&
-name|PointerKindMask
-argument_list|)
-return|;
-block|}
-name|PointerMode
-name|getPtrMode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PointerMode
-argument_list|(
-operator|(
-name|Attrs
-operator|>>
-name|PointerModeShift
-operator|)
-operator|&
-name|PointerModeMask
-argument_list|)
-return|;
-block|}
-name|uint8_t
-name|getPtrSize
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|Attrs
-operator|>>
-name|PointerSizeShift
-operator|)
-operator|&
-name|PointerSizeMask
-return|;
-block|}
-name|bool
-name|isFlat
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Attrs
-operator|&
-operator|(
-literal|1
-operator|<<
-literal|8
-operator|)
-return|;
-block|}
-name|bool
-name|isVolatile
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Attrs
-operator|&
-operator|(
-literal|1
-operator|<<
-literal|9
-operator|)
-return|;
-block|}
-name|bool
-name|isConst
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Attrs
-operator|&
-operator|(
-literal|1
-operator|<<
-literal|10
-operator|)
-return|;
-block|}
-name|bool
-name|isUnaligned
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Attrs
-operator|&
-operator|(
-literal|1
-operator|<<
-literal|11
-operator|)
-return|;
-block|}
-name|bool
-name|isPointerToDataMember
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getPtrMode
-argument_list|()
-operator|==
-name|PointerMode
-operator|::
-name|PointerToDataMember
-return|;
-block|}
-name|bool
-name|isPointerToMemberFunction
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getPtrMode
-argument_list|()
-operator|==
-name|PointerMode
-operator|::
-name|PointerToMemberFunction
-return|;
-block|}
-name|bool
-name|isPointerToMember
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isPointerToMemberFunction
-argument_list|()
-operator|||
-name|isPointerToDataMember
-argument_list|()
-return|;
-block|}
-expr|}
-block|;
 name|TypeIndex
 name|ReferentType
 block|;
-name|PointerKind
-name|PtrKind
+name|uint32_t
+name|Attrs
 block|;
-name|PointerMode
-name|Mode
-block|;
-name|PointerOptions
-name|Options
-block|;
-name|uint8_t
-name|Size
-block|;
+name|Optional
+operator|<
 name|MemberPointerInfo
+operator|>
 name|MemberInfo
-block|; }
+block|;
+name|private
+operator|:
+specifier|static
+name|uint32_t
+name|calcAttrs
+argument_list|(
+argument|PointerKind PK
+argument_list|,
+argument|PointerMode PM
+argument_list|,
+argument|PointerOptions PO
+argument_list|,
+argument|uint8_t Size
+argument_list|)
+block|{
+name|uint32_t
+name|A
+operator|=
+literal|0
+block|;
+name|A
+operator||=
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|PK
+operator|)
+block|;
+name|A
+operator||=
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|PO
+operator|)
+block|;
+name|A
+operator||=
+operator|(
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|PM
+operator|)
+operator|<<
+name|PointerModeShift
+operator|)
+block|;
+name|A
+operator||=
+operator|(
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|Size
+operator|)
+operator|<<
+name|PointerSizeShift
+operator|)
+block|;
+return|return
+name|A
+return|;
+block|}
+expr|}
 block|;
 comment|// LF_NESTTYPE
 name|class
@@ -1626,6 +1585,17 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|NestedTypeRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|NestedTypeRecord
 argument_list|(
 argument|TypeIndex Type
@@ -1662,18 +1632,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|NestedTypeRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getNestedType
 argument_list|()
@@ -1692,27 +1650,72 @@ return|return
 name|Name
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|ulittle16_t
-name|Pad0
-block|;
-comment|// Should be zero
-name|TypeIndex
-name|Type
-block|;
-comment|// Type index of nested type
-comment|// Name: Null-terminated string
-block|}
-block|;
 name|TypeIndex
 name|Type
 block|;
 name|StringRef
 name|Name
+block|; }
+block|;
+comment|// LF_FIELDLIST
+name|class
+name|FieldListRecord
+operator|:
+name|public
+name|TypeRecord
+block|{
+name|public
+operator|:
+name|explicit
+name|FieldListRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|explicit
+name|FieldListRecord
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Data
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|FieldList
+argument_list|)
+block|,
+name|Data
+argument_list|(
+argument|Data
+argument_list|)
+block|{}
+comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
+comment|/// is not in the map.
+name|bool
+name|remapTypeIndices
+argument_list|(
+argument|ArrayRef<TypeIndex> IndexMap
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Data
 block|; }
 block|;
 comment|// LF_ARRAY
@@ -1724,6 +1727,17 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|ArrayRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|ArrayRecord
 argument_list|(
 argument|TypeIndex ElementType
@@ -1774,18 +1788,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|ArrayRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getElementType
 argument_list|()
@@ -1813,8 +1815,6 @@ return|return
 name|Size
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getName
 argument_list|()
@@ -1824,21 +1824,6 @@ return|return
 name|Name
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|ElementType
-block|;
-name|TypeIndex
-name|IndexType
-block|;
-comment|// SizeOf: LF_NUMERIC encoded size in bytes. Not element count!
-comment|// Name: The null-terminated name follows.
-block|}
-block|;
 name|TypeIndex
 name|ElementType
 block|;
@@ -1848,8 +1833,6 @@ block|;
 name|uint64_t
 name|Size
 block|;
-name|llvm
-operator|::
 name|StringRef
 name|Name
 block|; }
@@ -1862,6 +1845,17 @@ name|TypeRecord
 block|{
 name|protected
 operator|:
+name|explicit
+name|TagRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|TagRecord
 argument_list|(
 argument|TypeRecordKind Kind
@@ -1949,6 +1943,25 @@ name|WinRTKindMask
 operator|=
 literal|0xC000
 block|;
+name|bool
+name|hasUniqueName
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Options
+operator|&
+name|ClassOptions
+operator|::
+name|HasUniqueName
+operator|)
+operator|!=
+name|ClassOptions
+operator|::
+name|None
+return|;
+block|}
 name|uint16_t
 name|getMemberCount
 argument_list|()
@@ -1994,8 +2007,6 @@ return|return
 name|UniqueName
 return|;
 block|}
-name|private
-operator|:
 name|uint16_t
 name|MemberCount
 block|;
@@ -2021,6 +2032,17 @@ name|TagRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|ClassRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TagRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|ClassRecord
 argument_list|(
 argument|TypeRecordKind Kind
@@ -2028,10 +2050,6 @@ argument_list|,
 argument|uint16_t MemberCount
 argument_list|,
 argument|ClassOptions Options
-argument_list|,
-argument|HfaKind Hfa
-argument_list|,
-argument|WindowsRTClassKind WinRTKind
 argument_list|,
 argument|TypeIndex FieldList
 argument_list|,
@@ -2061,16 +2079,6 @@ argument_list|,
 name|UniqueName
 argument_list|)
 block|,
-name|Hfa
-argument_list|(
-name|Hfa
-argument_list|)
-block|,
-name|WinRTKind
-argument_list|(
-name|WinRTKind
-argument_list|)
-block|,
 name|DerivationList
 argument_list|(
 name|DerivationList
@@ -2098,25 +2106,40 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|ClassRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|HfaKind
 name|getHfa
 argument_list|()
 specifier|const
 block|{
+name|uint16_t
+name|Value
+operator|=
+name|static_cast
+operator|<
+name|uint16_t
+operator|>
+operator|(
+name|Options
+operator|)
+block|;
+name|Value
+operator|=
+operator|(
+name|Value
+operator|&
+name|HfaKindMask
+operator|)
+operator|>>
+name|HfaKindShift
+block|;
 return|return
-name|Hfa
+name|static_cast
+operator|<
+name|HfaKind
+operator|>
+operator|(
+name|Value
+operator|)
 return|;
 block|}
 name|WindowsRTClassKind
@@ -2124,8 +2147,35 @@ name|getWinRTKind
 argument_list|()
 specifier|const
 block|{
+name|uint16_t
+name|Value
+operator|=
+name|static_cast
+operator|<
+name|uint16_t
+operator|>
+operator|(
+name|Options
+operator|)
+block|;
+name|Value
+operator|=
+operator|(
+name|Value
+operator|&
+name|WinRTKindMask
+operator|)
+operator|>>
+name|WinRTKindShift
+block|;
 return|return
-name|WinRTKind
+name|static_cast
+operator|<
+name|WindowsRTClassKind
+operator|>
+operator|(
+name|Value
+operator|)
 return|;
 block|}
 name|TypeIndex
@@ -2155,58 +2205,6 @@ return|return
 name|Size
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|ulittle16_t
-name|MemberCount
-block|;
-comment|// Number of members in FieldList.
-name|ulittle16_t
-name|Properties
-block|;
-comment|// ClassOptions bitset
-name|TypeIndex
-name|FieldList
-block|;
-comment|// LF_FIELDLIST: List of all kinds of members
-name|TypeIndex
-name|DerivedFrom
-block|;
-comment|// LF_DERIVED: List of known derived classes
-name|TypeIndex
-name|VShape
-block|;
-comment|// LF_VTSHAPE: Shape of the vftable
-comment|// SizeOf: The 'sizeof' the UDT in bytes is encoded as an LF_NUMERIC
-comment|// integer.
-comment|// Name: The null-terminated name follows.
-name|bool
-name|hasUniqueName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Properties
-operator|&
-name|uint16_t
-argument_list|(
-name|ClassOptions
-operator|::
-name|HasUniqueName
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
-name|HfaKind
-name|Hfa
-block|;
-name|WindowsRTClassKind
-name|WinRTKind
-block|;
 name|TypeIndex
 name|DerivationList
 block|;
@@ -2224,13 +2222,22 @@ operator|:
 name|public
 name|TagRecord
 block|{
+name|explicit
+name|UnionRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TagRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|UnionRecord
 argument_list|(
 argument|uint16_t MemberCount
 argument_list|,
 argument|ClassOptions Options
-argument_list|,
-argument|HfaKind Hfa
 argument_list|,
 argument|TypeIndex FieldList
 argument_list|,
@@ -2258,35 +2265,45 @@ argument_list|,
 name|UniqueName
 argument_list|)
 block|,
-name|Hfa
-argument_list|(
-name|Hfa
-argument_list|)
-block|,
 name|Size
 argument_list|(
 argument|Size
 argument_list|)
 block|{}
-specifier|static
-name|ErrorOr
-operator|<
-name|UnionRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|HfaKind
 name|getHfa
 argument_list|()
 specifier|const
 block|{
+name|uint16_t
+name|Value
+operator|=
+name|static_cast
+operator|<
+name|uint16_t
+operator|>
+operator|(
+name|Options
+operator|)
+block|;
+name|Value
+operator|=
+operator|(
+name|Value
+operator|&
+name|HfaKindMask
+operator|)
+operator|>>
+name|HfaKindShift
+block|;
 return|return
-name|Hfa
+name|static_cast
+operator|<
+name|HfaKind
+operator|>
+operator|(
+name|Value
+operator|)
 return|;
 block|}
 name|uint64_t
@@ -2298,47 +2315,6 @@ return|return
 name|Size
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|ulittle16_t
-name|MemberCount
-block|;
-comment|// Number of members in FieldList.
-name|ulittle16_t
-name|Properties
-block|;
-comment|// ClassOptions bitset
-name|TypeIndex
-name|FieldList
-block|;
-comment|// LF_FIELDLIST: List of all kinds of members
-comment|// SizeOf: The 'sizeof' the UDT in bytes is encoded as an LF_NUMERIC
-comment|// integer.
-comment|// Name: The null-terminated name follows.
-name|bool
-name|hasUniqueName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Properties
-operator|&
-name|uint16_t
-argument_list|(
-name|ClassOptions
-operator|::
-name|HasUniqueName
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
-name|HfaKind
-name|Hfa
-block|;
 name|uint64_t
 name|Size
 block|; }
@@ -2352,6 +2328,17 @@ name|TagRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|EnumRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TagRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|EnumRecord
 argument_list|(
 argument|uint16_t MemberCount
@@ -2400,18 +2387,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|EnumRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getUnderlyingType
 argument_list|()
@@ -2421,43 +2396,6 @@ return|return
 name|UnderlyingType
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|ulittle16_t
-name|NumEnumerators
-block|;
-comment|// Number of enumerators
-name|ulittle16_t
-name|Properties
-block|;
-name|TypeIndex
-name|UnderlyingType
-block|;
-name|TypeIndex
-name|FieldListType
-block|;
-comment|// Name: The null-terminated name follows.
-name|bool
-name|hasUniqueName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Properties
-operator|&
-name|uint16_t
-argument_list|(
-name|ClassOptions
-operator|::
-name|HasUniqueName
-argument_list|)
-return|;
-block|}
-expr|}
-block|;
 name|TypeIndex
 name|UnderlyingType
 block|; }
@@ -2471,6 +2409,17 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|BitFieldRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|BitFieldRecord
 argument_list|(
 argument|TypeIndex Type
@@ -2514,18 +2463,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|BitFieldRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getType
 argument_list|()
@@ -2553,21 +2490,6 @@ return|return
 name|BitSize
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|Type
-block|;
-name|uint8_t
-name|BitSize
-block|;
-name|uint8_t
-name|BitOffset
-block|;   }
-block|;
 name|TypeIndex
 name|Type
 block|;
@@ -2587,6 +2509,17 @@ name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|VFTableShapeRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|explicit
 name|VFTableShapeRecord
 argument_list|(
@@ -2645,18 +2578,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|VFTableShapeRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|VFTableSlotKind
@@ -2693,22 +2614,6 @@ name|size
 argument_list|()
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-comment|// Number of vftable entries. Each method may have more than one entry due
-comment|// to
-comment|// things like covariant return types.
-name|ulittle16_t
-name|VFEntryCount
-block|;
-comment|// Descriptors[]: 4-bit virtual method descriptors of type CV_VTS_desc_e.
-block|}
-block|;
-name|private
-operator|:
 name|ArrayRef
 operator|<
 name|VFTableSlotKind
@@ -2723,16 +2628,27 @@ name|VFTableSlotKind
 operator|>
 name|Slots
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_TYPESERVER2
 name|class
 name|TypeServer2Record
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|TypeServer2Record
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|TypeServer2Record
 argument_list|(
 argument|StringRef Guid
@@ -2776,18 +2692,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|TypeServer2Record
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|StringRef
 name|getGuid
 argument_list|()
@@ -2815,24 +2719,6 @@ return|return
 name|Name
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|char
-name|Guid
-index|[
-literal|16
-index|]
-block|;
-comment|// GUID
-name|ulittle32_t
-name|Age
-block|;
-comment|// Name: Name of the PDB as a null-terminated string
-block|}
-block|;
 name|StringRef
 name|Guid
 block|;
@@ -2842,16 +2728,27 @@ block|;
 name|StringRef
 name|Name
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_STRING_ID
 name|class
 name|StringIdRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|StringIdRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|StringIdRecord
 argument_list|(
 argument|TypeIndex Id
@@ -2888,18 +2785,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|StringIdRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getId
 argument_list|()
@@ -2918,33 +2803,33 @@ return|return
 name|String
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|id
-block|;
-comment|// Name: Name of the PDB as a null-terminated string
-block|}
-block|;
 name|TypeIndex
 name|Id
 block|;
 name|StringRef
 name|String
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_FUNC_ID
 name|class
 name|FuncIdRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|FuncIdRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|FuncIdRecord
 argument_list|(
 argument|TypeIndex ParentScope
@@ -2988,18 +2873,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|FuncIdRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getParentScope
 argument_list|()
@@ -3027,20 +2900,6 @@ return|return
 name|Name
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|ParentScope
-block|;
-name|TypeIndex
-name|FunctionType
-block|;
-comment|// Name: The null-terminated name follows.
-block|}
-block|;
 name|TypeIndex
 name|ParentScope
 block|;
@@ -3050,16 +2909,27 @@ block|;
 name|StringRef
 name|Name
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_UDT_SRC_LINE
 name|class
 name|UdtSourceLineRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|UdtSourceLineRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|UdtSourceLineRecord
 argument_list|(
 argument|TypeIndex UDT
@@ -3103,18 +2973,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|UdtSourceLineRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getUDT
 argument_list|()
@@ -3142,23 +3000,6 @@ return|return
 name|LineNumber
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|UDT
-block|;
-comment|// The user-defined type
-name|TypeIndex
-name|SourceFile
-block|;
-comment|// StringID containing the source filename
-name|ulittle32_t
-name|LineNumber
-block|;   }
-block|;
 name|TypeIndex
 name|UDT
 block|;
@@ -3168,16 +3009,27 @@ block|;
 name|uint32_t
 name|LineNumber
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_UDT_MOD_SRC_LINE
 name|class
 name|UdtModSourceLineRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|UdtModSourceLineRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|UdtModSourceLineRecord
 argument_list|(
 argument|TypeIndex UDT
@@ -3226,53 +3078,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|UdtModSourceLineRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|{
-specifier|const
-name|Layout
-operator|*
-name|L
-operator|=
-name|nullptr
-block|;
-name|CV_DESERIALIZE
-argument_list|(
-name|Data
-argument_list|,
-name|L
-argument_list|)
-block|;
-return|return
-name|UdtModSourceLineRecord
-argument_list|(
-name|L
-operator|->
-name|UDT
-argument_list|,
-name|L
-operator|->
-name|SourceFile
-argument_list|,
-name|L
-operator|->
-name|LineNumber
-argument_list|,
-name|L
-operator|->
-name|Module
-argument_list|)
-return|;
-block|}
 name|TypeIndex
 name|getUDT
 argument_list|()
@@ -3309,28 +3114,6 @@ return|return
 name|Module
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|UDT
-block|;
-comment|// The user-defined type
-name|TypeIndex
-name|SourceFile
-block|;
-comment|// StringID containing the source filename
-name|ulittle32_t
-name|LineNumber
-block|;
-name|ulittle16_t
-name|Module
-block|;
-comment|// Module that contributes this UDT definition
-block|}
-block|;
 name|TypeIndex
 name|UDT
 block|;
@@ -3343,16 +3126,27 @@ block|;
 name|uint16_t
 name|Module
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_BUILDINFO
 name|class
 name|BuildInfoRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|BuildInfoRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|BuildInfoRecord
 argument_list|(
 name|ArrayRef
@@ -3388,18 +3182,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|BuildInfoRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|TypeIndex
@@ -3412,18 +3194,6 @@ return|return
 name|ArgIndices
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|ulittle16_t
-name|NumArgs
-block|;
-comment|// Number of arguments
-comment|// ArgTypes[]: Type indicies of arguments
-block|}
-block|;
 name|SmallVector
 operator|<
 name|TypeIndex
@@ -3432,16 +3202,27 @@ literal|4
 operator|>
 name|ArgIndices
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_VFTABLE
 name|class
 name|VFTableRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|VFTableRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|VFTableRecord
 argument_list|(
 argument|TypeIndex CompleteClass
@@ -3474,64 +3255,36 @@ argument_list|)
 block|,
 name|VFPtrOffset
 argument_list|(
-name|VFPtrOffset
+argument|VFPtrOffset
 argument_list|)
-block|,
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-block|,
-name|MethodNamesRef
-argument_list|(
-argument|Methods
-argument_list|)
-block|{}
-name|VFTableRecord
-argument_list|(
-argument|TypeIndex CompleteClass
-argument_list|,
-argument|TypeIndex OverriddenVFTable
-argument_list|,
-argument|uint32_t VFPtrOffset
-argument_list|,
-argument|StringRef Name
-argument_list|,
-argument|const std::vector<StringRef>&Methods
-argument_list|)
-operator|:
-name|TypeRecord
-argument_list|(
-name|TypeRecordKind
-operator|::
-name|VFTable
-argument_list|)
-block|,
-name|CompleteClass
-argument_list|(
-name|CompleteClass
-argument_list|)
-block|,
-name|OverriddenVFTable
-argument_list|(
-name|OverriddenVFTable
-argument_list|)
-block|,
-name|VFPtrOffset
-argument_list|(
-name|VFPtrOffset
-argument_list|)
-block|,
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-block|,
+block|{
 name|MethodNames
+operator|.
+name|push_back
 argument_list|(
-argument|Methods
+name|Name
 argument_list|)
-block|{}
+block|;
+name|MethodNames
+operator|.
+name|insert
+argument_list|(
+name|MethodNames
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|Methods
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Methods
+operator|.
+name|end
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// Rewrite member type indices with IndexMap. Returns false if a type index
 comment|/// is not in the map.
 name|bool
@@ -3542,18 +3295,6 @@ operator|<
 name|TypeIndex
 operator|>
 name|IndexMap
-argument_list|)
-block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|VFTableRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
 argument_list|)
 block|;
 name|TypeIndex
@@ -3589,7 +3330,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Name
+name|makeArrayRef
+argument_list|(
+name|MethodNames
+argument_list|)
+operator|.
+name|front
+argument_list|()
 return|;
 block|}
 name|ArrayRef
@@ -3600,63 +3347,24 @@ name|getMethodNames
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|MethodNamesRef
-operator|.
-name|empty
-argument_list|()
-condition|)
 return|return
-name|MethodNamesRef
-return|;
-return|return
+name|makeArrayRef
+argument_list|(
 name|MethodNames
+argument_list|)
+operator|.
+name|drop_front
+argument_list|()
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|TypeIndex
-name|CompleteClass
-block|;
-comment|// Class that owns this vftable.
-name|TypeIndex
-name|OverriddenVFTable
-block|;
-comment|// VFTable that this overrides.
-name|ulittle32_t
-name|VFPtrOffset
-block|;
-comment|// VFPtr offset in CompleteClass
-name|ulittle32_t
-name|NamesLen
-block|;
-comment|// Length of subsequent names array in bytes.
-comment|// Names: A sequence of null-terminated strings. First string is vftable
-comment|// names.
-block|}
-block|;
 name|TypeIndex
 name|CompleteClass
 block|;
 name|TypeIndex
 name|OverriddenVFTable
 block|;
-name|ulittle32_t
+name|uint32_t
 name|VFPtrOffset
-block|;
-name|StringRef
-name|Name
-block|;
-name|ArrayRef
-operator|<
-name|StringRef
-operator|>
-name|MethodNamesRef
 block|;
 name|std
 operator|::
@@ -3666,25 +3374,40 @@ name|StringRef
 operator|>
 name|MethodNames
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_ONEMETHOD
 name|class
 name|OneMethodRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
 name|OneMethodRecord
+argument_list|()
+operator|:
+name|TypeRecord
+argument_list|(
+argument|TypeRecordKind::OneMethod
+argument_list|)
+block|{}
+name|explicit
+name|OneMethodRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|OneMethodRecord
 argument_list|(
 argument|TypeIndex Type
 argument_list|,
-argument|MethodKind Kind
-argument_list|,
-argument|MethodOptions Options
-argument_list|,
-argument|MemberAccess Access
+argument|MemberAttributes Attrs
 argument_list|,
 argument|int32_t VFTableOffset
 argument_list|,
@@ -3703,19 +3426,55 @@ argument_list|(
 name|Type
 argument_list|)
 block|,
-name|Kind
+name|Attrs
 argument_list|(
-name|Kind
+name|Attrs
 argument_list|)
 block|,
-name|Options
+name|VFTableOffset
 argument_list|(
-name|Options
+name|VFTableOffset
 argument_list|)
 block|,
-name|Access
+name|Name
+argument_list|(
+argument|Name
+argument_list|)
+block|{}
+name|OneMethodRecord
+argument_list|(
+argument|TypeIndex Type
+argument_list|,
+argument|MemberAccess Access
+argument_list|,
+argument|MethodKind MK
+argument_list|,
+argument|MethodOptions Options
+argument_list|,
+argument|int32_t VFTableOffset
+argument_list|,
+argument|StringRef Name
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|OneMethod
+argument_list|)
+block|,
+name|Type
+argument_list|(
+name|Type
+argument_list|)
+block|,
+name|Attrs
 argument_list|(
 name|Access
+argument_list|,
+name|MK
+argument_list|,
+name|Options
 argument_list|)
 block|,
 name|VFTableOffset
@@ -3740,18 +3499,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|OneMethodRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getType
 argument_list|()
@@ -3762,12 +3509,15 @@ name|Type
 return|;
 block|}
 name|MethodKind
-name|getKind
+name|getMethodKind
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Kind
+name|Attrs
+operator|.
+name|getMethodKind
+argument_list|()
 return|;
 block|}
 name|MethodOptions
@@ -3776,7 +3526,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Options
+name|Attrs
+operator|.
+name|getFlags
+argument_list|()
 return|;
 block|}
 name|MemberAccess
@@ -3785,7 +3538,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Access
+name|Attrs
+operator|.
+name|getAccess
+argument_list|()
 return|;
 block|}
 name|int32_t
@@ -3812,46 +3568,26 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Kind
+name|getMethodKind
+argument_list|()
 operator|==
 name|MethodKind
 operator|::
 name|IntroducingVirtual
 operator|||
-name|Kind
+name|getMethodKind
+argument_list|()
 operator|==
 name|MethodKind
 operator|::
 name|PureIntroducingVirtual
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
+name|TypeIndex
+name|Type
+block|;
 name|MemberAttributes
 name|Attrs
-block|;
-name|TypeIndex
-name|Type
-block|;
-comment|// If is introduced virtual method:
-comment|//   VFTableOffset: int32_t offset in vftable
-comment|// Name: Null-terminated string
-block|}
-block|;
-name|TypeIndex
-name|Type
-block|;
-name|MethodKind
-name|Kind
-block|;
-name|MethodOptions
-name|Options
-block|;
-name|MemberAccess
-name|Access
 block|;
 name|int32_t
 name|VFTableOffset
@@ -3859,16 +3595,27 @@ block|;
 name|StringRef
 name|Name
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_METHODLIST
 name|class
 name|MethodOverloadListRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|MethodOverloadListRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|MethodOverloadListRecord
 argument_list|(
 name|ArrayRef
@@ -3902,18 +3649,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|MethodOverloadListRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|ArrayRef
 operator|<
 name|OneMethodRecord
@@ -3926,24 +3661,6 @@ return|return
 name|Methods
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|MemberAttributes
-name|Attrs
-block|;
-name|ulittle16_t
-name|Padding
-block|;
-name|TypeIndex
-name|Type
-block|;
-comment|// If is introduced virtual method:
-comment|//   VFTableOffset: int32_t offset in vftable
-block|}
-block|;
 name|std
 operator|::
 name|vector
@@ -3952,16 +3669,27 @@ name|OneMethodRecord
 operator|>
 name|Methods
 block|; }
-block|;
+decl_stmt|;
 comment|/// For method overload sets.  LF_METHOD
 name|class
 name|OverloadedMethodRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|OverloadedMethodRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|OverloadedMethodRecord
 argument_list|(
 argument|uint16_t NumOverloads
@@ -4005,18 +3733,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|OverloadedMethodRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|uint16_t
 name|getNumOverloads
 argument_list|()
@@ -4044,22 +3760,6 @@ return|return
 name|Name
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|ulittle16_t
-name|MethodCount
-block|;
-comment|// Size of overload set
-name|TypeIndex
-name|MethList
-block|;
-comment|// Type index of methods in overload set
-comment|// Name: Null-terminated string
-block|}
-block|;
 name|uint16_t
 name|NumOverloads
 block|;
@@ -4069,16 +3769,65 @@ block|;
 name|StringRef
 name|Name
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_MEMBER
 name|class
 name|DataMemberRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|DataMemberRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|DataMemberRecord
+argument_list|(
+argument|MemberAttributes Attrs
+argument_list|,
+argument|TypeIndex Type
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|StringRef Name
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|DataMember
+argument_list|)
+block|,
+name|Attrs
+argument_list|(
+name|Attrs
+argument_list|)
+block|,
+name|Type
+argument_list|(
+name|Type
+argument_list|)
+block|,
+name|FieldOffset
+argument_list|(
+name|Offset
+argument_list|)
+block|,
+name|Name
+argument_list|(
+argument|Name
+argument_list|)
+block|{}
 name|DataMemberRecord
 argument_list|(
 argument|MemberAccess Access
@@ -4097,7 +3846,7 @@ operator|::
 name|DataMember
 argument_list|)
 block|,
-name|Access
+name|Attrs
 argument_list|(
 name|Access
 argument_list|)
@@ -4129,25 +3878,16 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|DataMemberRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Access
+name|Attrs
+operator|.
+name|getAccess
+argument_list|()
 return|;
 block|}
 name|TypeIndex
@@ -4177,24 +3917,8 @@ return|return
 name|Name
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
 name|MemberAttributes
 name|Attrs
-block|;
-comment|// Access control attributes, etc
-name|TypeIndex
-name|Type
-block|;
-comment|// FieldOffset: LF_NUMERIC encoded byte offset
-comment|// Name: Null-terminated string
-block|}
-block|;
-name|MemberAccess
-name|Access
 block|;
 name|TypeIndex
 name|Type
@@ -4205,16 +3929,58 @@ block|;
 name|StringRef
 name|Name
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_STMEMBER
 name|class
 name|StaticDataMemberRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|StaticDataMemberRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|StaticDataMemberRecord
+argument_list|(
+argument|MemberAttributes Attrs
+argument_list|,
+argument|TypeIndex Type
+argument_list|,
+argument|StringRef Name
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|StaticDataMember
+argument_list|)
+block|,
+name|Attrs
+argument_list|(
+name|Attrs
+argument_list|)
+block|,
+name|Type
+argument_list|(
+name|Type
+argument_list|)
+block|,
+name|Name
+argument_list|(
+argument|Name
+argument_list|)
+block|{}
 name|StaticDataMemberRecord
 argument_list|(
 argument|MemberAccess Access
@@ -4231,7 +3997,7 @@ operator|::
 name|StaticDataMember
 argument_list|)
 block|,
-name|Access
+name|Attrs
 argument_list|(
 name|Access
 argument_list|)
@@ -4258,25 +4024,16 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|StaticDataMemberRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Access
+name|Attrs
+operator|.
+name|getAccess
+argument_list|()
 return|;
 block|}
 name|TypeIndex
@@ -4297,23 +4054,8 @@ return|return
 name|Name
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
 name|MemberAttributes
 name|Attrs
-block|;
-comment|// Access control attributes, etc
-name|TypeIndex
-name|Type
-block|;
-comment|// Name: Null-terminated string
-block|}
-block|;
-name|MemberAccess
-name|Access
 block|;
 name|TypeIndex
 name|Type
@@ -4321,16 +4063,63 @@ block|;
 name|StringRef
 name|Name
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_ENUMERATE
 name|class
 name|EnumeratorRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|EnumeratorRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|EnumeratorRecord
+argument_list|(
+argument|MemberAttributes Attrs
+argument_list|,
+argument|APSInt Value
+argument_list|,
+argument|StringRef Name
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|Enumerator
+argument_list|)
+block|,
+name|Attrs
+argument_list|(
+name|Attrs
+argument_list|)
+block|,
+name|Value
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Value
+argument_list|)
+argument_list|)
+block|,
+name|Name
+argument_list|(
+argument|Name
+argument_list|)
+block|{}
 name|EnumeratorRecord
 argument_list|(
 argument|MemberAccess Access
@@ -4347,7 +4136,7 @@ operator|::
 name|Enumerator
 argument_list|)
 block|,
-name|Access
+name|Attrs
 argument_list|(
 name|Access
 argument_list|)
@@ -4379,25 +4168,16 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|EnumeratorRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Access
+name|Attrs
+operator|.
+name|getAccess
+argument_list|()
 return|;
 block|}
 name|APSInt
@@ -4418,21 +4198,8 @@ return|return
 name|Name
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
 name|MemberAttributes
 name|Attrs
-block|;
-comment|// Access control attributes, etc
-comment|// EnumValue: LF_NUMERIC encoded enumerator value
-comment|// Name: Null-terminated string
-block|}
-block|;
-name|MemberAccess
-name|Access
 block|;
 name|APSInt
 name|Value
@@ -4440,16 +4207,27 @@ block|;
 name|StringRef
 name|Name
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_VFUNCTAB
 name|class
 name|VFPtrRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|VFPtrRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|VFPtrRecord
 argument_list|(
 argument|TypeIndex Type
@@ -4479,18 +4257,6 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|VFPtrRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|TypeIndex
 name|getType
 argument_list|()
@@ -4500,33 +4266,61 @@ return|return
 name|Type
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|ulittle16_t
-name|Pad0
-block|;
-name|TypeIndex
-name|Type
-block|;
-comment|// Type of vfptr
-block|}
-block|;
 name|TypeIndex
 name|Type
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_BCLASS, LF_BINTERFACE
 name|class
 name|BaseClassRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|BaseClassRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|BaseClassRecord
+argument_list|(
+argument|MemberAttributes Attrs
+argument_list|,
+argument|TypeIndex Type
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|TypeRecordKind
+operator|::
+name|BaseClass
+argument_list|)
+block|,
+name|Attrs
+argument_list|(
+name|Attrs
+argument_list|)
+block|,
+name|Type
+argument_list|(
+name|Type
+argument_list|)
+block|,
+name|Offset
+argument_list|(
+argument|Offset
+argument_list|)
+block|{}
 name|BaseClassRecord
 argument_list|(
 argument|MemberAccess Access
@@ -4543,7 +4337,7 @@ operator|::
 name|BaseClass
 argument_list|)
 block|,
-name|Access
+name|Attrs
 argument_list|(
 name|Access
 argument_list|)
@@ -4570,25 +4364,16 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|BaseClassRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Access
+name|Attrs
+operator|.
+name|getAccess
+argument_list|()
 return|;
 block|}
 name|TypeIndex
@@ -4609,24 +4394,8 @@ return|return
 name|Offset
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
 name|MemberAttributes
 name|Attrs
-block|;
-comment|// Access control attributes, etc
-name|TypeIndex
-name|BaseType
-block|;
-comment|// Base class type
-comment|// BaseOffset: LF_NUMERIC encoded byte offset of base from derived.
-block|}
-block|;
-name|MemberAccess
-name|Access
 block|;
 name|TypeIndex
 name|Type
@@ -4634,18 +4403,76 @@ block|;
 name|uint64_t
 name|Offset
 block|; }
-block|;
+decl_stmt|;
 comment|// LF_VBCLASS, LF_IVBCLASS
 name|class
 name|VirtualBaseClassRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
 name|VirtualBaseClassRecord
 argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
+name|VirtualBaseClassRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|,
+argument|MemberAttributes Attrs
+argument_list|,
+argument|TypeIndex BaseType
+argument_list|,
+argument|TypeIndex VBPtrType
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|uint64_t Index
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+name|Kind
+argument_list|)
+block|,
+name|Attrs
+argument_list|(
+name|Attrs
+argument_list|)
+block|,
+name|BaseType
+argument_list|(
+name|BaseType
+argument_list|)
+block|,
+name|VBPtrType
+argument_list|(
+name|VBPtrType
+argument_list|)
+block|,
+name|VBPtrOffset
+argument_list|(
+name|Offset
+argument_list|)
+block|,
+name|VTableIndex
+argument_list|(
+argument|Index
+argument_list|)
+block|{}
+name|VirtualBaseClassRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|,
 argument|MemberAccess Access
 argument_list|,
 argument|TypeIndex BaseType
@@ -4659,12 +4486,10 @@ argument_list|)
 operator|:
 name|TypeRecord
 argument_list|(
-name|TypeRecordKind
-operator|::
-name|VirtualBaseClass
+name|Kind
 argument_list|)
 block|,
-name|Access
+name|Attrs
 argument_list|(
 name|Access
 argument_list|)
@@ -4701,25 +4526,16 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|VirtualBaseClassRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
 name|MemberAccess
 name|getAccess
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Access
+name|Attrs
+operator|.
+name|getAccess
+argument_list|()
 return|;
 block|}
 name|TypeIndex
@@ -4758,29 +4574,8 @@ return|return
 name|VTableIndex
 return|;
 block|}
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
 name|MemberAttributes
 name|Attrs
-block|;
-comment|// Access control attributes, etc.
-name|TypeIndex
-name|BaseType
-block|;
-comment|// Base class type
-name|TypeIndex
-name|VBPtrType
-block|;
-comment|// Virtual base pointer type
-comment|// VBPtrOffset: Offset of vbptr from vfptr encoded as LF_NUMERIC.
-comment|// VBTableIndex: Index of vbase within vbtable encoded as LF_NUMERIC.
-block|}
-block|;
-name|MemberAccess
-name|Access
 block|;
 name|TypeIndex
 name|BaseType
@@ -4794,17 +4589,28 @@ block|;
 name|uint64_t
 name|VTableIndex
 block|; }
-block|;
+decl_stmt|;
 comment|/// LF_INDEX - Used to chain two large LF_FIELDLIST or LF_METHODLIST records
 comment|/// together. The first will end in an LF_INDEX record that points to the next.
 name|class
 name|ListContinuationRecord
-operator|:
+range|:
 name|public
 name|TypeRecord
 block|{
 name|public
 operator|:
+name|explicit
+name|ListContinuationRecord
+argument_list|(
+argument|TypeRecordKind Kind
+argument_list|)
+operator|:
+name|TypeRecord
+argument_list|(
+argument|Kind
+argument_list|)
+block|{}
 name|ListContinuationRecord
 argument_list|(
 argument|TypeIndex ContinuationIndex
@@ -4841,56 +4647,27 @@ operator|>
 name|IndexMap
 argument_list|)
 block|;
-specifier|static
-name|ErrorOr
-operator|<
-name|ListContinuationRecord
-operator|>
-name|deserialize
-argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|ArrayRef<uint8_t>&Data
-argument_list|)
-block|;
-name|private
-operator|:
-expr|struct
-name|Layout
-block|{
-name|ulittle16_t
-name|Pad0
-block|;
-name|TypeIndex
-name|ContinuationIndex
-block|;   }
-block|;
 name|TypeIndex
 name|ContinuationIndex
 block|; }
-block|;
-typedef|typedef
-name|CVRecord
-operator|<
-name|TypeLeafKind
-operator|>
-name|CVType
-expr_stmt|;
-typedef|typedef
-name|VarStreamArray
-operator|<
-name|CVType
-operator|>
-name|CVTypeArray
-expr_stmt|;
+decl_stmt|;
 block|}
+comment|// end namespace codeview
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_DEBUGINFO_CODEVIEW_TYPERECORD_H
+end_comment
 
 end_unit
 

@@ -363,6 +363,49 @@ name|get
 argument_list|()
 return|;
 block|}
+comment|// Give BB, return the auxiliary information if it's available.
+name|BBInfo
+modifier|*
+name|findBBInfo
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+decl|const
+block|{
+name|auto
+name|It
+init|=
+name|BBInfos
+operator|.
+name|find
+argument_list|(
+name|BB
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|It
+operator|==
+name|BBInfos
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+return|return
+name|It
+operator|->
+name|second
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
 comment|// Traverse the CFG using a stack. Find all the edges and assign the weight.
 comment|// Edges with large weight will be put into MST first so they are less likely
 comment|// to be instrumented.

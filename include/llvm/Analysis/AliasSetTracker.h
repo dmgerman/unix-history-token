@@ -511,6 +511,10 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// Doubly linked list of nodes.
+end_comment
+
 begin_decl_stmt
 name|PointerRec
 modifier|*
@@ -523,7 +527,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Doubly linked list of nodes.
+comment|// Forwarding pointer.
 end_comment
 
 begin_decl_stmt
@@ -532,10 +536,6 @@ modifier|*
 name|Forward
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// Forwarding pointer.
-end_comment
 
 begin_comment
 comment|/// All instructions without a specific address in this alias set.
@@ -567,7 +567,23 @@ begin_decl_stmt
 name|unsigned
 name|RefCount
 range|:
-literal|28
+literal|27
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Signifies that this set should be considered to alias any pointer.
+end_comment
+
+begin_comment
+comment|// Use when the tracker holding this set is saturated.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|AliasAny
+range|:
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -684,6 +700,12 @@ name|unsigned
 name|Volatile
 range|:
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|SetSize
 decl_stmt|;
 end_decl_stmt
 
@@ -936,6 +958,25 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|// Unfortunately, ilist::size() is linear, so we have to add code to keep
+end_comment
+
+begin_comment
+comment|// track of the list's exact size.
+end_comment
+
+begin_function
+name|unsigned
+name|size
+parameter_list|()
+block|{
+return|return
+name|SetSize
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|void
 name|print
@@ -1184,25 +1225,8 @@ label|:
 end_label
 
 begin_comment
-comment|// Can only be created by AliasSetTracker. Also, ilist creates one
+comment|// Can only be created by AliasSetTracker.
 end_comment
-
-begin_comment
-comment|// to serve as a sentinel.
-end_comment
-
-begin_macro
-name|friend
-end_macro
-
-begin_expr_stmt
-unit|struct
-name|ilist_sentinel_traits
-operator|<
-name|AliasSet
-operator|>
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|AliasSet
@@ -1229,6 +1253,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|AliasAny
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Access
 argument_list|(
 name|NoAccess
@@ -1241,9 +1270,14 @@ argument_list|)
 operator|,
 name|Volatile
 argument_list|(
-argument|false
+name|false
 argument_list|)
-block|{   }
+operator|,
+name|SetSize
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 name|AliasSet
 argument_list|(
 specifier|const
@@ -1710,7 +1744,17 @@ argument_list|)
 operator|:
 name|AA
 argument_list|(
-argument|aa
+name|aa
+argument_list|)
+operator|,
+name|TotalMayAliasSetSize
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|AliasAnyAS
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{}
 operator|~
@@ -1732,7 +1776,7 @@ comment|///
 comment|/// These methods return true if inserting the instruction resulted in the
 comment|/// addition of a new alias set (i.e., the pointer did not alias anything).
 comment|///
-name|bool
+name|void
 name|add
 argument_list|(
 argument|Value *Ptr
@@ -1743,7 +1787,7 @@ argument|const AAMDNodes&AAInfo
 argument_list|)
 expr_stmt|;
 comment|// Add a loc.
-name|bool
+name|void
 name|add
 parameter_list|(
 name|LoadInst
@@ -1751,7 +1795,7 @@ modifier|*
 name|LI
 parameter_list|)
 function_decl|;
-name|bool
+name|void
 name|add
 parameter_list|(
 name|StoreInst
@@ -1759,7 +1803,7 @@ modifier|*
 name|SI
 parameter_list|)
 function_decl|;
-name|bool
+name|void
 name|add
 parameter_list|(
 name|VAArgInst
@@ -1767,7 +1811,7 @@ modifier|*
 name|VAAI
 parameter_list|)
 function_decl|;
-name|bool
+name|void
 name|add
 parameter_list|(
 name|MemSetInst
@@ -1775,7 +1819,15 @@ modifier|*
 name|MSI
 parameter_list|)
 function_decl|;
-name|bool
+name|void
+name|add
+parameter_list|(
+name|MemTransferInst
+modifier|*
+name|MTI
+parameter_list|)
+function_decl|;
+name|void
 name|add
 parameter_list|(
 name|Instruction
@@ -1803,83 +1855,8 @@ name|AST
 parameter_list|)
 function_decl|;
 comment|// Add alias relations from another AST
-name|bool
-name|addUnknown
-parameter_list|(
-name|Instruction
-modifier|*
-name|I
-parameter_list|)
-function_decl|;
-comment|/// These methods are used to remove all entries that might be aliased by the
-comment|/// specified instruction. These methods return true if any alias sets were
-comment|/// eliminated.
-name|bool
-name|remove
-parameter_list|(
-name|Value
-modifier|*
-name|Ptr
-parameter_list|,
-name|uint64_t
-name|Size
-parameter_list|,
-specifier|const
-name|AAMDNodes
-modifier|&
-name|AAInfo
-parameter_list|)
-function_decl|;
-name|bool
-name|remove
-parameter_list|(
-name|LoadInst
-modifier|*
-name|LI
-parameter_list|)
-function_decl|;
-name|bool
-name|remove
-parameter_list|(
-name|StoreInst
-modifier|*
-name|SI
-parameter_list|)
-function_decl|;
-name|bool
-name|remove
-parameter_list|(
-name|VAArgInst
-modifier|*
-name|VAAI
-parameter_list|)
-function_decl|;
-name|bool
-name|remove
-parameter_list|(
-name|MemSetInst
-modifier|*
-name|MSI
-parameter_list|)
-function_decl|;
-name|bool
-name|remove
-parameter_list|(
-name|Instruction
-modifier|*
-name|I
-parameter_list|)
-function_decl|;
 name|void
-name|remove
-parameter_list|(
-name|AliasSet
-modifier|&
-name|AS
-parameter_list|)
-function_decl|;
-name|bool
-name|removeUnknown
+name|addUnknown
 parameter_list|(
 name|Instruction
 modifier|*
@@ -1924,12 +1901,6 @@ specifier|const
 name|AAMDNodes
 modifier|&
 name|AAInfo
-parameter_list|,
-name|bool
-modifier|*
-name|New
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Return the alias set containing the location specified if one exists,
@@ -1963,26 +1934,6 @@ name|AAInfo
 argument_list|)
 return|;
 block|}
-comment|/// Return true if the specified location is represented by this alias set,
-comment|/// false otherwise. This does not modify the AST object or alias sets.
-name|bool
-name|containsPointer
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|P
-argument_list|,
-name|uint64_t
-name|Size
-argument_list|,
-specifier|const
-name|AAMDNodes
-operator|&
-name|AAInfo
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// Return true if the specified instruction "may" (or must) alias one of the
 comment|/// members in any of the sets.
 name|bool
@@ -2118,6 +2069,16 @@ name|friend
 name|class
 name|AliasSet
 decl_stmt|;
+comment|// The total number of pointers contained in all "may" alias sets.
+name|unsigned
+name|TotalMayAliasSetSize
+decl_stmt|;
+comment|// A non-null value signifies this AST is saturated. A saturated AST lumps
+comment|// all pointers into a single "May" set.
+name|AliasSet
+modifier|*
+name|AliasAnyAS
+decl_stmt|;
 name|void
 name|removeAliasSet
 parameter_list|(
@@ -2197,42 +2158,8 @@ name|AliasSet
 operator|::
 name|AccessLattice
 name|E
-argument_list|,
-name|bool
-operator|&
-name|NewSet
-argument_list|)
-block|{
-name|NewSet
-operator|=
-name|false
-expr_stmt|;
-name|AliasSet
-modifier|&
-name|AS
-init|=
-name|getAliasSetForPointer
-argument_list|(
-name|P
-argument_list|,
-name|Size
-argument_list|,
-name|AAInfo
-argument_list|,
-operator|&
-name|NewSet
 argument_list|)
 decl_stmt|;
-name|AS
-operator|.
-name|Access
-operator||=
-name|E
-expr_stmt|;
-return|return
-name|AS
-return|;
-block|}
 end_decl_stmt
 
 begin_function_decl
@@ -2253,6 +2180,22 @@ name|AAMDNodes
 modifier|&
 name|AAInfo
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Merge all alias sets into a single set that is considered to alias any
+end_comment
+
+begin_comment
+comment|/// pointer.
+end_comment
+
+begin_function_decl
+name|AliasSet
+modifier|&
+name|mergeAllAliasSets
+parameter_list|()
 function_decl|;
 end_function_decl
 

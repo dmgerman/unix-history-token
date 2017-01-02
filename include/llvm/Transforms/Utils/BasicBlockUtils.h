@@ -70,6 +70,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/BasicBlock.h"
 end_include
 
@@ -77,6 +83,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/CFG.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -103,9 +121,6 @@ name|ReturnInst
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
-decl_stmt|;
-name|class
-name|TerminatorInst
 decl_stmt|;
 comment|/// Delete the specified block, which must have no predecessors.
 name|void
@@ -555,7 +570,7 @@ literal|0
 decl_stmt|;
 while|while
 condition|(
-literal|1
+name|true
 condition|)
 block|{
 name|assert
@@ -806,8 +821,8 @@ name|Pred
 parameter_list|)
 function_decl|;
 comment|/// Split the containing block at the specified instruction - everything before
-comment|/// and including SplitBefore stays in the old basic block, and everything after
-comment|/// SplitBefore is moved to a new block. The two blocks are connected by a
+comment|/// SplitBefore stays in the old basic block, and the rest of the instructions
+comment|/// in the BB are moved to a new block. The two blocks are connected by a
 comment|/// conditional branch (with value of Cmp being the condition).
 comment|/// Before:
 comment|///   Head
@@ -932,13 +947,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TRANSFORMS_UTILS_BASICBLOCKUTILS_H
+end_comment
 
 end_unit
 

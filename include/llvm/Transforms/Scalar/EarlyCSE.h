@@ -90,6 +90,16 @@ operator|<
 name|EarlyCSEPass
 operator|>
 block|{
+name|EarlyCSEPass
+argument_list|(
+argument|bool UseMemorySSA = false
+argument_list|)
+operator|:
+name|UseMemorySSA
+argument_list|(
+argument|UseMemorySSA
+argument_list|)
+block|{}
 comment|/// \brief Run the pass over the function.
 name|PreservedAnalyses
 name|run
@@ -98,13 +108,13 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
+block|;
+name|bool
+name|UseMemorySSA
 block|; }
 decl_stmt|;
 block|}

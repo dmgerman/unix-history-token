@@ -61,18 +61,6 @@ directive|include
 file|"AMDGPUMachineFunction.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -84,11 +72,6 @@ range|:
 name|public
 name|AMDGPUMachineFunction
 block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|public
 operator|:
 name|R600MachineFunctionInfo
@@ -99,24 +82,8 @@ operator|&
 name|MF
 argument_list|)
 block|;
-name|SmallVector
-operator|<
 name|unsigned
-block|,
-literal|4
-operator|>
-name|LiveOuts
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|IndirectRegs
-block|;
-name|unsigned
-name|StackSize
+name|CFStackSize
 block|; }
 decl_stmt|;
 block|}

@@ -95,10 +95,6 @@ name|MCContext
 modifier|*
 name|Ctx
 decl_stmt|;
-name|Mangler
-modifier|*
-name|Mang
-decl_stmt|;
 name|AsmPrinter
 modifier|&
 name|Printer
@@ -113,10 +109,6 @@ empty_stmt|;
 name|void
 name|Initialize
 parameter_list|(
-name|Mangler
-modifier|*
-name|mang
-parameter_list|,
 name|MCContext
 modifier|*
 name|C

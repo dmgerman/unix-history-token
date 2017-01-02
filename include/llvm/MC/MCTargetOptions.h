@@ -53,6 +53,27 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|enum
+name|class
+name|ExceptionHandling
+block|{
+name|None
+operator|,
+comment|/// No exception support
+name|DwarfCFI
+operator|,
+comment|/// DWARF-like instruction based exceptions
+name|SjLj
+operator|,
+comment|/// setjmp/longjmp based exceptions
+name|ARM
+operator|,
+comment|/// ARM EHABI
+name|WinEH
+operator|,
+comment|/// Windows Exception Handling
+block|}
+empty_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
@@ -96,6 +117,11 @@ range|:
 literal|1
 decl_stmt|;
 name|bool
+name|MCNoDeprecatedWarn
+range|:
+literal|1
+decl_stmt|;
+name|bool
 name|MCSaveTempLabels
 range|:
 literal|1
@@ -107,6 +133,11 @@ literal|1
 decl_stmt|;
 name|bool
 name|MCIncrementalLinkerCompatible
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|MCPIECopyRelocations
 range|:
 literal|1
 decl_stmt|;
@@ -204,6 +235,11 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
+name|MCNoDeprecatedWarn
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
 name|MCSaveTempLabels
 argument_list|)
 operator|&&
@@ -215,6 +251,11 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|MCIncrementalLinkerCompatible
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|MCPIECopyRelocations
 argument_list|)
 operator|&&
 name|ARE_EQUAL

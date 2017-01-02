@@ -190,7 +190,7 @@ comment|/// Cases of interest:
 comment|///   1. This could be a load or store for dependence queries on
 comment|///      load/store.  The value loaded or stored is the produced value.
 comment|///      Note that the pointer operand may be different than that of the
-comment|///      queried pointer due to must aliases and phi translation.  Note
+comment|///      queried pointer due to must aliases and phi translation. Note
 comment|///      that the def may not be the same type as the query, the pointers
 comment|///      may just be must aliases.
 comment|///   2. For loads and stores, this could be an allocation instruction. In
@@ -1204,18 +1204,46 @@ argument_list|(
 argument|DT
 argument_list|)
 block|{}
+comment|/// Handle invalidation in the new PM.
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+name|Inv
+argument_list|)
+expr_stmt|;
+comment|/// Some methods limit the number of instructions they will examine.
+comment|/// The return value of this method is the default limit that will be
+comment|/// used if no limit is explicitly passed in.
+name|unsigned
+name|getDefaultBlockScanLimit
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Returns the instruction on which a memory operation depends.
 comment|///
-comment|/// See the class comment for more details.  It is illegal to call this on
+comment|/// See the class comment for more details. It is illegal to call this on
 comment|/// non-memory instructions.
 name|MemDepResult
 name|getDependency
-argument_list|(
+parameter_list|(
 name|Instruction
-operator|*
+modifier|*
 name|QueryInst
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Perform a full dependency query for the specified call, returning the set
 comment|/// of blocks that the value is potentially live across.
 comment|///
@@ -1302,7 +1330,11 @@ comment|/// If isLoad is true, this routine ignores may-aliases with read-only
 comment|/// operations.  If isLoad is false, this routine ignores may-aliases
 comment|/// with reads from read-only locations. If possible, pass the query
 comment|/// instruction as well; this function may take advantage of the metadata
-comment|/// annotated to the query instruction to refine the result.
+comment|/// annotated to the query instruction to refine the result. \p Limit
+comment|/// can be used to set the maximum number of instructions that will be
+comment|/// examined to find the pointer dependency. On return, it will be set to
+comment|/// the number of instructions left to examine. If a null pointer is passed
+comment|/// in, the limit will default to the value of -memdep-block-scan-limit.
 comment|///
 comment|/// Note that this is an uncached query, and thus may be inefficient.
 name|MemDepResult
@@ -1330,6 +1362,12 @@ operator|*
 name|QueryInst
 operator|=
 name|nullptr
+argument_list|,
+name|unsigned
+operator|*
+name|Limit
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 name|MemDepResult
@@ -1355,6 +1393,12 @@ argument_list|,
 name|Instruction
 operator|*
 name|QueryInst
+argument_list|,
+name|unsigned
+operator|*
+name|Limit
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// This analysis looks for other loads and stores with invariant.group
@@ -1542,8 +1586,8 @@ name|MemoryDependenceAnalysis
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -1558,10 +1602,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

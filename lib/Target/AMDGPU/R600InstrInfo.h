@@ -79,6 +79,32 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|R600InstrFlags
+block|{
+enum_decl|enum :
+name|uint64_t
+block|{
+name|REGISTER_STORE
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|62
+block|,
+name|REGISTER_LOAD
+init|=
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|63
+block|}
+enum_decl|;
+block|}
 name|class
 name|AMDGPUTargetMachine
 decl_stmt|;
@@ -521,7 +547,7 @@ specifier|const
 name|override
 block|;
 name|bool
-name|ReverseBranchCondition
+name|reverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
@@ -545,7 +571,7 @@ specifier|const
 name|override
 block|;
 name|unsigned
-name|InsertBranch
+name|insertBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -556,14 +582,18 @@ argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|const DebugLoc&DL
+argument_list|,
+argument|int *BytesAdded = nullptr
 argument_list|)
 specifier|const
 name|override
 block|;
 name|unsigned
-name|RemoveBranch
+name|removeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int *BytesRemvoed = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -948,26 +978,57 @@ argument_list|(
 argument|const MachineInstr&MI
 argument_list|)
 specifier|const
-block|;
+block|{
+return|return
+name|get
+argument_list|(
+name|MI
+operator|.
+name|getOpcode
+argument_list|()
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|R600InstrFlags
+operator|::
+name|REGISTER_STORE
+return|;
+block|}
 name|bool
 name|isRegisterLoad
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)
 specifier|const
-block|; }
-decl_stmt|;
+block|{
+return|return
+name|get
+argument_list|(
+name|MI
+operator|.
+name|getOpcode
+argument_list|()
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|R600InstrFlags
+operator|::
+name|REGISTER_LOAD
+return|;
+block|}
+expr|}
+block|;
 name|namespace
 name|AMDGPU
 block|{
 name|int
 name|getLDSNoRetOp
-parameter_list|(
-name|uint16_t
-name|Opcode
-parameter_list|)
-function_decl|;
-block|}
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+block|;  }
 comment|//End namespace AMDGPU
 block|}
 end_decl_stmt

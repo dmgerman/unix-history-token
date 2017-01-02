@@ -321,9 +321,7 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
@@ -494,7 +492,62 @@ name|CurrentLoop
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|// This pass is required by the LCSSA transformation. It is used inside
+comment|// LPPassManager to check if current pass preserves LCSSA form, and if it does
+comment|// pass manager calls lcssa verification for the current loop.
+name|struct
+name|LCSSAVerificationPass
+range|:
+name|public
+name|FunctionPass
+block|{
+specifier|static
+name|char
+name|ID
+block|;
+name|LCSSAVerificationPass
+argument_list|()
+operator|:
+name|FunctionPass
+argument_list|(
+argument|ID
+argument_list|)
+block|{
+name|initializeLCSSAVerificationPassPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
+name|bool
+name|runOnFunction
+argument_list|(
+argument|Function&F
+argument_list|)
+name|override
+block|{
+return|return
+name|false
+return|;
 block|}
+name|void
+name|getAnalysisUsage
+argument_list|(
+argument|AnalysisUsage&AU
+argument_list|)
+specifier|const
+name|override
+block|{
+name|AU
+operator|.
+name|setPreservesAll
+argument_list|()
+block|;   }
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

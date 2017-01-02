@@ -153,6 +153,19 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|// attributes.c
+name|int
+name|llvm_test_function_attributes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
+name|llvm_test_callsite_attributes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

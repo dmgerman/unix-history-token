@@ -1051,9 +1051,7 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|GetInstrName
 parameter_list|(
 name|unsigned

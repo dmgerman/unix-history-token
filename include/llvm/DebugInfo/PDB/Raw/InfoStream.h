@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/PDBTypes.h"
+file|"llvm/DebugInfo/MSF/MappedBlockStream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/Raw/MappedBlockStream.h"
+file|"llvm/DebugInfo/PDB/PDBTypes.h"
 end_include
 
 begin_include
@@ -105,29 +105,6 @@ name|friend
 name|class
 name|InfoStreamBuilder
 decl_stmt|;
-struct|struct
-name|HeaderInfo
-block|{
-name|support
-operator|::
-name|ulittle32_t
-name|Version
-expr_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|Signature
-expr_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|Age
-expr_stmt|;
-name|PDB_UniqueId
-name|Guid
-decl_stmt|;
-block|}
-struct|;
 name|public
 label|:
 name|InfoStream
@@ -136,6 +113,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream
@@ -143,10 +122,6 @@ argument_list|)
 expr_stmt|;
 name|Error
 name|reload
-parameter_list|()
-function_decl|;
-name|Error
-name|commit
 parameter_list|()
 function_decl|;
 name|PdbRaw_ImplVer
@@ -195,6 +170,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream

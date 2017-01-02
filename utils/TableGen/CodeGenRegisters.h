@@ -84,7 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -96,7 +108,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineValueType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/LaneBitmask.h"
 end_include
 
 begin_include
@@ -120,7 +156,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdlib>
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -145,6 +187,12 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -180,7 +228,7 @@ comment|/// assuming a wraparound at 32bits.
 struct|struct
 name|MaskRolPair
 block|{
-name|unsigned
+name|LaneBitmask
 name|Mask
 decl_stmt|;
 name|uint8_t
@@ -268,7 +316,7 @@ name|unsigned
 name|EnumValue
 decl_stmt|;
 name|mutable
-name|unsigned
+name|LaneBitmask
 name|LaneMask
 decl_stmt|;
 name|mutable
@@ -544,7 +592,7 @@ name|Composed
 return|;
 block|}
 comment|// Compute LaneMask from Composed. Return LaneMask.
-name|unsigned
+name|LaneBitmask
 name|computeLaneMask
 argument_list|()
 specifier|const
@@ -630,10 +678,7 @@ argument|unsigned Enum
 argument_list|)
 empty_stmt|;
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -812,7 +857,7 @@ expr_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
-name|unsigned
+name|LaneBitmask
 operator|,
 literal|16
 operator|>
@@ -837,7 +882,7 @@ return|;
 block|}
 name|ArrayRef
 operator|<
-name|unsigned
+name|LaneBitmask
 operator|>
 name|getRegUnitLaneMasks
 argument_list|()
@@ -1074,8 +1119,7 @@ name|Record
 operator|*
 operator|,
 literal|16
-operator|>
-expr|>
+operator|>>
 name|Orders
 expr_stmt|;
 comment|// Bit mask of sub-classes including this, indexed by their EnumValue.
@@ -1190,7 +1234,7 @@ name|uint8_t
 name|AllocationPriority
 decl_stmt|;
 comment|/// Contains the combination of the lane masks of all subregisters.
-name|unsigned
+name|LaneBitmask
 name|LaneMask
 decl_stmt|;
 comment|/// True if there are at least 2 subregisters which do not interfere.
@@ -1803,25 +1847,21 @@ name|Units
 expr_stmt|;
 name|unsigned
 name|Weight
+init|=
+literal|0
 decl_stmt|;
 comment|// Cache the sum of all unit weights.
 name|unsigned
 name|Order
+init|=
+literal|0
 decl_stmt|;
 comment|// Cache the sort key.
 name|RegUnitSet
 argument_list|()
-operator|:
-name|Weight
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Order
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -2021,8 +2061,7 @@ operator|::
 name|vector
 operator|<
 name|unsigned
-operator|>
-expr|>
+operator|>>
 name|RegClassUnitSets
 expr_stmt|;
 comment|// Give each register unit set an order based on sorting criteria.
@@ -2794,7 +2833,7 @@ decl_stmt|;
 comment|// Bit mask of lanes that cover their registers. A sub-register index whose
 comment|// LaneMask is contained in CoveringLanes will be completely covered by
 comment|// another sub-register with the same or larger lane mask.
-name|unsigned
+name|LaneBitmask
 name|CoveringLanes
 decl_stmt|;
 block|}
@@ -2804,11 +2843,19 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_UTILS_TABLEGEN_CODEGENREGISTERS_H
+end_comment
 
 end_unit
 

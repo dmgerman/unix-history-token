@@ -104,9 +104,7 @@ name|MemoryManager
 operator|&
 name|MM
 argument_list|,
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|&
 name|Resolver
 argument_list|)

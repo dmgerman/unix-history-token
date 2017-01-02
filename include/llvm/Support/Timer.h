@@ -98,19 +98,19 @@ block|{
 name|double
 name|WallTime
 decl_stmt|;
-comment|// Wall clock time elapsed in seconds
+comment|///< Wall clock time elapsed in seconds.
 name|double
 name|UserTime
 decl_stmt|;
-comment|// User time elapsed
+comment|///< User time elapsed.
 name|double
 name|SystemTime
 decl_stmt|;
-comment|// System time elapsed
+comment|///< System time elapsed.
 name|ssize_t
 name|MemUsed
 decl_stmt|;
-comment|// Memory allocated (in bytes)
+comment|///< Memory allocated (in bytes).
 name|public
 label|:
 name|TimeRecord
@@ -136,10 +136,10 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-comment|/// getCurrentTime - Get the current time and memory usage.  If Start is true
-comment|/// we get the memory usage before the time, otherwise we get time before
-comment|/// memory usage.  This matters if the time to get the memory usage is
-comment|/// significant and shouldn't be counted as part of a duration.
+comment|/// Get the current time and memory usage.  If Start is true we get the memory
+comment|/// usage before the time, otherwise we get time before memory usage.  This
+comment|/// matters if the time to get the memory usage is significant and shouldn't
+comment|/// be counted as part of a duration.
 specifier|static
 name|TimeRecord
 name|getCurrentTime
@@ -194,7 +194,6 @@ return|return
 name|MemUsed
 return|;
 block|}
-comment|// operator< - Allow sorting.
 name|bool
 name|operator
 operator|<
@@ -296,87 +295,96 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/// Timer - This class is used to track the amount of time spent between
-comment|/// invocations of its startTimer()/stopTimer() methods.  Given appropriate OS
-comment|/// support it can also keep track of the RSS of the program at various points.
-comment|/// By default, the Timer will print the amount of time it has captured to
-comment|/// standard error when the last timer is destroyed, otherwise it is printed
-comment|/// when its TimerGroup is destroyed.  Timers do not print their information
-comment|/// if they are never started.
-comment|///
+comment|/// This class is used to track the amount of time spent between invocations of
+comment|/// its startTimer()/stopTimer() methods.  Given appropriate OS support it can
+comment|/// also keep track of the RSS of the program at various points.  By default,
+comment|/// the Timer will print the amount of time it has captured to standard error
+comment|/// when the last timer is destroyed, otherwise it is printed when its
+comment|/// TimerGroup is destroyed.  Timers do not print their information if they are
+comment|/// never started.
 name|class
 name|Timer
 block|{
 name|TimeRecord
 name|Time
 decl_stmt|;
-comment|// The total time captured
+comment|///< The total time captured.
 name|TimeRecord
 name|StartTime
 decl_stmt|;
-comment|// The time startTimer() was last called
+comment|///< The time startTimer() was last called.
 name|std
 operator|::
 name|string
 name|Name
 expr_stmt|;
-comment|// The name of this time variable.
+comment|///< The name of this time variable.
+name|std
+operator|::
+name|string
+name|Description
+expr_stmt|;
+comment|///< Description of this time variable.
 name|bool
 name|Running
 decl_stmt|;
-comment|// Is the timer currently running?
+comment|///< Is the timer currently running?
 name|bool
 name|Triggered
 decl_stmt|;
-comment|// Has the timer ever been triggered?
+comment|///< Has the timer ever been triggered?
 name|TimerGroup
 modifier|*
 name|TG
+init|=
+name|nullptr
 decl_stmt|;
-comment|// The TimerGroup this Timer is in.
+comment|///< The TimerGroup this Timer is in.
 name|Timer
 modifier|*
 modifier|*
 name|Prev
-decl_stmt|,
+decl_stmt|;
+comment|///< Pointer to \p Next of previous timer in group.
+name|Timer
 modifier|*
 name|Next
 decl_stmt|;
-comment|// Doubly linked list of timers in the group.
+comment|///< Next timer in the group.
 name|public
 label|:
 name|explicit
 name|Timer
-argument_list|(
-argument|StringRef N
-argument_list|)
-block|:
-name|TG
-argument_list|(
-argument|nullptr
-argument_list|)
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|Description
+parameter_list|)
 block|{
 name|init
 argument_list|(
-name|N
+name|Name
+argument_list|,
+name|Description
 argument_list|)
 expr_stmt|;
 block|}
 name|Timer
 argument_list|(
-argument|StringRef N
+argument|StringRef Name
+argument_list|,
+argument|StringRef Description
 argument_list|,
 argument|TimerGroup&tg
-argument_list|)
-block|:
-name|TG
-argument_list|(
-argument|nullptr
 argument_list|)
 block|{
 name|init
 argument_list|(
-name|N
+name|Name
+argument_list|,
+name|Description
 argument_list|,
 name|tg
 argument_list|)
@@ -384,15 +392,7 @@ expr_stmt|;
 block|}
 name|Timer
 argument_list|(
-specifier|const
-name|Timer
-operator|&
-name|RHS
-argument_list|)
-operator|:
-name|TG
-argument_list|(
-argument|nullptr
+argument|const Timer&RHS
 argument_list|)
 block|{
 name|assert
@@ -404,12 +404,13 @@ name|TG
 operator|&&
 literal|"Can only copy uninitialized timers"
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 specifier|const
 name|Timer
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|Timer
@@ -439,27 +440,29 @@ operator|~
 name|Timer
 argument_list|()
 expr_stmt|;
-comment|// Create an uninitialized timer, client must use 'init'.
+comment|/// Create an uninitialized timer, client must use 'init'.
 name|explicit
 name|Timer
-argument_list|()
-operator|:
-name|TG
-argument_list|(
-argument|nullptr
-argument_list|)
+parameter_list|()
 block|{}
-name|void
-name|init
-argument_list|(
-argument|StringRef N
-argument_list|)
-expr_stmt|;
 name|void
 name|init
 parameter_list|(
 name|StringRef
-name|N
+name|Name
+parameter_list|,
+name|StringRef
+name|Description
+parameter_list|)
+function_decl|;
+name|void
+name|init
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|Description
 parameter_list|,
 name|TimerGroup
 modifier|&
@@ -477,6 +480,19 @@ specifier|const
 block|{
 return|return
 name|Name
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getDescription
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Description
 return|;
 block|}
 name|bool
@@ -549,7 +565,6 @@ comment|/// The TimeRegion class is used as a helper class to call the startTime
 comment|/// stopTimer() methods of the Timer class.  When the object is constructed, it
 comment|/// starts the timer specified as its argument.  When it is destroyed, it stops
 comment|/// the relevant timer.  This makes it easy to time a region of code.
-comment|///
 name|class
 name|TimeRegion
 block|{
@@ -625,11 +640,10 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|/// NamedRegionTimer - This class is basically a combination of TimeRegion and
-comment|/// Timer.  It allows you to declare a new timer, AND specify the region to
-comment|/// time, all in one statement.  All timers with the same name are merged.  This
-comment|/// is primarily used for debugging and for hunting performance problems.
-comment|///
+comment|/// This class is basically a combination of TimeRegion and Timer.  It allows
+comment|/// you to declare a new timer, AND specify the region to time, all in one
+comment|/// statement.  All timers with the same name are merged.  This is primarily
+comment|/// used for debugging and for hunting performance problems.
 name|struct
 name|NamedRegionTimer
 range|:
@@ -641,15 +655,11 @@ name|NamedRegionTimer
 argument_list|(
 argument|StringRef Name
 argument_list|,
-argument|bool Enabled = true
-argument_list|)
-block|;
-name|explicit
-name|NamedRegionTimer
-argument_list|(
-argument|StringRef Name
+argument|StringRef Description
 argument_list|,
 argument|StringRef GroupName
+argument_list|,
+argument|StringRef GroupDescription
 argument_list|,
 argument|bool Enabled = true
 argument_list|)
@@ -659,45 +669,129 @@ comment|/// The TimerGroup class is used to group together related timers into a
 comment|/// report that is printed when the TimerGroup is destroyed.  It is illegal to
 comment|/// destroy a TimerGroup object before all of the Timers in it are gone.  A
 comment|/// TimerGroup can be specified for a newly created timer in its constructor.
-comment|///
 name|class
 name|TimerGroup
 block|{
+struct|struct
+name|PrintRecord
+block|{
+name|TimeRecord
+name|Time
+decl_stmt|;
 name|std
 operator|::
 name|string
 name|Name
 expr_stmt|;
+name|std
+operator|::
+name|string
+name|Description
+expr_stmt|;
+name|PrintRecord
+argument_list|(
+specifier|const
+name|PrintRecord
+operator|&
+name|Other
+argument_list|)
+operator|=
+expr|default
+expr_stmt|;
+name|PrintRecord
+argument_list|(
+specifier|const
+name|TimeRecord
+operator|&
+name|Time
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Description
+argument_list|)
+operator|:
+name|Time
+argument_list|(
+name|Time
+argument_list|)
+operator|,
+name|Name
+argument_list|(
+name|Name
+argument_list|)
+operator|,
+name|Description
+argument_list|(
+argument|Description
+argument_list|)
+block|{}
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|PrintRecord
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|Time
+operator|<
+name|Other
+operator|.
+name|Time
+return|;
+block|}
+block|}
+struct|;
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|Description
+expr_stmt|;
 name|Timer
 modifier|*
 name|FirstTimer
+init|=
+name|nullptr
 decl_stmt|;
-comment|// First timer in the group.
+comment|///< First timer in the group.
 name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|TimeRecord
-operator|,
-name|std
-operator|::
-name|string
-operator|>>
+name|PrintRecord
+operator|>
 name|TimersToPrint
 expr_stmt|;
 name|TimerGroup
 modifier|*
 modifier|*
 name|Prev
-decl_stmt|,
+decl_stmt|;
+comment|///< Pointer to Next field of previous timergroup in list.
+name|TimerGroup
 modifier|*
 name|Next
 decl_stmt|;
-comment|// Doubly linked list of TimerGroup's.
+comment|///< Pointer to next timergroup in list.
 name|TimerGroup
 argument_list|(
 specifier|const
@@ -726,7 +820,10 @@ name|explicit
 name|TimerGroup
 parameter_list|(
 name|StringRef
-name|name
+name|Name
+parameter_list|,
+name|StringRef
+name|Description
 parameter_list|)
 function_decl|;
 operator|~
@@ -737,26 +834,44 @@ name|void
 name|setName
 parameter_list|(
 name|StringRef
-name|name
+name|NewName
+parameter_list|,
+name|StringRef
+name|NewDescription
 parameter_list|)
 block|{
 name|Name
 operator|.
 name|assign
 argument_list|(
-name|name
+name|NewName
 operator|.
 name|begin
 argument_list|()
 argument_list|,
-name|name
+name|NewName
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|Description
+operator|.
+name|assign
+argument_list|(
+name|NewDescription
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|NewDescription
 operator|.
 name|end
 argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// print - Print any started timers in this group and zero them.
+comment|/// Print any started timers in this group and zero them.
 name|void
 name|print
 parameter_list|(
@@ -765,7 +880,7 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
-comment|/// printAll - This static method prints all timers and clears them all out.
+comment|/// This static method prints all timers and clears them all out.
 specifier|static
 name|void
 name|printAll
@@ -775,12 +890,29 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
+comment|/// Ensure global timer group lists are initialized. This function is mostly
+comment|/// used by the Statistic code to influence the construction and destruction
+comment|/// order of the global timer lists.
+specifier|static
+name|void
+name|ConstructTimerLists
+parameter_list|()
+function_decl|;
 name|private
 label|:
 name|friend
 name|class
 name|Timer
 decl_stmt|;
+name|friend
+name|void
+name|PrintStatisticsJSON
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 name|void
 name|addTimer
 parameter_list|(
@@ -798,11 +930,67 @@ name|T
 parameter_list|)
 function_decl|;
 name|void
+name|prepareToPrintList
+parameter_list|()
+function_decl|;
+name|void
 name|PrintQueuedTimers
 parameter_list|(
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|)
+function_decl|;
+name|void
+name|printJSONValue
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|PrintRecord
+modifier|&
+name|R
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|suffix
+parameter_list|,
+name|double
+name|Value
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|printJSONValues
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|delim
+parameter_list|)
+function_decl|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|printAllJSONValues
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|delim
 parameter_list|)
 function_decl|;
 block|}
@@ -811,7 +999,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

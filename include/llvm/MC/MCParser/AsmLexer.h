@@ -119,6 +119,12 @@ block|;
 name|bool
 name|IsAtStartOfStatement
 block|;
+name|bool
+name|IsParsingMSInlineAsm
+block|;
+name|bool
+name|IsPeeking
+block|;
 name|void
 name|operator
 operator|=
@@ -170,6 +176,16 @@ argument_list|,
 argument|const char *ptr = nullptr
 argument_list|)
 block|;
+name|void
+name|setParsingMSInlineAsm
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|IsParsingMSInlineAsm
+operator|=
+name|V
+block|; }
 name|StringRef
 name|LexUntilEndOfStatement
 argument_list|()

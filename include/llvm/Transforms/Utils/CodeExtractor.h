@@ -85,6 +85,15 @@ name|class
 name|BasicBlock
 decl_stmt|;
 name|class
+name|BlockFrequency
+decl_stmt|;
+name|class
+name|BlockFrequencyInfo
+decl_stmt|;
+name|class
+name|BranchProbabilityInfo
+decl_stmt|;
+name|class
 name|DominatorTree
 decl_stmt|;
 name|class
@@ -139,6 +148,14 @@ specifier|const
 name|bool
 name|AggregateArgs
 decl_stmt|;
+name|BlockFrequencyInfo
+modifier|*
+name|BFI
+decl_stmt|;
+name|BranchProbabilityInfo
+modifier|*
+name|BPI
+decl_stmt|;
 comment|// Bits of intermediate state computed at various phases of extraction.
 name|SetVector
 operator|<
@@ -156,6 +173,19 @@ name|RetTy
 decl_stmt|;
 name|public
 label|:
+comment|/// \brief Check to see if a block is valid for extraction.
+comment|///
+comment|/// Blocks containing EHPads, allocas, invokes, or vastarts are not valid.
+specifier|static
+name|bool
+name|isBlockValidForExtraction
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|&
+name|BB
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a code extractor for a single basic block.
 comment|///
 comment|/// In this formation, we don't require a dominator tree. The given basic
@@ -165,6 +195,10 @@ argument_list|(
 argument|BasicBlock *BB
 argument_list|,
 argument|bool AggregateArgs = false
+argument_list|,
+argument|BlockFrequencyInfo *BFI = nullptr
+argument_list|,
+argument|BranchProbabilityInfo *BPI = nullptr
 argument_list|)
 empty_stmt|;
 comment|/// \brief Create a code extractor for a sequence of blocks.
@@ -180,6 +214,10 @@ argument_list|,
 argument|DominatorTree *DT = nullptr
 argument_list|,
 argument|bool AggregateArgs = false
+argument_list|,
+argument|BlockFrequencyInfo *BFI = nullptr
+argument_list|,
+argument|BranchProbabilityInfo *BPI = nullptr
 argument_list|)
 empty_stmt|;
 comment|/// \brief Create a code extractor for a loop body.
@@ -193,6 +231,10 @@ argument_list|,
 argument|Loop&L
 argument_list|,
 argument|bool AggregateArgs = false
+argument_list|,
+argument|BlockFrequencyInfo *BFI = nullptr
+argument_list|,
+argument|BranchProbabilityInfo *BPI = nullptr
 argument_list|)
 empty_stmt|;
 comment|/// \brief Create a code extractor for a region node.
@@ -206,6 +248,10 @@ argument_list|,
 argument|const RegionNode&RN
 argument_list|,
 argument|bool AggregateArgs = false
+argument_list|,
+argument|BlockFrequencyInfo *BFI = nullptr
+argument_list|,
+argument|BranchProbabilityInfo *BPI = nullptr
 argument_list|)
 empty_stmt|;
 comment|/// \brief Perform the extraction, returning the new function.
@@ -313,6 +359,28 @@ modifier|*
 name|newFunction
 parameter_list|)
 function_decl|;
+name|void
+name|calculateNewCallTerminatorWeights
+argument_list|(
+name|BasicBlock
+operator|*
+name|CodeReplacer
+argument_list|,
+name|DenseMap
+operator|<
+name|BasicBlock
+operator|*
+argument_list|,
+name|BlockFrequency
+operator|>
+operator|&
+name|ExitWeights
+argument_list|,
+name|BranchProbabilityInfo
+operator|*
+name|BPI
+argument_list|)
+decl_stmt|;
 name|void
 name|emitCallAndSwitchStatement
 parameter_list|(

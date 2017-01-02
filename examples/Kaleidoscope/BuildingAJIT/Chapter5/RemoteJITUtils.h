@@ -62,19 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/RPCChannel.h"
+file|"llvm/ExecutionEngine/Orc/RawByteChannel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RTDyldMemoryManager.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mutex>
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cerrno>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_if
@@ -129,9 +141,9 @@ name|llvm
 operator|::
 name|orc
 operator|::
-name|remote
+name|rpc
 operator|::
-name|RPCChannel
+name|RawByteChannel
 block|{
 name|public
 operator|:
@@ -402,6 +414,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TOOLS_LLI_REMOTEJITUTILS_H
+end_comment
 
 end_unit
 

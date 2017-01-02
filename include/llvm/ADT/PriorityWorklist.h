@@ -76,7 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -94,7 +106,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<cstddef>
 end_include
 
 begin_include
@@ -188,7 +200,9 @@ expr_stmt|;
 comment|/// Construct an empty PriorityWorklist
 name|PriorityWorklist
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Determine if the PriorityWorklist is empty or not.
 name|bool
 name|empty
@@ -446,8 +460,8 @@ argument_list|()
 condition|)
 do|;
 block|}
+name|LLVM_NODISCARD
 name|T
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|pop_back_val
 parameter_list|()
 block|{
@@ -587,7 +601,7 @@ comment|/// This is intended to be equivalent to the following code, if we could
 comment|/// write it:
 comment|///
 comment|/// \code
-comment|///   V.erase(std::remove_if(V.begin(), V.end(), P), V.end());
+comment|///   V.erase(remove_if(V, P), V.end());
 comment|/// \endcode
 comment|///
 comment|/// However, PriorityWorklist doesn't expose non-const iterators, making any
@@ -611,19 +625,9 @@ operator|::
 name|iterator
 name|E
 operator|=
-name|std
-operator|::
 name|remove_if
 argument_list|(
 name|V
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|V
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|TestAndEraseFromMap
 operator|<
@@ -912,16 +916,25 @@ name|public
 operator|:
 name|SmallPriorityWorklist
 argument_list|()
-block|{}
-block|}
+operator|=
+expr|default
+block|; }
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_PRIORITYWORKLIST_H
+end_comment
 
 end_unit
 

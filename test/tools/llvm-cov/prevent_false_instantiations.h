@@ -8,7 +8,7 @@ comment|// INSTANTIATION-NOT: {{_Z5func[1,2]v}}
 end_comment
 
 begin_comment
-comment|// NAN-NOT: 0{{[ \t]+}}nan%{{[ \t]+}}0{{[ \t]+}}nan%
+comment|// NAN-NOT: {{[ \t]+}}nan%
 end_comment
 
 begin_comment

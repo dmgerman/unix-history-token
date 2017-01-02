@@ -74,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
 end_include
 
 begin_decl_stmt
@@ -106,6 +112,13 @@ operator|:
 name|public
 name|FoldingSetNode
 block|{
+name|friend
+name|class
+name|ImmutableListFactory
+operator|<
+name|T
+operator|>
+block|;
 name|T
 name|Head
 block|;
@@ -139,14 +152,19 @@ argument_list|(
 argument|tail
 argument_list|)
 block|{}
-name|friend
-name|class
-name|ImmutableListFactory
-operator|<
-name|T
-operator|>
+name|public
+operator|:
+name|ImmutableListImpl
+argument_list|(
+specifier|const
+name|ImmutableListImpl
+operator|&
+argument_list|)
+operator|=
+name|delete
 block|;
-name|void
+name|ImmutableListImpl
+operator|&
 name|operator
 operator|=
 operator|(
@@ -157,17 +175,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|ImmutableListImpl
-argument_list|(
-specifier|const
-name|ImmutableListImpl
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|public
-operator|:
 specifier|const
 name|T
 operator|&
@@ -319,22 +326,21 @@ name|T
 operator|>
 operator|*
 name|L
+operator|=
+name|nullptr
 expr_stmt|;
 name|public
 label|:
 name|iterator
 argument_list|()
-operator|:
-name|L
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|iterator
 argument_list|(
 argument|ImmutableList l
 argument_list|)
-operator|:
+block|:
 name|L
 argument_list|(
 argument|l.getInternalPointer()
@@ -659,13 +665,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|Allocator
 operator|&
 literal|0x1
-operator|?
-name|false
-operator|:
-name|true
+operator|)
+operator|==
+literal|0
 return|;
 block|}
 end_expr_stmt
@@ -953,8 +959,7 @@ operator|<
 name|ImmutableList
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 block|{
 specifier|static
 specifier|inline
@@ -1110,8 +1115,7 @@ operator|<
 name|ImmutableList
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 block|{
 specifier|static
 specifier|const
@@ -1125,7 +1129,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

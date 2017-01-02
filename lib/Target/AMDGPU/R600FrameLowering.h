@@ -84,10 +84,10 @@ argument_list|,
 argument|TransAl
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|R600FrameLowering
 argument_list|()
+name|override
 block|;
 name|void
 name|emitPrologue
@@ -97,6 +97,7 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|{}
 name|void
 name|emitEpilogue
@@ -106,16 +107,25 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|{}
 block|}
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AMDGPU_R600FRAMELOWERING_H
+end_comment
 
 end_unit
 

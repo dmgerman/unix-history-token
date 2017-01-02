@@ -112,37 +112,6 @@ name|LLVMOpaqueMetadata
 modifier|*
 name|LLVMMetadataRef
 typedef|;
-comment|// These functions duplicate the LLVM*FunctionAttr functions in the stable C
-comment|// API. We cannot use the existing functions because they take 32-bit attribute
-comment|// values, and the Go bindings expose all of the LLVM attributes, some of which
-comment|// have values>= 1<<32.
-name|void
-name|LLVMAddFunctionAttr2
-parameter_list|(
-name|LLVMValueRef
-name|Fn
-parameter_list|,
-name|uint64_t
-name|PA
-parameter_list|)
-function_decl|;
-name|uint64_t
-name|LLVMGetFunctionAttr2
-parameter_list|(
-name|LLVMValueRef
-name|Fn
-parameter_list|)
-function_decl|;
-name|void
-name|LLVMRemoveFunctionAttr2
-parameter_list|(
-name|LLVMValueRef
-name|Fn
-parameter_list|,
-name|uint64_t
-name|PA
-parameter_list|)
-function_decl|;
 name|LLVMMetadataRef
 name|LLVMConstantAsMetadata
 parameter_list|(

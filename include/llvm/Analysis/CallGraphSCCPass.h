@@ -310,18 +310,22 @@ block|{}
 name|void
 name|initialize
 argument_list|(
-argument|CallGraphNode *const *I
-argument_list|,
-argument|CallGraphNode *const *E
+argument|ArrayRef<CallGraphNode *> NewNodes
 argument_list|)
 block|{
 name|Nodes
 operator|.
 name|assign
 argument_list|(
-name|I
+name|NewNodes
+operator|.
+name|begin
+argument_list|()
 argument_list|,
-name|E
+name|NewNodes
+operator|.
+name|end
+argument_list|()
 argument_list|)
 block|;   }
 name|bool

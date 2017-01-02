@@ -362,7 +362,7 @@ name|Loc
 return|;
 block|}
 name|bool
-name|isBitPiece
+name|isFragment
 argument_list|()
 specifier|const
 block|{
@@ -370,7 +370,7 @@ return|return
 name|getExpression
 argument_list|()
 operator|->
-name|isBitPiece
+name|isFragment
 argument_list|()
 return|;
 block|}
@@ -672,19 +672,9 @@ argument_list|()
 expr_stmt|;
 name|assert
 argument_list|(
-name|std
-operator|::
 name|all_of
 argument_list|(
 name|Values
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Values
-operator|.
-name|end
-argument_list|()
 argument_list|,
 index|[]
 operator|(
@@ -697,7 +687,7 @@ block|{
 return|return
 name|V
 operator|.
-name|isBitPiece
+name|isFragment
 argument_list|()
 return|;
 block|}
@@ -971,7 +961,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/// \brief Compare two pieces based on their offset.
+comment|/// Compare two fragments based on their offset.
 end_comment
 
 begin_expr_stmt
@@ -1001,16 +991,20 @@ operator|.
 name|getExpression
 argument_list|()
 operator|->
-name|getBitPieceOffset
+name|getFragmentInfo
 argument_list|()
+operator|->
+name|OffsetInBits
 operator|<
 name|B
 operator|.
 name|getExpression
 argument_list|()
 operator|->
-name|getBitPieceOffset
+name|getFragmentInfo
 argument_list|()
+operator|->
+name|OffsetInBits
 return|;
 block|}
 end_expr_stmt

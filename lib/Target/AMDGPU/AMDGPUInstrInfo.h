@@ -73,6 +73,12 @@ directive|include
 file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"Utils/AMDGPUBaseInfo.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -85,45 +91,11 @@ directive|define
 name|GET_INSTRINFO_ENUM
 end_define
 
-begin_define
-define|#
-directive|define
-name|GET_INSTRINFO_OPERAND_ENUM
-end_define
-
 begin_include
 include|#
 directive|include
 file|"AMDGPUGenInstrInfo.inc"
 end_include
-
-begin_define
-define|#
-directive|define
-name|OPCODE_IS_ZERO_INT
-value|AMDGPU::PRED_SETE_INT
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPCODE_IS_NOT_ZERO_INT
-value|AMDGPU::PRED_SETNE_INT
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPCODE_IS_ZERO
-value|AMDGPU::PRED_SETE
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPCODE_IS_NOT_ZERO
-value|AMDGPU::PRED_SETNE
-end_define
 
 begin_decl_stmt
 name|namespace
@@ -171,12 +143,6 @@ name|st
 argument_list|)
 block|;
 name|bool
-name|enableClusterLoads
-argument_list|()
-specifier|const
-name|override
-block|;
-name|bool
 name|shouldScheduleLoadsNear
 argument_list|(
 argument|SDNode *Load1
@@ -214,42 +180,12 @@ argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
-name|namespace
-name|AMDGPU
-block|{
-name|LLVM_READONLY
-name|int16_t
-name|getNamedOperandIdx
-parameter_list|(
-name|uint16_t
-name|Opcode
-parameter_list|,
-name|uint16_t
-name|NamedIndex
-parameter_list|)
-function_decl|;
-block|}
-comment|// End namespace AMDGPU
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// End llvm namespace
 end_comment
-
-begin_define
-define|#
-directive|define
-name|AMDGPU_FLAG_REGISTER_LOAD
-value|(UINT64_C(1)<< 63)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AMDGPU_FLAG_REGISTER_STORE
-value|(UINT64_C(1)<< 62)
-end_define
 
 begin_endif
 endif|#

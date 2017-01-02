@@ -244,6 +244,8 @@ name|kw_exact
 block|,
 name|kw_inbounds
 block|,
+name|kw_inrange
+block|,
 name|kw_align
 block|,
 name|kw_addrspace
@@ -289,6 +291,8 @@ block|,
 name|kw_x86_thiscallcc
 block|,
 name|kw_x86_vectorcallcc
+block|,
+name|kw_x86_regcallcc
 block|,
 name|kw_arm_apcscc
 block|,
@@ -716,6 +720,9 @@ comment|// DIFlagFoo
 name|DwarfMacinfo
 block|,
 comment|// DW_MACINFO_foo
+name|ChecksumKind
+block|,
+comment|// CSK_foo
 comment|// Type valued tokens (TyVal).
 name|Type
 block|,

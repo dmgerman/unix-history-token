@@ -165,10 +165,6 @@ comment|// Evaluates to the gap between the stack pointer and the
 comment|// base of the dynamically-allocatable area.
 name|ADJDYNALLOC
 block|,
-comment|// Extracts the value of a 32-bit access register.  Operand 0 is
-comment|// the number of the register.
-name|EXTRACT_ACCESS
-block|,
 comment|// Count number of bits set in operand 0 per byte.
 name|POPCNT
 block|,
@@ -587,10 +583,7 @@ if|if
 condition|(
 name|VT
 operator|.
-name|getVectorElementType
-argument_list|()
-operator|.
-name|getSizeInBits
+name|getScalarSizeInBits
 argument_list|()
 operator|%
 literal|8
@@ -685,6 +678,19 @@ name|Ty
 argument_list|,
 name|unsigned
 name|AS
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|isFoldableMemAccessOffset
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|int64_t
+name|Offset
 argument_list|)
 decl|const
 name|override
@@ -1910,6 +1916,9 @@ argument_list|,
 name|MachineBasicBlock
 operator|*
 name|BB
+argument_list|,
+name|unsigned
+name|LOCROpcode
 argument_list|)
 decl|const
 decl_stmt|;

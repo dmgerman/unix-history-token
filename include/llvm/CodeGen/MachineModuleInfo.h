@@ -154,19 +154,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/EHPersonalities.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DebugLoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Metadata.h"
 end_include
 
 begin_include
@@ -205,12 +193,6 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Dwarf.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -218,13 +200,19 @@ block|{
 comment|//===----------------------------------------------------------------------===//
 comment|// Forward declarations.
 name|class
+name|BlockAddress
+decl_stmt|;
+name|class
+name|CallInst
+decl_stmt|;
+name|class
 name|Constant
 decl_stmt|;
 name|class
 name|GlobalVariable
 decl_stmt|;
 name|class
-name|BlockAddress
+name|LandingPadInst
 decl_stmt|;
 name|class
 name|MDNode
@@ -239,6 +227,9 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
+name|MachineFunctionInitializer
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
@@ -247,103 +238,11 @@ decl_stmt|;
 name|class
 name|StructType
 decl_stmt|;
-struct|struct
-name|SEHHandler
-block|{
-comment|// Filter or finally function. Null indicates a catch-all.
-specifier|const
-name|Function
-modifier|*
-name|FilterOrFinally
-decl_stmt|;
-comment|// Address of block to recover at. Null for a finally handler.
-specifier|const
-name|BlockAddress
-modifier|*
-name|RecoverBA
-decl_stmt|;
-block|}
-struct|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// LandingPadInfo - This structure is used to retain landing pad info for
-comment|/// the current function.
-comment|///
-struct|struct
-name|LandingPadInfo
-block|{
-name|MachineBasicBlock
-modifier|*
-name|LandingPadBlock
-decl_stmt|;
-comment|// Landing pad block.
-name|SmallVector
-operator|<
-name|MCSymbol
-operator|*
-operator|,
-literal|1
-operator|>
-name|BeginLabels
-expr_stmt|;
-comment|// Labels prior to invoke.
-name|SmallVector
-operator|<
-name|MCSymbol
-operator|*
-operator|,
-literal|1
-operator|>
-name|EndLabels
-expr_stmt|;
-comment|// Labels after invoke.
-name|SmallVector
-operator|<
-name|SEHHandler
-operator|,
-literal|1
-operator|>
-name|SEHHandlers
-expr_stmt|;
-comment|// SEH handlers active at this lpad.
-name|MCSymbol
-modifier|*
-name|LandingPadLabel
-decl_stmt|;
-comment|// Label at beginning of landing pad.
-name|std
-operator|::
-name|vector
-operator|<
-name|int
-operator|>
-name|TypeIds
-expr_stmt|;
-comment|// List of type ids (filters negative).
-name|explicit
-name|LandingPadInfo
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|)
-operator|:
-name|LandingPadBlock
-argument_list|(
-name|MBB
-argument_list|)
-operator|,
-name|LandingPadLabel
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
-block|}
-struct|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// MachineModuleInfoImpl - This class can be derived from and used by targets
-comment|/// to hold private target-specific information for each Module.  Objects of
-comment|/// type are accessed/created with MMI::getInfo and destroyed when the
-comment|/// MachineModuleInfo is destroyed.
+comment|/// This class can be derived from and used by targets to hold private
+comment|/// target-specific information for each Module.  Objects of type are
+comment|/// accessed/created with MMI::getInfo and destroyed when the MachineModuleInfo
+comment|/// is destroyed.
 comment|///
 name|class
 name|MachineModuleInfoImpl
@@ -405,9 +304,9 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// MachineModuleInfo - This class contains meta information specific to a
-comment|/// module.  Queries can be made by different debugging and exception handling
-comment|/// schemes and reformated for specific use.
+comment|/// This class contains meta information specific to a module.  Queries can be
+comment|/// made by different debugging and exception handling schemes and reformated
+comment|/// for specific use.
 comment|///
 name|class
 name|MachineModuleInfo
@@ -415,107 +314,32 @@ range|:
 name|public
 name|ImmutablePass
 block|{
-comment|/// Context - This is the MCContext used for the entire code generator.
+specifier|const
+name|TargetMachine
+operator|&
+name|TM
+block|;
+comment|/// This is the MCContext used for the entire code generator.
 name|MCContext
 name|Context
 block|;
-comment|/// TheModule - This is the LLVM Module being worked on.
+comment|/// This is the LLVM Module being worked on.
 specifier|const
 name|Module
 operator|*
 name|TheModule
 block|;
-comment|/// ObjFileMMI - This is the object-file-format-specific implementation of
+comment|/// This is the object-file-format-specific implementation of
 comment|/// MachineModuleInfoImpl, which lets targets accumulate whatever info they
 comment|/// want.
 name|MachineModuleInfoImpl
 operator|*
 name|ObjFileMMI
 block|;
-comment|/// List of moves done by a function's prolog.  Used to construct frame maps
-comment|/// by debug and exception handling consumers.
-name|std
-operator|::
-name|vector
-operator|<
-name|MCCFIInstruction
-operator|>
-name|FrameInstructions
-block|;
-comment|/// LandingPads - List of LandingPadInfo describing the landing pad
-comment|/// information in the current function.
-name|std
-operator|::
-name|vector
-operator|<
-name|LandingPadInfo
-operator|>
-name|LandingPads
-block|;
-comment|/// LPadToCallSiteMap - Map a landing pad's EH symbol to the call site
-comment|/// indexes.
-name|DenseMap
-operator|<
-name|MCSymbol
-operator|*
-block|,
-name|SmallVector
-operator|<
-name|unsigned
-block|,
-literal|4
-operator|>
-expr|>
-name|LPadToCallSiteMap
-block|;
-comment|/// CallSiteMap - Map of invoke call site index values to associated begin
-comment|/// EH_LABEL for the current function.
-name|DenseMap
-operator|<
-name|MCSymbol
-operator|*
-block|,
-name|unsigned
-operator|>
-name|CallSiteMap
-block|;
-comment|/// CurCallSite - The current call site index being processed, if any. 0 if
-comment|/// none.
-name|unsigned
-name|CurCallSite
-block|;
-comment|/// TypeInfos - List of C++ TypeInfo used in the current function.
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|GlobalValue
-operator|*
-operator|>
-name|TypeInfos
-block|;
-comment|/// FilterIds - List of typeids encoding filters used in the current function.
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|FilterIds
-block|;
-comment|/// FilterEnds - List of the indices in FilterIds corresponding to filter
-comment|/// terminators.
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|FilterEnds
-block|;
-comment|/// Personalities - Vector of all personality functions ever seen. Used to
-comment|/// emit common EH frames.
+comment|/// \name Exception Handling
+comment|/// \{
+comment|/// Vector of all personality functions ever seen. Used to emit common EH
+comment|/// frames.
 name|std
 operator|::
 name|vector
@@ -526,48 +350,79 @@ operator|*
 operator|>
 name|Personalities
 block|;
-comment|/// AddrLabelSymbols - This map keeps track of which symbol is being used for
-comment|/// the specified basic block's address of label.
+comment|/// The current call site index being processed, if any. 0 if none.
+name|unsigned
+name|CurCallSite
+block|;
+comment|/// \}
+comment|/// This map keeps track of which symbol is being used for the specified
+comment|/// basic block's address of label.
 name|MMIAddrLabelMap
 operator|*
 name|AddrLabelSymbols
-block|;
-name|bool
-name|CallsEHReturn
-block|;
-name|bool
-name|CallsUnwindInit
-block|;
-name|bool
-name|HasEHFunclets
 block|;
 comment|// TODO: Ideally, what we'd like is to have a switch that allows emitting
 comment|// synchronous (precise at call-sites only) CFA into .eh_frame. However,
 comment|// even under this switch, we'd like .debug_frame to be precise when using.
 comment|// -g. At this moment, there's no way to specify that some CFI directives
 comment|// go into .eh_frame only, while others go into .debug_frame only.
-comment|/// DbgInfoAvailable - True if debugging information is available
-comment|/// in this module.
+comment|/// True if debugging information is available in this module.
 name|bool
 name|DbgInfoAvailable
 block|;
-comment|/// UsesVAFloatArgument - True if this module calls VarArg function with
-comment|/// floating-point arguments.  This is used to emit an undefined reference
-comment|/// to _fltused on Windows targets.
+comment|/// True if this module calls VarArg function with floating-point arguments.
+comment|/// This is used to emit an undefined reference to _fltused on Windows
+comment|/// targets.
 name|bool
 name|UsesVAFloatArgument
 block|;
-comment|/// UsesMorestackAddr - True if the module calls the __morestack function
-comment|/// indirectly, as is required under the large code model on x86. This is used
-comment|/// to emit a definition of a symbol, __morestack_addr, containing the
-comment|/// address. See comments in lib/Target/X86/X86FrameLowering.cpp for more
-comment|/// details.
+comment|/// True if the module calls the __morestack function indirectly, as is
+comment|/// required under the large code model on x86. This is used to emit
+comment|/// a definition of a symbol, __morestack_addr, containing the address. See
+comment|/// comments in lib/Target/X86/X86FrameLowering.cpp for more details.
 name|bool
 name|UsesMorestackAddr
 block|;
-name|EHPersonality
-name|PersonalityTypeCache
+name|MachineFunctionInitializer
+operator|*
+name|MFInitializer
 block|;
+comment|/// Maps IR Functions to their corresponding MachineFunctions.
+name|DenseMap
+operator|<
+specifier|const
+name|Function
+operator|*
+block|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MachineFunction
+operator|>>
+name|MachineFunctions
+block|;
+comment|/// Next unique number available for a MachineFunction.
+name|unsigned
+name|NextFnNum
+operator|=
+literal|0
+block|;
+specifier|const
+name|Function
+operator|*
+name|LastRequest
+operator|=
+name|nullptr
+block|;
+comment|///< Used for shortcut/cache.
+name|MachineFunction
+operator|*
+name|LastResult
+operator|=
+name|nullptr
+block|;
+comment|///< Used for shortcut/cache.
 name|public
 operator|:
 specifier|static
@@ -575,123 +430,37 @@ name|char
 name|ID
 block|;
 comment|// Pass identification, replacement for typeid
-block|struct
-name|VariableDbgInfo
-block|{
-specifier|const
-name|DILocalVariable
-operator|*
-name|Var
-block|;
-specifier|const
-name|DIExpression
-operator|*
-name|Expr
-block|;
-name|unsigned
-name|Slot
-block|;
-specifier|const
-name|DILocation
-operator|*
-name|Loc
-block|;
-name|VariableDbgInfo
-argument_list|(
-argument|const DILocalVariable *Var
-argument_list|,
-argument|const DIExpression *Expr
-argument_list|,
-argument|unsigned Slot
-argument_list|,
-argument|const DILocation *Loc
-argument_list|)
-operator|:
-name|Var
-argument_list|(
-name|Var
-argument_list|)
-block|,
-name|Expr
-argument_list|(
-name|Expr
-argument_list|)
-block|,
-name|Slot
-argument_list|(
-name|Slot
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-argument|Loc
-argument_list|)
-block|{}
-block|}
-block|;
-typedef|typedef
-name|SmallVector
-operator|<
-name|VariableDbgInfo
-operator|,
-literal|4
-operator|>
-name|VariableDbgInfoMapTy
-expr_stmt|;
-name|VariableDbgInfoMapTy
-name|VariableDbgInfos
-decl_stmt|;
-name|MachineModuleInfo
-argument_list|()
-expr_stmt|;
-comment|// DUMMY CONSTRUCTOR, DO NOT CALL.
-comment|// Real constructor.
+name|explicit
 name|MachineModuleInfo
 argument_list|(
 specifier|const
-name|MCAsmInfo
-operator|&
-name|MAI
-argument_list|,
-specifier|const
-name|MCRegisterInfo
-operator|&
-name|MRI
-argument_list|,
-specifier|const
-name|MCObjectFileInfo
+name|TargetMachine
 operator|*
-name|MOFI
+name|TM
+operator|=
+name|nullptr
 argument_list|)
-expr_stmt|;
+block|;
 operator|~
 name|MachineModuleInfo
 argument_list|()
 name|override
-expr_stmt|;
+block|;
 comment|// Initialization and Finalization
 name|bool
 name|doInitialization
 argument_list|(
-name|Module
-operator|&
+argument|Module&
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|doFinalization
 argument_list|(
-name|Module
-operator|&
+argument|Module&
 argument_list|)
 name|override
-decl_stmt|;
-comment|/// EndFunction - Discard function meta information.
-comment|///
-name|void
-name|EndFunction
-parameter_list|()
-function_decl|;
+block|;
 specifier|const
 name|MCContext
 operator|&
@@ -704,9 +473,9 @@ name|Context
 return|;
 block|}
 name|MCContext
-modifier|&
+operator|&
 name|getContext
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Context
@@ -714,18 +483,14 @@ return|;
 block|}
 name|void
 name|setModule
-parameter_list|(
-specifier|const
-name|Module
-modifier|*
-name|M
-parameter_list|)
+argument_list|(
+argument|const Module *M
+argument_list|)
 block|{
 name|TheModule
 operator|=
 name|M
-expr_stmt|;
-block|}
+block|; }
 specifier|const
 name|Module
 operator|*
@@ -737,9 +502,41 @@ return|return
 name|TheModule
 return|;
 block|}
-comment|/// getInfo - Keep track of various per-function pieces of information for
-comment|/// backends that would like to do so.
-comment|///
+name|void
+name|setMachineFunctionInitializer
+argument_list|(
+argument|MachineFunctionInitializer *MFInit
+argument_list|)
+block|{
+name|MFInitializer
+operator|=
+name|MFInit
+block|;   }
+comment|/// Returns the MachineFunction constructed for the IR function \p F.
+comment|/// Creates a new MachineFunction and runs the MachineFunctionInitializer
+comment|/// if none exists yet.
+name|MachineFunction
+operator|&
+name|getMachineFunction
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|F
+argument_list|)
+block|;
+comment|/// Delete the MachineFunction \p MF and reset the link in the IR Function to
+comment|/// Machine Function map.
+name|void
+name|deleteMachineFunctionFor
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|)
+block|;
+comment|/// Keep track of various per-function pieces of information for backends
+comment|/// that would like to do so.
 name|template
 operator|<
 name|typename
@@ -777,9 +574,6 @@ name|ObjFileMMI
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -810,17 +604,7 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// hasDebugInfo - Returns true if valid debug info is present.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_expr_stmt
+comment|/// Returns true if valid debug info is present.
 name|bool
 name|hasDebugInfo
 argument_list|()
@@ -830,9 +614,6 @@ return|return
 name|DbgInfoAvailable
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setDebugInfoAvailability
 parameter_list|(
@@ -845,90 +626,6 @@ operator|=
 name|avail
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
-name|bool
-name|callsEHReturn
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CallsEHReturn
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setCallsEHReturn
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
-block|{
-name|CallsEHReturn
-operator|=
-name|b
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|bool
-name|callsUnwindInit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CallsUnwindInit
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setCallsUnwindInit
-parameter_list|(
-name|bool
-name|b
-parameter_list|)
-block|{
-name|CallsUnwindInit
-operator|=
-name|b
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|bool
-name|hasEHFunclets
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasEHFunclets
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setHasEHFunclets
-parameter_list|(
-name|bool
-name|V
-parameter_list|)
-block|{
-name|HasEHFunclets
-operator|=
-name|V
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|usesVAFloatArgument
 argument_list|()
@@ -938,9 +635,6 @@ return|return
 name|UsesVAFloatArgument
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setUsesVAFloatArgument
 parameter_list|(
@@ -953,9 +647,6 @@ operator|=
 name|b
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|usesMorestackAddr
 argument_list|()
@@ -965,9 +656,6 @@ return|return
 name|UsesMorestackAddr
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setUsesMorestackAddr
 parameter_list|(
@@ -980,81 +668,9 @@ operator|=
 name|b
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/// \brief Returns a reference to a list of cfi instructions in the current
-end_comment
-
-begin_comment
-comment|/// function's prologue.  Used to construct frame maps for debug and exception
-end_comment
-
-begin_comment
-comment|/// handling comsumers.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|MCCFIInstruction
-operator|>
-operator|&
-name|getFrameInstructions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FrameInstructions
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|unsigned
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
-name|addFrameInst
-parameter_list|(
-specifier|const
-name|MCCFIInstruction
-modifier|&
-name|Inst
-parameter_list|)
-block|{
-name|FrameInstructions
-operator|.
-name|push_back
-argument_list|(
-name|Inst
-argument_list|)
-expr_stmt|;
-return|return
-name|FrameInstructions
-operator|.
-name|size
-argument_list|()
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// getAddrLabelSymbol - Return the symbol to be used for the specified basic
-end_comment
-
-begin_comment
-comment|/// block when its address is taken.  This cannot be its normal LBB label
-end_comment
-
-begin_comment
-comment|/// because the block may be accessed outside its containing function.
-end_comment
-
-begin_function
+comment|/// Return the symbol to be used for the specified basic block when its
+comment|/// address is taken.  This cannot be its normal LBB label because the block
+comment|/// may be accessed outside its containing function.
 name|MCSymbol
 modifier|*
 name|getAddrLabelSymbol
@@ -1075,21 +691,9 @@ name|front
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/// getAddrLabelSymbolToEmit - Return the symbol to be used for the specified
-end_comment
-
-begin_comment
-comment|/// basic block when its address is taken.  If other blocks were RAUW'd to
-end_comment
-
-begin_comment
-comment|/// this one, we may have to emit them as well, return the whole set.
-end_comment
-
-begin_expr_stmt
+comment|/// Return the symbol to be used for the specified basic block when its
+comment|/// address is taken.  If other blocks were RAUW'd to this one, we may have
+comment|/// to emit them as well, return the whole set.
 name|ArrayRef
 operator|<
 name|MCSymbol
@@ -1103,25 +707,10 @@ operator|*
 name|BB
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// takeDeletedSymbolsForFunction - If the specified function has had any
-end_comment
-
-begin_comment
-comment|/// references to address-taken blocks generated, but the block got deleted,
-end_comment
-
-begin_comment
-comment|/// return the symbol now so we can emit it.  This prevents emitting a
-end_comment
-
-begin_comment
-comment|/// reference to a symbol that has no definition.
-end_comment
-
-begin_decl_stmt
+comment|/// If the specified function has had any references to address-taken blocks
+comment|/// generated, but the block got deleted, return the symbol now so we can
+comment|/// emit it.  This prevents emitting a reference to a symbol that has no
+comment|/// definition.
 name|void
 name|takeDeletedSymbolsForFunction
 argument_list|(
@@ -1141,88 +730,32 @@ operator|&
 name|Result
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|//===- EH ---------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|/// getOrCreateLandingPadInfo - Find or create an LandingPadInfo for the
-end_comment
-
-begin_comment
-comment|/// specified MachineBasicBlock.
-end_comment
-
-begin_function_decl
-name|LandingPadInfo
-modifier|&
-name|getOrCreateLandingPadInfo
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|LandingPad
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// addInvoke - Provide the begin and end labels of an invoke style call and
-end_comment
-
-begin_comment
-comment|/// associate it with a try landing pad block.
-end_comment
-
-begin_function_decl
+comment|/// \name Exception Handling
+comment|/// \{
+comment|/// Set the call site currently being processed.
 name|void
-name|addInvoke
+name|setCurrentCallSite
 parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|LandingPad
-parameter_list|,
-name|MCSymbol
-modifier|*
-name|BeginLabel
-parameter_list|,
-name|MCSymbol
-modifier|*
-name|EndLabel
+name|unsigned
+name|Site
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// addLandingPad - Add a new panding pad.  Returns the label ID for the
-end_comment
-
-begin_comment
-comment|/// landing pad entry.
-end_comment
-
-begin_function_decl
-name|MCSymbol
-modifier|*
-name|addLandingPad
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|LandingPad
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// addPersonality - Provide the personality function for the exception
-end_comment
-
-begin_comment
-comment|/// information.
-end_comment
-
-begin_function_decl
+block|{
+name|CurCallSite
+operator|=
+name|Site
+expr_stmt|;
+block|}
+comment|/// Get the call site currently being processed, if any.  return zero if
+comment|/// none.
+name|unsigned
+name|getCurrentCallSite
+parameter_list|()
+block|{
+return|return
+name|CurCallSite
+return|;
+block|}
+comment|/// Provide the personality function for the exception information.
 name|void
 name|addPersonality
 parameter_list|(
@@ -1232,13 +765,7 @@ modifier|*
 name|Personality
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getPersonalities - Return array of personality functions ever seen.
-end_comment
-
-begin_expr_stmt
+comment|/// Return array of personality functions ever seen.
 specifier|const
 name|std
 operator|::
@@ -1257,552 +784,53 @@ return|return
 name|Personalities
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// addCatchTypeInfo - Provide the catch typeinfo for a landing pad.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|void
-name|addCatchTypeInfo
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|LandingPad
-argument_list|,
-name|ArrayRef
-operator|<
-specifier|const
-name|GlobalValue
-operator|*
-operator|>
-name|TyInfo
-argument_list|)
-decl_stmt|;
+comment|/// \}
+block|}
 end_decl_stmt
 
-begin_comment
-comment|/// addFilterTypeInfo - Provide the filter typeinfo for a landing pad.
-end_comment
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|void
-name|addFilterTypeInfo
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|LandingPad
-argument_list|,
-name|ArrayRef
-operator|<
-specifier|const
-name|GlobalValue
-operator|*
-operator|>
-name|TyInfo
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// addCleanup - Add a cleanup action for a landing pad.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_function_decl
-name|void
-name|addCleanup
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|LandingPad
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|addSEHCatchHandler
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|LandingPad
-parameter_list|,
-specifier|const
-name|Function
-modifier|*
-name|Filter
-parameter_list|,
-specifier|const
-name|BlockAddress
-modifier|*
-name|RecoverLabel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|addSEHCleanupHandler
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|LandingPad
-parameter_list|,
-specifier|const
-name|Function
-modifier|*
-name|Cleanup
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getTypeIDFor - Return the type id for the specified typeinfo.  This is
-end_comment
-
-begin_comment
-comment|/// function wide.
-end_comment
-
-begin_function_decl
-name|unsigned
-name|getTypeIDFor
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|TI
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getFilterIDFor - Return the id of the filter encoded by TyIds.  This is
-end_comment
-
-begin_comment
-comment|/// function wide.
-end_comment
-
-begin_decl_stmt
-name|int
-name|getFilterIDFor
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|TyIds
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// TidyLandingPads - Remap landing pad labels and remove any deleted landing
-end_comment
-
-begin_comment
-comment|/// pads.
-end_comment
-
-begin_decl_stmt
-name|void
-name|TidyLandingPads
-argument_list|(
-name|DenseMap
-operator|<
-name|MCSymbol
-operator|*
-argument_list|,
-name|uintptr_t
-operator|>
-operator|*
-name|LPMap
-operator|=
-name|nullptr
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// getLandingPads - Return a reference to the landing pad info for the
-end_comment
-
-begin_comment
-comment|/// current function.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|LandingPadInfo
-operator|>
-operator|&
-name|getLandingPads
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LandingPads
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// setCallSiteLandingPad - Map the landing pad's EH symbol to the call
-end_comment
-
-begin_comment
-comment|/// site indexes.
-end_comment
-
-begin_decl_stmt
-name|void
-name|setCallSiteLandingPad
-argument_list|(
-name|MCSymbol
-operator|*
-name|Sym
-argument_list|,
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|Sites
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// getCallSiteLandingPad - Get the call site indexes for a landing pad EH
-end_comment
-
-begin_comment
-comment|/// symbol.
-end_comment
-
-begin_expr_stmt
-name|SmallVectorImpl
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|getCallSiteLandingPad
-argument_list|(
-argument|MCSymbol *Sym
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|hasCallSiteLandingPad
-argument_list|(
-name|Sym
-argument_list|)
-operator|&&
-literal|"missing call site number for landing pad!"
-argument_list|)
-block|;
-return|return
-name|LPadToCallSiteMap
-index|[
-name|Sym
-index|]
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// hasCallSiteLandingPad - Return true if the landing pad Eh symbol has an
-end_comment
-
-begin_comment
-comment|/// associated call site.
-end_comment
-
-begin_function
-name|bool
-name|hasCallSiteLandingPad
-parameter_list|(
-name|MCSymbol
-modifier|*
-name|Sym
-parameter_list|)
-block|{
-return|return
-operator|!
-name|LPadToCallSiteMap
-index|[
-name|Sym
-index|]
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// setCallSiteBeginLabel - Map the begin label for a call site.
-end_comment
-
-begin_function
-name|void
-name|setCallSiteBeginLabel
-parameter_list|(
-name|MCSymbol
-modifier|*
-name|BeginLabel
-parameter_list|,
-name|unsigned
-name|Site
-parameter_list|)
-block|{
-name|CallSiteMap
-index|[
-name|BeginLabel
-index|]
-operator|=
-name|Site
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// getCallSiteBeginLabel - Get the call site number for a begin label.
-end_comment
-
-begin_function
-name|unsigned
-name|getCallSiteBeginLabel
-parameter_list|(
-name|MCSymbol
-modifier|*
-name|BeginLabel
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|hasCallSiteBeginLabel
-argument_list|(
-name|BeginLabel
-argument_list|)
-operator|&&
-literal|"Missing call site number for EH_LABEL!"
-argument_list|)
-expr_stmt|;
-return|return
-name|CallSiteMap
-index|[
-name|BeginLabel
-index|]
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// hasCallSiteBeginLabel - Return true if the begin label has a call site
-end_comment
-
-begin_comment
-comment|/// number associated with it.
-end_comment
-
-begin_function
-name|bool
-name|hasCallSiteBeginLabel
-parameter_list|(
-name|MCSymbol
-modifier|*
-name|BeginLabel
-parameter_list|)
-block|{
-return|return
-name|CallSiteMap
-index|[
-name|BeginLabel
-index|]
-operator|!=
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// setCurrentCallSite - Set the call site currently being processed.
-end_comment
-
-begin_function
-name|void
-name|setCurrentCallSite
-parameter_list|(
-name|unsigned
-name|Site
-parameter_list|)
-block|{
-name|CurCallSite
-operator|=
-name|Site
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// getCurrentCallSite - Get the call site currently being processed, if any.
-end_comment
-
-begin_comment
-comment|/// return zero if none.
-end_comment
-
-begin_function
-name|unsigned
-name|getCurrentCallSite
-parameter_list|()
-block|{
-return|return
-name|CurCallSite
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// getTypeInfos - Return a reference to the C++ typeinfo for the current
-end_comment
-
-begin_comment
-comment|/// function.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|GlobalValue
-operator|*
-operator|>
-operator|&
-name|getTypeInfos
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TypeInfos
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// getFilterIds - Return a reference to the typeids encoding filters used in
-end_comment
-
-begin_comment
-comment|/// the current function.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|getFilterIds
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FilterIds
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// setVariableDbgInfo - Collect information used to emit debugging
-end_comment
-
-begin_comment
-comment|/// information of a variable.
-end_comment
-
-begin_function
-name|void
-name|setVariableDbgInfo
-parameter_list|(
-specifier|const
-name|DILocalVariable
-modifier|*
-name|Var
-parameter_list|,
-specifier|const
-name|DIExpression
-modifier|*
-name|Expr
-parameter_list|,
-name|unsigned
-name|Slot
-parameter_list|,
-specifier|const
-name|DILocation
-modifier|*
-name|Loc
-parameter_list|)
-block|{
-name|VariableDbgInfos
-operator|.
-name|emplace_back
-argument_list|(
-name|Var
-argument_list|,
-name|Expr
-argument_list|,
-name|Slot
-argument_list|,
-name|Loc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|VariableDbgInfoMapTy
-modifier|&
-name|getVariableDbgInfo
-parameter_list|()
-block|{
-return|return
-name|VariableDbgInfos
-return|;
-block|}
-end_function
-
-begin_comment
-unit|};
 comment|// End class MachineModuleInfo
 end_comment
+
+begin_comment
+comment|//===- MMI building helpers -----------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// Determine if any floating-point values are being passed to this variadic
+end_comment
+
+begin_comment
+comment|/// function, and set the MachineModuleInfo's usesVAFloatArgument flag if so.
+end_comment
+
+begin_comment
+comment|/// This flag is used to emit an undefined reference to _fltused on Windows,
+end_comment
+
+begin_comment
+comment|/// which will link in MSVCRT's floating-point support.
+end_comment
+
+begin_function_decl
+name|void
+name|computeUsesVAFloatArgument
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|,
+name|MachineModuleInfo
+modifier|&
+name|MMI
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}

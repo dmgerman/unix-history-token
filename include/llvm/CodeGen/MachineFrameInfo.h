@@ -248,7 +248,7 @@ name|isSpillSlot
 decl_stmt|;
 comment|/// If true, this stack slot is used to spill a value (could be deopt
 comment|/// and/or GC related) over a statepoint. We know that the address of the
-comment|/// slot can't alias any LLVM IR value.  This is very similiar to a Spill
+comment|/// slot can't alias any LLVM IR value.  This is very similar to a Spill
 comment|/// Slot, but is created by statepoint lowering is SelectionDAG, not the
 comment|/// register allocator.
 name|bool
@@ -1814,6 +1814,11 @@ name|Size
 parameter_list|,
 name|int64_t
 name|SPOffset
+parameter_list|,
+name|bool
+name|Immutable
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// Returns true if the specified index corresponds to a fixed stack object.

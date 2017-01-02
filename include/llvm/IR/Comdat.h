@@ -116,6 +116,15 @@ block|}
 enum|;
 name|Comdat
 argument_list|(
+specifier|const
+name|Comdat
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|Comdat
+argument_list|(
 name|Comdat
 operator|&&
 name|C
@@ -175,15 +184,6 @@ decl_stmt|;
 name|Comdat
 argument_list|()
 expr_stmt|;
-name|Comdat
-argument_list|(
-specifier|const
-name|Comdat
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
 comment|// Points to the map in Module.
 name|StringMapEntry
 operator|<
@@ -228,13 +228,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_COMDAT_H
+end_comment
 
 end_unit
 

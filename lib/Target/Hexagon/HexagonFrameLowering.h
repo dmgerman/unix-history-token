@@ -58,7 +58,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFrameInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -534,6 +558,19 @@ name|HRI
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|updateEntryPaths
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|SaveB
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|updateExitPaths
 argument_list|(
@@ -542,7 +579,7 @@ operator|&
 name|MBB
 argument_list|,
 name|MachineBasicBlock
-operator|*
+operator|&
 name|RestoreB
 argument_list|,
 name|BitVector
@@ -958,8 +995,6 @@ decl_stmt|;
 name|bool
 name|shouldInlineCSR
 argument_list|(
-name|llvm
-operator|::
 name|MachineFunction
 operator|&
 name|MF
@@ -999,6 +1034,15 @@ name|CSI
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|mayOverflowFrameOffset
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1008,13 +1052,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_HEXAGONFRAMELOWERING_H
+end_comment
 
 end_unit
 

@@ -123,70 +123,76 @@ comment|/// \brief Class to accumulate and hold information about a callee.
 struct|struct
 name|CalleeInfo
 block|{
-comment|/// The static number of callsites calling corresponding function.
-name|unsigned
-name|CallsiteCount
+name|enum
+name|class
+name|HotnessType
+range|:
+name|uint8_t
+block|{
+name|Unknown
+operator|=
+literal|0
+block|,
+name|Cold
+operator|=
+literal|1
+block|,
+name|None
+operator|=
+literal|2
+block|,
+name|Hot
+operator|=
+literal|3
+block|}
 decl_stmt|;
-comment|/// The cumulative profile count of calls to corresponding function
-comment|/// (if using PGO, otherwise 0).
-name|uint64_t
-name|ProfileCount
+name|HotnessType
+name|Hotness
+init|=
+name|HotnessType
+operator|::
+name|Unknown
 decl_stmt|;
 name|CalleeInfo
 argument_list|()
-operator|:
-name|CallsiteCount
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ProfileCount
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
+name|explicit
 name|CalleeInfo
 argument_list|(
-argument|unsigned CallsiteCount
-argument_list|,
-argument|uint64_t ProfileCount
+argument|HotnessType Hotness
 argument_list|)
-operator|:
-name|CallsiteCount
+block|:
+name|Hotness
 argument_list|(
-name|CallsiteCount
-argument_list|)
-operator|,
-name|ProfileCount
-argument_list|(
-argument|ProfileCount
+argument|Hotness
 argument_list|)
 block|{}
-name|CalleeInfo
-operator|&
-name|operator
-operator|+=
-operator|(
-name|uint64_t
-name|RHSProfileCount
-operator|)
+name|void
+name|updateHotness
+parameter_list|(
+specifier|const
+name|HotnessType
+name|OtherHotness
+parameter_list|)
 block|{
-name|CallsiteCount
-operator|++
-block|;
-name|ProfileCount
-operator|+=
-name|RHSProfileCount
-block|;
-return|return
-operator|*
-name|this
-return|;
+name|Hotness
+operator|=
+name|std
+operator|::
+name|max
+argument_list|(
+name|Hotness
+argument_list|,
+name|OtherHotness
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 struct|;
-comment|/// Struct to hold value either by GUID or Value*, depending on whether this
-comment|/// is a combined or per-module index, respectively.
+comment|/// Struct to hold value either by GUID or GlobalValue*. Values in combined
+comment|/// indexes as well as indirect calls are GUIDs, all others are GlobalValues.
 struct|struct
 name|ValueInfo
 block|{
@@ -209,9 +215,9 @@ name|GUID
 name|Id
 expr_stmt|;
 specifier|const
-name|Value
+name|GlobalValue
 modifier|*
-name|V
+name|GV
 decl_stmt|;
 name|ValueUnion
 argument_list|(
@@ -226,14 +232,14 @@ block|{}
 name|ValueUnion
 argument_list|(
 specifier|const
-name|Value
+name|GlobalValue
 operator|*
-name|V
+name|GV
 argument_list|)
 operator|:
-name|V
+name|GV
 argument_list|(
-argument|V
+argument|GV
 argument_list|)
 block|{}
 block|}
@@ -263,11 +269,11 @@ argument_list|(
 argument|VI_GUID
 argument_list|)
 block|{}
-comment|/// Constructor for a Value* value
+comment|/// Constructor for a GlobalValue* value
 name|ValueInfo
 argument_list|(
 specifier|const
-name|Value
+name|GlobalValue
 operator|*
 name|V
 argument_list|)
@@ -305,9 +311,9 @@ operator|.
 name|Id
 return|;
 block|}
-comment|/// Accessor for Value* value
+comment|/// Accessor for GlobalValue* value
 specifier|const
-name|Value
+name|GlobalValue
 operator|*
 name|getValue
 argument_list|()
@@ -325,7 +331,7 @@ block|;
 return|return
 name|TheValue
 operator|.
-name|V
+name|GV
 return|;
 block|}
 name|bool
@@ -341,8 +347,150 @@ return|;
 block|}
 block|}
 struct|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|ValueInfo
+operator|>
+block|{
+specifier|static
+specifier|inline
+name|ValueInfo
+name|getEmptyKey
+argument_list|()
+block|{
+return|return
+name|ValueInfo
+argument_list|(
+operator|(
+name|GlobalValue
+operator|*
+operator|)
+operator|-
+literal|1
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|ValueInfo
+name|getTombstoneKey
+argument_list|()
+block|{
+return|return
+name|ValueInfo
+argument_list|(
+operator|(
+name|GlobalValue
+operator|*
+operator|)
+operator|-
+literal|2
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isEqual
+argument_list|(
+argument|ValueInfo L
+argument_list|,
+argument|ValueInfo R
+argument_list|)
+block|{
+if|if
+condition|(
+name|L
+operator|.
+name|isGUID
+argument_list|()
+operator|!=
+name|R
+operator|.
+name|isGUID
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|L
+operator|.
+name|isGUID
+argument_list|()
+condition|?
+operator|(
+name|L
+operator|.
+name|getGUID
+argument_list|()
+operator|==
+name|R
+operator|.
+name|getGUID
+argument_list|()
+operator|)
+else|:
+operator|(
+name|L
+operator|.
+name|getValue
+argument_list|()
+operator|==
+name|R
+operator|.
+name|getValue
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getHashValue
+parameter_list|(
+name|ValueInfo
+name|I
+parameter_list|)
+block|{
+return|return
+name|I
+operator|.
+name|isGUID
+argument_list|()
+condition|?
+name|I
+operator|.
+name|getGUID
+argument_list|()
+else|:
+operator|(
+name|uintptr_t
+operator|)
+name|I
+operator|.
+name|getValue
+argument_list|()
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Function and variable summary information to aid decisions and
+end_comment
+
+begin_comment
 comment|/// implementation of importing.
+end_comment
+
+begin_decl_stmt
 name|class
 name|GlobalValueSummary
 block|{
@@ -351,6 +499,8 @@ label|:
 comment|/// \brief Sububclass discriminator (for dyn_cast<> et al.)
 enum|enum
 name|SummaryKind
+enum|:
+name|unsigned
 block|{
 name|AliasKind
 block|,
@@ -359,7 +509,7 @@ block|,
 name|GlobalVarKind
 block|}
 enum|;
-comment|/// Group flags (Linkage, hasSection, isOptSize, etc.) as a bitfield.
+comment|/// Group flags (Linkage, noRename, isOptSize, etc.) as a bitfield.
 struct|struct
 name|GVFlags
 block|{
@@ -375,9 +525,27 @@ name|Linkage
 range|:
 literal|4
 decl_stmt|;
-comment|/// Indicate if the global value is located in a specific section.
+comment|/// Indicate if the global value cannot be renamed (in a specific section,
+comment|/// possibly referenced from inline assembly, etc).
 name|unsigned
-name|HasSection
+name|NoRename
+range|:
+literal|1
+decl_stmt|;
+comment|/// Indicate if a function contains inline assembly (which is opaque),
+comment|/// that may reference a local value. This is used to prevent importing
+comment|/// of this function, since we can't promote and rename the uses of the
+comment|/// local in the inline assembly. Use a flag rather than bloating the
+comment|/// summary with references to every possible local value in the
+comment|/// llvm.used set.
+name|unsigned
+name|HasInlineAsmMaybeReferencingInternal
+range|:
+literal|1
+decl_stmt|;
+comment|/// Indicate if the function is not viable to inline.
+name|unsigned
+name|IsNotViableToInline
 range|:
 literal|1
 decl_stmt|;
@@ -391,7 +559,13 @@ name|LinkageTypes
 name|Linkage
 argument_list|,
 name|bool
-name|HasSection
+name|NoRename
+argument_list|,
+name|bool
+name|HasInlineAsmMaybeReferencingInternal
+argument_list|,
+name|bool
+name|IsNotViableToInline
 argument_list|)
 range|:
 name|Linkage
@@ -399,9 +573,19 @@ argument_list|(
 name|Linkage
 argument_list|)
 decl_stmt|,
-name|HasSection
+name|NoRename
 argument_list|(
-name|HasSection
+name|NoRename
+argument_list|)
+decl_stmt|,
+name|HasInlineAsmMaybeReferencingInternal
+argument_list|(
+name|HasInlineAsmMaybeReferencingInternal
+argument_list|)
+decl_stmt|,
+name|IsNotViableToInline
+argument_list|(
+name|IsNotViableToInline
 argument_list|)
 block|{}
 name|GVFlags
@@ -420,11 +604,49 @@ name|getLinkage
 argument_list|()
 argument_list|)
 operator|,
-name|HasSection
+name|NoRename
 argument_list|(
-argument|GV.hasSection()
+name|GV
+operator|.
+name|hasSection
+argument_list|()
 argument_list|)
-block|{}
+operator|,
+name|HasInlineAsmMaybeReferencingInternal
+argument_list|(
+argument|false
+argument_list|)
+block|{
+name|IsNotViableToInline
+operator|=
+name|false
+block|;
+if|if
+condition|(
+specifier|const
+specifier|auto
+modifier|*
+name|F
+init|=
+name|dyn_cast
+operator|<
+name|Function
+operator|>
+operator|(
+operator|&
+name|GV
+operator|)
+condition|)
+comment|// Inliner doesn't handle variadic functions.
+comment|// FIXME: refactor this to use the same code that inliner is using.
+name|IsNotViableToInline
+operator|=
+name|F
+operator|->
+name|isVarArg
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 struct|;
 name|private
@@ -432,6 +654,9 @@ label|:
 comment|/// Kind of summary for use in dyn_cast<> et al.
 name|SummaryKind
 name|Kind
+decl_stmt|;
+name|GVFlags
+name|Flags
 decl_stmt|;
 comment|/// This is the hash of the name of the symbol in the original file. It is
 comment|/// identical to the GUID for global symbols, but differs for local since the
@@ -450,9 +675,6 @@ comment|/// not during writing of the per-module index which doesn't contain a
 comment|/// module path string table.
 name|StringRef
 name|ModulePath
-decl_stmt|;
-name|GVFlags
-name|Flags
 decl_stmt|;
 comment|/// List of values referenced by this global value's definition
 comment|/// (either by the initializer of a global variable, or referenced
@@ -474,6 +696,8 @@ argument_list|(
 argument|SummaryKind K
 argument_list|,
 argument|GVFlags Flags
+argument_list|,
+argument|std::vector<ValueInfo> Refs
 argument_list|)
 block|:
 name|Kind
@@ -483,7 +707,12 @@ argument_list|)
 operator|,
 name|Flags
 argument_list|(
-argument|Flags
+name|Flags
+argument_list|)
+operator|,
+name|RefEdgeList
+argument_list|(
+argument|std::move(Refs)
 argument_list|)
 block|{}
 name|public
@@ -605,6 +834,17 @@ operator|=
 name|Linkage
 expr_stmt|;
 block|}
+name|bool
+name|isNotViableToInline
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|.
+name|IsNotViableToInline
+return|;
+block|}
 comment|/// Return true if this summary is for a GlobalValue that needs promotion
 comment|/// to be referenced from another module.
 name|bool
@@ -622,108 +862,63 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// Return true if this global value is located in a specific section.
+comment|/// Return true if this global value cannot be renamed (in a specific section,
+comment|/// possibly referenced from inline assembly, etc).
 name|bool
-name|hasSection
+name|noRename
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Flags
 operator|.
-name|HasSection
+name|NoRename
 return|;
 block|}
-comment|/// Record a reference from this global value to the global value identified
-comment|/// by \p RefGUID.
+comment|/// Flag that this global value cannot be renamed (in a specific section,
+comment|/// possibly referenced from inline assembly, etc).
 name|void
-name|addRefEdge
-argument_list|(
-name|GlobalValue
-operator|::
-name|GUID
-name|RefGUID
-argument_list|)
+name|setNoRename
+parameter_list|()
 block|{
-name|RefEdgeList
+name|Flags
 operator|.
-name|push_back
-argument_list|(
-name|RefGUID
-argument_list|)
+name|NoRename
+operator|=
+name|true
 expr_stmt|;
 block|}
-comment|/// Record a reference from this global value to the global value identified
-comment|/// by \p RefV.
-name|void
-name|addRefEdge
-parameter_list|(
+comment|/// Return true if this global value possibly references another value
+comment|/// that can't be renamed.
+name|bool
+name|hasInlineAsmMaybeReferencingInternal
+argument_list|()
 specifier|const
-name|Value
-modifier|*
-name|RefV
-parameter_list|)
 block|{
-name|RefEdgeList
+return|return
+name|Flags
 operator|.
-name|push_back
-argument_list|(
-name|RefV
-argument_list|)
-expr_stmt|;
+name|HasInlineAsmMaybeReferencingInternal
+return|;
 block|}
-comment|/// Record a reference from this global value to each global value identified
-comment|/// in \p RefEdges.
+comment|/// Flag that this global value possibly references another value that
+comment|/// can't be renamed.
 name|void
-name|addRefEdges
-argument_list|(
-name|DenseSet
-operator|<
-specifier|const
-name|Value
-operator|*
-operator|>
-operator|&
-name|RefEdges
-argument_list|)
+name|setHasInlineAsmMaybeReferencingInternal
+parameter_list|()
 block|{
-for|for
-control|(
-name|auto
-operator|&
-name|RI
-operator|:
-name|RefEdges
-control|)
-name|addRefEdge
-argument_list|(
-name|RI
-argument_list|)
+name|Flags
+operator|.
+name|HasInlineAsmMaybeReferencingInternal
+operator|=
+name|true
 expr_stmt|;
 block|}
 comment|/// Return the list of values referenced by this global value definition.
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|ValueInfo
 operator|>
-operator|&
-name|refs
-argument_list|()
-block|{
-return|return
-name|RefEdgeList
-return|;
-block|}
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|ValueInfo
-operator|>
-operator|&
 name|refs
 argument_list|()
 specifier|const
@@ -733,8 +928,17 @@ name|RefEdgeList
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Alias summary information.
+end_comment
+
+begin_decl_stmt
 name|class
 name|AliasSummary
 range|:
@@ -751,6 +955,8 @@ comment|/// Summary constructors.
 name|AliasSummary
 argument_list|(
 argument|GVFlags Flags
+argument_list|,
+argument|std::vector<ValueInfo> Refs
 argument_list|)
 operator|:
 name|GlobalValueSummary
@@ -758,6 +964,8 @@ argument_list|(
 argument|AliasKind
 argument_list|,
 argument|Flags
+argument_list|,
+argument|std::move(Refs)
 argument_list|)
 block|{}
 comment|/// Check if this is an alias summary.
@@ -865,6 +1073,17 @@ name|EdgeTy
 operator|>
 name|CallGraphEdgeList
 block|;
+comment|/// List of type identifiers used by this function, represented as GUIDs.
+name|std
+operator|::
+name|vector
+operator|<
+name|GlobalValue
+operator|::
+name|GUID
+operator|>
+name|TypeIdList
+block|;
 name|public
 operator|:
 comment|/// Summary constructors.
@@ -873,6 +1092,12 @@ argument_list|(
 argument|GVFlags Flags
 argument_list|,
 argument|unsigned NumInsts
+argument_list|,
+argument|std::vector<ValueInfo> Refs
+argument_list|,
+argument|std::vector<EdgeTy> CGEdges
+argument_list|,
+argument|std::vector<GlobalValue::GUID> TypeIds
 argument_list|)
 operator|:
 name|GlobalValueSummary
@@ -880,11 +1105,33 @@ argument_list|(
 name|FunctionKind
 argument_list|,
 name|Flags
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|Refs
+argument_list|)
 argument_list|)
 block|,
 name|InstCount
 argument_list|(
-argument|NumInsts
+name|NumInsts
+argument_list|)
+block|,
+name|CallGraphEdgeList
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|CGEdges
+argument_list|)
+argument_list|)
+block|,
+name|TypeIdList
+argument_list|(
+argument|std::move(TypeIds)
 argument_list|)
 block|{}
 comment|/// Check if this is a function summary.
@@ -914,145 +1161,32 @@ return|return
 name|InstCount
 return|;
 block|}
-comment|/// Record a call graph edge from this function to the function identified
-comment|/// by \p CalleeGUID, with \p CalleeInfo including the cumulative profile
-comment|/// count (across all calls from this function) or 0 if no PGO.
-name|void
-name|addCallGraphEdge
-argument_list|(
-argument|GlobalValue::GUID CalleeGUID
-argument_list|,
-argument|CalleeInfo Info
-argument_list|)
-block|{
-name|CallGraphEdgeList
-operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|CalleeGUID
-argument_list|,
-name|Info
-argument_list|)
-argument_list|)
-block|;   }
-comment|/// Record a call graph edge from this function to each function GUID recorded
-comment|/// in \p CallGraphEdges.
-name|void
-name|addCallGraphEdges
-argument_list|(
-argument|DenseMap<GlobalValue::GUID
-argument_list|,
-argument|CalleeInfo>&CallGraphEdges
-argument_list|)
-block|{
-for|for
-control|(
-name|auto
-operator|&
-name|EI
-operator|:
-name|CallGraphEdges
-control|)
-name|addCallGraphEdge
-argument_list|(
-name|EI
-operator|.
-name|first
-argument_list|,
-name|EI
-operator|.
-name|second
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// Record a call graph edge from this function to the function identified
-comment|/// by \p CalleeV, with \p CalleeInfo including the cumulative profile
-comment|/// count (across all calls from this function) or 0 if no PGO.
-name|void
-name|addCallGraphEdge
-argument_list|(
-argument|const Value *CalleeV
-argument_list|,
-argument|CalleeInfo Info
-argument_list|)
-block|{
-name|CallGraphEdgeList
-operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|CalleeV
-argument_list|,
-name|Info
-argument_list|)
-argument_list|)
-block|;   }
-comment|/// Record a call graph edge from this function to each function recorded
-comment|/// in \p CallGraphEdges.
-name|void
-name|addCallGraphEdges
-argument_list|(
-argument|DenseMap<const Value *
-argument_list|,
-argument|CalleeInfo>&CallGraphEdges
-argument_list|)
-block|{
-for|for
-control|(
-name|auto
-operator|&
-name|EI
-operator|:
-name|CallGraphEdges
-control|)
-name|addCallGraphEdge
-argument_list|(
-name|EI
-operator|.
-name|first
-argument_list|,
-name|EI
-operator|.
-name|second
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// Return the list of<CalleeValueInfo, CalleeInfo> pairs.
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|EdgeTy
 operator|>
-operator|&
 name|calls
 argument_list|()
+specifier|const
 block|{
 return|return
 name|CallGraphEdgeList
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|vector
+comment|/// Returns the list of type identifiers used by this function.
+name|ArrayRef
 operator|<
-name|EdgeTy
+name|GlobalValue
+operator|::
+name|GUID
 operator|>
-operator|&
-name|calls
+name|type_tests
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CallGraphEdgeList
+name|TypeIdList
 return|;
 block|}
 expr|}
@@ -1075,6 +1209,8 @@ comment|/// Summary constructors.
 name|GlobalVarSummary
 argument_list|(
 argument|GVFlags Flags
+argument_list|,
+argument|std::vector<ValueInfo> Refs
 argument_list|)
 operator|:
 name|GlobalValueSummary
@@ -1082,6 +1218,8 @@ argument_list|(
 argument|GlobalVarKind
 argument_list|,
 argument|Flags
+argument_list|,
+argument|std::move(Refs)
 argument_list|)
 block|{}
 comment|/// Check if this is a global variable summary.
@@ -1131,11 +1269,29 @@ name|GlobalValueSummary
 operator|>>
 name|GlobalValueSummaryList
 expr_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Map from global value GUID to corresponding summary structures.
+end_comment
+
+begin_comment
 comment|/// Use a std::map rather than a DenseMap since it will likely incur
+end_comment
+
+begin_comment
 comment|/// less overhead, as the value type is not very small and the size
+end_comment
+
+begin_comment
 comment|/// of the map is unknown, resulting in inefficiencies due to repeated
+end_comment
+
+begin_comment
 comment|/// insertions and resizing.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1149,22 +1305,43 @@ name|GlobalValueSummaryList
 operator|>
 name|GlobalValueSummaryMapTy
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// Type used for iterating through the global value summary map.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|GlobalValueSummaryMapTy
 operator|::
 name|const_iterator
 name|const_gvsummary_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|GlobalValueSummaryMapTy
 operator|::
 name|iterator
 name|gvsummary_iterator
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// String table to hold/own module path strings, which additionally holds the
+end_comment
+
+begin_comment
 comment|/// module ID assigned to each module during the plugin step, as well as a hash
+end_comment
+
+begin_comment
 comment|/// of the module. The StringMap makes a copy of and owns inserted strings.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|StringMap
 operator|<
@@ -1178,8 +1355,17 @@ name|ModuleHash
 operator|>>
 name|ModulePathStringTableTy
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// Map of global value GUID to its summary, used to identify values defined in
+end_comment
+
+begin_comment
 comment|/// a particular module, and provide efficient access to their summary.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1194,8 +1380,17 @@ operator|*
 operator|>
 name|GVSummaryMapTy
 expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// Class to hold module path string table and global value map,
+end_comment
+
+begin_comment
 comment|/// and encapsulate methods for operating on them.
+end_comment
+
+begin_decl_stmt
 name|class
 name|ModuleSummaryIndex
 block|{
@@ -1212,33 +1407,6 @@ name|ModulePathStringTable
 decl_stmt|;
 name|public
 label|:
-name|ModuleSummaryIndex
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
-comment|// Disable the copy constructor and assignment operators, so
-comment|// no unexpected copying/moving occurs.
-name|ModuleSummaryIndex
-argument_list|(
-specifier|const
-name|ModuleSummaryIndex
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|ModuleSummaryIndex
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|gvsummary_iterator
 name|begin
 parameter_list|()
@@ -1518,8 +1686,17 @@ name|get
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Returns the first GlobalValueSummary for \p GV, asserting that there
+end_comment
+
+begin_comment
 comment|/// is only one if \p PerModuleIndex.
+end_comment
+
+begin_decl_stmt
 name|GlobalValueSummary
 modifier|*
 name|getGlobalValueSummary
@@ -1563,9 +1740,21 @@ name|PerModuleIndex
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Returns the first GlobalValueSummary for \p ValueGUID, asserting that
+end_comment
+
+begin_comment
 comment|/// there
+end_comment
+
+begin_comment
 comment|/// is only one if \p PerModuleIndex.
+end_comment
+
+begin_decl_stmt
 name|GlobalValueSummary
 modifier|*
 name|getGlobalValueSummary
@@ -1582,7 +1771,13 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Table of modules, containing module hash and id.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|StringMap
 operator|<
@@ -1603,7 +1798,13 @@ return|return
 name|ModulePathStringTable
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Table of modules, containing hash and id.
+end_comment
+
+begin_expr_stmt
 name|StringMap
 operator|<
 name|std
@@ -1622,7 +1823,13 @@ return|return
 name|ModulePathStringTable
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Get the module ID recorded for the given module path.
+end_comment
+
+begin_decl_stmt
 name|uint64_t
 name|getModuleId
 argument_list|(
@@ -1643,7 +1850,13 @@ operator|.
 name|first
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Get the module SHA1 hash recorded for the given module path.
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|ModuleHash
 modifier|&
@@ -1685,10 +1898,25 @@ operator|.
 name|second
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Add the given per-module index into this module index/summary,
+end_comment
+
+begin_comment
 comment|/// assigning it the given module ID. Each module merged in should have
+end_comment
+
+begin_comment
 comment|/// a unique ID, necessary for consistent renaming of promoted
+end_comment
+
+begin_comment
 comment|/// static (local) variables.
+end_comment
+
+begin_decl_stmt
 name|void
 name|mergeFrom
 argument_list|(
@@ -1704,8 +1932,17 @@ name|uint64_t
 name|NextModuleId
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Convenience method for creating a promoted global name
+end_comment
+
+begin_comment
 comment|/// for the given value name of a local, and its original module's ID.
+end_comment
+
+begin_expr_stmt
 specifier|static
 name|std
 operator|::
@@ -1748,8 +1985,17 @@ name|str
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Helper to obtain the unpromoted name for a global value (or the original
+end_comment
+
+begin_comment
 comment|/// name if not promoted).
+end_comment
+
+begin_function
 specifier|static
 name|StringRef
 name|getOriginalNameBeforePromote
@@ -1781,8 +2027,17 @@ operator|.
 name|first
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Add a new module path with the given \p Hash, mapped to the given \p
+end_comment
+
+begin_comment
 comment|/// ModID, and return an iterator to the entry in the index.
+end_comment
+
+begin_expr_stmt
 name|ModulePathStringTableTy
 operator|::
 name|iterator
@@ -1822,9 +2077,21 @@ operator|.
 name|first
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Check if the given Module has any functions available for exporting
+end_comment
+
+begin_comment
 comment|/// in the index. We consider any module present in the ModulePathStringTable
+end_comment
+
+begin_comment
 comment|/// to have exported functions.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|hasExportedFunctions
 argument_list|(
@@ -1847,17 +2114,44 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Remove entries in the GlobalValueMap that have empty summaries due to the
+end_comment
+
+begin_comment
 comment|/// eager nature of map entry creation during VST parsing. These would
+end_comment
+
+begin_comment
 comment|/// also be suppressed during combined index generation in mergeFrom(),
+end_comment
+
+begin_comment
 comment|/// but if there was only one module or this was the first module we might
+end_comment
+
+begin_comment
 comment|/// not invoke mergeFrom.
+end_comment
+
+begin_function_decl
 name|void
 name|removeEmptySummaryEntries
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Collect for the given module the list of function it defines
+end_comment
+
+begin_comment
 comment|/// (GUID -> Summary).
+end_comment
+
+begin_decl_stmt
 name|void
 name|collectDefinedFunctionsForModule
 argument_list|(
@@ -1870,8 +2164,17 @@ name|GVSummaryMap
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Collect for each module the list of Summaries it defines (GUID ->
+end_comment
+
+begin_comment
 comment|/// Summary).
+end_comment
+
+begin_decl_stmt
 name|void
 name|collectDefinedGVSummariesPerModule
 argument_list|(
@@ -1884,15 +2187,10 @@ name|ModuleToDefinedGVSummaries
 argument_list|)
 decl|const
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

@@ -84,11 +84,7 @@ value|name = value,
 include|#
 directive|include
 file|"TypeRecords.def"
-comment|// FIXME: Add serialization support
-name|FieldList
-operator|=
-literal|0x1203
-block|, }
+block|}
 decl_stmt|;
 comment|/// Duplicate copy of the above enum, but using the official CV names. Useful
 comment|/// for reference purposes and when dealing with unknown record types.
@@ -926,6 +922,7 @@ argument_list|(
 name|MethodOptions
 argument_list|)
 comment|/// Equivalent to CV_modifier_t.
+comment|/// TODO: Add flag for _Atomic modifier
 expr|enum
 name|class
 name|ModifierOptions
@@ -1877,31 +1874,35 @@ comment|/// These values correspond to the THUNK_ORDINAL enumeration.
 name|enum
 name|class
 name|ThunkOrdinal
+range|:
+name|uint8_t
 block|{
 name|Standard
-operator|,
+block|,
 name|ThisAdjustor
-operator|,
+block|,
 name|Vcall
-operator|,
+block|,
 name|Pcode
-operator|,
+block|,
 name|UnknownLoad
-operator|,
+block|,
 name|TrampIncremental
-operator|,
+block|,
 name|BranchIsland
 block|}
-empty_stmt|;
+decl_stmt|;
 name|enum
 name|class
 name|TrampolineType
+range|:
+name|uint16_t
 block|{
 name|TrampIncremental
-operator|,
+block|,
 name|BranchIsland
 block|}
-empty_stmt|;
+decl_stmt|;
 comment|// These values correspond to the CV_SourceChksum_t enumeration.
 name|enum
 name|class

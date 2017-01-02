@@ -164,6 +164,12 @@ comment|// R600: AMD GPUs HD2XXX - HD6XXX
 name|amdgcn
 block|,
 comment|// AMDGCN: AMD GCN GPUs
+name|riscv32
+block|,
+comment|// RISC-V (32-bit): riscv32
+name|riscv64
+block|,
+comment|// RISC-V (64-bit): riscv64
 name|sparc
 block|,
 comment|// Sparc: sparc
@@ -179,6 +185,9 @@ comment|// SystemZ: s390x
 name|tce
 block|,
 comment|// TCE (http://tce.cs.tut.fi/): tce
+name|tcele
+block|,
+comment|// TCE little endian (http://tce.cs.tut.fi/): tcele
 name|thumb
 block|,
 comment|// Thumb (little endian): thumb, thumbv.*
@@ -260,6 +269,8 @@ block|,
 name|ARMSubArch_v8_1a
 block|,
 name|ARMSubArch_v8
+block|,
+name|ARMSubArch_v8r
 block|,
 name|ARMSubArch_v8m_baseline
 block|,
@@ -347,6 +358,8 @@ name|DragonFly
 block|,
 name|FreeBSD
 block|,
+name|Fuchsia
+block|,
 name|IOS
 block|,
 name|KFreeBSD
@@ -403,9 +416,11 @@ block|,
 comment|// Apple watchOS
 name|Mesa3D
 block|,
+name|Contiki
+block|,
 name|LastOSType
 init|=
-name|Mesa3D
+name|Contiki
 block|}
 enum|;
 enum|enum
@@ -447,9 +462,11 @@ name|AMDOpenCL
 block|,
 name|CoreCLR
 block|,
+name|OpenCL
+block|,
 name|LastEnvironmentType
 init|=
-name|CoreCLR
+name|OpenCL
 block|}
 enum|;
 enum|enum
@@ -1332,6 +1349,20 @@ name|FreeBSD
 return|;
 block|}
 name|bool
+name|isOSFuchsia
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Fuchsia
+return|;
+block|}
+name|bool
 name|isOSDragonFly
 argument_list|()
 specifier|const
@@ -1428,6 +1459,20 @@ operator|==
 name|Triple
 operator|::
 name|GNUX32
+return|;
+block|}
+name|bool
+name|isOSContiki
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Contiki
 return|;
 block|}
 comment|/// Checks if the environment could be MSVC.
@@ -2039,9 +2084,7 @@ comment|/// @name Static helpers for IDs.
 comment|/// @{
 comment|/// getArchTypeName - Get the canonical name for the \p Kind architecture.
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getArchTypeName
 parameter_list|(
 name|ArchType
@@ -2055,9 +2098,7 @@ comment|/// Intrinsic::getIntrinsicForGCCBuiltin().
 comment|///
 comment|/// \return - The architecture prefix, or 0 if none is defined.
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getArchTypePrefix
 parameter_list|(
 name|ArchType
@@ -2066,9 +2107,7 @@ parameter_list|)
 function_decl|;
 comment|/// getVendorTypeName - Get the canonical name for the \p Kind vendor.
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getVendorTypeName
 parameter_list|(
 name|VendorType
@@ -2077,9 +2116,7 @@ parameter_list|)
 function_decl|;
 comment|/// getOSTypeName - Get the canonical name for the \p Kind operating system.
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getOSTypeName
 parameter_list|(
 name|OSType
@@ -2089,9 +2126,7 @@ function_decl|;
 comment|/// getEnvironmentTypeName - Get the canonical name for the \p Kind
 comment|/// environment.
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getEnvironmentTypeName
 parameter_list|(
 name|EnvironmentType

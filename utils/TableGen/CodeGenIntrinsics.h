@@ -195,21 +195,37 @@ comment|/// \c FunctionModRefBehaviour.
 enum|enum
 name|ModRefBits
 block|{
+comment|/// The intrinsic may access memory that is otherwise inaccessible via
+comment|/// LLVM IR.
+name|MR_InaccessibleMem
+init|=
+literal|1
+block|,
+comment|/// The intrinsic may access memory through pointer arguments.
+comment|/// LLVM IR.
+name|MR_ArgMem
+init|=
+literal|2
+block|,
 comment|/// The intrinsic may access memory anywhere, i.e. it is not restricted
 comment|/// to access through pointer arguments.
 name|MR_Anywhere
 init|=
-literal|1
+literal|4
+operator||
+name|MR_ArgMem
+operator||
+name|MR_InaccessibleMem
 block|,
 comment|/// The intrinsic may read memory.
 name|MR_Ref
 init|=
-literal|2
+literal|8
 block|,
 comment|/// The intrinsic may write memory.
 name|MR_Mod
 init|=
-literal|4
+literal|16
 block|,
 comment|/// The intrinsic may both read and write memory.
 name|MR_ModRef
@@ -231,6 +247,22 @@ block|,
 name|ReadArgMem
 init|=
 name|MR_Ref
+operator||
+name|MR_ArgMem
+block|,
+name|ReadInaccessibleMem
+init|=
+name|MR_Ref
+operator||
+name|MR_InaccessibleMem
+block|,
+name|ReadInaccessibleMemOrArgMem
+init|=
+name|MR_Ref
+operator||
+name|MR_ArgMem
+operator||
+name|MR_InaccessibleMem
 block|,
 name|ReadMem
 init|=
@@ -241,6 +273,22 @@ block|,
 name|WriteArgMem
 init|=
 name|MR_Mod
+operator||
+name|MR_ArgMem
+block|,
+name|WriteInaccessibleMem
+init|=
+name|MR_Mod
+operator||
+name|MR_InaccessibleMem
+block|,
+name|WriteInaccessibleMemOrArgMem
+init|=
+name|MR_Mod
+operator||
+name|MR_ArgMem
+operator||
+name|MR_InaccessibleMem
 block|,
 name|WriteMem
 init|=
@@ -251,6 +299,22 @@ block|,
 name|ReadWriteArgMem
 init|=
 name|MR_ModRef
+operator||
+name|MR_ArgMem
+block|,
+name|ReadWriteInaccessibleMem
+init|=
+name|MR_ModRef
+operator||
+name|MR_InaccessibleMem
+block|,
+name|ReadWriteInaccessibleMemOrArgMem
+init|=
+name|MR_ModRef
+operator||
+name|MR_ArgMem
+operator||
+name|MR_InaccessibleMem
 block|,
 name|ReadWriteMem
 init|=

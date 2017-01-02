@@ -112,7 +112,7 @@ name|LLVMTy
 decl_stmt|;
 name|public
 label|:
-name|LLVM_CONSTEXPR
+name|constexpr
 name|EVT
 argument_list|()
 operator|:
@@ -128,7 +128,7 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
-name|LLVM_CONSTEXPR
+name|constexpr
 name|EVT
 argument_list|(
 argument|MVT::SimpleValueType SVT
@@ -144,7 +144,7 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
-name|LLVM_CONSTEXPR
+name|constexpr
 name|EVT
 argument_list|(
 argument|MVT S
