@@ -1582,7 +1582,7 @@ parameter_list|,
 name|_value10
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u64[0] = EFX_INSERT_FIELDS64(0, 63,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u64[1] = EFX_INSERT_FIELDS64(64, 127,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u64[0] = EFX_INSERT_FIELDS64(0, 63,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u64[1] = EFX_INSERT_FIELDS64(64, 127,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_POPULATE_OWORD32
@@ -1630,7 +1630,7 @@ parameter_list|,
 name|_value10
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[0] = EFX_INSERT_FIELDS32(0, 31,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[1] = EFX_INSERT_FIELDS32(32, 63,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[2] = EFX_INSERT_FIELDS32(64, 95,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[3] = EFX_INSERT_FIELDS32(96, 127,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[0] = EFX_INSERT_FIELDS32(0, 31,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[1] = EFX_INSERT_FIELDS32(32, 63,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[2] = EFX_INSERT_FIELDS32(64, 95,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[3] = EFX_INSERT_FIELDS32(96, 127,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_POPULATE_QWORD64
@@ -1678,7 +1678,7 @@ parameter_list|,
 name|_value10
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u64[0] = EFX_INSERT_FIELDS64(0, 63,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u64[0] = EFX_INSERT_FIELDS64(0, 63,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_POPULATE_QWORD32
@@ -1726,7 +1726,7 @@ parameter_list|,
 name|_value10
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u32[0] = EFX_INSERT_FIELDS32(0, 31,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u32[1] = EFX_INSERT_FIELDS32(32, 63,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u32[0] = EFX_INSERT_FIELDS32(0, 31,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u32[1] = EFX_INSERT_FIELDS32(32, 63,	\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_POPULATE_DWORD
@@ -1774,7 +1774,7 @@ parameter_list|,
 name|_value10
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_dword).ed_u32[0] = EFX_INSERT_FIELDS32(0, 31,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_dword).ed_u32[0] = EFX_INSERT_FIELDS32(0, 31,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_POPULATE_WORD
@@ -1822,7 +1822,7 @@ parameter_list|,
 name|_value10
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_word).ew_u16[0] = EFX_INSERT_FIELDS16(0, 15,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_word).ew_u16[0] = EFX_INSERT_FIELDS16(0, 15,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_POPULATE_BYTE
@@ -1870,7 +1870,7 @@ parameter_list|,
 name|_value10
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_byte).eb_u8[0] = EFX_INSERT_FIELDS8(0, 7,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_byte).eb_u8[0] = EFX_INSERT_FIELDS8(0, 7,		\ 		    _field1, _value1, _field2, _value2,			\ 		    _field3, _value3, _field4, _value4,			\ 		    _field5, _value5, _field6, _value6,			\ 		    _field7, _value7, _field8, _value8,			\ 		    _field9, _value9, _field10, _value10);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 comment|/* Populate an octword field with various numbers of arguments */
 define|#
 directive|define
@@ -3352,7 +3352,7 @@ parameter_list|,
 name|_value
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u64[0] = (((_oword).eo_u64[0]&		\ 		    ~EFX_INPLACE_MASK64(0, 63, _field)) |		\ 		    EFX_INSERT_FIELD64(0, 63, _field, _value));		\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u64[1] = (((_oword).eo_u64[1]&		\ 		    ~EFX_INPLACE_MASK64(64, 127, _field)) |		\ 		    EFX_INSERT_FIELD64(64, 127, _field, _value));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u64[0] = (((_oword).eo_u64[0]&		\ 		    ~EFX_INPLACE_MASK64(0, 63, _field)) |		\ 		    EFX_INSERT_FIELD64(0, 63, _field, _value));		\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u64[1] = (((_oword).eo_u64[1]&		\ 		    ~EFX_INPLACE_MASK64(64, 127, _field)) |		\ 		    EFX_INSERT_FIELD64(64, 127, _field, _value));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_SET_OWORD_FIELD32
@@ -3364,7 +3364,7 @@ parameter_list|,
 name|_value
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[0] = (((_oword).eo_u32[0]&		\ 		    ~EFX_INPLACE_MASK32(0, 31, _field)) |		\ 		    EFX_INSERT_FIELD32(0, 31, _field, _value));		\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[1] = (((_oword).eo_u32[1]&		\ 		    ~EFX_INPLACE_MASK32(32, 63, _field)) |		\ 		    EFX_INSERT_FIELD32(32, 63, _field, _value));	\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[2] = (((_oword).eo_u32[2]&		\ 		    ~EFX_INPLACE_MASK32(64, 95, _field)) |		\ 		    EFX_INSERT_FIELD32(64, 95, _field, _value));	\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[3] = (((_oword).eo_u32[3]&		\ 		    ~EFX_INPLACE_MASK32(96, 127, _field)) |		\ 		    EFX_INSERT_FIELD32(96, 127, _field, _value));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[0] = (((_oword).eo_u32[0]&		\ 		    ~EFX_INPLACE_MASK32(0, 31, _field)) |		\ 		    EFX_INSERT_FIELD32(0, 31, _field, _value));		\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[1] = (((_oword).eo_u32[1]&		\ 		    ~EFX_INPLACE_MASK32(32, 63, _field)) |		\ 		    EFX_INSERT_FIELD32(32, 63, _field, _value));	\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[2] = (((_oword).eo_u32[2]&		\ 		    ~EFX_INPLACE_MASK32(64, 95, _field)) |		\ 		    EFX_INSERT_FIELD32(64, 95, _field, _value));	\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[3] = (((_oword).eo_u32[3]&		\ 		    ~EFX_INPLACE_MASK32(96, 127, _field)) |		\ 		    EFX_INSERT_FIELD32(96, 127, _field, _value));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_SET_QWORD_FIELD64
@@ -3376,7 +3376,7 @@ parameter_list|,
 name|_value
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u64[0] = (((_qword).eq_u64[0]&		\ 		    ~EFX_INPLACE_MASK64(0, 63, _field)) |		\ 		    EFX_INSERT_FIELD64(0, 63, _field, _value));		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u64[0] = (((_qword).eq_u64[0]&		\ 		    ~EFX_INPLACE_MASK64(0, 63, _field)) |		\ 		    EFX_INSERT_FIELD64(0, 63, _field, _value));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_SET_QWORD_FIELD32
@@ -3388,7 +3388,7 @@ parameter_list|,
 name|_value
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u32[0] = (((_qword).eq_u32[0]&		\ 		    ~EFX_INPLACE_MASK32(0, 31, _field)) |		\ 		    EFX_INSERT_FIELD32(0, 31, _field, _value));		\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u32[1] = (((_qword).eq_u32[1]&		\ 		    ~EFX_INPLACE_MASK32(32, 63, _field)) |		\ 		    EFX_INSERT_FIELD32(32, 63, _field, _value));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u32[0] = (((_qword).eq_u32[0]&		\ 		    ~EFX_INPLACE_MASK32(0, 31, _field)) |		\ 		    EFX_INSERT_FIELD32(0, 31, _field, _value));		\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u32[1] = (((_qword).eq_u32[1]&		\ 		    ~EFX_INPLACE_MASK32(32, 63, _field)) |		\ 		    EFX_INSERT_FIELD32(32, 63, _field, _value));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_SET_DWORD_FIELD
@@ -3400,7 +3400,7 @@ parameter_list|,
 name|_value
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_dword).ed_u32[0] = (((_dword).ed_u32[0]&		\ 		    ~EFX_INPLACE_MASK32(0, 31, _field)) |		\ 		    EFX_INSERT_FIELD32(0, 31, _field, _value));		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_dword).ed_u32[0] = (((_dword).ed_u32[0]&		\ 		    ~EFX_INPLACE_MASK32(0, 31, _field)) |		\ 		    EFX_INSERT_FIELD32(0, 31, _field, _value));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_SET_WORD_FIELD
@@ -3412,7 +3412,7 @@ parameter_list|,
 name|_value
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_word).ew_u16[0] = (((_word).ew_u16[0]&		\ 		    ~EFX_INPLACE_MASK16(0, 15, _field)) |		\ 		    EFX_INSERT_FIELD16(0, 15, _field, _value));		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_word).ew_u16[0] = (((_word).ew_u16[0]&		\ 		    ~EFX_INPLACE_MASK16(0, 15, _field)) |		\ 		    EFX_INSERT_FIELD16(0, 15, _field, _value));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_SET_BYTE_FIELD
@@ -3424,7 +3424,7 @@ parameter_list|,
 name|_value
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_byte).eb_u8[0] = (((_byte).eb_u8[0]&			\ 		    ~EFX_INPLACE_MASK8(0, 7, _field)) |			\ 		    EFX_INSERT_FIELD8(0, 7, _field, _value));		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_byte).eb_u8[0] = (((_byte).eb_u8[0]&			\ 		    ~EFX_INPLACE_MASK8(0, 7, _field)) |			\ 		    EFX_INSERT_FIELD8(0, 7, _field, _value));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 comment|/*  * Set or clear a numbered bit within an octword.  */
 define|#
 directive|define
@@ -3475,7 +3475,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u64[0] |=					\ 		    __CPU_TO_LE_64(EFX_SHIFT64(_bit, FIX_LINT(0)));	\ 		(_oword).eo_u64[1] |=					\ 		    __CPU_TO_LE_64(EFX_SHIFT64(_bit, FIX_LINT(64)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u64[0] |=					\ 		    __CPU_TO_LE_64(EFX_SHIFT64(_bit, FIX_LINT(0)));	\ 		(_oword).eo_u64[1] |=					\ 		    __CPU_TO_LE_64(EFX_SHIFT64(_bit, FIX_LINT(64)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_SET_OWORD_BIT32
@@ -3485,7 +3485,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[0] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 		(_oword).eo_u32[1] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(32)));	\ 		(_oword).eo_u32[2] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(64)));	\ 		(_oword).eo_u32[3] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(96)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[0] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 		(_oword).eo_u32[1] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(32)));	\ 		(_oword).eo_u32[2] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(64)));	\ 		(_oword).eo_u32[3] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(96)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_CLEAR_OWORD_BIT64
@@ -3495,7 +3495,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u64[0]&=					\ 		    __CPU_TO_LE_64(~EFX_SHIFT64(_bit, FIX_LINT(0)));	\ 		(_oword).eo_u64[1]&=					\ 		    __CPU_TO_LE_64(~EFX_SHIFT64(_bit, FIX_LINT(64)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u64[0]&=					\ 		    __CPU_TO_LE_64(~EFX_SHIFT64(_bit, FIX_LINT(0)));	\ 		(_oword).eo_u64[1]&=					\ 		    __CPU_TO_LE_64(~EFX_SHIFT64(_bit, FIX_LINT(64)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_CLEAR_OWORD_BIT32
@@ -3505,7 +3505,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_oword).eo_u32[0]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 		(_oword).eo_u32[1]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(32)));	\ 		(_oword).eo_u32[2]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(64)));	\ 		(_oword).eo_u32[3]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(96)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_oword).eo_u32[0]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 		(_oword).eo_u32[1]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(32)));	\ 		(_oword).eo_u32[2]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(64)));	\ 		(_oword).eo_u32[3]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(96)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_TEST_OWORD_BIT64
@@ -3535,7 +3535,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u64[0] |=					\ 		    __CPU_TO_LE_64(EFX_SHIFT64(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u64[0] |=					\ 		    __CPU_TO_LE_64(EFX_SHIFT64(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_SET_QWORD_BIT32
@@ -3545,7 +3545,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u32[0] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 		(_qword).eq_u32[1] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(32)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u32[0] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 		(_qword).eq_u32[1] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(32)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_CLEAR_QWORD_BIT64
@@ -3555,7 +3555,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u64[0]&=					\ 		    __CPU_TO_LE_64(~EFX_SHIFT64(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u64[0]&=					\ 		    __CPU_TO_LE_64(~EFX_SHIFT64(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_CLEAR_QWORD_BIT32
@@ -3565,7 +3565,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION) 				\ 		(_qword).eq_u32[0]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 		(_qword).eq_u32[1]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(32)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		(_qword).eq_u32[0]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 		(_qword).eq_u32[1]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(32)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_TEST_QWORD_BIT64
@@ -3595,7 +3595,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		(_dword).ed_u32[0] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_dword).ed_u32[0] |=					\ 		    __CPU_TO_LE_32(EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_CLEAR_DWORD_BIT
@@ -3605,7 +3605,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		(_dword).ed_u32[0]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_dword).ed_u32[0]&=					\ 		    __CPU_TO_LE_32(~EFX_SHIFT32(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_TEST_DWORD_BIT
@@ -3625,7 +3625,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		(_word).ew_u16[0] |=					\ 		    __CPU_TO_LE_16(EFX_SHIFT16(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_word).ew_u16[0] |=					\ 		    __CPU_TO_LE_16(EFX_SHIFT16(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_CLEAR_WORD_BIT
@@ -3635,7 +3635,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		(_word).ew_u32[0]&=					\ 		    __CPU_TO_LE_16(~EFX_SHIFT16(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_word).ew_u32[0]&=					\ 		    __CPU_TO_LE_16(~EFX_SHIFT16(_bit, FIX_LINT(0)));	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_TEST_WORD_BIT
@@ -3655,7 +3655,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		(_byte).eb_u8[0] |=					\ 		    __NATIVE_8(EFX_SHIFT8(_bit, FIX_LINT(0)));		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_byte).eb_u8[0] |=					\ 		    __NATIVE_8(EFX_SHIFT8(_bit, FIX_LINT(0)));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_CLEAR_BYTE_BIT
@@ -3665,7 +3665,7 @@ parameter_list|,
 name|_bit
 parameter_list|)
 define|\
-value|do {								\ 		(_byte).eb_u8[0]&=					\ 		    __NATIVE_8(~EFX_SHIFT8(_bit, FIX_LINT(0)));		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_byte).eb_u8[0]&=					\ 		    __NATIVE_8(~EFX_SHIFT8(_bit, FIX_LINT(0)));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_TEST_BYTE_BIT
@@ -3685,7 +3685,7 @@ parameter_list|,
 name|_oword2
 parameter_list|)
 define|\
-value|do {								\ 		(_oword1).eo_u64[0] |= (_oword2).eo_u64[0];		\ 		(_oword1).eo_u64[1] |= (_oword2).eo_u64[1];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_oword1).eo_u64[0] |= (_oword2).eo_u64[0];		\ 		(_oword1).eo_u64[1] |= (_oword2).eo_u64[1];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_OR_OWORD32
@@ -3695,7 +3695,7 @@ parameter_list|,
 name|_oword2
 parameter_list|)
 define|\
-value|do {								\ 		(_oword1).eo_u32[0] |= (_oword2).eo_u32[0];		\ 		(_oword1).eo_u32[1] |= (_oword2).eo_u32[1];		\ 		(_oword1).eo_u32[2] |= (_oword2).eo_u32[2];		\ 		(_oword1).eo_u32[3] |= (_oword2).eo_u32[3];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_oword1).eo_u32[0] |= (_oword2).eo_u32[0];		\ 		(_oword1).eo_u32[1] |= (_oword2).eo_u32[1];		\ 		(_oword1).eo_u32[2] |= (_oword2).eo_u32[2];		\ 		(_oword1).eo_u32[3] |= (_oword2).eo_u32[3];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_AND_OWORD64
@@ -3705,7 +3705,7 @@ parameter_list|,
 name|_oword2
 parameter_list|)
 define|\
-value|do {								\ 		(_oword1).eo_u64[0]&= (_oword2).eo_u64[0];		\ 		(_oword1).eo_u64[1]&= (_oword2).eo_u64[1];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_oword1).eo_u64[0]&= (_oword2).eo_u64[0];		\ 		(_oword1).eo_u64[1]&= (_oword2).eo_u64[1];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_AND_OWORD32
@@ -3715,7 +3715,7 @@ parameter_list|,
 name|_oword2
 parameter_list|)
 define|\
-value|do {								\ 		(_oword1).eo_u32[0]&= (_oword2).eo_u32[0];		\ 		(_oword1).eo_u32[1]&= (_oword2).eo_u32[1];		\ 		(_oword1).eo_u32[2]&= (_oword2).eo_u32[2];		\ 		(_oword1).eo_u32[3]&= (_oword2).eo_u32[3];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_oword1).eo_u32[0]&= (_oword2).eo_u32[0];		\ 		(_oword1).eo_u32[1]&= (_oword2).eo_u32[1];		\ 		(_oword1).eo_u32[2]&= (_oword2).eo_u32[2];		\ 		(_oword1).eo_u32[3]&= (_oword2).eo_u32[3];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_OR_QWORD64
@@ -3725,7 +3725,7 @@ parameter_list|,
 name|_qword2
 parameter_list|)
 define|\
-value|do {								\ 		(_qword1).eq_u64[0] |= (_qword2).eq_u64[0];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_qword1).eq_u64[0] |= (_qword2).eq_u64[0];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_OR_QWORD32
@@ -3735,7 +3735,7 @@ parameter_list|,
 name|_qword2
 parameter_list|)
 define|\
-value|do {								\ 		(_qword1).eq_u32[0] |= (_qword2).eq_u32[0];		\ 		(_qword1).eq_u32[1] |= (_qword2).eq_u32[1];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_qword1).eq_u32[0] |= (_qword2).eq_u32[0];		\ 		(_qword1).eq_u32[1] |= (_qword2).eq_u32[1];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_AND_QWORD64
@@ -3745,7 +3745,7 @@ parameter_list|,
 name|_qword2
 parameter_list|)
 define|\
-value|do {								\ 		(_qword1).eq_u64[0]&= (_qword2).eq_u64[0];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_qword1).eq_u64[0]&= (_qword2).eq_u64[0];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_AND_QWORD32
@@ -3755,7 +3755,7 @@ parameter_list|,
 name|_qword2
 parameter_list|)
 define|\
-value|do {								\ 		(_qword1).eq_u32[0]&= (_qword2).eq_u32[0];		\ 		(_qword1).eq_u32[1]&= (_qword2).eq_u32[1];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_qword1).eq_u32[0]&= (_qword2).eq_u32[0];		\ 		(_qword1).eq_u32[1]&= (_qword2).eq_u32[1];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_OR_DWORD
@@ -3765,7 +3765,7 @@ parameter_list|,
 name|_dword2
 parameter_list|)
 define|\
-value|do {								\ 		(_dword1).ed_u32[0] |= (_dword2).ed_u32[0];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_dword1).ed_u32[0] |= (_dword2).ed_u32[0];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_AND_DWORD
@@ -3775,7 +3775,7 @@ parameter_list|,
 name|_dword2
 parameter_list|)
 define|\
-value|do {								\ 		(_dword1).ed_u32[0]&= (_dword2).ed_u32[0];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_dword1).ed_u32[0]&= (_dword2).ed_u32[0];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_OR_WORD
@@ -3785,7 +3785,7 @@ parameter_list|,
 name|_word2
 parameter_list|)
 define|\
-value|do {								\ 		(_word1).ew_u16[0] |= (_word2).ew_u16[0];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_word1).ew_u16[0] |= (_word2).ew_u16[0];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_AND_WORD
@@ -3795,7 +3795,7 @@ parameter_list|,
 name|_word2
 parameter_list|)
 define|\
-value|do {								\ 		(_word1).ew_u16[0]&= (_word2).ew_u16[0];		\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_word1).ew_u16[0]&= (_word2).ew_u16[0];		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_OR_BYTE
@@ -3805,7 +3805,7 @@ parameter_list|,
 name|_byte2
 parameter_list|)
 define|\
-value|do {								\ 		(_byte1).eb_u8[0] |= (_byte2).eb_u8[0];			\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_byte1).eb_u8[0] |= (_byte2).eb_u8[0];			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_AND_BYTE
@@ -3815,7 +3815,7 @@ parameter_list|,
 name|_byte2
 parameter_list|)
 define|\
-value|do {								\ 		(_byte1).eb_u8[0]&= (_byte2).eb_u8[0];			\ 	_NOTE(CONSTANTCONDITION) 					\ 	} while (B_FALSE)
+value|do {								\ 		(_byte1).eb_u8[0]&= (_byte2).eb_u8[0];			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 if|#
 directive|if
 name|EFSYS_USE_UINT64
