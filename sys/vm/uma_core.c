@@ -4895,7 +4895,7 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-literal|"UMA: page_free used with invalid flags %d"
+literal|"UMA: page_free used with invalid flags %x"
 argument_list|,
 name|flags
 argument_list|)
