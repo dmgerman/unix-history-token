@@ -3382,6 +3382,8 @@ name|EFX_NVRAM_DYNAMIC_CFG
 block|,
 name|EFX_NVRAM_LICENSE
 block|,
+name|EFX_NVRAM_UEFIROM
+block|,
 name|EFX_NVRAM_NTYPES
 block|, }
 name|efx_nvram_type_t
