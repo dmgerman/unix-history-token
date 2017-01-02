@@ -3369,15 +3369,13 @@ name|aio
 operator|=
 name|calloc
 argument_list|(
-literal|1
+name|n
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|aio
 argument_list|)
-operator|*
-name|n
 argument_list|)
 operator|)
 operator|==
