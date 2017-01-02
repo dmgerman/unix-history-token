@@ -574,11 +574,11 @@ comment|// CHECK: define void @t22() [[NUW]] section ".bar"
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+comment|// CHECK: attributes [[NUW]] = { noinline nounwind{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[NR]] = { noreturn nounwind{{.*}} }
+comment|// CHECK: attributes [[NR]] = { noinline noreturn nounwind{{.*}} }
 end_comment
 
 end_unit

@@ -22,6 +22,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|clang_analyzer_numTimesReached
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|conjure_index
 parameter_list|()
@@ -53,6 +60,11 @@ literal|0
 condition|)
 do|;
 comment|// expected-warning{{SYMBOL DEAD}}
+comment|// Make sure we don't accidentally split state in ExprInspection.
+name|clang_analyzer_numTimesReached
+argument_list|()
+expr_stmt|;
+comment|// expected-warning{{1}}
 block|}
 end_function
 

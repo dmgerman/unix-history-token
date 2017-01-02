@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-windows -fsyntax-only -verify %s
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -209,27 +213,6 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|error_result_bad_position
-argument_list|(
-name|ERROR_RESULT
-name|void
-operator|*
-operator|*
-name|error
-argument_list|,
-name|int
-name|last
-argument_list|)
-name|SWIFTCALL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-error {{'swift_error_result' parameter must be last parameter of function}}
-end_comment
-
-begin_decl_stmt
-name|void
 name|error_result_bad_position2
 argument_list|(
 name|int
@@ -317,6 +300,34 @@ name|SWIFTCALL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|error_result_okay2
+argument_list|(
+name|CONTEXT
+name|void
+operator|*
+name|context
+argument_list|,
+name|ERROR_RESULT
+name|void
+operator|*
+operator|*
+name|error
+argument_list|,
+name|void
+operator|*
+name|selfType
+argument_list|,
+name|char
+operator|*
+operator|*
+name|selfWitnessTable
+argument_list|)
+name|SWIFTCALL
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|context_nonswift
@@ -331,26 +342,6 @@ end_function_decl
 
 begin_comment
 comment|// expected-error {{'swift_context' parameter can only be used with swiftcall calling convention}}
-end_comment
-
-begin_decl_stmt
-name|void
-name|context_bad_position
-argument_list|(
-name|CONTEXT
-name|void
-operator|*
-name|context
-argument_list|,
-name|int
-name|x
-argument_list|)
-name|SWIFTCALL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-error {{'swift_context' parameter can only be followed by 'swift_error_result' parameter}}
 end_comment
 
 begin_decl_stmt
@@ -377,6 +368,28 @@ name|CONTEXT
 name|void
 operator|*
 name|context
+argument_list|)
+name|SWIFTCALL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|context_okay2
+argument_list|(
+name|CONTEXT
+name|void
+operator|*
+name|context
+argument_list|,
+name|void
+operator|*
+name|selfType
+argument_list|,
+name|char
+operator|*
+operator|*
+name|selfWitnessTable
 argument_list|)
 name|SWIFTCALL
 decl_stmt|;

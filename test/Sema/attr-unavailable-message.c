@@ -8,6 +8,28 @@ comment|// rdar: //6734520
 end_comment
 
 begin_function_decl
+name|void
+name|tooManyArgs
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(unavailable
+parameter_list|(
+function_decl|"a"
+operator|,
+function_decl|"b"
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error {{'unavailable' attribute takes no more than 1 argument}}
+end_comment
+
+begin_function_decl
 name|int
 name|foo
 parameter_list|(

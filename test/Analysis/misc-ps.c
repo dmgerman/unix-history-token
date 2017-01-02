@@ -1173,5 +1173,52 @@ comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
+begin_comment
+comment|// PR15623: Currently the analyzer doesn't handle symbolic expressions of the
+end_comment
+
+begin_comment
+comment|// form "(exp comparison_op expr) != 0" very well. We perform a simplification
+end_comment
+
+begin_comment
+comment|// translating an assume of a constraint of the form "(exp comparison_op expr)
+end_comment
+
+begin_comment
+comment|// != 0" to true into an assume of "exp comparison_op expr" to true.
+end_comment
+
+begin_function
+name|void
+name|PR15623
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|n
+operator|==
+literal|0
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|clang_analyzer_eval
+argument_list|(
+name|n
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+block|}
+block|}
+end_function
+
 end_unit
 

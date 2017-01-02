@@ -10,6 +10,14 @@ begin_comment
 comment|// expected-warning {{missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -29,6 +37,14 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-warning 2{{missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1 2 {{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2 2 {{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_expr_stmt

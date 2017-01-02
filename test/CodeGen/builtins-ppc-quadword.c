@@ -70,6 +70,36 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|signed
+name|long
+name|long
+name|param_sll
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK-PPC: error: __int128 is not supported on this target
+end_comment
+
+begin_decl_stmt
+name|signed
+name|__int128
+name|param_lll
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK-PPC: error: __int128 is not supported on this target
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|__int128
+name|param_ulll
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// CHECK-PPC: error: __int128 is not supported on this target
 end_comment
@@ -326,6 +356,49 @@ expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubeuqm
 comment|// CHECK-LE: @llvm.ppc.altivec.vsubeuqm
 comment|// CHECK-PPC: error: assigning to '__vector __int128' (vector of 1 '__int128' value) from incompatible type 'int'
+comment|/* vec_sube */
+name|res_vlll
+operator|=
+name|vec_sube
+argument_list|(
+name|vlll
+argument_list|,
+name|vlll
+argument_list|,
+name|vlll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsubeuqm
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubeuqm
+comment|// CHECK-PPC: error: call to 'vec_sube' is ambiguous
+name|res_vulll
+operator|=
+name|vec_sube
+argument_list|(
+name|vulll
+argument_list|,
+name|vulll
+argument_list|,
+name|vulll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsubeuqm
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubeuqm
+comment|// CHECK-PPC: error: call to 'vec_sube' is ambiguous
+name|res_vlll
+operator|=
+name|vec_sube
+argument_list|(
+name|vlll
+argument_list|,
+name|vlll
+argument_list|,
+name|vlll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsubeuqm
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubeuqm
+comment|// CHECK-PPC: error: call to 'vec_sube' is ambiguous
 name|res_vulll
 operator|=
 name|vec_vsubeuqm
@@ -340,6 +413,20 @@ expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubeuqm
 comment|// CHECK-LE: @llvm.ppc.altivec.vsubeuqm
 comment|// CHECK-PPC: error: assigning to '__vector unsigned __int128' (vector of 1 'unsigned __int128' value) from incompatible type 'int'
+name|res_vulll
+operator|=
+name|vec_sube
+argument_list|(
+name|vulll
+argument_list|,
+name|vulll
+argument_list|,
+name|vulll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsubeuqm
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubeuqm
+comment|// CHECK-PPC: error: call to 'vec_sube' is ambiguous
 comment|/* vec_subc */
 name|res_vlll
 operator|=
@@ -419,6 +506,156 @@ expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubecuq
 comment|// CHECK-LE: @llvm.ppc.altivec.vsubecuq
 comment|// CHECK-PPC: error: assigning to '__vector unsigned __int128' (vector of 1 'unsigned __int128' value) from incompatible type 'int'
+name|res_vlll
+operator|=
+name|vec_subec
+argument_list|(
+name|vlll
+argument_list|,
+name|vlll
+argument_list|,
+name|vlll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsubecuq
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubecuq
+comment|// CHECK-PPC: error: assigning to '__vector __int128' (vector of 1 '__int128' value) from incompatible type 'int'
+name|res_vulll
+operator|=
+name|vec_subec
+argument_list|(
+name|vulll
+argument_list|,
+name|vulll
+argument_list|,
+name|vulll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsubecuq
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubecuq
+comment|// CHECK-PPC: error: assigning to '__vector unsigned __int128' (vector of 1 'unsigned __int128' value) from incompatible type 'int'
+name|res_vulll
+operator|=
+name|vec_revb
+argument_list|(
+name|vulll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8, i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8, i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK_PPC: error: call to 'vec_revb' is ambiguous
+comment|/* vec_xl */
+name|res_vlll
+operator|=
+name|vec_xl
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_lll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<1 x i128>,<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<1 x i128>,<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-PPC: error: call to 'vec_xl' is ambiguous
+name|res_vulll
+operator|=
+name|vec_xl
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_ulll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<1 x i128>,<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<1 x i128>,<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-PPC: error: call to 'vec_xl' is ambiguous
+comment|/* vec_xst */
+name|vec_xst
+argument_list|(
+name|vlll
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_lll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<1 x i128> %{{[0-9]+}},<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<1 x i128> %{{[0-9]+}},<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-PPC: error: call to 'vec_xst' is ambiguous
+name|vec_xst
+argument_list|(
+name|vulll
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_ulll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<1 x i128> %{{[0-9]+}},<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<1 x i128> %{{[0-9]+}},<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-PPC: error: call to 'vec_xst' is ambiguous
+comment|/* vec_xl_be */
+name|res_vlll
+operator|=
+name|vec_xl_be
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_lll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<1 x i128>,<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<1 x i128>,<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-PPC: error: call to 'vec_xl' is ambiguous
+name|res_vulll
+operator|=
+name|vec_xl_be
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_ulll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<1 x i128>,<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<1 x i128>,<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-PPC: error: call to 'vec_xl' is ambiguous
+comment|/* vec_xst_be  */
+name|vec_xst_be
+argument_list|(
+name|vlll
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_lll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<1 x i128> %{{[0-9]+}},<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<1 x i128> %{{[0-9]+}},<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-PPC: error: call to 'vec_xst' is ambiguous
+name|vec_xst_be
+argument_list|(
+name|vulll
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_ulll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<1 x i128> %{{[0-9]+}},<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<1 x i128> %{{[0-9]+}},<1 x i128>* %{{[0-9]+}}, align 16
+comment|// CHECK-PPC: error: call to 'vec_xst' is ambiguous
 block|}
 end_function
 

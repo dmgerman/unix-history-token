@@ -115,6 +115,12 @@ name|class
 name|CodeGenModule
 decl_stmt|;
 name|class
+name|ConstantArrayBuilder
+decl_stmt|;
+name|class
+name|ConstantStructBuilder
+decl_stmt|;
+name|class
 name|CodeGenVTables
 block|{
 name|CodeGenModule
@@ -127,14 +133,9 @@ name|VTContext
 decl_stmt|;
 comment|/// VTableAddressPointsMapTy - Address points for a single vtable.
 typedef|typedef
-name|llvm
+name|VTableLayout
 operator|::
-name|DenseMap
-operator|<
-name|BaseSubobject
-operator|,
-name|uint64_t
-operator|>
+name|AddressPointsMapTy
 name|VTableAddressPointsMapTy
 expr_stmt|;
 typedef|typedef
@@ -181,6 +182,24 @@ comment|/// indices.
 name|SecondaryVirtualPointerIndicesMapTy
 name|SecondaryVirtualPointerIndices
 decl_stmt|;
+comment|/// Cache for the pure virtual member call function.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|PureVirtualFn
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// Cache for the deleted virtual member call function.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|DeletedVirtualFn
+operator|=
+name|nullptr
+expr_stmt|;
 comment|/// emitThunk - Emit a single thunk.
 name|void
 name|emitThunk
@@ -211,31 +230,55 @@ modifier|&
 name|Thunk
 parameter_list|)
 function_decl|;
-name|public
-label|:
-comment|/// CreateVTableInitializer - Create a vtable initializer for the given record
-comment|/// decl.
-comment|/// \param Components - The vtable components; this is really an array of
-comment|/// VTableComponents.
+name|void
+name|addVTableComponent
+argument_list|(
+name|ConstantArrayBuilder
+operator|&
+name|builder
+argument_list|,
+specifier|const
+name|VTableLayout
+operator|&
+name|layout
+argument_list|,
+name|unsigned
+name|idx
+argument_list|,
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|CreateVTableInitializer
-argument_list|(
-argument|const CXXRecordDecl *RD
+name|rtti
 argument_list|,
-argument|const VTableComponent *Components
-argument_list|,
-argument|unsigned NumComponents
-argument_list|,
-argument|const VTableLayout::VTableThunkTy *VTableThunks
-argument_list|,
-argument|unsigned NumVTableThunks
-argument_list|,
-argument|llvm::Constant *RTTI
+name|unsigned
+operator|&
+name|nextVTableThunkIndex
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|public
+label|:
+comment|/// Add vtable components for the given vtable layout to the given
+comment|/// global initializer.
+name|void
+name|createVTableInitializer
+argument_list|(
+name|ConstantStructBuilder
+operator|&
+name|builder
+argument_list|,
+specifier|const
+name|VTableLayout
+operator|&
+name|layout
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|rtti
+argument_list|)
+decl_stmt|;
 name|CodeGenVTables
 argument_list|(
 name|CodeGenModule
@@ -388,6 +431,21 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
+comment|/// Returns the type of a vtable with the given layout. Normally a struct of
+comment|/// arrays of pointers, with one struct element for each vtable in the vtable
+comment|/// group.
+name|llvm
+operator|::
+name|Type
+operator|*
+name|getVTableType
+argument_list|(
+specifier|const
+name|VTableLayout
+operator|&
+name|layout
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

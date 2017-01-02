@@ -647,7 +647,7 @@ name|ReadLateParsedTemplates
 argument_list|(
 argument|llvm::MapVector<const FunctionDecl *
 argument_list|,
-argument|LateParsedTemplate *>&LPTMap
+argument|std::unique_ptr<LateParsedTemplate>>&LPTMap
 argument_list|)
 name|override
 block|;

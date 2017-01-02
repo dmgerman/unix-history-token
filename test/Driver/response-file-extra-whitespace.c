@@ -20,7 +20,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: echo -en "-x\r\nc\r\n-DTEST\r\n"> %t.0.txt
+comment|// RUN: printf " -x\r\nc\r\n-DTEST\r\n"> %t.0.txt
 end_comment
 
 begin_comment

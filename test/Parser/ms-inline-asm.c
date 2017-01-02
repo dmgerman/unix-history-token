@@ -47,7 +47,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm int 0x2c
+asm|__asm int 2ch
 block|}
 end_function
 
@@ -58,7 +58,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm M2 0x2c
+asm|__asm M2 2ch
 block|}
 end_function
 
@@ -69,7 +69,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm mov eax, fs:[0x10]
+asm|__asm mov eax, fs:[10h]
 block|}
 end_function
 
@@ -131,7 +131,7 @@ begin_block
 block|{
 asm|__asm {
 asm|push ebx
-asm|mov ebx, 0x07
+asm|mov ebx, 07h
 asm|pop ebx
 asm|}
 block|}
@@ -224,7 +224,7 @@ name|ebx
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{expected identifier}} expected-error {{use of undeclared label '{o}v eax, ebx'}}
+comment|// expected-error {{unknown token in expression}}
 end_comment
 
 begin_macro

@@ -96,7 +96,7 @@ name|t7
 parameter_list|()
 block|{
 asm|__asm {
-asm|int 0x2c ;
+asm|int 0x2cU ;
 asm|}
 name|asm
 name|comments
@@ -133,7 +133,7 @@ comment|// CHECK: t7
 end_comment
 
 begin_comment
-comment|// CHECK: call void asm sideeffect inteldialect "int $$0x2c", "~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "int $$0x2cU", "~{dirflag},~{fpsr},~{flags}"()
 end_comment
 
 begin_comment
@@ -416,8 +416,8 @@ block|{
 comment|// CHECK: t17
 asm|__asm _emit 0x4A
 comment|// CHECK: .byte 0x4A
-asm|__asm _emit 0x43
-comment|// CHECK: .byte 0x43
+asm|__asm _emit 0x43L
+comment|// CHECK: .byte 0x43L
 asm|__asm _emit 0x4B
 comment|// CHECK: .byte 0x4B
 asm|__asm _EMIT 0x4B
@@ -485,11 +485,11 @@ parameter_list|()
 block|{
 asm|__asm {
 asm|__asm push ebx
-asm|__asm mov ebx, 0x07
+asm|__asm mov ebx, 07H
 asm|__asm pop ebx
 asm|}
 comment|// CHECK: t21
-comment|// CHECK: call void asm sideeffect inteldialect "push ebx\0A\09mov ebx, $$0x07\0A\09pop ebx", "~{ebx},~{esp},~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "push ebx\0A\09mov ebx, $$07H\0A\09pop ebx", "~{ebx},~{esp},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -543,7 +543,7 @@ asm|__asm {
 asm|the_label:
 asm|}
 comment|// CHECK: t23
-comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.0__the_label:", "~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.${:uid}__the_label:", "~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -574,15 +574,15 @@ parameter_list|()
 block|{
 comment|// CHECK: t25
 asm|__asm mov eax, 0ffffffffh
-comment|// CHECK: mov eax, $$4294967295
-asm|__asm mov eax, 0fh
+comment|// CHECK: mov eax, $$0ffffffffh
+asm|__asm mov eax, 0fhU
 comment|// CHECK: mov eax, $$15
 asm|__asm mov eax, 0a2h
+comment|// CHECK: mov eax, $$0a2h
+asm|__asm mov eax, 10100010b
+comment|// CHECK: mov eax, $$10100010b
+asm|__asm mov eax, 10100010BU
 comment|// CHECK: mov eax, $$162
-asm|__asm mov eax, 0xa2h
-comment|// CHECK: mov eax, $$0xa2h
-asm|__asm mov eax, 0xa2
-comment|// CHECK: mov eax, $$0xa2
 comment|// CHECK: "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
@@ -1194,7 +1194,7 @@ asm|label:
 asm|jmp label
 asm|}
 comment|// CHECK-LABEL: define void @label1()
-comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.1__label:\0A\09jmp {{.*}}__MSASMLABEL_.1__label", "~{dirflag},~{fpsr},~{flags}"() [[ATTR1:#[0-9]+]]
+comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.${:uid}__label:\0A\09jmp {{.*}}__MSASMLABEL_.${:uid}__label", "~{dirflag},~{fpsr},~{flags}"() [[ATTR1:#[0-9]+]]
 block|}
 end_function
 
@@ -1208,7 +1208,7 @@ asm|jmp label
 asm|label:
 asm|}
 comment|// CHECK-LABEL: define void @label2
-comment|// CHECK: call void asm sideeffect inteldialect "jmp {{.*}}__MSASMLABEL_.2__label\0A\09{{.*}}__MSASMLABEL_.2__label:", "~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "jmp {{.*}}__MSASMLABEL_.${:uid}__label\0A\09{{.*}}__MSASMLABEL_.${:uid}__label:", "~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -1222,7 +1222,7 @@ asm|label:
 asm|mov eax, label
 asm|}
 comment|// CHECK-LABEL: define void @label3
-comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.3__label:\0A\09mov eax, {{.*}}__MSASMLABEL_.3__label", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.${:uid}__label:\0A\09mov eax, {{.*}}__MSASMLABEL_.${:uid}__label", "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -1236,7 +1236,7 @@ asm|label:
 asm|mov eax, [label]
 asm|}
 comment|// CHECK-LABEL: define void @label4
-comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.4__label:\0A\09mov eax, {{.*}}__MSASMLABEL_.4__label", "~{eax},~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "{{.*}}__MSASMLABEL_.${:uid}__label:\0A\09mov eax, {{.*}}__MSASMLABEL_.${:uid}__label", "~{eax},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -1250,7 +1250,21 @@ asm|jmp dollar_label$
 asm|dollar_label$:
 asm|}
 comment|// CHECK-LABEL: define void @label5
-comment|// CHECK: call void asm sideeffect inteldialect "jmp {{.*}}__MSASMLABEL_.5__dollar_label$$\0A\09{{.*}}__MSASMLABEL_.5__dollar_label$$:", "~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "jmp {{.*}}__MSASMLABEL_.${:uid}__dollar_label$$\0A\09{{.*}}__MSASMLABEL_.${:uid}__dollar_label$$:", "~{dirflag},~{fpsr},~{flags}"()
+block|}
+end_function
+
+begin_function
+name|void
+name|label6
+parameter_list|()
+block|{
+asm|__asm {
+asm|jmp short label
+asm|label:
+asm|}
+comment|// CHECK-LABEL: define void @label6
+comment|// CHECK: call void asm sideeffect inteldialect "jmp {{.*}}__MSASMLABEL_.${:uid}__label\0A\09{{.*}}__MSASMLABEL_.${:uid}__label:", "~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_function
 
@@ -1322,7 +1336,15 @@ comment|// MS ASM containing labels must not be duplicated (PR23715).
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[ATTR1]] = { {{.*}}noduplicate{{.*}} }
+comment|// CHECK: attributes [[ATTR1]] = {
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: noduplicate
+end_comment
+
+begin_comment
+comment|// CHECK-SAME: }{{$}}
 end_comment
 
 end_unit

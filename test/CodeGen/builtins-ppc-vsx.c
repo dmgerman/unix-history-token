@@ -377,6 +377,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|signed
+name|long
+name|long
+name|sll
+init|=
+literal|618LL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|float
 name|af
 index|[
@@ -611,7 +621,8 @@ end_decl_stmt
 begin_decl_stmt
 name|signed
 name|long
-name|asl
+name|long
+name|asll
 index|[
 literal|2
 index|]
@@ -628,7 +639,8 @@ end_decl_stmt
 begin_decl_stmt
 name|unsigned
 name|long
-name|aul
+name|long
+name|aull
 index|[
 literal|2
 index|]
@@ -861,6 +873,33 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.fabs.v4f32(<4 x float> %{{[0-9]*}})
 comment|// CHECK-LE: call<4 x float> @llvm.fabs.v4f32(<4 x float> %{{[0-9]*}})
+name|res_vd
+operator|=
+name|vec_abs
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x double> @llvm.fabs.v2f64(<2 x double> %{{[0-9]*}})
+comment|// CHECK-LE: call<2 x double> @llvm.fabs.v2f64(<2 x double> %{{[0-9]*}})
+name|res_vf
+operator|=
+name|vec_nabs
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[VEC:%[0-9]+]] = call<4 x float> @llvm.fabs.v4f32(<4 x float> %{{[0-9]*}})
+comment|// CHECK-NEXT: fsub<4 x float><float -0.000000e+00, float -0.000000e+00, float -0.000000e+00, float -0.000000e+00>, [[VEC]]
+name|res_vd
+operator|=
+name|vec_nabs
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[VECD:%[0-9]+]] = call<2 x double> @llvm.fabs.v2f64(<2 x double> %{{[0-9]*}})
+comment|// CHECK: fsub<2 x double><double -0.000000e+00, double -0.000000e+00>, [[VECD]]
 name|dummy
 argument_list|()
 expr_stmt|;
@@ -3340,6 +3379,1041 @@ comment|// CHECK: uitofp<2 x i64> %{{.*}} to<2 x double>
 comment|// CHECK: fmul<2 x double>
 comment|// CHECK-LE: uitofp<2 x i64> %{{.*}} to<2 x double>
 comment|// CHECK-LE: fmul<2 x double>
+name|res_vsll
+operator|=
+name|vec_signed
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fptosi<2 x double>
+comment|// CHECK-LE: fptosi<2 x double>
+name|res_vsi
+operator|=
+name|vec_signed2
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptosi double
+comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptosi double
+comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptosi double
+comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptosi double
+comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptosi double
+comment|// CHECK-LE: insertelement<4 x i32>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptosi double
+comment|// CHECK-LE: insertelement<4 x i32>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptosi double
+comment|// CHECK-LE: insertelement<4 x i32>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptosi double
+comment|// CHECK-LE: insertelement<4 x i32>
+name|res_vsi
+operator|=
+name|vec_signede
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvdpsxws(<2 x double>
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvdpsxws(<2 x double>
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vsi
+operator|=
+name|vec_signedo
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvdpsxws(<2 x double>
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvdpsxws(<2 x double>
+name|res_vull
+operator|=
+name|vec_unsigned
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fptoui<2 x double>
+comment|// CHECK-LE: fptoui<2 x double>
+name|res_vui
+operator|=
+name|vec_unsigned2
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptoui double
+comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptoui double
+comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptoui double
+comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptoui double
+comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptoui double
+comment|// CHECK-LE: insertelement<4 x i32>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptoui double
+comment|// CHECK-LE: insertelement<4 x i32>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptoui double
+comment|// CHECK-LE: insertelement<4 x i32>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptoui double
+comment|// CHECK-LE: insertelement<4 x i32>
+name|res_vui
+operator|=
+name|vec_unsignede
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvdpuxws(<2 x double>
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvdpuxws(<2 x double>
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_unsignedo
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvdpuxws(<2 x double>
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvdpuxws(<2 x double>
+name|res_vf
+operator|=
+name|vec_float2
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<2 x i64>
+comment|// CHECK: sitofp i64
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK: extractelement<2 x i64>
+comment|// CHECK: sitofp i64
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK: extractelement<2 x i64>
+comment|// CHECK: sitofp i64
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK: extractelement<2 x i64>
+comment|// CHECK: sitofp i64
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x i64>
+comment|// CHECK-LE: sitofp i64
+comment|// CHECK-LE: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x i64>
+comment|// CHECK-LE: sitofp i64
+comment|// CHECK-LE: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x i64>
+comment|// CHECK-LE: sitofp i64
+comment|// CHECK-LE: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x i64>
+comment|// CHECK-LE: sitofp i64
+comment|// CHECK-LE: insertelement<4 x float>
+name|res_vf
+operator|=
+name|vec_float2
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<2 x i64>
+comment|// CHECK: uitofp i64
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK: extractelement<2 x i64>
+comment|// CHECK: uitofp i64
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK: extractelement<2 x i64>
+comment|// CHECK: uitofp i64
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK: extractelement<2 x i64>
+comment|// CHECK: uitofp i64
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x i64>
+comment|// CHECK-LE: uitofp i64
+comment|// CHECK-LE: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x i64>
+comment|// CHECK-LE: uitofp i64
+comment|// CHECK-LE: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x i64>
+comment|// CHECK-LE: uitofp i64
+comment|// CHECK-LE: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x i64>
+comment|// CHECK-LE: uitofp i64
+comment|// CHECK-LE: insertelement<4 x float>
+name|res_vf
+operator|=
+name|vec_float2
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptrunc double
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptrunc double
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptrunc double
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK: extractelement<2 x double>
+comment|// CHECK: fptrunc double
+comment|// CHECK: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptrunc double
+comment|// CHECK-LE: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptrunc double
+comment|// CHECK-LE: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptrunc double
+comment|// CHECK-LE: insertelement<4 x float>
+comment|// CHECK-LE: extractelement<2 x double>
+comment|// CHECK-LE: fptrunc double
+comment|// CHECK-LE: insertelement<4 x float>
+name|res_vf
+operator|=
+name|vec_floate
+argument_list|(
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvsxdsp
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvsxdsp
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vf
+operator|=
+name|vec_floate
+argument_list|(
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvuxdsp
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvuxdsp
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vf
+operator|=
+name|vec_floate
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvdpsp
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvdpsp
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vf
+operator|=
+name|vec_floato
+argument_list|(
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvsxdsp
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvsxdsp
+name|res_vf
+operator|=
+name|vec_floato
+argument_list|(
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvuxdsp
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvuxdsp
+name|res_vf
+operator|=
+name|vec_floato
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvdpsp
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvdpsp
+name|res_vd
+operator|=
+name|vec_double
+argument_list|(
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sitofp<2 x i64>
+comment|// CHECK-LE: sitofp<2 x i64>
+name|res_vd
+operator|=
+name|vec_double
+argument_list|(
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: uitofp<2 x i64>
+comment|// CHECK-LE: uitofp<2 x i64>
+name|res_vd
+operator|=
+name|vec_doublee
+argument_list|(
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvsxwdp(<4 x i32
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvsxwdp(<4 x i32
+name|res_vd
+operator|=
+name|vec_doublee
+argument_list|(
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvuxwdp(<4 x i32
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvuxwdp(<4 x i32
+name|res_vd
+operator|=
+name|vec_doublee
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.xvcvspdp(<4 x float
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvspdp(<4 x float
+name|res_vd
+operator|=
+name|vec_doubleh
+argument_list|(
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK: sitofp i32
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK: sitofp i32
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x i32>
+comment|// CHECK-LE: sitofp i32
+comment|// CHECK-LE: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x i32>
+comment|// CHECK-LE: sitofp i32
+comment|// CHECK-LE: insertelement<2 x double>
+name|res_vd
+operator|=
+name|vec_doubleh
+argument_list|(
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK: uitofp i32
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK: uitofp i32
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x i32>
+comment|// CHECK-LE: uitofp i32
+comment|// CHECK-LE: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x i32>
+comment|// CHECK-LE: uitofp i32
+comment|// CHECK-LE: insertelement<2 x double>
+name|res_vd
+operator|=
+name|vec_doubleh
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x float>
+comment|// CHECK: fpext float
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK: extractelement<4 x float>
+comment|// CHECK: fpext float
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x float>
+comment|// CHECK-LE: fpext float
+comment|// CHECK-LE: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x float>
+comment|// CHECK-LE: fpext float
+comment|// CHECK-LE: insertelement<2 x double>
+name|res_vd
+operator|=
+name|vec_doublel
+argument_list|(
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK: sitofp i32
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK: sitofp i32
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x i32>
+comment|// CHECK-LE: sitofp i32
+comment|// CHECK-LE: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x i32>
+comment|// CHECK-LE: sitofp i32
+comment|// CHECK-LE: insertelement<2 x double>
+name|res_vd
+operator|=
+name|vec_doublel
+argument_list|(
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK: uitofp i32
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK: uitofp i32
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x i32>
+comment|// CHECK-LE: uitofp i32
+comment|// CHECK-LE: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x i32>
+comment|// CHECK-LE: uitofp i32
+comment|// CHECK-LE: insertelement<2 x double>
+name|res_vd
+operator|=
+name|vec_doublel
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x float>
+comment|// CHECK: fpext float
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK: extractelement<4 x float>
+comment|// CHECK: fpext float
+comment|// CHECK: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x float>
+comment|// CHECK-LE: fpext float
+comment|// CHECK-LE: insertelement<2 x double>
+comment|// CHECK-LE: extractelement<4 x float>
+comment|// CHECK-LE: fpext float
+comment|// CHECK-LE: insertelement<2 x double>
+name|res_vd
+operator|=
+name|vec_doubleo
+argument_list|(
+name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.vsx.xvcvsxwdp(<4 x i32>
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvsxwdp(<4 x i32>
+name|res_vd
+operator|=
+name|vec_doubleo
+argument_list|(
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.vsx.xvcvuxwdp(<4 x i32>
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvuxwdp(<4 x i32>
+name|res_vd
+operator|=
+name|vec_doubleo
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.vsx.xvcvspdp(<4 x float>
+comment|// CHECK-LE: @llvm.ppc.vsx.xvcvspdp(<4 x float>
+name|res_vbll
+operator|=
+name|vec_reve
+argument_list|(
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 0>
+name|res_vsll
+operator|=
+name|vec_reve
+argument_list|(
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 0>
+name|res_vull
+operator|=
+name|vec_reve
+argument_list|(
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<2 x i64> %{{[0-9]+}},<2 x i64> %{{[0-9]+}},<2 x i32><i32 1, i32 0>
+name|res_vd
+operator|=
+name|vec_reve
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<2 x double> %{{[0-9]+}},<2 x double> %{{[0-9]+}},<2 x i32><i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<2 x double> %{{[0-9]+}},<2 x double> %{{[0-9]+}},<2 x i32><i32 1, i32 0>
+name|res_vbll
+operator|=
+name|vec_revb
+argument_list|(
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0, i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0, i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vsll
+operator|=
+name|vec_revb
+argument_list|(
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0, i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0, i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vull
+operator|=
+name|vec_revb
+argument_list|(
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0, i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0, i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vd
+operator|=
+name|vec_revb
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0, i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 7, i8 6, i8 5, i8 4, i8 3, i8 2, i8 1, i8 0, i8 15, i8 14, i8 13, i8 12, i8 11, i8 10, i8 9, i8 8>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vbll
+operator|=
+name|vec_sld
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vsll
+operator|=
+name|vec_sld
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vull
+operator|=
+name|vec_sld
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vd
+operator|=
+name|vec_sld
+argument_list|(
+name|vd
+argument_list|,
+name|vd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vsll
+operator|=
+name|vec_sldw
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vull
+operator|=
+name|vec_sldw
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vsll
+operator|=
+name|vec_sll
+argument_list|(
+name|vsll
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
+name|res_vull
+operator|=
+name|vec_sll
+argument_list|(
+name|vull
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
+name|res_vsll
+operator|=
+name|vec_slo
+argument_list|(
+name|vsll
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
+name|res_vsll
+operator|=
+name|vec_slo
+argument_list|(
+name|vsll
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
+name|res_vull
+operator|=
+name|vec_slo
+argument_list|(
+name|vull
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
+name|res_vull
+operator|=
+name|vec_slo
+argument_list|(
+name|vull
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
+name|res_vsll
+operator|=
+name|vec_srl
+argument_list|(
+name|vsll
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
+name|res_vull
+operator|=
+name|vec_srl
+argument_list|(
+name|vull
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
+name|res_vsll
+operator|=
+name|vec_sro
+argument_list|(
+name|vsll
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
+name|res_vsll
+operator|=
+name|vec_sro
+argument_list|(
+name|vsll
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
+name|res_vull
+operator|=
+name|vec_sro
+argument_list|(
+name|vull
+argument_list|,
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
+name|res_vull
+operator|=
+name|vec_sro
+argument_list|(
+name|vull
+argument_list|,
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
+name|res_vsll
+operator|=
+name|vec_xl
+argument_list|(
+name|sll
+argument_list|,
+name|asll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<2 x i64>,<2 x i64>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<2 x i64>,<2 x i64>* %{{[0-9]+}}, align 16
+name|res_vull
+operator|=
+name|vec_xl
+argument_list|(
+name|sll
+argument_list|,
+name|aull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<2 x i64>,<2 x i64>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<2 x i64>,<2 x i64>* %{{[0-9]+}}, align 16
+name|res_vd
+operator|=
+name|vec_xl
+argument_list|(
+name|sll
+argument_list|,
+name|ad
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<2 x double>,<2 x double>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<2 x double>,<2 x double>* %{{[0-9]+}}, align 16
+name|vec_xst
+argument_list|(
+name|vsll
+argument_list|,
+name|sll
+argument_list|,
+name|asll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<2 x i64> %{{[0-9]+}},<2 x i64>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<2 x i64> %{{[0-9]+}},<2 x i64>* %{{[0-9]+}}, align 16
+name|vec_xst
+argument_list|(
+name|vull
+argument_list|,
+name|sll
+argument_list|,
+name|aull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<2 x i64> %{{[0-9]+}},<2 x i64>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<2 x i64> %{{[0-9]+}},<2 x i64>* %{{[0-9]+}}, align 16
+name|vec_xst
+argument_list|(
+name|vd
+argument_list|,
+name|sll
+argument_list|,
+name|ad
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<2 x double> %{{[0-9]+}},<2 x double>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<2 x double> %{{[0-9]+}},<2 x double>* %{{[0-9]+}}, align 16
+name|res_vsll
+operator|=
+name|vec_xl_be
+argument_list|(
+name|sll
+argument_list|,
+name|asll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<2 x i64>,<2 x i64>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<2 x double> @llvm.ppc.vsx.lxvd2x.be(i8* %{{[0-9]+}})
+name|res_vull
+operator|=
+name|vec_xl_be
+argument_list|(
+name|sll
+argument_list|,
+name|aull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<2 x i64>,<2 x i64>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<2 x double> @llvm.ppc.vsx.lxvd2x.be(i8* %{{[0-9]+}})
+name|res_vd
+operator|=
+name|vec_xl_be
+argument_list|(
+name|sll
+argument_list|,
+name|ad
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<2 x double>,<2 x double>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<2 x double> @llvm.ppc.vsx.lxvd2x.be(i8* %{{[0-9]+}})
+name|vec_xst_be
+argument_list|(
+name|vsll
+argument_list|,
+name|sll
+argument_list|,
+name|asll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<2 x i64> %{{[0-9]+}},<2 x i64>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvd2x.be(<2 x double> %{{[0-9]+}}, i8* %{{[0-9]+}})
+name|vec_xst_be
+argument_list|(
+name|vull
+argument_list|,
+name|sll
+argument_list|,
+name|aull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<2 x i64> %{{[0-9]+}},<2 x i64>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvd2x.be(<2 x double> %{{[0-9]+}}, i8* %{{[0-9]+}})
+name|vec_xst_be
+argument_list|(
+name|vd
+argument_list|,
+name|sll
+argument_list|,
+name|ad
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<2 x double> %{{[0-9]+}},<2 x double>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvd2x.be(<2 x double> %{{[0-9]+}}, i8* %{{[0-9]+}})
+name|res_vf
+operator|=
+name|vec_neg
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fsub<4 x float><float -0.000000e+00, float -0.000000e+00, float -0.000000e+00, float -0.000000e+00>, {{%[0-9]+}}
+comment|// CHECK-LE: fsub<4 x float><float -0.000000e+00, float -0.000000e+00, float -0.000000e+00, float -0.000000e+00>, {{%[0-9]+}}
+name|res_vd
+operator|=
+name|vec_neg
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fsub<2 x double><double -0.000000e+00, double -0.000000e+00>, {{%[0-9]+}}
+comment|// CHECK-LE: fsub<2 x double><double -0.000000e+00, double -0.000000e+00>, {{%[0-9]+}}
 block|}
 end_function
 

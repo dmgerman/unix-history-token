@@ -8,6 +8,18 @@ comment|// Check that ld gets "-lto_library".
 end_comment
 
 begin_comment
+comment|// RUN: mkdir -p %T/bin
+end_comment
+
+begin_comment
+comment|// RUN: mkdir -p %T/lib
+end_comment
+
+begin_comment
+comment|// RUN: touch %T/lib/libLTO.dylib
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-apple-darwin10 -### %s \
 end_comment
 

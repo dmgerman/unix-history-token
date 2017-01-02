@@ -74,7 +74,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MPIFunctionClassifier.h"
+file|"clang/StaticAnalyzer/Checkers/MPIFunctionClassifier.h"
 end_include
 
 begin_include

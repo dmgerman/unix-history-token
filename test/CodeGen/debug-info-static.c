@@ -4,7 +4,15 @@ comment|// RUN: %clang_cc1  -debug-info-kind=limited -emit-llvm -o - %s | FileCh
 end_comment
 
 begin_comment
-comment|// CHECK: !DIGlobalVariable({{.*}}variable: i32* @f.xyzzy
+comment|// CHECK: @f.xyzzy = internal global i32 0, align 4, !dbg [[XYZZY:![0-9]+]]
+end_comment
+
+begin_comment
+comment|// CHECK: [[XYZZY]] = !DIGlobalVariableExpression(var: [[VAR:.*]])
+end_comment
+
+begin_comment
+comment|// CHECK: [[VAR]] = distinct !DIGlobalVariable
 end_comment
 
 begin_function

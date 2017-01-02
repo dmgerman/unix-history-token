@@ -258,6 +258,179 @@ name|vec4p
 operator|->
 name|xy
 expr_stmt|;
+name|vec2
+operator|.
+name|a
+expr_stmt|;
+comment|// expected-error {{vector component access exceeds type 'float2'}}
+name|vec2
+operator|.
+name|rgba
+expr_stmt|;
+comment|// expected-error {{vector component access exceeds type 'float2'}}
+name|vec4
+operator|.
+name|rgba
+expr_stmt|;
+comment|// expected-warning {{expression result unused}}
+name|vec4
+operator|.
+name|rgbz
+expr_stmt|;
+comment|// expected-error {{illegal vector component name 'z'}}
+name|vec4
+operator|.
+name|rgbc
+expr_stmt|;
+comment|// expected-error {{illegal vector component name 'c'}}
+name|vec4
+operator|.
+name|xyzr
+expr_stmt|;
+comment|// expected-error {{illegal vector component name 'r'}}
+name|vec4
+operator|.
+name|s01b
+expr_stmt|;
+comment|// expected-error {{vector component access exceeds type 'float4'}}
+name|vec3
+operator|=
+name|vec4
+operator|.
+name|rgb
+expr_stmt|;
+comment|// legal, shorten
+name|f
+operator|=
+name|vec2
+operator|.
+name|r
+expr_stmt|;
+comment|// legal, shorten
+name|f
+operator|=
+name|vec4
+operator|.
+name|rg
+operator|.
+name|r
+expr_stmt|;
+comment|// legal, shorten
+name|vec4_2
+operator|.
+name|rgba
+operator|=
+name|vec4
+operator|.
+name|xyzw
+expr_stmt|;
+comment|// legal, no intermingling
+name|vec4_2
+operator|.
+name|rgbr
+operator|=
+name|vec4
+operator|.
+name|rgba
+expr_stmt|;
+comment|// expected-error {{vector is not assignable (contains duplicate components)}}
+name|vec4_2
+operator|.
+name|rgbb
+operator|=
+name|vec4
+operator|.
+name|rgba
+expr_stmt|;
+comment|// expected-error {{vector is not assignable (contains duplicate components)}}
+name|vec4_2
+operator|.
+name|rgga
+operator|=
+name|vec4
+operator|.
+name|rgba
+expr_stmt|;
+comment|// expected-error {{vector is not assignable (contains duplicate components)}}
+name|vec2
+operator|.
+name|x
+operator|=
+name|f
+expr_stmt|;
+name|vec2
+operator|.
+name|rr
+operator|=
+name|vec2_2
+operator|.
+name|rg
+expr_stmt|;
+comment|// expected-error {{vector is not assignable (contains duplicate components)}}
+name|vec2
+operator|.
+name|gr
+operator|=
+name|vec2_2
+operator|.
+name|rg
+expr_stmt|;
+name|vec2
+operator|.
+name|gr
+operator|.
+name|g
+operator|=
+name|vec2_2
+operator|.
+name|r
+expr_stmt|;
+name|vec4
+operator|=
+operator|(
+name|float4
+operator|)
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|}
+expr_stmt|;
+name|vec4
+operator|.
+name|rg
+operator|.
+name|b
+expr_stmt|;
+comment|// expected-error {{vector component access exceeds type 'float2'}}
+name|vec4
+operator|.
+name|r
+operator|=
+name|vec16
+operator|.
+name|sf
+expr_stmt|;
+name|vec4
+operator|.
+name|g
+operator|=
+name|vec16
+operator|.
+name|sF
+expr_stmt|;
+name|vec4p
+operator|->
+name|gb
+operator|=
+name|vec4p
+operator|->
+name|rg
+expr_stmt|;
 block|}
 end_function
 

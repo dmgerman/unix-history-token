@@ -57,6 +57,16 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|class
+name|StringRef
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|namespace
@@ -109,6 +119,16 @@ comment|/// it has been preprocessed, or INVALID if this input is not
 comment|/// preprocessed.
 name|ID
 name|getPreprocessedType
+parameter_list|(
+name|ID
+name|Id
+parameter_list|)
+function_decl|;
+comment|/// getPrecompiledType - Get the ID of the type for this input when
+comment|/// it has been precompiled, or INVALID if this input is not
+comment|/// precompiled.
+name|ID
+name|getPrecompiledType
 parameter_list|(
 name|ID
 name|Id
@@ -216,17 +236,27 @@ name|ID
 name|Id
 parameter_list|)
 function_decl|;
+comment|/// isSrcFile - Is this a source file, i.e. something that still has to be
+comment|/// preprocessed. The logic behind this is the same that decides if the first
+comment|/// compilation phase is a preprocessing one.
+name|bool
+name|isSrcFile
+parameter_list|(
+name|ID
+name|Id
+parameter_list|)
+function_decl|;
 comment|/// lookupTypeForExtension - Lookup the type to use for the file
 comment|/// extension \p Ext.
 name|ID
 name|lookupTypeForExtension
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|Ext
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// lookupTypeForTypSpecifier - Lookup the type to use for a user
 comment|/// specified type name.
 name|ID
@@ -262,6 +292,15 @@ comment|/// lookupCXXTypeForCType - Lookup CXX input type that corresponds to gi
 comment|/// C type (used for clang++ emulation of g++ behaviour)
 name|ID
 name|lookupCXXTypeForCType
+parameter_list|(
+name|ID
+name|Id
+parameter_list|)
+function_decl|;
+comment|/// Lookup header file input type that corresponds to given
+comment|/// source file type (used for clang-cl emulation of \Yc).
+name|ID
+name|lookupHeaderTypeForSourceType
 parameter_list|(
 name|ID
 name|Id

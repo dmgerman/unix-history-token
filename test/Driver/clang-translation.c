@@ -60,6 +60,14 @@ comment|// RUN: FileCheck -check-prefix=YONAH %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target i386-apple-macosx10.11 -### -S %s -o %t.s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=YONAH %s
+end_comment
+
+begin_comment
 comment|// YONAH: "-target-cpu"
 end_comment
 
@@ -69,6 +77,14 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target x86_64-apple-darwin9 -### -S %s -o %t.s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CORE2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-macosx10.11 -### -S %s -o %t.s 2>&1 | \
 end_comment
 
 begin_comment
@@ -92,11 +108,43 @@ comment|// RUN: FileCheck -check-prefix=AVX2 %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64h-apple-macosx10.12 -### -S %s -o %t.s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=AVX2 %s
+end_comment
+
+begin_comment
 comment|// AVX2: "-target-cpu"
 end_comment
 
 begin_comment
 comment|// AVX2: "core-avx2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-macosx10.12 -### -S %s -o %t.s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=PENRYN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-macosx10.12 -### -S %s -o %t.s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=PENRYN %s
+end_comment
+
+begin_comment
+comment|// PENRYN: "-target-cpu"
+end_comment
+
+begin_comment
+comment|// PENRYN: "penryn"
 end_comment
 
 begin_comment

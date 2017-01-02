@@ -572,6 +572,38 @@ comment|// CHECK-ASAN-ANDROID-SHARED-NOT: "-lpthread"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparcel-myriad-rtems-elf -fsanitize=address \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_myriad_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-MYRIAD %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-MYRIAD: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-MYRIAD-NOT: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-MYRIAD: libclang_rt.asan-sparcel.a"
+end_comment
+
+begin_comment
 comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
@@ -1048,6 +1080,10 @@ comment|// CHECK-LSAN-LINUX-NOT: "-lc"
 end_comment
 
 begin_comment
+comment|// CHECK-LSAN-LINUX-NOT: libclang_rt.ubsan
+end_comment
+
+begin_comment
 comment|// CHECK-LSAN-LINUX: libclang_rt.lsan-x86_64.a"
 end_comment
 
@@ -1057,6 +1093,54 @@ end_comment
 
 begin_comment
 comment|// CHECK-LSAN-LINUX: "-ldl"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:  -target x86_64-unknown-linux -fsanitize=leak -fsanitize-coverage=func \
+end_comment
+
+begin_comment
+comment|// RUN:  --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LSAN-COV-LINUX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-COV-LINUX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-COV-LINUX-NOT: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-COV-LINUX-NOT: libclang_rt.ubsan
+end_comment
+
+begin_comment
+comment|// CHECK-LSAV-COV-LINUX: libclang_rt.lsan-x86_64.a"
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-COV-LINUX-NOT: libclang_rt.ubsan
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-COV-LINUX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-LSAN-COV-LINUX: "-ldl"
 end_comment
 
 begin_comment
@@ -1272,7 +1356,7 @@ comment|// RUN: %clang -fsanitize=cfi %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -1352,6 +1436,10 @@ comment|// CHECK-CFI-CROSS-DSO-LINUX: "-whole-archive" "{{[^"]*}}libclang_rt.cfi
 end_comment
 
 begin_comment
+comment|// CHECK-CFI-CROSS-DSO-LINUX: -export-dynamic
+end_comment
+
+begin_comment
 comment|// Cross-DSO CFI with diagnostics links just the CFI runtime.
 end_comment
 
@@ -1381,6 +1469,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-CFI-CROSS-DSO-DIAG-LINUX: "-whole-archive" "{{[^"]*}}libclang_rt.cfi_diag-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-CROSS-DSO-DIAG-LINUX: -export-dynamic
 end_comment
 
 begin_comment
@@ -1612,7 +1704,7 @@ comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-ANDROID-ARM %s
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-SHARED-ANDROID-ARM %s
 end_comment
 
 begin_comment
@@ -1653,6 +1745,78 @@ end_comment
 
 begin_comment
 comment|// CHECK-SAFESTACK-ANDROID-AARCH64-NOT: libclang_rt.safestack
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-androideabi -fsanitize=cfi \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CFI-ANDROID %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-ANDROID: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-ANDROID-NOT: libclang_rt.cfi
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-ANDROID-NOT: __cfi_check
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm-linux-androideabi -fsanitize=cfi \
+end_comment
+
+begin_comment
+comment|// RUN:     -fsanitize-cfi-cross-dso \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CROSSDSO-CFI-ANDROID %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-CROSSDSO-CFI-ANDROID: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-CROSSDSO-CFI-ANDROID-NOT: libclang_rt.cfi
+end_comment
+
+begin_comment
+comment|// CHECK-CROSSDSO-CFI-ANDROID: -export-dynamic-symbol=__cfi_check
+end_comment
+
+begin_comment
+comment|// CHECK-CROSSDSO-CFI-ANDROID-NOT: libclang_rt.cfi
 end_comment
 
 begin_comment

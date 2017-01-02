@@ -49,7 +49,7 @@ comment|// CHECK: store i8* %3, i8** %8, align 4
 comment|// CHECK: call void asm sideeffect inteldialect
 comment|// CHECK: mov edx,dword ptr $1
 comment|// CHECK: test edx,edx
-comment|// CHECK: jz {{[^_]*}}__MSASMLABEL_.0__noparams
+comment|// CHECK: jz {{[^_]*}}__MSASMLABEL_.${:uid}__noparams
 comment|//             ^ Can't use {{.*}} here because the matching is greedy.
 comment|// CHECK: mov eax,edx
 comment|// CHECK: shl eax,$$3
@@ -57,7 +57,7 @@ comment|// CHECK: sub esp,eax
 comment|// CHECK: mov ecx,esp
 comment|// CHECK: push dword ptr $0
 comment|// CHECK: call dword ptr $2
-comment|// CHECK: {{.*}}__MSASMLABEL_.0__noparams:
+comment|// CHECK: {{.*}}__MSASMLABEL_.${:uid}__noparams:
 comment|// CHECK: mov ecx,dword ptr $3
 comment|// CHECK: push ecx
 comment|// CHECK: mov edx,[ecx]

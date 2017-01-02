@@ -56,6 +56,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|openat
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|close
 parameter_list|(
 name|int
@@ -133,7 +150,59 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Call to 'open' with more than three arguments}}
+comment|// expected-warning{{Call to 'open' with more than 3 arguments}}
+if|if
+condition|(
+name|fd
+operator|>
+operator|-
+literal|1
+condition|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|openat_2
+parameter_list|(
+name|int
+name|base_fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|mode
+init|=
+literal|0x0
+decl_stmt|;
+name|fd
+operator|=
+name|openat
+argument_list|(
+name|base_fd
+argument_list|,
+name|path
+argument_list|,
+name|O_RDONLY
+argument_list|,
+name|mode
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{Call to 'openat' with more than 4 arguments}}
 if|if
 condition|(
 name|fd
@@ -173,7 +242,52 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Third argument to 'open' is not an integer}}
+comment|// expected-warning{{The 3rd argument to 'open' is not an integer}}
+if|if
+condition|(
+name|fd
+operator|>
+operator|-
+literal|1
+condition|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|openat_3
+parameter_list|(
+name|int
+name|base_fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|fd
+operator|=
+name|openat
+argument_list|(
+name|base_fd
+argument_list|,
+name|path
+argument_list|,
+name|O_RDONLY
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{The 4th argument to 'openat' is not an integer}}
 if|if
 condition|(
 name|fd
@@ -213,7 +327,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Third argument to 'open' is not an integer}}
+comment|// expected-warning{{The 3rd argument to 'open' is not an integer}}
 if|if
 condition|(
 name|fd
@@ -265,7 +379,7 @@ argument_list|,
 name|st
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Third argument to 'open' is not an integer}}
+comment|// expected-warning{{The 3rd argument to 'open' is not an integer}}
 if|if
 condition|(
 name|fd
@@ -360,7 +474,7 @@ operator|&
 name|open
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Third argument to 'open' is not an integer}}
+comment|// expected-warning{{The 3rd argument to 'open' is not an integer}}
 if|if
 condition|(
 name|fd
@@ -400,7 +514,7 @@ argument_list|,
 literal|0.0f
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{Third argument to 'open' is not an integer}}
+comment|// expected-warning{{The 3rd argument to 'open' is not an integer}}
 if|if
 condition|(
 name|fd

@@ -178,6 +178,8 @@ argument_list|,
 argument|Twine Filename
 argument_list|,
 argument|std::vector<std::string> CommandLine
+argument_list|,
+argument|Twine Output
 argument_list|)
 block|:
 name|Directory
@@ -198,7 +200,17 @@ argument_list|)
 operator|,
 name|CommandLine
 argument_list|(
-argument|std::move(CommandLine)
+name|std
+operator|::
+name|move
+argument_list|(
+name|CommandLine
+argument_list|)
+argument_list|)
+operator|,
+name|Output
+argument_list|(
+argument|Output.str()
 argument_list|)
 block|{}
 comment|/// \brief The working directory the command was executed from.
@@ -223,6 +235,12 @@ operator|::
 name|string
 operator|>
 name|CommandLine
+expr_stmt|;
+comment|/// The output file associated with the command.
+name|std
+operator|::
+name|string
+name|Output
 expr_stmt|;
 comment|/// \brief An optional mapping from each file's path to its content for all
 comment|/// files needed for the compilation that are not available via the file

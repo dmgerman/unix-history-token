@@ -1,21 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-unknown-unknown -target-feature +3dnowa -emit-llvm -o - -Werror | FileCheck %s -check-prefix=GCC -check-prefix=CHECK
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-unknown-unknown -target-feature +3dnowa -emit-llvm -o - -Wall -Werror | FileCheck %s -check-prefix=GCC -check-prefix=CHECK
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-scei-ps4 -target-feature +3dnowa -emit-llvm -o - -Werror | FileCheck %s -check-prefix=PS4 -check-prefix=CHECK
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-scei-ps4 -target-feature +3dnowa -emit-llvm -o - -Wall -Werror | FileCheck %s -check-prefix=PS4 -check-prefix=CHECK
 end_comment
-
-begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#

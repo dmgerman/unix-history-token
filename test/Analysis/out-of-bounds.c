@@ -1,7 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wno-array-bounds -analyze -analyzer-checker=core,alpha.security.ArrayBoundV2 -verify %s
+comment|// RUN: %clang_cc1 -Wno-array-bounds -analyze -analyzer-checker=core,alpha.security.ArrayBoundV2,debug.ExprInspection -verify %s
 end_comment
+
+begin_function_decl
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// Tests doing an out-of-bounds access after the end of an array using:
@@ -650,18 +659,6 @@ comment|// no-warning
 block|}
 end_function
 
-begin_comment
-comment|// *** FIXME ***
-end_comment
-
-begin_comment
-comment|// We don't get a warning here yet because our symbolic constraint solving
-end_comment
-
-begin_comment
-comment|// doesn't handle:  (symbol * constant)< constant
-end_comment
-
 begin_function
 name|void
 name|test3
@@ -689,20 +686,9 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
+comment|// expected-warning{{Out of bound memory access}}
 block|}
 end_function
-
-begin_comment
-comment|// *** FIXME ***
-end_comment
-
-begin_comment
-comment|// We don't get a warning here yet because our symbolic constraint solving
-end_comment
-
-begin_comment
-comment|// doesn't handle:  (symbol * constant)< constant
-end_comment
 
 begin_function
 name|void
@@ -731,6 +717,40 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
+comment|// expected-warning{{Out of bound memory access}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test_assume_after_access
+parameter_list|(
+name|unsigned
+name|long
+name|x
+parameter_list|)
+block|{
+name|int
+name|buf
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|buf
+index|[
+name|x
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|x
+operator|<=
+literal|99
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
@@ -834,6 +854,39 @@ operator|=
 literal|42
 expr_stmt|;
 comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|test_assume_after_access2
+parameter_list|(
+name|unsigned
+name|long
+name|x
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|buf
+index|[
+name|x
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|x
+operator|<=
+literal|99
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
 block|}
 end_function
 

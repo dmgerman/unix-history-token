@@ -57,6 +57,14 @@ begin_comment
 comment|// expected-warning{{pointer is missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -85,7 +93,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-warning {{pointer is missing a nullability type specifier}}
+comment|// expected-warning{{pointer is missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_function_decl
@@ -189,7 +205,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-warning {{pointer is missing a nullability type specifier}}
+comment|// expected-warning{{pointer is missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_function_decl

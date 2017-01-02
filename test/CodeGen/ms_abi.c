@@ -154,6 +154,7 @@ comment|// WIN64: %[[AP_CUR:.*]] = load i8*, i8** %[[AP]]
 comment|// WIN64-NEXT: %[[AP_NEXT:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR]], i64 8
 comment|// WIN64-NEXT: store i8* %[[AP_NEXT]], i8** %[[AP]]
 comment|// WIN64-NEXT: bitcast i8* %[[AP_CUR]] to i32*
+comment|// FIXME: These are different now. We probably need __builtin_ms_va_arg.
 name|double
 specifier|_Complex
 name|c
@@ -171,9 +172,10 @@ comment|// FREEBSD-NEXT: %[[AP_NEXT2:.*]] = getelementptr inbounds i8, i8* %[[AP
 comment|// FREEBSD-NEXT: store i8* %[[AP_NEXT2]], i8** %[[AP]]
 comment|// FREEBSD-NEXT: bitcast i8* %[[AP_CUR2]] to { double, double }*
 comment|// WIN64: %[[AP_CUR2:.*]] = load i8*, i8** %[[AP]]
-comment|// WIN64-NEXT: %[[AP_NEXT2:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR2]], i64 16
+comment|// WIN64-NEXT: %[[AP_NEXT2:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR2]], i64 8
 comment|// WIN64-NEXT: store i8* %[[AP_NEXT2]], i8** %[[AP]]
-comment|// WIN64-NEXT: bitcast i8* %[[AP_CUR2]] to { double, double }*
+comment|// WIN64-NEXT: %[[CUR2:.*]] = bitcast i8* %[[AP_CUR2]] to { double, double }**
+comment|// WIN64-NEXT: load { double, double }*, { double, double }** %[[CUR2]]
 name|struct
 name|foo
 name|d
@@ -191,9 +193,10 @@ comment|// FREEBSD-NEXT: %[[AP_NEXT3:.*]] = getelementptr inbounds i8, i8* %[[AP
 comment|// FREEBSD-NEXT: store i8* %[[AP_NEXT3]], i8** %[[AP]]
 comment|// FREEBSD-NEXT: bitcast i8* %[[AP_CUR3]] to %[[STRUCT_FOO]]*
 comment|// WIN64: %[[AP_CUR3:.*]] = load i8*, i8** %[[AP]]
-comment|// WIN64-NEXT: %[[AP_NEXT3:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR3]], i64 16
+comment|// WIN64-NEXT: %[[AP_NEXT3:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR3]], i64 8
 comment|// WIN64-NEXT: store i8* %[[AP_NEXT3]], i8** %[[AP]]
-comment|// WIN64-NEXT: bitcast i8* %[[AP_CUR3]] to %[[STRUCT_FOO]]*
+comment|// WIN64-NEXT: %[[CUR3:.*]] = bitcast i8* %[[AP_CUR3]] to %[[STRUCT_FOO]]*
+comment|// WIN64-NEXT: load %[[STRUCT_FOO]]*, %[[STRUCT_FOO]]** %[[CUR3]]
 name|__builtin_ms_va_list
 name|ap2
 decl_stmt|;
@@ -272,7 +275,7 @@ specifier|_Complex
 argument_list|)
 decl_stmt|;
 comment|// WIN64: %[[AP_CUR2:.*]] = load i8*, i8** %[[AP]]
-comment|// WIN64-NEXT: %[[AP_NEXT2:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR2]], i64 16
+comment|// WIN64-NEXT: %[[AP_NEXT2:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR2]], i64 8
 comment|// WIN64-NEXT: store i8* %[[AP_NEXT2]], i8** %[[AP]]
 comment|// WIN64-NEXT: bitcast i8* %[[AP_CUR2]] to { double, double }*
 name|struct
@@ -288,7 +291,7 @@ name|foo
 argument_list|)
 decl_stmt|;
 comment|// WIN64: %[[AP_CUR3:.*]] = load i8*, i8** %[[AP]]
-comment|// WIN64-NEXT: %[[AP_NEXT3:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR3]], i64 16
+comment|// WIN64-NEXT: %[[AP_NEXT3:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR3]], i64 8
 comment|// WIN64-NEXT: store i8* %[[AP_NEXT3]], i8** %[[AP]]
 comment|// WIN64-NEXT: bitcast i8* %[[AP_CUR3]] to %[[STRUCT_FOO]]*
 name|__builtin_va_list
@@ -368,7 +371,7 @@ comment|// FREEBSD-NEXT: %[[AP_NEXT2:.*]] = getelementptr inbounds i8, i8* %[[AP
 comment|// FREEBSD-NEXT: store i8* %[[AP_NEXT2]], i8** %[[AP]]
 comment|// FREEBSD-NEXT: bitcast i8* %[[AP_CUR2]] to { double, double }*
 comment|// WIN64: %[[AP_CUR2:.*]] = load i8*, i8** %[[AP]]
-comment|// WIN64-NEXT: %[[AP_NEXT2:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR2]], i64 16
+comment|// WIN64-NEXT: %[[AP_NEXT2:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR2]], i64 8
 comment|// WIN64-NEXT: store i8* %[[AP_NEXT2]], i8** %[[AP]]
 comment|// WIN64-NEXT: bitcast i8* %[[AP_CUR2]] to { double, double }*
 name|struct
@@ -388,7 +391,7 @@ comment|// FREEBSD-NEXT: %[[AP_NEXT3:.*]] = getelementptr inbounds i8, i8* %[[AP
 comment|// FREEBSD-NEXT: store i8* %[[AP_NEXT3]], i8** %[[AP]]
 comment|// FREEBSD-NEXT: bitcast i8* %[[AP_CUR3]] to %[[STRUCT_FOO]]*
 comment|// WIN64: %[[AP_CUR3:.*]] = load i8*, i8** %[[AP]]
-comment|// WIN64-NEXT: %[[AP_NEXT3:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR3]], i64 16
+comment|// WIN64-NEXT: %[[AP_NEXT3:.*]] = getelementptr inbounds i8, i8* %[[AP_CUR3]], i64 8
 comment|// WIN64-NEXT: store i8* %[[AP_NEXT3]], i8** %[[AP]]
 comment|// WIN64-NEXT: bitcast i8* %[[AP_CUR3]] to %[[STRUCT_FOO]]*
 name|__builtin_ms_va_list

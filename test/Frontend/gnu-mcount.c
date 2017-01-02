@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: arm-registered-target,aarch64-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7-unknown-none-eabi -pg -S -emit-llvm -o - %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-ARM-EABI
 end_comment
 
@@ -175,127 +179,127 @@ comment|// CHECK-LABEL: f
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-IOS-NOT: call void @_mcount()
+comment|// CHECK-ARM-IOS-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="_mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-IOS-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM-IOS-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI: call void @"\01mcount"()
+comment|// CHECK-ARM-EABI: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM-EABI-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI: call void @mcount()
+comment|// CHECK-ARM64-EABI: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-MEABI-GNU: call void @"\01_mcount"()
+comment|// CHECK-ARM64-EABI-MEABI-GNU: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01_mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM64-EABI-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-FREEBSD: call void @__mcount()
+comment|// CHECK-ARM-EABI-FREEBSD: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="__mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-FREEBSD-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM-EABI-FREEBSD-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-FREEBSD: call void @.mcount()
+comment|// CHECK-ARM64-EABI-FREEBSD: attributes #{{[0-9]+}} = { {{.*}}"counting-function"=".mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-FREEBSD-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM64-EABI-FREEBSD-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-NETBSD: call void @_mcount()
+comment|// CHECK-ARM-EABI-NETBSD: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="_mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-NETBSD-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM-EABI-NETBSD-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-OPENBSD: call void @__mcount()
+comment|// CHECK-ARM-EABI-OPENBSD: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="__mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-OPENBSD-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM-EABI-OPENBSD-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-OPENBSD: call void @mcount()
+comment|// CHECK-ARM64-EABI-OPENBSD: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-OPENBSD-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM64-EABI-OPENBSD-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-MEABI-GNU-NOT: call void @mcount()
+comment|// CHECK-ARM-EABI-MEABI-GNU-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-MEABI-GNU: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM-EABI-MEABI-GNU: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-BITRIG: call void @__mcount()
+comment|// CHECK-ARM-EABI-BITRIG: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="__mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-BITRIG-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM-EABI-BITRIG-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM54-EABI-BITRIG: call void @mcount()
+comment|// CHECK-ARM54-EABI-BITRIG: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM54-EABI-BITRIG-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM54-EABI-BITRIG-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-RTEMS: call void @mcount()
+comment|// CHECK-ARM-EABI-RTEMS: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-RTEMS-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM-EABI-RTEMS-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-RTEMS: call void @mcount()
+comment|// CHECK-ARM64-EABI-RTEMS: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-RTEMS-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM64-EABI-RTEMS-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-CLOUDABI: call void @mcount()
+comment|// CHECK-ARM-EABI-CLOUDABI: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-CLOUDABI-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM-EABI-CLOUDABI-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-CLOUDABI: call void @mcount()
+comment|// CHECK-ARM64-EABI-CLOUDABI: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="mcount"{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-ARM64-EABI-CLOUDABI-NOT: call void @"\01__gnu_mcount_nc"()
+comment|// CHECK-ARM64-EABI-CLOUDABI-NOT: attributes #{{[0-9]+}} = { {{.*}}"counting-function"="\01__gnu_mcount_nc"{{.*}} }
 end_comment
 
 end_unit

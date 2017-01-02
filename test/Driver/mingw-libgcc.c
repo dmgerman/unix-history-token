@@ -12,23 +12,23 @@ comment|// gcc, static
 end_comment
 
 begin_comment
-comment|// RUN: %clang -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
+comment|// RUN: %clang -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -static -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
+comment|// RUN: %clang -static -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -static-libgcc -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
+comment|// RUN: %clang -static-libgcc -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -static -shared -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
+comment|// RUN: %clang -static -shared -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -static-libgcc -shared -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
+comment|// RUN: %clang -static-libgcc -shared -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// gcc, dynamic
 end_comment
 
 begin_comment
-comment|// RUN: %clang -shared -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_DYNAMIC %s
+comment|// RUN: %clang -shared -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_DYNAMIC %s
 end_comment
 
 begin_comment
@@ -44,19 +44,19 @@ comment|// g++, static
 end_comment
 
 begin_comment
-comment|// RUN: %clang -static --driver-mode=g++ -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
+comment|// RUN: %clang -static --driver-mode=g++ -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -static-libgcc --driver-mode=g++ -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
+comment|// RUN: %clang -static-libgcc --driver-mode=g++ -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -static -shared --driver-mode=g++ -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
+comment|// RUN: %clang -static -shared --driver-mode=g++ -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -static-libgcc -shared --driver-mode=g++ -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
+comment|// RUN: %clang -static-libgcc -shared --driver-mode=g++ -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_STATIC %s
 end_comment
 
 begin_comment
@@ -64,11 +64,11 @@ comment|// g++, dynamic
 end_comment
 
 begin_comment
-comment|// RUN: %clang --driver-mode=g++ -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_DYNAMIC %s
+comment|// RUN: %clang --driver-mode=g++ -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_DYNAMIC %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -shared --driver-mode=g++ -v -target i686-pc-windows-gnu -### %s 2>&1 | FileCheck -check-prefix=CHECK_DYNAMIC %s
+comment|// RUN: %clang -shared --driver-mode=g++ -v -target i686-pc-windows-gnu -rtlib=platform -### %s 2>&1 | FileCheck -check-prefix=CHECK_DYNAMIC %s
 end_comment
 
 begin_comment

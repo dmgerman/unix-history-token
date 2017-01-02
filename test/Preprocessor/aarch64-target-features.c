@@ -332,6 +332,14 @@ comment|// RUN: %clang -target aarch64 -mcpu=exynos-m1 -### -c %s 2>&1 | FileChe
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-M1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-M1 %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target aarch64 -mcpu=kryo -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-MCPU-KRYO %s
 end_comment
 

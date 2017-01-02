@@ -575,7 +575,7 @@ begin_define
 define|#
 directive|define
 name|LOG_FUNC_SECTION
-value|LOG_SECTION(LLVM_FUNCTION_NAME)
+value|LOG_SECTION(__func__)
 end_define
 
 begin_endif

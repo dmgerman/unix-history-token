@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -171,8 +165,15 @@ argument_list|)
 block|{}
 name|public
 operator|:
+comment|// Work around a bug in MSVC 2013 where explicitly default constructed
+comment|// temporaries with defaulted ctors are not zero initialized.
 name|UnresolvedSetIterator
 argument_list|()
+operator|:
+name|iterator_adaptor_base
+argument_list|(
+argument|nullptr
+argument_list|)
 block|{}
 name|NamedDecl
 operator|*

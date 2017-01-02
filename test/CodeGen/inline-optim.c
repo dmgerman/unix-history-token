@@ -4,7 +4,23 @@ comment|// Make sure -finline-functions family flags are behaving correctly.
 end_comment
 
 begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple i686-pc-win32 -emit-llvm %s -o - | FileCheck -check-prefix=NOINLINE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple i686-pc-win32 -fexperimental-new-pass-manager -emit-llvm %s -o - | FileCheck -check-prefix=NOINLINE %s
 end_comment
 
 begin_comment
@@ -12,11 +28,23 @@ comment|// RUN: %clang_cc1 -triple i686-pc-win32 -O3 -fno-inline-functions -emit
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-win32 -finline-hint-functions -emit-llvm %s -o - | FileCheck -check-prefix=HINT %s
+comment|// RUN: %clang_cc1 -triple i686-pc-win32 -fexperimental-new-pass-manager -O3 -fno-inline-functions -emit-llvm %s -o - | FileCheck -check-prefix=NOINLINE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-win32 -finline-functions -emit-llvm %s -o - | FileCheck -check-prefix=INLINE %s
+comment|// RUN: %clang_cc1 -triple i686-pc-win32 -O3 -finline-hint-functions -emit-llvm %s -o - | FileCheck -check-prefix=HINT %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple i686-pc-win32 -fexperimental-new-pass-manager -O3 -finline-hint-functions -emit-llvm %s -o - | FileCheck -check-prefix=HINT %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple i686-pc-win32 -O3 -finline-functions -emit-llvm %s -o - | FileCheck -check-prefix=INLINE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple i686-pc-win32 -fexperimental-new-pass-manager -O3 -finline-functions -emit-llvm %s -o - | FileCheck -check-prefix=INLINE %s
 end_comment
 
 begin_function

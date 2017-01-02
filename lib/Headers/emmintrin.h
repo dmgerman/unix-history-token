@@ -157,6 +157,66 @@ name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("sse2")))
 end_define
 
+begin_comment
+comment|/// \brief Adds lower double-precision values in both operands and returns the
+end_comment
+
+begin_comment
+comment|///    sum in the lower 64 bits of the result. The upper 64 bits of the result
+end_comment
+
+begin_comment
+comment|///    are copied from the upper double-precision value of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VADDSD / ADDSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    sum of the lower 64 bits of both operands. The upper 64 bits are copied
+end_comment
+
+begin_comment
+comment|///    from the upper 64 bits of the first source operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -186,6 +246,54 @@ name|__a
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds two 128-bit vectors of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VADDPD / ADDPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
 
 begin_function
 specifier|static
@@ -220,6 +328,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Subtracts the lower double-precision value of the second operand
+end_comment
+
+begin_comment
+comment|///    from the lower double-precision value of the first operand and returns
+end_comment
+
+begin_comment
+comment|///    the difference in the lower 64 bits of the result. The upper 64 bits of
+end_comment
+
+begin_comment
+comment|///    the result are copied from the upper double-precision value of the first
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VSUBSD / SUBSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the minuend.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the subtrahend.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    difference of the lower 64 bits of both operands. The upper 64 bits are
+end_comment
+
+begin_comment
+comment|///    copied from the upper 64 bits of the first source operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -249,6 +425,54 @@ name|__a
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Subtracts two 128-bit vectors of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VSUBPD / SUBPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the minuend.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the subtrahend.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the differences between
+end_comment
+
+begin_comment
+comment|///    both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -283,6 +507,70 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Multiplies lower double-precision values in both operands and returns
+end_comment
+
+begin_comment
+comment|///    the product in the lower 64 bits of the result. The upper 64 bits of the
+end_comment
+
+begin_comment
+comment|///    result are copied from the upper double-precision value of the first
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMULSD / MULSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    product of the lower 64 bits of both operands. The upper 64 bits are
+end_comment
+
+begin_comment
+comment|///    copied from the upper 64 bits of the first source operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -312,6 +600,54 @@ name|__a
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Multiplies two 128-bit vectors of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMULPD / MULPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the products of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
 
 begin_function
 specifier|static
@@ -346,6 +682,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Divides the lower double-precision value of the first operand by the
+end_comment
+
+begin_comment
+comment|///    lower double-precision value of the second operand and returns the
+end_comment
+
+begin_comment
+comment|///    quotient in the lower 64 bits of the result. The upper 64 bits of the
+end_comment
+
+begin_comment
+comment|///    result are copied from the upper double-precision value of the first
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VDIVSD / DIVSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the dividend.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing divisor.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    quotient of the lower 64 bits of both operands. The upper 64 bits are
+end_comment
+
+begin_comment
+comment|///    copied from the upper 64 bits of the first source operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -375,6 +779,58 @@ name|__a
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs an element-by-element division of two 128-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VDIVPD / DIVPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the dividend.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the divisor.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the quotients of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
 
 begin_function
 specifier|static
@@ -408,6 +864,82 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Calculates the square root of the lower double-precision value of
+end_comment
+
+begin_comment
+comment|///    the second operand and returns it in the lower 64 bits of the result.
+end_comment
+
+begin_comment
+comment|///    The upper 64 bits of the result are copied from the upper double-
+end_comment
+
+begin_comment
+comment|///    precision value of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VSQRTSD / SQRTSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands. The
+end_comment
+
+begin_comment
+comment|///    upper 64 bits of this operand are copied to the upper 64 bits of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands. The
+end_comment
+
+begin_comment
+comment|///    square root is calculated using the lower 64 bits of this operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    square root of the lower 64 bits of operand \a __b, and whose upper 64
+end_comment
+
+begin_comment
+comment|///    bits are copied from the upper 64 bits of operand \a __a.
+end_comment
 
 begin_function
 specifier|static
@@ -453,6 +985,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Calculates the square root of the each of two values stored in a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VSQRTPD / SQRTPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the square roots of the
+end_comment
+
+begin_comment
+comment|///    values in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -475,6 +1051,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares lower 64-bit double-precision values of both operands, and
+end_comment
+
+begin_comment
+comment|///    returns the lesser of the pair of values in the lower 64-bits of the
+end_comment
+
+begin_comment
+comment|///    result. The upper 64 bits of the result are copied from the upper double-
+end_comment
+
+begin_comment
+comment|///    precision value of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMINSD / MINSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands. The
+end_comment
+
+begin_comment
+comment|///    lower 64 bits of this operand are used in the comparison.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands. The
+end_comment
+
+begin_comment
+comment|///    lower 64 bits of this operand are used in the comparison.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    minimum value between both operands. The upper 64 bits are copied from
+end_comment
+
+begin_comment
+comment|///    the upper 64 bits of the first source operand.
+end_comment
 
 begin_function
 specifier|static
@@ -507,6 +1155,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Performs element-by-element comparison of the two 128-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [2 x double] and returns the vector containing the lesser of each pair of
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMINPD / MINPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the minimum values
+end_comment
+
+begin_comment
+comment|///    between both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -537,6 +1241,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares lower 64-bits double-precision values of both operands, and
+end_comment
+
+begin_comment
+comment|///    returns the greater of the pair of values in the lower 64-bits of the
+end_comment
+
+begin_comment
+comment|///    result. The upper 64 bits of the result are copied from the upper double-
+end_comment
+
+begin_comment
+comment|///    precision value of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMAXSD / MAXSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands. The
+end_comment
+
+begin_comment
+comment|///    lower 64 bits of this operand are used in the comparison.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands. The
+end_comment
+
+begin_comment
+comment|///    lower 64 bits of this operand are used in the comparison.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    maximum value between both operands. The upper 64 bits are copied from
+end_comment
+
+begin_comment
+comment|///    the upper 64 bits of the first source operand.
+end_comment
 
 begin_function
 specifier|static
@@ -569,6 +1345,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Performs element-by-element comparison of the two 128-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [2 x double] and returns the vector containing the greater of each pair
+end_comment
+
+begin_comment
+comment|///    of values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMAXPD / MAXPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the maximum values
+end_comment
+
+begin_comment
+comment|///    between both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -600,6 +1432,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Performs a bitwise AND of two 128-bit vectors of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPAND / PAND</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the bitwise AND of the
+end_comment
+
+begin_comment
+comment|///    values between both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -620,18 +1500,78 @@ name|__m128d
 call|)
 argument_list|(
 operator|(
-name|__v4su
+name|__v2du
 operator|)
 name|__a
 operator|&
 operator|(
-name|__v4su
+name|__v2du
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of two 128-bit vectors of [2 x double], using
+end_comment
+
+begin_comment
+comment|///    the one's complement of the values contained in the first source operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPANDN / PANDN</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the left source operand. The
+end_comment
+
+begin_comment
+comment|///    one's complement of this value is used in the bitwise AND.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the right source operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the bitwise AND of the
+end_comment
+
+begin_comment
+comment|///    values in the second operand and the one's complement of the first
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
 
 begin_function
 specifier|static
@@ -654,18 +1594,66 @@ call|)
 argument_list|(
 operator|~
 operator|(
-name|__v4su
+name|__v2du
 operator|)
 name|__a
 operator|&
 operator|(
-name|__v4su
+name|__v2du
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise OR of two 128-bit vectors of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPOR / POR</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the bitwise OR of the
+end_comment
+
+begin_comment
+comment|///    values between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -687,18 +1675,66 @@ name|__m128d
 call|)
 argument_list|(
 operator|(
-name|__v4su
+name|__v2du
 operator|)
 name|__a
 operator||
 operator|(
-name|__v4su
+name|__v2du
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise XOR of two 128-bit vectors of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPXOR / PXOR</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the bitwise XOR of the
+end_comment
+
+begin_comment
+comment|///    values between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -720,18 +1756,70 @@ name|__m128d
 call|)
 argument_list|(
 operator|(
-name|__v4su
+name|__v2du
 operator|)
 name|__a
 operator|^
 operator|(
-name|__v4su
+name|__v2du
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] for equality. Each comparison yields 0h
+end_comment
+
+begin_comment
+comment|///    for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPEQPD / CMPEQPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
 
 begin_function
 specifier|static
@@ -767,6 +1855,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are less than those in the second operand. Each comparison
+end_comment
+
+begin_comment
+comment|///    yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPLTPD / CMPLTPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -800,6 +1944,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are less than or equal to those in the second operand. Each
+end_comment
+
+begin_comment
+comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPLEPD / CMPLEPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
 
 begin_function
 specifier|static
@@ -835,6 +2035,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are greater than those in the second operand. Each comparison
+end_comment
+
+begin_comment
+comment|///    yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPLTPD / CMPLTPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -868,6 +2124,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are greater than or equal to those in the second operand. Each
+end_comment
+
+begin_comment
+comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPLEPD / CMPLEPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
 
 begin_function
 specifier|static
@@ -903,6 +2215,70 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are ordered with respect to those in the second operand. A pair
+end_comment
+
+begin_comment
+comment|///    of double-precision values are "ordered" with respect to each other if
+end_comment
+
+begin_comment
+comment|///    neither value is a NaN. Each comparison yields 0h for false,
+end_comment
+
+begin_comment
+comment|///    FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPORDPD / CMPORDPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -936,6 +2312,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are unordered with respect to those in the second operand. A pair
+end_comment
+
+begin_comment
+comment|///    of double-precision values are "unordered" with respect to each other if
+end_comment
+
+begin_comment
+comment|///    one or both values are NaN. Each comparison yields 0h for false,
+end_comment
+
+begin_comment
+comment|///    FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPUNORDPD / CMPUNORDPD</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
 
 begin_function
 specifier|static
@@ -971,6 +2415,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are unequal to those in the second operand. Each comparison
+end_comment
+
+begin_comment
+comment|///    yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNEQPD / CMPNEQPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1004,6 +2504,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are not less than those in the second operand. Each comparison
+end_comment
+
+begin_comment
+comment|///    yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNLTPD / CMPNLTPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
 
 begin_function
 specifier|static
@@ -1039,6 +2595,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are not less than or equal to those in the second operand. Each
+end_comment
+
+begin_comment
+comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNLEPD / CMPNLEPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1072,6 +2684,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are not greater than those in the second operand. Each
+end_comment
+
+begin_comment
+comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNLTPD / CMPNLTPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
 
 begin_function
 specifier|static
@@ -1107,6 +2775,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of the
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double] to determine if the values in the first
+end_comment
+
+begin_comment
+comment|///    operand are not greater than or equal to those in the second operand.
+end_comment
+
+begin_comment
+comment|///    Each comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNLEPD / CMPNLEPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the comparison results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1140,6 +2864,70 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] for equality. The
+end_comment
+
+begin_comment
+comment|///    comparison yields 0h for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPEQSD / CMPEQSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
 
 begin_function
 specifier|static
@@ -1175,6 +2963,78 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is less than the corresponding value in
+end_comment
+
+begin_comment
+comment|///    the second parameter. The comparison yields 0h for false,
+end_comment
+
+begin_comment
+comment|///    FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPLTSD / CMPLTSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1209,6 +3069,78 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is less than or equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0h for
+end_comment
+
+begin_comment
+comment|///    false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPLESD / CMPLESD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1242,6 +3174,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is greater than the corresponding value
+end_comment
+
+begin_comment
+comment|///    in the second parameter. The comparison yields 0h for false,
+end_comment
+
+begin_comment
+comment|///    FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPLTSD / CMPLTSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///     A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///     compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///     A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///     compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///     results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
 
 begin_function
 specifier|static
@@ -1292,6 +3296,78 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is greater than or equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0h for
+end_comment
+
+begin_comment
+comment|///    false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPLESD / CMPLESD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1341,6 +3417,82 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is "ordered" with respect to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0h for
+end_comment
+
+begin_comment
+comment|///    false, FFFFFFFFFFFFFFFFh for true. A pair of double-precision values are
+end_comment
+
+begin_comment
+comment|///    "ordered" with respect to each other if neither value is a NaN.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPORDSD / CMPORDSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1374,6 +3526,86 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is "unordered" with respect to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0h
+end_comment
+
+begin_comment
+comment|///    for false, FFFFFFFFFFFFFFFFh for true. A pair of double-precision values
+end_comment
+
+begin_comment
+comment|///    are "unordered" with respect to each other if one or both values are NaN.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPUNORDSD / CMPUNORDSD</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
 
 begin_function
 specifier|static
@@ -1409,6 +3641,78 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is unequal to the corresponding value in
+end_comment
+
+begin_comment
+comment|///    the second parameter. The comparison yields 0h for false,
+end_comment
+
+begin_comment
+comment|///    FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNEQSD / CMPNEQSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1442,6 +3746,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is not less than the corresponding
+end_comment
+
+begin_comment
+comment|///    value in the second parameter. The comparison yields 0h for false,
+end_comment
+
+begin_comment
+comment|///    FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNLTSD / CMPNLTSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
 
 begin_function
 specifier|static
@@ -1477,6 +3853,78 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is not less than or equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0h
+end_comment
+
+begin_comment
+comment|///    for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNLESD / CMPNLESD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns  A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1510,6 +3958,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is not greater than the corresponding
+end_comment
+
+begin_comment
+comment|///    value in the second parameter. The comparison yields 0h for false,
+end_comment
+
+begin_comment
+comment|///    FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNLTSD / CMPNLTSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
 
 begin_function
 specifier|static
@@ -1560,6 +4080,78 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is not greater than or equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0h
+end_comment
+
+begin_comment
+comment|///    for false, FFFFFFFFFFFFFFFFh for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCMPNLESD / CMPNLESD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector. The lower 64 bits contains the comparison
+end_comment
+
+begin_comment
+comment|///    results. The upper 64 bits are copied from the upper 64 bits of \a __a.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1609,6 +4201,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] for equality. The
+end_comment
+
+begin_comment
+comment|///    comparison yields 0 for false, 1 for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCOMISD / COMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1639,6 +4291,70 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is less than the corresponding value in
+end_comment
+
+begin_comment
+comment|///    the second parameter. The comparison yields 0 for false, 1 for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCOMISD / COMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results.
+end_comment
 
 begin_function
 specifier|static
@@ -1671,6 +4387,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is less than or equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0 for
+end_comment
+
+begin_comment
+comment|///    false, 1 for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCOMISD / COMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///     A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///     compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1701,6 +4485,70 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is greater than the corresponding value
+end_comment
+
+begin_comment
+comment|///    in the second parameter. The comparison yields 0 for false, 1 for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCOMISD / COMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results.
+end_comment
 
 begin_function
 specifier|static
@@ -1733,6 +4581,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is greater than or equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0 for
+end_comment
+
+begin_comment
+comment|///    false, 1 for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCOMISD / COMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1763,6 +4679,70 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is unequal to the corresponding value in
+end_comment
+
+begin_comment
+comment|///    the second parameter. The comparison yields 0 for false, 1 for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCOMISD / COMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results.
+end_comment
 
 begin_function
 specifier|static
@@ -1795,6 +4775,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] for equality. The
+end_comment
+
+begin_comment
+comment|///    comparison yields 0 for false, 1 for true. If either of the two lower
+end_comment
+
+begin_comment
+comment|///    double-precision values is NaN, 1 is returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUCOMISD / UCOMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results. If either of the two
+end_comment
+
+begin_comment
+comment|///    lower double-precision values is NaN, 1 is returned.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1825,6 +4873,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is less than the corresponding value in
+end_comment
+
+begin_comment
+comment|///    the second parameter. The comparison yields 0 for false, 1 for true. If
+end_comment
+
+begin_comment
+comment|///    either of the two lower double-precision values is NaN, 1 is returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUCOMISD / UCOMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results. If either of the two
+end_comment
+
+begin_comment
+comment|///    lower double-precision values is NaN, 1 is returned.
+end_comment
 
 begin_function
 specifier|static
@@ -1857,6 +4977,82 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is less than or equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0 for
+end_comment
+
+begin_comment
+comment|///    false, 1 for true. If either of the two lower double-precision values is
+end_comment
+
+begin_comment
+comment|///    NaN, 1 is returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUCOMISD / UCOMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///     A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///     compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results. If either of the two
+end_comment
+
+begin_comment
+comment|///     lower double-precision values is NaN, 1 is returned.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1887,6 +5083,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is greater than the corresponding value
+end_comment
+
+begin_comment
+comment|///    in the second parameter. The comparison yields 0 for false, 1 for true.
+end_comment
+
+begin_comment
+comment|///    If either of the two lower double-precision values is NaN, 0 is returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUCOMISD / UCOMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///     A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///     compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results. If either of the two
+end_comment
+
+begin_comment
+comment|///     lower double-precision values is NaN, 0 is returned.
+end_comment
 
 begin_function
 specifier|static
@@ -1919,6 +5187,82 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is greater than or equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding value in the second parameter. The comparison yields 0 for
+end_comment
+
+begin_comment
+comment|///    false, 1 for true.  If either of the two lower double-precision values
+end_comment
+
+begin_comment
+comment|///    is NaN, 0 is returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUCOMISD / UCOMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison results. If either of the two
+end_comment
+
+begin_comment
+comment|///    lower double-precision values is NaN, 0 is returned.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1949,6 +5293,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the lower double-precision floating-point values in each of
+end_comment
+
+begin_comment
+comment|///    the two 128-bit floating-point vectors of [2 x double] to determine if
+end_comment
+
+begin_comment
+comment|///    the value in the first parameter is unequal to the corresponding value in
+end_comment
+
+begin_comment
+comment|///    the second parameter. The comparison yields 0 for false, 1 for true. If
+end_comment
+
+begin_comment
+comment|///    either of the two lower double-precision values is NaN, 0 is returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUCOMISD / UCOMISD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision value is
+end_comment
+
+begin_comment
+comment|///    compared to the lower double-precision value of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer containing the comparison result. If either of the two
+end_comment
+
+begin_comment
+comment|///    lower double-precision values is NaN, 0 is returned.
+end_comment
 
 begin_function
 specifier|static
@@ -1981,6 +5397,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts the two double-precision floating-point elements of a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [2 x double] into two single-precision floating-point
+end_comment
+
+begin_comment
+comment|///    values, returned in the lower 64 bits of a 128-bit vector of [4 x float].
+end_comment
+
+begin_comment
+comment|///    The upper 64 bits of the result vector are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTPD2PS / CVTPD2PS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x float] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    converted values. The upper 64 bits are set to zero.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2003,6 +5471,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Converts the lower two single-precision floating-point elements of a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [4 x float] into two double-precision floating-point
+end_comment
+
+begin_comment
+comment|///    values, returned in a 128-bit vector of [2 x double]. The upper two
+end_comment
+
+begin_comment
+comment|///    elements of the input vector are unused.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTPS2PD / CVTPS2PD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float]. The lower two single-precision
+end_comment
+
+begin_comment
+comment|///    floating-point elements are converted to double-precision values. The
+end_comment
+
+begin_comment
+comment|///    upper two elements are unused.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the converted values.
+end_comment
 
 begin_function
 specifier|static
@@ -2044,6 +5568,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts the lower two integer elements of a 128-bit vector of
+end_comment
+
+begin_comment
+comment|///    [4 x i32] into two double-precision floating-point values, returned in a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [2 x double]. The upper two elements of the input
+end_comment
+
+begin_comment
+comment|///    vector are unused.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTDQ2PD / CVTDQ2PD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [4 x i32]. The lower two integer elements are
+end_comment
+
+begin_comment
+comment|///    converted to double-precision values. The upper two elements are unused.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the converted values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2084,6 +5660,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts the two double-precision floating-point elements of a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [2 x double] into two signed 32-bit integer values,
+end_comment
+
+begin_comment
+comment|///    returned in the lower 64 bits of a 128-bit vector of [4 x i32]. The upper
+end_comment
+
+begin_comment
+comment|///    64 bits of the result vector are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTPD2DQ / CVTPD2DQ</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x i32] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    converted values. The upper 64 bits are set to zero.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2107,6 +5735,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts the low-order element of a 128-bit vector of [2 x double]
+end_comment
+
+begin_comment
+comment|///    into a 32-bit signed integer value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTSD2SI / CVTSD2SI</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower 64 bits are used in the
+end_comment
+
+begin_comment
+comment|///    conversion.
+end_comment
+
+begin_comment
+comment|/// \returns A 32-bit signed integer containing the converted value.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2129,6 +5801,82 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Converts the lower double-precision floating-point element of a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [2 x double], in the second parameter, into a
+end_comment
+
+begin_comment
+comment|///    single-precision floating-point value, returned in the lower 32 bits of a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [4 x float]. The upper 96 bits of the result vector are
+end_comment
+
+begin_comment
+comment|///    copied from the upper 96 bits of the first parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTSD2SS / CVTSD2SS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float]. The upper 96 bits of this parameter are
+end_comment
+
+begin_comment
+comment|///    copied to the upper 96 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower double-precision
+end_comment
+
+begin_comment
+comment|///    floating-point element is used in the conversion.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x float]. The lower 32 bits contain the
+end_comment
+
+begin_comment
+comment|///    converted value from the second parameter. The upper 96 bits are copied
+end_comment
+
+begin_comment
+comment|///    from the upper 96 bits of the first parameter.
+end_comment
 
 begin_function
 specifier|static
@@ -2164,6 +5912,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts a 32-bit signed integer value, in the second parameter, into
+end_comment
+
+begin_comment
+comment|///    a double-precision floating-point value, returned in the lower 64 bits of
+end_comment
+
+begin_comment
+comment|///    a 128-bit vector of [2 x double]. The upper 64 bits of the result vector
+end_comment
+
+begin_comment
+comment|///    are copied from the upper 64 bits of the first parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTSI2SD / CVTSI2SD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The upper 64 bits of this parameter are
+end_comment
+
+begin_comment
+comment|///    copied to the upper 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 32-bit signed integer containing the value to be converted.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double]. The lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    converted value from the second parameter. The upper 64 bits are copied
+end_comment
+
+begin_comment
+comment|///    from the upper 64 bits of the first parameter.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2190,6 +6006,82 @@ name|__a
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Converts the lower single-precision floating-point element of a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [4 x float], in the second parameter, into a
+end_comment
+
+begin_comment
+comment|///    double-precision floating-point value, returned in the lower 64 bits of
+end_comment
+
+begin_comment
+comment|///    a 128-bit vector of [2 x double]. The upper 64 bits of the result vector
+end_comment
+
+begin_comment
+comment|///    are copied from the upper 64 bits of the first parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTSS2SD / CVTSS2SD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The upper 64 bits of this parameter are
+end_comment
+
+begin_comment
+comment|///    copied to the upper 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float]. The lower single-precision
+end_comment
+
+begin_comment
+comment|///    floating-point element is used in the conversion.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double]. The lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    converted value from the second parameter. The upper 64 bits are copied
+end_comment
+
+begin_comment
+comment|///    from the upper 64 bits of the first parameter.
+end_comment
 
 begin_function
 specifier|static
@@ -2221,6 +6113,70 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts the two double-precision floating-point elements of a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [2 x double] into two signed 32-bit integer values,
+end_comment
+
+begin_comment
+comment|///    returned in the lower 64 bits of a 128-bit vector of [4 x i32]. If the
+end_comment
+
+begin_comment
+comment|///    result of either conversion is inexact, the result is truncated (rounded
+end_comment
+
+begin_comment
+comment|///    towards zero) regardless of the current MXCSR setting. The upper 64 bits
+end_comment
+
+begin_comment
+comment|///    of the result vector are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTTPD2DQ / CVTTPD2DQ</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x i32] whose lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    converted values. The upper 64 bits are set to zero.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2247,6 +6203,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts the low-order element of a [2 x double] vector into a 32-bit
+end_comment
+
+begin_comment
+comment|///    signed integer value, truncating the result when it is inexact.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTTSD2SI / CVTTSD2SI</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower 64 bits are used in the
+end_comment
+
+begin_comment
+comment|///    conversion.
+end_comment
+
+begin_comment
+comment|/// \returns A 32-bit signed integer containing the converted value.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2269,6 +6273,50 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Converts the two double-precision floating-point elements of a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [2 x double] into two signed 32-bit integer values,
+end_comment
+
+begin_comment
+comment|///    returned in a 64-bit vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> CVTPD2PI</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit vector of [2 x i32] containing the converted values.
+end_comment
 
 begin_function
 specifier|static
@@ -2296,6 +6344,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts the two double-precision floating-point elements of a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [2 x double] into two signed 32-bit integer values,
+end_comment
+
+begin_comment
+comment|///    returned in a 64-bit vector of [2 x i32]. If the result of either
+end_comment
+
+begin_comment
+comment|///    conversion is inexact, the result is truncated (rounded towards zero)
+end_comment
+
+begin_comment
+comment|///    regardless of the current MXCSR setting.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> CVTTPD2PI</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit vector of [2 x i32] containing the converted values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2322,6 +6422,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts the two signed 32-bit integer elements of a 64-bit vector of
+end_comment
+
+begin_comment
+comment|///    [2 x i32] into two double-precision floating-point values, returned in a
+end_comment
+
+begin_comment
+comment|///    128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> CVTPI2PD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the converted values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2345,6 +6489,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Returns the low-order element of a 128-bit vector of [2 x double] as
+end_comment
+
+begin_comment
+comment|///    a double-precision floating-point value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower 64 bits are returned.
+end_comment
+
+begin_comment
+comment|/// \returns A double-precision floating-point value copied from the lower 64
+end_comment
+
+begin_comment
+comment|///    bits of \a __a.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2364,6 +6552,50 @@ index|]
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Loads a 128-bit floating-point vector of [2 x double] from an aligned
+end_comment
+
+begin_comment
+comment|///    memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVAPD / MOVAPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 128-bit memory location. The address of the memory
+end_comment
+
+begin_comment
+comment|///    location has to be 16-byte aligned.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the loaded values.
+end_comment
 
 begin_function
 specifier|static
@@ -2388,6 +6620,54 @@ name|__dp
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Loads a double-precision floating-point value from a specified memory
+end_comment
+
+begin_comment
+comment|///    location and duplicates it to both vector elements of a 128-bit vector of
+end_comment
+
+begin_comment
+comment|///    [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVDDUP / MOVDDUP</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a memory location containing a double-precision value.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the loaded and
+end_comment
+
+begin_comment
+comment|///    duplicated values.
+end_comment
 
 begin_function
 specifier|static
@@ -2455,6 +6735,62 @@ parameter_list|)
 value|_mm_load1_pd(dp)
 end_define
 
+begin_comment
+comment|/// \brief Loads two double-precision values, in reverse order, from an aligned
+end_comment
+
+begin_comment
+comment|///    memory location into a 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVAPD / MOVAPD</c> instruction +
+end_comment
+
+begin_comment
+comment|/// needed shuffling instructions. In AVX mode, the shuffling may be combined
+end_comment
+
+begin_comment
+comment|/// with the \c VMOVAPD, resulting in only a \c VPERMILPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A 16-byte aligned pointer to an array of double-precision values to be
+end_comment
+
+begin_comment
+comment|///    loaded in reverse order.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the reversed loaded
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2498,6 +6834,50 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Loads a 128-bit floating-point vector of [2 x double] from an
+end_comment
+
+begin_comment
+comment|///    unaligned memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVUPD / MOVUPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 128-bit memory location. The address of the memory
+end_comment
+
+begin_comment
+comment|///    location does not have to be aligned.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the loaded values.
+end_comment
 
 begin_function
 specifier|static
@@ -2657,6 +7037,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Loads a double-precision value into the high-order bits of a 128-bit
+end_comment
+
+begin_comment
+comment|///    vector of [2 x double]. The low-order bits are copied from the low-order
+end_comment
+
+begin_comment
+comment|///    bits of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVHPD / MOVHPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:0] are written to bits [63:0] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 64-bit memory location containing a double-precision
+end_comment
+
+begin_comment
+comment|///    floating-point value that is loaded. The loaded value is written to bits
+end_comment
+
+begin_comment
+comment|///    [127:64] of the result. The address of the memory location does not have
+end_comment
+
+begin_comment
+comment|///    to be aligned.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the moved values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2718,6 +7166,74 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Loads a double-precision value into the low-order bits of a 128-bit
+end_comment
+
+begin_comment
+comment|///    vector of [2 x double]. The high-order bits are copied from the
+end_comment
+
+begin_comment
+comment|///    high-order bits of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVLPD / MOVLPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:64] are written to bits [127:64] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 64-bit memory location containing a double-precision
+end_comment
+
+begin_comment
+comment|///    floating-point value that is loaded. The loaded value is written to bits
+end_comment
+
+begin_comment
+comment|///    [63:0] of the result. The address of the memory location does not have to
+end_comment
+
+begin_comment
+comment|///    be aligned.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the moved values.
+end_comment
 
 begin_function
 specifier|static
@@ -2781,6 +7297,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double] with
+end_comment
+
+begin_comment
+comment|///    unspecified content. This could be used as an argument to another
+end_comment
+
+begin_comment
+comment|///    intrinsic function where the argument is required but the value is not
+end_comment
+
+begin_comment
+comment|///    actually used.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit floating-point vector of [2 x double] with unspecified
+end_comment
+
+begin_comment
+comment|///    content.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2800,6 +7360,62 @@ argument_list|()
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double]. The lower
+end_comment
+
+begin_comment
+comment|///    64 bits of the vector are initialized with the specified double-precision
+end_comment
+
+begin_comment
+comment|///    floating-point value. The upper 64 bits are set to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVQ</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __w
+end_comment
+
+begin_comment
+comment|///    A double-precision floating-point value used to initialize the lower 64
+end_comment
+
+begin_comment
+comment|///    bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit floating-point vector of [2 x double]. The
+end_comment
+
+begin_comment
+comment|///    lower 64 bits contain the value of the parameter. The upper 64 bits are
+end_comment
+
+begin_comment
+comment|///    set to zero.
+end_comment
 
 begin_function
 specifier|static
@@ -2825,6 +7441,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double], with each
+end_comment
+
+begin_comment
+comment|///    of the two double-precision floating-point vector elements set to the
+end_comment
+
+begin_comment
+comment|///    specified double-precision floating-point value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVDDUP / MOVLHPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __w
+end_comment
+
+begin_comment
+comment|///    A double-precision floating-point value used to initialize each vector
+end_comment
+
+begin_comment
+comment|///    element of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit floating-point vector of [2 x double].
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2848,6 +7512,62 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double]
+end_comment
+
+begin_comment
+comment|///    initialized with the specified double-precision floating-point values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUNPCKLPD / UNPCKLPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __w
+end_comment
+
+begin_comment
+comment|///    A double-precision floating-point value used to initialize the upper 64
+end_comment
+
+begin_comment
+comment|///    bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __x
+end_comment
+
+begin_comment
+comment|///    A double-precision floating-point value used to initialize the lower 64
+end_comment
+
+begin_comment
+comment|///    bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit floating-point vector of [2 x double].
+end_comment
 
 begin_function
 specifier|static
@@ -2876,6 +7596,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double],
+end_comment
+
+begin_comment
+comment|///    initialized in reverse order with the specified double-precision
+end_comment
+
+begin_comment
+comment|///    floating-point values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUNPCKLPD / UNPCKLPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __w
+end_comment
+
+begin_comment
+comment|///    A double-precision floating-point value used to initialize the lower 64
+end_comment
+
+begin_comment
+comment|///    bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __x
+end_comment
+
+begin_comment
+comment|///    A double-precision floating-point value used to initialize the upper 64
+end_comment
+
+begin_comment
+comment|///    bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit floating-point vector of [2 x double].
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2903,6 +7683,42 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double]
+end_comment
+
+begin_comment
+comment|///    initialized to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VXORPS / XORPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit floating-point vector of [2 x double] with
+end_comment
+
+begin_comment
+comment|///    all elements set to zero.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2925,6 +7741,66 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double]. The lower
+end_comment
+
+begin_comment
+comment|///    64 bits are set to the lower 64 bits of the second parameter. The upper
+end_comment
+
+begin_comment
+comment|///    64 bits are set to the upper 64 bits of the first parameter.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VBLENDPD / BLENDPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The upper 64 bits are written to the
+end_comment
+
+begin_comment
+comment|///    upper 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. The lower 64 bits are written to the
+end_comment
+
+begin_comment
+comment|///    lower 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the moved values.
+end_comment
 
 begin_function
 specifier|static
@@ -2958,6 +7834,50 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Stores the lower 64 bits of a 128-bit vector of [2 x double] to a
+end_comment
+
+begin_comment
+comment|///    memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVSD / MOVSD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 64-bit memory location.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the value to be stored.
+end_comment
 
 begin_function
 specifier|static
@@ -3080,6 +8000,54 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Stores a 128-bit vector of [2 x double] into an aligned memory
+end_comment
+
+begin_comment
+comment|///    location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVAPD / MOVAPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 128-bit memory location. The address of the memory
+end_comment
+
+begin_comment
+comment|///    location has to be 16-byte aligned.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the values to be stored.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3105,6 +8073,54 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Stores a 128-bit vector of [2 x double] into an unaligned memory
+end_comment
+
+begin_comment
+comment|///    location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVUPD / MOVUPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 128-bit memory location. The address of the memory
+end_comment
+
+begin_comment
+comment|///    location does not have to be aligned.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the values to be stored.
+end_comment
 
 begin_function
 specifier|static
@@ -3153,6 +8169,62 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Stores two double-precision values, in reverse order, from a 128-bit
+end_comment
+
+begin_comment
+comment|///    vector of [2 x double] to a 16-byte aligned memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to a shuffling instruction followed by a
+end_comment
+
+begin_comment
+comment|///<c> VMOVAPD / MOVAPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 16-byte aligned memory location that can store two
+end_comment
+
+begin_comment
+comment|///    double-precision values.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the values to be reversed and
+end_comment
+
+begin_comment
+comment|///    stored.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3198,6 +8270,50 @@ name|__a
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Stores the upper 64 bits of a 128-bit vector of [2 x double] to a
+end_comment
+
+begin_comment
+comment|///    memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVHPD / MOVHPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 64-bit memory location.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the value to be stored.
+end_comment
 
 begin_function
 specifier|static
@@ -3249,6 +8365,50 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Stores the lower 64 bits of a 128-bit vector of [2 x double] to a
+end_comment
+
+begin_comment
+comment|///    memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVLPD / MOVLPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __dp
+end_comment
+
+begin_comment
+comment|///    A pointer to a 64-bit memory location.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the value to be stored.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3299,6 +8459,66 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds the corresponding elements of two 128-bit vectors of [16 x i8],
+end_comment
+
+begin_comment
+comment|///    saving the lower 8 bits of each sum in the corresponding element of a
+end_comment
+
+begin_comment
+comment|///    128-bit result vector of [16 x i8]. The integer elements of both
+end_comment
+
+begin_comment
+comment|///    parameters can be either signed or unsigned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPADDB / PADDB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [16 x i8] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3331,6 +8551,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds the corresponding elements of two 128-bit vectors of [8 x i16],
+end_comment
+
+begin_comment
+comment|///    saving the lower 16 bits of each sum in the corresponding element of a
+end_comment
+
+begin_comment
+comment|///    128-bit result vector of [8 x i16]. The integer elements of both
+end_comment
+
+begin_comment
+comment|///    parameters can be either signed or unsigned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPADDW / PADDW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [8 x i16] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -3365,6 +8645,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds the corresponding elements of two 128-bit vectors of [4 x i32],
+end_comment
+
+begin_comment
+comment|///    saving the lower 32 bits of each sum in the corresponding element of a
+end_comment
+
+begin_comment
+comment|///    128-bit result vector of [4 x i32]. The integer elements of both
+end_comment
+
+begin_comment
+comment|///    parameters can be either signed or unsigned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPADDD / PADDD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x i32] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3397,6 +8737,54 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds two signed or unsigned 64-bit integer values, returning the
+end_comment
+
+begin_comment
+comment|///    lower 64 bits of the sum.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> PADDQ</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer containing the sum of both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -3432,6 +8820,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds the corresponding elements of two 128-bit vectors of [2 x i64],
+end_comment
+
+begin_comment
+comment|///    saving the lower 64 bits of each sum in the corresponding element of a
+end_comment
+
+begin_comment
+comment|///    128-bit result vector of [2 x i64]. The integer elements of both
+end_comment
+
+begin_comment
+comment|///    parameters can be either signed or unsigned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPADDQ / PADDQ</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x i64].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x i64].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x i64] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3464,6 +8912,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds, with saturation, the corresponding elements of two 128-bit
+end_comment
+
+begin_comment
+comment|///    signed [16 x i8] vectors, saving each sum in the corresponding element of
+end_comment
+
+begin_comment
+comment|///    a 128-bit result vector of [16 x i8]. Positive sums greater than 7Fh are
+end_comment
+
+begin_comment
+comment|///    saturated to 7Fh. Negative sums less than 80h are saturated to 80h.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPADDSB / PADDSB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit signed [16 x i8] vector containing the saturated sums of
+end_comment
+
+begin_comment
+comment|///    both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -3499,6 +9007,70 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds, with saturation, the corresponding elements of two 128-bit
+end_comment
+
+begin_comment
+comment|///    signed [8 x i16] vectors, saving each sum in the corresponding element of
+end_comment
+
+begin_comment
+comment|///    a 128-bit result vector of [8 x i16]. Positive sums greater than 7FFFh
+end_comment
+
+begin_comment
+comment|///    are saturated to 7FFFh. Negative sums less than 8000h are saturated to
+end_comment
+
+begin_comment
+comment|///    8000h.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPADDSW / PADDSW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit signed [8 x i16] vector containing the saturated sums of
+end_comment
+
+begin_comment
+comment|///    both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3532,6 +9104,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds, with saturation, the corresponding elements of two 128-bit
+end_comment
+
+begin_comment
+comment|///    unsigned [16 x i8] vectors, saving each sum in the corresponding element
+end_comment
+
+begin_comment
+comment|///    of a 128-bit result vector of [16 x i8]. Positive sums greater than FFh
+end_comment
+
+begin_comment
+comment|///    are saturated to FFh. Negative sums are saturated to 00h.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPADDUSB / PADDUSB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit unsigned [16 x i8] vector containing the saturated sums
+end_comment
+
+begin_comment
+comment|///    of both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -3567,6 +9199,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds, with saturation, the corresponding elements of two 128-bit
+end_comment
+
+begin_comment
+comment|///    unsigned [8 x i16] vectors, saving each sum in the corresponding element
+end_comment
+
+begin_comment
+comment|///    of a 128-bit result vector of [8 x i16]. Positive sums greater than FFFFh
+end_comment
+
+begin_comment
+comment|///    are saturated to FFFFh. Negative sums are saturated to 0000h.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPADDUSB / PADDUSB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit unsigned [8 x i16] vector containing the saturated sums
+end_comment
+
+begin_comment
+comment|///    of both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3600,6 +9292,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Computes the rounded avarages of corresponding elements of two
+end_comment
+
+begin_comment
+comment|///    128-bit unsigned [16 x i8] vectors, saving each result in the
+end_comment
+
+begin_comment
+comment|///    corresponding element of a 128-bit result vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPAVGB / PAVGB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit unsigned [16 x i8] vector containing the rounded
+end_comment
+
+begin_comment
+comment|///    averages of both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -3635,6 +9383,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Computes the rounded avarages of corresponding elements of two
+end_comment
+
+begin_comment
+comment|///    128-bit unsigned [8 x i16] vectors, saving each result in the
+end_comment
+
+begin_comment
+comment|///    corresponding element of a 128-bit result vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPAVGW / PAVGW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit unsigned [8 x i16] vector containing the rounded
+end_comment
+
+begin_comment
+comment|///    averages of both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3668,6 +9472,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Multiplies the corresponding elements of two 128-bit signed [8 x i16]
+end_comment
+
+begin_comment
+comment|///    vectors, producing eight intermediate 32-bit signed integer products, and
+end_comment
+
+begin_comment
+comment|///    adds the consecutive pairs of 32-bit products to form a 128-bit signed
+end_comment
+
+begin_comment
+comment|///    [4 x i32] vector. For example, bits [15:0] of both parameters are
+end_comment
+
+begin_comment
+comment|///    multiplied producing a 32-bit product, bits [31:16] of both parameters
+end_comment
+
+begin_comment
+comment|///    are multiplied producing a 32-bit product, and the sum of those two
+end_comment
+
+begin_comment
+comment|///    products becomes bits [31:0] of the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPMADDWD / PMADDWD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit signed [4 x i32] vector containing the sums of products
+end_comment
+
+begin_comment
+comment|///    of both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -3703,6 +9579,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares corresponding elements of two 128-bit signed [8 x i16]
+end_comment
+
+begin_comment
+comment|///    vectors, saving the greater value from each comparison in the
+end_comment
+
+begin_comment
+comment|///    corresponding element of a 128-bit result vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPMAXSW / PMAXSW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit signed [8 x i16] vector containing the greater value of
+end_comment
+
+begin_comment
+comment|///    each comparison.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3736,6 +9668,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares corresponding elements of two 128-bit unsigned [16 x i8]
+end_comment
+
+begin_comment
+comment|///    vectors, saving the greater value from each comparison in the
+end_comment
+
+begin_comment
+comment|///    corresponding element of a 128-bit result vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPMAXUB / PMAXUB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit unsigned [16 x i8] vector containing the greater value of
+end_comment
+
+begin_comment
+comment|///    each comparison.
+end_comment
 
 begin_function
 specifier|static
@@ -3771,6 +9759,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares corresponding elements of two 128-bit signed [8 x i16]
+end_comment
+
+begin_comment
+comment|///    vectors, saving the smaller value from each comparison in the
+end_comment
+
+begin_comment
+comment|///    corresponding element of a 128-bit result vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPMINSW / PMINSW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit signed [8 x i16] vector containing the smaller value of
+end_comment
+
+begin_comment
+comment|///    each comparison.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3804,6 +9848,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares corresponding elements of two 128-bit unsigned [16 x i8]
+end_comment
+
+begin_comment
+comment|///    vectors, saving the smaller value from each comparison in the
+end_comment
+
+begin_comment
+comment|///    corresponding element of a 128-bit result vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPMINUB / PMINUB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [16 x i8] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit unsigned [16 x i8] vector containing the smaller value of
+end_comment
+
+begin_comment
+comment|///    each comparison.
+end_comment
 
 begin_function
 specifier|static
@@ -3839,6 +9939,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Multiplies the corresponding elements of two signed [8 x i16]
+end_comment
+
+begin_comment
+comment|///    vectors, saving the upper 16 bits of each 32-bit product in the
+end_comment
+
+begin_comment
+comment|///    corresponding element of a 128-bit signed [8 x i16] result vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPMULHW / PMULHW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit signed [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit signed [8 x i16] vector containing the upper 16 bits of
+end_comment
+
+begin_comment
+comment|///    each of the eight 32-bit products.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -3872,6 +10028,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Multiplies the corresponding elements of two unsigned [8 x i16]
+end_comment
+
+begin_comment
+comment|///    vectors, saving the upper 16 bits of each 32-bit product in the
+end_comment
+
+begin_comment
+comment|///    corresponding element of a 128-bit unsigned [8 x i16] result vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPMULHUW / PMULHUW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit unsigned [8 x i16] vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit unsigned [8 x i16] vector containing the upper 16 bits
+end_comment
+
+begin_comment
+comment|///    of each of the eight 32-bit products.
+end_comment
 
 begin_function
 specifier|static
@@ -3908,15 +10120,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Multiplies the corresponding elements of two [8 x short] vectors and
+comment|/// \brief Multiplies the corresponding elements of two signed [8 x i16]
 end_comment
 
 begin_comment
-comment|///    returns a vector containing the low-order 16 bits of each 32-bit product
+comment|///    vectors, saving the lower 16 bits of each 32-bit product in the
 end_comment
 
 begin_comment
-comment|///    in the corresponding element.
+comment|///    corresponding element of a 128-bit signed [8 x i16] result vector.
 end_comment
 
 begin_comment
@@ -3932,7 +10144,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPMULLW / PMULLW instruction.
+comment|/// This intrinsic corresponds to the<c> VPMULLW / PMULLW</c> instruction.
 end_comment
 
 begin_comment
@@ -3944,7 +10156,7 @@ comment|/// \param __a
 end_comment
 
 begin_comment
-comment|///    A 128-bit integer vector containing one of the source operands.
+comment|///    A 128-bit signed [8 x i16] vector.
 end_comment
 
 begin_comment
@@ -3952,11 +10164,15 @@ comment|/// \param __b
 end_comment
 
 begin_comment
-comment|///    A 128-bit integer vector containing one of the source operands.
+comment|///    A 128-bit signed [8 x i16] vector.
 end_comment
 
 begin_comment
-comment|/// \returns A 128-bit integer vector containing the products of both operands.
+comment|/// \returns A 128-bit signed [8 x i16] vector containing the lower 16 bits of
+end_comment
+
+begin_comment
+comment|///    each of the eight 32-bit products.
 end_comment
 
 begin_function
@@ -4017,7 +10233,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PMULUDQ instruction.
+comment|/// This intrinsic corresponds to the<c> PMULUDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -4100,7 +10316,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPMULUDQ / PMULUDQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPMULUDQ / PMULUDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -4191,7 +10407,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSADBW / PSADBW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSADBW / PSADBW</c> instruction.
 end_comment
 
 begin_comment
@@ -4270,7 +10486,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSUBB / PSUBB instruction.
+comment|/// This intrinsic corresponds to the<c> VPSUBB / PSUBB</c> instruction.
 end_comment
 
 begin_comment
@@ -4351,7 +10567,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSUBW / PSUBW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSUBW / PSUBW</c> instruction.
 end_comment
 
 begin_comment
@@ -4432,7 +10648,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSUBD / PSUBD instruction.
+comment|/// This intrinsic corresponds to the<c> VPSUBD / PSUBD</c> instruction.
 end_comment
 
 begin_comment
@@ -4517,7 +10733,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c PSUBQ instruction.
+comment|/// This intrinsic corresponds to the<c> PSUBQ</c> instruction.
 end_comment
 
 begin_comment
@@ -4599,7 +10815,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSUBQ / PSUBQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPSUBQ / PSUBQ</c> instruction.
 end_comment
 
 begin_comment
@@ -4692,7 +10908,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSUBSB / PSUBSB instruction.
+comment|/// This intrinsic corresponds to the<c> VPSUBSB / PSUBSB</c> instruction.
 end_comment
 
 begin_comment
@@ -4786,7 +11002,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSUBSW / PSUBSW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSUBSW / PSUBSW</c> instruction.
 end_comment
 
 begin_comment
@@ -4876,7 +11092,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSUBUSB / PSUBUSB instruction.
+comment|/// This intrinsic corresponds to the<c> VPSUBUSB / PSUBUSB</c> instruction.
 end_comment
 
 begin_comment
@@ -4966,7 +11182,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSUBUSW / PSUBUSW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSUBUSW / PSUBUSW</c> instruction.
 end_comment
 
 begin_comment
@@ -5048,7 +11264,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPAND / PAND instruction.
+comment|/// This intrinsic corresponds to the<c> VPAND / PAND</c> instruction.
 end_comment
 
 begin_comment
@@ -5133,7 +11349,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPANDN / PANDN instruction.
+comment|/// This intrinsic corresponds to the<c> VPANDN / PANDN</c> instruction.
 end_comment
 
 begin_comment
@@ -5219,7 +11435,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPOR / POR instruction.
+comment|/// This intrinsic corresponds to the<c> VPOR / POR</c> instruction.
 end_comment
 
 begin_comment
@@ -5300,7 +11516,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPXOR / PXOR instruction.
+comment|/// This intrinsic corresponds to the<c> VPXOR / PXOR</c> instruction.
 end_comment
 
 begin_comment
@@ -5401,7 +11617,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSLLDQ / PSLLDQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPSLLDQ / PSLLDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -5421,11 +11637,11 @@ comment|/// \param imm
 end_comment
 
 begin_comment
-comment|///    An immediate value specifying the number of bytes to left-shift
+comment|///    An immediate value specifying the number of bytes to left-shift operand
 end_comment
 
 begin_comment
-comment|///    operand a.
+comment|///    \a a.
 end_comment
 
 begin_comment
@@ -5478,7 +11694,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSLLW / PSLLW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSLLW / PSLLW</c> instruction.
 end_comment
 
 begin_comment
@@ -5502,7 +11718,7 @@ comment|///    An integer value specifying the number of bits to left-shift each
 end_comment
 
 begin_comment
-comment|///    in operand __a.
+comment|///    in operand \a __a.
 end_comment
 
 begin_comment
@@ -5561,7 +11777,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSLLW / PSLLW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSLLW / PSLLW</c> instruction.
 end_comment
 
 begin_comment
@@ -5585,7 +11801,7 @@ comment|///    A 128-bit integer vector in which bits [63:0] specify the number 
 end_comment
 
 begin_comment
-comment|///    to left-shift each value in operand __a.
+comment|///    to left-shift each value in operand \a __a.
 end_comment
 
 begin_comment
@@ -5647,7 +11863,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSLLD / PSLLD instruction.
+comment|/// This intrinsic corresponds to the<c> VPSLLD / PSLLD</c> instruction.
 end_comment
 
 begin_comment
@@ -5671,7 +11887,7 @@ comment|///    An integer value specifying the number of bits to left-shift each
 end_comment
 
 begin_comment
-comment|///    in operand __a.
+comment|///    in operand \a __a.
 end_comment
 
 begin_comment
@@ -5730,7 +11946,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSLLD / PSLLD instruction.
+comment|/// This intrinsic corresponds to the<c> VPSLLD / PSLLD</c> instruction.
 end_comment
 
 begin_comment
@@ -5754,7 +11970,7 @@ comment|///    A 128-bit integer vector in which bits [63:0] specify the number 
 end_comment
 
 begin_comment
-comment|///    to left-shift each value in operand __a.
+comment|///    to left-shift each value in operand \a __a.
 end_comment
 
 begin_comment
@@ -5816,7 +12032,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSLLQ / PSLLQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPSLLQ / PSLLQ</c> instruction.
 end_comment
 
 begin_comment
@@ -5840,7 +12056,7 @@ comment|///    An integer value specifying the number of bits to left-shift each
 end_comment
 
 begin_comment
-comment|///    in operand __a.
+comment|///    in operand \a __a.
 end_comment
 
 begin_comment
@@ -5896,7 +12112,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSLLQ / PSLLQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPSLLQ / PSLLQ</c> instruction.
 end_comment
 
 begin_comment
@@ -5920,7 +12136,7 @@ comment|///    A 128-bit integer vector in which bits [63:0] specify the number 
 end_comment
 
 begin_comment
-comment|///    to left-shift each value in operand __a.
+comment|///    to left-shift each value in operand \a __a.
 end_comment
 
 begin_comment
@@ -5983,7 +12199,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRAW / PSRAW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRAW / PSRAW</c> instruction.
 end_comment
 
 begin_comment
@@ -6007,7 +12223,7 @@ comment|///    An integer value specifying the number of bits to right-shift eac
 end_comment
 
 begin_comment
-comment|///    in operand __a.
+comment|///    in operand \a __a.
 end_comment
 
 begin_comment
@@ -6070,7 +12286,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRAW / PSRAW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRAW / PSRAW</c> instruction.
 end_comment
 
 begin_comment
@@ -6094,7 +12310,7 @@ comment|///    A 128-bit integer vector in which bits [63:0] specify the number 
 end_comment
 
 begin_comment
-comment|///    to right-shift each value in operand __a.
+comment|///    to right-shift each value in operand \a __a.
 end_comment
 
 begin_comment
@@ -6160,7 +12376,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRAD / PSRAD instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRAD / PSRAD</c> instruction.
 end_comment
 
 begin_comment
@@ -6184,7 +12400,7 @@ comment|///    An integer value specifying the number of bits to right-shift eac
 end_comment
 
 begin_comment
-comment|///    in operand __a.
+comment|///    in operand \a __a.
 end_comment
 
 begin_comment
@@ -6247,7 +12463,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRAD / PSRAD instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRAD / PSRAD</c> instruction.
 end_comment
 
 begin_comment
@@ -6271,7 +12487,7 @@ comment|///    A 128-bit integer vector in which bits [63:0] specify the number 
 end_comment
 
 begin_comment
-comment|///    to right-shift each value in operand __a.
+comment|///    to right-shift each value in operand \a __a.
 end_comment
 
 begin_comment
@@ -6349,7 +12565,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRLDQ / PSRLDQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRLDQ / PSRLDQ</c> instruction.
 end_comment
 
 begin_comment
@@ -6373,7 +12589,7 @@ comment|///    An immediate value specifying the number of bytes to right-shift 
 end_comment
 
 begin_comment
-comment|///    a.
+comment|///    \a a.
 end_comment
 
 begin_comment
@@ -6426,7 +12642,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRLW / PSRLW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRLW / PSRLW</c> instruction.
 end_comment
 
 begin_comment
@@ -6450,7 +12666,7 @@ comment|///    An integer value specifying the number of bits to right-shift eac
 end_comment
 
 begin_comment
-comment|///    in operand __a.
+comment|///    in operand \a __a.
 end_comment
 
 begin_comment
@@ -6509,7 +12725,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRLW / PSRLW instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRLW / PSRLW</c> instruction.
 end_comment
 
 begin_comment
@@ -6533,7 +12749,7 @@ comment|///    A 128-bit integer vector in which bits [63:0] specify the number 
 end_comment
 
 begin_comment
-comment|///    to right-shift each value in operand __a.
+comment|///    to right-shift each value in operand \a __a.
 end_comment
 
 begin_comment
@@ -6595,7 +12811,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRLD / PSRLD instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRLD / PSRLD</c> instruction.
 end_comment
 
 begin_comment
@@ -6619,7 +12835,7 @@ comment|///    An integer value specifying the number of bits to right-shift eac
 end_comment
 
 begin_comment
-comment|///    in operand __a.
+comment|///    in operand \a __a.
 end_comment
 
 begin_comment
@@ -6678,7 +12894,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRLD / PSRLD instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRLD / PSRLD</c> instruction.
 end_comment
 
 begin_comment
@@ -6702,7 +12918,7 @@ comment|///    A 128-bit integer vector in which bits [63:0] specify the number 
 end_comment
 
 begin_comment
-comment|///    to right-shift each value in operand __a.
+comment|///    to right-shift each value in operand \a __a.
 end_comment
 
 begin_comment
@@ -6764,7 +12980,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRLQ / PSRLQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRLQ / PSRLQ</c> instruction.
 end_comment
 
 begin_comment
@@ -6788,7 +13004,7 @@ comment|///    An integer value specifying the number of bits to right-shift eac
 end_comment
 
 begin_comment
-comment|///    in operand __a.
+comment|///    in operand \a __a.
 end_comment
 
 begin_comment
@@ -6844,7 +13060,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPSRLQ / PSRLQ instruction.
+comment|/// This intrinsic corresponds to the<c> VPSRLQ / PSRLQ</c> instruction.
 end_comment
 
 begin_comment
@@ -6868,7 +13084,7 @@ comment|///    A 128-bit integer vector in which bits [63:0] specify the number 
 end_comment
 
 begin_comment
-comment|///    to right-shift each value in operand __a.
+comment|///    to right-shift each value in operand \a __a.
 end_comment
 
 begin_comment
@@ -6931,7 +13147,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCMPEQB / PCMPEQB instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPEQB / PCMPEQB</c> instruction.
 end_comment
 
 begin_comment
@@ -7016,7 +13232,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCMPEQW / PCMPEQW instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPEQW / PCMPEQW</c> instruction.
 end_comment
 
 begin_comment
@@ -7101,7 +13317,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCMPEQD / PCMPEQD instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPEQD / PCMPEQD</c> instruction.
 end_comment
 
 begin_comment
@@ -7190,7 +13406,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCMPGTB / PCMPGTB instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPGTB / PCMPGTB</c> instruction.
 end_comment
 
 begin_comment
@@ -7280,7 +13496,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCMPGTW / PCMPGTW instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPGTW / PCMPGTW</c> instruction.
 end_comment
 
 begin_comment
@@ -7369,7 +13585,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCMPGTD / PCMPGTD instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPGTD / PCMPGTD</c> instruction.
 end_comment
 
 begin_comment
@@ -7458,7 +13674,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCMPGTB / PCMPGTB instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPGTB / PCMPGTB</c> instruction.
 end_comment
 
 begin_comment
@@ -7539,7 +13755,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCMPGTW / PCMPGTW instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPGTW / PCMPGTW</c> instruction.
 end_comment
 
 begin_comment
@@ -7620,7 +13836,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VPCMPGTD / PCMPGTD instruction.
+comment|/// This intrinsic corresponds to the<c> VPCMPGTD / PCMPGTD</c> instruction.
 end_comment
 
 begin_comment
@@ -7707,7 +13923,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTSI2SD / CVTSI2SD instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTSI2SD / CVTSI2SD</c> instruction.
 end_comment
 
 begin_comment
@@ -7795,7 +14011,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTSD2SI / CVTSD2SI instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTSD2SI / CVTSD2SI</c> instruction.
 end_comment
 
 begin_comment
@@ -7863,7 +14079,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTTSD2SI / CVTTSD2SI instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTTSD2SI / CVTTSD2SI</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
 end_comment
 
 begin_comment
@@ -7932,7 +14152,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTDQ2PS / CVTDQ2PS instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTDQ2PS / CVTDQ2PS</c> instruction.
 end_comment
 
 begin_comment
@@ -7991,7 +14211,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTPS2DQ / CVTPS2DQ instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTPS2DQ / CVTPS2DQ</c> instruction.
 end_comment
 
 begin_comment
@@ -8061,7 +14281,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTTPS2DQ / CVTTPS2DQ instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTTPS2DQ / CVTTPS2DQ</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
 end_comment
 
 begin_comment
@@ -8127,7 +14351,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVD / MOVD instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVD / MOVD</c> instruction.
 end_comment
 
 begin_comment
@@ -8204,7 +14428,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVQ / MOVQ instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVQ</c> instruction.
 end_comment
 
 begin_comment
@@ -8274,7 +14498,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVD / MOVD instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVD / MOVD</c> instruction.
 end_comment
 
 begin_comment
@@ -8352,7 +14576,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVQ / MOVQ instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVQ</c> instruction.
 end_comment
 
 begin_comment
@@ -8422,7 +14646,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVDQA / MOVDQA instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVDQA / MOVDQA</c> instruction.
 end_comment
 
 begin_comment
@@ -8482,7 +14706,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVDQU / MOVDQU instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVDQU / MOVDQU</c> instruction.
 end_comment
 
 begin_comment
@@ -8566,7 +14790,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VMOVQ / MOVQ instruction.
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVQ</c> instruction.
 end_comment
 
 begin_comment
@@ -9927,6 +16151,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 128-bit integer vector, initialized in reverse order
+end_comment
+
+begin_comment
+comment|///     with the specified 64-bit integral values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPUNPCKLQDQ / PUNPCKLQDQ</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __q0
+end_comment
+
+begin_comment
+comment|///    A 64-bit integral value used to initialize the lower 64 bits of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \param __q1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integral value used to initialize the upper 64 bits of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit integer vector.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -9961,6 +16245,74 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 128-bit integer vector, initialized in reverse order
+end_comment
+
+begin_comment
+comment|///     with the specified 32-bit integral values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __i0
+end_comment
+
+begin_comment
+comment|///    A 32-bit integral value used to initialize bits [31:0] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __i1
+end_comment
+
+begin_comment
+comment|///    A 32-bit integral value used to initialize bits [63:32] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __i2
+end_comment
+
+begin_comment
+comment|///    A 32-bit integral value used to initialize bits [95:64] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __i3
+end_comment
+
+begin_comment
+comment|///    A 32-bit integral value used to initialize bits [127:96] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit integer vector.
+end_comment
 
 begin_function
 specifier|static
@@ -10001,6 +16353,106 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 128-bit integer vector, initialized in reverse order
+end_comment
+
+begin_comment
+comment|///     with the specified 16-bit integral values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __w0
+end_comment
+
+begin_comment
+comment|///    A 16-bit integral value used to initialize bits [15:0] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w1
+end_comment
+
+begin_comment
+comment|///    A 16-bit integral value used to initialize bits [31:16] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w2
+end_comment
+
+begin_comment
+comment|///    A 16-bit integral value used to initialize bits [47:32] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w3
+end_comment
+
+begin_comment
+comment|///    A 16-bit integral value used to initialize bits [63:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w4
+end_comment
+
+begin_comment
+comment|///    A 16-bit integral value used to initialize bits [79:64] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w5
+end_comment
+
+begin_comment
+comment|///    A 16-bit integral value used to initialize bits [95:80] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w6
+end_comment
+
+begin_comment
+comment|///    A 16-bit integral value used to initialize bits [111:96] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w7
+end_comment
+
+begin_comment
+comment|///    A 16-bit integral value used to initialize bits [127:112] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit integer vector.
+end_comment
 
 begin_function
 specifier|static
@@ -10061,6 +16513,170 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 128-bit integer vector, initialized in reverse order
+end_comment
+
+begin_comment
+comment|///     with the specified 8-bit integral values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __b0
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [7:0] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b1
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [15:8] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b2
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [23:16] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b3
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [31:24] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b4
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [39:32] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b5
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [47:40] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b6
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [55:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b7
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [63:56] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b8
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [71:64] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b9
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [79:72] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b10
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [87:80] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b11
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [95:88] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b12
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [103:96] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b13
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [111:104] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b14
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [119:112] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b15
+end_comment
+
+begin_comment
+comment|///    An 8-bit integral value used to initialize bits [127:120] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit integer vector.
+end_comment
 
 begin_function
 specifier|static
@@ -10162,6 +16778,38 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Creates a 128-bit integer vector initialized to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VXORPS / XORPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 128-bit integer vector with all elements set to
+end_comment
+
+begin_comment
+comment|///    zero.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10185,6 +16833,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Stores a 128-bit integer vector to a memory location aligned on a
+end_comment
+
+begin_comment
+comment|///    128-bit boundary.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVAPS / MOVAPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to an aligned memory location that will receive the integer
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values to be moved.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10207,6 +16903,46 @@ name|__b
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Stores a 128-bit integer vector to an unaligned memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVUPS / MOVUPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to a memory location that will receive the integer values.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values to be moved.
+end_comment
 
 begin_function
 specifier|static
@@ -10255,6 +16991,86 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Moves bytes selected by the mask from the first operand to the
+end_comment
+
+begin_comment
+comment|///    specified unaligned memory location. When a mask bit is 1, the
+end_comment
+
+begin_comment
+comment|///    corresponding byte is written, otherwise it is not written. To minimize
+end_comment
+
+begin_comment
+comment|///    caching, the date is flagged as non-temporal (unlikely to be used again
+end_comment
+
+begin_comment
+comment|///    soon). Exception and trap behavior for elements not selected for storage
+end_comment
+
+begin_comment
+comment|///    to memory are implementation dependent.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMASKMOVDQU / MASKMOVDQU</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __d
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values to be moved.
+end_comment
+
+begin_comment
+comment|/// \param __n
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the mask. The most significant bit of
+end_comment
+
+begin_comment
+comment|///    each byte represents the mask bits.
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to an unaligned 128-bit memory location where the specified
+end_comment
+
+begin_comment
+comment|///    values are moved.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10290,6 +17106,58 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Stores the lower 64 bits of a 128-bit integer vector of [2 x i64] to
+end_comment
+
+begin_comment
+comment|///    a memory location.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVLPS / MOVLPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to a 64-bit memory location that will receive the lower 64 bits
+end_comment
+
+begin_comment
+comment|///    of the integer vector parameter.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [2 x i64]. The lower 64 bits contain the
+end_comment
+
+begin_comment
+comment|///    value to be stored.
+end_comment
 
 begin_function
 specifier|static
@@ -10342,6 +17210,54 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Stores a 128-bit floating point vector of [2 x double] to a 128-bit
+end_comment
+
+begin_comment
+comment|///    aligned memory location. To minimize caching, the data is flagged as
+end_comment
+
+begin_comment
+comment|///    non-temporal (unlikely to be used again soon).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVNTPS / MOVNTPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to the 128-bit aligned memory location used to store the value.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A vector of [2 x double] containing the 64-bit values to be stored.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10373,6 +17289,54 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Stores a 128-bit integer vector to a 128-bit aligned memory location.
+end_comment
+
+begin_comment
+comment|///    To minimize caching, the data is flagged as non-temporal (unlikely to be
+end_comment
+
+begin_comment
+comment|///    used again soon).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVNTPS / MOVNTPS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to the 128-bit aligned memory location used to store the value.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values to be stored.
+end_comment
 
 begin_function
 specifier|static
@@ -10406,6 +17370,54 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Stores a 32-bit integer value in the specified memory location. To
+end_comment
+
+begin_comment
+comment|///    minimize caching, the data is flagged as non-temporal (unlikely to be
+end_comment
+
+begin_comment
+comment|///    used again soon).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> MOVNTI</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to the 32-bit memory location used to store the value.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer containing the value to be stored.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10436,6 +17448,54 @@ ifdef|#
 directive|ifdef
 name|__x86_64__
 end_ifdef
+
+begin_comment
+comment|/// \brief Stores a 64-bit integer value in the specified memory location. To
+end_comment
+
+begin_comment
+comment|///    minimize caching, the data is flagged as non-temporal (unlikely to be
+end_comment
+
+begin_comment
+comment|///    used again soon).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> MOVNTIQ</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to the 64-bit memory location used to store the value.
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer containing the value to be stored.
+end_comment
 
 begin_function
 specifier|static
@@ -10469,58 +17529,174 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-specifier|static
-name|__inline__
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/// \brief The cache line containing \a __p is flushed and invalidated from all
+comment|///    caches in the coherency domain.
+comment|///
+comment|/// \headerfile<x86intrin.h>
+comment|///
+comment|/// This intrinsic corresponds to the<c> CLFLUSH</c> instruction.
+comment|///
+comment|/// \param __p
+comment|///    A pointer to the memory location used to identify the cache line to be
+comment|///    flushed.
 name|void
-name|__DEFAULT_FN_ATTRS
 name|_mm_clflush
 parameter_list|(
 name|void
 specifier|const
 modifier|*
-name|__p
 parameter_list|)
-block|{
-name|__builtin_ia32_clflush
-argument_list|(
-name|__p
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline__
+function_decl|;
+comment|/// \brief Forces strong memory ordering (serialization) between load
+comment|///    instructions preceding this instruction and load instructions following
+comment|///    this instruction, ensuring the system completes all previous loads before
+comment|///    executing subsequent loads.
+comment|///
+comment|/// \headerfile<x86intrin.h>
+comment|///
+comment|/// This intrinsic corresponds to the<c> LFENCE</c> instruction.
+comment|///
 name|void
-name|__DEFAULT_FN_ATTRS
 name|_mm_lfence
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|__builtin_ia32_lfence
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline__
+function_decl|;
+comment|/// \brief Forces strong memory ordering (serialization) between load and store
+comment|///    instructions preceding this instruction and load and store instructions
+comment|///    following this instruction, ensuring that the system completes all
+comment|///    previous memory accesses before executing subsequent memory accesses.
+comment|///
+comment|/// \headerfile<x86intrin.h>
+comment|///
+comment|/// This intrinsic corresponds to the<c> MFENCE</c> instruction.
+comment|///
 name|void
-name|__DEFAULT_FN_ATTRS
 name|_mm_mfence
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|__builtin_ia32_mfence
-argument_list|()
-expr_stmt|;
+function_decl|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
 block|}
-end_function
+end_extern
+
+begin_comment
+comment|// extern "C"
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \brief Converts 16-bit signed integers from both 128-bit integer vector
+end_comment
+
+begin_comment
+comment|///    operands into 8-bit signed integers, and packs the results into the
+end_comment
+
+begin_comment
+comment|///    destination. Positive values greater than 0x7F are saturated to 0x7F.
+end_comment
+
+begin_comment
+comment|///    Negative values less than 0x80 are saturated to 0x80.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPACKSSWB / PACKSSWB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///   A 128-bit integer vector of [8 x i16]. Each 16-bit element is treated as
+end_comment
+
+begin_comment
+comment|///   a signed integer and is converted to a 8-bit signed integer with
+end_comment
+
+begin_comment
+comment|///   saturation. Values greater than 0x7F are saturated to 0x7F. Values less
+end_comment
+
+begin_comment
+comment|///   than 0x80 are saturated to 0x80. The converted [8 x i8] values are
+end_comment
+
+begin_comment
+comment|///   written to the lower 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///   A 128-bit integer vector of [8 x i16]. Each 16-bit element is treated as
+end_comment
+
+begin_comment
+comment|///   a signed integer and is converted to a 8-bit signed integer with
+end_comment
+
+begin_comment
+comment|///   saturation. Values greater than 0x7F are saturated to 0x7F. Values less
+end_comment
+
+begin_comment
+comment|///   than 0x80 are saturated to 0x80. The converted [8 x i8] values are
+end_comment
+
+begin_comment
+comment|///   written to the higher 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [16 x i8] containing the converted values.
+end_comment
 
 begin_function
 specifier|static
@@ -10556,6 +17732,94 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts 32-bit signed integers from both 128-bit integer vector
+end_comment
+
+begin_comment
+comment|///    operands into 16-bit signed integers, and packs the results into the
+end_comment
+
+begin_comment
+comment|///    destination. Positive values greater than 0x7FFF are saturated to 0x7FFF.
+end_comment
+
+begin_comment
+comment|///    Negative values less than 0x8000 are saturated to 0x8000.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPACKSSDW / PACKSSDW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [4 x i32]. Each 32-bit element is treated as
+end_comment
+
+begin_comment
+comment|///    a signed integer and is converted to a 16-bit signed integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Values greater than 0x7FFF are saturated to 0x7FFF. Values
+end_comment
+
+begin_comment
+comment|///    less than 0x8000 are saturated to 0x8000. The converted [4 x i16] values
+end_comment
+
+begin_comment
+comment|///    are written to the lower 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [4 x i32]. Each 32-bit element is treated as
+end_comment
+
+begin_comment
+comment|///    a signed integer and is converted to a 16-bit signed integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Values greater than 0x7FFF are saturated to 0x7FFF. Values
+end_comment
+
+begin_comment
+comment|///    less than 0x8000 are saturated to 0x8000. The converted [4 x i16] values
+end_comment
+
+begin_comment
+comment|///    are written to the higher 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [8 x i16] containing the converted values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10590,6 +17854,94 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts 16-bit signed integers from both 128-bit integer vector
+end_comment
+
+begin_comment
+comment|///    operands into 8-bit unsigned integers, and packs the results into the
+end_comment
+
+begin_comment
+comment|///    destination. Values greater than 0xFF are saturated to 0xFF. Values less
+end_comment
+
+begin_comment
+comment|///    than 0x00 are saturated to 0x00.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPACKUSWB / PACKUSWB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [8 x i16]. Each 16-bit element is treated as
+end_comment
+
+begin_comment
+comment|///    a signed integer and is converted to an 8-bit unsigned integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Values greater than 0xFF are saturated to 0xFF. Values less
+end_comment
+
+begin_comment
+comment|///    than 0x00 are saturated to 0x00. The converted [8 x i8] values are
+end_comment
+
+begin_comment
+comment|///    written to the lower 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [8 x i16]. Each 16-bit element is treated as
+end_comment
+
+begin_comment
+comment|///    a signed integer and is converted to an 8-bit unsigned integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Values greater than 0xFF are saturated to 0xFF. Values less
+end_comment
+
+begin_comment
+comment|///    than 0x00 are saturated to 0x00. The converted [8 x i8] values are
+end_comment
+
+begin_comment
+comment|///    written to the higher 64 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [16 x i8] containing the converted values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10623,6 +17975,94 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Extracts 16 bits from a 128-bit integer vector of [8 x i16], using
+end_comment
+
+begin_comment
+comment|///    the immediate-value parameter as a selector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPEXTRW / PEXTRW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate value. Bits [3:0] selects values from \a __a to be assigned
+end_comment
+
+begin_comment
+comment|///    to bits[15:0] of the result. \n
+end_comment
+
+begin_comment
+comment|///    000: assign values from bits [15:0] of \a __a. \n
+end_comment
+
+begin_comment
+comment|///    001: assign values from bits [31:16] of \a __a. \n
+end_comment
+
+begin_comment
+comment|///    010: assign values from bits [47:32] of \a __a. \n
+end_comment
+
+begin_comment
+comment|///    011: assign values from bits [63:48] of \a __a. \n
+end_comment
+
+begin_comment
+comment|///    100: assign values from bits [79:64] of \a __a. \n
+end_comment
+
+begin_comment
+comment|///    101: assign values from bits [95:80] of \a __a. \n
+end_comment
+
+begin_comment
+comment|///    110: assign values from bits [111:96] of \a __a. \n
+end_comment
+
+begin_comment
+comment|///    111: assign values from bits [127:112] of \a __a.
+end_comment
+
+begin_comment
+comment|/// \returns An integer, whose lower 16 bits are selected from the 128-bit
+end_comment
+
+begin_comment
+comment|///    integer vector parameter and the remaining bits are assigned zeros.
+end_comment
 
 begin_function
 specifier|static
@@ -10660,6 +18100,86 @@ index|]
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 128-bit integer vector by first making a copy of the
+end_comment
+
+begin_comment
+comment|///    128-bit integer vector parameter, and then inserting the lower 16 bits
+end_comment
+
+begin_comment
+comment|///    of an integer parameter into an offset specified by the immediate-value
+end_comment
+
+begin_comment
+comment|///    parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPINSRW / PINSRW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [8 x i16]. This vector is copied to the
+end_comment
+
+begin_comment
+comment|///    result and then one of the eight elements in the result is replaced by
+end_comment
+
+begin_comment
+comment|///    the lower 16 bits of \a __b.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    An integer. The lower 16 bits of this parameter are written to the
+end_comment
+
+begin_comment
+comment|///    result beginning at an offset specified by \a __imm.
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate value specifying the bit offset in the result at which the
+end_comment
+
+begin_comment
+comment|///    lower 16 bits of \a __b are written.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the constructed values.
+end_comment
 
 begin_function
 specifier|static
@@ -10704,6 +18224,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Copies the values of the most significant bits from each 8-bit
+end_comment
+
+begin_comment
+comment|///    element in a 128-bit integer vector of [16 x i8] to create a 16-bit mask
+end_comment
+
+begin_comment
+comment|///    value, zero-extends the value, and writes it to the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPMOVMSKB / PMOVMSKB</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values with bits to be extracted.
+end_comment
+
+begin_comment
+comment|/// \returns The most significant bits from each 8-bit element in \a __a,
+end_comment
+
+begin_comment
+comment|///    written to bits [15:0]. The other bits are assigned zeros.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10727,6 +18295,118 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 128-bit integer vector by shuffling four 32-bit
+end_comment
+
+begin_comment
+comment|///    elements of a 128-bit integer vector parameter, using the immediate-value
+end_comment
+
+begin_comment
+comment|///    parameter as a specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128i _mm_shuffle_epi32(__m128i a, const int imm);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPSHUFD / PSHUFD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values to be copied.
+end_comment
+
+begin_comment
+comment|/// \param imm
+end_comment
+
+begin_comment
+comment|///    An immediate value containing an 8-bit value specifying which elements to
+end_comment
+
+begin_comment
+comment|///    copy from a. The destinations within the 128-bit destination are assigned
+end_comment
+
+begin_comment
+comment|///    values as follows: \n
+end_comment
+
+begin_comment
+comment|///    Bits [1:0] are used to assign values to bits [31:0] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [3:2] are used to assign values to bits [63:32] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [5:4] are used to assign values to bits [95:64] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [7:6] are used to assign values to bits [127:96] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bit value assignments: \n
+end_comment
+
+begin_comment
+comment|///    00: assign values from bits [31:0] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    01: assign values from bits [63:32] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    10: assign values from bits [95:64] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    11: assign values from bits [127:96] of \a a.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the shuffled values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10738,6 +18418,114 @@ name|imm
 parameter_list|)
 value|__extension__ ({ \   (__m128i)__builtin_shufflevector((__v4si)(__m128i)(a), \                                    (__v4si)_mm_undefined_si128(), \                                    ((imm)>> 0)& 0x3, ((imm)>> 2)& 0x3, \                                    ((imm)>> 4)& 0x3, ((imm)>> 6)& 0x3); })
 end_define
+
+begin_comment
+comment|/// \brief Constructs a 128-bit integer vector by shuffling four lower 16-bit
+end_comment
+
+begin_comment
+comment|///    elements of a 128-bit integer vector of [8 x i16], using the immediate
+end_comment
+
+begin_comment
+comment|///    value parameter as a specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128i _mm_shufflelo_epi16(__m128i a, const int imm);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPSHUFLW / PSHUFLW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [8 x i16]. Bits [127:64] are copied to bits
+end_comment
+
+begin_comment
+comment|///    [127:64] of the result.
+end_comment
+
+begin_comment
+comment|/// \param imm
+end_comment
+
+begin_comment
+comment|///    An 8-bit immediate value specifying which elements to copy from \a a. \n
+end_comment
+
+begin_comment
+comment|///    Bits[1:0] are used to assign values to bits [15:0] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits[3:2] are used to assign values to bits [31:16] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits[5:4] are used to assign values to bits [47:32] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits[7:6] are used to assign values to bits [63:48] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bit value assignments: \n
+end_comment
+
+begin_comment
+comment|///    00: assign values from bits [15:0] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    01: assign values from bits [31:16] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    10: assign values from bits [47:32] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    11: assign values from bits [63:48] of \a a. \n
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the shuffled values.
+end_comment
 
 begin_define
 define|#
@@ -10751,6 +18539,114 @@ parameter_list|)
 value|__extension__ ({ \   (__m128i)__builtin_shufflevector((__v8hi)(__m128i)(a), \                                    (__v8hi)_mm_undefined_si128(), \                                    ((imm)>> 0)& 0x3, ((imm)>> 2)& 0x3, \                                    ((imm)>> 4)& 0x3, ((imm)>> 6)& 0x3, \                                    4, 5, 6, 7); })
 end_define
 
+begin_comment
+comment|/// \brief Constructs a 128-bit integer vector by shuffling four upper 16-bit
+end_comment
+
+begin_comment
+comment|///    elements of a 128-bit integer vector of [8 x i16], using the immediate
+end_comment
+
+begin_comment
+comment|///    value parameter as a specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128i _mm_shufflehi_epi16(__m128i a, const int imm);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPSHUFHW / PSHUFHW</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [8 x i16]. Bits [63:0] are copied to bits
+end_comment
+
+begin_comment
+comment|///    [63:0] of the result.
+end_comment
+
+begin_comment
+comment|/// \param imm
+end_comment
+
+begin_comment
+comment|///    An 8-bit immediate value specifying which elements to copy from \a a. \n
+end_comment
+
+begin_comment
+comment|///    Bits[1:0] are used to assign values to bits [79:64] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits[3:2] are used to assign values to bits [95:80] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits[5:4] are used to assign values to bits [111:96] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits[7:6] are used to assign values to bits [127:112] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bit value assignments: \n
+end_comment
+
+begin_comment
+comment|///    00: assign values from bits [79:64] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    01: assign values from bits [95:80] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    10: assign values from bits [111:96] of \a a. \n
+end_comment
+
+begin_comment
+comment|///    11: assign values from bits [127:112] of \a a. \n
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the shuffled values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10762,6 +18658,122 @@ name|imm
 parameter_list|)
 value|__extension__ ({ \   (__m128i)__builtin_shufflevector((__v8hi)(__m128i)(a), \                                    (__v8hi)_mm_undefined_si128(), \                                    0, 1, 2, 3, \                                    4 + (((imm)>> 0)& 0x3), \                                    4 + (((imm)>> 2)& 0x3), \                                    4 + (((imm)>> 4)& 0x3), \                                    4 + (((imm)>> 6)& 0x3)); })
 end_define
+
+begin_comment
+comment|/// \brief Unpacks the high-order (index 8-15) values from two 128-bit vectors
+end_comment
+
+begin_comment
+comment|///    of [16 x i8] and interleaves them into a 128-bit vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPUNPCKHBW / PUNPCKHBW</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|///    Bits [71:64] are written to bits [7:0] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [79:72] are written to bits [23:16] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [87:80] are written to bits [39:32] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [95:88] are written to bits [55:48] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [103:96] are written to bits [71:64] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [111:104] are written to bits [87:80] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [119:112] are written to bits [103:96] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:120] are written to bits [119:112] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [16 x i8]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [71:64] are written to bits [15:8] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [79:72] are written to bits [31:24] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [87:80] are written to bits [47:40] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [95:88] are written to bits [63:56] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [103:96] are written to bits [79:72] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [111:104] are written to bits [95:88] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [119:112] are written to bits [111:104] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:120] are written to bits [127:120] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [16 x i8] containing the interleaved values.
+end_comment
 
 begin_function
 specifier|static
@@ -10845,6 +18857,90 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the high-order (index 4-7) values from two 128-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [8 x i16] and interleaves them into a 128-bit vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPUNPCKHWD / PUNPCKHWD</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|///    Bits [79:64] are written to bits [15:0] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [95:80] are written to bits [47:32] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [111:96] are written to bits [79:64] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:112] are written to bits [111:96] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|///    Bits [79:64] are written to bits [31:16] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [95:80] are written to bits [63:48] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [111:96] are written to bits [95:80] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:112] are written to bits [127:112] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [8 x i16] containing the interleaved values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10903,6 +18999,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the high-order (index 2,3) values from two 128-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [4 x i32] and interleaves them into a 128-bit vector of [4 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPUNPCKHDQ / PUNPCKHDQ</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [95:64] are written to bits [31:0] of the destination. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:96] are written to bits [95:64] of the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [95:64] are written to bits [64:32] of the destination. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:96] are written to bits [127:96] of the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x i32] containing the interleaved values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10949,6 +19113,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the high-order (odd-indexed) values from two 128-bit vectors
+end_comment
+
+begin_comment
+comment|///    of [2 x i64] and interleaves them into a 128-bit vector of [2 x i64].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPUNPCKHQDQ / PUNPCKHQDQ</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x i64]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:64] are written to bits [63:0] of the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x i64]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:64] are written to bits [127:64] of the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x i64] containing the interleaved values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -10988,6 +19212,122 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Unpacks the low-order (index 0-7) values from two 128-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [16 x i8] and interleaves them into a 128-bit vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPUNPCKLBW / PUNPCKLBW</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [16 x i8]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [7:0] are written to bits [7:0] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [15:8] are written to bits [23:16] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [23:16] are written to bits [39:32] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [31:24] are written to bits [55:48] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [39:32] are written to bits [71:64] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [47:40] are written to bits [87:80] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [55:48] are written to bits [103:96] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:56] are written to bits [119:112] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|///    Bits [7:0] are written to bits [15:8] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [15:8] are written to bits [31:24] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [23:16] are written to bits [47:40] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [31:24] are written to bits [63:56] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [39:32] are written to bits [79:72] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [47:40] are written to bits [95:88] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [55:48] are written to bits [111:104] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:56] are written to bits [127:120] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [16 x i8] containing the interleaved values.
+end_comment
 
 begin_function
 specifier|static
@@ -11071,6 +19411,94 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the low-order (index 0-3) values from each of the two 128-bit
+end_comment
+
+begin_comment
+comment|///    vectors of [8 x i16] and interleaves them into a 128-bit vector of
+end_comment
+
+begin_comment
+comment|///    [8 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPUNPCKLWD / PUNPCKLWD</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|///    Bits [15:0] are written to bits [15:0] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [31:16] are written to bits [47:32] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [47:32] are written to bits [79:64] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:48] are written to bits [111:96] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|///    Bits [15:0] are written to bits [31:16] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [31:16] are written to bits [63:48] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [47:32] are written to bits [95:80] of the result. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:48] are written to bits [127:112] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [8 x i16] containing the interleaved values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -11129,6 +19557,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the low-order (index 0,1) values from two 128-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [4 x i32] and interleaves them into a 128-bit vector of [4 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPUNPCKLDQ / PUNPCKLDQ</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [31:0] are written to bits [31:0] of the destination. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:32] are written to bits [95:64] of the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [31:0] are written to bits [64:32] of the destination. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:32] are written to bits [127:96] of the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x i32] containing the interleaved values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -11175,6 +19671,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the low-order 64-bit elements from two 128-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [2 x i64] and interleaves them into a 128-bit vector of [2 x i64].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VPUNPCKLQDQ / PUNPCKLQDQ</c>
+end_comment
+
+begin_comment
+comment|///   instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x i64]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:0] are written to bits [63:0] of the destination. \n
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x i64]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:0] are written to bits [127:64] of the destination. \n
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x i64] containing the interleaved values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -11215,6 +19771,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Returns the lower 64 bits of a 128-bit integer vector as a 64-bit
+end_comment
+
+begin_comment
+comment|///    integer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector operand. The lower 64 bits are moved to the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer containing the lower 64 bits of the parameter.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -11237,6 +19837,50 @@ index|]
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Moves the 64-bit operand to a 128-bit integer vector, zeroing the
+end_comment
+
+begin_comment
+comment|///    upper bits.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVQ / MOVD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit value.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector. The lower 64 bits contain the value from
+end_comment
+
+begin_comment
+comment|///    the operand. The upper 64 bits are assigned zeros.
+end_comment
 
 begin_function
 specifier|static
@@ -11265,6 +19909,54 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Moves the lower 64 bits of a 128-bit integer vector to a 128-bit
+end_comment
+
+begin_comment
+comment|///    integer vector, zeroing the upper bits.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVQ / MOVQ</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector operand. The lower 64 bits are moved to the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector. The lower 64 bits contain the value from
+end_comment
+
+begin_comment
+comment|///    the operand. The upper 64 bits are assigned zeros.
+end_comment
 
 begin_function
 specifier|static
@@ -11299,6 +19991,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Unpacks the high-order (odd-indexed) values from two 128-bit vectors
+end_comment
+
+begin_comment
+comment|///    of [2 x double] and interleaves them into a 128-bit vector of [2 x
+end_comment
+
+begin_comment
+comment|///    double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUNPCKHPD / UNPCKHPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:64] are written to bits [63:0] of the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [127:64] are written to bits [127:64] of the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the interleaved values.
+end_comment
 
 begin_function
 specifier|static
@@ -11337,6 +20089,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the low-order (even-indexed) values from two 128-bit vectors
+end_comment
+
+begin_comment
+comment|///    of [2 x double] and interleaves them into a 128-bit vector of [2 x
+end_comment
+
+begin_comment
+comment|///    double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VUNPCKLPD / UNPCKLPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:0] are written to bits [63:0] of the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double]. \n
+end_comment
+
+begin_comment
+comment|///    Bits [63:0] are written to bits [127:64] of the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the interleaved values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -11374,6 +20186,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Extracts the sign bits of the double-precision values in the 128-bit
+end_comment
+
+begin_comment
+comment|///    vector of [2 x double], zero-extends the value, and writes it to the
+end_comment
+
+begin_comment
+comment|///    low-order bits of the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VMOVMSKPD / MOVMSKPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double] containing the values with sign bits to
+end_comment
+
+begin_comment
+comment|///    be extracted.
+end_comment
+
+begin_comment
+comment|/// \returns The sign bits from each of the double-precision elements in \a __a,
+end_comment
+
+begin_comment
+comment|///    written to bits [1:0]. The remaining bits are assigned values of zero.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -11397,6 +20261,102 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 128-bit floating-point vector of [2 x double] from two
+end_comment
+
+begin_comment
+comment|///    128-bit vector parameters of [2 x double], using the immediate-value
+end_comment
+
+begin_comment
+comment|///     parameter as a specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128d _mm_shuffle_pd(__m128d a, __m128d b, const int i);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VSHUFPD / SHUFPD</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param i
+end_comment
+
+begin_comment
+comment|///    An 8-bit immediate value. The least significant two bits specify which
+end_comment
+
+begin_comment
+comment|///    elements to copy from a and b: \n
+end_comment
+
+begin_comment
+comment|///    Bit[0] = 0: lower element of a copied to lower element of result. \n
+end_comment
+
+begin_comment
+comment|///    Bit[0] = 1: upper element of a copied to lower element of result. \n
+end_comment
+
+begin_comment
+comment|///    Bit[1] = 0: lower element of \a b copied to upper element of result. \n
+end_comment
+
+begin_comment
+comment|///    Bit[1] = 1: upper element of \a b copied to upper element of result. \n
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the shuffled values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11410,6 +20370,50 @@ name|i
 parameter_list|)
 value|__extension__ ({ \   (__m128d)__builtin_shufflevector((__v2df)(__m128d)(a), (__v2df)(__m128d)(b), \                                    0 + (((i)>> 0)& 0x1), \                                    2 + (((i)>> 1)& 0x1)); })
 end_define
+
+begin_comment
+comment|/// \brief Casts a 128-bit floating-point vector of [2 x double] into a 128-bit
+end_comment
+
+begin_comment
+comment|///    floating-point vector of [4 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit floating-point vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit floating-point vector of [4 x float] containing the same
+end_comment
+
+begin_comment
+comment|///    bitwise pattern as the parameter.
+end_comment
 
 begin_function
 specifier|static
@@ -11431,6 +20435,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Casts a 128-bit floating-point vector of [2 x double] into a 128-bit
+end_comment
+
+begin_comment
+comment|///    integer vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit floating-point vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the same bitwise pattern as the
+end_comment
+
+begin_comment
+comment|///    parameter.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -11450,6 +20498,50 @@ name|__a
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Casts a 128-bit floating-point vector of [4 x float] into a 128-bit
+end_comment
+
+begin_comment
+comment|///    floating-point vector of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit floating-point vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit floating-point vector of [2 x double] containing the same
+end_comment
+
+begin_comment
+comment|///    bitwise pattern as the parameter.
+end_comment
 
 begin_function
 specifier|static
@@ -11471,6 +20563,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Casts a 128-bit floating-point vector of [4 x float] into a 128-bit
+end_comment
+
+begin_comment
+comment|///    integer vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit floating-point vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the same bitwise pattern as the
+end_comment
+
+begin_comment
+comment|///    parameter.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -11490,6 +20626,50 @@ name|__a
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Casts a 128-bit integer vector into a 128-bit floating-point vector
+end_comment
+
+begin_comment
+comment|///    of [4 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit floating-point vector of [4 x float] containing the same
+end_comment
+
+begin_comment
+comment|///    bitwise pattern as the parameter.
+end_comment
 
 begin_function
 specifier|static
@@ -11511,6 +20691,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Casts a 128-bit integer vector into a 128-bit floating-point vector
+end_comment
+
+begin_comment
+comment|///    of [2 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic has no corresponding instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit floating-point vector of [2 x double] containing the same
+end_comment
+
+begin_comment
+comment|///    bitwise pattern as the parameter.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -11531,21 +20755,51 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline__
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/// \brief Indicates that a spin loop is being executed for the purposes of
+comment|///    optimizing power consumption during the loop.
+comment|///
+comment|/// \headerfile<x86intrin.h>
+comment|///
+comment|/// This intrinsic corresponds to the<c> PAUSE</c> instruction.
+comment|///
 name|void
-name|__DEFAULT_FN_ATTRS
 name|_mm_pause
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|__builtin_ia32_pause
-argument_list|()
-expr_stmt|;
+function_decl|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
 block|}
-end_function
+end_extern
+
+begin_comment
+comment|// extern "C"
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#

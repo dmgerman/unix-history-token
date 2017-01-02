@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx512dq -target-feature +avx512vl -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +avx512dq -target-feature +avx512vl -emit-llvm -o - -Wall -Werror | FileCheck %s
 end_comment
-
-begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#
@@ -61,7 +51,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_mullo_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmull.q.256
+comment|// CHECK: mul<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 operator|(
 name|__m256i
@@ -95,7 +86,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_mullo_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmull.q.256
+comment|// CHECK: mul<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 operator|(
 name|__m256i
@@ -157,7 +149,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_mullo_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmull.q.128
+comment|// CHECK: mul<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 operator|(
 name|__m128i
@@ -191,7 +184,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_mullo_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmull.q.128
+comment|// CHECK: mul<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 operator|(
 name|__m128i
@@ -226,7 +220,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_andnot_pd
-comment|// CHECK: @llvm.x86.avx512.mask.andn.pd.256
+comment|// CHECK: xor<4 x i64> %{{.*}},<i64 -1, i64 -1, i64 -1, i64 -1>
+comment|// CHECK: and<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 operator|(
 name|__m256d
@@ -260,7 +256,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_andnot_pd
-comment|// CHECK: @llvm.x86.avx512.mask.andn.pd.256
+comment|// CHECK: xor<4 x i64> %{{.*}},<i64 -1, i64 -1, i64 -1, i64 -1>
+comment|// CHECK: and<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 operator|(
 name|__m256d
@@ -295,7 +293,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_andnot_pd
-comment|// CHECK: @llvm.x86.avx512.mask.andn.pd.128
+comment|// CHECK: xor<2 x i64> %{{.*}},<i64 -1, i64 -1>
+comment|// CHECK: and<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 operator|(
 name|__m128d
@@ -329,7 +329,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_andnot_pd
-comment|// CHECK: @llvm.x86.avx512.mask.andn.pd.128
+comment|// CHECK: xor<2 x i64> %{{.*}},<i64 -1, i64 -1>
+comment|// CHECK: and<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 operator|(
 name|__m128d
@@ -364,7 +366,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_andnot_ps
-comment|// CHECK: @llvm.x86.avx512.mask.andn.ps.256
+comment|// CHECK: xor<8 x i32> %{{.*}},<i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: and<8 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 operator|(
 name|__m256
@@ -398,7 +402,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_andnot_ps
-comment|// CHECK: @llvm.x86.avx512.mask.andn.ps.256
+comment|// CHECK: xor<8 x i32> %{{.*}},<i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: and<8 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 operator|(
 name|__m256
@@ -433,7 +439,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_andnot_ps
-comment|// CHECK: @llvm.x86.avx512.mask.andn.ps.128
+comment|// CHECK: xor<4 x i32> %{{.*}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: and<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 operator|(
 name|__m128
@@ -467,7 +475,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_andnot_ps
-comment|// CHECK: @llvm.x86.avx512.mask.andn.ps.128
+comment|// CHECK: xor<4 x i32> %{{.*}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: and<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 operator|(
 name|__m128
@@ -502,7 +512,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_and_pd
-comment|// CHECK: @llvm.x86.avx512.mask.and.pd.256
+comment|// CHECK: and<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 operator|(
 name|__m256d
@@ -536,7 +547,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_and_pd
-comment|// CHECK: @llvm.x86.avx512.mask.and.pd.256
+comment|// CHECK: and<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 operator|(
 name|__m256d
@@ -571,7 +583,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_and_pd
-comment|// CHECK: @llvm.x86.avx512.mask.and.pd.128
+comment|// CHECK: and<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 operator|(
 name|__m128d
@@ -605,7 +618,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_and_pd
-comment|// CHECK: @llvm.x86.avx512.mask.and.pd.128
+comment|// CHECK: and<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 operator|(
 name|__m128d
@@ -640,7 +654,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_and_ps
-comment|// CHECK: @llvm.x86.avx512.mask.and.ps.256
+comment|// CHECK: and<8 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 operator|(
 name|__m256
@@ -674,7 +689,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_and_ps
-comment|// CHECK: @llvm.x86.avx512.mask.and.ps.256
+comment|// CHECK: and<8 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 operator|(
 name|__m256
@@ -709,7 +725,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_and_ps
-comment|// CHECK: @llvm.x86.avx512.mask.and.ps.128
+comment|// CHECK: and<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 operator|(
 name|__m128
@@ -743,7 +760,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_and_ps
-comment|// CHECK: @llvm.x86.avx512.mask.and.ps.128
+comment|// CHECK: and<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 operator|(
 name|__m128
@@ -778,7 +796,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_xor_pd
-comment|// CHECK: @llvm.x86.avx512.mask.xor.pd.256
+comment|// CHECK: xor<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 operator|(
 name|__m256d
@@ -812,7 +831,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_xor_pd
-comment|// CHECK: @llvm.x86.avx512.mask.xor.pd.256
+comment|// CHECK: xor<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 operator|(
 name|__m256d
@@ -847,7 +867,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_xor_pd
-comment|// CHECK: @llvm.x86.avx512.mask.xor.pd.128
+comment|// CHECK: xor<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 operator|(
 name|__m128d
@@ -881,7 +902,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_xor_pd
-comment|// CHECK: @llvm.x86.avx512.mask.xor.pd.128
+comment|// CHECK: xor<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 operator|(
 name|__m128d
@@ -916,7 +938,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_xor_ps
-comment|// CHECK: @llvm.x86.avx512.mask.xor.ps.256
+comment|// CHECK: xor<8 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 operator|(
 name|__m256
@@ -950,7 +973,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_xor_ps
-comment|// CHECK: @llvm.x86.avx512.mask.xor.ps.256
+comment|// CHECK: xor<8 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 operator|(
 name|__m256
@@ -985,7 +1009,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_xor_ps
-comment|// CHECK: @llvm.x86.avx512.mask.xor.ps.128
+comment|// CHECK: xor<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 operator|(
 name|__m128
@@ -1019,7 +1044,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_xor_ps
-comment|// CHECK: @llvm.x86.avx512.mask.xor.ps.128
+comment|// CHECK: xor<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 operator|(
 name|__m128
@@ -1054,7 +1080,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_or_pd
-comment|// CHECK: @llvm.x86.avx512.mask.or.pd.256
+comment|// CHECK: or<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 operator|(
 name|__m256d
@@ -1088,7 +1115,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_or_pd
-comment|// CHECK: @llvm.x86.avx512.mask.or.pd.256
+comment|// CHECK: or<4 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 operator|(
 name|__m256d
@@ -1123,7 +1151,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_or_pd
-comment|// CHECK: @llvm.x86.avx512.mask.or.pd.128
+comment|// CHECK: or<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 operator|(
 name|__m128d
@@ -1157,7 +1186,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_or_pd
-comment|// CHECK: @llvm.x86.avx512.mask.or.pd.128
+comment|// CHECK: or<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 operator|(
 name|__m128d
@@ -1192,7 +1222,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_or_ps
-comment|// CHECK: @llvm.x86.avx512.mask.or.ps.256
+comment|// CHECK: or<8 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 operator|(
 name|__m256
@@ -1226,7 +1257,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_or_ps
-comment|// CHECK: @llvm.x86.avx512.mask.or.ps.256
+comment|// CHECK: or<8 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 operator|(
 name|__m256
@@ -1261,7 +1293,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_or_ps
-comment|// CHECK: @llvm.x86.avx512.mask.or.ps.128
+comment|// CHECK: or<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 operator|(
 name|__m128
@@ -1295,7 +1328,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_or_ps
-comment|// CHECK: @llvm.x86.avx512.mask.or.ps.128
+comment|// CHECK: or<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 operator|(
 name|__m128
@@ -4245,7 +4279,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_extractf64x2_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vextractf64x2
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<2 x i32><i32 2, i32 3>
 return|return
 name|_mm256_extractf64x2_pd
 argument_list|(
@@ -4272,7 +4306,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_extractf64x2_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vextractf64x2
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm256_mask_extractf64x2_pd
 argument_list|(
@@ -4300,7 +4335,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_extractf64x2_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vextractf64x2
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm256_maskz_extractf64x2_pd
 argument_list|(
@@ -4323,7 +4359,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_extracti64x2_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti64x2
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<2 x i32><i32 2, i32 3>
 return|return
 name|_mm256_extracti64x2_epi64
 argument_list|(
@@ -4350,7 +4386,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_extracti64x2_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti64x2
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm256_mask_extracti64x2_epi64
 argument_list|(
@@ -4378,7 +4415,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_extracti64x2_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti64x2
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_extracti64x2_epi64
 argument_list|(
@@ -4404,7 +4442,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_insertf64x2
-comment|// CHECK: @llvm.x86.avx512.mask.insertf64x2
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> %{{.*}},<4 x i32><i32 0, i32 1, i32 4, i32 5>
 return|return
 name|_mm256_insertf64x2
 argument_list|(
@@ -4436,7 +4474,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_insertf64x2
-comment|// CHECK: @llvm.x86.avx512.mask.insertf64x2
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> %{{.*}},<4 x i32><i32 0, i32 1, i32 4, i32 5>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_insertf64x2
 argument_list|(
@@ -4469,7 +4508,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_insertf64x2
-comment|// CHECK: @llvm.x86.avx512.mask.insertf64x2
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> %{{.*}},<4 x i32><i32 0, i32 1, i32 4, i32 5>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_insertf64x2
 argument_list|(
@@ -4497,7 +4537,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_inserti64x2
-comment|// CHECK: @llvm.x86.avx512.mask.inserti64x2
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 4, i32 5>
 return|return
 name|_mm256_inserti64x2
 argument_list|(
@@ -4529,7 +4569,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_inserti64x2
-comment|// CHECK: @llvm.x86.avx512.mask.inserti64x2
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 4, i32 5>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_inserti64x2
 argument_list|(
@@ -4562,7 +4603,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_inserti64x2
-comment|// CHECK: @llvm.x86.avx512.mask.inserti64x2
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 4, i32 5>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_inserti64x2
 argument_list|(

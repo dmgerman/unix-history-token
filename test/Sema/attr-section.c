@@ -63,7 +63,7 @@ argument_list|)
 name|int
 name|n1
 decl_stmt|;
-comment|// expected-error {{'section' attribute only applies to functions and global variables}}
+comment|// expected-error {{'section' attribute only applies to functions, methods, properties, and global variables}}
 name|__attribute__
 argument_list|(
 argument|(section(
@@ -148,7 +148,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{'section' attribute only applies to functions and global variables}}
+comment|// expected-error {{'section' attribute only applies to functions, methods, properties, and global variables}}
 end_comment
 
 end_unit

@@ -1475,7 +1475,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store i32 20
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2412,7 +2412,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store i32 2
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2752,7 +2752,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store i32 2
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
 name|gi
 operator|=
 name|__builtin_object_size
@@ -2826,6 +2826,90 @@ literal|0
 index|]
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @PR30346
+end_comment
+
+begin_function
+name|void
+name|PR30346
+parameter_list|()
+block|{
+struct|struct
+name|sa_family_t
+block|{}
+struct|;
+struct|struct
+name|sockaddr
+block|{
+name|struct
+name|sa_family_t
+name|sa_family
+decl_stmt|;
+name|char
+name|sa_data
+index|[
+literal|14
+index|]
+decl_stmt|;
+block|}
+struct|;
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+decl_stmt|;
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+name|gi
+operator|=
+name|__builtin_object_size
+argument_list|(
+name|sa
+operator|->
+name|sa_data
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
+name|gi
+operator|=
+name|__builtin_object_size
+argument_list|(
+name|sa
+operator|->
+name|sa_data
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 true)
+name|gi
+operator|=
+name|__builtin_object_size
+argument_list|(
+name|sa
+operator|->
+name|sa_data
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store i32 14
+name|gi
+operator|=
+name|__builtin_object_size
+argument_list|(
+name|sa
+operator|->
+name|sa_data
+argument_list|,
+literal|3
 argument_list|)
 expr_stmt|;
 block|}

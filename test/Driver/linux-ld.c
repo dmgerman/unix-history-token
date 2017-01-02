@@ -72,7 +72,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-unknown-linux \
+comment|// RUN:     --target=x86_64-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -152,7 +152,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-unknown-linux-gnux32 \
+comment|// RUN:     --target=x86_64-unknown-linux-gnux32 -rtlib=platform \
 end_comment
 
 begin_comment
@@ -352,7 +352,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-unknown-linux \
+comment|// RUN:     --target=x86_64-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -436,7 +436,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-unknown-linux \
+comment|// RUN:     --target=x86_64-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -520,7 +520,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-unknown-linux \
+comment|// RUN:     --target=x86_64-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -604,7 +604,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-unknown-linux \
+comment|// RUN:     --target=x86_64-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4024,7 +4024,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm-linux-androideabi \
+comment|// RUN:     --target=arm-linux-androideabi -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4044,7 +4044,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm-linux-android \
+comment|// RUN:     --target=arm-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4064,7 +4064,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=aarch64-linux-android \
+comment|// RUN:     --target=aarch64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4084,7 +4084,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm64-linux-android \
+comment|// RUN:     --target=arm64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4104,7 +4104,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mipsel-linux-android \
+comment|// RUN:     --target=mipsel-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4124,7 +4124,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mips64el-linux-android \
+comment|// RUN:     --target=mips64el-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4144,7 +4144,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=i686-linux-android \
+comment|// RUN:     --target=i686-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4164,7 +4164,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-linux-android \
+comment|// RUN:     --target=x86_64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4216,7 +4216,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm-linux-androideabi \
+comment|// RUN:     --target=arm-linux-androideabi -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4240,7 +4240,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm-linux-android \
+comment|// RUN:     --target=arm-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4264,7 +4264,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=aarch64-linux-android \
+comment|// RUN:     --target=aarch64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4288,7 +4288,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm64-linux-android \
+comment|// RUN:     --target=arm64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4308,7 +4308,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mipsel-linux-android \
+comment|// RUN:     --target=mipsel-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4332,7 +4332,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mips64el-linux-android \
+comment|// RUN:     --target=mips64el-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4356,7 +4356,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=i686-linux-android \
+comment|// RUN:     --target=i686-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4380,7 +4380,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-linux-android \
+comment|// RUN:     --target=x86_64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4440,7 +4440,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm-linux-androideabi \
+comment|// RUN:     --target=arm-linux-androideabi -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4464,7 +4464,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm-linux-android \
+comment|// RUN:     --target=arm-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4484,7 +4484,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=aarch64-linux-android \
+comment|// RUN:     --target=aarch64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4508,7 +4508,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm64-linux-android \
+comment|// RUN:     --target=arm64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4528,7 +4528,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mipsel-linux-android \
+comment|// RUN:     --target=mipsel-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4552,7 +4552,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mips64el-linux-android \
+comment|// RUN:     --target=mips64el-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4576,7 +4576,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=i686-linux-android \
+comment|// RUN:     --target=i686-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4600,7 +4600,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-linux-android \
+comment|// RUN:     --target=x86_64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4656,7 +4656,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm-linux-androideabi \
+comment|// RUN:     --target=arm-linux-androideabi -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4680,7 +4680,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm-linux-android \
+comment|// RUN:     --target=arm-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4704,7 +4704,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=aarch64-linux-android \
+comment|// RUN:     --target=aarch64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4728,7 +4728,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=arm64-linux-android \
+comment|// RUN:     --target=arm64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4752,7 +4752,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mipsel-linux-android \
+comment|// RUN:     --target=mipsel-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4776,7 +4776,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mips64el-linux-android \
+comment|// RUN:     --target=mips64el-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4800,7 +4800,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=i686-linux-android \
+comment|// RUN:     --target=i686-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -4824,7 +4824,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=x86_64-linux-android \
+comment|// RUN:     --target=x86_64-linux-android -rtlib=platform \
 end_comment
 
 begin_comment
@@ -6440,6 +6440,18 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
+comment|// RUN:     --target=thumbv7-pc-linux-musleabi -mhard-float \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMHF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
 comment|// RUN:     --target=thumbeb-pc-linux-musleabi \
 end_comment
 
@@ -6453,6 +6465,18 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=thumbeb-pc-linux-musleabihf \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMEBHF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=thumbv7eb-pc-linux-musleabi -mhard-float \
 end_comment
 
 begin_comment
@@ -6488,6 +6512,18 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
+comment|// RUN:     --target=armv7-pc-linux-musleabi -mhard-float \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMHF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
 comment|// RUN:     --target=armeb-pc-linux-musleabi \
 end_comment
 
@@ -6501,6 +6537,18 @@ end_comment
 
 begin_comment
 comment|// RUN:     --target=armeb-pc-linux-musleabihf \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMEBHF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=armv7eb-pc-linux-musleabi -mhard-float \
 end_comment
 
 begin_comment
@@ -6585,6 +6633,214 @@ end_comment
 
 begin_comment
 comment|// CHECK-MUSL-AARCH64_BE: "-dynamic-linker" "/lib/ld-musl-aarch64_be.so.1"
+end_comment
+
+begin_comment
+comment|// Check whether multilib gcc install works fine on Gentoo with gcc-config
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=x86_64-unknown-linux-gnu -rtlib=platform \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/gentoo_linux_gcc_multi_version_tree \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-GENTOO %s
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-NOT: warning:
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "--eh-frame-hdr"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "-m" "elf_x86_64"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "-dynamic-linker"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "{{.*}}/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/../../../../x86_64-pc-linux-gnu/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=i686-unknown-linux-gnu -rtlib=platform \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/gentoo_linux_gcc_multi_version_tree \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-GENTOO-32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32-NOT: warning:
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "--eh-frame-hdr"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "-m" "elf_i386"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "-dynamic-linker"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "{{.*}}/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/32{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/32"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/../../../../x86_64-pc-linux-gnu/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-32: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=x86_64-unknown-linux-gnux32 -rtlib=platform \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/gentoo_linux_gcc_multi_version_tree \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-GENTOO-X32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32-NOT: warning:
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "--eh-frame-hdr"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "-m" "elf32_x86_64"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "-dynamic-linker"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "{{.*}}/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/x32{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/x32"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/../../../../x86_64-pc-linux-gnu/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-pc-linux-gnu/4.9.3/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-GENTOO-X32: "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed"
 end_comment
 
 end_unit

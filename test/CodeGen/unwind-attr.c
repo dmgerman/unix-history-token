@@ -94,15 +94,15 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: attributes [[TF]] = { "{{.*}} }
+comment|// CHECK: attributes [[TF]] = { noinline "{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+comment|// CHECK: attributes [[NUW]] = { noinline nounwind{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-NOEXC: attributes [[NUW]] = { nounwind{{.*}} }
+comment|// CHECK-NOEXC: attributes [[NUW]] = { noinline nounwind{{.*}} }
 end_comment
 
 end_unit

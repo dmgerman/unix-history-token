@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Twine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<memory>
 end_include
 
@@ -388,14 +382,17 @@ name|class
 name|Payload
 range|:
 name|public
-name|RefCountedBaseVPTR
+name|RefCountedBase
+operator|<
+name|Payload
+operator|>
 block|{
 name|public
 operator|:
+name|virtual
 operator|~
 name|Payload
 argument_list|()
-name|override
 block|;
 name|virtual
 name|llvm

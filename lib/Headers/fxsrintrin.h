@@ -39,6 +39,46 @@ name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__,  __target__("fxsr")))
 end_define
 
+begin_comment
+comment|/// \brief Saves the XMM, MMX, MXCSR and x87 FPU registers into a 512-byte
+end_comment
+
+begin_comment
+comment|///    memory region pointed to by the input parameter \a __p.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> FXSAVE</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to a 512-byte memory region. The beginning of this memory
+end_comment
+
+begin_comment
+comment|///    region should be aligned on a 16-byte boundary.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -60,26 +100,53 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline__
-name|void
-name|__DEFAULT_FN_ATTRS
-name|_fxsave64
-parameter_list|(
-name|void
-modifier|*
-name|__p
-parameter_list|)
-block|{
-return|return
-name|__builtin_ia32_fxsave64
-argument_list|(
-name|__p
-argument_list|)
-return|;
-block|}
-end_function
+begin_comment
+comment|/// \brief Restores the XMM, MMX, MXCSR and x87 FPU registers from the 512-byte
+end_comment
+
+begin_comment
+comment|///    memory region pointed to by the input parameter \a __p. The contents of
+end_comment
+
+begin_comment
+comment|///    this memory region should have been written to by a previous \c _fxsave
+end_comment
+
+begin_comment
+comment|///    or \c _fxsave64 intrinsic.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> FXRSTOR</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to a 512-byte memory region. The beginning of this memory
+end_comment
+
+begin_comment
+comment|///    region should be aligned on a 16-byte boundary.
+end_comment
 
 begin_function
 specifier|static
@@ -102,6 +169,121 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
+begin_comment
+comment|/// \brief Saves the XMM, MMX, MXCSR and x87 FPU registers into a 512-byte
+end_comment
+
+begin_comment
+comment|///    memory region pointed to by the input parameter \a __p.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> FXSAVE64</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to a 512-byte memory region. The beginning of this memory
+end_comment
+
+begin_comment
+comment|///    region should be aligned on a 16-byte boundary.
+end_comment
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__DEFAULT_FN_ATTRS
+name|_fxsave64
+parameter_list|(
+name|void
+modifier|*
+name|__p
+parameter_list|)
+block|{
+return|return
+name|__builtin_ia32_fxsave64
+argument_list|(
+name|__p
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Restores the XMM, MMX, MXCSR and x87 FPU registers from the 512-byte
+end_comment
+
+begin_comment
+comment|///    memory region pointed to by the input parameter \a __p. The contents of
+end_comment
+
+begin_comment
+comment|///    this memory region should have been written to by a previous \c _fxsave
+end_comment
+
+begin_comment
+comment|///    or \c _fxsave64 intrinsic.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> FXRSTOR64</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __p
+end_comment
+
+begin_comment
+comment|///    A pointer to a 512-byte memory region. The beginning of this memory
+end_comment
+
+begin_comment
+comment|///    region should be aligned on a 16-byte boundary.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -122,6 +304,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#

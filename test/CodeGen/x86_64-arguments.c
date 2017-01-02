@@ -2461,11 +2461,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Even on AVX512, aggregates of size larger than four eightbytes have class
+comment|// On AVX512, aggregates which contain a __m512 type are classified as SSE/SSEUP
 end_comment
 
 begin_comment
-comment|// MEMORY (AVX512 draft 0.3 3.2.3p2 Rule 1).
+comment|// as per https://github.com/hjl-tools/x86-psABI/commit/30f9c9 3.2.3p2 Rule 1
 end_comment
 
 begin_comment
@@ -2473,7 +2473,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: declare void @f55(%struct.s512* byval align 64)
+comment|// AVX512: declare void @f55(<16 x float>)
+end_comment
+
+begin_comment
+comment|// NO-AVX512: declare void @f55(%struct.s512* byval align 64)
 end_comment
 
 begin_function_decl
@@ -2487,7 +2491,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// However, __m512 has type SSE/SSEUP on AVX512.
+comment|// __m512 has type SSE/SSEUP on AVX512.
 end_comment
 
 begin_comment
@@ -2819,6 +2823,40 @@ literal|1.0i
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_struct
+struct|struct
+name|t65
+block|{
+name|__m256
+name|m
+decl_stmt|;
+name|int
+label|:
+literal|0
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// SSE-LABEL: @f65(%struct.t65* byval align 32 %{{[^,)]+}})
+end_comment
+
+begin_comment
+comment|// AVX: @f65(<8 x float> %{{[^,)]+}})
+end_comment
+
+begin_function
+name|void
+name|f65
+parameter_list|(
+name|struct
+name|t65
+name|a0
+parameter_list|)
+block|{ }
 end_function
 
 end_unit

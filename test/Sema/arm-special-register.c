@@ -189,7 +189,7 @@ block|{
 return|return
 name|__builtin_arm_rsr
 argument_list|(
-literal|"cp0:1:c2:c3:4"
+literal|"cp0:1:c15:c15:4"
 argument_list|)
 return|;
 block|}
@@ -324,7 +324,7 @@ block|{
 return|return
 name|__builtin_arm_rsr64
 argument_list|(
-literal|"cp0:1:c2"
+literal|"cp0:1:c15"
 argument_list|)
 return|;
 block|}
@@ -339,6 +339,51 @@ return|return
 name|__builtin_arm_rsr
 argument_list|(
 literal|"0:1:2:3:4"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|rsr_5
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr
+argument_list|(
+literal|"cp0:1:c2:c3:8"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|rsr_6
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr
+argument_list|(
+literal|"cp0:8:c1:c2:3"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|rsr_7
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr
+argument_list|(
+literal|"cp0:1:c16:c16:2"
 argument_list|)
 return|;
 comment|//expected-error {{invalid special register for builtin}}
@@ -371,6 +416,38 @@ return|return
 name|__builtin_arm_rsr64
 argument_list|(
 literal|"0:1:2"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|rsr64_5
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr64
+argument_list|(
+literal|"cp0:8:c1"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|rsr64_6
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr64
+argument_list|(
+literal|"cp0:1:c16"
 argument_list|)
 return|;
 comment|//expected-error {{invalid special register for builtin}}

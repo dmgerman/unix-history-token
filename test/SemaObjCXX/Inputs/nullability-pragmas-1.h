@@ -43,6 +43,14 @@ begin_comment
 comment|// expected-warning{{pointer is missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -344,6 +352,14 @@ begin_comment
 comment|// expected-warning 2{{pointer is missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-1 2 {{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2 2 {{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_function_decl
 name|void
 name|f19
@@ -356,6 +372,14 @@ end_function_decl
 
 begin_comment
 comment|// expected-warning{{pointer is missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_function_decl
@@ -399,7 +423,23 @@ comment|// expected-warning{{block pointer is missing a nullability type specifi
 end_comment
 
 begin_comment
-comment|// expected-warning@-1{{pointer is missing a nullability type specifier}}
+comment|// expected-note@-1{{insert '_Nullable' if the block pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the block pointer should never be null}}
+end_comment
+
+begin_comment
+comment|// expected-warning@-3{{pointer is missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-4{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-5{{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_function_decl
@@ -418,7 +458,23 @@ comment|// expected-warning{{block pointer is missing a nullability type specifi
 end_comment
 
 begin_comment
-comment|// expected-warning@-1{{pointer is missing a nullability type specifier}}
+comment|// expected-note@-1{{insert '_Nullable' if the block pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the block pointer should never be null}}
+end_comment
+
+begin_comment
+comment|// expected-warning@-3{{pointer is missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-4{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-5{{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_function_decl
@@ -460,6 +516,14 @@ end_function_decl
 
 begin_comment
 comment|// expected-warning 2{{pointer is missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1 2 {{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2 2 {{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_decl_stmt
@@ -566,6 +630,14 @@ begin_comment
 comment|// expected-warning@-1{{pointer is missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-2{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-3{{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_decl_stmt
 unit|@
 name|property
@@ -587,6 +659,14 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-warning 2{{pointer is missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1 2 {{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2 2 {{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_decl_stmt
@@ -615,6 +695,8 @@ typedef|typedef
 name|int
 modifier|*
 comment|// expected-warning{{pointer is missing a nullability type specifier}}
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
 modifier|*
 name|int_ptr_ptr
 typedef|;
@@ -695,6 +777,14 @@ begin_comment
 comment|// expected-warning{{pointer is missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_function_decl
 name|void
 name|f21
@@ -709,6 +799,14 @@ begin_comment
 comment|// expected-warning{{pointer is missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_function_decl
 name|void
 name|f22
@@ -721,6 +819,14 @@ end_function_decl
 
 begin_comment
 comment|// expected-warning{{pointer is missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_function_decl
@@ -759,6 +865,14 @@ begin_comment
 comment|// expected-warning{{pointer is missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_decl_stmt
 unit|@
 name|interface
@@ -781,6 +895,14 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-warning{{pointer is missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1{{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2{{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_macro

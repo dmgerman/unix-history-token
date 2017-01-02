@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple arm64-apple-ios7.0 -target-feature +neon -tar
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple arm64-apple-ios7.0 -target-feature +neon -target-feature +crypto -ffreestanding -fexperimental-new-pass-manager -Os -S -o - %s | FileCheck %s
+end_comment
+
+begin_comment
 comment|// REQUIRES: aarch64-registered-target
 end_comment
 

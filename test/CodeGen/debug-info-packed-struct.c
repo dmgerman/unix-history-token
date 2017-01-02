@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -x c -debug-info-kind=limited -emit-llvm -triple x86_
 end_comment
 
 begin_comment
+comment|// CHECK: %struct.layout3 = type<{ i8, [3 x i8], %struct.size8_pack4, i8, [3 x i8] }>
+end_comment
+
+begin_comment
 comment|// CHECK: %struct.layout0 = type { i8, %struct.size8, i8 }
 end_comment
 
@@ -13,10 +17,6 @@ end_comment
 
 begin_comment
 comment|// CHECK: %struct.layout2 = type<{ i8, %struct.size8_pack1, i8 }>
-end_comment
-
-begin_comment
-comment|// CHECK: %struct.layout3 = type<{ i8, [3 x i8], %struct.size8_pack4, i8, [3 x i8] }>
 end_comment
 
 begin_comment
@@ -79,7 +79,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l0_ofs8",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 64, align: 64, offset: 64)
+comment|// CHECK-SAME:     {{.*}}size: 64, offset: 64)
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l0_ofs16",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 128, flags: DIFlagBitField, extraData: i64 128)
+comment|// CHECK-SAME:     {{.*}}size: 1, offset: 128, flags: DIFlagBitField, extraData: i64 128)
 end_comment
 
 begin_comment
@@ -148,7 +148,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l1_ofs1",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 64, align: 8, offset: 8)
+comment|// CHECK-SAME:     {{.*}}size: 64, offset: 8)
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l1_ofs9",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 72, flags: DIFlagBitField, extraData: i64 72)
+comment|// CHECK-SAME:     {{.*}}size: 1, offset: 72, flags: DIFlagBitField, extraData: i64 72)
 end_comment
 
 begin_comment
@@ -236,7 +236,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l2_ofs1",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 64, align: 8, offset: 8)
+comment|// CHECK-SAME:     {{.*}}size: 64, offset: 8)
 end_comment
 
 begin_comment
@@ -244,7 +244,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l2_ofs9",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 72, flags: DIFlagBitField, extraData: i64 72)
+comment|// CHECK-SAME:     {{.*}}size: 1, offset: 72, flags: DIFlagBitField, extraData: i64 72)
 end_comment
 
 begin_comment
@@ -324,7 +324,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l3_ofs4",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 64, align: 32, offset: 32)
+comment|// CHECK-SAME:     {{.*}}size: 64, offset: 32)
 end_comment
 
 begin_comment
@@ -332,8 +332,15 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l3_ofs12",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 96, flags: DIFlagBitField, extraData: i64 96)
+comment|// CHECK-SAME:     {{.*}}size: 1, offset: 96, flags: DIFlagBitField, extraData: i64 96)
 end_comment
+
+begin_decl_stmt
+name|struct
+name|layout3
+name|l3
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -353,13 +360,6 @@ begin_decl_stmt
 name|struct
 name|layout2
 name|l2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|layout3
-name|l3
 decl_stmt|;
 end_decl_stmt
 

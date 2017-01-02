@@ -1,21 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -O3 -triple x86_64-apple-macosx10.8.0 -target-feature +sse4.1 -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding -O3 -triple x86_64-apple-macosx10.8.0 -target-feature +sse4.1 -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_comment
 comment|// FIXME: This test currently depends on optimization - it should be rewritten to avoid it.
 end_comment
-
-begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#

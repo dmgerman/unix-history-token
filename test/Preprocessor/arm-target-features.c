@@ -40,6 +40,38 @@ comment|// CHECK-V8A: #define __ARM_FP16_FORMAT_IEEE 1
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armv8r-none-linux-gnu -x c -E -dM %s -o - | FileCheck -match-full-lines --check-prefix=CHECK-V8R %s
+end_comment
+
+begin_comment
+comment|// CHECK-V8R: #define __ARMEL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-V8R: #define __ARM_ARCH 8
+end_comment
+
+begin_comment
+comment|// CHECK-V8R: #define __ARM_ARCH_8R__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-V8R: #define __ARM_FEATURE_CRC32 1
+end_comment
+
+begin_comment
+comment|// CHECK-V8R: #define __ARM_FEATURE_DIRECTED_ROUNDING 1
+end_comment
+
+begin_comment
+comment|// CHECK-V8R: #define __ARM_FEATURE_NUMERIC_MAXMIN 1
+end_comment
+
+begin_comment
+comment|// CHECK-V8R: #define __ARM_FP 0xE
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7a-none-linux-gnu -x c -E -dM %s -o - | FileCheck -match-full-lines --check-prefix=CHECK-V7 %s
 end_comment
 
@@ -1309,6 +1341,10 @@ end_comment
 
 begin_comment
 comment|// M7-THUMB:#define __ARM_FP 0xE
+end_comment
+
+begin_comment
+comment|// M7-THUMB:#define __ARM_FPV5__ 1
 end_comment
 
 begin_comment

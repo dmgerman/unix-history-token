@@ -92,11 +92,23 @@ comment|// RUN:   -mabi=altivec | FileCheck -check-prefix=CHECK-ELFv2 %s
 end_comment
 
 begin_comment
+comment|// CHECK-ELFv1: "-mrelocation-model" "pic" "-pic-level" "2"
+end_comment
+
+begin_comment
 comment|// CHECK-ELFv1: "-target-abi" "elfv1"
 end_comment
 
 begin_comment
+comment|// CHECK-ELFv1-QPX: "-mrelocation-model" "pic" "-pic-level" "2"
+end_comment
+
+begin_comment
 comment|// CHECK-ELFv1-QPX: "-target-abi" "elfv1-qpx"
+end_comment
+
+begin_comment
+comment|// CHECK-ELFv2: "-mrelocation-model" "pic" "-pic-level" "2"
 end_comment
 
 begin_comment

@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -print-libgcc-file-name 2>&1 \
+comment|// RUN: %clang -rtlib=platform -print-libgcc-file-name 2>&1 \
 end_comment
 
 begin_comment

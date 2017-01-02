@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Option/Option.h"
 end_include
 

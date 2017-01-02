@@ -183,7 +183,10 @@ name|MK_Preamble
 block|,
 comment|///< File is a PCH file treated as the preamble.
 name|MK_MainFile
+block|,
 comment|///< File is a PCH file treated as the actual main file.
+name|MK_PrebuiltModule
+comment|///< File is from a prebuilt module path.
 block|}
 enum|;
 comment|/// \brief The input file that has been loaded from this AST file, along with
@@ -505,12 +508,10 @@ comment|/// \brief The global bit offset (or base) of this module
 name|uint64_t
 name|GlobalBitOffset
 decl_stmt|;
-comment|/// \brief The bitstream reader from which we'll read the AST file.
-name|llvm
-operator|::
-name|BitstreamReader
-name|StreamFile
-expr_stmt|;
+comment|/// \brief The serialized bitstream data for this file.
+name|StringRef
+name|Data
+decl_stmt|;
 comment|/// \brief The main bitstream cursor for the main block.
 name|llvm
 operator|::
@@ -1036,6 +1037,10 @@ operator|||
 name|Kind
 operator|==
 name|MK_ExplicitModule
+operator|||
+name|Kind
+operator|==
+name|MK_PrebuiltModule
 return|;
 block|}
 comment|/// \brief Dump debugging output for this module.

@@ -24,6 +24,14 @@ begin_comment
 comment|// expected-warning@-2{{pointer is missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-3 {{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-4 {{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -74,7 +74,7 @@ end_expr_stmt
 
 begin_comment
 unit|}; }
-comment|// CHECK: @__func__.__mangle_block_invoke_2 = private unnamed_addr constant [24 x i8] c"__mangle_block_invoke_2\00", align 1
+comment|// CHECK: @__func__.__mangle_block_invoke_2 = private unnamed_addr constant [22 x i8] c"mangle_block_invoke_2\00", align 1
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ comment|// CHECK: define internal void @__mangle_block_invoke_2(i8* %.block_desc
 end_comment
 
 begin_comment
-comment|// CHECK:   call void @__assert_rtn(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @__func__.__mangle_block_invoke_2, i32 0, i32 0), i8* getelementptr inbounds {{.*}}, i32 9, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.1, i32 0, i32 0))
+comment|// CHECK:   call void @__assert_rtn(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @__func__.__mangle_block_invoke_2, i32 0, i32 0), i8* getelementptr inbounds {{.*}}, i32 9, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.1, i32 0, i32 0))
 end_comment
 
 begin_comment

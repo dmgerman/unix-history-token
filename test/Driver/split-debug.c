@@ -108,6 +108,78 @@ comment|// CHECK-IAS: objcopy
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gsplit-dwarf -gmlt -fno-split-dwarf-inlining -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-GMLT-WITH-SPLIT< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-GMLT-WITH-SPLIT: "-split-dwarf=Enable"
+end_comment
+
+begin_comment
+comment|// CHECK-GMLT-WITH-SPLIT: "-debug-info-kind=line-tables-only"
+end_comment
+
+begin_comment
+comment|// CHECK-GMLT-WITH-SPLIT: "-split-dwarf-file"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gmlt -gsplit-dwarf -fno-split-dwarf-inlining -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-SPLIT-WITH-GMLT< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-WITH-GMLT: "-split-dwarf=Enable"
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-WITH-GMLT: "-debug-info-kind=line-tables-only"
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-WITH-GMLT: "-split-dwarf-file"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gsplit-dwarf -fno-split-dwarf-inlining -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-SPLIT-WITH-NOINL< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-WITH-NOINL: "-split-dwarf=Enable"
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-WITH-NOINL: "-debug-info-kind=limited"
+end_comment
+
+begin_comment
+comment|// CHECK-SPLIT-WITH-NOINL: "-split-dwarf-file"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gsplit-dwarf -gmlt -S -### %s 2> %t
 end_comment
 
@@ -120,11 +192,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-GMLT-OVER-SPLIT: "-debug-info-kind=line-tables-only"
+comment|// CHECK-GMLT-OVER-SPLIT-NOT: "-split-dwarf=Enable"
 end_comment
 
 begin_comment
-comment|// CHECK-GMLT-OVER-SPLIT-NOT: "-split-dwarf=Enable"
+comment|// CHECK-GMLT-OVER-SPLIT: "-debug-info-kind=line-tables-only"
 end_comment
 
 begin_comment
@@ -152,6 +224,30 @@ comment|// CHECK-SPLIT-OVER-GMLT: "-split-dwarf-file"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gsplit-dwarf -g0 -fno-split-dwarf-inlining -S -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-G0-OVER-SPLIT< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-split-dwarf=Enable"
+end_comment
+
+begin_comment
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-debug-info-kind
+end_comment
+
+begin_comment
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-split-dwarf-file"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-unknown-linux-gnu -gsplit-dwarf -g0 -S -### %s 2> %t
 end_comment
 
@@ -164,11 +260,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-G0-OVER-SPLIT-NOT: "-debug-info-kind
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-split-dwarf=Enable"
 end_comment
 
 begin_comment
-comment|// CHECK-G0-OVER-SPLIT-NOT: "-split-dwarf=Enable"
+comment|// CHECK-G0-OVER-SPLIT-NOT: "-debug-info-kind
 end_comment
 
 begin_comment

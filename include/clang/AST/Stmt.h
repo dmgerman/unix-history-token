@@ -202,9 +202,10 @@ comment|//===-------------------------------------------------------------------
 comment|/// Stmt - This represents one statement.
 comment|///
 name|class
-name|LLVM_ALIGNAS
+name|alignas
 parameter_list|(
-name|LLVM_PTR_SIZE
+name|void
+modifier|*
 parameter_list|)
 function|Stmt
 block|{
@@ -272,7 +273,7 @@ parameter_list|(
 name|size_t
 name|bytes
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{
 name|llvm_unreachable
 argument_list|(
@@ -288,7 +289,7 @@ name|void
 modifier|*
 name|data
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{
 name|llvm_unreachable
 argument_list|(
@@ -956,7 +957,7 @@ name|void
 modifier|*
 name|mem
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{
 return|return
 name|mem
@@ -975,7 +976,7 @@ modifier|&
 parameter_list|,
 name|unsigned
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{}
 name|void
 name|operator
@@ -990,7 +991,7 @@ modifier|*
 parameter_list|,
 name|unsigned
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{}
 name|void
 name|operator
@@ -1001,7 +1002,7 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{}
 name|void
 name|operator
@@ -1013,7 +1014,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{}
 name|public
 label|:
@@ -1248,15 +1249,11 @@ operator|*
 name|this
 argument_list|)
 operator|%
-name|llvm
-operator|::
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|void
 operator|*
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|==
 literal|0
 argument_list|,
@@ -1439,6 +1436,27 @@ modifier|*
 name|IgnoreImplicit
 parameter_list|()
 function_decl|;
+specifier|const
+name|Stmt
+operator|*
+name|IgnoreImplicit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|IgnoreImplicit
+argument_list|()
+return|;
+block|}
 comment|/// \brief Skip no-op (attributed, compound) container stmts and skip captured
 comment|/// stmt at the top, if \a IgnoreCaptured is true.
 name|Stmt
@@ -4506,6 +4524,11 @@ name|IsConstexpr
 operator|=
 name|C
 block|; }
+name|bool
+name|isObjCAvailabilityCheck
+argument_list|()
+specifier|const
+block|;
 name|SourceLocation
 name|getLocStart
 argument_list|()

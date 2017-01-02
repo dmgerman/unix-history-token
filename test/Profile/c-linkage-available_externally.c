@@ -16,7 +16,7 @@ comment|// CHECK: @__profc_foo = linkonce_odr hidden global [1 x i64] zeroinitia
 end_comment
 
 begin_comment
-comment|// CHECK: @__profd_foo = linkonce_odr hidden global {{.*}} i64* getelementptr inbounds ([1 x i64], [1 x i64]* @__profc_foo, i32 0, i32 0){{.*}}, section "__DATA,__llvm_prf_data", align 8
+comment|// CHECK: @__profd_foo = linkonce_odr hidden global {{.*}} i64* getelementptr inbounds ([1 x i64], [1 x i64]* @__profc_foo, i32 0, i32 0){{.*}}, section "__DATA,__llvm_prf_data,regular,live_support", align 8
 end_comment
 
 begin_function

@@ -312,7 +312,8 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-comment|// CHECK: call i32 @ObjectSize1(i8* %{{.*}}, i64 36)
+comment|// CHECK: [[VAR:%[0-9]+]] = call i64 @llvm.objectsize
+comment|// CHECK: call i32 @ObjectSize1(i8* %{{.*}}, i64 [[VAR]])
 name|gi
 operator|=
 name|ObjectSize1
@@ -972,7 +973,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call i32 @_Z27NoViableOverloadObjectSize1PvU17pass_object_size1(i8* %{{.*}}, i64 36)
+comment|// CHECK: [[VAR:%[0-9]+]] = call i64 @llvm.objectsize
+comment|// CHECK: call i32 @_Z27NoViableOverloadObjectSize1PvU17pass_object_size1(i8* %{{.*}}, i64 [[VAR]])
 name|gi
 operator|=
 name|NoViableOverloadObjectSize1
@@ -1601,7 +1603,8 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-comment|// CHECK: call i32 @"\01Identity"(i8* %{{.*}}, i64 36)
+comment|// CHECK: [[VAR:%[0-9]+]] = call i64 @llvm.objectsize
+comment|// CHECK: call i32 @"\01Identity"(i8* %{{.*}}, i64 [[VAR]])
 name|gi
 operator|=
 name|AsmObjectSize1

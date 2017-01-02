@@ -63,18 +63,6 @@ directive|define
 name|LLVM_CLANG_GR_SUMMARY
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/FoldingSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Allocator.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang

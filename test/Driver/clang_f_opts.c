@@ -224,6 +224,42 @@ comment|// CHECK-NO-PROFILE-ARCS-NOT: "-femit-coverage-data"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -S -fprofile-dir=abc %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-DIR-UNUSED %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -ftest-coverage -fprofile-dir=abc %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-DIR-UNUSED %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-arcs -fprofile-dir=abc %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-DIR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S --coverage -fprofile-dir=abc %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-DIR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-arcs -fno-profile-arcs -fprofile-dir=abc %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-DIR-NEITHER %s
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-DIR: "-coverage-data-file" "abc
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-DIR-UNUSED: argument unused
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-DIR-UNUSED-NOT: "-coverage-data-file" "abc
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-DIR-NEITHER-NOT: argument unused
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -S -fprofile-generate %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-GENERATE-LLVM %s
 end_comment
 
@@ -356,7 +392,7 @@ comment|// CHECK-PROFILE-GENERATE-LLVM: "-fprofile-instrument=llvm"
 end_comment
 
 begin_comment
-comment|// CHECK-PROFILE-GENERATE-DIR: "-fprofile-instrument-path=/some/dir{{/|\\\\}}default.profraw"
+comment|// CHECK-PROFILE-GENERATE-DIR: "-fprofile-instrument-path=/some/dir{{/|\\\\}}{{.*}}"
 end_comment
 
 begin_comment
@@ -760,10 +796,6 @@ comment|// RUN:     -fprofile-correction -fno-profile-correction                
 end_comment
 
 begin_comment
-comment|// RUN:     -fprofile-dir=bar                                                 \
-end_comment
-
-begin_comment
 comment|// RUN:     -fprofile-values -fno-profile-values                              \
 end_comment
 
@@ -1068,10 +1100,6 @@ comment|// RUN: -freorder-blocks                                                
 end_comment
 
 begin_comment
-comment|// RUN: -fprofile-dir=/rand/dir                                               \
-end_comment
-
-begin_comment
 comment|// RUN: -falign-functions                                                     \
 end_comment
 
@@ -1333,10 +1361,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-WARNING-DAG: optimization flag '-freorder-blocks' is not supported
-end_comment
-
-begin_comment
-comment|// CHECK-WARNING-DAG: optimization flag '-fprofile-dir=/rand/dir' is not supported
 end_comment
 
 begin_comment
@@ -1725,6 +1749,34 @@ end_comment
 
 begin_comment
 comment|// DELIMITERS: {{^ *"}}
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-experimental-new-pass-manager -fexperimental-new-pass-manager %s 2>&1 | FileCheck --check-prefix=CHECK-PM --check-prefix=CHECK-NEW-PM %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fexperimental-new-pass-manager -fno-experimental-new-pass-manager %s 2>&1 | FileCheck --check-prefix=CHECK-PM --check-prefix=CHECK-NO-NEW-PM %s
+end_comment
+
+begin_comment
+comment|// CHECK-PM-NOT: argument unused
+end_comment
+
+begin_comment
+comment|// CHECK-NEW-PM: -fexperimental-new-pass-manager
+end_comment
+
+begin_comment
+comment|// CHECK-NEW-PM-NOT: -fno-experimental-new-pass-manager
+end_comment
+
+begin_comment
+comment|// CHECK-NO-NEW-PM: -fno-experimental-new-pass-manager
+end_comment
+
+begin_comment
+comment|// CHECK-NO-NEW-PM-NOT: -fexperimental-new-pass-manager
 end_comment
 
 end_unit

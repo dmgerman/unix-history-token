@@ -1318,8 +1318,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vsc
 operator|=
 name|vec_load_bndry
@@ -1330,8 +1329,7 @@ literal|200
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vsc
 operator|=
 name|vec_load_bndry
@@ -1342,8 +1340,7 @@ literal|32
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vsc
 operator|=
 name|vec_load_bndry
@@ -1354,8 +1351,7 @@ literal|8192
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vuc
 operator|=
 name|vec_load_bndry
@@ -1366,8 +1362,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vss
 operator|=
 name|vec_load_bndry
@@ -1378,8 +1373,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vus
 operator|=
 name|vec_load_bndry
@@ -1390,8 +1384,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vsi
 operator|=
 name|vec_load_bndry
@@ -1402,8 +1395,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vui
 operator|=
 name|vec_load_bndry
@@ -1414,8 +1406,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vsl
 operator|=
 name|vec_load_bndry
@@ -1426,8 +1417,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vul
 operator|=
 name|vec_load_bndry
@@ -1438,8 +1428,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{no matching function}}
-comment|// expected-note@vecintrin.h:* 8 {{candidate function not viable}}
-comment|// expected-note@vecintrin.h:* 1 {{must be a constant power of 2 from 64 to 4096}}
+comment|// expected-note@vecintrin.h:* 9 {{must be a constant power of 2 from 64 to 4096}}
 name|vuc
 operator|=
 name|vec_genmask

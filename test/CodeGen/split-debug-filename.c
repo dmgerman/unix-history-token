@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -gsplit-dwarf -S -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -debug-info-kind=limited -split-dwarf-file foo.dwo -S -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_function
@@ -21,7 +21,7 @@ comment|// Testing to ensure that the dwo name gets output into the compile unit
 end_comment
 
 begin_comment
-comment|// CHECK: split-debug-filename.dwo
+comment|// CHECK: !DICompileUnit({{.*}}, splitDebugFilename: "foo.dwo"
 end_comment
 
 end_unit

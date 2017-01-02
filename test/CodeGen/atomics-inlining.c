@@ -20,7 +20,11 @@ comment|// RUN: %clang_cc1 -triple mips64el-linux-gnu -emit-llvm %s -o - | FileC
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple sparc-unknown-eabi -emit-llvm %s -o - | FileCheck %s -check-prefix=SPARC
+comment|// RUN: %clang_cc1 -triple sparc-unknown-eabi -emit-llvm %s -o - | FileCheck %s -check-prefix=SPARCV8 -check-prefix=SPARC
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple sparcv9-unknown-eabi -emit-llvm %s -o - | FileCheck %s -check-prefix=SPARCV9 -check-prefix=SPARC
 end_comment
 
 begin_decl_stmt
@@ -303,10 +307,12 @@ comment|// SPARC: = load atomic i16, i16* @s1 seq_cst
 comment|// SPARC: store atomic i16 {{.*}}, i16* @s1 seq_cst
 comment|// SPARC: = load atomic i32, i32* @i1 seq_cst
 comment|// SPARC: store atomic i32 {{.*}}, i32* @i1 seq_cst
-comment|// SPARC: = load atomic i64, i64* @ll1 seq_cst
-comment|// SPARC: store atomic i64 {{.*}}, i64* @ll1 seq_cst
-comment|// SPARC: call void @__atomic_load(i32 100, i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a1, i32 0, i32 0), i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a2, i32 0, i32 0)
-comment|// SPARC: call void @__atomic_store(i32 100, i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a1, i32 0, i32 0), i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a2, i32 0, i32 0)
+comment|// SPARCV8: call i64 @__atomic_load_8(i8* bitcast (i64* @ll1 to i8*)
+comment|// SPARCV8: call void @__atomic_store_8(i8* bitcast (i64* @ll1 to i8*), i64
+comment|// SPARCV9: load atomic i64, i64* @ll1 seq_cst, align 8
+comment|// SPARCV9: store atomic i64 {{.*}}, i64* @ll1 seq_cst, align 8
+comment|// SPARCV8: call void @__atomic_load(i32 100, i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a1, i32 0, i32 0), i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a2, i32 0, i32 0)
+comment|// SPARCV8: call void @__atomic_store(i32 100, i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a1, i32 0, i32 0), i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a2, i32 0, i32 0)
 block|}
 end_function
 

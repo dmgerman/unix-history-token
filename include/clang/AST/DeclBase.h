@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/VersionTuple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
@@ -134,6 +140,9 @@ name|DependentDiagnostic
 decl_stmt|;
 name|class
 name|EnumDecl
+decl_stmt|;
+name|class
+name|ExportDecl
 decl_stmt|;
 name|class
 name|FunctionDecl
@@ -1892,6 +1901,13 @@ operator|&
 name|ModulePrivateFlag
 return|;
 block|}
+comment|/// \brief Whether this declaration is exported (by virtue of being lexically
+comment|/// within an ExportDecl or by being a NamespaceDecl).
+name|bool
+name|isExported
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Return true if this declaration has an attribute which acts as
 comment|/// definition of the entity, such as 'alias' or 'ifunc'.
 name|bool
@@ -1992,6 +2008,9 @@ comment|/// \param Message If non-NULL and the result is not \c
 comment|/// AR_Available, will be set to a (possibly empty) message
 comment|/// describing why the declaration has not been introduced, is
 comment|/// deprecated, or is unavailable.
+comment|///
+comment|/// \param EnclosingVersion The version to compare with. If empty, assume the
+comment|/// deployment target version.
 name|AvailabilityResult
 name|getAvailability
 argument_list|(
@@ -2002,6 +2021,12 @@ operator|*
 name|Message
 operator|=
 name|nullptr
+argument_list|,
+name|VersionTuple
+name|EnclosingVersion
+operator|=
+name|VersionTuple
+argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4648,6 +4673,10 @@ comment|///   LinkageSpecDecl
 end_comment
 
 begin_comment
+comment|///   ExportDecl
+end_comment
+
+begin_comment
 comment|///   BlockDecl
 end_comment
 
@@ -5120,6 +5149,12 @@ operator|!=
 name|Decl
 operator|::
 name|LinkageSpec
+operator|&&
+name|DeclKind
+operator|!=
+name|Decl
+operator|::
+name|Export
 return|;
 block|}
 name|bool
@@ -5227,6 +5262,14 @@ comment|/// \brief Determines whether this context or some of its ancestors is a
 comment|/// linkage specification context that specifies C linkage.
 name|bool
 name|isExternCContext
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Retrieve the nearest enclosing C linkage specification context.
+specifier|const
+name|LinkageSpecDecl
+operator|*
+name|getExternCContext
 argument_list|()
 specifier|const
 expr_stmt|;

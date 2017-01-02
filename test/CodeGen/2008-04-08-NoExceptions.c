@@ -32,7 +32,7 @@ comment|// CHECK-NOT: declare void @f() [[NUW]]
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+comment|// CHECK: attributes [[NUW]] = { noinline nounwind{{.*}} }
 end_comment
 
 end_unit

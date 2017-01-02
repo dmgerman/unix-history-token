@@ -22,7 +22,7 @@ file|<arm_neon.h>
 end_include
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vceqz_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_s8(
 end_comment
 
 begin_comment
@@ -55,7 +55,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vceqz_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_s16(
 end_comment
 
 begin_comment
@@ -63,15 +63,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<4 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<4 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i16>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i16>
 end_comment
 
 begin_comment
@@ -96,7 +92,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vceqz_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_s32(
 end_comment
 
 begin_comment
@@ -104,15 +100,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<2 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<2 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -137,7 +129,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vceqz_s64(<1 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_s64(
 end_comment
 
 begin_comment
@@ -145,15 +137,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x i64> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<1 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<1 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -178,7 +166,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vceqz_u64(<1 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_u64(
 end_comment
 
 begin_comment
@@ -186,15 +174,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x i64> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<1 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<1 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -219,7 +203,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vceqz_p64(<1 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_p64(
 end_comment
 
 begin_comment
@@ -227,15 +211,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x i64> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<1 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<1 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -260,7 +240,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vceqzq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_s8(
 end_comment
 
 begin_comment
@@ -293,7 +273,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vceqzq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_s16(
 end_comment
 
 begin_comment
@@ -301,15 +281,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<8 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<8 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<8 x i1> [[TMP2]] to<8 x i16>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<8 x i1> [[TMP1]] to<8 x i16>
 end_comment
 
 begin_comment
@@ -334,7 +310,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vceqzq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_s32(
 end_comment
 
 begin_comment
@@ -342,15 +318,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<4 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<4 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -375,7 +347,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vceqzq_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_s64(
 end_comment
 
 begin_comment
@@ -383,15 +355,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<2 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<2 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -416,7 +384,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vceqz_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_u8(
 end_comment
 
 begin_comment
@@ -449,7 +417,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vceqz_u16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_u16(
 end_comment
 
 begin_comment
@@ -457,15 +425,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<4 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<4 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i16>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i16>
 end_comment
 
 begin_comment
@@ -490,7 +454,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vceqz_u32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_u32(
 end_comment
 
 begin_comment
@@ -498,15 +462,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<2 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<2 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -531,7 +491,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vceqzq_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_u8(
 end_comment
 
 begin_comment
@@ -564,7 +524,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vceqzq_u16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_u16(
 end_comment
 
 begin_comment
@@ -572,15 +532,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<8 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<8 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<8 x i1> [[TMP2]] to<8 x i16>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<8 x i1> [[TMP1]] to<8 x i16>
 end_comment
 
 begin_comment
@@ -605,7 +561,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vceqzq_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_u32(
 end_comment
 
 begin_comment
@@ -613,15 +569,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<4 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<4 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -646,7 +598,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vceqzq_u64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_u64(
 end_comment
 
 begin_comment
@@ -654,15 +606,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<2 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<2 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -687,7 +635,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vceqz_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_f32(
 end_comment
 
 begin_comment
@@ -695,15 +643,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp oeq<2 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp oeq<2 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -728,7 +672,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vceqz_f64(<1 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_f64(
 end_comment
 
 begin_comment
@@ -736,15 +680,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x double> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp oeq<1 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp oeq<1 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -769,7 +709,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vceqzq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_f32(
 end_comment
 
 begin_comment
@@ -777,15 +717,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp oeq<4 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp oeq<4 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -810,7 +746,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vceqz_p8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_p8(
 end_comment
 
 begin_comment
@@ -843,7 +779,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vceqzq_p8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_p8(
 end_comment
 
 begin_comment
@@ -876,7 +812,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vceqz_p16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqz_p16(
 end_comment
 
 begin_comment
@@ -884,15 +820,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<4 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<4 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i16>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i16>
 end_comment
 
 begin_comment
@@ -917,7 +849,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vceqzq_p16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_p16(
 end_comment
 
 begin_comment
@@ -925,15 +857,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<8 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<8 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<8 x i1> [[TMP2]] to<8 x i16>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<8 x i1> [[TMP1]] to<8 x i16>
 end_comment
 
 begin_comment
@@ -958,7 +886,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vceqzq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_f64(
 end_comment
 
 begin_comment
@@ -966,15 +894,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp oeq<2 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp oeq<2 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -999,7 +923,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vceqzq_p64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vceqzq_p64(
 end_comment
 
 begin_comment
@@ -1007,15 +931,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp eq<2 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp eq<2 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCEQZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -1040,7 +960,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vcgez_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgez_s8(
 end_comment
 
 begin_comment
@@ -1073,7 +993,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vcgez_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgez_s16(
 end_comment
 
 begin_comment
@@ -1081,15 +1001,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sge<4 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sge<4 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i16>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i16>
 end_comment
 
 begin_comment
@@ -1114,7 +1030,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcgez_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgez_s32(
 end_comment
 
 begin_comment
@@ -1122,15 +1038,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sge<2 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sge<2 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -1155,7 +1067,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vcgez_s64(<1 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgez_s64(
 end_comment
 
 begin_comment
@@ -1163,15 +1075,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x i64> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sge<1 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sge<1 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -1196,7 +1104,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vcgezq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgezq_s8(
 end_comment
 
 begin_comment
@@ -1229,7 +1137,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vcgezq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgezq_s16(
 end_comment
 
 begin_comment
@@ -1237,15 +1145,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sge<8 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sge<8 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<8 x i1> [[TMP2]] to<8 x i16>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<8 x i1> [[TMP1]] to<8 x i16>
 end_comment
 
 begin_comment
@@ -1270,7 +1174,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcgezq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgezq_s32(
 end_comment
 
 begin_comment
@@ -1278,15 +1182,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sge<4 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sge<4 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -1311,7 +1211,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcgezq_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgezq_s64(
 end_comment
 
 begin_comment
@@ -1319,15 +1219,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sge<2 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sge<2 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -1352,7 +1248,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcgez_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgez_f32(
 end_comment
 
 begin_comment
@@ -1360,15 +1256,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp oge<2 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp oge<2 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -1393,7 +1285,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vcgez_f64(<1 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgez_f64(
 end_comment
 
 begin_comment
@@ -1401,15 +1293,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x double> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp oge<1 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp oge<1 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -1434,7 +1322,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcgezq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgezq_f32(
 end_comment
 
 begin_comment
@@ -1442,15 +1330,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp oge<4 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp oge<4 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -1475,7 +1359,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcgezq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgezq_f64(
 end_comment
 
 begin_comment
@@ -1483,15 +1367,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp oge<2 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp oge<2 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCGEZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -1516,7 +1396,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vclez_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vclez_s8(
 end_comment
 
 begin_comment
@@ -1549,7 +1429,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vclez_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vclez_s16(
 end_comment
 
 begin_comment
@@ -1557,15 +1437,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sle<4 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sle<4 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i16>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i16>
 end_comment
 
 begin_comment
@@ -1590,7 +1466,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vclez_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vclez_s32(
 end_comment
 
 begin_comment
@@ -1598,15 +1474,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sle<2 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sle<2 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -1631,7 +1503,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vclez_s64(<1 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vclez_s64(
 end_comment
 
 begin_comment
@@ -1639,15 +1511,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x i64> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sle<1 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sle<1 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -1672,7 +1540,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vclezq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vclezq_s8(
 end_comment
 
 begin_comment
@@ -1705,7 +1573,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vclezq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vclezq_s16(
 end_comment
 
 begin_comment
@@ -1713,15 +1581,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sle<8 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sle<8 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<8 x i1> [[TMP2]] to<8 x i16>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<8 x i1> [[TMP1]] to<8 x i16>
 end_comment
 
 begin_comment
@@ -1746,7 +1610,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vclezq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vclezq_s32(
 end_comment
 
 begin_comment
@@ -1754,15 +1618,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sle<4 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sle<4 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -1787,7 +1647,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vclezq_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vclezq_s64(
 end_comment
 
 begin_comment
@@ -1795,15 +1655,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sle<2 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sle<2 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -1828,7 +1684,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vclez_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vclez_f32(
 end_comment
 
 begin_comment
@@ -1836,15 +1692,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp ole<2 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp ole<2 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -1869,7 +1721,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vclez_f64(<1 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vclez_f64(
 end_comment
 
 begin_comment
@@ -1877,15 +1729,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x double> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp ole<1 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp ole<1 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -1910,7 +1758,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vclezq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vclezq_f32(
 end_comment
 
 begin_comment
@@ -1918,15 +1766,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp ole<4 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp ole<4 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -1951,7 +1795,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vclezq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vclezq_f64(
 end_comment
 
 begin_comment
@@ -1959,15 +1803,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp ole<2 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp ole<2 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCLEZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -1992,7 +1832,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vcgtz_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtz_s8(
 end_comment
 
 begin_comment
@@ -2025,7 +1865,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vcgtz_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtz_s16(
 end_comment
 
 begin_comment
@@ -2033,15 +1873,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sgt<4 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sgt<4 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i16>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i16>
 end_comment
 
 begin_comment
@@ -2066,7 +1902,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcgtz_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtz_s32(
 end_comment
 
 begin_comment
@@ -2074,15 +1910,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sgt<2 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sgt<2 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -2107,7 +1939,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vcgtz_s64(<1 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtz_s64(
 end_comment
 
 begin_comment
@@ -2115,15 +1947,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x i64> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sgt<1 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sgt<1 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -2148,7 +1976,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vcgtzq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtzq_s8(
 end_comment
 
 begin_comment
@@ -2181,7 +2009,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vcgtzq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtzq_s16(
 end_comment
 
 begin_comment
@@ -2189,15 +2017,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sgt<8 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sgt<8 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<8 x i1> [[TMP2]] to<8 x i16>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<8 x i1> [[TMP1]] to<8 x i16>
 end_comment
 
 begin_comment
@@ -2222,7 +2046,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcgtzq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtzq_s32(
 end_comment
 
 begin_comment
@@ -2230,15 +2054,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sgt<4 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sgt<4 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -2263,7 +2083,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcgtzq_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtzq_s64(
 end_comment
 
 begin_comment
@@ -2271,15 +2091,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp sgt<2 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp sgt<2 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -2304,7 +2120,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcgtz_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtz_f32(
 end_comment
 
 begin_comment
@@ -2312,15 +2128,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp ogt<2 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp ogt<2 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -2345,7 +2157,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vcgtz_f64(<1 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtz_f64(
 end_comment
 
 begin_comment
@@ -2353,15 +2165,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x double> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp ogt<1 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp ogt<1 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -2386,7 +2194,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcgtzq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtzq_f32(
 end_comment
 
 begin_comment
@@ -2394,15 +2202,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp ogt<4 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp ogt<4 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -2427,7 +2231,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcgtzq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcgtzq_f64(
 end_comment
 
 begin_comment
@@ -2435,15 +2239,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp ogt<2 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp ogt<2 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCGTZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -2468,7 +2268,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vcltz_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltz_s8(
 end_comment
 
 begin_comment
@@ -2501,7 +2301,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vcltz_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltz_s16(
 end_comment
 
 begin_comment
@@ -2509,15 +2309,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp slt<4 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp slt<4 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i16>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i16>
 end_comment
 
 begin_comment
@@ -2542,7 +2338,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcltz_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltz_s32(
 end_comment
 
 begin_comment
@@ -2550,15 +2346,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp slt<2 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp slt<2 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -2583,7 +2375,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vcltz_s64(<1 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltz_s64(
 end_comment
 
 begin_comment
@@ -2591,15 +2383,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x i64> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp slt<1 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp slt<1 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -2624,7 +2412,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vcltzq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltzq_s8(
 end_comment
 
 begin_comment
@@ -2657,7 +2445,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vcltzq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltzq_s16(
 end_comment
 
 begin_comment
@@ -2665,15 +2453,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = icmp slt<8 x i16> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp slt<8 x i16> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<8 x i1> [[TMP2]] to<8 x i16>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<8 x i1> [[TMP1]] to<8 x i16>
 end_comment
 
 begin_comment
@@ -2698,7 +2482,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcltzq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltzq_s32(
 end_comment
 
 begin_comment
@@ -2706,15 +2490,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
+comment|// CHECK:   [[TMP1:%.*]] = icmp slt<4 x i32> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp slt<4 x i32> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -2739,7 +2519,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcltzq_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltzq_s64(
 end_comment
 
 begin_comment
@@ -2747,15 +2527,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
+comment|// CHECK:   [[TMP1:%.*]] = icmp slt<2 x i64> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = icmp slt<2 x i64> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -2780,7 +2556,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcltz_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltz_f32(
 end_comment
 
 begin_comment
@@ -2788,15 +2564,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp olt<2 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp olt<2 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i32>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i32>
 end_comment
 
 begin_comment
@@ -2821,7 +2593,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vcltz_f64(<1 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltz_f64(
 end_comment
 
 begin_comment
@@ -2829,15 +2601,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x double> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp olt<1 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp olt<1 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<1 x i1> [[TMP2]] to<1 x i64>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<1 x i1> [[TMP1]] to<1 x i64>
 end_comment
 
 begin_comment
@@ -2862,7 +2630,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcltzq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltzq_f32(
 end_comment
 
 begin_comment
@@ -2870,15 +2638,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp olt<4 x float> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp olt<4 x float> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<4 x i1> [[TMP2]] to<4 x i32>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<4 x i1> [[TMP1]] to<4 x i32>
 end_comment
 
 begin_comment
@@ -2903,7 +2667,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcltzq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcltzq_f64(
 end_comment
 
 begin_comment
@@ -2911,15 +2675,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fcmp olt<2 x double> %a, zeroinitializer
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fcmp olt<2 x double> [[TMP1]], zeroinitializer
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<2 x i1> [[TMP2]] to<2 x i64>
+comment|// CHECK:   [[VCLTZ_I:%.*]] = sext<2 x i1> [[TMP1]] to<2 x i64>
 end_comment
 
 begin_comment
@@ -2944,7 +2704,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrev16_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev16_s8(
 end_comment
 
 begin_comment
@@ -2973,7 +2733,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrev16_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev16_u8(
 end_comment
 
 begin_comment
@@ -3002,7 +2762,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrev16_p8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev16_p8(
 end_comment
 
 begin_comment
@@ -3031,7 +2791,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrev16q_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev16q_s8(
 end_comment
 
 begin_comment
@@ -3060,7 +2820,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrev16q_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev16q_u8(
 end_comment
 
 begin_comment
@@ -3089,7 +2849,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrev16q_p8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev16q_p8(
 end_comment
 
 begin_comment
@@ -3118,7 +2878,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrev32_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32_s8(
 end_comment
 
 begin_comment
@@ -3147,7 +2907,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vrev32_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32_s16(
 end_comment
 
 begin_comment
@@ -3176,7 +2936,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrev32_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32_u8(
 end_comment
 
 begin_comment
@@ -3205,7 +2965,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vrev32_u16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32_u16(
 end_comment
 
 begin_comment
@@ -3234,7 +2994,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrev32_p8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32_p8(
 end_comment
 
 begin_comment
@@ -3263,7 +3023,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vrev32_p16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32_p16(
 end_comment
 
 begin_comment
@@ -3292,7 +3052,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrev32q_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32q_s8(
 end_comment
 
 begin_comment
@@ -3321,7 +3081,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vrev32q_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32q_s16(
 end_comment
 
 begin_comment
@@ -3350,7 +3110,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrev32q_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32q_u8(
 end_comment
 
 begin_comment
@@ -3379,7 +3139,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vrev32q_u16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32q_u16(
 end_comment
 
 begin_comment
@@ -3408,7 +3168,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrev32q_p8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32q_p8(
 end_comment
 
 begin_comment
@@ -3437,7 +3197,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vrev32q_p16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev32q_p16(
 end_comment
 
 begin_comment
@@ -3466,7 +3226,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrev64_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64_s8(
 end_comment
 
 begin_comment
@@ -3495,7 +3255,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vrev64_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64_s16(
 end_comment
 
 begin_comment
@@ -3524,7 +3284,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vrev64_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64_s32(
 end_comment
 
 begin_comment
@@ -3553,7 +3313,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrev64_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64_u8(
 end_comment
 
 begin_comment
@@ -3582,7 +3342,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vrev64_u16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64_u16(
 end_comment
 
 begin_comment
@@ -3611,7 +3371,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vrev64_u32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64_u32(
 end_comment
 
 begin_comment
@@ -3640,7 +3400,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrev64_p8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64_p8(
 end_comment
 
 begin_comment
@@ -3669,7 +3429,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vrev64_p16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64_p16(
 end_comment
 
 begin_comment
@@ -3698,7 +3458,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrev64_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64_f32(
 end_comment
 
 begin_comment
@@ -3727,7 +3487,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrev64q_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64q_s8(
 end_comment
 
 begin_comment
@@ -3756,7 +3516,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vrev64q_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64q_s16(
 end_comment
 
 begin_comment
@@ -3785,7 +3545,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vrev64q_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64q_s32(
 end_comment
 
 begin_comment
@@ -3814,7 +3574,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrev64q_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64q_u8(
 end_comment
 
 begin_comment
@@ -3843,7 +3603,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vrev64q_u16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64q_u16(
 end_comment
 
 begin_comment
@@ -3872,7 +3632,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vrev64q_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64q_u32(
 end_comment
 
 begin_comment
@@ -3901,7 +3661,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrev64q_p8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64q_p8(
 end_comment
 
 begin_comment
@@ -3930,7 +3690,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vrev64q_p16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64q_p16(
 end_comment
 
 begin_comment
@@ -3959,7 +3719,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrev64q_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrev64q_f32(
 end_comment
 
 begin_comment
@@ -3988,7 +3748,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vpaddl_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddl_s8(
 end_comment
 
 begin_comment
@@ -4017,7 +3777,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vpaddl_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddl_s16(
 end_comment
 
 begin_comment
@@ -4025,11 +3785,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.saddlp.v2i32.v4i16(<4 x i16> [[VPADDL_I]]) #2
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.saddlp.v2i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -4054,7 +3810,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vpaddl_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddl_s32(
 end_comment
 
 begin_comment
@@ -4062,11 +3818,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<1 x i64> @llvm.aarch64.neon.saddlp.v1i64.v2i32(<2 x i32> [[VPADDL_I]]) #2
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<1 x i64> @llvm.aarch64.neon.saddlp.v1i64.v2i32(<2 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -4091,7 +3843,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vpaddl_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddl_u8(
 end_comment
 
 begin_comment
@@ -4120,7 +3872,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vpaddl_u16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddl_u16(
 end_comment
 
 begin_comment
@@ -4128,11 +3880,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.uaddlp.v2i32.v4i16(<4 x i16> [[VPADDL_I]]) #2
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.uaddlp.v2i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -4157,7 +3905,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vpaddl_u32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddl_u32(
 end_comment
 
 begin_comment
@@ -4165,11 +3913,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<1 x i64> @llvm.aarch64.neon.uaddlp.v1i64.v2i32(<2 x i32> [[VPADDL_I]]) #2
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<1 x i64> @llvm.aarch64.neon.uaddlp.v1i64.v2i32(<2 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -4194,7 +3938,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vpaddlq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddlq_s8(
 end_comment
 
 begin_comment
@@ -4223,7 +3967,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vpaddlq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddlq_s16(
 end_comment
 
 begin_comment
@@ -4231,11 +3975,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.saddlp.v4i32.v8i16(<8 x i16> [[VPADDL_I]]) #2
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.saddlp.v4i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -4260,7 +4000,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vpaddlq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddlq_s32(
 end_comment
 
 begin_comment
@@ -4268,11 +4008,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.saddlp.v2i64.v4i32(<4 x i32> [[VPADDL_I]]) #2
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.saddlp.v2i64.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -4297,7 +4033,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vpaddlq_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddlq_u8(
 end_comment
 
 begin_comment
@@ -4326,7 +4062,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vpaddlq_u16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddlq_u16(
 end_comment
 
 begin_comment
@@ -4334,11 +4070,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.uaddlp.v4i32.v8i16(<8 x i16> [[VPADDL_I]]) #2
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.uaddlp.v4i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -4363,7 +4095,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vpaddlq_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vpaddlq_u32(
 end_comment
 
 begin_comment
@@ -4371,11 +4103,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADDL_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.uaddlp.v2i64.v4i32(<4 x i32> [[VPADDL_I]]) #2
+comment|// CHECK:   [[VPADDL1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.uaddlp.v2i64.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -4400,7 +4128,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vpadal_s8(<4 x i16> %a,<8 x i8> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadal_s8(
 end_comment
 
 begin_comment
@@ -4412,15 +4140,11 @@ comment|// CHECK:   [[VPADAL_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.saddlp.v
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = add<4 x i16> [[VPADAL_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = add<4 x i16> [[VPADAL_I]], [[TMP1]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[TMP1]]
 end_comment
 
 begin_function
@@ -4446,7 +4170,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vpadal_s16(<2 x i32> %a,<4 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadal_s16(
 end_comment
 
 begin_comment
@@ -4458,23 +4182,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VPADAL1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.saddlp.v2i32.v4i16(<4 x i16> %b) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.saddlp.v2i32.v4i16(<4 x i16> [[VPADAL_I]]) #2
+comment|// CHECK:   [[TMP2:%.*]] = add<2 x i32> [[VPADAL1_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = add<2 x i32> [[VPADAL1_I]], [[TMP2]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP3]]
+comment|// CHECK:   ret<2 x i32> [[TMP2]]
 end_comment
 
 begin_function
@@ -4500,7 +4216,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vpadal_s32(<1 x i64> %a,<2 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadal_s32(
 end_comment
 
 begin_comment
@@ -4512,23 +4228,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VPADAL1_I:%.*]] = call<1 x i64> @llvm.aarch64.neon.saddlp.v1i64.v2i32(<2 x i32> %b) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL1_I:%.*]] = call<1 x i64> @llvm.aarch64.neon.saddlp.v1i64.v2i32(<2 x i32> [[VPADAL_I]]) #2
+comment|// CHECK:   [[TMP2:%.*]] = add<1 x i64> [[VPADAL1_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = add<1 x i64> [[VPADAL1_I]], [[TMP2]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<1 x i64> [[TMP3]]
+comment|// CHECK:   ret<1 x i64> [[TMP2]]
 end_comment
 
 begin_function
@@ -4554,7 +4262,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vpadal_u8(<4 x i16> %a,<8 x i8> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadal_u8(
 end_comment
 
 begin_comment
@@ -4566,15 +4274,11 @@ comment|// CHECK:   [[VPADAL_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.uaddlp.v
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = add<4 x i16> [[VPADAL_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = add<4 x i16> [[VPADAL_I]], [[TMP1]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[TMP1]]
 end_comment
 
 begin_function
@@ -4600,7 +4304,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vpadal_u16(<2 x i32> %a,<4 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadal_u16(
 end_comment
 
 begin_comment
@@ -4612,23 +4316,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VPADAL1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.uaddlp.v2i32.v4i16(<4 x i16> %b) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.uaddlp.v2i32.v4i16(<4 x i16> [[VPADAL_I]]) #2
+comment|// CHECK:   [[TMP2:%.*]] = add<2 x i32> [[VPADAL1_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = add<2 x i32> [[VPADAL1_I]], [[TMP2]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP3]]
+comment|// CHECK:   ret<2 x i32> [[TMP2]]
 end_comment
 
 begin_function
@@ -4654,7 +4350,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x i64> @test_vpadal_u32(<1 x i64> %a,<2 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadal_u32(
 end_comment
 
 begin_comment
@@ -4666,23 +4362,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VPADAL1_I:%.*]] = call<1 x i64> @llvm.aarch64.neon.uaddlp.v1i64.v2i32(<2 x i32> %b) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL1_I:%.*]] = call<1 x i64> @llvm.aarch64.neon.uaddlp.v1i64.v2i32(<2 x i32> [[VPADAL_I]]) #2
+comment|// CHECK:   [[TMP2:%.*]] = add<1 x i64> [[VPADAL1_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = add<1 x i64> [[VPADAL1_I]], [[TMP2]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<1 x i64> [[TMP3]]
+comment|// CHECK:   ret<1 x i64> [[TMP2]]
 end_comment
 
 begin_function
@@ -4708,7 +4396,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vpadalq_s8(<8 x i16> %a,<16 x i8> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadalq_s8(
 end_comment
 
 begin_comment
@@ -4720,15 +4408,11 @@ comment|// CHECK:   [[VPADAL_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.saddlp.v
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = add<8 x i16> [[VPADAL_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = add<8 x i16> [[VPADAL_I]], [[TMP1]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[TMP1]]
 end_comment
 
 begin_function
@@ -4754,7 +4438,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vpadalq_s16(<4 x i32> %a,<8 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadalq_s16(
 end_comment
 
 begin_comment
@@ -4766,23 +4450,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
+comment|// CHECK:   [[VPADAL1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.saddlp.v4i32.v8i16(<8 x i16> %b) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.saddlp.v4i32.v8i16(<8 x i16> [[VPADAL_I]]) #2
+comment|// CHECK:   [[TMP2:%.*]] = add<4 x i32> [[VPADAL1_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = add<4 x i32> [[VPADAL1_I]], [[TMP2]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP3]]
+comment|// CHECK:   ret<4 x i32> [[TMP2]]
 end_comment
 
 begin_function
@@ -4808,7 +4484,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vpadalq_s32(<2 x i64> %a,<4 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadalq_s32(
 end_comment
 
 begin_comment
@@ -4820,23 +4496,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
+comment|// CHECK:   [[VPADAL1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.saddlp.v2i64.v4i32(<4 x i32> %b) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.saddlp.v2i64.v4i32(<4 x i32> [[VPADAL_I]]) #2
+comment|// CHECK:   [[TMP2:%.*]] = add<2 x i64> [[VPADAL1_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = add<2 x i64> [[VPADAL1_I]], [[TMP2]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP3]]
+comment|// CHECK:   ret<2 x i64> [[TMP2]]
 end_comment
 
 begin_function
@@ -4862,7 +4530,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vpadalq_u8(<8 x i16> %a,<16 x i8> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadalq_u8(
 end_comment
 
 begin_comment
@@ -4874,15 +4542,11 @@ comment|// CHECK:   [[VPADAL_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.uaddlp.v
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[TMP1:%.*]] = add<8 x i16> [[VPADAL_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = add<8 x i16> [[VPADAL_I]], [[TMP1]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[TMP1]]
 end_comment
 
 begin_function
@@ -4908,7 +4572,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vpadalq_u16(<4 x i32> %a,<8 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadalq_u16(
 end_comment
 
 begin_comment
@@ -4920,23 +4584,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
+comment|// CHECK:   [[VPADAL1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.uaddlp.v4i32.v8i16(<8 x i16> %b) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.uaddlp.v4i32.v8i16(<8 x i16> [[VPADAL_I]]) #2
+comment|// CHECK:   [[TMP2:%.*]] = add<4 x i32> [[VPADAL1_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = add<4 x i32> [[VPADAL1_I]], [[TMP2]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP3]]
+comment|// CHECK:   ret<4 x i32> [[TMP2]]
 end_comment
 
 begin_function
@@ -4962,7 +4618,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vpadalq_u32(<2 x i64> %a,<4 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vpadalq_u32(
 end_comment
 
 begin_comment
@@ -4974,23 +4630,15 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
+comment|// CHECK:   [[VPADAL1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.uaddlp.v2i64.v4i32(<4 x i32> %b) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VPADAL1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.uaddlp.v2i64.v4i32(<4 x i32> [[VPADAL_I]]) #2
+comment|// CHECK:   [[TMP2:%.*]] = add<2 x i64> [[VPADAL1_I]], %a
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = add<2 x i64> [[VPADAL1_I]], [[TMP2]]
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP3]]
+comment|// CHECK:   ret<2 x i64> [[TMP2]]
 end_comment
 
 begin_function
@@ -5016,7 +4664,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vqabs_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vqabs_s8(
 end_comment
 
 begin_comment
@@ -5045,7 +4693,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vqabsq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vqabsq_s8(
 end_comment
 
 begin_comment
@@ -5074,7 +4722,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqabs_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vqabs_s16(
 end_comment
 
 begin_comment
@@ -5082,11 +4730,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABS_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQABS_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqabs.v4i16(<4 x i16> [[VQABS_V_I]]) #2
+comment|// CHECK:   [[VQABS_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqabs.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -5094,11 +4738,7 @@ comment|// CHECK:   [[VQABS_V2_I:%.*]] = bitcast<4 x i16> [[VQABS_V1_I]] to<8 x 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQABS_V2_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP1]]
+comment|// CHECK:   ret<4 x i16> [[VQABS_V1_I]]
 end_comment
 
 begin_function
@@ -5119,7 +4759,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqabsq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vqabsq_s16(
 end_comment
 
 begin_comment
@@ -5127,11 +4767,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABSQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqabs.v8i16(<8 x i16> [[VQABSQ_V_I]]) #2
+comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqabs.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -5139,11 +4775,7 @@ comment|// CHECK:   [[VQABSQ_V2_I:%.*]] = bitcast<8 x i16> [[VQABSQ_V1_I]] to<16
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VQABSQ_V2_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP1]]
+comment|// CHECK:   ret<8 x i16> [[VQABSQ_V1_I]]
 end_comment
 
 begin_function
@@ -5164,7 +4796,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqabs_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vqabs_s32(
 end_comment
 
 begin_comment
@@ -5172,11 +4804,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABS_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQABS_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqabs.v2i32(<2 x i32> [[VQABS_V_I]]) #2
+comment|// CHECK:   [[VQABS_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqabs.v2i32(<2 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -5184,11 +4812,7 @@ comment|// CHECK:   [[VQABS_V2_I:%.*]] = bitcast<2 x i32> [[VQABS_V1_I]] to<8 x 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQABS_V2_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP1]]
+comment|// CHECK:   ret<2 x i32> [[VQABS_V1_I]]
 end_comment
 
 begin_function
@@ -5209,7 +4833,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqabsq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vqabsq_s32(
 end_comment
 
 begin_comment
@@ -5217,11 +4841,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABSQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqabs.v4i32(<4 x i32> [[VQABSQ_V_I]]) #2
+comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqabs.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -5229,11 +4849,7 @@ comment|// CHECK:   [[VQABSQ_V2_I:%.*]] = bitcast<4 x i32> [[VQABSQ_V1_I]] to<16
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VQABSQ_V2_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP1]]
+comment|// CHECK:   ret<4 x i32> [[VQABSQ_V1_I]]
 end_comment
 
 begin_function
@@ -5254,7 +4870,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqabsq_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vqabsq_s64(
 end_comment
 
 begin_comment
@@ -5262,11 +4878,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQABSQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqabs.v2i64(<2 x i64> [[VQABSQ_V_I]]) #2
+comment|// CHECK:   [[VQABSQ_V1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqabs.v2i64(<2 x i64> %a) #2
 end_comment
 
 begin_comment
@@ -5274,11 +4886,7 @@ comment|// CHECK:   [[VQABSQ_V2_I:%.*]] = bitcast<2 x i64> [[VQABSQ_V1_I]] to<16
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VQABSQ_V2_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP1]]
+comment|// CHECK:   ret<2 x i64> [[VQABSQ_V1_I]]
 end_comment
 
 begin_function
@@ -5299,7 +4907,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vqneg_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vqneg_s8(
 end_comment
 
 begin_comment
@@ -5328,7 +4936,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vqnegq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vqnegq_s8(
 end_comment
 
 begin_comment
@@ -5357,7 +4965,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqneg_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vqneg_s16(
 end_comment
 
 begin_comment
@@ -5365,11 +4973,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEG_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQNEG_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqneg.v4i16(<4 x i16> [[VQNEG_V_I]]) #2
+comment|// CHECK:   [[VQNEG_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqneg.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -5377,11 +4981,7 @@ comment|// CHECK:   [[VQNEG_V2_I:%.*]] = bitcast<4 x i16> [[VQNEG_V1_I]] to<8 x 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQNEG_V2_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP1]]
+comment|// CHECK:   ret<4 x i16> [[VQNEG_V1_I]]
 end_comment
 
 begin_function
@@ -5402,7 +5002,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqnegq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vqnegq_s16(
 end_comment
 
 begin_comment
@@ -5410,11 +5010,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEGQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqneg.v8i16(<8 x i16> [[VQNEGQ_V_I]]) #2
+comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqneg.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -5422,11 +5018,7 @@ comment|// CHECK:   [[VQNEGQ_V2_I:%.*]] = bitcast<8 x i16> [[VQNEGQ_V1_I]] to<16
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VQNEGQ_V2_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP1]]
+comment|// CHECK:   ret<8 x i16> [[VQNEGQ_V1_I]]
 end_comment
 
 begin_function
@@ -5447,7 +5039,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqneg_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vqneg_s32(
 end_comment
 
 begin_comment
@@ -5455,11 +5047,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEG_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQNEG_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqneg.v2i32(<2 x i32> [[VQNEG_V_I]]) #2
+comment|// CHECK:   [[VQNEG_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqneg.v2i32(<2 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -5467,11 +5055,7 @@ comment|// CHECK:   [[VQNEG_V2_I:%.*]] = bitcast<2 x i32> [[VQNEG_V1_I]] to<8 x 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQNEG_V2_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP1]]
+comment|// CHECK:   ret<2 x i32> [[VQNEG_V1_I]]
 end_comment
 
 begin_function
@@ -5492,7 +5076,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqnegq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vqnegq_s32(
 end_comment
 
 begin_comment
@@ -5500,11 +5084,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEGQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqneg.v4i32(<4 x i32> [[VQNEGQ_V_I]]) #2
+comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqneg.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -5512,11 +5092,7 @@ comment|// CHECK:   [[VQNEGQ_V2_I:%.*]] = bitcast<4 x i32> [[VQNEGQ_V1_I]] to<16
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VQNEGQ_V2_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP1]]
+comment|// CHECK:   ret<4 x i32> [[VQNEGQ_V1_I]]
 end_comment
 
 begin_function
@@ -5537,7 +5113,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqnegq_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vqnegq_s64(
 end_comment
 
 begin_comment
@@ -5545,11 +5121,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQNEGQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqneg.v2i64(<2 x i64> [[VQNEGQ_V_I]]) #2
+comment|// CHECK:   [[VQNEGQ_V1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqneg.v2i64(<2 x i64> %a) #2
 end_comment
 
 begin_comment
@@ -5557,11 +5129,7 @@ comment|// CHECK:   [[VQNEGQ_V2_I:%.*]] = bitcast<2 x i64> [[VQNEGQ_V1_I]] to<16
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VQNEGQ_V2_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP1]]
+comment|// CHECK:   ret<2 x i64> [[VQNEGQ_V1_I]]
 end_comment
 
 begin_function
@@ -5582,7 +5150,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vneg_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vneg_s8(
 end_comment
 
 begin_comment
@@ -5611,7 +5179,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vnegq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vnegq_s8(
 end_comment
 
 begin_comment
@@ -5640,7 +5208,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vneg_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vneg_s16(
 end_comment
 
 begin_comment
@@ -5669,7 +5237,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vnegq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vnegq_s16(
 end_comment
 
 begin_comment
@@ -5698,7 +5266,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vneg_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vneg_s32(
 end_comment
 
 begin_comment
@@ -5727,7 +5295,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vnegq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vnegq_s32(
 end_comment
 
 begin_comment
@@ -5756,7 +5324,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vnegq_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vnegq_s64(
 end_comment
 
 begin_comment
@@ -5785,7 +5353,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vneg_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vneg_f32(
 end_comment
 
 begin_comment
@@ -5814,7 +5382,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vnegq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vnegq_f32(
 end_comment
 
 begin_comment
@@ -5843,7 +5411,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vnegq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vnegq_f64(
 end_comment
 
 begin_comment
@@ -5872,7 +5440,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vabs_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vabs_s8(
 end_comment
 
 begin_comment
@@ -5901,7 +5469,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vabsq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vabsq_s8(
 end_comment
 
 begin_comment
@@ -5930,7 +5498,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vabs_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vabs_s16(
 end_comment
 
 begin_comment
@@ -5938,11 +5506,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.abs.v4i16(<4 x i16> [[VABS_I]]) #2
+comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.abs.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -5967,7 +5531,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vabsq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vabsq_s16(
 end_comment
 
 begin_comment
@@ -5975,11 +5539,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.abs.v8i16(<8 x i16> [[VABS_I]]) #2
+comment|// CHECK:   [[VABS1_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.abs.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -6004,7 +5564,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vabs_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vabs_s32(
 end_comment
 
 begin_comment
@@ -6012,11 +5572,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.abs.v2i32(<2 x i32> [[VABS_I]]) #2
+comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.abs.v2i32(<2 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -6041,7 +5597,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vabsq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vabsq_s32(
 end_comment
 
 begin_comment
@@ -6049,11 +5605,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.abs.v4i32(<4 x i32> [[VABS_I]]) #2
+comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.abs.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -6078,7 +5630,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vabsq_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vabsq_s64(
 end_comment
 
 begin_comment
@@ -6086,11 +5638,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.abs.v2i64(<2 x i64> [[VABS_I]]) #2
+comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.abs.v2i64(<2 x i64> %a) #2
 end_comment
 
 begin_comment
@@ -6115,7 +5663,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vabs_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vabs_f32(
 end_comment
 
 begin_comment
@@ -6123,11 +5671,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x float> @llvm.fabs.v2f32(<2 x float> [[VABS_I]]) #2
+comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x float> @llvm.fabs.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -6152,7 +5696,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vabsq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vabsq_f32(
 end_comment
 
 begin_comment
@@ -6160,11 +5704,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x float> @llvm.fabs.v4f32(<4 x float> [[VABS_I]]) #2
+comment|// CHECK:   [[VABS1_I:%.*]] = call<4 x float> @llvm.fabs.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -6189,7 +5729,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vabsq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vabsq_f64(
 end_comment
 
 begin_comment
@@ -6197,11 +5737,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VABS_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x double> @llvm.fabs.v2f64(<2 x double> [[VABS_I]]) #2
+comment|// CHECK:   [[VABS1_I:%.*]] = call<2 x double> @llvm.fabs.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -6226,7 +5762,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vuqadd_s8(<8 x i8> %a,<8 x i8> %b) #0 {
+comment|// CHECK-LABEL: @test_vuqadd_s8(
 end_comment
 
 begin_comment
@@ -6260,7 +5796,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vuqaddq_s8(<16 x i8> %a,<16 x i8> %b) #0 {
+comment|// CHECK-LABEL: @test_vuqaddq_s8(
 end_comment
 
 begin_comment
@@ -6294,7 +5830,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vuqadd_s16(<4 x i16> %a,<4 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vuqadd_s16(
 end_comment
 
 begin_comment
@@ -6306,15 +5842,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VUQADD_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.suqadd.v4i16(<4 x i16> [[VUQADD_I]],<4 x i16> [[VUQADD1_I]]) #2
+comment|// CHECK:   [[VUQADD2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.suqadd.v4i16(<4 x i16> %a,<4 x i16> %b) #2
 end_comment
 
 begin_comment
@@ -6344,7 +5872,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vuqaddq_s16(<8 x i16> %a,<8 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vuqaddq_s16(
 end_comment
 
 begin_comment
@@ -6356,15 +5884,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VUQADD_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.suqadd.v8i16(<8 x i16> [[VUQADD_I]],<8 x i16> [[VUQADD1_I]]) #2
+comment|// CHECK:   [[VUQADD2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.suqadd.v8i16(<8 x i16> %a,<8 x i16> %b) #2
 end_comment
 
 begin_comment
@@ -6394,7 +5914,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vuqadd_s32(<2 x i32> %a,<2 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vuqadd_s32(
 end_comment
 
 begin_comment
@@ -6406,15 +5926,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> %b to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VUQADD_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.suqadd.v2i32(<2 x i32> [[VUQADD_I]],<2 x i32> [[VUQADD1_I]]) #2
+comment|// CHECK:   [[VUQADD2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.suqadd.v2i32(<2 x i32> %a,<2 x i32> %b) #2
 end_comment
 
 begin_comment
@@ -6444,7 +5956,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vuqaddq_s32(<4 x i32> %a,<4 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vuqaddq_s32(
 end_comment
 
 begin_comment
@@ -6456,15 +5968,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VUQADD_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.suqadd.v4i32(<4 x i32> [[VUQADD_I]],<4 x i32> [[VUQADD1_I]]) #2
+comment|// CHECK:   [[VUQADD2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.suqadd.v4i32(<4 x i32> %a,<4 x i32> %b) #2
 end_comment
 
 begin_comment
@@ -6494,7 +5998,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vuqaddq_s64(<2 x i64> %a,<2 x i64> %b) #0 {
+comment|// CHECK-LABEL: @test_vuqaddq_s64(
 end_comment
 
 begin_comment
@@ -6506,15 +6010,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VUQADD_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VUQADD2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.suqadd.v2i64(<2 x i64> [[VUQADD_I]],<2 x i64> [[VUQADD1_I]]) #2
+comment|// CHECK:   [[VUQADD2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.suqadd.v2i64(<2 x i64> %a,<2 x i64> %b) #2
 end_comment
 
 begin_comment
@@ -6544,7 +6040,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vcls_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcls_s8(
 end_comment
 
 begin_comment
@@ -6573,7 +6069,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vclsq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vclsq_s8(
 end_comment
 
 begin_comment
@@ -6602,7 +6098,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vcls_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vcls_s16(
 end_comment
 
 begin_comment
@@ -6610,11 +6106,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLS_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLS_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.cls.v4i16(<4 x i16> [[VCLS_V_I]]) #2
+comment|// CHECK:   [[VCLS_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.cls.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -6622,11 +6114,7 @@ comment|// CHECK:   [[VCLS_V2_I:%.*]] = bitcast<4 x i16> [[VCLS_V1_I]] to<8 x i8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VCLS_V2_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP1]]
+comment|// CHECK:   ret<4 x i16> [[VCLS_V1_I]]
 end_comment
 
 begin_function
@@ -6647,7 +6135,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vclsq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vclsq_s16(
 end_comment
 
 begin_comment
@@ -6655,11 +6143,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLSQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLSQ_V1_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.cls.v8i16(<8 x i16> [[VCLSQ_V_I]]) #2
+comment|// CHECK:   [[VCLSQ_V1_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.cls.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -6667,11 +6151,7 @@ comment|// CHECK:   [[VCLSQ_V2_I:%.*]] = bitcast<8 x i16> [[VCLSQ_V1_I]] to<16 x
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VCLSQ_V2_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP1]]
+comment|// CHECK:   ret<8 x i16> [[VCLSQ_V1_I]]
 end_comment
 
 begin_function
@@ -6692,7 +6172,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcls_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcls_s32(
 end_comment
 
 begin_comment
@@ -6700,11 +6180,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLS_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLS_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.cls.v2i32(<2 x i32> [[VCLS_V_I]]) #2
+comment|// CHECK:   [[VCLS_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.cls.v2i32(<2 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -6712,11 +6188,7 @@ comment|// CHECK:   [[VCLS_V2_I:%.*]] = bitcast<2 x i32> [[VCLS_V1_I]] to<8 x i8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VCLS_V2_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP1]]
+comment|// CHECK:   ret<2 x i32> [[VCLS_V1_I]]
 end_comment
 
 begin_function
@@ -6737,7 +6209,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vclsq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vclsq_s32(
 end_comment
 
 begin_comment
@@ -6745,11 +6217,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLSQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLSQ_V1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.cls.v4i32(<4 x i32> [[VCLSQ_V_I]]) #2
+comment|// CHECK:   [[VCLSQ_V1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.cls.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -6757,11 +6225,7 @@ comment|// CHECK:   [[VCLSQ_V2_I:%.*]] = bitcast<4 x i32> [[VCLSQ_V1_I]] to<16 x
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VCLSQ_V2_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP1]]
+comment|// CHECK:   ret<4 x i32> [[VCLSQ_V1_I]]
 end_comment
 
 begin_function
@@ -6782,7 +6246,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vclz_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vclz_s8(
 end_comment
 
 begin_comment
@@ -6811,7 +6275,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vclzq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vclzq_s8(
 end_comment
 
 begin_comment
@@ -6840,7 +6304,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vclz_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vclz_s16(
 end_comment
 
 begin_comment
@@ -6848,11 +6312,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> [[VCLZ_V_I]], i1 false) #2
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> %a, i1 false) #2
 end_comment
 
 begin_comment
@@ -6860,11 +6320,7 @@ comment|// CHECK:   [[VCLZ_V2_I:%.*]] = bitcast<4 x i16> [[VCLZ_V1_I]] to<8 x i8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VCLZ_V2_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP1]]
+comment|// CHECK:   ret<4 x i16> [[VCLZ_V1_I]]
 end_comment
 
 begin_function
@@ -6885,7 +6341,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vclzq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vclzq_s16(
 end_comment
 
 begin_comment
@@ -6893,11 +6349,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> [[VCLZQ_V_I]], i1 false) #2
+comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %a, i1 false) #2
 end_comment
 
 begin_comment
@@ -6905,11 +6357,7 @@ comment|// CHECK:   [[VCLZQ_V2_I:%.*]] = bitcast<8 x i16> [[VCLZQ_V1_I]] to<16 x
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VCLZQ_V2_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP1]]
+comment|// CHECK:   ret<8 x i16> [[VCLZQ_V1_I]]
 end_comment
 
 begin_function
@@ -6930,7 +6378,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vclz_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vclz_s32(
 end_comment
 
 begin_comment
@@ -6938,11 +6386,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> [[VCLZ_V_I]], i1 false) #2
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> %a, i1 false) #2
 end_comment
 
 begin_comment
@@ -6950,11 +6394,7 @@ comment|// CHECK:   [[VCLZ_V2_I:%.*]] = bitcast<2 x i32> [[VCLZ_V1_I]] to<8 x i8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VCLZ_V2_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP1]]
+comment|// CHECK:   ret<2 x i32> [[VCLZ_V1_I]]
 end_comment
 
 begin_function
@@ -6975,7 +6415,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vclzq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vclzq_s32(
 end_comment
 
 begin_comment
@@ -6983,11 +6423,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> [[VCLZQ_V_I]], i1 false) #2
+comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %a, i1 false) #2
 end_comment
 
 begin_comment
@@ -6995,11 +6431,7 @@ comment|// CHECK:   [[VCLZQ_V2_I:%.*]] = bitcast<4 x i32> [[VCLZQ_V1_I]] to<16 x
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VCLZQ_V2_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP1]]
+comment|// CHECK:   ret<4 x i32> [[VCLZQ_V1_I]]
 end_comment
 
 begin_function
@@ -7020,7 +6452,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vclz_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vclz_u8(
 end_comment
 
 begin_comment
@@ -7049,7 +6481,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vclzq_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vclzq_u8(
 end_comment
 
 begin_comment
@@ -7078,7 +6510,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vclz_u16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vclz_u16(
 end_comment
 
 begin_comment
@@ -7086,11 +6518,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> [[VCLZ_V_I]], i1 false) #2
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<4 x i16> @llvm.ctlz.v4i16(<4 x i16> %a, i1 false) #2
 end_comment
 
 begin_comment
@@ -7098,11 +6526,7 @@ comment|// CHECK:   [[VCLZ_V2_I:%.*]] = bitcast<4 x i16> [[VCLZ_V1_I]] to<8 x i8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VCLZ_V2_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP1]]
+comment|// CHECK:   ret<4 x i16> [[VCLZ_V1_I]]
 end_comment
 
 begin_function
@@ -7123,7 +6547,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vclzq_u16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vclzq_u16(
 end_comment
 
 begin_comment
@@ -7131,11 +6555,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> [[VCLZQ_V_I]], i1 false) #2
+comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<8 x i16> @llvm.ctlz.v8i16(<8 x i16> %a, i1 false) #2
 end_comment
 
 begin_comment
@@ -7143,11 +6563,7 @@ comment|// CHECK:   [[VCLZQ_V2_I:%.*]] = bitcast<8 x i16> [[VCLZQ_V1_I]] to<16 x
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VCLZQ_V2_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP1]]
+comment|// CHECK:   ret<8 x i16> [[VCLZQ_V1_I]]
 end_comment
 
 begin_function
@@ -7168,7 +6584,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vclz_u32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vclz_u32(
 end_comment
 
 begin_comment
@@ -7176,11 +6592,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZ_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> [[VCLZ_V_I]], i1 false) #2
+comment|// CHECK:   [[VCLZ_V1_I:%.*]] = call<2 x i32> @llvm.ctlz.v2i32(<2 x i32> %a, i1 false) #2
 end_comment
 
 begin_comment
@@ -7188,11 +6600,7 @@ comment|// CHECK:   [[VCLZ_V2_I:%.*]] = bitcast<2 x i32> [[VCLZ_V1_I]] to<8 x i8
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VCLZ_V2_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP1]]
+comment|// CHECK:   ret<2 x i32> [[VCLZ_V1_I]]
 end_comment
 
 begin_function
@@ -7213,7 +6621,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vclzq_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vclzq_u32(
 end_comment
 
 begin_comment
@@ -7221,11 +6629,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCLZQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> [[VCLZQ_V_I]], i1 false) #2
+comment|// CHECK:   [[VCLZQ_V1_I:%.*]] = call<4 x i32> @llvm.ctlz.v4i32(<4 x i32> %a, i1 false) #2
 end_comment
 
 begin_comment
@@ -7233,11 +6637,7 @@ comment|// CHECK:   [[VCLZQ_V2_I:%.*]] = bitcast<4 x i32> [[VCLZQ_V1_I]] to<16 x
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VCLZQ_V2_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP1]]
+comment|// CHECK:   ret<4 x i32> [[VCLZQ_V1_I]]
 end_comment
 
 begin_function
@@ -7258,7 +6658,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vcnt_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcnt_s8(
 end_comment
 
 begin_comment
@@ -7287,7 +6687,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vcntq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcntq_s8(
 end_comment
 
 begin_comment
@@ -7316,7 +6716,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vcnt_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcnt_u8(
 end_comment
 
 begin_comment
@@ -7345,7 +6745,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vcntq_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcntq_u8(
 end_comment
 
 begin_comment
@@ -7374,7 +6774,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vcnt_p8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcnt_p8(
 end_comment
 
 begin_comment
@@ -7403,7 +6803,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vcntq_p8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vcntq_p8(
 end_comment
 
 begin_comment
@@ -7432,7 +6832,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vmvn_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvn_s8(
 end_comment
 
 begin_comment
@@ -7461,7 +6861,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vmvnq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvnq_s8(
 end_comment
 
 begin_comment
@@ -7490,7 +6890,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmvn_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvn_s16(
 end_comment
 
 begin_comment
@@ -7519,7 +6919,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmvnq_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvnq_s16(
 end_comment
 
 begin_comment
@@ -7548,7 +6948,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmvn_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvn_s32(
 end_comment
 
 begin_comment
@@ -7577,7 +6977,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmvnq_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvnq_s32(
 end_comment
 
 begin_comment
@@ -7606,7 +7006,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vmvn_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvn_u8(
 end_comment
 
 begin_comment
@@ -7635,7 +7035,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vmvnq_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvnq_u8(
 end_comment
 
 begin_comment
@@ -7664,7 +7064,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmvn_u16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvn_u16(
 end_comment
 
 begin_comment
@@ -7693,7 +7093,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmvnq_u16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvnq_u16(
 end_comment
 
 begin_comment
@@ -7722,7 +7122,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmvn_u32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvn_u32(
 end_comment
 
 begin_comment
@@ -7751,7 +7151,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmvnq_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvnq_u32(
 end_comment
 
 begin_comment
@@ -7780,7 +7180,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vmvn_p8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvn_p8(
 end_comment
 
 begin_comment
@@ -7809,7 +7209,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vmvnq_p8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vmvnq_p8(
 end_comment
 
 begin_comment
@@ -7838,7 +7238,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrbit_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrbit_s8(
 end_comment
 
 begin_comment
@@ -7867,7 +7267,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrbitq_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrbitq_s8(
 end_comment
 
 begin_comment
@@ -7896,7 +7296,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrbit_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrbit_u8(
 end_comment
 
 begin_comment
@@ -7925,7 +7325,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrbitq_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrbitq_u8(
 end_comment
 
 begin_comment
@@ -7954,7 +7354,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vrbit_p8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrbit_p8(
 end_comment
 
 begin_comment
@@ -7983,7 +7383,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vrbitq_p8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vrbitq_p8(
 end_comment
 
 begin_comment
@@ -8012,7 +7412,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vmovn_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vmovn_s16(
 end_comment
 
 begin_comment
@@ -8020,11 +7420,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<8 x i16> [[TMP1]] to<8 x i8>
+comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<8 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
@@ -8049,7 +7445,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmovn_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vmovn_s32(
 end_comment
 
 begin_comment
@@ -8057,11 +7453,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<4 x i32> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<4 x i32> %a to<4 x i16>
 end_comment
 
 begin_comment
@@ -8086,7 +7478,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmovn_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vmovn_s64(
 end_comment
 
 begin_comment
@@ -8094,11 +7486,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<2 x i64> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<2 x i64> %a to<2 x i32>
 end_comment
 
 begin_comment
@@ -8123,7 +7511,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vmovn_u16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vmovn_u16(
 end_comment
 
 begin_comment
@@ -8131,11 +7519,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<8 x i16> [[TMP1]] to<8 x i8>
+comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<8 x i16> %a to<8 x i8>
 end_comment
 
 begin_comment
@@ -8160,7 +7544,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmovn_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vmovn_u32(
 end_comment
 
 begin_comment
@@ -8168,11 +7552,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<4 x i32> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<4 x i32> %a to<4 x i16>
 end_comment
 
 begin_comment
@@ -8197,7 +7577,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmovn_u64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vmovn_u64(
 end_comment
 
 begin_comment
@@ -8205,11 +7585,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<2 x i64> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VMOVN_I:%.*]] = trunc<2 x i64> %a to<2 x i32>
 end_comment
 
 begin_comment
@@ -8234,7 +7610,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vmovn_high_s16(<8 x i8> %a,<8 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vmovn_high_s16(
 end_comment
 
 begin_comment
@@ -8242,11 +7618,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<8 x i16> [[TMP1]] to<8 x i8>
+comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<8 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
@@ -8280,7 +7652,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmovn_high_s32(<4 x i16> %a,<4 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vmovn_high_s32(
 end_comment
 
 begin_comment
@@ -8288,11 +7660,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<4 x i32> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<4 x i32> %b to<4 x i16>
 end_comment
 
 begin_comment
@@ -8326,7 +7694,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmovn_high_s64(<2 x i32> %a,<2 x i64> %b) #0 {
+comment|// CHECK-LABEL: @test_vmovn_high_s64(
 end_comment
 
 begin_comment
@@ -8334,11 +7702,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<2 x i64> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<2 x i64> %b to<2 x i32>
 end_comment
 
 begin_comment
@@ -8372,7 +7736,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vmovn_high_u16(<8 x i8> %a,<8 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vmovn_high_u16(
 end_comment
 
 begin_comment
@@ -8380,11 +7744,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<8 x i16> [[TMP1]] to<8 x i8>
+comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<8 x i16> %b to<8 x i8>
 end_comment
 
 begin_comment
@@ -8418,7 +7778,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmovn_high_u32(<4 x i16> %a,<4 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vmovn_high_u32(
 end_comment
 
 begin_comment
@@ -8426,11 +7786,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<4 x i32> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<4 x i32> %b to<4 x i16>
 end_comment
 
 begin_comment
@@ -8464,7 +7820,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmovn_high_u64(<2 x i32> %a,<2 x i64> %b) #0 {
+comment|// CHECK-LABEL: @test_vmovn_high_u64(
 end_comment
 
 begin_comment
@@ -8472,11 +7828,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<2 x i64> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VMOVN_I_I:%.*]] = trunc<2 x i64> %b to<2 x i32>
 end_comment
 
 begin_comment
@@ -8510,7 +7862,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vqmovun_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vqmovun_s16(
 end_comment
 
 begin_comment
@@ -8518,11 +7870,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVUN_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.sqxtun.v8i8(<8 x i16> [[VQMOVUN_V_I]]) #2
+comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.sqxtun.v8i8(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -8547,7 +7895,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqmovun_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vqmovun_s32(
 end_comment
 
 begin_comment
@@ -8555,11 +7903,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVUN_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqxtun.v4i16(<4 x i32> [[VQMOVUN_V_I]]) #2
+comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqxtun.v4i16(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -8567,11 +7911,7 @@ comment|// CHECK:   [[VQMOVUN_V2_I:%.*]] = bitcast<4 x i16> [[VQMOVUN_V1_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVUN_V2_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP1]]
+comment|// CHECK:   ret<4 x i16> [[VQMOVUN_V1_I]]
 end_comment
 
 begin_function
@@ -8592,7 +7932,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqmovun_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vqmovun_s64(
 end_comment
 
 begin_comment
@@ -8600,11 +7940,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVUN_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqxtun.v2i32(<2 x i64> [[VQMOVUN_V_I]]) #2
+comment|// CHECK:   [[VQMOVUN_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqxtun.v2i32(<2 x i64> %a) #2
 end_comment
 
 begin_comment
@@ -8612,11 +7948,7 @@ comment|// CHECK:   [[VQMOVUN_V2_I:%.*]] = bitcast<2 x i32> [[VQMOVUN_V1_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVUN_V2_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP1]]
+comment|// CHECK:   ret<2 x i32> [[VQMOVUN_V1_I]]
 end_comment
 
 begin_function
@@ -8637,7 +7969,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vqmovun_high_s16(<8 x i8> %a,<8 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vqmovun_high_s16(
 end_comment
 
 begin_comment
@@ -8645,11 +7977,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVUN_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVUN_V1_I_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.sqxtun.v8i8(<8 x i16> [[VQMOVUN_V_I_I]]) #2
+comment|// CHECK:   [[VQMOVUN_V1_I_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.sqxtun.v8i8(<8 x i16> %b) #2
 end_comment
 
 begin_comment
@@ -8683,7 +8011,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqmovun_high_s32(<4 x i16> %a,<4 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vqmovun_high_s32(
 end_comment
 
 begin_comment
@@ -8691,11 +8019,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVUN_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVUN_V1_I_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqxtun.v4i16(<4 x i32> [[VQMOVUN_V_I_I]]) #2
+comment|// CHECK:   [[VQMOVUN_V1_I_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqxtun.v4i16(<4 x i32> %b) #2
 end_comment
 
 begin_comment
@@ -8703,11 +8027,7 @@ comment|// CHECK:   [[VQMOVUN_V2_I_I:%.*]] = bitcast<4 x i16> [[VQMOVUN_V1_I_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVUN_V2_I_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<4 x i16> %a,<4 x i16> [[TMP1]],<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<4 x i16> %a,<4 x i16> [[VQMOVUN_V1_I_I]],<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 end_comment
 
 begin_comment
@@ -8737,7 +8057,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqmovun_high_s64(<2 x i32> %a,<2 x i64> %b) #0 {
+comment|// CHECK-LABEL: @test_vqmovun_high_s64(
 end_comment
 
 begin_comment
@@ -8745,11 +8065,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVUN_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVUN_V1_I_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqxtun.v2i32(<2 x i64> [[VQMOVUN_V_I_I]]) #2
+comment|// CHECK:   [[VQMOVUN_V1_I_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqxtun.v2i32(<2 x i64> %b) #2
 end_comment
 
 begin_comment
@@ -8757,11 +8073,7 @@ comment|// CHECK:   [[VQMOVUN_V2_I_I:%.*]] = bitcast<2 x i32> [[VQMOVUN_V1_I_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVUN_V2_I_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<2 x i32> %a,<2 x i32> [[TMP1]],<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<2 x i32> %a,<2 x i32> [[VQMOVUN_V1_I_I]],<4 x i32><i32 0, i32 1, i32 2, i32 3>
 end_comment
 
 begin_comment
@@ -8791,7 +8103,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vqmovn_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_s16(
 end_comment
 
 begin_comment
@@ -8799,11 +8111,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.sqxtn.v8i8(<8 x i16> [[VQMOVN_V_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.sqxtn.v8i8(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -8828,7 +8136,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqmovn_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_s32(
 end_comment
 
 begin_comment
@@ -8836,11 +8144,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqxtn.v4i16(<4 x i32> [[VQMOVN_V_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqxtn.v4i16(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -8848,11 +8152,7 @@ comment|// CHECK:   [[VQMOVN_V2_I:%.*]] = bitcast<4 x i16> [[VQMOVN_V1_I]] to<8 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVN_V2_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP1]]
+comment|// CHECK:   ret<4 x i16> [[VQMOVN_V1_I]]
 end_comment
 
 begin_function
@@ -8873,7 +8173,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqmovn_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_s64(
 end_comment
 
 begin_comment
@@ -8881,11 +8181,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqxtn.v2i32(<2 x i64> [[VQMOVN_V_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqxtn.v2i32(<2 x i64> %a) #2
 end_comment
 
 begin_comment
@@ -8893,11 +8189,7 @@ comment|// CHECK:   [[VQMOVN_V2_I:%.*]] = bitcast<2 x i32> [[VQMOVN_V1_I]] to<8 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVN_V2_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP1]]
+comment|// CHECK:   ret<2 x i32> [[VQMOVN_V1_I]]
 end_comment
 
 begin_function
@@ -8918,7 +8210,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vqmovn_high_s16(<8 x i8> %a,<8 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_high_s16(
 end_comment
 
 begin_comment
@@ -8926,11 +8218,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.sqxtn.v8i8(<8 x i16> [[VQMOVN_V_I_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.sqxtn.v8i8(<8 x i16> %b) #2
 end_comment
 
 begin_comment
@@ -8964,7 +8252,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqmovn_high_s32(<4 x i16> %a,<4 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_high_s32(
 end_comment
 
 begin_comment
@@ -8972,11 +8260,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqxtn.v4i16(<4 x i32> [[VQMOVN_V_I_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqxtn.v4i16(<4 x i32> %b) #2
 end_comment
 
 begin_comment
@@ -8984,11 +8268,7 @@ comment|// CHECK:   [[VQMOVN_V2_I_I:%.*]] = bitcast<4 x i16> [[VQMOVN_V1_I_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVN_V2_I_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<4 x i16> %a,<4 x i16> [[TMP1]],<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<4 x i16> %a,<4 x i16> [[VQMOVN_V1_I_I]],<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 end_comment
 
 begin_comment
@@ -9018,7 +8298,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqmovn_high_s64(<2 x i32> %a,<2 x i64> %b) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_high_s64(
 end_comment
 
 begin_comment
@@ -9026,11 +8306,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqxtn.v2i32(<2 x i64> [[VQMOVN_V_I_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqxtn.v2i32(<2 x i64> %b) #2
 end_comment
 
 begin_comment
@@ -9038,11 +8314,7 @@ comment|// CHECK:   [[VQMOVN_V2_I_I:%.*]] = bitcast<2 x i32> [[VQMOVN_V1_I_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVN_V2_I_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<2 x i32> %a,<2 x i32> [[TMP1]],<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<2 x i32> %a,<2 x i32> [[VQMOVN_V1_I_I]],<4 x i32><i32 0, i32 1, i32 2, i32 3>
 end_comment
 
 begin_comment
@@ -9072,7 +8344,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i8> @test_vqmovn_u16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_u16(
 end_comment
 
 begin_comment
@@ -9080,11 +8352,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.uqxtn.v8i8(<8 x i16> [[VQMOVN_V_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.uqxtn.v8i8(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -9109,7 +8377,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqmovn_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_u32(
 end_comment
 
 begin_comment
@@ -9117,11 +8385,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.uqxtn.v4i16(<4 x i32> [[VQMOVN_V_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.uqxtn.v4i16(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -9129,11 +8393,7 @@ comment|// CHECK:   [[VQMOVN_V2_I:%.*]] = bitcast<4 x i16> [[VQMOVN_V1_I]] to<8 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVN_V2_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP1]]
+comment|// CHECK:   ret<4 x i16> [[VQMOVN_V1_I]]
 end_comment
 
 begin_function
@@ -9154,7 +8414,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqmovn_u64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_u64(
 end_comment
 
 begin_comment
@@ -9162,11 +8422,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.uqxtn.v2i32(<2 x i64> [[VQMOVN_V_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.uqxtn.v2i32(<2 x i64> %a) #2
 end_comment
 
 begin_comment
@@ -9174,11 +8430,7 @@ comment|// CHECK:   [[VQMOVN_V2_I:%.*]] = bitcast<2 x i32> [[VQMOVN_V1_I]] to<8 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVN_V2_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP1]]
+comment|// CHECK:   ret<2 x i32> [[VQMOVN_V1_I]]
 end_comment
 
 begin_function
@@ -9199,7 +8451,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<16 x i8> @test_vqmovn_high_u16(<8 x i8> %a,<8 x i16> %b) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_high_u16(
 end_comment
 
 begin_comment
@@ -9207,11 +8459,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.uqxtn.v8i8(<8 x i16> [[VQMOVN_V_I_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.uqxtn.v8i8(<8 x i16> %b) #2
 end_comment
 
 begin_comment
@@ -9245,7 +8493,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqmovn_high_u32(<4 x i16> %a,<4 x i32> %b) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_high_u32(
 end_comment
 
 begin_comment
@@ -9253,11 +8501,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.uqxtn.v4i16(<4 x i32> [[VQMOVN_V_I_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.uqxtn.v4i16(<4 x i32> %b) #2
 end_comment
 
 begin_comment
@@ -9265,11 +8509,7 @@ comment|// CHECK:   [[VQMOVN_V2_I_I:%.*]] = bitcast<4 x i16> [[VQMOVN_V1_I_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVN_V2_I_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<4 x i16> %a,<4 x i16> [[TMP1]],<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<4 x i16> %a,<4 x i16> [[VQMOVN_V1_I_I]],<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 end_comment
 
 begin_comment
@@ -9299,7 +8539,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqmovn_high_u64(<2 x i32> %a,<2 x i64> %b) #0 {
+comment|// CHECK-LABEL: @test_vqmovn_high_u64(
 end_comment
 
 begin_comment
@@ -9307,11 +8547,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQMOVN_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.uqxtn.v2i32(<2 x i64> [[VQMOVN_V_I_I]]) #2
+comment|// CHECK:   [[VQMOVN_V1_I_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.uqxtn.v2i32(<2 x i64> %b) #2
 end_comment
 
 begin_comment
@@ -9319,11 +8555,7 @@ comment|// CHECK:   [[VQMOVN_V2_I_I:%.*]] = bitcast<2 x i32> [[VQMOVN_V1_I_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[VQMOVN_V2_I_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<2 x i32> %a,<2 x i32> [[TMP1]],<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK:   [[SHUFFLE_I_I:%.*]] = shufflevector<2 x i32> %a,<2 x i32> [[VQMOVN_V1_I_I]],<4 x i32><i32 0, i32 1, i32 2, i32 3>
 end_comment
 
 begin_comment
@@ -9353,7 +8585,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vshll_n_s8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_n_s8(
 end_comment
 
 begin_comment
@@ -9388,7 +8620,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vshll_n_s16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_n_s16(
 end_comment
 
 begin_comment
@@ -9431,7 +8663,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vshll_n_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_n_s32(
 end_comment
 
 begin_comment
@@ -9474,7 +8706,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vshll_n_u8(<8 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_n_u8(
 end_comment
 
 begin_comment
@@ -9509,7 +8741,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vshll_n_u16(<4 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_n_u16(
 end_comment
 
 begin_comment
@@ -9552,7 +8784,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vshll_n_u32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_n_u32(
 end_comment
 
 begin_comment
@@ -9595,7 +8827,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vshll_high_n_s8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_high_n_s8(
 end_comment
 
 begin_comment
@@ -9634,7 +8866,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vshll_high_n_s16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_high_n_s16(
 end_comment
 
 begin_comment
@@ -9681,7 +8913,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vshll_high_n_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_high_n_s32(
 end_comment
 
 begin_comment
@@ -9728,7 +8960,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vshll_high_n_u8(<16 x i8> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_high_n_u8(
 end_comment
 
 begin_comment
@@ -9767,7 +8999,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vshll_high_n_u16(<8 x i16> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_high_n_u16(
 end_comment
 
 begin_comment
@@ -9814,7 +9046,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vshll_high_n_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vshll_high_n_u32(
 end_comment
 
 begin_comment
@@ -9861,7 +9093,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x half> @test_vcvt_f16_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_f16_f32(
 end_comment
 
 begin_comment
@@ -9869,11 +9101,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVT_F16_F32_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_F16_F321_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.vcvtfp2hf(<4 x float> [[VCVT_F16_F32_I]]) #2
+comment|// CHECK:   [[VCVT_F16_F321_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.vcvtfp2hf(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -9906,7 +9134,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x half> @test_vcvt_high_f16_f32(<4 x half> %a,<4 x float> %b) #0 {
+comment|// CHECK-LABEL: @test_vcvt_high_f16_f32(
 end_comment
 
 begin_comment
@@ -9914,11 +9142,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVT_F16_F32_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_F16_F321_I_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.vcvtfp2hf(<4 x float> [[VCVT_F16_F32_I_I]]) #2
+comment|// CHECK:   [[VCVT_F16_F321_I_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.vcvtfp2hf(<4 x float> %b) #2
 end_comment
 
 begin_comment
@@ -9960,7 +9184,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vcvt_f32_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_f32_f64(
 end_comment
 
 begin_comment
@@ -9968,11 +9192,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I:%.*]] = fptrunc<2 x double> [[TMP1]] to<2 x float>
+comment|// CHECK:   [[VCVT_I:%.*]] = fptrunc<2 x double> %a to<2 x float>
 end_comment
 
 begin_comment
@@ -9997,7 +9217,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vcvt_high_f32_f64(<2 x float> %a,<2 x double> %b) #0 {
+comment|// CHECK-LABEL: @test_vcvt_high_f32_f64(
 end_comment
 
 begin_comment
@@ -10005,11 +9225,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I_I:%.*]] = fptrunc<2 x double> [[TMP1]] to<2 x float>
+comment|// CHECK:   [[VCVT_I_I:%.*]] = fptrunc<2 x double> %b to<2 x float>
 end_comment
 
 begin_comment
@@ -10043,7 +9259,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vcvtx_f32_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtx_f32_f64(
 end_comment
 
 begin_comment
@@ -10051,11 +9267,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTX_F32_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTX_F32_V1_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fcvtxn.v2f32.v2f64(<2 x double> [[VCVTX_F32_V_I]]) #2
+comment|// CHECK:   [[VCVTX_F32_V1_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fcvtxn.v2f32.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -10080,7 +9292,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vcvtx_high_f32_f64(<2 x float> %a,<2 x double> %b) #0 {
+comment|// CHECK-LABEL: @test_vcvtx_high_f32_f64(
 end_comment
 
 begin_comment
@@ -10088,11 +9300,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %b to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTX_F32_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTX_F32_V1_I_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fcvtxn.v2f32.v2f64(<2 x double> [[VCVTX_F32_V_I_I]]) #2
+comment|// CHECK:   [[VCVTX_F32_V1_I_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fcvtxn.v2f32.v2f64(<2 x double> %b) #2
 end_comment
 
 begin_comment
@@ -10126,7 +9334,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vcvt_f32_f16(<4 x half> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_f32_f16(
 end_comment
 
 begin_comment
@@ -10146,11 +9354,7 @@ comment|// CHECK:   [[VCVT_F32_F162_I:%.*]] = bitcast<4 x float> [[VCVT_F32_F161
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VCVT_F32_F162_I]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x float> [[TMP1]]
+comment|// CHECK:   ret<4 x float> [[VCVT_F32_F161_I]]
 end_comment
 
 begin_function
@@ -10171,7 +9375,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vcvt_high_f32_f16(<8 x half> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_high_f32_f16(
 end_comment
 
 begin_comment
@@ -10195,11 +9399,7 @@ comment|// CHECK:   [[VCVT_F32_F162_I_I:%.*]] = bitcast<4 x float> [[VCVT_F32_F1
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[VCVT_F32_F162_I_I]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x float> [[TMP1]]
+comment|// CHECK:   ret<4 x float> [[VCVT_F32_F161_I_I]]
 end_comment
 
 begin_function
@@ -10220,7 +9420,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vcvt_f64_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_f64_f32(
 end_comment
 
 begin_comment
@@ -10228,11 +9428,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I:%.*]] = fpext<2 x float> [[TMP1]] to<2 x double>
+comment|// CHECK:   [[VCVT_I:%.*]] = fpext<2 x float> %a to<2 x double>
 end_comment
 
 begin_comment
@@ -10257,7 +9453,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vcvt_high_f64_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_high_f64_f32(
 end_comment
 
 begin_comment
@@ -10269,11 +9465,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> [[SHUFFLE_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I_I:%.*]] = fpext<2 x float> [[TMP1]] to<2 x double>
+comment|// CHECK:   [[VCVT_I_I:%.*]] = fpext<2 x float> [[SHUFFLE_I_I]] to<2 x double>
 end_comment
 
 begin_comment
@@ -10298,7 +9490,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrndn_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndn_f32(
 end_comment
 
 begin_comment
@@ -10306,11 +9498,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDN_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDN1_I:%.*]] = call<2 x float> @llvm.aarch64.neon.frintn.v2f32(<2 x float> [[VRNDN_I]]) #2
+comment|// CHECK:   [[VRNDN1_I:%.*]] = call<2 x float> @llvm.aarch64.neon.frintn.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10335,7 +9523,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrndnq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndnq_f32(
 end_comment
 
 begin_comment
@@ -10343,11 +9531,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDN_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDN1_I:%.*]] = call<4 x float> @llvm.aarch64.neon.frintn.v4f32(<4 x float> [[VRNDN_I]]) #2
+comment|// CHECK:   [[VRNDN1_I:%.*]] = call<4 x float> @llvm.aarch64.neon.frintn.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10372,7 +9556,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vrndnq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndnq_f64(
 end_comment
 
 begin_comment
@@ -10380,11 +9564,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDN_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDN1_I:%.*]] = call<2 x double> @llvm.aarch64.neon.frintn.v2f64(<2 x double> [[VRNDN_I]]) #2
+comment|// CHECK:   [[VRNDN1_I:%.*]] = call<2 x double> @llvm.aarch64.neon.frintn.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -10409,7 +9589,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrnda_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrnda_f32(
 end_comment
 
 begin_comment
@@ -10417,11 +9597,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDA_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDA1_I:%.*]] = call<2 x float> @llvm.round.v2f32(<2 x float> [[VRNDA_I]]) #2
+comment|// CHECK:   [[VRNDA1_I:%.*]] = call<2 x float> @llvm.round.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10446,7 +9622,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrndaq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndaq_f32(
 end_comment
 
 begin_comment
@@ -10454,11 +9630,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDA_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDA1_I:%.*]] = call<4 x float> @llvm.round.v4f32(<4 x float> [[VRNDA_I]]) #2
+comment|// CHECK:   [[VRNDA1_I:%.*]] = call<4 x float> @llvm.round.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10483,7 +9655,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vrndaq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndaq_f64(
 end_comment
 
 begin_comment
@@ -10491,11 +9663,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDA_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDA1_I:%.*]] = call<2 x double> @llvm.round.v2f64(<2 x double> [[VRNDA_I]]) #2
+comment|// CHECK:   [[VRNDA1_I:%.*]] = call<2 x double> @llvm.round.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -10520,7 +9688,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrndp_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndp_f32(
 end_comment
 
 begin_comment
@@ -10528,11 +9696,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDP_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDP1_I:%.*]] = call<2 x float> @llvm.ceil.v2f32(<2 x float> [[VRNDP_I]]) #2
+comment|// CHECK:   [[VRNDP1_I:%.*]] = call<2 x float> @llvm.ceil.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10557,7 +9721,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrndpq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndpq_f32(
 end_comment
 
 begin_comment
@@ -10565,11 +9729,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDP_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDP1_I:%.*]] = call<4 x float> @llvm.ceil.v4f32(<4 x float> [[VRNDP_I]]) #2
+comment|// CHECK:   [[VRNDP1_I:%.*]] = call<4 x float> @llvm.ceil.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10594,7 +9754,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vrndpq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndpq_f64(
 end_comment
 
 begin_comment
@@ -10602,11 +9762,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDP_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDP1_I:%.*]] = call<2 x double> @llvm.ceil.v2f64(<2 x double> [[VRNDP_I]]) #2
+comment|// CHECK:   [[VRNDP1_I:%.*]] = call<2 x double> @llvm.ceil.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -10631,7 +9787,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrndm_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndm_f32(
 end_comment
 
 begin_comment
@@ -10639,11 +9795,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDM_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDM1_I:%.*]] = call<2 x float> @llvm.floor.v2f32(<2 x float> [[VRNDM_I]]) #2
+comment|// CHECK:   [[VRNDM1_I:%.*]] = call<2 x float> @llvm.floor.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10668,7 +9820,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrndmq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndmq_f32(
 end_comment
 
 begin_comment
@@ -10676,11 +9828,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDM_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDM1_I:%.*]] = call<4 x float> @llvm.floor.v4f32(<4 x float> [[VRNDM_I]]) #2
+comment|// CHECK:   [[VRNDM1_I:%.*]] = call<4 x float> @llvm.floor.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10705,7 +9853,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vrndmq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndmq_f64(
 end_comment
 
 begin_comment
@@ -10713,11 +9861,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDM_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDM1_I:%.*]] = call<2 x double> @llvm.floor.v2f64(<2 x double> [[VRNDM_I]]) #2
+comment|// CHECK:   [[VRNDM1_I:%.*]] = call<2 x double> @llvm.floor.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -10742,7 +9886,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrndx_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndx_f32(
 end_comment
 
 begin_comment
@@ -10750,11 +9894,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDX_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDX1_I:%.*]] = call<2 x float> @llvm.rint.v2f32(<2 x float> [[VRNDX_I]]) #2
+comment|// CHECK:   [[VRNDX1_I:%.*]] = call<2 x float> @llvm.rint.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10779,7 +9919,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrndxq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndxq_f32(
 end_comment
 
 begin_comment
@@ -10787,11 +9927,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDX1_I:%.*]] = call<4 x float> @llvm.rint.v4f32(<4 x float> [[VRNDX_I]]) #2
+comment|// CHECK:   [[VRNDX1_I:%.*]] = call<4 x float> @llvm.rint.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10816,7 +9952,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vrndxq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndxq_f64(
 end_comment
 
 begin_comment
@@ -10824,11 +9960,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDX1_I:%.*]] = call<2 x double> @llvm.rint.v2f64(<2 x double> [[VRNDX_I]]) #2
+comment|// CHECK:   [[VRNDX1_I:%.*]] = call<2 x double> @llvm.rint.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -10853,7 +9985,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrnd_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrnd_f32(
 end_comment
 
 begin_comment
@@ -10861,11 +9993,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDZ_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDZ1_I:%.*]] = call<2 x float> @llvm.trunc.v2f32(<2 x float> [[VRNDZ_I]]) #2
+comment|// CHECK:   [[VRNDZ1_I:%.*]] = call<2 x float> @llvm.trunc.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10890,7 +10018,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrndq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndq_f32(
 end_comment
 
 begin_comment
@@ -10898,11 +10026,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDZ_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDZ1_I:%.*]] = call<4 x float> @llvm.trunc.v4f32(<4 x float> [[VRNDZ_I]]) #2
+comment|// CHECK:   [[VRNDZ1_I:%.*]] = call<4 x float> @llvm.trunc.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -10927,7 +10051,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vrndq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndq_f64(
 end_comment
 
 begin_comment
@@ -10935,11 +10059,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDZ_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDZ1_I:%.*]] = call<2 x double> @llvm.trunc.v2f64(<2 x double> [[VRNDZ_I]]) #2
+comment|// CHECK:   [[VRNDZ1_I:%.*]] = call<2 x double> @llvm.trunc.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -10964,7 +10084,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrndi_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndi_f32(
 end_comment
 
 begin_comment
@@ -10972,11 +10092,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDI_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDI1_I:%.*]] = call<2 x float> @llvm.nearbyint.v2f32(<2 x float> [[VRNDI_I]]) #2
+comment|// CHECK:   [[VRNDI1_I:%.*]] = call<2 x float> @llvm.nearbyint.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11001,7 +10117,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrndiq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndiq_f32(
 end_comment
 
 begin_comment
@@ -11009,11 +10125,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDI_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDI1_I:%.*]] = call<4 x float> @llvm.nearbyint.v4f32(<4 x float> [[VRNDI_I]]) #2
+comment|// CHECK:   [[VRNDI1_I:%.*]] = call<4 x float> @llvm.nearbyint.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11038,7 +10150,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vrndiq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vrndiq_f64(
 end_comment
 
 begin_comment
@@ -11046,11 +10158,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRNDI_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRNDI1_I:%.*]] = call<2 x double> @llvm.nearbyint.v2f64(<2 x double> [[VRNDI_I]]) #2
+comment|// CHECK:   [[VRNDI1_I:%.*]] = call<2 x double> @llvm.nearbyint.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -11075,7 +10183,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvt_s32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_s32_f32(
 end_comment
 
 begin_comment
@@ -11083,15 +10191,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fptosi<2 x float> %a to<2 x i32>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fptosi<2 x float> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[TMP1]]
 end_comment
 
 begin_function
@@ -11112,7 +10216,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtq_s32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtq_s32_f32(
 end_comment
 
 begin_comment
@@ -11120,15 +10224,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fptosi<4 x float> %a to<4 x i32>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fptosi<4 x float> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[TMP1]]
 end_comment
 
 begin_function
@@ -11149,7 +10249,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtq_s64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtq_s64_f64(
 end_comment
 
 begin_comment
@@ -11157,15 +10257,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fptosi<2 x double> %a to<2 x i64>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fptosi<2 x double> [[TMP1]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[TMP1]]
 end_comment
 
 begin_function
@@ -11186,7 +10282,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvt_u32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_u32_f32(
 end_comment
 
 begin_comment
@@ -11194,15 +10290,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fptoui<2 x float> %a to<2 x i32>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fptoui<2 x float> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[TMP1]]
 end_comment
 
 begin_function
@@ -11223,7 +10315,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtq_u32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtq_u32_f32(
 end_comment
 
 begin_comment
@@ -11231,15 +10323,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+comment|// CHECK:   [[TMP1:%.*]] = fptoui<4 x float> %a to<4 x i32>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fptoui<4 x float> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[TMP1]]
 end_comment
 
 begin_function
@@ -11260,7 +10348,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtq_u64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtq_u64_f64(
 end_comment
 
 begin_comment
@@ -11268,15 +10356,11 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
+comment|// CHECK:   [[TMP1:%.*]] = fptoui<2 x double> %a to<2 x i64>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = fptoui<2 x double> [[TMP1]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[TMP1]]
 end_comment
 
 begin_function
@@ -11297,7 +10381,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvtn_s32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtn_s32_f32(
 end_comment
 
 begin_comment
@@ -11305,11 +10389,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTN_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtns.v2i32.v2f32(<2 x float> [[VCVTN_I]]) #2
+comment|// CHECK:   [[VCVTN1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtns.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11334,7 +10414,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtnq_s32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtnq_s32_f32(
 end_comment
 
 begin_comment
@@ -11342,11 +10422,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTN_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtns.v4i32.v4f32(<4 x float> [[VCVTN_I]]) #2
+comment|// CHECK:   [[VCVTN1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtns.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11371,7 +10447,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtnq_s64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtnq_s64_f64(
 end_comment
 
 begin_comment
@@ -11379,11 +10455,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTN_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtns.v2i64.v2f64(<2 x double> [[VCVTN_I]]) #2
+comment|// CHECK:   [[VCVTN1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtns.v2i64.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -11408,7 +10480,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvtn_u32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtn_u32_f32(
 end_comment
 
 begin_comment
@@ -11416,11 +10488,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTN_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtnu.v2i32.v2f32(<2 x float> [[VCVTN_I]]) #2
+comment|// CHECK:   [[VCVTN1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtnu.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11445,7 +10513,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtnq_u32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtnq_u32_f32(
 end_comment
 
 begin_comment
@@ -11453,11 +10521,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTN_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtnu.v4i32.v4f32(<4 x float> [[VCVTN_I]]) #2
+comment|// CHECK:   [[VCVTN1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtnu.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11482,7 +10546,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtnq_u64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtnq_u64_f64(
 end_comment
 
 begin_comment
@@ -11490,11 +10554,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTN_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtnu.v2i64.v2f64(<2 x double> [[VCVTN_I]]) #2
+comment|// CHECK:   [[VCVTN1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtnu.v2i64.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -11519,7 +10579,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvtp_s32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtp_s32_f32(
 end_comment
 
 begin_comment
@@ -11527,11 +10587,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTP_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtps.v2i32.v2f32(<2 x float> [[VCVTP_I]]) #2
+comment|// CHECK:   [[VCVTP1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtps.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11556,7 +10612,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtpq_s32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtpq_s32_f32(
 end_comment
 
 begin_comment
@@ -11564,11 +10620,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTP_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtps.v4i32.v4f32(<4 x float> [[VCVTP_I]]) #2
+comment|// CHECK:   [[VCVTP1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtps.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11593,7 +10645,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtpq_s64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtpq_s64_f64(
 end_comment
 
 begin_comment
@@ -11601,11 +10653,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTP_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtps.v2i64.v2f64(<2 x double> [[VCVTP_I]]) #2
+comment|// CHECK:   [[VCVTP1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtps.v2i64.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -11630,7 +10678,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvtp_u32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtp_u32_f32(
 end_comment
 
 begin_comment
@@ -11638,11 +10686,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTP_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtpu.v2i32.v2f32(<2 x float> [[VCVTP_I]]) #2
+comment|// CHECK:   [[VCVTP1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtpu.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11667,7 +10711,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtpq_u32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtpq_u32_f32(
 end_comment
 
 begin_comment
@@ -11675,11 +10719,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTP_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtpu.v4i32.v4f32(<4 x float> [[VCVTP_I]]) #2
+comment|// CHECK:   [[VCVTP1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtpu.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11704,7 +10744,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtpq_u64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtpq_u64_f64(
 end_comment
 
 begin_comment
@@ -11712,11 +10752,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTP_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtpu.v2i64.v2f64(<2 x double> [[VCVTP_I]]) #2
+comment|// CHECK:   [[VCVTP1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtpu.v2i64.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -11741,7 +10777,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvtm_s32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtm_s32_f32(
 end_comment
 
 begin_comment
@@ -11749,11 +10785,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTM_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtms.v2i32.v2f32(<2 x float> [[VCVTM_I]]) #2
+comment|// CHECK:   [[VCVTM1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtms.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11778,7 +10810,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtmq_s32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtmq_s32_f32(
 end_comment
 
 begin_comment
@@ -11786,11 +10818,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTM_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtms.v4i32.v4f32(<4 x float> [[VCVTM_I]]) #2
+comment|// CHECK:   [[VCVTM1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtms.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11815,7 +10843,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtmq_s64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtmq_s64_f64(
 end_comment
 
 begin_comment
@@ -11823,11 +10851,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTM_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtms.v2i64.v2f64(<2 x double> [[VCVTM_I]]) #2
+comment|// CHECK:   [[VCVTM1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtms.v2i64.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -11852,7 +10876,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvtm_u32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtm_u32_f32(
 end_comment
 
 begin_comment
@@ -11860,11 +10884,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTM_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtmu.v2i32.v2f32(<2 x float> [[VCVTM_I]]) #2
+comment|// CHECK:   [[VCVTM1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtmu.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11889,7 +10909,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtmq_u32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtmq_u32_f32(
 end_comment
 
 begin_comment
@@ -11897,11 +10917,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTM_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtmu.v4i32.v4f32(<4 x float> [[VCVTM_I]]) #2
+comment|// CHECK:   [[VCVTM1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtmu.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -11926,7 +10942,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtmq_u64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtmq_u64_f64(
 end_comment
 
 begin_comment
@@ -11934,11 +10950,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTM_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtmu.v2i64.v2f64(<2 x double> [[VCVTM_I]]) #2
+comment|// CHECK:   [[VCVTM1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtmu.v2i64.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -11963,7 +10975,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvta_s32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvta_s32_f32(
 end_comment
 
 begin_comment
@@ -11971,11 +10983,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTA_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtas.v2i32.v2f32(<2 x float> [[VCVTA_I]]) #2
+comment|// CHECK:   [[VCVTA1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtas.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12000,7 +11008,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtaq_s32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtaq_s32_f32(
 end_comment
 
 begin_comment
@@ -12008,11 +11016,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTA_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtas.v4i32.v4f32(<4 x float> [[VCVTA_I]]) #2
+comment|// CHECK:   [[VCVTA1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtas.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12037,7 +11041,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtaq_s64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtaq_s64_f64(
 end_comment
 
 begin_comment
@@ -12045,11 +11049,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTA_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtas.v2i64.v2f64(<2 x double> [[VCVTA_I]]) #2
+comment|// CHECK:   [[VCVTA1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtas.v2i64.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -12074,7 +11074,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vcvta_u32_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvta_u32_f32(
 end_comment
 
 begin_comment
@@ -12082,11 +11082,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTA_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtau.v2i32.v2f32(<2 x float> [[VCVTA_I]]) #2
+comment|// CHECK:   [[VCVTA1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.fcvtau.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12111,7 +11107,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vcvtaq_u32_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtaq_u32_f32(
 end_comment
 
 begin_comment
@@ -12119,11 +11115,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTA_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtau.v4i32.v4f32(<4 x float> [[VCVTA_I]]) #2
+comment|// CHECK:   [[VCVTA1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.fcvtau.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12148,7 +11140,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vcvtaq_u64_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtaq_u64_f64(
 end_comment
 
 begin_comment
@@ -12156,11 +11148,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VCVTA_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtau.v2i64.v2f64(<2 x double> [[VCVTA_I]]) #2
+comment|// CHECK:   [[VCVTA1_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.fcvtau.v2i64.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -12185,7 +11173,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrsqrte_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrsqrte_f32(
 end_comment
 
 begin_comment
@@ -12193,11 +11181,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSQRTE_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRSQRTE_V1_I:%.*]] = call<2 x float> @llvm.aarch64.neon.frsqrte.v2f32(<2 x float> [[VRSQRTE_V_I]]) #2
+comment|// CHECK:   [[VRSQRTE_V1_I:%.*]] = call<2 x float> @llvm.aarch64.neon.frsqrte.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12222,7 +11206,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrsqrteq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrsqrteq_f32(
 end_comment
 
 begin_comment
@@ -12230,11 +11214,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSQRTEQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRSQRTEQ_V1_I:%.*]] = call<4 x float> @llvm.aarch64.neon.frsqrte.v4f32(<4 x float> [[VRSQRTEQ_V_I]]) #2
+comment|// CHECK:   [[VRSQRTEQ_V1_I:%.*]] = call<4 x float> @llvm.aarch64.neon.frsqrte.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12259,7 +11239,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vrsqrteq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vrsqrteq_f64(
 end_comment
 
 begin_comment
@@ -12267,11 +11247,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRSQRTEQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRSQRTEQ_V1_I:%.*]] = call<2 x double> @llvm.aarch64.neon.frsqrte.v2f64(<2 x double> [[VRSQRTEQ_V_I]]) #2
+comment|// CHECK:   [[VRSQRTEQ_V1_I:%.*]] = call<2 x double> @llvm.aarch64.neon.frsqrte.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -12296,7 +11272,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vrecpe_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrecpe_f32(
 end_comment
 
 begin_comment
@@ -12304,11 +11280,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPE_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRECPE_V1_I:%.*]] = call<2 x float> @llvm.aarch64.neon.frecpe.v2f32(<2 x float> [[VRECPE_V_I]]) #2
+comment|// CHECK:   [[VRECPE_V1_I:%.*]] = call<2 x float> @llvm.aarch64.neon.frecpe.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12333,7 +11305,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vrecpeq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vrecpeq_f32(
 end_comment
 
 begin_comment
@@ -12341,11 +11313,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPEQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<4 x float> @llvm.aarch64.neon.frecpe.v4f32(<4 x float> [[VRECPEQ_V_I]]) #2
+comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<4 x float> @llvm.aarch64.neon.frecpe.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12370,7 +11338,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vrecpeq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vrecpeq_f64(
 end_comment
 
 begin_comment
@@ -12378,11 +11346,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPEQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<2 x double> @llvm.aarch64.neon.frecpe.v2f64(<2 x double> [[VRECPEQ_V_I]]) #2
+comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<2 x double> @llvm.aarch64.neon.frecpe.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -12407,7 +11371,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vrecpe_u32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vrecpe_u32(
 end_comment
 
 begin_comment
@@ -12415,11 +11379,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPE_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRECPE_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.urecpe.v2i32(<2 x i32> [[VRECPE_V_I]]) #2
+comment|// CHECK:   [[VRECPE_V1_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.urecpe.v2i32(<2 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -12444,7 +11404,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vrecpeq_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vrecpeq_u32(
 end_comment
 
 begin_comment
@@ -12452,11 +11412,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VRECPEQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.urecpe.v4i32(<4 x i32> [[VRECPEQ_V_I]]) #2
+comment|// CHECK:   [[VRECPEQ_V1_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.urecpe.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -12481,7 +11437,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vsqrt_f32(<2 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vsqrt_f32(
 end_comment
 
 begin_comment
@@ -12489,11 +11445,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VSQRT_I:%.*]] = call<2 x float> @llvm.sqrt.v2f32(<2 x float> [[TMP1]]) #2
+comment|// CHECK:   [[VSQRT_I:%.*]] = call<2 x float> @llvm.sqrt.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12518,7 +11470,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vsqrtq_f32(<4 x float> %a) #0 {
+comment|// CHECK-LABEL: @test_vsqrtq_f32(
 end_comment
 
 begin_comment
@@ -12526,11 +11478,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VSQRT_I:%.*]] = call<4 x float> @llvm.sqrt.v4f32(<4 x float> [[TMP1]]) #2
+comment|// CHECK:   [[VSQRT_I:%.*]] = call<4 x float> @llvm.sqrt.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -12555,7 +11503,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vsqrtq_f64(<2 x double> %a) #0 {
+comment|// CHECK-LABEL: @test_vsqrtq_f64(
 end_comment
 
 begin_comment
@@ -12563,11 +11511,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VSQRT_I:%.*]] = call<2 x double> @llvm.sqrt.v2f64(<2 x double> [[TMP1]]) #2
+comment|// CHECK:   [[VSQRT_I:%.*]] = call<2 x double> @llvm.sqrt.v2f64(<2 x double> %a) #2
 end_comment
 
 begin_comment
@@ -12592,7 +11536,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vcvt_f32_s32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_f32_s32(
 end_comment
 
 begin_comment
@@ -12600,11 +11544,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I:%.*]] = sitofp<2 x i32> [[TMP1]] to<2 x float>
+comment|// CHECK:   [[VCVT_I:%.*]] = sitofp<2 x i32> %a to<2 x float>
 end_comment
 
 begin_comment
@@ -12629,7 +11569,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vcvt_f32_u32(<2 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvt_f32_u32(
 end_comment
 
 begin_comment
@@ -12637,11 +11577,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I:%.*]] = uitofp<2 x i32> [[TMP1]] to<2 x float>
+comment|// CHECK:   [[VCVT_I:%.*]] = uitofp<2 x i32> %a to<2 x float>
 end_comment
 
 begin_comment
@@ -12666,7 +11602,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vcvtq_f32_s32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtq_f32_s32(
 end_comment
 
 begin_comment
@@ -12674,11 +11610,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I:%.*]] = sitofp<4 x i32> [[TMP1]] to<4 x float>
+comment|// CHECK:   [[VCVT_I:%.*]] = sitofp<4 x i32> %a to<4 x float>
 end_comment
 
 begin_comment
@@ -12703,7 +11635,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vcvtq_f32_u32(<4 x i32> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtq_f32_u32(
 end_comment
 
 begin_comment
@@ -12711,11 +11643,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I:%.*]] = uitofp<4 x i32> [[TMP1]] to<4 x float>
+comment|// CHECK:   [[VCVT_I:%.*]] = uitofp<4 x i32> %a to<4 x float>
 end_comment
 
 begin_comment
@@ -12740,7 +11668,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vcvtq_f64_s64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtq_f64_s64(
 end_comment
 
 begin_comment
@@ -12748,11 +11676,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I:%.*]] = sitofp<2 x i64> [[TMP1]] to<2 x double>
+comment|// CHECK:   [[VCVT_I:%.*]] = sitofp<2 x i64> %a to<2 x double>
 end_comment
 
 begin_comment
@@ -12777,7 +11701,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vcvtq_f64_u64(<2 x i64> %a) #0 {
+comment|// CHECK-LABEL: @test_vcvtq_f64_u64(
 end_comment
 
 begin_comment
@@ -12785,11 +11709,7 @@ comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVT_I:%.*]] = uitofp<2 x i64> [[TMP1]] to<2 x double>
+comment|// CHECK:   [[VCVT_I:%.*]] = uitofp<2 x i64> %a to<2 x double>
 end_comment
 
 begin_comment

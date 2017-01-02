@@ -16,18 +16,6 @@ comment|// RUN: %clang_cc1 -O2 -fprofile-sample-use=%S/Inputs/pgo-sample.prof %s
 end_comment
 
 begin_comment
-comment|// CHECK: Simplify the CFG
-end_comment
-
-begin_comment
-comment|// CHECK: SROA
-end_comment
-
-begin_comment
-comment|// CHECK: Combine redundant instructions
-end_comment
-
-begin_comment
 comment|// CHECK: Remove unused exception handling info
 end_comment
 

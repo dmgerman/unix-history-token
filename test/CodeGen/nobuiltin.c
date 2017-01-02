@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fno-builtin -O1 -S -o - %s | FileCheck %s
+comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fno-builtin-memset -O1 -S -o - %s | FileCheck -check-prefix=MEMSET %s
+comment|// RUN: %clang_cc1 -triple x86_64-linux-gnu -O1 -S -o - %s | FileCheck -check-prefix=STRCPY -check-prefix=MEMSET %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-linux-gnu -fno-builtin -O1 -S -o - %s | FileCheck -check-prefix=NOSTRCPY -check-prefix=NOMEMSET %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-linux-gnu -fno-builtin-memset -O1 -S -o - %s | FileCheck -check-prefix=STRCPY -check-prefix=NOMEMSET %s
 end_comment
 
 begin_function
@@ -19,7 +27,8 @@ literal|2
 index|]
 decl_stmt|;
 comment|// make sure we don't optimize this call to strcpy()
-comment|// CHECK: __strcpy_chk
+comment|// STRCPY-NOT: __strcpy_chk
+comment|// NOSTRCPY: __strcpy_chk
 name|__builtin___strcpy_chk
 argument_list|(
 name|content
@@ -42,8 +51,8 @@ name|s
 parameter_list|)
 block|{
 comment|// Make sure we don't optimize this loop to a memset().
-comment|// MEMSET-LABEL: PR4941:
-comment|// MEMSET-NOT: memset
+comment|// NOMEMSET-NOT: memset
+comment|// MEMSET: memset
 for|for
 control|(
 name|unsigned

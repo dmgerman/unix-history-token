@@ -948,5 +948,33 @@ argument_list|)
 assert|;
 end_assert
 
+begin_function
+name|void
+name|PR28782
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+name|foo
+label|:
+name|int
+name|n
+decl_stmt|;
+switch|switch
+condition|(
+name|i
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|int
+name|m
+decl_stmt|;
+block|}
+block|}
+end_function
+
 end_unit
 

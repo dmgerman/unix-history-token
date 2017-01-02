@@ -40,7 +40,7 @@ comment|// CHECK:ld{{(\.exe)?}}" {{.*}} "-o" "[[LD_OUT2:[^"]*]]" {{.*}} "[[CC_OU
 end_comment
 
 begin_comment
-comment|// CHECK:lipo"
+comment|// CHECK:lipo{{(\.exe)?}}"
 end_comment
 
 begin_comment

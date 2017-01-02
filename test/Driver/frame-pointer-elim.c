@@ -116,6 +116,66 @@ comment|// OMIT_LEAF: "-momit-leaf-frame-pointer"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -target armv7s-apple-ios -fomit-frame-pointer %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=WARN-OMIT-7S %s
+end_comment
+
+begin_comment
+comment|// WARN-OMIT-7S: warning: optimization flag '-fomit-frame-pointer' is not supported for target 'armv7s'
+end_comment
+
+begin_comment
+comment|// WARN-OMIT-7S: "-mdisable-fp-elim"
+end_comment
+
+begin_comment
+comment|// WARN-OMIT-7S-NOT: "-momit-leaf-frame-pointer"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target armv7k-apple-watchos -fomit-frame-pointer %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=WARN-OMIT-7K %s
+end_comment
+
+begin_comment
+comment|// WARN-OMIT-7K: warning: optimization flag '-fomit-frame-pointer' is not supported for target 'armv7k'
+end_comment
+
+begin_comment
+comment|// WARN-OMIT-7K: "-mdisable-fp-elim"
+end_comment
+
+begin_comment
+comment|// WARN-OMIT-7K-NOT: "-momit-leaf-frame-pointer"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target armv7s-apple-ios8.0 -momit-leaf-frame-pointer %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=WARN-OMIT-LEAF-7S %s
+end_comment
+
+begin_comment
+comment|// WARN-OMIT-LEAF-7S: warning: optimization flag '-momit-leaf-frame-pointer' is not supported for target 'armv7s'
+end_comment
+
+begin_comment
+comment|// WARN-OMIT-LEAF-7S: "-mdisable-fp-elim"
+end_comment
+
+begin_comment
+comment|// WARN-OMIT-LEAF-7S-NOT: "-momit-leaf-frame-pointer"
+end_comment
+
+begin_comment
 comment|// On the PS4, we default to omitting the frame pointer on leaf functions
 end_comment
 
@@ -125,6 +185,14 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -### -target x86_64-scei-ps4 -S %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=OMIT_LEAF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target x86_64-scei-ps4 -S -O2 %s 2>&1 | \
 end_comment
 
 begin_comment

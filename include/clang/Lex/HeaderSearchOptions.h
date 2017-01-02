@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/CachedHashString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
@@ -278,6 +284,17 @@ operator|::
 name|string
 name|ModuleUserBuildPath
 block|;
+comment|/// \brief The directories used to load prebuilt module files.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|PrebuiltModulePaths
+block|;
 comment|/// The module/pch container format.
 name|std
 operator|::
@@ -345,9 +362,9 @@ name|llvm
 operator|::
 name|SmallSetVector
 operator|<
-name|std
+name|llvm
 operator|::
-name|string
+name|CachedHashString
 block|,
 literal|16
 operator|>
@@ -411,6 +428,11 @@ block|;
 comment|/// Whether the module includes debug information (-gmodules).
 name|unsigned
 name|UseDebugInfo
+operator|:
+literal|1
+block|;
+name|unsigned
+name|ModulesValidateDiagnosticOptions
 operator|:
 literal|1
 block|;
@@ -509,7 +531,12 @@ argument_list|)
 block|,
 name|UseDebugInfo
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|ModulesValidateDiagnosticOptions
+argument_list|(
+argument|true
 argument_list|)
 block|{}
 comment|/// AddPath - Add the \p Path path to the specified \p Group list.
@@ -565,6 +592,19 @@ argument|StringRef Name
 argument_list|)
 block|{
 name|VFSOverlayFiles
+operator|.
+name|push_back
+argument_list|(
+name|Name
+argument_list|)
+block|;   }
+name|void
+name|AddPrebuiltModulePath
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|{
+name|PrebuiltModulePaths
 operator|.
 name|push_back
 argument_list|(

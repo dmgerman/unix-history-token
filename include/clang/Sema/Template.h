@@ -1399,6 +1399,14 @@ name|BASE
 parameter_list|)
 define|#
 directive|define
+name|EXPORT
+parameter_list|(
+name|DERIVED
+parameter_list|,
+name|BASE
+parameter_list|)
+define|#
+directive|define
 name|LINKAGESPEC
 parameter_list|(
 name|DERIVED
@@ -1526,15 +1534,25 @@ function_decl|;
 name|Decl
 modifier|*
 name|VisitVarDecl
-parameter_list|(
+argument_list|(
 name|VarDecl
-modifier|*
+operator|*
 name|D
-parameter_list|,
+argument_list|,
 name|bool
 name|InstantiatingVarTemplate
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ArrayRef
+operator|<
+name|BindingDecl
+operator|*
+operator|>
+operator|*
+name|Bindings
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|// Enable late instantiation of attributes.  Late instantiated attributes
 comment|// will be stored in LA.
 name|void
@@ -1825,6 +1843,22 @@ modifier|*
 name|Pattern
 parameter_list|)
 function_decl|;
+name|private
+label|:
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|Decl
+operator|*
+name|instantiateUnresolvedUsingDecl
+argument_list|(
+argument|T *D
+argument_list|,
+argument|bool InstantiatingPackElement = false
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

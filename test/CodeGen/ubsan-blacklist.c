@@ -8,7 +8,7 @@ comment|// RUN: echo "fun:hash"> %t-func.blacklist
 end_comment
 
 begin_comment
-comment|// RUN: echo "src:%s"> %t-file.blacklist
+comment|// RUN: echo "src:%s" | sed -e 's/\\/\\\\/g'> %t-file.blacklist
 end_comment
 
 begin_comment
@@ -21,14 +21,6 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -fsanitize=unsigned-integer-overflow -fsanitize-blacklist=%t-file.blacklist -emit-llvm %s -o - | FileCheck %s --check-prefix=FILE
-end_comment
-
-begin_comment
-comment|// FIXME: %t-file.blacklist contains DOSish paths.
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell
 end_comment
 
 begin_decl_stmt

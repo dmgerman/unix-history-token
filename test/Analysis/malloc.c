@@ -9299,6 +9299,62 @@ comment|// no-warning
 end_comment
 
 begin_comment
+comment|// PR15623
+end_comment
+
+begin_function
+name|int
+name|testNoCheckerDataPropogationFromLogicalOpOperandToOpResult
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|param
+init|=
+name|malloc
+argument_list|(
+literal|10
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|value
+init|=
+name|malloc
+argument_list|(
+literal|10
+argument_list|)
+decl_stmt|;
+name|int
+name|ok
+init|=
+operator|(
+name|param
+operator|&&
+name|value
+operator|)
+decl_stmt|;
+name|free
+argument_list|(
+name|param
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+comment|// Previously we ended up with 'Use of memory after it is freed' on return.
+return|return
+name|ok
+return|;
+comment|// no warning
+block|}
+end_function
+
+begin_comment
 comment|// ----------------------------------------------------------------------------
 end_comment
 

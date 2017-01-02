@@ -127,6 +127,25 @@ name|__builtin_fpclassify
 argument_list|(
 literal|0
 argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|4.5
+argument_list|,
+literal|5.0
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{implicit conversion from 'double' to 'int' changes value from 4.5 to 4}}
+name|check
+argument_list|(
+name|__builtin_fpclassify
+argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|,
 literal|0

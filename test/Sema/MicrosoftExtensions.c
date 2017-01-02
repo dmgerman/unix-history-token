@@ -90,6 +90,23 @@ begin_comment
 comment|/* expected-error {{'uuid' attribute is not supported in C}} */
 end_comment
 
+begin_expr_stmt
+index|[
+name|uuid
+argument_list|(
+literal|"00000000-0000-0000-C000-000000000046"
+argument_list|)
+index|]
+expr|struct
+name|IUnknown2
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* expected-error {{'uuid' attribute is not supported in C}} */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct

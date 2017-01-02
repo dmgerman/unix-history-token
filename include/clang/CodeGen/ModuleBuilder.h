@@ -78,6 +78,9 @@ decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
 block|}
 end_decl_stmt
 

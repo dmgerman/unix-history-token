@@ -14,15 +14,7 @@ comment|// CHECK-LABEL: define<2 x i32> @test_vcvta_s32_f32(<2 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA_S32_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA_S32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtas.v2i32.v2f32(<2 x float> [[VCVTA_S32_V_I]]) #2
+comment|// CHECK:   [[VCVTA_S32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtas.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -51,15 +43,7 @@ comment|// CHECK-LABEL: define<2 x i32> @test_vcvta_u32_f32(<2 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA_U32_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTA_U32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtau.v2i32.v2f32(<2 x float> [[VCVTA_U32_V_I]]) #2
+comment|// CHECK:   [[VCVTA_U32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtau.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -88,15 +72,7 @@ comment|// CHECK-LABEL: define<4 x i32> @test_vcvtaq_s32_f32(<4 x float> %a) #0 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTAQ_S32_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTAQ_S32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtas.v4i32.v4f32(<4 x float> [[VCVTAQ_S32_V_I]]) #2
+comment|// CHECK:   [[VCVTAQ_S32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtas.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -125,15 +101,7 @@ comment|// CHECK-LABEL: define<4 x i32> @test_vcvtaq_u32_f32(<4 x float> %a) #0 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTAQ_U32_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTAQ_U32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtau.v4i32.v4f32(<4 x float> [[VCVTAQ_U32_V_I]]) #2
+comment|// CHECK:   [[VCVTAQ_U32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtau.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -162,15 +130,7 @@ comment|// CHECK-LABEL: define<2 x i32> @test_vcvtn_s32_f32(<2 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN_S32_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN_S32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtns.v2i32.v2f32(<2 x float> [[VCVTN_S32_V_I]]) #2
+comment|// CHECK:   [[VCVTN_S32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtns.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -199,15 +159,7 @@ comment|// CHECK-LABEL: define<2 x i32> @test_vcvtn_u32_f32(<2 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN_U32_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTN_U32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtnu.v2i32.v2f32(<2 x float> [[VCVTN_U32_V_I]]) #2
+comment|// CHECK:   [[VCVTN_U32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtnu.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -236,15 +188,7 @@ comment|// CHECK-LABEL: define<4 x i32> @test_vcvtnq_s32_f32(<4 x float> %a) #0 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTNQ_S32_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTNQ_S32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtns.v4i32.v4f32(<4 x float> [[VCVTNQ_S32_V_I]]) #2
+comment|// CHECK:   [[VCVTNQ_S32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtns.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -273,15 +217,7 @@ comment|// CHECK-LABEL: define<4 x i32> @test_vcvtnq_u32_f32(<4 x float> %a) #0 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTNQ_U32_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTNQ_U32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtnu.v4i32.v4f32(<4 x float> [[VCVTNQ_U32_V_I]]) #2
+comment|// CHECK:   [[VCVTNQ_U32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtnu.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -310,15 +246,7 @@ comment|// CHECK-LABEL: define<2 x i32> @test_vcvtp_s32_f32(<2 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP_S32_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP_S32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtps.v2i32.v2f32(<2 x float> [[VCVTP_S32_V_I]]) #2
+comment|// CHECK:   [[VCVTP_S32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtps.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -347,15 +275,7 @@ comment|// CHECK-LABEL: define<2 x i32> @test_vcvtp_u32_f32(<2 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP_U32_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTP_U32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtpu.v2i32.v2f32(<2 x float> [[VCVTP_U32_V_I]]) #2
+comment|// CHECK:   [[VCVTP_U32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtpu.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -384,15 +304,7 @@ comment|// CHECK-LABEL: define<4 x i32> @test_vcvtpq_s32_f32(<4 x float> %a) #0 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTPQ_S32_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTPQ_S32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtps.v4i32.v4f32(<4 x float> [[VCVTPQ_S32_V_I]]) #2
+comment|// CHECK:   [[VCVTPQ_S32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtps.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -421,15 +333,7 @@ comment|// CHECK-LABEL: define<4 x i32> @test_vcvtpq_u32_f32(<4 x float> %a) #0 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTPQ_U32_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTPQ_U32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtpu.v4i32.v4f32(<4 x float> [[VCVTPQ_U32_V_I]]) #2
+comment|// CHECK:   [[VCVTPQ_U32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtpu.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -458,15 +362,7 @@ comment|// CHECK-LABEL: define<2 x i32> @test_vcvtm_s32_f32(<2 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM_S32_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM_S32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtms.v2i32.v2f32(<2 x float> [[VCVTM_S32_V_I]]) #2
+comment|// CHECK:   [[VCVTM_S32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtms.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -495,15 +391,7 @@ comment|// CHECK-LABEL: define<2 x i32> @test_vcvtm_u32_f32(<2 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM_U32_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTM_U32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtmu.v2i32.v2f32(<2 x float> [[VCVTM_U32_V_I]]) #2
+comment|// CHECK:   [[VCVTM_U32_V1_I:%.*]] = call<2 x i32> @llvm.arm.neon.vcvtmu.v2i32.v2f32(<2 x float> %a) #2
 end_comment
 
 begin_comment
@@ -532,15 +420,7 @@ comment|// CHECK-LABEL: define<4 x i32> @test_vcvtmq_s32_f32(<4 x float> %a) #0 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTMQ_S32_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTMQ_S32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtms.v4i32.v4f32(<4 x float> [[VCVTMQ_S32_V_I]]) #2
+comment|// CHECK:   [[VCVTMQ_S32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtms.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -569,15 +449,7 @@ comment|// CHECK-LABEL: define<4 x i32> @test_vcvtmq_u32_f32(<4 x float> %a) #0 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTMQ_U32_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VCVTMQ_U32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtmu.v4i32.v4f32(<4 x float> [[VCVTMQ_U32_V_I]]) #2
+comment|// CHECK:   [[VCVTMQ_U32_V1_I:%.*]] = call<4 x i32> @llvm.arm.neon.vcvtmu.v4i32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment

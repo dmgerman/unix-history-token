@@ -122,15 +122,10 @@ enum|enum
 block|{
 name|BufferMaxAlignment
 init|=
-name|llvm
-operator|::
-name|AlignOf
-operator|<
-name|void
-operator|*
-operator|>
-operator|::
-name|Alignment
+name|alignof
+argument_list|(
+argument|void *
+argument_list|)
 block|}
 enum|;
 name|llvm

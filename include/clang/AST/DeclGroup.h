@@ -422,7 +422,7 @@ argument_list|(
 name|isSingleDecl
 argument_list|()
 operator|&&
-literal|"Isn't a declgroup"
+literal|"Isn't a single decl"
 argument_list|)
 expr_stmt|;
 return|return

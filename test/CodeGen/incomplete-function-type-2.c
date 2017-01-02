@@ -89,7 +89,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+comment|// CHECK: attributes [[NUW]] = { noinline nounwind{{.*}} }
 end_comment
 
 end_unit

@@ -23,7 +23,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-warning {{incompatible redeclaration of library function 'vfprintf'}} expected-note {{'vfprintf' is a builtin}}
+comment|// expected-warning {{declaration of built-in function 'vfprintf'}}
 end_comment
 
 end_unit

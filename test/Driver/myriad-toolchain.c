@@ -4,6 +4,10 @@ comment|// RUN: %clang -no-canonical-prefixes -### -target sparc-myriad-rtems-el
 end_comment
 
 begin_comment
+comment|// RUN: -ccc-install-dir %S/Inputs/basic_myriad_tree/bin \
+end_comment
+
+begin_comment
 comment|// RUN: --gcc-toolchain=%S/Inputs/basic_myriad_tree 2>&1 | FileCheck %s -check-prefix=LINK_WITH_RTEMS
 end_comment
 
@@ -16,15 +20,15 @@ comment|// LINK_WITH_RTEMS: Inputs{{.*}}crtbegin.o
 end_comment
 
 begin_comment
-comment|// LINK_WITH_RTEMS: "-L{{.*}}Inputs/basic_myriad_tree/lib/gcc/sparc-myriad-elf/4.8.2/../../..{{/|\\\\}}../sparc-myriad-elf/lib"
-end_comment
-
-begin_comment
 comment|// LINK_WITH_RTEMS: "-L{{.*}}Inputs/basic_myriad_tree/lib/gcc/sparc-myriad-elf/4.8.2"
 end_comment
 
 begin_comment
-comment|// LINK_WITH_RTEMS: "--start-group" "-lc" "-lrtemscpu" "-lrtemsbsp" "--end-group" "-lgcc"
+comment|// LINK_WITH_RTEMS: "-L{{.*}}Inputs/basic_myriad_tree/bin/../sparc-myriad-elf/lib"
+end_comment
+
+begin_comment
+comment|// LINK_WITH_RTEMS: "--start-group" "-lc" "-lgcc" "-lrtemscpu" "-lrtemsbsp" "--end-group"
 end_comment
 
 begin_comment
@@ -40,7 +44,7 @@ comment|// RUN: %clang -c -no-canonical-prefixes -### -target sparc-myriad-rtems
 end_comment
 
 begin_comment
-comment|// RUN: --gcc-toolchain=%S/Inputs/basic_myriad_tree 2>&1 | FileCheck %s -check-prefix=COMPILE_CXX
+comment|// RUN: -stdlib=libstdc++ --gcc-toolchain=%S/Inputs/basic_myriad_tree 2>&1 | FileCheck %s -check-prefix=COMPILE_CXX
 end_comment
 
 begin_comment
@@ -168,11 +172,15 @@ comment|// INCLUDES: "-iquote" "quotepath" "-isystem" "syspath"
 end_comment
 
 begin_comment
+comment|// -fno-split-dwarf-inlining is consumed but not passed to moviCompile.
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target shave-myriad -c -### %s -g -fno-inline-functions \
 end_comment
 
 begin_comment
-comment|// RUN: -fno-inline-functions-called-once -Os -Wall -MF dep.d \
+comment|// RUN: -fno-inline-functions-called-once -Os -Wall -MF dep.d -fno-split-dwarf-inlining \
 end_comment
 
 begin_comment
@@ -224,11 +232,19 @@ comment|// PREPROCESS: "-E" "-DMYRIAD2" "-I" "foo"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target sparc-myriad -### --driver-mode=g++ %s 2>&1 | FileCheck %s --check-prefix=STDLIBCXX
+comment|// RUN: %clang -stdlib=platform -target sparc-myriad -### --driver-mode=g++ %s 2>&1 | FileCheck %s --check-prefix=LIBSTDCXX
 end_comment
 
 begin_comment
-comment|// STDLIBCXX: "-lstdc++" "-lc" "-lgcc"
+comment|// LIBSTDCXX: "-lstdc++" "-lc" "-lgcc"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -stdlib=libc++ -### -target sparcel-myriad -S -x c++ %s 2>&1 | FileCheck %s -check-prefix=LIBCXX
+end_comment
+
+begin_comment
+comment|// LIBCXX: "-internal-isystem" "{{.*}}/../include/c++/v1"
 end_comment
 
 begin_comment

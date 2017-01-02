@@ -4,7 +4,11 @@ comment|// RUN: %clang_cc1 -S -emit-llvm -debug-info-kind=limited  %s -o - | Fil
 end_comment
 
 begin_comment
-comment|// CHECK: !DIGlobalVariable(
+comment|// CHECK: !DIGlobalVariableExpression(var: [[VAR:.*]], expr: [[EXPR:![0-9]+]])
+end_comment
+
+begin_comment
+comment|// CHECK: [[EXPR]] = !DIExpression(DW_OP_constu, 201, DW_OP_stack_value)
 end_comment
 
 begin_decl_stmt

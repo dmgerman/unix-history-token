@@ -257,6 +257,78 @@ return|return
 name|Operator
 return|;
 block|}
+specifier|static
+name|bool
+name|isAssignmentOp
+argument_list|(
+argument|OverloadedOperatorKind Opc
+argument_list|)
+block|{
+return|return
+name|Opc
+operator|==
+name|OO_Equal
+operator|||
+name|Opc
+operator|==
+name|OO_StarEqual
+operator|||
+name|Opc
+operator|==
+name|OO_SlashEqual
+operator|||
+name|Opc
+operator|==
+name|OO_PercentEqual
+operator|||
+name|Opc
+operator|==
+name|OO_PlusEqual
+operator|||
+name|Opc
+operator|==
+name|OO_MinusEqual
+operator|||
+name|Opc
+operator|==
+name|OO_LessLessEqual
+operator|||
+name|Opc
+operator|==
+name|OO_GreaterGreaterEqual
+operator|||
+name|Opc
+operator|==
+name|OO_AmpEqual
+operator|||
+name|Opc
+operator|==
+name|OO_CaretEqual
+operator|||
+name|Opc
+operator|==
+name|OO_PipeEqual
+return|;
+block|}
+name|bool
+name|isAssignmentOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isAssignmentOp
+argument_list|(
+name|getOperator
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Is this written as an infix binary operator?
+name|bool
+name|isInfixBinaryOp
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Returns the location of the operator symbol in the expression.
 comment|///
 comment|/// When \c getOperator()==OO_Call, this is the location of the right
@@ -6166,11 +6238,6 @@ name|LambdaExpr
 block|,
 name|Stmt
 operator|*
-block|,
-name|unsigned
-block|,
-name|VarDecl
-operator|*
 operator|>
 block|{
 comment|/// \brief The source range that covers the lambda introducer ([...]).
@@ -6207,13 +6274,6 @@ name|ExplicitResultType
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether there are any array index variables stored at the end of
-comment|/// this lambda expression.
-name|unsigned
-name|HasArrayIndexVars
-operator|:
-literal|1
-block|;
 comment|/// \brief The location of the closing brace ('}') that completes
 comment|/// the lambda.
 comment|///
@@ -6225,36 +6285,6 @@ comment|/// module file just to determine the source range.
 name|SourceLocation
 name|ClosingBrace
 block|;
-name|size_t
-name|numTrailingObjects
-argument_list|(
-argument|OverloadToken<Stmt *>
-argument_list|)
-specifier|const
-block|{
-return|return
-name|NumCaptures
-operator|+
-literal|1
-return|;
-block|}
-name|size_t
-name|numTrailingObjects
-argument_list|(
-argument|OverloadToken<unsigned>
-argument_list|)
-specifier|const
-block|{
-return|return
-name|HasArrayIndexVars
-condition|?
-name|NumCaptures
-operator|+
-literal|1
-else|:
-literal|0
-return|;
-block|}
 comment|/// \brief Construct a lambda expression.
 name|LambdaExpr
 argument_list|(
@@ -6274,10 +6304,6 @@ argument|bool ExplicitResultType
 argument_list|,
 argument|ArrayRef<Expr *> CaptureInits
 argument_list|,
-argument|ArrayRef<VarDecl *> ArrayIndexVars
-argument_list|,
-argument|ArrayRef<unsigned> ArrayIndexStarts
-argument_list|,
 argument|SourceLocation ClosingBrace
 argument_list|,
 argument|bool ContainsUnexpandedParameterPack
@@ -6289,8 +6315,6 @@ argument_list|(
 argument|EmptyShell Empty
 argument_list|,
 argument|unsigned NumCaptures
-argument_list|,
-argument|bool HasArrayIndexVars
 argument_list|)
 operator|:
 name|Expr
@@ -6317,12 +6341,7 @@ argument_list|)
 block|,
 name|ExplicitResultType
 argument_list|(
-name|false
-argument_list|)
-block|,
-name|HasArrayIndexVars
-argument_list|(
-argument|true
+argument|false
 argument_list|)
 block|{
 name|getStoredStmts
@@ -6367,73 +6386,6 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// \brief Retrieve the mapping from captures to the first array index
-comment|/// variable.
-name|unsigned
-operator|*
-name|getArrayIndexStarts
-argument_list|()
-block|{
-return|return
-name|getTrailingObjects
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-specifier|const
-name|unsigned
-operator|*
-name|getArrayIndexStarts
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTrailingObjects
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-comment|/// \brief Retrieve the complete set of array-index variables.
-name|VarDecl
-operator|*
-operator|*
-name|getArrayIndexVars
-argument_list|()
-block|{
-return|return
-name|getTrailingObjects
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-name|VarDecl
-operator|*
-specifier|const
-operator|*
-name|getArrayIndexVars
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTrailingObjects
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
 name|public
 operator|:
 comment|/// \brief Construct a new lambda expression.
@@ -6460,10 +6412,6 @@ argument|bool ExplicitResultType
 argument_list|,
 argument|ArrayRef<Expr *> CaptureInits
 argument_list|,
-argument|ArrayRef<VarDecl *> ArrayIndexVars
-argument_list|,
-argument|ArrayRef<unsigned> ArrayIndexStarts
-argument_list|,
 argument|SourceLocation ClosingBrace
 argument_list|,
 argument|bool ContainsUnexpandedParameterPack
@@ -6479,8 +6427,6 @@ argument_list|(
 argument|const ASTContext&C
 argument_list|,
 argument|unsigned NumCaptures
-argument_list|,
-argument|unsigned NumArrayIndexVars
 argument_list|)
 block|;
 comment|/// \brief Determine the default capture kind for this lambda.
@@ -6735,37 +6681,9 @@ operator|+
 name|NumCaptures
 return|;
 block|}
-comment|/// \brief Retrieve the set of index variables used in the capture
-comment|/// initializer of an array captured by copy.
-comment|///
-comment|/// \param Iter The iterator that points at the capture initializer for
-comment|/// which we are extracting the corresponding index variables.
-name|ArrayRef
-operator|<
-name|VarDecl
-operator|*
-operator|>
-name|getCaptureInitIndexVars
-argument_list|(
-argument|const_capture_init_iterator Iter
-argument_list|)
-specifier|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Retrieve the source range covering the lambda introducer,
-end_comment
-
-begin_comment
 comment|/// which contains the explicit capture list surrounded by square
-end_comment
-
-begin_comment
 comment|/// brackets ([...]).
-end_comment
-
-begin_expr_stmt
 name|SourceRange
 name|getIntroducerRange
 argument_list|()
@@ -6775,36 +6693,18 @@ return|return
 name|IntroducerRange
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the class that corresponds to the lambda.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is the "closure type" (C++1y [expr.prim.lambda]), and stores the
-end_comment
-
-begin_comment
 comment|/// captures in its fields and provides the various operations permitted
-end_comment
-
-begin_comment
 comment|/// on a lambda (copying, calling).
-end_comment
-
-begin_expr_stmt
 name|CXXRecordDecl
 operator|*
 name|getLambdaClass
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Retrieve the function call operator associated with this
@@ -7229,6 +7129,12 @@ name|Array
 operator|:
 literal|1
 block|;
+comment|/// Should the alignment be passed to the allocation function?
+name|unsigned
+name|PassAlignment
+operator|:
+literal|1
+block|;
 comment|/// If this is an array allocation, does the usual deallocation
 comment|/// function for the allocated type want to know the allocated size?
 name|unsigned
@@ -7240,7 +7146,7 @@ comment|/// The number of placement new arguments.
 name|unsigned
 name|NumPlacementArgs
 operator|:
-literal|13
+literal|26
 block|;
 comment|/// What kind of initializer do we have? Could be none, parens, or braces.
 comment|/// In storage, we distinguish between "none, and no initializer expr", and
@@ -7282,6 +7188,8 @@ argument_list|,
 argument|FunctionDecl *operatorNew
 argument_list|,
 argument|FunctionDecl *operatorDelete
+argument_list|,
+argument|bool PassAlignment
 argument_list|,
 argument|bool usualArrayDeleteWantsSize
 argument_list|,
@@ -7715,6 +7623,17 @@ operator|(
 name|getInitializer
 argument_list|()
 operator|)
+return|;
+block|}
+comment|/// Indicates whether the required alignment should be implicitly passed to
+comment|/// the allocation function.
+name|bool
+name|passAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PassAlignment
 return|;
 block|}
 comment|/// Answers whether the usual array deallocation function for the
@@ -15652,6 +15571,31 @@ condition|)
 return|return
 name|SD_Automatic
 return|;
+comment|// FIXME: This only works because storage class specifiers are not allowed
+comment|// on decomposition declarations.
+if|if
+condition|(
+name|isa
+operator|<
+name|BindingDecl
+operator|>
+operator|(
+name|ExtendingDecl
+operator|)
+condition|)
+return|return
+name|ExtendingDecl
+operator|->
+name|getDeclContext
+argument_list|()
+operator|->
+name|isFunctionOrMethod
+argument_list|()
+condition|?
+name|SD_Automatic
+else|:
+name|SD_Static
+return|;
 return|return
 name|cast
 operator|<
@@ -15684,9 +15628,9 @@ operator|*
 operator|>
 operator|(
 operator|)
-operator|?
+condition|?
 name|nullptr
-operator|:
+else|:
 name|State
 operator|.
 name|get

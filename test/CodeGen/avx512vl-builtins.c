@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx512f -target-feature +avx512vl -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +avx512f -target-feature +avx512vl -emit-llvm -o - -Wall -Werror | FileCheck %s
 end_comment
-
-begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#
@@ -2303,7 +2293,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm_cmp_epi32_mask
+name|test_mm_cmp_eq_epi32_mask
 parameter_list|(
 name|__m128i
 name|__a
@@ -2312,7 +2302,7 @@ name|__m128i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmp_epi32_mask
+comment|// CHECK-LABEL: @test_mm_cmp_eq_epi32_mask
 comment|// CHECK: icmp eq<4 x i32> %{{.*}}, %{{.*}}
 return|return
 operator|(
@@ -2324,7 +2314,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_EQ
 argument_list|)
 return|;
 block|}
@@ -2332,7 +2322,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm_mask_cmp_epi32_mask
+name|test_mm_mask_cmp_lt_epi32_mask
 parameter_list|(
 name|__mmask8
 name|__u
@@ -2344,8 +2334,8 @@ name|__m128i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_mask_cmp_epi32_mask
-comment|// CHECK: icmp eq<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK-LABEL: @test_mm_mask_cmp_lt_epi32_mask
+comment|// CHECK: icmp slt<4 x i32> %{{.*}}, %{{.*}}
 comment|// CHECK: and<4 x i1> %{{.*}}, %{{.*}}
 return|return
 operator|(
@@ -2359,7 +2349,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_LT
 argument_list|)
 return|;
 block|}
@@ -2367,7 +2357,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm_cmp_epi64_mask
+name|test_mm_cmp_lt_epi64_mask
 parameter_list|(
 name|__m128i
 name|__a
@@ -2376,8 +2366,8 @@ name|__m128i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmp_epi64_mask
-comment|// CHECK: icmp eq<2 x i64> %{{.*}}, %{{.*}}
+comment|// CHECK-LABEL: @test_mm_cmp_lt_epi64_mask
+comment|// CHECK: icmp slt<2 x i64> %{{.*}}, %{{.*}}
 return|return
 operator|(
 name|__mmask8
@@ -2388,7 +2378,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_LT
 argument_list|)
 return|;
 block|}
@@ -2396,7 +2386,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm_mask_cmp_epi64_mask
+name|test_mm_mask_cmp_eq_epi64_mask
 parameter_list|(
 name|__mmask8
 name|__u
@@ -2408,7 +2398,7 @@ name|__m128i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_mask_cmp_epi64_mask
+comment|// CHECK-LABEL: @test_mm_mask_cmp_eq_epi64_mask
 comment|// CHECK: icmp eq<2 x i64> %{{.*}}, %{{.*}}
 comment|// CHECK: and<2 x i1> %{{.*}}, %{{.*}}
 return|return
@@ -2423,7 +2413,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_EQ
 argument_list|)
 return|;
 block|}
@@ -2431,7 +2421,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm256_cmp_epi32_mask
+name|test_mm256_cmp_eq_epi32_mask
 parameter_list|(
 name|__m256i
 name|__a
@@ -2440,7 +2430,7 @@ name|__m256i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm256_cmp_epi32_mask
+comment|// CHECK-LABEL: @test_mm256_cmp_eq_epi32_mask
 comment|// CHECK: icmp eq<8 x i32> %{{.*}}, %{{.*}}
 return|return
 operator|(
@@ -2452,7 +2442,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_EQ
 argument_list|)
 return|;
 block|}
@@ -2460,7 +2450,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm256_mask_cmp_epi32_mask
+name|test_mm256_mask_cmp_le_epi32_mask
 parameter_list|(
 name|__mmask8
 name|__u
@@ -2472,8 +2462,8 @@ name|__m256i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm256_mask_cmp_epi32_mask
-comment|// CHECK: icmp eq<8 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK-LABEL: @test_mm256_mask_cmp_le_epi32_mask
+comment|// CHECK: icmp sle<8 x i32> %{{.*}}, %{{.*}}
 comment|// CHECK: and<8 x i1> %{{.*}}, %{{.*}}
 return|return
 operator|(
@@ -2487,7 +2477,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_LE
 argument_list|)
 return|;
 block|}
@@ -2495,7 +2485,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm256_cmp_epi64_mask
+name|test_mm256_cmp_eq_epi64_mask
 parameter_list|(
 name|__m256i
 name|__a
@@ -2504,7 +2494,7 @@ name|__m256i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm256_cmp_epi64_mask
+comment|// CHECK-LABEL: @test_mm256_cmp_eq_epi64_mask
 comment|// CHECK: icmp eq<4 x i64> %{{.*}}, %{{.*}}
 return|return
 operator|(
@@ -2516,7 +2506,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_EQ
 argument_list|)
 return|;
 block|}
@@ -2524,7 +2514,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm256_mask_cmp_epi64_mask
+name|test_mm256_mask_cmp_eq_epi64_mask
 parameter_list|(
 name|__mmask8
 name|__u
@@ -2536,7 +2526,7 @@ name|__m256i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm256_mask_cmp_epi64_mask
+comment|// CHECK-LABEL: @test_mm256_mask_cmp_eq_epi64_mask
 comment|// CHECK: icmp eq<4 x i64> %{{.*}}, %{{.*}}
 comment|// CHECK: and<4 x i1> %{{.*}}, %{{.*}}
 return|return
@@ -2551,7 +2541,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_EQ
 argument_list|)
 return|;
 block|}
@@ -2831,7 +2821,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_mask_add_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.padd.d.256
+comment|//CHECK: add<8 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_add_epi32
 argument_list|(
@@ -2862,7 +2853,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_maskz_add_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.padd.d.256
+comment|//CHECK: add<8 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_add_epi32
 argument_list|(
@@ -2894,7 +2886,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_mask_add_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.padd.q.256
+comment|//CHECK: add<4 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_add_epi64
 argument_list|(
@@ -2925,7 +2918,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_maskz_add_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.padd.q.256
+comment|//CHECK: add<4 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_add_epi64
 argument_list|(
@@ -2957,7 +2951,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_mask_sub_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.psub.d.256
+comment|//CHECK: sub<8 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_sub_epi32
 argument_list|(
@@ -2988,7 +2983,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_maskz_sub_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.psub.d.256
+comment|//CHECK: sub<8 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_sub_epi32
 argument_list|(
@@ -3020,7 +3016,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_mask_sub_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.psub.q.256
+comment|//CHECK: sub<4 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_sub_epi64
 argument_list|(
@@ -3051,7 +3048,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_maskz_sub_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.psub.q.256
+comment|//CHECK: sub<4 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_sub_epi64
 argument_list|(
@@ -3083,7 +3081,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_mask_add_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.padd.d.128
+comment|//CHECK: add<4 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_add_epi32
 argument_list|(
@@ -3114,7 +3113,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_maskz_add_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.padd.d.128
+comment|//CHECK: add<4 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_add_epi32
 argument_list|(
@@ -3146,7 +3146,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_mask_add_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.padd.q.128
+comment|//CHECK: add<2 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_add_epi64
 argument_list|(
@@ -3177,7 +3178,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_maskz_add_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.padd.q.128
+comment|//CHECK: add<2 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_add_epi64
 argument_list|(
@@ -3209,7 +3211,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_mask_sub_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.psub.d.128
+comment|//CHECK: sub<4 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_sub_epi32
 argument_list|(
@@ -3240,7 +3243,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_maskz_sub_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.psub.d.128
+comment|//CHECK: sub<4 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_sub_epi32
 argument_list|(
@@ -3272,7 +3276,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_mask_sub_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.psub.q.128
+comment|//CHECK: sub<2 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_sub_epi64
 argument_list|(
@@ -3303,7 +3308,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_maskz_sub_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.psub.q.128
+comment|//CHECK: sub<2 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_sub_epi64
 argument_list|(
@@ -3335,7 +3341,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_mask_mul_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmul.dq.256
+comment|//CHECK: @llvm.x86.avx2.pmul.dq
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_mul_epi32
 argument_list|(
@@ -3366,7 +3373,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_maskz_mul_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmul.dq.256
+comment|//CHECK: @llvm.x86.avx2.pmul.dq
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_mul_epi32
 argument_list|(
@@ -3398,7 +3406,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_mask_mul_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmul.dq.128
+comment|//CHECK: @llvm.x86.sse41.pmuldq
+comment|//CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_mul_epi32
 argument_list|(
@@ -3429,7 +3438,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_maskz_mul_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmul.dq.128
+comment|//CHECK: @llvm.x86.sse41.pmuldq
+comment|//CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_mul_epi32
 argument_list|(
@@ -3461,7 +3471,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_mask_mul_epu32
-comment|//CHECK: @llvm.x86.avx512.mask.pmulu.dq.256
+comment|//CHECK: @llvm.x86.avx2.pmulu.dq
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_mul_epu32
 argument_list|(
@@ -3492,7 +3503,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_maskz_mul_epu32
-comment|//CHECK: @llvm.x86.avx512.mask.pmulu.dq.256
+comment|//CHECK: @llvm.x86.avx2.pmulu.dq
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_mul_epu32
 argument_list|(
@@ -3524,7 +3536,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_mask_mul_epu32
-comment|//CHECK: @llvm.x86.avx512.mask.pmulu.dq.128
+comment|//CHECK: @llvm.x86.sse2.pmulu.dq
+comment|//CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_mul_epu32
 argument_list|(
@@ -3555,7 +3568,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_maskz_mul_epu32
-comment|//CHECK: @llvm.x86.avx512.mask.pmulu.dq.128
+comment|//CHECK: @llvm.x86.sse2.pmulu.dq
+comment|//CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_mul_epu32
 argument_list|(
@@ -3584,7 +3598,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_maskz_mullo_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmull.d.128
+comment|//CHECK: mul<4 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_mullo_epi32
 argument_list|(
@@ -3616,7 +3631,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm_mask_mullo_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmull.d.128
+comment|//CHECK: mul<4 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_mullo_epi32
 argument_list|(
@@ -3647,7 +3663,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_maskz_mullo_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmull.d.256
+comment|//CHECK: mul<8 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_mullo_epi32
 argument_list|(
@@ -3679,7 +3696,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm256_mask_mullo_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmull.d.256
+comment|//CHECK: mul<8 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_mullo_epi32
 argument_list|(
@@ -7437,7 +7455,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_add_pd
-comment|// CHECK: @llvm.x86.avx512.mask.add.pd.128
+comment|// CHECK: fadd<2 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_mask_add_pd
 argument_list|(
@@ -7468,7 +7487,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_add_pd
-comment|// CHECK: @llvm.x86.avx512.mask.add.pd.128
+comment|// CHECK: fadd<2 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_maskz_add_pd
 argument_list|(
@@ -7500,7 +7520,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_add_pd
-comment|// CHECK: @llvm.x86.avx512.mask.add.pd.256
+comment|// CHECK: fadd<4 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_add_pd
 argument_list|(
@@ -7531,7 +7552,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_add_pd
-comment|// CHECK: @llvm.x86.avx512.mask.add.pd.256
+comment|// CHECK: fadd<4 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_add_pd
 argument_list|(
@@ -7552,7 +7574,7 @@ parameter_list|(
 name|__m128
 name|__W
 parameter_list|,
-name|__mmask16
+name|__mmask8
 name|__U
 parameter_list|,
 name|__m128
@@ -7563,7 +7585,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_add_ps
-comment|// CHECK: @llvm.x86.avx512.mask.add.ps.128
+comment|// CHECK: fadd<4 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_mask_add_ps
 argument_list|(
@@ -7594,7 +7617,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_add_ps
-comment|// CHECK: @llvm.x86.avx512.mask.add.ps.128
+comment|// CHECK: fadd<4 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_maskz_add_ps
 argument_list|(
@@ -7615,7 +7639,7 @@ parameter_list|(
 name|__m256
 name|__W
 parameter_list|,
-name|__mmask16
+name|__mmask8
 name|__U
 parameter_list|,
 name|__m256
@@ -7626,7 +7650,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_add_ps
-comment|// CHECK: @llvm.x86.avx512.mask.add.ps.256
+comment|// CHECK: fadd<8 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_add_ps
 argument_list|(
@@ -7646,7 +7671,7 @@ begin_function
 name|__m256
 name|test_mm256_maskz_add_ps
 parameter_list|(
-name|__mmask16
+name|__mmask8
 name|__U
 parameter_list|,
 name|__m256
@@ -7657,7 +7682,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_add_ps
-comment|// CHECK: @llvm.x86.avx512.mask.add.ps.256
+comment|// CHECK: fadd<8 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_add_ps
 argument_list|(
@@ -8582,7 +8608,9 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepi32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtdq2pd.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<2 x i32><i32 0, i32 1>
+comment|// CHECK: sitofp<2 x i32> %{{.*}} to<2 x double>
+comment|// CHECK: select<2 x i1> {{.*}},<2 x double> {{.*}},<2 x double> {{.*}}
 return|return
 name|_mm_mask_cvtepi32_pd
 argument_list|(
@@ -8608,7 +8636,9 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepi32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtdq2pd.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<2 x i32><i32 0, i32 1>
+comment|// CHECK: sitofp<2 x i32> %{{.*}} to<2 x double>
+comment|// CHECK: select<2 x i1> {{.*}},<2 x double> {{.*}},<2 x double> {{.*}}
 return|return
 name|_mm_maskz_cvtepi32_pd
 argument_list|(
@@ -8635,7 +8665,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepi32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtdq2pd.256
+comment|// CHECK: sitofp<4 x i32> %{{.*}} to<4 x double>
+comment|// CHECK: select<4 x i1> {{.*}},<4 x double> {{.*}},<4 x double> {{.*}}
 return|return
 name|_mm256_mask_cvtepi32_pd
 argument_list|(
@@ -8661,7 +8692,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepi32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtdq2pd.256
+comment|// CHECK: sitofp<4 x i32> %{{.*}} to<4 x double>
+comment|// CHECK: select<4 x i1> {{.*}},<4 x double> {{.*}},<4 x double> {{.*}}
 return|return
 name|_mm256_maskz_cvtepi32_pd
 argument_list|(
@@ -10000,7 +10032,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_cvtepu32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtudq2pd.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<2 x i32><i32 0, i32 1>
+comment|// CHECK: uitofp<2 x i32> %{{.*}} to<2 x double>
 return|return
 name|_mm_cvtepu32_pd
 argument_list|(
@@ -10025,7 +10058,9 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepu32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtudq2pd.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<2 x i32><i32 0, i32 1>
+comment|// CHECK: uitofp<2 x i32> %{{.*}} to<2 x double>
+comment|// CHECK: select<2 x i1> {{.*}},<2 x double> {{.*}},<2 x double> {{.*}}
 return|return
 name|_mm_mask_cvtepu32_pd
 argument_list|(
@@ -10051,7 +10086,9 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepu32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtudq2pd.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<2 x i32><i32 0, i32 1>
+comment|// CHECK: uitofp<2 x i32> %{{.*}} to<2 x double>
+comment|// CHECK: select<2 x i1> {{.*}},<2 x double> {{.*}},<2 x double> {{.*}}
 return|return
 name|_mm_maskz_cvtepu32_pd
 argument_list|(
@@ -10072,7 +10109,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_cvtepu32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtudq2pd.256
+comment|// CHECK: uitofp<4 x i32> %{{.*}} to<4 x double>
 return|return
 name|_mm256_cvtepu32_pd
 argument_list|(
@@ -10097,7 +10134,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepu32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtudq2pd.256
+comment|// CHECK: uitofp<4 x i32> %{{.*}} to<4 x double>
+comment|// CHECK: select<4 x i1> {{.*}},<4 x double> {{.*}},<4 x double> {{.*}}
 return|return
 name|_mm256_mask_cvtepu32_pd
 argument_list|(
@@ -10123,7 +10161,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepu32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtudq2pd.256
+comment|// CHECK: uitofp<4 x i32> %{{.*}} to<4 x double>
+comment|// CHECK: select<4 x i1> {{.*}},<4 x double> {{.*}},<4 x double> {{.*}}
 return|return
 name|_mm256_maskz_cvtepu32_pd
 argument_list|(
@@ -10297,7 +10336,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_div_pd
-comment|// CHECK: @llvm.x86.avx512.mask.div.pd.128
+comment|// CHECK: fdiv<2 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_mask_div_pd
 argument_list|(
@@ -10328,7 +10368,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_div_pd
-comment|// CHECK: @llvm.x86.avx512.mask.div.pd.128
+comment|// CHECK: fdiv<2 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_maskz_div_pd
 argument_list|(
@@ -10360,7 +10401,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_div_pd
-comment|// CHECK: @llvm.x86.avx512.mask.div.pd.256
+comment|// CHECK: fdiv<4 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_div_pd
 argument_list|(
@@ -10391,7 +10433,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_div_pd
-comment|// CHECK: @llvm.x86.avx512.mask.div.pd.256
+comment|// CHECK: fdiv<4 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_div_pd
 argument_list|(
@@ -10423,7 +10466,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_div_ps
-comment|// CHECK: @llvm.x86.avx512.mask.div.ps.128
+comment|// CHECK: fdiv<4 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_mask_div_ps
 argument_list|(
@@ -10443,7 +10487,7 @@ begin_function
 name|__m128
 name|test_mm_maskz_div_ps
 parameter_list|(
-name|__mmask8
+name|__mmask16
 name|__U
 parameter_list|,
 name|__m128
@@ -10454,7 +10498,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_div_ps
-comment|// CHECK: @llvm.x86.avx512.mask.div.ps.128
+comment|// CHECK: fdiv<4 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_maskz_div_ps
 argument_list|(
@@ -10486,7 +10531,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_div_ps
-comment|// CHECK: @llvm.x86.avx512.mask.div.ps.256
+comment|// CHECK: fdiv<8 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_div_ps
 argument_list|(
@@ -10517,7 +10563,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_div_ps
-comment|// CHECK: @llvm.x86.avx512.mask.div.ps.256
+comment|// CHECK: fdiv<8 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_div_ps
 argument_list|(
@@ -11717,7 +11764,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_max_pd
-comment|// CHECK: @llvm.x86.avx512.mask.max.pd
+comment|// CHECK: @llvm.x86.sse2.max.pd
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_mask_max_pd
 argument_list|(
@@ -11748,7 +11796,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_max_pd
-comment|// CHECK: @llvm.x86.avx512.mask.max.pd
+comment|// CHECK: @llvm.x86.sse2.max.pd
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_maskz_max_pd
 argument_list|(
@@ -11780,7 +11829,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_max_pd
-comment|// CHECK: @llvm.x86.avx512.mask.max.pd.256
+comment|// CHECK: @llvm.x86.avx.max.pd.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_max_pd
 argument_list|(
@@ -11811,7 +11861,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_max_pd
-comment|// CHECK: @llvm.x86.avx512.mask.max.pd.256
+comment|// CHECK: @llvm.x86.avx.max.pd.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_max_pd
 argument_list|(
@@ -11843,7 +11894,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_max_ps
-comment|// CHECK: @llvm.x86.avx512.mask.max.ps
+comment|// CHECK: @llvm.x86.sse.max.ps
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_mask_max_ps
 argument_list|(
@@ -11874,7 +11926,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_max_ps
-comment|// CHECK: @llvm.x86.avx512.mask.max.ps
+comment|// CHECK: @llvm.x86.sse.max.ps
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_maskz_max_ps
 argument_list|(
@@ -11906,7 +11959,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_max_ps
-comment|// CHECK: @llvm.x86.avx512.mask.max.ps.256
+comment|// CHECK: @llvm.x86.avx.max.ps.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_max_ps
 argument_list|(
@@ -11937,7 +11991,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_max_ps
-comment|// CHECK: @llvm.x86.avx512.mask.max.ps.256
+comment|// CHECK: @llvm.x86.avx.max.ps.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_max_ps
 argument_list|(
@@ -11969,7 +12024,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_min_pd
-comment|// CHECK: @llvm.x86.avx512.mask.min.pd
+comment|// CHECK: @llvm.x86.sse2.min.pd
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_mask_min_pd
 argument_list|(
@@ -12000,7 +12056,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_min_pd
-comment|// CHECK: @llvm.x86.avx512.mask.min.pd
+comment|// CHECK: @llvm.x86.sse2.min.pd
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_maskz_min_pd
 argument_list|(
@@ -12032,7 +12089,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_min_pd
-comment|// CHECK: @llvm.x86.avx512.mask.min.pd.256
+comment|// CHECK: @llvm.x86.avx.min.pd.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_min_pd
 argument_list|(
@@ -12063,7 +12121,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_min_pd
-comment|// CHECK: @llvm.x86.avx512.mask.min.pd.256
+comment|// CHECK: @llvm.x86.avx.min.pd.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_min_pd
 argument_list|(
@@ -12095,7 +12154,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_min_ps
-comment|// CHECK: @llvm.x86.avx512.mask.min.ps
+comment|// CHECK: @llvm.x86.sse.min.ps
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_mask_min_ps
 argument_list|(
@@ -12126,7 +12186,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_min_ps
-comment|// CHECK: @llvm.x86.avx512.mask.min.ps
+comment|// CHECK: @llvm.x86.sse.min.ps
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_maskz_min_ps
 argument_list|(
@@ -12158,7 +12219,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_min_ps
-comment|// CHECK: @llvm.x86.avx512.mask.min.ps.256
+comment|// CHECK: @llvm.x86.avx.min.ps.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_min_ps
 argument_list|(
@@ -12189,7 +12251,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_min_ps
-comment|// CHECK: @llvm.x86.avx512.mask.min.ps.256
+comment|// CHECK: @llvm.x86.avx.min.ps.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_min_ps
 argument_list|(
@@ -12221,7 +12284,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_mul_pd
-comment|// CHECK: @llvm.x86.avx512.mask.mul.pd
+comment|// CHECK: fmul<2 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_mask_mul_pd
 argument_list|(
@@ -12252,7 +12316,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_mul_pd
-comment|// CHECK: @llvm.x86.avx512.mask.mul.pd
+comment|// CHECK: fmul<2 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_maskz_mul_pd
 argument_list|(
@@ -12284,7 +12349,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_mul_pd
-comment|// CHECK: @llvm.x86.avx512.mask.mul.pd.256
+comment|// CHECK: fmul<4 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_mul_pd
 argument_list|(
@@ -12315,7 +12381,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_mul_pd
-comment|// CHECK: @llvm.x86.avx512.mask.mul.pd.256
+comment|// CHECK: fmul<4 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_mul_pd
 argument_list|(
@@ -12347,7 +12414,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_mul_ps
-comment|// CHECK: @llvm.x86.avx512.mask.mul.ps
+comment|// CHECK: fmul<4 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_mask_mul_ps
 argument_list|(
@@ -12378,7 +12446,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_mul_ps
-comment|// CHECK: @llvm.x86.avx512.mask.mul.ps
+comment|// CHECK: fmul<4 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_maskz_mul_ps
 argument_list|(
@@ -12410,7 +12479,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_mul_ps
-comment|// CHECK: @llvm.x86.avx512.mask.mul.ps.256
+comment|// CHECK: fmul<8 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_mul_ps
 argument_list|(
@@ -12441,7 +12511,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_mul_ps
-comment|// CHECK: @llvm.x86.avx512.mask.mul.ps.256
+comment|// CHECK: fmul<8 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_mul_ps
 argument_list|(
@@ -12470,7 +12541,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_abs_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pabs.d.128
+comment|// CHECK: @llvm.x86.ssse3.pabs.d.128
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_abs_epi32
 argument_list|(
@@ -12496,7 +12568,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_abs_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pabs.d.128
+comment|// CHECK: @llvm.x86.ssse3.pabs.d.128
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_abs_epi32
 argument_list|(
@@ -12523,7 +12596,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_abs_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pabs.d.256
+comment|// CHECK: @llvm.x86.avx2.pabs.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_abs_epi32
 argument_list|(
@@ -12549,7 +12623,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_abs_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pabs.d.256
+comment|// CHECK: @llvm.x86.avx2.pabs.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_abs_epi32
 argument_list|(
@@ -12720,7 +12795,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_max_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.d.128
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<4 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i32> [[X]],<4 x i32> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i32> [[RES]],<4 x i32> {{.*}}
 return|return
 name|_mm_maskz_max_epi32
 argument_list|(
@@ -12752,7 +12829,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_max_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.d.128
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<4 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i32> [[X]],<4 x i32> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i32> [[RES]],<4 x i32> {{.*}}
 return|return
 name|_mm_mask_max_epi32
 argument_list|(
@@ -12783,7 +12862,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_max_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.d.256
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<8 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i32> [[X]],<8 x i32> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i32> [[RES]],<8 x i32> {{.*}}
 return|return
 name|_mm256_maskz_max_epi32
 argument_list|(
@@ -12815,7 +12896,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_max_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.d.256
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<8 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i32> [[X]],<8 x i32> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i32> [[RES]],<8 x i32> {{.*}}
 return|return
 name|_mm256_mask_max_epi32
 argument_list|(
@@ -12846,7 +12929,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_max_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
+comment|// CHECK:       select<2 x i1> {{.*}},<2 x i64> [[RES]],<2 x i64> {{.*}}
 return|return
 name|_mm_maskz_max_epi64
 argument_list|(
@@ -12878,7 +12963,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_max_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
+comment|// CHECK:       select<2 x i1> {{.*}},<2 x i64> [[RES]],<2 x i64> {{.*}}
 return|return
 name|_mm_mask_max_epi64
 argument_list|(
@@ -12906,7 +12993,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_max_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
 return|return
 name|_mm_max_epi64
 argument_list|(
@@ -12933,7 +13021,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_max_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i64> [[RES]],<4 x i64> {{.*}}
 return|return
 name|_mm256_maskz_max_epi64
 argument_list|(
@@ -12965,7 +13055,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_max_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i64> [[RES]],<4 x i64> {{.*}}
 return|return
 name|_mm256_mask_max_epi64
 argument_list|(
@@ -12993,7 +13085,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_max_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
 return|return
 name|_mm256_max_epi64
 argument_list|(
@@ -13020,7 +13113,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_max_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.d.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<4 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i32> [[X]],<4 x i32> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i32> [[RES]],<4 x i32> {{.*}}
 return|return
 name|_mm_maskz_max_epu32
 argument_list|(
@@ -13052,7 +13147,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_max_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.d.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<4 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i32> [[X]],<4 x i32> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i32> [[RES]],<4 x i32> {{.*}}
 return|return
 name|_mm_mask_max_epu32
 argument_list|(
@@ -13083,7 +13180,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_max_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.d.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<8 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i32> [[X]],<8 x i32> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i32> [[RES]],<8 x i32> {{.*}}
 return|return
 name|_mm256_maskz_max_epu32
 argument_list|(
@@ -13115,7 +13214,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_max_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.d.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<8 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i32> [[X]],<8 x i32> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i32> [[RES]],<8 x i32> {{.*}}
 return|return
 name|_mm256_mask_max_epu32
 argument_list|(
@@ -13146,7 +13247,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_max_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
+comment|// CHECK:       select<2 x i1> {{.*}},<2 x i64> [[RES]],<2 x i64> {{.*}}
 return|return
 name|_mm_maskz_max_epu64
 argument_list|(
@@ -13172,7 +13275,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_max_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
 return|return
 name|_mm_max_epu64
 argument_list|(
@@ -13202,7 +13306,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_max_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
+comment|// CHECK:       select<2 x i1> {{.*}},<2 x i64> [[RES]],<2 x i64> {{.*}}
 return|return
 name|_mm_mask_max_epu64
 argument_list|(
@@ -13233,7 +13339,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_max_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i64> [[RES]],<4 x i64> {{.*}}
 return|return
 name|_mm256_maskz_max_epu64
 argument_list|(
@@ -13259,7 +13367,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_max_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
 return|return
 name|_mm256_max_epu64
 argument_list|(
@@ -13289,7 +13398,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_max_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i64> [[RES]],<4 x i64> {{.*}}
 return|return
 name|_mm256_mask_max_epu64
 argument_list|(
@@ -13320,7 +13431,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_min_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.d.128
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<4 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i32> [[X]],<4 x i32> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i32> [[RES]],<4 x i32> {{.*}}
 return|return
 name|_mm_maskz_min_epi32
 argument_list|(
@@ -13352,7 +13465,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_min_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.d.128
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<4 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i32> [[X]],<4 x i32> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i32> [[RES]],<4 x i32> {{.*}}
 return|return
 name|_mm_mask_min_epi32
 argument_list|(
@@ -13383,7 +13498,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_min_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.d.256
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<8 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i32> [[X]],<8 x i32> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i32> [[RES]],<8 x i32> {{.*}}
 return|return
 name|_mm256_maskz_min_epi32
 argument_list|(
@@ -13415,7 +13532,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_min_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.d.256
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<8 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i32> [[X]],<8 x i32> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i32> [[RES]],<8 x i32> {{.*}}
 return|return
 name|_mm256_mask_min_epi32
 argument_list|(
@@ -13443,7 +13562,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_min_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
 return|return
 name|_mm_min_epi64
 argument_list|(
@@ -13473,7 +13593,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_min_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
+comment|// CHECK:       select<2 x i1> {{.*}},<2 x i64> [[RES]],<2 x i64> {{.*}}
 return|return
 name|_mm_mask_min_epi64
 argument_list|(
@@ -13504,7 +13626,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_min_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
+comment|// CHECK:       select<2 x i1> {{.*}},<2 x i64> [[RES]],<2 x i64> {{.*}}
 return|return
 name|_mm_maskz_min_epi64
 argument_list|(
@@ -13530,7 +13654,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_min_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
 return|return
 name|_mm256_min_epi64
 argument_list|(
@@ -13560,7 +13685,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_min_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i64> [[RES]],<4 x i64> {{.*}}
 return|return
 name|_mm256_mask_min_epi64
 argument_list|(
@@ -13591,7 +13718,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_min_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i64> [[RES]],<4 x i64> {{.*}}
 return|return
 name|_mm256_maskz_min_epi64
 argument_list|(
@@ -13620,7 +13749,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_min_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.d.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<4 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i32> [[X]],<4 x i32> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i32> [[RES]],<4 x i32> {{.*}}
 return|return
 name|_mm_maskz_min_epu32
 argument_list|(
@@ -13652,7 +13783,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_min_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.d.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<4 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i32> [[X]],<4 x i32> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i32> [[RES]],<4 x i32> {{.*}}
 return|return
 name|_mm_mask_min_epu32
 argument_list|(
@@ -13683,7 +13816,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_min_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.d.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<8 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i32> [[X]],<8 x i32> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i32> [[RES]],<8 x i32> {{.*}}
 return|return
 name|_mm256_maskz_min_epu32
 argument_list|(
@@ -13715,7 +13850,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_min_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.d.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<8 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i32> [[X]],<8 x i32> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i32> [[RES]],<8 x i32> {{.*}}
 return|return
 name|_mm256_mask_min_epu32
 argument_list|(
@@ -13743,7 +13880,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_min_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
 return|return
 name|_mm_min_epu64
 argument_list|(
@@ -13773,7 +13911,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_min_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
+comment|// CHECK:       select<2 x i1> {{.*}},<2 x i64> [[RES]],<2 x i64> {{.*}}
 return|return
 name|_mm_mask_min_epu64
 argument_list|(
@@ -13804,7 +13944,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_min_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.q.128
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<2 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<2 x i1> [[CMP]],<2 x i64> [[X]],<2 x i64> [[Y]]
+comment|// CHECK:       select<2 x i1> {{.*}},<2 x i64> [[RES]],<2 x i64> {{.*}}
 return|return
 name|_mm_maskz_min_epu64
 argument_list|(
@@ -13830,7 +13972,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_min_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
 return|return
 name|_mm256_min_epu64
 argument_list|(
@@ -13860,7 +14003,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_min_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i64> [[RES]],<4 x i64> {{.*}}
 return|return
 name|_mm256_mask_min_epu64
 argument_list|(
@@ -13891,7 +14036,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_min_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.q.256
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<4 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<4 x i1> [[CMP]],<4 x i64> [[X]],<4 x i64> [[Y]]
+comment|// CHECK:       select<4 x i1> {{.*}},<4 x i64> [[RES]],<4 x i64> {{.*}}
 return|return
 name|_mm256_maskz_min_epu64
 argument_list|(
@@ -15692,7 +15839,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_sqrt_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sqrt.pd.128
+comment|// CHECK: @llvm.x86.sse2.sqrt.pd
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_mask_sqrt_pd
 argument_list|(
@@ -15718,7 +15866,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_sqrt_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sqrt.pd.128
+comment|// CHECK: @llvm.x86.sse2.sqrt.pd
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_maskz_sqrt_pd
 argument_list|(
@@ -15745,7 +15894,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_sqrt_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sqrt.pd.256
+comment|// CHECK: @llvm.x86.avx.sqrt.pd.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_sqrt_pd
 argument_list|(
@@ -15771,7 +15921,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_sqrt_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sqrt.pd.256
+comment|// CHECK: @llvm.x86.avx.sqrt.pd.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_sqrt_pd
 argument_list|(
@@ -15798,7 +15949,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_sqrt_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sqrt.ps.128
+comment|// CHECK: @llvm.x86.sse.sqrt.ps
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_mask_sqrt_ps
 argument_list|(
@@ -15824,7 +15976,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_sqrt_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sqrt.ps.128
+comment|// CHECK: @llvm.x86.sse.sqrt.ps
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_maskz_sqrt_ps
 argument_list|(
@@ -15851,7 +16004,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_sqrt_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sqrt.ps.256
+comment|// CHECK: @llvm.x86.avx.sqrt.ps.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_sqrt_ps
 argument_list|(
@@ -15877,7 +16031,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_sqrt_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sqrt.ps.256
+comment|// CHECK: @llvm.x86.avx.sqrt.ps.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_sqrt_ps
 argument_list|(
@@ -15907,7 +16062,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_sub_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sub.pd.128
+comment|// CHECK: fsub<2 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_mask_sub_pd
 argument_list|(
@@ -15938,7 +16094,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_sub_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sub.pd.128
+comment|// CHECK: fsub<2 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_maskz_sub_pd
 argument_list|(
@@ -15970,7 +16127,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_sub_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sub.pd.256
+comment|// CHECK: fsub<4 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_sub_pd
 argument_list|(
@@ -16001,7 +16159,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_sub_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sub.pd.256
+comment|// CHECK: fsub<4 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_sub_pd
 argument_list|(
@@ -16022,7 +16181,7 @@ parameter_list|(
 name|__m128
 name|__W
 parameter_list|,
-name|__mmask16
+name|__mmask8
 name|__U
 parameter_list|,
 name|__m128
@@ -16033,7 +16192,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_sub_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sub.ps.128
+comment|// CHECK: fsub<4 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_mask_sub_ps
 argument_list|(
@@ -16053,7 +16213,7 @@ begin_function
 name|__m128
 name|test_mm_maskz_sub_ps
 parameter_list|(
-name|__mmask16
+name|__mmask8
 name|__U
 parameter_list|,
 name|__m128
@@ -16064,7 +16224,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_sub_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sub.ps.128
+comment|// CHECK: fsub<4 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_maskz_sub_ps
 argument_list|(
@@ -16085,7 +16246,7 @@ parameter_list|(
 name|__m256
 name|__W
 parameter_list|,
-name|__mmask16
+name|__mmask8
 name|__U
 parameter_list|,
 name|__m256
@@ -16096,7 +16257,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_sub_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sub.ps.256
+comment|// CHECK: fsub<8 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_sub_ps
 argument_list|(
@@ -16116,7 +16278,7 @@ begin_function
 name|__m256
 name|test_mm256_maskz_sub_ps
 parameter_list|(
-name|__mmask16
+name|__mmask8
 name|__U
 parameter_list|,
 name|__m256
@@ -16127,7 +16289,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_sub_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sub.ps.256
+comment|// CHECK: fsub<8 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_sub_ps
 argument_list|(
@@ -17204,7 +17367,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepi8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.d.128
+comment|// CHECK: sext<4 x i8> %{{.*}} to<4 x i32>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_cvtepi8_epi32
 argument_list|(
@@ -17230,7 +17394,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepi8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.d.128
+comment|// CHECK: sext<4 x i8> %{{.*}} to<4 x i32>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_cvtepi8_epi32
 argument_list|(
@@ -17257,7 +17422,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepi8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.d.256
+comment|// CHECK: sext<8 x i8> %{{.*}} to<8 x i32>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_cvtepi8_epi32
 argument_list|(
@@ -17283,7 +17449,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepi8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.d.256
+comment|// CHECK: sext<8 x i8> %{{.*}} to<8 x i32>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepi8_epi32
 argument_list|(
@@ -17310,7 +17477,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepi8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.q.128
+comment|// CHECK: sext<2 x i8> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_cvtepi8_epi64
 argument_list|(
@@ -17336,7 +17504,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepi8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.q.128
+comment|// CHECK: sext<2 x i8> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_cvtepi8_epi64
 argument_list|(
@@ -17363,7 +17532,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepi8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.q.256
+comment|// CHECK: sext<4 x i8> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_cvtepi8_epi64
 argument_list|(
@@ -17389,7 +17559,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepi8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.q.256
+comment|// CHECK: sext<4 x i8> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepi8_epi64
 argument_list|(
@@ -17416,7 +17587,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepi32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxd.q.128
+comment|// CHECK: sext<2 x i32> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_cvtepi32_epi64
 argument_list|(
@@ -17442,7 +17614,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepi32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxd.q.128
+comment|// CHECK: sext<2 x i32> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_cvtepi32_epi64
 argument_list|(
@@ -17469,7 +17642,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepi32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxd.q.256
+comment|// CHECK: sext<4 x i32> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_cvtepi32_epi64
 argument_list|(
@@ -17495,7 +17669,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepi32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxd.q.256
+comment|// CHECK: sext<4 x i32> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepi32_epi64
 argument_list|(
@@ -17522,7 +17697,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepi16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.d.128
+comment|// CHECK: sext<4 x i16> %{{.*}} to<4 x i32>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_cvtepi16_epi32
 argument_list|(
@@ -17548,7 +17724,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepi16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.d.128
+comment|// CHECK: sext<4 x i16> %{{.*}} to<4 x i32>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_cvtepi16_epi32
 argument_list|(
@@ -17575,7 +17752,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepi16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.d.256
+comment|// CHECK: sext<8 x i16> %{{.*}} to<8 x i32>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_cvtepi16_epi32
 argument_list|(
@@ -17601,7 +17779,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepi16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.d.256
+comment|// CHECK: sext<8 x i16> %{{.*}} to<8 x i32>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepi16_epi32
 argument_list|(
@@ -17628,7 +17807,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepi16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.q.128
+comment|// CHECK: sext<2 x i16> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_cvtepi16_epi64
 argument_list|(
@@ -17654,7 +17834,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepi16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.q.128
+comment|// CHECK: sext<2 x i16> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_cvtepi16_epi64
 argument_list|(
@@ -17681,7 +17862,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepi16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.q.256
+comment|// CHECK: sext<4 x i16> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_cvtepi16_epi64
 argument_list|(
@@ -17707,7 +17889,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepi16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.q.256
+comment|// CHECK: sext<4 x i16> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepi16_epi64
 argument_list|(
@@ -17734,7 +17917,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepu8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.d.128
+comment|// CHECK: zext<4 x i8> %{{.*}} to<4 x i32>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_cvtepu8_epi32
 argument_list|(
@@ -17760,7 +17944,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepu8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.d.128
+comment|// CHECK: zext<4 x i8> %{{.*}} to<4 x i32>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_cvtepu8_epi32
 argument_list|(
@@ -17787,7 +17972,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepu8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.d.256
+comment|// CHECK: zext<8 x i8> %{{.*}} to<8 x i32>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_cvtepu8_epi32
 argument_list|(
@@ -17813,7 +17999,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepu8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.d.256
+comment|// CHECK: zext<8 x i8> %{{.*}} to<8 x i32>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepu8_epi32
 argument_list|(
@@ -17840,7 +18027,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepu8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.q.128
+comment|// CHECK: zext<2 x i8> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_cvtepu8_epi64
 argument_list|(
@@ -17866,7 +18054,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepu8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.q.128
+comment|// CHECK: zext<2 x i8> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_cvtepu8_epi64
 argument_list|(
@@ -17893,7 +18082,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepu8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.q.256
+comment|// CHECK: zext<4 x i8> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_cvtepu8_epi64
 argument_list|(
@@ -17919,7 +18109,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepu8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.q.256
+comment|// CHECK: zext<4 x i8> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepu8_epi64
 argument_list|(
@@ -17946,7 +18137,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepu32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxd.q.128
+comment|// CHECK: zext<2 x i32> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_cvtepu32_epi64
 argument_list|(
@@ -17972,7 +18164,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepu32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxd.q.128
+comment|// CHECK: zext<2 x i32> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_cvtepu32_epi64
 argument_list|(
@@ -17999,7 +18192,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepu32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxd.q.256
+comment|// CHECK: zext<4 x i32> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_cvtepu32_epi64
 argument_list|(
@@ -18025,7 +18219,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepu32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxd.q.256
+comment|// CHECK: zext<4 x i32> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepu32_epi64
 argument_list|(
@@ -18052,7 +18247,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepu16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.d.128
+comment|// CHECK: zext<4 x i16> %{{.*}} to<4 x i32>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_cvtepu16_epi32
 argument_list|(
@@ -18078,7 +18274,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepu16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.d.128
+comment|// CHECK: zext<4 x i16> %{{.*}} to<4 x i32>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_cvtepu16_epi32
 argument_list|(
@@ -18105,7 +18302,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepu16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.d.256
+comment|// CHECK: zext<8 x i16> %{{.*}} to<8 x i32>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_cvtepu16_epi32
 argument_list|(
@@ -18131,7 +18329,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepu16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.d.256
+comment|// CHECK: zext<8 x i16> %{{.*}} to<8 x i32>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepu16_epi32
 argument_list|(
@@ -18158,7 +18357,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_cvtepu16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.q.128
+comment|// CHECK: zext<2 x i16> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_cvtepu16_epi64
 argument_list|(
@@ -18184,7 +18384,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_cvtepu16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.q.128
+comment|// CHECK: zext<2 x i16> %{{.*}} to<2 x i64>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_cvtepu16_epi64
 argument_list|(
@@ -18211,7 +18412,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_cvtepu16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.q.256
+comment|// CHECK: zext<4 x i16> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_cvtepu16_epi64
 argument_list|(
@@ -18237,7 +18439,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_cvtepu16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.q.256
+comment|// CHECK: zext<4 x i16> %{{.*}} to<4 x i64>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_cvtepu16_epi64
 argument_list|(
@@ -19587,7 +19790,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_sllv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psllv
+comment|// CHECK: @llvm.x86.avx2.psllv.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_sllv_epi64
 argument_list|(
@@ -19618,7 +19822,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_sllv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psllv
+comment|// CHECK: @llvm.x86.avx2.psllv.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_sllv_epi64
 argument_list|(
@@ -19650,7 +19855,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_sllv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psllv
+comment|// CHECK: @llvm.x86.avx2.psllv.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_sllv_epi64
 argument_list|(
@@ -19681,7 +19887,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_sllv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psllv
+comment|// CHECK: @llvm.x86.avx2.psllv.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_sllv_epi64
 argument_list|(
@@ -19713,7 +19920,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_sllv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psllv
+comment|// CHECK: @llvm.x86.avx2.psllv.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_sllv_epi32
 argument_list|(
@@ -19744,7 +19952,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_sllv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psllv
+comment|// CHECK: @llvm.x86.avx2.psllv.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_sllv_epi32
 argument_list|(
@@ -19776,7 +19985,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_sllv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psllv
+comment|// CHECK: @llvm.x86.avx2.psllv.d.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_sllv_epi32
 argument_list|(
@@ -19807,7 +20017,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_sllv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psllv
+comment|// CHECK: @llvm.x86.avx2.psllv.d.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_sllv_epi32
 argument_list|(
@@ -19839,7 +20050,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srlv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv
+comment|// CHECK: @llvm.x86.avx2.psrlv.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_srlv_epi64
 argument_list|(
@@ -19870,7 +20082,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srlv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv
+comment|// CHECK: @llvm.x86.avx2.psrlv.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_srlv_epi64
 argument_list|(
@@ -19902,7 +20115,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srlv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv
+comment|// CHECK: @llvm.x86.avx2.psrlv.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_srlv_epi64
 argument_list|(
@@ -19933,7 +20147,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srlv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv
+comment|// CHECK: @llvm.x86.avx2.psrlv.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_srlv_epi64
 argument_list|(
@@ -19965,7 +20180,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srlv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv
+comment|// CHECK: @llvm.x86.avx2.psrlv.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_srlv_epi32
 argument_list|(
@@ -19996,7 +20212,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srlv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv
+comment|// CHECK: @llvm.x86.avx2.psrlv.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_srlv_epi32
 argument_list|(
@@ -20028,7 +20245,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srlv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv
+comment|// CHECK: @llvm.x86.avx2.psrlv.d.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_srlv_epi32
 argument_list|(
@@ -20059,7 +20277,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srlv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv
+comment|// CHECK: @llvm.x86.avx2.psrlv.d.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_srlv_epi32
 argument_list|(
@@ -20091,7 +20310,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srl_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.d.128
+comment|// CHECK: @llvm.x86.sse2.psrl.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_srl_epi32
 argument_list|(
@@ -20122,7 +20342,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srl_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.d.128
+comment|// CHECK: @llvm.x86.sse2.psrl.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_srl_epi32
 argument_list|(
@@ -20154,7 +20375,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srl_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.d.256
+comment|// CHECK: @llvm.x86.avx2.psrl.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_srl_epi32
 argument_list|(
@@ -20185,7 +20407,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srl_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.d.256
+comment|// CHECK: @llvm.x86.avx2.psrl.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_srl_epi32
 argument_list|(
@@ -20214,7 +20437,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.di.128
+comment|// CHECK: @llvm.x86.sse2.psrli.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_srli_epi32
 argument_list|(
@@ -20242,7 +20466,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.di.128
+comment|// CHECK: @llvm.x86.sse2.psrli.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_srli_epi32
 argument_list|(
@@ -20271,7 +20496,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.di.256
+comment|// CHECK: @llvm.x86.avx2.psrli.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_srli_epi32
 argument_list|(
@@ -20299,7 +20525,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.di.256
+comment|// CHECK: @llvm.x86.avx2.psrli.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_srli_epi32
 argument_list|(
@@ -20331,7 +20558,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srl_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.q.128
+comment|// CHECK: @llvm.x86.sse2.psrl.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_srl_epi64
 argument_list|(
@@ -20362,7 +20590,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srl_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.q.128
+comment|// CHECK: @llvm.x86.sse2.psrl.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_srl_epi64
 argument_list|(
@@ -20394,7 +20623,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srl_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.q.256
+comment|// CHECK: @llvm.x86.avx2.psrl.q
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_srl_epi64
 argument_list|(
@@ -20425,7 +20655,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srl_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.q.256
+comment|// CHECK: @llvm.x86.avx2.psrl.q
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_srl_epi64
 argument_list|(
@@ -20454,7 +20685,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.qi.128
+comment|// CHECK: @llvm.x86.sse2.psrli.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_srli_epi64
 argument_list|(
@@ -20482,7 +20714,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.qi.128
+comment|// CHECK: @llvm.x86.sse2.psrli.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_srli_epi64
 argument_list|(
@@ -20511,7 +20744,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.qi.256
+comment|// CHECK: @llvm.x86.avx2.psrli.q
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_srli_epi64
 argument_list|(
@@ -20539,9 +20773,506 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.qi.256
+comment|// CHECK: @llvm.x86.avx2.psrli.q
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_srli_epi64
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm_mask_sll_epi32
+parameter_list|(
+name|__m128i
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128i
+name|__A
+parameter_list|,
+name|__m128i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_mask_sll_epi32
+comment|// CHECK: @llvm.x86.sse2.psll.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
+return|return
+name|_mm_mask_sll_epi32
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm_maskz_sll_epi32
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128i
+name|__A
+parameter_list|,
+name|__m128i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_maskz_sll_epi32
+comment|// CHECK: @llvm.x86.sse2.psll.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
+return|return
+name|_mm_maskz_sll_epi32
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_mask_sll_epi32
+parameter_list|(
+name|__m256i
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m256i
+name|__A
+parameter_list|,
+name|__m128i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_mask_sll_epi32
+comment|// CHECK: @llvm.x86.avx2.psll.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
+return|return
+name|_mm256_mask_sll_epi32
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_maskz_sll_epi32
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m256i
+name|__A
+parameter_list|,
+name|__m128i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_maskz_sll_epi32
+comment|// CHECK: @llvm.x86.avx2.psll.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
+return|return
+name|_mm256_maskz_sll_epi32
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm_mask_slli_epi32
+parameter_list|(
+name|__m128i
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_mask_slli_epi32
+comment|// CHECK: @llvm.x86.sse2.pslli.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
+return|return
+name|_mm_mask_slli_epi32
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm_maskz_slli_epi32
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_maskz_slli_epi32
+comment|// CHECK: @llvm.x86.sse2.pslli.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
+return|return
+name|_mm_maskz_slli_epi32
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_mask_slli_epi32
+parameter_list|(
+name|__m256i
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m256i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_mask_slli_epi32
+comment|// CHECK: @llvm.x86.avx2.pslli.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
+return|return
+name|_mm256_mask_slli_epi32
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_maskz_slli_epi32
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m256i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_maskz_slli_epi32
+comment|// CHECK: @llvm.x86.avx2.pslli.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
+return|return
+name|_mm256_maskz_slli_epi32
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm_mask_sll_epi64
+parameter_list|(
+name|__m128i
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128i
+name|__A
+parameter_list|,
+name|__m128i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_mask_sll_epi64
+comment|// CHECK: @llvm.x86.sse2.psll.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
+return|return
+name|_mm_mask_sll_epi64
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm_maskz_sll_epi64
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128i
+name|__A
+parameter_list|,
+name|__m128i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_maskz_sll_epi64
+comment|// CHECK: @llvm.x86.sse2.psll.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
+return|return
+name|_mm_maskz_sll_epi64
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_mask_sll_epi64
+parameter_list|(
+name|__m256i
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m256i
+name|__A
+parameter_list|,
+name|__m128i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_mask_sll_epi64
+comment|// CHECK: @llvm.x86.avx2.psll.q
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
+return|return
+name|_mm256_mask_sll_epi64
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_maskz_sll_epi64
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m256i
+name|__A
+parameter_list|,
+name|__m128i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_maskz_sll_epi64
+comment|// CHECK: @llvm.x86.avx2.psll.q
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
+return|return
+name|_mm256_maskz_sll_epi64
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm_mask_slli_epi64
+parameter_list|(
+name|__m128i
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_mask_slli_epi64
+comment|// CHECK: @llvm.x86.sse2.pslli.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
+return|return
+name|_mm_mask_slli_epi64
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm_maskz_slli_epi64
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_maskz_slli_epi64
+comment|// CHECK: @llvm.x86.sse2.pslli.q
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
+return|return
+name|_mm_maskz_slli_epi64
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_mask_slli_epi64
+parameter_list|(
+name|__m256i
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m256i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_mask_slli_epi64
+comment|// CHECK: @llvm.x86.avx2.pslli.q
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
+return|return
+name|_mm256_mask_slli_epi64
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_maskz_slli_epi64
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m256i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_maskz_slli_epi64
+comment|// CHECK: @llvm.x86.avx2.pslli.q
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
+return|return
+name|_mm256_maskz_slli_epi64
 argument_list|(
 name|__U
 argument_list|,
@@ -20571,7 +21302,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srav_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrav
+comment|// CHECK: @llvm.x86.avx2.psrav.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_srav_epi32
 argument_list|(
@@ -20602,7 +21334,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srav_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrav
+comment|// CHECK: @llvm.x86.avx2.psrav.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_srav_epi32
 argument_list|(
@@ -20634,7 +21367,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srav_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrav
+comment|// CHECK: @llvm.x86.avx2.psrav.d.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_srav_epi32
 argument_list|(
@@ -20665,7 +21399,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srav_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrav
+comment|// CHECK: @llvm.x86.avx2.psrav.d.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_srav_epi32
 argument_list|(
@@ -20691,7 +21426,7 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_srav_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.q.128
+comment|// CHECK: @llvm.x86.avx512.psrav.q.128
 return|return
 name|_mm_srav_epi64
 argument_list|(
@@ -20721,7 +21456,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srav_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.q.128
+comment|// CHECK: @llvm.x86.avx512.psrav.q.128
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_srav_epi64
 argument_list|(
@@ -20752,7 +21488,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srav_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.q.128
+comment|// CHECK: @llvm.x86.avx512.psrav.q.128
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_srav_epi64
 argument_list|(
@@ -20778,7 +21515,7 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_srav_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.q.256
+comment|// CHECK: @llvm.x86.avx512.psrav.q.256
 return|return
 name|_mm256_srav_epi64
 argument_list|(
@@ -20808,7 +21545,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srav_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.q.256
+comment|// CHECK: @llvm.x86.avx512.psrav.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_srav_epi64
 argument_list|(
@@ -20839,7 +21577,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srav_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.q.256
+comment|// CHECK: @llvm.x86.avx512.psrav.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_srav_epi64
 argument_list|(
@@ -21617,6 +22356,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
 begin_function
 name|__m128i
 name|test_mm_mask_set1_epi64
@@ -21726,6 +22471,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|__m128d
@@ -24245,7 +24995,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_permutevar_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.pd
+comment|// CHECK: @llvm.x86.avx.vpermilvar.pd
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_mask_permutevar_pd
 argument_list|(
@@ -24276,7 +25027,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_permutevar_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.pd
+comment|// CHECK: @llvm.x86.avx.vpermilvar.pd
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x double> %{{.*}},<2 x double> %{{.*}}
 return|return
 name|_mm_maskz_permutevar_pd
 argument_list|(
@@ -24308,7 +25060,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_permutevar_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.pd.256
+comment|// CHECK: @llvm.x86.avx.vpermilvar.pd.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_mask_permutevar_pd
 argument_list|(
@@ -24339,7 +25092,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_permutevar_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.pd.256
+comment|// CHECK: @llvm.x86.avx.vpermilvar.pd.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm256_maskz_permutevar_pd
 argument_list|(
@@ -24371,7 +25125,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_permutevar_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.ps
+comment|// CHECK: @llvm.x86.avx.vpermilvar.ps
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_mask_permutevar_ps
 argument_list|(
@@ -24402,7 +25157,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_permutevar_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.ps
+comment|// CHECK: @llvm.x86.avx.vpermilvar.ps
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm_maskz_permutevar_ps
 argument_list|(
@@ -24434,7 +25190,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_permutevar_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.ps.256
+comment|// CHECK: @llvm.x86.avx.vpermilvar.ps.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_permutevar_ps
 argument_list|(
@@ -24465,7 +25222,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_permutevar_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.ps.256
+comment|// CHECK: @llvm.x86.avx.vpermilvar.ps.256
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_permutevar_ps
 argument_list|(
@@ -25441,7 +26199,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_sra_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.d.128
+comment|// CHECK: @llvm.x86.sse2.psra.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_sra_epi32
 argument_list|(
@@ -25472,7 +26231,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_sra_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.d.128
+comment|// CHECK: @llvm.x86.sse2.psra.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_sra_epi32
 argument_list|(
@@ -25504,7 +26264,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_sra_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.d.256
+comment|// CHECK: @llvm.x86.avx2.psra.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_sra_epi32
 argument_list|(
@@ -25535,7 +26296,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_sra_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.d.256
+comment|// CHECK: @llvm.x86.avx2.psra.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_sra_epi32
 argument_list|(
@@ -25564,7 +26326,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srai_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.di.128
+comment|// CHECK: @llvm.x86.sse2.psrai.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_srai_epi32
 argument_list|(
@@ -25592,7 +26355,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srai_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.di.128
+comment|// CHECK: @llvm.x86.sse2.psrai.d
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_srai_epi32
 argument_list|(
@@ -25621,7 +26385,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srai_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.di.256
+comment|// CHECK: @llvm.x86.avx2.psrai.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_srai_epi32
 argument_list|(
@@ -25649,7 +26414,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srai_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.di.256
+comment|// CHECK: @llvm.x86.avx2.psrai.d
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_srai_epi32
 argument_list|(
@@ -25675,7 +26441,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_sra_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.q.128
+comment|// CHECK: @llvm.x86.avx512.psra.q.128
 return|return
 name|_mm_sra_epi64
 argument_list|(
@@ -25705,7 +26471,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_sra_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.q.128
+comment|// CHECK: @llvm.x86.avx512.psra.q.128
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_sra_epi64
 argument_list|(
@@ -25736,7 +26503,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_sra_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.q.128
+comment|// CHECK: @llvm.x86.avx512.psra.q.128
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_sra_epi64
 argument_list|(
@@ -25762,7 +26530,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_sra_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.q.256
+comment|// CHECK: @llvm.x86.avx512.psra.q.256
 return|return
 name|_mm256_sra_epi64
 argument_list|(
@@ -25792,7 +26560,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_sra_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.q.256
+comment|// CHECK: @llvm.x86.avx512.psra.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_sra_epi64
 argument_list|(
@@ -25823,7 +26592,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_sra_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.q.256
+comment|// CHECK: @llvm.x86.avx512.psra.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_sra_epi64
 argument_list|(
@@ -25846,7 +26616,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_srai_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.qi.128
+comment|// CHECK: @llvm.x86.avx512.psrai.q.128
 return|return
 name|_mm_srai_epi64
 argument_list|(
@@ -25873,7 +26643,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_srai_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.qi.128
+comment|// CHECK: @llvm.x86.avx512.psrai.q.128
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_srai_epi64
 argument_list|(
@@ -25901,7 +26672,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_srai_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.qi.128
+comment|// CHECK: @llvm.x86.avx512.psrai.q.128
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_srai_epi64
 argument_list|(
@@ -25924,7 +26696,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_srai_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.qi.256
+comment|// CHECK: @llvm.x86.avx512.psrai.q.256
 return|return
 name|_mm256_srai_epi64
 argument_list|(
@@ -25951,7 +26723,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_srai_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.qi.256
+comment|// CHECK: @llvm.x86.avx512.psrai.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_srai_epi64
 argument_list|(
@@ -25979,7 +26752,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_srai_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.qi.256
+comment|// CHECK: @llvm.x86.avx512.psrai.q.256
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_srai_epi64
 argument_list|(
@@ -30939,7 +31713,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_extractf32x4_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vextractf32x4
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm256_extractf32x4_ps
 argument_list|(
@@ -30966,7 +31740,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_extractf32x4_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vextractf32x4
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm256_mask_extractf32x4_ps
 argument_list|(
@@ -30994,7 +31769,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_extractf32x4_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vextractf32x4
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm256_maskz_extractf32x4_ps
 argument_list|(
@@ -31017,7 +31793,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_extracti32x4_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti32x4
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm256_extracti32x4_epi32
 argument_list|(
@@ -31044,7 +31820,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_extracti32x4_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti32x4
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm256_mask_extracti32x4_epi32
 argument_list|(
@@ -31072,7 +31849,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_extracti32x4_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti32x4
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_extracti32x4_epi32
 argument_list|(
@@ -31098,7 +31876,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_insertf32x4
-comment|// CHECK: @llvm.x86.avx512.mask.insertf32x4
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
 return|return
 name|_mm256_insertf32x4
 argument_list|(
@@ -31130,7 +31908,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_insertf32x4
-comment|// CHECK: @llvm.x86.avx512.mask.insertf32x4
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_mask_insertf32x4
 argument_list|(
@@ -31163,7 +31942,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_insertf32x4
-comment|// CHECK: @llvm.x86.avx512.mask.insertf32x4
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x float> %{{.*}},<8 x float> %{{.*}}
 return|return
 name|_mm256_maskz_insertf32x4
 argument_list|(
@@ -31191,7 +31971,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_inserti32x4
-comment|// CHECK: @llvm.x86.avx512.mask.inserti32x4
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
 return|return
 name|_mm256_inserti32x4
 argument_list|(
@@ -31223,7 +32003,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_inserti32x4
-comment|// CHECK: @llvm.x86.avx512.mask.inserti32x4
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_inserti32x4
 argument_list|(
@@ -31256,7 +32037,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_inserti32x4
-comment|// CHECK: @llvm.x86.avx512.mask.inserti32x4
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_inserti32x4
 argument_list|(
@@ -32712,7 +33494,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_alignr_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.valign.d.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<4 x i32><i32 1, i32 2, i32 3, i32 4>
 return|return
 name|_mm_alignr_epi32
 argument_list|(
@@ -32744,7 +33526,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_alignr_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.valign.d.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<4 x i32><i32 1, i32 2, i32 3, i32 4>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_mask_alignr_epi32
 argument_list|(
@@ -32777,7 +33560,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_alignr_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.valign.d.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<4 x i32><i32 1, i32 2, i32 3, i32 4>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm_maskz_alignr_epi32
 argument_list|(
@@ -32805,7 +33589,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_alignr_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.valign.d.256
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<8 x i32><i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8>
 return|return
 name|_mm256_alignr_epi32
 argument_list|(
@@ -32837,7 +33621,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_alignr_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.valign.d.256
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<8 x i32><i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_mask_alignr_epi32
 argument_list|(
@@ -32870,7 +33655,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_alignr_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.valign.d.256
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<8 x i32><i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i32> %{{.*}},<8 x i32> %{{.*}}
 return|return
 name|_mm256_maskz_alignr_epi32
 argument_list|(
@@ -32898,7 +33684,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_alignr_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.valign.q.128
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<2 x i32><i32 1, i32 2>
 return|return
 name|_mm_alignr_epi64
 argument_list|(
@@ -32930,7 +33716,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask_alignr_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.valign.q.128
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<2 x i32><i32 1, i32 2>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_mask_alignr_epi64
 argument_list|(
@@ -32963,7 +33750,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_maskz_alignr_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.valign.q.128
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<2 x i32><i32 1, i32 2>
+comment|// CHECK: select<2 x i1> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}}
 return|return
 name|_mm_maskz_alignr_epi64
 argument_list|(
@@ -32991,7 +33779,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_alignr_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.valign.q.256
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<4 x i32><i32 1, i32 2, i32 3, i32 4>
 return|return
 name|_mm256_alignr_epi64
 argument_list|(
@@ -33023,7 +33811,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_mask_alignr_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.valign.q.256
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<4 x i32><i32 1, i32 2, i32 3, i32 4>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_mask_alignr_epi64
 argument_list|(
@@ -33056,7 +33845,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_maskz_alignr_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.valign.q.256
+comment|// CHECK: shufflevector<4 x i64> %{{.*}},<4 x i64> %{{.*}},<4 x i32><i32 1, i32 2, i32 3, i32 4>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm256_maskz_alignr_epi64
 argument_list|(

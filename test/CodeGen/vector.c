@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -O1 -target-cpu core2 -debug-info-kind=limited -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding -triple i386-apple-darwin9 -O1 -target-cpu core2 -debug-info-kind=limited -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_typedef
@@ -127,16 +127,6 @@ name|c
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#

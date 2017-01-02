@@ -78,19 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclarationName.h"
+file|"clang/AST/TemplateBase.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/Frontend/PCHContainerOperations.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/TemplateBase.h"
 end_include
 
 begin_include
@@ -138,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -151,12 +139,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Bitcode/BitstreamWriter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_include
@@ -181,9 +163,6 @@ decl_stmt|;
 name|class
 name|APInt
 decl_stmt|;
-name|class
-name|BitstreamWriter
-decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -191,6 +170,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|DeclarationName
+decl_stmt|;
 name|class
 name|ASTContext
 decl_stmt|;
@@ -1239,8 +1221,9 @@ literal|16
 operator|>
 name|UpdatedDeclContexts
 expr_stmt|;
-comment|/// \brief Keeps track of visible decls that were added in DeclContexts
-comment|/// coming from another AST file.
+comment|/// \brief Keeps track of declarations that we must emit, even though we're
+comment|/// not guaranteed to be able to find them by walking the AST starting at the
+comment|/// translation unit.
 name|SmallVector
 operator|<
 specifier|const
@@ -1249,7 +1232,7 @@ operator|*
 operator|,
 literal|16
 operator|>
-name|UpdatingVisibleDecls
+name|DeclsToEmitEvenIfUnreferenced
 expr_stmt|;
 comment|/// \brief The set of Objective-C class that have categories we
 comment|/// should serialize.
@@ -1623,6 +1606,30 @@ parameter_list|)
 function_decl|;
 name|void
 name|WriteOpenCLExtensions
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|)
+function_decl|;
+name|void
+name|WriteOpenCLExtensionTypes
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|)
+function_decl|;
+name|void
+name|WriteOpenCLExtensionDecls
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|)
+function_decl|;
+name|void
+name|WriteCUDAPragmas
 parameter_list|(
 name|Sema
 modifier|&
@@ -2507,6 +2514,51 @@ argument_list|)
 name|override
 decl_stmt|;
 name|void
+name|AddedCXXTemplateSpecialization
+argument_list|(
+specifier|const
+name|ClassTemplateDecl
+operator|*
+name|TD
+argument_list|,
+specifier|const
+name|ClassTemplateSpecializationDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|AddedCXXTemplateSpecialization
+argument_list|(
+specifier|const
+name|VarTemplateDecl
+operator|*
+name|TD
+argument_list|,
+specifier|const
+name|VarTemplateSpecializationDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|AddedCXXTemplateSpecialization
+argument_list|(
+specifier|const
+name|FunctionTemplateDecl
+operator|*
+name|TD
+argument_list|,
+specifier|const
+name|FunctionDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
 name|ResolvedExceptionSpec
 argument_list|(
 specifier|const
@@ -2569,6 +2621,16 @@ name|DefaultArgumentInstantiated
 argument_list|(
 specifier|const
 name|ParmVarDecl
+operator|*
+name|D
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|DefaultMemberInitializerInstantiated
+argument_list|(
+specifier|const
+name|FieldDecl
 operator|*
 name|D
 argument_list|)
@@ -3548,12 +3610,6 @@ operator|::
 name|string
 name|OutputFile
 block|;
-name|clang
-operator|::
-name|Module
-operator|*
-name|Module
-block|;
 name|std
 operator|::
 name|string
@@ -3626,8 +3682,6 @@ argument_list|(
 argument|const Preprocessor&PP
 argument_list|,
 argument|StringRef OutputFile
-argument_list|,
-argument|clang::Module *Module
 argument_list|,
 argument|StringRef isysroot
 argument_list|,

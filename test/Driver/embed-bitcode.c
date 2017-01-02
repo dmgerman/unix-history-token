@@ -151,5 +151,49 @@ begin_comment
 comment|// CHECK-MARKER-NOT: -cc1
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target armv7-apple-darwin -miphoneos-version-min=6.0 %s -fembed-bitcode=all -fintegrated-as 2>&1 -### | FileCheck %s -check-prefix=CHECK-LINKER
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-apple-darwin -miphoneos-version-min=6.0 %s -fembed-bitcode=marker -fintegrated-as 2>&1 -### | FileCheck %s -check-prefix=CHECK-LINKER
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-apple-darwin -miphoneos-version-min=6.0 %s -flto=full -fembed-bitcode=bitcode -fintegrated-as 2>&1 -### | FileCheck %s -check-prefix=CHECK-LINKER
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-apple-darwin -miphoneos-version-min=6.0 %s -flto=thin -fembed-bitcode=bitcode -fintegrated-as 2>&1 -### | FileCheck %s -check-prefix=CHECK-LINKER
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-apple-darwin -miphoneos-version-min=6.0 %s -fembed-bitcode=off -fintegrated-as 2>&1 -### | FileCheck %s -check-prefix=CHECK-NO-LINKER
+end_comment
+
+begin_comment
+comment|// CHECK-LINKER: ld
+end_comment
+
+begin_comment
+comment|// CHECK-LINKER: -bitcode_bundle
+end_comment
+
+begin_comment
+comment|// CHECK-NO-LINKER-NOT: -bitcode_bundle
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-apple-darwin -miphoneos-version-min=5.0 %s -fembed-bitcode -### 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck %s -check-prefix=CHECK-PLATFORM-UNSUPPORTED
+end_comment
+
+begin_comment
+comment|// CHECK-PLATFORM-UNSUPPORTED: -fembed-bitcode is not supported on versions of iOS prior to 6.0
+end_comment
+
 end_unit
 

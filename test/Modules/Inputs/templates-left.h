@@ -448,5 +448,25 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|inline
+name|WithAttributes
+operator|<
+name|int
+operator|>
+name|make_with_attributes_left
+argument_list|()
+block|{
+return|return
+name|WithAttributes
+operator|<
+name|int
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 end_unit
 

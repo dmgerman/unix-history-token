@@ -42,11 +42,11 @@ comment|// CHECK: define void @nofoo() [[NOMIPS16:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[MIPS16]] = { nounwind {{.*}} "mips16" {{.*}} }
+comment|// CHECK: attributes [[MIPS16]] = { noinline nounwind {{.*}} "mips16" {{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[NOMIPS16]]  = { nounwind {{.*}} "nomips16" {{.*}} }
+comment|// CHECK: attributes [[NOMIPS16]]  = { noinline nounwind {{.*}} "nomips16" {{.*}} }
 end_comment
 
 end_unit

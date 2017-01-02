@@ -3,6 +3,18 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -triple arm-apple-darwin -verify -fsyntax-only
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple thumb-apple-darwin -verify -fsyntax-only
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple armeb-none-eabi -verify -fsyntax-only
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple thumbeb-none-eabi -verify -fsyntax-only
+end_comment
+
 begin_macro
 name|__attribute__
 argument_list|(

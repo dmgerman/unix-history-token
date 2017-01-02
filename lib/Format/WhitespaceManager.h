@@ -138,38 +138,24 @@ argument_list|(
 argument|UseCRLF
 argument_list|)
 block|{}
-comment|/// \brief Prepares the \c WhitespaceManager for another run.
-name|void
-name|reset
-argument_list|()
-expr_stmt|;
 comment|/// \brief Replaces the whitespace in front of \p Tok. Only call once for
 comment|/// each \c AnnotatedToken.
 name|void
 name|replaceWhitespace
-parameter_list|(
-name|FormatToken
-modifier|&
-name|Tok
-parameter_list|,
-name|unsigned
-name|Newlines
-parameter_list|,
-name|unsigned
-name|IndentLevel
-parameter_list|,
-name|unsigned
-name|Spaces
-parameter_list|,
-name|unsigned
-name|StartOfTokenColumn
-parameter_list|,
-name|bool
-name|InPPDirective
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|FormatToken&Tok
+argument_list|,
+argument|unsigned Newlines
+argument_list|,
+argument|unsigned IndentLevel
+argument_list|,
+argument|unsigned Spaces
+argument_list|,
+argument|unsigned StartOfTokenColumn
+argument_list|,
+argument|bool InPPDirective = false
+argument_list|)
+expr_stmt|;
 comment|/// \brief Adds information about an unchangeable token's whitespace.
 comment|///
 comment|/// Needs to be called for every token for which \c replaceWhitespace

@@ -441,10 +441,17 @@ block|,
 literal|1.0
 block|}
 decl_stmt|;
+comment|// FIXME: These diagnostics are inaccurate: should complain that 'double' to vector 'float2' involves truncation
 name|f2
 operator|+=
 name|d
 expr_stmt|;
+comment|// expected-error {{cannot convert between vector values of different size ('float2' (vector of 2 'float' values) and 'double')}}
+name|d
+operator|+=
+name|f2
+expr_stmt|;
+comment|// expected-error {{cannot convert between vector values of different size}}
 name|a
 operator|=
 literal|3.0
@@ -470,13 +477,6 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// LAX conversions within compound assignments are not supported.
-comment|// FIXME: This diagnostic is inaccurate.
-name|d
-operator|+=
-name|f2
-expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size}}
 name|c
 operator|-=
 name|vget_low_f64
@@ -484,7 +484,6 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{cannot convert between vector values of different size}}
 comment|// LAX conversions between scalar and vector types require same size and one element sized vectors.
 name|d
 operator|=

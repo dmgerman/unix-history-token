@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,alpha.core.CastToStruct -analyzer-store=region -analyzer-constraints=range -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,alpha.core.CastToStruct -analyzer-store=region -verify %s
 end_comment
 
 begin_struct
@@ -618,6 +618,60 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|struct
+name|s3
+name|gets3
+parameter_list|()
+block|{
+name|struct
+name|s3
+name|s
+decl_stmt|;
+return|return
+name|s
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|accessArrayFieldNoCrash
+parameter_list|()
+block|{
+name|bar
+argument_list|(
+name|gets3
+argument_list|()
+operator|.
+name|a
+argument_list|)
+expr_stmt|;
+name|bar
+argument_list|(
+operator|(
+name|gets3
+argument_list|()
+operator|.
+name|a
+operator|)
+argument_list|)
+expr_stmt|;
+name|bar
+argument_list|(
+operator|(
+operator|(
+name|gets3
+argument_list|()
+operator|.
+name|a
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|// Test if the array is correctly invalidated.

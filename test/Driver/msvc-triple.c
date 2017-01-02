@@ -12,6 +12,10 @@ comment|// RUN: %clang -target i686-pc-windows-msvc-elf -S -emit-llvm %s -o - | 
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target i686-pc-windows-msvc   -S -emit-llvm %s -o - | FileCheck %s --check-prefix=DEFAULT
+end_comment
+
+begin_comment
 comment|// TARGET-19:   target triple = "i686-pc-windows-msvc19.0.0"
 end_comment
 
@@ -21,6 +25,10 @@ end_comment
 
 begin_comment
 comment|// ELF-DEFAULT: target triple = "i686-pc-windows-msvc{{.*}}-elf"
+end_comment
+
+begin_comment
+comment|// DEFAULT:     target triple = "i686-pc-windows-msvc{{[^-]+}}"
 end_comment
 
 end_unit

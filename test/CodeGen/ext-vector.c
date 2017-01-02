@@ -1177,5 +1177,126 @@ decl_stmt|;
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|( ext_vector_type(
+literal|16
+argument|) )
+argument_list|)
+name|float
+name|float16
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|float16
+name|vec16
+decl_stmt|,
+name|vec16_2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: @test_rgba
+end_comment
+
+begin_function
+name|void
+name|test_rgba
+parameter_list|()
+block|{
+comment|// CHECK: fadd<4 x float>
+name|vec4_2
+operator|=
+name|vec4
+operator|.
+name|abgr
+operator|+
+name|vec4
+expr_stmt|;
+comment|// CHECK: shufflevector {{.*}}<i32 0, i32 1>
+name|vec2
+operator|=
+name|vec4
+operator|.
+name|rg
+expr_stmt|;
+comment|// CHECK: shufflevector {{.*}}<i32 2, i32 3>
+name|vec2_2
+operator|=
+name|vec4
+operator|.
+name|ba
+expr_stmt|;
+comment|// CHECK: extractelement {{.*}} 2
+name|f
+operator|=
+name|vec4
+operator|.
+name|b
+expr_stmt|;
+comment|// CHECK: shufflevector {{.*}}<i32 2, i32 2, i32 2, i32 2>
+name|vec4_2
+operator|=
+name|vec4_2
+operator|.
+name|bbbb
+expr_stmt|;
+comment|// CHECK: insertelement {{.*}} 0
+name|vec2
+operator|.
+name|r
+operator|=
+name|f
+expr_stmt|;
+comment|// CHECK: shufflevector {{.*}}<i32 1, i32 0>
+name|vec2
+operator|.
+name|gr
+operator|=
+name|vec2
+expr_stmt|;
+comment|// CHECK: extractelement {{.*}} 0
+name|f
+operator|=
+name|vec4_2
+operator|.
+name|rg
+operator|.
+name|r
+expr_stmt|;
+comment|// CHECK: shufflevector {{.*}}<i32 2, i32 1, i32 0>
+comment|// CHECK: shufflevector {{.*}}<i32 0, i32 1, i32 2, i32 undef>
+comment|// CHECK: shufflevector {{.*}}<i32 4, i32 5, i32 6, i32 3>
+name|vec4
+operator|.
+name|rgb
+operator|=
+name|vec4
+operator|.
+name|bgr
+expr_stmt|;
+comment|// CHECK: extractelement {{.*}} 11
+comment|// CHECK: insertelement {{.*}} 2
+name|vec4
+operator|.
+name|b
+operator|=
+name|vec16
+operator|.
+name|sb
+expr_stmt|;
+comment|// CHECK: shufflevector {{.*}}<i32 10, i32 11, i32 12, i32 13>
+name|vec4_2
+operator|=
+name|vec16
+operator|.
+name|sabcd
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

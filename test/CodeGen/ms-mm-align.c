@@ -8,7 +8,7 @@ comment|// RUN:         -triple i686--windows -emit-llvm %s -o - \
 end_comment
 
 begin_comment
-comment|// RUN:         | FileCheck %s -check-prefix CHECK
+comment|// RUN:         | FileCheck %s
 end_comment
 
 begin_comment

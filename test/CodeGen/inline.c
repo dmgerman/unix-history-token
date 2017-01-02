@@ -1,10 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: echo "GNU89 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-optzns -emit-llvm -o - -std=gnu89 | FileCheck %s --check-prefix=CHECK1
+comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-passes -emit-llvm -o - -std=gnu89 | FileCheck %s --check-prefix=CHECK1
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -fexperimental-new-pass-manager -O1 -disable-llvm-passes -emit-llvm -o - -std=gnu89 | FileCheck %s --check-prefix=CHECK1
 end_comment
 
 begin_comment
@@ -88,7 +100,11 @@ comment|// RUN: echo "C99 tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-optzns -emit-llvm -o - -std=gnu99 | FileCheck %s --check-prefix=CHECK2
+comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-passes -emit-llvm -o - -std=gnu99 | FileCheck %s --check-prefix=CHECK2
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -fexperimental-new-pass-manager -O1 -disable-llvm-passes -emit-llvm -o - -std=gnu99 | FileCheck %s --check-prefix=CHECK2
 end_comment
 
 begin_comment
@@ -172,7 +188,11 @@ comment|// RUN: echo "C++ tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ %s -triple i386-unknown-unknown -O1 -disable-llvm-optzns -emit-llvm -o - -std=c++98 | FileCheck %s --check-prefix=CHECK3
+comment|// RUN: %clang_cc1 -x c++ %s -triple i386-unknown-unknown -O1 -disable-llvm-passes -emit-llvm -o - -std=c++98 | FileCheck %s --check-prefix=CHECK3
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ %s -triple i386-unknown-unknown -fexperimental-new-pass-manager -O1 -disable-llvm-passes -emit-llvm -o - -std=c++98 | FileCheck %s --check-prefix=CHECK3
 end_comment
 
 begin_comment
@@ -208,7 +228,11 @@ comment|// RUN: echo "MS C Mode tests:"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple i386-pc-win32 -O1 -disable-llvm-optzns -emit-llvm -o - -std=c99 | FileCheck %s --check-prefix=CHECK4
+comment|// RUN: %clang_cc1 %s -triple i386-pc-win32 -O1 -disable-llvm-passes -emit-llvm -o - -std=c99 | FileCheck %s --check-prefix=CHECK4
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple i386-pc-win32 -fexperimental-new-pass-manager -O1 -disable-llvm-passes -emit-llvm -o - -std=c99 | FileCheck %s --check-prefix=CHECK4
 end_comment
 
 begin_comment

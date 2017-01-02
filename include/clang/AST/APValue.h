@@ -626,6 +626,8 @@ argument_list|,
 argument|NoLValuePath N
 argument_list|,
 argument|unsigned CallIndex
+argument_list|,
+argument|bool IsNullPtr = false
 argument_list|)
 operator|:
 name|Kind
@@ -645,6 +647,8 @@ argument_list|,
 name|N
 argument_list|,
 name|CallIndex
+argument_list|,
+name|IsNullPtr
 argument_list|)
 block|;   }
 name|APValue
@@ -658,6 +662,8 @@ argument_list|,
 argument|bool OnePastTheEnd
 argument_list|,
 argument|unsigned CallIndex
+argument_list|,
+argument|bool IsNullPtr = false
 argument_list|)
 operator|:
 name|Kind
@@ -679,6 +685,8 @@ argument_list|,
 name|OnePastTheEnd
 argument_list|,
 name|CallIndex
+argument_list|,
+name|IsNullPtr
 argument_list|)
 block|;   }
 name|APValue
@@ -1372,6 +1380,11 @@ specifier|const
 expr_stmt|;
 name|unsigned
 name|getLValueCallIndex
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isNullPointer
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -2420,6 +2433,9 @@ name|NoLValuePath
 parameter_list|,
 name|unsigned
 name|CallIndex
+parameter_list|,
+name|bool
+name|IsNullPtr
 parameter_list|)
 function_decl|;
 name|void
@@ -2444,6 +2460,9 @@ name|OnePastTheEnd
 argument_list|,
 name|unsigned
 name|CallIndex
+argument_list|,
+name|bool
+name|IsNullPtr
 argument_list|)
 decl_stmt|;
 name|void

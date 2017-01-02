@@ -188,7 +188,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|0
+literal|4
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{argument should be a value from 0 to 31}}
@@ -217,7 +217,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|0
+literal|4
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{argument should be a value from 0 to 31}}
@@ -413,6 +413,37 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{argument should be a value from 0 to 7}}
+block|}
+end_function
+
+begin_function
+name|__mmask16
+name|test__builtin_ia32_cmpps512_mask_rounding
+parameter_list|(
+name|__m512
+name|__a
+parameter_list|,
+name|__m512
+name|__b
+parameter_list|,
+name|__mmask16
+name|__u
+parameter_list|)
+block|{
+name|__builtin_ia32_cmpps512_mask
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+literal|0
+argument_list|,
+name|__u
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{invalid rounding argument}}
 block|}
 end_function
 

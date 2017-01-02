@@ -125,6 +125,20 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|bool
+name|operator
+operator|==
+operator|(
+name|Aggregate
+operator|,
+name|Aggregate
+operator|)
+operator|=
+name|delete
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif

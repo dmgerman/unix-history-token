@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 %s -emit-llvm -o - -fms-extensions -triple i686-pc-wi
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define void @test_alloca
+comment|// CHECK-LABEL: define void @test_alloca(
 end_comment
 
 begin_function_decl
@@ -33,7 +33,34 @@ name|n
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// CHECK: %[[arg:.*]] = alloca i8, i32 %
+comment|// CHECK: %[[arg:.*]] = alloca i8, i32 %{{.*}}, align 16
+comment|// CHECK: call void @capture(i8* %[[arg]])
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @test_alloca_with_align(
+end_comment
+
+begin_function
+name|void
+name|test_alloca_with_align
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+block|{
+name|capture
+argument_list|(
+name|__builtin_alloca_with_align
+argument_list|(
+name|n
+argument_list|,
+literal|64
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// CHECK: %[[arg:.*]] = alloca i8, i32 %{{.*}}, align 8
 comment|// CHECK: call void @capture(i8* %[[arg]])
 block|}
 end_function

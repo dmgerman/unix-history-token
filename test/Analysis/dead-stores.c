@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,dea
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores -analyzer-store=region -analyzer-constraints=range -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores -analyzer-store=region -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_function

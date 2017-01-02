@@ -281,6 +281,11 @@ operator|,
 name|NextFriend
 argument_list|()
 operator|,
+name|UnsupportedFriend
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|NumTPLists
 argument_list|(
 argument|NumFriendTypeTPLists
@@ -718,6 +723,10 @@ decl_stmt|;
 name|friend
 name|class
 name|ASTDeclWriter
+decl_stmt|;
+name|friend
+name|class
+name|ASTNodeImporter
 decl_stmt|;
 name|friend
 name|TrailingObjects

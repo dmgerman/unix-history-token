@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -target i386-unknown-unknown -emit-llvm -S -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-linux -debug-info-kind=limited -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_decl_stmt
@@ -89,6 +89,32 @@ block|{
 comment|// CHECK: ret i32 0
 return|return
 name|AA
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// This used to crash with debug info enabled.
+end_comment
+
+begin_decl_stmt
+name|int
+name|pr31366
+argument_list|(
+expr|struct
+block|{ enum
+block|{
+name|a
+operator|=
+literal|1
+block|}
+name|b
+block|; }
+name|c
+argument_list|)
+block|{
+return|return
+name|a
 return|;
 block|}
 end_decl_stmt

@@ -14,7 +14,7 @@ file|<arm_neon.h>
 end_include
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_lane_s16(<4 x i16> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_lane_s16(
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_lane_s16(<8 x i16> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_lane_s16(
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_lane_s32(<2 x i32> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_lane_s32(
 end_comment
 
 begin_comment
@@ -161,7 +161,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_lane_s32(<4 x i32> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_lane_s32(
 end_comment
 
 begin_comment
@@ -210,7 +210,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_laneq_s16(<4 x i16> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_laneq_s16(
 end_comment
 
 begin_comment
@@ -259,7 +259,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_laneq_s16(<8 x i16> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_laneq_s16(
 end_comment
 
 begin_comment
@@ -308,7 +308,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_laneq_s32(<2 x i32> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_laneq_s32(
 end_comment
 
 begin_comment
@@ -357,7 +357,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_laneq_s32(<4 x i32> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_laneq_s32(
 end_comment
 
 begin_comment
@@ -406,7 +406,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_lane_s16(<4 x i16> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_lane_s16(
 end_comment
 
 begin_comment
@@ -455,7 +455,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_lane_s16(<8 x i16> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_lane_s16(
 end_comment
 
 begin_comment
@@ -504,7 +504,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_lane_s32(<2 x i32> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_lane_s32(
 end_comment
 
 begin_comment
@@ -553,7 +553,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_lane_s32(<4 x i32> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_lane_s32(
 end_comment
 
 begin_comment
@@ -602,7 +602,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_laneq_s16(<4 x i16> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_laneq_s16(
 end_comment
 
 begin_comment
@@ -651,7 +651,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_laneq_s16(<8 x i16> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_laneq_s16(
 end_comment
 
 begin_comment
@@ -700,7 +700,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_laneq_s32(<2 x i32> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_laneq_s32(
 end_comment
 
 begin_comment
@@ -749,7 +749,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_laneq_s32(<4 x i32> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_laneq_s32(
 end_comment
 
 begin_comment
@@ -798,7 +798,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_lane_s16(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_s16(
 end_comment
 
 begin_comment
@@ -838,7 +838,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_lane_s16(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_s16(
 end_comment
 
 begin_comment
@@ -878,7 +878,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_lane_s32(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_s32(
 end_comment
 
 begin_comment
@@ -918,7 +918,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_lane_s32(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_s32(
 end_comment
 
 begin_comment
@@ -958,7 +958,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_lane_u16(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_u16(
 end_comment
 
 begin_comment
@@ -998,7 +998,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_lane_u16(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_u16(
 end_comment
 
 begin_comment
@@ -1038,7 +1038,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_lane_u32(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_u32(
 end_comment
 
 begin_comment
@@ -1078,7 +1078,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_lane_u32(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_u32(
 end_comment
 
 begin_comment
@@ -1118,7 +1118,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_laneq_s16(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_s16(
 end_comment
 
 begin_comment
@@ -1158,7 +1158,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_laneq_s16(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_s16(
 end_comment
 
 begin_comment
@@ -1198,7 +1198,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_laneq_s32(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_s32(
 end_comment
 
 begin_comment
@@ -1238,7 +1238,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_laneq_s32(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_s32(
 end_comment
 
 begin_comment
@@ -1278,7 +1278,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_laneq_u16(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_u16(
 end_comment
 
 begin_comment
@@ -1318,7 +1318,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_laneq_u16(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_u16(
 end_comment
 
 begin_comment
@@ -1358,7 +1358,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_laneq_u32(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_u32(
 end_comment
 
 begin_comment
@@ -1398,7 +1398,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_laneq_u32(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_u32(
 end_comment
 
 begin_comment
@@ -1438,7 +1438,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfma_lane_f32(<2 x float> %a,<2 x float> %b,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfma_lane_f32(
 end_comment
 
 begin_comment
@@ -1507,7 +1507,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmaq_lane_f32(<4 x float> %a,<4 x float> %b,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmaq_lane_f32(
 end_comment
 
 begin_comment
@@ -1576,7 +1576,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfma_laneq_f32(<2 x float> %a,<2 x float> %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfma_laneq_f32(
 end_comment
 
 begin_comment
@@ -1645,7 +1645,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmaq_laneq_f32(<4 x float> %a,<4 x float> %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmaq_laneq_f32(
 end_comment
 
 begin_comment
@@ -1714,7 +1714,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfms_lane_f32(<2 x float> %a,<2 x float> %b,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfms_lane_f32(
 end_comment
 
 begin_comment
@@ -1787,7 +1787,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmsq_lane_f32(<4 x float> %a,<4 x float> %b,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmsq_lane_f32(
 end_comment
 
 begin_comment
@@ -1860,7 +1860,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfms_laneq_f32(<2 x float> %a,<2 x float> %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfms_laneq_f32(
 end_comment
 
 begin_comment
@@ -1933,7 +1933,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmsq_laneq_f32(<4 x float> %a,<4 x float> %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmsq_laneq_f32(
 end_comment
 
 begin_comment
@@ -2006,7 +2006,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vfmaq_lane_f64(<2 x double> %a,<2 x double> %b,<1 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmaq_lane_f64(
 end_comment
 
 begin_comment
@@ -2075,7 +2075,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vfmaq_laneq_f64(<2 x double> %a,<2 x double> %b,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmaq_laneq_f64(
 end_comment
 
 begin_comment
@@ -2144,7 +2144,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vfmsq_lane_f64(<2 x double> %a,<2 x double> %b,<1 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmsq_lane_f64(
 end_comment
 
 begin_comment
@@ -2217,7 +2217,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vfmsq_laneq_f64(<2 x double> %a,<2 x double> %b,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmsq_laneq_f64(
 end_comment
 
 begin_comment
@@ -2290,7 +2290,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define float @test_vfmas_laneq_f32(float %a, float %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmas_laneq_f32(
 end_comment
 
 begin_comment
@@ -2343,7 +2343,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define double @test_vfmsd_lane_f64(double %a, double %b,<1 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmsd_lane_f64(
 end_comment
 
 begin_comment
@@ -2400,7 +2400,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define float @test_vfmss_laneq_f32(float %a, float %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmss_laneq_f32(
 end_comment
 
 begin_comment
@@ -2457,7 +2457,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define double @test_vfmsd_laneq_f64(double %a, double %b,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmsd_laneq_f64(
 end_comment
 
 begin_comment
@@ -2514,7 +2514,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_lane_s16(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_lane_s16(
 end_comment
 
 begin_comment
@@ -2530,15 +2530,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -2579,7 +2571,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_lane_s32(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_lane_s32(
 end_comment
 
 begin_comment
@@ -2595,15 +2587,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -2644,7 +2628,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_laneq_s16(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_laneq_s16(
 end_comment
 
 begin_comment
@@ -2660,15 +2644,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -2709,7 +2685,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_laneq_s32(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_laneq_s32(
 end_comment
 
 begin_comment
@@ -2725,15 +2701,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -2774,7 +2742,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_lane_s16(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_lane_s16(
 end_comment
 
 begin_comment
@@ -2794,15 +2762,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -2843,7 +2803,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_lane_s32(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_lane_s32(
 end_comment
 
 begin_comment
@@ -2863,15 +2823,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -2912,7 +2864,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_laneq_s16(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_laneq_s16(
 end_comment
 
 begin_comment
@@ -2932,15 +2884,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -2981,7 +2925,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_laneq_s32(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_laneq_s32(
 end_comment
 
 begin_comment
@@ -3001,15 +2945,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3050,7 +2986,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_lane_s16(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_lane_s16(
 end_comment
 
 begin_comment
@@ -3066,15 +3002,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3115,7 +3043,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_lane_s32(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_lane_s32(
 end_comment
 
 begin_comment
@@ -3131,15 +3059,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3180,7 +3100,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_laneq_s16(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_laneq_s16(
 end_comment
 
 begin_comment
@@ -3196,15 +3116,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3245,7 +3157,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_laneq_s32(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_laneq_s32(
 end_comment
 
 begin_comment
@@ -3261,15 +3173,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3310,7 +3214,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_lane_s16(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_lane_s16(
 end_comment
 
 begin_comment
@@ -3330,15 +3234,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3379,7 +3275,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_lane_s32(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_lane_s32(
 end_comment
 
 begin_comment
@@ -3399,15 +3295,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3448,7 +3336,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_laneq_s16(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_laneq_s16(
 end_comment
 
 begin_comment
@@ -3468,15 +3356,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3517,7 +3397,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_laneq_s32(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_laneq_s32(
 end_comment
 
 begin_comment
@@ -3537,15 +3417,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3586,7 +3458,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_lane_u16(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_lane_u16(
 end_comment
 
 begin_comment
@@ -3602,15 +3474,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3651,7 +3515,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_lane_u32(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_lane_u32(
 end_comment
 
 begin_comment
@@ -3667,15 +3531,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3716,7 +3572,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_laneq_u16(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_laneq_u16(
 end_comment
 
 begin_comment
@@ -3732,15 +3588,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3781,7 +3629,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_laneq_u32(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_laneq_u32(
 end_comment
 
 begin_comment
@@ -3797,15 +3645,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3846,7 +3686,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_lane_u16(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_lane_u16(
 end_comment
 
 begin_comment
@@ -3866,15 +3706,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3915,7 +3747,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_lane_u32(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_lane_u32(
 end_comment
 
 begin_comment
@@ -3935,15 +3767,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -3984,7 +3808,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_laneq_u16(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_laneq_u16(
 end_comment
 
 begin_comment
@@ -4004,15 +3828,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4053,7 +3869,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_laneq_u32(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_laneq_u32(
 end_comment
 
 begin_comment
@@ -4073,15 +3889,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4122,7 +3930,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_lane_u16(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_lane_u16(
 end_comment
 
 begin_comment
@@ -4138,15 +3946,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4187,7 +3987,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_lane_u32(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_lane_u32(
 end_comment
 
 begin_comment
@@ -4203,15 +4003,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4252,7 +4044,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_laneq_u16(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_laneq_u16(
 end_comment
 
 begin_comment
@@ -4268,15 +4060,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4317,7 +4101,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_laneq_u32(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_laneq_u32(
 end_comment
 
 begin_comment
@@ -4333,15 +4117,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4382,7 +4158,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_lane_u16(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_lane_u16(
 end_comment
 
 begin_comment
@@ -4402,15 +4178,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4451,7 +4219,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_lane_u32(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_lane_u32(
 end_comment
 
 begin_comment
@@ -4471,15 +4239,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4520,7 +4280,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_laneq_u16(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_laneq_u16(
 end_comment
 
 begin_comment
@@ -4540,15 +4300,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4589,7 +4341,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_laneq_u32(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_laneq_u32(
 end_comment
 
 begin_comment
@@ -4609,15 +4361,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4658,7 +4402,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_lane_s16(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_lane_s16(
 end_comment
 
 begin_comment
@@ -4674,15 +4418,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4714,7 +4450,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_lane_s32(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_lane_s32(
 end_comment
 
 begin_comment
@@ -4730,15 +4466,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4770,7 +4498,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_lane_u16(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_lane_u16(
 end_comment
 
 begin_comment
@@ -4786,15 +4514,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4826,7 +4546,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_lane_u32(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_lane_u32(
 end_comment
 
 begin_comment
@@ -4842,15 +4562,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4882,7 +4594,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_lane_s16(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_lane_s16(
 end_comment
 
 begin_comment
@@ -4902,15 +4614,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -4942,7 +4646,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_lane_s32(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_lane_s32(
 end_comment
 
 begin_comment
@@ -4962,15 +4666,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5002,7 +4698,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_lane_u16(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_lane_u16(
 end_comment
 
 begin_comment
@@ -5022,15 +4718,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5062,7 +4750,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_lane_u32(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_lane_u32(
 end_comment
 
 begin_comment
@@ -5082,15 +4770,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5122,7 +4802,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_laneq_s16(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_laneq_s16(
 end_comment
 
 begin_comment
@@ -5138,15 +4818,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5178,7 +4850,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_laneq_s32(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_laneq_s32(
 end_comment
 
 begin_comment
@@ -5194,15 +4866,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5234,7 +4898,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_laneq_u16(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_laneq_u16(
 end_comment
 
 begin_comment
@@ -5250,15 +4914,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5290,7 +4946,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_laneq_u32(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_laneq_u32(
 end_comment
 
 begin_comment
@@ -5306,15 +4962,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5346,7 +4994,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_laneq_s16(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_laneq_s16(
 end_comment
 
 begin_comment
@@ -5366,15 +5014,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5406,7 +5046,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_laneq_s32(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_laneq_s32(
 end_comment
 
 begin_comment
@@ -5426,15 +5066,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5466,7 +5098,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_laneq_u16(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_laneq_u16(
 end_comment
 
 begin_comment
@@ -5486,15 +5118,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5526,7 +5150,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_laneq_u32(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_laneq_u32(
 end_comment
 
 begin_comment
@@ -5546,15 +5170,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -5586,7 +5202,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_lane_s16(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_lane_s16(
 end_comment
 
 begin_comment
@@ -5606,23 +5222,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -5659,7 +5263,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_lane_s32(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_lane_s32(
 end_comment
 
 begin_comment
@@ -5679,23 +5283,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -5732,7 +5324,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_high_lane_s16(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_lane_s16(
 end_comment
 
 begin_comment
@@ -5756,23 +5348,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -5809,7 +5389,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_high_lane_s32(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_lane_s32(
 end_comment
 
 begin_comment
@@ -5833,23 +5413,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -5886,7 +5454,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_lane_s16(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_lane_s16(
 end_comment
 
 begin_comment
@@ -5906,23 +5474,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -5959,7 +5515,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_lane_s32(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_lane_s32(
 end_comment
 
 begin_comment
@@ -5979,23 +5535,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -6032,7 +5576,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_high_lane_s16(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_lane_s16(
 end_comment
 
 begin_comment
@@ -6056,23 +5600,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -6109,7 +5641,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_high_lane_s32(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_lane_s32(
 end_comment
 
 begin_comment
@@ -6133,23 +5665,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -6186,7 +5706,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_lane_s16(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_lane_s16(
 end_comment
 
 begin_comment
@@ -6202,15 +5722,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I]],<4 x i16> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6218,11 +5730,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -6250,7 +5758,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_lane_s32(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_lane_s32(
 end_comment
 
 begin_comment
@@ -6266,15 +5774,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I]],<2 x i32> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6282,11 +5782,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -6314,7 +5810,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_laneq_s16(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_laneq_s16(
 end_comment
 
 begin_comment
@@ -6330,15 +5826,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I]],<4 x i16> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6346,11 +5834,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -6378,7 +5862,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_laneq_s32(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_laneq_s32(
 end_comment
 
 begin_comment
@@ -6394,15 +5878,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I]],<2 x i32> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6410,11 +5886,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -6442,7 +5914,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_high_lane_s16(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_lane_s16(
 end_comment
 
 begin_comment
@@ -6462,15 +5934,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I]],<4 x i16> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6478,11 +5942,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -6510,7 +5970,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_high_lane_s32(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_lane_s32(
 end_comment
 
 begin_comment
@@ -6530,15 +5990,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I]],<2 x i32> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6546,11 +5998,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -6578,7 +6026,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_high_laneq_s16(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_laneq_s16(
 end_comment
 
 begin_comment
@@ -6598,15 +6046,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I]],<4 x i16> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6614,11 +6054,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -6646,7 +6082,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_high_laneq_s32(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_laneq_s32(
 end_comment
 
 begin_comment
@@ -6666,15 +6102,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I]],<2 x i32> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6682,11 +6110,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -6714,7 +6138,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqdmulh_lane_s16(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_lane_s16(
 end_comment
 
 begin_comment
@@ -6730,15 +6154,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> [[VQDMULH_V_I]],<4 x i16> [[VQDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6746,11 +6162,7 @@ comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = bitcast<4 x i16> [[VQDMULH_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V3_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -6778,7 +6190,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqdmulhq_lane_s16(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_lane_s16(
 end_comment
 
 begin_comment
@@ -6794,15 +6206,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> [[VQDMULHQ_V_I]],<8 x i16> [[VQDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6810,11 +6214,7 @@ comment|// CHECK:   [[VQDMULHQ_V3_I:%.*]] = bitcast<8 x i16> [[VQDMULHQ_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V3_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -6842,7 +6242,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqdmulh_lane_s32(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_lane_s32(
 end_comment
 
 begin_comment
@@ -6858,15 +6258,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> [[VQDMULH_V_I]],<2 x i32> [[VQDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6874,11 +6266,7 @@ comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = bitcast<2 x i32> [[VQDMULH_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V3_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -6906,7 +6294,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmulhq_lane_s32(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_lane_s32(
 end_comment
 
 begin_comment
@@ -6922,15 +6310,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> [[VQDMULHQ_V_I]],<4 x i32> [[VQDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -6938,11 +6318,7 @@ comment|// CHECK:   [[VQDMULHQ_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULHQ_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -6970,7 +6346,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqrdmulh_lane_s16(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_lane_s16(
 end_comment
 
 begin_comment
@@ -6986,15 +6362,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> [[VQRDMULH_V_I]],<4 x i16> [[VQRDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7002,11 +6370,7 @@ comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = bitcast<4 x i16> [[VQRDMULH_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V3_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQRDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -7034,7 +6398,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqrdmulhq_lane_s16(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_lane_s16(
 end_comment
 
 begin_comment
@@ -7050,15 +6414,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> [[VQRDMULHQ_V_I]],<8 x i16> [[VQRDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7066,11 +6422,7 @@ comment|// CHECK:   [[VQRDMULHQ_V3_I:%.*]] = bitcast<8 x i16> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V3_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -7098,7 +6450,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqrdmulh_lane_s32(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_lane_s32(
 end_comment
 
 begin_comment
@@ -7114,15 +6466,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> [[VQRDMULH_V_I]],<2 x i32> [[VQRDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7130,11 +6474,7 @@ comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = bitcast<2 x i32> [[VQRDMULH_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V3_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQRDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -7162,7 +6502,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqrdmulhq_lane_s32(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_lane_s32(
 end_comment
 
 begin_comment
@@ -7178,15 +6518,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> [[VQRDMULHQ_V_I]],<4 x i32> [[VQRDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7194,11 +6526,7 @@ comment|// CHECK:   [[VQRDMULHQ_V3_I:%.*]] = bitcast<4 x i32> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -7226,7 +6554,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vmul_lane_f32(<2 x float> %a,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_f32(
 end_comment
 
 begin_comment
@@ -7266,7 +6594,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x double> @test_vmul_lane_f64(<1 x double> %a,<1 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_f64(
 end_comment
 
 begin_comment
@@ -7326,7 +6654,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vmulq_lane_f32(<4 x float> %a,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_f32(
 end_comment
 
 begin_comment
@@ -7366,7 +6694,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vmulq_lane_f64(<2 x double> %a,<1 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_f64(
 end_comment
 
 begin_comment
@@ -7406,7 +6734,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vmul_laneq_f32(<2 x float> %a,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_f32(
 end_comment
 
 begin_comment
@@ -7446,7 +6774,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x double> @test_vmul_laneq_f64(<1 x double> %a,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_f64(
 end_comment
 
 begin_comment
@@ -7506,7 +6834,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vmulq_laneq_f32(<4 x float> %a,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_f32(
 end_comment
 
 begin_comment
@@ -7546,7 +6874,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vmulq_laneq_f64(<2 x double> %a,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_f64(
 end_comment
 
 begin_comment
@@ -7586,7 +6914,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vmulx_lane_f32(<2 x float> %a,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulx_lane_f32(
 end_comment
 
 begin_comment
@@ -7602,15 +6930,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> [[VMULX_I]],<2 x float> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7642,7 +6962,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vmulxq_lane_f32(<4 x float> %a,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulxq_lane_f32(
 end_comment
 
 begin_comment
@@ -7658,15 +6978,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> [[VMULX_I]],<4 x float> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7698,7 +7010,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vmulxq_lane_f64(<2 x double> %a,<1 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulxq_lane_f64(
 end_comment
 
 begin_comment
@@ -7714,15 +7026,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> [[VMULX_I]],<2 x double> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7754,7 +7058,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vmulx_laneq_f32(<2 x float> %a,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulx_laneq_f32(
 end_comment
 
 begin_comment
@@ -7770,15 +7074,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> [[VMULX_I]],<2 x float> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7810,7 +7106,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vmulxq_laneq_f32(<4 x float> %a,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulxq_laneq_f32(
 end_comment
 
 begin_comment
@@ -7826,15 +7122,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> [[VMULX_I]],<4 x float> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7866,7 +7154,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vmulxq_laneq_f64(<2 x double> %a,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulxq_laneq_f64(
 end_comment
 
 begin_comment
@@ -7882,15 +7170,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> [[VMULX_I]],<2 x double> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -7922,7 +7202,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_lane_s16_0(<4 x i16> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_lane_s16_0(
 end_comment
 
 begin_comment
@@ -7971,7 +7251,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_lane_s16_0(<8 x i16> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_lane_s16_0(
 end_comment
 
 begin_comment
@@ -8020,7 +7300,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_lane_s32_0(<2 x i32> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_lane_s32_0(
 end_comment
 
 begin_comment
@@ -8069,7 +7349,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_lane_s32_0(<4 x i32> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_lane_s32_0(
 end_comment
 
 begin_comment
@@ -8118,7 +7398,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_laneq_s16_0(<4 x i16> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -8167,7 +7447,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_laneq_s16_0(<8 x i16> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -8216,7 +7496,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_laneq_s32_0(<2 x i32> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -8265,7 +7545,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_laneq_s32_0(<4 x i32> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -8314,7 +7594,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_lane_s16_0(<4 x i16> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_lane_s16_0(
 end_comment
 
 begin_comment
@@ -8363,7 +7643,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_lane_s16_0(<8 x i16> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_lane_s16_0(
 end_comment
 
 begin_comment
@@ -8412,7 +7692,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_lane_s32_0(<2 x i32> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_lane_s32_0(
 end_comment
 
 begin_comment
@@ -8461,7 +7741,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_lane_s32_0(<4 x i32> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_lane_s32_0(
 end_comment
 
 begin_comment
@@ -8510,7 +7790,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_laneq_s16_0(<4 x i16> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -8559,7 +7839,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_laneq_s16_0(<8 x i16> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -8608,7 +7888,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_laneq_s32_0(<2 x i32> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -8657,7 +7937,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_laneq_s32_0(<4 x i32> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -8706,7 +7986,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_lane_s16_0(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_s16_0(
 end_comment
 
 begin_comment
@@ -8746,7 +8026,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_lane_s16_0(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_s16_0(
 end_comment
 
 begin_comment
@@ -8786,7 +8066,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_lane_s32_0(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_s32_0(
 end_comment
 
 begin_comment
@@ -8826,7 +8106,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_lane_s32_0(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_s32_0(
 end_comment
 
 begin_comment
@@ -8866,7 +8146,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_lane_u16_0(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_u16_0(
 end_comment
 
 begin_comment
@@ -8906,7 +8186,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_lane_u16_0(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_u16_0(
 end_comment
 
 begin_comment
@@ -8946,7 +8226,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_lane_u32_0(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_u32_0(
 end_comment
 
 begin_comment
@@ -8986,7 +8266,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_lane_u32_0(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_u32_0(
 end_comment
 
 begin_comment
@@ -9026,7 +8306,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_laneq_s16_0(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -9066,7 +8346,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_laneq_s16_0(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -9106,7 +8386,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_laneq_s32_0(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -9146,7 +8426,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_laneq_s32_0(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -9186,7 +8466,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_laneq_u16_0(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -9226,7 +8506,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_laneq_u16_0(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -9266,7 +8546,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_laneq_u32_0(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -9306,7 +8586,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_laneq_u32_0(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -9346,7 +8626,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfma_lane_f32_0(<2 x float> %a,<2 x float> %b,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfma_lane_f32_0(
 end_comment
 
 begin_comment
@@ -9415,7 +8695,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmaq_lane_f32_0(<4 x float> %a,<4 x float> %b,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmaq_lane_f32_0(
 end_comment
 
 begin_comment
@@ -9484,7 +8764,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfma_laneq_f32_0(<2 x float> %a,<2 x float> %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfma_laneq_f32_0(
 end_comment
 
 begin_comment
@@ -9553,7 +8833,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmaq_laneq_f32_0(<4 x float> %a,<4 x float> %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmaq_laneq_f32_0(
 end_comment
 
 begin_comment
@@ -9622,7 +8902,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfms_lane_f32_0(<2 x float> %a,<2 x float> %b,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfms_lane_f32_0(
 end_comment
 
 begin_comment
@@ -9695,7 +8975,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmsq_lane_f32_0(<4 x float> %a,<4 x float> %b,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmsq_lane_f32_0(
 end_comment
 
 begin_comment
@@ -9768,7 +9048,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfms_laneq_f32_0(<2 x float> %a,<2 x float> %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfms_laneq_f32_0(
 end_comment
 
 begin_comment
@@ -9841,7 +9121,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmsq_laneq_f32_0(<4 x float> %a,<4 x float> %b,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmsq_laneq_f32_0(
 end_comment
 
 begin_comment
@@ -9914,7 +9194,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vfmaq_laneq_f64_0(<2 x double> %a,<2 x double> %b,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmaq_laneq_f64_0(
 end_comment
 
 begin_comment
@@ -9983,7 +9263,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vfmsq_laneq_f64_0(<2 x double> %a,<2 x double> %b,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vfmsq_laneq_f64_0(
 end_comment
 
 begin_comment
@@ -10056,7 +9336,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_lane_s16_0(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_lane_s16_0(
 end_comment
 
 begin_comment
@@ -10072,15 +9352,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10121,7 +9393,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_lane_s32_0(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_lane_s32_0(
 end_comment
 
 begin_comment
@@ -10137,15 +9409,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10186,7 +9450,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_laneq_s16_0(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -10202,15 +9466,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10251,7 +9507,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_laneq_s32_0(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -10267,15 +9523,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10316,7 +9564,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_lane_s16_0(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_lane_s16_0(
 end_comment
 
 begin_comment
@@ -10336,15 +9584,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10385,7 +9625,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_lane_s32_0(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_lane_s32_0(
 end_comment
 
 begin_comment
@@ -10405,15 +9645,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10454,7 +9686,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_laneq_s16_0(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -10474,15 +9706,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10523,7 +9747,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_laneq_s32_0(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -10543,15 +9767,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10592,7 +9808,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_lane_s16_0(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_lane_s16_0(
 end_comment
 
 begin_comment
@@ -10608,15 +9824,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10657,7 +9865,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_lane_s32_0(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_lane_s32_0(
 end_comment
 
 begin_comment
@@ -10673,15 +9881,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10722,7 +9922,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_laneq_s16_0(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -10738,15 +9938,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10787,7 +9979,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_laneq_s32_0(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -10803,15 +9995,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10852,7 +10036,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_lane_s16_0(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_lane_s16_0(
 end_comment
 
 begin_comment
@@ -10872,15 +10056,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10921,7 +10097,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_lane_s32_0(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_lane_s32_0(
 end_comment
 
 begin_comment
@@ -10941,15 +10117,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -10990,7 +10158,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_laneq_s16_0(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -11010,15 +10178,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11059,7 +10219,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_laneq_s32_0(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -11079,15 +10239,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11128,7 +10280,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_lane_u16_0(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_lane_u16_0(
 end_comment
 
 begin_comment
@@ -11144,15 +10296,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11193,7 +10337,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_lane_u32_0(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_lane_u32_0(
 end_comment
 
 begin_comment
@@ -11209,15 +10353,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11258,7 +10394,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_laneq_u16_0(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -11274,15 +10410,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11323,7 +10451,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_laneq_u32_0(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -11339,15 +10467,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11388,7 +10508,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_lane_u16_0(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_lane_u16_0(
 end_comment
 
 begin_comment
@@ -11408,15 +10528,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11457,7 +10569,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_lane_u32_0(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_lane_u32_0(
 end_comment
 
 begin_comment
@@ -11477,15 +10589,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11526,7 +10630,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_laneq_u16_0(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -11546,15 +10650,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11595,7 +10691,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_laneq_u32_0(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -11615,15 +10711,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11664,7 +10752,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_lane_u16_0(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_lane_u16_0(
 end_comment
 
 begin_comment
@@ -11680,15 +10768,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11729,7 +10809,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_lane_u32_0(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_lane_u32_0(
 end_comment
 
 begin_comment
@@ -11745,15 +10825,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11794,7 +10866,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_laneq_u16_0(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -11810,15 +10882,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11859,7 +10923,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_laneq_u32_0(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -11875,15 +10939,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11924,7 +10980,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_lane_u16_0(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_lane_u16_0(
 end_comment
 
 begin_comment
@@ -11944,15 +11000,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -11993,7 +11041,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_lane_u32_0(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_lane_u32_0(
 end_comment
 
 begin_comment
@@ -12013,15 +11061,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12062,7 +11102,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_laneq_u16_0(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -12082,15 +11122,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12131,7 +11163,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_laneq_u32_0(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -12151,15 +11183,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12200,7 +11224,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_lane_s16_0(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_lane_s16_0(
 end_comment
 
 begin_comment
@@ -12216,15 +11240,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12256,7 +11272,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_lane_s32_0(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_lane_s32_0(
 end_comment
 
 begin_comment
@@ -12272,15 +11288,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12312,7 +11320,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_lane_u16_0(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_lane_u16_0(
 end_comment
 
 begin_comment
@@ -12328,15 +11336,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12368,7 +11368,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_lane_u32_0(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_lane_u32_0(
 end_comment
 
 begin_comment
@@ -12384,15 +11384,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12424,7 +11416,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_lane_s16_0(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_lane_s16_0(
 end_comment
 
 begin_comment
@@ -12444,15 +11436,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12484,7 +11468,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_lane_s32_0(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_lane_s32_0(
 end_comment
 
 begin_comment
@@ -12504,15 +11488,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12544,7 +11520,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_lane_u16_0(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_lane_u16_0(
 end_comment
 
 begin_comment
@@ -12564,15 +11540,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12604,7 +11572,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_lane_u32_0(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_lane_u32_0(
 end_comment
 
 begin_comment
@@ -12624,15 +11592,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12664,7 +11624,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_laneq_s16_0(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -12680,15 +11640,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12720,7 +11672,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_laneq_s32_0(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -12736,15 +11688,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12776,7 +11720,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_laneq_u16_0(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -12792,15 +11736,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12832,7 +11768,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_laneq_u32_0(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -12848,15 +11784,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12888,7 +11816,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_laneq_s16_0(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -12908,15 +11836,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -12948,7 +11868,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_laneq_s32_0(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -12968,15 +11888,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -13008,7 +11920,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_laneq_u16_0(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -13028,15 +11940,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -13068,7 +11972,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_laneq_u32_0(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -13088,15 +11992,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL1_I]]) #2
+comment|// CHECK:   [[VMULL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -13128,7 +12024,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_lane_s16_0(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_lane_s16_0(
 end_comment
 
 begin_comment
@@ -13148,23 +12044,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -13201,7 +12085,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_lane_s32_0(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_lane_s32_0(
 end_comment
 
 begin_comment
@@ -13221,23 +12105,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -13274,7 +12146,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_high_lane_s16_0(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_lane_s16_0(
 end_comment
 
 begin_comment
@@ -13298,23 +12170,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -13351,7 +12211,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_high_lane_s32_0(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_lane_s32_0(
 end_comment
 
 begin_comment
@@ -13375,23 +12235,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -13428,7 +12276,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_lane_s16_0(<4 x i32> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_lane_s16_0(
 end_comment
 
 begin_comment
@@ -13448,23 +12296,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -13501,7 +12337,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_lane_s32_0(<2 x i64> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_lane_s32_0(
 end_comment
 
 begin_comment
@@ -13521,23 +12357,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -13574,7 +12398,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_high_lane_s16_0(<4 x i32> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_lane_s16_0(
 end_comment
 
 begin_comment
@@ -13598,23 +12422,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -13651,7 +12463,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_high_lane_s32_0(<2 x i64> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_lane_s32_0(
 end_comment
 
 begin_comment
@@ -13675,23 +12487,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -13728,7 +12528,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_lane_s16_0(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_lane_s16_0(
 end_comment
 
 begin_comment
@@ -13744,15 +12544,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I]],<4 x i16> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -13760,11 +12552,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -13792,7 +12580,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_lane_s32_0(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_lane_s32_0(
 end_comment
 
 begin_comment
@@ -13808,15 +12596,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I]],<2 x i32> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -13824,11 +12604,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -13856,7 +12632,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_laneq_s16_0(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -13872,15 +12648,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I]],<4 x i16> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -13888,11 +12656,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -13920,7 +12684,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_laneq_s32_0(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -13936,15 +12700,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I]],<2 x i32> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -13952,11 +12708,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -13984,7 +12736,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_high_lane_s16_0(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_lane_s16_0(
 end_comment
 
 begin_comment
@@ -14004,15 +12756,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I]],<4 x i16> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14020,11 +12764,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -14052,7 +12792,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_high_lane_s32_0(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_lane_s32_0(
 end_comment
 
 begin_comment
@@ -14072,15 +12812,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I]],<2 x i32> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14088,11 +12820,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -14120,7 +12848,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_high_laneq_s16_0(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -14140,15 +12868,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I]],<4 x i16> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14156,11 +12876,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -14188,7 +12904,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_high_laneq_s32_0(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -14208,15 +12924,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I]],<2 x i32> [[VQDMULL_V1_I]]) #2
+comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14224,11 +12932,7 @@ comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V3_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V2_I]]
 end_comment
 
 begin_function
@@ -14256,7 +12960,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqdmulh_lane_s16_0(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_lane_s16_0(
 end_comment
 
 begin_comment
@@ -14272,15 +12976,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> [[VQDMULH_V_I]],<4 x i16> [[VQDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14288,11 +12984,7 @@ comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = bitcast<4 x i16> [[VQDMULH_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V3_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -14320,7 +13012,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqdmulhq_lane_s16_0(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_lane_s16_0(
 end_comment
 
 begin_comment
@@ -14336,15 +13028,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> [[VQDMULHQ_V_I]],<8 x i16> [[VQDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14352,11 +13036,7 @@ comment|// CHECK:   [[VQDMULHQ_V3_I:%.*]] = bitcast<8 x i16> [[VQDMULHQ_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V3_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -14384,7 +13064,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqdmulh_lane_s32_0(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_lane_s32_0(
 end_comment
 
 begin_comment
@@ -14400,15 +13080,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> [[VQDMULH_V_I]],<2 x i32> [[VQDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14416,11 +13088,7 @@ comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = bitcast<2 x i32> [[VQDMULH_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V3_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -14448,7 +13116,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmulhq_lane_s32_0(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_lane_s32_0(
 end_comment
 
 begin_comment
@@ -14464,15 +13132,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> [[VQDMULHQ_V_I]],<4 x i32> [[VQDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14480,11 +13140,7 @@ comment|// CHECK:   [[VQDMULHQ_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULHQ_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -14512,7 +13168,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqrdmulh_lane_s16_0(<4 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_lane_s16_0(
 end_comment
 
 begin_comment
@@ -14528,15 +13184,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> [[VQRDMULH_V_I]],<4 x i16> [[VQRDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14544,11 +13192,7 @@ comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = bitcast<4 x i16> [[VQRDMULH_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V3_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQRDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -14576,7 +13220,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqrdmulhq_lane_s16_0(<8 x i16> %a,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_lane_s16_0(
 end_comment
 
 begin_comment
@@ -14592,27 +13236,11 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> [[VQRDMULHQ_V_I]],<8 x i16> [[VQRDMULHQ_V1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V3_I:%.*]] = bitcast<8 x i16> [[VQRDMULHQ_V2_I]] to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V3_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -14640,7 +13268,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqrdmulh_lane_s32_0(<2 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_lane_s32_0(
 end_comment
 
 begin_comment
@@ -14656,15 +13284,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> [[VQRDMULH_V_I]],<2 x i32> [[VQRDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -14672,11 +13292,7 @@ comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = bitcast<2 x i32> [[VQRDMULH_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V3_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQRDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -14704,7 +13320,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqrdmulhq_lane_s32_0(<4 x i32> %a,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_lane_s32_0(
 end_comment
 
 begin_comment
@@ -14720,27 +13336,11 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> [[VQRDMULHQ_V_I]],<4 x i32> [[VQRDMULHQ_V1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V3_I:%.*]] = bitcast<4 x i32> [[VQRDMULHQ_V2_I]] to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -14768,7 +13368,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vmul_lane_f32_0(<2 x float> %a,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_lane_f32_0(
 end_comment
 
 begin_comment
@@ -14808,7 +13408,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vmulq_lane_f32_0(<4 x float> %a,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_lane_f32_0(
 end_comment
 
 begin_comment
@@ -14848,7 +13448,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vmul_laneq_f32_0(<2 x float> %a,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_f32_0(
 end_comment
 
 begin_comment
@@ -14888,7 +13488,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<1 x double> @test_vmul_laneq_f64_0(<1 x double> %a,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmul_laneq_f64_0(
 end_comment
 
 begin_comment
@@ -14948,7 +13548,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vmulq_laneq_f32_0(<4 x float> %a,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_f32_0(
 end_comment
 
 begin_comment
@@ -14988,7 +13588,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vmulq_laneq_f64_0(<2 x double> %a,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulq_laneq_f64_0(
 end_comment
 
 begin_comment
@@ -15028,7 +13628,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vmulx_lane_f32_0(<2 x float> %a,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulx_lane_f32_0(
 end_comment
 
 begin_comment
@@ -15044,15 +13644,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> [[VMULX_I]],<2 x float> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -15084,7 +13676,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vmulxq_lane_f32_0(<4 x float> %a,<2 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulxq_lane_f32_0(
 end_comment
 
 begin_comment
@@ -15100,15 +13692,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> [[VMULX_I]],<4 x float> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -15140,7 +13724,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vmulxq_lane_f64_0(<2 x double> %a,<1 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulxq_lane_f64_0(
 end_comment
 
 begin_comment
@@ -15156,15 +13740,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> [[VMULX_I]],<2 x double> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -15196,7 +13772,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vmulx_laneq_f32_0(<2 x float> %a,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulx_laneq_f32_0(
 end_comment
 
 begin_comment
@@ -15212,15 +13788,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x float> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> [[VMULX_I]],<2 x float> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x float> @llvm.aarch64.neon.fmulx.v2f32(<2 x float> %a,<2 x float> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -15252,7 +13820,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vmulxq_laneq_f32_0(<4 x float> %a,<4 x float> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulxq_laneq_f32_0(
 end_comment
 
 begin_comment
@@ -15268,15 +13836,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x float> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> [[VMULX_I]],<4 x float> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<4 x float> @llvm.aarch64.neon.fmulx.v4f32(<4 x float> %a,<4 x float> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -15308,7 +13868,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vmulxq_laneq_f64_0(<2 x double> %a,<2 x double> %v) #0 {
+comment|// CHECK-LABEL: @test_vmulxq_laneq_f64_0(
 end_comment
 
 begin_comment
@@ -15324,15 +13884,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULX_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> [[VMULX_I]],<2 x double> [[VMULX1_I]]) #2
+comment|// CHECK:   [[VMULX2_I:%.*]] = call<2 x double> @llvm.aarch64.neon.fmulx.v2f64(<2 x double> %a,<2 x double> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -15364,7 +13916,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_n_s16(<8 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_n_s16(
 end_comment
 
 begin_comment
@@ -15396,15 +13948,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL4_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I_I]],<4 x i16> [[VMULL4_I_I]]) #2
+comment|// CHECK:   [[VMULL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
 end_comment
 
 begin_comment
@@ -15434,7 +13978,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_n_s32(<4 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_n_s32(
 end_comment
 
 begin_comment
@@ -15458,15 +14002,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I_I]],<2 x i32> [[VMULL2_I_I]]) #2
+comment|// CHECK:   [[VMULL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
 end_comment
 
 begin_comment
@@ -15496,7 +14032,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_high_n_u16(<8 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_n_u16(
 end_comment
 
 begin_comment
@@ -15528,15 +14064,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL4_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I_I]],<4 x i16> [[VMULL4_I_I]]) #2
+comment|// CHECK:   [[VMULL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
 end_comment
 
 begin_comment
@@ -15566,7 +14094,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_high_n_u32(<4 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vmull_high_n_u32(
 end_comment
 
 begin_comment
@@ -15590,15 +14118,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I_I]],<2 x i32> [[VMULL2_I_I]]) #2
+comment|// CHECK:   [[VMULL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
 end_comment
 
 begin_comment
@@ -15628,7 +14148,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_high_n_s16(<8 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_n_s16(
 end_comment
 
 begin_comment
@@ -15660,15 +14180,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V4_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I_I]],<4 x i16> [[VQDMULL_V4_I_I]]) #2
+comment|// CHECK:   [[VQDMULL_V5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
 end_comment
 
 begin_comment
@@ -15676,11 +14188,7 @@ comment|// CHECK:   [[VQDMULL_V6_I_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V5_I_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V6_I_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V5_I_I]]
 end_comment
 
 begin_function
@@ -15706,7 +14214,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_high_n_s32(<4 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_high_n_s32(
 end_comment
 
 begin_comment
@@ -15730,15 +14238,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I_I]],<2 x i32> [[VQDMULL_V2_I_I]]) #2
+comment|// CHECK:   [[VQDMULL_V3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
 end_comment
 
 begin_comment
@@ -15746,11 +14246,7 @@ comment|// CHECK:   [[VQDMULL_V4_I_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V3_I_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V4_I_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V3_I_I]]
 end_comment
 
 begin_function
@@ -15776,7 +14272,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_n_s16(<4 x i32> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_n_s16(
 end_comment
 
 begin_comment
@@ -15808,15 +14304,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I_I_I]],<4 x i16> [[VMULL1_I_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
 end_comment
 
 begin_comment
@@ -15855,7 +14343,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_n_s32(<2 x i64> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_n_s32(
 end_comment
 
 begin_comment
@@ -15879,15 +14367,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I_I_I]],<2 x i32> [[VMULL1_I_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
 end_comment
 
 begin_comment
@@ -15926,7 +14406,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_high_n_u16(<4 x i32> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_n_u16(
 end_comment
 
 begin_comment
@@ -15958,15 +14438,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I_I_I]],<4 x i16> [[VMULL1_I_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16005,7 +14477,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_high_n_u32(<2 x i64> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlal_high_n_u32(
 end_comment
 
 begin_comment
@@ -16029,15 +14501,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I_I_I]],<2 x i32> [[VMULL1_I_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16076,7 +14540,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_high_n_s16(<4 x i32> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_n_s16(
 end_comment
 
 begin_comment
@@ -16112,23 +14576,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL4_I_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I_I]],<4 x i16> [[VQDMLAL4_I_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V6_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I_I]],<4 x i32> [[VQDMLAL5_I_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V6_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16163,7 +14615,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_high_n_s32(<2 x i64> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_n_s32(
 end_comment
 
 begin_comment
@@ -16191,23 +14643,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I_I]],<2 x i32> [[VQDMLAL2_I_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V4_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I_I]],<2 x i64> [[VQDMLAL3_I_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V4_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16242,7 +14682,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_n_s16(<4 x i32> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_n_s16(
 end_comment
 
 begin_comment
@@ -16274,15 +14714,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I_I_I]],<4 x i16> [[VMULL1_I_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16321,7 +14753,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_n_s32(<2 x i64> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_n_s32(
 end_comment
 
 begin_comment
@@ -16345,15 +14777,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I_I_I]],<2 x i32> [[VMULL1_I_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16392,7 +14816,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_high_n_u16(<4 x i32> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_n_u16(
 end_comment
 
 begin_comment
@@ -16424,15 +14848,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I_I_I]],<4 x i16> [[VMULL1_I_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16471,7 +14887,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_high_n_u32(<2 x i64> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_high_n_u32(
 end_comment
 
 begin_comment
@@ -16495,15 +14911,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I_I_I]],<2 x i32> [[VMULL1_I_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16542,7 +14950,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_high_n_s16(<4 x i32> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_n_s16(
 end_comment
 
 begin_comment
@@ -16578,23 +14986,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I_I]],<4 x i16> [[VECINIT3_I_I]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL4_I_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL5_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I_I]],<4 x i16> [[VQDMLAL4_I_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V6_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I_I]],<4 x i32> [[VQDMLAL5_I_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V6_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16629,7 +15025,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_high_n_s32(<2 x i64> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_n_s32(
 end_comment
 
 begin_comment
@@ -16657,23 +15053,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I_I]],<2 x i32> [[VECINIT1_I_I]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL3_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I_I]],<2 x i32> [[VQDMLAL2_I_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V4_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I_I]],<2 x i64> [[VQDMLAL3_I_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V4_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I_I]]) #2
 end_comment
 
 begin_comment
@@ -16708,7 +15092,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vmul_n_f32(<2 x float> %a, float %b) #0 {
+comment|// CHECK-LABEL: @test_vmul_n_f32(
 end_comment
 
 begin_comment
@@ -16750,7 +15134,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vmulq_n_f32(<4 x float> %a, float %b) #0 {
+comment|// CHECK-LABEL: @test_vmulq_n_f32(
 end_comment
 
 begin_comment
@@ -16800,7 +15184,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x double> @test_vmulq_n_f64(<2 x double> %a, double %b) #0 {
+comment|// CHECK-LABEL: @test_vmulq_n_f64(
 end_comment
 
 begin_comment
@@ -16842,7 +15226,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfma_n_f32(<2 x float> %a,<2 x float> %b, float %n) #0 {
+comment|// CHECK-LABEL: @test_vfma_n_f32(
 end_comment
 
 begin_comment
@@ -16866,23 +15250,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x float> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> %b,<2 x float> [[VECINIT1_I]],<2 x float> %a) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> [[TMP4]],<2 x float> [[TMP5]],<2 x float> [[TMP3]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x float> [[TMP6]]
+comment|// CHECK:   ret<2 x float> [[TMP3]]
 end_comment
 
 begin_function
@@ -16913,7 +15285,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmaq_n_f32(<4 x float> %a,<4 x float> %b, float %n) #0 {
+comment|// CHECK-LABEL: @test_vfmaq_n_f32(
 end_comment
 
 begin_comment
@@ -16945,23 +15317,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x float> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> %b,<4 x float> [[VECINIT3_I]],<4 x float> %a) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = bitcast<16 x i8> [[TMP2]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> [[TMP4]],<4 x float> [[TMP5]],<4 x float> [[TMP3]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x float> [[TMP6]]
+comment|// CHECK:   ret<4 x float> [[TMP3]]
 end_comment
 
 begin_function
@@ -16992,7 +15352,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x float> @test_vfms_n_f32(<2 x float> %a,<2 x float> %b, float %n) #0 {
+comment|// CHECK-LABEL: @test_vfms_n_f32(
 end_comment
 
 begin_comment
@@ -17020,23 +15380,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x float> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+comment|// CHECK:   [[TMP3:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> [[SUB_I]],<2 x float> [[VECINIT1_I]],<2 x float> %a) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = call<2 x float> @llvm.fma.v2f32(<2 x float> [[TMP4]],<2 x float> [[TMP5]],<2 x float> [[TMP3]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x float> [[TMP6]]
+comment|// CHECK:   ret<2 x float> [[TMP3]]
 end_comment
 
 begin_function
@@ -17067,7 +15415,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @test_vfmsq_n_f32(<4 x float> %a,<4 x float> %b, float %n) #0 {
+comment|// CHECK-LABEL: @test_vfmsq_n_f32(
 end_comment
 
 begin_comment
@@ -17103,23 +15451,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x float> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+comment|// CHECK:   [[TMP3:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> [[SUB_I]],<4 x float> [[VECINIT3_I]],<4 x float> %a) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = bitcast<16 x i8> [[TMP2]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = call<4 x float> @llvm.fma.v4f32(<4 x float> [[TMP4]],<4 x float> [[TMP5]],<4 x float> [[TMP3]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x float> [[TMP6]]
+comment|// CHECK:   ret<4 x float> [[TMP3]]
 end_comment
 
 begin_function
@@ -17150,7 +15486,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_n_s16(<4 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vmul_n_s16(
 end_comment
 
 begin_comment
@@ -17200,7 +15536,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_n_s16(<8 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vmulq_n_s16(
 end_comment
 
 begin_comment
@@ -17266,7 +15602,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_n_s32(<2 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vmul_n_s32(
 end_comment
 
 begin_comment
@@ -17308,7 +15644,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_n_s32(<4 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vmulq_n_s32(
 end_comment
 
 begin_comment
@@ -17358,7 +15694,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmul_n_u16(<4 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vmul_n_u16(
 end_comment
 
 begin_comment
@@ -17408,7 +15744,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmulq_n_u16(<8 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vmulq_n_u16(
 end_comment
 
 begin_comment
@@ -17474,7 +15810,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmul_n_u32(<2 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vmul_n_u32(
 end_comment
 
 begin_comment
@@ -17516,7 +15852,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmulq_n_u32(<4 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vmulq_n_u32(
 end_comment
 
 begin_comment
@@ -17566,7 +15902,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_n_s16(<4 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vmull_n_s16(
 end_comment
 
 begin_comment
@@ -17594,15 +15930,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL4_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL4_I]]) #2
+comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -17632,7 +15960,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_n_s32(<2 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vmull_n_s32(
 end_comment
 
 begin_comment
@@ -17652,15 +15980,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL2_I]]) #2
+comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
@@ -17690,7 +16010,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmull_n_u16(<4 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vmull_n_u16(
 end_comment
 
 begin_comment
@@ -17718,15 +16038,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL4_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I]],<4 x i16> [[VMULL4_I]]) #2
+comment|// CHECK:   [[VMULL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -17756,7 +16068,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmull_n_u32(<2 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vmull_n_u32(
 end_comment
 
 begin_comment
@@ -17776,15 +16088,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I]],<2 x i32> [[VMULL2_I]]) #2
+comment|// CHECK:   [[VMULL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
@@ -17814,7 +16118,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmull_n_s16(<4 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_n_s16(
 end_comment
 
 begin_comment
@@ -17842,15 +16146,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V4_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMULL_V_I]],<4 x i16> [[VQDMULL_V4_I]]) #2
+comment|// CHECK:   [[VQDMULL_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -17858,11 +16154,7 @@ comment|// CHECK:   [[VQDMULL_V6_I:%.*]] = bitcast<4 x i32> [[VQDMULL_V5_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V6_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULL_V5_I]]
 end_comment
 
 begin_function
@@ -17888,7 +16180,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmull_n_s32(<2 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vqdmull_n_s32(
 end_comment
 
 begin_comment
@@ -17908,15 +16200,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULL_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V2_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMULL_V_I]],<2 x i32> [[VQDMULL_V2_I]]) #2
+comment|// CHECK:   [[VQDMULL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
@@ -17924,11 +16208,7 @@ comment|// CHECK:   [[VQDMULL_V4_I:%.*]] = bitcast<2 x i64> [[VQDMULL_V3_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULL_V4_I]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i64> [[TMP2]]
+comment|// CHECK:   ret<2 x i64> [[VQDMULL_V3_I]]
 end_comment
 
 begin_function
@@ -17954,7 +16234,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqdmulh_n_s16(<4 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_n_s16(
 end_comment
 
 begin_comment
@@ -17982,15 +16262,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V4_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V5_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> [[VQDMULH_V_I]],<4 x i16> [[VQDMULH_V4_I]]) #2
+comment|// CHECK:   [[VQDMULH_V5_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -17998,11 +16270,7 @@ comment|// CHECK:   [[VQDMULH_V6_I:%.*]] = bitcast<4 x i16> [[VQDMULH_V5_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V6_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQDMULH_V5_I]]
 end_comment
 
 begin_function
@@ -18028,7 +16296,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqdmulhq_n_s16(<8 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_n_s16(
 end_comment
 
 begin_comment
@@ -18072,15 +16340,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[VECINIT7_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V8_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> [[VQDMULHQ_V_I]],<8 x i16> [[VQDMULHQ_V8_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]]) #2
 end_comment
 
 begin_comment
@@ -18088,11 +16348,7 @@ comment|// CHECK:   [[VQDMULHQ_V10_I:%.*]] = bitcast<8 x i16> [[VQDMULHQ_V9_I]] 
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V10_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQDMULHQ_V9_I]]
 end_comment
 
 begin_function
@@ -18118,7 +16374,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqdmulh_n_s32(<2 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_n_s32(
 end_comment
 
 begin_comment
@@ -18138,15 +16394,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> [[VQDMULH_V_I]],<2 x i32> [[VQDMULH_V2_I]]) #2
+comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
@@ -18154,11 +16402,7 @@ comment|// CHECK:   [[VQDMULH_V4_I:%.*]] = bitcast<2 x i32> [[VQDMULH_V3_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V4_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQDMULH_V3_I]]
 end_comment
 
 begin_function
@@ -18184,7 +16428,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmulhq_n_s32(<4 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_n_s32(
 end_comment
 
 begin_comment
@@ -18212,15 +16456,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V4_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> [[VQDMULHQ_V_I]],<4 x i32> [[VQDMULHQ_V4_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -18228,11 +16464,7 @@ comment|// CHECK:   [[VQDMULHQ_V6_I:%.*]] = bitcast<4 x i32> [[VQDMULHQ_V5_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V6_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULHQ_V5_I]]
 end_comment
 
 begin_function
@@ -18258,7 +16490,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqrdmulh_n_s16(<4 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_n_s16(
 end_comment
 
 begin_comment
@@ -18286,15 +16518,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V4_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V5_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> [[VQRDMULH_V_I]],<4 x i16> [[VQRDMULH_V4_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V5_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -18302,11 +16526,7 @@ comment|// CHECK:   [[VQRDMULH_V6_I:%.*]] = bitcast<4 x i16> [[VQRDMULH_V5_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V6_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQRDMULH_V5_I]]
 end_comment
 
 begin_function
@@ -18332,7 +16552,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqrdmulhq_n_s16(<8 x i16> %a, i16 %b) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_n_s16(
 end_comment
 
 begin_comment
@@ -18376,15 +16596,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[VECINIT7_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V8_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> [[VQRDMULHQ_V_I]],<8 x i16> [[VQRDMULHQ_V8_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V9_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[VECINIT7_I]]) #2
 end_comment
 
 begin_comment
@@ -18392,11 +16604,7 @@ comment|// CHECK:   [[VQRDMULHQ_V10_I:%.*]] = bitcast<8 x i16> [[VQRDMULHQ_V9_I]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V10_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQRDMULHQ_V9_I]]
 end_comment
 
 begin_function
@@ -18422,7 +16630,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqrdmulh_n_s32(<2 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_n_s32(
 end_comment
 
 begin_comment
@@ -18442,15 +16650,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> [[VQRDMULH_V_I]],<2 x i32> [[VQRDMULH_V2_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
@@ -18458,11 +16658,7 @@ comment|// CHECK:   [[VQRDMULH_V4_I:%.*]] = bitcast<2 x i32> [[VQRDMULH_V3_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V4_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQRDMULH_V3_I]]
 end_comment
 
 begin_function
@@ -18488,7 +16684,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqrdmulhq_n_s32(<4 x i32> %a, i32 %b) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_n_s32(
 end_comment
 
 begin_comment
@@ -18516,15 +16712,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[VECINIT3_I]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V4_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> [[VQRDMULHQ_V_I]],<4 x i32> [[VQRDMULHQ_V4_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -18532,11 +16720,7 @@ comment|// CHECK:   [[VQRDMULHQ_V6_I:%.*]] = bitcast<4 x i32> [[VQRDMULHQ_V5_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V6_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQRDMULHQ_V5_I]]
 end_comment
 
 begin_function
@@ -18562,7 +16746,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_n_s16(<4 x i16> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmla_n_s16(
 end_comment
 
 begin_comment
@@ -18621,7 +16805,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_n_s16(<8 x i16> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_n_s16(
 end_comment
 
 begin_comment
@@ -18696,7 +16880,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_n_s32(<2 x i32> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmla_n_s32(
 end_comment
 
 begin_comment
@@ -18747,7 +16931,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_n_s32(<4 x i32> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_n_s32(
 end_comment
 
 begin_comment
@@ -18806,7 +16990,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_n_u16(<4 x i16> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmla_n_u16(
 end_comment
 
 begin_comment
@@ -18865,7 +17049,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_n_u16(<8 x i16> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_n_u16(
 end_comment
 
 begin_comment
@@ -18940,7 +17124,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_n_u32(<2 x i32> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmla_n_u32(
 end_comment
 
 begin_comment
@@ -18991,7 +17175,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_n_u32(<4 x i32> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_n_u32(
 end_comment
 
 begin_comment
@@ -19050,7 +17234,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_n_s16(<4 x i32> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlal_n_s16(
 end_comment
 
 begin_comment
@@ -19078,15 +17262,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I_I]],<4 x i16> [[VMULL1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -19125,7 +17301,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_n_s32(<2 x i64> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlal_n_s32(
 end_comment
 
 begin_comment
@@ -19145,15 +17321,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I_I]],<2 x i32> [[VMULL1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
@@ -19192,7 +17360,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlal_n_u16(<4 x i32> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlal_n_u16(
 end_comment
 
 begin_comment
@@ -19220,15 +17388,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I_I]],<4 x i16> [[VMULL1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -19267,7 +17427,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlal_n_u32(<2 x i64> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlal_n_u32(
 end_comment
 
 begin_comment
@@ -19287,15 +17447,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I_I]],<2 x i32> [[VMULL1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
@@ -19334,7 +17486,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_n_s16(<4 x i32> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_n_s16(
 end_comment
 
 begin_comment
@@ -19366,23 +17518,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL4_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL4_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V6_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I]],<4 x i32> [[VQDMLAL5_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V6_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]]) #2
 end_comment
 
 begin_comment
@@ -19417,7 +17557,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_n_s32(<2 x i64> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_n_s32(
 end_comment
 
 begin_comment
@@ -19441,23 +17581,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL2_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V4_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I]],<2 x i64> [[VQDMLAL3_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V4_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]]) #2
 end_comment
 
 begin_comment
@@ -19492,7 +17620,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_n_s16(<4 x i16> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmls_n_s16(
 end_comment
 
 begin_comment
@@ -19551,7 +17679,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_n_s16(<8 x i16> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_n_s16(
 end_comment
 
 begin_comment
@@ -19626,7 +17754,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_n_s32(<2 x i32> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmls_n_s32(
 end_comment
 
 begin_comment
@@ -19677,7 +17805,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_n_s32(<4 x i32> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_n_s32(
 end_comment
 
 begin_comment
@@ -19736,7 +17864,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_n_u16(<4 x i16> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmls_n_u16(
 end_comment
 
 begin_comment
@@ -19795,7 +17923,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_n_u16(<8 x i16> %a,<8 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_n_u16(
 end_comment
 
 begin_comment
@@ -19870,7 +17998,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_n_u32(<2 x i32> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmls_n_u32(
 end_comment
 
 begin_comment
@@ -19921,7 +18049,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_n_u32(<4 x i32> %a,<4 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_n_u32(
 end_comment
 
 begin_comment
@@ -19980,7 +18108,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_n_s16(<4 x i32> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_n_s16(
 end_comment
 
 begin_comment
@@ -20008,15 +18136,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> [[VMULL_I_I]],<4 x i16> [[VMULL1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.smull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -20055,7 +18175,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_n_s32(<2 x i64> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_n_s32(
 end_comment
 
 begin_comment
@@ -20075,15 +18195,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> [[VMULL_I_I]],<2 x i32> [[VMULL1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.smull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
@@ -20122,7 +18234,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsl_n_u16(<4 x i32> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_n_u16(
 end_comment
 
 begin_comment
@@ -20150,15 +18262,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> [[VMULL_I_I]],<4 x i16> [[VMULL1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.umull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
@@ -20197,7 +18301,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vmlsl_n_u32(<2 x i64> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vmlsl_n_u32(
 end_comment
 
 begin_comment
@@ -20217,15 +18321,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VMULL_I_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL1_I_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> [[VMULL_I_I]],<2 x i32> [[VMULL1_I_I]]) #2
+comment|// CHECK:   [[VMULL2_I_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.umull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
@@ -20264,7 +18360,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_n_s16(<4 x i32> %a,<4 x i16> %b, i16 %c) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_n_s16(
 end_comment
 
 begin_comment
@@ -20296,23 +18392,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[VECINIT3_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[VECINIT3_I]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL4_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL5_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL4_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V6_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I]],<4 x i32> [[VQDMLAL5_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V6_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL5_I]]) #2
 end_comment
 
 begin_comment
@@ -20347,7 +18431,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_n_s32(<2 x i64> %a,<2 x i32> %b, i32 %c) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_n_s32(
 end_comment
 
 begin_comment
@@ -20371,23 +18455,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[VECINIT1_I]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[VECINIT1_I]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL2_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V4_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I]],<2 x i64> [[VQDMLAL3_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V4_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL3_I]]) #2
 end_comment
 
 begin_comment
@@ -20422,7 +18494,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_lane_u16_0(<4 x i16> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_lane_u16_0(
 end_comment
 
 begin_comment
@@ -20471,7 +18543,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_lane_u16_0(<8 x i16> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_lane_u16_0(
 end_comment
 
 begin_comment
@@ -20520,7 +18592,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_lane_u32_0(<2 x i32> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_lane_u32_0(
 end_comment
 
 begin_comment
@@ -20569,7 +18641,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_lane_u32_0(<4 x i32> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_lane_u32_0(
 end_comment
 
 begin_comment
@@ -20618,7 +18690,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_laneq_u16_0(<4 x i16> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -20667,7 +18739,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_laneq_u16_0(<8 x i16> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -20716,7 +18788,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_laneq_u32_0(<2 x i32> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -20765,7 +18837,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_laneq_u32_0(<4 x i32> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -20814,7 +18886,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_laneq_s16_0(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -20834,23 +18906,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -20887,7 +18947,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_laneq_s32_0(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -20907,23 +18967,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -20960,7 +19008,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_high_laneq_s16_0(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -20984,23 +19032,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -21037,7 +19073,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_high_laneq_s32_0(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -21061,23 +19097,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -21114,7 +19138,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_lane_u16_0(<4 x i16> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_lane_u16_0(
 end_comment
 
 begin_comment
@@ -21163,7 +19187,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_lane_u16_0(<8 x i16> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_lane_u16_0(
 end_comment
 
 begin_comment
@@ -21212,7 +19236,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_lane_u32_0(<2 x i32> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_lane_u32_0(
 end_comment
 
 begin_comment
@@ -21261,7 +19285,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_lane_u32_0(<4 x i32> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_lane_u32_0(
 end_comment
 
 begin_comment
@@ -21310,7 +19334,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_laneq_u16_0(<4 x i16> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -21359,7 +19383,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_laneq_u16_0(<8 x i16> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_laneq_u16_0(
 end_comment
 
 begin_comment
@@ -21408,7 +19432,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_laneq_u32_0(<2 x i32> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -21457,7 +19481,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_laneq_u32_0(<4 x i32> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_laneq_u32_0(
 end_comment
 
 begin_comment
@@ -21506,7 +19530,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_laneq_s16_0(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -21526,23 +19550,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -21579,7 +19591,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_laneq_s32_0(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -21599,23 +19611,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -21652,7 +19652,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_high_laneq_s16_0(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -21676,23 +19676,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -21729,7 +19717,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_high_laneq_s32_0(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -21753,23 +19741,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -21806,7 +19782,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqdmulh_laneq_s16_0(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -21822,15 +19798,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> [[VQDMULH_V_I]],<4 x i16> [[VQDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -21838,11 +19806,7 @@ comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = bitcast<4 x i16> [[VQDMULH_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V3_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -21870,7 +19834,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqdmulhq_laneq_s16_0(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -21886,15 +19850,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> [[VQDMULHQ_V_I]],<8 x i16> [[VQDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -21902,11 +19858,7 @@ comment|// CHECK:   [[VQDMULHQ_V3_I:%.*]] = bitcast<8 x i16> [[VQDMULHQ_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V3_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -21934,7 +19886,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqdmulh_laneq_s32_0(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -21950,15 +19902,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> [[VQDMULH_V_I]],<2 x i32> [[VQDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -21966,11 +19910,7 @@ comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = bitcast<2 x i32> [[VQDMULH_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V3_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -21998,7 +19938,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmulhq_laneq_s32_0(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -22014,15 +19954,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> [[VQDMULHQ_V_I]],<4 x i32> [[VQDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -22030,11 +19962,7 @@ comment|// CHECK:   [[VQDMULHQ_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULHQ_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -22062,7 +19990,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqrdmulh_laneq_s16_0(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -22078,15 +20006,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> [[VQRDMULH_V_I]],<4 x i16> [[VQRDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -22094,11 +20014,7 @@ comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = bitcast<4 x i16> [[VQRDMULH_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V3_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQRDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -22126,7 +20042,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqrdmulhq_laneq_s16_0(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_laneq_s16_0(
 end_comment
 
 begin_comment
@@ -22142,15 +20058,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> [[VQRDMULHQ_V_I]],<8 x i16> [[VQRDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -22158,11 +20066,7 @@ comment|// CHECK:   [[VQRDMULHQ_V3_I:%.*]] = bitcast<8 x i16> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V3_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -22190,7 +20094,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqrdmulh_laneq_s32_0(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -22206,15 +20110,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> [[VQRDMULH_V_I]],<2 x i32> [[VQRDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -22222,11 +20118,7 @@ comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = bitcast<2 x i32> [[VQRDMULH_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V3_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQRDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -22254,7 +20146,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqrdmulhq_laneq_s32_0(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_laneq_s32_0(
 end_comment
 
 begin_comment
@@ -22270,15 +20162,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> [[VQRDMULHQ_V_I]],<4 x i32> [[VQRDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -22286,11 +20170,7 @@ comment|// CHECK:   [[VQRDMULHQ_V3_I:%.*]] = bitcast<4 x i32> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -22318,7 +20198,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_lane_u16(<4 x i16> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_lane_u16(
 end_comment
 
 begin_comment
@@ -22367,7 +20247,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_lane_u16(<8 x i16> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_lane_u16(
 end_comment
 
 begin_comment
@@ -22416,7 +20296,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_lane_u32(<2 x i32> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_lane_u32(
 end_comment
 
 begin_comment
@@ -22465,7 +20345,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_lane_u32(<4 x i32> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_lane_u32(
 end_comment
 
 begin_comment
@@ -22514,7 +20394,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmla_laneq_u16(<4 x i16> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_laneq_u16(
 end_comment
 
 begin_comment
@@ -22563,7 +20443,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlaq_laneq_u16(<8 x i16> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_laneq_u16(
 end_comment
 
 begin_comment
@@ -22612,7 +20492,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmla_laneq_u32(<2 x i32> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmla_laneq_u32(
 end_comment
 
 begin_comment
@@ -22661,7 +20541,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlaq_laneq_u32(<4 x i32> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlaq_laneq_u32(
 end_comment
 
 begin_comment
@@ -22710,7 +20590,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_laneq_s16(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_laneq_s16(
 end_comment
 
 begin_comment
@@ -22730,23 +20610,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -22783,7 +20651,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_laneq_s32(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_laneq_s32(
 end_comment
 
 begin_comment
@@ -22803,23 +20671,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -22856,7 +20712,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlal_high_laneq_s16(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_laneq_s16(
 end_comment
 
 begin_comment
@@ -22880,23 +20736,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> [[VQDMLAL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqadd.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -22933,7 +20777,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlal_high_laneq_s32(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlal_high_laneq_s32(
 end_comment
 
 begin_comment
@@ -22957,23 +20801,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> [[VQDMLAL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLAL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqadd.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -23010,7 +20842,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_lane_u16(<4 x i16> %a,<4 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_lane_u16(
 end_comment
 
 begin_comment
@@ -23059,7 +20891,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_lane_u16(<8 x i16> %a,<8 x i16> %b,<4 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_lane_u16(
 end_comment
 
 begin_comment
@@ -23108,7 +20940,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_lane_u32(<2 x i32> %a,<2 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_lane_u32(
 end_comment
 
 begin_comment
@@ -23157,7 +20989,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_lane_u32(<4 x i32> %a,<4 x i32> %b,<2 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_lane_u32(
 end_comment
 
 begin_comment
@@ -23206,7 +21038,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vmls_laneq_u16(<4 x i16> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_laneq_u16(
 end_comment
 
 begin_comment
@@ -23255,7 +21087,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vmlsq_laneq_u16(<8 x i16> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_laneq_u16(
 end_comment
 
 begin_comment
@@ -23304,7 +21136,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vmls_laneq_u32(<2 x i32> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmls_laneq_u32(
 end_comment
 
 begin_comment
@@ -23353,7 +21185,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vmlsq_laneq_u32(<4 x i32> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vmlsq_laneq_u32(
 end_comment
 
 begin_comment
@@ -23402,7 +21234,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_laneq_s16(<4 x i32> %a,<4 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_laneq_s16(
 end_comment
 
 begin_comment
@@ -23422,23 +21254,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> %b,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -23475,7 +21295,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_laneq_s32(<2 x i64> %a,<2 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_laneq_s32(
 end_comment
 
 begin_comment
@@ -23495,23 +21315,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> %b,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -23548,7 +21356,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmlsl_high_laneq_s16(<4 x i32> %a,<8 x i16> %b,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_laneq_s16(
 end_comment
 
 begin_comment
@@ -23572,23 +21380,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[SHUFFLE_I]],<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmull.v4i32(<4 x i16> [[VQDMLAL_I]],<4 x i16> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> [[VQDMLSL_V_I]],<4 x i32> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqsub.v4i32(<4 x i32> %a,<4 x i32> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -23625,7 +21421,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i64> @test_vqdmlsl_high_laneq_s32(<2 x i64> %a,<4 x i32> %b,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmlsl_high_laneq_s32(
 end_comment
 
 begin_comment
@@ -23649,23 +21445,11 @@ comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
+comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[SHUFFLE_I]],<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMLAL1_I:%.*]] = bitcast<8 x i8> [[TMP2]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLAL2_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqdmull.v2i64(<2 x i32> [[VQDMLAL_I]],<2 x i32> [[VQDMLAL1_I]]) #2
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> [[VQDMLSL_V_I]],<2 x i64> [[VQDMLAL2_I]]) #2
+comment|// CHECK:   [[VQDMLSL_V3_I:%.*]] = call<2 x i64> @llvm.aarch64.neon.sqsub.v2i64(<2 x i64> %a,<2 x i64> [[VQDMLAL2_I]]) #2
 end_comment
 
 begin_comment
@@ -23702,7 +21486,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqdmulh_laneq_s16(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_laneq_s16(
 end_comment
 
 begin_comment
@@ -23718,15 +21502,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> [[VQDMULH_V_I]],<4 x i16> [[VQDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -23734,11 +21510,7 @@ comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = bitcast<4 x i16> [[VQDMULH_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V3_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -23766,7 +21538,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqdmulhq_laneq_s16(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_laneq_s16(
 end_comment
 
 begin_comment
@@ -23782,15 +21554,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> [[VQDMULHQ_V_I]],<8 x i16> [[VQDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -23798,11 +21562,7 @@ comment|// CHECK:   [[VQDMULHQ_V3_I:%.*]] = bitcast<8 x i16> [[VQDMULHQ_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V3_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -23830,7 +21590,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqdmulh_laneq_s32(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulh_laneq_s32(
 end_comment
 
 begin_comment
@@ -23846,15 +21606,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> [[VQDMULH_V_I]],<2 x i32> [[VQDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -23862,11 +21614,7 @@ comment|// CHECK:   [[VQDMULH_V3_I:%.*]] = bitcast<2 x i32> [[VQDMULH_V2_I]] to<
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQDMULH_V3_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -23894,7 +21642,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqdmulhq_laneq_s32(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqdmulhq_laneq_s32(
 end_comment
 
 begin_comment
@@ -23910,15 +21658,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> [[VQDMULHQ_V_I]],<4 x i32> [[VQDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -23926,11 +21666,7 @@ comment|// CHECK:   [[VQDMULHQ_V3_I:%.*]] = bitcast<4 x i32> [[VQDMULHQ_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQDMULHQ_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -23958,7 +21694,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i16> @test_vqrdmulh_laneq_s16(<4 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_laneq_s16(
 end_comment
 
 begin_comment
@@ -23974,15 +21710,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i16> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> [[VQRDMULH_V_I]],<4 x i16> [[VQRDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<4 x i16> @llvm.aarch64.neon.sqrdmulh.v4i16(<4 x i16> %a,<4 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -23990,11 +21718,7 @@ comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = bitcast<4 x i16> [[VQRDMULH_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V3_I]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i16> [[TMP2]]
+comment|// CHECK:   ret<4 x i16> [[VQRDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -24022,7 +21746,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<8 x i16> @test_vqrdmulhq_laneq_s16(<8 x i16> %a,<8 x i16> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_laneq_s16(
 end_comment
 
 begin_comment
@@ -24038,15 +21762,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i16> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> [[VQRDMULHQ_V_I]],<8 x i16> [[VQRDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<8 x i16> @llvm.aarch64.neon.sqrdmulh.v8i16(<8 x i16> %a,<8 x i16> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -24054,11 +21770,7 @@ comment|// CHECK:   [[VQRDMULHQ_V3_I:%.*]] = bitcast<8 x i16> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V3_I]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<8 x i16> [[TMP2]]
+comment|// CHECK:   ret<8 x i16> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_function
@@ -24086,7 +21798,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<2 x i32> @test_vqrdmulh_laneq_s32(<2 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulh_laneq_s32(
 end_comment
 
 begin_comment
@@ -24102,15 +21814,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x i32> [[SHUFFLE]] to<8 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULH_V_I:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V1_I:%.*]] = bitcast<8 x i8> [[TMP1]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> [[VQRDMULH_V_I]],<2 x i32> [[VQRDMULH_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULH_V2_I:%.*]] = call<2 x i32> @llvm.aarch64.neon.sqrdmulh.v2i32(<2 x i32> %a,<2 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -24118,11 +21822,7 @@ comment|// CHECK:   [[VQRDMULH_V3_I:%.*]] = bitcast<2 x i32> [[VQRDMULH_V2_I]] t
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<8 x i8> [[VQRDMULH_V3_I]] to<2 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<2 x i32> [[TMP2]]
+comment|// CHECK:   ret<2 x i32> [[VQRDMULH_V2_I]]
 end_comment
 
 begin_function
@@ -24150,7 +21850,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x i32> @test_vqrdmulhq_laneq_s32(<4 x i32> %a,<4 x i32> %v) #0 {
+comment|// CHECK-LABEL: @test_vqrdmulhq_laneq_s32(
 end_comment
 
 begin_comment
@@ -24166,15 +21866,7 @@ comment|// CHECK:   [[TMP1:%.*]] = bitcast<4 x i32> [[SHUFFLE]] to<16 x i8>
 end_comment
 
 begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V_I:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V1_I:%.*]] = bitcast<16 x i8> [[TMP1]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> [[VQRDMULHQ_V_I]],<4 x i32> [[VQRDMULHQ_V1_I]]) #2
+comment|// CHECK:   [[VQRDMULHQ_V2_I:%.*]] = call<4 x i32> @llvm.aarch64.neon.sqrdmulh.v4i32(<4 x i32> %a,<4 x i32> [[SHUFFLE]]) #2
 end_comment
 
 begin_comment
@@ -24182,11 +21874,7 @@ comment|// CHECK:   [[VQRDMULHQ_V3_I:%.*]] = bitcast<4 x i32> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<16 x i8> [[VQRDMULHQ_V3_I]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   ret<4 x i32> [[TMP2]]
+comment|// CHECK:   ret<4 x i32> [[VQRDMULHQ_V2_I]]
 end_comment
 
 begin_function

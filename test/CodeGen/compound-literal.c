@@ -3,6 +3,44 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm %s -o - | FileCheck %s
 end_comment
 
+begin_comment
+comment|// Capture the type and name so matching later is cleaner.
+end_comment
+
+begin_struct
+struct|struct
+name|CompoundTy
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// CHECK: @MyCLH = constant [[MY_CLH:[^,]+]]
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|CompoundTy
+modifier|*
+specifier|const
+name|MyCLH
+init|=
+operator|&
+operator|(
+expr|struct
+name|CompoundTy
+operator|)
+block|{
+literal|3
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|int
 modifier|*
@@ -287,6 +325,47 @@ comment|// CHECK-NEXT: [[T1:%.*]] = bitcast [[G]]* [[RESULT]] to i8*
 comment|// CHECK-NEXT: call void @llvm.memcpy.p0i8.p0i8.i64(i8* [[T0]], i8* [[T1]], i64 6
 comment|// CHECK-NEXT: [[T0:%.*]] = load i48, i48* [[COERCE_TEMP]]
 comment|// CHECK-NEXT: ret i48 [[T0]]
+block|}
+end_function
+
+begin_comment
+comment|// We had a bug where we'd emit a new GlobalVariable for each time we used a
+end_comment
+
+begin_comment
+comment|// const pointer to a variable initialized by a compound literal.
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define i32 @compareMyCLH() #0
+end_comment
+
+begin_function
+name|int
+name|compareMyCLH
+parameter_list|()
+block|{
+comment|// CHECK: store i8* bitcast ([[MY_CLH]] to i8*)
+specifier|const
+name|void
+modifier|*
+name|a
+init|=
+name|MyCLH
+decl_stmt|;
+comment|// CHECK: store i8* bitcast ([[MY_CLH]] to i8*)
+specifier|const
+name|void
+modifier|*
+name|b
+init|=
+name|MyCLH
+decl_stmt|;
+return|return
+name|a
+operator|==
+name|b
+return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,osx.coreFoundation.CFNumber,osx.cocoa.RetainCount -analyzer-store=region -analyzer-constraints=range -verify -triple x86_64-apple-darwin9 %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,osx.coreFoundation.CFNumber,osx.cocoa.RetainCount -analyzer-store=region -verify -triple x86_64-apple-darwin9 %s
 end_comment
 
 begin_typedef
@@ -112,6 +112,14 @@ name|CFNumberRef
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|Boolean
+typedef|;
+end_typedef
+
 begin_function_decl
 specifier|extern
 name|CFNumberRef
@@ -130,6 +138,30 @@ name|valuePtr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|Boolean
+name|CFNumberGetValue
+parameter_list|(
+name|CFNumberRef
+name|number
+parameter_list|,
+name|CFNumberType
+name|theType
+parameter_list|,
+name|void
+modifier|*
+name|valuePtr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(cf_returns_retained)
+argument_list|)
+end_macro
 
 begin_function
 name|CFNumberRef
@@ -151,7 +183,7 @@ operator|&
 name|x
 argument_list|)
 return|;
-comment|// expected-warning{{An 8 bit integer is used to initialize a CFNumber object that represents a 16 bit integer. 8 bits of the CFNumber value will be garbage}}
+comment|// expected-warning{{An 8-bit integer is used to initialize a CFNumber object that represents a 16-bit integer; 8 bits of the CFNumber value will be garbage}}
 block|}
 end_function
 
@@ -182,7 +214,7 @@ operator|&
 name|x
 argument_list|)
 return|;
-comment|// expected-warning{{A 16 bit integer is used to initialize a CFNumber object that represents an 8 bit integer. 8 bits of the input integer will be lost}}
+comment|// expected-warning{{A 16-bit integer is used to initialize a CFNumber object that represents an 8-bit integer; 8 bits of the integer value will be lost}}
 block|}
 end_function
 
@@ -221,6 +253,13 @@ comment|// expected-warning{{leak}}
 block|}
 end_function
 
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(cf_returns_retained)
+argument_list|)
+end_macro
+
 begin_function
 name|CFNumberRef
 name|f3
@@ -240,7 +279,71 @@ operator|&
 name|i
 argument_list|)
 return|;
-comment|// expected-warning{{A 32 bit integer is used to initialize a CFNumber object that represents a 64 bit integer}}
+comment|// expected-warning{{A 32-bit integer is used to initialize a CFNumber object that represents a 64-bit integer}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|char
+name|getValueTest1
+parameter_list|(
+name|CFNumberRef
+name|x
+parameter_list|)
+block|{
+name|unsigned
+name|char
+name|scalar
+init|=
+literal|0
+decl_stmt|;
+name|CFNumberGetValue
+argument_list|(
+name|x
+argument_list|,
+name|kCFNumberSInt16Type
+argument_list|,
+operator|&
+name|scalar
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{A CFNumber object that represents a 16-bit integer is used to initialize an 8-bit integer; 8 bits of the CFNumber value will overwrite adjacent storage}}
+return|return
+name|scalar
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|char
+name|getValueTest2
+parameter_list|(
+name|CFNumberRef
+name|x
+parameter_list|)
+block|{
+name|unsigned
+name|short
+name|scalar
+init|=
+literal|0
+decl_stmt|;
+name|CFNumberGetValue
+argument_list|(
+name|x
+argument_list|,
+name|kCFNumberSInt8Type
+argument_list|,
+operator|&
+name|scalar
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{A CFNumber object that represents an 8-bit integer is used to initialize a 16-bit integer; 8 bits of the integer value will be garbage}}
+return|return
+name|scalar
+return|;
 block|}
 end_function
 

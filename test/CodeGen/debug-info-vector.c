@@ -32,7 +32,7 @@ comment|// CHECK-SAME:             baseType: ![[INT:[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:             size: 128, align: 128
+comment|// CHECK-SAME:             size: 128
 end_comment
 
 begin_comment

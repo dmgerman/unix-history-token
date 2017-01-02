@@ -1413,6 +1413,42 @@ block|{}
 end_function
 
 begin_comment
+comment|// PR31069: Don't crash trying to merge attributes for redeclaration of invalid decl.
+end_comment
+
+begin_function_decl
+name|void
+name|__declspec
+parameter_list|(
+name|dllimport
+parameter_list|)
+function_decl|redecl8
+parameter_list|(
+name|unknowntype
+name|X
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-error{{unknown type name 'unknowntype'}}
+end_comment
+
+begin_function
+name|void
+name|redecl8
+parameter_list|(
+name|unknowntype
+name|X
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// expected-error{{unknown type name 'unknowntype'}}
+end_comment
+
+begin_comment
 comment|// External linkage is required.
 end_comment
 

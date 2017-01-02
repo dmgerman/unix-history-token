@@ -326,6 +326,10 @@ begin_comment
 comment|// CHECK-NEXT:   Field{{.*}} 'TestIndirectFieldDecl'
 end_comment
 
+begin_comment
+comment|// FIXME: It would be nice to dump the enum and its enumerators.
+end_comment
+
 begin_decl_stmt
 name|int
 name|TestFunctionDecl
@@ -351,19 +355,45 @@ comment|// CHECK:      FunctionDecl{{.*}} TestFunctionDecl 'int (int, enum {{.*}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:   EnumDecl
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:     EnumConstantDecl{{.*}} e
-end_comment
-
-begin_comment
 comment|// CHECK-NEXT:   ParmVarDecl{{.*}} x
 end_comment
 
 begin_comment
 comment|// CHECK-NEXT:   ParmVarDecl{{.*}} y
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   CompoundStmt
+end_comment
+
+begin_comment
+comment|// FIXME: It would be nice to 'Enum' and 'e'.
+end_comment
+
+begin_decl_stmt
+name|int
+name|TestFunctionDecl2
+argument_list|(
+expr|enum
+name|Enum
+block|{
+name|e
+block|}
+name|x
+argument_list|)
+block|{
+return|return
+name|x
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// CHECK:      FunctionDecl{{.*}} TestFunctionDecl2 'int (enum {{.*}})'
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   ParmVarDecl{{.*}} x
 end_comment
 
 begin_comment

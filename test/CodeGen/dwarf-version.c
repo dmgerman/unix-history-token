@@ -24,7 +24,23 @@ comment|// RUN: %clang -target x86_64-linux-gnu -gdwarf -S -emit-llvm -o - %s | 
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-darwin -g -S -emit-llvm -o - %s | FileCheck %s --check-prefix=VER2
+comment|// The -isysroot is used as a hack to avoid LIT messing with the SDKROOT
+end_comment
+
+begin_comment
+comment|// environment variable which indirecty overrides the version in the target
+end_comment
+
+begin_comment
+comment|// triple used here.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-macosx10.11 -g -S -emit-llvm -o - %s -isysroot %t | FileCheck %s --check-prefix=VER4
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin14 -g -S -emit-llvm -o - %s -isysroot %t | FileCheck %s --check-prefix=VER2
 end_comment
 
 begin_comment

@@ -103,6 +103,12 @@ directive|include
 file|"llvm/Support/Regex.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stack>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -110,6 +116,16 @@ block|{
 name|namespace
 name|format
 block|{
+enum|enum
+name|LexerState
+block|{
+name|NORMAL
+block|,
+name|TEMPLATE_STRING
+block|,
+name|TOKEN_STASHED
+block|, }
+enum|;
 name|class
 name|FormatTokenLexer
 block|{
@@ -194,8 +210,17 @@ name|void
 name|tryParseJSRegexLiteral
 parameter_list|()
 function_decl|;
+comment|// Handles JavaScript template strings.
+comment|//
+comment|// JavaScript template strings use backticks ('`') as delimiters, and allow
+comment|// embedding expressions nested in ${expr-here}. Template strings can be
+comment|// nested recursively, i.e. expressions can contain template strings in turn.
+comment|//
+comment|// The code below parses starting from a backtick, up to a closing backtick or
+comment|// an opening ${. It also maintains a stack of lexing contexts to handle
+comment|// nested template parts by balancing curly braces.
 name|void
-name|tryParseTemplateString
+name|handleTemplateStrings
 parameter_list|()
 function_decl|;
 name|bool
@@ -223,11 +248,14 @@ decl_stmt|;
 name|bool
 name|IsFirstToken
 decl_stmt|;
-name|bool
-name|GreaterStashed
-decl_stmt|,
-name|LessStashed
-decl_stmt|;
+name|std
+operator|::
+name|stack
+operator|<
+name|LexerState
+operator|>
+name|StateStack
+expr_stmt|;
 name|unsigned
 name|Column
 decl_stmt|;

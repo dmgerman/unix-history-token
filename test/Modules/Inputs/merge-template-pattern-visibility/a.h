@@ -54,5 +54,20 @@ block|{}
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|auto
+name|C
+argument_list|(
+argument|T
+argument_list|)
+block|{}
+end_expr_stmt
+
 end_unit
 

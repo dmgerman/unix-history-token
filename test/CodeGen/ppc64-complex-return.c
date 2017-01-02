@@ -497,7 +497,7 @@ comment|// CHECK: extractvalue { i64, i64 } [[VAR8]], 1
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+comment|// CHECK: attributes [[NUW]] = { noinline nounwind{{.*}} }
 end_comment
 
 end_unit

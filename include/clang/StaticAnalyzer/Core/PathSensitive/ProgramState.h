@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -639,7 +633,7 @@ comment|///
 comment|/// This returns a new state with the added constraint on \p cond.
 comment|/// If no new state is feasible, NULL is returned.
 name|ProgramStateRef
-name|assumeWithinInclusiveRange
+name|assumeInclusiveRange
 argument_list|(
 name|DefinedOrUnknownSVal
 name|Val
@@ -676,7 +670,7 @@ name|ProgramStateRef
 operator|,
 name|ProgramStateRef
 operator|>
-name|assumeWithinInclusiveRange
+name|assumeInclusiveRange
 argument_list|(
 argument|DefinedOrUnknownSVal Val
 argument_list|,
@@ -2691,7 +2685,7 @@ unit|}  inline
 name|ProgramStateRef
 name|ProgramState
 operator|::
-name|assumeWithinInclusiveRange
+name|assumeInclusiveRange
 argument_list|(
 argument|DefinedOrUnknownSVal Val
 argument_list|,
@@ -2736,7 +2730,7 @@ argument_list|()
 operator|.
 name|ConstraintMgr
 operator|->
-name|assumeWithinInclusiveRange
+name|assumeInclusiveRange
 argument_list|(
 name|this
 argument_list|,
@@ -2770,7 +2764,7 @@ name|ProgramStateRef
 operator|>
 name|ProgramState
 operator|::
-name|assumeWithinInclusiveRange
+name|assumeInclusiveRange
 argument_list|(
 argument|DefinedOrUnknownSVal Val
 argument_list|,
@@ -2820,7 +2814,7 @@ argument_list|()
 operator|.
 name|ConstraintMgr
 operator|->
-name|assumeWithinInclusiveRangeDual
+name|assumeInclusiveRangeDual
 argument_list|(
 name|this
 argument_list|,
@@ -3741,11 +3735,15 @@ comment|/// \class ScanReachableSymbols
 end_comment
 
 begin_comment
-comment|/// A Utility class that allows to visit the reachable symbols using a custom
+comment|/// A utility class that visits the reachable symbols using a custom
 end_comment
 
 begin_comment
-comment|/// SymbolVisitor.
+comment|/// SymbolVisitor. Terminates recursive traversal when the visitor function
+end_comment
+
+begin_comment
+comment|/// returns false.
 end_comment
 
 begin_decl_stmt

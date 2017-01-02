@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Check that --sysroot= also applies to header search paths.
 end_comment
 

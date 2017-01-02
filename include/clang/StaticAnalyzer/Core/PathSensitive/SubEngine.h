@@ -404,6 +404,13 @@ parameter_list|,
 name|ExplodedNode
 modifier|*
 name|Pred
+parameter_list|,
+specifier|const
+name|ReturnStmt
+modifier|*
+name|RS
+init|=
+name|nullptr
 parameter_list|)
 init|=
 literal|0
@@ -453,18 +460,6 @@ name|cond
 parameter_list|,
 name|bool
 name|assumption
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// wantsRegionChangeUpdate - Called by ProgramStateManager to determine if a
-comment|///  region change should trigger a processRegionChanges update.
-name|virtual
-name|bool
-name|wantsRegionChangeUpdate
-parameter_list|(
-name|ProgramStateRef
-name|state
 parameter_list|)
 init|=
 literal|0

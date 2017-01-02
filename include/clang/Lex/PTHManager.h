@@ -62,31 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/Diagnostic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/IdentifierTable.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LangOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PTHLexer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"clang/Basic/SourceLocation.h"
 end_include
 
 begin_include
@@ -107,12 +89,6 @@ directive|include
 file|"llvm/Support/OnDiskHashTable.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -129,6 +105,9 @@ name|clang
 block|{
 name|class
 name|FileEntry
+decl_stmt|;
+name|class
+name|Preprocessor
 decl_stmt|;
 name|class
 name|PTHLexer

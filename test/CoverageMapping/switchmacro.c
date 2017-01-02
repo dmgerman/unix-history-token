@@ -31,7 +31,6 @@ condition|(
 name|i
 condition|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> {{[0-9]+}}:4 = #1
 default|default:
 comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> {{[0-9]+}}:11 = #2
 if|if

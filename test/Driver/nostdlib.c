@@ -28,7 +28,7 @@ comment|// options were present, the second would warn about being unused.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -nostartfiles -nostdlib -target i386-apple-darwin %s \
+comment|// RUN: %clang -### -Wno-liblto -nostartfiles -nostdlib -target i386-apple-darwin %s \
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// passed down to link line
 end_comment
 
 begin_comment
-comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang -no-canonical-prefixes %s -### -Wno-liblto -o %t.o 2>&1 \
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang -no-canonical-prefixes %s -### -Wno-liblto -o %t.o 2>&1 \
 end_comment
 
 begin_comment
@@ -88,11 +88,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-pc-windows-msvc -nostdlib --rtlib=compiler-rt -### %s 2>&1 | FileCheck %s -check-prefix CHECK-MSVC-NOSTDLIB
+comment|// RUN: %clang -target x86_64-pc-windows-msvc -nostdlib --rtlib=compiler-rt -### -Wno-liblto %s 2>&1 | FileCheck %s -check-prefix CHECK-MSVC-NOSTDLIB
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-pc-windows-msvc --rtlib=compiler-rt -nostdlib -### %s 2>&1 | FileCheck %s -check-prefix CHECK-MSVC-NOSTDLIB
+comment|// RUN: %clang -target x86_64-pc-windows-msvc --rtlib=compiler-rt -nostdlib -### -Wno-liblto %s 2>&1 | FileCheck %s -check-prefix CHECK-MSVC-NOSTDLIB
 end_comment
 
 begin_comment

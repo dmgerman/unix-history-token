@@ -43,6 +43,18 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-macho -S -emit-llvm %s -o - | FileCheck %s -check-prefix CHECK-MACHO -check-prefix CHECK-MACHO64
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple thumbv7-windows -S %s -o - | FileCheck %s -check-prefix CHECK-ASM-COFF
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple thumbv7-elf -S %s -o - | FileCheck %s -check-prefix CHECK-ASM-ELF
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple thumbv7-macho -S %s -o - | FileCheck %s -check-prefix CHECK-ASM-MACHO
+end_comment
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -95,23 +107,23 @@ comment|// CHECK-MACHO: @.str = private unnamed_addr constant [4 x i8] c"one\00"
 end_comment
 
 begin_comment
-comment|// CHECK-COFF: @_unnamed_cfstring_ = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 3 }, section "cfstring", align {{[48]}}
+comment|// CHECK-COFF: @_unnamed_cfstring_ = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 3 }, section "cfstring", align {{[48]}}
 end_comment
 
 begin_comment
-comment|// CHECK-ELF32: @_unnamed_cfstring_ = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 3 }, section "cfstring", align 4
+comment|// CHECK-ELF32: @_unnamed_cfstring_ = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 3 }, section "cfstring", align 4
 end_comment
 
 begin_comment
-comment|// CHECK-ELF64: @_unnamed_cfstring_ = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i64 3 }, section "cfstring", align 8
+comment|// CHECK-ELF64: @_unnamed_cfstring_ = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i64 3 }, section "cfstring", align 8
 end_comment
 
 begin_comment
-comment|// CHECK-MACHO32: @_unnamed_cfstring_ = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 3 }, section "__DATA,__cfstring", align 4
+comment|// CHECK-MACHO32: @_unnamed_cfstring_ = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 3 }, section "__DATA,__cfstring", align 4
 end_comment
 
 begin_comment
-comment|// CHECK-MACHO64: @_unnamed_cfstring_ = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i64 3 }, section "__DATA,__cfstring", align 8
+comment|// CHECK-MACHO64: @_unnamed_cfstring_ = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 1992, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i64 3 }, section "__DATA,__cfstring", align 8
 end_comment
 
 begin_comment
@@ -127,23 +139,23 @@ comment|// CHECK-MACHO: @.str.1 = private unnamed_addr constant [7 x i16] [i16 -
 end_comment
 
 begin_comment
-comment|// CHECK-COFF: @_unnamed_cfstring_.2 = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i32 6 }, section "cfstring", align {{[48]}}
+comment|// CHECK-COFF: @_unnamed_cfstring_.2 = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i32 6 }, section "cfstring", align {{[48]}}
 end_comment
 
 begin_comment
-comment|// CHECK-ELF32: @_unnamed_cfstring_.2 = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i32 6 }, section "cfstring", align 4
+comment|// CHECK-ELF32: @_unnamed_cfstring_.2 = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i32 6 }, section "cfstring", align 4
 end_comment
 
 begin_comment
-comment|// CHECK-ELF64: @_unnamed_cfstring_.2 = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i64 6 }, section "cfstring", align 8
+comment|// CHECK-ELF64: @_unnamed_cfstring_.2 = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i64 6 }, section "cfstring", align 8
 end_comment
 
 begin_comment
-comment|// CHECK-MACHO32: @_unnamed_cfstring_.2 = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i32 6 }, section "__DATA,__cfstring", align 4
+comment|// CHECK-MACHO32: @_unnamed_cfstring_.2 = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i32 6 }, section "__DATA,__cfstring", align 4
 end_comment
 
 begin_comment
-comment|// CHECK-MACHO64: @_unnamed_cfstring_.2 = private constant %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i64 6 }, section "__DATA,__cfstring", align 8
+comment|// CHECK-MACHO64: @_unnamed_cfstring_.2 = private global %struct.__NSConstantString_tag { i32* getelementptr inbounds ([0 x i32], [0 x i32]* @__CFConstantStringClassReference, i32 0, i32 0), i32 2000, i8* bitcast ([7 x i16]* @.str.1 to i8*), i64 6 }, section "__DATA,__cfstring", align 8
 end_comment
 
 begin_comment
@@ -184,6 +196,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-ELF-DATA-SECTION: .short 0
+end_comment
+
+begin_comment
+comment|// CHECK-ASM-COFF: .section cfstring,"dw"
+end_comment
+
+begin_comment
+comment|// CHECK-ASM-ELF: .section cfstring,"aw"
+end_comment
+
+begin_comment
+comment|// CHECK-ASM-MACHO: .section __DATA,__cfstring
 end_comment
 
 end_unit

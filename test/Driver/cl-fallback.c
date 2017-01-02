@@ -176,6 +176,22 @@ comment|// GS: "/GS-"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /fallback /Zc:threadSafeInit -### -- %s 2>&1 | FileCheck -check-prefix=ThreadSafe %s
+end_comment
+
+begin_comment
+comment|// ThreadSafe: /Zc:threadSafeInit
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fallback /Zc:threadSafeInit- -### -- %s 2>&1 | FileCheck -check-prefix=NonThreadSafe %s
+end_comment
+
+begin_comment
+comment|// NonThreadSafe: /Zc:threadSafeInit-
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /fallback /Od -### -- %s 2>&1 | FileCheck -check-prefix=O0 %s
 end_comment
 

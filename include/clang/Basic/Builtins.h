@@ -549,6 +549,33 @@ operator|!=
 name|nullptr
 return|;
 block|}
+comment|/// \brief Returns true if this builtin requires appropriate header in other
+comment|/// compilers. In Clang it will work even without including it, but we can emit
+comment|/// a warning about missing header.
+name|bool
+name|isHeaderDependentFunction
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|strchr
+argument_list|(
+name|getRecord
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|Attributes
+argument_list|,
+literal|'h'
+argument_list|)
+operator|!=
+name|nullptr
+return|;
+block|}
 comment|/// \brief Determines whether this builtin is a predefined compiler-rt/libgcc
 comment|/// function, such as "__clear_cache", where we know the signature a
 comment|/// priori.

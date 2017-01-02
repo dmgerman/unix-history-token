@@ -183,5 +183,13 @@ begin_comment
 comment|// NONEXISTENT: nonexistent
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cl /Tc%s -fuse-ld=lld -### 2>&1 | FileCheck --check-prefix=USE_LLD %s
+end_comment
+
+begin_comment
+comment|// USE_LLD: lld-link.exe
+end_comment
+
 end_unit
 

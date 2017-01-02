@@ -179,7 +179,7 @@ comment|// CHECK1-NEXT: load %struct.A*, %struct.A**
 comment|// CHECK1-NEXT: getelementptr inbounds %struct.A, %struct.A*
 comment|// CHECK1-NEXT: store i8 99
 comment|//
-comment|// CHECK1: [[SIZE_ADDR_REF:%.*]] = getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 7
+comment|// CHECK1-DAG: [[SIZE_ADDR_REF:%.*]] = getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 7
 comment|// CHECK1-DAG: [[SIZE_ADDR:%.*]] = load i{{.+}}*, i{{.+}}** [[SIZE_ADDR_REF]]
 comment|// CHECK1-DAG: [[SIZE:%.*]] = load i{{.+}}, i{{.+}}* [[SIZE_ADDR]]
 comment|// CHECK1-DAG: [[PARAM_ARR_IDX:%.*]] = sub nsw i{{.+}} [[SIZE]], 1
@@ -189,7 +189,7 @@ comment|// CHECK1-DAG: [[PARAM_ARR:%.*]] = load i{{.+}}*, i{{.+}}** [[PARAM_ARR_
 comment|// CHECK1-DAG: [[PARAM_ARR_SIZE_MINUS_1_ADDR:%.*]] = getelementptr inbounds i{{.+}}, i{{.+}}* [[PARAM_ARR]], i{{.*}}
 comment|// CHECK1: store i{{.+}} 2, i{{.+}}* [[PARAM_ARR_SIZE_MINUS_1_ADDR]]
 comment|//
-comment|// CHECK1: [[Z_ADDR_REF:%.*]] = getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 2
+comment|// CHECK1-DAG: [[Z_ADDR_REF:%.*]] = getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 2
 comment|// CHECK1-DAG: [[Z_ADDR:%.*]] = load %struct.A*, %struct.A** [[Z_ADDR_REF]]
 comment|// CHECK1-DAG: [[Z_A_ADDR:%.*]] = getelementptr inbounds %struct.A, %struct.A* [[Z_ADDR]], i{{.+}} 0, i{{.+}} 0
 comment|// CHECK1-DAG: [[ARR_IDX_2:%.*]] = load i{{.+}}, i{{.+}}* [[Z_A_ADDR]]

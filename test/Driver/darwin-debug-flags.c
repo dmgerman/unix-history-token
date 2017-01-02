@@ -24,7 +24,7 @@ comment|// RUN: %clang -### -target i386-apple-darwin9 -c -g %t.s 2>&1 | FileChe
 end_comment
 
 begin_comment
-comment|// CHECK: !0 = distinct !DICompileUnit(
+comment|// CHECK: distinct !DICompileUnit(
 end_comment
 
 begin_comment

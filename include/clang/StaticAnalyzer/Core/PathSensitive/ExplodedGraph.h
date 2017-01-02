@@ -136,12 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -1839,7 +1833,8 @@ operator|::
 name|ento
 operator|::
 name|ExplodedNode
-name|NodeType
+operator|*
+name|NodeRef
 expr_stmt|;
 typedef|typedef
 name|clang
@@ -1847,11 +1842,6 @@ operator|::
 name|ento
 operator|::
 name|ExplodedNode
-operator|*
-name|NodeRef
-expr_stmt|;
-typedef|typedef
-name|NodeType
 operator|::
 name|succ_iterator
 name|ChildIteratorType
@@ -1861,19 +1851,15 @@ name|llvm
 operator|::
 name|df_iterator
 operator|<
-name|NodeType
-operator|*
+name|NodeRef
 operator|>
 name|nodes_iterator
 expr_stmt|;
 specifier|static
-specifier|inline
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1882,12 +1868,10 @@ name|N
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1899,12 +1883,10 @@ argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1916,12 +1898,10 @@ argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
 name|nodes_iterator
 name|nodes_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1933,12 +1913,10 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|nodes_iterator
 name|nodes_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1979,26 +1957,18 @@ operator|::
 name|ento
 operator|::
 name|ExplodedNode
-name|NodeType
+operator|*
+name|NodeRef
 expr_stmt|;
 end_expr_stmt
 
 begin_typedef
 typedef|typedef
-specifier|const
 name|clang
 operator|::
 name|ento
 operator|::
 name|ExplodedNode
-operator|*
-name|NodeRef
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|NodeType
 operator|::
 name|const_succ_iterator
 name|ChildIteratorType
@@ -2011,8 +1981,7 @@ name|llvm
 operator|::
 name|df_iterator
 operator|<
-name|NodeType
-operator|*
+name|NodeRef
 operator|>
 name|nodes_iterator
 expr_stmt|;
@@ -2020,13 +1989,10 @@ end_typedef
 
 begin_function
 specifier|static
-specifier|inline
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -2038,12 +2004,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -2058,12 +2022,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -2078,12 +2040,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|nodes_iterator
 name|nodes_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -2098,12 +2058,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|nodes_iterator
 name|nodes_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{

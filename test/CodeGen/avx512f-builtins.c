@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx512f -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +avx512f -emit-llvm -o - -Wall -Werror | FileCheck %s
 end_comment
 
 begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +avx512f -O2 -emit-llvm -o - -Wall -Werror | FileCheck %s -check-prefix=O2
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#
@@ -1334,7 +1328,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_alignr_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.valign.d.512
+comment|// CHECK: shufflevector<16 x i32> %{{.*}},<16 x i32> %{{.*}},<16 x i32><i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17>
 return|return
 name|_mm512_alignr_epi32
 argument_list|(
@@ -1366,7 +1360,8 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_alignr_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.valign.d.512
+comment|// CHECK: shufflevector<16 x i32> %{{.*}},<16 x i32> %{{.*}},<16 x i32><i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> {{.*}}
 return|return
 name|_mm512_mask_alignr_epi32
 argument_list|(
@@ -1399,7 +1394,8 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_alignr_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.valign.d.512
+comment|// CHECK: shufflevector<16 x i32> %{{.*}},<16 x i32> %{{.*}},<16 x i32><i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> {{.*}}
 return|return
 name|_mm512_maskz_alignr_epi32
 argument_list|(
@@ -1427,7 +1423,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_alignr_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.valign.q.512
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<8 x i32><i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9>
 return|return
 name|_mm512_alignr_epi64
 argument_list|(
@@ -1459,7 +1455,8 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_alignr_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.valign.q.512
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<8 x i32><i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> {{.*}}
 return|return
 name|_mm512_mask_alignr_epi64
 argument_list|(
@@ -1492,7 +1489,8 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_alignr_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.valign.q.512
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<8 x i32><i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> {{.*}}
 return|return
 name|_mm512_maskz_alignr_epi64
 argument_list|(
@@ -1534,6 +1532,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1570,6 +1570,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1606,6 +1608,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1642,6 +1646,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1673,6 +1679,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1709,6 +1717,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1745,6 +1755,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1776,6 +1788,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1812,6 +1826,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1848,6 +1864,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1879,6 +1897,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -1915,6 +1935,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2334,6 +2356,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2370,6 +2394,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2406,6 +2432,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2442,6 +2470,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2473,6 +2503,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2509,6 +2541,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2545,6 +2579,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2576,6 +2612,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2612,6 +2650,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2648,6 +2688,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2679,6 +2721,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -2715,6 +2759,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3134,6 +3180,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3170,6 +3218,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3206,6 +3256,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3242,6 +3294,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3273,6 +3327,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3309,6 +3365,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3345,6 +3403,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3604,6 +3664,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3640,6 +3702,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3676,6 +3740,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3712,6 +3778,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3743,6 +3811,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3779,6 +3849,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -3815,6 +3887,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4079,6 +4153,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4149,6 +4225,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4219,6 +4297,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4289,6 +4369,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4359,6 +4441,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4429,6 +4513,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4499,6 +4585,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4535,6 +4623,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4639,6 +4729,8 @@ argument_list|,
 name|__C
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -4675,6 +4767,8 @@ argument_list|,
 name|__U
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -5321,6 +5415,854 @@ block|}
 end_function
 
 begin_function
+name|__mmask8
+name|test_mm512_cmpeq_pd_mask
+parameter_list|(
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpeq_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_cmpeq_pd_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpeq_ps_mask
+parameter_list|(
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpeq_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_cmpeq_ps_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpeq_pd_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpeq_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_mask_cmpeq_pd_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpeq_ps_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpeq_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_mask_cmpeq_ps_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmple_pd_mask
+parameter_list|(
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmple_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_cmpeq_pd_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmple_ps_mask
+parameter_list|(
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmple_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_cmpeq_ps_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmple_pd_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmple_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_mask_cmple_pd_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmple_ps_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmple_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_mask_cmple_ps_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmplt_pd_mask
+parameter_list|(
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmplt_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_cmplt_pd_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmplt_ps_mask
+parameter_list|(
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmplt_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_cmplt_ps_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmplt_pd_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmplt_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_mask_cmplt_pd_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmplt_ps_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmplt_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_mask_cmplt_ps_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpneq_pd_mask
+parameter_list|(
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpneq_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_cmpneq_pd_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpneq_ps_mask
+parameter_list|(
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpneq_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_cmpneq_ps_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpneq_pd_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpneq_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_mask_cmpneq_pd_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpneq_ps_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpneq_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_mask_cmpneq_ps_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpnle_pd_mask
+parameter_list|(
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpnle_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_cmpnle_pd_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpnle_ps_mask
+parameter_list|(
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpnle_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_cmpnle_ps_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpnle_pd_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpnle_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_mask_cmpnle_pd_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpnle_ps_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpnle_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_mask_cmpnle_ps_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpnlt_pd_mask
+parameter_list|(
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpnlt_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_cmpnlt_pd_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpnlt_ps_mask
+parameter_list|(
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpnlt_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_cmpnlt_ps_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpnlt_pd_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpnlt_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_mask_cmpnlt_pd_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpnlt_ps_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpnlt_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_mask_cmpnlt_ps_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpord_pd_mask
+parameter_list|(
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpord_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_cmpord_pd_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpord_ps_mask
+parameter_list|(
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpord_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_cmpord_ps_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpord_pd_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpord_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_mask_cmpord_pd_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpord_ps_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpord_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_mask_cmpord_ps_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpunord_pd_mask
+parameter_list|(
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpunord_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_cmpunord_pd_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_cmpunord_ps_mask
+parameter_list|(
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cmpunord_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_cmpunord_ps_mask
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpunord_pd_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512d
+name|a
+parameter_list|,
+name|__m512d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpunord_pd_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.pd.512
+return|return
+name|_mm512_mask_cmpunord_pd_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask8
+name|test_mm512_mask_cmpunord_ps_mask
+parameter_list|(
+name|__mmask8
+name|k
+parameter_list|,
+name|__m512
+name|a
+parameter_list|,
+name|__m512
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cmpunord_ps_mask
+comment|// CHECK: @llvm.x86.avx512.mask.cmp.ps.512
+return|return
+name|_mm512_mask_cmpunord_ps_mask
+argument_list|(
+name|k
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|__m256d
 name|test_mm512_extractf64x4_pd
 parameter_list|(
@@ -5329,7 +6271,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_extractf64x4_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vextractf64x4.512
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm512_extractf64x4_pd
 argument_list|(
@@ -5355,8 +6297,9 @@ name|__m512d
 name|__A
 parameter_list|)
 block|{
-comment|//CHECK-LABEL:@test_mm512_mask_extractf64x4_pd
-comment|//CHECL:@llvm.x86.avx512.mask.vextractf64x4.512
+comment|// CHECK-LABEL:@test_mm512_mask_extractf64x4_pd
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm512_mask_extractf64x4_pd
 argument_list|(
@@ -5383,8 +6326,9 @@ name|__m512d
 name|__A
 parameter_list|)
 block|{
-comment|//CHECK-LABEL:@test_mm512_maskz_extractf64x4_pd
-comment|//CHECL:@llvm.x86.avx512.mask.vextractf64x4.512
+comment|// CHECK-LABEL:@test_mm512_maskz_extractf64x4_pd
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x double> %{{.*}},<4 x double> %{{.*}}
 return|return
 name|_mm512_maskz_extractf64x4_pd
 argument_list|(
@@ -5407,7 +6351,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_extractf32x4_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vextractf32x4.512
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm512_extractf32x4_ps
 argument_list|(
@@ -5433,8 +6377,9 @@ name|__m512d
 name|__A
 parameter_list|)
 block|{
-comment|//CHECK-LABEL:@test_mm512_mask_extractf32x4_ps
-comment|//CHECL: @llvm.x86.avx512.mask.vextractf32x4.512
+comment|// CHECK-LABEL:@test_mm512_mask_extractf32x4_ps
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm512_mask_extractf32x4_ps
 argument_list|(
@@ -5461,8 +6406,9 @@ name|__m512d
 name|__A
 parameter_list|)
 block|{
-comment|//CHECK-LABEL:@test_mm512_maskz_extractf32x4_ps
-comment|//CHECL: @llvm.x86.avx512.mask.vextractf32x4.512
+comment|// CHECK-LABEL:@test_mm512_maskz_extractf32x4_ps
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x float> %{{.*}},<4 x float> %{{.*}}
 return|return
 name|_mm512_maskz_extractf32x4_ps
 argument_list|(
@@ -6678,7 +7624,7 @@ end_function
 
 begin_function
 name|__mmask16
-name|test_mm512_cmp_epi32_mask
+name|test_mm512_cmp_eq_epi32_mask
 parameter_list|(
 name|__m512i
 name|__a
@@ -6687,7 +7633,7 @@ name|__m512i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm512_cmp_epi32_mask
+comment|// CHECK-LABEL: @test_mm512_cmp_eq_epi32_mask
 comment|// CHECK: icmp eq<16 x i32> %{{.*}}, %{{.*}}
 return|return
 operator|(
@@ -6699,7 +7645,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_EQ
 argument_list|)
 return|;
 block|}
@@ -6707,7 +7653,7 @@ end_function
 
 begin_function
 name|__mmask16
-name|test_mm512_mask_cmp_epi32_mask
+name|test_mm512_mask_cmp_eq_epi32_mask
 parameter_list|(
 name|__mmask16
 name|__u
@@ -6719,7 +7665,7 @@ name|__m512i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm512_mask_cmp_epi32_mask
+comment|// CHECK-LABEL: @test_mm512_mask_cmp_eq_epi32_mask
 comment|// CHECK: icmp eq<16 x i32> %{{.*}}, %{{.*}}
 comment|// CHECK: and<16 x i1> %{{.*}}, %{{.*}}
 return|return
@@ -6734,7 +7680,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_EQ
 argument_list|)
 return|;
 block|}
@@ -6742,7 +7688,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm512_cmp_epi64_mask
+name|test_mm512_cmp_eq_epi64_mask
 parameter_list|(
 name|__m512i
 name|__a
@@ -6751,7 +7697,7 @@ name|__m512i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm512_cmp_epi64_mask
+comment|// CHECK-LABEL: @test_mm512_cmp_eq_epi64_mask
 comment|// CHECK: icmp eq<8 x i64> %{{.*}}, %{{.*}}
 return|return
 operator|(
@@ -6763,7 +7709,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_EQ
 argument_list|)
 return|;
 block|}
@@ -6771,7 +7717,7 @@ end_function
 
 begin_function
 name|__mmask8
-name|test_mm512_mask_cmp_epi64_mask
+name|test_mm512_mask_cmp_eq_epi64_mask
 parameter_list|(
 name|__mmask8
 name|__u
@@ -6783,7 +7729,7 @@ name|__m512i
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm512_mask_cmp_epi64_mask
+comment|// CHECK-LABEL: @test_mm512_mask_cmp_eq_epi64_mask
 comment|// CHECK: icmp eq<8 x i64> %{{.*}}, %{{.*}}
 comment|// CHECK: and<8 x i1> %{{.*}}, %{{.*}}
 return|return
@@ -6798,7 +7744,7 @@ name|__a
 argument_list|,
 name|__b
 argument_list|,
-literal|0
+name|_MM_CMPINT_EQ
 argument_list|)
 return|;
 block|}
@@ -7740,7 +8686,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_maskz_sub_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.psub.d.512
+comment|//CHECK: sub<16 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_sub_epi32
 argument_list|(
@@ -7772,7 +8719,8 @@ name|__src
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_mask_sub_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.psub.d.512
+comment|//CHECK: sub<16 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_sub_epi32
 argument_list|(
@@ -7827,7 +8775,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_maskz_sub_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.psub.q.512
+comment|//CHECK: sub<8 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_sub_epi64
 argument_list|(
@@ -7859,7 +8808,8 @@ name|__src
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_mask_sub_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.psub.q.512
+comment|//CHECK: sub<8 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_sub_epi64
 argument_list|(
@@ -7914,7 +8864,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_maskz_add_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.padd.d.512
+comment|//CHECK: add<16 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_add_epi32
 argument_list|(
@@ -7946,7 +8897,8 @@ name|__src
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_mask_add_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.padd.d.512
+comment|//CHECK: add<16 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_add_epi32
 argument_list|(
@@ -8001,7 +8953,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_maskz_add_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.padd.q.512
+comment|//CHECK: add<8 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_add_epi64
 argument_list|(
@@ -8033,7 +8986,8 @@ name|__src
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_mask_add_epi64
-comment|//CHECK: @llvm.x86.avx512.mask.padd.q.512
+comment|//CHECK: add<8 x i64> %{{.*}}, %{{.*}}
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_add_epi64
 argument_list|(
@@ -8075,6 +9029,30 @@ end_function
 
 begin_function
 name|__m512i
+name|test_mm512_mul_epi32
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|//CHECK-LABEL: @test_mm512_mul_epi32
+comment|//CHECK: @llvm.x86.avx512.pmul.dq.512
+return|return
+name|_mm512_mul_epi32
+argument_list|(
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
 name|test_mm512_maskz_mul_epi32
 parameter_list|(
 name|__mmask16
@@ -8088,7 +9066,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_maskz_mul_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmul.dq.512
+comment|//CHECK: @llvm.x86.avx512.pmul.dq.512
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_mul_epi32
 argument_list|(
@@ -8120,7 +9099,8 @@ name|__src
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_mask_mul_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmul.dq.512
+comment|//CHECK: @llvm.x86.avx512.pmul.dq.512
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_mul_epi32
 argument_list|(
@@ -8128,6 +9108,30 @@ name|__src
 argument_list|,
 name|__k
 argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_mul_epu32
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|//CHECK-LABEL: @test_mm512_mul_epu32
+comment|//CHECK: @llvm.x86.avx512.pmulu.dq.512
+return|return
+name|_mm512_mul_epu32
+argument_list|(
 name|__A
 argument_list|,
 name|__B
@@ -8151,7 +9155,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_maskz_mul_epu32
-comment|//CHECK: @llvm.x86.avx512.mask.pmulu.dq.512
+comment|//CHECK: @llvm.x86.avx512.pmulu.dq.512
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_mul_epu32
 argument_list|(
@@ -8183,7 +9188,8 @@ name|__src
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_mask_mul_epu32
-comment|//CHECK: @llvm.x86.avx512.mask.pmulu.dq.512
+comment|//CHECK: @llvm.x86.avx512.pmulu.dq.512
+comment|//CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_mul_epu32
 argument_list|(
@@ -8214,7 +9220,8 @@ name|__B
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_maskz_mullo_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmull.d.512
+comment|//CHECK: mul<16 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_mullo_epi32
 argument_list|(
@@ -8246,7 +9253,8 @@ name|__src
 parameter_list|)
 block|{
 comment|//CHECK-LABEL: @test_mm512_mask_mullo_epi32
-comment|//CHECK: @llvm.x86.avx512.mask.pmull.d.512
+comment|//CHECK: mul<16 x i32> %{{.*}}, %{{.*}}
+comment|//CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_mullo_epi32
 argument_list|(
@@ -8307,6 +9315,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8343,6 +9353,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8374,6 +9386,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8397,7 +9411,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_add_pd
-comment|// CHECK: @llvm.x86.avx512.mask.add.pd.512
+comment|// CHECK: fadd<8 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_add_pd
 argument_list|(
@@ -8428,7 +9443,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_add_pd
-comment|// CHECK: @llvm.x86.avx512.mask.add.pd.512
+comment|// CHECK: fadd<8 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_add_pd
 argument_list|(
@@ -8463,6 +9479,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8499,6 +9517,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8530,6 +9550,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8553,7 +9575,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_add_ps
-comment|// CHECK: @llvm.x86.avx512.mask.add.ps.512
+comment|// CHECK: fadd<16 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_mask_add_ps
 argument_list|(
@@ -8584,7 +9607,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_add_ps
-comment|// CHECK: @llvm.x86.avx512.mask.add.ps.512
+comment|// CHECK: fadd<16 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_maskz_add_ps
 argument_list|(
@@ -8619,6 +9643,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8655,6 +9681,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8686,6 +9714,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8775,6 +9805,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8811,6 +9843,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8842,6 +9876,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8931,6 +9967,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8967,6 +10005,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -8998,6 +10038,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9021,7 +10063,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_sub_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sub.pd.512
+comment|// CHECK: fsub<8 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_sub_pd
 argument_list|(
@@ -9052,7 +10095,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_sub_pd
-comment|// CHECK: @llvm.x86.avx512.mask.sub.pd.512
+comment|// CHECK: fsub<8 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_sub_pd
 argument_list|(
@@ -9087,6 +10131,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9123,6 +10169,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9154,6 +10202,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9177,7 +10227,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_sub_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sub.ps.512
+comment|// CHECK: fsub<16 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_mask_sub_ps
 argument_list|(
@@ -9208,7 +10259,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_sub_ps
-comment|// CHECK: @llvm.x86.avx512.mask.sub.ps.512
+comment|// CHECK: fsub<16 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_maskz_sub_ps
 argument_list|(
@@ -9243,6 +10295,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9279,6 +10333,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9310,6 +10366,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9399,6 +10457,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9435,6 +10495,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9466,6 +10528,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9555,6 +10619,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9591,6 +10657,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9622,6 +10690,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9645,7 +10715,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_mul_pd
-comment|// CHECK: @llvm.x86.avx512.mask.mul.pd.512
+comment|// CHECK: fmul<8 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_mul_pd
 argument_list|(
@@ -9676,7 +10747,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_mul_pd
-comment|// CHECK: @llvm.x86.avx512.mask.mul.pd.512
+comment|// CHECK: fmul<8 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_mul_pd
 argument_list|(
@@ -9711,6 +10783,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9747,6 +10821,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9778,6 +10854,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9801,7 +10879,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_mul_ps
-comment|// CHECK: @llvm.x86.avx512.mask.mul.ps.512
+comment|// CHECK: fmul<16 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_mask_mul_ps
 argument_list|(
@@ -9832,7 +10911,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_mul_ps
-comment|// CHECK: @llvm.x86.avx512.mask.mul.ps.512
+comment|// CHECK: fmul<16 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_maskz_mul_ps
 argument_list|(
@@ -9867,6 +10947,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9903,6 +10985,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -9934,6 +11018,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10023,6 +11109,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10059,6 +11147,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10090,6 +11180,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10179,6 +11271,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10215,6 +11309,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10246,6 +11342,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10293,7 +11391,8 @@ name|__b
 parameter_list|)
 block|{
 comment|// CHECK-LABLE: @test_mm512_mask_div_pd
-comment|// CHECK: @llvm.x86.avx512.mask.div.pd.512
+comment|// CHECK: fdiv<8 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_div_pd
 argument_list|(
@@ -10324,7 +11423,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_div_pd
-comment|// CHECK: @llvm.x86.avx512.mask.div.pd.512
+comment|// CHECK: fdiv<8 x double> %{{.*}}, %{{.*}}
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_div_pd
 argument_list|(
@@ -10359,6 +11459,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10395,6 +11497,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10426,6 +11530,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10473,7 +11579,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_div_ps
-comment|// CHECK: @llvm.x86.avx512.mask.div.ps.512
+comment|// CHECK: fdiv<16 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_mask_div_ps
 argument_list|(
@@ -10504,7 +11611,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_div_ps
-comment|// CHECK: @llvm.x86.avx512.mask.div.ps.512
+comment|// CHECK: fdiv<16 x float> %{{.*}}, %{{.*}}
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_maskz_div_ps
 argument_list|(
@@ -10539,6 +11647,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10575,6 +11685,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10606,6 +11718,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10695,6 +11809,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10731,6 +11847,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -10762,6 +11880,8 @@ argument_list|,
 name|__B
 argument_list|,
 name|_MM_FROUND_TO_NEAREST_INT
+operator||
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -11519,7 +12639,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepi8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.d.512
+comment|// CHECK: sext<16 x i8> %{{.*}} to<16 x i32>
 return|return
 name|_mm512_cvtepi8_epi32
 argument_list|(
@@ -11544,7 +12664,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepi8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.d.512
+comment|// CHECK: sext<16 x i8> %{{.*}} to<16 x i32>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_cvtepi8_epi32
 argument_list|(
@@ -11570,7 +12691,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepi8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.d.512
+comment|// CHECK: sext<16 x i8> %{{.*}} to<16 x i32>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepi8_epi32
 argument_list|(
@@ -11591,7 +12713,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepi8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.q.512
+comment|// CHECK: sext<8 x i8> %{{.*}} to<8 x i64>
 return|return
 name|_mm512_cvtepi8_epi64
 argument_list|(
@@ -11616,7 +12738,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepi8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.q.512
+comment|// CHECK: sext<8 x i8> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_cvtepi8_epi64
 argument_list|(
@@ -11642,7 +12765,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepi8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxb.q.512
+comment|// CHECK: sext<8 x i8> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepi8_epi64
 argument_list|(
@@ -11663,7 +12787,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepi32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxd.q.512
+comment|// CHECK: sext<8 x i32> %{{.*}} to<8 x i64>
 return|return
 name|_mm512_cvtepi32_epi64
 argument_list|(
@@ -11688,7 +12812,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepi32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxd.q.512
+comment|// CHECK: sext<8 x i32> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_cvtepi32_epi64
 argument_list|(
@@ -11714,7 +12839,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepi32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxd.q.512
+comment|// CHECK: sext<8 x i32> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepi32_epi64
 argument_list|(
@@ -11735,7 +12861,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepi16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.d.512
+comment|// CHECK: sext<16 x i16> %{{.*}} to<16 x i32>
 return|return
 name|_mm512_cvtepi16_epi32
 argument_list|(
@@ -11760,7 +12886,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepi16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.d.512
+comment|// CHECK: sext<16 x i16> %{{.*}} to<16 x i32>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_cvtepi16_epi32
 argument_list|(
@@ -11786,7 +12913,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepi16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.d.512
+comment|// CHECK: sext<16 x i16> %{{.*}} to<16 x i32>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepi16_epi32
 argument_list|(
@@ -11807,7 +12935,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepi16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.q.512
+comment|// CHECK: sext<8 x i16> %{{.*}} to<8 x i64>
 return|return
 name|_mm512_cvtepi16_epi64
 argument_list|(
@@ -11832,7 +12960,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepi16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.q.512
+comment|// CHECK: sext<8 x i16> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_cvtepi16_epi64
 argument_list|(
@@ -11858,7 +12987,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepi16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovsxw.q.512
+comment|// CHECK: sext<8 x i16> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepi16_epi64
 argument_list|(
@@ -11879,7 +13009,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepu8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.d.512
+comment|// CHECK: zext<16 x i8> %{{.*}} to<16 x i32>
 return|return
 name|_mm512_cvtepu8_epi32
 argument_list|(
@@ -11904,7 +13034,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepu8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.d.512
+comment|// CHECK: zext<16 x i8> %{{.*}} to<16 x i32>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_cvtepu8_epi32
 argument_list|(
@@ -11930,7 +13061,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepu8_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.d.512
+comment|// CHECK: zext<16 x i8> %{{.*}} to<16 x i32>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepu8_epi32
 argument_list|(
@@ -11951,7 +13083,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepu8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.q.512
+comment|// CHECK: zext<8 x i8> %{{.*}} to<8 x i64>
 return|return
 name|_mm512_cvtepu8_epi64
 argument_list|(
@@ -11976,7 +13108,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepu8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.q.512
+comment|// CHECK: zext<8 x i8> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_cvtepu8_epi64
 argument_list|(
@@ -12002,7 +13135,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepu8_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxb.q.512
+comment|// CHECK: zext<8 x i8> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepu8_epi64
 argument_list|(
@@ -12023,7 +13157,7 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepu32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxd.q.512
+comment|// CHECK: zext<8 x i32> %{{.*}} to<8 x i64>
 return|return
 name|_mm512_cvtepu32_epi64
 argument_list|(
@@ -12048,7 +13182,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepu32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxd.q.512
+comment|// CHECK: zext<8 x i32> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_cvtepu32_epi64
 argument_list|(
@@ -12074,7 +13209,8 @@ name|__X
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepu32_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxd.q.512
+comment|// CHECK: zext<8 x i32> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepu32_epi64
 argument_list|(
@@ -12095,7 +13231,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepu16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.d.512
+comment|// CHECK: zext<16 x i16> %{{.*}} to<16 x i32>
 return|return
 name|_mm512_cvtepu16_epi32
 argument_list|(
@@ -12120,7 +13256,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepu16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.d.512
+comment|// CHECK: zext<16 x i16> %{{.*}} to<16 x i32>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_cvtepu16_epi32
 argument_list|(
@@ -12146,7 +13283,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepu16_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.d.512
+comment|// CHECK: zext<16 x i16> %{{.*}} to<16 x i32>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepu16_epi32
 argument_list|(
@@ -12167,7 +13305,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_cvtepu16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.q.512
+comment|// CHECK: zext<8 x i16> %{{.*}} to<8 x i64>
 return|return
 name|_mm512_cvtepu16_epi64
 argument_list|(
@@ -12192,7 +13330,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepu16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.q.512
+comment|// CHECK: zext<8 x i16> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_cvtepu16_epi64
 argument_list|(
@@ -12218,7 +13357,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepu16_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmovzxw.q.512
+comment|// CHECK: zext<8 x i16> %{{.*}} to<8 x i64>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_cvtepu16_epi64
 argument_list|(
@@ -12899,7 +14039,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_slli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psll.di.512
+comment|// CHECK: @llvm.x86.avx512.pslli.d.512
 return|return
 name|_mm512_slli_epi32
 argument_list|(
@@ -12926,7 +14066,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_slli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psll.di.512
+comment|// CHECK: @llvm.x86.avx512.pslli.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_slli_epi32
 argument_list|(
@@ -12954,7 +14095,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_slli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psll.di.512
+comment|// CHECK: @llvm.x86.avx512.pslli.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_slli_epi32
 argument_list|(
@@ -12977,7 +14119,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_slli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psll.qi.512
+comment|// CHECK: @llvm.x86.avx512.pslli.q.512
 return|return
 name|_mm512_slli_epi64
 argument_list|(
@@ -13004,7 +14146,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_slli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psll.qi.512
+comment|// CHECK: @llvm.x86.avx512.pslli.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_slli_epi64
 argument_list|(
@@ -13032,7 +14175,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_slli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psll.qi.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_slli_epi64
 argument_list|(
@@ -13055,7 +14198,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.di.512
+comment|// CHECK: @llvm.x86.avx512.psrli.d.512
 return|return
 name|_mm512_srli_epi32
 argument_list|(
@@ -13082,7 +14225,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.di.512
+comment|// CHECK: @llvm.x86.avx512.psrli.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_srli_epi32
 argument_list|(
@@ -13110,7 +14254,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srli_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.di.512
+comment|// CHECK: @llvm.x86.avx512.psrli.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_srli_epi32
 argument_list|(
@@ -13133,7 +14278,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.qi.512
+comment|// CHECK: @llvm.x86.avx512.psrli.q.512
 return|return
 name|_mm512_srli_epi64
 argument_list|(
@@ -13160,7 +14305,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.qi.512
+comment|// CHECK: @llvm.x86.avx512.psrli.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_srli_epi64
 argument_list|(
@@ -13188,7 +14334,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srli_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.qi.512
+comment|// CHECK: @llvm.x86.avx512.psrli.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_srli_epi64
 argument_list|(
@@ -13578,7 +14725,7 @@ name|__B
 argument_list|,
 literal|5
 argument_list|,
-literal|3
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -13606,7 +14753,7 @@ name|__B
 argument_list|,
 literal|5
 argument_list|,
-literal|3
+name|_MM_FROUND_NO_EXC
 argument_list|)
 return|;
 block|}
@@ -14730,6 +15877,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__x86_64__
+end_if
+
 begin_function
 name|unsigned
 name|long
@@ -14752,6 +15905,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|__m512i
@@ -14841,6 +15999,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__x86_64__
+end_if
+
 begin_function
 name|long
 name|long
@@ -14862,6 +16026,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|__m512d
@@ -15209,6 +16378,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
 begin_function
 name|unsigned
 name|long
@@ -15253,6 +16428,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|test_mm_cvt_roundss_si32
@@ -15294,6 +16474,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|int
@@ -15338,6 +16524,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|unsigned
 name|test_mm_cvt_roundss_u32
@@ -15377,6 +16568,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|unsigned
@@ -15421,6 +16618,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -15482,6 +16684,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|unsigned
@@ -15548,6 +16756,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|unsigned
 name|test_mm_cvtt_roundsd_u32
@@ -15587,6 +16800,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|unsigned
@@ -15631,6 +16850,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -15692,6 +16916,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|float
@@ -15756,6 +16986,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|unsigned
 name|test_mm_cvtt_roundss_u32
@@ -15795,6 +17030,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|unsigned
@@ -15839,6 +17080,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|__m512i
@@ -16848,7 +18094,7 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_permutevar_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.pd.512
+comment|// CHECK: @llvm.x86.avx512.vpermilvar.pd.512
 return|return
 name|_mm512_permutevar_pd
 argument_list|(
@@ -16878,7 +18124,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_permutevar_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.pd.512
+comment|// CHECK: @llvm.x86.avx512.vpermilvar.pd.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_permutevar_pd
 argument_list|(
@@ -16909,7 +18156,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_permutevar_pd
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.pd.512
+comment|// CHECK: @llvm.x86.avx512.vpermilvar.pd.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_permutevar_pd
 argument_list|(
@@ -16935,7 +18183,7 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_permutevar_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.ps.512
+comment|// CHECK: @llvm.x86.avx512.vpermilvar.ps.512
 return|return
 name|_mm512_permutevar_ps
 argument_list|(
@@ -16965,7 +18213,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_permutevar_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.ps.512
+comment|// CHECK: @llvm.x86.avx512.vpermilvar.ps.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_mask_permutevar_ps
 argument_list|(
@@ -16996,7 +18245,8 @@ name|__C
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_permutevar_ps
-comment|// CHECK: @llvm.x86.avx512.mask.vpermilvar.ps.512
+comment|// CHECK: @llvm.x86.avx512.vpermilvar.ps.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_maskz_permutevar_ps
 argument_list|(
@@ -18872,7 +20122,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srai_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.di.512
+comment|// CHECK: @llvm.x86.avx512.psrai.d.512
 return|return
 name|_mm512_srai_epi32
 argument_list|(
@@ -18899,7 +20149,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srai_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.di.512
+comment|// CHECK: @llvm.x86.avx512.psrai.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_srai_epi32
 argument_list|(
@@ -18927,7 +20178,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srai_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.di.512
+comment|// CHECK: @llvm.x86.avx512.psrai.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_srai_epi32
 argument_list|(
@@ -18950,7 +20202,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srai_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.qi.512
+comment|// CHECK: @llvm.x86.avx512.psrai.q.512
 return|return
 name|_mm512_srai_epi64
 argument_list|(
@@ -18977,7 +20229,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srai_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.qi.512
+comment|// CHECK: @llvm.x86.avx512.psrai.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_srai_epi64
 argument_list|(
@@ -19005,7 +20258,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srai_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.qi.512
+comment|// CHECK: @llvm.x86.avx512.psrai.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_srai_epi64
 argument_list|(
@@ -19031,7 +20285,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_sll_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psll.d
+comment|// CHECK: @llvm.x86.avx512.psll.d.512
 return|return
 name|_mm512_sll_epi32
 argument_list|(
@@ -19061,7 +20315,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_sll_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psll.d
+comment|// CHECK: @llvm.x86.avx512.psll.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_sll_epi32
 argument_list|(
@@ -19092,7 +20347,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_sll_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psll.d
+comment|// CHECK: @llvm.x86.avx512.psll.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_sll_epi32
 argument_list|(
@@ -19118,7 +20374,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_sll_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psll.q
+comment|// CHECK: @llvm.x86.avx512.psll.q.512
 return|return
 name|_mm512_sll_epi64
 argument_list|(
@@ -19148,7 +20404,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_sll_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psll.q
+comment|// CHECK: @llvm.x86.avx512.psll.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_sll_epi64
 argument_list|(
@@ -19179,7 +20436,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_sll_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psll.q
+comment|// CHECK: @llvm.x86.avx512.psll.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_sll_epi64
 argument_list|(
@@ -19205,7 +20463,7 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_sllv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psllv.d
+comment|// CHECK: @llvm.x86.avx512.psllv.d.512
 return|return
 name|_mm512_sllv_epi32
 argument_list|(
@@ -19235,7 +20493,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_sllv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psllv.d
+comment|// CHECK: @llvm.x86.avx512.psllv.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_sllv_epi32
 argument_list|(
@@ -19266,7 +20525,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_sllv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psllv.d
+comment|// CHECK: @llvm.x86.avx512.psllv.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_sllv_epi32
 argument_list|(
@@ -19292,7 +20552,7 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_sllv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psllv.q
+comment|// CHECK: @llvm.x86.avx512.psllv.q.512
 return|return
 name|_mm512_sllv_epi64
 argument_list|(
@@ -19322,7 +20582,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_sllv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psllv.q
+comment|// CHECK: @llvm.x86.avx512.psllv.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_sllv_epi64
 argument_list|(
@@ -19353,7 +20614,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_sllv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psllv.q
+comment|// CHECK: @llvm.x86.avx512.psllv.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_sllv_epi64
 argument_list|(
@@ -19379,7 +20641,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_sra_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.d
+comment|// CHECK: @llvm.x86.avx512.psra.d.512
 return|return
 name|_mm512_sra_epi32
 argument_list|(
@@ -19409,7 +20671,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_sra_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.d
+comment|// CHECK: @llvm.x86.avx512.psra.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_sra_epi32
 argument_list|(
@@ -19440,7 +20703,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_sra_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psra.d
+comment|// CHECK: @llvm.x86.avx512.psra.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_sra_epi32
 argument_list|(
@@ -19466,7 +20730,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_sra_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.q
+comment|// CHECK: @llvm.x86.avx512.psra.q.512
 return|return
 name|_mm512_sra_epi64
 argument_list|(
@@ -19496,7 +20760,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_sra_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.q
+comment|// CHECK: @llvm.x86.avx512.psra.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_sra_epi64
 argument_list|(
@@ -19527,7 +20792,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_sra_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psra.q
+comment|// CHECK: @llvm.x86.avx512.psra.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_sra_epi64
 argument_list|(
@@ -19553,7 +20819,7 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srav_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.d
+comment|// CHECK: @llvm.x86.avx512.psrav.d.512
 return|return
 name|_mm512_srav_epi32
 argument_list|(
@@ -19583,7 +20849,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srav_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.d
+comment|// CHECK: @llvm.x86.avx512.psrav.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_srav_epi32
 argument_list|(
@@ -19614,7 +20881,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srav_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.d
+comment|// CHECK: @llvm.x86.avx512.psrav.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_srav_epi32
 argument_list|(
@@ -19640,7 +20908,7 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srav_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.q
+comment|// CHECK: @llvm.x86.avx512.psrav.q.512
 return|return
 name|_mm512_srav_epi64
 argument_list|(
@@ -19670,7 +20938,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srav_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.q
+comment|// CHECK: @llvm.x86.avx512.psrav.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_srav_epi64
 argument_list|(
@@ -19701,7 +20970,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srav_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrav.q
+comment|// CHECK: @llvm.x86.avx512.psrav.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_srav_epi64
 argument_list|(
@@ -19727,7 +20997,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srl_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.d
+comment|// CHECK: @llvm.x86.avx512.psrl.d.512
 return|return
 name|_mm512_srl_epi32
 argument_list|(
@@ -19757,7 +21027,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srl_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.d
+comment|// CHECK: @llvm.x86.avx512.psrl.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_srl_epi32
 argument_list|(
@@ -19788,7 +21059,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srl_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.d
+comment|// CHECK: @llvm.x86.avx512.psrl.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_srl_epi32
 argument_list|(
@@ -19814,7 +21086,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srl_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.q
+comment|// CHECK: @llvm.x86.avx512.psrl.q.512
 return|return
 name|_mm512_srl_epi64
 argument_list|(
@@ -19844,7 +21116,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srl_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.q
+comment|// CHECK: @llvm.x86.avx512.psrl.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_srl_epi64
 argument_list|(
@@ -19875,7 +21148,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srl_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrl.q
+comment|// CHECK: @llvm.x86.avx512.psrl.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_srl_epi64
 argument_list|(
@@ -19901,7 +21175,7 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srlv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv.d
+comment|// CHECK: @llvm.x86.avx512.psrlv.d.512
 return|return
 name|_mm512_srlv_epi32
 argument_list|(
@@ -19931,7 +21205,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srlv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv.d
+comment|// CHECK: @llvm.x86.avx512.psrlv.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_srlv_epi32
 argument_list|(
@@ -19962,7 +21237,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srlv_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv.d
+comment|// CHECK: @llvm.x86.avx512.psrlv.d.512
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_srlv_epi32
 argument_list|(
@@ -19988,7 +21264,7 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_srlv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv.q
+comment|// CHECK: @llvm.x86.avx512.psrlv.q.512
 return|return
 name|_mm512_srlv_epi64
 argument_list|(
@@ -20018,7 +21294,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_srlv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv.q
+comment|// CHECK: @llvm.x86.avx512.psrlv.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_srlv_epi64
 argument_list|(
@@ -20049,7 +21326,8 @@ name|__Y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_srlv_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.psrlv.q
+comment|// CHECK: @llvm.x86.avx512.psrlv.q.512
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_srlv_epi64
 argument_list|(
@@ -23258,7 +24536,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_extracti32x4_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti32x4
+comment|// CHECK: shufflevector<16 x i32> %{{.*}},<16 x i32> %{{.*}},<4 x i32><i32 12, i32 13, i32 14, i32 15>
 return|return
 name|_mm512_extracti32x4_epi32
 argument_list|(
@@ -23285,7 +24563,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_extracti32x4_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti32x4
+comment|// CHECK: shufflevector<16 x i32> %{{.*}},<16 x i32> %{{.*}},<4 x i32><i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm512_mask_extracti32x4_epi32
 argument_list|(
@@ -23313,7 +24592,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_extracti32x4_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti32x4
+comment|// CHECK: shufflevector<16 x i32> %{{.*}},<16 x i32> %{{.*}},<4 x i32><i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_extracti32x4_epi32
 argument_list|(
@@ -23336,7 +24616,7 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_extracti64x4_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti64x4
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|_mm512_extracti64x4_epi64
 argument_list|(
@@ -23363,7 +24643,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_extracti64x4_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti64x4
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm512_mask_extracti64x4_epi64
 argument_list|(
@@ -23391,7 +24672,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_extracti64x4_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.vextracti64x4
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: select<4 x i1> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_extracti64x4_epi64
 argument_list|(
@@ -23417,7 +24699,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_insertf64x4
-comment|// CHECK: @llvm.x86.avx512.mask.insertf64x4
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
 return|return
 name|_mm512_insertf64x4
 argument_list|(
@@ -23449,7 +24731,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_insertf64x4
-comment|// CHECK: @llvm.x86.avx512.mask.insertf64x4
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_mask_insertf64x4
 argument_list|(
@@ -23482,7 +24765,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_insertf64x4
-comment|// CHECK: @llvm.x86.avx512.mask.insertf64x4
+comment|// CHECK: shufflevector<8 x double> %{{.*}},<8 x double> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x double> %{{.*}},<8 x double> %{{.*}}
 return|return
 name|_mm512_maskz_insertf64x4
 argument_list|(
@@ -23510,7 +24794,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_inserti64x4
-comment|// CHECK: @llvm.x86.avx512.mask.inserti64x4
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
 return|return
 name|_mm512_inserti64x4
 argument_list|(
@@ -23542,7 +24826,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_inserti64x4
-comment|// CHECK: @llvm.x86.avx512.mask.inserti64x4
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_mask_inserti64x4
 argument_list|(
@@ -23575,7 +24860,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_inserti64x4
-comment|// CHECK: @llvm.x86.avx512.mask.inserti64x4
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+comment|// CHECK: select<8 x i1> %{{.*}},<8 x i64> %{{.*}},<8 x i64> %{{.*}}
 return|return
 name|_mm512_maskz_inserti64x4
 argument_list|(
@@ -23603,7 +24889,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_insertf32x4
-comment|// CHECK: @llvm.x86.avx512.mask.insertf32x4
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 16, i32 17, i32 18, i32 19, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 return|return
 name|_mm512_insertf32x4
 argument_list|(
@@ -23635,7 +24921,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_insertf32x4
-comment|// CHECK: @llvm.x86.avx512.mask.insertf32x4
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 16, i32 17, i32 18, i32 19, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_mask_insertf32x4
 argument_list|(
@@ -23668,7 +24955,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_insertf32x4
-comment|// CHECK: @llvm.x86.avx512.mask.insertf32x4
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 16, i32 17, i32 18, i32 19, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x float> %{{.*}},<16 x float> %{{.*}}
 return|return
 name|_mm512_maskz_insertf32x4
 argument_list|(
@@ -23696,7 +24984,7 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_inserti32x4
-comment|// CHECK: @llvm.x86.avx512.mask.inserti32x4
+comment|// CHECK: shufflevector<16 x i32> %{{.*}},<16 x i32> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 16, i32 17, i32 18, i32 19, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 return|return
 name|_mm512_inserti32x4
 argument_list|(
@@ -23728,7 +25016,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_inserti32x4
-comment|// CHECK: @llvm.x86.avx512.mask.inserti32x4
+comment|// CHECK: shufflevector<16 x i32> %{{.*}},<16 x i32> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 16, i32 17, i32 18, i32 19, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_mask_inserti32x4
 argument_list|(
@@ -23761,7 +25050,8 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_inserti32x4
-comment|// CHECK: @llvm.x86.avx512.mask.inserti32x4
+comment|// CHECK: shufflevector<16 x i32> %{{.*}},<16 x i32> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 16, i32 17, i32 18, i32 19, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: select<16 x i1> %{{.*}},<16 x i32> %{{.*}},<16 x i32> %{{.*}}
 return|return
 name|_mm512_maskz_inserti32x4
 argument_list|(
@@ -26783,7 +28073,7 @@ name|__U
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask3_fmsub_ss
-comment|// CHECK: @llvm.x86.avx512.mask3.vfmadd.ss
+comment|// CHECK: @llvm.x86.avx512.mask3.vfmsub.ss
 return|return
 name|_mm_mask3_fmsub_ss
 argument_list|(
@@ -26817,7 +28107,7 @@ name|__U
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask3_fmsub_round_ss
-comment|// CHECK: @llvm.x86.avx512.mask3.vfmadd.ss
+comment|// CHECK: @llvm.x86.avx512.mask3.vfmsub.ss
 return|return
 name|_mm_mask3_fmsub_round_ss
 argument_list|(
@@ -27203,7 +28493,7 @@ name|__U
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask3_fnmsub_ss
-comment|// CHECK: @llvm.x86.avx512.mask3.vfmadd.ss
+comment|// CHECK: @llvm.x86.avx512.mask3.vfnmsub.ss
 return|return
 name|_mm_mask3_fnmsub_ss
 argument_list|(
@@ -27237,7 +28527,7 @@ name|__U
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask3_fnmsub_round_ss
-comment|// CHECK: @llvm.x86.avx512.mask3.vfmadd.ss
+comment|// CHECK: @llvm.x86.avx512.mask3.vfnmsub.ss
 return|return
 name|_mm_mask3_fnmsub_round_ss
 argument_list|(
@@ -27623,7 +28913,7 @@ name|__U
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask3_fmsub_sd
-comment|// CHECK: @llvm.x86.avx512.mask3.vfmadd.sd
+comment|// CHECK: @llvm.x86.avx512.mask3.vfmsub.sd
 return|return
 name|_mm_mask3_fmsub_sd
 argument_list|(
@@ -27657,7 +28947,7 @@ name|__U
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask3_fmsub_round_sd
-comment|// CHECK: @llvm.x86.avx512.mask3.vfmadd.sd
+comment|// CHECK: @llvm.x86.avx512.mask3.vfmsub.sd
 return|return
 name|_mm_mask3_fmsub_round_sd
 argument_list|(
@@ -28043,7 +29333,7 @@ name|__U
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask3_fnmsub_sd
-comment|// CHECK: @llvm.x86.avx512.mask3.vfmadd.sd
+comment|// CHECK: @llvm.x86.avx512.mask3.vfnmsub.sd
 return|return
 name|_mm_mask3_fnmsub_sd
 argument_list|(
@@ -28077,7 +29367,7 @@ name|__U
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_mask3_fnmsub_round_sd
-comment|// CHECK: @llvm.x86.avx512.mask3.vfmadd.sd
+comment|// CHECK: @llvm.x86.avx512.mask3.vfnmsub.sd
 return|return
 name|_mm_mask3_fnmsub_round_sd
 argument_list|(
@@ -30046,6 +31336,26 @@ end_function
 
 begin_function
 name|__m512d
+name|test_mm512_cvtpslo_pd
+parameter_list|(
+name|__m512
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cvtpslo_pd
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: @llvm.x86.avx512.mask.cvtps2pd.512
+return|return
+name|_mm512_cvtpslo_pd
+argument_list|(
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
 name|test_mm512_mask_cvtps_pd
 parameter_list|(
 name|__m512d
@@ -30062,6 +31372,36 @@ comment|// CHECK-LABEL: @test_mm512_mask_cvtps_pd
 comment|// CHECK: @llvm.x86.avx512.mask.cvtps2pd.512
 return|return
 name|_mm512_mask_cvtps_pd
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
+name|test_mm512_mask_cvtpslo_pd
+parameter_list|(
+name|__m512d
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m512
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cvtpslo_pd
+comment|// CHECK: shufflevector<16 x float> %{{.*}},<16 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: @llvm.x86.avx512.mask.cvtps2pd.512
+return|return
+name|_mm512_mask_cvtpslo_pd
 argument_list|(
 name|__W
 argument_list|,
@@ -31185,6 +32525,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
 begin_function
 name|__m128d
 name|test_mm_cvt_roundi64_sd
@@ -31239,6 +32585,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|__m128
 name|test_mm_cvt_roundsi32_ss
@@ -31290,6 +32641,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|__m128
@@ -31344,6 +32701,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|__m128d
@@ -31462,6 +32824,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
 begin_function
 name|__m128d
 name|test_mm_cvt_roundu64_sd
@@ -31516,6 +32884,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|__m128
 name|test_mm_cvt_roundu32_ss
@@ -31565,6 +32938,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|__m128
@@ -31619,6 +32998,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|__m512i
@@ -31747,6 +33131,25 @@ end_function
 
 begin_function
 name|__m512d
+name|test_mm512_cvtepi32_pd
+parameter_list|(
+name|__m256i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cvtepi32_pd
+comment|// CHECK: sitofp<8 x i32> %{{.*}} to<8 x double>
+return|return
+name|_mm512_cvtepi32_pd
+argument_list|(
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
 name|test_mm512_mask_cvtepi32_pd
 parameter_list|(
 name|__m512d
@@ -31760,7 +33163,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepi32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtdq2pd.512
+comment|// CHECK: sitofp<8 x i32> %{{.*}} to<8 x double>
+comment|// CHECK: select<8 x i1> {{.*}},<8 x double> {{.*}},<8 x double> {{.*}}
 return|return
 name|_mm512_mask_cvtepi32_pd
 argument_list|(
@@ -31786,10 +33190,62 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepi32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtdq2pd.512
+comment|// CHECK: sitofp<8 x i32> %{{.*}} to<8 x double>
+comment|// CHECK: select<8 x i1> {{.*}},<8 x double> {{.*}},<8 x double> {{.*}}
 return|return
 name|_mm512_maskz_cvtepi32_pd
 argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
+name|test_mm512_cvtepi32lo_pd
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cvtepi32lo_pd
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: sitofp<8 x i32> %{{.*}} to<8 x double>
+return|return
+name|_mm512_cvtepi32lo_pd
+argument_list|(
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
+name|test_mm512_mask_cvtepi32lo_pd
+parameter_list|(
+name|__m512d
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m512i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cvtepi32lo_pd
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: sitofp<8 x i32> %{{.*}} to<8 x double>
+comment|// CHECK: select<8 x i1> {{.*}},<8 x double> {{.*}},<8 x double> {{.*}}
+return|return
+name|_mm512_mask_cvtepi32lo_pd
+argument_list|(
+name|__W
+argument_list|,
 name|__U
 argument_list|,
 name|__A
@@ -31872,6 +33328,25 @@ end_function
 
 begin_function
 name|__m512d
+name|test_mm512_cvtepu32_pd
+parameter_list|(
+name|__m256i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cvtepu32_pd
+comment|// CHECK: uitofp<8 x i32> %{{.*}} to<8 x double>
+return|return
+name|_mm512_cvtepu32_pd
+argument_list|(
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
 name|test_mm512_mask_cvtepu32_pd
 parameter_list|(
 name|__m512d
@@ -31885,7 +33360,8 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_cvtepu32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtudq2pd.512
+comment|// CHECK: uitofp<8 x i32> %{{.*}} to<8 x double>
+comment|// CHECK: select<8 x i1> {{.*}},<8 x double> {{.*}},<8 x double> {{.*}}
 return|return
 name|_mm512_mask_cvtepu32_pd
 argument_list|(
@@ -31911,10 +33387,62 @@ name|__A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_cvtepu32_pd
-comment|// CHECK: @llvm.x86.avx512.mask.cvtudq2pd.512
+comment|// CHECK: uitofp<8 x i32> %{{.*}} to<8 x double>
+comment|// CHECK: select<8 x i1> {{.*}},<8 x double> {{.*}},<8 x double> {{.*}}
 return|return
 name|_mm512_maskz_cvtepu32_pd
 argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
+name|test_mm512_cvtepu32lo_pd
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cvtepu32lo_pd
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: uitofp<8 x i32> %{{.*}} to<8 x double>
+return|return
+name|_mm512_cvtepu32lo_pd
+argument_list|(
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
+name|test_mm512_mask_cvtepu32lo_pd
+parameter_list|(
+name|__m512d
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m512i
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cvtepu32lo_pd
+comment|// CHECK: shufflevector<8 x i64> %{{.*}},<8 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: uitofp<8 x i32> %{{.*}} to<8 x double>
+comment|// CHECK: select<8 x i1> {{.*}},<8 x double> {{.*}},<8 x double> {{.*}}
+return|return
+name|_mm512_mask_cvtepu32lo_pd
+argument_list|(
+name|__W
+argument_list|,
 name|__U
 argument_list|,
 name|__A
@@ -31960,6 +33488,58 @@ comment|// CHECK-LABEL: @test_mm512_mask_cvtpd_ps
 comment|// CHECK: @llvm.x86.avx512.mask.cvtpd2ps.512
 return|return
 name|_mm512_mask_cvtpd_ps
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
+name|test_mm512_cvtpd_pslo
+parameter_list|(
+name|__m512
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_cvtpd_pslo
+comment|// CHECK: @llvm.x86.avx512.mask.cvtpd2ps.512
+comment|// CHECK: zeroinitializer
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+return|return
+name|_mm512_cvtpd_pslo
+argument_list|(
+name|__A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512d
+name|test_mm512_mask_cvtpd_pslo
+parameter_list|(
+name|__m512
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m512d
+name|__A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_mask_cvtpd_pslo
+comment|// CHECK: @llvm.x86.avx512.mask.cvtpd2ps.512
+comment|// CHECK: zeroinitializer
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+return|return
+name|_mm512_mask_cvtpd_pslo
 argument_list|(
 name|__W
 argument_list|,
@@ -33523,6 +35103,31 @@ end_function
 
 begin_function
 name|__m512i
+name|test_mm512_max_epi32
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_max_epi32
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+return|return
+name|_mm512_max_epi32
+argument_list|(
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
 name|test_mm512_mask_max_epi32
 parameter_list|(
 name|__m512i
@@ -33539,7 +35144,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_max_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.d.512
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+comment|// CHECK:       select<16 x i1> {{.*}},<16 x i32> [[RES]],<16 x i32> {{.*}}
 return|return
 name|_mm512_mask_max_epi32
 argument_list|(
@@ -33570,12 +35177,39 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_max_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.d.512
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+comment|// CHECK:       select<16 x i1> {{.*}},<16 x i32> [[RES]],<16 x i32> {{.*}}
 return|return
 name|_mm512_maskz_max_epi32
 argument_list|(
 name|__M
 argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_max_epi64
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_max_epi64
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+return|return
+name|_mm512_max_epi64
+argument_list|(
 name|__A
 argument_list|,
 name|__B
@@ -33602,7 +35236,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_max_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.q.512
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i64> [[RES]],<8 x i64> {{.*}}
 return|return
 name|_mm512_mask_max_epi64
 argument_list|(
@@ -33633,12 +35269,39 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_max_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxs.q.512
+comment|// CHECK:       [[CMP:%.*]] = icmp sgt<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i64> [[RES]],<8 x i64> {{.*}}
 return|return
 name|_mm512_maskz_max_epi64
 argument_list|(
 name|__M
 argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_max_epu64
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_max_epu64
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+return|return
+name|_mm512_max_epu64
+argument_list|(
 name|__A
 argument_list|,
 name|__B
@@ -33665,7 +35328,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_max_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.q.512
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i64> [[RES]],<8 x i64> {{.*}}
 return|return
 name|_mm512_mask_max_epu64
 argument_list|(
@@ -33696,12 +35361,39 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_max_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.q.512
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i64> [[RES]],<8 x i64> {{.*}}
 return|return
 name|_mm512_maskz_max_epu64
 argument_list|(
 name|__M
 argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_max_epu32
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_max_epu32
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+return|return
+name|_mm512_max_epu32
+argument_list|(
 name|__A
 argument_list|,
 name|__B
@@ -33728,7 +35420,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_max_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.d.512
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+comment|// CHECK:       select<16 x i1> {{.*}},<16 x i32> [[RES]],<16 x i32> {{.*}}
 return|return
 name|_mm512_mask_max_epu32
 argument_list|(
@@ -33759,12 +35453,39 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_max_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pmaxu.d.512
+comment|// CHECK:       [[CMP:%.*]] = icmp ugt<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+comment|// CHECK:       select<16 x i1> {{.*}},<16 x i32> [[RES]],<16 x i32> {{.*}}
 return|return
 name|_mm512_maskz_max_epu32
 argument_list|(
 name|__M
 argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_min_epi32
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_min_epi32
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+return|return
+name|_mm512_min_epi32
+argument_list|(
 name|__A
 argument_list|,
 name|__B
@@ -33791,7 +35512,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_min_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.d.512
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+comment|// CHECK:       select<16 x i1> {{.*}},<16 x i32> [[RES]],<16 x i32> {{.*}}
 return|return
 name|_mm512_mask_min_epi32
 argument_list|(
@@ -33822,12 +35545,39 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_min_epi32
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.d.512
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+comment|// CHECK:       select<16 x i1> {{.*}},<16 x i32> [[RES]],<16 x i32> {{.*}}
 return|return
 name|_mm512_maskz_min_epi32
 argument_list|(
 name|__M
 argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_min_epu32
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_min_epu32
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+return|return
+name|_mm512_min_epu32
+argument_list|(
 name|__A
 argument_list|,
 name|__B
@@ -33854,7 +35604,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_min_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.d.512
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+comment|// CHECK:       select<16 x i1> {{.*}},<16 x i32> [[RES]],<16 x i32> {{.*}}
 return|return
 name|_mm512_mask_min_epu32
 argument_list|(
@@ -33885,12 +35637,39 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_min_epu32
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.d.512
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<16 x i32> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<16 x i1> [[CMP]],<16 x i32> [[X]],<16 x i32> [[Y]]
+comment|// CHECK:       select<16 x i1> {{.*}},<16 x i32> [[RES]],<16 x i32> {{.*}}
 return|return
 name|_mm512_maskz_min_epu32
 argument_list|(
 name|__M
 argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_min_epi64
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_min_epi64
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+return|return
+name|_mm512_min_epi64
+argument_list|(
 name|__A
 argument_list|,
 name|__B
@@ -33917,7 +35696,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_min_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.q.512
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i64> [[RES]],<8 x i64> {{.*}}
 return|return
 name|_mm512_mask_min_epi64
 argument_list|(
@@ -33948,12 +35729,39 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_min_epi64
-comment|// CHECK: @llvm.x86.avx512.mask.pmins.q.512
+comment|// CHECK:       [[CMP:%.*]] = icmp slt<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i64> [[RES]],<8 x i64> {{.*}}
 return|return
 name|_mm512_maskz_min_epi64
 argument_list|(
 name|__M
 argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m512i
+name|test_mm512_min_epu64
+parameter_list|(
+name|__m512i
+name|__A
+parameter_list|,
+name|__m512i
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm512_min_epu64
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+return|return
+name|_mm512_min_epu64
+argument_list|(
 name|__A
 argument_list|,
 name|__B
@@ -33980,7 +35788,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_mask_min_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.q.512
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i64> [[RES]],<8 x i64> {{.*}}
 return|return
 name|_mm512_mask_min_epu64
 argument_list|(
@@ -34011,7 +35821,9 @@ name|__B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_maskz_min_epu64
-comment|// CHECK: @llvm.x86.avx512.mask.pminu.q.512
+comment|// CHECK:       [[CMP:%.*]] = icmp ult<8 x i64> [[X:%.*]], [[Y:%.*]]
+comment|// CHECK-NEXT:  [[RES:%.*]] = select<8 x i1> [[CMP]],<8 x i64> [[X]],<8 x i64> [[Y]]
+comment|// CHECK:       select<8 x i1> {{.*}},<8 x i64> [[RES]],<8 x i64> {{.*}}
 return|return
 name|_mm512_maskz_min_epu64
 argument_list|(
@@ -34288,6 +36100,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
 begin_function
 name|__m512i
 name|test_mm512_mask_set1_epi64
@@ -34317,6 +36135,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|__m512i
@@ -34953,6 +36776,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
 begin_function
 name|long
 name|long
@@ -34972,6 +36801,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|__m128d
@@ -34997,6 +36831,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|__m128d
@@ -35024,6 +36864,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|__m128
 name|test_mm_cvti32_ss
@@ -35048,6 +36893,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|__m128
@@ -35075,6 +36926,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|test_mm_cvtsd_i32
@@ -35093,6 +36949,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
 
 begin_function
 name|long
@@ -35113,6 +36975,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|__m128d
@@ -35306,6 +37173,395 @@ comment|// CHECK: zeroinitializer
 return|return
 name|_mm512_setzero_pd
 argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|__mmask16
+name|test_mm512_int2mask
+parameter_list|(
+name|int
+name|__a
+parameter_list|)
+block|{
+comment|// O2-LABEL: test_mm512_int2mask
+comment|// O2: trunc i32 %__a to i16
+return|return
+name|_mm512_int2mask
+argument_list|(
+name|__a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm512_mask2int
+parameter_list|(
+name|__mmask16
+name|__a
+parameter_list|)
+block|{
+comment|// O2-LABEL: test_mm512_mask2int
+comment|// O2: zext i16 %__a to i32
+return|return
+name|_mm512_mask2int
+argument_list|(
+name|__a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_mask_move_ss
+parameter_list|(
+name|__m128
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128
+name|__A
+parameter_list|,
+name|__m128
+name|__B
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_mask_move_ss
+comment|// O2: %[[M:.*]] = and i8 %__U, 1
+comment|// O2: %[[M2:.*]] = icmp ne i8 %[[M]], 0
+comment|// O2: %[[ELM1:.*]] = extractelement<4 x float> %__B, i32 0
+comment|// O2: %[[ELM2:.*]] = extractelement<4 x float> %__W, i32 0
+comment|// O2: %[[SEL:.*]] = select i1 %[[M2]], float %[[ELM1]], float %[[ELM2]]
+comment|// O2: %[[RES:.*]] = insertelement<4 x float> %__A, float %[[SEL]], i32 0
+comment|// O2: ret<4 x float> %[[RES]]
+return|return
+name|_mm_mask_move_ss
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_maskz_move_ss
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128
+name|__A
+parameter_list|,
+name|__m128
+name|__B
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_maskz_move_ss
+comment|// O2: %[[M:.*]] = and i8 %__U, 1
+comment|// O2: %[[M2:.*]] = icmp ne i8 %[[M]], 0
+comment|// O2: %[[ELM1:.*]] = extractelement<4 x float> %__B, i32 0
+comment|// O2: %[[SEL:.*]] = select i1 %[[M2]], float %[[ELM1]], float 0.0
+comment|// O2: %[[RES:.*]] = insertelement<4 x float> %__A, float %[[SEL]], i32 0
+comment|// O2: ret<4 x float> %[[RES]]
+return|return
+name|_mm_maskz_move_ss
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128d
+name|test_mm_mask_move_sd
+parameter_list|(
+name|__m128d
+name|__W
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128d
+name|__A
+parameter_list|,
+name|__m128d
+name|__B
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_mask_move_sd
+comment|// O2: %[[M:.*]] = and i8 %__U, 1
+comment|// O2: %[[M2:.*]] = icmp ne i8 %[[M]], 0
+comment|// O2: %[[ELM1:.*]] = extractelement<2 x double> %__B, i32 0
+comment|// O2: %[[ELM2:.*]] = extractelement<2 x double> %__W, i32 0
+comment|// O2: %[[SEL:.*]] = select i1 %[[M2]], double %[[ELM1]], double %[[ELM2]]
+comment|// O2: %[[RES:.*]] = insertelement<2 x double> %__A, double %[[SEL]], i32 0
+comment|// O2: ret<2 x double> %[[RES]]
+return|return
+name|_mm_mask_move_sd
+argument_list|(
+name|__W
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128d
+name|test_mm_maskz_move_sd
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128d
+name|__A
+parameter_list|,
+name|__m128d
+name|__B
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_maskz_move_sd
+comment|// O2: %[[M:.*]] = and i8 %__U, 1
+comment|// O2: %[[M2:.*]] = icmp ne i8 %[[M]], 0
+comment|// O2: %[[ELM1:.*]] = extractelement<2 x double> %__B, i32 0
+comment|// O2: %[[SEL:.*]] = select i1 %[[M2]], double %[[ELM1]], double 0.0
+comment|// O2: %[[RES:.*]] = insertelement<2 x double> %__A, double %[[SEL]], i32 0
+comment|// O2: ret<2 x double> %[[RES]]
+return|return
+name|_mm_maskz_move_sd
+argument_list|(
+name|__U
+argument_list|,
+name|__A
+argument_list|,
+name|__B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_mask_store_ss
+parameter_list|(
+name|float
+modifier|*
+name|__P
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128
+name|__A
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_mask_store_ss
+comment|// O2: %[[CAST:.*]] = bitcast float* %__P to<16 x float>*
+comment|// O2: %[[SHUFFLE:.*]] = shufflevector<4 x float> %__A,<4 x float> undef,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+comment|// O2: %[[MASK1:.*]] = and i8 %__U, 1
+comment|// O2: %[[MASK2:.*]] = zext i8 %[[MASK1]] to i16
+comment|// O2: %[[MASK3:.*]] = bitcast i16 %[[MASK2]] to<16 x i1>
+comment|// O2: tail call void @llvm.masked.store.v16f32.p0v16f32(<16 x float> %[[SHUFFLE]],<16 x float>* %[[CAST]], i32 16,<16 x i1> %[[MASK3]])
+name|_mm_mask_store_ss
+argument_list|(
+name|__P
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_mask_store_sd
+parameter_list|(
+name|double
+modifier|*
+name|__P
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+name|__m128d
+name|__A
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_mask_store_sd
+comment|// O2: %[[CAST:.*]] = bitcast double* %__P to<8 x double>*
+comment|// O2: %[[SHUFFLE:.*]] = shufflevector<2 x double> %__A,<2 x double> undef,<8 x i32><i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+comment|// O2: %[[MASK1:.*]] = and i8 %__U, 1
+comment|// O2: %[[MASK2:.*]] = bitcast i8 %[[MASK1]] to<8 x i1>
+comment|// O2: tail call void @llvm.masked.store.v8f64.p0v8f64(<8 x double> %[[SHUFFLE]],<8 x double>* %[[CAST]], i32 16,<8 x i1> %[[MASK2]])
+name|_mm_mask_store_sd
+argument_list|(
+name|__P
+argument_list|,
+name|__U
+argument_list|,
+name|__A
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_mask_load_ss
+parameter_list|(
+name|__m128
+name|__A
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+specifier|const
+name|float
+modifier|*
+name|__W
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_mask_load_ss
+comment|// O2: %[[SHUF:.*]] = shufflevector<4 x float> %__A,<4 x float><float 0.000000e+00, float undef, float undef, float undef>,<4 x i32><i32 0, i32 4, i32 4, i32 4>
+comment|// O2: %[[PTR:.*]] = bitcast float* %__W to<16 x float>*
+comment|// O2: %[[SHUF2:.*]] = shufflevector<4 x float> %[[SHUF]],<4 x float> undef,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+comment|// O2: %[[AND:.*]] = and i8 %__U, 1
+comment|// O2: %[[MASK:.*]] = zext i8 %[[AND]] to i16
+comment|// O2: %[[MASK2:.*]] = bitcast i16 %[[MASK]] to<16 x i1>
+comment|// O2: %[[RES:.*]] = tail call<16 x float> @llvm.masked.load.v16f32.p0v16f32(<16 x float>* %[[PTR]], i32 16,<16 x i1> %[[MASK2]],<16 x float> %[[SHUF2]])
+comment|// O2: shufflevector<16 x float> %[[RES]],<16 x float> undef,<4 x i32><i32 0, i32 1, i32 2, i32 3>
+return|return
+name|_mm_mask_load_ss
+argument_list|(
+name|__A
+argument_list|,
+name|__U
+argument_list|,
+name|__W
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_maskz_load_ss
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+specifier|const
+name|float
+modifier|*
+name|__W
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_maskz_load_ss
+comment|// O2: %[[PTR:.*]] = bitcast float* %__W to<16 x float>*
+comment|// O2: %[[AND:.*]] = and i8 %__U, 1
+comment|// O2: %[[MASK:.*]] = zext i8 %[[AND]] to i16
+comment|// O2: %[[MASK2:.*]] = bitcast i16 %[[MASK]] to<16 x i1>
+comment|// O2: %[[RES:.*]] = tail call<16 x float> @llvm.masked.load.v16f32.p0v16f32(<16 x float>* %[[PTR]], i32 16,<16 x i1> %[[MASK2]],<16 x float> zeroinitializer)
+comment|// O2: shufflevector<16 x float> %[[RES]],<16 x float> undef,<4 x i32><i32 0, i32 1, i32 2, i32 3>
+return|return
+name|_mm_maskz_load_ss
+argument_list|(
+name|__U
+argument_list|,
+name|__W
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128d
+name|test_mm_mask_load_sd
+parameter_list|(
+name|__m128d
+name|__A
+parameter_list|,
+name|__mmask8
+name|__U
+parameter_list|,
+specifier|const
+name|double
+modifier|*
+name|__W
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_mask_load_sd
+comment|// O2: %[[SHUF:.*]] = insertelement<2 x double> %__A, double 0.000000e+00, i32 1
+comment|// O2: %[[PTR:.*]] = bitcast double* %__W to<8 x double>*
+comment|// O2: %[[SHUF2:.*]] = shufflevector<2 x double> %[[SHUF]],<2 x double> undef,<8 x i32><i32 0, i32 1, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef, i32 undef>
+comment|// O2: %[[AND:.*]] = and i8 %__U, 1
+comment|// O2: %[[MASK:.*]] = bitcast i8 %[[AND]] to<8 x i1>
+comment|// O2: %[[RES:.*]] = tail call<8 x double> @llvm.masked.load.v8f64.p0v8f64(<8 x double>* %[[PTR]], i32 16,<8 x i1> %[[MASK]],<8 x double> %[[SHUF2]])
+comment|// O2: shufflevector<8 x double> %[[RES]],<8 x double> undef,<2 x i32><i32 0, i32 1>
+return|return
+name|_mm_mask_load_sd
+argument_list|(
+name|__A
+argument_list|,
+name|__U
+argument_list|,
+name|__W
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128d
+name|test_mm_maskz_load_sd
+parameter_list|(
+name|__mmask8
+name|__U
+parameter_list|,
+specifier|const
+name|double
+modifier|*
+name|__W
+parameter_list|)
+block|{
+comment|// O2-LABEL: @test_mm_maskz_load_sd
+comment|// O2: %[[PTR:.*]] = bitcast double* %__W to<8 x double>*
+comment|// O2: %[[AND:.*]] = and i8 %__U, 1
+comment|// O2: %[[MASK:.*]] = bitcast i8 %[[AND]] to<8 x i1>
+comment|// O2: %[[RES:.*]] = tail call<8 x double> @llvm.masked.load.v8f64.p0v8f64(<8 x double>* %[[PTR]], i32 16,<8 x i1> %[[MASK]],<8 x double> zeroinitializer)
+comment|// O2: shufflevector<8 x double> %[[RES]],<8 x double> undef,<2 x i32><i32 0, i32 1>
+return|return
+name|_mm_maskz_load_sd
+argument_list|(
+name|__U
+argument_list|,
+name|__W
+argument_list|)
 return|;
 block|}
 end_function

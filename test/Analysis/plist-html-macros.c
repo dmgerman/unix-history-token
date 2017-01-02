@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: shell
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -verify %s
 end_comment
 
@@ -24,11 +20,11 @@ comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-output=plis
 end_comment
 
 begin_comment
-comment|// RUN: ls %t.dir | grep \\.html | count 1
+comment|// RUN: ls %t.dir | grep '\.html' | count 1
 end_comment
 
 begin_comment
-comment|// RUN: grep \\.html %t.dir/index.plist | count 1
+comment|// RUN: grep '\.html' %t.dir/index.plist | count 1
 end_comment
 
 begin_comment

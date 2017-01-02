@@ -8,6 +8,10 @@ comment|// RUN: %clang_cc1 -emit-llvm -disable-red-zone -femit-coverage-data -co
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm -disable-red-zone -femit-coverage-data -coverage-notes-file=aaa.gcno -coverage-data-file=bbb.gcda -dwarf-column-info -debug-info-kind=limited -dwarf-version=4 %s -o - | FileCheck %s --check-prefix GCOV_FILE_INFO
+end_comment
+
+begin_comment
 comment|//<rdar://problem/12843084>
 end_comment
 
@@ -88,6 +92,14 @@ end_comment
 
 begin_comment
 comment|// CHECK: attributes [[NRZ]] = { {{.*}}noredzone{{.*}} }
+end_comment
+
+begin_comment
+comment|// GCOV_FILE_INFO: !llvm.gcov = !{![[GCOV:[0-9]+]]}
+end_comment
+
+begin_comment
+comment|// GCOV_FILE_INFO: ![[GCOV]] = !{!"aaa.gcno", !"bbb.gcda", !{{[0-9]+}}}
 end_comment
 
 end_unit

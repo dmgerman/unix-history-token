@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx512f -target-feature +avx512er -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +avx512f -target-feature +avx512er -emit-llvm -o - -Wall -Werror | FileCheck %s
 end_comment
-
-begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#
@@ -34,7 +24,7 @@ name|_mm512_rsqrt28_round_pd
 argument_list|(
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -65,7 +55,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -91,7 +81,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -184,7 +174,7 @@ name|_mm512_rsqrt28_round_ps
 argument_list|(
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -215,7 +205,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -241,7 +231,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -339,7 +329,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -375,7 +365,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -406,7 +396,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -519,7 +509,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -555,7 +545,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -586,7 +576,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -607,7 +597,7 @@ name|_mm512_rcp28_round_pd
 argument_list|(
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -638,7 +628,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -664,7 +654,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -757,7 +747,7 @@ name|_mm512_rcp28_round_ps
 argument_list|(
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -788,7 +778,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -814,7 +804,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -912,7 +902,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -948,7 +938,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -979,7 +969,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -1092,7 +1082,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -1128,7 +1118,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -1159,7 +1149,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -1267,7 +1257,7 @@ name|_mm512_exp2a23_round_pd
 argument_list|(
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -1298,7 +1288,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -1324,7 +1314,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -1417,7 +1407,7 @@ name|_mm512_exp2a23_round_ps
 argument_list|(
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -1448,7 +1438,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}
@@ -1474,7 +1464,7 @@ name|m
 argument_list|,
 name|a
 argument_list|,
-name|_MM_FROUND_TO_NEAREST_INT
+name|_MM_FROUND_CUR_DIRECTION
 argument_list|)
 return|;
 block|}

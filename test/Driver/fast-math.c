@@ -931,5 +931,21 @@ begin_comment
 comment|// CHECK-NO-UNSAFE-MATH: "-o"
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -ftrapping-math -fno-trapping-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-TRAPPING-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-TRAPPING-MATH: "-fno-trapping-math"
+end_comment
+
 end_unit
 

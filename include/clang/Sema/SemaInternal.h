@@ -1550,7 +1550,7 @@ name|TypoExprState
 argument_list|(
 argument|TypoExprState&&other
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 operator|*
 name|this
@@ -1580,7 +1580,7 @@ name|TypoExprState
 operator|&&
 name|other
 operator|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 name|Consumer
 operator|=

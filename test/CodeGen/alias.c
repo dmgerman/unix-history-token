@@ -507,11 +507,11 @@ comment|// CHECKCC: define internal arm_aapcs_vfpcc i32 @inner_weak(i32 %a) [[NU
 end_comment
 
 begin_comment
-comment|// CHECKBASIC: attributes [[NUW]] = { nounwind{{.*}} }
+comment|// CHECKBASIC: attributes [[NUW]] = { noinline nounwind{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECKCC: attributes [[NUW]] = { nounwind{{.*}} }
+comment|// CHECKCC: attributes [[NUW]] = { noinline nounwind{{.*}} }
 end_comment
 
 begin_function

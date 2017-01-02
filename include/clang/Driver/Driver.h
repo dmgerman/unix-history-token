@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Driver/Action.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Phases.h"
 end_include
 
@@ -88,22 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Path.h"
-end_include
-
-begin_comment
-comment|// FIXME: Kill when CompilationInfo lands.
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<list>
 end_include
 
@@ -116,18 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<memory>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<set>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -135,6 +113,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Triple
+decl_stmt|;
 name|namespace
 name|opt
 block|{
@@ -171,9 +152,6 @@ block|}
 name|namespace
 name|driver
 block|{
-name|class
-name|Action
-decl_stmt|;
 name|class
 name|Command
 decl_stmt|;
@@ -274,6 +252,28 @@ name|LTOMode
 decl_stmt|;
 name|public
 label|:
+enum|enum
+name|OpenMPRuntimeKind
+block|{
+comment|/// An unknown OpenMP runtime. We can't generate effective OpenMP code
+comment|/// without knowing what runtime to target.
+name|OMPRT_Unknown
+block|,
+comment|/// The LLVM OpenMP runtime. When completed and integrated, this will become
+comment|/// the default for Clang.
+name|OMPRT_OMP
+block|,
+comment|/// The GNU OpenMP runtime. Clang doesn't support generating OpenMP code for
+comment|/// this runtime but can swallow the pragmas, and find and link against the
+comment|/// runtime library itself.
+name|OMPRT_GOMP
+block|,
+comment|/// The legacy name for the LLVM OpenMP runtime from when it was the Intel
+comment|/// OpenMP runtime. We support this mode for users with existing
+comment|/// dependencies on this runtime library name.
+name|OMPRT_IOMP5
+block|}
+enum|;
 comment|// Diag - Forwarding function for diagnostics.
 name|DiagnosticBuilder
 name|Diag
@@ -360,12 +360,6 @@ comment|/// If the standard library is used
 name|bool
 name|UseStdLib
 decl_stmt|;
-comment|/// Default target triple.
-name|std
-operator|::
-name|string
-name|DefaultTargetTriple
-expr_stmt|;
 comment|/// Driver title to use with help.
 name|std
 operator|::
@@ -451,6 +445,18 @@ operator|==
 name|CPPMode
 return|;
 block|}
+comment|/// Whether the driver should follow gcc like behavior.
+name|bool
+name|CCCIsCC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Mode
+operator|==
+name|GCCMode
+return|;
+block|}
 comment|/// Whether the driver should follow cl.exe like behavior.
 name|bool
 name|IsCLMode
@@ -499,6 +505,12 @@ literal|1
 decl_stmt|;
 name|private
 label|:
+comment|/// Default target triple.
+name|std
+operator|::
+name|string
+name|DefaultTargetTriple
+expr_stmt|;
 comment|/// Name to use when invoking gcc/g++.
 name|std
 operator|::
@@ -608,9 +620,7 @@ function_decl|;
 name|void
 name|generatePrefixedToolNames
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Tool
 argument_list|,
 specifier|const
@@ -628,6 +638,31 @@ operator|&
 name|Names
 argument_list|)
 decl|const
+decl_stmt|;
+comment|/// \brief Find the appropriate .crash diagonostic file for the child crash
+comment|/// under this driver and copy it out to a temporary destination with the
+comment|/// other reproducer related files (.sh, .cache, etc). If not found, suggest a
+comment|/// directory for the user to look at.
+comment|///
+comment|/// \param ReproCrashFilename The file path to copy the .crash to.
+comment|/// \param CrashDiagDir       The suggested directory for the user to look at
+comment|///                           in case the search or copy fails.
+comment|///
+comment|/// \returns If the .crash is found and successfully copied return true,
+comment|/// otherwise false and return the suggested directory in \p CrashDiagDir.
+name|bool
+name|getCrashDiagnosticFile
+argument_list|(
+name|StringRef
+name|ReproCrashFilename
+argument_list|,
+name|SmallString
+operator|<
+literal|128
+operator|>
+operator|&
+name|CrashDiagDir
+argument_list|)
 decl_stmt|;
 name|public
 label|:
@@ -839,8 +874,26 @@ specifier|const
 block|{
 return|return
 name|BitcodeEmbed
+operator|!=
+name|EmbedNone
+return|;
+block|}
+name|bool
+name|embedBitcodeInObject
+argument_list|()
+specifier|const
+block|{
+comment|// LTO has no object file output so ignore embed bitcode option in LTO.
+return|return
+operator|(
+name|BitcodeEmbed
 operator|==
 name|EmbedBitcode
+operator|)
+operator|&&
+operator|!
+name|isUsingLTO
+argument_list|()
 return|;
 block|}
 name|bool
@@ -849,11 +902,32 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|BitcodeEmbed
 operator|==
 name|EmbedMarker
+operator|)
+operator|&&
+operator|!
+name|isUsingLTO
+argument_list|()
 return|;
 block|}
+comment|/// Compute the desired OpenMP runtime from the flags provided.
+name|OpenMPRuntimeKind
+name|getOpenMPRuntime
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// @name Primary Functionality
 comment|/// @{
@@ -898,6 +972,9 @@ comment|/// ParseDriverMode - Look for and handle the driver mode option in Args
 name|void
 name|ParseDriverMode
 argument_list|(
+name|StringRef
+name|ProgramName
+argument_list|,
 name|ArrayRef
 operator|<
 specifier|const
@@ -1120,7 +1197,7 @@ operator|::
 name|string
 name|GetFilePath
 argument_list|(
-argument|const char *Name
+argument|StringRef Name
 argument_list|,
 argument|const ToolChain&TC
 argument_list|)
@@ -1137,7 +1214,7 @@ operator|::
 name|string
 name|GetProgramPath
 argument_list|(
-argument|const char *Name
+argument|StringRef Name
 argument_list|,
 argument|const ToolChain&TC
 argument_list|)
@@ -1190,7 +1267,7 @@ decl|const
 decl_stmt|;
 comment|/// BuildJobsForAction - Construct the jobs to perform for the action \p A and
 comment|/// return an InputInfo for the result of running \p A.  Will only construct
-comment|/// jobs for a given (Action, ToolChain, BoundArch) tuple once.
+comment|/// jobs for a given (Action, ToolChain, BoundArch, DeviceKind) tuple once.
 name|InputInfo
 name|BuildJobsForAction
 argument_list|(
@@ -1208,9 +1285,7 @@ name|ToolChain
 operator|*
 name|TC
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|BoundArch
 argument_list|,
 name|bool
@@ -1246,8 +1321,10 @@ operator|>
 operator|&
 name|CachedResults
 argument_list|,
-name|bool
-name|BuildForOffloadDevice
+name|Action
+operator|::
+name|OffloadKind
+name|TargetDeviceOffloadKind
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1290,9 +1367,7 @@ name|char
 operator|*
 name|BaseInput
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|BoundArch
 argument_list|,
 name|bool
@@ -1317,7 +1392,7 @@ name|GetTemporaryPath
 argument_list|(
 argument|StringRef Prefix
 argument_list|,
-argument|const char *Suffix
+argument|StringRef Suffix
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1369,6 +1444,15 @@ return|;
 block|}
 name|private
 label|:
+comment|/// Set the driver mode (cl, gcc, etc) from an option string of the form
+comment|/// --driver-mode=<mode>.
+name|void
+name|setDriverModeFromOption
+parameter_list|(
+name|StringRef
+name|Opt
+parameter_list|)
+function_decl|;
 comment|/// Parse the \p Args list for LTO options and record the type of LTO
 comment|/// compilation based on which -f(no-)?lto(=.*)? option occurs last.
 name|void
@@ -1446,9 +1530,7 @@ name|ToolChain
 operator|*
 name|TC
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|BoundArch
 argument_list|,
 name|bool
@@ -1484,8 +1566,10 @@ operator|>
 operator|&
 name|CachedResults
 argument_list|,
-name|bool
-name|BuildForOffloadDevice
+name|Action
+operator|::
+name|OffloadKind
+name|TargetDeviceOffloadKind
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1502,9 +1586,7 @@ specifier|static
 name|bool
 name|GetReleaseVersion
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Str
 parameter_list|,
 name|unsigned
@@ -1534,9 +1616,7 @@ specifier|static
 name|bool
 name|GetReleaseVersion
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Str
 argument_list|,
 name|MutableArrayRef

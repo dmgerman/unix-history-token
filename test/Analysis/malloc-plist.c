@@ -6669,6 +6669,258 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>55</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>9</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>55</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>9</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>55</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>9</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>55</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>9</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>55</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>10</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>1</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Assuming the condition is true</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Assuming the condition is true</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>55</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>9</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>55</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>9</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>line</key><integer>56</integer>
 end_comment
 

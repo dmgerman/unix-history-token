@@ -264,6 +264,18 @@ comment|// RUN: %clang_cc1 -std=c11 -E -dM< /dev/null | FileCheck -match-full-li
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -std=c1x -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix C11 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -std=iso9899:2011 -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix C11 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -std=iso9899:201x -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix C11 %s
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -828,6 +840,30 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -Og -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix Og %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Og-NOT:#define __OPTIMIZE_SIZE__
+end_comment
+
+begin_comment
+comment|// Og	:#define __OPTIMIZE__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -Os -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix Os %s
 end_comment
 
@@ -989,6 +1025,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm64-none-none< /dev/null | FileCheck -match-full-lines -check-prefix AARCH64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=arm64-none-none< /dev/null | FileCheck -match-full-lines -check-prefix AARCH64 -check-prefix AARCH64-CXX %s
 end_comment
 
 begin_comment
@@ -1573,6 +1613,10 @@ end_comment
 
 begin_comment
 comment|// AARCH64:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 16UL
 end_comment
 
 begin_comment
@@ -4820,6 +4864,10 @@ comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-none-none< /dev/nul
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=arm-none-none< /dev/null | FileCheck -match-full-lines -check-prefix ARM -check-prefix ARM-CXX %s
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -5397,6 +5445,10 @@ end_comment
 
 begin_comment
 comment|// ARM:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 8U
 end_comment
 
 begin_comment
@@ -9624,6 +9676,10 @@ comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=i386-pc-linux-gnu -targ
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=i386-pc-linux-gnu -target-cpu pentium4< /dev/null | FileCheck -match-full-lines -check-prefix I386-LINUX -check-prefix I386-LINUX-CXX %s
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -10188,6 +10244,10 @@ comment|// I386-LINUX:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// I386-LINUX-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 8U
+end_comment
+
+begin_comment
 comment|// I386-LINUX:#define __UINT16_C_SUFFIX__
 end_comment
 
@@ -10369,6 +10429,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=i386-netbsd< /dev/null | FileCheck -match-full-lines -check-prefix I386-NETBSD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=i386-netbsd< /dev/null | FileCheck -match-full-lines -check-prefix I386-NETBSD -check-prefix I386-NETBSD-CXX %s
 end_comment
 
 begin_comment
@@ -10936,6 +11000,10 @@ comment|// I386-NETBSD:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// I386-NETBSD-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 4U
+end_comment
+
+begin_comment
 comment|// I386-NETBSD:#define __UINT16_C_SUFFIX__
 end_comment
 
@@ -11164,7 +11232,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips-none-none< /dev/null | FileCheck -match-full-lines -check-prefix MIPS32BE %s
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips-none-none< /dev/null | FileCheck -match-full-lines -check-prefix MIPS32BE -check-prefix MIPS32BE-C %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=mips-none-none< /dev/null | FileCheck -match-full-lines -check-prefix MIPS32BE -check-prefix MIPS32BE-CXX %s
 end_comment
 
 begin_comment
@@ -11784,11 +11856,15 @@ comment|// MIPS32BE:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// MIPS32BE-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 8U
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define __STDC_HOSTED__ 0
 end_comment
 
 begin_comment
-comment|// MIPS32BE:#define __STDC_VERSION__ 201112L
+comment|// MIPS32BE-C:#define __STDC_VERSION__ 201112L
 end_comment
 
 begin_comment
@@ -12832,7 +12908,19 @@ comment|// RUN:            -triple=mips64-none-none -target-abi n32< /dev/null \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck -match-full-lines -check-prefix MIPSN32BE %s
+comment|// RUN:   | FileCheck -match-full-lines -check-prefix MIPSN32BE -check-prefix MIPSN32BE-C %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding \
+end_comment
+
+begin_comment
+comment|// RUN:            -triple=mips64-none-none -target-abi n32< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines -check-prefix MIPSN32BE -check-prefix MIPSN32BE-CXX %s
 end_comment
 
 begin_comment
@@ -13108,7 +13196,7 @@ comment|// MIPSN32BE: #define __GNUC_PATCHLEVEL__ 1
 end_comment
 
 begin_comment
-comment|// MIPSN32BE: #define __GNUC_STDC_INLINE__ 1
+comment|// MIPSN32BE-C: #define __GNUC_STDC_INLINE__ 1
 end_comment
 
 begin_comment
@@ -13588,6 +13676,10 @@ comment|// MIPSN32BE: #define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// MIPSN32BE-CXX: #define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 16U
+end_comment
+
+begin_comment
 comment|// MIPSN32BE: #define __STDC_HOSTED__ 0
 end_comment
 
@@ -13600,7 +13692,7 @@ comment|// MIPSN32BE: #define __STDC_UTF_32__ 1
 end_comment
 
 begin_comment
-comment|// MIPSN32BE: #define __STDC_VERSION__ 201112L
+comment|// MIPSN32BE-C: #define __STDC_VERSION__ 201112L
 end_comment
 
 begin_comment
@@ -15276,6 +15368,10 @@ comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips64-none-none< /dev/
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=mips64-none-none< /dev/null | FileCheck -match-full-lines -check-prefix MIPS64BE -check-prefix MIPS64BE-CXX %s
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -15893,6 +15989,10 @@ end_comment
 
 begin_comment
 comment|// MIPS64BE:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPS64BE-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 16UL
 end_comment
 
 begin_comment
@@ -17848,6 +17948,10 @@ comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=msp430-none-none< /dev/
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=msp430-none-none< /dev/null | FileCheck -match-full-lines -check-prefix MSP430 -check-prefix MSP430-CXX %s
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -18412,6 +18516,10 @@ comment|// MSP430:#define __SIZE_WIDTH__ 16
 end_comment
 
 begin_comment
+comment|// MSP430-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 8U
+end_comment
+
+begin_comment
 comment|// MSP430:#define __UINT16_C_SUFFIX__ U
 end_comment
 
@@ -18585,6 +18693,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=nvptx-none-none< /dev/null | FileCheck -match-full-lines -check-prefix NVPTX32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=nvptx-none-none< /dev/null | FileCheck -match-full-lines -check-prefix NVPTX32 -check-prefix NVPTX32-CXX %s
 end_comment
 
 begin_comment
@@ -19164,6 +19276,10 @@ comment|// NVPTX32:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// NVPTX32-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 8U
+end_comment
+
+begin_comment
 comment|// NVPTX32:#define __UINT16_C_SUFFIX__
 end_comment
 
@@ -19333,6 +19449,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=nvptx64-none-none< /dev/null | FileCheck -match-full-lines -check-prefix NVPTX64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=nvptx64-none-none< /dev/null | FileCheck -match-full-lines -check-prefix NVPTX64 -check-prefix NVPTX64-CXX %s
 end_comment
 
 begin_comment
@@ -19912,6 +20032,10 @@ comment|// NVPTX64:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// NVPTX64-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 8UL
+end_comment
+
+begin_comment
 comment|// NVPTX64:#define __UINT16_C_SUFFIX__
 end_comment
 
@@ -20081,6 +20205,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc-none-none -target-cpu 603e< /dev/null | FileCheck -match-full-lines -check-prefix PPC603E %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=powerpc-none-none -target-cpu 603e< /dev/null | FileCheck -match-full-lines -check-prefix PPC603E-CXX %s
 end_comment
 
 begin_comment
@@ -20680,6 +20808,10 @@ comment|// PPC603E:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// PPC603E-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 16UL
+end_comment
+
+begin_comment
 comment|// PPC603E:#define __UINT16_C_SUFFIX__
 end_comment
 
@@ -20857,6 +20989,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr7 -fno-signed-char< /dev/null | FileCheck -match-full-lines -check-prefix PPC64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr7 -fno-signed-char< /dev/null | FileCheck -match-full-lines -check-prefix PPC64 -check-prefix PPC64-CXX %s
 end_comment
 
 begin_comment
@@ -21477,6 +21613,10 @@ end_comment
 
 begin_comment
 comment|// PPC64:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 16UL
 end_comment
 
 begin_comment
@@ -26500,6 +26640,10 @@ comment|//
 end_comment
 
 begin_comment
+comment|// AMDGPU:#define __ENDIAN_LITTLE__ 1
+end_comment
+
+begin_comment
 comment|// AMDGPU:#define cl_khr_byte_addressable_store 1
 end_comment
 
@@ -26525,6 +26669,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=s390x-none-none -fno-signed-char< /dev/null | FileCheck -match-full-lines -check-prefix S390X %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=s390x-none-none -fno-signed-char< /dev/null | FileCheck -match-full-lines -check-prefix S390X -check-prefix S390X-CXX %s
 end_comment
 
 begin_comment
@@ -27072,6 +27220,10 @@ comment|// S390X:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// S390X-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 8UL
+end_comment
+
+begin_comment
 comment|// S390X:#define __UINT16_C_SUFFIX__
 end_comment
 
@@ -27264,6 +27416,14 @@ comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=sparc-none-openbsd< /de
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=sparc-none-none< /dev/null | FileCheck -match-full-lines -check-prefix SPARC -check-prefix SPARC-DEFAULT -check-prefix SPARC-DEFAULT-CXX %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=sparc-none-openbsd< /dev/null | FileCheck -match-full-lines -check-prefix SPARC -check-prefix SPARC-NETOPENBSD -check-prefix SPARC-NETOPENBSD-CXX %s
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -27409,6 +27569,10 @@ end_comment
 
 begin_comment
 comment|// SPARC:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// SPARC:#define __GCC_ATOMIC_LLONG_LOCK_FREE 1
 end_comment
 
 begin_comment
@@ -27852,6 +28016,14 @@ comment|// SPARC:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// SPARC-DEFAULT-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 8U
+end_comment
+
+begin_comment
+comment|// SPARC-NETOPENBSD-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 8UL
+end_comment
+
+begin_comment
 comment|// SPARC:#define __UINT16_C_SUFFIX__
 end_comment
 
@@ -28045,6 +28217,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=tce-none-none< /dev/null | FileCheck -match-full-lines -check-prefix TCE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=tce-none-none< /dev/null | FileCheck -match-full-lines -check-prefix TCE -check-prefix TCE-CXX %s
 end_comment
 
 begin_comment
@@ -28552,6 +28728,10 @@ comment|// TCE:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// TCE-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 4U
+end_comment
+
+begin_comment
 comment|// TCE:#define __TCE_V1__ 1
 end_comment
 
@@ -28713,6 +28893,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=x86_64-none-none< /dev/null | FileCheck -match-full-lines -check-prefix X86_64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=x86_64-none-none< /dev/null | FileCheck -match-full-lines -check-prefix X86_64 -check-prefix X86_64-CXX %s
 end_comment
 
 begin_comment
@@ -29308,6 +29492,10 @@ comment|// X86_64:#define __SSE__ 1
 end_comment
 
 begin_comment
+comment|// X86_64-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 16UL
+end_comment
+
+begin_comment
 comment|// X86_64:#define __UINT16_C_SUFFIX__
 end_comment
 
@@ -29517,6 +29705,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=x86_64-none-none-gnux32< /dev/null | FileCheck -match-full-lines -check-prefix X32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -E -dM -ffreestanding -triple=x86_64-none-none-gnux32< /dev/null | FileCheck -match-full-lines -check-prefix X32 -check-prefix X32-CXX %s
 end_comment
 
 begin_comment
@@ -30109,6 +30301,10 @@ end_comment
 
 begin_comment
 comment|// X32:#define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// X32-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 16U
 end_comment
 
 begin_comment
@@ -33704,7 +33900,51 @@ comment|// RUN: %clang_cc1 -triple arm-linux-androideabi -E -dM< /dev/null | Fil
 end_comment
 
 begin_comment
+comment|// ANDROID-NOT:#define __ANDROID_API__
+end_comment
+
+begin_comment
 comment|// ANDROID:#define __ANDROID__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -triple i686-linux-android -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix I386-ANDROID-CXX %s
+end_comment
+
+begin_comment
+comment|// I386-ANDROID-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 4U
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -triple x86_64-linux-android -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix X86_64-ANDROID-CXX %s
+end_comment
+
+begin_comment
+comment|// X86_64-ANDROID-CXX:#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 16UL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm-linux-androideabi20 -E -dM< /dev/null | FileCheck -match-full-lines -check-prefix ANDROID20 %s
+end_comment
+
+begin_comment
+comment|// ANDROID20:#define __ANDROID_API__ 20
+end_comment
+
+begin_comment
+comment|// ANDROID20:#define __ANDROID__ 1
 end_comment
 
 begin_comment
@@ -33717,6 +33957,98 @@ end_comment
 
 begin_comment
 comment|// LANAI: #define __lanai__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=amd64-unknown-openbsd6.1< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-unknown-openbsd6.1-gnueabi< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=i386-unknown-openbsd6.1< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=sparc64-unknown-openbsd6.1< /dev/null | FileCheck -match-full-lines -check-prefix OPENBSD %s
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __ELF__ 1
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __OpenBSD__ 1
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __PTRDIFF_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// OPENBSD:#define __WINT_TYPE__ int
 end_comment
 
 begin_comment
@@ -34136,19 +34468,19 @@ comment|// WEBASSEMBLY32-NEXT:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_FMTd__ "ld"
+comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_FMTd__ "d"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_FMTi__ "li"
+comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_FMTi__ "i"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_MAX__ 2147483647L
+comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_TYPE__ long int
+comment|// WEBASSEMBLY32-NEXT:#define __INTPTR_TYPE__ int
 end_comment
 
 begin_comment
@@ -34384,19 +34716,19 @@ comment|// WEBASSEMBLY32-NEXT:#define __PRAGMA_REDEFINE_EXTNAME 1
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_FMTd__ "ld"
+comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_FMTd__ "d"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_FMTi__ "li"
+comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_FMTi__ "i"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_MAX__ 2147483647L
+comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_TYPE__ long int
+comment|// WEBASSEMBLY32-NEXT:#define __PTRDIFF_TYPE__ int
 end_comment
 
 begin_comment
@@ -34476,27 +34808,27 @@ comment|// WEBASSEMBLY32-NEXT:#define __SIZEOF_WINT_T__ 4
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTX__ "lX"
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTX__ "X"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTo__ "lo"
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTo__ "o"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTu__ "lu"
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTu__ "u"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTx__ "lx"
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_FMTx__ "x"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __SIZE_MAX__ 4294967295UL
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_MAX__ 4294967295U
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __SIZE_TYPE__ long unsigned int
+comment|// WEBASSEMBLY32-NEXT:#define __SIZE_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -34688,27 +35020,27 @@ comment|// WEBASSEMBLY32-NEXT:#define __UINTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTX__ "lX"
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTX__ "X"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTo__ "lo"
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTo__ "o"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTu__ "lu"
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTu__ "u"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTx__ "lx"
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_FMTx__ "x"
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_MAX__ 4294967295UL
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_MAX__ 4294967295U
 end_comment
 
 begin_comment
-comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_TYPE__ long unsigned int
+comment|// WEBASSEMBLY32-NEXT:#define __UINTPTR_TYPE__ unsigned int
 end_comment
 
 begin_comment

@@ -186,7 +186,7 @@ block|{
 return|return
 name|__builtin_arm_rsr
 argument_list|(
-literal|"0:1:2:3:4"
+literal|"0:1:15:15:4"
 argument_list|)
 return|;
 block|}
@@ -216,7 +216,7 @@ block|{
 return|return
 name|__builtin_arm_rsr64
 argument_list|(
-literal|"0:1:2:3:4"
+literal|"0:1:15:15:4"
 argument_list|)
 return|;
 block|}
@@ -297,6 +297,51 @@ block|}
 end_function
 
 begin_function
+name|unsigned
+name|rsr_4
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr
+argument_list|(
+literal|"0:1:2:3:8"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|rsr_5
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr
+argument_list|(
+literal|"0:8:1:2:3"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|rsr_6
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr
+argument_list|(
+literal|"0:1:16:16:2"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
 name|void
 modifier|*
 name|rsrp_3
@@ -322,6 +367,54 @@ return|return
 name|__builtin_arm_rsr64
 argument_list|(
 literal|"0:1:2"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|rsr64_4
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr64
+argument_list|(
+literal|"0:1:2:3:8"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|rsr64_5
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr64
+argument_list|(
+literal|"0:8:2:3:4"
+argument_list|)
+return|;
+comment|//expected-error {{invalid special register for builtin}}
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|rsr64_6
+parameter_list|()
+block|{
+return|return
+name|__builtin_arm_rsr64
+argument_list|(
+literal|"0:1:16:16:2"
 argument_list|)
 return|;
 comment|//expected-error {{invalid special register for builtin}}

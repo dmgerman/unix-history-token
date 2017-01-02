@@ -77,6 +77,27 @@ begin_if
 if|#
 directive|if
 operator|!
+name|__has_feature
+argument_list|(
+name|nullability_on_arrays
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|Nullability on array parameters should always be supported
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
 name|__has_extension
 argument_list|(
 name|nullability
@@ -87,6 +108,27 @@ begin_error
 error|#
 directive|error
 error|Nullability should always be supported as an extension
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_extension
+argument_list|(
+name|nullability_on_arrays
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|Nullability on array parameters should always be supported as an extension
 end_error
 
 begin_endif

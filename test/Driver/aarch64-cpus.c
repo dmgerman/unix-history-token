@@ -324,6 +324,62 @@ comment|// M1: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "exynos-m1"
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mtune=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2 %s
+end_comment
+
+begin_comment
+comment|// M2: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "exynos-m2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mtune=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mtune=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mtune=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3 %s
+end_comment
+
+begin_comment
+comment|// M3: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "exynos-m3"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm64 -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M1 %s
 end_comment
 
@@ -341,6 +397,86 @@ end_comment
 
 begin_comment
 comment|// ARM64-M1: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "exynos-m1"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mtune=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M2 %s
+end_comment
+
+begin_comment
+comment|// ARM64-M2: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "exynos-m2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M3 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M3 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mtune=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M3 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-M3 %s
+end_comment
+
+begin_comment
+comment|// ARM64-M3: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "exynos-m3"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=falkor -### -c %s 2>&1 | FileCheck -check-prefix=FALKOR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mcpu=falkor -### -c %s 2>&1 | FileCheck -check-prefix=FALKOR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=falkor -### -c %s 2>&1 | FileCheck -check-prefix=FALKOR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=falkor -### -c %s 2>&1 | FileCheck -check-prefix=FALKOR %s
+end_comment
+
+begin_comment
+comment|// FALKOR: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "falkor"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mcpu=falkor -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-FALKOR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=falkor -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-FALKOR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mtune=falkor -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-FALKOR %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=falkor -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-FALKOR %s
+end_comment
+
+begin_comment
+comment|// ARM64-FALKOR: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "falkor"
 end_comment
 
 begin_comment
@@ -396,19 +532,27 @@ comment|// RUN: %clang -target aarch64_be -mlittle-endian -mcpu=vulcan -### -c %
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+comment|// RUN: %clang -target aarch64 -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-TUNE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-TUNE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64_be -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-TUNE %s
 end_comment
 
 begin_comment
-comment|// VULCAN: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "vulcan"
+comment|// VULCAN: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "vulcan" "-target-feature" "+v8.1a"
+end_comment
+
+begin_comment
+comment|// VULCAN-TUNE: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "vulcan"
+end_comment
+
+begin_comment
+comment|// VULCAN-TUNE-NOT: +v8.1a
 end_comment
 
 begin_comment
@@ -420,15 +564,23 @@ comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=vulcan -### -c %s 2>&
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64 -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN %s
+comment|// RUN: %clang -target arm64 -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN-TUNE %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN %s
+comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN-TUNE %s
 end_comment
 
 begin_comment
-comment|// ARM64-VULCAN: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "vulcan"
+comment|// ARM64-VULCAN: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "vulcan" "-target-feature" "+v8.1a"
+end_comment
+
+begin_comment
+comment|// ARM64-VULCAN-TUNE: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "vulcan"
+end_comment
+
+begin_comment
+comment|// ARM64-VULCAN-TUNE-NOT: +v8.1a
 end_comment
 
 begin_comment
@@ -613,6 +765,62 @@ end_comment
 
 begin_comment
 comment|// M1-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "exynos-m1"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mtune=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mtune=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mtune=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=M2-BE %s
+end_comment
+
+begin_comment
+comment|// M2-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "exynos-m2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mtune=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mtune=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mtune=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=M3-BE %s
+end_comment
+
+begin_comment
+comment|// M3-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "exynos-m3"
 end_comment
 
 begin_comment

@@ -505,6 +505,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|signed
+name|long
+name|long
+name|param_sll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|res_sc
 decl_stmt|;
@@ -606,6 +614,72 @@ comment|// CHECK-LE: bitcast<4 x i32> %{{.*}} to<4 x float>
 comment|// CHECK-LE: store<4 x float> %{{.*}},<4 x float>* @vf
 comment|// CHECK-NOALTIVEC: error: use of undeclared identifier 'vf'
 comment|// CHECK-NOALTIVEC: vf = vec_abs(vf)
+name|vsc
+operator|=
+name|vec_nabs
+argument_list|(
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sub<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.vminsb
+comment|// CHECK-LE: sub<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsb
+name|vs
+operator|=
+name|vec_nabs
+argument_list|(
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sub<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.vminsh
+comment|// CHECK-LE: sub<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsh
+name|vi
+operator|=
+name|vec_nabs
+argument_list|(
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sub<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.vminsw
+comment|// CHECK-LE: sub<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsw
+name|res_vi
+operator|=
+name|vec_neg
+argument_list|(
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sub<4 x i32> zeroinitializer, {{%[0-9]+}}
+comment|// CHECK-LE: sub<4 x i32> zeroinitializer, {{%[0-9]+}}
+comment|// CHECK-NOALTIVEC: error: use of undeclared identifier 'vi'
+comment|// CHECK-NOALTIVEC: vi = vec_neg(vi);
+name|res_vs
+operator|=
+name|vec_neg
+argument_list|(
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sub<8 x i16> zeroinitializer, {{%[0-9]+}}
+comment|// CHECK-LE: sub<8 x i16> zeroinitializer, {{%[0-9]+}}
+comment|// CHECK-NOALTIVEC: error: use of undeclared identifier 'vs'
+comment|// CHECK-NOALTIVEC: res_vs = vec_neg(vs);
+name|res_vsc
+operator|=
+name|vec_neg
+argument_list|(
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sub<16 x i8> zeroinitializer, {{%[0-9]+}}
+comment|// CHECK-LE: sub<16 x i8> zeroinitializer, {{%[0-9]+}}
+comment|// CHECK-NOALTIVEC: error: use of undeclared identifier 'vsc'
+comment|// CHECK-NOALTIVEC: res_vsc = vec_neg(vsc);
 comment|/* vec_abs */
 name|vsc
 operator|=
@@ -850,6 +924,40 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: fadd<4 x float>
 comment|// CHECK-LE: fadd<4 x float>
+name|res_vi
+operator|=
+name|vec_adde
+argument_list|(
+name|vi
+argument_list|,
+name|vi
+argument_list|,
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
+name|res_vui
+operator|=
+name|vec_adde
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vaddubm
@@ -2749,6 +2857,28 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb
 comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb
+name|res_vbc
+operator|=
+name|vec_cmpeq
+argument_list|(
+name|vbc
+argument_list|,
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequb
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb
+name|res_vbc
+operator|=
+name|vec_cmpeq
+argument_list|(
+name|vbc
+argument_list|,
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequb
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb
 name|res_vbs
 operator|=
 name|vec_cmpeq
@@ -2767,6 +2897,28 @@ argument_list|(
 name|vus
 argument_list|,
 name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh
+name|res_vbs
+operator|=
+name|vec_cmpeq
+argument_list|(
+name|vbs
+argument_list|,
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh
+name|res_vbs
+operator|=
+name|vec_cmpeq
+argument_list|(
+name|vbs
+argument_list|,
+name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh
@@ -2789,6 +2941,28 @@ argument_list|(
 name|vui
 argument_list|,
 name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw
+name|res_vbi
+operator|=
+name|vec_cmpeq
+argument_list|(
+name|vbi
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw
+name|res_vbi
+operator|=
+name|vec_cmpeq
+argument_list|(
+name|vbi
+argument_list|,
+name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw
@@ -3319,6 +3493,42 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vctuxs
 comment|// CHECK-LE: @llvm.ppc.altivec.vctuxs
+name|res_vi
+operator|=
+name|vec_signed
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fptosi<4 x float>
+comment|// CHECK-LE: fptosi<4 x float>
+name|res_vui
+operator|=
+name|vec_unsigned
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fptoui<4 x float>
+comment|// CHECK-LE: fptoui<4 x float>
+name|res_vf
+operator|=
+name|vec_float
+argument_list|(
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sitofp<4 x i32>
+comment|// CHECK-LE: sitofp<4 x i32>
+name|res_vf
+operator|=
+name|vec_float
+argument_list|(
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: uitofp<4 x i32>
+comment|// CHECK-LE: uitofp<4 x i32>
 comment|/* vec_div */
 name|res_vsc
 operator|=
@@ -9257,6 +9467,133 @@ comment|// CHECK-LE: sub nsw i32 17
 comment|// CHECK-LE: sub nsw i32 18
 comment|// CHECK-LE: sub nsw i32 31
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|/* vec_sldw */
+name|res_vsc
+operator|=
+name|vec_sldw
+argument_list|(
+name|vsc
+argument_list|,
+name|vsc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vuc
+operator|=
+name|vec_sldw
+argument_list|(
+name|vuc
+argument_list|,
+name|vuc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_sldw
+argument_list|(
+name|vi
+argument_list|,
+name|vi
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_sldw
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vs
+operator|=
+name|vec_sldw
+argument_list|(
+name|vs
+argument_list|,
+name|vs
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vus
+operator|=
+name|vec_sldw
+argument_list|(
+name|vus
+argument_list|,
+name|vus
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 1
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 2
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 3
+comment|// CHECK: add nsw i32 {{[0-9a-zA-Z%.]+}}, 15
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: sub nsw i32 16
+comment|// CHECK-LE: sub nsw i32 17
+comment|// CHECK-LE: sub nsw i32 18
+comment|// CHECK-LE: sub nsw i32 31
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_vsldoi
@@ -14082,6 +14419,17 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubcuw
 comment|// CHECK-LE: @llvm.ppc.altivec.vsubcuw
+name|res_vi
+operator|=
+name|vec_subc
+argument_list|(
+name|vi
+argument_list|,
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vsubcuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubcuw
 name|res_vui
 operator|=
 name|vec_vsubcuw
@@ -14292,6 +14640,44 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuws
 comment|// CHECK-LE: @llvm.ppc.altivec.vsubuws
+name|res_vi
+operator|=
+name|vec_sube
+argument_list|(
+name|vi
+argument_list|,
+name|vi
+argument_list|,
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<4 x i32>
+comment|// CHECK: xor<4 x i32> {{%[0-9]+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32> {{%[0-9]+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
+name|res_vui
+operator|=
+name|vec_sube
+argument_list|(
+name|vui
+argument_list|,
+name|vui
+argument_list|,
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<4 x i32>
+comment|// CHECK: xor<4 x i32> {{%[0-9]+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32> {{%[0-9]+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vsubsbs
@@ -22349,6 +22735,646 @@ operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p(i32 2
 comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p(i32 2
+block|}
+end_function
+
+begin_comment
+comment|/* ------------------------------ optional ---------------------------------- */
+end_comment
+
+begin_function
+name|void
+name|test8
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: define void @test8
+comment|// CHECK-LE-LABEL: define void @test8
+name|res_vbc
+operator|=
+name|vec_reve
+argument_list|(
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8, i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8, i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+name|res_vsc
+operator|=
+name|vec_reve
+argument_list|(
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8, i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8, i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+name|res_vuc
+operator|=
+name|vec_reve
+argument_list|(
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8, i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8, i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+name|res_vbi
+operator|=
+name|vec_reve
+argument_list|(
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+name|res_vi
+operator|=
+name|vec_reve
+argument_list|(
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+name|res_vui
+operator|=
+name|vec_reve
+argument_list|(
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<4 x i32> %{{[0-9]+}},<4 x i32> %{{[0-9]+}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+name|res_vbs
+operator|=
+name|vec_reve
+argument_list|(
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+name|res_vbs
+operator|=
+name|vec_reve
+argument_list|(
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+name|res_vbs
+operator|=
+name|vec_reve
+argument_list|(
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0>
+name|res_vf
+operator|=
+name|vec_reve
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: shufflevector<4 x float> %{{[0-9]+}},<4 x float> %{{[0-9]+}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK-LE: shufflevector<4 x float> %{{[0-9]+}},<4 x float> %{{[0-9]+}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+name|res_vbc
+operator|=
+name|vec_revb
+argument_list|(
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = load<16 x i8>,<16 x i8>* @vbc, align 16
+comment|// CHECK: store<16 x i8> [[T1]],<16 x i8>* [[T2:%.+]], align 16
+comment|// CHECK: [[T3:%.+]] = load<16 x i8>,<16 x i8>* [[T2]], align 16
+comment|// CHECK: store<16 x i8> [[T3]],<16 x i8>* @res_vbc, align 16
+comment|// CHECK-LE: [[T1:%.+]] = load<16 x i8>,<16 x i8>* @vbc, align 16
+comment|// CHECK-LE: store<16 x i8> [[T1]],<16 x i8>* [[T2:%.+]], align 16
+comment|// CHECK-LE: [[T3:%.+]] = load<16 x i8>,<16 x i8>* [[T2]], align 16
+comment|// CHECK-LE: store<16 x i8> [[T3]],<16 x i8>* @res_vbc, align 16
+name|res_vsc
+operator|=
+name|vec_revb
+argument_list|(
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = load<16 x i8>,<16 x i8>* @vsc, align 16
+comment|// CHECK: store<16 x i8> [[T1]],<16 x i8>* [[T2:%.+]], align 16
+comment|// CHECK: [[T3:%.+]] = load<16 x i8>,<16 x i8>* [[T2]], align 16
+comment|// CHECK: store<16 x i8> [[T3]],<16 x i8>* @res_vsc, align 16
+comment|// CHECK-LE: [[T1:%.+]] = load<16 x i8>,<16 x i8>* @vsc, align 16
+comment|// CHECK-LE: store<16 x i8> [[T1]],<16 x i8>* [[T2:%.+]], align 16
+comment|// CHECK-LE: [[T3:%.+]] = load<16 x i8>,<16 x i8>* [[T2]], align 16
+comment|// CHECK-LE: store<16 x i8> [[T3]],<16 x i8>* @res_vsc, align 16
+name|res_vuc
+operator|=
+name|vec_revb
+argument_list|(
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = load<16 x i8>,<16 x i8>* @vuc, align 16
+comment|// CHECK: store<16 x i8> [[T1]],<16 x i8>* [[T2:%.+]], align 16
+comment|// CHECK: [[T3:%.+]] = load<16 x i8>,<16 x i8>* [[T2]], align 16
+comment|// CHECK: store<16 x i8> [[T3]],<16 x i8>* @res_vuc, align 16
+comment|// CHECK-LE: [[T1:%.+]] = load<16 x i8>,<16 x i8>* @vuc, align 16
+comment|// CHECK-LE: store<16 x i8> [[T1]],<16 x i8>* [[T2:%.+]], align 16
+comment|// CHECK-LE: [[T3:%.+]] = load<16 x i8>,<16 x i8>* [[T2]], align 16
+comment|// CHECK-LE: store<16 x i8> [[T3]],<16 x i8>* @res_vuc, align 16
+name|res_vbs
+operator|=
+name|vec_revb
+argument_list|(
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 1, i8 0, i8 3, i8 2, i8 5, i8 4, i8 7, i8 6, i8 9, i8 8, i8 11, i8 10, i8 13, i8 12, i8 15, i8 14>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 1, i8 0, i8 3, i8 2, i8 5, i8 4, i8 7, i8 6, i8 9, i8 8, i8 11, i8 10, i8 13, i8 12, i8 15, i8 14>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vs
+operator|=
+name|vec_revb
+argument_list|(
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 1, i8 0, i8 3, i8 2, i8 5, i8 4, i8 7, i8 6, i8 9, i8 8, i8 11, i8 10, i8 13, i8 12, i8 15, i8 14>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 1, i8 0, i8 3, i8 2, i8 5, i8 4, i8 7, i8 6, i8 9, i8 8, i8 11, i8 10, i8 13, i8 12, i8 15, i8 14>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vus
+operator|=
+name|vec_revb
+argument_list|(
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 1, i8 0, i8 3, i8 2, i8 5, i8 4, i8 7, i8 6, i8 9, i8 8, i8 11, i8 10, i8 13, i8 12, i8 15, i8 14>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 1, i8 0, i8 3, i8 2, i8 5, i8 4, i8 7, i8 6, i8 9, i8 8, i8 11, i8 10, i8 13, i8 12, i8 15, i8 14>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vbi
+operator|=
+name|vec_revb
+argument_list|(
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 3, i8 2, i8 1, i8 0, i8 7, i8 6, i8 5, i8 4, i8 11, i8 10, i8 9, i8 8, i8 15, i8 14, i8 13, i8 12>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 3, i8 2, i8 1, i8 0, i8 7, i8 6, i8 5, i8 4, i8 11, i8 10, i8 9, i8 8, i8 15, i8 14, i8 13, i8 12>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vi
+operator|=
+name|vec_revb
+argument_list|(
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 3, i8 2, i8 1, i8 0, i8 7, i8 6, i8 5, i8 4, i8 11, i8 10, i8 9, i8 8, i8 15, i8 14, i8 13, i8 12>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 3, i8 2, i8 1, i8 0, i8 7, i8 6, i8 5, i8 4, i8 11, i8 10, i8 9, i8 8, i8 15, i8 14, i8 13, i8 12>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vui
+operator|=
+name|vec_revb
+argument_list|(
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 3, i8 2, i8 1, i8 0, i8 7, i8 6, i8 5, i8 4, i8 11, i8 10, i8 9, i8 8, i8 15, i8 14, i8 13, i8 12>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 3, i8 2, i8 1, i8 0, i8 7, i8 6, i8 5, i8 4, i8 11, i8 10, i8 9, i8 8, i8 15, i8 14, i8 13, i8 12>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+name|res_vf
+operator|=
+name|vec_revb
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8><i8 3, i8 2, i8 1, i8 0, i8 7, i8 6, i8 5, i8 4, i8 11, i8 10, i8 9, i8 8, i8 15, i8 14, i8 13, i8 12>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+comment|// CHECK-LE: store<16 x i8><i8 3, i8 2, i8 1, i8 0, i8 7, i8 6, i8 5, i8 4, i8 11, i8 10, i8 9, i8 8, i8 15, i8 14, i8 13, i8 12>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: store<16 x i8><i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>,<16 x i8>* {{%.+}}, align 16
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.altivec.vperm(<4 x i32> {{%.+}},<4 x i32> {{%.+}},<16 x i8> {{%.+}})
+block|}
+end_function
+
+begin_comment
+comment|/* ------------------------------ vec_xl ------------------------------------ */
+end_comment
+
+begin_function
+name|void
+name|test9
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: define void @test9
+comment|// CHECK-LE-LABEL: define void @test9
+name|res_vsc
+operator|=
+name|vec_xl
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<16 x i8>,<16 x i8>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<16 x i8>,<16 x i8>* %{{[0-9]+}}, align 16
+name|res_vuc
+operator|=
+name|vec_xl
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<16 x i8>,<16 x i8>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<16 x i8>,<16 x i8>* %{{[0-9]+}}, align 16
+name|res_vs
+operator|=
+name|vec_xl
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<8 x i16>,<8 x i16>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<8 x i16>,<8 x i16>* %{{[0-9]+}}, align 16
+name|res_vus
+operator|=
+name|vec_xl
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<8 x i16>,<8 x i16>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<8 x i16>,<8 x i16>* %{{[0-9]+}}, align 16
+name|res_vi
+operator|=
+name|vec_xl
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<4 x i32>,<4 x i32>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<4 x i32>,<4 x i32>* %{{[0-9]+}}, align 16
+name|res_vui
+operator|=
+name|vec_xl
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<4 x i32>,<4 x i32>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<4 x i32>,<4 x i32>* %{{[0-9]+}}, align 16
+name|res_vf
+operator|=
+name|vec_xl
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_f
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<4 x float>,<4 x float>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: load<4 x float>,<4 x float>* %{{[0-9]+}}, align 16
+block|}
+end_function
+
+begin_comment
+comment|/* ------------------------------ vec_xst ----------------------------------- */
+end_comment
+
+begin_function
+name|void
+name|test10
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: define void @test10
+comment|// CHECK-LE-LABEL: define void @test10
+name|vec_xst
+argument_list|(
+name|vsc
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> %{{[0-9]+}},<16 x i8>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<16 x i8> %{{[0-9]+}},<16 x i8>* %{{[0-9]+}}, align 16
+name|vec_xst
+argument_list|(
+name|vuc
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> %{{[0-9]+}},<16 x i8>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<16 x i8> %{{[0-9]+}},<16 x i8>* %{{[0-9]+}}, align 16
+name|vec_xst
+argument_list|(
+name|vs
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> %{{[0-9]+}},<8 x i16>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<8 x i16> %{{[0-9]+}},<8 x i16>* %{{[0-9]+}}, align 16
+name|vec_xst
+argument_list|(
+name|vus
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> %{{[0-9]+}},<8 x i16>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<8 x i16> %{{[0-9]+}},<8 x i16>* %{{[0-9]+}}, align 16
+name|vec_xst
+argument_list|(
+name|vi
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> %{{[0-9]+}},<4 x i32>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<4 x i32> %{{[0-9]+}},<4 x i32>* %{{[0-9]+}}, align 16
+name|vec_xst
+argument_list|(
+name|vui
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> %{{[0-9]+}},<4 x i32>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<4 x i32> %{{[0-9]+}},<4 x i32>* %{{[0-9]+}}, align 16
+name|vec_xst
+argument_list|(
+name|vf
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_f
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x float> %{{[0-9]+}},<4 x float>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: store<4 x float> %{{[0-9]+}},<4 x float>* %{{[0-9]+}}, align 16
+block|}
+end_function
+
+begin_comment
+comment|/* ----------------------------- vec_xl_be ---------------------------------- */
+end_comment
+
+begin_function
+name|void
+name|test11
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: define void @test11
+comment|// CHECK-LE-LABEL: define void @test11
+name|res_vsc
+operator|=
+name|vec_xl_be
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<16 x i8>,<16 x i8>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<2 x double> @llvm.ppc.vsx.lxvd2x.be(i8* %{{[0-9]+}})
+comment|// CHECK-LE: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0, i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8>
+name|res_vuc
+operator|=
+name|vec_xl_be
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<16 x i8>,<16 x i8>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<2 x double> @llvm.ppc.vsx.lxvd2x.be(i8* %{{[0-9]+}})
+comment|// CHECK-LE: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0, i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8>
+name|res_vs
+operator|=
+name|vec_xl_be
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<8 x i16>,<8 x i16>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<2 x double> @llvm.ppc.vsx.lxvd2x.be(i8* %{{[0-9]+}})
+comment|// CHECK-LE: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
+name|res_vus
+operator|=
+name|vec_xl_be
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<8 x i16>,<8 x i16>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<2 x double> @llvm.ppc.vsx.lxvd2x.be(i8* %{{[0-9]+}})
+comment|// CHECK-LE: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
+name|res_vi
+operator|=
+name|vec_xl_be
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<4 x i32>,<4 x i32>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.vsx.lxvw4x.be(i8* %{{[0-9]+}})
+name|res_vui
+operator|=
+name|vec_xl_be
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<4 x i32>,<4 x i32>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.vsx.lxvw4x.be(i8* %{{[0-9]+}})
+name|res_vf
+operator|=
+name|vec_xl_be
+argument_list|(
+name|param_sll
+argument_list|,
+operator|&
+name|param_f
+argument_list|)
+expr_stmt|;
+comment|// CHECK: load<4 x float>,<4 x float>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call<4 x i32> @llvm.ppc.vsx.lxvw4x.be(i8* %{{[0-9]+}})
+block|}
+end_function
+
+begin_comment
+comment|/* ----------------------------- vec_xst_be --------------------------------- */
+end_comment
+
+begin_function
+name|void
+name|test12
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: define void @test12
+comment|// CHECK-LE-LABEL: define void @test12
+name|vec_xst_be
+argument_list|(
+name|vsc
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> %{{[0-9]+}},<16 x i8>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0, i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8>
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvd2x.be(<2 x double> %{{[0-9]+}}, i8* %{{[0-9]+}})
+name|vec_xst_be
+argument_list|(
+name|vuc
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> %{{[0-9]+}},<16 x i8>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: shufflevector<16 x i8> %{{[0-9]+}},<16 x i8> %{{[0-9]+}},<16 x i32><i32 7, i32 6, i32 5, i32 4, i32 3, i32 2, i32 1, i32 0, i32 15, i32 14, i32 13, i32 12, i32 11, i32 10, i32 9, i32 8>
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvd2x.be(<2 x double> %{{[0-9]+}}, i8* %{{[0-9]+}})
+name|vec_xst_be
+argument_list|(
+name|vs
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> %{{[0-9]+}},<8 x i16>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvd2x.be(<2 x double> %{{[0-9]+}}, i8* %{{[0-9]+}})
+name|vec_xst_be
+argument_list|(
+name|vus
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> %{{[0-9]+}},<8 x i16>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: shufflevector<8 x i16> %{{[0-9]+}},<8 x i16> %{{[0-9]+}},<8 x i32><i32 3, i32 2, i32 1, i32 0, i32 7, i32 6, i32 5, i32 4>
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvd2x.be(<2 x double> %{{[0-9]+}}, i8* %{{[0-9]+}})
+name|vec_xst_be
+argument_list|(
+name|vi
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> %{{[0-9]+}},<4 x i32>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvw4x.be(<4 x i32> %{{[0-9]+}}, i8* %{{[0-9]+}})
+name|vec_xst_be
+argument_list|(
+name|vui
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> %{{[0-9]+}},<4 x i32>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvw4x.be(<4 x i32> %{{[0-9]+}}, i8* %{{[0-9]+}})
+name|vec_xst_be
+argument_list|(
+name|vf
+argument_list|,
+name|param_sll
+argument_list|,
+operator|&
+name|param_f
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x float> %{{[0-9]+}},<4 x float>* %{{[0-9]+}}, align 16
+comment|// CHECK-LE: call void @llvm.ppc.vsx.stxvw4x.be(<4 x i32> %{{[0-9]+}}, i8* %{{[0-9]+}})
 block|}
 end_function
 

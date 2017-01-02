@@ -7,6 +7,14 @@ begin_comment
 comment|// RUN: %clang -target i386-apple-darwin10 -flto -S -g %s -o - | FileCheck %s
 end_comment
 
+begin_comment
+comment|// CHECK: @main.localstatic = internal global i32 0, align 4, !dbg [[L:![0-9]+]]
+end_comment
+
+begin_comment
+comment|// CHECK: @global = common global i32 0, align 4, !dbg [[G:![0-9]+]]
+end_comment
+
 begin_decl_stmt
 name|int
 name|global
@@ -29,35 +37,35 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: !DIGlobalVariable(name: "localstatic"
+comment|// CHECK: [[L]] = !DIGlobalVariableExpression(var: [[LV:.*]])
 end_comment
 
 begin_comment
-comment|// CHECK-NOT:               linkageName:
+comment|// CHECK: [[LV]] = distinct !DIGlobalVariable(name: "localstatic"
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:              line: 5,
+comment|// CHECK-NOT:                                 linkageName:
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:              variable: i32* @main.localstatic
+comment|// CHECK-SAME:                                line: 9,
 end_comment
 
 begin_comment
-comment|// CHECK: !DIGlobalVariable(name: "global"
+comment|// CHECK: [[G]] = !DIGlobalVariableExpression(var: [[GV:.*]])
 end_comment
 
 begin_comment
-comment|// CHECK-NOT:               linkageName:
+comment|// CHECK: [[GV]] = distinct !DIGlobalVariable(name: "global"
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:              line: 3,
+comment|// CHECK-NOT:                                 linkageName:
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:              variable: i32* @global
+comment|// CHECK-SAME:                                line: 7,
 end_comment
 
 end_unit

@@ -340,6 +340,98 @@ begin_comment
 comment|/* The 256-bit versions of functions in f16cintrin.h.    Intel documents these as being in immintrin.h, and    they depend on typedefs from avxintrin.h. */
 end_comment
 
+begin_comment
+comment|/// \brief Converts a 256-bit vector of [8 x float] into a 128-bit vector
+end_comment
+
+begin_comment
+comment|///    containing 16-bit half-precision float values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128i _mm256_cvtps_ph(__m256 a, const int imm);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTPS2PH</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector containing 32-bit single-precision float values to be
+end_comment
+
+begin_comment
+comment|///    converted to 16-bit half-precision float values.
+end_comment
+
+begin_comment
+comment|/// \param imm
+end_comment
+
+begin_comment
+comment|///    An immediate value controlling rounding using bits [2:0]: \n
+end_comment
+
+begin_comment
+comment|///    000: Nearest \n
+end_comment
+
+begin_comment
+comment|///    001: Down \n
+end_comment
+
+begin_comment
+comment|///    010: Up \n
+end_comment
+
+begin_comment
+comment|///    011: Truncate \n
+end_comment
+
+begin_comment
+comment|///    1XX: Use MXCSR.RC for rounding
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing the converted 16-bit half-precision
+end_comment
+
+begin_comment
+comment|///    float values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -351,6 +443,54 @@ name|imm
 parameter_list|)
 value|__extension__ ({ \  (__m128i)__builtin_ia32_vcvtps2ph256((__v8sf)(__m256)(a), (imm)); })
 end_define
+
+begin_comment
+comment|/// \brief Converts a 128-bit vector containing 16-bit half-precision float
+end_comment
+
+begin_comment
+comment|///    values into a 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the<c> VCVTPH2PS</c> instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector containing 16-bit half-precision float values to be
+end_comment
+
+begin_comment
+comment|///    converted to 32-bit single-precision float values.
+end_comment
+
+begin_comment
+comment|/// \returns A vector of [8 x float] containing the converted 32-bit
+end_comment
+
+begin_comment
+comment|///    single-precision float values.
+end_comment
 
 begin_decl_stmt
 specifier|static

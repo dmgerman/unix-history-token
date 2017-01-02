@@ -1063,6 +1063,14 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+name|bool
+name|VisitFriendDecl
+parameter_list|(
+name|FriendDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|// Name visitor
 name|bool
 name|VisitDeclarationNameInfo

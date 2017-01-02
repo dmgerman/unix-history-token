@@ -32,6 +32,22 @@ comment|// RUN: %clang -O3 -target x86_64-unknown-linux -fsanitize=efficiency-wo
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target mips64-unknown-linux -fsanitize=efficiency-cache-frag %s -S -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64-unknown-linux -fsanitize=efficiency-working-set %s -S -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-unknown-linux -fsanitize=efficiency-cache-frag %s -S -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-unknown-linux -fsanitize=efficiency-working-set %s -S -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
 comment|// Verify that -fsanitize=efficiency-* invokes esan instrumentation.
 end_comment
 

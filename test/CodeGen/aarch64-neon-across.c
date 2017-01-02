@@ -55,15 +55,7 @@ comment|// CHECK-LABEL: define i32 @test_vaddlv_s16(<4 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDLV_I:%.*]] = call i32 @llvm.aarch64.neon.saddlv.i32.v4i16(<4 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VADDLV_I:%.*]] = call i32 @llvm.aarch64.neon.saddlv.i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -125,15 +117,7 @@ comment|// CHECK-LABEL: define i32 @test_vaddlv_u16(<4 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDLV_I:%.*]] = call i32 @llvm.aarch64.neon.uaddlv.i32.v4i16(<4 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VADDLV_I:%.*]] = call i32 @llvm.aarch64.neon.uaddlv.i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -195,15 +179,7 @@ comment|// CHECK-LABEL: define i32 @test_vaddlvq_s16(<8 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDLV_I:%.*]] = call i32 @llvm.aarch64.neon.saddlv.i32.v8i16(<8 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VADDLV_I:%.*]] = call i32 @llvm.aarch64.neon.saddlv.i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -232,15 +208,7 @@ comment|// CHECK-LABEL: define i64 @test_vaddlvq_s32(<4 x i32> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDLVQ_S32_I:%.*]] = call i64 @llvm.aarch64.neon.saddlv.i64.v4i32(<4 x i32> [[TMP1]]) #2
+comment|// CHECK:   [[VADDLVQ_S32_I:%.*]] = call i64 @llvm.aarch64.neon.saddlv.i64.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -302,15 +270,7 @@ comment|// CHECK-LABEL: define i32 @test_vaddlvq_u16(<8 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDLV_I:%.*]] = call i32 @llvm.aarch64.neon.uaddlv.i32.v8i16(<8 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VADDLV_I:%.*]] = call i32 @llvm.aarch64.neon.uaddlv.i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -339,15 +299,7 @@ comment|// CHECK-LABEL: define i64 @test_vaddlvq_u32(<4 x i32> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDLVQ_U32_I:%.*]] = call i64 @llvm.aarch64.neon.uaddlv.i64.v4i32(<4 x i32> [[TMP1]]) #2
+comment|// CHECK:   [[VADDLVQ_U32_I:%.*]] = call i64 @llvm.aarch64.neon.uaddlv.i64.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -409,15 +361,7 @@ comment|// CHECK-LABEL: define i16 @test_vmaxv_s16(<4 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMAXV_I:%.*]] = call i32 @llvm.aarch64.neon.smaxv.i32.v4i16(<4 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VMAXV_I:%.*]] = call i32 @llvm.aarch64.neon.smaxv.i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -483,15 +427,7 @@ comment|// CHECK-LABEL: define i16 @test_vmaxv_u16(<4 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMAXV_I:%.*]] = call i32 @llvm.aarch64.neon.umaxv.i32.v4i16(<4 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VMAXV_I:%.*]] = call i32 @llvm.aarch64.neon.umaxv.i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -557,15 +493,7 @@ comment|// CHECK-LABEL: define i16 @test_vmaxvq_s16(<8 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMAXV_I:%.*]] = call i32 @llvm.aarch64.neon.smaxv.i32.v8i16(<8 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VMAXV_I:%.*]] = call i32 @llvm.aarch64.neon.smaxv.i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -598,15 +526,7 @@ comment|// CHECK-LABEL: define i32 @test_vmaxvq_s32(<4 x i32> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMAXVQ_S32_I:%.*]] = call i32 @llvm.aarch64.neon.smaxv.i32.v4i32(<4 x i32> [[TMP1]]) #2
+comment|// CHECK:   [[VMAXVQ_S32_I:%.*]] = call i32 @llvm.aarch64.neon.smaxv.i32.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -668,15 +588,7 @@ comment|// CHECK-LABEL: define i16 @test_vmaxvq_u16(<8 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMAXV_I:%.*]] = call i32 @llvm.aarch64.neon.umaxv.i32.v8i16(<8 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VMAXV_I:%.*]] = call i32 @llvm.aarch64.neon.umaxv.i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -709,15 +621,7 @@ comment|// CHECK-LABEL: define i32 @test_vmaxvq_u32(<4 x i32> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMAXVQ_U32_I:%.*]] = call i32 @llvm.aarch64.neon.umaxv.i32.v4i32(<4 x i32> [[TMP1]]) #2
+comment|// CHECK:   [[VMAXVQ_U32_I:%.*]] = call i32 @llvm.aarch64.neon.umaxv.i32.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -779,15 +683,7 @@ comment|// CHECK-LABEL: define i16 @test_vminv_s16(<4 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMINV_I:%.*]] = call i32 @llvm.aarch64.neon.sminv.i32.v4i16(<4 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VMINV_I:%.*]] = call i32 @llvm.aarch64.neon.sminv.i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -853,15 +749,7 @@ comment|// CHECK-LABEL: define i16 @test_vminv_u16(<4 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMINV_I:%.*]] = call i32 @llvm.aarch64.neon.uminv.i32.v4i16(<4 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VMINV_I:%.*]] = call i32 @llvm.aarch64.neon.uminv.i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -927,15 +815,7 @@ comment|// CHECK-LABEL: define i16 @test_vminvq_s16(<8 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMINV_I:%.*]] = call i32 @llvm.aarch64.neon.sminv.i32.v8i16(<8 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VMINV_I:%.*]] = call i32 @llvm.aarch64.neon.sminv.i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -968,15 +848,7 @@ comment|// CHECK-LABEL: define i32 @test_vminvq_s32(<4 x i32> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMINVQ_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sminv.i32.v4i32(<4 x i32> [[TMP1]]) #2
+comment|// CHECK:   [[VMINVQ_S32_I:%.*]] = call i32 @llvm.aarch64.neon.sminv.i32.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -1038,15 +910,7 @@ comment|// CHECK-LABEL: define i16 @test_vminvq_u16(<8 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMINV_I:%.*]] = call i32 @llvm.aarch64.neon.uminv.i32.v8i16(<8 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VMINV_I:%.*]] = call i32 @llvm.aarch64.neon.uminv.i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -1079,15 +943,7 @@ comment|// CHECK-LABEL: define i32 @test_vminvq_u32(<4 x i32> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMINVQ_U32_I:%.*]] = call i32 @llvm.aarch64.neon.uminv.i32.v4i32(<4 x i32> [[TMP1]]) #2
+comment|// CHECK:   [[VMINVQ_U32_I:%.*]] = call i32 @llvm.aarch64.neon.uminv.i32.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -1149,15 +1005,7 @@ comment|// CHECK-LABEL: define i16 @test_vaddv_s16(<4 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDV_I:%.*]] = call i32 @llvm.aarch64.neon.saddv.i32.v4i16(<4 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VADDV_I:%.*]] = call i32 @llvm.aarch64.neon.saddv.i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -1223,15 +1071,7 @@ comment|// CHECK-LABEL: define i16 @test_vaddv_u16(<4 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDV_I:%.*]] = call i32 @llvm.aarch64.neon.uaddv.i32.v4i16(<4 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VADDV_I:%.*]] = call i32 @llvm.aarch64.neon.uaddv.i32.v4i16(<4 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -1297,15 +1137,7 @@ comment|// CHECK-LABEL: define i16 @test_vaddvq_s16(<8 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDV_I:%.*]] = call i32 @llvm.aarch64.neon.saddv.i32.v8i16(<8 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VADDV_I:%.*]] = call i32 @llvm.aarch64.neon.saddv.i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -1338,15 +1170,7 @@ comment|// CHECK-LABEL: define i32 @test_vaddvq_s32(<4 x i32> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDVQ_S32_I:%.*]] = call i32 @llvm.aarch64.neon.saddv.i32.v4i32(<4 x i32> [[TMP1]]) #2
+comment|// CHECK:   [[VADDVQ_S32_I:%.*]] = call i32 @llvm.aarch64.neon.saddv.i32.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -1408,15 +1232,7 @@ comment|// CHECK-LABEL: define i16 @test_vaddvq_u16(<8 x i16> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDV_I:%.*]] = call i32 @llvm.aarch64.neon.uaddv.i32.v8i16(<8 x i16> [[TMP1]]) #2
+comment|// CHECK:   [[VADDV_I:%.*]] = call i32 @llvm.aarch64.neon.uaddv.i32.v8i16(<8 x i16> %a) #2
 end_comment
 
 begin_comment
@@ -1449,15 +1265,7 @@ comment|// CHECK-LABEL: define i32 @test_vaddvq_u32(<4 x i32> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VADDVQ_U32_I:%.*]] = call i32 @llvm.aarch64.neon.uaddv.i32.v4i32(<4 x i32> [[TMP1]]) #2
+comment|// CHECK:   [[VADDVQ_U32_I:%.*]] = call i32 @llvm.aarch64.neon.uaddv.i32.v4i32(<4 x i32> %a) #2
 end_comment
 
 begin_comment
@@ -1486,15 +1294,7 @@ comment|// CHECK-LABEL: define float @test_vmaxvq_f32(<4 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMAXVQ_F32_I:%.*]] = call float @llvm.aarch64.neon.fmaxv.f32.v4f32(<4 x float> [[TMP1]]) #2
+comment|// CHECK:   [[VMAXVQ_F32_I:%.*]] = call float @llvm.aarch64.neon.fmaxv.f32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -1523,15 +1323,7 @@ comment|// CHECK-LABEL: define float @test_vminvq_f32(<4 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMINVQ_F32_I:%.*]] = call float @llvm.aarch64.neon.fminv.f32.v4f32(<4 x float> [[TMP1]]) #2
+comment|// CHECK:   [[VMINVQ_F32_I:%.*]] = call float @llvm.aarch64.neon.fminv.f32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -1560,15 +1352,7 @@ comment|// CHECK-LABEL: define float @test_vmaxnmvq_f32(<4 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMAXNMVQ_F32_I:%.*]] = call float @llvm.aarch64.neon.fmaxnmv.f32.v4f32(<4 x float> [[TMP1]]) #2
+comment|// CHECK:   [[VMAXNMVQ_F32_I:%.*]] = call float @llvm.aarch64.neon.fmaxnmv.f32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment
@@ -1597,15 +1381,7 @@ comment|// CHECK-LABEL: define float @test_vminnmvq_f32(<4 x float> %a) #0 {
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[VMINNMVQ_F32_I:%.*]] = call float @llvm.aarch64.neon.fminnmv.f32.v4f32(<4 x float> [[TMP1]]) #2
+comment|// CHECK:   [[VMINNMVQ_F32_I:%.*]] = call float @llvm.aarch64.neon.fminnmv.f32.v4f32(<4 x float> %a) #2
 end_comment
 
 begin_comment

@@ -526,7 +526,7 @@ block|{
 name|knr_one_argument
 argument_list|()
 expr_stmt|;
-comment|// expected-warning{{too few arguments}} expected-warning{{Function taking 1 argument}}
+comment|// expected-warning{{too few arguments}} expected-warning{{Function taking 1 argument is called with fewer (0)}}
 block|}
 end_function
 

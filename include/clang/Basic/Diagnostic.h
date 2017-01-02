@@ -114,7 +114,61 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -135,12 +189,6 @@ name|DiagnosticBuilder
 decl_stmt|;
 name|class
 name|DiagnosticConsumer
-decl_stmt|;
-name|class
-name|DiagnosticErrorTrap
-decl_stmt|;
-name|class
-name|DiagnosticOptions
 decl_stmt|;
 name|class
 name|IdentifierInfo
@@ -164,6 +212,7 @@ name|unsigned
 name|short
 enum_decl|;
 block|}
+comment|// end namespace tok
 comment|/// \brief Annotates a diagnostic with some code that should be
 comment|/// inserted, removed, or replaced to fix the problem.
 comment|///
@@ -438,26 +487,6 @@ operator|<
 name|DiagnosticsEngine
 operator|>
 block|{
-name|DiagnosticsEngine
-argument_list|(
-specifier|const
-name|DiagnosticsEngine
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|DiagnosticsEngine
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 name|public
 operator|:
 comment|/// \brief The level of the diagnostic, after it has been through mapping.
@@ -1330,12 +1359,10 @@ begin_decl_stmt
 name|explicit
 name|DiagnosticsEngine
 argument_list|(
-specifier|const
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticIDs
 operator|>
-operator|&
 name|Diags
 argument_list|,
 name|DiagnosticOptions
@@ -1353,6 +1380,33 @@ name|ShouldOwnClient
 operator|=
 name|true
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DiagnosticsEngine
+argument_list|(
+specifier|const
+name|DiagnosticsEngine
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|DiagnosticsEngine
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|DiagnosticsEngine
+operator|&
+operator|)
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -3898,17 +3952,6 @@ name|IsForceEmit
 init|=
 name|false
 decl_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|DiagnosticBuilder
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|friend
 name|class
 name|DiagnosticsEngine
@@ -4087,17 +4130,18 @@ operator|.
 name|NumArgs
 expr_stmt|;
 block|}
-comment|/// \brief Retrieve an empty diagnostic builder.
-specifier|static
 name|DiagnosticBuilder
-name|getEmpty
-parameter_list|()
-block|{
-return|return
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
 name|DiagnosticBuilder
-argument_list|()
-return|;
-block|}
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|/// \brief Emits the diagnostic.
 operator|~
 name|DiagnosticBuilder
@@ -4106,6 +4150,17 @@ block|{
 name|Emit
 argument_list|()
 block|;   }
+comment|/// \brief Retrieve an empty diagnostic builder.
+specifier|static
+name|DiagnosticBuilder
+name|getEmpty
+argument_list|()
+block|{
+return|return
+name|DiagnosticBuilder
+argument_list|()
+return|;
+block|}
 comment|/// \brief Forces the diagnostic to be emitted.
 specifier|const
 name|DiagnosticBuilder
@@ -5728,12 +5783,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|Message
 operator|.
-name|size
+name|empty
 argument_list|()
-operator|>
-literal|0
 return|;
 block|}
 name|unsigned
@@ -5941,27 +5995,28 @@ name|protected
 label|:
 name|unsigned
 name|NumWarnings
+init|=
+literal|0
 decl_stmt|;
 comment|///< Number of warnings reported
 name|unsigned
 name|NumErrors
+init|=
+literal|0
 decl_stmt|;
 comment|///< Number of errors reported
 name|public
 label|:
 name|DiagnosticConsumer
 argument_list|()
-operator|:
-name|NumWarnings
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumErrors
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
+name|virtual
+operator|~
+name|DiagnosticConsumer
+argument_list|()
+expr_stmt|;
 name|unsigned
 name|getNumErrors
 argument_list|()
@@ -5992,11 +6047,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|virtual
-operator|~
-name|DiagnosticConsumer
-argument_list|()
-expr_stmt|;
 comment|/// \brief Callback to inform the diagnostic client that processing
 comment|/// of a source file is beginning.
 comment|///
@@ -6275,6 +6325,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_BASIC_DIAGNOSTIC_H
+end_comment
 
 end_unit
 

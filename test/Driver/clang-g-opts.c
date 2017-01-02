@@ -80,7 +80,7 @@ comment|// RUN: %clang -### -S %s -g0 -g -target x86_64-apple-darwin 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G-DWARF2 %s
+comment|// RUN:             | FileCheck --check-prefix=CHECK-WITH-G-STANDALONE %s
 end_comment
 
 begin_comment
@@ -121,6 +121,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-WITH-G-DWARF2: "-dwarf-version=2"
+end_comment
+
+begin_comment
+comment|// CHECK-WITH-G-STANDALONE: "-debug-info-kind=standalone"
+end_comment
+
+begin_comment
+comment|// CHECK-WITH-G-STANDALONE: "-dwarf-version=2"
 end_comment
 
 end_unit

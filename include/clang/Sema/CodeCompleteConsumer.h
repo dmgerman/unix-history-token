@@ -252,6 +252,12 @@ comment|/// \brief An Objective-C method being used as a property.
 name|CCD_MethodAsProperty
 init|=
 literal|2
+block|,
+comment|/// \brief An Objective-C block property completed as a setter with a
+comment|/// block placeholder.
+name|CCD_BlockPropertySetter
+init|=
+literal|3
 block|}
 enum|;
 comment|/// \brief Priority value factors by which we will divide or multiply the
@@ -2018,7 +2024,7 @@ name|CodeCompletionResult
 argument_list|(
 argument|CodeCompletionString *Pattern
 argument_list|,
-argument|NamedDecl *D
+argument|const NamedDecl *D
 argument_list|,
 argument|unsigned Priority
 argument_list|)
@@ -2583,6 +2589,23 @@ operator|~
 name|CodeCompleteConsumer
 argument_list|()
 expr_stmt|;
+comment|/// \name Code-completion filtering
+comment|/// \brief Check if the result should be filtered out.
+name|virtual
+name|bool
+name|isResultFilteredOut
+parameter_list|(
+name|StringRef
+name|Filter
+parameter_list|,
+name|CodeCompletionResult
+name|Results
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \name Code-completion callbacks
 comment|//@{
 comment|/// \brief Process the finalized code-completion results.
@@ -2726,6 +2749,15 @@ argument_list|,
 argument|OverloadCandidate *Candidates
 argument_list|,
 argument|unsigned NumCandidates
+argument_list|)
+name|override
+block|;
+name|bool
+name|isResultFilteredOut
+argument_list|(
+argument|StringRef Filter
+argument_list|,
+argument|CodeCompletionResult Results
 argument_list|)
 name|override
 block|;

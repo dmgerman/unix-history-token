@@ -38,7 +38,7 @@ comment|// CHECK:   %[[p_load:.*]] = load i64*, i64** %[[p_addr]], align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   %[[atomic_add:.*]] = atomicrmw volatile add i64* %[[p_load]], i64 1 seq_cst
+comment|// CHECK:   %[[atomic_add:.*]] = atomicrmw add i64* %[[p_load]], i64 1 seq_cst
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ comment|// CHECK:   %[[p_load:.*]] = load i64*, i64** %[[p_addr]], align 8
 end_comment
 
 begin_comment
-comment|// CHECK:   %[[atomic_sub:.*]] = atomicrmw volatile sub i64* %[[p_load]], i64 1 seq_cst
+comment|// CHECK:   %[[atomic_sub:.*]] = atomicrmw sub i64* %[[p_load]], i64 1 seq_cst
 end_comment
 
 begin_comment

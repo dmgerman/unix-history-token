@@ -7444,6 +7444,30 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -mpower9-vector -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PPC_POWER9_VECTOR_M64
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_PPC_POWER9_VECTOR_M64: #define __POWER9_VECTOR__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -mcrypto -E -dM %s -o - 2>&1 \
 end_comment
 
@@ -7656,6 +7680,14 @@ comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_MYRIAD2-2
 end_comment
 
 begin_comment
+comment|// RUN: %clang -E -dM %s -o - -target sparcel-myriad -mcpu=ma2450 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_MYRIAD2-2 -check-prefix=CHECK_SPARCEL
+end_comment
+
+begin_comment
 comment|// CHECK_SPARCEL: #define __LITTLE_ENDIAN__ 1
 end_comment
 
@@ -7681,6 +7713,10 @@ end_comment
 
 begin_comment
 comment|// CHECK_SPARCEL: #define __sparc__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_MYRIAD2-1: #define __sparc_v8__ 1
 end_comment
 
 begin_comment
@@ -7797,6 +7833,18 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -march=zEC12 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target s390x-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SYSTEMZ_ZEC12
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=arch10 -E -dM %s -o - 2>&1 \
 end_comment
 
 begin_comment

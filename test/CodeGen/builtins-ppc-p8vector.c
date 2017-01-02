@@ -628,18 +628,6 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.ppc.altivec.vmaxsd(<2 x i64> %{{[0-9]*}},<2 x i64>
 comment|// CHECK-LE: call<2 x i64> @llvm.ppc.altivec.vmaxsd(<2 x i64> %{{[0-9]*}},<2 x i64>
 comment|// CHECK-PPC: error: call to 'vec_abs' is ambiguous
-name|res_vd
-operator|=
-name|vec_abs
-argument_list|(
-name|vda
-argument_list|)
-expr_stmt|;
-comment|// CHECK: call<2 x double> @llvm.fabs.v2f64(<2 x double> %{{.*}})
-comment|// CHECK: store<2 x double> %{{.*}},<2 x double>* @res_vd
-comment|// CHECK-LE: call<2 x double> @llvm.fabs.v2f64(<2 x double> %{{.*}})
-comment|// CHECK-LE: store<2 x double> %{{.*}},<2 x double>* @res_vd
-comment|// CHECK-PPC: error: call to 'vec_abs' is ambiguous
 comment|/* vec_add */
 name|res_vsll
 operator|=
@@ -786,6 +774,61 @@ expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|// CHECK-PPC: warning: implicit declaration of function 'vec_mergee'
+name|res_vbll
+operator|=
+name|vec_mergee
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vsll
+operator|=
+name|vec_mergee
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vull
+operator|=
+name|vec_mergee
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vf
+operator|=
+name|vec_mergee
+argument_list|(
+name|vfa
+argument_list|,
+name|vfa
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+name|res_vd
+operator|=
+name|vec_mergee
+argument_list|(
+name|vda
+argument_list|,
+name|vda
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_mergeo */
 name|res_vbi
 operator|=
@@ -822,6 +865,18 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|// CHECK-PPC: warning: implicit declaration of function 'vec_mergeo'
 comment|/* vec_cmpeq */
+name|res_vbll
+operator|=
+name|vec_cmpeq
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequd
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequd
+comment|// CHECK-PPC: error: call to 'vec_cmpeq' is ambiguous
 name|res_vbll
 operator|=
 name|vec_cmpeq
@@ -946,25 +1001,6 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.ppc.altivec.vcmpgtud(<2 x i64> %{{[0-9]*}},<2 x i64> %{{[0-9]*}})
 comment|// CHECK-LE: call<2 x i64> @llvm.ppc.altivec.vcmpgtud(<2 x i64> %{{[0-9]*}},<2 x i64> %{{[0-9]*}})
 comment|// CHECK-PPC: error: call to 'vec_cmplt' is ambiguous
-comment|/* vec_double */
-name|res_vd
-operator|=
-name|vec_double
-argument_list|(
-name|vsll
-argument_list|)
-expr_stmt|;
-comment|// CHECK: sitofp i64 {{.+}} to double
-comment|// CHECK-BE: sitofp i64 {{.+}} to double
-name|res_vd
-operator|=
-name|vec_double
-argument_list|(
-name|vull
-argument_list|)
-expr_stmt|;
-comment|// CHECK: uitofp i64 {{.+}} to double
-comment|// CHECK-BE: uitofp i64 {{.+}} to double
 comment|/* vec_eqv */
 name|res_vsc
 operator|=
@@ -3354,6 +3390,19 @@ comment|// CHECK: [[T1:%.+]] = and<4 x i32>
 comment|// CHECK: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
 comment|// CHECK-LE: [[T1:%.+]] = and<4 x i32>
 comment|// CHECK-LE: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+name|res_vf
+operator|=
+name|vec_nand
+argument_list|(
+name|vfa
+argument_list|,
+name|vfa
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32> [[T1]],<i32 -1, i32 -1, i32 -1, i32 -1>
 name|res_vsll
 operator|=
 name|vec_nand
@@ -3387,6 +3436,19 @@ argument_list|(
 name|vull
 argument_list|,
 name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+comment|// CHECK-LE: [[T1:%.+]] = and<2 x i64>
+comment|// CHECK-LE: xor<2 x i64> [[T1]],<i64 -1, i64 -1>
+name|res_vd
+operator|=
+name|vec_nand
+argument_list|(
+name|vda
+argument_list|,
+name|vda
 argument_list|)
 expr_stmt|;
 comment|// CHECK: [[T1:%.+]] = and<2 x i64>
@@ -3668,6 +3730,32 @@ comment|// CHECK: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32
 comment|// CHECK: or<4 x i32> {{%.+}}, [[T1]]
 comment|// CHECK-LE: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
 comment|// CHECK-LE: or<4 x i32> {{%.+}}, [[T1]]
+name|res_vf
+operator|=
+name|vec_orc
+argument_list|(
+name|vbi
+argument_list|,
+name|vfa
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: or<4 x i32> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: or<4 x i32> {{%.+}}, [[T1]]
+name|res_vf
+operator|=
+name|vec_orc
+argument_list|(
+name|vfa
+argument_list|,
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: or<4 x i32> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<4 x i32> {{%.+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK-LE: or<4 x i32> {{%.+}}, [[T1]]
 name|res_vsll
 operator|=
 name|vec_orc
@@ -3751,6 +3839,32 @@ operator|=
 name|vec_orc
 argument_list|(
 name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK: or<2 x i64> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK-LE: or<2 x i64> {{%.+}}, [[T1]]
+name|res_vd
+operator|=
+name|vec_orc
+argument_list|(
+name|vbll
+argument_list|,
+name|vda
+argument_list|)
+expr_stmt|;
+comment|// CHECK: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK: or<2 x i64> {{%.+}}, [[T1]]
+comment|// CHECK-LE: [[T1:%.+]] = xor<2 x i64> {{%.+}},<i64 -1, i64 -1>
+comment|// CHECK-LE: or<2 x i64> {{%.+}}, [[T1]]
+name|res_vd
+operator|=
+name|vec_orc
+argument_list|(
+name|vda
 argument_list|,
 name|vbll
 argument_list|)
@@ -3881,6 +3995,201 @@ expr_stmt|;
 comment|// CHECK: llvm.ppc.altivec.vbpermq
 comment|// CHECK-LE: llvm.ppc.altivec.vbpermq
 comment|// CHECK-PPC: warning: implicit declaration of function 'vec_bperm'
+name|res_vsll
+operator|=
+name|vec_neg
+argument_list|(
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: sub<2 x i64> zeroinitializer, {{%[0-9]+}}
+comment|// CHECK-LE: sub<2 x i64> zeroinitializer, {{%[0-9]+}}
+comment|// CHECK_PPC: call to 'vec_neg' is ambiguous
+block|}
+end_function
+
+begin_function
+name|vector
+name|signed
+name|int
+name|test_vec_addec_signed
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|a
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|b
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|c
+parameter_list|)
+block|{
+return|return
+name|vec_addec
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
+argument_list|)
+return|;
+comment|// CHECK-LABEL: @test_vec_addec_signed
+comment|// CHECK: icmp slt i32 {{%[0-9]+}}, 4
+comment|// CHECK: extractelement
+comment|// CHECK: extractelement
+comment|// CHECK: extractelement
+comment|// CHECK: and i32 {{%[0-9]+}}, 1
+comment|// CHECK: zext
+comment|// CHECK: zext
+comment|// CHECK: zext
+comment|// CHECK: add i64
+comment|// CHECK: add i64
+comment|// CHECK: lshr i64
+comment|// CHECK: and i64
+comment|// CHECK: trunc i64 {{%[0-9]+}} to i32
+comment|// CHECK: zext i32
+comment|// CHECK: trunc i64 {{%[0-9]+}} to i32
+comment|// CHECK: sext i32
+comment|// CHECK: add nsw i32
+comment|// CHECK: br label
+comment|// CHECK: ret<4 x i32>
+block|}
+end_function
+
+begin_function
+name|vector
+name|unsigned
+name|int
+name|test_vec_addec_unsigned
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|b
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|c
+parameter_list|)
+block|{
+return|return
+name|vec_addec
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
+argument_list|)
+return|;
+comment|// CHECK-LABEL: @test_vec_addec_unsigned
+comment|// CHECK: icmp slt i32 {{%[0-9]+}}, 4
+comment|// CHECK: extractelement
+comment|// CHECK: and i32
+comment|// CHECK: extractelement
+comment|// CHECK: zext i32
+comment|// CHECK: extractelement
+comment|// CHECK: zext i32
+comment|// CHECK: zext i32
+comment|// CHECK: add i64
+comment|// CHECK: lshr i64
+comment|// CHECK: and i64
+comment|// CHECK: trunc i64 {{%[0-9]+}} to i32
+comment|// CHECK: zext i32
+comment|// CHECK: trunc i64 {{%[0-9]+}} to i32
+comment|// CHECK: sext i32
+comment|// CHECK: add nsw i32
+comment|// CHECK: br label
+comment|// CHECK: ret<4 x i32>
+block|}
+end_function
+
+begin_function
+name|vector
+name|signed
+name|int
+name|test_vec_subec_signed
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|a
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|b
+parameter_list|,
+name|vector
+name|signed
+name|int
+name|c
+parameter_list|)
+block|{
+return|return
+name|vec_subec
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
+argument_list|)
+return|;
+comment|// CHECK-LABEL: @test_vec_subec_signed
+comment|// CHECK: xor<4 x i32> {{%[0-9]+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: ret<4 x i32>
+block|}
+end_function
+
+begin_function
+name|vector
+name|unsigned
+name|int
+name|test_vec_subec_unsigned
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|a
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|b
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+name|c
+parameter_list|)
+block|{
+return|return
+name|vec_subec
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+name|c
+argument_list|)
+return|;
+comment|// CHECK-LABEL: @test_vec_subec_unsigned
+comment|// CHECK: xor<4 x i32> {{%[0-9]+}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: ret<4 x i32>
 block|}
 end_function
 

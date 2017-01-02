@@ -1,21 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +avx -emit-llvm -o - -Wall -Werror | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +avx -fno-signed-char -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +avx -fno-signed-char -emit-llvm -o - -Wall -Werror | FileCheck %s
 end_comment
-
-begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#
@@ -341,7 +331,8 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_broadcast_pd
-comment|// CHECK: call<4 x double> @llvm.x86.avx.vbroadcastf128.pd.256(i8* %{{.*}})
+comment|// CHECK: load<2 x double>,<2 x double>* %{{.*}}, align 1{{$}}
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<4 x i32><i32 0, i32 1, i32 0, i32 1>
 return|return
 name|_mm256_broadcast_pd
 argument_list|(
@@ -361,7 +352,8 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_broadcast_ps
-comment|// CHECK: call<8 x float> @llvm.x86.avx.vbroadcastf128.ps.256(i8* %{{.*}})
+comment|// CHECK: load<4 x float>,<4 x float>* %{{.*}}, align 1{{$}}
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
 return|return
 name|_mm256_broadcast_ps
 argument_list|(

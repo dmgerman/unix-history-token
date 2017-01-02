@@ -136,7 +136,7 @@ comment|// CHECK-SANITIZE-COVERAGE-SAN-DISABLED-NOT: argument unused
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=edge,indirect-calls,trace-bb,trace-pc,trace-cmp,8bit-counters %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FEATURES
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=edge,indirect-calls,trace-bb,trace-pc,trace-cmp,8bit-counters,trace-div,trace-gep %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FEATURES
 end_comment
 
 begin_comment
@@ -153,6 +153,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-trace-cmp
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-trace-div
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-trace-gep
 end_comment
 
 begin_comment
@@ -229,6 +237,34 @@ end_comment
 
 begin_comment
 comment|// CHECK-TRACE_PC_FUNC: -fsanitize-coverage-trace-pc
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-coverage=trace-pc-guard %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TRACE_PC_GUARD_EDGE
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-coverage=edge,trace-pc-guard %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TRACE_PC_GUARD_EDGE
+end_comment
+
+begin_comment
+comment|// CHECK-TRACE_PC_GUARD_EDGE: -fsanitize-coverage-type=3
+end_comment
+
+begin_comment
+comment|// CHECK-TRACE_PC_GUARD_EDGE: -fsanitize-coverage-trace-pc-guard
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-coverage=func,trace-pc-guard %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TRACE_PC_GUARD_FUNC
+end_comment
+
+begin_comment
+comment|// CHECK-TRACE_PC_GUARD_FUNC: -fsanitize-coverage-type=1
+end_comment
+
+begin_comment
+comment|// CHECK-TRACE_PC_GUARD_FUNC: -fsanitize-coverage-trace-pc-guard
 end_comment
 
 begin_comment

@@ -7,10 +7,6 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -fsyntax-only -pedantic -verify -DPREDECLARE
 end_comment
 
-begin_comment
-comment|// expected-no-diagnostics
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -46,6 +42,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// expected-warning {{requires inclusion of the header<stdio.h>}}
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -60,7 +60,7 @@ comment|// The following declaration is compatible with vfprintf, so we shouldn'
 end_comment
 
 begin_comment
-comment|// warn.
+comment|// reject.
 end_comment
 
 begin_function_decl
@@ -69,6 +69,21 @@ name|vfprintf
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PREDECLARE
+end_ifndef
+
+begin_comment
+comment|// expected-warning@-2 {{requires inclusion of the header<stdio.h>}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

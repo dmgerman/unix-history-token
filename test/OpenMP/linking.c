@@ -24,7 +24,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -fopenmp -target i386-unknown-linux \
+comment|// RUN:     -fopenmp -target i386-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -fopenmp -target x86_64-unknown-linux \
+comment|// RUN:     -fopenmp -target x86_64-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -fopenmp=libgomp -target i386-unknown-linux \
+comment|// RUN:     -fopenmp=libgomp -target i386-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -108,7 +108,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -fopenmp=libgomp -target x86_64-unknown-linux \
+comment|// RUN:     -fopenmp=libgomp -target x86_64-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -136,7 +136,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -fopenmp -target i386-unknown-linux \
+comment|// RUN:     -fopenmp -target i386-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -164,7 +164,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -fopenmp -target x86_64-unknown-linux \
+comment|// RUN:     -fopenmp -target x86_64-unknown-linux -rtlib=platform \
 end_comment
 
 begin_comment
@@ -236,6 +236,10 @@ comment|// RUN:     -fopenmp -fopenmp=libgomp -target i386-unknown-linux \
 end_comment
 
 begin_comment
+comment|// RUN:     -rtlib=platform \
+end_comment
+
+begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-OVERRIDE-32 %s
 end_comment
 
@@ -264,6 +268,10 @@ comment|// RUN:     -fopenmp -fopenmp=libgomp -target x86_64-unknown-linux \
 end_comment
 
 begin_comment
+comment|// RUN:     -rtlib=platform \
+end_comment
+
+begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-OVERRIDE-64 %s
 end_comment
 
@@ -288,7 +296,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -fopenmp=libomp -target x86_64-msvc-win32 \
+comment|// RUN:     -fopenmp=libomp -target x86_64-msvc-win32 -rtlib=platform \
 end_comment
 
 begin_comment
@@ -324,7 +332,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -fopenmp=libiomp5 -target x86_64-msvc-win32 \
+comment|// RUN:     -fopenmp=libiomp5 -target x86_64-msvc-win32 -rtlib=platform \
 end_comment
 
 begin_comment

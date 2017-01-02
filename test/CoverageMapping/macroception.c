@@ -59,10 +59,6 @@ end_return
 
 begin_comment
 unit|}
-comment|// CHECK-NEXT: File 1, 4:12 -> 4:14 = #0
-end_comment
-
-begin_comment
 comment|// CHECK-NEXT: Expansion,File 1, 4:12 -> 4:14 = #0
 end_comment
 
@@ -96,7 +92,6 @@ init|=
 literal|0
 decl_stmt|;
 name|M11
-comment|// CHECK-NEXT: File 1, 6:13 -> 6:16 = #0
 comment|// CHECK-NEXT: Expansion,File 1, 6:13 -> 6:16 = #0
 comment|// CHECK-NEXT: File 2, 5:13 -> 5:14 = #0
 comment|// CHECK-LABEL: func3:
@@ -113,9 +108,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|M11
-comment|// CHECK-NEXT: File 1, 4:12 -> 4:14 = #0
 comment|// CHECK-NEXT: Expansion,File 1, 4:12 -> 4:14 = #0
-comment|// CHECK-NEXT: File 2, 6:13 -> 6:16 = #0
 comment|// CHECK-NEXT: Expansion,File 2, 6:13 -> 6:16 = #0
 comment|// CHECK-NEXT: File 3, 3:12 -> 3:13 = #0
 comment|// CHECK-NEXT: File 4, 5:13 -> 5:14 = #0
@@ -131,15 +124,7 @@ name|M11
 end_block
 
 begin_comment
-comment|// CHECK-NEXT: File 1, 4:12 -> 4:14 = #0
-end_comment
-
-begin_comment
 comment|// CHECK-NEXT: Expansion,File 1, 4:12 -> 4:14 = #0
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 2, 6:13 -> 6:16 = #0
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -std=c1x -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -std=c11 -fsyntax-only -verify %s
 end_comment
 
 begin_function_decl
@@ -483,6 +483,70 @@ generic_selection|)
 expr_stmt|;
 end_expr_stmt
 
-unit|}
+begin_macro
+unit|}  int
+name|__attribute__
+argument_list|(
+argument|(overloadable)
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|test
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|double
+name|__attribute__
+argument_list|(
+operator|(
+name|overloadable
+operator|)
+argument_list|)
+name|test
+argument_list|(
+name|double
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|char
+name|testc
+parameter_list|(
+name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|PR30201
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+generic_selection|_Generic(
+literal|4
+generic_selection|,
+name|char
+association|:
+name|testc
+association_list|,
+type|default
+association|:
+name|test
+generic_selection|)
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

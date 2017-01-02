@@ -214,15 +214,7 @@ comment|// CHECK-LABEL: define<1 x double> @test_vmul_n_f64(<1 x double> %a, dou
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x double> %a to<8 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<1 x double> [[TMP1]] to double
+comment|// CHECK:   [[TMP2:%.*]] = bitcast<1 x double> %a to double
 end_comment
 
 begin_comment

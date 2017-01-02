@@ -278,5 +278,37 @@ block|; }
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|__attribute__
+argument_list|(
+argument|(packed, aligned(
+literal|2
+argument|))
+argument_list|)
+name|WithAttributes
+block|{
+name|T
+name|value
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|WithAttributes
+operator|<
+name|int
+operator|>
+operator|*
+name|get_with_attributes
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

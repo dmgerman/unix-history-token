@@ -1,21 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +sse2 -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +sse2 -emit-llvm -o - -Wall -Werror | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +sse2 -fno-signed-char -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding %s -triple=x86_64-apple-darwin -target-feature +sse2 -fno-signed-char -emit-llvm -o - -Wall -Werror | FileCheck %s
 end_comment
-
-begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#
@@ -282,7 +272,7 @@ name|B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_and_pd
-comment|// CHECK: and<4 x i32>
+comment|// CHECK: and<2 x i64>
 return|return
 name|_mm_and_pd
 argument_list|(
@@ -330,8 +320,8 @@ name|B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_andnot_pd
-comment|// CHECK: xor<4 x i32> %{{.*}},<i32 -1, i32 -1, i32 -1, i32 -1>
-comment|// CHECK: and<4 x i32>
+comment|// CHECK: xor<2 x i64> %{{.*}},<i64 -1, i64 -1>
+comment|// CHECK: and<2 x i64>
 return|return
 name|_mm_andnot_pd
 argument_list|(
@@ -2908,7 +2898,7 @@ name|B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_or_pd
-comment|// CHECK: or<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: or<2 x i64> %{{.*}}, %{{.*}}
 return|return
 name|_mm_or_pd
 argument_list|(
@@ -5404,7 +5394,7 @@ name|B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_xor_pd
-comment|// CHECK: xor<4 x i32> %{{.*}}, %{{.*}}
+comment|// CHECK: xor<2 x i64> %{{.*}}, %{{.*}}
 return|return
 name|_mm_xor_pd
 argument_list|(

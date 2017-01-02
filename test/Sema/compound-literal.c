@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -pedantic %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -fblocks -pedantic %s
 end_comment
 
 begin_comment
@@ -431,5 +431,52 @@ index|]
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// rdar://28949016 - Constant restriction should not apply to compound literals in blocks
+end_comment
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|^
+name|block
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+init|=
+lambda|^
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+name|int
+operator|*
+name|array
+operator|=
+operator|(
+name|int
+index|[]
+operator|)
+block|{
+name|i
+operator|,
+function_decl|i + 2
+operator|,
+function_decl|i + 4
+end_function_decl
+
+begin_return
+unit|};
+return|return
+name|array
+index|[
+name|i
+index|]
+return|;
+end_return
+
+unit|};
 end_unit
 

@@ -1132,31 +1132,7 @@ comment|// CHECK:   [[VECINIT1_I:%.*]] = insertelement<2 x double> [[VECINIT_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> %b to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x double> [[VECINIT1_I]] to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = bitcast<16 x i8> [[TMP1]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = bitcast<16 x i8> [[TMP2]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = call<2 x double> @llvm.fma.v2f64(<2 x double> [[TMP4]],<2 x double> [[TMP5]],<2 x double> [[TMP3]]) #2
+comment|// CHECK:   [[TMP6:%.*]] = call<2 x double> @llvm.fma.v2f64(<2 x double> %b,<2 x double> [[VECINIT1_I]],<2 x double> %a)
 end_comment
 
 begin_comment
@@ -1207,31 +1183,7 @@ comment|// CHECK:   [[VECINIT1_I:%.*]] = insertelement<2 x double> [[VECINIT_I]]
 end_comment
 
 begin_comment
-comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP1:%.*]] = bitcast<2 x double> [[SUB_I]] to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP2:%.*]] = bitcast<2 x double> [[VECINIT1_I]] to<16 x i8>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP3:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP4:%.*]] = bitcast<16 x i8> [[TMP1]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP5:%.*]] = bitcast<16 x i8> [[TMP2]] to<2 x double>
-end_comment
-
-begin_comment
-comment|// CHECK:   [[TMP6:%.*]] = call<2 x double> @llvm.fma.v2f64(<2 x double> [[TMP4]],<2 x double> [[TMP5]],<2 x double> [[TMP3]]) #2
+comment|// CHECK:   [[TMP6:%.*]] = call<2 x double> @llvm.fma.v2f64(<2 x double> [[SUB_I]],<2 x double> [[VECINIT1_I]],<2 x double> %a) #2
 end_comment
 
 begin_comment

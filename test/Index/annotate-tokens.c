@@ -977,5 +977,17 @@ begin_comment
 comment|// CHECK-RANGE2: Identifier: "field" [68:7 - 68:12] MemberRefExpr=field:62:9
 end_comment
 
+begin_comment
+comment|// RUN: c-index-test -test-annotate-tokens=%s:68:15:68:16 %s | FileCheck %s -check-prefix=CHECK-RANGE3
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE3: Literal: "1" [68:15 - 68:16] IntegerLiteral=
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE3-NOT: Punctuation: ";"
+end_comment
+
 end_unit
 

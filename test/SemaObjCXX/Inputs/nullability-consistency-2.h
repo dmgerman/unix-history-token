@@ -32,6 +32,14 @@ begin_comment
 comment|// expected-warning{{block pointer is missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-1 {{insert '_Nullable' if the block pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2 {{insert '_Nonnull' if the block pointer should never be null}}
+end_comment
+
 begin_function_decl
 name|void
 name|g3
@@ -39,9 +47,13 @@ parameter_list|(
 specifier|const
 name|id
 comment|// expected-warning{{missing a nullability type specifier}}
+comment|// expected-note@-1 {{insert '_Nullable' if the pointer may be null}}
+comment|// expected-note@-2 {{insert '_Nonnull' if the pointer should never be null}}
 specifier|volatile
 modifier|*
 comment|// expected-warning{{missing a nullability type specifier}}
+comment|// expected-note@-1 {{insert '_Nullable' if the pointer may be null}}
+comment|// expected-note@-2 {{insert '_Nonnull' if the pointer should never be null}}
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -127,6 +139,14 @@ begin_comment
 comment|// expected-warning{{missing a nullability type specifier}}
 end_comment
 
+begin_comment
+comment|// expected-note@-1 {{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2 {{insert '_Nonnull' if the pointer should never be null}}
+end_comment
+
 begin_expr_stmt
 unit|@
 name|end
@@ -149,6 +169,14 @@ end_expr_stmt
 
 begin_comment
 comment|// expected-warning{{missing a nullability type specifier}}
+end_comment
+
+begin_comment
+comment|// expected-note@-1 {{insert '_Nullable' if the pointer may be null}}
+end_comment
+
+begin_comment
+comment|// expected-note@-2 {{insert '_Nonnull' if the pointer should never be null}}
 end_comment
 
 begin_macro

@@ -8,7 +8,7 @@ comment|// PR12920
 end_comment
 
 begin_comment
-comment|// REQUIRES: clang-driver, shell
+comment|// REQUIRES: clang-driver
 end_comment
 
 begin_comment

@@ -1220,7 +1220,7 @@ argument_list|,
 literal|20
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{invalid conversion specifier 'b'}}
+comment|// expected-warning {{invalid conversion specifier 'b'}} expected-warning {{data argument not used by format string}}
 name|fprintf
 argument_list|(
 name|fp
@@ -1258,7 +1258,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{format specifies type 'long' but the argument has type 'int'}} expected-warning {{invalid conversion specifier ';'}}
+comment|// expected-warning{{format specifies type 'long' but the argument has type 'int'}} expected-warning {{invalid conversion specifier ';'}} expected-warning {{data argument not used by format string}}
 block|}
 end_function
 
@@ -1760,7 +1760,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{invalid conversion specifier 'W'}}
+comment|// expected-warning{{invalid conversion specifier 'W'}}  expected-warning {{data argument not used by format string}}
 name|printf
 argument_list|(
 literal|"%"
@@ -1926,8 +1926,6 @@ argument_list|(
 literal|"Format %d, is %! %f"
 argument_list|,
 literal|1
-argument_list|,
-literal|2
 argument_list|,
 literal|4.4
 argument_list|)
@@ -4346,6 +4344,263 @@ name|diagnostic
 name|warning
 literal|"-Wformat-nonliteral"
 end_pragma
+
+begin_function
+name|void
+name|test_char_pointer_arithmetic
+parameter_list|(
+name|int
+name|b
+parameter_list|)
+block|{
+specifier|const
+name|char
+name|s1
+index|[]
+init|=
+literal|"string"
+decl_stmt|;
+specifier|const
+name|char
+name|s2
+index|[]
+init|=
+literal|"%s string"
+decl_stmt|;
+name|printf
+argument_list|(
+name|s1
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{format string is not a string literal (potentially insecure)}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
+name|printf
+argument_list|(
+name|s1
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+name|s2
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+specifier|const
+name|char
+name|s3
+index|[]
+init|=
+literal|"%s string"
+decl_stmt|;
+name|printf
+argument_list|(
+operator|(
+name|s3
+operator|+
+literal|2
+operator|)
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more '%' conversions than data arguments}}
+comment|// expected-note@-2{{format string is defined here}}
+name|printf
+argument_list|(
+literal|2
+operator|+
+name|s2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|6
+operator|+
+name|s2
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|2
+operator|+
+operator|(
+name|b
+condition|?
+name|s1
+else|:
+name|s2
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+specifier|const
+name|char
+name|s5
+index|[]
+init|=
+literal|"string %s"
+decl_stmt|;
+name|printf
+argument_list|(
+literal|2
+operator|+
+operator|(
+name|b
+condition|?
+name|s2
+else|:
+name|s5
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more '%' conversions than data arguments}}
+comment|// expected-note@-2{{format string is defined here}}
+name|printf
+argument_list|(
+literal|2
+operator|+
+operator|(
+name|b
+condition|?
+name|s2
+else|:
+name|s5
+operator|)
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|2
+operator|+
+operator|(
+name|b
+condition|?
+name|s1
+else|:
+name|s2
+operator|-
+literal|2
+operator|)
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+specifier|const
+name|char
+name|s6
+index|[]
+init|=
+literal|"%s string"
+decl_stmt|;
+name|printf
+argument_list|(
+literal|2
+operator|+
+operator|(
+name|b
+condition|?
+name|s1
+else|:
+name|s6
+operator|-
+literal|2
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more '%' conversions than data arguments}}
+comment|// expected-note@-2{{format string is defined here}}
+name|printf
+argument_list|(
+literal|1
+condition|?
+name|s2
+operator|+
+literal|2
+else|:
+name|s2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|0
+condition|?
+name|s2
+else|:
+name|s2
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|2
+operator|+
+name|s2
+operator|+
+literal|5
+operator|*
+literal|3
+operator|-
+literal|16
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument not used}}
+specifier|const
+name|char
+name|s7
+index|[]
+init|=
+literal|"%s string %s %s"
+decl_stmt|;
+name|printf
+argument_list|(
+name|s7
+operator|+
+literal|3
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more '%' conversions than data arguments}}
+comment|// expected-note@-2{{format string is defined here}}
+block|}
+end_function
+
+begin_function
+name|void
+name|PR30481
+parameter_list|()
+block|{
+comment|// This caused crashes due to invalid casts.
+name|printf
+argument_list|(
+literal|1
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format string is not a string literal}} expected-warning{{incompatible integer to pointer conversion}} expected-note@format-strings.c:*{{passing argument to parameter here}} expected-note{{to avoid this}}
+block|}
+end_function
 
 end_unit
 

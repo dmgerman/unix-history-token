@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -201,13 +195,32 @@ label|:
 comment|/// \brief Construct a new LoopInfo for the loop with entry Header.
 name|LoopInfo
 argument_list|(
-argument|llvm::BasicBlock *Header
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|Header
 argument_list|,
-argument|const LoopAttributes&Attrs
+specifier|const
+name|LoopAttributes
+operator|&
+name|Attrs
 argument_list|,
-argument|llvm::DebugLoc Location
+specifier|const
+name|llvm
+operator|::
+name|DebugLoc
+operator|&
+name|StartLoc
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|DebugLoc
+operator|&
+name|EndLoc
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 comment|/// \brief Get the loop id metadata for this loop.
 name|llvm
 operator|::
@@ -310,15 +323,19 @@ name|BasicBlock
 operator|*
 name|Header
 argument_list|,
+specifier|const
 name|llvm
 operator|::
 name|DebugLoc
-name|Location
-operator|=
+operator|&
+name|StartLoc
+argument_list|,
+specifier|const
 name|llvm
 operator|::
 name|DebugLoc
-argument_list|()
+operator|&
+name|EndLoc
 argument_list|)
 decl_stmt|;
 comment|/// \brief Begin a new structured loop. Stage attributes from the Attrs list.
@@ -348,15 +365,19 @@ operator|*
 operator|>
 name|Attrs
 argument_list|,
+specifier|const
 name|llvm
 operator|::
 name|DebugLoc
-name|Location
-operator|=
+operator|&
+name|StartLoc
+argument_list|,
+specifier|const
 name|llvm
 operator|::
 name|DebugLoc
-argument_list|()
+operator|&
+name|EndLoc
 argument_list|)
 decl_stmt|;
 comment|/// \brief End the current loop.

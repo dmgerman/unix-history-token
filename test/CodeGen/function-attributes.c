@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -disable-llvm-optzns -Os -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -disable-llvm-passes -Os -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -disable-llvm-optzns -Os -std=c99 -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -disable-llvm-passes -Os -std=c99 -o - %s | FileCheck %s
 end_comment
 
 begin_comment

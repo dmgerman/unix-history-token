@@ -59,7 +59,21 @@ block|{
 name|foo
 argument_list|()
 expr_stmt|;
-comment|// expected-warning{{Call virtual functions during construction or destruction will never go to a more derived class}}
+if|#
+directive|if
+operator|!
+name|PUREONLY
+if|#
+directive|if
+name|INTERPROCEDURAL
+comment|// expected-warning-re@-3 {{{{^}}Call Path : fooCall to virtual function during construction will not dispatch to derived class}}
+else|#
+directive|else
+comment|// expected-warning-re@-5 {{{{^}}Call to virtual function during construction will not dispatch to derived class}}
+endif|#
+directive|endif
+endif|#
+directive|endif
 block|}
 name|virtual
 name|int

@@ -152,6 +152,74 @@ comment|// fpstrict-NOT: -ffast-math
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /Z7 -gcolumn-info -### -- %s 2>&1 | FileCheck -check-prefix=gcolumn %s
+end_comment
+
+begin_comment
+comment|// gcolumn: -dwarf-column-info
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Z7 -gno-column-info -### -- %s 2>&1 | FileCheck -check-prefix=gnocolumn %s
+end_comment
+
+begin_comment
+comment|// gnocolumn-NOT: -dwarf-column-info
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Z7 -### -- %s 2>&1 | FileCheck -check-prefix=gdefcolumn %s
+end_comment
+
+begin_comment
+comment|// gdefcolumn-NOT: -dwarf-column-info
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /FA -fprofile-instr-generate -- %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-GENERATE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /FA -fprofile-instr-generate=/tmp/somefile.profraw -- %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-GENERATE-FILE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /FA -fprofile-instr-generate -fprofile-instr-use -- %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /FA -fprofile-instr-generate -fprofile-instr-use=file -- %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GEN-USE %s
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-GENERATE: "-fprofile-instrument=clang"
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-GENERATE-FILE: "-fprofile-instrument-path=/tmp/somefile.profraw"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-MIX-GEN-USE: '{{[a-z=-]*}}' not allowed with '{{[a-z=-]*}}'
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /FA -fprofile-instr-use -- %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-USE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /FA -fprofile-instr-use=/tmp/somefile.prof -- %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-USE-FILE %s
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-USE: "-fprofile-instrument-use-path=default.profdata"
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-USE-FILE: "-fprofile-instrument-use-path=/tmp/somefile.prof"
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /GA -### -- %s 2>&1 | FileCheck -check-prefix=GA %s
 end_comment
 
@@ -508,6 +576,34 @@ comment|// showIncludes_E: warning: argument unused during compilation: '--show-
 end_comment
 
 begin_comment
+comment|// /source-charset: should warn on everything except UTF-8.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /source-charset:utf-16 -### -- %s 2>&1 | FileCheck -check-prefix=source-charset-utf-16 %s
+end_comment
+
+begin_comment
+comment|// source-charset-utf-16: invalid value 'utf-16'
+end_comment
+
+begin_comment
+comment|// /execution-charset: should warn on everything except UTF-8.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /execution-charset:utf-16 -### -- %s 2>&1 | FileCheck -check-prefix=execution-charset-utf-16 %s
+end_comment
+
+begin_comment
+comment|// execution-charset-utf-16: invalid value 'utf-16'
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /Umymacro -### -- %s 2>&1 | FileCheck -check-prefix=U %s
 end_comment
 
@@ -517,6 +613,22 @@ end_comment
 
 begin_comment
 comment|// U: "-U" "mymacro"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /validate-charset -### -- %s 2>&1 | FileCheck -check-prefix=validate-charset %s
+end_comment
+
+begin_comment
+comment|// validate-charset: -Winvalid-source-encoding
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /validate-charset- -### -- %s 2>&1 | FileCheck -check-prefix=validate-charset_ %s
+end_comment
+
+begin_comment
+comment|// validate-charset_: -Wno-invalid-source-encoding
 end_comment
 
 begin_comment
@@ -824,6 +936,10 @@ comment|// RUN:    /errorReport:foo \
 end_comment
 
 begin_comment
+comment|// RUN:    /execution-charset:utf-8 \
+end_comment
+
+begin_comment
 comment|// RUN:    /FC \
 end_comment
 
@@ -869,6 +985,14 @@ end_comment
 
 begin_comment
 comment|// RUN:    /sdl- \
+end_comment
+
+begin_comment
+comment|// RUN:    /source-charset:utf-8 \
+end_comment
+
+begin_comment
+comment|// RUN:    /utf-8 \
 end_comment
 
 begin_comment
@@ -1005,10 +1129,6 @@ end_comment
 
 begin_comment
 comment|// RUN:     /favor:blend \
-end_comment
-
-begin_comment
-comment|// RUN:     /FC \
 end_comment
 
 begin_comment
@@ -1396,7 +1516,7 @@ comment|// RUN: %clang_cl /Brepro- /Brepro /c '-###' -- %s 2>&1 | FileCheck -che
 end_comment
 
 begin_comment
-comment|// Brepro: "-mincremental-linker-compatible"
+comment|// Brepro-NOT: "-mincremental-linker-compatible"
 end_comment
 
 begin_comment
@@ -1404,7 +1524,7 @@ comment|// RUN: %clang_cl /Brepro /Brepro- /c '-###' -- %s 2>&1 | FileCheck -che
 end_comment
 
 begin_comment
-comment|// Brepro_-NOT: "-mincremental-linker-compatible"
+comment|// Brepro_: "-mincremental-linker-compatible"
 end_comment
 
 begin_comment
@@ -1504,6 +1624,10 @@ comment|// ENV-_CL_-NOT: "-ffunction-sections"
 end_comment
 
 begin_comment
+comment|// RUN: env CL="%s" _CL_="%s" not %clang --rsp-quoting=windows -c
+end_comment
+
+begin_comment
 comment|// Accept "core" clang options.
 end_comment
 
@@ -1537,6 +1661,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     -fdiagnostics-parseable-fixits \
+end_comment
+
+begin_comment
+comment|// RUN:     -fdiagnostics-absolute-paths \
 end_comment
 
 begin_comment
@@ -1576,11 +1704,15 @@ comment|// RUN:     -fno-ms-extensions \
 end_comment
 
 begin_comment
-comment|// RUN:     -mllvm -disable-llvm-optzns \
+comment|// RUN:     -mllvm -disable-llvm-passes \
 end_comment
 
 begin_comment
-comment|// RUN:     -resource-dir \
+comment|// RUN:     -resource-dir asdf \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=asdf \
 end_comment
 
 begin_comment
@@ -1589,6 +1721,18 @@ end_comment
 
 begin_comment
 comment|// RUN:     -fmacro-backtrace-limit=0 \
+end_comment
+
+begin_comment
+comment|// RUN:     -fstandalone-debug \
+end_comment
+
+begin_comment
+comment|// RUN:     -flimit-debug-info \
+end_comment
+
+begin_comment
+comment|// RUN:     -flto \
 end_comment
 
 begin_comment

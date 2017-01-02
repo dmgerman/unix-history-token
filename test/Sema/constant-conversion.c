@@ -54,7 +54,7 @@ name|i5
 operator|=
 literal|36
 expr_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 36 to 4}}
+comment|// expected-warning {{implicit truncation from 'int' to bit-field changes value from 36 to 4}}
 block|}
 end_function
 
@@ -148,7 +148,7 @@ block|,
 literal|10
 block|}
 decl_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 10 to -2}}
+comment|// expected-warning {{implicit truncation from 'int' to bit-field changes value from 10 to -2}}
 name|struct
 name|A
 name|b
@@ -164,7 +164,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 10 to -2}}
+comment|// expected-warning {{implicit truncation from 'int' to bit-field changes value from 10 to -2}}
 name|struct
 name|A
 name|c
@@ -178,7 +178,7 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 10 to 2}}
+comment|// expected-warning {{implicit truncation from 'int' to bit-field changes value from 10 to 2}}
 name|struct
 name|A
 name|d
@@ -193,7 +193,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 10 to 2}}
+comment|// expected-warning {{implicit truncation from 'int' to bit-field changes value from 10 to 2}}
 name|struct
 name|A
 name|e
@@ -205,7 +205,7 @@ operator|=
 literal|10
 block|}
 decl_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 10 to 2}}
+comment|// expected-warning {{implicit truncation from 'int' to bit-field changes value from 10 to 2}}
 block|}
 end_function
 
@@ -231,7 +231,7 @@ name|c
 operator|=
 literal|0x101
 expr_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 257 to 1}}
+comment|// expected-warning {{implicit truncation from 'int' to bit-field changes value from 257 to 1}}
 block|}
 end_function
 
@@ -252,7 +252,7 @@ block|}
 name|a
 struct|;
 comment|// Don't warn about this implicit conversion to bool, or at least
-comment|// don't warn about it just because it's a bitfield.
+comment|// don't warn about it just because it's a bit-field.
 name|a
 operator|.
 name|b
@@ -326,9 +326,17 @@ operator|.
 name|twoBits1
 operator|=
 operator|~
+literal|0
+expr_stmt|;
+comment|// no-warning
+name|f
+operator|.
+name|twoBits1
+operator|=
+operator|~
 literal|1
 expr_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from -2 to 2}}
+comment|// no-warning
 name|f
 operator|.
 name|twoBits2
@@ -336,7 +344,7 @@ operator|=
 operator|~
 literal|2
 expr_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from -3 to 1}}
+comment|// expected-warning {{implicit truncation from 'int' to bit-field changes value from -3 to 1}}
 name|f
 operator|.
 name|twoBits1
@@ -388,7 +396,7 @@ name|x
 operator|=
 name|C
 expr_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 2 to 0}}
+comment|// expected-warning {{implicit truncation from 'int' to bit-field changes value from 2 to 0}}
 block|}
 end_function
 
@@ -549,6 +557,13 @@ decl_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|A
+value|1
+end_define
+
 begin_function
 name|void
 name|test10
@@ -589,17 +604,42 @@ name|s
 operator|.
 name|a
 operator|=
+operator|~
+literal|0
+expr_stmt|;
+name|s
+operator|.
+name|a
+operator|=
+operator|~
+literal|0U
+expr_stmt|;
+name|s
+operator|.
+name|a
+operator|=
+operator|~
+operator|(
+literal|1
+operator|<<
+name|A
+operator|)
+expr_stmt|;
+name|s
+operator|.
+name|a
+operator|=
 operator|-
 literal|9
 expr_stmt|;
-comment|// expected-warning{{implicit truncation from 'int' to bitfield changes value from -9 to 7}}
+comment|// expected-warning{{implicit truncation from 'int' to bit-field changes value from -9 to 7}}
 name|s
 operator|.
 name|a
 operator|=
 literal|16
 expr_stmt|;
-comment|// expected-warning{{implicit truncation from 'int' to bitfield changes value from 16 to 0}}
+comment|// expected-warning{{implicit truncation from 'int' to bit-field changes value from 16 to 0}}
 block|}
 end_function
 

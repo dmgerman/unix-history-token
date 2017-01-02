@@ -1,21 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-apple-darwin -target-feature +avx -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding %s -O3 -triple=x86_64-apple-darwin -target-feature +avx -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
 comment|// FIXME: This is testing optimized generation of shuffle instructions and should be fixed.
 end_comment
-
-begin_comment
-comment|// Don't include mm_malloc.h, it's system specific.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MM_MALLOC_H
-end_define
 
 begin_include
 include|#
@@ -260,9 +250,7 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_broadcast_ss
 comment|// CHECK: insertelement<4 x float> {{.*}}, i32 0
-comment|// CHECK: insertelement<4 x float> {{.*}}, i32 1
-comment|// CHECK: insertelement<4 x float> {{.*}}, i32 2
-comment|// CHECK: insertelement<4 x float> {{.*}}, i32 3
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> undef,<4 x i32> zeroinitializer
 return|return
 name|_mm_broadcast_ss
 argument_list|(
@@ -284,9 +272,7 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_broadcast_sd
 comment|// CHECK: insertelement<4 x double> {{.*}}, i32 0
-comment|// CHECK: insertelement<4 x double> {{.*}}, i32 1
-comment|// CHECK: insertelement<4 x double> {{.*}}, i32 2
-comment|// CHECK: insertelement<4 x double> {{.*}}, i32 3
+comment|// CHECK: shufflevector<4 x double> {{.*}},<4 x double> undef,<4 x i32> zeroinitializer
 return|return
 name|_mm256_broadcast_sd
 argument_list|(
@@ -308,13 +294,7 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm256_broadcast_ss
 comment|// CHECK: insertelement<8 x float> {{.*}}, i32 0
-comment|// CHECK: insertelement<8 x float> {{.*}}, i32 1
-comment|// CHECK: insertelement<8 x float> {{.*}}, i32 2
-comment|// CHECK: insertelement<8 x float> {{.*}}, i32 3
-comment|// CHECK: insertelement<8 x float> {{.*}}, i32 4
-comment|// CHECK: insertelement<8 x float> {{.*}}, i32 5
-comment|// CHECK: insertelement<8 x float> {{.*}}, i32 6
-comment|// CHECK: insertelement<8 x float> {{.*}}, i32 7
+comment|// CHECK: shufflevector<8 x float> {{.*}},<8 x float> undef,<8 x i32> zeroinitializer
 return|return
 name|_mm256_broadcast_ss
 argument_list|(

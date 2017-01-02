@@ -877,7 +877,7 @@ literal|"-nocudainc"
 block|,
 literal|"-target"
 block|,
-literal|"nvptx64-unknown-unknown"
+literal|"x86_64-unknown-unknown"
 block|,
 name|CompileArg
 block|}

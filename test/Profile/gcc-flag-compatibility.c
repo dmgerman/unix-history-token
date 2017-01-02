@@ -32,23 +32,11 @@ comment|// -fprofile-use=<dir>/file   Uses the profile file<dir>/file
 end_comment
 
 begin_comment
-comment|// FIXME: IRPGO shouldn't use the override API when no profraw name is given.
-end_comment
-
-begin_comment
-comment|// Check that -fprofile-generate overrides the default profraw.
-end_comment
-
-begin_comment
 comment|// RUN: %clang %s -c -S -o - -emit-llvm -fprofile-generate | FileCheck -check-prefix=PROFILE-GEN %s
 end_comment
 
 begin_comment
-comment|// PROFILE-GEN: call void @__llvm_profile_override_default_filename
-end_comment
-
-begin_comment
-comment|// PROFILE-GEN: declare void @__llvm_profile_override_default_filename(i8*)
+comment|// PROFILE-GEN: __llvm_profile_filename
 end_comment
 
 begin_comment
@@ -60,15 +48,7 @@ comment|// RUN: %clang %s -c -S -o - -emit-llvm -fprofile-generate=/path/to | Fi
 end_comment
 
 begin_comment
-comment|// PROFILE-GEN-EQ: private constant [25 x i8] c"/path/to{{/|\\5C}}default.profraw\00"
-end_comment
-
-begin_comment
-comment|// PROFILE-GEN-EQ: call void @__llvm_profile_override_default_filename(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @0, i32 0, i32 0))
-end_comment
-
-begin_comment
-comment|// PROFILE-GEN-EQ: declare void @__llvm_profile_override_default_filename(i8*)
+comment|// PROFILE-GEN-EQ: constant [{{.*}} x i8] c"/path/to{{/|\\5C}}{{.*}}\00"
 end_comment
 
 begin_comment
@@ -88,7 +68,7 @@ comment|// RUN: llvm-profdata merge %S/Inputs/gcc-flag-compatibility.proftext -o
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -o - -mllvm -disable-llvm-optzns -emit-llvm -S -fprofile-use=%t.dir/some/path | FileCheck -check-prefix=PROFILE-USE-2 %s
+comment|// RUN: %clang %s -o - -mllvm -disable-llvm-passes -emit-llvm -S -fprofile-use=%t.dir/some/path | FileCheck -check-prefix=PROFILE-USE-2 %s
 end_comment
 
 begin_comment
@@ -112,7 +92,7 @@ comment|// RUN: llvm-profdata merge %S/Inputs/gcc-flag-compatibility.proftext -o
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -o - -mllvm -disable-llvm-optzns -emit-llvm -S -fprofile-use=%t.dir/some/path/file.prof | FileCheck -check-prefix=PROFILE-USE-3 %s
+comment|// RUN: %clang %s -o - -mllvm -disable-llvm-passes -emit-llvm -S -fprofile-use=%t.dir/some/path/file.prof | FileCheck -check-prefix=PROFILE-USE-3 %s
 end_comment
 
 begin_comment

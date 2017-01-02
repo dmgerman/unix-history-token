@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/type_traits.h"
 end_include
 
@@ -2100,7 +2094,7 @@ name|new
 argument_list|(
 argument|C
 argument_list|,
-argument|llvm::alignOf<T>()
+argument|alignof(T)
 argument_list|)
 name|T
 index|[

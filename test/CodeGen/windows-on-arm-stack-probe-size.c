@@ -20,7 +20,7 @@ comment|// RUN: %clang_cc1 -triple thumbv7-windows-itanium -fms-extensions -O2 -
 end_comment
 
 begin_comment
-comment|// RUN:     | FileCheck %s -check-prefix CHECK
+comment|// RUN:     | FileCheck %s
 end_comment
 
 begin_macro

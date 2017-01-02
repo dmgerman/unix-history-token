@@ -668,6 +668,10 @@ comment|// AVX512VBMI: #define __AVX2__ 1
 end_comment
 
 begin_comment
+comment|// AVX512VBMI: #define __AVX512BW__ 1
+end_comment
+
+begin_comment
 comment|// AVX512VBMI: #define __AVX512F__ 1
 end_comment
 
@@ -709,6 +713,18 @@ end_comment
 
 begin_comment
 comment|// AVX512VBMI: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=atom -mavx512vbmi -mno-avx512bw -x c -E -dM -o - %s | FileCheck -match-full-lines --check-prefix=AVX512VBMINOAVX512BW %s
+end_comment
+
+begin_comment
+comment|// AVX512VBMINOAVX512BW-NOT: #define __AVX512BW__ 1
+end_comment
+
+begin_comment
+comment|// AVX512VBMINOAVX512BW-NOT: #define __AVX512VBMI__ 1
 end_comment
 
 begin_comment

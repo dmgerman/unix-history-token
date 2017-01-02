@@ -12,6 +12,10 @@ comment|// RUN: %clang_cl /c -### -- %s 2>&1 | FileCheck -check-prefix=DEFAULT %
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /c -flto -### -- %s 2>&1 | FileCheck -check-prefix=DEFAULT %s
+end_comment
+
+begin_comment
 comment|// DEFAULT: "-o" "cl-outputs.obj"
 end_comment
 
@@ -25,6 +29,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cl /Foa -### -- %s 2>&1 | FileCheck -check-prefix=FoNAME %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Foa -flto -### -- %s 2>&1 | FileCheck -check-prefix=FoNAME %s
 end_comment
 
 begin_comment

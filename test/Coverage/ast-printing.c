@@ -4,7 +4,15 @@ comment|// RUN: %clang_cc1 -fsyntax-only %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -ast-print %s
+comment|// RUN: %clang_cc1 -ast-print %s -o %t.1.c
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -ast-print %t.1.c -o %t.2.c
+end_comment
+
+begin_comment
+comment|// RUN: diff %t.1.c %t.2.c
 end_comment
 
 begin_comment

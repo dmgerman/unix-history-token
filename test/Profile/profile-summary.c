@@ -8,7 +8,7 @@ comment|// RUN: llvm-profdata merge %S/Inputs/max-function-count.proftext -o %t.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -o - -disable-llvm-optzns -emit-llvm -fprofile-instrument-use-path=%t.profdata | FileCheck %s
+comment|// RUN: %clang_cc1 %s -o - -disable-llvm-passes -emit-llvm -fprofile-instrument-use-path=%t.profdata | FileCheck %s
 end_comment
 
 begin_comment

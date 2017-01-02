@@ -63,6 +63,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|EXTERN_C
+name|int
+name|scanf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -179,6 +193,84 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
+begin_comment
+comment|// GNU C allows forward declaring enums.
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|forward_declared
+modifier|*
+name|fwd
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|forward_enum
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+literal|"%u"
+argument_list|,
+name|fwd
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'unsigned int' but the argument has type 'enum forward_declared *}}
+name|printf
+argument_list|(
+literal|"%p"
+argument_list|,
+name|fwd
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%c"
+argument_list|,
+name|fwd
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'char *' but the argument has type 'enum forward_declared *}}
+name|scanf
+argument_list|(
+literal|"%u"
+argument_list|,
+name|fwd
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%lu"
+argument_list|,
+name|fwd
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'unsigned long *' but the argument has type 'enum forward_declared *}}
+name|scanf
+argument_list|(
+literal|"%p"
+argument_list|,
+name|fwd
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'void **' but the argument has type 'enum forward_declared *}}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

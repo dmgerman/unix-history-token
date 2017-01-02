@@ -3034,13 +3034,151 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
+comment|/// Struct that keeps all the relevant information that should be kept
+comment|/// throughout a 'target data' region.
+name|class
+name|TargetDataInfo
+block|{
+comment|/// Set to true if device pointer information have to be obtained.
+name|bool
+name|RequiresDevicePointerInfo
+init|=
+name|false
+decl_stmt|;
+name|public
+label|:
+comment|/// The array of base pointer passed to the runtime library.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|BasePointersArray
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// The array of section pointers passed to the runtime library.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|PointersArray
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// The array of sizes passed to the runtime library.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SizesArray
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// The array of map types passed to the runtime library.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|MapTypesArray
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// The total number of pointers passed to the runtime library.
+name|unsigned
+name|NumberOfPtrs
+init|=
+literal|0u
+decl_stmt|;
+comment|/// Map between the a declaration of a capture and the corresponding base
+comment|/// pointer address where the runtime returns the device pointers.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|ValueDecl
+operator|*
+operator|,
+name|Address
+operator|>
+name|CaptureDeviceAddrMap
+expr_stmt|;
+name|explicit
+name|TargetDataInfo
+parameter_list|()
+block|{}
+name|explicit
+name|TargetDataInfo
+argument_list|(
+argument|bool RequiresDevicePointerInfo
+argument_list|)
+block|:
+name|RequiresDevicePointerInfo
+argument_list|(
+argument|RequiresDevicePointerInfo
+argument_list|)
+block|{}
+comment|/// Clear information about the data arrays.
+name|void
+name|clearArrayInfo
+parameter_list|()
+block|{
+name|BasePointersArray
+operator|=
+name|nullptr
+expr_stmt|;
+name|PointersArray
+operator|=
+name|nullptr
+expr_stmt|;
+name|SizesArray
+operator|=
+name|nullptr
+expr_stmt|;
+name|MapTypesArray
+operator|=
+name|nullptr
+expr_stmt|;
+name|NumberOfPtrs
+operator|=
+literal|0u
+expr_stmt|;
+block|}
+comment|/// Return true if the current target data information has valid arrays.
+name|bool
+name|isValid
+parameter_list|()
+block|{
+return|return
+name|BasePointersArray
+operator|&&
+name|PointersArray
+operator|&&
+name|SizesArray
+operator|&&
+name|MapTypesArray
+operator|&&
+name|NumberOfPtrs
+return|;
+block|}
+name|bool
+name|requiresDevicePointerInfo
+parameter_list|()
+block|{
+return|return
+name|RequiresDevicePointerInfo
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief Emit the target data mapping code associated with \a D.
 comment|/// \param D Directive to emit.
-comment|/// \param IfCond Expression evaluated in if clause associated with the target
-comment|/// directive, or null if no if clause is used.
+comment|/// \param IfCond Expression evaluated in if clause associated with the
+comment|/// target directive, or null if no device clause is used.
 comment|/// \param Device Expression evaluated in device clause associated with the
 comment|/// target directive, or null if no device clause is used.
-comment|/// \param CodeGen Function that emits the enclosed region.
+comment|/// \param Info A record used to store information that needs to be preserved
+comment|/// until the region is closed.
 name|virtual
 name|void
 name|emitTargetDataCalls
@@ -3068,6 +3206,10 @@ specifier|const
 name|RegionCodeGenTy
 modifier|&
 name|CodeGen
+parameter_list|,
+name|TargetDataInfo
+modifier|&
+name|Info
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit the data mapping/movement code associated with the directive

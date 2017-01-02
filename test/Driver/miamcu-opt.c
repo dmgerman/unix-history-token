@@ -12,31 +12,31 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -miamcu -no-canonical-prefixes %s -### -o %t.o 2>&1 | FileCheck %s
+comment|// RUN: %clang -miamcu -rtlib=platform -no-canonical-prefixes %s -### -o %t.o 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -miamcu -no-canonical-prefixes -m32 %s -### -o %t.o 2>&1 | FileCheck %s
+comment|// RUN: %clang -miamcu -rtlib=platform -no-canonical-prefixes -m32 %s -### -o %t.o 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -miamcu -no-canonical-prefixes -target x86_64-unknown-linux-gnu %s -### -o %t.o 2>&1 | FileCheck %s
+comment|// RUN: %clang -miamcu -rtlib=platform -no-canonical-prefixes -target x86_64-unknown-linux-gnu %s -### -o %t.o 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -mno-iamcu -miamcu -no-canonical-prefixes %s -### -o %t.o 2>&1 | FileCheck %s
+comment|// RUN: %clang -mno-iamcu -miamcu -rtlib=platform -no-canonical-prefixes %s -### -o %t.o 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -miamcu -no-canonical-prefixes -m64 %s -### -o %t.o 2>&1 | FileCheck %s -check-prefix=M64
+comment|// RUN: %clang -miamcu -rtlib=platform -no-canonical-prefixes -m64 %s -### -o %t.o 2>&1 | FileCheck %s -check-prefix=M64
 end_comment
 
 begin_comment
-comment|// RUN: %clang -miamcu -no-canonical-prefixes -dynamic %s -### -o %t.o 2>&1 | FileCheck %s -check-prefix=DYNAMIC
+comment|// RUN: %clang -miamcu -rtlib=platform -no-canonical-prefixes -dynamic %s -### -o %t.o 2>&1 | FileCheck %s -check-prefix=DYNAMIC
 end_comment
 
 begin_comment
-comment|// RUN: %clang -miamcu -no-canonical-prefixes  -target armv8-eabi %s -### -o %t.o 2>&1 | FileCheck %s -check-prefix=NOT-X86
+comment|// RUN: %clang -miamcu -rtlib=platform -no-canonical-prefixes  -target armv8-eabi %s -### -o %t.o 2>&1 | FileCheck %s -check-prefix=NOT-X86
 end_comment
 
 begin_comment

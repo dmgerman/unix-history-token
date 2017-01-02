@@ -103,7 +103,7 @@ comment|// CHECK: call void (i32, ...) @qux
 end_comment
 
 begin_comment
-comment|// CHECK: attributes [[NUW]] = { nounwind{{.*}} }
+comment|// CHECK: attributes [[NUW]] = { noinline nounwind{{.*}} }
 end_comment
 
 end_unit

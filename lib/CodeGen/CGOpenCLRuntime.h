@@ -116,6 +116,12 @@ name|Type
 operator|*
 name|PipeTy
 expr_stmt|;
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|SamplerTy
+expr_stmt|;
 name|public
 label|:
 name|CGOpenCLRuntime
@@ -131,6 +137,11 @@ name|CGM
 argument_list|)
 operator|,
 name|PipeTy
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|SamplerTy
 argument_list|(
 argument|nullptr
 argument_list|)
@@ -177,6 +188,43 @@ name|Type
 operator|*
 name|getPipeType
 argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|getSamplerType
+argument_list|()
+expr_stmt|;
+comment|// \brief Returnes a value which indicates the size in bytes of the pipe
+comment|// element.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getPipeElemSize
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|PipeArg
+argument_list|)
+expr_stmt|;
+comment|// \brief Returnes a value which indicates the alignment in bytes of the pipe
+comment|// element.
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getPipeElemAlign
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|PipeArg
+argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;

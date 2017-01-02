@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MPIFunctionClassifier.h"
+file|"MPITypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MPITypes.h"
+file|"clang/StaticAnalyzer/Checkers/MPIFunctionClassifier.h"
 end_include
 
 begin_include
@@ -139,7 +139,7 @@ name|BReporter
 argument_list|(
 argument|*this
 argument_list|)
-block|{ }
+block|{}
 comment|// path-sensitive callbacks
 name|void
 name|checkPreCall
@@ -256,10 +256,9 @@ name|Ctx
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Checks if a request is used by a wait multiple times in sequence without
-comment|/// intermediate nonblocking call or if the request used by the wait
-comment|/// function was not used at all before. The check contains a guard,
-comment|/// in order to only inspect wait functions.
+comment|/// Checks if the request used by the wait function was not used at all
+comment|/// before. The check contains a guard, in order to only inspect wait
+comment|/// functions.
 comment|///
 comment|/// \param PreCallEvent MPI call to verify
 name|void

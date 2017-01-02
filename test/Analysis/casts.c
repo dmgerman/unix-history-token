@@ -112,6 +112,7 @@ operator|)
 operator|&
 name|storage
 decl_stmt|;
+comment|// expected-warning{{Casting data to a larger structure type and accessing a field can lead to memory access errors or data corruption}}
 name|socklen_t
 name|addrlen
 init|=

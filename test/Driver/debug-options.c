@@ -8,6 +8,10 @@ comment|// rdar://10383444
 end_comment
 
 begin_comment
+comment|// Linux.
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -c -g %s -target x86_64-linux-gnu 2>&1 \
 end_comment
 
@@ -68,6 +72,10 @@ comment|// RUN: %clang -### -c -gsce %s -target x86_64-linux-gnu 2>&1 \
 end_comment
 
 begin_comment
+comment|// Darwin.
+end_comment
+
+begin_comment
 comment|// RUN:             | FileCheck -check-prefix=G -check-prefix=G_SCE %s
 end_comment
 
@@ -76,47 +84,159 @@ comment|// RUN: %clang -### -c -g %s -target x86_64-apple-darwin 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck -check-prefix=G_DARWIN -check-prefix=G_LLDB %s
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -g2 %s -target x86_64-apple-darwin 2>&1 \
+comment|// RUN:                         -check-prefix=G_DWARF2 \
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck -check-prefix=G_DARWIN %s
+comment|// RUN:                         -check-prefix=G_LLDB %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -g3 %s -target x86_64-apple-darwin 2>&1 \
+comment|// RUN: %clang -### -c -g %s -target x86_64-apple-darwin16 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck -check-prefix=G_DARWIN %s
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -ggdb %s -target x86_64-apple-darwin 2>&1 \
+comment|// RUN:                         -check-prefix=G_DWARF4 \
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck -check-prefix=G_DARWIN -check-prefix=G_GDB %s
+comment|// RUN:                         -check-prefix=G_LLDB %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -ggdb1 %s -target x86_64-apple-darwin 2>&1 \
+comment|// RUN: %clang -### -c -g2 %s -target x86_64-apple-darwin16 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck -check-prefix=GLTO_ONLY_DWARF2 %s
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -ggdb3 %s -target x86_64-apple-darwin 2>&1 \
+comment|// RUN:                         -check-prefix=G_DWARF4 %s
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck -check-prefix=G_DARWIN %s
+comment|// RUN: %clang -### -c -g3 %s -target x86_64-apple-darwin16 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
+end_comment
+
+begin_comment
+comment|// RUN:                         -check-prefix=G_DWARF4 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -ggdb %s -target x86_64-apple-darwin16 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
+end_comment
+
+begin_comment
+comment|// RUN:                         -check-prefix=G_DWARF4 \
+end_comment
+
+begin_comment
+comment|// RUN:                         -check-prefix=G_GDB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -ggdb1 %s -target x86_64-apple-darwin16 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=GLTO_ONLY %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -ggdb3 %s -target x86_64-apple-darwin16 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
+end_comment
+
+begin_comment
+comment|// RUN:                         -check-prefix=G_DWARF4 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -g %s -target x86_64-apple-macosx10.11 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
+end_comment
+
+begin_comment
+comment|// RUN:                         -check-prefix=G_DWARF4 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -g %s -target x86_64-apple-macosx10.10 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_ONLY_DWARF2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -g %s -target armv7-apple-ios9.0 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
+end_comment
+
+begin_comment
+comment|// RUN:                         -check-prefix=G_DWARF4 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -g %s -target armv7-apple-ios8.0 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_ONLY_DWARF2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -g %s -target armv7k-apple-watchos 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
+end_comment
+
+begin_comment
+comment|// RUN:                         -check-prefix=G_DWARF4 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c -g %s -target arm64-apple-tvos9.0 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE \
+end_comment
+
+begin_comment
+comment|// RUN:                         -check-prefix=G_DWARF4 %s
+end_comment
+
+begin_comment
+comment|// FreeBSD.
 end_comment
 
 begin_comment
@@ -176,7 +296,11 @@ comment|// RUN:             | FileCheck -check-prefix=CI %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -gdwarf-2 %s 2>&1 | FileCheck -check-prefix=G_D2 %s
+comment|// RUN: %clang -### -c -gdwarf-2 %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:             | FileCheck -check-prefix=G_ONLY_DWARF2 %s
 end_comment
 
 begin_comment
@@ -260,7 +384,7 @@ comment|// RUN: %clang -### -c -gline-tables-only %s -target x86_64-apple-darwin
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck -check-prefix=GLTO_ONLY_DWARF2 %s
+comment|// RUN:             | FileCheck -check-prefix=GLTO_ONLY %s
 end_comment
 
 begin_comment
@@ -288,11 +412,11 @@ comment|// RUN:             | FileCheck -check-prefix=G_ONLY %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -gline-tables-only -g %s -target x86_64-apple-darwin 2>&1 \
+comment|// RUN: %clang -### -c -gline-tables-only -g %s -target x86_64-apple-darwin16 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:             | FileCheck -check-prefix=G_ONLY_DWARF2 %s
+comment|// RUN:             | FileCheck -check-prefix=G_STANDALONE -check-prefix=G_DWARF4 %s
 end_comment
 
 begin_comment
@@ -424,11 +548,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// G: "-cc1"
+comment|// RUN: %clang -### -gmodules -g %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// G: "-debug-info-kind=limited"
+comment|// RUN:        | FileCheck -check-prefix=GEXTREFS %s
 end_comment
 
 begin_comment
@@ -436,11 +560,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// G_DARWIN: "-cc1"
+comment|// RUN: %clang -### -gline-tables-only -gmodules %s 2>&1 \
 end_comment
 
 begin_comment
-comment|// G_DARWIN: "-dwarf-version=2"
+comment|// RUN:        | FileCheck -check-prefix=GEXTREFS %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -gmodules -gline-tables-only %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:        | FileCheck -check-prefix=GLTO_ONLY %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// G: "-cc1"
+end_comment
+
+begin_comment
+comment|// G: "-debug-info-kind=limited"
 end_comment
 
 begin_comment
@@ -484,18 +632,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// G_D2: "-cc1"
-end_comment
-
-begin_comment
-comment|// G_D2: "-dwarf-version=2"
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// G_NO: "-cc1"
 end_comment
 
@@ -512,7 +648,15 @@ comment|// GLTO_ONLY: "-cc1"
 end_comment
 
 begin_comment
+comment|// GLTO_ONLY-NOT: "-dwarf-ext-refs"
+end_comment
+
+begin_comment
 comment|// GLTO_ONLY: "-debug-info-kind=line-tables-only"
+end_comment
+
+begin_comment
+comment|// GLTO_ONLY-NOT: "-dwarf-ext-refs"
 end_comment
 
 begin_comment
@@ -548,22 +692,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// G_GDB:  "-debugger-tuning=gdb"
-end_comment
-
-begin_comment
-comment|// G_LLDB: "-debugger-tuning=lldb"
-end_comment
-
-begin_comment
-comment|// G_SCE:  "-debugger-tuning=sce"
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// These tests assert that "-gline-tables-only" "-g" uses the latter,
 end_comment
 
@@ -581,6 +709,38 @@ end_comment
 
 begin_comment
 comment|// G_ONLY_DWARF2: "-dwarf-version=2"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// G_STANDALONE: "-cc1"
+end_comment
+
+begin_comment
+comment|// G_STANDALONE: "-debug-info-kind=standalone"
+end_comment
+
+begin_comment
+comment|// G_DWARF4: "-dwarf-version=4"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// G_GDB:  "-debugger-tuning=gdb"
+end_comment
+
+begin_comment
+comment|// G_LLDB: "-debugger-tuning=lldb"
+end_comment
+
+begin_comment
+comment|// G_SCE:  "-debugger-tuning=sce"
 end_comment
 
 begin_comment

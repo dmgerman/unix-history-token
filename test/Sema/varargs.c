@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s -triple i386-pc-unknown
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify %s -triple x86_64-apple-darwin9
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -fms-compatibility -DMS -verify %s -triple x86_64-pc-win32
 end_comment
 
 begin_function
@@ -491,6 +495,63 @@ comment|// expected-warning {{passing a parameter declared with the 'register' k
 name|__builtin_va_end
 argument_list|(
 name|ap
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+name|enum
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+name|E1
+block|{
+name|one1
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|f13
+parameter_list|(
+name|enum
+name|E1
+name|e
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|__builtin_va_list
+name|va
+decl_stmt|;
+name|__builtin_va_start
+argument_list|(
+name|va
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MS
+comment|// In Microsoft compatibility mode, all enum types are int, but in
+comment|// non-ms-compatibility mode, this enumeration type will undergo default
+comment|// argument promotions.
+comment|// expected-note@-7 {{parameter of type 'enum E1' is declared here}}
+comment|// expected-warning@-6 {{passing an object that undergoes default argument promotion to 'va_start' has undefined behavior}}
+endif|#
+directive|endif
+name|__builtin_va_end
+argument_list|(
+name|va
 argument_list|)
 expr_stmt|;
 block|}

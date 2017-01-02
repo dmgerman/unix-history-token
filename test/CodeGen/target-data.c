@@ -516,6 +516,14 @@ comment|// RUN: FileCheck %s -check-prefix=SYSTEMZ-VECTOR
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple s390x-unknown -target-cpu arch11 -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=SYSTEMZ-VECTOR
+end_comment
+
+begin_comment
 comment|// SYSTEMZ-VECTOR: target datalayout = "E-m:e-i1:8:16-i8:8:16-i64:64-f128:64-v128:64-a:8:16-n32:64"
 end_comment
 
@@ -540,7 +548,19 @@ comment|// RUN: FileCheck %s -check-prefix=TCE
 end_comment
 
 begin_comment
-comment|// TCE: target datalayout = "E-p:32:32-i8:8:32-i16:16:32-i64:32-f64:32-v64:32-v128:32-a:0:32-n32"
+comment|// TCE: target datalayout = "E-p:32:32:32-i1:8:8-i8:8:32-i16:16:32-i32:32:32-i64:32:32-f32:32:32-f64:32:32-v64:32:32-v128:32:32-v256:32:32-v512:32:32-v1024:32:32-a0:0:32-n32"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple tcele-unknown -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=TCELE
+end_comment
+
+begin_comment
+comment|// TCELE: target datalayout = "e-p:32:32:32-i1:8:8-i8:8:32-i16:16:32-i32:32:32-i64:32:32-f32:32:32-f64:32:32-v64:32:32-v128:32:32-v256:32:32-v512:32:32-v1024:32:32-a0:0:32-n32"
 end_comment
 
 begin_comment

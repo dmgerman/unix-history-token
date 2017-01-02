@@ -143,5 +143,33 @@ begin_comment
 comment|// CHECK-MSC-15: "-fms-compatibility-version=15.0.20706"
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Verify default version with -fms-extensions
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i686-windows -fms-extensions -dM -E -</dev/null -o - | FileCheck %s -check-prefix CHECK-MS-EXTENSIONS
+end_comment
+
+begin_comment
+comment|// CHECK-MS-EXTENSIONS: _MSC_BUILD 1
+end_comment
+
+begin_comment
+comment|// CHECK-MS-EXTENSIONS: _MSC_FULL_VER {{.+}}
+end_comment
+
+begin_comment
+comment|// CHECK-MS-EXTENSIONS: _MSC_VER {{..}}00
+end_comment
+
 end_unit
 

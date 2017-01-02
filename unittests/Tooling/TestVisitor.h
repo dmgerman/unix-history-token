@@ -154,6 +154,8 @@ name|Lang_CXX98
 block|,
 name|Lang_CXX11
 block|,
+name|Lang_CXX14
+block|,
 name|Lang_OBJC
 block|,
 name|Lang_OBJCXX11
@@ -217,6 +219,17 @@ operator|.
 name|push_back
 argument_list|(
 literal|"-std=c++11"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Lang_CXX14
+case|:
+name|Args
+operator|.
+name|push_back
+argument_list|(
+literal|"-std=c++14"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -478,7 +491,9 @@ block|;   }
 comment|/// \brief Expect 'Match' to occur at the given 'Line' and 'Column'.
 comment|///
 comment|/// Any number of expected matches can be set by calling this repeatedly.
-comment|/// Each is expected to be matched exactly once.
+comment|/// Each is expected to be matched 'Times' number of times. (This is useful in
+comment|/// cases in which different AST nodes can match at the same source code
+comment|/// location.)
 name|void
 name|ExpectMatch
 argument_list|(
@@ -487,6 +502,9 @@ argument_list|,
 argument|unsigned Line
 argument_list|,
 argument|unsigned Column
+argument_list|,
+argument|unsigned Times =
+literal|1
 argument_list|)
 block|{
 name|ExpectedMatches
@@ -500,6 +518,8 @@ argument_list|,
 name|Line
 argument_list|,
 name|Column
+argument_list|,
+name|Times
 argument_list|)
 argument_list|)
 block|;   }
@@ -855,6 +875,8 @@ argument_list|,
 argument|unsigned LineNumber
 argument_list|,
 argument|unsigned ColumnNumber
+argument_list|,
+argument|unsigned Times
 argument_list|)
 operator|:
 name|Candidate
@@ -866,9 +888,14 @@ argument_list|,
 name|ColumnNumber
 argument_list|)
 block|,
-name|Found
+name|TimesExpected
 argument_list|(
-argument|false
+name|Times
+argument_list|)
+block|,
+name|TimesSeen
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|void
@@ -893,22 +920,23 @@ name|Location
 argument_list|)
 condition|)
 block|{
-name|EXPECT_TRUE
+name|EXPECT_LT
 argument_list|(
-operator|!
-name|Found
+name|TimesSeen
+argument_list|,
+name|TimesExpected
 argument_list|)
 expr_stmt|;
-name|Found
-operator|=
-name|true
+operator|++
+name|TimesSeen
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|Found
+name|TimesSeen
+operator|<
+name|TimesExpected
 operator|&&
 name|Candidate
 operator|.
@@ -952,9 +980,11 @@ name|ExpectFound
 argument_list|()
 specifier|const
 block|{
-name|EXPECT_TRUE
+name|EXPECT_EQ
 argument_list|(
-name|Found
+name|TimesExpected
+argument_list|,
+name|TimesSeen
 argument_list|)
 operator|<<
 literal|"Expected \""
@@ -985,8 +1015,11 @@ operator|::
 name|string
 name|PartialMatches
 block|;
-name|bool
-name|Found
+name|unsigned
+name|TimesExpected
+block|;
+name|unsigned
+name|TimesSeen
 block|;   }
 block|;
 name|std

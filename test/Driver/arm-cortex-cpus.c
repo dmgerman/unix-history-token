@@ -452,6 +452,78 @@ comment|// CHECK-V8A: "-cc1"{{.*}} "-triple" "armv8-{{.*}}" "-target-cpu" "corte
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armv8r-linux-gnueabi -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8R %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=armv8r -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8R %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=armv8-r -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8R %s
+end_comment
+
+begin_comment
+comment|// CHECK-V8R: "-cc1"{{.*}} "-triple" "armv8r-{{.*}} "-target-cpu" "cortex-r52"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv8r-linux-gnueabi -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8R-BIG %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=armv8r -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8R-BIG %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=armv8-r -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8R-BIG %s
+end_comment
+
+begin_comment
+comment|// CHECK-V8R-BIG: "-cc1"{{.*}} "-triple" "armebv8r-{{.*}} "-target-cpu" "cortex-r52"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv8r-linux-gnueabi -mthumb -### -c %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:     FileCheck -check-prefix=CHECK-V8R-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=armv8r -mthumb -### -c %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:     FileCheck -check-prefix=CHECK-V8R-THUMB %s
+end_comment
+
+begin_comment
+comment|// CHECK-V8R-THUMB: "-cc1"{{.*}} "-triple" "thumbv8r-{{.*}} "-target-cpu" "cortex-r52"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv8r-linux-gnueabi -mthumb -mbig-endian -### -c %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:     FileCheck -check-prefix=CHECK-V8R-THUMB-BIG %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=armv8r -mthumb -mbig-endian -### -c %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:     FileCheck -check-prefix=CHECK-V8R-THUMB-BIG %s
+end_comment
+
+begin_comment
+comment|// CHECK-V8R-THUMB-BIG: "-cc1"{{.*}} "-triple" "thumbebv8r-{{.*}} "-target-cpu" "cortex-r52"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -mcpu=generic -target armv8 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-V8A-GENERIC %s
 end_comment
 
@@ -1012,7 +1084,19 @@ comment|// RUN: %clang -target arm -mcpu=bogus -### -c %s 2>&1 | FileCheck -chec
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armv8-apple-darwin -arch arm64 -mcpu=bogus -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BOGUS-CPU %s
+end_comment
+
+begin_comment
 comment|// CHECK-BOGUS-CPU: error: {{.*}} does not support '-mcpu=bogus'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv8-apple-darwin -arch arm64 -mtune=bogus -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BOGUS-TUNE %s
+end_comment
+
+begin_comment
+comment|// CHECK-BOGUS-TUNE: error: {{.*}} does not support '-mtune=bogus'
 end_comment
 
 begin_comment
@@ -1608,6 +1692,14 @@ comment|// RUN: %clang -target arm -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm -mcpu=cortex-a32 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
 end_comment
 
@@ -1633,6 +1725,14 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm -mcpu=exynos-m1 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m2 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m3 -mlittle-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A %s
 end_comment
 
 begin_comment
@@ -1668,6 +1768,14 @@ comment|// RUN: %clang -target armeb -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armeb -mcpu=exynos-m2 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armeb -mcpu=exynos-m3 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm -mcpu=cortex-a32 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A %s
 end_comment
 
@@ -1696,7 +1804,23 @@ comment|// RUN: %clang -target arm -mcpu=exynos-m1 -mbig-endian -### -c %s 2>&1 
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m2 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m3 -mbig-endian -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A %s
+end_comment
+
+begin_comment
 comment|// CHECK-BE-CPUV8A: "-cc1"{{.*}} "-triple" "armebv8-{{.*}}
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-r52 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8R %s
+end_comment
+
+begin_comment
+comment|// CHECK-CPUV8R: "-cc1"{{.*}} "-triple" "armv8r-{{.*}}
 end_comment
 
 begin_comment
@@ -1728,6 +1852,14 @@ comment|// RUN: %clang -target arm -mcpu=exynos-m1 -mthumb -### -c %s 2>&1 | Fil
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m2 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m3 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm -mcpu=cortex-a32 -mlittle-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
 end_comment
 
@@ -1753,6 +1885,14 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm -mcpu=exynos-m1 -mlittle-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m2 -mlittle-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m3 -mlittle-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV8A-THUMB %s
 end_comment
 
 begin_comment
@@ -1788,6 +1928,14 @@ comment|// RUN: %clang -target armeb -mcpu=exynos-m1 -mthumb -### -c %s 2>&1 | F
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armeb -mcpu=exynos-m2 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armeb -mcpu=exynos-m3 -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm -mcpu=cortex-a32 -mbig-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
 end_comment
 
@@ -1813,6 +1961,14 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target arm -mcpu=exynos-m1 -mbig-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m2 -mbig-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -mcpu=exynos-m3 -mbig-endian -mthumb -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BE-CPUV8A-THUMB %s
 end_comment
 
 begin_comment

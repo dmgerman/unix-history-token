@@ -20,15 +20,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PROF-INSTR-PATH: private constant [24 x i8] c"c-generate-test.profraw\00"
-end_comment
-
-begin_comment
-comment|// PROF-INSTR-PATH: call void @__llvm_profile_override_default_filename(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @0, i32 0, i32 0))
-end_comment
-
-begin_comment
-comment|// PROF-INSTR-PATH: declare void @__llvm_profile_override_default_filename(i8*)
+comment|// PROF-INSTR-PATH: constant [24 x i8] c"c-generate-test.profraw\00"
 end_comment
 
 begin_comment

@@ -1151,5 +1151,49 @@ begin_comment
 comment|// LINK_VERSION_DIGITS: invalid version number in '-mlinker-version=133.3.0.1a'
 end_comment
 
+begin_comment
+comment|// Check that we're passing -lto-pass-remarks-output for LTO
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %t.o -fsave-optimization-record -### -o foo/bar.out 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=PASS_REMARKS_OUTPUT %s< %t.log
+end_comment
+
+begin_comment
+comment|// PASS_REMARKS_OUTPUT: "-mllvm" "-lto-pass-remarks-output" "-mllvm" "foo/bar.out.opt.yaml"
+end_comment
+
+begin_comment
+comment|// PASS_REMARKS_OUTPUT-NOT: -lto-pass-remarks-with-hotness
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %t.o -fsave-optimization-record -### 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=PASS_REMARKS_OUTPUT_NO_O %s< %t.log
+end_comment
+
+begin_comment
+comment|// PASS_REMARKS_OUTPUT_NO_O: "-mllvm" "-lto-pass-remarks-output" "-mllvm" "a.out.opt.yaml"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %t.o -fsave-optimization-record -fprofile-instr-use=blah -### -o foo/bar.out 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=PASS_REMARKS_WITH_HOTNESS %s< %t.log
+end_comment
+
+begin_comment
+comment|// PASS_REMARKS_WITH_HOTNESS: "-mllvm" "-lto-pass-remarks-output" "-mllvm" "foo/bar.out.opt.yaml" "-mllvm" "-lto-pass-remarks-with-hotness"
+end_comment
+
 end_unit
 

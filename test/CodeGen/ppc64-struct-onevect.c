@@ -46,7 +46,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define<4 x float> @foo(<4 x float> inreg %a.coerce)
+comment|// CHECK-LABEL: define<4 x float> @foo(<4 x float> inreg returned %a.coerce)
 end_comment
 
 begin_comment

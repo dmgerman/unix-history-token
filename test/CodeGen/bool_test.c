@@ -4,7 +4,7 @@ comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc-apple-macosx10.4.0 -emit-llvm -o - %s -O2 -disable-llvm-optzns | FileCheck %s
+comment|// RUN: %clang_cc1 -triple powerpc-apple-macosx10.4.0 -emit-llvm -o - %s -O2 -disable-llvm-passes | FileCheck %s
 end_comment
 
 begin_decl_stmt
