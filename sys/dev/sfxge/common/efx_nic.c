@@ -1996,7 +1996,7 @@ name|enp
 operator|->
 name|en_family
 operator|=
-literal|0
+name|EFX_FAMILY_INVALID
 expr_stmt|;
 name|enp
 operator|->
