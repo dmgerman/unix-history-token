@@ -3664,11 +3664,9 @@ argument_list|)
 decl_stmt|;
 name|len
 operator|=
-name|strnlen
+name|strlen
 argument_list|(
 name|line
-argument_list|,
-name|USHRT_MAX
 argument_list|)
 expr_stmt|;
 name|fprintf
