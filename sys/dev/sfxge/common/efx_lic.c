@@ -2160,7 +2160,7 @@ name|EFX_LICENSE_V1V2_HEADER_LENGTH
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// Ensure space for terminator remains
+comment|/* Ensure space for terminator remains */
 if|if
 condition|(
 operator|(
@@ -2288,7 +2288,7 @@ operator|<=
 name|buffer_size
 argument_list|)
 expr_stmt|;
-comment|// Shift everything after the key down
+comment|/* Shift everything after the key down */
 name|memmove
 argument_list|(
 name|bufferp
@@ -2348,7 +2348,7 @@ operator|<=
 name|buffer_size
 argument_list|)
 expr_stmt|;
-comment|// Write terminator
+comment|/* Write terminator */
 name|memset
 argument_list|(
 name|bufferp
@@ -4213,7 +4213,7 @@ name|uint32_t
 name|length
 argument_list|)
 block|{
-comment|// Check key is a valid V3 key
+comment|/* Check key is a valid V3 key */
 name|uint8_t
 name|key_type
 decl_stmt|;
@@ -4606,7 +4606,7 @@ block|{
 name|efx_rc_t
 name|rc
 decl_stmt|;
-comment|// Construct empty partition
+comment|/* Construct empty partition */
 if|if
 condition|(
 operator|(
@@ -4704,7 +4704,7 @@ goto|goto
 name|fail1
 goto|;
 block|}
-comment|// Validate completed partition
+comment|/* Validate completed partition */
 if|if
 condition|(
 operator|(
