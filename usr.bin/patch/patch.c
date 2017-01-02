@@ -3668,7 +3668,7 @@ name|strnlen
 argument_list|(
 name|line
 argument_list|,
-name|USHRT_MAX
+name|UINT_MAX
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3697,12 +3697,19 @@ index|]
 operator|!=
 literal|'\n'
 condition|)
-block|{
+name|fprintf
+argument_list|(
+name|rejfp
+argument_list|,
+literal|"\n\\ No newline at end of line\n"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|len
 operator|>=
-name|USHRT_MAX
+name|UINT_MAX
 condition|)
 name|fprintf
 argument_list|(
@@ -3711,15 +3718,6 @@ argument_list|,
 literal|"\n\\ Line too long\n"
 argument_list|)
 expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|rejfp
-argument_list|,
-literal|"\n\\ No newline at end of line\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -5032,8 +5030,7 @@ name|char
 modifier|*
 name|plineptr
 decl_stmt|;
-name|unsigned
-name|short
+name|u_int
 name|plinelen
 decl_stmt|;
 for|for
