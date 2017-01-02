@@ -208,7 +208,9 @@ begin_function_decl
 name|void
 name|set_profile
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
