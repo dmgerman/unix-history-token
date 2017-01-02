@@ -93,6 +93,9 @@ operator|*
 operator|>
 name|Args
 argument_list|,
+name|bool
+name|CanExitEarly
+argument_list|,
 name|llvm
 operator|::
 name|raw_ostream

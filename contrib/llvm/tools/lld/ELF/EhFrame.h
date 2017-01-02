@@ -61,14 +61,23 @@ operator|<
 name|class
 name|ELFT
 operator|>
+name|class
+name|InputSectionBase
+expr_stmt|;
+struct_decl|struct
+name|EhSectionPiece
+struct_decl|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
 name|size_t
 name|readEhRecordSize
 argument_list|(
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-name|Data
+argument|InputSectionBase<ELFT> *S
+argument_list|,
+argument|size_t Off
 argument_list|)
 expr_stmt|;
 name|template
@@ -79,11 +88,9 @@ operator|>
 name|uint8_t
 name|getFdeEncoding
 argument_list|(
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-name|Data
+name|EhSectionPiece
+operator|*
+name|P
 argument_list|)
 expr_stmt|;
 block|}

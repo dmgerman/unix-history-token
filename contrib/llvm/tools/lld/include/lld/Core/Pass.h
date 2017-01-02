@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===------ Core/Pass.h - Base class for linker passes --------------------===//
+comment|//===------ Core/Pass.h - Base class for linker passes ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,31 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lld/Core/Atom.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lld/Core/File.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lld/Core/Reference.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_decl_stmt
@@ -99,7 +75,9 @@ name|virtual
 operator|~
 name|Pass
 argument_list|()
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Do the actual work of the Pass.
 name|virtual
 name|llvm
@@ -119,14 +97,16 @@ label|:
 comment|// Only subclassess can be instantiated.
 name|Pass
 argument_list|()
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace lld
+comment|// end namespace lld
 end_comment
 
 begin_endif

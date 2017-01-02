@@ -59,6 +59,9 @@ block|{
 name|class
 name|SymbolBody
 decl_stmt|;
+name|class
+name|InputSectionData
+decl_stmt|;
 name|template
 operator|<
 name|class
@@ -75,6 +78,9 @@ operator|>
 name|class
 name|InputSectionBase
 expr_stmt|;
+comment|// List of target-independent relocation types. Relocations read
+comment|// from files are converted to these types so that the main code
+comment|// doesn't have to know about architecture-specific details.
 enum|enum
 name|RelExpr
 block|{
@@ -84,7 +90,11 @@ name|R_GOT
 block|,
 name|R_GOTONLY_PC
 block|,
+name|R_GOTONLY_PC_FROM_END
+block|,
 name|R_GOTREL
+block|,
+name|R_GOTREL_FROM_END
 block|,
 name|R_GOT_FROM_END
 block|,
@@ -99,6 +109,10 @@ block|,
 name|R_MIPS_GOT_LOCAL_PAGE
 block|,
 name|R_MIPS_GOT_OFF
+block|,
+name|R_MIPS_GOT_OFF32
+block|,
+name|R_MIPS_GOTREL
 block|,
 name|R_MIPS_TLSGD
 block|,
@@ -156,6 +170,8 @@ name|R_TLSDESC
 block|,
 name|R_TLSDESC_PAGE
 block|,
+name|R_TLSDESC_CALL
+block|,
 name|R_TLSGD
 block|,
 name|R_TLSGD_PC
@@ -163,13 +179,148 @@ block|,
 name|R_TLSLD
 block|,
 name|R_TLSLD_PC
-block|}
+block|, }
 enum|;
+comment|// Build a bitmask with one bit set for each RelExpr.
+comment|//
+comment|// Constexpr function arguments can't be used in static asserts, so we
+comment|// use template arguments to build the mask.
+comment|// But function template partial specializations don't exist (needed
+comment|// for base case of the recursion), so we need a dummy struct.
 name|template
 operator|<
-name|class
-name|ELFT
+name|RelExpr
+operator|...
+name|Exprs
 operator|>
+expr|struct
+name|RelExprMaskBuilder
+block|{
+specifier|static
+specifier|inline
+name|uint64_t
+name|build
+argument_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+expr|}
+block|;
+comment|// Specialization for recursive case.
+name|template
+operator|<
+name|RelExpr
+name|Head
+block|,
+name|RelExpr
+operator|...
+name|Tail
+operator|>
+expr|struct
+name|RelExprMaskBuilder
+operator|<
+name|Head
+block|,
+name|Tail
+operator|...
+operator|>
+block|{
+specifier|static
+specifier|inline
+name|uint64_t
+name|build
+argument_list|()
+block|{
+name|static_assert
+argument_list|(
+literal|0
+operator|<=
+name|Head
+operator|&&
+name|Head
+operator|<
+literal|64
+argument_list|,
+literal|"RelExpr is too large for 64-bit mask!"
+argument_list|)
+block|;
+return|return
+operator|(
+name|uint64_t
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+name|Head
+operator|)
+operator||
+name|RelExprMaskBuilder
+operator|<
+name|Tail
+operator|...
+operator|>
+operator|::
+name|build
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|// Return true if `Expr` is one of `Exprs`.
+comment|// There are fewer than 64 RelExpr's, so we can represent any set of
+comment|// RelExpr's as a constant bit mask and test for membership with a
+comment|// couple cheap bitwise operations.
+name|template
+operator|<
+name|RelExpr
+operator|...
+name|Exprs
+operator|>
+name|bool
+name|isRelExprOneOf
+argument_list|(
+argument|RelExpr Expr
+argument_list|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|<=
+name|Expr
+operator|&&
+operator|(
+name|int
+operator|)
+name|Expr
+operator|<
+literal|64
+operator|&&
+literal|"RelExpr is too large for 64-bit mask!"
+argument_list|)
+block|;
+return|return
+operator|(
+name|uint64_t
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+name|Expr
+operator|)
+operator|&
+name|RelExprMaskBuilder
+operator|<
+name|Exprs
+operator|...
+operator|>
+operator|::
+name|build
+argument_list|()
+return|;
+block|}
+comment|// Architecture-neutral representation of relocation.
 expr|struct
 name|Relocation
 block|{
@@ -178,13 +329,6 @@ name|Expr
 block|;
 name|uint32_t
 name|Type
-block|;
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|InputSec
 block|;
 name|uint64_t
 name|Offset
@@ -196,7 +340,7 @@ name|SymbolBody
 operator|*
 name|Sym
 block|; }
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|class
@@ -205,26 +349,28 @@ operator|>
 name|void
 name|scanRelocations
 argument_list|(
-name|InputSection
+name|InputSectionBase
 operator|<
 name|ELFT
 operator|>
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|class
 name|ELFT
 operator|>
 name|void
-name|scanRelocations
+name|createThunks
 argument_list|(
-argument|InputSectionBase<ELFT>&
-argument_list|,
-argument|const typename ELFT::Shdr&
+name|InputSectionBase
+operator|<
+name|ELFT
+operator|>
+operator|&
 argument_list|)
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|class
@@ -267,8 +413,7 @@ operator|.
 name|r_addend
 return|;
 block|}
-block|}
-block|}
+expr|} }
 end_decl_stmt
 
 begin_endif

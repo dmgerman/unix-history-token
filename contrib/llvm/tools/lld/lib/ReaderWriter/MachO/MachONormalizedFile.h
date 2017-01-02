@@ -170,6 +170,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lld/Core/Error.h"
 end_include
 
@@ -932,6 +938,14 @@ operator|<
 name|Symbol
 operator|>
 name|undefinedSymbols
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Symbol
+operator|>
+name|stabsSymbols
 expr_stmt|;
 comment|// Maps to load commands with no LINKEDIT content (final linked images only).
 name|std

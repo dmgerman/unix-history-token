@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- Core/References.h - A Reference to Another Atom --------------------===//
+comment|//===- Core/References.h - A Reference to Another Atom ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,13 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lld/Core/LLVM.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringSwitch.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -325,10 +319,12 @@ name|virtual
 operator|~
 name|Reference
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|KindValue
 name|_kindValue
-expr_stmt|;
+decl_stmt|;
 name|uint8_t
 name|_kindNamespace
 decl_stmt|;
@@ -341,7 +337,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace lld
+comment|// end namespace lld
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- Core/Atom.h - A node in linking graph ------------------------------===//
+comment|//===- Core/Atom.h - A node in linking graph --------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"lld/Core/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -187,12 +193,14 @@ name|virtual
 operator|~
 name|Atom
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|private
-operator|:
+label|:
 name|Definition
 name|_definition
-expr_stmt|;
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Class which owns an atom pointer and runs the atom destructor when the
@@ -231,12 +239,9 @@ name|public
 operator|:
 name|OwningAtomPtr
 argument_list|()
-operator|:
-name|atom
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{ }
+operator|=
+expr|default
+block|;
 name|OwningAtomPtr
 argument_list|(
 name|T
@@ -369,6 +374,8 @@ label|:
 name|T
 modifier|*
 name|atom
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -379,7 +386,7 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// namespace lld
+comment|// end namespace lld
 end_comment
 
 begin_endif

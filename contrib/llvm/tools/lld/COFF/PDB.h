@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- SymbolListFile.h -----------------------------------------*- C++ -*-===//
+comment|//===- PDB.h ----------------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,25 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLD_ELF_SYMBOL_LIST_FILE_H
+name|LLD_COFF_PDB_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLD_ELF_SYMBOL_LIST_FILE_H
+name|LLD_COFF_PDB_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"lld/Core/LLVM.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MemoryBuffer.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -60,37 +60,35 @@ name|namespace
 name|lld
 block|{
 name|namespace
-name|elf
+name|coff
 block|{
-name|size_t
-name|defineSymbolVersion
-parameter_list|(
+name|class
+name|SymbolTable
+decl_stmt|;
+name|void
+name|createPDB
+argument_list|(
+name|llvm
+operator|::
 name|StringRef
-name|Version
-parameter_list|)
-function_decl|;
-name|void
-name|parseDynamicList
-parameter_list|(
-name|MemoryBufferRef
-name|MB
-parameter_list|)
-function_decl|;
-name|void
-name|parseVersionScript
-parameter_list|(
-name|MemoryBufferRef
-name|MB
-parameter_list|)
-function_decl|;
+name|Path
+argument_list|,
+name|SymbolTable
+operator|*
+name|Symtab
+argument_list|,
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|SectionTable
+argument_list|)
+decl_stmt|;
 block|}
-comment|// namespace elf
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// namespace lld
-end_comment
 
 begin_endif
 endif|#
