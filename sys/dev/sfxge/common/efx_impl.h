@@ -3450,6 +3450,9 @@ index|[
 name|EFX_EV_RX_NLABELS
 index|]
 decl_stmt|;
+name|uint32_t
+name|ee_flags
+decl_stmt|;
 block|}
 struct|;
 define|#
