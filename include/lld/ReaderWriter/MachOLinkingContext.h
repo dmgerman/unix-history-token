@@ -1375,6 +1375,21 @@ argument|StringRef installName
 argument_list|)
 specifier|const
 block|;
+name|ArrayRef
+operator|<
+name|mach_o
+operator|::
+name|MachODylibFile
+operator|*
+operator|>
+name|allDylibs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_allDylibs
+return|;
+block|}
 comment|/// Creates a copy (owned by this MachOLinkingContext) of a string.
 name|StringRef
 name|copy
@@ -1860,7 +1875,7 @@ block|;
 name|mutable
 name|std
 operator|::
-name|set
+name|vector
 operator|<
 name|mach_o
 operator|::

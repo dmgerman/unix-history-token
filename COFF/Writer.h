@@ -57,10 +57,7 @@ name|namespace
 name|coff
 block|{
 name|class
-name|Chunk
-decl_stmt|;
-name|class
-name|OutputSection
+name|SymbolTable
 decl_stmt|;
 name|void
 name|writeResult

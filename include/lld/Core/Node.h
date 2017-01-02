@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- lld/Core/Node.h - Input file class ---------------------------------===//
+comment|//===- lld/Core/Node.h - Input file class -----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -76,19 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Option/ArgList.h"
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<memory>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_decl_stmt
@@ -127,7 +121,9 @@ name|virtual
 operator|~
 name|Node
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|Kind
 name|kind
@@ -288,7 +284,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace lld
+comment|// end namespace lld
 end_comment
 
 begin_endif

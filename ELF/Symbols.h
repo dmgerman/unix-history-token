@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"Strings.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lld/Core/LLVM.h"
 end_include
 
@@ -85,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Object/ELF.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/AlignOf.h"
 end_include
 
 begin_decl_stmt
@@ -112,9 +112,6 @@ decl_stmt|;
 name|class
 name|LazyObjectFile
 decl_stmt|;
-name|class
-name|SymbolBody
-decl_stmt|;
 name|template
 operator|<
 name|class
@@ -131,14 +128,9 @@ operator|>
 name|class
 name|OutputSection
 expr_stmt|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|OutputSectionBase
-expr_stmt|;
+decl_stmt|;
 name|template
 operator|<
 name|class
@@ -168,8 +160,6 @@ block|,
 name|SharedKind
 block|,
 name|DefinedCommonKind
-block|,
-name|DefinedBitcodeKind
 block|,
 name|DefinedSyntheticKind
 block|,
@@ -312,27 +302,9 @@ name|StringRef
 name|getName
 argument_list|()
 specifier|const
-expr_stmt|;
-name|void
-name|setName
-parameter_list|(
-name|StringRef
-name|S
-parameter_list|)
-function_decl|;
-name|uint32_t
-name|getNameOffset
-argument_list|()
-specifier|const
 block|{
-name|assert
-argument_list|(
-name|isLocal
-argument_list|()
-argument_list|)
-block|;
 return|return
-name|NameOffset
+name|Name
 return|;
 block|}
 name|uint8_t
@@ -346,35 +318,10 @@ operator|&
 literal|0x3
 return|;
 block|}
-name|unsigned
-name|DynsymIndex
-init|=
-literal|0
-decl_stmt|;
-name|uint32_t
-name|GotIndex
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|uint32_t
-name|GotPltIndex
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|uint32_t
-name|PltIndex
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|uint32_t
-name|GlobalDynIndex
-init|=
-operator|-
-literal|1
-decl_stmt|;
+name|void
+name|parseSymbolVersion
+parameter_list|()
+function_decl|;
 name|bool
 name|isInGot
 argument_list|()
@@ -523,24 +470,44 @@ name|File
 init|=
 name|nullptr
 decl_stmt|;
+name|uint32_t
+name|DynsymIndex
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|GotIndex
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|uint32_t
+name|GotPltIndex
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|uint32_t
+name|PltIndex
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|uint32_t
+name|GlobalDynIndex
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|protected
 label|:
 name|SymbolBody
 argument_list|(
 argument|Kind K
 argument_list|,
-argument|StringRef Name
+argument|StringRefZ Name
 argument_list|,
-argument|uint8_t StOther
-argument_list|,
-argument|uint8_t Type
-argument_list|)
-empty_stmt|;
-name|SymbolBody
-argument_list|(
-argument|Kind K
-argument_list|,
-argument|uint32_t NameOffset
+argument|bool IsLocal
 argument_list|,
 argument|uint8_t StOther
 argument_list|,
@@ -571,6 +538,24 @@ decl_stmt|;
 comment|// True if this symbol has an entry in the global part of MIPS GOT.
 name|unsigned
 name|IsInGlobalMipsGot
+range|:
+literal|1
+decl_stmt|;
+comment|// True if this symbol is referenced by 32-bit GOT relocations.
+name|unsigned
+name|Is32BitMipsGot
+range|:
+literal|1
+decl_stmt|;
+comment|// True if this symbol is in the Iplt sub-section of the Plt.
+name|unsigned
+name|IsInIplt
+range|:
+literal|1
+decl_stmt|;
+comment|// True if this symbol is in the Igot sub-section of the .got.plt or .got.
+name|unsigned
+name|IsInIgot
 range|:
 literal|1
 decl_stmt|;
@@ -687,29 +672,9 @@ return|;
 block|}
 name|protected
 label|:
-struct|struct
-name|Str
-block|{
-specifier|const
-name|char
-modifier|*
-name|S
-decl_stmt|;
-name|size_t
-name|Len
-decl_stmt|;
-block|}
-struct|;
-union|union
-block|{
-name|Str
+name|StringRefZ
 name|Name
 decl_stmt|;
-name|uint32_t
-name|NameOffset
-decl_stmt|;
-block|}
-union|;
 block|}
 empty_stmt|;
 comment|// The base class for any defined symbols.
@@ -725,18 +690,9 @@ name|Defined
 argument_list|(
 argument|Kind K
 argument_list|,
-argument|StringRef Name
+argument|StringRefZ Name
 argument_list|,
-argument|uint8_t StOther
-argument_list|,
-argument|uint8_t Type
-argument_list|)
-block|;
-name|Defined
-argument_list|(
-argument|Kind K
-argument_list|,
-argument|uint32_t NameOffset
+argument|bool IsLocal
 argument_list|,
 argument|uint8_t StOther
 argument_list|,
@@ -755,53 +711,6 @@ name|S
 operator|->
 name|isDefined
 argument_list|()
-return|;
-block|}
-expr|}
-block|;
-comment|// The defined symbol in LLVM bitcode files.
-name|class
-name|DefinedBitcode
-operator|:
-name|public
-name|Defined
-block|{
-name|public
-operator|:
-name|DefinedBitcode
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|uint8_t StOther
-argument_list|,
-argument|uint8_t Type
-argument_list|,
-argument|BitcodeFile *F
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-specifier|const
-name|SymbolBody
-operator|*
-name|S
-argument_list|)
-block|;
-name|BitcodeFile
-operator|*
-name|file
-argument_list|()
-block|{
-return|return
-operator|(
-name|BitcodeFile
-operator|*
-operator|)
-name|this
-operator|->
-name|File
 return|;
 block|}
 expr|}
@@ -850,7 +759,7 @@ block|}
 comment|// The output offset of this common symbol in the output bss. Computed by the
 comment|// writer.
 name|uint64_t
-name|OffsetInBss
+name|Offset
 block|;
 comment|// The maximum alignment we have seen for this symbol.
 name|uint64_t
@@ -890,143 +799,21 @@ name|public
 operator|:
 name|DefinedRegular
 argument_list|(
-argument|StringRef Name
+argument|StringRefZ Name
 argument_list|,
-argument|const Elf_Sym&Sym
-argument_list|,
-argument|InputSectionBase<ELFT> *Section
-argument_list|)
-operator|:
-name|Defined
-argument_list|(
-name|SymbolBody
-operator|::
-name|DefinedRegularKind
-argument_list|,
-name|Name
-argument_list|,
-name|Sym
-operator|.
-name|st_other
-argument_list|,
-name|Sym
-operator|.
-name|getType
-argument_list|()
-argument_list|)
-block|,
-name|Value
-argument_list|(
-name|Sym
-operator|.
-name|st_value
-argument_list|)
-block|,
-name|Size
-argument_list|(
-name|Sym
-operator|.
-name|st_size
-argument_list|)
-block|,
-name|Section
-argument_list|(
-argument|Section ? Section->Repl : NullInputSection
-argument_list|)
-block|{
-if|if
-condition|(
-name|Section
-condition|)
-name|this
-operator|->
-name|File
-operator|=
-name|Section
-operator|->
-name|getFile
-argument_list|()
-expr_stmt|;
-block|}
-name|DefinedRegular
-argument_list|(
-specifier|const
-name|Elf_Sym
-operator|&
-name|Sym
-argument_list|,
-name|InputSectionBase
-operator|<
-name|ELFT
-operator|>
-operator|*
-name|Section
-argument_list|)
-operator|:
-name|Defined
-argument_list|(
-name|SymbolBody
-operator|::
-name|DefinedRegularKind
-argument_list|,
-name|Sym
-operator|.
-name|st_name
-argument_list|,
-name|Sym
-operator|.
-name|st_other
-argument_list|,
-name|Sym
-operator|.
-name|getType
-argument_list|()
-argument_list|)
-block|,
-name|Value
-argument_list|(
-name|Sym
-operator|.
-name|st_value
-argument_list|)
-block|,
-name|Size
-argument_list|(
-name|Sym
-operator|.
-name|st_size
-argument_list|)
-block|,
-name|Section
-argument_list|(
-argument|Section ? Section->Repl : NullInputSection
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|isLocal
-argument_list|()
-argument_list|)
-block|;
-if|if
-condition|(
-name|Section
-condition|)
-name|this
-operator|->
-name|File
-operator|=
-name|Section
-operator|->
-name|getFile
-argument_list|()
-expr_stmt|;
-block|}
-name|DefinedRegular
-argument_list|(
-argument|StringRef Name
+argument|bool IsLocal
 argument_list|,
 argument|uint8_t StOther
+argument_list|,
+argument|uint8_t Type
+argument_list|,
+argument|uintX_t Value
+argument_list|,
+argument|uintX_t Size
+argument_list|,
+argument|InputSectionBase<ELFT> *Section
+argument_list|,
+argument|InputFile *File
 argument_list|)
 operator|:
 name|Defined
@@ -1036,37 +823,50 @@ operator|::
 name|DefinedRegularKind
 argument_list|,
 name|Name
+argument_list|,
+name|IsLocal
 argument_list|,
 name|StOther
 argument_list|,
-name|llvm
-operator|::
-name|ELF
-operator|::
-name|STT_NOTYPE
+name|Type
 argument_list|)
 block|,
 name|Value
 argument_list|(
-literal|0
+name|Value
 argument_list|)
 block|,
 name|Size
 argument_list|(
-literal|0
+name|Size
 argument_list|)
 block|,
 name|Section
 argument_list|(
-argument|NullInputSection
+argument|Section ? Section->Repl : NullInputSection
 argument_list|)
-block|{}
+block|{
+name|this
+operator|->
+name|File
+operator|=
+name|File
+block|;   }
+comment|// Return true if the symbol is a PIC function.
+name|bool
+name|isMipsPIC
+argument_list|()
+specifier|const
+decl_stmt|;
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const SymbolBody *S
-argument_list|)
+parameter_list|(
+specifier|const
+name|SymbolBody
+modifier|*
+name|S
+parameter_list|)
 block|{
 return|return
 name|S
@@ -1081,10 +881,10 @@ return|;
 block|}
 name|uintX_t
 name|Value
-block|;
+decl_stmt|;
 name|uintX_t
 name|Size
-block|;
+decl_stmt|;
 comment|// The input section this symbol belongs to. Notice that this is
 comment|// a reference to a pointer. We are using two levels of indirections
 comment|// because of ICF. If ICF decides two sections need to be merged, it
@@ -1098,7 +898,7 @@ operator|>
 operator|*
 operator|&
 name|Section
-block|;
+expr_stmt|;
 comment|// If non-null the symbol has a Thunk that may be used as an alternative
 comment|// destination for callers of this Symbol.
 name|Thunk
@@ -1109,9 +909,9 @@ operator|*
 name|ThunkData
 operator|=
 name|nullptr
-block|;
+expr_stmt|;
 name|private
-operator|:
+label|:
 specifier|static
 name|InputSectionBase
 operator|<
@@ -1119,8 +919,9 @@ name|ELFT
 operator|>
 operator|*
 name|NullInputSection
-block|; }
-decl_stmt|;
+expr_stmt|;
+block|}
+empty_stmt|;
 name|template
 operator|<
 name|class
@@ -1143,44 +944,60 @@ comment|// The difference from the regular symbol is that DefinedSynthetic symbo
 comment|// don't belong to any input files or sections. Thus, its constructor
 comment|// takes an output section to calculate output VA, etc.
 comment|// If Section is null, this symbol is relative to the image base.
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
 name|class
 name|DefinedSynthetic
-operator|:
+range|:
 name|public
 name|Defined
 block|{
 name|public
 operator|:
-typedef|typedef
-name|typename
-name|ELFT
-operator|::
-name|uint
-name|uintX_t
-expr_stmt|;
 name|DefinedSynthetic
 argument_list|(
-argument|StringRef N
+argument|StringRef Name
 argument_list|,
-argument|uintX_t Value
+argument|uint64_t Value
 argument_list|,
-argument|OutputSectionBase<ELFT> *Section
+argument|const OutputSectionBase *Section
 argument_list|)
-expr_stmt|;
+operator|:
+name|Defined
+argument_list|(
+name|SymbolBody
+operator|::
+name|DefinedSyntheticKind
+argument_list|,
+name|Name
+argument_list|,
+comment|/*IsLocal=*/
+name|false
+argument_list|,
+name|llvm
+operator|::
+name|ELF
+operator|::
+name|STV_HIDDEN
+argument_list|,
+literal|0
+comment|/* Type */
+argument_list|)
+block|,
+name|Value
+argument_list|(
+name|Value
+argument_list|)
+block|,
+name|Section
+argument_list|(
+argument|Section
+argument_list|)
+block|{}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|SymbolBody
-modifier|*
-name|S
-parameter_list|)
+argument_list|(
+argument|const SymbolBody *S
+argument_list|)
 block|{
 return|return
 name|S
@@ -1193,32 +1010,15 @@ operator|::
 name|DefinedSyntheticKind
 return|;
 block|}
-comment|// Special value designates that the symbol 'points'
-comment|// to the end of the section.
-specifier|static
-specifier|const
-name|uintX_t
-name|SectionEnd
-init|=
-name|uintX_t
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-decl_stmt|;
-name|uintX_t
+name|uint64_t
 name|Value
-decl_stmt|;
+block|;
 specifier|const
 name|OutputSectionBase
-operator|<
-name|ELFT
-operator|>
 operator|*
 name|Section
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 name|class
 name|Undefined
 range|:
@@ -1229,18 +1029,9 @@ name|public
 operator|:
 name|Undefined
 argument_list|(
-argument|StringRef Name
+argument|StringRefZ Name
 argument_list|,
-argument|uint8_t StOther
-argument_list|,
-argument|uint8_t Type
-argument_list|,
-argument|InputFile *F
-argument_list|)
-block|;
-name|Undefined
-argument_list|(
-argument|uint32_t NameOffset
+argument|bool IsLocal
 argument_list|,
 argument|uint8_t StOther
 argument_list|,
@@ -1351,6 +1142,9 @@ operator|::
 name|SharedKind
 argument_list|,
 name|Name
+argument_list|,
+comment|/*IsLocal=*/
+name|false
 argument_list|,
 name|Sym
 operator|.
@@ -1537,12 +1331,8 @@ return|;
 block|}
 comment|// Returns an object file for this symbol, or a nullptr if the file
 comment|// was already returned.
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|InputFile
-operator|>
+operator|*
 name|fetch
 argument_list|()
 block|;
@@ -1562,6 +1352,9 @@ argument_list|(
 argument|K
 argument_list|,
 argument|Name
+argument_list|,
+comment|/*IsLocal=*/
+argument|false
 argument_list|,
 argument|llvm::ELF::STV_DEFAULT
 argument_list|,
@@ -1625,12 +1418,8 @@ operator|->
 name|File
 return|;
 block|}
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|InputFile
-operator|>
+operator|*
 name|fetch
 argument_list|()
 block|;
@@ -1706,12 +1495,8 @@ operator|->
 name|File
 return|;
 block|}
-name|std
-operator|::
-name|unique_ptr
-operator|<
 name|InputFile
-operator|>
+operator|*
 name|fetch
 argument_list|()
 block|; }
@@ -1735,6 +1520,15 @@ operator|>
 expr|struct
 name|ElfSym
 block|{
+comment|// The content for __ehdr_start symbol.
+specifier|static
+name|DefinedRegular
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|EhdrStart
+block|;
 comment|// The content for _etext and etext symbols.
 specifier|static
 name|DefinedRegular
@@ -1786,12 +1580,51 @@ operator|>
 operator|*
 name|End2
 block|;
-comment|// The content for _gp_disp symbol for MIPS target.
+comment|// The content for _gp_disp/__gnu_local_gp symbols for MIPS target.
 specifier|static
-name|SymbolBody
+name|DefinedRegular
+operator|<
+name|ELFT
+operator|>
 operator|*
 name|MipsGpDisp
+block|;
+specifier|static
+name|DefinedRegular
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|MipsLocalGp
+block|;
+specifier|static
+name|DefinedRegular
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|MipsGp
 block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|DefinedRegular
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|ElfSym
+operator|<
+name|ELFT
+operator|>
+operator|::
+name|EhdrStart
 expr_stmt|;
 end_expr_stmt
 
@@ -1921,7 +1754,10 @@ operator|<
 name|class
 name|ELFT
 operator|>
-name|SymbolBody
+name|DefinedRegular
+operator|<
+name|ELFT
+operator|>
 operator|*
 name|ElfSym
 operator|<
@@ -1929,6 +1765,46 @@ name|ELFT
 operator|>
 operator|::
 name|MipsGpDisp
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|DefinedRegular
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|ElfSym
+operator|<
+name|ELFT
+operator|>
+operator|::
+name|MipsLocalGp
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|DefinedRegular
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|ElfSym
+operator|<
+name|ELFT
+operator|>
+operator|::
+name|MipsGp
 expr_stmt|;
 end_expr_stmt
 
@@ -1995,6 +1871,12 @@ name|Traced
 range|:
 literal|1
 decl_stmt|;
+comment|// This symbol version was found in a version script.
+name|unsigned
+name|InVersionScript
+range|:
+literal|1
+decl_stmt|;
 name|bool
 name|includeInDynsym
 argument_list|()
@@ -2024,8 +1906,6 @@ name|llvm
 operator|::
 name|AlignedCharArrayUnion
 operator|<
-name|DefinedBitcode
-operator|,
 name|DefinedCommon
 operator|,
 name|DefinedRegular
@@ -2038,13 +1918,6 @@ name|ELF64LE
 operator|>
 operator|,
 name|DefinedSynthetic
-operator|<
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELF64LE
-operator|>
 operator|,
 name|Undefined
 operator|,
@@ -2154,28 +2027,20 @@ argument_list|)
 block|;
 name|static_assert
 argument_list|(
-name|llvm
-operator|::
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|<=
-name|llvm
-operator|::
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|decltype
 argument_list|(
 name|S
 operator|->
 name|Body
 argument_list|)
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 argument_list|,
 literal|"Body not aligned enough"
 argument_list|)
@@ -2278,6 +2143,20 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|toString
+argument_list|(
+specifier|const
+name|SymbolBody
+operator|&
+name|B
+argument_list|)
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
