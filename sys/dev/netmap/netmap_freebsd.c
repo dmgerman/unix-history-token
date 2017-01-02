@@ -429,7 +429,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|IFNET_WUNLOCK
+name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
