@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<bitset>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<bitset>
+file|<vector>
 end_include
 
 begin_include
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/SymbolFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Chrono.h"
 end_include
 
 begin_include
@@ -192,35 +198,35 @@ operator|::
 name|LanguageType
 name|ParseCompileUnitLanguage
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|size_t
 name|ParseCompileUnitFunctions
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|bool
 name|ParseCompileUnitLineTable
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|bool
 name|ParseCompileUnitDebugMacros
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|bool
 name|ParseCompileUnitSupportFiles
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|,
 argument|lldb_private::FileSpecList&support_files
 argument_list|)
@@ -245,21 +251,21 @@ block|;
 name|size_t
 name|ParseFunctionBlocks
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|size_t
 name|ParseTypes
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|size_t
 name|ParseVariablesForContext
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
@@ -301,25 +307,25 @@ block|;
 name|bool
 name|CompleteType
 argument_list|(
-argument|lldb_private::CompilerType& compiler_type
+argument|lldb_private::CompilerType&compiler_type
 argument_list|)
 name|override
 block|;
 name|uint32_t
 name|ResolveSymbolContext
 argument_list|(
-argument|const lldb_private::Address& so_addr
+argument|const lldb_private::Address&so_addr
 argument_list|,
 argument|uint32_t resolve_scope
 argument_list|,
-argument|lldb_private::SymbolContext& sc
+argument|lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|uint32_t
 name|ResolveSymbolContext
 argument_list|(
-argument|const lldb_private::FileSpec& file_spec
+argument|const lldb_private::FileSpec&file_spec
 argument_list|,
 argument|uint32_t line
 argument_list|,
@@ -327,7 +333,7 @@ argument|bool check_inlines
 argument_list|,
 argument|uint32_t resolve_scope
 argument_list|,
-argument|lldb_private::SymbolContextList& sc_list
+argument|lldb_private::SymbolContextList&sc_list
 argument_list|)
 name|override
 block|;
@@ -342,20 +348,20 @@ argument|bool append
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
-argument|lldb_private::VariableList& variables
+argument|lldb_private::VariableList&variables
 argument_list|)
 name|override
 block|;
 name|uint32_t
 name|FindGlobalVariables
 argument_list|(
-argument|const lldb_private::RegularExpression& regex
+argument|const lldb_private::RegularExpression&regex
 argument_list|,
 argument|bool append
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
-argument|lldb_private::VariableList& variables
+argument|lldb_private::VariableList&variables
 argument_list|)
 name|override
 block|;
@@ -372,27 +378,27 @@ argument|bool include_inlines
 argument_list|,
 argument|bool append
 argument_list|,
-argument|lldb_private::SymbolContextList& sc_list
+argument|lldb_private::SymbolContextList&sc_list
 argument_list|)
 name|override
 block|;
 name|uint32_t
 name|FindFunctions
 argument_list|(
-argument|const lldb_private::RegularExpression& regex
+argument|const lldb_private::RegularExpression&regex
 argument_list|,
 argument|bool include_inlines
 argument_list|,
 argument|bool append
 argument_list|,
-argument|lldb_private::SymbolContextList& sc_list
+argument|lldb_private::SymbolContextList&sc_list
 argument_list|)
 name|override
 block|;
 name|uint32_t
 name|FindTypes
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|,
 argument|const lldb_private::ConstString&name
 argument_list|,
@@ -404,7 +410,7 @@ argument|uint32_t max_matches
 argument_list|,
 argument|llvm::DenseSet<lldb_private::SymbolFile *>&searched_symbol_files
 argument_list|,
-argument|lldb_private::TypeMap& types
+argument|lldb_private::TypeMap&types
 argument_list|)
 name|override
 block|;
@@ -413,7 +419,7 @@ operator|::
 name|CompilerDeclContext
 name|FindNamespace
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|,
 argument|const lldb_private::ConstString&name
 argument_list|,
@@ -481,7 +487,7 @@ block|;
 name|friend
 name|class
 name|SymbolFileDWARF
-block|;     struct
+block|;   struct
 name|OSOInfo
 block|{
 name|lldb
@@ -494,7 +500,7 @@ argument_list|()
 operator|:
 name|module_sp
 argument_list|()
-block|{         }
+block|{}
 block|}
 block|;
 typedef|typedef
@@ -556,9 +562,13 @@ operator|::
 name|ConstString
 name|oso_path
 expr_stmt|;
-name|lldb_private
+name|llvm
 operator|::
-name|TimeValue
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 name|oso_mod_time
 expr_stmt|;
 name|OSOInfoSP
@@ -632,7 +642,7 @@ name|file_range_map_valid
 argument_list|(
 argument|false
 argument_list|)
-block|{         }
+block|{}
 specifier|const
 name|FileRangeMap
 operator|&
@@ -1169,7 +1179,7 @@ name|m_oso_file_addr
 argument_list|(
 argument|LLDB_INVALID_ADDRESS
 argument_list|)
-block|{         }
+block|{}
 name|OSOEntry
 argument_list|(
 argument|uint32_t exe_sym_idx
@@ -1186,7 +1196,7 @@ name|m_oso_file_addr
 argument_list|(
 argument|oso_file_addr
 argument_list|)
-block|{         }
+block|{}
 name|uint32_t
 name|GetExeSymbolIndex
 argument_list|()

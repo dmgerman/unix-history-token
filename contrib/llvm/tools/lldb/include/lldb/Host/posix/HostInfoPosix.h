@@ -180,6 +180,24 @@ name|FileSpec
 operator|&
 name|file_spec
 argument_list|)
+block|;
+specifier|static
+name|bool
+name|ComputeClangDirectory
+argument_list|(
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|ComputePathRelativeToLibrary
+argument_list|(
+argument|FileSpec&file_spec
+argument_list|,
+argument|llvm::StringRef dir
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

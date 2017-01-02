@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- BreakpointResolverFileRegex.h ----------------------------*- C++ -*-===//
+comment|//===-- BreakpointResolverFileRegex.h ----------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -82,8 +86,10 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class BreakpointResolverFileRegex BreakpointResolverFileRegex.h "lldb/Breakpoint/BreakpointResolverFileRegex.h"
-comment|/// @brief This class sets breakpoints by file and line.  Optionally, it will look for inlined
+comment|/// @class BreakpointResolverFileRegex BreakpointResolverFileRegex.h
+comment|/// "lldb/Breakpoint/BreakpointResolverFileRegex.h"
+comment|/// @brief This class sets breakpoints by file and line.  Optionally, it will
+comment|/// look for inlined
 comment|/// instances of the file and line specification.
 comment|//----------------------------------------------------------------------
 name|class
@@ -104,6 +110,34 @@ argument|const std::unordered_set<std::string>&func_name_set
 argument_list|,
 argument|bool exact_match
 argument_list|)
+block|;
+specifier|static
+name|BreakpointResolver
+operator|*
+name|CreateFromStructuredData
+argument_list|(
+name|Breakpoint
+operator|*
+name|bkpt
+argument_list|,
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|options_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
+name|override
 block|;
 operator|~
 name|BreakpointResolverFileRegex
@@ -210,7 +244,8 @@ comment|// This is the line expression that we are looking for.
 name|bool
 name|m_exact_match
 block|;
-comment|// If true, then if the source we match is in a comment, we won't set a location there.
+comment|// If true, then if the source we match is in a comment,
+comment|// we won't set a location there.
 name|std
 operator|::
 name|unordered_set
@@ -221,7 +256,9 @@ name|string
 operator|>
 name|m_function_names
 block|;
-comment|// Limit the search to functions in the comp_unit passed in.
+comment|// Limit the search to
+comment|// functions in the
+comment|// comp_unit passed in.
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN

@@ -150,7 +150,7 @@ comment|///     The size in bytes of the address range.
 comment|//------------------------------------------------------------------
 name|AddressRange
 argument_list|(
-argument|const Address& so_addr
+argument|const Address&so_addr
 argument_list|,
 argument|lldb::addr_t byte_size
 argument_list|)
@@ -470,7 +470,7 @@ expr_stmt|;
 comment|///< The size in bytes of this address range.
 block|}
 empty_stmt|;
-comment|//bool operator== (const AddressRange& lhs, const AddressRange& rhs);
+comment|// bool operator== (const AddressRange& lhs, const AddressRange& rhs);
 block|}
 end_decl_stmt
 

@@ -134,7 +134,7 @@ block|{}
 operator|~
 name|ThreadSafeSTLMap
 argument_list|()
-block|{     }
+block|{}
 name|bool
 name|IsEmpty
 argument_list|()

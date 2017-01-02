@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- PlatformRemoteGDBServer.h ----------------------------------------*- C++ -*-===//
+comment|//===-- PlatformRemoteGDBServer.h ----------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -68,12 +72,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Platform.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../../Process/gdb-remote/GDBRemoteCommunicationClient.h"
 end_include
 
@@ -81,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"Plugins/Process/Utility/GDBRemoteSignals.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/Platform.h"
 end_include
 
 begin_decl_stmt
@@ -178,9 +182,9 @@ block|;
 name|bool
 name|GetModuleSpec
 argument_list|(
-argument|const FileSpec& module_file_spec
+argument|const FileSpec&module_file_spec
 argument_list|,
-argument|const ArchSpec& arch
+argument|const ArchSpec&arch
 argument_list|,
 argument|ModuleSpec&module_spec
 argument_list|)
@@ -247,7 +251,9 @@ argument|Debugger&debugger
 argument_list|,
 argument|Target *target
 argument_list|,
-comment|// Can be NULL, if NULL create a new target, else use existing one
+comment|// Can be NULL, if NULL create a
+comment|// new target, else use existing
+comment|// one
 argument|Error&error
 argument_list|)
 name|override
@@ -263,7 +269,8 @@ argument|Debugger&debugger
 argument_list|,
 argument|Target *target
 argument_list|,
-comment|// Can be NULL, if NULL create a new target, else use existing one
+comment|// Can be NULL, if NULL create a new
+comment|// target, else use existing one
 argument|Error&error
 argument_list|)
 name|override
@@ -359,7 +366,7 @@ block|;
 name|Error
 name|ConnectRemote
 argument_list|(
-argument|Args& args
+argument|Args&args
 argument_list|)
 name|override
 block|;
@@ -400,7 +407,7 @@ operator|::
 name|user_id_t
 name|OpenFile
 argument_list|(
-argument|const FileSpec& file_spec
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t flags
 argument_list|,
@@ -441,7 +448,7 @@ argument|lldb::user_id_t fd
 argument_list|,
 argument|uint64_t offset
 argument_list|,
-argument|const void* data
+argument|const void *data
 argument_list|,
 argument|uint64_t len
 argument_list|,
@@ -454,16 +461,16 @@ operator|::
 name|user_id_t
 name|GetFileSize
 argument_list|(
-argument|const FileSpec& file_spec
+argument|const FileSpec&file_spec
 argument_list|)
 name|override
 block|;
 name|Error
 name|PutFile
 argument_list|(
-argument|const FileSpec& source
+argument|const FileSpec&source
 argument_list|,
-argument|const FileSpec& destination
+argument|const FileSpec&destination
 argument_list|,
 argument|uint32_t uid = UINT32_MAX
 argument_list|,
@@ -483,7 +490,7 @@ block|;
 name|bool
 name|GetFileExists
 argument_list|(
-argument|const FileSpec& file_spec
+argument|const FileSpec&file_spec
 argument_list|)
 name|override
 block|;
@@ -502,14 +509,16 @@ argument_list|,
 comment|// Shouldn't be NULL
 argument|const FileSpec&working_dir
 argument_list|,
-comment|// Pass empty FileSpec to use the current working directory
+comment|// Pass empty FileSpec to use the current
+comment|// working directory
 argument|int *status_ptr
 argument_list|,
 comment|// Pass NULL if you don't want the process exit status
 argument|int *signo_ptr
 argument_list|,
-comment|// Pass NULL if you don't want the signal that caused the process to exit
-argument|std::string *command_output
+comment|// Pass NULL if you don't want the signal that caused the
+comment|// process to exit
+argument|std::string           *command_output
 argument_list|,
 comment|// Pass NULL if you don't want the command output
 argument|uint32_t timeout_sec
@@ -536,9 +545,9 @@ operator|::
 name|ProcessSP
 name|ConnectProcess
 argument_list|(
-argument|const char* connect_url
+argument|llvm::StringRef connect_url
 argument_list|,
-argument|const char* plugin_name
+argument|llvm::StringRef plugin_name
 argument_list|,
 argument|lldb_private::Debugger&debugger
 argument_list|,
@@ -551,9 +560,9 @@ block|;
 name|size_t
 name|ConnectToWaitingProcesses
 argument_list|(
-argument|lldb_private::Debugger& debugger
+argument|lldb_private::Debugger&debugger
 argument_list|,
-argument|lldb_private::Error& error
+argument|lldb_private::Error&error
 argument_list|)
 name|override
 block|;
@@ -585,7 +594,9 @@ operator|::
 name|string
 name|m_platform_description
 block|;
-comment|// After we connect we can get a more complete description of what we are connected to
+comment|// After we connect we can get a more
+comment|// complete description of what we are
+comment|// connected to
 name|std
 operator|::
 name|string
@@ -603,7 +614,8 @@ name|m_remote_signals_sp
 block|;
 comment|// Launch the debug server on the remote host - caller connects to launched
 comment|// debug server using connect_url.
-comment|// Subclasses should override this method if they want to do extra actions before or
+comment|// Subclasses should override this method if they want to do extra actions
+comment|// before or
 comment|// after launching the debug server.
 name|virtual
 name|bool
@@ -635,13 +647,13 @@ operator|::
 name|string
 name|MakeUrl
 argument_list|(
-argument|const char* scheme
+argument|const char *scheme
 argument_list|,
-argument|const char* hostname
+argument|const char *hostname
 argument_list|,
 argument|uint16_t port
 argument_list|,
-argument|const char* path
+argument|const char *path
 argument_list|)
 block|;
 name|private
@@ -657,14 +669,14 @@ argument|const std::string&platform_hostname
 argument_list|,
 argument|uint16_t port
 argument_list|,
-argument|const char* socket_name
+argument|const char *socket_name
 argument_list|)
 block|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|PlatformRemoteGDBServer
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 comment|// namespace platform_gdb_server

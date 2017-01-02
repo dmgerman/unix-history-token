@@ -64,7 +64,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -72,7 +76,11 @@ comment|// Details: MI common code class. Command argument class. Arguments obje
 end_comment
 
 begin_comment
-comment|//          needing specialization derived from the CMICmdArgValOptionLong class.
+comment|//          needing specialization derived from the CMICmdArgValOptionLong
+end_comment
+
+begin_comment
+comment|//          class.
 end_comment
 
 begin_comment
@@ -80,7 +88,11 @@ comment|//          An argument knows what type of argument it is and how it is 
 end_comment
 
 begin_comment
-comment|//          interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a
+end_comment
+
+begin_comment
+comment|//          matching
 end_comment
 
 begin_comment
@@ -88,11 +100,19 @@ comment|//          argument and so extract a value from it.
 end_comment
 
 begin_comment
-comment|//          If *this argument has expected options following it the option objects
+comment|//          If *this argument has expected options following it the option
 end_comment
 
 begin_comment
-comment|//          created to hold each of those option's values belong to *this argument
+comment|//          objects
+end_comment
+
+begin_comment
+comment|//          created to hold each of those option's values belong to *this
+end_comment
+
+begin_comment
+comment|//          argument
 end_comment
 
 begin_comment

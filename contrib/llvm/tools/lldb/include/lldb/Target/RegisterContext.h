@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/ExecutionContextScope.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/ExecutionContextScope.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -241,11 +241,16 @@ return|return
 name|false
 return|;
 block|}
-comment|// These two functions are used to implement "push" and "pop" of register states.  They are used primarily
-comment|// for expression evaluation, where we need to push a new state (storing the old one in data_sp) and then
-comment|// restoring the original state by passing the data_sp we got from ReadAllRegisters to WriteAllRegisterValues.
-comment|// ReadAllRegisters will do what is necessary to return a coherent set of register values for this thread, which
-comment|// may mean e.g. interrupting a thread that is sitting in a kernel trap.  That is a somewhat disruptive operation,
+comment|// These two functions are used to implement "push" and "pop" of register
+comment|// states.  They are used primarily
+comment|// for expression evaluation, where we need to push a new state (storing the
+comment|// old one in data_sp) and then
+comment|// restoring the original state by passing the data_sp we got from
+comment|// ReadAllRegisters to WriteAllRegisterValues.
+comment|// ReadAllRegisters will do what is necessary to return a coherent set of
+comment|// register values for this thread, which
+comment|// may mean e.g. interrupting a thread that is sitting in a kernel trap.  That
+comment|// is a somewhat disruptive operation,
 comment|// so these API's should only be used when this behavior is needed.
 name|virtual
 name|bool
@@ -472,18 +477,18 @@ specifier|const
 name|RegisterInfo
 modifier|*
 name|GetRegisterInfoByName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|reg_name
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|start_idx
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|const
 name|RegisterInfo
 modifier|*
@@ -719,7 +724,8 @@ comment|// The thread that this register context belongs to.
 name|uint32_t
 name|m_concrete_frame_idx
 decl_stmt|;
-comment|// The concrete frame index for this register context
+comment|// The concrete frame index for this register
+comment|// context
 name|uint32_t
 name|m_stop_id
 decl_stmt|;

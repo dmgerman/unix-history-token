@@ -60,11 +60,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|//              To implement new MI commands derive a new command class from the command base
+comment|//              To implement new MI commands derive a new command class from the
 end_comment
 
 begin_comment
-comment|//              class. To enable the new command for interpretation add the new command class
+comment|//              command base
+end_comment
+
+begin_comment
+comment|//              class. To enable the new command for interpretation add the new
+end_comment
+
+begin_comment
+comment|//              command class
 end_comment
 
 begin_comment
@@ -84,7 +92,11 @@ comment|//                  MICmdCmd.h / .cpp
 end_comment
 
 begin_comment
-comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+comment|//              For an introduction to adding a new command see
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdSupportInfoMiCmdQuery
 end_comment
 
 begin_comment
@@ -120,7 +132,11 @@ file|"MICmnMIValueTuple.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -201,7 +217,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -276,7 +296,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -383,7 +407,11 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -454,7 +482,8 @@ operator|:
 name|bool
 name|m_bThreadInvalid
 block|;
-comment|// True = yes invalid thread, false = thread object valid
+comment|// True = yes invalid thread, false = thread object
+comment|// valid
 name|CMICmnMIValueList
 name|m_miValueList
 block|;
@@ -474,7 +503,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -545,7 +578,8 @@ operator|:
 name|bool
 name|m_bThreadInvalid
 block|;
-comment|// True = yes invalid thread, false = thread object valid
+comment|// True = yes invalid thread, false = thread object
+comment|// valid
 name|CMICmnMIValueList
 name|m_miValueList
 block|;
@@ -557,7 +591,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -628,7 +666,8 @@ operator|:
 name|bool
 name|m_bThreadInvalid
 block|;
-comment|// True = yes invalid thread, false = thread object valid
+comment|// True = yes invalid thread, false = thread object
+comment|// valid
 name|CMICmnMIValueList
 name|m_miValueList
 block|;
@@ -640,7 +679,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment

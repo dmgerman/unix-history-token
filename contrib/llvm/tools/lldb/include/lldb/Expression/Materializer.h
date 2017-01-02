@@ -74,12 +74,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Error.h"
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/StackFrame.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-types.h"
 end_include
 
 begin_decl_stmt
@@ -139,14 +139,14 @@ name|m_process_address
 argument_list|(
 argument|LLDB_INVALID_ADDRESS
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|Dematerializer
 argument_list|()
 block|{
 name|Wipe
 argument_list|()
-block|;         }
+block|; }
 name|void
 name|Dematerialize
 argument_list|(
@@ -447,7 +447,7 @@ name|m_offset
 argument_list|(
 literal|0
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Entity

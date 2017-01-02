@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Sema/SemaConsumer.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ClangForward.h"
 end_include
 
@@ -61,16 +55,24 @@ directive|include
 file|"lldb/Target/Target.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Sema/SemaConsumer.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class ASTResultSynthesizer ASTResultSynthesizer.h "lldb/Expression/ASTResultSynthesizer.h"
+comment|/// @class ASTResultSynthesizer ASTResultSynthesizer.h
+comment|/// "lldb/Expression/ASTResultSynthesizer.h"
 comment|/// @brief Adds a result variable declaration to the ASTs for an expression.
 comment|///
 comment|/// Users expect the expression "i + 3" to return a result, even if a result
-comment|/// variable wasn't specifically declared.  To fulfil this requirement, LLDB adds
+comment|/// variable wasn't specifically declared.  To fulfil this requirement, LLDB
+comment|/// adds
 comment|/// a result variable to the expression, transforming it to
 comment|/// "int $__lldb_expr_result = i + 3."  The IR transformers ensure that the
 comment|/// resulting variable is mapped to the right piece of memory.
@@ -374,14 +376,18 @@ name|ASTConsumer
 operator|*
 name|m_passthrough
 block|;
-comment|///< The ASTConsumer down the chain, for passthrough.  NULL if it's a SemaConsumer.
+comment|///< The ASTConsumer down the chain, for
+comment|///passthrough.  NULL if it's a
+comment|///SemaConsumer.
 name|clang
 operator|::
 name|SemaConsumer
 operator|*
 name|m_passthrough_sema
 block|;
-comment|///< The SemaConsumer down the chain, for passthrough.  NULL if it's an ASTConsumer.
+comment|///< The SemaConsumer down the chain,
+comment|///for passthrough.  NULL if it's an
+comment|///ASTConsumer.
 name|std
 operator|::
 name|vector
@@ -393,12 +399,15 @@ operator|*
 operator|>
 name|m_decls
 block|;
-comment|///< Persistent declarations to register assuming the expression succeeds.
+comment|///< Persistent declarations to
+comment|///register assuming the expression
+comment|///succeeds.
 name|Target
 operator|&
 name|m_target
 block|;
-comment|///< The target, which contains the persistent variable store and the
+comment|///< The target, which contains the persistent variable
+comment|///store and the
 name|clang
 operator|::
 name|Sema

@@ -127,7 +127,7 @@ parameter_list|,
 name|generic
 parameter_list|)
 define|\
-value|{                                                                                                                  \         #name, alt, size, offset, eEncodingUint, eFormatHex,                                                           \         { dwarf_##name##_s390x, dwarf_##name##_s390x, generic, LLDB_INVALID_REGNUM, lldb_##name##_s390x },             \         NULL, NULL, NULL, 0                                                                                            \     }
+value|{                                                                            \     #name, alt, size, offset, eEncodingUint, eFormatHex,                       \         {dwarf_##name##_s390x, dwarf_##name##_s390x, generic,                  \          LLDB_INVALID_REGNUM, lldb_##name##_s390x },                           \          NULL, NULL, NULL, 0                                                   \   }
 end_define
 
 begin_define
@@ -146,7 +146,7 @@ parameter_list|,
 name|generic
 parameter_list|)
 define|\
-value|{                                                                                                                  \         #name, alt, size, offset, eEncodingUint, eFormatHex,                                                           \         { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, generic, LLDB_INVALID_REGNUM, lldb_##name##_s390x },               \         NULL, NULL, NULL, 0                                                                                            \     }
+value|{                                                                            \     #name, alt, size, offset, eEncodingUint, eFormatHex,                       \         {LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, generic,                    \          LLDB_INVALID_REGNUM, lldb_##name##_s390x },                           \          NULL, NULL, NULL, 0                                                   \   }
 end_define
 
 begin_define
@@ -161,7 +161,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|{                                                                                                                  \         #name, NULL, size, offset, eEncodingUint, eFormatHex,                                                          \         { dwarf_##name##_s390x, dwarf_##name##_s390x, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_##name##_s390x }, \         NULL, NULL, NULL, 0                                                                                            \     }
+value|{                                                                            \     #name, NULL, size, offset, eEncodingUint, eFormatHex,                      \         {dwarf_##name##_s390x, dwarf_##name##_s390x, LLDB_INVALID_REGNUM,      \          LLDB_INVALID_REGNUM, lldb_##name##_s390x },                           \          NULL, NULL, NULL, 0                                                   \   }
 end_define
 
 begin_define
@@ -176,7 +176,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|{                                                                                                                  \         #name, NULL, size, offset, eEncodingUint, eFormatHex,                                                          \         { LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, lldb_##name##_s390x },   \         NULL, NULL, NULL, 0                                                                                            \     }
+value|{                                                                            \     #name, NULL, size, offset, eEncodingUint, eFormatHex,                      \         {LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM, LLDB_INVALID_REGNUM,        \          LLDB_INVALID_REGNUM, lldb_##name##_s390x },                           \          NULL, NULL, NULL, 0                                                   \   }
 end_define
 
 begin_decl_stmt

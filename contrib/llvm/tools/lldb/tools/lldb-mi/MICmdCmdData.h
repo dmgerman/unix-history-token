@@ -76,11 +76,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|//              To implement new MI commands derive a new command class from the command base
+comment|//              To implement new MI commands derive a new command class from the
 end_comment
 
 begin_comment
-comment|//              class. To enable the new command for interpretation add the new command class
+comment|//              command base
+end_comment
+
+begin_comment
+comment|//              class. To enable the new command for interpretation add the new
+end_comment
+
+begin_comment
+comment|//              command class
 end_comment
 
 begin_comment
@@ -100,7 +108,11 @@ comment|//                  MICmdCmd.h / .cpp
 end_comment
 
 begin_comment
-comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+comment|//              For an introduction to adding a new command see
+end_comment
+
+begin_comment
+comment|//              CMICmdCmdSupportInfoMiCmdQuery
 end_comment
 
 begin_comment
@@ -146,7 +158,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MICmnMIValueTuple.h"
+file|"MICmnLLDBDebugSessionInfoVarObj.h"
 end_include
 
 begin_include
@@ -158,11 +170,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MICmnLLDBDebugSessionInfoVarObj.h"
+file|"MICmnMIValueTuple.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -253,13 +269,15 @@ comment|// True = yes is valid, false = not valid
 name|bool
 name|m_bEvaluatedExpression
 block|;
-comment|// True = yes is expression evaluated, false = failed
+comment|// True = yes is expression evaluated, false =
+comment|// failed
 name|lldb
 operator|::
 name|SBError
 name|m_Error
 block|;
-comment|// Error object, which is examined when m_bEvaluatedExpression is false
+comment|// Error object, which is examined when
+comment|// m_bEvaluatedExpression is false
 name|CMIUtilString
 name|m_strValue
 block|;
@@ -269,7 +287,8 @@ block|;
 name|bool
 name|m_bFoundInvalidChar
 block|;
-comment|// True = yes found unexpected character in the expression, false = all ok
+comment|// True = yes found unexpected character in the
+comment|// expression, false = all ok
 name|char
 name|m_cExpressionInvalidChar
 block|;
@@ -281,7 +300,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -370,7 +393,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -465,7 +492,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -529,7 +560,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -621,7 +656,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -731,7 +770,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -795,7 +838,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -882,7 +929,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -958,12 +1009,14 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgOffset
 block|;
-comment|// Not specified in MI spec but Eclipse gives this option.
+comment|// Not specified in MI spec but
+comment|// Eclipse gives this option.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgAddr
 block|;
-comment|// Not specified in MI spec but Eclipse gives this option.
+comment|// Not specified in MI spec but Eclipse
+comment|// gives this option.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgD
@@ -973,12 +1026,14 @@ specifier|const
 name|CMIUtilString
 name|m_constStrArgNumber
 block|;
-comment|// Not specified in MI spec but Eclipse gives this option.
+comment|// Not specified in MI spec but
+comment|// Eclipse gives this option.
 specifier|const
 name|CMIUtilString
 name|m_constStrArgContents
 block|;
-comment|// Not specified in MI spec but Eclipse gives this option.
+comment|// Not specified in MI spec but
+comment|// Eclipse gives this option.
 name|MIuint64
 name|m_nAddr
 block|;
@@ -997,7 +1052,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OperatingSystem.h ----------------------------------------------*- C++ -*-===//
+comment|//===-- OperatingSystem.h ----------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -58,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/PluginInterface.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/PluginInterface.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt

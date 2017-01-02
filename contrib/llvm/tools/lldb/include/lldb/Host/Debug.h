@@ -86,17 +86,20 @@ operator|::
 name|tid_t
 name|tid
 expr_stmt|;
-comment|// The thread ID that this action applies to, LLDB_INVALID_THREAD_ID for the default thread action
+comment|// The thread ID that this action applies to,
+comment|// LLDB_INVALID_THREAD_ID for the default thread action
 name|lldb
 operator|::
 name|StateType
 name|state
 expr_stmt|;
-comment|// Valid values are eStateStopped/eStateSuspended, eStateRunning, and eStateStepping.
+comment|// Valid values are eStateStopped/eStateSuspended,
+comment|// eStateRunning, and eStateStepping.
 name|int
 name|signal
 decl_stmt|;
-comment|// When resuming this thread, resume it with this signal if this value is> 0
+comment|// When resuming this thread, resume it with this signal if this
+comment|// value is> 0
 block|}
 struct|;
 comment|//------------------------------------------------------------------
@@ -119,7 +122,7 @@ argument_list|()
 operator|,
 name|m_signal_handled
 argument_list|()
-block|{         }
+block|{}
 name|ResumeActionList
 argument_list|(
 argument|lldb::StateType default_action
@@ -139,7 +142,7 @@ name|default_action
 argument_list|,
 name|signal
 argument_list|)
-block|;         }
+block|;   }
 name|ResumeActionList
 argument_list|(
 argument|const ResumeAction *actions
@@ -654,7 +657,7 @@ operator|::
 name|addr_t
 name|data
 index|[
-literal|2
+literal|8
 index|]
 expr_stmt|;
 block|}

@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/Disassembler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/Error.h"
 end_include
 
@@ -160,9 +166,9 @@ name|DWARFExpression
 argument_list|(
 argument|lldb::ModuleSP module
 argument_list|,
-argument|const DataExtractor& data
+argument|const DataExtractor&data
 argument_list|,
-argument|DWARFCompileUnit* dwarf_cu
+argument|DWARFCompileUnit *dwarf_cu
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -261,7 +267,8 @@ comment|///     True if IsLocationList() is true and the address was found;
 comment|///     false otherwise.
 comment|//------------------------------------------------------------------
 comment|//    bool
-comment|//    LocationListContainsLoadAddress (Process* process, const Address&addr) const;
+comment|//    LocationListContainsLoadAddress (Process* process, const Address&addr)
+comment|//    const;
 comment|//
 name|bool
 name|LocationListContainsAddress
@@ -904,6 +911,21 @@ name|offset_t
 name|offset
 argument_list|)
 decl_stmt|;
+name|bool
+name|MatchesOperand
+argument_list|(
+name|StackFrame
+operator|&
+name|frame
+argument_list|,
+specifier|const
+name|Instruction
+operator|::
+name|Operand
+operator|&
+name|op
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -1012,6 +1034,26 @@ operator|&
 name|high_pc
 argument_list|)
 decl_stmt|;
+name|bool
+name|GetOpAndEndOffsets
+argument_list|(
+name|StackFrame
+operator|&
+name|frame
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+operator|&
+name|op_offset
+argument_list|,
+name|lldb
+operator|::
+name|offset_t
+operator|&
+name|end_offset
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Classes that inherit from DWARFExpression can see and modify these
 comment|//------------------------------------------------------------------
@@ -1029,7 +1071,8 @@ name|DWARFCompileUnit
 modifier|*
 name|m_dwarf_cu
 decl_stmt|;
-comment|///< The DWARF compile unit this expression belongs to. It is used
+comment|///< The DWARF compile unit this expression
+comment|///belongs to. It is used
 comment|///< to evaluate values indexing into the .debug_addr section (e.g.
 comment|///< DW_OP_GNU_addr_index, DW_OP_GNU_const_index)
 name|lldb
@@ -1043,7 +1086,8 @@ operator|::
 name|addr_t
 name|m_loclist_slide
 expr_stmt|;
-comment|///< A value used to slide the location list offsets so that
+comment|///< A value used to slide the location list
+comment|///offsets so that
 comment|///< they are relative to the object that owns the location list
 comment|///< (the function for frame base and variable location lists)
 block|}

@@ -86,12 +86,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Broadcaster.h"
 end_include
 
@@ -135,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/StackFrameList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_define
@@ -439,7 +439,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ThreadEventData
 argument_list|)
-block|;     }
+block|;   }
 decl_stmt|;
 struct|struct
 name|ThreadStateCheckpoint
@@ -447,13 +447,15 @@ block|{
 name|uint32_t
 name|orig_stop_id
 decl_stmt|;
-comment|// Dunno if I need this yet but it is an interesting bit of data.
+comment|// Dunno if I need this yet but it is an interesting
+comment|// bit of data.
 name|lldb
 operator|::
 name|StopInfoSP
 name|stop_info_sp
 expr_stmt|;
-comment|// You have to restore the stop info or you might continue with the wrong signals.
+comment|// You have to restore the stop info or you
+comment|// might continue with the wrong signals.
 name|lldb
 operator|::
 name|RegisterCheckpointSP
@@ -570,18 +572,25 @@ name|state
 argument_list|)
 decl_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Sets the USER resume state for this thread.  If you set a thread to suspended with
-comment|/// this API, it won't take part in any of the arbitration for ShouldResume, and will stay
+comment|/// Sets the USER resume state for this thread.  If you set a thread to
+comment|/// suspended with
+comment|/// this API, it won't take part in any of the arbitration for ShouldResume,
+comment|/// and will stay
 comment|/// suspended even when other threads do get to run.
 comment|///
-comment|/// N.B. This is not the state that is used internally by thread plans to implement
+comment|/// N.B. This is not the state that is used internally by thread plans to
+comment|/// implement
 comment|/// staying on one thread while stepping over a breakpoint, etc.  The is the
-comment|/// TemporaryResume state, and if you are implementing some bit of strategy in the stepping
+comment|/// TemporaryResume state, and if you are implementing some bit of strategy in
+comment|/// the stepping
 comment|/// machinery you should be using that state and not the user resume state.
 comment|///
-comment|/// If you are just preparing all threads to run, you should not override the threads that are
-comment|/// marked as suspended by the debugger.  In that case, pass override_suspend = false.  If you want
-comment|/// to force the thread to run (e.g. the "thread continue" command, or are resetting the state
+comment|/// If you are just preparing all threads to run, you should not override the
+comment|/// threads that are
+comment|/// marked as suspended by the debugger.  In that case, pass override_suspend
+comment|/// = false.  If you want
+comment|/// to force the thread to run (e.g. the "thread continue" command, or are
+comment|/// resetting the state
 comment|/// (e.g. in SBThread::Resume()), then pass true to override_suspend.
 comment|/// @return
 comment|///    The User resume state for this thread.
@@ -620,7 +629,8 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Gets the USER resume state for this thread.  This is not the same as what
 comment|/// this thread is going to do for any particular step, however if this thread
-comment|/// returns eStateSuspended, then the process control logic will never allow this
+comment|/// returns eStateSuspended, then the process control logic will never allow
+comment|/// this
 comment|/// thread to run.
 comment|///
 comment|/// @return
@@ -665,7 +675,7 @@ operator|::
 name|StateType
 name|resume_state
 argument_list|)
-block|{     }
+block|{}
 comment|// This clears generic thread state after a resume.  If you subclass this,
 comment|// be sure to call it.
 name|virtual
@@ -718,10 +728,14 @@ name|void
 name|Flush
 parameter_list|()
 function_decl|;
-comment|// Return whether this thread matches the specification in ThreadSpec.  This is a virtual
-comment|// method because at some point we may extend the thread spec with a platform specific
-comment|// dictionary of attributes, which then only the platform specific Thread implementation
-comment|// would know how to match.  For now, this just calls through to the ThreadSpec's
+comment|// Return whether this thread matches the specification in ThreadSpec.  This
+comment|// is a virtual
+comment|// method because at some point we may extend the thread spec with a platform
+comment|// specific
+comment|// dictionary of attributes, which then only the platform specific Thread
+comment|// implementation
+comment|// would know how to match.  For now, this just calls through to the
+comment|// ThreadSpec's
 comment|// ThreadPassesBasicTests method.
 name|virtual
 name|bool
@@ -750,8 +764,10 @@ name|StopInfoIsUpToDate
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// This sets the stop reason to a "blank" stop reason, so you can call functions on the thread
-comment|// without having the called function run with whatever stop reason you stopped with.
+comment|// This sets the stop reason to a "blank" stop reason, so you can call
+comment|// functions on the thread
+comment|// without having the called function run with whatever stop reason you
+comment|// stopped with.
 name|void
 name|SetStopInfoToNothing
 parameter_list|()
@@ -802,7 +818,8 @@ comment|/// On Mac OS X systems there may be voucher information.
 comment|/// The top level dictionary returned will have an "activity" key and the
 comment|/// value of the activity is a dictionary.  Keys in that dictionary will
 comment|/// be "name" and "id", among others.
-comment|/// There may also be "trace_messages" (an array) with each entry in that array
+comment|/// There may also be "trace_messages" (an array) with each entry in that
+comment|/// array
 comment|/// being a dictionary (keys include "message" with the text of the trace
 comment|/// message).
 comment|//------------------------------------------------------------------
@@ -853,7 +870,7 @@ name|char
 modifier|*
 name|name
 parameter_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Whether this thread can be associated with a libdispatch queue
 comment|///
@@ -892,7 +909,7 @@ operator|::
 name|LazyBool
 name|associated_with_libdispatch_queue
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Retrieve the Queue ID for the queue currently using this Thread
 comment|///
@@ -902,7 +919,7 @@ comment|///
 comment|/// This is a unique identifier for the libdispatch/GCD queue in a
 comment|/// process.  Often starting at 1 for the initial system-created
 comment|/// queues and incrementing, a QueueID will not be reused for a
-comment|/// different queue during the lifetime of a proces.
+comment|/// different queue during the lifetime of a process.
 comment|///
 comment|/// @return
 comment|///     A QueueID if the Thread subclass implements this, else
@@ -928,7 +945,7 @@ operator|::
 name|queue_id_t
 name|new_val
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Retrieve the Queue name for the queue currently using this Thread
 comment|///
@@ -959,7 +976,7 @@ name|char
 modifier|*
 name|name
 parameter_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Retrieve the Queue kind for the queue currently using this Thread
 comment|///
@@ -994,7 +1011,7 @@ operator|::
 name|QueueKind
 name|kind
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Retrieve the Queue for this thread, if any.
 comment|///
@@ -1055,13 +1072,14 @@ operator|::
 name|addr_t
 name|dispatch_queue_t
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Whether this Thread already has all the Queue information cached or not
 comment|///
 comment|/// A Thread may be associated with a libdispatch work Queue at a given
 comment|/// public stop event.  If so, the thread can satisify requests like
-comment|/// GetQueueLibdispatchQueueAddress, GetQueueKind, GetQueueName, and GetQueueID
+comment|/// GetQueueLibdispatchQueueAddress, GetQueueKind, GetQueueName, and
+comment|/// GetQueueID
 comment|/// either from information from the remote debug stub when it is initially
 comment|/// created, or it can query the SystemRuntime for that information.
 comment|///
@@ -1369,10 +1387,13 @@ comment|// Subclasses can use this function if a thread is actually backed by
 comment|// another thread. This is currently used for the OperatingSystem plug-ins
 comment|// where they might have a thread that is in memory, yet its registers
 comment|// are available through the lldb_private::Thread subclass for the current
-comment|// lldb_private::Process class. Since each time the process stops the backing
+comment|// lldb_private::Process class. Since each time the process stops the
+comment|// backing
 comment|// threads for memory threads can change, we need a way to clear the backing
 comment|// thread for all memory threads each time we stop.
 block|}
+comment|// If stop_format is true, this will be the form used when we print stop info.
+comment|// If false, it will be the form we use for thread list and co.
 name|void
 name|DumpUsingSettingsFormat
 parameter_list|(
@@ -1382,6 +1403,9 @@ name|strm
 parameter_list|,
 name|uint32_t
 name|frame_idx
+parameter_list|,
+name|bool
+name|stop_format
 parameter_list|)
 function_decl|;
 name|bool
@@ -1544,21 +1568,28 @@ comment|// Thread Plan Providers:
 comment|// This section provides the basic thread plans that the Process control
 comment|// machinery uses to run the target.  ThreadPlan.h provides more details on
 comment|// how this mechanism works.
-comment|// The thread provides accessors to a set of plans that perform basic operations.
+comment|// The thread provides accessors to a set of plans that perform basic
+comment|// operations.
 comment|// The idea is that particular Platform plugins can override these methods to
 comment|// provide the implementation of these basic operations appropriate to their
 comment|// environment.
 comment|//
 comment|// NB: All the QueueThreadPlanXXX providers return Shared Pointers to
 comment|// Thread plans.  This is useful so that you can modify the plans after
-comment|// creation in ways specific to that plan type.  Also, it is often necessary for
-comment|// ThreadPlans that utilize other ThreadPlans to implement their task to keep a shared
+comment|// creation in ways specific to that plan type.  Also, it is often necessary
+comment|// for
+comment|// ThreadPlans that utilize other ThreadPlans to implement their task to keep
+comment|// a shared
 comment|// pointer to the sub-plan.
-comment|// But besides that, the shared pointers should only be held onto by entities who live no longer
+comment|// But besides that, the shared pointers should only be held onto by entities
+comment|// who live no longer
 comment|// than the thread containing the ThreadPlan.
-comment|// FIXME: If this becomes a problem, we can make a version that just returns a pointer,
-comment|// which it is clearly unsafe to hold onto, and a shared pointer version, and only allow
-comment|// ThreadPlan and Co. to use the latter.  That is made more annoying to do because there's
+comment|// FIXME: If this becomes a problem, we can make a version that just returns a
+comment|// pointer,
+comment|// which it is clearly unsafe to hold onto, and a shared pointer version, and
+comment|// only allow
+comment|// ThreadPlan and Co. to use the latter.  That is made more annoying to do
+comment|// because there's
 comment|// no elegant way to friend a method to all sub-classes of a given class.
 comment|//
 comment|//------------------------------------------------------------------
@@ -1570,11 +1601,13 @@ comment|/// one you probably want to call through to the Process one for anythin
 comment|/// your plugin doesn't explicitly handle.
 comment|///
 comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    \b true if we discard the currently queued plans and replace them with
+comment|///    this one.
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the
+comment|///     plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1586,20 +1619,23 @@ argument|bool abort_other_plans
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Queues the plan used to step one instruction from the current PC of \a thread.
+comment|/// Queues the plan used to step one instruction from the current PC of \a
+comment|/// thread.
 comment|///
 comment|/// @param[in] step_over
 comment|///    \b true if we step over calls to functions, false if we step in.
 comment|///
 comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    \b true if we discard the currently queued plans and replace them with
+comment|///    this one.
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the
+comment|///     plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1619,18 +1655,22 @@ comment|/// Queues the plan used to step through an address range, stepping  ove
 comment|/// function calls.
 comment|///
 comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    \b true if we discard the currently queued plans and replace them with
+comment|///    this one.
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @param[in] type
-comment|///    Type of step to do, only eStepTypeInto and eStepTypeOver are supported by this plan.
+comment|///    Type of step to do, only eStepTypeInto and eStepTypeOver are supported
+comment|///    by this plan.
 comment|///
 comment|/// @param[in] range
 comment|///    The address range to step through.
 comment|///
 comment|/// @param[in] addr_context
-comment|///    When dealing with stepping through inlined functions the current PC is not enough information to know
-comment|///    what "step" means.  For instance a series of nested inline functions might start at the same address.
+comment|///    When dealing with stepping through inlined functions the current PC is
+comment|///    not enough information to know
+comment|///    what "step" means.  For instance a series of nested inline functions
+comment|///    might start at the same address.
 comment|//     The \a addr_context provides the current symbol context the step
 comment|///    is supposed to be out of.
 comment|//   FIXME: Currently unused.
@@ -1639,11 +1679,13 @@ comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
 comment|/// @param[in] step_out_avoids_code_without_debug_info
-comment|///    If eLazyBoolYes, if the step over steps out it will continue to step out till it comes to a frame with debug info.
+comment|///    If eLazyBoolYes, if the step over steps out it will continue to step
+comment|///    out till it comes to a frame with debug info.
 comment|///    If eLazyBoolCalculate, we will consult the default set in the thread.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the
+comment|///     plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1662,8 +1704,10 @@ argument_list|,
 argument|LazyBool step_out_avoids_code_without_debug_info = eLazyBoolCalculate
 argument_list|)
 expr_stmt|;
-comment|// Helper function that takes a LineEntry to step, insted of an AddressRange.  This may combine multiple
-comment|// LineEntries of the same source line number to step over a longer address range in a single operation.
+comment|// Helper function that takes a LineEntry to step, insted of an AddressRange.
+comment|// This may combine multiple
+comment|// LineEntries of the same source line number to step over a longer address
+comment|// range in a single operation.
 name|virtual
 name|lldb
 operator|::
@@ -1682,41 +1726,50 @@ argument|LazyBool step_out_avoids_code_without_debug_info = eLazyBoolCalculate
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Queues the plan used to step through an address range, stepping into functions.
+comment|/// Queues the plan used to step through an address range, stepping into
+comment|/// functions.
 comment|///
 comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    \b true if we discard the currently queued plans and replace them with
+comment|///    this one.
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @param[in] type
-comment|///    Type of step to do, only eStepTypeInto and eStepTypeOver are supported by this plan.
+comment|///    Type of step to do, only eStepTypeInto and eStepTypeOver are supported
+comment|///    by this plan.
 comment|///
 comment|/// @param[in] range
 comment|///    The address range to step through.
 comment|///
 comment|/// @param[in] addr_context
-comment|///    When dealing with stepping through inlined functions the current PC is not enough information to know
-comment|///    what "step" means.  For instance a series of nested inline functions might start at the same address.
+comment|///    When dealing with stepping through inlined functions the current PC is
+comment|///    not enough information to know
+comment|///    what "step" means.  For instance a series of nested inline functions
+comment|///    might start at the same address.
 comment|//     The \a addr_context provides the current symbol context the step
 comment|///    is supposed to be out of.
 comment|//   FIXME: Currently unused.
 comment|///
 comment|/// @param[in] step_in_target
-comment|///    Name if function we are trying to step into.  We will step out if we don't land in that function.
+comment|///    Name if function we are trying to step into.  We will step out if we
+comment|///    don't land in that function.
 comment|///
 comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
 comment|/// @param[in] step_in_avoids_code_without_debug_info
-comment|///    If eLazyBoolYes we will step out if we step into code with no debug info.
+comment|///    If eLazyBoolYes we will step out if we step into code with no debug
+comment|///    info.
 comment|///    If eLazyBoolCalculate we will consult the default set in the thread.
 comment|///
 comment|/// @param[in] step_out_avoids_code_without_debug_info
-comment|///    If eLazyBoolYes, if the step over steps out it will continue to step out till it comes to a frame with debug info.
+comment|///    If eLazyBoolYes, if the step over steps out it will continue to step
+comment|///    out till it comes to a frame with debug info.
 comment|///    If eLazyBoolCalculate, it will consult the default set in the thread.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the
+comment|///     plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1739,8 +1792,10 @@ argument_list|,
 argument|LazyBool step_out_avoids_code_without_debug_info = eLazyBoolCalculate
 argument_list|)
 expr_stmt|;
-comment|// Helper function that takes a LineEntry to step, insted of an AddressRange.  This may combine multiple
-comment|// LineEntries of the same source line number to step over a longer address range in a single operation.
+comment|// Helper function that takes a LineEntry to step, insted of an AddressRange.
+comment|// This may combine multiple
+comment|// LineEntries of the same source line number to step over a longer address
+comment|// range in a single operation.
 name|virtual
 name|lldb
 operator|::
@@ -1767,12 +1822,15 @@ comment|/// Queue the plan used to step out of the function at the current PC of
 comment|/// \a thread.
 comment|///
 comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    \b true if we discard the currently queued plans and replace them with
+comment|///    this one.
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @param[in] addr_context
-comment|///    When dealing with stepping through inlined functions the current PC is not enough information to know
-comment|///    what "step" means.  For instance a series of nested inline functions might start at the same address.
+comment|///    When dealing with stepping through inlined functions the current PC is
+comment|///    not enough information to know
+comment|///    what "step" means.  For instance a series of nested inline functions
+comment|///    might start at the same address.
 comment|//     The \a addr_context provides the current symbol context the step
 comment|///    is supposed to be out of.
 comment|//   FIXME: Currently unused.
@@ -1788,11 +1846,13 @@ comment|/// @param[in] run_vote
 comment|///    See standard meanings for the stop& run votes in ThreadPlan.h.
 comment|///
 comment|/// @param[in] step_out_avoids_code_without_debug_info
-comment|///    If eLazyBoolYes, if the step over steps out it will continue to step out till it comes to a frame with debug info.
+comment|///    If eLazyBoolYes, if the step over steps out it will continue to step
+comment|///    out till it comes to a frame with debug info.
 comment|///    If eLazyBoolCalculate, it will consult the default set in the thread.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the
+comment|///     plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1821,16 +1881,21 @@ argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Queue the plan used to step out of the function at the current PC of
-comment|/// a thread.  This version does not consult the should stop here callback, and should only
-comment|/// be used by other thread plans when they need to retain control of the step out.
+comment|/// a thread.  This version does not consult the should stop here callback,
+comment|/// and should only
+comment|/// be used by other thread plans when they need to retain control of the step
+comment|/// out.
 comment|///
 comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    \b true if we discard the currently queued plans and replace them with
+comment|///    this one.
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @param[in] addr_context
-comment|///    When dealing with stepping through inlined functions the current PC is not enough information to know
-comment|///    what "step" means.  For instance a series of nested inline functions might start at the same address.
+comment|///    When dealing with stepping through inlined functions the current PC is
+comment|///    not enough information to know
+comment|///    what "step" means.  For instance a series of nested inline functions
+comment|///    might start at the same address.
 comment|//     The \a addr_context provides the current symbol context the step
 comment|///    is supposed to be out of.
 comment|//   FIXME: Currently unused.
@@ -1846,17 +1911,25 @@ comment|/// @param[in] run_vote
 comment|///    See standard meanings for the stop& run votes in ThreadPlan.h.
 comment|///
 comment|/// @param[in] continue_to_next_branch
-comment|///    Normally this will enqueue a plan that will put a breakpoint on the return address and continue
-comment|///    to there.  If continue_to_next_branch is true, this is an operation not involving the user --
-comment|///    e.g. stepping "next" in a source line and we instruction stepped into another function --
-comment|///    so instead of putting a breakpoint on the return address, advance the breakpoint to the
-comment|///    end of the source line that is doing the call, or until the next flow control instruction.
-comment|///    If the return value from the function call is to be retrieved / displayed to the user, you must stop
-comment|///    on the return address.  The return value may be stored in volatile registers which are overwritten
+comment|///    Normally this will enqueue a plan that will put a breakpoint on the
+comment|///    return address and continue
+comment|///    to there.  If continue_to_next_branch is true, this is an operation not
+comment|///    involving the user --
+comment|///    e.g. stepping "next" in a source line and we instruction stepped into
+comment|///    another function --
+comment|///    so instead of putting a breakpoint on the return address, advance the
+comment|///    breakpoint to the
+comment|///    end of the source line that is doing the call, or until the next flow
+comment|///    control instruction.
+comment|///    If the return value from the function call is to be retrieved /
+comment|///    displayed to the user, you must stop
+comment|///    on the return address.  The return value may be stored in volatile
+comment|///    registers which are overwritten
 comment|///    before the next branch instruction.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the
+comment|///     plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1889,18 +1962,21 @@ comment|/// call site at the current PC into the actual function call.
 comment|///
 comment|///
 comment|/// @param[in] return_stack_id
-comment|///    The stack id that we will return to (by setting backstop breakpoints on the return
+comment|///    The stack id that we will return to (by setting backstop breakpoints on
+comment|///    the return
 comment|///    address to that frame) if we fail to step through.
 comment|///
 comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    \b true if we discard the currently queued plans and replace them with
+comment|///    this one.
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the
+comment|///     plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -1921,7 +1997,8 @@ comment|/// This is a simple plan, mostly useful as a backstop when you are cont
 comment|/// for some particular purpose.
 comment|///
 comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    \b true if we discard the currently queued plans and replace them with
+comment|///    this one.
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @param[in] target_addr
@@ -1931,7 +2008,8 @@ comment|/// @param[in] stop_other_threads
 comment|///    \b true if we will stop other threads while we single step this one.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or nullptr if the plan could not be queued.
+comment|///     A shared pointer to the newly queued thread plan, or nullptr if the
+comment|///     plan could not be queued.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -2086,7 +2164,8 @@ comment|/// @param[in] plan_sp
 comment|///    The plan to queue.
 comment|///
 comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
+comment|///    \b true if we discard the currently queued plans and replace them with
+comment|///    this one.
 comment|///    Otherwise this plan will go on the end of the plan stack.
 comment|///
 comment|/// @return
@@ -2106,7 +2185,8 @@ name|abort_other_plans
 argument_list|)
 decl_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Discards the plans queued on the plan stack of the current thread.  This is
+comment|/// Discards the plans queued on the plan stack of the current thread.  This
+comment|/// is
 comment|/// arbitrated by the "Master" ThreadPlans, using the "OkayToDiscard" call.
 comment|//  But if \a force is true, all thread plans are discarded.
 comment|//------------------------------------------------------------------
@@ -2118,7 +2198,8 @@ name|force
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Discards the plans queued on the plan stack of the current thread up to and
+comment|/// Discards the plans queued on the plan stack of the current thread up to
+comment|/// and
 comment|/// including up_to_plan_sp.
 comment|//
 comment|// @param[in] up_to_plan_sp
@@ -2143,15 +2224,18 @@ name|up_to_plan_ptr
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Discards the plans queued on the plan stack of the current thread up to and
+comment|/// Discards the plans queued on the plan stack of the current thread up to
+comment|/// and
 comment|/// including the plan in that matches \a thread_index counting only
 comment|/// the non-Private plans.
 comment|///
 comment|/// @param[in] up_to_plan_sp
-comment|///   Discard all plans up to and including this user plan given by this index.
+comment|///   Discard all plans up to and including this user plan given by this
+comment|///   index.
 comment|///
 comment|/// @return
-comment|///    \b true if there was a thread plan with that user index, \b false otherwise.
+comment|///    \b true if there was a thread plan with that user index, \b false
+comment|///    otherwise.
 comment|//------------------------------------------------------------------
 name|bool
 name|DiscardUserThreadPlansUpToIndex
@@ -2359,6 +2443,9 @@ name|num_frames
 parameter_list|,
 name|uint32_t
 name|num_frames_with_source
+parameter_list|,
+name|bool
+name|stop_format
 parameter_list|)
 function_decl|;
 name|size_t
@@ -2490,7 +2577,7 @@ parameter_list|(
 name|uint64_t
 name|token
 parameter_list|)
-block|{ }
+block|{}
 comment|//----------------------------------------------------------------------
 comment|/// Gets the extended backtrace token for this thread
 comment|///
@@ -2536,8 +2623,10 @@ name|friend
 name|class
 name|OperatingSystem
 decl_stmt|;
-comment|// This is necessary to make sure thread assets get destroyed while the thread is still in good shape
-comment|// to call virtual thread methods.  This must be called by classes that derive from Thread in their destructor.
+comment|// This is necessary to make sure thread assets get destroyed while the thread
+comment|// is still in good shape
+comment|// to call virtual thread methods.  This must be called by classes that derive
+comment|// from Thread in their destructor.
 name|virtual
 name|void
 name|DestroyThread
@@ -2589,7 +2678,8 @@ operator|*
 name|GetUnwinder
 argument_list|()
 expr_stmt|;
-comment|// Check to see whether the thread is still at the last breakpoint hit that stopped it.
+comment|// Check to see whether the thread is still at the last breakpoint hit that
+comment|// stopped it.
 name|virtual
 name|bool
 name|IsStillAtLastBreakpointHit
@@ -2609,7 +2699,8 @@ return|return
 name|false
 return|;
 block|}
-comment|// Subclasses that have a way to get an extended info dictionary for this thread should
+comment|// Subclasses that have a way to get an extended info dictionary for this
+comment|// thread should
 comment|// fill
 name|virtual
 name|lldb_private
@@ -2675,23 +2766,28 @@ comment|///< The private stop reason for this thread
 name|uint32_t
 name|m_stop_info_stop_id
 decl_stmt|;
-comment|// This is the stop id for which the StopInfo is valid.  Can use this so you know that
+comment|// This is the stop id for which the StopInfo is
+comment|// valid.  Can use this so you know that
 comment|// the thread's m_stop_info_sp is current and you don't have to fetch it again
 name|uint32_t
 name|m_stop_info_override_stop_id
 decl_stmt|;
-comment|// The stop ID containing the last time the stop info was checked against the stop info override
+comment|// The stop ID containing the last time
+comment|// the stop info was checked against
+comment|// the stop info override
 specifier|const
 name|uint32_t
 name|m_index_id
 decl_stmt|;
-comment|///< A unique 1 based index assigned to each thread for easy UI/command line access.
+comment|///< A unique 1 based index assigned to each thread
+comment|///for easy UI/command line access.
 name|lldb
 operator|::
 name|RegisterContextSP
 name|m_reg_context_sp
 expr_stmt|;
-comment|///< The register context for this thread's current register state.
+comment|///< The register context for this
+comment|///thread's current register state.
 name|lldb
 operator|::
 name|StateType
@@ -2712,11 +2808,15 @@ comment|///< The stack of plans this thread is executing.
 name|plan_stack
 name|m_completed_plan_stack
 decl_stmt|;
-comment|///< Plans that have been completed by this stop.  They get deleted when the thread resumes.
+comment|///< Plans that have been completed by this
+comment|///stop.  They get deleted when the thread
+comment|///resumes.
 name|plan_stack
 name|m_discarded_plan_stack
 decl_stmt|;
-comment|///< Plans that have been discarded by this stop.  They get deleted when the thread resumes.
+comment|///< Plans that have been discarded by this
+comment|///stop.  They get deleted when the thread
+comment|///resumes.
 name|mutable
 name|std
 operator|::
@@ -2729,29 +2829,37 @@ operator|::
 name|StackFrameListSP
 name|m_curr_frames_sp
 expr_stmt|;
-comment|///< The stack frames that get lazily populated after a thread stops.
+comment|///< The stack frames that get lazily
+comment|///populated after a thread stops.
 name|lldb
 operator|::
 name|StackFrameListSP
 name|m_prev_frames_sp
 expr_stmt|;
-comment|///< The previous stack frames from the last time this thread stopped.
+comment|///< The previous stack frames from
+comment|///the last time this thread stopped.
 name|int
 name|m_resume_signal
 decl_stmt|;
-comment|///< The signal that should be used when continuing this thread.
+comment|///< The signal that should be used when continuing this
+comment|///thread.
 name|lldb
 operator|::
 name|StateType
 name|m_resume_state
 expr_stmt|;
-comment|///< This state is used to force a thread to be suspended from outside the ThreadPlan logic.
+comment|///< This state is used to force a thread to
+comment|///be suspended from outside the ThreadPlan
+comment|///logic.
 name|lldb
 operator|::
 name|StateType
 name|m_temporary_resume_state
 expr_stmt|;
-comment|///< This state records what the thread was told to do by the thread plan logic for the current resume.
+comment|///< This state records what the
+comment|///thread was told to do by the
+comment|///thread plan logic for the current
+comment|///resume.
 comment|/// It gets set in Thread::ShouldResume.
 name|std
 operator|::
@@ -2766,7 +2874,8 @@ expr_stmt|;
 name|bool
 name|m_destroy_called
 decl_stmt|;
-comment|// This is used internally to make sure derived Thread classes call DestroyThread.
+comment|// This is used internally to make sure derived Thread
+comment|// classes call DestroyThread.
 name|LazyBool
 name|m_override_should_notify
 decl_stmt|;
@@ -2775,7 +2884,8 @@ label|:
 name|bool
 name|m_extended_info_fetched
 decl_stmt|;
-comment|// Have we tried to retrieve the m_extended_info for this thread?
+comment|// Have we tried to retrieve the m_extended_info
+comment|// for this thread?
 name|StructuredData
 operator|::
 name|ObjectSP

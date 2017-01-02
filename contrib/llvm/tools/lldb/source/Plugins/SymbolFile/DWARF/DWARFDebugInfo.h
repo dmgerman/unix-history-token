@@ -46,25 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|<vector>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"DWARFDIE.h"
 end_include
 
 begin_include
@@ -76,7 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DWARFDIE.h"
+file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_typedef
@@ -437,7 +437,8 @@ expr_stmt|;
 comment|// A quick address to compile unit table
 name|private
 label|:
-comment|// All parsing needs to be done partially any managed by this class as accessors are called.
+comment|// All parsing needs to be done partially any managed by this class as
+comment|// accessors are called.
 name|void
 name|ParseCompileUnitHeadersIfNeeded
 parameter_list|()

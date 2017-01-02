@@ -104,7 +104,7 @@ name|virtual
 operator|~
 name|Unwind
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -124,7 +124,7 @@ argument_list|)
 block|;
 name|DoClear
 argument_list|()
-block|;     }
+block|;   }
 name|uint32_t
 name|GetFrameCount
 argument_list|()

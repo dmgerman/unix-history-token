@@ -81,7 +81,7 @@ name|public
 label|:
 name|ValueObjectConstResultImpl
 argument_list|(
-argument|ValueObject* valobj
+argument|ValueObject *valobj
 argument_list|,
 argument|lldb::addr_t live_address = LLDB_INVALID_ADDRESS
 argument_list|)
@@ -124,7 +124,7 @@ name|GetSyntheticChildAtOffset
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const CompilerType& type
+argument|const CompilerType&type
 argument_list|,
 argument|bool can_create
 argument_list|,

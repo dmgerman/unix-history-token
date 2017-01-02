@@ -232,7 +232,8 @@ name|ValueType
 name|GetValueType
 parameter_list|()
 function_decl|;
-comment|// If you call this on a newly created ValueObject, it will always return false.
+comment|// If you call this on a newly created ValueObject, it will always return
+comment|// false.
 name|bool
 name|GetValueDidChange
 parameter_list|()
@@ -467,21 +468,22 @@ operator|::
 name|SBValue
 name|CreateValueFromAddress
 argument_list|(
-argument|const char* name
+argument|const char *name
 argument_list|,
 argument|lldb::addr_t address
 argument_list|,
 argument|lldb::SBType type
 argument_list|)
 expr_stmt|;
-comment|// this has no address! GetAddress() and GetLoadAddress() as well as AddressOf()
+comment|// this has no address! GetAddress() and GetLoadAddress() as well as
+comment|// AddressOf()
 comment|// on the return of this call all return invalid
 name|lldb
 operator|::
 name|SBValue
 name|CreateValueFromData
 argument_list|(
-argument|const char* name
+argument|const char *name
 argument_list|,
 argument|lldb::SBData data
 argument_list|,
@@ -915,9 +917,12 @@ argument|SBError&error
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Same as the protected version of GetSP that takes a locker, except that we make the
-comment|/// locker locally in the function.  Since the Target API mutex is recursive, and the
-comment|/// StopLocker is a read lock, you can call this function even if you are already
+comment|/// Same as the protected version of GetSP that takes a locker, except that we
+comment|/// make the
+comment|/// locker locally in the function.  Since the Target API mutex is recursive,
+comment|/// and the
+comment|/// StopLocker is a read lock, you can call this function even if you are
+comment|/// already
 comment|/// holding the two above-mentioned locks.
 comment|///
 comment|/// @return
@@ -957,15 +962,21 @@ comment|//------------------------------------------------------------------
 comment|/// Get the appropriate ValueObjectSP from this SBValue, consulting the
 comment|/// use_dynamic and use_synthetic options passed in to SetSP when the
 comment|/// SBValue's contents were set.  Since this often requires examining memory,
-comment|/// and maybe even running code, it needs to acquire the Target API and Process StopLock.
-comment|/// Those are held in an opaque class ValueLocker which is currently local to SBValue.cpp.
-comment|/// So you don't have to get these yourself just default construct a ValueLocker, and pass it into this.
-comment|/// If we need to make a ValueLocker and use it in some other .cpp file, we'll have to move it to
-comment|/// ValueObject.h/cpp or somewhere else convenient.  We haven't needed to so far.
+comment|/// and maybe even running code, it needs to acquire the Target API and
+comment|/// Process StopLock.
+comment|/// Those are held in an opaque class ValueLocker which is currently local to
+comment|/// SBValue.cpp.
+comment|/// So you don't have to get these yourself just default construct a
+comment|/// ValueLocker, and pass it into this.
+comment|/// If we need to make a ValueLocker and use it in some other .cpp file, we'll
+comment|/// have to move it to
+comment|/// ValueObject.h/cpp or somewhere else convenient.  We haven't needed to so
+comment|/// far.
 comment|///
 comment|/// @param[in] value_locker
 comment|///     An object that will hold the Target API, and Process RunLocks, and
-comment|///     auto-destroy them when it goes out of scope.  Currently this is only useful in
+comment|///     auto-destroy them when it goes out of scope.  Currently this is only
+comment|///     useful in
 comment|///     SBValue.cpp.
 comment|///
 comment|/// @return
@@ -981,7 +992,8 @@ argument|ValueLocker&value_locker
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|// these calls do the right thing WRT adjusting their settings according to the target's preferences
+comment|// these calls do the right thing WRT adjusting their settings according to
+comment|// the target's preferences
 name|void
 name|SetSP
 argument_list|(

@@ -139,7 +139,7 @@ name|m_type
 argument_list|(
 argument|eTypeInvalid
 argument_list|)
-block|{         }
+block|{}
 name|Opcode
 argument_list|(
 argument|uint8_t inst
@@ -162,7 +162,7 @@ operator|.
 name|inst8
 operator|=
 name|inst
-block|;         }
+block|;   }
 name|Opcode
 argument_list|(
 argument|uint16_t inst
@@ -185,7 +185,7 @@ operator|.
 name|inst16
 operator|=
 name|inst
-block|;         }
+block|;   }
 name|Opcode
 argument_list|(
 argument|uint32_t inst
@@ -208,7 +208,7 @@ operator|.
 name|inst32
 operator|=
 name|inst
-block|;         }
+block|;   }
 name|Opcode
 argument_list|(
 argument|uint64_t inst
@@ -231,7 +231,7 @@ operator|.
 name|inst64
 operator|=
 name|inst
-block|;         }
+block|;   }
 name|Opcode
 argument_list|(
 argument|uint8_t *bytes
@@ -250,7 +250,7 @@ name|bytes
 argument_list|,
 name|length
 argument_list|)
-block|;         }
+block|;   }
 name|void
 name|Clear
 argument_list|()
@@ -266,7 +266,7 @@ operator|=
 name|Opcode
 operator|::
 name|eTypeInvalid
-block|;         }
+block|;   }
 name|Opcode
 operator|::
 name|Type
@@ -1168,7 +1168,8 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|// This must be big enough to handle any opcode for any supported target.
+comment|// This must be big enough to handle any opcode for any
+comment|// supported target.
 name|uint8_t
 name|length
 decl_stmt|;

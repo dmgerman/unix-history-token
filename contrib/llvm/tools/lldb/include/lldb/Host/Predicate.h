@@ -63,6 +63,18 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<condition_variable>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -75,18 +87,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-defines.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Condition.h"
 end_include
 
 begin_comment
@@ -119,7 +119,8 @@ name|eBroadcastAlways
 block|,
 comment|///< Always send a broadcast when the value is modified.
 name|eBroadcastOnChange
-comment|///< Only broadcast if the value changes when the value is modified.
+comment|///< Only broadcast if the value changes when the value is
+comment|///modified.
 block|}
 name|PredicateBroadcastType
 typedef|;
@@ -160,7 +161,7 @@ argument_list|()
 block|,
 name|m_condition
 argument_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Construct with initial T value \a initial_value.
 comment|///
@@ -185,7 +186,7 @@ argument_list|()
 block|,
 name|m_condition
 argument_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Destructor.
 comment|///
@@ -211,10 +212,15 @@ name|GetValue
 argument_list|()
 specifier|const
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -251,10 +257,15 @@ argument_list|,
 argument|PredicateBroadcastType broadcast_type
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -291,7 +302,7 @@ name|old_value
 argument_list|,
 name|broadcast_type
 argument_list|)
-block|;     }
+block|;   }
 comment|//------------------------------------------------------------------
 comment|/// Set some bits in \a m_value.
 comment|///
@@ -315,10 +326,15 @@ argument_list|,
 argument|PredicateBroadcastType broadcast_type
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -355,7 +371,7 @@ name|old_value
 argument_list|,
 name|broadcast_type
 argument_list|)
-block|;     }
+block|;   }
 comment|//------------------------------------------------------------------
 comment|/// Reset some bits in \a m_value.
 comment|///
@@ -379,10 +395,15 @@ argument_list|,
 argument|PredicateBroadcastType broadcast_type
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -420,7 +441,7 @@ name|old_value
 argument_list|,
 name|broadcast_type
 argument_list|)
-block|;     }
+block|;   }
 comment|//------------------------------------------------------------------
 comment|/// Wait for bits to be set in \a m_value.
 comment|///
@@ -452,23 +473,25 @@ name|WaitForSetValueBits
 argument_list|(
 argument|T bits
 argument_list|,
-argument|const TimeValue *abstime = nullptr
+argument|const std::chrono::microseconds&timeout =                                     std::chrono::microseconds(
+literal|0
+argument|)
 argument_list|)
 block|{
-name|int
-name|err
-operator|=
-literal|0
-block|;
 comment|// pthread_cond_timedwait() or pthread_cond_wait() will atomically
 comment|// unlock the mutex and wait for the condition to be set. When either
 comment|// function returns, they will re-lock the mutex. We use an auto lock/unlock
-comment|// class (Mutex::Locker) to allow us to return at any point in this
+comment|// class (std::lock_guard) to allow us to return at any point in this
 comment|// function and not have to worry about unlocking the mutex.
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|lock
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -478,13 +501,16 @@ directive|ifdef
 name|DB_PTHREAD_LOG_EVENTS
 name|printf
 argument_list|(
-literal|"%s (bits = 0x%8.8x, abstime = %p), m_value = 0x%8.8x\n"
+literal|"%s (bits = 0x%8.8x, timeout = %llu), m_value = 0x%8.8x\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|bits
 argument_list|,
-name|abstime
+name|timeout
+operator|.
+name|count
+argument_list|()
 argument_list|,
 name|m_value
 argument_list|)
@@ -493,11 +519,6 @@ endif|#
 directive|endif
 while|while
 condition|(
-name|err
-operator|==
-literal|0
-operator|&&
-operator|(
 operator|(
 name|m_value
 operator|&
@@ -505,20 +526,58 @@ name|bits
 operator|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
-name|err
+if|if
+condition|(
+name|timeout
+operator|==
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+block|{
+name|m_condition
+operator|.
+name|wait
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|std
+operator|::
+name|cv_status
+name|result
 operator|=
 name|m_condition
 operator|.
-name|Wait
+name|wait_for
 argument_list|(
-name|m_mutex
+name|lock
 argument_list|,
-name|abstime
+name|timeout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|std
+operator|::
+name|cv_status
+operator|::
+name|timeout
+condition|)
+break|break;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -573,32 +632,43 @@ comment|///     unrecoverable error occurs.
 comment|//------------------------------------------------------------------
 name|T
 name|WaitForResetValueBits
-parameter_list|(
+argument_list|(
 name|T
 name|bits
-parameter_list|,
+argument_list|,
 specifier|const
-name|TimeValue
-modifier|*
-name|abstime
-init|=
-name|nullptr
-parameter_list|)
-block|{
-name|int
-name|err
-init|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+operator|&
+name|timeout
+operator|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+argument_list|(
 literal|0
-decl_stmt|;
+argument_list|)
+argument_list|)
+block|{
 comment|// pthread_cond_timedwait() or pthread_cond_wait() will atomically
 comment|// unlock the mutex and wait for the condition to be set. When either
 comment|// function returns, they will re-lock the mutex. We use an auto lock/unlock
-comment|// class (Mutex::Locker) to allow us to return at any point in this
+comment|// class (std::lock_guard) to allow us to return at any point in this
 comment|// function and not have to worry about unlocking the mutex.
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|lock
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -608,13 +678,16 @@ directive|ifdef
 name|DB_PTHREAD_LOG_EVENTS
 name|printf
 argument_list|(
-literal|"%s (bits = 0x%8.8x, abstime = %p), m_value = 0x%8.8x\n"
+literal|"%s (bits = 0x%8.8x, timeout = %llu), m_value = 0x%8.8x\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|bits
 argument_list|,
-name|abstime
+name|timeout
+operator|.
+name|count
+argument_list|()
 argument_list|,
 name|m_value
 argument_list|)
@@ -623,11 +696,6 @@ endif|#
 directive|endif
 while|while
 condition|(
-name|err
-operator|==
-literal|0
-operator|&&
-operator|(
 operator|(
 name|m_value
 operator|&
@@ -635,20 +703,58 @@ name|bits
 operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
-name|err
+if|if
+condition|(
+name|timeout
+operator|==
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+block|{
+name|m_condition
+operator|.
+name|wait
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|std
+operator|::
+name|cv_status
+name|result
 operator|=
 name|m_condition
 operator|.
-name|Wait
+name|wait_for
 argument_list|(
-name|m_mutex
+name|lock
 argument_list|,
-name|abstime
+name|timeout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|std
+operator|::
+name|cv_status
+operator|::
+name|timeout
+condition|)
+break|break;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -707,38 +813,49 @@ comment|///     @li \b false otherwise
 comment|//------------------------------------------------------------------
 name|bool
 name|WaitForValueEqualTo
-parameter_list|(
+argument_list|(
 name|T
 name|value
-parameter_list|,
+argument_list|,
 specifier|const
-name|TimeValue
-modifier|*
-name|abstime
-init|=
-name|nullptr
-parameter_list|,
-name|bool
-modifier|*
-name|timed_out
-init|=
-name|nullptr
-parameter_list|)
-block|{
-name|int
-name|err
-init|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+operator|&
+name|timeout
+operator|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+argument_list|(
 literal|0
-decl_stmt|;
+argument_list|)
+argument_list|,
+name|bool
+operator|*
+name|timed_out
+operator|=
+name|nullptr
+argument_list|)
+block|{
 comment|// pthread_cond_timedwait() or pthread_cond_wait() will atomically
 comment|// unlock the mutex and wait for the condition to be set. When either
 comment|// function returns, they will re-lock the mutex. We use an auto lock/unlock
-comment|// class (Mutex::Locker) to allow us to return at any point in this
+comment|// class (std::lock_guard) to allow us to return at any point in this
 comment|// function and not have to worry about unlocking the mutex.
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|lock
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -748,13 +865,16 @@ directive|ifdef
 name|DB_PTHREAD_LOG_EVENTS
 name|printf
 argument_list|(
-literal|"%s (value = 0x%8.8x, abstime = %p), m_value = 0x%8.8x\n"
+literal|"%s (value = 0x%8.8x, timeout = %llu), m_value = 0x%8.8x\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|value
 argument_list|,
-name|abstime
+name|timeout
+operator|.
+name|count
+argument_list|()
 argument_list|,
 name|m_value
 argument_list|)
@@ -772,28 +892,72 @@ name|false
 expr_stmt|;
 while|while
 condition|(
-name|err
-operator|==
-literal|0
-operator|&&
 name|m_value
 operator|!=
 name|value
 condition|)
 block|{
-name|err
+if|if
+condition|(
+name|timeout
+operator|==
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+block|{
+name|m_condition
+operator|.
+name|wait
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|std
+operator|::
+name|cv_status
+name|result
 operator|=
 name|m_condition
 operator|.
-name|Wait
+name|wait_for
 argument_list|(
-name|m_mutex
+name|lock
 argument_list|,
-name|abstime
-argument_list|,
-name|timed_out
+name|timeout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|std
+operator|::
+name|cv_status
+operator|::
+name|timeout
+condition|)
+block|{
+if|if
+condition|(
+name|timed_out
+condition|)
+operator|*
+name|timed_out
+operator|=
+name|true
+expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 return|return
 name|m_value
@@ -838,41 +1002,52 @@ comment|///     @li \b false otherwise
 comment|//------------------------------------------------------------------
 name|bool
 name|WaitForValueEqualToAndSetValueTo
-parameter_list|(
+argument_list|(
 name|T
 name|wait_value
-parameter_list|,
+argument_list|,
 name|T
 name|new_value
-parameter_list|,
+argument_list|,
 specifier|const
-name|TimeValue
-modifier|*
-name|abstime
-init|=
-name|nullptr
-parameter_list|,
-name|bool
-modifier|*
-name|timed_out
-init|=
-name|nullptr
-parameter_list|)
-block|{
-name|int
-name|err
-init|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+operator|&
+name|timeout
+operator|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+argument_list|(
 literal|0
-decl_stmt|;
+argument_list|)
+argument_list|,
+name|bool
+operator|*
+name|timed_out
+operator|=
+name|nullptr
+argument_list|)
+block|{
 comment|// pthread_cond_timedwait() or pthread_cond_wait() will atomically
 comment|// unlock the mutex and wait for the condition to be set. When either
 comment|// function returns, they will re-lock the mutex. We use an auto lock/unlock
-comment|// class (Mutex::Locker) to allow us to return at any point in this
+comment|// class (std::lock_guard) to allow us to return at any point in this
 comment|// function and not have to worry about unlocking the mutex.
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|lock
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -882,7 +1057,8 @@ directive|ifdef
 name|DB_PTHREAD_LOG_EVENTS
 name|printf
 argument_list|(
-literal|"%s (wait_value = 0x%8.8x, new_value = 0x%8.8x, abstime = %p), m_value = 0x%8.8x\n"
+literal|"%s (wait_value = 0x%8.8x, new_value = 0x%8.8x, timeout = %llu), "
+literal|"m_value = 0x%8.8x\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -890,7 +1066,10 @@ name|wait_value
 argument_list|,
 name|new_value
 argument_list|,
-name|abstime
+name|timeout
+operator|.
+name|count
+argument_list|()
 argument_list|,
 name|m_value
 argument_list|)
@@ -908,28 +1087,72 @@ name|false
 expr_stmt|;
 while|while
 condition|(
-name|err
-operator|==
-literal|0
-operator|&&
 name|m_value
 operator|!=
 name|wait_value
 condition|)
 block|{
-name|err
+if|if
+condition|(
+name|timeout
+operator|==
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+block|{
+name|m_condition
+operator|.
+name|wait
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|std
+operator|::
+name|cv_status
+name|result
 operator|=
 name|m_condition
 operator|.
-name|Wait
+name|wait_for
 argument_list|(
-name|m_mutex
+name|lock
 argument_list|,
-name|abstime
-argument_list|,
-name|timed_out
+name|timeout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|std
+operator|::
+name|cv_status
+operator|::
+name|timeout
+condition|)
+block|{
+if|if
+condition|(
+name|timed_out
+condition|)
+operator|*
+name|timed_out
+operator|=
+name|true
+expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -980,36 +1203,47 @@ comment|///     @li \b false otherwise
 comment|//------------------------------------------------------------------
 name|bool
 name|WaitForValueNotEqualTo
-parameter_list|(
+argument_list|(
 name|T
 name|value
-parameter_list|,
+argument_list|,
 name|T
-modifier|&
+operator|&
 name|new_value
-parameter_list|,
+argument_list|,
 specifier|const
-name|TimeValue
-modifier|*
-name|abstime
-init|=
-name|nullptr
-parameter_list|)
-block|{
-name|int
-name|err
-init|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+operator|&
+name|timeout
+operator|=
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+argument_list|(
 literal|0
-decl_stmt|;
+argument_list|)
+argument_list|)
+block|{
 comment|// pthread_cond_timedwait() or pthread_cond_wait() will atomically
 comment|// unlock the mutex and wait for the condition to be set. When either
 comment|// function returns, they will re-lock the mutex. We use an auto lock/unlock
-comment|// class (Mutex::Locker) to allow us to return at any point in this
+comment|// class (std::lock_guard) to allow us to return at any point in this
 comment|// function and not have to worry about unlocking the mutex.
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
+name|lock
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -1019,13 +1253,16 @@ directive|ifdef
 name|DB_PTHREAD_LOG_EVENTS
 name|printf
 argument_list|(
-literal|"%s (value = 0x%8.8x, abstime = %p), m_value = 0x%8.8x\n"
+literal|"%s (value = 0x%8.8x, timeout = %llu), m_value = 0x%8.8x\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|value
 argument_list|,
-name|abstime
+name|timeout
+operator|.
+name|count
+argument_list|()
 argument_list|,
 name|m_value
 argument_list|)
@@ -1034,26 +1271,61 @@ endif|#
 directive|endif
 while|while
 condition|(
-name|err
-operator|==
-literal|0
-operator|&&
 name|m_value
 operator|==
 name|value
 condition|)
 block|{
-name|err
+if|if
+condition|(
+name|timeout
+operator|==
+name|std
+operator|::
+name|chrono
+operator|::
+name|microseconds
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+block|{
+name|m_condition
+operator|.
+name|wait
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|std
+operator|::
+name|cv_status
+name|result
 operator|=
 name|m_condition
 operator|.
-name|Wait
+name|wait_for
 argument_list|(
-name|m_mutex
+name|lock
 argument_list|,
-name|abstime
+name|timeout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|std
+operator|::
+name|cv_status
+operator|::
+name|timeout
+condition|)
+break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -1085,14 +1357,20 @@ name|m_value
 decl_stmt|;
 comment|///< The templatized value T that we are protecting access to
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 comment|///< The mutex to use when accessing the data
-name|Condition
+name|std
+operator|::
+name|condition_variable
 name|m_condition
-decl_stmt|;
-comment|///< The pthread condition variable to use for signaling that data available or changed.
+expr_stmt|;
+comment|///< The pthread condition variable to
+comment|///use for signaling that data available
+comment|///or changed.
 name|private
 label|:
 comment|//------------------------------------------------------------------
@@ -1146,7 +1424,8 @@ directive|ifdef
 name|DB_PTHREAD_LOG_EVENTS
 name|printf
 argument_list|(
-literal|"%s (old_value = 0x%8.8x, broadcast_type = %i) m_value = 0x%8.8x, broadcast = %u\n"
+literal|"%s (old_value = 0x%8.8x, broadcast_type = %i) m_value = 0x%8.8x, "
+literal|"broadcast = %u\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -1167,7 +1446,7 @@ name|broadcast
 condition|)
 name|m_condition
 operator|.
-name|Broadcast
+name|notify_all
 argument_list|()
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterContextCorePOSIX_arm.h --------------------------*- C++ -*-===//
+comment|//===-- RegisterContextPOSIXCore_arm.h --------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,13 +62,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"Plugins/Process/Utility/RegisterContextPOSIX_arm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/DataBufferHeap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/Utility/RegisterContextPOSIX_arm.h"
+file|"lldb/Core/DataExtractor.h"
 end_include
 
 begin_decl_stmt

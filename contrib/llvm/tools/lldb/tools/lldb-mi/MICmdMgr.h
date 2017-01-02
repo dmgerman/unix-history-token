@@ -54,12 +54,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MICmnBase.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MICmdBase.h"
 end_include
 
@@ -67,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"MICmdMgrSetCmdDeleteCallback.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmnBase.h"
 end_include
 
 begin_include
@@ -104,7 +104,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -116,7 +120,11 @@ comment|//          production and the running of commands.
 end_comment
 
 begin_comment
-comment|//          Command Invoker, Command Factory and Command Monitor while independent
+comment|//          Command Invoker, Command Factory and Command Monitor while
+end_comment
+
+begin_comment
+comment|//          independent
 end_comment
 
 begin_comment

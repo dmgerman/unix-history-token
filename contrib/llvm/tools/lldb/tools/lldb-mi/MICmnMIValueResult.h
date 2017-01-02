@@ -48,11 +48,19 @@ file|"MICmnMIValue.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: MI common code MI Result class. Part of the CMICmnMIValueResultRecord
+comment|//============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI common code MI Result class. Part of the
+end_comment
+
+begin_comment
+comment|// CMICmnMIValueResultRecord
 end_comment
 
 begin_comment
@@ -100,7 +108,11 @@ comment|//          tuple ==>  "{}" | "{" result ( "," result )* "}"
 end_comment
 
 begin_comment
-comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( "," result )* "]"
+comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( ","
+end_comment
+
+begin_comment
+comment|//          result )* "]"
 end_comment
 
 begin_comment
@@ -217,11 +229,13 @@ block|;
 name|bool
 name|m_bEmptyConstruction
 block|;
-comment|// True = *this object used constructor with no parameters, false = constructor with parameters
+comment|// True = *this object used constructor with no
+comment|// parameters, false = constructor with parameters
 name|bool
 name|m_bUseSpacing
 block|;
-comment|// True = put space separators into the string, false = no spaces used
+comment|// True = put space separators into the string, false = no
+comment|// spaces used
 block|}
 decl_stmt|;
 end_decl_stmt

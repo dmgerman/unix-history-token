@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
+file|"lldb/Core/STLUtils.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/STLUtils.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_decl_stmt
@@ -390,9 +390,9 @@ operator|::
 name|string
 name|CopyList
 argument_list|(
-argument|const char* item_preamble = nullptr
+argument|const char *item_preamble = nullptr
 argument_list|,
-argument|const char* items_sep =
+argument|const char *items_sep =
 literal|"\n"
 argument_list|)
 specifier|const
@@ -459,9 +459,9 @@ comment|// have SIZE_MAX
 name|size_t
 name|AutoComplete
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|s
 argument_list|,
 name|StringList
@@ -474,8 +474,10 @@ name|exact_matches_idx
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Dump the StringList to the given lldb_private::Log, `log`, one item per line.
-comment|// If given, `name` will be used to identify the start and end of the list in the output.
+comment|// Dump the StringList to the given lldb_private::Log, `log`, one item per
+comment|// line.
+comment|// If given, `name` will be used to identify the start and end of the list in
+comment|// the output.
 name|virtual
 name|void
 name|LogDump

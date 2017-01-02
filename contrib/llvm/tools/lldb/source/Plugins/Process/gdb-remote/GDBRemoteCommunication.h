@@ -54,13 +54,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string>
+file|<condition_variable>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<queue>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -76,12 +88,6 @@ end_comment
 begin_comment
 comment|// Project includes
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-public.h"
-end_include
 
 begin_include
 include|#
@@ -104,25 +110,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/Predicate.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/TimeValue.h"
+file|"lldb/Interpreter/Args.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/Args.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_include
@@ -171,13 +171,15 @@ operator|,
 comment|// no compression
 name|ZlibDeflate
 operator|,
-comment|// zlib's deflate compression scheme, requires zlib or Apple's libcompression
+comment|// zlib's deflate compression scheme, requires zlib or Apple's
+comment|// libcompression
 name|LZFSE
 operator|,
 comment|// an Apple compression scheme, requires Apple's libcompression
 name|LZ4
 operator|,
-comment|// lz compression - called "lz4 raw" in libcompression terms, compat with https://code.google.com/p/lz4/
+comment|// lz compression - called "lz4 raw" in libcompression terms, compat with
+comment|// https://code.google.com/p/lz4/
 name|LZMA
 operator|,
 comment|// LempelâZivâMarkov chain algorithm
@@ -207,7 +209,7 @@ operator|<<
 literal|1
 comment|// Sent when we received a notify packet.
 block|}
-block|;      enum
+block|;    enum
 name|class
 name|PacketType
 block|{
@@ -219,7 +221,7 @@ name|Standard
 block|,
 name|Notify
 block|}
-block|;      enum
+block|;    enum
 name|class
 name|PacketResult
 block|{
@@ -242,7 +244,8 @@ block|,
 comment|// Timed out waiting for reply
 name|ErrorReplyInvalid
 block|,
-comment|// Got a reply but it wasn't valid for the packet that was sent
+comment|// Got a reply but it wasn't valid for the packet that
+comment|// was sent
 name|ErrorReplyAck
 block|,
 comment|// Sending reply ack failed
@@ -250,10 +253,12 @@ name|ErrorDisconnected
 block|,
 comment|// We were disconnected
 name|ErrorNoSequenceLock
-comment|// We couldn't get the sequence lock for a multi-packet request
+comment|// We couldn't get the sequence lock for a multi-packet
+comment|// request
 block|}
 block|;
-comment|// Class to change the timeout for a given scope and restore it to the original value when the
+comment|// Class to change the timeout for a given scope and restore it to the
+comment|// original value when the
 comment|// created ScopedTimeout object got out of scope
 name|class
 name|ScopedTimeout
@@ -262,9 +267,9 @@ name|public
 operator|:
 name|ScopedTimeout
 argument_list|(
-argument|GDBRemoteCommunication& gdb_comm
+argument|GDBRemoteCommunication&gdb_comm
 argument_list|,
-argument|uint32_t timeout
+argument|std::chrono::seconds timeout
 argument_list|)
 block|;
 operator|~
@@ -277,9 +282,13 @@ name|GDBRemoteCommunication
 operator|&
 name|m_gdb_comm
 block|;
-name|uint32_t
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
 name|m_saved_timeout
-block|;     }
+block|;   }
 block|;
 name|GDBRemoteCommunication
 argument_list|(
@@ -314,26 +323,7 @@ block|;
 name|char
 name|CalculcateChecksum
 argument_list|(
-argument|const char *payload
-argument_list|,
-argument|size_t payload_length
-argument_list|)
-block|;
-name|bool
-name|GetSequenceMutex
-argument_list|(
-name|Mutex
-operator|::
-name|Locker
-operator|&
-name|locker
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|failure_message
-operator|=
-name|nullptr
+argument|llvm::StringRef payload
 argument_list|)
 block|;
 name|PacketType
@@ -347,18 +337,6 @@ argument|StringExtractorGDBRemote&packet
 argument_list|)
 block|;
 name|bool
-name|IsRunning
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_public_is_running
-operator|.
-name|GetValue
-argument_list|()
-return|;
-block|}
-name|bool
 name|GetSendAcks
 argument_list|()
 block|{
@@ -367,31 +345,24 @@ name|m_send_acks
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|// Client and server must implement these pure virtual functions
-comment|//------------------------------------------------------------------
-name|virtual
-name|bool
-name|GetThreadSuffixSupported
-argument_list|()
-operator|=
-literal|0
-block|;
-comment|//------------------------------------------------------------------
 comment|// Set the global packet timeout.
 comment|//
 comment|// For clients, this is the timeout that gets used when sending
-comment|// packets and waiting for responses. For servers, this might not
-comment|// get used, and if it doesn't this should be moved to the
-comment|// GDBRemoteCommunicationClient.
+comment|// packets and waiting for responses. For servers, this is used when waiting
+comment|// for ACKs.
 comment|//------------------------------------------------------------------
-name|uint32_t
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
 name|SetPacketTimeout
 argument_list|(
-argument|uint32_t packet_timeout
+argument|std::chrono::seconds packet_timeout
 argument_list|)
 block|{
 specifier|const
-name|uint32_t
+name|auto
 name|old_packet_timeout
 operator|=
 name|m_packet_timeout
@@ -404,17 +375,17 @@ return|return
 name|old_packet_timeout
 return|;
 block|}
-name|uint32_t
-name|GetPacketTimeoutInMicroSeconds
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
+name|GetPacketTimeout
 argument_list|()
 specifier|const
 block|{
 return|return
 name|m_packet_timeout
-operator|*
-name|TimeValue
-operator|::
-name|MicroSecPerSec
 return|;
 block|}
 comment|//------------------------------------------------------------------
@@ -424,33 +395,23 @@ comment|//------------------------------------------------------------------
 name|Error
 name|StartDebugserverProcess
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|url
+argument|const char *url
 argument_list|,
-name|Platform
-operator|*
-name|platform
+argument|Platform *platform
 argument_list|,
-comment|// If non nullptr, then check with the platform for the GDB server binary if it can't be located
-name|ProcessLaunchInfo
-operator|&
-name|launch_info
+comment|// If non nullptr, then check with the platform for
+comment|// the GDB server binary if it can't be located
+argument|ProcessLaunchInfo&launch_info
 argument_list|,
-name|uint16_t
-operator|*
-name|port
+argument|uint16_t *port
 argument_list|,
-specifier|const
-name|Args
-operator|&
-name|inferior_args
-operator|=
-name|Args
-argument_list|()
+argument|const Args *inferior_args
+argument_list|,
+argument|int pass_comm_fd
 argument_list|)
 block|;
+comment|// Communication file descriptor to pass during
+comment|// fork/exec to avoid having to connect/accept
 name|void
 name|DumpHistory
 argument_list|(
@@ -477,7 +438,7 @@ name|ePacketTypeSend
 block|,
 name|ePacketTypeRecv
 block|}
-block|;          struct
+block|;      struct
 name|Entry
 block|{
 name|Entry
@@ -505,7 +466,7 @@ name|tid
 argument_list|(
 argument|LLDB_INVALID_THREAD_ID
 argument_list|)
-block|{             }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -530,7 +491,7 @@ block|;
 name|tid
 operator|=
 name|LLDB_INVALID_THREAD_ID
-block|;             }
+block|;       }
 name|std
 operator|::
 name|string
@@ -549,7 +510,7 @@ name|lldb
 operator|::
 name|tid_t
 name|tid
-block|;         }
+block|;     }
 block|;
 name|History
 argument_list|(
@@ -719,9 +680,13 @@ block|;
 name|mutable
 name|bool
 name|m_dumped_to_log
-block|;     }
+block|;   }
 block|;
-name|uint32_t
+name|std
+operator|::
+name|chrono
+operator|::
+name|seconds
 name|m_packet_timeout
 block|;
 name|uint32_t
@@ -729,32 +694,6 @@ name|m_echo_number
 block|;
 name|LazyBool
 name|m_supports_qEcho
-block|;
-ifdef|#
-directive|ifdef
-name|ENABLE_MUTEX_ERROR_CHECKING
-name|TrackingMutex
-name|m_sequence_mutex
-block|;
-else|#
-directive|else
-name|Mutex
-name|m_sequence_mutex
-block|;
-comment|// Restrict access to sending/receiving packets to a single thread at a time
-endif|#
-directive|endif
-name|Predicate
-operator|<
-name|bool
-operator|>
-name|m_public_is_running
-block|;
-name|Predicate
-operator|<
-name|bool
-operator|>
-name|m_private_is_running
 block|;
 name|History
 name|m_history
@@ -772,19 +711,9 @@ name|CompressionType
 name|m_compression_type
 block|;
 name|PacketResult
-name|SendPacket
-argument_list|(
-argument|const char *payload
-argument_list|,
-argument|size_t payload_length
-argument_list|)
-block|;
-name|PacketResult
 name|SendPacketNoLock
 argument_list|(
-argument|const char *payload
-argument_list|,
-argument|size_t payload_length
+argument|llvm::StringRef payload
 argument_list|)
 block|;
 name|PacketResult
@@ -792,7 +721,7 @@ name|ReadPacket
 argument_list|(
 argument|StringExtractorGDBRemote&response
 argument_list|,
-argument|uint32_t timeout_usec
+argument|Timeout<std::micro> timeout
 argument_list|,
 argument|bool sync_on_timeout
 argument_list|)
@@ -801,28 +730,27 @@ comment|// Pop a packet from the queue in a thread safe manner
 name|PacketResult
 name|PopPacketFromQueue
 argument_list|(
-argument|StringExtractorGDBRemote&response
+name|StringExtractorGDBRemote
+operator|&
+name|response
 argument_list|,
-argument|uint32_t timeout_usec
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+name|timeout
 argument_list|)
 block|;
 name|PacketResult
-name|WaitForPacketWithTimeoutMicroSecondsNoLock
+name|WaitForPacketNoLock
 argument_list|(
 argument|StringExtractorGDBRemote&response
 argument_list|,
-argument|uint32_t timeout_usec
+argument|Timeout<std::micro> timeout
 argument_list|,
 argument|bool sync_on_timeout
-argument_list|)
-block|;
-name|bool
-name|WaitForNotRunningPrivate
-argument_list|(
-specifier|const
-name|TimeValue
-operator|*
-name|timeout_ptr
 argument_list|)
 block|;
 name|bool
@@ -839,10 +767,12 @@ return|;
 block|}
 comment|// If compression is enabled, decompress the packet in m_bytes and update
 comment|// m_bytes with the uncompressed version.
-comment|// Returns 'true' packet was decompressed and m_bytes is the now-decompressed text.
+comment|// Returns 'true' packet was decompressed and m_bytes is the now-decompressed
+comment|// text.
 comment|// Returns 'false' if unable to decompress or if the checksum was invalid.
 comment|//
-comment|// NB: Once the packet has been decompressed, checksum cannot be computed based
+comment|// NB: Once the packet has been decompressed, checksum cannot be computed
+comment|// based
 comment|// on m_bytes.  The checksum was for the compressed packet.
 name|bool
 name|DecompressPacket
@@ -883,7 +813,7 @@ comment|// when the read thread gets any bytes it will pass them on to this func
 name|void
 name|AppendBytesToCache
 argument_list|(
-argument|const uint8_t * bytes
+argument|const uint8_t *bytes
 argument_list|,
 argument|size_t len
 argument_list|,
@@ -904,13 +834,15 @@ operator|>
 name|m_packet_queue
 block|;
 comment|// The packet queue
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|mutex
 name|m_packet_queue_mutex
 block|;
 comment|// Mutex for accessing queue
-name|Condition
+name|std
+operator|::
+name|condition_variable
 name|m_condition_queue_not_empty
 block|;
 comment|// Condition variable to wait for packets

@@ -66,6 +66,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<chrono>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
 end_include
 
@@ -90,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<unordered_set>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unordered_set>
+file|<vector>
 end_include
 
 begin_comment
@@ -110,7 +116,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Breakpoint/BreakpointSiteList.h"
 end_include
 
 begin_include
@@ -158,12 +164,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ThreadSafeValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/PluginInterface.h"
 end_include
 
@@ -176,13 +176,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UserSettingsController.h"
+file|"lldb/Core/ThreadSafeValue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Breakpoint/BreakpointSiteList.h"
+file|"lldb/Core/UserSettingsController.h"
 end_include
 
 begin_include
@@ -207,6 +207,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/ExecutionContextScope.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/InstrumentationRuntime.h"
 end_include
 
 begin_include
@@ -242,7 +248,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/InstrumentationRuntime.h"
+file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_decl_stmt
@@ -271,7 +283,8 @@ name|Properties
 block|{
 name|public
 operator|:
-comment|// Pass nullptr for "process" if the ProcessProperties are to be the global copy
+comment|// Pass nullptr for "process" if the ProcessProperties are to be the global
+comment|// copy
 name|ProcessProperties
 argument_list|(
 name|lldb_private
@@ -438,7 +451,7 @@ name|m_parent_pid
 argument_list|(
 argument|LLDB_INVALID_PROCESS_ID
 argument_list|)
-block|{     }
+block|{}
 name|ProcessInstanceInfo
 argument_list|(
 argument|const char *name
@@ -471,7 +484,7 @@ name|m_parent_pid
 argument_list|(
 argument|LLDB_INVALID_PROCESS_ID
 argument_list|)
-block|{     }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -492,7 +505,7 @@ block|;
 name|m_parent_pid
 operator|=
 name|LLDB_INVALID_PROCESS_ID
-block|;     }
+block|;   }
 name|uint32_t
 name|GetEffectiveUserID
 argument_list|()
@@ -542,7 +555,7 @@ block|{
 name|m_euid
 operator|=
 name|uid
-block|;     }
+block|; }
 name|void
 name|SetEffectiveGroupID
 argument_list|(
@@ -552,7 +565,7 @@ block|{
 name|m_egid
 operator|=
 name|gid
-block|;     }
+block|; }
 name|lldb
 operator|::
 name|pid_t
@@ -573,7 +586,7 @@ block|{
 name|m_parent_pid
 operator|=
 name|pid
-block|;     }
+block|; }
 name|bool
 name|ParentProcessIDIsValid
 argument_list|()
@@ -691,7 +704,7 @@ name|m_async
 argument_list|(
 argument|false
 argument_list|)
-block|{     }
+block|{}
 name|ProcessAttachInfo
 argument_list|(
 specifier|const
@@ -788,7 +801,7 @@ name|launch_info
 operator|.
 name|GetDetachOnError
 argument_list|()
-block|;     }
+block|;   }
 name|bool
 name|GetWaitForLaunch
 argument_list|()
@@ -807,7 +820,7 @@ block|{
 name|m_wait_for_launch
 operator|=
 name|b
-block|;     }
+block|; }
 name|bool
 name|GetAsync
 argument_list|()
@@ -826,7 +839,7 @@ block|{
 name|m_async
 operator|=
 name|b
-block|;     }
+block|; }
 name|bool
 name|GetIgnoreExisting
 argument_list|()
@@ -845,7 +858,7 @@ block|{
 name|m_ignore_existing
 operator|=
 name|b
-block|;     }
+block|; }
 name|bool
 name|GetContinueOnceAttached
 argument_list|()
@@ -864,7 +877,7 @@ block|{
 name|m_continue_once_attached
 operator|=
 name|b
-block|;     }
+block|; }
 name|uint32_t
 name|GetResumeCount
 argument_list|()
@@ -883,7 +896,7 @@ block|{
 name|m_resume_count
 operator|=
 name|c
-block|;     }
+block|; }
 specifier|const
 name|char
 operator|*
@@ -910,32 +923,13 @@ block|}
 name|void
 name|SetProcessPluginName
 argument_list|(
-argument|const char *plugin
+argument|llvm::StringRef plugin
 argument_list|)
 block|{
-if|if
-condition|(
-name|plugin
-operator|&&
-name|plugin
-index|[
-literal|0
-index|]
-condition|)
 name|m_plugin_name
-operator|.
-name|assign
-argument_list|(
+operator|=
 name|plugin
-argument_list|)
-expr_stmt|;
-else|else
-name|m_plugin_name
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
+block|; }
 name|void
 name|Clear
 argument_list|()
@@ -965,7 +959,7 @@ block|;
 name|m_continue_once_attached
 operator|=
 name|false
-block|;     }
+block|;   }
 name|bool
 name|ProcessInfoSpecified
 argument_list|()
@@ -1173,7 +1167,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Supports the use-case scenario of immediately continuing the process once attached.
+comment|// Supports the use-case scenario of
+end_comment
+
+begin_comment
+comment|// immediately continuing the process once
+end_comment
+
+begin_comment
+comment|// attached.
 end_comment
 
 begin_decl_stmt
@@ -1183,7 +1185,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// If we are debugging remotely, instruct the stub to detach rather than killing the target on error.
+comment|// If we are debugging remotely, instruct the stub to
+end_comment
+
+begin_comment
+comment|// detach rather than killing the target on error.
 end_comment
 
 begin_decl_stmt
@@ -1193,7 +1199,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Use an async attach where we start the attach and return immediately (used by GUI programs with --waitfor so they can call SBProcess::Stop() to cancel attach)
+comment|// Use an async attach where we start the attach and return
+end_comment
+
+begin_comment
+comment|// immediately (used by GUI programs with --waitfor so they can
+end_comment
+
+begin_comment
+comment|// call SBProcess::Stop() to cancel attach)
 end_comment
 
 begin_decl_stmt
@@ -1207,21 +1221,17 @@ block|{
 name|public
 operator|:
 name|ProcessLaunchCommandOptions
-argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
-argument_list|)
+argument_list|()
 operator|:
 name|Options
-argument_list|(
-argument|interpreter
-argument_list|)
+argument_list|()
 block|{
 comment|// Keep default values of all options in one place: OptionParsingStarting ()
 name|OptionParsingStarting
-argument_list|()
-block|;     }
+argument_list|(
+name|nullptr
+argument_list|)
+block|;   }
 operator|~
 name|ProcessLaunchCommandOptions
 argument_list|()
@@ -1234,13 +1244,17 @@ name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_arg
+argument|llvm::StringRef option_arg
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
 name|void
 name|OptionParsingStarting
-argument_list|()
+argument_list|(
+argument|ExecutionContext *execution_context
+argument_list|)
 name|override
 block|{
 name|launch_info
@@ -1251,23 +1265,16 @@ block|;
 name|disable_aslr
 operator|=
 name|eLazyBoolCalculate
-block|;     }
-specifier|const
+block|;   }
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
-block|{
-return|return
-name|g_option_table
-return|;
-block|}
-comment|// Options table: Required for subclasses of Options.
-specifier|static
-name|OptionDefinition
-name|g_option_table
-index|[]
 block|;
 comment|// Instance variables to hold the values for command options.
 name|ProcessLaunchInfo
@@ -1322,7 +1329,7 @@ name|m_match_all_users
 argument_list|(
 argument|false
 argument_list|)
-block|{     }
+block|{}
 name|ProcessInstanceInfoMatch
 argument_list|(
 argument|const char *process_name
@@ -1354,7 +1361,7 @@ name|process_name
 argument_list|,
 name|false
 argument_list|)
-block|;     }
+block|;   }
 name|ProcessInstanceInfo
 operator|&
 name|GetProcessInfo
@@ -1692,11 +1699,19 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// This class tracks the Modification state of the process.  Things that can currently modify
+comment|// This class tracks the Modification state of the process.  Things that can
 end_comment
 
 begin_comment
-comment|// the program are running the program (which will up the StopID) and writing memory (which
+comment|// currently modify
+end_comment
+
+begin_comment
+comment|// the program are running the program (which will up the StopID) and writing
+end_comment
+
+begin_comment
+comment|// memory (which
 end_comment
 
 begin_comment
@@ -1975,7 +1990,8 @@ name|IsLastResumeForUserExpression
 argument_list|()
 specifier|const
 block|{
-comment|// If we haven't yet resumed the target, then it can't be for a user expression...
+comment|// If we haven't yet resumed the target, then it can't be for a user
+comment|// expression...
 if|if
 condition|(
 name|m_resume_id
@@ -2305,7 +2321,15 @@ literal|1
 operator|<<
 literal|4
 operator|)
-block|}
+block|,
+name|eBroadcastBitStructuredData
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+block|,   }
 enum|;
 enum|enum
 block|{
@@ -2714,7 +2738,7 @@ argument_list|()
 block|{
 name|m_update_state
 operator|++
-block|;             }
+block|; }
 name|void
 name|SetRestarted
 argument_list|(
@@ -2724,7 +2748,7 @@ block|{
 name|m_restarted
 operator|=
 name|new_value
-block|;             }
+block|; }
 name|void
 name|SetInterrupted
 argument_list|(
@@ -2734,7 +2758,7 @@ block|{
 name|m_interrupted
 operator|=
 name|new_value
-block|;             }
+block|; }
 name|void
 name|AddRestartedReason
 argument_list|(
@@ -2747,7 +2771,7 @@ name|push_back
 argument_list|(
 name|reason
 argument_list|)
-block|;             }
+block|;     }
 name|lldb
 operator|::
 name|ProcessWP
@@ -2771,7 +2795,8 @@ block|;
 name|bool
 name|m_restarted
 block|;
-comment|// For "eStateStopped" events, this is true if the target was automatically restarted.
+comment|// For "eStateStopped" events, this is true if the target
+comment|// was automatically restarted.
 name|int
 name|m_update_state
 block|;
@@ -2782,7 +2807,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ProcessEventData
 argument_list|)
-block|;     }
+block|;   }
 decl_stmt|;
 endif|#
 directive|endif
@@ -2865,7 +2890,7 @@ name|FindPlugin
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|const char *plugin_name
+argument|llvm::StringRef plugin_name
 argument_list|,
 argument|lldb::ListenerSP listener_sp
 argument_list|,
@@ -3195,17 +3220,17 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|Error
 name|ConnectRemote
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|*
 name|strm
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|remote_url
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|GetShouldDetach
 argument_list|()
@@ -3268,7 +3293,7 @@ name|virtual
 name|void
 name|WillPublicStop
 parameter_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Register for process and thread notifications.
 comment|///
@@ -3388,7 +3413,8 @@ comment|/// @param[in] use_run_lock
 comment|///     Whether to release the run lock after the stop.
 comment|///
 comment|/// @return
-comment|///     Returns an error object.  If the error is empty, the process is halted.
+comment|///     Returns an error object.  If the error is empty, the process is
+comment|///     halted.
 comment|///     otherwise the halt has failed.
 comment|//------------------------------------------------------------------
 name|Error
@@ -3554,16 +3580,16 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|Error
 name|DoConnectRemote
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|*
+operator|*
 name|strm
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|remote_url
-parameter_list|)
+argument_list|)
 block|{
 name|Error
 name|error
@@ -3678,7 +3704,8 @@ comment|//------------------------------------------------------------------
 comment|/// Called after attaching a process.
 comment|///
 comment|/// @param[in] process_arch
-comment|///     If you can figure out the process architecture after attach, fill it in here.
+comment|///     If you can figure out the process architecture after attach, fill it
+comment|///     in here.
 comment|///
 comment|/// Allow Process plug-ins to execute some code after attaching to
 comment|/// a process.
@@ -3720,7 +3747,7 @@ name|virtual
 name|void
 name|DoDidExec
 parameter_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Called before launching to a process.
 comment|///
@@ -3901,10 +3928,13 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Halts a running process.
 comment|///
-comment|/// DoHalt must produce one and only one stop StateChanged event if it actually
+comment|/// DoHalt must produce one and only one stop StateChanged event if it
+comment|/// actually
 comment|/// stops the process.  If the stop happens through some natural event (for
-comment|/// instance a SIGSTOP), then forwarding that event will do.  Otherwise, you must
-comment|/// generate the event manually. This function is called from the context of the
+comment|/// instance a SIGSTOP), then forwarding that event will do.  Otherwise, you
+comment|/// must
+comment|/// generate the event manually. This function is called from the context of
+comment|/// the
 comment|/// private state thread.
 comment|///
 comment|/// @param[out] caused_stop
@@ -4105,7 +4135,7 @@ name|virtual
 name|void
 name|DidDestroy
 parameter_list|()
-block|{ }
+block|{}
 name|virtual
 name|bool
 name|DestroyRequiresHalt
@@ -4335,6 +4365,9 @@ name|num_frames
 parameter_list|,
 name|uint32_t
 name|num_frames_with_source
+parameter_list|,
+name|bool
+name|stop_format
 parameter_list|)
 function_decl|;
 name|void
@@ -4358,6 +4391,9 @@ parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Retrieve the list of shared libraries that are loaded for this process
+comment|/// This method is used on pre-macOS 10.12, pre-iOS 10, pre-tvOS 10,
+comment|/// pre-watchOS 3 systems.  The following two methods are for newer versions
+comment|/// of those OSes.
 comment|///
 comment|/// For certain platforms, the time it takes for the DynamicLoader plugin to
 comment|/// read all of the shared libraries out of memory over a slow communication
@@ -4392,6 +4428,71 @@ argument|lldb::addr_t image_list_address
 argument_list|,
 argument|lldb::addr_t image_count
 argument_list|)
+block|{
+return|return
+name|StructuredData
+operator|::
+name|ObjectSP
+argument_list|()
+return|;
+block|}
+comment|// On macOS 10.12, tvOS 10, iOS 10, watchOS 3 and newer, debugserver can
+comment|// return
+comment|// the full list of loaded shared libraries without needing any input.
+name|virtual
+name|lldb_private
+operator|::
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetLoadedDynamicLibrariesInfos
+argument_list|()
+block|{
+return|return
+name|StructuredData
+operator|::
+name|ObjectSP
+argument_list|()
+return|;
+block|}
+comment|// On macOS 10.12, tvOS 10, iOS 10, watchOS 3 and newer, debugserver can
+comment|// return
+comment|// information about binaries given their load addresses.
+name|virtual
+name|lldb_private
+operator|::
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetLoadedDynamicLibrariesInfos
+argument_list|(
+argument|const std::vector<lldb::addr_t>&load_addresses
+argument_list|)
+block|{
+return|return
+name|StructuredData
+operator|::
+name|ObjectSP
+argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|// Get information about the library shared cache, if that exists
+comment|//
+comment|// On macOS 10.12, tvOS 10, iOS 10, watchOS 3 and newer, debugserver can
+comment|// return
+comment|// information about the library shared cache (a set of standard libraries
+comment|// that are
+comment|// loaded at the same location for all processes on a system) in use.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb_private
+operator|::
+name|StructuredData
+operator|::
+name|ObjectSP
+name|GetSharedCacheInfo
+argument_list|()
 block|{
 return|return
 name|StructuredData
@@ -4459,7 +4560,7 @@ name|virtual
 name|void
 name|DidExit
 parameter_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Get the Modification ID of the process.
 comment|///
@@ -4594,9 +4695,12 @@ name|IsAlive
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Before lldb detaches from a process, it warns the user that they are about to lose their debug session.
-comment|/// In some cases, this warning doesn't need to be emitted -- for instance, with core file debugging where
-comment|/// the user can reconstruct the "state" by simply re-running the debugger on the core file.
+comment|/// Before lldb detaches from a process, it warns the user that they are about
+comment|/// to lose their debug session.
+comment|/// In some cases, this warning doesn't need to be emitted -- for instance,
+comment|/// with core file debugging where
+comment|/// the user can reconstruct the "state" by simply re-running the debugger on
+comment|/// the core file.
 comment|///
 comment|/// @return
 comment|//      true if the user should be warned about detaching from this process.
@@ -5081,6 +5185,7 @@ comment|///
 comment|/// @return
 comment|///     The number of bytes that were actually written.
 comment|//------------------------------------------------------------------
+comment|// TODO: change this to take an ArrayRef<uint8_t>
 name|size_t
 name|WriteMemory
 argument_list|(
@@ -5159,7 +5264,8 @@ comment|///
 comment|/// @param[in] permissions
 comment|///     Or together any of the lldb::Permissions bits.  The permissions on
 comment|///     a given memory allocation can't be changed after allocation.  Note
-comment|///     that a block that isn't set writable can still be written on from lldb,
+comment|///     that a block that isn't set writable can still be written on from
+comment|///     lldb,
 comment|///     just not by the process itself.
 comment|///
 comment|/// @param[in,out] error
@@ -5194,7 +5300,8 @@ comment|///
 comment|/// @param[in] permissions
 comment|///     Or together any of the lldb::Permissions bits.  The permissions on
 comment|///     a given memory allocation can't be changed after allocation.  Note
-comment|///     that a block that isn't set writable can still be written on from lldb,
+comment|///     that a block that isn't set writable can still be written on from
+comment|///     lldb,
 comment|///     just not by the process itself.
 comment|///
 comment|/// @param[in/out] error
@@ -5391,7 +5498,7 @@ operator|::
 name|ModuleSP
 name|ReadModuleFromMemory
 argument_list|(
-argument|const FileSpec& file_spec
+argument|const FileSpec&file_spec
 argument_list|,
 argument|lldb::addr_t header_addr
 argument_list|,
@@ -6028,8 +6135,10 @@ name|uint64_t
 name|sb_thread_id
 parameter_list|)
 function_decl|;
-comment|// Given a thread_id, it will assign a more reasonable index id for display to the user.
-comment|// If the thread_id has previously been assigned, the same index id will be used.
+comment|// Given a thread_id, it will assign a more reasonable index id for display to
+comment|// the user.
+comment|// If the thread_id has previously been assigned, the same index id will be
+comment|// used.
 name|uint32_t
 name|AssignIndexIDToThread
 parameter_list|(
@@ -6090,15 +6199,17 @@ expr_stmt|;
 comment|// Returns the process state when it is stopped. If specified, event_sp_ptr
 comment|// is set to the event which triggered the stop. If wait_always = false,
 comment|// and the process is already stopped, this function returns immediately.
-comment|// If the process is hijacked and use_run_lock is true (the default), then this
-comment|// function releases the run lock after the stop. Setting use_run_lock to false
+comment|// If the process is hijacked and use_run_lock is true (the default), then
+comment|// this
+comment|// function releases the run lock after the stop. Setting use_run_lock to
+comment|// false
 comment|// will avoid this behavior.
 name|lldb
 operator|::
 name|StateType
 name|WaitForProcessToStop
 argument_list|(
-argument|const TimeValue *timeout
+argument|const Timeout<std::micro>&timeout
 argument_list|,
 argument|lldb::EventSP *event_sp_ptr = nullptr
 argument_list|,
@@ -6126,7 +6237,8 @@ block|}
 comment|//--------------------------------------------------------------------------------------
 comment|/// Waits for the process state to be running within a given msec timeout.
 comment|///
-comment|/// The main purpose of this is to implement an interlock waiting for HandlePrivateEvent
+comment|/// The main purpose of this is to implement an interlock waiting for
+comment|/// HandlePrivateEvent
 comment|/// to push an IOHandler.
 comment|///
 comment|/// @param[in] timeout_msec
@@ -6146,18 +6258,19 @@ function_decl|;
 name|lldb
 operator|::
 name|StateType
-name|WaitForStateChangedEvents
+name|GetStateChangedEvents
 argument_list|(
-argument|const TimeValue *timeout
-argument_list|,
 argument|lldb::EventSP&event_sp
 argument_list|,
-argument|lldb::ListenerSP hijack_listener
+argument|const Timeout<std::micro>&timeout
+argument_list|,
+argument|lldb::ListenerSP           hijack_listener
 argument_list|)
 expr_stmt|;
 comment|// Pass an empty ListenerSP to use builtin listener
 comment|//--------------------------------------------------------------------------------------
-comment|/// Centralize the code that handles and prints descriptions for process state changes.
+comment|/// Centralize the code that handles and prints descriptions for process state
+comment|/// changes.
 comment|///
 comment|/// @param[in] event_sp
 comment|///     The process state changed event
@@ -6166,12 +6279,15 @@ comment|/// @param[in] stream
 comment|///     The output stream to get the state change description
 comment|///
 comment|/// @param[in,out] pop_process_io_handler
-comment|///     If this value comes in set to \b true, then pop the Process IOHandler if needed.
-comment|///     Else this variable will be set to \b true or \b false to indicate if the process
+comment|///     If this value comes in set to \b true, then pop the Process IOHandler
+comment|///     if needed.
+comment|///     Else this variable will be set to \b true or \b false to indicate if
+comment|///     the process
 comment|///     needs to have its process IOHandler popped.
 comment|///
 comment|/// @return
-comment|///     \b true if the event describes a process state changed event, \b false otherwise.
+comment|///     \b true if the event describes a process state changed event, \b false
+comment|///     otherwise.
 comment|//--------------------------------------------------------------------------------------
 specifier|static
 name|bool
@@ -6231,7 +6347,7 @@ name|m_process
 operator|.
 name|RestoreProcessEvents
 argument_list|()
-block|;         }
+block|; }
 name|private
 operator|:
 name|Process
@@ -6252,7 +6368,8 @@ comment|//------------------------------------------------------------------
 comment|/// If you need to ensure that you and only you will hear about some public
 comment|/// event, then make a new listener, set to listen to process events, and
 comment|/// then call this with that listener.  Then you will have to wait on that
-comment|/// listener explicitly for events (rather than using the GetNextEvent& WaitFor*
+comment|/// listener explicitly for events (rather than using the GetNextEvent&
+comment|/// WaitFor*
 comment|/// calls above.  Be sure to call RestoreProcessEvents when you are done.
 comment|///
 comment|/// @param[in] listener
@@ -6386,7 +6503,8 @@ comment|/// Call this to set the lldb in the mode where it breaks on new thread
 comment|/// creations, and then auto-restarts.  This is useful when you are trying
 comment|/// to run only one thread, but either that thread or the kernel is creating
 comment|/// new threads in the process.  If you stop when the thread is created, you
-comment|/// can immediately suspend it, and keep executing only the one thread you intend.
+comment|/// can immediately suspend it, and keep executing only the one thread you
+comment|/// intend.
 comment|///
 comment|/// @return
 comment|///     Returns \b true if we were able to start up the notification
@@ -6556,6 +6674,17 @@ name|void
 name|ClearPreResumeActions
 parameter_list|()
 function_decl|;
+name|void
+name|ClearPreResumeAction
+parameter_list|(
+name|PreResumeActionCallback
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|baton
+parameter_list|)
+function_decl|;
 name|ProcessRunLock
 modifier|&
 name|GetRunLock
@@ -6636,6 +6765,26 @@ modifier|&
 name|module_spec
 parameter_list|)
 function_decl|;
+name|virtual
+name|void
+name|PrefetchModuleSpecs
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|FileSpec
+operator|>
+name|module_file_specs
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|triple
+argument_list|)
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Try to find the load address of a file.
 comment|/// The load address is defined as the address of the first memory
@@ -6738,6 +6887,104 @@ name|AddressRange
 name|range_bounds
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Configure asynchronous structured data feature.
+comment|///
+comment|/// Each Process type that supports using an asynchronous StructuredData
+comment|/// feature should implement this to enable/disable/configure the feature.
+comment|/// The default implementation here will always return an error indiciating
+comment|/// the feature is unsupported.
+comment|///
+comment|/// StructuredDataPlugin implementations will call this to configure
+comment|/// a feature that has been reported as being supported.
+comment|///
+comment|/// @param[in] type_name
+comment|///     The StructuredData type name as previously discovered by
+comment|///     the Process-derived instance.
+comment|///
+comment|/// @param[in] config
+comment|///     Configuration data for the feature being enabled.  This config
+comment|///     data, which may be null, will be passed along to the feature
+comment|///     to process.  The feature will dictate whether this is a dictionary,
+comment|///     an array or some other object.  If the feature needs to be
+comment|///     set up properly before it can be enabled, then the config should
+comment|///     also take an enable/disable flag.
+comment|///
+comment|/// @return
+comment|///     Returns the result of attempting to configure the feature.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|ConfigureStructuredData
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|type_name
+argument_list|,
+specifier|const
+name|StructuredData
+operator|::
+name|ObjectSP
+operator|&
+name|config_sp
+argument_list|)
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Broadcasts the given structured data object from the given
+comment|/// plugin.
+comment|///
+comment|/// StructuredDataPlugin instances can use this to optionally
+comment|/// broadcast any of their data if they want to make it available
+comment|/// for clients.  The data will come in on the structured data
+comment|/// event bit (eBroadcastBitStructuredData).
+comment|///
+comment|/// @param[in] object_sp
+comment|///     The structured data object to broadcast.
+comment|///
+comment|/// @param[in] plugin_sp
+comment|///     The plugin that will be reported in the event's plugin
+comment|///     parameter.
+comment|//------------------------------------------------------------------
+name|void
+name|BroadcastStructuredData
+argument_list|(
+specifier|const
+name|StructuredData
+operator|::
+name|ObjectSP
+operator|&
+name|object_sp
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|StructuredDataPluginSP
+operator|&
+name|plugin_sp
+argument_list|)
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Returns the StructuredDataPlugin associated with a given type
+comment|/// name, if there is one.
+comment|///
+comment|/// There will only be a plugin for a given StructuredDataType if the
+comment|/// debugged process monitor claims that the feature is supported.
+comment|/// This is one way to tell whether a feature is available.
+comment|///
+comment|/// @return
+comment|///     The plugin if one is available for the specified feature;
+comment|///     otherwise, returns an empty shared pointer.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|StructuredDataPluginSP
+name|GetStructuredDataPlugin
+argument_list|(
+argument|const ConstString&type_name
+argument_list|)
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|void
@@ -6911,7 +7158,7 @@ name|m_process
 argument_list|(
 argument|process
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|NextEventAction
@@ -7065,7 +7312,7 @@ name|std
 operator|::
 name|string
 name|m_exit_string
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -7123,6 +7370,209 @@ name|true
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|/// Loads any plugins associated with asynchronous structured data
+end_comment
+
+begin_comment
+comment|/// and maps the relevant supported type name to the plugin.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Processes can receive asynchronous structured data from the
+end_comment
+
+begin_comment
+comment|/// process monitor.  This method will load and map any structured
+end_comment
+
+begin_comment
+comment|/// data plugins that support the given set of supported type names.
+end_comment
+
+begin_comment
+comment|/// Later, if any of these features are enabled, the process monitor
+end_comment
+
+begin_comment
+comment|/// is free to generate asynchronous structured data.  The data must
+end_comment
+
+begin_comment
+comment|/// come in as a single \b StructuredData::Dictionary.  That dictionary
+end_comment
+
+begin_comment
+comment|/// must have a string field named 'type', with a value that equals
+end_comment
+
+begin_comment
+comment|/// the relevant type name string (one of the values in
+end_comment
+
+begin_comment
+comment|/// \b supported_type_names).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param[in] supported_type_names
+end_comment
+
+begin_comment
+comment|///     An array of zero or more type names.  Each must be unique.
+end_comment
+
+begin_comment
+comment|///     For each entry in the list, a StructuredDataPlugin will be
+end_comment
+
+begin_comment
+comment|///     searched for that supports the structured data type name.
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_decl_stmt
+name|void
+name|MapSupportedStructuredDataPlugins
+argument_list|(
+specifier|const
+name|StructuredData
+operator|::
+name|Array
+operator|&
+name|supported_type_names
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|/// Route the incoming structured data dictionary to the right plugin.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The incoming structured data must be a dictionary, and it must
+end_comment
+
+begin_comment
+comment|/// have a key named 'type' that stores a string value.  The string
+end_comment
+
+begin_comment
+comment|/// value must be the name of the structured data feature that
+end_comment
+
+begin_comment
+comment|/// knows how to handle it.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param[in] object_sp
+end_comment
+
+begin_comment
+comment|///     When non-null and pointing to a dictionary, the 'type'
+end_comment
+
+begin_comment
+comment|///     key's string value is used to look up the plugin that
+end_comment
+
+begin_comment
+comment|///     was registered for that structured data type.  It then
+end_comment
+
+begin_comment
+comment|///     calls the following method on the StructuredDataPlugin
+end_comment
+
+begin_comment
+comment|///     instance:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///     virtual void
+end_comment
+
+begin_comment
+comment|///     HandleArrivalOfStructuredData(Process&process,
+end_comment
+
+begin_comment
+comment|///                                   const ConstString&type_name,
+end_comment
+
+begin_comment
+comment|///                                   const StructuredData::ObjectSP
+end_comment
+
+begin_comment
+comment|///&object_sp)
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @return
+end_comment
+
+begin_comment
+comment|///     True if the structured data was routed to a plugin; otherwise,
+end_comment
+
+begin_comment
+comment|///     false.
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_decl_stmt
+name|bool
+name|RouteAsyncStructuredData
+argument_list|(
+specifier|const
+name|StructuredData
+operator|::
+name|ObjectSP
+name|object_sp
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -7216,10 +7666,51 @@ name|baton
 argument_list|(
 argument|in_baton
 argument_list|)
-block|{         }
+block|{}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|PreResumeCallbackAndBaton
+operator|&
+name|rhs
+operator|)
+block|{
+return|return
+name|callback
+operator|==
+name|rhs
+operator|.
+name|callback
+operator|&&
+name|baton
+operator|==
+name|rhs
+operator|.
+name|baton
+return|;
+block|}
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|using
+name|StructuredDataPluginMap
+init|=
+name|std
+operator|::
+name|map
+operator|<
+name|ConstString
+decl_stmt|,
+name|lldb
+decl|::
+name|StructuredDataPluginSP
+decl|>
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -7281,7 +7772,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// This broadcaster feeds state changed events into the private state thread's listener.
+comment|// This broadcaster feeds state
+end_comment
+
+begin_comment
+comment|// changed events into the private
+end_comment
+
+begin_comment
+comment|// state thread's listener.
 end_comment
 
 begin_decl_stmt
@@ -7291,7 +7790,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// This is the control broadcaster, used to pause, resume& stop the private state thread.
+comment|// This is the control
+end_comment
+
+begin_comment
+comment|// broadcaster, used to
+end_comment
+
+begin_comment
+comment|// pause, resume& stop the
+end_comment
+
+begin_comment
+comment|// private state thread.
 end_comment
 
 begin_expr_stmt
@@ -7303,7 +7814,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// This is the listener for the private state thread.
+comment|// This is the listener for the
+end_comment
+
+begin_comment
+comment|// private state thread.
 end_comment
 
 begin_decl_stmt
@@ -7313,7 +7828,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< Thread ID for the thread that watches internal state events
+comment|///< Thread ID for the thread that watches
+end_comment
+
+begin_comment
+comment|///internal state events
 end_comment
 
 begin_decl_stmt
@@ -7323,7 +7842,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< Tracks the state of the process over stops and other alterations.
+comment|///< Tracks the state of the process over stops and
+end_comment
+
+begin_comment
+comment|///other alterations.
 end_comment
 
 begin_decl_stmt
@@ -7333,7 +7856,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< Each lldb_private::Process class that is created gets a unique integer ID that increments with each new instance
+comment|///< Each lldb_private::Process class that is
+end_comment
+
+begin_comment
+comment|///created gets a unique integer ID that
+end_comment
+
+begin_comment
+comment|///increments with each new instance
 end_comment
 
 begin_decl_stmt
@@ -7343,7 +7874,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< Each thread is created with a 1 based index that won't get re-used.
+comment|///< Each thread is created with a 1 based index
+end_comment
+
+begin_comment
+comment|///that won't get re-used.
 end_comment
 
 begin_expr_stmt
@@ -7390,7 +7925,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|///< Mutex so m_exit_status m_exit_string can be safely accessed from multiple threads
+comment|///< Mutex so m_exit_status m_exit_string can
+end_comment
+
+begin_comment
+comment|///be safely accessed from multiple threads
 end_comment
 
 begin_expr_stmt
@@ -7408,7 +7947,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< The threads for this process as are known to the protocol we are debugging with
+comment|///< The threads for this process as are known
+end_comment
+
+begin_comment
+comment|///to the protocol we are debugging with
 end_comment
 
 begin_decl_stmt
@@ -7418,11 +7961,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< The threads for this process as the user will see them. This is usually the same as
+comment|///< The threads for this process as the user will
 end_comment
 
 begin_comment
-comment|///< m_thread_list_real, but might be different if there is an OS plug-in creating memory threads
+comment|///see them. This is usually the same as
+end_comment
+
+begin_comment
+comment|///< m_thread_list_real, but might be different if there is an OS plug-in
+end_comment
+
+begin_comment
+comment|///creating memory threads
 end_comment
 
 begin_decl_stmt
@@ -7432,7 +7983,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< Owner for extended threads that may be generated, cleared on natural stops
+comment|///< Owner for extended threads that may be
+end_comment
+
+begin_comment
+comment|///generated, cleared on natural stops
 end_comment
 
 begin_decl_stmt
@@ -7442,7 +7997,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< The natural stop id when extended_thread_list was last updated
+comment|///< The natural stop id when
+end_comment
+
+begin_comment
+comment|///extended_thread_list was last updated
 end_comment
 
 begin_decl_stmt
@@ -7462,7 +8021,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< The natural stop id when queue list was last fetched
+comment|///< The natural stop id when queue list was
+end_comment
+
+begin_comment
+comment|///last fetched
 end_comment
 
 begin_expr_stmt
@@ -7477,7 +8040,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|///< The list of notifications that this process can deliver.
+comment|///< The list of notifications
+end_comment
+
+begin_comment
+comment|///that this process can deliver.
 end_comment
 
 begin_expr_stmt
@@ -7502,7 +8069,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|///< Shared pointer to the listener used for public events.  Can not be empty.
+comment|///< Shared pointer to the listener used for
+end_comment
+
+begin_comment
+comment|///public events.  Can not be empty.
 end_comment
 
 begin_decl_stmt
@@ -7512,7 +8083,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< This is the list of breakpoint locations we intend to insert in the target.
+comment|///< This is the list of breakpoint
+end_comment
+
+begin_comment
+comment|///locations we intend to insert in
+end_comment
+
+begin_comment
+comment|///the target.
 end_comment
 
 begin_expr_stmt
@@ -7540,7 +8119,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|///< The functions used by the expression parser to validate data that expressions use.
+comment|///< The functions used
+end_comment
+
+begin_comment
+comment|///by the expression
+end_comment
+
+begin_comment
+comment|///parser to validate
+end_comment
+
+begin_comment
+comment|///data that
+end_comment
+
+begin_comment
+comment|///expressions use.
 end_comment
 
 begin_expr_stmt
@@ -7608,7 +8203,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Remember if stdin must be forwarded to remote debug server
+comment|/// Remember if stdin must be forwarded to remote debug
+end_comment
+
+begin_comment
+comment|/// server
 end_comment
 
 begin_expr_stmt
@@ -7676,7 +8275,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Should we detach if the process object goes away with an explicit call to Kill or Detach?
+comment|/// Should we detach if the process object goes away
+end_comment
+
+begin_comment
+comment|/// with an explicit call to Kill or Detach?
 end_comment
 
 begin_decl_stmt
@@ -7746,7 +8349,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// If m_currently_handling_event or m_currently_handling_do_on_removals are true, Resume will only request a resume, using this flag to check.
+comment|// If m_currently_handling_event or
+end_comment
+
+begin_comment
+comment|// m_currently_handling_do_on_removals are true,
+end_comment
+
+begin_comment
+comment|// Resume will only request a resume, using this flag
+end_comment
+
+begin_comment
+comment|// to check.
 end_comment
 
 begin_decl_stmt
@@ -7756,7 +8371,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// This is set at the beginning of Process::Finalize() to stop functions from looking up or creating things during a finalize call
+comment|// This is set at the beginning of Process::Finalize() to
+end_comment
+
+begin_comment
+comment|// stop functions from looking up or creating things during
+end_comment
+
+begin_comment
+comment|// a finalize call
 end_comment
 
 begin_decl_stmt
@@ -7790,7 +8413,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// This helps with the Public event coalescing in ShouldBroadcastEvent.
+comment|/// This helps with the Public event
+end_comment
+
+begin_comment
+comment|/// coalescing in
+end_comment
+
+begin_comment
+comment|/// ShouldBroadcastEvent.
 end_comment
 
 begin_expr_stmt
@@ -7823,7 +8454,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Some targets, e.g the OSX kernel, don't support the ability to modify the stack.
+comment|// Some targets, e.g the OSX kernel,
+end_comment
+
+begin_comment
+comment|// don't support the ability to modify
+end_comment
+
+begin_comment
+comment|// the stack.
 end_comment
 
 begin_decl_stmt
@@ -7833,7 +8472,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// A set of object pointers which have already had warnings printed
+comment|// A set of object pointers which have
+end_comment
+
+begin_comment
+comment|// already had warnings printed
 end_comment
 
 begin_expr_stmt
@@ -7843,6 +8486,12 @@ name|mutex
 name|m_run_thread_plan_lock
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|StructuredDataPluginMap
+name|m_structured_data_plugin_map
+decl_stmt|;
+end_decl_stmt
 
 begin_enum
 enum|enum
@@ -7990,7 +8639,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|// arg is a pointer to a new'ed PrivateStateThreadArgs structure.  PrivateStateThread will free it for you.
+comment|// arg is a pointer to a new'ed PrivateStateThreadArgs structure.
+end_comment
+
+begin_comment
+comment|// PrivateStateThread will free it for you.
 end_comment
 
 begin_expr_stmt
@@ -8008,15 +8661,27 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// The starts up the private state thread that will watch for events from the debugee.
+comment|// The starts up the private state thread that will watch for events from the
 end_comment
 
 begin_comment
-comment|// Pass true for is_secondary_thread in the case where you have to temporarily spin up a
+comment|// debugee.
 end_comment
 
 begin_comment
-comment|// secondary state thread to handle events from a hand-called function on the primary
+comment|// Pass true for is_secondary_thread in the case where you have to temporarily
+end_comment
+
+begin_comment
+comment|// spin up a
+end_comment
+
+begin_comment
+comment|// secondary state thread to handle events from a hand-called function on the
+end_comment
+
+begin_comment
+comment|// primary
 end_comment
 
 begin_comment
@@ -8065,22 +8730,31 @@ operator|::
 name|StateType
 name|WaitForProcessStopPrivate
 argument_list|(
-specifier|const
-name|TimeValue
-operator|*
-name|timeout
-argument_list|,
 name|lldb
 operator|::
 name|EventSP
 operator|&
 name|event_sp
+argument_list|,
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
+name|timeout
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// This waits for both the state change broadcaster, and the control broadcaster.
+comment|// This waits for both the state change broadcaster, and the control
+end_comment
+
+begin_comment
+comment|// broadcaster.
 end_comment
 
 begin_comment
@@ -8089,18 +8763,23 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|WaitForEventsPrivate
+name|GetEventsPrivate
 argument_list|(
-specifier|const
-name|TimeValue
-operator|*
-name|timeout
-argument_list|,
 name|lldb
 operator|::
 name|EventSP
 operator|&
 name|event_sp
+argument_list|,
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
+name|timeout
 argument_list|,
 name|bool
 name|control_only
@@ -8112,33 +8791,23 @@ begin_expr_stmt
 name|lldb
 operator|::
 name|StateType
-name|WaitForStateChangedEventsPrivate
+name|GetStateChangedEventsPrivate
 argument_list|(
-specifier|const
-name|TimeValue
-operator|*
-name|timeout
-argument_list|,
 name|lldb
 operator|::
 name|EventSP
 operator|&
 name|event_sp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lldb
+argument_list|,
+specifier|const
+name|Timeout
+operator|<
+name|std
 operator|::
-name|StateType
-name|WaitForState
-argument_list|(
-argument|const TimeValue *timeout
-argument_list|,
-argument|const lldb::StateType *match_states
-argument_list|,
-argument|const uint32_t num_match_states
+name|micro
+operator|>
+operator|&
+name|timeout
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8330,7 +8999,11 @@ comment|/// the target to executing again.
 end_comment
 
 begin_comment
-comment|/// There is only one place where this call should be called, HandlePrivateEvent.
+comment|/// There is only one place where this call should be called,
+end_comment
+
+begin_comment
+comment|/// HandlePrivateEvent.
 end_comment
 
 begin_comment

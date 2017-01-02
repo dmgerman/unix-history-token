@@ -96,24 +96,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<utility>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<vector>
 end_include
 
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
 
 begin_include
 include|#
@@ -125,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/TemplateBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_comment
@@ -1116,8 +1116,7 @@ name|char
 operator|*
 argument_list|,
 name|CompilerType
-operator|>
-expr|>
+operator|>>
 operator|&
 name|type_fields
 argument_list|,
@@ -1149,8 +1148,7 @@ name|char
 operator|*
 argument_list|,
 name|CompilerType
-operator|>
-expr|>
+operator|>>
 operator|&
 name|type_fields
 argument_list|,
@@ -1458,19 +1456,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|bool
 name|CheckOverloadedOperatorKindParameterCount
-parameter_list|(
-name|uint32_t
+argument_list|(
+name|bool
+name|is_method
+argument_list|,
+name|clang
+operator|::
+name|OverloadedOperatorKind
 name|op_kind
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|num_params
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|bool
@@ -1598,7 +1601,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Returns a mask containing bits from the ClangASTContext::eTypeXXX enumerations
+comment|// Returns a mask containing bits from the ClangASTContext::eTypeXXX
+end_comment
+
+begin_comment
+comment|// enumerations
 end_comment
 
 begin_comment
@@ -2014,11 +2021,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|//  PDBASTParser *
-end_comment
-
-begin_comment
-comment|//  GetPDBParser();
+comment|//PDBASTParser *GetPDBParser();
 end_comment
 
 begin_comment
@@ -3177,7 +3180,11 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Using the current type, create a new typedef to that type using "typedef_name"
+comment|// Using the current type, create a new typedef to that type using
+end_comment
+
+begin_comment
+comment|// "typedef_name"
 end_comment
 
 begin_comment
@@ -3226,6 +3233,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|CompilerType
+name|GetArrayType
+argument_list|(
+name|lldb
+operator|::
+name|opaque_compiler_type_t
+name|type
+argument_list|,
+name|uint64_t
+name|size
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CompilerType
 name|GetCanonicalType
 argument_list|(
 name|lldb
@@ -3251,7 +3274,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Returns -1 if this isn't a function of if the function doesn't have a prototype
+comment|// Returns -1 if this isn't a function of if the function doesn't have a
+end_comment
+
+begin_comment
+comment|// prototype
 end_comment
 
 begin_comment
@@ -3928,7 +3955,11 @@ comment|// member in this class, or any base class that matches "name".
 end_comment
 
 begin_comment
-comment|// TODO: Return all matches for a given name by returning a vector<vector<uint32_t>>
+comment|// TODO: Return all matches for a given name by returning a
+end_comment
+
+begin_comment
+comment|// vector<vector<uint32_t>>
 end_comment
 
 begin_comment
@@ -4078,7 +4109,7 @@ name|FieldDecl
 operator|*
 name|AddFieldToRecordType
 argument_list|(
-argument|const CompilerType& type
+argument|const CompilerType&type
 argument_list|,
 argument|const char *name
 argument_list|,
@@ -4125,7 +4156,7 @@ name|VarDecl
 operator|*
 name|AddVariableToRecordType
 argument_list|(
-argument|const CompilerType& type
+argument|const CompilerType&type
 argument_list|,
 argument|const char *name
 argument_list|,
@@ -4302,11 +4333,13 @@ name|ObjCMethodDecl
 operator|*
 name|AddMethodToObjCObjectType
 argument_list|(
-argument|const CompilerType& type
+argument|const CompilerType&type
 argument_list|,
 argument|const char *name
 argument_list|,
-comment|// the full symbol name as seen in the symbol table (lldb::opaque_compiler_type_t type, "-[NString stringWithCString:]")
+comment|// the full symbol name as seen in the symbol table
+comment|// (lldb::opaque_compiler_type_t type, "-[NString
+comment|// stringWithCString:]")
 argument|const CompilerType&method_compiler_type
 argument_list|,
 argument|lldb::AccessType access
@@ -4930,7 +4963,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}      static
+unit|}    static
 name|clang
 operator|::
 name|QualType
@@ -4967,8 +5000,31 @@ argument_list|()
 return|;
 end_return
 
+begin_expr_stmt
+unit|}    clang
+operator|::
+name|DeclarationName
+name|GetDeclarationName
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+specifier|const
+name|CompilerType
+operator|&
+name|function_clang_type
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_label
+name|protected
+label|:
+end_label
+
 begin_comment
-unit|}  protected:
 comment|//------------------------------------------------------------------
 end_comment
 
@@ -5299,9 +5355,9 @@ name|UserExpression
 operator|*
 name|GetUserExpression
 argument_list|(
-argument|const char *expr
+argument|llvm::StringRef expr
 argument_list|,
-argument|const char *expr_prefix
+argument|llvm::StringRef prefix
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
@@ -5317,7 +5373,7 @@ name|GetFunctionCaller
 argument_list|(
 argument|const CompilerType&return_type
 argument_list|,
-argument|const Address& function_address
+argument|const Address&function_address
 argument_list|,
 argument|const ValueList&arg_value_list
 argument_list|,
@@ -5353,7 +5409,13 @@ operator|::
 name|ClangPersistentVariablesUP
 name|m_persistent_variables
 block|;
-comment|///< These are the persistent variables associated with this process for the expression parser.
+comment|///< These are the
+comment|///persistent
+comment|///variables
+comment|///associated with
+comment|///this process for
+comment|///the expression
+comment|///parser.
 block|}
 decl_stmt|;
 end_decl_stmt

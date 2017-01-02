@@ -83,7 +83,8 @@ name|lldb_private
 block|{
 comment|//------------------------------------------------------------------
 comment|//  Base thread plans:
-comment|//  This is the generic version of the bottom most plan on the plan stack.  It should
+comment|//  This is the generic version of the bottom most plan on the plan stack.  It
+comment|//  should
 comment|//  be able to handle generic breakpoint hitting, and signals and exceptions.
 comment|//------------------------------------------------------------------
 name|class

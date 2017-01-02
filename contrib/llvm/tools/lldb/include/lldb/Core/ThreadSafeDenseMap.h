@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ThreadSafeDenseMap.h ------------------------------------------*- C++ -*-===//
+comment|//===-- ThreadSafeDenseMap.h ------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -51,6 +55,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -65,12 +75,6 @@ begin_comment
 comment|// Project includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -82,6 +86,13 @@ name|_KeyType
 operator|,
 name|typename
 name|_ValueType
+operator|,
+name|typename
+name|_MutexType
+operator|=
+name|std
+operator|::
+name|mutex
 operator|>
 name|class
 name|ThreadSafeDenseMap
@@ -103,8 +114,6 @@ name|ThreadSafeDenseMap
 argument_list|(
 argument|unsigned map_initial_capacity =
 literal|0
-argument_list|,
-argument|Mutex::Type mutex_type = Mutex::eMutexTypeNormal
 argument_list|)
 operator|:
 name|m_map
@@ -113,10 +122,8 @@ name|map_initial_capacity
 argument_list|)
 operator|,
 name|m_mutex
-argument_list|(
-argument|mutex_type
-argument_list|)
-block|{     }
+argument_list|()
+block|{}
 name|void
 name|Insert
 argument_list|(
@@ -125,10 +132,13 @@ argument_list|,
 argument|_ValueType v
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|_MutexType
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -146,17 +156,20 @@ argument_list|,
 name|v
 argument_list|)
 argument_list|)
-block|;     }
+block|;   }
 name|void
 name|Erase
 argument_list|(
 argument|_KeyType k
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|_MutexType
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -167,17 +180,20 @@ name|erase
 argument_list|(
 name|k
 argument_list|)
-block|;     }
+block|;   }
 name|_ValueType
 name|Lookup
 argument_list|(
 argument|_KeyType k
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|_MutexType
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -202,10 +218,13 @@ modifier|&
 name|v
 parameter_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|_MutexType
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -250,10 +269,13 @@ name|void
 name|Clear
 parameter_list|()
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|_MutexType
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -269,7 +291,7 @@ label|:
 name|LLVMMapType
 name|m_map
 decl_stmt|;
-name|Mutex
+name|_MutexType
 name|m_mutex
 decl_stmt|;
 block|}

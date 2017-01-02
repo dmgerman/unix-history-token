@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- CPPLanguageRuntime.h ---------------------------------------------------*- C++ -*-===//
+comment|//===-- CPPLanguageRuntime.h
+end_comment
+
+begin_comment
+comment|//---------------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -74,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/LanguageRuntime.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/LanguageRuntime.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt

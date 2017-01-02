@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterContextHistory.h ----------------------------------------*- C++ -*-===//
+comment|//===-- RegisterContextHistory.h ----------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -68,7 +72,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Symbol/SymbolContext.h"
 end_include
 
 begin_include
@@ -80,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/SymbolContext.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt

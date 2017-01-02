@@ -55,13 +55,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_include
@@ -119,7 +119,7 @@ block|,
 name|eMIPSSubType_mips64r2el
 block|,
 name|eMIPSSubType_mips64r6el
-block|,     }
+block|,   }
 enum|;
 comment|// Masks for the ases word of an ABI flags structure.
 enum|enum
@@ -627,17 +627,32 @@ parameter_list|)
 function_decl|;
 name|explicit
 name|ArchSpec
-parameter_list|(
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|triple_str
+argument_list|)
+decl_stmt|;
+name|ArchSpec
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|triple_cstr
-parameter_list|,
+argument_list|,
 name|Platform
-modifier|*
+operator|*
 name|platform
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+name|ArchSpec
+argument_list|(
+argument|llvm::StringRef triple_str
+argument_list|,
+argument|Platform *platform
+argument_list|)
+empty_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor over architecture name.
 comment|///
@@ -686,17 +701,17 @@ decl_stmt|;
 specifier|static
 name|size_t
 name|AutoComplete
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|name
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Returns a static string representing the current architecture.
 comment|///
@@ -732,6 +747,18 @@ operator|::
 name|string
 name|GetClangTargetCPU
 argument_list|()
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Return a string representing target application ABI.
+comment|///
+comment|/// @return A string representing target application ABI.
+comment|//------------------------------------------------------------------
+name|std
+operator|::
+name|string
+name|GetTargetABI
+argument_list|()
+specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Clears the object state.
@@ -819,18 +846,6 @@ operator|<
 name|kNumCores
 return|;
 block|}
-comment|//------------------------------------------------------------------
-comment|/// Return a string representing target application ABI.
-comment|///
-comment|/// @return A string representing target application ABI.
-comment|//------------------------------------------------------------------
-name|std
-operator|::
-name|string
-name|GetTargetABI
-argument_list|()
-specifier|const
-expr_stmt|;
 name|bool
 name|TripleVendorWasSpecified
 argument_list|()
@@ -960,7 +975,7 @@ comment|///
 comment|/// @param[in] cpu The required CPU type.
 comment|///
 comment|/// @param[in] os The optional OS type
-comment|/// The default value of 0 was choosen to from the ELF spec value
+comment|/// The default value of 0 was chosen to from the ELF spec value
 comment|/// ELFOSABI_NONE.  ELF is the only one using this parameter.  If another
 comment|/// format uses this parameter and 0 does not work, use a value over
 comment|/// 255 because in the ELF header this is value is only a byte.
@@ -1156,6 +1171,28 @@ operator|::
 name|Triple
 operator|&
 name|triple
+argument_list|)
+decl_stmt|;
+name|bool
+name|SetTriple
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|triple_str
+argument_list|)
+decl_stmt|;
+name|bool
+name|SetTriple
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|triple_str
+argument_list|,
+name|Platform
+operator|*
+name|platform
 argument_list|)
 decl_stmt|;
 name|bool
@@ -1369,17 +1406,25 @@ name|m_triple
 expr_stmt|;
 name|Core
 name|m_core
+init|=
+name|kCore_invalid
 decl_stmt|;
 name|lldb
 operator|::
 name|ByteOrder
 name|m_byte_order
+operator|=
+name|lldb
+operator|::
+name|eByteOrderInvalid
 expr_stmt|;
 comment|// Additional arch flags which we cannot get from triple and core
 comment|// For MIPS these are application specific extensions like
 comment|// micromips, mips16 etc.
 name|uint32_t
 name|m_flags
+init|=
+literal|0
 decl_stmt|;
 name|ConstString
 name|m_distribution_id
@@ -1422,6 +1467,19 @@ operator|&
 name|rhs
 operator|)
 expr_stmt|;
+name|bool
+name|ParseMachCPUDashSubtypeTriple
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|triple_str
+argument_list|,
+name|ArchSpec
+operator|&
+name|arch
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

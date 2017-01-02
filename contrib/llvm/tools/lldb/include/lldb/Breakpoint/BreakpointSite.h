@@ -74,13 +74,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UserID.h"
+file|"lldb/Breakpoint/BreakpointLocationCollection.h"
 end_include
 
 begin_include
@@ -92,7 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Breakpoint/BreakpointLocationCollection.h"
+file|"lldb/Core/UserID.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_decl_stmt
@@ -132,7 +132,8 @@ name|Type
 block|{
 name|eSoftware
 block|,
-comment|// Breakpoint opcode has been written to memory and m_saved_opcode
+comment|// Breakpoint opcode has been written to memory and
+comment|// m_saved_opcode
 comment|// and m_trap_opcode contain the saved and written opcode.
 name|eHardware
 block|,
@@ -201,7 +202,8 @@ name|GetSavedOpcodeBytes
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Gets the original instruction bytes that were overwritten by the trap const version
+comment|/// Gets the original instruction bytes that were overwritten by the trap
+comment|/// const version
 comment|//------------------------------------------------------------------
 specifier|const
 name|uint8_t
@@ -211,7 +213,8 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Says whether \a addr and size \a size intersects with the address \a intersect_addr
+comment|/// Says whether \a addr and size \a size intersects with the address \a
+comment|/// intersect_addr
 comment|//------------------------------------------------------------------
 name|bool
 name|IntersectsRange
@@ -268,7 +271,8 @@ name|enabled
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Enquires of the breakpoint locations that produced this breakpoint site whether
+comment|/// Enquires of the breakpoint locations that produced this breakpoint site
+comment|/// whether
 comment|/// we should stop at this location.
 comment|///
 comment|/// @param[in] context
@@ -484,7 +488,8 @@ name|friend
 name|class
 name|BreakpointLocation
 decl_stmt|;
-comment|// The StopInfoBreakpoint knows when it is processing a hit for a thread for a site, so let it be the
+comment|// The StopInfoBreakpoint knows when it is processing a hit for a thread for a
+comment|// site, so let it be the
 comment|// one to manage setting the location hit count once and only once.
 name|friend
 name|class
@@ -526,14 +531,16 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|///< The saved opcode bytes if this breakpoint site uses trap opcodes.
+comment|///< The saved opcode bytes if this breakpoint site
+comment|///uses trap opcodes.
 name|uint8_t
 name|m_trap_opcode
 index|[
 literal|8
 index|]
 decl_stmt|;
-comment|///< The opcode that was used to create the breakpoint if it is a software breakpoint site.
+comment|///< The opcode that was used to create the
+comment|///breakpoint if it is a software breakpoint site.
 name|bool
 name|m_enabled
 decl_stmt|;
@@ -543,7 +550,8 @@ comment|// owner, we don't store a list.  The usual case will be only one owner.
 name|BreakpointLocationCollection
 name|m_owners
 decl_stmt|;
-comment|///< This has the BreakpointLocations that share this breakpoint site.
+comment|///< This has the BreakpointLocations
+comment|///that share this breakpoint site.
 name|std
 operator|::
 name|recursive_mutex
@@ -563,7 +571,7 @@ name|BreakpointSite
 argument_list|(
 argument|BreakpointSiteList *list
 argument_list|,
-argument|const lldb::BreakpointLocationSP& owner
+argument|const lldb::BreakpointLocationSP&owner
 argument_list|,
 argument|lldb::addr_t m_addr
 argument_list|,

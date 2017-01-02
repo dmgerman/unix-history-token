@@ -74,12 +74,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -92,7 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/TimeValue.h"
+file|"lldb/Host/PosixApi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FormatVariadic.h"
 end_include
 
 begin_decl_stmt
@@ -173,51 +179,18 @@ comment|/// @param[in] path
 comment|///     The full or partial path to a file.
 comment|///
 comment|/// @param[in] resolve_path
-comment|///     If \b true, then we resolve the path, removing stray ../.. and so forth,
+comment|///     If \b true, then we resolve the path, removing stray ../.. and so
+comment|///     forth,
 comment|///     if \b false we trust the path is in canonical form already.
 comment|///
 comment|/// @see FileSpec::SetFile (const char *path, bool resolve)
 comment|//------------------------------------------------------------------
 name|explicit
 name|FileSpec
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|bool
-name|resolve_path
-parameter_list|,
-name|PathSyntax
-name|syntax
-init|=
-name|ePathSyntaxHostNative
-parameter_list|)
-function_decl|;
-name|explicit
-name|FileSpec
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|bool
-name|resolve_path
-parameter_list|,
-name|ArchSpec
-name|arch
-parameter_list|)
-function_decl|;
-name|explicit
-name|FileSpec
 argument_list|(
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|path
 argument_list|,
 name|bool
@@ -232,11 +205,9 @@ decl_stmt|;
 name|explicit
 name|FileSpec
 argument_list|(
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|path
 argument_list|,
 name|bool
@@ -709,11 +680,6 @@ name|IsAbsolute
 argument_list|()
 specifier|const
 expr_stmt|;
-name|TimeValue
-name|GetModificationTime
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Extract the full path to the file.
 comment|///
@@ -1029,7 +995,8 @@ argument_list|)
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Read part of, or the entire contents of, a file into a heap based data buffer.
+comment|/// Read part of, or the entire contents of, a file into a heap based data
+comment|/// buffer.
 comment|///
 comment|/// Returns a shared pointer to a data buffer that contains all or
 comment|/// part of the contents of a file. The data copies into a heap based
@@ -1116,35 +1083,11 @@ comment|//------------------------------------------------------------------
 comment|/// Normalize a pathname by collapsing redundant separators and
 comment|/// up-level references.
 comment|//------------------------------------------------------------------
-name|void
-name|NormalizePath
-parameter_list|()
-function_decl|;
-comment|//------------------------------------------------------------------
-comment|/// Run through the input string, replaying the effect of any ".." and produce
-comment|/// the resultant path.  The input path is not required to be in the host file system
-comment|/// format, but it is required to be normalized to that system.
-comment|///
-comment|/// @param[in] input
-comment|///     The input path to analyze.
-comment|///
-comment|/// @param[out] result
-comment|///     The backup-resolved path will be written here.
-comment|//------------------------------------------------------------------
-specifier|static
-name|void
-name|RemoveBackupDots
-parameter_list|(
+name|FileSpec
+name|GetNormalizedPath
+argument_list|()
 specifier|const
-name|ConstString
-modifier|&
-name|input_const_str
-parameter_list|,
-name|ConstString
-modifier|&
-name|result_const_str
-parameter_list|)
-function_decl|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Change the file specified with a new path.
 comment|///
@@ -1161,44 +1104,10 @@ comment|///     the static FileSpec::Resolve.
 comment|//------------------------------------------------------------------
 name|void
 name|SetFile
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|bool
-name|resolve_path
-parameter_list|,
-name|PathSyntax
-name|syntax
-init|=
-name|ePathSyntaxHostNative
-parameter_list|)
-function_decl|;
-name|void
-name|SetFile
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|bool
-name|resolve_path
-parameter_list|,
-name|ArchSpec
-name|arch
-parameter_list|)
-function_decl|;
-name|void
-name|SetFile
 argument_list|(
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|path
 argument_list|,
 name|bool
@@ -1213,11 +1122,9 @@ decl_stmt|;
 name|void
 name|SetFile
 argument_list|(
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
+name|StringRef
 name|path
 argument_list|,
 name|bool
@@ -1287,7 +1194,8 @@ comment|/// Resolves user name and links in \a path, and overwrites the input
 comment|/// argument with the resolved path.
 comment|///
 comment|/// @param[in] path
-comment|///     Input path to be resolved, in the form of a llvm::SmallString or similar.
+comment|///     Input path to be resolved, in the form of a llvm::SmallString or
+comment|///     similar.
 comment|//------------------------------------------------------------------
 specifier|static
 name|void
@@ -1306,10 +1214,10 @@ decl_stmt|;
 name|FileSpec
 name|CopyByAppendingPathComponent
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|new_path
+name|llvm
+operator|::
+name|StringRef
+name|component
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1320,22 +1228,11 @@ specifier|const
 expr_stmt|;
 name|void
 name|PrependPathComponent
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|new_path
-parameter_list|)
-function_decl|;
-name|void
-name|PrependPathComponent
 argument_list|(
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
-name|new_path
+name|StringRef
+name|component
 argument_list|)
 decl_stmt|;
 name|void
@@ -1349,22 +1246,11 @@ parameter_list|)
 function_decl|;
 name|void
 name|AppendPathComponent
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|new_path
-parameter_list|)
-function_decl|;
-name|void
-name|AppendPathComponent
 argument_list|(
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
-operator|&
-name|new_path
+name|StringRef
+name|component
 argument_list|)
 decl_stmt|;
 name|void
@@ -1386,9 +1272,12 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Resolves the user name at the beginning of \a src_path, and writes the output
-comment|/// to \a dst_path.  Note, \a src_path can contain other path components after the
-comment|/// user name, they will be copied over, and if the path doesn't start with "~" it
+comment|/// Resolves the user name at the beginning of \a src_path, and writes the
+comment|/// output
+comment|/// to \a dst_path.  Note, \a src_path can contain other path components after
+comment|/// the
+comment|/// user name, they will be copied over, and if the path doesn't start with
+comment|/// "~" it
 comment|/// will also be copied over to \a dst_path.
 comment|///
 comment|/// @param[in] src_path
@@ -1414,29 +1303,32 @@ decl_stmt|;
 specifier|static
 name|size_t
 name|ResolvePartialUsername
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|partial_name
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 enum|enum
 name|EnumerateDirectoryResult
 block|{
 name|eEnumerateDirectoryResultNext
 block|,
-comment|// Enumerate next entry in the current directory
+comment|// Enumerate next entry in the current
+comment|// directory
 name|eEnumerateDirectoryResultEnter
 block|,
-comment|// Recurse into the current entry if it is a directory or symlink, or next if not
+comment|// Recurse into the current entry if it is a
+comment|// directory or symlink, or next if not
 name|eEnumerateDirectoryResultExit
 block|,
-comment|// Exit from the current directory at the current level.
+comment|// Exit from the current directory at the
+comment|// current level.
 name|eEnumerateDirectoryResultQuit
 comment|// Stop directory enumerations at any level
 block|}
@@ -1464,29 +1356,29 @@ function_decl|;
 specifier|static
 name|EnumerateDirectoryResult
 name|EnumerateDirectory
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|dir_path
-parameter_list|,
+argument_list|,
 name|bool
 name|find_directories
-parameter_list|,
+argument_list|,
 name|bool
 name|find_files
-parameter_list|,
+argument_list|,
 name|bool
 name|find_other
-parameter_list|,
+argument_list|,
 name|EnumerateDirectoryCallbackType
 name|callback
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|callback_baton
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -1504,18 +1396,18 @@ expr_stmt|;
 specifier|static
 name|EnumerateDirectoryResult
 name|ForEachItemInDirectory
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|dir_path
-parameter_list|,
+argument_list|,
 name|DirectoryCallback
 specifier|const
-modifier|&
+operator|&
 name|callback
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -1532,6 +1424,8 @@ comment|///< The uniqued filename path
 name|mutable
 name|bool
 name|m_is_resolved
+init|=
+name|false
 decl_stmt|;
 comment|///< True if this path has been resolved.
 name|PathSyntax
@@ -1564,6 +1458,54 @@ end_decl_stmt
 begin_comment
 comment|// namespace lldb_private
 end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+comment|/// Implementation of format_provider<T> for FileSpec.
+comment|///
+comment|/// The options string of a FileSpec has the grammar:
+comment|///
+comment|///   file_spec_options   :: (empty) | F | D
+comment|///
+comment|///   =======================================================
+comment|///   |  style  |     Meaning          |      Example       |
+comment|///   -------------------------------------------------------
+comment|///   |         |                      |  Input   |  Output |
+comment|///   =======================================================
+comment|///   |    F    | Only print filename  | /foo/bar |   bar   |
+comment|///   |    D    | Only print directory | /foo/bar |  /foo/  |
+comment|///   | (empty) | Print file and dir   |          |         |
+comment|///   =======================================================
+comment|///
+comment|/// Any other value is considered an invalid format string.
+comment|///
+name|template
+operator|<
+operator|>
+expr|struct
+name|format_provider
+operator|<
+name|lldb_private
+operator|::
+name|FileSpec
+operator|>
+block|{
+specifier|static
+name|void
+name|format
+argument_list|(
+argument|const lldb_private::FileSpec&F
+argument_list|,
+argument|llvm::raw_ostream&Stream
+argument_list|,
+argument|StringRef Style
+argument_list|)
+block|; }
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

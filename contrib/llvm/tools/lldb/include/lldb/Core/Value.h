@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/DataBufferHeap.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/CompilerType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -116,7 +116,8 @@ block|,
 comment|// raw scalar value
 name|eValueTypeVector
 block|,
-comment|// byte array of m_vector.length with endianness of m_vector.byte_order
+comment|// byte array of m_vector.length with endianness of
+comment|// m_vector.byte_order
 name|eValueTypeFileAddress
 block|,
 comment|// file address value
@@ -124,7 +125,8 @@ name|eValueTypeLoadAddress
 block|,
 comment|// load address value
 name|eValueTypeHostAddress
-comment|// host address value (for memory in the process that is using liblldb)
+comment|// host address value (for memory in the process that
+comment|// is using liblldb)
 block|}
 enum|;
 enum|enum
@@ -138,7 +140,8 @@ block|,
 comment|// undefined
 name|eContextTypeRegisterInfo
 block|,
-comment|// RegisterInfo * (can be a scalar or a vector register)
+comment|// RegisterInfo * (can be a scalar or a vector
+comment|// register)
 name|eContextTypeLLDBType
 block|,
 comment|// lldb_private::Type *
@@ -156,7 +159,8 @@ decl_stmt|;
 struct|struct
 name|Vector
 block|{
-comment|// The byte array must be big enough to hold vector registers for any supported target.
+comment|// The byte array must be big enough to hold vector registers for any
+comment|// supported target.
 name|uint8_t
 name|bytes
 index|[
@@ -183,17 +187,17 @@ name|byte_order
 argument_list|(
 argument|lldb::eByteOrderInvalid
 argument_list|)
-block|{ 		}
+block|{}
 name|Vector
 argument_list|(
-argument|const Vector& vector
+argument|const Vector&vector
 argument_list|)
 block|{
 operator|*
 name|this
 operator|=
 name|vector
-block|;          }
+block|; }
 specifier|const
 name|Vector
 operator|&
@@ -314,9 +318,11 @@ name|eByteOrderInvalid
 operator|)
 return|;
 block|}
-comment|// Casts a vector, if valid, to an unsigned int of matching or largest supported size.
+comment|// Casts a vector, if valid, to an unsigned int of matching or largest
+comment|// supported size.
 comment|// Truncates to the beginning of the vector if required.
-comment|// Returns a default constructed Scalar if the Vector data is internally inconsistent.
+comment|// Returns a default constructed Scalar if the Vector data is internally
+comment|// inconsistent.
 name|llvm
 operator|::
 name|APInt
@@ -925,7 +931,7 @@ argument_list|()
 operator|:
 name|m_values
 argument_list|()
-block|{     }
+block|{}
 name|ValueList
 argument_list|(
 specifier|const

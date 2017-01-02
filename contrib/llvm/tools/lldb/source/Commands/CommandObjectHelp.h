@@ -123,11 +123,11 @@ name|GenerateAdditionalHelpAvenuesMessage
 argument_list|(
 argument|Stream *s
 argument_list|,
-argument|const char* command
+argument|llvm::StringRef command
 argument_list|,
-argument|const char* prefix = nullptr
+argument|llvm::StringRef prefix
 argument_list|,
-argument|const char* subcommand = nullptr
+argument|llvm::StringRef subcommand
 argument_list|,
 argument|bool include_apropos = true
 argument_list|,
@@ -143,17 +143,11 @@ block|{
 name|public
 operator|:
 name|CommandOptions
-argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
-argument_list|)
+argument_list|()
 operator|:
 name|Options
-argument_list|(
-argument|interpreter
-argument_list|)
-block|{         }
+argument_list|()
+block|{}
 operator|~
 name|CommandOptions
 argument_list|()
@@ -164,7 +158,9 @@ name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_arg
+argument|llvm::StringRef option_arg
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|{
@@ -229,7 +225,9 @@ return|;
 block|}
 name|void
 name|OptionParsingStarting
-argument_list|()
+argument_list|(
+argument|ExecutionContext *execution_context
+argument_list|)
 name|override
 block|{
 name|m_show_aliases
@@ -243,23 +241,16 @@ block|;
 name|m_show_hidden
 operator|=
 name|false
-block|;         }
-specifier|const
+block|;     }
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
-block|{
-return|return
-name|g_option_table
-return|;
-block|}
-comment|// Options table: Required for subclasses of Options.
-specifier|static
-name|OptionDefinition
-name|g_option_table
-index|[]
 block|;
 comment|// Instance variables to hold the values for command options.
 name|bool
@@ -270,7 +261,7 @@ name|m_show_user_defined
 block|;
 name|bool
 name|m_show_hidden
-block|;     }
+block|;   }
 block|;
 name|Options
 operator|*
@@ -288,7 +279,7 @@ operator|:
 name|bool
 name|DoExecute
 argument_list|(
-argument|Args& command
+argument|Args&command
 argument_list|,
 argument|CommandReturnObject&result
 argument_list|)

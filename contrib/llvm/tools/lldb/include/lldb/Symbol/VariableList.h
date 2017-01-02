@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Symbol/SymbolContext.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/Variable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -150,7 +150,7 @@ operator|::
 name|VariableSP
 name|FindVariable
 argument_list|(
-argument|const ConstString& name
+argument|const ConstString&name
 argument_list|,
 argument|bool include_static_members = true
 argument_list|)
@@ -160,7 +160,7 @@ operator|::
 name|VariableSP
 name|FindVariable
 argument_list|(
-argument|const ConstString& name
+argument|const ConstString&name
 argument_list|,
 argument|lldb::ValueType value_type
 argument_list|,

@@ -62,13 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/RegisterContext.h"
+file|"RegisterContext_powerpc.h"
 end_include
 
 begin_include
@@ -80,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterContext_powerpc.h"
+file|"lldb/Core/Log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/RegisterContext.h"
 end_include
 
 begin_decl_stmt
@@ -503,7 +503,8 @@ operator|>
 name|m_register_info_ap
 block|;
 comment|// Register Info Interface (FreeBSD or Linux)
-comment|// Determines if an extended register set is supported on the processor running the inferior process.
+comment|// Determines if an extended register set is supported on the processor
+comment|// running the inferior process.
 name|virtual
 name|bool
 name|IsRegisterSetAvailable

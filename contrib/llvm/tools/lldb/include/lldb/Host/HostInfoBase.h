@@ -185,12 +185,15 @@ name|ArchitectureKind
 block|{
 name|eArchKindDefault
 block|,
-comment|// The overall default architecture that applications will run on this host
+comment|// The overall default architecture that applications will
+comment|// run on this host
 name|eArchKind32
 block|,
-comment|// If this host supports 32 bit programs, return the default 32 bit arch
+comment|// If this host supports 32 bit programs, return the default 32
+comment|// bit arch
 name|eArchKind64
-comment|// If this host supports 64 bit programs, return the default 64 bit arch
+comment|// If this host supports 64 bit programs, return the default 64
+comment|// bit arch
 block|}
 enum|;
 specifier|static

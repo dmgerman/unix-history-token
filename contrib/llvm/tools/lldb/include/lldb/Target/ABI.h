@@ -117,7 +117,7 @@ name|public
 operator|:
 expr|struct
 name|CallArgument
-block|{         enum
+block|{     enum
 name|eType
 block|{
 name|HostPointer
@@ -189,10 +189,13 @@ literal|0
 block|;
 comment|// Prepare trivial call used from ThreadPlanFunctionCallUsingABI
 comment|// AD:
-comment|//  . Because i don't want to change other ABI's this is not declared pure virtual.
-comment|//    The dummy implementation will simply fail.  Only HexagonABI will currently
+comment|//  . Because i don't want to change other ABI's this is not declared pure
+comment|//  virtual.
+comment|//    The dummy implementation will simply fail.  Only HexagonABI will
+comment|//    currently
 comment|//    use this method.
-comment|//  . Two PrepareTrivialCall's is not good design so perhaps this should be combined.
+comment|//  . Two PrepareTrivialCall's is not good design so perhaps this should be
+comment|//  combined.
 comment|//
 name|virtual
 name|bool
@@ -273,8 +276,10 @@ literal|0
 block|;
 name|protected
 operator|:
-comment|// This is the method the ABI will call to actually calculate the return value.
-comment|// Don't put it in a persistent value object, that will be done by the ABI::GetReturnValueObject.
+comment|// This is the method the ABI will call to actually calculate the return
+comment|// value.
+comment|// Don't put it in a persistent value object, that will be done by the
+comment|// ABI::GetReturnValueObject.
 name|virtual
 name|lldb
 operator|::
@@ -360,7 +365,8 @@ comment|// Should take a look at a call frame address (CFA) which is just the st
 comment|// pointer value upon entry to a function. ABIs usually impose alignment
 comment|// restrictions (4, 8 or 16 byte aligned), and zero is usually not allowed.
 comment|// This function should return true if "cfa" is valid call frame address for
-comment|// the ABI, and false otherwise. This is used by the generic stack frame unwinding
+comment|// the ABI, and false otherwise. This is used by the generic stack frame
+comment|// unwinding
 comment|// code to help determine when a stack ends.
 name|virtual
 name|bool
@@ -433,6 +439,17 @@ argument_list|,
 argument|RegisterInfo&info
 argument_list|)
 block|;
+name|virtual
+name|bool
+name|GetPointerReturnRegister
+argument_list|(
+argument|const char *&name
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 specifier|static
 name|lldb
 operator|::

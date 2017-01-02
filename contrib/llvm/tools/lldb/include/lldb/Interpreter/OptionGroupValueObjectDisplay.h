@@ -94,14 +94,12 @@ name|OptionGroupValueObjectDisplay
 argument_list|()
 name|override
 block|;
-name|uint32_t
-name|GetNumDefinitions
-argument_list|()
-name|override
-block|;
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
@@ -109,18 +107,33 @@ block|;
 name|Error
 name|SetOptionValue
 argument_list|(
-argument|CommandInterpreter&interpreter
-argument_list|,
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_value
+argument|llvm::StringRef option_value
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetOptionValue
+argument_list|(
+name|uint32_t
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|ExecutionContext
+operator|*
+argument_list|)
+operator|=
+name|delete
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-argument|CommandInterpreter&interpreter
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
@@ -163,7 +176,7 @@ block|}
 name|DumpValueObjectOptions
 name|GetAsDumpOptions
 argument_list|(
-argument|LanguageRuntimeDescriptionDisplayVerbosity lang_descr_verbosity = eLanguageRuntimeDescriptionDisplayVerbosityFull
+argument|LanguageRuntimeDescriptionDisplayVerbosity lang_descr_verbosity =           eLanguageRuntimeDescriptionDisplayVerbosityFull
 argument_list|,
 argument|lldb::Format format = lldb::eFormatDefault
 argument_list|,

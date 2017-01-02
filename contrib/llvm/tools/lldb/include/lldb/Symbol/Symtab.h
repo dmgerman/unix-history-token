@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/RangeMap.h"
 end_include
 
@@ -77,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/Symbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt

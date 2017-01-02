@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ProcessFreeBSD.h ------------------------------------------*- C++ -*-===//
+comment|//===-- ProcessFreeBSD.h ------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -76,13 +80,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Process.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/ThreadList.h"
+file|"ProcessFreeBSD.h"
 end_include
 
 begin_include
@@ -94,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ProcessFreeBSD.h"
+file|"lldb/Target/Process.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/ThreadList.h"
 end_include
 
 begin_decl_stmt
@@ -534,8 +538,10 @@ operator|&
 name|dbg_pts_file_spec
 argument_list|)
 block|;
-comment|/// Adds the thread to the list of threads for which we have received the initial stopping signal.
-comment|/// The \p stop_tid parameter indicates the thread which the stop happened for.
+comment|/// Adds the thread to the list of threads for which we have received the
+comment|/// initial stopping signal.
+comment|/// The \p stop_tid parameter indicates the thread which the stop happened
+comment|/// for.
 name|bool
 name|AddThreadForInitialStopIfNeeded
 argument_list|(

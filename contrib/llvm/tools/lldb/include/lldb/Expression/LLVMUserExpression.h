@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string>
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<string>
 end_include
 
 begin_include
@@ -94,14 +94,16 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class LLVMUserExpression LLVMUserExpression.h "lldb/Expression/LLVMUserExpression.h"
+comment|/// @class LLVMUserExpression LLVMUserExpression.h
+comment|/// "lldb/Expression/LLVMUserExpression.h"
 comment|/// @brief Encapsulates a one-time expression for use in lldb.
 comment|///
 comment|/// LLDB uses expressions for various purposes, notably to call functions
 comment|/// and as a backend for the expr command.  LLVMUserExpression is a virtual base
 comment|/// class that encapsulates the objects needed to parse and JIT an expression.
 comment|/// The actual parsing part will be provided by the specific implementations
-comment|/// of LLVMUserExpression - which will be vended through the appropriate TypeSystem.
+comment|/// of LLVMUserExpression - which will be vended through the appropriate
+comment|/// TypeSystem.
 comment|//----------------------------------------------------------------------
 name|class
 name|LLVMUserExpression
@@ -111,9 +113,12 @@ name|UserExpression
 block|{
 name|public
 operator|:
-comment|// The IRPasses struct is filled in by a runtime after an expression is compiled and can be used to to run
-comment|// fixups/analysis passes as required. EarlyPasses are run on the generated module before lldb runs its own IR
-comment|// fixups and inserts instrumentation code/pointer checks. LatePasses are run after the module has been processed by
+comment|// The IRPasses struct is filled in by a runtime after an expression is
+comment|// compiled and can be used to to run
+comment|// fixups/analysis passes as required. EarlyPasses are run on the generated
+comment|// module before lldb runs its own IR
+comment|// fixups and inserts instrumentation code/pointer checks. LatePasses are run
+comment|// after the module has been processed by
 comment|// llvm, before the module is assembled and run in the ThreadPlan.
 expr|struct
 name|IRPasses
@@ -155,15 +160,15 @@ operator|::
 name|PassManager
 operator|>
 name|LatePasses
-block|;     }
+block|;   }
 block|;
 name|LLVMUserExpression
 argument_list|(
 argument|ExecutionContextScope&exe_scope
 argument_list|,
-argument|const char *expr
+argument|llvm::StringRef expr
 argument_list|,
-argument|const char *expr_prefix
+argument|llvm::StringRef prefix
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
@@ -338,7 +343,9 @@ name|Materializer
 operator|>
 name|m_materializer_ap
 block|;
-comment|///< The materializer to use when running the expression.
+comment|///< The materializer to use
+comment|///when running the
+comment|///expression.
 name|lldb
 operator|::
 name|ModuleWP
@@ -347,28 +354,33 @@ block|;
 name|bool
 name|m_enforce_valid_object
 block|;
-comment|///< True if the expression parser should enforce the presence of a valid class pointer
-comment|///in order to generate the expression as a method.
+comment|///< True if the expression parser should enforce
+comment|///the presence of a valid class pointer
+comment|/// in order to generate the expression as a method.
 name|bool
 name|m_in_cplusplus_method
 block|;
-comment|///< True if the expression is compiled as a C++ member function (true if it was parsed
-comment|///when exe_ctx was in a C++ method).
+comment|///< True if the expression is compiled as a C++
+comment|///member function (true if it was parsed
+comment|/// when exe_ctx was in a C++ method).
 name|bool
 name|m_in_objectivec_method
 block|;
-comment|///< True if the expression is compiled as an Objective-C method (true if it was parsed
-comment|///when exe_ctx was in an Objective-C method).
+comment|///< True if the expression is compiled as an
+comment|///Objective-C method (true if it was parsed
+comment|/// when exe_ctx was in an Objective-C method).
 name|bool
 name|m_in_static_method
 block|;
-comment|///< True if the expression is compiled as a static (or class) method (currently true if it
-comment|///was parsed when exe_ctx was in an Objective-C class method).
+comment|///< True if the expression is compiled as a static
+comment|///(or class) method (currently true if it
+comment|/// was parsed when exe_ctx was in an Objective-C class method).
 name|bool
 name|m_needs_object_ptr
 block|;
-comment|///< True if "this" or "self" must be looked up and passed in.  False if the expression
-comment|///doesn't really use them and they can be NULL.
+comment|///< True if "this" or "self" must be looked up and
+comment|///passed in.  False if the expression
+comment|/// doesn't really use them and they can be NULL.
 name|bool
 name|m_const_object
 block|;
@@ -377,17 +389,21 @@ name|Target
 operator|*
 name|m_target
 block|;
-comment|///< The target for storing persistent data like types and variables.
+comment|///< The target for storing persistent data like types and
+comment|///variables.
 name|bool
 name|m_can_interpret
 block|;
-comment|///< True if the expression could be evaluated statically; false otherwise.
+comment|///< True if the expression could be evaluated
+comment|///statically; false otherwise.
 name|lldb
 operator|::
 name|addr_t
 name|m_materialized_address
 block|;
-comment|///< The address at which the arguments to the expression have been materialized.
+comment|///< The address at which the arguments
+comment|///to the expression have been
+comment|///materialized.
 name|Materializer
 operator|::
 name|DematerializerSP

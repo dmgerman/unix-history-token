@@ -121,7 +121,7 @@ name|GDBRemoteCommunicationServerPlatform
 argument_list|(
 argument|const Socket::SocketProtocol socket_protocol
 argument_list|,
-argument|const char* socket_scheme
+argument|const char *socket_scheme
 argument_list|)
 decl_stmt|;
 operator|~

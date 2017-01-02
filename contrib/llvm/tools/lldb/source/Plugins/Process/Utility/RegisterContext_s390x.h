@@ -56,7 +56,11 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// EHFrame and DWARF Register numbers (eRegisterKindEHFrame& eRegisterKindDWARF)
+comment|// EHFrame and DWARF Register numbers (eRegisterKindEHFrame&
+end_comment
+
+begin_comment
+comment|// eRegisterKindDWARF)
 end_comment
 
 begin_enum

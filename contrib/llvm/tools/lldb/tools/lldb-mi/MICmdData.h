@@ -48,7 +48,11 @@ file|"MICmnResources.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -56,7 +60,11 @@ comment|// Details: MI command metadata. Holds the command's name, MI number and
 end_comment
 
 begin_comment
-comment|//          as found on stdin. Holds the command's MI output (written to stdout).
+comment|//          as found on stdin. Holds the command's MI output (written to
+end_comment
+
+begin_comment
+comment|//          stdout).
 end_comment
 
 begin_comment
@@ -122,7 +130,9 @@ comment|// Each command forms 1 response to its input
 name|CMIUtilString
 name|strMiCmdResultRecordExtra
 decl_stmt|;
-comment|// Hack command produce more response text to help the client because of using LLDB
+comment|// Hack command produce more response
+comment|// text to help the client because of
+comment|// using LLDB
 name|bool
 name|bCmdValid
 decl_stmt|;
@@ -130,7 +140,8 @@ comment|// True = Valid MI format command, false = invalid
 name|bool
 name|bCmdExecutedSuccessfully
 decl_stmt|;
-comment|// True = Command finished successfully, false = Did not start/did not complete
+comment|// True = Command finished successfully, false
+comment|// = Did not start/did not complete
 name|CMIUtilString
 name|strErrorDescription
 decl_stmt|;
@@ -142,7 +153,9 @@ comment|// True = format "3thread", false = format "3-thread"
 name|bool
 name|bHasResultRecordExtra
 decl_stmt|;
-comment|// True = Yes command produced additional MI output to its 1 line response, false = no extra MI output formed
+comment|// True = Yes command produced additional MI
+comment|// output to its 1 line response, false = no extra
+comment|// MI output formed
 name|void
 name|Clear
 parameter_list|()

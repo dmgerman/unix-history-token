@@ -101,7 +101,7 @@ name|m_byte_size
 argument_list|(
 literal|0
 argument_list|)
-block|{     }
+block|{}
 name|VMRange
 argument_list|(
 argument|lldb::addr_t start_addr
@@ -119,11 +119,11 @@ argument_list|(
 argument|end_addr> start_addr ? end_addr - start_addr :
 literal|0
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|VMRange
 argument_list|()
-block|{     }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -135,7 +135,7 @@ block|;
 name|m_byte_size
 operator|=
 literal|0
-block|;       }
+block|;   }
 comment|// Set the start and end values
 name|void
 name|Reset
@@ -154,7 +154,7 @@ name|SetEndAddress
 argument_list|(
 name|end_addr
 argument_list|)
-block|;     }
+block|;   }
 comment|// Set the start value for the range, and keep the same size
 name|void
 name|SetBaseAddress
@@ -165,7 +165,7 @@ block|{
 name|m_base_addr
 operator|=
 name|base_addr
-block|;     }
+block|; }
 name|void
 name|SetEndAddress
 argument_list|(
@@ -372,7 +372,7 @@ name|_value
 argument_list|(
 argument|value
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|operator
 argument_list|()
@@ -414,7 +414,7 @@ name|_range
 argument_list|(
 argument|range
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|operator
 argument_list|()

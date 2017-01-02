@@ -338,7 +338,7 @@ name|protected
 operator|:
 name|void
 name|Clear
-argument_list|( )
+argument_list|()
 block|;
 name|bool
 name|UpdateThreadList
@@ -373,7 +373,7 @@ name|lldb_private
 operator|::
 name|ConstString
 name|path
-block|;     }
+block|;   }
 block|;
 comment|//------------------------------------------------------------------
 comment|// For ProcessElfCore only
@@ -555,24 +555,18 @@ begin_comment
 comment|// Parse thread(s) data structures(prstatus, prpsinfo) from given NOTE segment
 end_comment
 
-begin_decl_stmt
-name|void
-name|ParseThreadContextsFromNoteSegment
-argument_list|(
-specifier|const
-name|elf
-operator|::
-name|ELFProgramHeader
-operator|*
-name|segment_header
-argument_list|,
+begin_expr_stmt
 name|lldb_private
 operator|::
-name|DataExtractor
-name|segment_data
+name|Error
+name|ParseThreadContextsFromNoteSegment
+argument_list|(
+argument|const elf::ELFProgramHeader *segment_header
+argument_list|,
+argument|lldb_private::DataExtractor segment_data
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// Returns number of thread contexts stored in the core file

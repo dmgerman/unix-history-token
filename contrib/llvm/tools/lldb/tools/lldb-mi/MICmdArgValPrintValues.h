@@ -58,7 +58,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -74,11 +78,19 @@ comment|//          An argument knows what type of argument it is and how it is 
 end_comment
 
 begin_comment
-comment|//          interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a
 end_comment
 
 begin_comment
-comment|//          argument and so extract a value from it. The print-values looks like:
+comment|//          matching
+end_comment
+
+begin_comment
+comment|//          argument and so extract a value from it. The print-values looks
+end_comment
+
+begin_comment
+comment|//          like:
 end_comment
 
 begin_comment

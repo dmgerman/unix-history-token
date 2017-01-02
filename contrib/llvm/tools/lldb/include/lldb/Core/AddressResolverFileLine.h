@@ -58,8 +58,10 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class AddressResolverFileLine AddressResolverFileLine.h "lldb/Core/AddressResolverFileLine.h"
-comment|/// @brief This class finds address for source file and line.  Optionally, it will look for inlined
+comment|/// @class AddressResolverFileLine AddressResolverFileLine.h
+comment|/// "lldb/Core/AddressResolverFileLine.h"
+comment|/// @brief This class finds address for source file and line.  Optionally, it
+comment|/// will look for inlined
 comment|/// instances of the file and line specification.
 comment|//----------------------------------------------------------------------
 name|class
@@ -126,7 +128,8 @@ comment|// This is the line number that we are looking for.
 name|bool
 name|m_inlines
 block|;
-comment|// This determines whether the resolver looks for inlined functions or not.
+comment|// This determines whether the resolver looks for inlined
+comment|// functions or not.
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN

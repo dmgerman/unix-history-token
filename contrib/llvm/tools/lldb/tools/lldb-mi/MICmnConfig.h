@@ -46,7 +46,11 @@ comment|// 1 = Show debug process attach modal dialog, 0 = do not show
 end_comment
 
 begin_comment
-comment|// For windows only ATM, other OS's code is an infinite loop which a debugger must change a value to continue
+comment|// For windows only ATM, other OS's code is an infinite loop which a debugger
+end_comment
+
+begin_comment
+comment|// must change a value to continue
 end_comment
 
 begin_define
@@ -57,7 +61,11 @@ value|0
 end_define
 
 begin_comment
-comment|// 1 = Write to MI's Log file warnings about commands that did not handle arguments or
+comment|// 1 = Write to MI's Log file warnings about commands that did not handle
+end_comment
+
+begin_comment
+comment|// arguments or
 end_comment
 
 begin_comment

@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Breakpoint/BreakpointResolver.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Breakpoint/BreakpointResolver.h"
+file|"lldb/Core/Value.h"
 end_include
 
 begin_include
@@ -98,19 +98,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/LanguageRuntime.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/CPPLanguageRuntime.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Value.h"
+file|"lldb/Target/LanguageRuntime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -191,9 +191,9 @@ block|;
 name|TypeAndOrName
 name|FixUpDynamicType
 argument_list|(
-argument|const TypeAndOrName& type_and_or_name
+argument|const TypeAndOrName&type_and_or_name
 argument_list|,
-argument|ValueObject& static_value
+argument|ValueObject&static_value
 argument_list|)
 name|override
 block|;
@@ -329,7 +329,7 @@ argument_list|()
 block|,
 name|m_dynamic_type_map_mutex
 argument_list|()
-block|{         }
+block|{}
 name|lldb
 operator|::
 name|BreakpointSP

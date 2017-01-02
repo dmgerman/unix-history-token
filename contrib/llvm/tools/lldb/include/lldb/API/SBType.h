@@ -436,6 +436,14 @@ expr_stmt|;
 name|lldb
 operator|::
 name|SBType
+name|GetArrayType
+argument_list|(
+argument|uint64_t size
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBType
 name|GetVectorElementType
 argument_list|()
 expr_stmt|;

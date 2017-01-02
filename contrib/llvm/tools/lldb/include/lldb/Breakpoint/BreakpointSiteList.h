@@ -88,7 +88,8 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class BreakpointSiteList BreakpointSiteList.h "lldb/Breakpoint/BreakpointSiteList.h"
+comment|/// @class BreakpointSiteList BreakpointSiteList.h
+comment|/// "lldb/Breakpoint/BreakpointSiteList.h"
 comment|/// @brief Class that manages lists of BreakpointSite shared pointers.
 comment|//----------------------------------------------------------------------
 name|class
@@ -178,7 +179,8 @@ comment|/// @param[in] breakID
 comment|///   The breakpoint site ID to seek for.
 comment|///
 comment|/// @result
-comment|///   A shared pointer to the breakpoint site.  May contain a NULL pointer if the
+comment|///   A shared pointer to the breakpoint site.  May contain a NULL pointer if
+comment|///   the
 comment|///   breakpoint doesn't exist.
 comment|//------------------------------------------------------------------
 name|lldb
@@ -190,13 +192,15 @@ argument|lldb::break_id_t breakID
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Returns a shared pointer to the breakpoint site with id \a breakID - const version.
+comment|/// Returns a shared pointer to the breakpoint site with id \a breakID - const
+comment|/// version.
 comment|///
 comment|/// @param[in] breakID
 comment|///   The breakpoint site ID to seek for.
 comment|///
 comment|/// @result
-comment|///   A shared pointer to the breakpoint site.  May contain a NULL pointer if the
+comment|///   A shared pointer to the breakpoint site.  May contain a NULL pointer if
+comment|///   the
 comment|///   breakpoint doesn't exist.
 comment|//------------------------------------------------------------------
 specifier|const

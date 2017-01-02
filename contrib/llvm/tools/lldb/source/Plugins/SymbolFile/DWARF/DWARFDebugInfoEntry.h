@@ -58,25 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DWARFDebugAbbrev.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"DWARFAbbreviationDeclaration.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DWARFDebugRanges.h"
+file|"DWARFDebugAbbrev.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"DWARFDebugRanges.h"
 end_include
 
 begin_include
@@ -89,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_typedef
@@ -364,7 +364,7 @@ name|m_tag
 argument_list|(
 literal|0
 argument_list|)
-block|{                 }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -396,7 +396,7 @@ block|;
 name|m_tag
 operator|=
 literal|0
-block|;                 }
+block|;   }
 name|bool
 name|Contains
 argument_list|(
@@ -1041,7 +1041,8 @@ name|dw_form_t
 name|form
 argument_list|)
 decl_stmt|;
-comment|// This one dumps the comp unit name, objfile name and die offset for this die so the stream S.
+comment|// This one dumps the comp unit name, objfile name and die offset for this die
+comment|// so the stream S.
 name|void
 name|DumpLocation
 argument_list|(
@@ -1544,7 +1545,8 @@ comment|// Offset within the .debug_info of the start of this entry
 name|uint32_t
 name|m_parent_idx
 decl_stmt|;
-comment|// How many to subtract from "this" to get the parent. If zero this die has no parent
+comment|// How many to subtract from "this" to get the parent.
+comment|// If zero this die has no parent
 name|uint32_t
 name|m_sibling_idx
 range|:
@@ -1555,7 +1557,8 @@ name|m_empty_children
 range|:
 literal|1
 decl_stmt|;
-comment|// If a DIE says it had children, yet it just contained a NULL tag, this will be set.
+comment|// If a DIE says it had children, yet it just
+comment|// contained a NULL tag, this will be set.
 name|uint32_t
 name|m_abbr_idx
 range|:
@@ -1570,7 +1573,9 @@ name|m_tag
 range|:
 literal|16
 decl_stmt|;
-comment|// A copy of the DW_TAG value so we don't have to go through the compile unit abbrev table
+comment|// A copy of the DW_TAG value so we don't
+comment|// have to go through the compile unit
+comment|// abbrev table
 block|}
 end_decl_stmt
 

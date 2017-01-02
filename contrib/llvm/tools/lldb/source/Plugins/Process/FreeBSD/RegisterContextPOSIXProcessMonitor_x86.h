@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"RegisterContextPOSIX.h"
+file|"Plugins/Process/Utility/RegisterContextPOSIX_x86.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/Utility/RegisterContextPOSIX_x86.h"
+file|"RegisterContextPOSIX.h"
 end_include
 
 begin_decl_stmt

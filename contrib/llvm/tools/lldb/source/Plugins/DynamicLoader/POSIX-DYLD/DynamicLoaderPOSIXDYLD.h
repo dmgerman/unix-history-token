@@ -298,7 +298,8 @@ comment|/// Updates the load address of every allocatable section in @p module.
 comment|///
 comment|/// @param module The module to traverse.
 comment|///
-comment|/// @param link_map_addr The virtual address of the link map for the @p module.
+comment|/// @param link_map_addr The virtual address of the link map for the @p
+comment|/// module.
 comment|///
 comment|/// @param base_addr The virtual base address @p module is loaded at.
 name|void
@@ -387,6 +388,13 @@ name|ModuleSP
 operator|&
 name|module_sp
 argument_list|)
+block|;
+name|bool
+name|AlwaysRelyOnEHUnwindInfo
+argument_list|(
+argument|lldb_private::SymbolContext&sym_ctx
+argument_list|)
+name|override
 block|;
 name|private
 operator|:

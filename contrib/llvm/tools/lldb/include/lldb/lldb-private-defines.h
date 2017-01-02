@@ -53,7 +53,11 @@ argument_list|)
 end_if
 
 begin_comment
-comment|// Include Compiler.h here so we don't define LLVM_FALLTHROUGH and then Compiler.h
+comment|// Include Compiler.h here so we don't define LLVM_FALLTHROUGH and then
+end_comment
+
+begin_comment
+comment|// Compiler.h
 end_comment
 
 begin_comment

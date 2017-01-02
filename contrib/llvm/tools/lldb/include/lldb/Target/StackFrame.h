@@ -247,21 +247,26 @@ comment|/// @param [in] pc
 comment|///   The current pc value of this stack frame.
 comment|///
 comment|/// @param [in] stop_id
-comment|///   The stop_id which should be used when looking up symbols for the pc value,
+comment|///   The stop_id which should be used when looking up symbols for the pc
+comment|///   value,
 comment|///   if appropriate.  This argument is ignored if stop_id_is_valid is false.
 comment|///
 comment|/// @param [in] stop_id_is_valid
 comment|///   If the stop_id argument provided is not needed for this StackFrame, this
-comment|///   should be false.  If this is a history stack frame and we know the stop_id
-comment|///   when the pc value was collected, that stop_id should be provided and this
+comment|///   should be false.  If this is a history stack frame and we know the
+comment|///   stop_id
+comment|///   when the pc value was collected, that stop_id should be provided and
+comment|///   this
 comment|///   will be true.
 comment|///
 comment|/// @param [in] is_history_frame
-comment|///   If this is a historical stack frame -- possibly without CFA or registers or
+comment|///   If this is a historical stack frame -- possibly without CFA or registers
+comment|///   or
 comment|///   local variables -- then this should be set to true.
 comment|///
 comment|/// @param [in] sc_ptr
-comment|///   Optionally seed the StackFrame with the SymbolContext information that has
+comment|///   Optionally seed the StackFrame with the SymbolContext information that
+comment|///   has
 comment|///   already been discovered.
 comment|//------------------------------------------------------------------
 name|StackFrame
@@ -316,7 +321,7 @@ argument|const lldb::RegisterContextSP&reg_context_sp
 argument_list|,
 argument|lldb::addr_t cfa
 argument_list|,
-argument|const Address& pc
+argument|const Address&pc
 argument_list|,
 argument|const SymbolContext *sc_ptr
 argument_list|)
@@ -383,7 +388,8 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Provide a SymbolContext for this StackFrame's current pc value.
 comment|///
-comment|/// The StackFrame maintains this SymbolContext and adds additional information
+comment|/// The StackFrame maintains this SymbolContext and adds additional
+comment|/// information
 comment|/// to it on an as-needed basis.  This helps to avoid different functions
 comment|/// looking up symbolic information for a given pc value multiple times.
 comment|///
@@ -433,6 +439,27 @@ name|Scalar
 modifier|&
 name|value
 parameter_list|,
+name|Error
+modifier|*
+name|error_ptr
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Get the DWARFExpression corresponding to the Canonical Frame Address.
+comment|///
+comment|/// Often a register (bp), but sometimes a register + offset.
+comment|///
+comment|/// @param [out] error_ptr
+comment|///   If there is an error determining the CFA address, this may contain a
+comment|///   string explaining the failure.
+comment|///
+comment|/// @return
+comment|///   Returns the corresponding DWARF expression, or NULL.
+comment|//------------------------------------------------------------------
+name|DWARFExpression
+modifier|*
+name|GetFrameBaseExpression
+parameter_list|(
 name|Error
 modifier|*
 name|error_ptr
@@ -549,7 +576,8 @@ comment|///     determined before creating the object, or if the static type is
 comment|///     sufficient.  One of the DynamicValueType enumerated values.
 comment|///
 comment|/// @param[in] options
-comment|///     An unsigned integer of flags, values from StackFrame::ExpressionPathOption
+comment|///     An unsigned integer of flags, values from
+comment|///     StackFrame::ExpressionPathOption
 comment|///     enum.
 comment|/// @param[in] var_sp
 comment|///     A VariableSP that will be set to the variable described in the
@@ -566,7 +594,7 @@ operator|::
 name|ValueObjectSP
 name|GetValueForVariableExpressionPath
 argument_list|(
-argument|const char *var_expr
+argument|llvm::StringRef var_expr
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|,
@@ -602,7 +630,8 @@ name|Disassemble
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Print a description for this frame using the frame-format formatter settings.
+comment|/// Print a description for this frame using the frame-format formatter
+comment|/// settings.
 comment|///
 comment|/// @param [in] strm
 comment|///   The Stream to print the description to.
@@ -759,7 +788,8 @@ argument|lldb::DynamicValueType use_dynamic
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Add an arbitrary Variable object (e.g. one that specifics a global or static)
+comment|/// Add an arbitrary Variable object (e.g. one that specifics a global or
+comment|/// static)
 comment|/// to a StackFrame's list of ValueObjects.
 comment|///
 comment|/// @params [in] variable_sp
@@ -796,13 +826,57 @@ name|LanguageType
 name|GetLanguage
 argument_list|()
 expr_stmt|;
-comment|// similar to GetLanguage(), but is allowed to take a potentially incorrect guess
+comment|// similar to GetLanguage(), but is allowed to take a potentially incorrect
+comment|// guess
 comment|// if exact information is not available
 name|lldb
 operator|::
 name|LanguageType
 name|GuessLanguage
 argument_list|()
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Attempt to econstruct the ValueObject for a given raw address touched by
+comment|/// the current instruction.  The ExpressionPath should indicate how to get
+comment|/// to this value using "frame variable."
+comment|///
+comment|/// @params [in] addr
+comment|///   The raw address.
+comment|///
+comment|/// @return
+comment|///   The ValueObject if found.  If valid, it has a valid ExpressionPath.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GuessValueForAddress
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Attempt to reconstruct the ValueObject for the address contained in a
+comment|/// given register plus an offset.  The ExpressionPath should indicate how to
+comment|/// get to this value using "frame variable."
+comment|///
+comment|/// @params [in] reg
+comment|///   The name of the register.
+comment|///
+comment|/// @params [in] offset
+comment|///   The offset from the register.  Particularly important for sp...
+comment|///
+comment|/// @return
+comment|///   The ValueObject if found.  If valid, it has a valid ExpressionPath.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GuessValueForRegisterAndOffset
+argument_list|(
+argument|ConstString reg
+argument_list|,
+argument|int64_t offset
+argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// lldb::ExecutionContextScope pure virtual functions
@@ -906,7 +980,9 @@ decl_stmt|;
 name|Address
 name|m_frame_code_addr
 decl_stmt|;
-comment|// The frame code address (might not be the same as the actual PC for inlined frames) as a section/offset address
+comment|// The frame code address (might not be the same as
+comment|// the actual PC for inlined frames) as a
+comment|// section/offset address
 name|SymbolContext
 name|m_sc
 decl_stmt|;
@@ -922,14 +998,16 @@ decl_stmt|;
 name|bool
 name|m_cfa_is_valid
 decl_stmt|;
-comment|// Does this frame have a CFA?  Different from CFA == LLDB_INVALID_ADDRESS
+comment|// Does this frame have a CFA?  Different from CFA ==
+comment|// LLDB_INVALID_ADDRESS
 name|uint32_t
 name|m_stop_id
 decl_stmt|;
 name|bool
 name|m_stop_id_is_valid
 decl_stmt|;
-comment|// Does this frame have a stop_id?  Use it when referring to the m_frame_code_addr.
+comment|// Does this frame have a stop_id?  Use it when
+comment|// referring to the m_frame_code_addr.
 name|bool
 name|m_is_history_frame
 decl_stmt|;
@@ -941,7 +1019,9 @@ expr_stmt|;
 name|ValueObjectList
 name|m_variable_list_value_objects
 decl_stmt|;
-comment|// Value objects for each variable in m_variable_list_sp
+comment|// Value objects for each
+comment|// variable in
+comment|// m_variable_list_sp
 name|StreamString
 name|m_disassembly
 decl_stmt|;

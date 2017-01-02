@@ -44,32 +44,8 @@ name|liblldb_ObjectContainerBSDArchive_h_
 end_define
 
 begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<mutex>
-end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
 comment|// Project includes
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/ObjectContainer.h"
-end_include
 
 begin_include
 include|#
@@ -86,19 +62,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/UniqueCStringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/TimeValue.h"
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/ObjectContainer.h"
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Chrono.h"
+end_include
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<mutex>
 end_include
 
 begin_decl_stmt
@@ -116,7 +116,7 @@ name|ObjectContainerBSDArchive
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -168,7 +168,7 @@ name|CreateInstance
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -183,9 +183,9 @@ specifier|static
 name|size_t
 name|GetModuleSpecifications
 argument_list|(
-argument|const lldb_private::FileSpec& file
+argument|const lldb_private::FileSpec&file
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -316,7 +316,7 @@ operator|::
 name|offset_t
 name|Extract
 argument_list|(
-argument|const lldb_private::DataExtractor& data
+argument|const lldb_private::DataExtractor&data
 argument_list|,
 argument|lldb::offset_t offset
 argument_list|)
@@ -352,7 +352,8 @@ operator|::
 name|offset_t
 name|ar_file_offset
 expr_stmt|;
-comment|// file offset in bytes from the beginning of the file of the object data
+comment|// file offset in bytes from the beginning of
+comment|// the file of the object data
 name|lldb
 operator|::
 name|offset_t
@@ -416,7 +417,7 @@ name|Archive
 argument_list|(
 argument|const lldb_private::ArchSpec&arch
 argument_list|,
-argument|const lldb_private::TimeValue&mod_time
+argument|const llvm::sys::TimePoint<>&mod_time
 argument_list|,
 argument|lldb::offset_t file_offset
 argument_list|,
@@ -451,7 +452,7 @@ argument|const lldb_private::FileSpec&file
 argument_list|,
 argument|const lldb_private::ArchSpec&arch
 argument_list|,
-argument|const lldb_private::TimeValue&mod_time
+argument|const llvm::sys::TimePoint<>&mod_time
 argument_list|,
 argument|lldb::offset_t file_offset
 argument_list|)
@@ -466,7 +467,7 @@ argument|const lldb_private::FileSpec&file
 argument_list|,
 argument|const lldb_private::ArchSpec&arch
 argument_list|,
-argument|const lldb_private::TimeValue&mod_time
+argument|const llvm::sys::TimePoint<>&mod_time
 argument_list|,
 argument|lldb::offset_t file_offset
 argument_list|,
@@ -530,9 +531,13 @@ operator|&
 name|object_name
 argument_list|,
 specifier|const
-name|lldb_private
+name|llvm
 operator|::
-name|TimeValue
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 operator|&
 name|object_mod_time
 argument_list|)
@@ -549,9 +554,13 @@ name|m_file_offset
 return|;
 block|}
 specifier|const
-name|lldb_private
+name|llvm
 operator|::
-name|TimeValue
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 operator|&
 name|GetModificationTime
 argument_list|()
@@ -624,9 +633,13 @@ operator|::
 name|ArchSpec
 name|m_arch
 expr_stmt|;
-name|lldb_private
+name|llvm
 operator|::
-name|TimeValue
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 name|m_time
 expr_stmt|;
 name|lldb
@@ -647,7 +660,9 @@ operator|::
 name|DataExtractor
 name|m_data
 expr_stmt|;
-comment|///< The data for this object container so we don't lose data if the .a files gets modified
+comment|///< The data for this object container
+comment|///so we don't lose data if the .a files
+comment|///gets modified
 block|}
 end_decl_stmt
 

@@ -173,35 +173,35 @@ operator|::
 name|LanguageType
 name|ParseCompileUnitLanguage
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|size_t
 name|ParseCompileUnitFunctions
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|bool
 name|ParseCompileUnitLineTable
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|bool
 name|ParseCompileUnitDebugMacros
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|bool
 name|ParseCompileUnitSupportFiles
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|,
 argument|lldb_private::FileSpecList&support_files
 argument_list|)
@@ -219,21 +219,21 @@ block|;
 name|size_t
 name|ParseFunctionBlocks
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|size_t
 name|ParseTypes
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
 name|size_t
 name|ParseVariablesForContext
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;
@@ -250,18 +250,18 @@ block|;
 name|bool
 name|CompleteType
 argument_list|(
-argument|lldb_private::CompilerType& compiler_type
+argument|lldb_private::CompilerType&compiler_type
 argument_list|)
 name|override
 block|;
 name|uint32_t
 name|ResolveSymbolContext
 argument_list|(
-argument|const lldb_private::Address& so_addr
+argument|const lldb_private::Address&so_addr
 argument_list|,
 argument|uint32_t resolve_scope
 argument_list|,
-argument|lldb_private::SymbolContext& sc
+argument|lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 block|;

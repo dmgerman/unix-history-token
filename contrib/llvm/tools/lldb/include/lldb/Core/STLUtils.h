@@ -265,11 +265,11 @@ name|PrintAllCollectionElements
 argument_list|(
 argument|std::ostream&s
 argument_list|,
-argument|const T& coll
+argument|const T&coll
 argument_list|,
-argument|const char* header_cstr = nullptr
+argument|const char *header_cstr = nullptr
 argument_list|,
-argument|const char* separator_cstr =
+argument|const char *separator_cstr =
 literal|" "
 argument_list|)
 block|{
@@ -369,7 +369,7 @@ operator|)
 block|{
 name|delete
 name|ptr
-block|;}
+block|; }
 block|}
 end_block
 

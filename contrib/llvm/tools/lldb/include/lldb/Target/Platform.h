@@ -98,18 +98,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ArchSpec.h"
 end_include
 
@@ -134,13 +122,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/Options.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/lldb-private-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_comment
@@ -216,7 +216,7 @@ name|FileSpec
 operator|&
 name|dir_spec
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 typedef|typedef
 name|std
@@ -1017,7 +1017,8 @@ name|Target
 operator|*
 name|target
 argument_list|,
-comment|// Can be nullptr, if nullptr create a new target, else use existing one
+comment|// Can be nullptr, if nullptr create a new
+comment|// target, else use existing one
 name|Error
 operator|&
 name|error
@@ -1029,33 +1030,15 @@ operator|::
 name|ProcessSP
 name|ConnectProcess
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|connect_url
+argument|llvm::StringRef connect_url
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|plugin_name
+argument|llvm::StringRef plugin_name
 argument_list|,
-name|lldb_private
-operator|::
-name|Debugger
-operator|&
-name|debugger
+argument|lldb_private::Debugger&debugger
 argument_list|,
-name|lldb_private
-operator|::
-name|Target
-operator|*
-name|target
+argument|lldb_private::Target *target
 argument_list|,
-name|lldb_private
-operator|::
-name|Error
-operator|&
-name|error
+argument|lldb_private::Error&error
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -1094,7 +1077,9 @@ name|Target
 operator|*
 name|target
 argument_list|,
-comment|// Can be nullptr, if nullptr create a new target, else use existing one
+comment|// Can be nullptr, if nullptr
+comment|// create a new target, else
+comment|// use existing one
 name|Error
 operator|&
 name|error
@@ -1300,7 +1285,7 @@ block|{
 name|m_sdk_sysroot
 operator|=
 name|dir
-block|;         }
+block|; }
 specifier|const
 name|ConstString
 operator|&
@@ -1321,9 +1306,10 @@ block|{
 name|m_sdk_build
 operator|=
 name|sdk_build
-block|;         }
+block|; }
 comment|// Override this to return true if your platform supports Clang modules.
-comment|// You may also need to override AddClangModuleCompilationOptions to pass the right Clang flags for your platform.
+comment|// You may also need to override AddClangModuleCompilationOptions to pass the
+comment|// right Clang flags for your platform.
 name|virtual
 name|bool
 name|SupportsModules
@@ -1333,7 +1319,8 @@ return|return
 name|false
 return|;
 block|}
-comment|// Appends the platform-specific options required to find the modules for the current platform.
+comment|// Appends the platform-specific options required to find the modules for the
+comment|// current platform.
 name|virtual
 name|void
 name|AddClangModuleCompilationOptions
@@ -1367,8 +1354,10 @@ operator|&
 name|working_dir
 argument_list|)
 block|;
-comment|// There may be modules that we don't want to find by default for operations like "setting breakpoint by name".
-comment|// The platform will return "true" from this call if the passed in module happens to be one of these.
+comment|// There may be modules that we don't want to find by default for operations
+comment|// like "setting breakpoint by name".
+comment|// The platform will return "true" from this call if the passed in module
+comment|// happens to be one of these.
 name|virtual
 name|bool
 name|ModuleIsExcludedForUnconstrainedSearches
@@ -1420,7 +1409,7 @@ operator|::
 name|user_id_t
 name|OpenFile
 argument_list|(
-argument|const FileSpec& file_spec
+argument|const FileSpec&file_spec
 argument_list|,
 argument|uint32_t flags
 argument_list|,
@@ -1452,7 +1441,7 @@ operator|::
 name|user_id_t
 name|GetFileSize
 argument_list|(
-argument|const FileSpec& file_spec
+argument|const FileSpec&file_spec
 argument_list|)
 block|{
 return|return
@@ -1500,7 +1489,7 @@ argument|lldb::user_id_t fd
 argument_list|,
 argument|uint64_t offset
 argument_list|,
-argument|const void* src
+argument|const void *src
 argument_list|,
 argument|uint64_t src_len
 argument_list|,
@@ -1544,9 +1533,9 @@ name|virtual
 name|Error
 name|PutFile
 argument_list|(
-argument|const FileSpec& source
+argument|const FileSpec&source
 argument_list|,
-argument|const FileSpec& destination
+argument|const FileSpec&destination
 argument_list|,
 argument|uint32_t uid = UINT32_MAX
 argument_list|,
@@ -1668,7 +1657,7 @@ block|{
 name|m_supports_rsync
 operator|=
 name|flag
-block|;         }
+block|; }
 name|virtual
 specifier|const
 name|char
@@ -1687,7 +1676,7 @@ name|virtual
 name|void
 name|SetRSyncOpts
 argument_list|(
-argument|const char* opts
+argument|const char *opts
 argument_list|)
 block|{
 name|m_rsync_opts
@@ -1696,7 +1685,7 @@ name|assign
 argument_list|(
 name|opts
 argument_list|)
-block|;         }
+block|; }
 name|virtual
 specifier|const
 name|char
@@ -1715,7 +1704,7 @@ name|virtual
 name|void
 name|SetRSyncPrefix
 argument_list|(
-argument|const char* prefix
+argument|const char *prefix
 argument_list|)
 block|{
 name|m_rsync_prefix
@@ -1724,7 +1713,7 @@ name|assign
 argument_list|(
 name|prefix
 argument_list|)
-block|;         }
+block|;   }
 name|virtual
 name|bool
 name|GetSupportsSSH
@@ -1744,7 +1733,7 @@ block|{
 name|m_supports_ssh
 operator|=
 name|flag
-block|;         }
+block|; }
 name|virtual
 specifier|const
 name|char
@@ -1763,7 +1752,7 @@ name|virtual
 name|void
 name|SetSSHOpts
 argument_list|(
-argument|const char* opts
+argument|const char *opts
 argument_list|)
 block|{
 name|m_ssh_opts
@@ -1772,7 +1761,7 @@ name|assign
 argument_list|(
 name|opts
 argument_list|)
-block|;         }
+block|; }
 name|virtual
 name|bool
 name|GetIgnoresRemoteHostname
@@ -1792,7 +1781,7 @@ block|{
 name|m_ignores_remote_hostname
 operator|=
 name|flag
-block|;         }
+block|;   }
 name|virtual
 name|lldb_private
 operator|::
@@ -1800,7 +1789,7 @@ name|OptionGroupOptions
 operator|*
 name|GetConnectionOptions
 argument_list|(
-argument|CommandInterpreter& interpreter
+argument|CommandInterpreter&interpreter
 argument_list|)
 block|{
 return|return
@@ -1818,20 +1807,23 @@ argument_list|,
 comment|// Shouldn't be nullptr
 argument|const FileSpec&working_dir
 argument_list|,
-comment|// Pass empty FileSpec to use the current working directory
+comment|// Pass empty FileSpec to use the current
+comment|// working directory
 argument|int *status_ptr
 argument_list|,
 comment|// Pass nullptr if you don't want the process exit status
 argument|int *signo_ptr
 argument_list|,
-comment|// Pass nullptr if you don't want the signal that caused the process to exit
-argument|std::string *command_output
+comment|// Pass nullptr if you don't want the signal that caused
+comment|// the process to exit
+argument|std::string           *command_output
 argument_list|,
 comment|// Pass nullptr if you don't want the command output
 argument|uint32_t timeout_sec
 argument_list|)
 block|;
-comment|// Timeout in seconds to wait for shell program to finish
+comment|// Timeout in seconds to wait for shell program to
+comment|// finish
 name|virtual
 name|void
 name|SetLocalCacheDirectory
@@ -1992,7 +1984,8 @@ comment|/// typically just "_sigtramp".
 comment|///
 comment|/// The Platform base class provides the m_trap_handlers ivar but it does
 comment|/// not populate it.  Subclasses should add the names of the asynchronous
-comment|/// signal handler routines as needed.  For most Unix platforms, add _sigtramp.
+comment|/// signal handler routines as needed.  For most Unix platforms, add
+comment|/// _sigtramp.
 comment|///
 comment|/// @return
 comment|///     A list of symbol names.  The list may be empty.
@@ -2038,8 +2031,10 @@ argument_list|()
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Allow the platform to set preferred memory cache line size. If non-zero (and the user
-comment|/// has not set cache line size explicitly), this value will be used as the cache line
+comment|/// Allow the platform to set preferred memory cache line size. If non-zero
+comment|/// (and the user
+comment|/// has not set cache line size explicitly), this value will be used as the
+comment|/// cache line
 comment|/// size for memory reads.
 comment|//------------------------------------------------------------------
 name|virtual
@@ -2142,7 +2137,7 @@ name|virtual
 name|Error
 name|UnloadImage
 argument_list|(
-argument|lldb_private::Process* process
+argument|lldb_private::Process *process
 argument_list|,
 argument|uint32_t image_token
 argument_list|)
@@ -2161,7 +2156,7 @@ comment|///     If an error occurred during the connect then this object will
 comment|///     contain the error message.
 comment|///
 comment|/// @return
-comment|///     The number of processes we are succesfully connected to.
+comment|///     The number of processes we are successfully connected to.
 comment|//------------------------------------------------------------------
 name|virtual
 name|size_t
@@ -2206,7 +2201,8 @@ block|;
 name|FileSpec
 name|m_working_dir
 block|;
-comment|// The working directory which is used when installing modules that have no install path set
+comment|// The working directory which is used when installing
+comment|// modules that have no install path set
 name|std
 operator|::
 name|string
@@ -2241,7 +2237,8 @@ name|ConstString
 operator|>
 name|IDToNameMap
 expr_stmt|;
-comment|// Mutex for modifying Platform data structures that should only be used for non-reentrant code
+comment|// Mutex for modifying Platform data structures that should only be used for
+comment|// non-reentrant code
 name|std
 operator|::
 name|mutex
@@ -2442,7 +2439,8 @@ name|m_max_uid_name_len
 operator|=
 name|name_len
 expr_stmt|;
-comment|// Const strings lives forever in our const string pool, so we can return the const char *
+comment|// Const strings lives forever in our const string pool, so we can return
+comment|// the const char *
 return|return
 name|const_name
 operator|.
@@ -2616,7 +2614,8 @@ name|m_max_gid_name_len
 operator|=
 name|name_len
 expr_stmt|;
-comment|// Const strings lives forever in our const string pool, so we can return the const char *
+comment|// Const strings lives forever in our const string pool, so we can return
+comment|// the const char *
 return|return
 name|const_name
 operator|.
@@ -3225,32 +3224,28 @@ operator|::
 name|Error
 name|SetOptionValue
 argument_list|(
-argument|CommandInterpreter&interpreter
-argument_list|,
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_value
+argument|llvm::StringRef option_value
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-argument|CommandInterpreter&interpreter
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
-specifier|const
-name|lldb_private
+name|llvm
 operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
-argument_list|()
-name|override
-block|;
-name|uint32_t
-name|GetNumDefinitions
 argument_list|()
 name|override
 block|;
@@ -3285,7 +3280,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|OptionGroupPlatformRSync
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -3317,31 +3312,27 @@ operator|::
 name|Error
 name|SetOptionValue
 argument_list|(
-argument|CommandInterpreter&interpreter
-argument_list|,
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_value
+argument|llvm::StringRef option_value
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-argument|CommandInterpreter&interpreter
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
-name|uint32_t
-name|GetNumDefinitions
-argument_list|()
-name|override
-block|;
-specifier|const
-name|lldb_private
+name|llvm
 operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
@@ -3369,7 +3360,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|OptionGroupPlatformSSH
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -3401,31 +3392,27 @@ operator|::
 name|Error
 name|SetOptionValue
 argument_list|(
-argument|CommandInterpreter&interpreter
-argument_list|,
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_value
+argument|llvm::StringRef option_value
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
 name|void
 name|OptionParsingStarting
 argument_list|(
-argument|CommandInterpreter&interpreter
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
-name|uint32_t
-name|GetNumDefinitions
-argument_list|()
-name|override
-block|;
-specifier|const
-name|lldb_private
+name|llvm
 operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
@@ -3450,7 +3437,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|OptionGroupPlatformCaching
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Breakpoint/BreakpointLocationCollection.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Breakpoint/BreakpointLocationList.h"
 end_include
 
@@ -104,19 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Breakpoint/BreakpointLocationCollection.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Breakpoint/Stoppoint.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/SearchFilter.h"
 end_include
 
 begin_include
@@ -128,7 +122,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/SearchFilter.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/StringList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/StructuredData.h"
 end_include
 
 begin_decl_stmt
@@ -141,27 +147,35 @@ comment|/// @brief Class that manages logical breakpoint setting.
 comment|//----------------------------------------------------------------------
 comment|//----------------------------------------------------------------------
 comment|/// General Outline:
-comment|/// A breakpoint has four main parts, a filter, a resolver, the list of breakpoint
-comment|/// locations that have been determined for the filter/resolver pair, and finally
+comment|/// A breakpoint has four main parts, a filter, a resolver, the list of
+comment|/// breakpoint
+comment|/// locations that have been determined for the filter/resolver pair, and
+comment|/// finally
 comment|/// a set of options for the breakpoint.
 comment|///
 comment|/// \b Filter:
 comment|/// This is an object derived from SearchFilter.  It manages the search
-comment|/// for breakpoint location matches through the symbols in the module list of the target
-comment|/// that owns it.  It also filters out locations based on whatever logic it wants.
+comment|/// for breakpoint location matches through the symbols in the module list of
+comment|/// the target
+comment|/// that owns it.  It also filters out locations based on whatever logic it
+comment|/// wants.
 comment|///
 comment|/// \b Resolver:
 comment|/// This is an object derived from BreakpointResolver.  It provides a
-comment|/// callback to the filter that will find breakpoint locations.  How it does this is
+comment|/// callback to the filter that will find breakpoint locations.  How it does
+comment|/// this is
 comment|/// determined by what kind of resolver it is.
 comment|///
-comment|/// The Breakpoint class also provides constructors for the common breakpoint cases
+comment|/// The Breakpoint class also provides constructors for the common breakpoint
+comment|/// cases
 comment|/// which make the appropriate filter and resolver for you.
 comment|///
 comment|/// \b Location List:
 comment|/// This stores the breakpoint locations that have been determined
-comment|/// to date.  For a given breakpoint, there will be only one location with a given
-comment|/// address.  Adding a location at an already taken address will just return the location
+comment|/// to date.  For a given breakpoint, there will be only one location with a
+comment|/// given
+comment|/// address.  Adding a location at an already taken address will just return the
+comment|/// location
 comment|/// already at that address.  Locations can be looked up by ID, or by address.
 comment|///
 comment|/// \b Options:
@@ -170,17 +184,25 @@ comment|///    \b Enabled/Disabled
 comment|///    \b Ignore Count
 comment|///    \b Callback
 comment|///    \b Condition
-comment|/// Note, these options can be set on the breakpoint, and they can also be set on the
-comment|/// individual locations.  The options set on the breakpoint take precedence over the
+comment|/// Note, these options can be set on the breakpoint, and they can also be set
+comment|/// on the
+comment|/// individual locations.  The options set on the breakpoint take precedence
+comment|/// over the
 comment|/// options set on the individual location.
-comment|/// So for instance disabling the breakpoint will cause NONE of the locations to get hit.
-comment|/// But if the breakpoint is enabled, then the location's enabled state will be checked
+comment|/// So for instance disabling the breakpoint will cause NONE of the locations to
+comment|/// get hit.
+comment|/// But if the breakpoint is enabled, then the location's enabled state will be
+comment|/// checked
 comment|/// to determine whether to insert that breakpoint location.
-comment|/// Similarly, if the breakpoint condition says "stop", we won't check the location's condition.
-comment|/// But if the breakpoint condition says "continue", then we will check the location for whether
+comment|/// Similarly, if the breakpoint condition says "stop", we won't check the
+comment|/// location's condition.
+comment|/// But if the breakpoint condition says "continue", then we will check the
+comment|/// location for whether
 comment|/// to actually stop or not.
-comment|/// One subtle point worth observing here is that you don't actually stop at a Breakpoint, you
-comment|/// always stop at one of its locations.  So the "should stop" tests are done by the location,
+comment|/// One subtle point worth observing here is that you don't actually stop at a
+comment|/// Breakpoint, you
+comment|/// always stop at one of its locations.  So the "should stop" tests are done by
+comment|/// the location,
 comment|/// not by the breakpoint.
 comment|//----------------------------------------------------------------------
 name|class
@@ -221,6 +243,65 @@ name|Glob
 block|}
 name|MatchType
 typedef|;
+name|private
+label|:
+name|enum
+name|class
+name|OptionNames
+range|:
+name|uint32_t
+block|{
+name|Names
+operator|=
+literal|0
+block|,
+name|Hardware
+block|,
+name|LastOptionName
+block|}
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|g_option_names
+index|[
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|OptionNames
+operator|::
+name|LastOptionName
+operator|)
+index|]
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|GetKey
+parameter_list|(
+name|OptionNames
+name|enum_value
+parameter_list|)
+block|{
+return|return
+name|g_option_names
+index|[
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|enum_value
+operator|)
+index|]
+return|;
+block|}
+name|public
+label|:
 name|class
 name|BreakpointEventData
 range|:
@@ -369,7 +450,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|BreakpointEventData
 argument_list|)
-block|;     }
+block|;   }
 decl_stmt|;
 name|class
 name|BreakpointPrecondition
@@ -426,6 +507,68 @@ name|BreakpointPrecondition
 operator|>
 name|BreakpointPreconditionSP
 expr_stmt|;
+comment|// Saving& restoring breakpoints:
+specifier|static
+name|lldb
+operator|::
+name|BreakpointSP
+name|CreateFromStructuredData
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|,
+name|StructuredData
+operator|::
+name|ObjectSP
+operator|&
+name|data_object_sp
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+expr_stmt|;
+specifier|static
+name|bool
+name|SerializedBreakpointMatchesNames
+argument_list|(
+name|StructuredData
+operator|::
+name|ObjectSP
+operator|&
+name|bkpt_object_sp
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|names
+argument_list|)
+decl_stmt|;
+name|virtual
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
+expr_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|GetSerializationKey
+parameter_list|()
+block|{
+return|return
+literal|"Breakpoint"
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|/// Destructor.
 comment|///
@@ -491,7 +634,8 @@ comment|/// @param[in] module_list
 comment|///    The list of modules to look in for new locations.
 comment|///
 comment|/// @param[in]  send_event
-comment|///     If \b true, send a breakpoint location added event for non-internal breakpoints.
+comment|///     If \b true, send a breakpoint location added event for non-internal
+comment|///     breakpoints.
 comment|//------------------------------------------------------------------
 name|void
 name|ResolveBreakpointInModules
@@ -538,7 +682,8 @@ comment|///    The list of modules to look in for new locations.
 comment|/// @param[in] load_event
 comment|///    If \b true then the modules were loaded, if \b false, unloaded.
 comment|/// @param[in] delete_locations
-comment|///    If \b true then the modules were unloaded delete any locations in the changed modules.
+comment|///    If \b true then the modules were unloaded delete any locations in the
+comment|///    changed modules.
 comment|//------------------------------------------------------------------
 name|void
 name|ModulesChanged
@@ -620,7 +765,8 @@ comment|/// @param[in] addr
 comment|///    The Address specifying the location.
 comment|/// @return
 comment|///    Returns a shared pointer to the location at \a addr.  The pointer
-comment|///    in the shared pointer will be nullptr if there is no location at that address.
+comment|///    in the shared pointer will be nullptr if there is no location at that
+comment|///    address.
 comment|//------------------------------------------------------------------
 name|lldb
 operator|::
@@ -659,8 +805,10 @@ comment|///
 comment|/// @param[in] bp_loc_id
 comment|///    The ID specifying the location.
 comment|/// @return
-comment|///    Returns a shared pointer to the location with ID \a bp_loc_id.  The pointer
-comment|///    in the shared pointer will be nullptr if there is no location with that ID.
+comment|///    Returns a shared pointer to the location with ID \a bp_loc_id.  The
+comment|///    pointer
+comment|///    in the shared pointer will be nullptr if there is no location with that
+comment|///    ID.
 comment|//------------------------------------------------------------------
 name|lldb
 operator|::
@@ -806,7 +954,8 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Return the current stop thread value.
 comment|/// @return
-comment|///     The thread id for which the breakpoint hit will stop, LLDB_INVALID_THREAD_ID for all threads.
+comment|///     The thread id for which the breakpoint hit will stop,
+comment|///     LLDB_INVALID_THREAD_ID for all threads.
 comment|//------------------------------------------------------------------
 name|lldb
 operator|::
@@ -1003,7 +1152,8 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Set the "kind" description for a breakpoint.  If the breakpoint is hit
 comment|/// the stop info will show this "kind" description instead of the breakpoint
-comment|/// number.  Mostly useful for internal breakpoints, where the breakpoint number
+comment|/// number.  Mostly useful for internal breakpoints, where the breakpoint
+comment|/// number
 comment|/// doesn't have meaning to the user.
 comment|///
 comment|/// @param[in] kind
@@ -1087,15 +1237,19 @@ name|s
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Find breakpoint locations which match the (filename, line_number) description.
-comment|/// The breakpoint location collection is to be filled with the matching locations.
+comment|/// Find breakpoint locations which match the (filename, line_number)
+comment|/// description.
+comment|/// The breakpoint location collection is to be filled with the matching
+comment|/// locations.
 comment|/// It should be initialized with 0 size by the API client.
 comment|///
 comment|/// @return
 comment|///     True if there is a match
 comment|///
-comment|///     The locations which match the filename and line_number in loc_coll.  If its
-comment|///     size is 0 and true is returned, it means the breakpoint fully matches the
+comment|///     The locations which match the filename and line_number in loc_coll.
+comment|///     If its
+comment|///     size is 0 and true is returned, it means the breakpoint fully matches
+comment|///     the
 comment|///     description.
 comment|//------------------------------------------------------------------
 name|bool
@@ -1286,12 +1440,15 @@ expr_stmt|;
 block|}
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Set a pre-condition filter that overrides all user provided filters/callbacks etc.
+comment|/// Set a pre-condition filter that overrides all user provided
+comment|/// filters/callbacks etc.
 comment|///
-comment|/// Used to define fancy breakpoints that can do dynamic hit detection without taking up the condition slot -
+comment|/// Used to define fancy breakpoints that can do dynamic hit detection without
+comment|/// taking up the condition slot -
 comment|/// which really belongs to the user anyway...
 comment|///
-comment|/// The Precondition should not continue the target, it should return true if the condition says to stop and
+comment|/// The Precondition should not continue the target, it should return true if
+comment|/// the condition says to stop and
 comment|/// false otherwise.
 comment|///
 comment|//------------------------------------------------------------------
@@ -1334,25 +1491,32 @@ comment|// Protected Methods
 comment|//------------------------------------------------------------------
 comment|//------------------------------------------------------------------
 comment|/// Constructors and Destructors
-comment|/// Only the Target can make a breakpoint, and it owns the breakpoint lifespans.
-comment|/// The constructor takes a filter and a resolver.  Up in Target there are convenience
+comment|/// Only the Target can make a breakpoint, and it owns the breakpoint
+comment|/// lifespans.
+comment|/// The constructor takes a filter and a resolver.  Up in Target there are
+comment|/// convenience
 comment|/// variants that make breakpoints for some common cases.
 comment|///
 comment|/// @param[in] target
 comment|///    The target in which the breakpoint will be set.
 comment|///
 comment|/// @param[in] filter_sp
-comment|///    Shared pointer to the search filter that restricts the search domain of the breakpoint.
+comment|///    Shared pointer to the search filter that restricts the search domain of
+comment|///    the breakpoint.
 comment|///
 comment|/// @param[in] resolver_sp
-comment|///    Shared pointer to the resolver object that will determine breakpoint matches.
+comment|///    Shared pointer to the resolver object that will determine breakpoint
+comment|///    matches.
 comment|///
 comment|/// @param hardware
-comment|///    If true, request a hardware breakpoint to be used to implement the breakpoint locations.
+comment|///    If true, request a hardware breakpoint to be used to implement the
+comment|///    breakpoint locations.
 comment|///
 comment|/// @param resolve_indirect_symbols
-comment|///    If true, and the address of a given breakpoint location in this breakpoint is set on an
-comment|///    indirect symbol (i.e. Symbol::IsIndirect returns true) then the actual breakpoint site will
+comment|///    If true, and the address of a given breakpoint location in this
+comment|///    breakpoint is set on an
+comment|///    indirect symbol (i.e. Symbol::IsIndirect returns true) then the actual
+comment|///    breakpoint site will
 comment|///    be set on the target of the indirect symbol.
 comment|//------------------------------------------------------------------
 comment|// This is the generic constructor
@@ -1373,13 +1537,16 @@ name|friend
 name|class
 name|BreakpointLocation
 decl_stmt|;
-comment|// To call the following two when determining whether to stop.
+comment|// To call the following two when determining
+comment|// whether to stop.
 name|void
 name|DecrementIgnoreCount
 parameter_list|()
 function_decl|;
-comment|// BreakpointLocation::IgnoreCountShouldStop& Breakpoint::IgnoreCountShouldStop can only be called once per stop,
-comment|// and BreakpointLocation::IgnoreCountShouldStop should be tested first, and if it returns false we should
+comment|// BreakpointLocation::IgnoreCountShouldStop&
+comment|// Breakpoint::IgnoreCountShouldStop can only be called once per stop,
+comment|// and BreakpointLocation::IgnoreCountShouldStop should be tested first, and
+comment|// if it returns false we should
 comment|// continue, otherwise we should test Breakpoint::IgnoreCountShouldStop.
 name|bool
 name|IgnoreCountShouldStop
@@ -1410,7 +1577,8 @@ expr_stmt|;
 block|}
 name|private
 label|:
-comment|// This one should only be used by Target to copy breakpoints from target to target - primarily from the dummy
+comment|// This one should only be used by Target to copy breakpoints from target to
+comment|// target - primarily from the dummy
 comment|// target to prime new targets.
 name|Breakpoint
 argument_list|(
@@ -1448,7 +1616,10 @@ name|string
 operator|>
 name|m_name_list
 expr_stmt|;
-comment|// If not empty, this is the name of this breakpoint (many breakpoints can share the same name.)
+comment|// If not empty, this is the name
+comment|// of this breakpoint (many
+comment|// breakpoints can share the same
+comment|// name.)
 name|lldb
 operator|::
 name|SearchFilterSP
@@ -1464,13 +1635,20 @@ comment|// The resolver that defines this breakpoint.
 name|BreakpointPreconditionSP
 name|m_precondition_sp
 decl_stmt|;
-comment|// The precondition is a breakpoint-level hit filter that can be used
+comment|// The precondition is a
+comment|// breakpoint-level hit filter
+comment|// that can be used
 comment|// to skip certain breakpoint hits.  For instance, exception breakpoints
 comment|// use this to limit the stop to certain exception classes, while leaving
 comment|// the condition& callback free for user specification.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|BreakpointOptions
-name|m_options
-decl_stmt|;
+operator|>
+name|m_options_up
+expr_stmt|;
 comment|// Settable breakpoint options
 name|BreakpointLocationList
 name|m_locations
@@ -1487,7 +1665,8 @@ decl_stmt|;
 name|uint32_t
 name|m_hit_count
 decl_stmt|;
-comment|// Number of times this breakpoint/watchpoint has been hit.  This is kept
+comment|// Number of times this breakpoint/watchpoint has been
+comment|// hit.  This is kept
 comment|// separately from the locations hit counts, since locations can go away when
 comment|// their backing library gets unloaded, and we would lose hit counts.
 name|void

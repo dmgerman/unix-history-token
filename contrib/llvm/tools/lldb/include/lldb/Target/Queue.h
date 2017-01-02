@@ -46,19 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/QueueItem.h"
 end_include
 
 begin_include
@@ -70,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/QueueItem.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -300,7 +300,7 @@ name|push_back
 argument_list|(
 name|item
 argument_list|)
-block|;     }
+block|;   }
 comment|//------------------------------------------------------------------
 comment|/// Return the kind (serial, concurrent) of this queue
 comment|///
@@ -360,7 +360,8 @@ operator|::
 name|addr_t
 name|m_dispatch_queue_t_addr
 block|;
-comment|// address of libdispatch dispatch_queue_t for this Queue
+comment|// address of libdispatch
+comment|// dispatch_queue_t for this Queue
 name|lldb
 operator|::
 name|QueueKind

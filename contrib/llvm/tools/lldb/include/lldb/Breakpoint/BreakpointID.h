@@ -65,6 +65,24 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -94,6 +112,7 @@ operator|::
 name|break_id_t
 name|GetBreakpointID
 argument_list|()
+specifier|const
 block|{
 return|return
 name|m_break_id
@@ -104,6 +123,7 @@ operator|::
 name|break_id_t
 name|GetLocationID
 argument_list|()
+specifier|const
 block|{
 return|return
 name|m_location_id
@@ -176,65 +196,59 @@ decl_stmt|;
 specifier|static
 name|bool
 name|IsRangeIdentifier
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|str
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|bool
 name|IsValidIDExpression
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|str
-parameter_list|)
-function_decl|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|g_range_specifiers
-index|[]
+argument_list|)
 decl_stmt|;
+specifier|static
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|>
+name|GetRangeSpecifiers
+argument_list|()
+expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Takes an input string containing the description of a breakpoint or breakpoint and location
-comment|/// and returns the breakpoint ID and the breakpoint location id.
+comment|/// Takes an input string containing the description of a breakpoint or
+comment|/// breakpoint and location and returns the a BreakpointID filled out with
+comment|/// the proper id and location.
 comment|///
 comment|/// @param[in] input
 comment|///     A string containing JUST the breakpoint description.
-comment|/// @param[out] break_id
-comment|///     This is the break id.
-comment|/// @param[out] break_loc_id
-comment|///     This is breakpoint location id, or LLDB_INVALID_BREAK_ID is no location was specified.
 comment|/// @return
-comment|///     \b true if the call was able to extract a breakpoint location from the string.  \b false otherwise.
+comment|///     If \p input was not a valid breakpoint ID string, returns
+comment|///     \b llvm::None.  Otherwise returns a BreakpointID with members filled
+comment|///     out accordingly.
 comment|//------------------------------------------------------------------
 specifier|static
-name|bool
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|BreakpointID
+operator|>
 name|ParseCanonicalReference
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|input
-argument_list|,
-name|lldb
-operator|::
-name|break_id_t
-operator|*
-name|break_id
-argument_list|,
-name|lldb
-operator|::
-name|break_id_t
-operator|*
-name|break_loc_id
+argument|llvm::StringRef input
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Takes an input string and checks to see whether it is a breakpoint name.
 comment|/// If it is a mal-formed breakpoint name, error will be set to an appropriate
@@ -243,24 +257,26 @@ comment|///
 comment|/// @param[in] input
 comment|///     A string containing JUST the breakpoint description.
 comment|/// @param[out] error
-comment|///     If the name is a well-formed breakpoint name, set to success, otherwise set to an error.
+comment|///     If the name is a well-formed breakpoint name, set to success,
+comment|///     otherwise set to an error.
 comment|/// @return
-comment|///     \b true if the name is a breakpoint name (as opposed to an ID or range) false otherwise.
+comment|///     \b true if the name is a breakpoint name (as opposed to an ID or
+comment|///     range) false otherwise.
 comment|//------------------------------------------------------------------
 specifier|static
 name|bool
 name|StringIsBreakpointName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|str
+argument_list|,
 name|Error
-modifier|&
+operator|&
 name|error
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Takes a breakpoint ID and the breakpoint location id and returns
 comment|/// a string containing the canonical description for the breakpoint

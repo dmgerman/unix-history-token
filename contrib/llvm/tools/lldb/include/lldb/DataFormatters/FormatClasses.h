@@ -86,18 +86,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-enumerations.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/DataFormatters/TypeFormat.h"
 end_include
 
@@ -129,6 +117,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -260,7 +260,7 @@ name|m_stripped_typedef
 argument_list|(
 argument|strip_tydef
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|FormattersMatchCandidate
 argument_list|()
@@ -320,7 +320,7 @@ operator|>
 name|bool
 name|IsMatch
 argument_list|(
-argument|const std::shared_ptr<Formatter>& formatter_sp
+argument|const std::shared_ptr<Formatter>&formatter_sp
 argument_list|)
 specifier|const
 block|{
@@ -516,10 +516,10 @@ argument_list|)
 operator|,
 name|m_type
 argument_list|()
-block|{     }
+block|{}
 name|TypeNameSpecifierImpl
 argument_list|(
-argument|const char* name
+argument|llvm::StringRef name
 argument_list|,
 argument|bool is_regex
 argument_list|)
@@ -532,27 +532,19 @@ operator|,
 name|m_type
 argument_list|()
 block|{
-if|if
-condition|(
-name|name
-condition|)
 name|m_type
 operator|.
 name|m_type_name
-operator|.
-name|assign
-argument_list|(
+operator|=
 name|name
-argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|// if constructing with a given type, is_regex cannot be true since we are
 comment|// giving an exact type to match
 name|TypeNameSpecifierImpl
 argument_list|(
 argument|lldb::TypeSP type
 argument_list|)
-block|:
+operator|:
 name|m_is_regex
 argument_list|(
 name|false
@@ -569,17 +561,14 @@ block|{
 name|m_type
 operator|.
 name|m_type_name
-operator|.
-name|assign
-argument_list|(
+operator|=
 name|type
 operator|->
 name|GetName
 argument_list|()
 operator|.
-name|GetCString
+name|GetStringRef
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|m_type
 operator|.
@@ -704,7 +693,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          CompilerType
+unit|}    CompilerType
 name|GetCompilerType
 argument_list|()
 end_macro
@@ -801,7 +790,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};      }
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

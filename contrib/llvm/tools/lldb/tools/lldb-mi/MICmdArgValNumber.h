@@ -58,7 +58,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -74,7 +78,11 @@ comment|//          An argument knows what type of argument it is and how it is 
 end_comment
 
 begin_comment
-comment|//          interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a
+end_comment
+
+begin_comment
+comment|//          matching
 end_comment
 
 begin_comment
@@ -102,8 +110,10 @@ block|{
 comment|// Enums:
 name|public
 operator|:
-comment|//++ ---------------------------------------------------------------------------------
-comment|// Details: CMICmdArgValNumber needs to know what format of argument to look for in
+comment|//++
+comment|//---------------------------------------------------------------------------------
+comment|// Details: CMICmdArgValNumber needs to know what format of argument to look
+comment|// for in
 comment|//          the command options text.
 comment|//--
 expr|enum

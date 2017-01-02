@@ -255,6 +255,13 @@ end_decl_stmt
 begin_decl_stmt
 name|friend
 name|class
+name|SBStructuredData
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
 name|SBThread
 decl_stmt|;
 end_decl_stmt
@@ -383,7 +390,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-unit|};   }
+unit|};  }
 comment|// namespace lldb
 end_comment
 

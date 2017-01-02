@@ -74,12 +74,12 @@ comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
 name|DeclVendor
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|DeclVendor
 argument_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Look up the set of Decls that the DeclVendor currently knows about
 comment|/// matching a given name.
@@ -108,7 +108,7 @@ argument|bool append
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
-argument|std::vector<clang::NamedDecl*>&decls
+argument|std::vector<clang::NamedDecl *>&decls
 argument_list|)
 operator|=
 literal|0

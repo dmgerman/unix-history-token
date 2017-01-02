@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ArchSpec.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/PluginInterface.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -155,7 +155,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|// thread may be NULL in which case we only use the Target (e.g. if this is called pre-process-launch).
+comment|// thread may be NULL in which case we only use the Target (e.g. if this is
+comment|// called pre-process-launch).
 name|virtual
 name|bool
 name|FirstNonPrologueInsn

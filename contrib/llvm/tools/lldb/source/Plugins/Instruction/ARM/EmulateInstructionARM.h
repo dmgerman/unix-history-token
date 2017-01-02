@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/Core/EmulateInstruction.h"
+file|"Plugins/Process/Utility/ARMDefines.h"
 end_include
 
 begin_include
@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/Core/EmulateInstruction.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/Utility/ARMDefines.h"
+file|"lldb/Core/Error.h"
 end_include
 
 begin_decl_stmt
@@ -111,7 +111,8 @@ name|bool
 name|InITBlock
 parameter_list|()
 function_decl|;
-comment|// LastInITBlock - Returns true if we're the last instruction inside an IT Block.
+comment|// LastInITBlock - Returns true if we're the last instruction inside an IT
+comment|// Block.
 name|bool
 name|LastInITBlock
 parameter_list|()
@@ -238,7 +239,7 @@ return|return
 name|false
 return|;
 block|}
-function|lldb_private::ConstString     GetPluginName
+function|lldb_private::ConstString GetPluginName
 parameter_list|()
 function|override
 block|{
@@ -247,7 +248,7 @@ name|GetPluginNameStatic
 argument_list|()
 return|;
 block|}
-function|uint32_t     GetPluginVersion
+function|uint32_t GetPluginVersion
 parameter_list|()
 function|override
 block|{
@@ -314,7 +315,7 @@ name|SetArchitecture
 argument_list|(
 name|arch
 argument_list|)
-block|;     }
+block|;   }
 comment|//    EmulateInstructionARM (const ArchSpec&arch,
 comment|//                           bool ignore_conditions,
 comment|//                           void *baton,
@@ -464,7 +465,8 @@ name|bool
 name|InITBlock
 parameter_list|()
 function_decl|;
-comment|// LastInITBlock - Returns true if we're in Thumb mode and the last instruction inside an IT Block.
+comment|// LastInITBlock - Returns true if we're in Thumb mode and the last
+comment|// instruction inside an IT Block.
 name|bool
 name|LastInITBlock
 parameter_list|()
@@ -610,7 +612,8 @@ name|success
 parameter_list|)
 function_decl|;
 comment|// See A8.6.96 MOV (immediate) Operation.
-comment|// Default arguments are specified for carry and overflow parameters, which means
+comment|// Default arguments are specified for carry and overflow parameters, which
+comment|// means
 comment|// not to update the respective flags even if setflags is true.
 name|bool
 name|WriteCoreRegOptionalFlags
@@ -676,7 +679,8 @@ argument_list|)
 return|;
 block|}
 comment|// See A8.6.35 CMP (immediate) Operation.
-comment|// Default arguments are specified for carry and overflow parameters, which means
+comment|// Default arguments are specified for carry and overflow parameters, which
+comment|// means
 comment|// not to update the respective flags.
 name|bool
 name|WriteFlags
@@ -730,11 +734,16 @@ operator|*
 name|success_ptr
 argument_list|)
 block|{
-comment|// This is a stub function corresponding to "MemA[]" in the ARM manual pseudocode, for
-comment|// aligned reads from memory.  Since we are not trying to write a full hardware simulator, and since
-comment|// we are running in User mode (rather than Kernel mode) and therefore won't have access to many of the
-comment|// system registers we would need in order to fully implement this function, we will just call
-comment|// ReadMemoryUnsigned from here.  In the future, if we decide we do need to do more faithful emulation of
+comment|// This is a stub function corresponding to "MemA[]" in the ARM manual
+comment|// pseudocode, for
+comment|// aligned reads from memory.  Since we are not trying to write a full
+comment|// hardware simulator, and since
+comment|// we are running in User mode (rather than Kernel mode) and therefore won't
+comment|// have access to many of the
+comment|// system registers we would need in order to fully implement this function,
+comment|// we will just call
+comment|// ReadMemoryUnsigned from here.  In the future, if we decide we do need to
+comment|// do more faithful emulation of
 comment|// the hardware, we can update this function appropriately.
 return|return
 name|ReadMemoryUnsigned
@@ -773,11 +782,16 @@ name|uint32_t
 name|size
 argument_list|)
 block|{
-comment|// This is a stub function corresponding to "MemA[]" in the ARM manual pseudocode, for
-comment|// aligned writes to memory.  Since we are not trying to write a full hardware simulator, and since
-comment|// we are running in User mode (rather than Kernel mode) and therefore won't have access to many of the
-comment|// system registers we would need in order to fully implement this function, we will just call
-comment|// WriteMemoryUnsigned from here.  In the future, if we decide we do need to do more faithful emulation of
+comment|// This is a stub function corresponding to "MemA[]" in the ARM manual
+comment|// pseudocode, for
+comment|// aligned writes to memory.  Since we are not trying to write a full
+comment|// hardware simulator, and since
+comment|// we are running in User mode (rather than Kernel mode) and therefore won't
+comment|// have access to many of the
+comment|// system registers we would need in order to fully implement this function,
+comment|// we will just call
+comment|// WriteMemoryUnsigned from here.  In the future, if we decide we do need to
+comment|// do more faithful emulation of
 comment|// the hardware, we can update this function appropriately.
 return|return
 name|WriteMemoryUnsigned
@@ -818,11 +832,16 @@ operator|*
 name|success_ptr
 argument_list|)
 block|{
-comment|// This is a stub function corresponding to "MemU[]" in the ARM manual pseudocode, for
-comment|// unaligned reads from memory.  Since we are not trying to write a full hardware simulator, and since
-comment|// we are running in User mode (rather than Kernel mode) and therefore won't have access to many of the
-comment|// system registers we would need in order to fully implement this function, we will just call
-comment|// ReadMemoryUnsigned from here.  In the future, if we decide we do need to do more faithful emulation of
+comment|// This is a stub function corresponding to "MemU[]" in the ARM manual
+comment|// pseudocode, for
+comment|// unaligned reads from memory.  Since we are not trying to write a full
+comment|// hardware simulator, and since
+comment|// we are running in User mode (rather than Kernel mode) and therefore won't
+comment|// have access to many of the
+comment|// system registers we would need in order to fully implement this function,
+comment|// we will just call
+comment|// ReadMemoryUnsigned from here.  In the future, if we decide we do need to
+comment|// do more faithful emulation of
 comment|// the hardware, we can update this function appropriately.
 return|return
 name|ReadMemoryUnsigned
@@ -861,11 +880,16 @@ name|uint32_t
 name|size
 argument_list|)
 block|{
-comment|// This is a stub function corresponding to "MemU[]" in the ARM manual pseudocode, for
-comment|// unaligned writes to memory.  Since we are not trying to write a full hardware simulator, and since
-comment|// we are running in User mode (rather than Kernel mode) and therefore won't have access to many of the
-comment|// system registers we would need in order to fully implement this function, we will just call
-comment|// WriteMemoryUnsigned from here.  In the future, if we decide we do need to do more faithful emulation of
+comment|// This is a stub function corresponding to "MemU[]" in the ARM manual
+comment|// pseudocode, for
+comment|// unaligned writes to memory.  Since we are not trying to write a full
+comment|// hardware simulator, and since
+comment|// we are running in User mode (rather than Kernel mode) and therefore won't
+comment|// have access to many of the
+comment|// system registers we would need in order to fully implement this function,
+comment|// we will just call
+comment|// WriteMemoryUnsigned from here.  In the future, if we decide we do need to
+comment|// do more faithful emulation of
 comment|// the hardware, we can update this function appropriately.
 return|return
 name|WriteMemoryUnsigned

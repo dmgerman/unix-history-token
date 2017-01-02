@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- IRDynamicChecks.h ---------------------------------------------*- C++ -*-===//
+comment|//===-- IRDynamicChecks.h ---------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -100,7 +104,8 @@ name|class
 name|Stream
 decl_stmt|;
 comment|//----------------------------------------------------------------------
-comment|/// @class DynamicCheckerFunctions IRDynamicChecks.h "lldb/Expression/IRDynamicChecks.h"
+comment|/// @class DynamicCheckerFunctions IRDynamicChecks.h
+comment|/// "lldb/Expression/IRDynamicChecks.h"
 comment|/// @brief Encapsulates dynamic check functions used by expressions.
 comment|///
 comment|/// Each of the utility functions encapsulated in this class is responsible
@@ -189,7 +194,8 @@ block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------
 comment|/// @class IRDynamicChecks IRDynamicChecks.h "lldb/Expression/IRDynamicChecks.h"
-comment|/// @brief Adds dynamic checks to a user-entered expression to reduce its likelihood of crashing
+comment|/// @brief Adds dynamic checks to a user-entered expression to reduce its
+comment|/// likelihood of crashing
 comment|///
 comment|/// When an IR function is executed in the target process, it may cause
 comment|/// crashes or hangs by dereferencing NULL pointers, trying to call Objective-C

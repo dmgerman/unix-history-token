@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/Options.h"
+file|"lldb/Interpreter/OptionGroupWatchpoint.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/OptionGroupWatchpoint.h"
+file|"lldb/Interpreter/Options.h"
 end_include
 
 begin_decl_stmt

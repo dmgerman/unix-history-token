@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private-forward.h"
+file|"lldb/Core/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/lldb-private-forward.h"
 end_include
 
 begin_comment

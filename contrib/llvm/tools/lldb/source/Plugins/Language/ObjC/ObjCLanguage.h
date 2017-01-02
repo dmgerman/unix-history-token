@@ -74,12 +74,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Language.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -140,7 +140,7 @@ name|m_category_is_valid
 argument_list|(
 argument|false
 argument_list|)
-block|{         }
+block|{}
 name|MethodName
 argument_list|(
 argument|const char *name
@@ -176,7 +176,43 @@ name|name
 argument_list|,
 name|strict
 argument_list|)
-block|;         }
+block|;     }
+name|MethodName
+argument_list|(
+argument|llvm::StringRef name
+argument_list|,
+argument|bool strict
+argument_list|)
+operator|:
+name|m_full
+argument_list|()
+block|,
+name|m_class
+argument_list|()
+block|,
+name|m_category
+argument_list|()
+block|,
+name|m_selector
+argument_list|()
+block|,
+name|m_type
+argument_list|(
+name|eTypeUnspecified
+argument_list|)
+block|,
+name|m_category_is_valid
+argument_list|(
+argument|false
+argument_list|)
+block|{
+name|SetName
+argument_list|(
+name|name
+argument_list|,
+name|strict
+argument_list|)
+block|;     }
 name|void
 name|Clear
 argument_list|()
@@ -257,6 +293,14 @@ argument_list|,
 argument|bool strict
 argument_list|)
 block|;
+name|bool
+name|SetName
+argument_list|(
+argument|llvm::StringRef name
+argument_list|,
+argument|bool strict
+argument_list|)
+block|;
 specifier|const
 name|ConstString
 operator|&
@@ -285,7 +329,8 @@ comment|// Get all possible names for a method. Examples:
 comment|// If name is "+[NSString(my_additions) myStringWithCString:]"
 comment|//  names[0] => "+[NSString(my_additions) myStringWithCString:]"
 comment|//  names[1] => "+[NSString myStringWithCString:]"
-comment|// If name is specified without the leading '+' or '-' like "[NSString(my_additions) myStringWithCString:]"
+comment|// If name is specified without the leading '+' or '-' like
+comment|// "[NSString(my_additions) myStringWithCString:]"
 comment|//  names[0] => "+[NSString(my_additions) myStringWithCString:]"
 comment|//  names[1] => "-[NSString(my_additions) myStringWithCString:]"
 comment|//  names[2] => "+[NSString myStringWithCString:]"
@@ -325,7 +370,7 @@ name|m_type
 block|;
 name|bool
 name|m_category_is_valid
-block|;     }
+block|;   }
 decl_stmt|;
 name|ObjCLanguage
 argument_list|()
@@ -368,7 +413,7 @@ name|ConstString
 operator|>
 name|GetPossibleFormattersMatches
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)

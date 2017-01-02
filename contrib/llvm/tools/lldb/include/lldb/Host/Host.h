@@ -73,18 +73,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/StringList.h"
 end_include
 
@@ -104,6 +92,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/HostThread.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -346,7 +346,11 @@ comment|//------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// Get the thread token (the one returned by ThreadCreate when the thread was created) for the
+comment|/// Get the thread token (the one returned by ThreadCreate when the thread was
+end_comment
+
+begin_comment
+comment|/// created) for the
 end_comment
 
 begin_comment
@@ -684,95 +688,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|/// Set a string that can be displayed if host application crashes.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Some operating systems have the ability to print a description
-end_comment
-
-begin_comment
-comment|/// for shared libraries when a program crashes. If the host OS
-end_comment
-
-begin_comment
-comment|/// supports such a mechanism, it should be implemented to help
-end_comment
-
-begin_comment
-comment|/// with crash triage.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param[in] format
-end_comment
-
-begin_comment
-comment|///     A printf format that will be used to form a new crash
-end_comment
-
-begin_comment
-comment|///     description string.
-end_comment
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|SetCrashDescriptionWithFormat
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(format
-parameter_list|(
-name|printf
-parameter_list|,
-function_decl|1
-operator|,
-function_decl|2
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|static
-name|void
-name|SetCrashDescription
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|description
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|static
 name|uint32_t
@@ -860,6 +775,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__APPLE__
@@ -875,6 +791,7 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__GLIBC__
@@ -884,21 +801,13 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
+operator|)
+operator|&&
+expr|\
 operator|!
 name|defined
 argument_list|(
 name|__ANDROID__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__ANDROID_NDK__
 argument_list|)
 end_if
 
@@ -969,19 +878,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|// !defined(__ANDROID__)&& !defined(__ANDROID_NDK__)
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// defined (__APPLE__) || defined (__linux__) || defined (__FreeBSD__) || defined (__GLIBC__) || defined(__NetBSD__)
-end_comment
-
 begin_expr_stmt
 specifier|static
 specifier|const
@@ -1046,6 +942,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// TODO: Convert this function to take a StringRef.
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|Error
@@ -1062,7 +962,8 @@ name|FileSpec
 operator|&
 name|working_dir
 argument_list|,
-comment|// Pass empty FileSpec to use the current working directory
+comment|// Pass empty FileSpec to use the current
+comment|// working directory
 name|int
 operator|*
 name|status_ptr
@@ -1072,7 +973,8 @@ name|int
 operator|*
 name|signo_ptr
 argument_list|,
-comment|// Pass NULL if you don't want the signal that caused the process to exit
+comment|// Pass NULL if you don't want the signal that caused the
+comment|// process to exit
 name|std
 operator|::
 name|string
@@ -1106,7 +1008,8 @@ name|FileSpec
 operator|&
 name|working_dir
 argument_list|,
-comment|// Pass empty FileSpec to use the current working directory
+comment|// Pass empty FileSpec to use the current
+comment|// working directory
 name|int
 operator|*
 name|status_ptr
@@ -1116,7 +1019,8 @@ name|int
 operator|*
 name|signo_ptr
 argument_list|,
-comment|// Pass NULL if you don't want the signal that caused the process to exit
+comment|// Pass NULL if you don't want the signal that caused the
+comment|// process to exit
 name|std
 operator|::
 name|string

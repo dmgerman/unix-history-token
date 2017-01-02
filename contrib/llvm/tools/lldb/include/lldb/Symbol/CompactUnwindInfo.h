@@ -89,15 +89,21 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
-comment|// Compact Unwind info is an unwind format used on Darwin.  The unwind instructions
-comment|// for typical compiler-generated functions can be expressed in a 32-bit encoding.
-comment|// The format includes a two-level index so the unwind information for a function
+comment|// Compact Unwind info is an unwind format used on Darwin.  The unwind
+comment|// instructions
+comment|// for typical compiler-generated functions can be expressed in a 32-bit
+comment|// encoding.
+comment|// The format includes a two-level index so the unwind information for a
+comment|// function
 comment|// can be found by two binary searches in the section.  It can represent both
 comment|// stack frames that use a frame-pointer register and frameless functions, on
-comment|// i386/x86_64 for instance.  When a function is too complex to be represented in
+comment|// i386/x86_64 for instance.  When a function is too complex to be represented
+comment|// in
 comment|// the compact unwind format, it calls out to eh_frame unwind instructions.
-comment|// On Mac OS X / iOS, a function will have either a compact unwind representation
-comment|// or an eh_frame representation.  If lldb is going to benefit  from the compiler's
+comment|// On Mac OS X / iOS, a function will have either a compact unwind
+comment|// representation
+comment|// or an eh_frame representation.  If lldb is going to benefit  from the
+comment|// compiler's
 comment|// description about saved register locations, it must be able to read both
 comment|// sources of information.
 name|class
@@ -151,8 +157,10 @@ decl_stmt|;
 name|private
 label|:
 comment|// The top level index entries of the compact unwind info
-comment|//   (internal representation of struct unwind_info_section_header_index_entry)
-comment|// There are relatively few of these (one per 500/1000 functions, depending on format) so
+comment|//   (internal representation of struct
+comment|//   unwind_info_section_header_index_entry)
+comment|// There are relatively few of these (one per 500/1000 functions, depending on
+comment|// format) so
 comment|// creating them on first scan will not be too costly.
 struct|struct
 name|UnwindIndex
@@ -160,16 +168,19 @@ block|{
 name|uint32_t
 name|function_offset
 decl_stmt|;
-comment|// The offset of the first function covered by this index
+comment|// The offset of the first function covered by
+comment|// this index
 name|uint32_t
 name|second_level
 decl_stmt|;
-comment|// The offset (inside unwind_info sect) to the second level page for this index
+comment|// The offset (inside unwind_info sect) to the second
+comment|// level page for this index
 comment|// (either UNWIND_SECOND_LEVEL_REGULAR or UNWIND_SECOND_LEVEL_COMPRESSED)
 name|uint32_t
 name|lsda_array_start
 decl_stmt|;
-comment|// The offset (inside unwind_info sect) LSDA array for this index
+comment|// The offset (inside unwind_info sect) LSDA
+comment|// array for this index
 name|uint32_t
 name|lsda_array_end
 decl_stmt|;
@@ -177,7 +188,8 @@ comment|// The offset to the LSDA array for the NEXT index
 name|bool
 name|sentinal_entry
 decl_stmt|;
-comment|// There is an empty index at the end which provides the upper bound of
+comment|// There is an empty index at the end which provides
+comment|// the upper bound of
 comment|// function addresses that are described
 name|UnwindIndex
 argument_list|()
@@ -206,7 +218,7 @@ name|sentinal_entry
 argument_list|(
 argument|false
 argument_list|)
-block|{ }
+block|{}
 name|bool
 name|operator
 operator|<
@@ -251,7 +263,8 @@ return|;
 block|}
 block|}
 struct|;
-comment|// An internal object used to store the information we retrieve about a function --
+comment|// An internal object used to store the information we retrieve about a
+comment|// function --
 comment|// the encoding bits and possibly the LSDA/personality function.
 struct|struct
 name|FunctionInfo
@@ -267,11 +280,13 @@ comment|// the address of the LSDA data for this function
 name|Address
 name|personality_ptr_address
 decl_stmt|;
-comment|// the address where the personality routine addr can be found
+comment|// the address where the personality
+comment|// routine addr can be found
 name|uint32_t
 name|valid_range_offset_start
 decl_stmt|;
-comment|// first offset that this encoding is valid for (start of the function)
+comment|// first offset that this encoding is
+comment|// valid for (start of the function)
 name|uint32_t
 name|valid_range_offset_end
 decl_stmt|;
@@ -299,7 +314,7 @@ name|valid_range_offset_end
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 block|}
 struct|;
 struct|struct
@@ -342,7 +357,7 @@ name|personality_array_count
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 block|}
 struct|;
 name|void
@@ -514,7 +529,9 @@ operator|::
 name|DataBufferSP
 name|m_section_contents_if_encrypted
 expr_stmt|;
-comment|// if the binary is encrypted, read the sect contents
+comment|// if the binary is
+comment|// encrypted, read the
+comment|// sect contents
 comment|// out of live memory and cache them here
 name|std
 operator|::
@@ -532,7 +549,8 @@ expr_stmt|;
 name|LazyBool
 name|m_indexes_computed
 decl_stmt|;
-comment|// eLazyBoolYes once we've tried to parse the unwind info
+comment|// eLazyBoolYes once we've tried to parse the
+comment|// unwind info
 comment|// eLazyBoolNo means we cannot parse the unwind info& should not retry
 comment|// eLazyBoolCalculate means we haven't tried to parse it yet
 name|DataExtractor
@@ -541,7 +559,8 @@ decl_stmt|;
 name|bool
 name|m_unwindinfo_data_computed
 decl_stmt|;
-comment|// true once we've mapped in the unwindinfo data
+comment|// true once we've mapped in the unwindinfo
+comment|// data
 name|UnwindHeader
 name|m_unwind_header
 decl_stmt|;

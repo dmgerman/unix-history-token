@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string>
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<string>
 end_include
 
 begin_include
@@ -80,6 +80,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Expression/ExpressionTypeSystemHelper.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-forward.h"
 end_include
 
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Expression/ExpressionTypeSystemHelper.h"
 end_include
 
 begin_decl_stmt
@@ -146,7 +146,7 @@ name|virtual
 operator|~
 name|Expression
 argument_list|()
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Return the string that the parser should parse.  Must be a full
 comment|/// translation unit.
@@ -277,19 +277,25 @@ operator|::
 name|ProcessWP
 name|m_jit_process_wp
 expr_stmt|;
-comment|/// An expression might have a process, but it doesn't need to (e.g. calculator mode.)
+comment|/// An expression might have a process, but
+comment|/// it doesn't need to (e.g. calculator
+comment|/// mode.)
 name|lldb
 operator|::
 name|addr_t
 name|m_jit_start_addr
 expr_stmt|;
-comment|///< The address of the JITted function within the JIT allocation.  LLDB_INVALID_ADDRESS if invalid.
+comment|///< The address of the JITted function within
+comment|///the JIT allocation.  LLDB_INVALID_ADDRESS if
+comment|///invalid.
 name|lldb
 operator|::
 name|addr_t
 name|m_jit_end_addr
 expr_stmt|;
-comment|///< The address of the JITted function within the JIT allocation.  LLDB_INVALID_ADDRESS if invalid.
+comment|///< The address of the JITted function within
+comment|///the JIT allocation.  LLDB_INVALID_ADDRESS if
+comment|///invalid.
 block|}
 empty_stmt|;
 block|}

@@ -44,13 +44,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<map>
+file|"lldb/API/SBDebugger.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDebugger.h"
+file|<map>
 end_include
 
 begin_comment
@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MIUtilString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MICmnLog.h"
 end_include
 
@@ -81,8 +75,18 @@ directive|include
 file|"MIUtilSingletonBase.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MIUtilString.h"
+end_include
+
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -98,7 +102,11 @@ comment|//          registered with it and so will not delete when this manager 
 end_comment
 
 begin_comment
-comment|//          shutdown. The Driver flagged as "use this one" will be set as current
+comment|//          shutdown. The Driver flagged as "use this one" will be set as
+end_comment
+
+begin_comment
+comment|//          current
 end_comment
 
 begin_comment
@@ -118,11 +126,19 @@ comment|//          It also initializes other resources as part it's setup such 
 end_comment
 
 begin_comment
-comment|//          Logger and Resources objects (explicit indicate *this object requires
+comment|//          Logger and Resources objects (explicit indicate *this object
 end_comment
 
 begin_comment
-comment|//          those objects (modules/components) to support it's own functionality).
+comment|//          requires
+end_comment
+
+begin_comment
+comment|//          those objects (modules/components) to support it's own
+end_comment
+
+begin_comment
+comment|//          functionality).
 end_comment
 
 begin_comment
@@ -558,11 +574,13 @@ name|IDriver
 modifier|*
 name|m_pDriverCurrent
 decl_stmt|;
-comment|// This driver is used by this manager to do work. It is the main driver.
+comment|// This driver is used by this manager to do work.
+comment|// It is the main driver.
 name|bool
 name|m_bInMi2Mode
 decl_stmt|;
-comment|// True = --interpreter entered on the cmd line, false = operate LLDB driver (non GDB)
+comment|// True = --interpreter entered on the cmd line, false =
+comment|// operate LLDB driver (non GDB)
 block|}
 end_decl_stmt
 

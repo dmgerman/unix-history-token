@@ -50,12 +50,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Error.h"
 end_include
 
@@ -63,6 +57,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/PluginInterface.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/UUID.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -84,7 +90,8 @@ comment|/// function.
 comment|///
 comment|/// Breakpoints can also be set in the process which can register
 comment|/// functions that get called using:
-comment|/// Process::BreakpointSetCallback (lldb::user_id_t, BreakpointHitCallback, void *).
+comment|/// Process::BreakpointSetCallback (lldb::user_id_t, BreakpointHitCallback, void
+comment|/// *).
 comment|/// These breakpoint callbacks return a boolean value that indicates if
 comment|/// the process should continue or halt and should return the global
 comment|/// setting for this using:
@@ -257,9 +264,12 @@ operator|=
 literal|0
 block|;
 comment|//------------------------------------------------------------------
-comment|/// Some dynamic loaders provide features where there are a group of symbols "equivalent to"
-comment|/// a given symbol one of which will be chosen when the symbol is bound.  If you want to
-comment|/// set a breakpoint on one of these symbols, you really need to set it on all the
+comment|/// Some dynamic loaders provide features where there are a group of symbols
+comment|/// "equivalent to"
+comment|/// a given symbol one of which will be chosen when the symbol is bound.  If
+comment|/// you want to
+comment|/// set a breakpoint on one of these symbols, you really need to set it on all
+comment|/// the
 comment|/// equivalent symbols.
 comment|///
 comment|///
@@ -270,7 +280,8 @@ comment|/// @param[in] module_list
 comment|///     The set of modules in which to search.
 comment|///
 comment|/// @param[out] equivalent_symbols
-comment|///     The equivalent symbol list - any equivalent symbols found are appended to this list.
+comment|///     The equivalent symbol list - any equivalent symbols found are appended
+comment|///     to this list.
 comment|///
 comment|/// @return
 comment|///    Number of equivalent symbols found.
@@ -391,6 +402,76 @@ argument_list|,
 argument|bool base_addr_is_offset
 argument_list|)
 block|;
+comment|//------------------------------------------------------------------
+comment|/// Get information about the shared cache for a process, if possible.
+comment|///
+comment|/// On some systems (e.g. Darwin based systems), a set of libraries
+comment|/// that are common to most processes may be put in a single region
+comment|/// of memory and mapped into every process, this is called the
+comment|/// shared cache, as a performance optimization.
+comment|///
+comment|/// Many targets will not have the concept of a shared cache.
+comment|///
+comment|/// Depending on how the DynamicLoader gathers information about the
+comment|/// shared cache, it may be able to only return basic information -
+comment|/// like the UUID of the cache - or it may be able to return additional
+comment|/// information about the cache.
+comment|///
+comment|/// @param[out] base_address
+comment|///     The base address (load address) of the shared cache.
+comment|///     LLDB_INVALID_ADDRESS if it cannot be determined.
+comment|///
+comment|/// @param[out] uuid
+comment|///     The UUID of the shared cache, if it can be determined.
+comment|///     If the UUID cannot be fetched, IsValid() will be false.
+comment|///
+comment|/// @param[out] using_shared_cache
+comment|///     If this process is using a shared cache.
+comment|///     If unknown, eLazyBoolCalculate is returned.
+comment|///
+comment|/// @param[out] private_shared_cache
+comment|///     A LazyBool indicating whether this process is using a
+comment|///     private shared cache.
+comment|///     If this information cannot be fetched, eLazyBoolCalculate.
+comment|///
+comment|/// @return
+comment|///     Returns false if this DynamicLoader cannot gather information
+comment|///     about the shared cache / has no concept of a shared cache.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|GetSharedCacheInformation
+argument_list|(
+argument|lldb::addr_t&base_address
+argument_list|,
+argument|UUID&uuid
+argument_list|,
+argument|LazyBool&using_shared_cache
+argument_list|,
+argument|LazyBool&private_shared_cache
+argument_list|)
+block|{
+name|base_address
+operator|=
+name|LLDB_INVALID_ADDRESS
+block|;
+name|uuid
+operator|.
+name|Clear
+argument_list|()
+block|;
+name|using_shared_cache
+operator|=
+name|eLazyBoolCalculate
+block|;
+name|private_shared_cache
+operator|=
+name|eLazyBoolCalculate
+block|;
+return|return
+name|false
+return|;
+block|}
 name|protected
 operator|:
 comment|//------------------------------------------------------------------
@@ -408,7 +489,8 @@ comment|/// Updates the load address of every allocatable section in @p module.
 comment|///
 comment|/// @param module The module to traverse.
 comment|///
-comment|/// @param link_map_addr The virtual address of the link map for the @p module.
+comment|/// @param link_map_addr The virtual address of the link map for the @p
+comment|/// module.
 comment|///
 comment|/// @param base_addr The virtual base address @p module is loaded at.
 name|virtual
@@ -424,7 +506,8 @@ argument_list|,
 argument|bool base_addr_is_offset
 argument_list|)
 block|;
-comment|// Utility method so base classes can share implementation of UpdateLoadedSections
+comment|// Utility method so base classes can share implementation of
+comment|// UpdateLoadedSections
 name|void
 name|UpdateLoadedSectionsCommon
 argument_list|(

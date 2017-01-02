@@ -44,18 +44,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MIUtilFileStd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MIUtilString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MICmnBase.h"
 end_include
 
@@ -71,12 +59,32 @@ directive|include
 file|"MIUtilDateTimeStd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MIUtilFileStd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MIUtilString.h"
+end_include
+
 begin_comment
-comment|//++ ============================================================================
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: MI common code implementation class. Logs application fn trace/message/
+comment|//============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI common code implementation class. Logs application fn
+end_comment
+
+begin_comment
+comment|// trace/message/
 end_comment
 
 begin_comment

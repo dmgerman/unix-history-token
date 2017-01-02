@@ -82,14 +82,14 @@ argument_list|()
 operator|:
 name|OptionValueArray
 argument_list|(
-argument|OptionValue::ConvertTypeToMask (OptionValue::eTypeString)
+argument|OptionValue::ConvertTypeToMask(OptionValue::eTypeString)
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueArgs
 argument_list|()
 name|override
-block|{     }
+block|{}
 name|size_t
 name|GetArgs
 argument_list|(

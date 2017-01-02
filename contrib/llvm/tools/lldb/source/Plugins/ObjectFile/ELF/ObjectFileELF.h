@@ -80,7 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/ArchSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/UUID.h"
 end_include
 
 begin_include
@@ -98,13 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UUID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ArchSpec.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -154,7 +154,7 @@ name|n_type
 argument_list|(
 literal|0
 argument_list|)
-block|{     }
+block|{}
 comment|/// Parse an ELFNote entry from the given DataExtractor starting at position
 comment|/// \p offset.
 comment|///
@@ -291,11 +291,11 @@ name|CreateInstance
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
-argument|const lldb_private::FileSpec* file
+argument|const lldb_private::FileSpec *file
 argument_list|,
 argument|lldb::offset_t file_offset
 argument_list|,
@@ -311,7 +311,7 @@ name|CreateMemoryInstance
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|const lldb::ProcessSP&process_sp
 argument_list|,
@@ -322,9 +322,9 @@ specifier|static
 name|size_t
 name|GetModuleSpecifications
 argument_list|(
-argument|const lldb_private::FileSpec& file
+argument|const lldb_private::FileSpec&file
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
@@ -339,7 +339,7 @@ specifier|static
 name|bool
 name|MagicBytesMatch
 argument_list|(
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::addr_t offset
 argument_list|,
@@ -446,7 +446,7 @@ block|;
 name|bool
 name|GetUUID
 argument_list|(
-argument|lldb_private::UUID* uuid
+argument|lldb_private::UUID *uuid
 argument_list|)
 name|override
 block|;
@@ -460,7 +460,7 @@ block|;
 name|uint32_t
 name|GetDependentModules
 argument_list|(
-argument|lldb_private::FileSpecList& files
+argument|lldb_private::FileSpecList&files
 argument_list|)
 name|override
 block|;
@@ -535,11 +535,11 @@ name|ObjectFileELF
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& data_sp
+argument|lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t data_offset
 argument_list|,
-argument|const lldb_private::FileSpec* file
+argument|const lldb_private::FileSpec *file
 argument_list|,
 argument|lldb::offset_t offset
 argument_list|,
@@ -550,7 +550,7 @@ name|ObjectFileELF
 argument_list|(
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
-argument|lldb::DataBufferSP& header_data_sp
+argument|lldb::DataBufferSP&header_data_sp
 argument_list|,
 argument|const lldb::ProcessSP&process_sp
 argument_list|,
@@ -601,7 +601,7 @@ name|lldb_private
 operator|::
 name|ConstString
 name|section_name
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -1009,7 +1009,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Parses the elf section headers and returns the uuid, debug link name, crc, archspec.
+comment|/// Parses the elf section headers and returns the uuid, debug link name, crc,
+end_comment
+
+begin_comment
+comment|/// archspec.
 end_comment
 
 begin_decl_stmt

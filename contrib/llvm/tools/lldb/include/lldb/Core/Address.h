@@ -51,12 +51,6 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<atomic>
-end_include
-
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -68,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Symbol/SymbolContextScope.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/SymbolContextScope.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -137,7 +131,8 @@ comment|/// libSystem.B.dylib.__TEXT.__text + 0x0005cfdf
 comment|/// \endcode
 name|DumpStyleSectionPointerOffset
 block|,
-comment|///< Display as the section pointer + offset (debug output).
+comment|///< Display as the section pointer + offset
+comment|///(debug output).
 comment|///< \code
 comment|/// // address for printf in libSystem.B.dylib as a section pointer + offset
 comment|/// (lldb::Section *)0x35cc50 + 0x000000000005cfdf \endcode
@@ -149,7 +144,8 @@ comment|/// // address for printf in libSystem.B.dylib as a file address
 comment|/// 0x000000000005dcff \endcode
 name|DumpStyleModuleWithFileAddress
 block|,
-comment|///< Display as the file address with the module name prepended (if any).
+comment|///< Display as the file address with the
+comment|///module name prepended (if any).
 comment|///< \code
 comment|/// // address for printf in libSystem.B.dylib as a file address
 comment|/// libSystem.B.dylib[0x000000000005dcff] \endcode
@@ -161,7 +157,8 @@ comment|/// // address for printf in libSystem.B.dylib as a load address
 comment|/// 0x00007fff8306bcff \endcode
 name|DumpStyleResolvedDescription
 block|,
-comment|///< Display the details about what an address resolves to. This can
+comment|///< Display the details about what an address
+comment|///resolves to. This can
 comment|///< be anything from a symbol context summary (module, function/symbol,
 comment|///< and file and line), to information about what the pointer points to
 comment|///< if the address is in a section (section of pointers, c strings, etc).
@@ -171,14 +168,17 @@ name|DumpStyleResolvedDescriptionNoFunctionArguments
 block|,
 name|DumpStyleNoFunctionName
 block|,
-comment|///< Elide the function name; display an offset into the current function.
+comment|///< Elide the function name; display an offset
+comment|///into the current function.
 comment|///< Used primarily in disassembly symbolication
 name|DumpStyleDetailedSymbolContext
 block|,
-comment|///< Detailed symbol context information for an address for all symbol
+comment|///< Detailed symbol context information for
+comment|///an address for all symbol
 comment|///< context members.
 name|DumpStyleResolvedPointerDescription
-comment|///< Dereference a pointer at the current address and then lookup the
+comment|///< Dereference a pointer at the
+comment|///current address and then lookup the
 comment|///< dereferenced address using DumpStyleResolvedDescription
 block|}
 name|DumpStyle
@@ -199,7 +199,7 @@ name|m_offset
 argument_list|(
 argument|LLDB_INVALID_ADDRESS
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Copy constructor
 comment|///
@@ -225,9 +225,9 @@ argument_list|)
 operator|,
 name|m_offset
 argument_list|(
-argument|rhs.m_offset.load()
+argument|rhs.m_offset
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Construct with a section pointer and offset.
 comment|///
@@ -251,7 +251,8 @@ operator|:
 name|m_section_wp
 argument_list|()
 operator|,
-comment|// Don't init with section_sp in case section_sp is invalid (the weak_ptr will throw)
+comment|// Don't init with section_sp in case section_sp is
+comment|// invalid (the weak_ptr will throw)
 name|m_offset
 argument_list|(
 argument|offset
@@ -282,7 +283,7 @@ name|Address
 argument_list|(
 argument|lldb::addr_t file_addr
 argument_list|,
-argument|const SectionList * section_list
+argument|const SectionList *section_list
 argument_list|)
 empty_stmt|;
 name|Address
@@ -1013,14 +1014,9 @@ name|SectionWP
 name|m_section_wp
 expr_stmt|;
 comment|///< The section for the address, can be NULL.
-name|std
-operator|::
-name|atomic
-operator|<
 name|lldb
 operator|::
 name|addr_t
-operator|>
 name|m_offset
 expr_stmt|;
 comment|///< Offset into section if \a m_section_wp is valid...

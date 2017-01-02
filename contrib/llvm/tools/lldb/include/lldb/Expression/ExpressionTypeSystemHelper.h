@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ExpressionTypeSystemHelper.h ---------------------------------*- C++ -*-===//
+comment|//===-- ExpressionTypeSystemHelper.h ---------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -54,9 +58,12 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class ExpressionTypeSystemHelper ExpressionTypeSystemHelper.h "lldb/Expression/ExpressionTypeSystemHelper.h"
-comment|/// @brief A helper object that the Expression can pass to its ExpressionParser to provide generic information that
-comment|/// any type of expression will need to supply.  It's only job is to support dyn_cast so that the expression parser
+comment|/// @class ExpressionTypeSystemHelper ExpressionTypeSystemHelper.h
+comment|/// "lldb/Expression/ExpressionTypeSystemHelper.h"
+comment|/// @brief A helper object that the Expression can pass to its ExpressionParser
+comment|/// to provide generic information that
+comment|/// any type of expression will need to supply.  It's only job is to support
+comment|/// dyn_cast so that the expression parser
 comment|/// can cast it back to the requisite specific type.
 comment|///
 comment|//----------------------------------------------------------------------
@@ -95,7 +102,7 @@ name|m_kind
 argument_list|(
 argument|kind
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|ExpressionTypeSystemHelper
 argument_list|()

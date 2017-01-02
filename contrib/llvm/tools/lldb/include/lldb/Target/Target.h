@@ -92,12 +92,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Breakpoint/BreakpointList.h"
 end_include
 
@@ -171,6 +165,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/SectionLoadHistory.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Timeout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -334,9 +340,9 @@ name|GetInlineStrategy
 argument_list|()
 specifier|const
 block|;
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetArg0
 argument_list|()
 specifier|const
@@ -344,10 +350,7 @@ block|;
 name|void
 name|SetArg0
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|arg
+argument|llvm::StringRef arg
 argument_list|)
 block|;
 name|bool
@@ -424,6 +427,11 @@ argument_list|()
 specifier|const
 block|;
 name|bool
+name|GetEnableSaveObjects
+argument_list|()
+specifier|const
+block|;
+name|bool
 name|GetEnableSyntheticValue
 argument_list|()
 specifier|const
@@ -448,6 +456,34 @@ name|GetStandardInputPath
 argument_list|()
 specifier|const
 block|;
+name|FileSpec
+name|GetStandardErrorPath
+argument_list|()
+specifier|const
+block|;
+name|FileSpec
+name|GetStandardOutputPath
+argument_list|()
+specifier|const
+block|;
+name|void
+name|SetStandardInputPath
+argument_list|(
+argument|llvm::StringRef path
+argument_list|)
+block|;
+name|void
+name|SetStandardOutputPath
+argument_list|(
+argument|llvm::StringRef path
+argument_list|)
+block|;
+name|void
+name|SetStandardErrorPath
+argument_list|(
+argument|llvm::StringRef path
+argument_list|)
+block|;
 name|void
 name|SetStandardInputPath
 argument_list|(
@@ -456,11 +492,8 @@ name|char
 operator|*
 name|path
 argument_list|)
-block|;
-name|FileSpec
-name|GetStandardOutputPath
-argument_list|()
-specifier|const
+operator|=
+name|delete
 block|;
 name|void
 name|SetStandardOutputPath
@@ -470,11 +503,8 @@ name|char
 operator|*
 name|path
 argument_list|)
-block|;
-name|FileSpec
-name|GetStandardErrorPath
-argument_list|()
-specifier|const
+operator|=
+name|delete
 block|;
 name|void
 name|SetStandardErrorPath
@@ -484,6 +514,8 @@ name|char
 operator|*
 name|path
 argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|GetBreakpointsConsultPlatformAvoidList
@@ -752,15 +784,60 @@ name|EvaluateExpressionOptions
 block|{
 name|public
 label|:
+comment|// MSVC has a bug here that reports C4268: 'const' static/global data
+comment|// initialized with compiler generated default constructor fills the object
+comment|// with zeros.
+comment|// Confirmed that MSVC is *not* zero-initializing, it's just a bogus warning.
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|push
+name|)
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|disable
+name|:
+name|4268
+name|)
+endif|#
+directive|endif
 specifier|static
-specifier|const
-name|uint32_t
+name|constexpr
+name|std
+operator|::
+name|chrono
+operator|::
+name|milliseconds
 name|default_timeout
-init|=
-literal|500000
-decl_stmt|;
+block|{
+literal|500
+block|}
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|pop
+name|)
+endif|#
+directive|endif
 specifier|static
-specifier|const
+name|constexpr
 name|ExecutionPolicy
 name|default_execution_policy
 init|=
@@ -768,105 +845,9 @@ name|eExecutionPolicyOnlyWhenNeeded
 decl_stmt|;
 name|EvaluateExpressionOptions
 argument_list|()
-operator|:
-name|m_execution_policy
-argument_list|(
-name|default_execution_policy
-argument_list|)
-operator|,
-name|m_language
-argument_list|(
-name|lldb
-operator|::
-name|eLanguageTypeUnknown
-argument_list|)
-operator|,
-name|m_prefix
-argument_list|()
-operator|,
-comment|// A prefix specific to this expression that is added after the prefix from the settings (if any)
-name|m_coerce_to_id
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|m_unwind_on_error
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|m_ignore_breakpoints
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|m_keep_in_memory
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|m_try_others
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|m_stop_others
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|m_debug
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|m_trap_exceptions
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|m_generate_debug_info
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|m_result_is_internal
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|m_auto_apply_fixits
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|m_use_dynamic
-argument_list|(
-name|lldb
-operator|::
-name|eNoDynamicValues
-argument_list|)
-operator|,
-name|m_timeout_usec
-argument_list|(
-name|default_timeout
-argument_list|)
-operator|,
-name|m_one_thread_timeout_usec
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|m_cancel_callback
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|m_cancel_callback_baton
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{     }
+operator|=
+expr|default
+expr_stmt|;
 name|ExecutionPolicy
 name|GetExecutionPolicy
 argument_list|()
@@ -1088,48 +1069,72 @@ operator|=
 name|dynamic
 expr_stmt|;
 block|}
-name|uint32_t
-name|GetTimeoutUsec
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
+name|GetTimeout
 argument_list|()
 specifier|const
 block|{
 return|return
-name|m_timeout_usec
+name|m_timeout
 return|;
 block|}
 name|void
-name|SetTimeoutUsec
-parameter_list|(
-name|uint32_t
+name|SetTimeout
+argument_list|(
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
 name|timeout
-init|=
-literal|0
-parameter_list|)
+argument_list|)
 block|{
-name|m_timeout_usec
+name|m_timeout
 operator|=
 name|timeout
 expr_stmt|;
 block|}
-name|uint32_t
-name|GetOneThreadTimeoutUsec
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
+name|GetOneThreadTimeout
 argument_list|()
 specifier|const
 block|{
 return|return
-name|m_one_thread_timeout_usec
+name|m_one_thread_timeout
 return|;
 block|}
 name|void
-name|SetOneThreadTimeoutUsec
-parameter_list|(
-name|uint32_t
+name|SetOneThreadTimeout
+argument_list|(
+specifier|const
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+operator|&
 name|timeout
-init|=
-literal|0
-parameter_list|)
+argument_list|)
 block|{
-name|m_one_thread_timeout_usec
+name|m_one_thread_timeout
 operator|=
 name|timeout
 expr_stmt|;
@@ -1344,7 +1349,8 @@ name|false
 operator|)
 return|;
 block|}
-comment|// Allows the expression contents to be remapped to point to the specified file and line
+comment|// Allows the expression contents to be remapped to point to the specified
+comment|// file and line
 comment|// using #line directives.
 name|void
 name|SetPoundLine
@@ -1469,11 +1475,17 @@ name|private
 label|:
 name|ExecutionPolicy
 name|m_execution_policy
+init|=
+name|default_execution_policy
 decl_stmt|;
 name|lldb
 operator|::
 name|LanguageType
 name|m_language
+operator|=
+name|lldb
+operator|::
+name|eLanguageTypeUnknown
 expr_stmt|;
 name|std
 operator|::
@@ -1482,62 +1494,112 @@ name|m_prefix
 expr_stmt|;
 name|bool
 name|m_coerce_to_id
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|m_unwind_on_error
+init|=
+name|true
 decl_stmt|;
 name|bool
 name|m_ignore_breakpoints
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|m_keep_in_memory
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|m_try_others
+init|=
+name|true
 decl_stmt|;
 name|bool
 name|m_stop_others
+init|=
+name|true
 decl_stmt|;
 name|bool
 name|m_debug
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|m_trap_exceptions
+init|=
+name|true
 decl_stmt|;
 name|bool
 name|m_repl
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|m_generate_debug_info
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|m_ansi_color_errors
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|m_result_is_internal
+init|=
+name|false
 decl_stmt|;
 name|bool
 name|m_auto_apply_fixits
+init|=
+name|true
 decl_stmt|;
 name|lldb
 operator|::
 name|DynamicValueType
 name|m_use_dynamic
+operator|=
+name|lldb
+operator|::
+name|eNoDynamicValues
 expr_stmt|;
-name|uint32_t
-name|m_timeout_usec
-decl_stmt|;
-name|uint32_t
-name|m_one_thread_timeout_usec
-decl_stmt|;
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+name|m_timeout
+operator|=
+name|default_timeout
+expr_stmt|;
+name|Timeout
+operator|<
+name|std
+operator|::
+name|micro
+operator|>
+name|m_one_thread_timeout
+operator|=
+name|llvm
+operator|::
+name|None
+expr_stmt|;
 name|lldb
 operator|::
 name|ExpressionCancelCallback
 name|m_cancel_callback
+operator|=
+name|nullptr
 expr_stmt|;
 name|void
 modifier|*
 name|m_cancel_callback_baton
+init|=
+name|nullptr
 decl_stmt|;
 comment|// If m_pound_line_file is not empty and m_pound_line_line is non-zero,
 comment|// use #line %u "%s" before the expression content to remap where the source
@@ -1653,7 +1715,8 @@ name|GetStaticBroadcasterClass
 argument_list|()
 return|;
 block|}
-comment|// This event data class is for use by the TargetList to broadcast new target notifications.
+comment|// This event data class is for use by the TargetList to broadcast new target
+comment|// notifications.
 name|class
 name|TargetEventData
 range|:
@@ -1794,7 +1857,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|TargetEventData
 argument_list|)
-block|;     }
+block|;   }
 decl_stmt|;
 operator|~
 name|Target
@@ -1925,7 +1988,7 @@ name|CreateProcess
 argument_list|(
 argument|lldb::ListenerSP listener
 argument_list|,
-argument|const char *plugin_name
+argument|llvm::StringRef plugin_name
 argument_list|,
 argument|const FileSpec *crash_file
 argument_list|)
@@ -2020,7 +2083,8 @@ argument_list|(
 argument|lldb::break_id_t break_id
 argument_list|)
 expr_stmt|;
-comment|// Use this to create a file and line breakpoint to a given module or all module it is nullptr
+comment|// Use this to create a file and line breakpoint to a given module or all
+comment|// module it is nullptr
 name|lldb
 operator|::
 name|BreakpointSP
@@ -2045,8 +2109,10 @@ argument_list|,
 argument|LazyBool move_to_nearest_code
 argument_list|)
 expr_stmt|;
-comment|// Use this to create breakpoint that matches regex against the source lines in files given in source_file_list:
-comment|// If function_names is non-empty, also filter by function after the matches are made.
+comment|// Use this to create breakpoint that matches regex against the source lines
+comment|// in files given in source_file_list:
+comment|// If function_names is non-empty, also filter by function after the matches
+comment|// are made.
 name|lldb
 operator|::
 name|BreakpointSP
@@ -2108,7 +2174,8 @@ argument_list|,
 argument|bool request_hardware
 argument_list|)
 expr_stmt|;
-comment|// Use this to create a function breakpoint by regexp in containingModule/containingSourceFiles, or all modules if it is nullptr
+comment|// Use this to create a function breakpoint by regexp in
+comment|// containingModule/containingSourceFiles, or all modules if it is nullptr
 comment|// When "skip_prologue is set to eLazyBoolCalculate, we use the current target
 comment|// setting, else we use the values passed in
 name|lldb
@@ -2131,7 +2198,8 @@ argument_list|,
 argument|bool request_hardware
 argument_list|)
 expr_stmt|;
-comment|// Use this to create a function breakpoint by name in containingModule, or all modules if it is nullptr
+comment|// Use this to create a function breakpoint by name in containingModule, or
+comment|// all modules if it is nullptr
 comment|// When "skip_prologue is set to eLazyBoolCalculate, we use the current target
 comment|// setting, else we use the values passed in.
 comment|// func_name_type_mask is or'ed values from the FunctionNameType enum.
@@ -2177,8 +2245,10 @@ argument_list|,
 argument|Error *additional_args_error = nullptr
 argument_list|)
 expr_stmt|;
-comment|// This is the same as the func_name breakpoint except that you can specify a vector of names.  This is cheaper
-comment|// than a regular expression breakpoint in the case where you just want to set a breakpoint on a set of names
+comment|// This is the same as the func_name breakpoint except that you can specify a
+comment|// vector of names.  This is cheaper
+comment|// than a regular expression breakpoint in the case where you just want to set
+comment|// a breakpoint on a set of names
 comment|// you already know.
 comment|// func_name_type_mask is or'ed values from the FunctionNameType enum.
 name|lldb
@@ -2421,6 +2491,60 @@ name|uint32_t
 name|ignore_count
 argument_list|)
 decl_stmt|;
+name|Error
+name|SerializeBreakpointsToFile
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
+name|file
+parameter_list|,
+specifier|const
+name|BreakpointIDList
+modifier|&
+name|bp_ids
+parameter_list|,
+name|bool
+name|append
+parameter_list|)
+function_decl|;
+name|Error
+name|CreateBreakpointsFromFile
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
+name|file
+parameter_list|,
+name|BreakpointIDList
+modifier|&
+name|new_bps
+parameter_list|)
+function_decl|;
+name|Error
+name|CreateBreakpointsFromFile
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|file
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|names
+argument_list|,
+name|BreakpointIDList
+operator|&
+name|new_bps
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Get \a load_addr as a callable code load address for this target
 comment|///
@@ -2467,9 +2591,11 @@ argument_list|)
 specifier|const
 expr_stmt|;
 comment|// Get load_addr as breakable load address for this target.
-comment|// Take a addr and check if for any reason there is a better address than this to put a breakpoint on.
+comment|// Take a addr and check if for any reason there is a better address than this
+comment|// to put a breakpoint on.
 comment|// If there is then return that address.
-comment|// For MIPS, if instruction at addr is a delay slot instruction then this method will find the address of its
+comment|// For MIPS, if instruction at addr is a delay slot instruction then this
+comment|// method will find the address of its
 comment|// previous instruction and return that address.
 name|lldb
 operator|::
@@ -2564,7 +2690,7 @@ comment|/// that will be executed or attached to. Executable files can have
 comment|/// dependent modules that are discovered from the object files, or
 comment|/// discovered at runtime as things are dynamically loaded.
 comment|///
-comment|/// Setting the executable causes any of the current dependant
+comment|/// Setting the executable causes any of the current dependent
 comment|/// image information to be cleared and replaced with the static
 comment|/// dependent image information found by calling
 comment|/// ObjectFile::GetDependentModules (FileSpecList&) on the main
@@ -2675,7 +2801,8 @@ name|m_images
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Return whether this FileSpec corresponds to a module that should be considered for general searches.
+comment|/// Return whether this FileSpec corresponds to a module that should be
+comment|/// considered for general searches.
 comment|///
 comment|/// This API will be consulted by the SearchFilterForUnconstrainedSearches
 comment|/// and any module that returns \b true will not be searched.  Note the
@@ -2710,7 +2837,8 @@ comment|///
 comment|/// The target call at present just consults the Platform's call of the
 comment|/// same name.
 comment|///
-comment|/// FIXME: When we get time we should add a way for the user to set modules that they
+comment|/// FIXME: When we get time we should add a way for the user to set modules
+comment|/// that they
 comment|/// don't want searched, in addition to or instead of the platform ones.
 comment|///
 comment|/// @param[in] module_sp
@@ -2743,14 +2871,21 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Set the architecture for this target.
 comment|///
-comment|/// If the current target has no Images read in, then this just sets the architecture, which will
-comment|/// be used to select the architecture of the ExecutableModule when that is set.
-comment|/// If the current target has an ExecutableModule, then calling SetArchitecture with a different
-comment|/// architecture from the currently selected one will reset the ExecutableModule to that slice
-comment|/// of the file backing the ExecutableModule.  If the file backing the ExecutableModule does not
-comment|/// contain a fork of this architecture, then this code will return false, and the architecture
+comment|/// If the current target has no Images read in, then this just sets the
+comment|/// architecture, which will
+comment|/// be used to select the architecture of the ExecutableModule when that is
+comment|/// set.
+comment|/// If the current target has an ExecutableModule, then calling
+comment|/// SetArchitecture with a different
+comment|/// architecture from the currently selected one will reset the
+comment|/// ExecutableModule to that slice
+comment|/// of the file backing the ExecutableModule.  If the file backing the
+comment|/// ExecutableModule does not
+comment|/// contain a fork of this architecture, then this code will return false, and
+comment|/// the architecture
 comment|/// won't be changed.
-comment|/// If the input arch_spec is the same as the already set architecture, this is a no-op.
+comment|/// If the input arch_spec is the same as the already set architecture, this
+comment|/// is a no-op.
 comment|///
 comment|/// @param[in] arch_spec
 comment|///     The new architecture.
@@ -2968,7 +3103,8 @@ block|}
 comment|//    const SectionLoadList&
 comment|//    GetSectionLoadList() const
 comment|//    {
-comment|//        return const_cast<SectionLoadHistory *>(&m_section_load_history)->GetCurrentSectionLoadList();
+comment|//        return const_cast<SectionLoadHistory
+comment|//        *>(&m_section_load_history)->GetCurrentSectionLoadList();
 comment|//    }
 specifier|static
 name|Target
@@ -3060,22 +3196,23 @@ name|LanguageType
 name|language
 argument_list|)
 decl_stmt|;
-comment|// Creates a UserExpression for the given language, the rest of the parameters have the
+comment|// Creates a UserExpression for the given language, the rest of the parameters
+comment|// have the
 comment|// same meaning as for the UserExpression constructor.
 comment|// Returns a new-ed object which the caller owns.
 name|UserExpression
 modifier|*
 name|GetUserExpressionForLanguage
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|expr
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|expr_prefix
+name|llvm
+operator|::
+name|StringRef
+name|prefix
 argument_list|,
 name|lldb
 operator|::
@@ -3097,9 +3234,12 @@ operator|&
 name|error
 argument_list|)
 decl_stmt|;
-comment|// Creates a FunctionCaller for the given language, the rest of the parameters have the
-comment|// same meaning as for the FunctionCaller constructor.  Since a FunctionCaller can't be
-comment|// IR Interpreted, it makes no sense to call this with an ExecutionContextScope that lacks
+comment|// Creates a FunctionCaller for the given language, the rest of the parameters
+comment|// have the
+comment|// same meaning as for the FunctionCaller constructor.  Since a FunctionCaller
+comment|// can't be
+comment|// IR Interpreted, it makes no sense to call this with an
+comment|// ExecutionContextScope that lacks
 comment|// a Process.
 comment|// Returns a new-ed object which the caller owns.
 name|FunctionCaller
@@ -3136,7 +3276,8 @@ operator|&
 name|error
 argument_list|)
 decl_stmt|;
-comment|// Creates a UtilityFunction for the given language, the rest of the parameters have the
+comment|// Creates a UtilityFunction for the given language, the rest of the
+comment|// parameters have the
 comment|// same meaning as for the UtilityFunction constructor.
 comment|// Returns a new-ed object which the caller owns.
 name|UtilityFunction
@@ -3306,36 +3447,15 @@ operator|::
 name|ExpressionResults
 name|EvaluateExpression
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|expression
+argument|llvm::StringRef expression
 argument_list|,
-name|ExecutionContextScope
-operator|*
-name|exe_scope
+argument|ExecutionContextScope *exe_scope
 argument_list|,
-name|lldb
-operator|::
-name|ValueObjectSP
-operator|&
-name|result_valobj_sp
+argument|lldb::ValueObjectSP&result_valobj_sp
 argument_list|,
-specifier|const
-name|EvaluateExpressionOptions
-operator|&
-name|options
-operator|=
-name|EvaluateExpressionOptions
-argument_list|()
+argument|const EvaluateExpressionOptions&options = EvaluateExpressionOptions()
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|fixed_expression
-operator|=
-name|nullptr
+argument|std::string *fixed_expression = nullptr
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -3423,8 +3543,9 @@ block|{
 name|m_commands
 operator|=
 name|in_commands
-block|;         }
-comment|// Set the specifier.  The stop hook will own the specifier, and is responsible for deleting it when we're done.
+block|; }
+comment|// Set the specifier.  The stop hook will own the specifier, and is
+comment|// responsible for deleting it when we're done.
 name|void
 name|SetSpecifier
 argument_list|(
@@ -3445,7 +3566,8 @@ name|get
 argument_list|()
 return|;
 block|}
-comment|// Set the Thread Specifier.  The stop hook will own the thread specifier, and is responsible for deleting it when we're done.
+comment|// Set the Thread Specifier.  The stop hook will own the thread specifier,
+comment|// and is responsible for deleting it when we're done.
 name|void
 name|SetThreadSpecifier
 argument_list|(
@@ -3483,7 +3605,7 @@ block|{
 name|m_active
 operator|=
 name|is_active
-block|;         }
+block|; }
 name|void
 name|GetDescription
 argument_list|(
@@ -3519,8 +3641,10 @@ block|;
 name|bool
 name|m_active
 block|;
-comment|// Use CreateStopHook to make a new empty stop hook. The GetCommandPointer and fill it with commands,
-comment|// and SetSpecifier to set the specifier shared pointer (can be null, that will match anything.)
+comment|// Use CreateStopHook to make a new empty stop hook. The GetCommandPointer
+comment|// and fill it with commands,
+comment|// and SetSpecifier to set the specifier shared pointer (can be null, that
+comment|// will match anything.)
 name|StopHook
 argument_list|(
 argument|lldb::TargetSP target_sp
@@ -3531,7 +3655,7 @@ block|;
 name|friend
 name|class
 name|Target
-block|;     }
+block|;   }
 decl_stmt|;
 typedef|typedef
 name|std
@@ -3542,7 +3666,8 @@ name|StopHook
 operator|>
 name|StopHookSP
 expr_stmt|;
-comment|// Add an empty stop hook to the Target's stop hook list, and returns a shared pointer to it in new_hook.
+comment|// Add an empty stop hook to the Target's stop hook list, and returns a shared
+comment|// pointer to it in new_hook.
 comment|// Returns the id of the new hook.
 name|StopHookSP
 name|CreateStopHook
@@ -3887,14 +4012,16 @@ operator|::
 name|recursive_mutex
 name|m_mutex
 expr_stmt|;
-comment|///< An API mutex that is used by the lldb::SB* classes make the SB interface thread safe
+comment|///< An API mutex that is used by the lldb::SB*
+comment|/// classes make the SB interface thread safe
 name|ArchSpec
 name|m_arch
 decl_stmt|;
 name|ModuleList
 name|m_images
 decl_stmt|;
-comment|///< The list of images for this process (shared libraries and anything dynamically loaded).
+comment|///< The list of images for this process (shared
+comment|/// libraries and anything dynamically loaded).
 name|SectionLoadHistory
 name|m_section_load_history
 decl_stmt|;

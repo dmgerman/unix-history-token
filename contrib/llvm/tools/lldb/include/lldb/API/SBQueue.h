@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_decl_stmt

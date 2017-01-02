@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Address.h"
 end_include
 
@@ -86,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/FileSpec.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
@@ -98,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -114,8 +114,10 @@ comment|//----------------------------------------------------------------------
 comment|/// General Outline:
 comment|/// The AddressResolver is a Searcher.  In that protocol,
 comment|/// the SearchFilter asks the question "At what depth of the symbol context
-comment|/// descent do you want your callback to get called?" of the filter.  The resolver
-comment|/// answers this question (in the GetDepth method) and provides the resolution callback.
+comment|/// descent do you want your callback to get called?" of the filter.  The
+comment|/// resolver
+comment|/// answers this question (in the GetDepth method) and provides the resolution
+comment|/// callback.
 comment|//----------------------------------------------------------------------
 name|class
 name|AddressResolver

@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mutex>
+file|<vector>
 end_include
 
 begin_comment
@@ -74,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Utility/Iterable.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Iterable.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt

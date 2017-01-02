@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- TypeValidator.h ------------------------------------------*- C++ -*-===//
+comment|//===-- TypeValidator.h ------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -74,12 +78,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/lldb-enumerations.h"
 end_include
 
@@ -87,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -633,8 +637,10 @@ operator|::
 name|eTypeUnknown
 return|;
 block|}
-comment|// we are using a ValueObject* instead of a ValueObjectSP because we do not need to hold on to this for
-comment|// extended periods of time and we trust the ValueObject to stay around for as long as it is required
+comment|// we are using a ValueObject* instead of a ValueObjectSP because we do not
+comment|// need to hold on to this for
+comment|// extended periods of time and we trust the ValueObject to stay around for as
+comment|// long as it is required
 comment|// for us to generate its value
 name|virtual
 name|ValidationResult
@@ -725,7 +731,7 @@ argument|ValidatorFunction f
 argument_list|,
 argument|std::string d
 argument_list|,
-argument|const TypeValidatorImpl::Flags& flags = Flags()
+argument|const TypeValidatorImpl::Flags&flags = Flags()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -851,7 +857,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};       }
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

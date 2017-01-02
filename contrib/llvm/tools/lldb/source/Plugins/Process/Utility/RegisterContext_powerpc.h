@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterContext_powerpc.h --------------------------------*- C++ -*-===//
+comment|//===-- RegisterContext_powerpc.h --------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -44,7 +48,11 @@ name|liblldb_RegisterContext_powerpc_H_
 end_define
 
 begin_comment
-comment|// eh_frame and DWARF Register numbers (eRegisterKindEHFrame& eRegisterKindDWARF)
+comment|// eh_frame and DWARF Register numbers (eRegisterKindEHFrame&
+end_comment
+
+begin_comment
+comment|// eRegisterKindDWARF)
 end_comment
 
 begin_enum

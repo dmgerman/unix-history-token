@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Interpreter/Args.h"
 end_include
 
@@ -81,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/CommandObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
 end_include
 
 begin_decl_stmt
@@ -110,13 +110,13 @@ argument|CommandInterpreter&interpreter
 argument_list|,
 argument|lldb::CommandObjectSP cmd_sp
 argument_list|,
-argument|const char *options_args
+argument|llvm::StringRef options_args
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
-argument|const char *help = nullptr
+argument|llvm::StringRef help = llvm::StringRef()
 argument_list|,
-argument|const char *syntax = nullptr
+argument|llvm::StringRef syntax = llvm::StringRef()
 argument_list|,
 argument|uint32_t flags =
 literal|0
@@ -124,15 +124,17 @@ argument_list|)
 decl_stmt|;
 name|void
 name|GetAliasExpansion
-parameter_list|(
+argument_list|(
 name|StreamString
-modifier|&
+operator|&
 name|help_string
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|IsValid
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|m_underlying_command_sp
@@ -143,7 +145,8 @@ block|}
 name|explicit
 name|operator
 name|bool
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|IsValid
@@ -246,16 +249,16 @@ name|IsDashDashCommand
 argument_list|()
 name|override
 expr_stmt|;
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetHelp
 argument_list|()
 name|override
 expr_stmt|;
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetHelpLong
 argument_list|()
 name|override
@@ -263,9 +266,9 @@ expr_stmt|;
 name|void
 name|SetHelp
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|str
 argument_list|)
 name|override
@@ -273,9 +276,9 @@ decl_stmt|;
 name|void
 name|SetHelpLong
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|str
 argument_list|)
 name|override
@@ -306,7 +309,8 @@ return|;
 block|}
 name|OptionArgVectorSP
 name|GetOptionArguments
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|m_option_args_sp

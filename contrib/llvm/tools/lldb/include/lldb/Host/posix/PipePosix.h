@@ -157,7 +157,7 @@ argument|llvm::StringRef prefix
 argument_list|,
 argument|bool child_process_inherit
 argument_list|,
-argument|llvm::SmallVectorImpl<char>& name
+argument|llvm::SmallVectorImpl<char>&name
 argument_list|)
 name|override
 block|;

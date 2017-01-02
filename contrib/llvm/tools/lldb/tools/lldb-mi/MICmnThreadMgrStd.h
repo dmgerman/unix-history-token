@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MIUtilThreadBaseStd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MICmnResources.h"
 end_include
 
@@ -75,8 +69,18 @@ directive|include
 file|"MIUtilSingletonBase.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MIUtilThreadBaseStd.h"
+end_include
+
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -153,7 +157,8 @@ operator|<
 name|typename
 name|T
 operator|>
-comment|// Ask the thread manager to start and stop threads on our behalf
+comment|// Ask the thread manager to start and stop threads on
+comment|// our behalf
 name|bool
 name|ThreadStart
 argument_list|(
@@ -237,15 +242,27 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Given a thread object start its (worker) thread to do work. The object is
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//          added to the *this manager for housekeeping and deletion of all thread objects.
+comment|// Details: Given a thread object start its (worker) thread to do work. The
+end_comment
+
+begin_comment
+comment|// object is
+end_comment
+
+begin_comment
+comment|//          added to the *this manager for housekeeping and deletion of all
+end_comment
+
+begin_comment
+comment|//          thread objects.
 end_comment
 
 begin_comment
@@ -253,7 +270,11 @@ comment|// Type:    Template method.
 end_comment
 
 begin_comment
-comment|// Args:    vrwThreadObj      - (RW) A CMIUtilThreadActiveObjBase derived object.
+comment|// Args:    vrwThreadObj      - (RW) A CMIUtilThreadActiveObjBase derived
+end_comment
+
+begin_comment
+comment|// object.
 end_comment
 
 begin_comment

@@ -80,18 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Address.h"
 end_include
 
@@ -117,6 +105,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Target.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -172,9 +172,9 @@ name|UserExpression
 argument_list|(
 argument|ExecutionContextScope&exe_scope
 argument_list|,
-argument|const char *expr
+argument|llvm::StringRef expr
 argument_list|,
-argument|const char *expr_prefix
+argument|llvm::StringRef prefix
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
@@ -514,16 +514,19 @@ comment|///     Filled in with an error in case the expression evaluation
 comment|///     fails to parse, run, or evaluated.
 comment|///
 comment|/// @param[in] line_offset
-comment|///     The offset of the first line of the expression from the "beginning" of a virtual source file used for error reporting and debug info.
+comment|///     The offset of the first line of the expression from the "beginning" of
+comment|///     a virtual source file used for error reporting and debug info.
 comment|///
 comment|/// @param[out] fixed_expression
-comment|///     If non-nullptr, the fixed expression is copied into the provided string.
+comment|///     If non-nullptr, the fixed expression is copied into the provided
+comment|///     string.
 comment|///
 comment|/// @param[out] jit_module_sp_ptr
 comment|///     If non-nullptr, used to persist the generated IR module.
 comment|///
 comment|/// @result
-comment|///      A Process::ExpressionResults value.  eExpressionCompleted for success.
+comment|///      A Process::ExpressionResults value.  eExpressionCompleted for
+comment|///      success.
 comment|//------------------------------------------------------------------
 specifier|static
 name|lldb
@@ -533,11 +536,11 @@ name|Evaluate
 argument_list|(
 argument|ExecutionContext&exe_ctx
 argument_list|,
-argument|const EvaluateExpressionOptions& options
+argument|const EvaluateExpressionOptions&options
 argument_list|,
-argument|const char *expr_cstr
+argument|llvm::StringRef expr_cstr
 argument_list|,
-argument|const char *expr_prefix
+argument|llvm::StringRef expr_prefix
 argument_list|,
 argument|lldb::ValueObjectSP&result_valobj_sp
 argument_list|,
@@ -560,7 +563,8 @@ name|kNoResult
 operator|=
 literal|0x1001
 block|;
-comment|///< ValueObject::GetError() returns this if there is no result from the expression.
+comment|///< ValueObject::GetError() returns this if there is no result
+comment|///from the expression.
 specifier|const
 name|char
 operator|*
@@ -634,7 +638,8 @@ argument|Error&err
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Populate m_in_cplusplus_method and m_in_objectivec_method based on the environment.
+comment|/// Populate m_in_cplusplus_method and m_in_objectivec_method based on the
+comment|/// environment.
 comment|//------------------------------------------------------------------
 name|void
 name|InstallContext
@@ -685,23 +690,28 @@ operator|::
 name|string
 name|m_expr_prefix
 expr_stmt|;
-comment|///< The text of the translation-level definitions, as provided by the user
+comment|///< The text of the translation-level definitions,
+comment|///as provided by the user
 name|std
 operator|::
 name|string
 name|m_fixed_text
 expr_stmt|;
-comment|///< The text of the expression with fix-its applied - this won't be set if the fixed text doesn't parse.
+comment|///< The text of the expression with fix-its applied
+comment|///- this won't be set if the fixed text doesn't
+comment|///parse.
 name|lldb
 operator|::
 name|LanguageType
 name|m_language
 expr_stmt|;
-comment|///< The language to use when parsing (eLanguageTypeUnknown means use defaults)
+comment|///< The language to use when parsing
+comment|///(eLanguageTypeUnknown means use defaults)
 name|ResultType
 name|m_desired_type
 decl_stmt|;
-comment|///< The type to coerce the expression's result to.  If eResultTypeAny, inferred from the expression.
+comment|///< The type to coerce the expression's result to.
+comment|///If eResultTypeAny, inferred from the expression.
 name|EvaluateExpressionOptions
 name|m_options
 decl_stmt|;

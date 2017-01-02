@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ClangForward.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Address.h"
 end_include
 
@@ -81,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/ArchSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/ClangForward.h"
 end_include
 
 begin_include
@@ -124,7 +124,8 @@ name|class
 name|ClangExpressionParser
 decl_stmt|;
 comment|//----------------------------------------------------------------------
-comment|/// @class ClangFunctionCaller ClangFunctionCaller.h "lldb/Expression/ClangFunctionCaller.h"
+comment|/// @class ClangFunctionCaller ClangFunctionCaller.h
+comment|/// "lldb/Expression/ClangFunctionCaller.h"
 comment|/// @brief Encapsulates a function that can be called.
 comment|///
 comment|/// A given ClangFunctionCaller object can handle a single function signature.
@@ -185,7 +186,7 @@ name|m_owner
 argument_list|(
 argument|owner
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|ClangFunctionCallerHelper
 argument_list|()
@@ -239,7 +240,10 @@ name|ASTStructExtractor
 operator|>
 name|m_struct_extractor
 block|;
-comment|///< The class that generates the argument struct layout.
+comment|///< The class that
+comment|///generates the
+comment|///argument struct
+comment|///layout.
 block|}
 block|;
 name|public

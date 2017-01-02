@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/AddressRange.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -323,7 +323,8 @@ comment|///< The section offset address range for this line entry.
 name|FileSpec
 name|file
 decl_stmt|;
-comment|///< The source file, possibly mapped by the target.source-map setting
+comment|///< The source file, possibly mapped by the target.source-map
+comment|///setting
 name|FileSpec
 name|original_file
 decl_stmt|;
@@ -331,37 +332,47 @@ comment|///< The original source file, from debug info.
 name|uint32_t
 name|line
 decl_stmt|;
-comment|///< The source line number, or zero if there is no line number information.
+comment|///< The source line number, or zero if there is no line number
+comment|///information.
 name|uint16_t
 name|column
 decl_stmt|;
-comment|///< The column number of the source line, or zero if there is no column information.
+comment|///< The column number of the source line, or zero if there
+comment|///is no column information.
 name|uint16_t
 name|is_start_of_statement
 range|:
 literal|1
 decl_stmt|,
-comment|///< Indicates this entry is the beginning of a statement.
+comment|///< Indicates this entry is the beginning
+comment|///of a statement.
 name|is_start_of_basic_block
 range|:
 literal|1
 decl_stmt|,
-comment|///< Indicates this entry is the beginning of a basic block.
+comment|///< Indicates this entry is the beginning of
+comment|///a basic block.
 name|is_prologue_end
 range|:
 literal|1
 decl_stmt|,
-comment|///< Indicates this entry is one (of possibly many) where execution should be suspended for an entry breakpoint of a function.
+comment|///< Indicates this entry is one (of possibly many)
+comment|///where execution should be suspended for an entry
+comment|///breakpoint of a function.
 name|is_epilogue_begin
 range|:
 literal|1
 decl_stmt|,
-comment|///< Indicates this entry is one (of possibly many) where execution should be suspended for an exit breakpoint of a function.
+comment|///< Indicates this entry is one (of possibly many)
+comment|///where execution should be suspended for an exit
+comment|///breakpoint of a function.
 name|is_terminal_entry
 range|:
 literal|1
 decl_stmt|;
-comment|///< Indicates this entry is that of the first byte after the end of a sequence of target machine instructions.
+comment|///< Indicates this entry is that of the first byte
+comment|///after the end of a sequence of target machine
+comment|///instructions.
 block|}
 struct|;
 comment|//------------------------------------------------------------------

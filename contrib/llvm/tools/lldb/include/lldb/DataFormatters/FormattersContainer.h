@@ -182,8 +182,10 @@ function_decl|;
 block|}
 empty_stmt|;
 comment|// if the user tries to add formatters for, say, "struct Foo"
-comment|// those will not match any type because of the way we strip qualifiers from typenames
-comment|// this method looks for the case where the user is adding a "class","struct","enum" or "union" Foo
+comment|// those will not match any type because of the way we strip qualifiers from
+comment|// typenames
+comment|// this method looks for the case where the user is adding a
+comment|// "class","struct","enum" or "union" Foo
 comment|// and strips the unnecessary qualifier
 specifier|static
 specifier|inline
@@ -978,8 +980,7 @@ operator|<
 name|KeyType
 operator|,
 name|ValueType
-operator|>
-expr|>
+operator|>>
 name|SharedPointer
 expr_stmt|;
 end_typedef
@@ -996,7 +997,7 @@ name|FormattersContainer
 argument_list|(
 argument|std::string name
 argument_list|,
-argument|IFormatChangeListener* lst
+argument|IFormatChangeListener *lst
 argument_list|)
 end_macro
 
@@ -1011,13 +1012,13 @@ name|m_name
 argument_list|(
 argument|name
 argument_list|)
-block|{     }
+block|{}
 name|void
 name|Add
 argument_list|(
 argument|const MapKeyType&type
 argument_list|,
-argument|const MapValueType& entry
+argument|const MapValueType&entry
 argument_list|)
 block|{
 name|Add_Impl
@@ -1035,7 +1036,7 @@ operator|(
 name|nullptr
 operator|)
 argument_list|)
-block|;     }
+block|;   }
 name|bool
 name|Delete
 argument_list|(
@@ -1494,21 +1495,15 @@ name|first
 expr_stmt|;
 if|if
 condition|(
-operator|::
-name|strcmp
-argument_list|(
 name|type
 operator|.
-name|AsCString
+name|GetStringRef
 argument_list|()
-argument_list|,
+operator|==
 name|regex
 operator|->
 name|GetText
 argument_list|()
-argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|m_format_map
@@ -1640,7 +1635,7 @@ name|lldb
 operator|::
 name|TypeNameSpecifierImplSP
 argument_list|(
-argument|new TypeNameSpecifierImpl(key.AsCString(),                                                                            false)
+argument|new TypeNameSpecifierImpl(key.AsCString(), false)
 argument_list|)
 return|;
 else|else
@@ -1699,13 +1694,13 @@ name|lldb
 operator|::
 name|TypeNameSpecifierImplSP
 argument_list|(
-argument|new TypeNameSpecifierImpl(regex->GetText(),                                                                        true)
+argument|new TypeNameSpecifierImpl(regex->GetText().str().c_str(), true)
 argument_list|)
 return|;
 end_return
 
 begin_macro
-unit|}      bool
+unit|}    bool
 name|Get_Impl
 argument_list|(
 argument|ConstString key
@@ -1718,24 +1713,16 @@ end_macro
 
 begin_block
 block|{
-specifier|const
-name|char
-modifier|*
-name|key_cstr
-init|=
+name|llvm
+operator|::
+name|StringRef
+name|key_str
+operator|=
 name|key
 operator|.
-name|AsCString
+name|GetStringRef
 argument_list|()
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|key_cstr
-condition|)
-return|return
-name|false
-return|;
+expr_stmt|;
 name|std
 operator|::
 name|lock_guard
@@ -1800,7 +1787,7 @@ name|regex
 operator|->
 name|Execute
 argument_list|(
-name|key_cstr
+name|key_str
 argument_list|)
 condition|)
 block|{
@@ -1899,20 +1886,15 @@ name|first
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
-argument_list|(
 name|regex
 operator|->
 name|GetText
 argument_list|()
-argument_list|,
+operator|==
 name|key
 operator|.
-name|AsCString
+name|GetStringRef
 argument_list|()
-argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|value

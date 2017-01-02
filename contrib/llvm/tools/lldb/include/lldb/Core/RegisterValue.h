@@ -74,13 +74,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/Scalar.h"
 end_include
 
 begin_include
@@ -92,7 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Scalar.h"
+file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -148,7 +148,7 @@ argument_list|(
 argument|(unsigned long)
 literal|0
 argument_list|)
-block|{         }
+block|{}
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -163,7 +163,7 @@ block|{
 name|m_scalar
 operator|=
 name|inst
-block|;         }
+block|; }
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -178,7 +178,7 @@ block|{
 name|m_scalar
 operator|=
 name|inst
-block|;         }
+block|;   }
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -193,7 +193,7 @@ block|{
 name|m_scalar
 operator|=
 name|inst
-block|;         }
+block|;   }
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -208,7 +208,7 @@ block|{
 name|m_scalar
 operator|=
 name|inst
-block|;         }
+block|;   }
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -228,7 +228,7 @@ name|APInt
 argument_list|(
 name|inst
 argument_list|)
-block|;         }
+block|;   }
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -243,7 +243,7 @@ block|{
 name|m_scalar
 operator|=
 name|value
-block|;         }
+block|; }
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -258,7 +258,7 @@ block|{
 name|m_scalar
 operator|=
 name|value
-block|;         }
+block|;   }
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -273,7 +273,7 @@ block|{
 name|m_scalar
 operator|=
 name|value
-block|;         }
+block|;   }
 name|explicit
 name|RegisterValue
 argument_list|(
@@ -292,7 +292,7 @@ name|length
 argument_list|,
 name|byte_order
 argument_list|)
-block|;         }
+block|;   }
 name|RegisterValue
 operator|::
 name|Type
@@ -523,7 +523,7 @@ operator|::
 name|APInt
 name|GetAsUInt128
 argument_list|(
-argument|const llvm::APInt& fail_value
+argument|const llvm::APInt&fail_value
 argument_list|,
 argument|bool *success_ptr = nullptr
 argument_list|)
@@ -639,7 +639,7 @@ block|;
 name|m_scalar
 operator|=
 name|uint
-block|;         }
+block|;   }
 name|void
 name|operator
 operator|=
@@ -655,7 +655,7 @@ block|;
 name|m_scalar
 operator|=
 name|uint
-block|;         }
+block|;   }
 name|void
 name|operator
 operator|=
@@ -671,7 +671,7 @@ block|;
 name|m_scalar
 operator|=
 name|uint
-block|;         }
+block|;   }
 name|void
 name|operator
 operator|=
@@ -687,7 +687,7 @@ block|;
 name|m_scalar
 operator|=
 name|uint
-block|;         }
+block|;   }
 name|void
 name|operator
 operator|=
@@ -710,7 +710,7 @@ name|APInt
 argument_list|(
 name|uint
 argument_list|)
-block|;         }
+block|;   }
 name|void
 name|operator
 operator|=
@@ -726,7 +726,7 @@ block|;
 name|m_scalar
 operator|=
 name|f
-block|;         }
+block|;   }
 name|void
 name|operator
 operator|=
@@ -742,7 +742,7 @@ block|;
 name|m_scalar
 operator|=
 name|f
-block|;         }
+block|;   }
 name|void
 name|operator
 operator|=
@@ -759,7 +759,7 @@ block|;
 name|m_scalar
 operator|=
 name|f
-block|;         }
+block|;   }
 name|void
 name|SetUInt8
 argument_list|(
@@ -773,7 +773,7 @@ block|;
 name|m_scalar
 operator|=
 name|uint
-block|;         }
+block|;   }
 name|void
 name|SetUInt16
 argument_list|(
@@ -787,7 +787,7 @@ block|;
 name|m_scalar
 operator|=
 name|uint
-block|;         }
+block|;   }
 name|void
 name|SetUInt32
 argument_list|(
@@ -803,7 +803,7 @@ block|;
 name|m_scalar
 operator|=
 name|uint
-block|;         }
+block|;   }
 name|void
 name|SetUInt64
 argument_list|(
@@ -819,7 +819,7 @@ block|;
 name|m_scalar
 operator|=
 name|uint
-block|;         }
+block|;   }
 name|void
 name|SetUInt128
 argument_list|(
@@ -833,7 +833,7 @@ block|;
 name|m_scalar
 operator|=
 name|uint
-block|;         }
+block|;   }
 name|bool
 name|SetUInt
 argument_list|(
@@ -916,7 +916,21 @@ name|sign_bitpos
 parameter_list|)
 function_decl|;
 name|Error
-name|SetValueFromCString
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|RegisterInfo
+operator|*
+name|reg_info
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|value_str
+argument_list|)
+decl_stmt|;
+name|Error
+name|SetValueFromString
 parameter_list|(
 specifier|const
 name|RegisterInfo
@@ -928,6 +942,8 @@ name|char
 modifier|*
 name|value_str
 parameter_list|)
+init|=
+name|delete
 function_decl|;
 name|Error
 name|SetValueFromData
@@ -950,7 +966,8 @@ name|bool
 name|partial_data_ok
 argument_list|)
 decl_stmt|;
-comment|// The default value of 0 for reg_name_right_align_at means no alignment at all.
+comment|// The default value of 0 for reg_name_right_align_at means no alignment at
+comment|// all.
 name|bool
 name|Dump
 argument_list|(
@@ -1049,7 +1066,8 @@ index|[
 name|kMaxRegisterByteSize
 index|]
 decl_stmt|;
-comment|// This must be big enough to hold any register for any supported target.
+comment|// This must be big enough to hold any
+comment|// register for any supported target.
 name|uint8_t
 name|length
 decl_stmt|;

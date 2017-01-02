@@ -43,6 +43,74 @@ directive|define
 name|liblldb_Module_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/SymbolContextScope.h"
+end_include
+
+begin_comment
+comment|// Project includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/ArchSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/UUID.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/TypeSystem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/PathMappingList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Chrono.h"
+end_include
+
 begin_comment
 comment|// C Includes
 end_comment
@@ -73,68 +141,6 @@ begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ArchSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/UUID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/TimeValue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/SymbolContextScope.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/TypeSystem.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/PathMappingList.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_decl_stmt
@@ -231,16 +237,16 @@ comment|///     multiple architectures).
 comment|//------------------------------------------------------------------
 name|Module
 argument_list|(
-argument|const FileSpec& file_spec
+argument|const FileSpec&file_spec
 argument_list|,
-argument|const ArchSpec& arch
+argument|const ArchSpec&arch
 argument_list|,
 argument|const ConstString *object_name = nullptr
 argument_list|,
 argument|lldb::offset_t object_offset =
 literal|0
 argument_list|,
-argument|const TimeValue *object_mod_time_ptr = nullptr
+argument|const llvm::sys::TimePoint<>&object_mod_time = llvm::sys::TimePoint<>()
 argument_list|)
 empty_stmt|;
 name|Module
@@ -512,7 +518,7 @@ name|sc_list
 argument_list|)
 decl_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Find a funciton symbols in the object file's symbol table.
+comment|/// Find a function symbols in the object file's symbol table.
 comment|///
 comment|/// @param[in] name
 comment|///     The name of the symbol that we are looking for.
@@ -700,7 +706,8 @@ comment|///     Source line to locate.
 comment|///
 comment|/// @param[in] function
 comment|///	    Optional filter function. Addresses within this function will be
-comment|///     added to the 'local' list. All others will be added to the 'extern' list.
+comment|///     added to the 'local' list. All others will be added to the 'extern'
+comment|///     list.
 comment|///
 comment|/// @param[out] output_local
 comment|///     All matching addresses within 'function'
@@ -920,7 +927,7 @@ operator|::
 name|TypeSP
 name|FindFirstType
 argument_list|(
-argument|const SymbolContext& sc
+argument|const SymbolContext&sc
 argument_list|,
 argument|const ConstString&type_name
 argument_list|,
@@ -1102,7 +1109,13 @@ name|file
 parameter_list|)
 function_decl|;
 specifier|const
-name|TimeValue
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 operator|&
 name|GetModificationTime
 argument_list|()
@@ -1113,7 +1126,13 @@ name|m_mod_time
 return|;
 block|}
 specifier|const
-name|TimeValue
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 operator|&
 name|GetObjectModificationTime
 argument_list|()
@@ -1125,12 +1144,18 @@ return|;
 block|}
 name|void
 name|SetObjectModificationTime
-parameter_list|(
+argument_list|(
 specifier|const
-name|TimeValue
-modifier|&
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
+operator|&
 name|mod_time
-parameter_list|)
+argument_list|)
 block|{
 name|m_mod_time
 operator|=
@@ -1636,9 +1661,12 @@ name|LanguageType
 name|language
 argument_list|)
 decl_stmt|;
-comment|// Special error functions that can do printf style formatting that will prepend the message with
-comment|// something appropriate for this module (like the architecture, path and object name (if any)).
-comment|// This centralizes code so that everyone doesn't need to format their error and log messages on
+comment|// Special error functions that can do printf style formatting that will
+comment|// prepend the message with
+comment|// something appropriate for this module (like the architecture, path and
+comment|// object name (if any)).
+comment|// This centralizes code so that everyone doesn't need to format their error
+comment|// and log messages on
 comment|// their own and keeps the output a bit more consistent.
 name|void
 name|LogMessage
@@ -2050,9 +2078,9 @@ begin_decl_stmt
 name|bool
 name|RemapSourceFile
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|path
 argument_list|,
 name|std
@@ -2062,6 +2090,25 @@ operator|&
 name|new_path
 argument_list|)
 decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|RemapSourceFile
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+argument_list|)
+decl|const
+init|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -2192,7 +2239,7 @@ name|m_match_name_after_lookup
 argument_list|(
 argument|false
 argument_list|)
-block|{         }
+block|{}
 name|LookupInfo
 argument_list|(
 argument|const ConstString&name
@@ -2294,7 +2341,8 @@ comment|///< What the user originally typed
 name|ConstString
 name|m_lookup_name
 decl_stmt|;
-comment|///< The actual name will lookup when calling in the object or symbol file
+comment|///< The actual name will lookup when calling in
+comment|///the object or symbol file
 name|lldb
 operator|::
 name|LanguageType
@@ -2304,11 +2352,15 @@ comment|///< Limit matches to only be for this language
 name|uint32_t
 name|m_name_type_mask
 decl_stmt|;
-comment|///< One or more bits from lldb::FunctionNameType that indicate what kind of names we are looking for
+comment|///< One or more bits from lldb::FunctionNameType
+comment|///that indicate what kind of names we are
+comment|///looking for
 name|bool
 name|m_match_name_after_lookup
 decl_stmt|;
-comment|///< If \b true, then demangled names that match will need to contain "m_name" in order to be considered a match
+comment|///< If \b true, then demangled names that
+comment|///match will need to contain "m_name" in
+comment|///order to be considered a match
 block|}
 end_decl_stmt
 
@@ -2343,18 +2395,28 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|///< A mutex to keep this object happy in multi-threaded environments.
+comment|///< A mutex to keep this object happy
 end_comment
-
-begin_decl_stmt
-name|TimeValue
-name|m_mod_time
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|///< The modification time for this module when it was created.
+comment|///in multi-threaded environments.
 end_comment
+
+begin_comment
+comment|/// The modification time for this module when it was created.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
+name|m_mod_time
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|ArchSpec
@@ -2373,7 +2435,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< Each module is assumed to have a unique identifier to help match it up to debug symbols.
+comment|///< Each module is assumed to have a unique identifier to help
+end_comment
+
+begin_comment
+comment|///match it up to debug symbols.
 end_comment
 
 begin_decl_stmt
@@ -2383,7 +2449,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< The file representation on disk for this module (if there is one).
+comment|///< The file representation on disk for this module (if
+end_comment
+
+begin_comment
+comment|///there is one).
 end_comment
 
 begin_decl_stmt
@@ -2393,7 +2463,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< The path to the module on the platform on which it is being debugged
+comment|///< The path to the module on the platform on which
+end_comment
+
+begin_comment
+comment|///it is being debugged
 end_comment
 
 begin_decl_stmt
@@ -2403,7 +2477,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< If set when debugging on remote platforms, this module will be installed at this location
+comment|///< If set when debugging on remote
+end_comment
+
+begin_comment
+comment|///platforms, this module will be installed at
+end_comment
+
+begin_comment
+comment|///this location
 end_comment
 
 begin_decl_stmt
@@ -2413,7 +2495,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< If this path is valid, then this is the file that _will_ be used as the symbol file for this module
+comment|///< If this path is valid, then this is the file
+end_comment
+
+begin_comment
+comment|///that _will_ be used as the symbol file for this
+end_comment
+
+begin_comment
+comment|///module
 end_comment
 
 begin_decl_stmt
@@ -2423,7 +2513,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< The name an object within this module that is selected, or empty of the module is represented by \a m_file.
+comment|///< The name an object within this module that is
+end_comment
+
+begin_comment
+comment|///selected, or empty of the module is represented
+end_comment
+
+begin_comment
+comment|///by \a m_file.
 end_comment
 
 begin_decl_stmt
@@ -2432,11 +2530,17 @@ name|m_object_offset
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|TimeValue
+begin_expr_stmt
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 name|m_object_mod_time
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|lldb
@@ -2447,7 +2551,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|///< A shared pointer to the object file parser for this module as it may or may not be shared with the SymbolFile
+comment|///< A shared pointer to the object file
+end_comment
+
+begin_comment
+comment|///parser for this module as it may or may
+end_comment
+
+begin_comment
+comment|///not be shared with the SymbolFile
 end_comment
 
 begin_expr_stmt
@@ -2476,11 +2588,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|///< If anyone calls Module::SetSymbolFileFileSpec() and changes the symbol file,
+comment|///< If anyone calls Module::SetSymbolFileFileSpec() and
 end_comment
 
 begin_comment
-comment|///< we need to keep all old symbol files around in case anyone has type references to them
+comment|///changes the symbol file,
+end_comment
+
+begin_comment
+comment|///< we need to keep all old symbol files around in case anyone has type
+end_comment
+
+begin_comment
+comment|///references to them
 end_comment
 
 begin_decl_stmt
@@ -2490,7 +2610,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< A map of any type systems associated with this module
+comment|///< A map of any type systems associated
+end_comment
+
+begin_comment
+comment|///with this module
 end_comment
 
 begin_decl_stmt
@@ -2500,7 +2624,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|///< Module specific source remappings for when you have debug info for a module that doesn't match where the sources currently are
+comment|///< Module specific source remappings for
+end_comment
+
+begin_comment
+comment|///when you have debug info for a module
+end_comment
+
+begin_comment
+comment|///that doesn't match where the sources
+end_comment
+
+begin_comment
+comment|///currently are
 end_comment
 
 begin_expr_stmt
@@ -2512,7 +2648,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|///< Unified section list for module that is used by the ObjectFile and and ObjectFile instances for the debug info
+comment|///< Unified section list for module that
+end_comment
+
+begin_comment
+comment|///is used by the ObjectFile and and
+end_comment
+
+begin_comment
+comment|///ObjectFile instances for the debug info
 end_comment
 
 begin_expr_stmt
@@ -2523,6 +2667,9 @@ operator|<
 name|bool
 operator|>
 name|m_did_load_objfile
+block|{
+name|false
+block|}
 expr_stmt|;
 end_expr_stmt
 
@@ -2534,6 +2681,9 @@ operator|<
 name|bool
 operator|>
 name|m_did_load_symbol_vendor
+block|{
+name|false
+block|}
 expr_stmt|;
 end_expr_stmt
 
@@ -2545,6 +2695,9 @@ operator|<
 name|bool
 operator|>
 name|m_did_parse_uuid
+block|{
+name|false
+block|}
 expr_stmt|;
 end_expr_stmt
 
@@ -2562,7 +2715,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// See if the module was modified after it was initially opened.
+comment|/// See if the module was modified after it
+end_comment
+
+begin_comment
+comment|/// was initially opened.
 end_comment
 
 begin_comment

@@ -58,7 +58,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -74,11 +78,19 @@ comment|//          An argument knows what type of argument it is and how it is 
 end_comment
 
 begin_comment
-comment|//          interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a
 end_comment
 
 begin_comment
-comment|//          argument. This type having recognised its argument name just consumes
+comment|//          matching
+end_comment
+
+begin_comment
+comment|//          argument. This type having recognised its argument name just
+end_comment
+
+begin_comment
+comment|//          consumes
 end_comment
 
 begin_comment
@@ -86,7 +98,11 @@ comment|//          that argument or option (ignores it). This is the so the val
 end_comment
 
 begin_comment
-comment|//          process can then ask if all arguments or options have been recognised
+comment|//          process can then ask if all arguments or options have been
+end_comment
+
+begin_comment
+comment|//          recognised
 end_comment
 
 begin_comment
@@ -94,11 +110,19 @@ comment|//          other an error will occurred "argument not recognised". For 
 end_comment
 
 begin_comment
-comment|//          this can be used to consume the "--" text which is not an argument in
+comment|//          this can be used to consume the "--" text which is not an argument
 end_comment
 
 begin_comment
-comment|//          itself. Normally the GetValue() function (in base class) would return
+comment|//          in
+end_comment
+
+begin_comment
+comment|//          itself. Normally the GetValue() function (in base class) would
+end_comment
+
+begin_comment
+comment|//          return
 end_comment
 
 begin_comment

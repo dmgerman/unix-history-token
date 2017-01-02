@@ -78,7 +78,7 @@ name|SymbolFileDWARFDwo
 argument_list|(
 argument|lldb::ObjectFileSP objfile
 argument_list|,
-argument|DWARFCompileUnit* dwarf_cu
+argument|DWARFCompileUnit *dwarf_cu
 argument_list|)
 block|;
 operator|~
@@ -93,7 +93,7 @@ operator|::
 name|CompUnitSP
 name|ParseCompileUnit
 argument_list|(
-argument|DWARFCompileUnit* dwarf_cu
+argument|DWARFCompileUnit *dwarf_cu
 argument_list|,
 argument|uint32_t cu_idx
 argument_list|)
@@ -164,7 +164,7 @@ name|LoadSectionData
 argument_list|(
 argument|lldb::SectionType sect_type
 argument_list|,
-argument|lldb_private::DWARFDataExtractor& data
+argument|lldb_private::DWARFDataExtractor&data
 argument_list|)
 name|override
 block|;

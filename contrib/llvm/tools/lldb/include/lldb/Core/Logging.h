@@ -305,7 +305,8 @@ begin_define
 define|#
 directive|define
 name|LIBLLDB_LOG_DEFAULT
-value|(LIBLLDB_LOG_PROCESS              |\                                          LIBLLDB_LOG_THREAD               |\                                          LIBLLDB_LOG_DYNAMIC_LOADER       |\                                          LIBLLDB_LOG_BREAKPOINTS          |\                                          LIBLLDB_LOG_WATCHPOINTS          |\                                          LIBLLDB_LOG_STEP                 |\                                          LIBLLDB_LOG_STATE                |\                                          LIBLLDB_LOG_SYMBOLS              |\                                          LIBLLDB_LOG_TARGET               |\                                          LIBLLDB_LOG_COMMANDS)
+define|\
+value|(LIBLLDB_LOG_PROCESS | LIBLLDB_LOG_THREAD | LIBLLDB_LOG_DYNAMIC_LOADER |     \    LIBLLDB_LOG_BREAKPOINTS | LIBLLDB_LOG_WATCHPOINTS | LIBLLDB_LOG_STEP |      \    LIBLLDB_LOG_STATE | LIBLLDB_LOG_SYMBOLS | LIBLLDB_LOG_TARGET |              \    LIBLLDB_LOG_COMMANDS)
 end_define
 
 begin_decl_stmt

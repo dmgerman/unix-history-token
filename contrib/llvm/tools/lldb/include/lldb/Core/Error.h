@@ -82,6 +82,12 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FormatVariadic.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -985,17 +991,17 @@ begin_comment
 comment|//------------------------------------------------------------------
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|SetErrorString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|err_str
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -1063,47 +1069,55 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|/// Test for success condition.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Returns true if the error code in this object is considered a
-end_comment
-
-begin_comment
-comment|/// successful return value.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @return
-end_comment
-
-begin_comment
-comment|///     \b true if this object contains an value that describes
-end_comment
-
-begin_comment
-comment|///     success (non-erro), \b false otherwise.
-end_comment
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
 begin_expr_stmt
+name|template
+operator|<
+name|typename
+operator|...
+name|Args
+operator|>
+name|void
+name|SetErrorStringWithFormatv
+argument_list|(
+argument|const char *format
+argument_list|,
+argument|Args&&... args
+argument_list|)
+block|{
+name|SetErrorString
+argument_list|(
+name|llvm
+operator|::
+name|formatv
+argument_list|(
+name|format
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|Args
+operator|>
+operator|(
+name|args
+operator|)
+operator|...
+argument_list|)
+operator|.
+name|str
+argument_list|()
+argument_list|)
+block|;   }
+comment|//------------------------------------------------------------------
+comment|/// Test for success condition.
+comment|///
+comment|/// Returns true if the error code in this object is considered a
+comment|/// successful return value.
+comment|///
+comment|/// @return
+comment|///     \b true if this object contains an value that describes
+comment|///     success (non-erro), \b false otherwise.
+comment|//------------------------------------------------------------------
 name|bool
 name|Success
 argument_list|()

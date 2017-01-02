@@ -490,7 +490,7 @@ block|{}
 name|void
 name|add
 argument_list|(
-argument|const LoadedModuleInfo& mod
+argument|const LoadedModuleInfo&mod
 argument_list|)
 block|{
 name|m_list
@@ -499,7 +499,7 @@ name|push_back
 argument_list|(
 name|mod
 argument_list|)
-block|;     }
+block|; }
 name|void
 name|clear
 argument_list|()
@@ -508,7 +508,7 @@ name|m_list
 operator|.
 name|clear
 argument_list|()
-block|;     }
+block|; }
 name|std
 operator|::
 name|vector

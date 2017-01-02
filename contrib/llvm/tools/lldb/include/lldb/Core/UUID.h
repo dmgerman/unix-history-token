@@ -207,40 +207,25 @@ comment|/// @param[in] uuid_bytes
 comment|///     A buffer of bytes that will contain a full or patially
 comment|///     decoded UUID.
 comment|///
-comment|/// @param[out] end
-comment|///     If \a end is not nullptr, it will be filled in with the a
-comment|///     pointer to the character after the last successfully decoded
-comment|///     byte.
-comment|///
 comment|/// @return
-comment|///     Returns the number of bytes that were successfully decoded
-comment|///     which should be 16 if a full UUID value was properly decoded.
+comment|///     The original string, with all decoded bytes removed.
 comment|//------------------------------------------------------------------
 specifier|static
-name|size_t
-name|DecodeUUIDBytesFromCString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|cstr
-parameter_list|,
-name|ValueType
-modifier|&
-name|uuid_bytes
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|end
-parameter_list|,
-name|uint32_t
-name|num_uuid_bytes
-init|=
+name|llvm
+operator|::
+name|StringRef
+name|DecodeUUIDBytesFromString
+argument_list|(
+argument|llvm::StringRef str
+argument_list|,
+argument|ValueType&uuid_bytes
+argument_list|,
+argument|uint32_t&bytes_decoded
+argument_list|,
+argument|uint32_t num_uuid_bytes =
 literal|16
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------

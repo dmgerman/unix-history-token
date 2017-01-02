@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OptionValueSInt64.h --------------------------------------*- C++ -*-===//
+comment|//===-- OptionValueSInt64.h --------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -102,7 +106,7 @@ name|m_max_value
 argument_list|(
 argument|INT64_MAX
 argument_list|)
-block|{     }
+block|{}
 name|OptionValueSInt64
 argument_list|(
 argument|int64_t value
@@ -130,7 +134,7 @@ name|m_max_value
 argument_list|(
 argument|INT64_MAX
 argument_list|)
-block|{     }
+block|{}
 name|OptionValueSInt64
 argument_list|(
 argument|int64_t current_value
@@ -160,7 +164,7 @@ name|m_max_value
 argument_list|(
 argument|INT64_MAX
 argument_list|)
-block|{     }
+block|{}
 name|OptionValueSInt64
 argument_list|(
 specifier|const
@@ -199,12 +203,12 @@ name|m_max_value
 argument_list|(
 argument|rhs.m_max_value
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueSInt64
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -239,6 +243,20 @@ argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|Clear
@@ -371,7 +389,7 @@ block|{
 name|m_min_value
 operator|=
 name|v
-block|;     }
+block|; }
 name|int64_t
 name|GetMinimumValue
 argument_list|()
@@ -390,7 +408,7 @@ block|{
 name|m_max_value
 operator|=
 name|v
-block|;     }
+block|; }
 name|int64_t
 name|GetMaximumValue
 argument_list|()

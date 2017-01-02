@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<set>
+file|<bitset>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<bitset>
+file|<set>
 end_include
 
 begin_include
@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/API/SBBroadcaster.h"
 end_include
 
@@ -95,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/API/SBDebugger.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_include
@@ -271,7 +271,7 @@ operator|&
 name|error
 argument_list|)
 decl_stmt|;
-comment|//static OptionDefinition m_cmd_option_table[];
+comment|// static OptionDefinition m_cmd_option_table[];
 struct|struct
 name|InitialCmdEntry
 block|{
@@ -317,7 +317,8 @@ decl_stmt|;
 name|bool
 name|is_cwd_lldbinit_file_read
 decl_stmt|;
-comment|// if this is reading ./.lldbinit - so we may skip if not permitted
+comment|// if this is reading ./.lldbinit - so we
+comment|// may skip if not permitted
 name|bool
 name|source_quietly
 decl_stmt|;
@@ -416,7 +417,8 @@ expr_stmt|;
 name|bool
 name|m_use_external_editor
 decl_stmt|;
-comment|// FIXME: When we have set/show variables we can remove this from here.
+comment|// FIXME: When we have set/show variables we can
+comment|// remove this from here.
 name|bool
 name|m_batch
 decl_stmt|;

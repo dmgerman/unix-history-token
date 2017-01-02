@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- lldb-versioning.h ----------------------------------------*- C++ -*-===//
+comment|//===-- lldb-versioning.h ----------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -70,11 +74,15 @@ value|0
 end_define
 
 begin_comment
-comment|/*   API versioning  ---------------------------------    The LLDB API is versioned independently of the LLDB source base  Our API version numbers are composed of a major and a minor number   The major number means a complete and stable revision of the API. Major numbers are compatibility breakers  (i.e. when we change the API major number, there is no promise of compatibility with the previous major version   and we are free to remove and/or change any APIs)  Minor numbers are a work-in-progress evolution of the API. APIs will not be removed or changed across minor versions  (minors do not break compatibility). However, we can deprecate APIs in minor versions or add new APIs in minor versions  A deprecated API is supposedly going to be removed in the next major version and will generate a warning if used  APIs we add in minor versions will not be removed (at least until the following major) but they might theoretically be deprecated  in a following minor version  Users are discouraged from using the LLDB version number to test for API features and should instead use the API version checking  as discussed below     API version checking  ---------------------------------    You can (optionally) sign into an API version checking feature  To do so you need to define three macros:  LLDB_API_CHECK_VERSIONING - define to any value (or no value)  LLDB_API_MAJOR_VERSION_WANTED - which major version of the LLDB API you are targeting  LLDB_API_MINOR_VERSION_WANTED - which minor version of the LLDB API you are targeting    If these macros exist - LLDB will enable version checking of the public API    If LLDB_API_MAJOR_VERSION is not equal to LLDB_API_MAJOR_VERSION_WANTED we will immediately halt your compilation with an error  This is by design, since we do not make any promise of compatibility across major versions - if you really want to test your luck, disable the versioning altogether    If the major version test passes, you have signed up for a specific minor version of the API  Whenever we add or deprecate an API in a minor version, we will mark it with either  LLDB_API_NEW_IN_DOT_x - this API is new in LLDB .x  LLDB_API_DEPRECATED_IN_DOT_x - this API is deprecated as of .x    If you are using an API new in DOT_x   if LLDB_API_MINOR_VERSION_WANTED>= x then all is well, else you will get a compilation error    This is meant to prevent you from using APIs that are newer than whatever LLDB you want to target   If you are using an API deprecated in DOT_x   if LLDB_API_MINOR_VERSION_WANTED>= x then you will get a compilation warning, else all is well   This is meant to let you know that you are using an API that is deprecated and might go away     Caveats  ---------------------------------    Version checking only works on clang on OSX - you will get an error if you try to enable it on any other OS/compiler  If you want to enable version checking on other platforms, you will need to define appropriate implementations for  LLDB_API_IMPL_DEPRECATED and LLDB_API_IMPL_TOONEW and any other infrastructure your compiler needs for this purpose    We have no deprecation-as-error mode    There is no support for API versioning in Python    We reserve to use macros whose names begin with LLDB_API_ and you should not use them in your source code as they might conflict  with present or future macro names we are using to implement versioning */
+comment|/*   API versioning  ---------------------------------   The LLDB API is versioned independently of the LLDB source base  Our API version numbers are composed of a major and a minor number   The major number means a complete and stable revision of the API. Major numbers  are compatibility breakers  (i.e. when we change the API major number, there is no promise of compatibility  with the previous major version   and we are free to remove and/or change any APIs)  Minor numbers are a work-in-progress evolution of the API. APIs will not be  removed or changed across minor versions  (minors do not break compatibility). However, we can deprecate APIs in minor  versions or add new APIs in minor versions  A deprecated API is supposedly going to be removed in the next major version  and will generate a warning if used  APIs we add in minor versions will not be removed (at least until the following  major) but they might theoretically be deprecated  in a following minor version  Users are discouraged from using the LLDB version number to test for API  features and should instead use the API version checking  as discussed below    API version checking  ---------------------------------   You can (optionally) sign into an API version checking feature  To do so you need to define three macros:  LLDB_API_CHECK_VERSIONING - define to any value (or no value)  LLDB_API_MAJOR_VERSION_WANTED - which major version of the LLDB API you are  targeting  LLDB_API_MINOR_VERSION_WANTED - which minor version of the LLDB API you are  targeting   If these macros exist - LLDB will enable version checking of the public API   If LLDB_API_MAJOR_VERSION is not equal to LLDB_API_MAJOR_VERSION_WANTED we will  immediately halt your compilation with an error  This is by design, since we do not make any promise of compatibility across  major versions - if you really want to test your luck, disable the versioning  altogether   If the major version test passes, you have signed up for a specific minor  version of the API  Whenever we add or deprecate an API in a minor version, we will mark it with  either  LLDB_API_NEW_IN_DOT_x - this API is new in LLDB .x  LLDB_API_DEPRECATED_IN_DOT_x - this API is deprecated as of .x   If you are using an API new in DOT_x   if LLDB_API_MINOR_VERSION_WANTED>= x then all is well, else you will get a  compilation error    This is meant to prevent you from using APIs that are newer than whatever  LLDB you want to target   If you are using an API deprecated in DOT_x   if LLDB_API_MINOR_VERSION_WANTED>= x then you will get a compilation warning,  else all is well   This is meant to let you know that you are using an API that is deprecated and  might go away    Caveats  ---------------------------------   Version checking only works on clang on OSX - you will get an error if you try  to enable it on any other OS/compiler  If you want to enable version checking on other platforms, you will need to  define appropriate implementations for  LLDB_API_IMPL_DEPRECATED and LLDB_API_IMPL_TOONEW and any other infrastructure  your compiler needs for this purpose   We have no deprecation-as-error mode   There is no support for API versioning in Python   We reserve to use macros whose names begin with LLDB_API_ and you should not  use them in your source code as they might conflict  with present or future macro names we are using to implement versioning */
 end_comment
 
 begin_comment
-comment|// if you want the version checking to work on other OS/compiler, define appropriate IMPL_DEPRECATED/IMPL_TOONEW
+comment|// if you want the version checking to work on other OS/compiler, define
+end_comment
+
+begin_comment
+comment|// appropriate IMPL_DEPRECATED/IMPL_TOONEW
 end_comment
 
 begin_comment
@@ -128,6 +136,7 @@ argument_list|(
 name|LLDB_API_CHECK_VERSIONING
 argument_list|)
 operator|&&
+expr|\
 operator|!
 name|defined
 argument_list|(
@@ -138,6 +147,7 @@ end_if
 begin_error
 error|#
 directive|error
+error|\
 literal|"API version checking will not work here - please disable or create and submit patches to lldb-versioning.h"
 end_error
 
@@ -154,6 +164,7 @@ argument_list|(
 name|LLDB_API_CHECK_VERSIONING_WORKS
 argument_list|)
 operator|&&
+expr|\
 operator|(
 operator|!
 name|defined
@@ -172,6 +183,7 @@ end_if
 begin_error
 error|#
 directive|error
+error|\
 literal|"LLDB_API_CHECK_VERSIONING_WORKS needs LLDB_API_IMPL_DEPRECATED and LLDB_API_IMPL_TOONEW to be defined"
 end_error
 
@@ -188,11 +200,13 @@ argument_list|(
 name|LLDB_API_CHECK_VERSIONING
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
 name|LLDB_API_MAJOR_VERSION_WANTED
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
 name|LLDB_API_MINOR_VERSION_WANTED
@@ -207,6 +221,7 @@ argument_list|(
 name|LLDB_API_MAJOR_VERSION
 argument_list|)
 operator|&&
+expr|\
 operator|(
 name|LLDB_API_MAJOR_VERSION
 operator|!=
@@ -217,6 +232,7 @@ end_if
 begin_error
 error|#
 directive|error
+error|\
 literal|"Cannot link using this LLDB version - public API versions are incompatible"
 end_error
 
@@ -7131,7 +7147,19 @@ directive|else
 end_else
 
 begin_comment
-comment|// defined(LLDB_CHECK_API_VERSIONING)&& defined(LLDB_API_MAJOR_VERSION_WANTED)&& defined(LLDB_API_MINOR_VERSION_WANTED)&& defined (LLDB_API_MAJOR_VERSION)
+comment|// defined(LLDB_CHECK_API_VERSIONING)&&
+end_comment
+
+begin_comment
+comment|// defined(LLDB_API_MAJOR_VERSION_WANTED)&&
+end_comment
+
+begin_comment
+comment|// defined(LLDB_API_MINOR_VERSION_WANTED)&& defined
+end_comment
+
+begin_comment
+comment|// (LLDB_API_MAJOR_VERSION)
 end_comment
 
 begin_define
@@ -8340,7 +8368,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// defined(LLDB_CHECK_API_VERSIONING)&& defined(LLDB_API_MAJOR_VERSION_WANTED)&& defined(LLDB_API_MINOR_VERSION_WANTED)&& defined (LLDB_API_MAJOR_VERSION)
+comment|// defined(LLDB_CHECK_API_VERSIONING)&&
+end_comment
+
+begin_comment
+comment|// defined(LLDB_API_MAJOR_VERSION_WANTED)&&
+end_comment
+
+begin_comment
+comment|// defined(LLDB_API_MINOR_VERSION_WANTED)&& defined
+end_comment
+
+begin_comment
+comment|// (LLDB_API_MAJOR_VERSION)
 end_comment
 
 begin_endif

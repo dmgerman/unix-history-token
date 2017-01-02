@@ -91,13 +91,13 @@ name|m_t1
 block|;
 name|T2
 name|m_t2
-block|;         }
+block|;   }
 block|;
 name|public
 operator|:
 name|Either
 argument_list|(
-argument|const T1& t1
+argument|const T1&t1
 argument_list|)
 block|{
 name|m_t1
@@ -109,10 +109,10 @@ operator|=
 name|Selected
 operator|::
 name|One
-block|;         }
+block|;   }
 name|Either
 argument_list|(
-argument|const T2& t2
+argument|const T2&t2
 argument_list|)
 block|{
 name|m_t2
@@ -124,12 +124,12 @@ operator|=
 name|Selected
 operator|::
 name|Two
-block|;         }
+block|;   }
 name|Either
 argument_list|(
 argument|const Either<T1
 argument_list|,
-argument|T2>& rhs
+argument|T2>&rhs
 argument_list|)
 block|{
 switch|switch

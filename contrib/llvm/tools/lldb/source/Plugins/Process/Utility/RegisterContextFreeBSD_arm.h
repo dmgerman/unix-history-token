@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"RegisterInfoInterface.h"
 end_include
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterInfoInterface.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -87,7 +87,7 @@ name|cpsr
 block|;
 comment|// CPSR
 block|}
-block|;       struct
+block|;    struct
 name|QReg
 block|{
 name|uint8_t
@@ -95,8 +95,8 @@ name|bytes
 index|[
 literal|16
 index|]
-block|;     }
-block|;      struct
+block|;   }
+block|;    struct
 name|FPU
 block|{
 expr|union
@@ -125,8 +125,8 @@ name|floats
 block|;
 name|uint32_t
 name|fpscr
-block|;     }
-block|;     struct
+block|;   }
+block|;   struct
 name|EXC
 block|{
 name|uint32_t
@@ -141,7 +141,7 @@ name|far
 block|;
 comment|/* Virtual Fault Address */
 block|}
-block|;      struct
+block|;    struct
 name|DBG
 block|{
 name|uint32_t
@@ -167,7 +167,7 @@ name|wcr
 index|[
 literal|16
 index|]
-block|;     }
+block|;   }
 block|;
 name|RegisterContextFreeBSD_arm
 argument_list|(

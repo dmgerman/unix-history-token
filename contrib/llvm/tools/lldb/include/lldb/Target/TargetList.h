@@ -198,9 +198,9 @@ name|CreateTarget
 argument_list|(
 argument|Debugger&debugger
 argument_list|,
-argument|const char *user_exe_path
+argument|llvm::StringRef user_exe_path
 argument_list|,
-argument|const char *triple_cstr
+argument|llvm::StringRef triple_str
 argument_list|,
 argument|bool get_dependent_modules
 argument_list|,
@@ -220,9 +220,9 @@ name|CreateTarget
 argument_list|(
 argument|Debugger&debugger
 argument_list|,
-argument|const char *user_exe_path
+argument|llvm::StringRef user_exe_path
 argument_list|,
-argument|const ArchSpec& arch
+argument|const ArchSpec&arch
 argument_list|,
 argument|bool get_dependent_modules
 argument_list|,
@@ -448,9 +448,9 @@ name|Debugger
 operator|&
 name|debugger
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|specified_arch_name
 argument_list|,
 name|lldb
@@ -467,15 +467,15 @@ name|Debugger
 operator|&
 name|debugger
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|user_exe_path
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|triple_cstr
+name|llvm
+operator|::
+name|StringRef
+name|triple_str
 argument_list|,
 name|bool
 name|get_dependent_files
@@ -502,9 +502,9 @@ name|Debugger
 operator|&
 name|debugger
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|user_exe_path
 argument_list|,
 specifier|const
