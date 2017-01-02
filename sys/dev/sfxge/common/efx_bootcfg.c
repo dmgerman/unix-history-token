@@ -50,14 +50,14 @@ begin_define
 define|#
 directive|define
 name|DHCP_END
-value|(uint8_t)0xff
+value|((uint8_t)0xff)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DHCP_PAD
-value|(uint8_t)0
+value|((uint8_t)0)
 end_define
 
 begin_decl_stmt

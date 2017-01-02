@@ -45,14 +45,14 @@ begin_define
 define|#
 directive|define
 name|MCDI_MON_NEXT_PAGE
-value|(uint16_t)0xfffe
+value|((uint16_t)0xfffe)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MCDI_MON_INVALID_SENSOR
-value|(uint16_t)0xfffd
+value|((uint16_t)0xfffd)
 end_define
 
 begin_define
