@@ -4194,7 +4194,7 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED EfxTransmitQueueStatNamesBlock 9d8d26a0a5e2c453 */
+comment|/* START MKCONFIG GENERATED EfxTransmitQueueStatNamesBlock 2866874ecd7a363b */
 end_comment
 
 begin_decl_stmt
@@ -4202,6 +4202,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|__efx_tx_qstat_name
 index|[]
 init|=

@@ -1239,7 +1239,7 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED PhyStatNamesBlock d5f79b4bc2c050fe */
+comment|/* START MKCONFIG GENERATED PhyStatNamesBlock af9ffa24da3bc100 */
 end_comment
 
 begin_decl_stmt
@@ -1247,6 +1247,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|__efx_phy_stat_name
 index|[]
 init|=
