@@ -1812,7 +1812,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/*  * This improves performance by pushing a TX descriptor at the same time as the  * doorbell. The descriptor must be added to the TXQ, so that can be used if the  * hardware decides not to use the pushed descriptor.  */
+comment|/*  * This improves performance by, when possible, pushing a TX descriptor at the  * same time as the doorbell. The descriptor must be added to the TXQ, so that  * can be used if the hardware decides not to use the pushed descriptor.  */
 end_comment
 
 begin_function
@@ -1897,6 +1897,33 @@ operator|&
 name|desc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * SF Bug 65776: TSO option descriptors cannot be pushed if pacer bypass 	 * is enabled on the event queue this transmit queue is attached to. 	 * 	 * To ensure the code is safe, it is easiest to simply test the type of 	 * the descriptor to push, and only push it is if it not a TSO option 	 * descriptor. 	 */
+if|if
+condition|(
+operator|(
+name|EFX_QWORD_FIELD
+argument_list|(
+name|desc
+argument_list|,
+name|ESF_DZ_TX_DESC_IS_OPT
+argument_list|)
+operator|!=
+literal|1
+operator|)
+operator|||
+operator|(
+name|EFX_QWORD_FIELD
+argument_list|(
+name|desc
+argument_list|,
+name|ESF_DZ_TX_OPTION_TYPE
+argument_list|)
+operator|!=
+name|ESE_DZ_TX_OPTION_DESC_TSO
+operator|)
+condition|)
+block|{
+comment|/* Push the descriptor and update the wptr. */
 name|EFX_POPULATE_OWORD_3
 argument_list|(
 name|oword
@@ -1924,7 +1951,7 @@ name|EFX_DWORD_0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Guarantee ordering of memory (descriptors) and PIO (doorbell) */
+comment|/* Ensure ordering of memory (descriptors) and PIO (doorbell) */
 name|EFX_DMA_SYNC_QUEUE_FOR_DEVICE
 argument_list|(
 name|etp
@@ -1959,6 +1986,69 @@ operator|&
 name|oword
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|efx_dword_t
+name|dword
+decl_stmt|;
+comment|/* 		 * Only update the wptr. This is signalled to the hardware by 		 * only writing one DWORD of the doorbell register. 		 */
+name|EFX_POPULATE_OWORD_1
+argument_list|(
+name|oword
+argument_list|,
+name|ERF_DZ_TX_DESC_WPTR
+argument_list|,
+name|wptr
+argument_list|)
+expr_stmt|;
+name|dword
+operator|=
+name|oword
+operator|.
+name|eo_dword
+index|[
+literal|2
+index|]
+expr_stmt|;
+comment|/* Ensure ordering of memory (descriptors) and PIO (doorbell) */
+name|EFX_DMA_SYNC_QUEUE_FOR_DEVICE
+argument_list|(
+name|etp
+operator|->
+name|et_esmp
+argument_list|,
+name|etp
+operator|->
+name|et_mask
+operator|+
+literal|1
+argument_list|,
+name|wptr
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+name|EFSYS_PIO_WRITE_BARRIER
+argument_list|()
+expr_stmt|;
+name|EFX_BAR_TBL_WRITED2
+argument_list|(
+name|enp
+argument_list|,
+name|ER_DZ_TX_DESC_UPD_REG
+argument_list|,
+name|etp
+operator|->
+name|et_index
+argument_list|,
+operator|&
+name|dword
+argument_list|,
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
