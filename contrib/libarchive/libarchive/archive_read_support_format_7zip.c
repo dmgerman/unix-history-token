@@ -827,7 +827,7 @@ name|unsigned
 name|long
 name|header_crc32
 decl_stmt|;
-comment|/* Header offset to check that reading pointes of the file contens 	 * will not exceed the header. */
+comment|/* Header offset to check that reading points of the file contents 	 * will not exceed the header. */
 name|uint64_t
 name|header_offset
 decl_stmt|;
@@ -927,7 +927,7 @@ name|long
 name|codec2
 decl_stmt|;
 comment|/* 	 * Decompressor controllers. 	 */
-comment|/* Decording LZMA1 and LZMA2 data. */
+comment|/* Decoding LZMA1 and LZMA2 data. */
 ifdef|#
 directive|ifdef
 name|HAVE_LZMA_H
@@ -939,7 +939,7 @@ name|lzstream_valid
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* Decording bzip2 data. */
+comment|/* Decoding bzip2 data. */
 if|#
 directive|if
 name|defined
@@ -959,7 +959,7 @@ name|bzstream_valid
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* Decording deflate data. */
+comment|/* Decoding deflate data. */
 ifdef|#
 directive|ifdef
 name|HAVE_ZLIB_H
@@ -971,7 +971,7 @@ name|stream_valid
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* Decording PPMd data. */
+comment|/* Decoding PPMd data. */
 name|int
 name|ppmd7_stat
 decl_stmt|;
@@ -4785,18 +4785,10 @@ name|filters
 index|[
 name|LZMA_FILTERS_MAX
 index|]
-decl_stmt|;
-if|#
-directive|if
-name|LZMA_VERSION
-operator|<
-literal|50010000
-name|lzma_filter
+decl_stmt|,
 modifier|*
 name|ff
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|fi
 init|=
@@ -5094,11 +5086,6 @@ name|options
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|LZMA_VERSION
-operator|<
-literal|50010000
 name|ff
 operator|=
 operator|&
@@ -5107,8 +5094,6 @@ index|[
 name|fi
 index|]
 expr_stmt|;
-endif|#
-directive|endif
 name|r
 operator|=
 name|lzma_properties_decode
@@ -5188,11 +5173,6 @@ argument_list|,
 name|filters
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|LZMA_VERSION
-operator|<
-literal|50010000
 name|free
 argument_list|(
 name|ff
@@ -5200,8 +5180,6 @@ operator|->
 name|options
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|r

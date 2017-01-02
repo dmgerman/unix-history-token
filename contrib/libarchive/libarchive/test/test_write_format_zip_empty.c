@@ -159,7 +159,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Verify the correct format for an empy Zip archive. */
+comment|/* Verify the correct format for an empty Zip archive. */
 name|assertEqualInt
 argument_list|(
 name|used

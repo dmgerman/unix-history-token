@@ -151,6 +151,31 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* On some systems the error won't be detected until closing 		   time, by a 127 exit error returned by waitpid. */
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|p
+argument_list|,
+literal|"Error closing"
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|canLz4
+argument_list|()
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"This version of bsdcpio uses an external lz4 program "
+literal|"but no such program is available on this system."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|failure
 argument_list|(
 literal|"--lz4 option is broken: %s"

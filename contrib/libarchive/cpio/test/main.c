@@ -2742,7 +2742,7 @@ index|[
 name|ch
 index|]
 expr_stmt|;
-comment|/* Invalide sequence or there are not plenty bytes. */
+comment|/* Invalid sequence or there are not plenty bytes. */
 if|if
 condition|(
 name|n
@@ -3062,7 +3062,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* The code point larger than 0x10FFFF is not leagal 	 * Unicode values. */
+comment|/* The code point larger than 0x10FFFF is not legal 	 * Unicode values. */
 if|if
 condition|(
 name|wc

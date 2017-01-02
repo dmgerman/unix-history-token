@@ -611,8 +611,10 @@ expr|struct
 name|pax
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -645,19 +647,6 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-name|memset
-argument_list|(
-name|pax
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|pax
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|a
 operator|->
 name|format_data
@@ -3325,7 +3314,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-comment|/* Make sure the path separators in pahtname, hardlink and symlink 	 * are all slash '/', not the Windows path separator '\'. */
+comment|/* Make sure the path separators in pathname, hardlink and symlink 	 * are all slash '/', not the Windows path separator '\'. */
 name|entry_main
 operator|=
 name|__la_win_entry_in_posix_pathseparator

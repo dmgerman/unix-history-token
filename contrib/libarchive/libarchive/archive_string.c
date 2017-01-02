@@ -8821,7 +8821,7 @@ condition|(
 name|opt
 condition|)
 block|{
-comment|/* 	 * A filename in UTF-8 was made with libarchive 2.x in a wrong 	 * assumption that wchar_t was Unicode. 	 * This option enables simulating the assumption in order to read 	 * that filname correctly. 	 */
+comment|/* 	 * A filename in UTF-8 was made with libarchive 2.x in a wrong 	 * assumption that wchar_t was Unicode. 	 * This option enables simulating the assumption in order to read 	 * that filename correctly. 	 */
 case|case
 name|SCONV_SET_OPT_UTF8_LIBARCHIVE2X
 case|:
@@ -9268,6 +9268,8 @@ name|s
 decl_stmt|;
 name|size_t
 name|length
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
@@ -9278,14 +9280,55 @@ literal|0
 decl_stmt|,
 name|r2
 decl_stmt|;
-comment|/* We must allocate memory even if there is no data for conversion 	 * or copy. This simulates archive_string_append behavior. */
 if|if
 condition|(
 name|_p
-operator|==
+operator|!=
 name|NULL
-operator|||
+operator|&&
 name|n
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|sc
+operator|->
+name|flag
+operator|&
+name|SCONV_FROM_UTF16
+operator|)
+condition|)
+name|length
+operator|=
+name|utf16nbytes
+argument_list|(
+name|_p
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+else|else
+name|length
+operator|=
+name|mbsnbytes
+argument_list|(
+name|_p
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* We must allocate memory even if there is no data for conversion 	 * or copy. This simulates archive_string_append behavior. */
+if|if
+condition|(
+name|length
 operator|==
 literal|0
 condition|)
@@ -9378,15 +9421,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|length
-operator|=
-name|mbsnbytes
-argument_list|(
-name|_p
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|archive_string_append
@@ -9413,33 +9447,6 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|flag
-operator|&
-name|SCONV_FROM_UTF16
-condition|)
-name|length
-operator|=
-name|utf16nbytes
-argument_list|(
-name|_p
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-else|else
-name|length
-operator|=
-name|mbsnbytes
-argument_list|(
-name|_p
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|_p
@@ -9576,7 +9583,7 @@ name|HAVE_ICONV
 end_if
 
 begin_comment
-comment|/*  * Return -1 if conversion failes.  */
+comment|/*  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -10115,7 +10122,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Translate a string from a some CodePage to an another CodePage by  * Windows APIs, and copy the result. Return -1 if conversion failes.  */
+comment|/*  * Translate a string from a some CodePage to an another CodePage by  * Windows APIs, and copy the result. Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -11418,7 +11425,7 @@ index|[
 name|ch
 index|]
 expr_stmt|;
-comment|/* Invalide sequence or there are not plenty bytes. */
+comment|/* Invalid sequence or there are not plenty bytes. */
 if|if
 condition|(
 operator|(
@@ -11892,7 +11899,7 @@ goto|goto
 name|invalid_sequence
 goto|;
 block|}
-comment|/* The code point larger than 0x10FFFF is not leagal 	 * Unicode values. */
+comment|/* The code point larger than 0x10FFFF is not legal 	 * Unicode values. */
 if|if
 condition|(
 name|wc
@@ -11964,7 +11971,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* Any of Surrogate pair is not leagal Unicode values. */
+comment|/* Any of Surrogate pair is not legal Unicode values. */
 if|if
 condition|(
 name|cnt
@@ -12207,7 +12214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a Unicode code point to a single UTF-8 sequence.  *  * NOTE:This function does not check if the Unicode is leagal or not.  * Please you definitely check it before calling this.  */
+comment|/*  * Convert a Unicode code point to a single UTF-8 sequence.  *  * NOTE:This function does not check if the Unicode is legal or not.  * Please you definitely check it before calling this.  */
 end_comment
 
 begin_function
@@ -12705,7 +12712,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Surrogate pair values(0xd800 through 0xdfff) are only 	 * used by UTF-16, so, after above culculation, the code 	 * must not be surrogate values, and Unicode has no codes 	 * larger than 0x10ffff. Thus, those are not leagal Unicode 	 * values. 	 */
+comment|/* 	 * Surrogate pair values(0xd800 through 0xdfff) are only 	 * used by UTF-16, so, after above culculation, the code 	 * must not be surrogate values, and Unicode has no codes 	 * larger than 0x10ffff. Thus, those are not legal Unicode 	 * values. 	 */
 if|if
 condition|(
 name|IS_SURROGATE_PAIR_LA
@@ -16773,7 +16780,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Convert a UTF-16BE/LE string to current locale and copy the result.  * Return -1 if conversion failes.  */
+comment|/*  * Convert a UTF-16BE/LE string to current locale and copy the result.  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -17488,7 +17495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a current locale string to UTF-16BE/LE and copy the result.  * Return -1 if conversion failes.  */
+comment|/*  * Convert a current locale string to UTF-16BE/LE and copy the result.  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -18030,7 +18037,7 @@ comment|/*  * Do the best effort for conversions.  * We cannot handle UTF-16BE c
 end_comment
 
 begin_comment
-comment|/*  * Convert a UTF-16BE string to current locale and copy the result.  * Return -1 if conversion failes.  */
+comment|/*  * Convert a UTF-16BE string to current locale and copy the result.  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -18322,7 +18329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a current locale string to UTF-16BE/LE and copy the result.  * Return -1 if conversion failes.  */
+comment|/*  * Convert a current locale string to UTF-16BE/LE and copy the result.  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function

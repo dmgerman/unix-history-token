@@ -178,7 +178,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Verify the correct format for an empy Zip archive with Zip64 extensions forced. */
+comment|/* Verify the correct format for an empty Zip archive with Zip64 extensions forced. */
 name|assertEqualInt
 argument_list|(
 name|used

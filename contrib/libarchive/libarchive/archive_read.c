@@ -157,6 +157,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|close_filters
+parameter_list|(
+name|struct
+name|archive_read
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|struct
 name|archive_vtable
 modifier|*
@@ -2780,7 +2792,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|__archive_read_close_filters
+name|close_filters
 argument_list|(
 name|a
 argument_list|)
@@ -3030,11 +3042,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|__archive_read_close_filters
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|__archive_read_free_filters
 argument_list|(
 name|a
@@ -3151,11 +3158,6 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|__archive_read_close_filters
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|__archive_read_free_filters
 argument_list|(
 name|a
@@ -3793,7 +3795,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns 1 if the archive contains at least one encrypted entry.  * If the archive format not support encryption at all  * ARCHIVE_READ_FORMAT_ENCRYPTION_UNSUPPORTED is returned.  * If for any other reason (e.g. not enough data read so far)  * we cannot say whether there are encrypted entries, then  * ARCHIVE_READ_FORMAT_ENCRYPTION_DONT_KNOW is returned.  * In general, this function will return values below zero when the  * reader is uncertain or totally uncapable of encryption support.  * When this function returns 0 you can be sure that the reader  * supports encryption detection but no encrypted entries have  * been found yet.  *  * NOTE: If the metadata/header of an archive is also encrypted, you  * cannot rely on the number of encrypted entries. That is why this  * function does not return the number of encrypted entries but#  * just shows that there are some.  */
+comment|/*  * Returns 1 if the archive contains at least one encrypted entry.  * If the archive format not support encryption at all  * ARCHIVE_READ_FORMAT_ENCRYPTION_UNSUPPORTED is returned.  * If for any other reason (e.g. not enough data read so far)  * we cannot say whether there are encrypted entries, then  * ARCHIVE_READ_FORMAT_ENCRYPTION_DONT_KNOW is returned.  * In general, this function will return values below zero when the  * reader is uncertain or totally incapable of encryption support.  * When this function returns 0 you can be sure that the reader  * supports encryption detection but no encrypted entries have  * been found yet.  *  * NOTE: If the metadata/header of an archive is also encrypted, you  * cannot rely on the number of encrypted entries. That is why this  * function does not return the number of encrypted entries but#  * just shows that there are some.  */
 end_comment
 
 begin_function
@@ -4664,8 +4666,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|__archive_read_close_filters
+name|close_filters
 parameter_list|(
 name|struct
 name|archive_read
@@ -4781,6 +4784,12 @@ modifier|*
 name|a
 parameter_list|)
 block|{
+comment|/* Make sure filters are closed and their buffers are freed */
+name|close_filters
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|a
@@ -4967,7 +4976,7 @@ comment|/* TODO: Clean up the formatters. */
 comment|/* Release the filter objects. */
 name|r1
 operator|=
-name|__archive_read_close_filters
+name|close_filters
 argument_list|(
 name|a
 argument_list|)

@@ -66,7 +66,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Test if the current filesytem is mounted with noatime option.  */
+comment|/*  * Test if the current filesystem is mounted with noatime option.  */
 end_comment
 
 begin_function
@@ -3740,7 +3740,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * We should be on the initial directory where we performed 	 * archive_read_disk_new() after we perfome archive_read_free() 	 *  even if we broke off the directory traversals. 	 */
+comment|/* 	 * We should be on the initial directory where we performed 	 * archive_read_disk_new() after we perform archive_read_free() 	 * even if we broke off the directory traversals. 	 */
 comment|/* Save current working directory. */
 ifdef|#
 directive|ifdef
@@ -11250,15 +11250,15 @@ comment|/* Basic test. */
 name|test_basic
 argument_list|()
 expr_stmt|;
-comment|/* Test hybird mode; follow symlink initially, then not. */
+comment|/* Test hybrid mode; follow symlink initially, then not. */
 name|test_symlink_hybrid
 argument_list|()
 expr_stmt|;
-comment|/* Test logcal mode; follow all symlinks. */
+comment|/* Test logical mode; follow all symlinks. */
 name|test_symlink_logical
 argument_list|()
 expr_stmt|;
-comment|/* Test logcal mode; prevent loop in symlinks. */
+comment|/* Test logical mode; prevent loop in symlinks. */
 name|test_symlink_logical_loop
 argument_list|()
 expr_stmt|;
