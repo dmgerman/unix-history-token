@@ -57,6 +57,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|__efx_mon_name
 index|[]
 init|=
