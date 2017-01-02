@@ -683,6 +683,12 @@ name|int
 name|isc_tx_tso_segsize_max
 decl_stmt|;
 name|int
+name|isc_tx_csum_flags
+decl_stmt|;
+name|int
+name|isc_capenable
+decl_stmt|;
+name|int
 name|isc_rss_table_size
 decl_stmt|;
 name|int
@@ -705,6 +711,9 @@ name|pci_vendor_info_t
 name|isc_vendor_info
 decl_stmt|;
 comment|/* set by iflib prior to attach_pre */
+name|if_txrx_t
+name|isc_txrx
+decl_stmt|;
 block|}
 typedef|*
 name|if_softc_ctx_t
@@ -721,9 +730,6 @@ name|if_shared_ctx
 block|{
 name|int
 name|isc_magic
-decl_stmt|;
-name|if_txrx_t
-name|isc_txrx
 decl_stmt|;
 name|driver_t
 modifier|*
@@ -919,7 +925,7 @@ begin_define
 define|#
 directive|define
 name|IFLIB_HAS_RXCQ
-value|0x1
+value|0x01
 end_define
 
 begin_comment
@@ -930,7 +936,7 @@ begin_define
 define|#
 directive|define
 name|IFLIB_SKIP_MSIX
-value|0x2
+value|0x02
 end_define
 
 begin_comment
@@ -941,7 +947,7 @@ begin_define
 define|#
 directive|define
 name|IFLIB_IS_VF
-value|0x4
+value|0x04
 end_define
 
 begin_comment
@@ -952,7 +958,29 @@ begin_define
 define|#
 directive|define
 name|IFLIB_HAS_TXCQ
-value|0x8
+value|0x08
+end_define
+
+begin_comment
+comment|/*  * Interface does checksum in place  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLIB_NEED_SCRATCH
+value|0x10
+end_define
+
+begin_comment
+comment|/*  * Interface doesn't expect in_pseudo for th_sum  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLIB_TSO_INIT_IP
+value|0x20
 end_define
 
 begin_comment
