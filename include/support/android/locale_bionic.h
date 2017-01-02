@@ -52,7 +52,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__ANDROID__
+name|__BIONIC__
 argument_list|)
 end_if
 
@@ -103,7 +103,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// defined(__ANDROID__)
+comment|// defined(__BIONIC__)
 end_comment
 
 begin_endif

@@ -575,10 +575,10 @@ return|;
 block|}
 specifier|inline
 name|_LIBCPP_ALWAYS_INLINE
-name|int
+name|wint_t
 name|towupper_l
 parameter_list|(
-name|int
+name|wint_t
 name|c
 parameter_list|,
 name|locale_t
@@ -594,10 +594,10 @@ return|;
 block|}
 specifier|inline
 name|_LIBCPP_ALWAYS_INLINE
-name|int
+name|wint_t
 name|towlower_l
 parameter_list|(
-name|int
+name|wint_t
 name|c
 parameter_list|,
 name|locale_t

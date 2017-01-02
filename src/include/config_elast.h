@@ -111,6 +111,19 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|__Fuchsia__
+argument_list|)
+end_elif
+
+begin_comment
+comment|// No _LIBCPP_ELAST needed on Fuchsia
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__linux__
 argument_list|)
 end_elif

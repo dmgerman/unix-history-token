@@ -83,12 +83,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<memory>
-end_include
-
 begin_function_decl
 name|lconv
 modifier|*
@@ -298,38 +292,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
-name|_VSTD
-operator|::
-name|remove_pointer
-operator|<
-name|locale_t
-operator|>
-operator|::
-name|type
-name|__locale_struct
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|_VSTD
-operator|::
-name|unique_ptr
-operator|<
-name|__locale_struct
-operator|,
-name|decltype
-argument_list|(
-operator|&
-name|uselocale
-argument_list|)
-operator|>
-name|__locale_raii
-expr_stmt|;
-end_typedef
-
 begin_function
 specifier|inline
 name|_LIBCPP_ALWAYS_INLINE
@@ -343,19 +305,11 @@ name|locale_t
 name|__l
 parameter_list|)
 block|{
-name|__locale_raii
-name|__current
-argument_list|(
-name|uselocale
+return|return
+name|___mb_cur_max_l_func
 argument_list|(
 name|__l
 argument_list|)
-argument_list|,
-name|uselocale
-argument_list|)
-decl_stmt|;
-return|return
-name|MB_CUR_MAX
 return|;
 block|}
 end_function
@@ -385,15 +339,25 @@ name|strtoull_l
 value|_strtoui64_l
 end_define
 
-begin_comment
-comment|// FIXME: current msvcrt does not know about long double
-end_comment
+begin_define
+define|#
+directive|define
+name|strtof_l
+value|_strtof_l
+end_define
+
+begin_define
+define|#
+directive|define
+name|strtod_l
+value|_strtod_l
+end_define
 
 begin_define
 define|#
 directive|define
 name|strtold_l
-value|_strtod_l
+value|_strtold_l
 end_define
 
 begin_function

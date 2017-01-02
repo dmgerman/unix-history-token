@@ -43,6 +43,12 @@ directive|define
 name|TRANSPARENT_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"test_macros.h"
+end_include
+
 begin_comment
 comment|// testing transparent
 end_comment
@@ -50,7 +56,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|_LIBCPP_STD_VER
+name|TEST_STD_VER
 operator|>
 literal|11
 end_if

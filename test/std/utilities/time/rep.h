@@ -43,6 +43,12 @@ directive|define
 name|REP_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"test_macros.h"
+end_include
+
 begin_decl_stmt
 name|class
 name|Rep
@@ -52,7 +58,7 @@ name|data_
 decl_stmt|;
 name|public
 label|:
-name|_LIBCPP_CONSTEXPR
+name|TEST_CONSTEXPR
 name|Rep
 argument_list|()
 operator|:
@@ -63,7 +69,7 @@ literal|1
 argument_list|)
 block|{}
 name|explicit
-name|_LIBCPP_CONSTEXPR
+name|TEST_CONSTEXPR
 name|Rep
 argument_list|(
 argument|int i
@@ -75,7 +81,7 @@ argument|i
 argument_list|)
 block|{}
 name|bool
-name|_LIBCPP_CONSTEXPR
+name|TEST_CONSTEXPR
 name|operator
 operator|==
 operator|(
@@ -91,7 +97,7 @@ name|i
 return|;
 block|}
 name|bool
-name|_LIBCPP_CONSTEXPR
+name|TEST_CONSTEXPR
 name|operator
 operator|==
 operator|(

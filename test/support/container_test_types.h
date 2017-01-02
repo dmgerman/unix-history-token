@@ -1663,7 +1663,7 @@ name|Args
 operator|>
 name|CopyInsertable
 argument_list|(
-argument|Args&&... args
+argument|Args&&...
 argument_list|)
 block|{
 name|assert

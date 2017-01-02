@@ -79,6 +79,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* C99 stdlib (e.g. glibc< 2.18) does not provide format macros needed    for C++11 unless __STDC_FORMAT_MACROS is defined */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STDC_FORMAT_MACROS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STDC_FORMAT_MACROS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_empty
 empty|#include_next<inttypes.h>
 end_empty

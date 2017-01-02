@@ -104,14 +104,6 @@ block|{
 include|#
 directive|include
 file|<type_traits>
-ifdef|#
-directive|ifdef
-name|_LIBCPP_MSVCRT
-include|#
-directive|include
-file|"support/win32/math_win32.h"
-endif|#
-directive|endif
 comment|// signbit
 ifdef|#
 directive|ifdef
@@ -1380,12 +1372,6 @@ begin_comment
 comment|// isunordered
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__sun__
-end_ifndef
-
 begin_comment
 comment|// abs
 end_comment
@@ -1394,10 +1380,17 @@ begin_if
 if|#
 directive|if
 operator|!
+operator|(
 name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
+operator|)
 end_if
 
 begin_function
@@ -1468,7 +1461,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// !defined(_AIX)
+comment|// !(defined(_AIX) || defined(__sun__))
 end_comment
 
 begin_comment
@@ -1488,6 +1481,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -1601,6 +1599,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -1713,6 +1716,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -1824,6 +1832,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -2023,6 +2036,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -2134,6 +2152,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -2247,6 +2270,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -2358,6 +2386,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -2471,6 +2504,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -2583,6 +2621,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -2694,6 +2737,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -2893,6 +2941,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -3021,6 +3074,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -3147,6 +3205,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -3258,6 +3321,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -3371,6 +3439,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -3451,6 +3524,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -3650,6 +3728,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -3761,6 +3844,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -3874,6 +3962,11 @@ name|defined
 argument_list|(
 name|_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
 operator|)
 end_if
 
@@ -3924,15 +4017,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// __sun__
-end_comment
-
 begin_expr_stmt
 name|template
 operator|<
@@ -3977,12 +4061,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__sun__
-end_ifndef
-
 begin_comment
 comment|// tan
 end_comment
@@ -4000,6 +4078,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -4112,6 +4195,11 @@ operator|||
 name|defined
 argument_list|(
 name|_AIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sun__
 argument_list|)
 operator|)
 end_if
@@ -8229,15 +8317,6 @@ end_endif
 
 begin_comment
 comment|// !_LIBCPP_MSVCRT
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// __sun__
 end_comment
 
 begin_comment
