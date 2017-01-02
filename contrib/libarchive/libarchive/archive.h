@@ -1201,7 +1201,7 @@ define|#
 directive|define
 name|ARCHIVE_READ_FORMAT_ENCRYPTION_DONT_KNOW
 value|-1
-comment|/*-  * Basic outline for reading an archive:  *   1) Ask archive_read_new for an archive reader object.  *   2) Update any global properties as appropriate.  *      In particular, you'll certainly want to call appropriate  *      archive_read_support_XXX functions.  *   3) Call archive_read_open_XXX to open the archive  *   4) Repeatedly call archive_read_next_header to get information about  *      successive archive entries.  Call archive_read_data to extract  *      data for entries of interest.  *   5) Call archive_read_finish to end processing.  */
+comment|/*-  * Basic outline for reading an archive:  *   1) Ask archive_read_new for an archive reader object.  *   2) Update any global properties as appropriate.  *      In particular, you'll certainly want to call appropriate  *      archive_read_support_XXX functions.  *   3) Call archive_read_open_XXX to open the archive  *   4) Repeatedly call archive_read_next_header to get information about  *      successive archive entries.  Call archive_read_data to extract  *      data for entries of interest.  *   5) Call archive_read_free to end processing.  */
 name|__LA_DECL
 name|struct
 name|archive
@@ -2135,7 +2135,7 @@ name|archive
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * Returns 1 if the archive contains at least one encrypted entry.  * If the archive format not support encryption at all  * ARCHIVE_READ_FORMAT_ENCRYPTION_UNSUPPORTED is returned.  * If for any other reason (e.g. not enough data read so far)  * we cannot say whether there are encrypted entries, then  * ARCHIVE_READ_FORMAT_ENCRYPTION_DONT_KNOW is returned.  * In general, this function will return values below zero when the  * reader is uncertain or totally uncapable of encryption support.  * When this function returns 0 you can be sure that the reader  * supports encryption detection but no encrypted entries have  * been found yet.  *  * NOTE: If the metadata/header of an archive is also encrypted, you  * cannot rely on the number of encrypted entries. That is why this  * function does not return the number of encrypted entries but#  * just shows that there are some.  */
+comment|/*  * Returns 1 if the archive contains at least one encrypted entry.  * If the archive format not support encryption at all  * ARCHIVE_READ_FORMAT_ENCRYPTION_UNSUPPORTED is returned.  * If for any other reason (e.g. not enough data read so far)  * we cannot say whether there are encrypted entries, then  * ARCHIVE_READ_FORMAT_ENCRYPTION_DONT_KNOW is returned.  * In general, this function will return values below zero when the  * reader is uncertain or totally incapable of encryption support.  * When this function returns 0 you can be sure that the reader  * supports encryption detection but no encrypted entries have  * been found yet.  *  * NOTE: If the metadata/header of an archive is also encrypted, you  * cannot rely on the number of encrypted entries. That is why this  * function does not return the number of encrypted entries but#  * just shows that there are some.  */
 name|__LA_DECL
 name|int
 name|archive_read_has_encrypted_entries
@@ -3876,7 +3876,7 @@ name|archive
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Request that the access time of the entry visited by travesal be restored. */
+comment|/* Request that the access time of the entry visited by traversal be restored. */
 name|__LA_DECL
 name|int
 name|archive_read_disk_set_atime_restored
@@ -3887,7 +3887,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/*  * Set behavior. The "flags" argument selects optional behavior.  */
-comment|/* Request that the access time of the entry visited by travesal be restored.  * This is the same as archive_read_disk_set_atime_restored. */
+comment|/* Request that the access time of the entry visited by traversal be restored.  * This is the same as archive_read_disk_set_atime_restored. */
 define|#
 directive|define
 name|ARCHIVE_READDISK_RESTORE_ATIME
@@ -4512,7 +4512,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Flags to tell a matching type of time stamps. These are used for  * following functinos.  */
+comment|/*  * Flags to tell a matching type of time stamps. These are used for  * following functions.  */
 end_comment
 
 begin_comment
@@ -4640,7 +4640,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Set inclusion time by a particluar file. */
+comment|/* Set inclusion time by a particular file. */
 end_comment
 
 begin_function_decl

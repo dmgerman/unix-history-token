@@ -375,7 +375,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Copy one archive_string to another in locale conversion.  * Return -1 if conversion failes. */
+comment|/* Copy one archive_string to another in locale conversion.  * Return -1 if conversion fails. */
 end_comment
 
 begin_function_decl
@@ -400,7 +400,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Copy one archive_string to another in locale conversion.  * Return -1 if conversion failes. */
+comment|/* Copy one archive_string to another in locale conversion.  * Return -1 if conversion fails. */
 end_comment
 
 begin_function_decl

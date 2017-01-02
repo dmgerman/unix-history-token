@@ -576,6 +576,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_LINUX_FIEMAP_H
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|static
+name|int
+name|setup_sparse_fiemap
+parameter_list|(
+name|struct
+name|archive_read_disk
+modifier|*
+parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|archive_read_disk_entry_from_file
@@ -3188,7 +3222,7 @@ operator|&
 name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
 condition|)
 block|{
-comment|/* 			 * acl_get_entry_type_np() falis with non-NFSv4 ACLs 			 */
+comment|/* 			 * acl_get_entry_type_np() fails with non-NFSv4 ACLs 			 */
 if|if
 condition|(
 name|acl_get_entry_type_np
@@ -5526,13 +5560,13 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Linux sparse interface.  *  * The FIEMAP ioctl returns an "extent" for each physical allocation  * on disk.  We need to process those to generate a more compact list  * of logical file blocks.  We also need to be very careful to use  * FIEMAP_FLAG_SYNC here, since there are reports that Linux sometimes  * does not report allocations for newly-written data that hasn't  * been synced to disk.  *  * It's important to return a minimal sparse file list because we want  * to not trigger sparse file extensions if we don't have to, since  * not all readers support them.  */
+comment|/*  * Linux FIEMAP sparse interface.  *  * The FIEMAP ioctl returns an "extent" for each physical allocation  * on disk.  We need to process those to generate a more compact list  * of logical file blocks.  We also need to be very careful to use  * FIEMAP_FLAG_SYNC here, since there are reports that Linux sometimes  * does not report allocations for newly-written data that hasn't  * been synced to disk.  *  * It's important to return a minimal sparse file list because we want  * to not trigger sparse file extensions if we don't have to, since  * not all readers support them.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|setup_sparse
+name|setup_sparse_fiemap
 parameter_list|(
 name|struct
 name|archive_read_disk
@@ -5834,9 +5868,9 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* When something error happens, it is better we 			 * should return ARCHIVE_OK because an earlier 			 * version(<2.6.28) cannot perfom FS_IOC_FIEMAP. */
+comment|/* When something error happens, it is better we 			 * should return ARCHIVE_OK because an earlier 			 * version(<2.6.28) cannot perform FS_IOC_FIEMAP. */
 goto|goto
-name|exit_setup_sparse
+name|exit_setup_sparse_fiemap
 goto|;
 block|}
 if|if
@@ -6023,7 +6057,7 @@ block|}
 else|else
 break|break;
 block|}
-name|exit_setup_sparse
+name|exit_setup_sparse_fiemap
 label|:
 return|return
 operator|(
@@ -6033,9 +6067,72 @@ return|;
 block|}
 end_function
 
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SEEK_HOLE
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|SEEK_DATA
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|int
+name|setup_sparse
+parameter_list|(
+name|struct
+name|archive_read_disk
+modifier|*
+name|a
+parameter_list|,
+name|struct
+name|archive_entry
+modifier|*
+name|entry
+parameter_list|,
+name|int
+modifier|*
+name|fd
+parameter_list|)
+block|{
+return|return
+name|setup_sparse_fiemap
+argument_list|(
+name|a
+argument_list|,
+name|entry
+argument_list|,
+name|fd
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(HAVE_LINUX_FIEMAP_H) */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|SEEK_HOLE
@@ -6045,15 +6142,10 @@ name|defined
 argument_list|(
 name|SEEK_DATA
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_PC_MIN_HOLE_SIZE
-argument_list|)
-end_elif
+end_if
 
 begin_comment
-comment|/*  * FreeBSD and Solaris sparse interface.  */
+comment|/*  * SEEK_HOLE sparse interface (FreeBSD, Linux, Solaris)  */
 end_comment
 
 begin_function
@@ -6082,13 +6174,11 @@ decl_stmt|;
 name|off_t
 name|initial_off
 decl_stmt|;
-comment|/* FreeBSD/Solaris only, so off_t okay here */
 name|off_t
 name|off_s
 decl_stmt|,
 name|off_e
 decl_stmt|;
-comment|/* FreeBSD/Solaris only, so off_t okay here */
 name|int
 name|exit_sts
 init|=
@@ -6222,6 +6312,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|_PC_MIN_HOLE_SIZE
 if|if
 condition|(
 name|fpathconf
@@ -6239,6 +6332,8 @@ operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
+endif|#
+directive|endif
 name|initial_off
 operator|=
 name|lseek
@@ -6295,6 +6390,9 @@ argument_list|(
 name|entry
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_PC_MIN_HOLE_SIZE
 if|if
 condition|(
 name|pathconf
@@ -6311,6 +6409,8 @@ operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
+endif|#
+directive|endif
 operator|*
 name|fd
 operator|=
@@ -6364,6 +6464,70 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|_PC_MIN_HOLE_SIZE
+comment|/* Check if the underlying filesystem supports seek hole */
+name|off_s
+operator|=
+name|lseek
+argument_list|(
+operator|*
+name|fd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_HOLE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|off_s
+operator|<
+literal|0
+condition|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_LINUX_FIEMAP_H
+argument_list|)
+return|return
+name|setup_sparse_fiemap
+argument_list|(
+name|a
+argument_list|,
+name|entry
+argument_list|,
+name|fd
+argument_list|)
+return|;
+else|#
+directive|else
+goto|goto
+name|exit_setup_sparse
+goto|;
+endif|#
+directive|endif
+elseif|else
+if|if
+condition|(
+name|off_s
+operator|>
+literal|0
+condition|)
+name|lseek
+argument_list|(
+operator|*
+name|fd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|off_s
 operator|=
 literal|0
@@ -6537,7 +6701,7 @@ operator|==
 name|size
 condition|)
 break|break;
-comment|/* This is not spase. */
+comment|/* This is not sparse. */
 name|archive_entry_sparse_add_entry
 argument_list|(
 name|entry
@@ -6618,10 +6782,15 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|HAVE_LINUX_FIEMAP_H
+argument_list|)
+end_elif
 
 begin_comment
 comment|/*  * Generic (stub) sparse support.  */

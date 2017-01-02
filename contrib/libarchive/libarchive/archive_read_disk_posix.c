@@ -834,7 +834,7 @@ name|int
 name|max_filesystem_id
 decl_stmt|;
 name|int
-name|allocated_filesytem
+name|allocated_filesystem
 decl_stmt|;
 name|int
 name|entry_fd
@@ -4620,7 +4620,7 @@ argument_list|,
 name|st
 argument_list|)
 expr_stmt|;
-comment|/* Save the times to be restored. This must be in before 	 * calling archive_read_disk_descend() or any chance of it, 	 * especially, invokng a callback. */
+comment|/* Save the times to be restored. This must be in before 	 * calling archive_read_disk_descend() or any chance of it, 	 * especially, invoking a callback. */
 name|t
 operator|->
 name|restore_time
@@ -6494,7 +6494,7 @@ operator|==
 name|dev
 condition|)
 block|{
-comment|/* There is the filesytem ID we've already generated. */
+comment|/* There is the filesystem ID we've already generated. */
 name|t
 operator|->
 name|current_filesystem_id
@@ -6522,7 +6522,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * This is the new filesytem which we have to generate a new ID for. 	 */
+comment|/* 	 * This is the new filesystem which we have to generate a new ID for. 	 */
 name|fid
 operator|=
 name|t
@@ -6538,7 +6538,7 @@ name|max_filesystem_id
 operator|>
 name|t
 operator|->
-name|allocated_filesytem
+name|allocated_filesystem
 condition|)
 block|{
 name|size_t
@@ -6613,7 +6613,7 @@ name|p
 expr_stmt|;
 name|t
 operator|->
-name|allocated_filesytem
+name|allocated_filesystem
 operator|=
 name|s
 expr_stmt|;
@@ -10231,20 +10231,9 @@ name|te
 decl_stmt|;
 name|te
 operator|=
-name|malloc
+name|calloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|te
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|te
-argument_list|,
-literal|0
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -10640,8 +10629,10 @@ condition|(
 operator|(
 name|t
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -10657,19 +10648,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|memset
-argument_list|(
-name|t
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|archive_string_init
 argument_list|(
 operator|&

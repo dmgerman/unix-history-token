@@ -685,7 +685,7 @@ name|ad
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Extract ._file3 which will be merged into file3 as medtadata. */
+comment|/* Extract ._file3 which will be merged into file3 as metadata. */
 name|assertEqualIntA
 argument_list|(
 name|a
@@ -1081,7 +1081,7 @@ name|ad
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Extract ._file3 which will be merged into file3 as medtadata. */
+comment|/* Extract ._file3 which will be merged into file3 as metadata. */
 name|assertEqualIntA
 argument_list|(
 name|a

@@ -500,7 +500,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<openssl/evp.h>
+file|"archive_openssl_evp_private.h"
 end_include
 
 begin_endif
@@ -655,6 +655,7 @@ end_elif
 begin_typedef
 typedef|typedef
 name|EVP_MD_CTX
+modifier|*
 name|archive_md5_ctx
 typedef|;
 end_typedef
@@ -754,6 +755,7 @@ end_elif
 begin_typedef
 typedef|typedef
 name|EVP_MD_CTX
+modifier|*
 name|archive_rmd160_ctx
 typedef|;
 end_typedef
@@ -853,6 +855,7 @@ end_elif
 begin_typedef
 typedef|typedef
 name|EVP_MD_CTX
+modifier|*
 name|archive_sha1_ctx
 typedef|;
 end_typedef
@@ -1000,6 +1003,7 @@ end_elif
 begin_typedef
 typedef|typedef
 name|EVP_MD_CTX
+modifier|*
 name|archive_sha256_ctx
 typedef|;
 end_typedef
@@ -1131,6 +1135,7 @@ end_elif
 begin_typedef
 typedef|typedef
 name|EVP_MD_CTX
+modifier|*
 name|archive_sha384_ctx
 typedef|;
 end_typedef
@@ -1278,6 +1283,7 @@ end_elif
 begin_typedef
 typedef|typedef
 name|EVP_MD_CTX
+modifier|*
 name|archive_sha512_ctx
 typedef|;
 end_typedef

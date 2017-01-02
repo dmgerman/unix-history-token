@@ -3369,13 +3369,15 @@ expr|struct
 name|rar
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|rar
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3403,19 +3405,6 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-name|memset
-argument_list|(
-name|rar
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|rar
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Until enough data has been read, we cannot tell about 	 * any encrypted entries yet. 	 */
 name|rar
 operator|->

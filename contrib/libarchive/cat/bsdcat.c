@@ -502,6 +502,17 @@ name|bsdcat_next
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|a
+operator|!=
+name|NULL
+condition|)
+name|archive_read_free
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|exit_status

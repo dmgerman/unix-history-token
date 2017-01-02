@@ -163,7 +163,7 @@ comment|/* The length how many bytes we can copy decoded code from 	 * the windo
 name|int
 name|copy_len
 decl_stmt|;
-comment|/* Translation reversal for x86 proccessor CALL byte sequence(E8). 	 * This is used for LZX only. */
+comment|/* Translation reversal for x86 processor CALL byte sequence(E8). 	 * This is used for LZX only. */
 name|uint32_t
 name|translation_size
 decl_stmt|;
@@ -2830,7 +2830,7 @@ operator|==
 literal|'Z'
 condition|)
 block|{
-comment|/* This is an executable?  Must be self-extracting... 	*/
+comment|/* This is an executable?  Must be self-extracting... */
 name|err
 operator|=
 name|cab_skip_sfx
@@ -2849,6 +2849,7 @@ operator|(
 name|err
 operator|)
 return|;
+comment|/* Re-read header after processing the SFX. */
 if|if
 condition|(
 operator|(
@@ -2858,11 +2859,7 @@ name|__archive_read_ahead
 argument_list|(
 name|a
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|p
-argument_list|)
+literal|42
 argument_list|,
 name|NULL
 argument_list|)
@@ -7575,7 +7572,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * Note: I suspect there is a bug in makecab.exe because, in rare 	 * case, compressed bytes are still remaining regardless we have 	 * gotten all uncompressed bytes, which size is recoded in CFDATA, 	 * as much as we need, and we have to use the garbage so as to 	 * correctly compute the sum of CFDATA accordingly. 	 */
+comment|/* 	 * Note: I suspect there is a bug in makecab.exe because, in rare 	 * case, compressed bytes are still remaining regardless we have 	 * gotten all uncompressed bytes, which size is recorded in CFDATA, 	 * as much as we need, and we have to use the garbage so as to 	 * correctly compute the sum of CFDATA accordingly. 	 */
 if|if
 condition|(
 name|cfdata
@@ -8461,7 +8458,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Translation reversal of x86 proccessor CALL byte sequence(E8). 	 */
+comment|/* 	 * Translation reversal of x86 processor CALL byte sequence(E8). 	 */
 name|lzx_translation
 argument_list|(
 operator|&
@@ -11135,7 +11132,7 @@ modifier|*
 name|br
 parameter_list|)
 block|{
-comment|/*  * x86 proccessor family can read misaligned data without an access error.  */
+comment|/*  * x86 processor family can read misaligned data without an access error.  */
 name|int
 name|n
 init|=

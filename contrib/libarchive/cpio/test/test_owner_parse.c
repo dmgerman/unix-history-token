@@ -84,7 +84,7 @@ argument_list|)
 end_elif
 
 begin_comment
-comment|/* On cygwin, the Administrator user most likely exists (unless  * it has been renamed or is in a non-English localization), but  * its primary group membership depends on how the user set up  * their /etc/passwd. Likely values are 513 (None), 545 (Users),  * or 544 (Administrators). Just check for one of those...  * TODO: Handle non-English localizations...e.g. French 'Administrateur'  *       Use CreateWellKnownSID() and LookupAccountName()?  */
+comment|/* On cygwin, the Administrator user most likely exists (unless  * it has been renamed or is in a non-English localization), but  * its primary group membership depends on how the user set up  * their /etc/passwd. Likely values are 513 (None), 545 (Users),  * or 544 (Administrators). Just check for one of those...  * TODO: Handle non-English localizations... e.g. French 'Administrateur'  *       Use CreateWellKnownSID() and LookupAccountName()?  */
 end_comment
 
 begin_define

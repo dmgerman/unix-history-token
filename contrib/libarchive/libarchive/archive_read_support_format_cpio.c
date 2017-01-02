@@ -1836,7 +1836,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Handle filnames as libarchive 2.x */
+comment|/* Handle filenames as libarchive 2.x */
 name|cpio
 operator|->
 name|init_default_conversion
@@ -4334,7 +4334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NOTE: if a filename suffix is ".z", it is the file gziped by afio.  * it would be nice that we can show uncompressed file size and we can  * uncompressed file contents automatically, unfortunately we have nothing  * to get a uncompressed file size while reading each header. it means  * we also cannot uncompressed file contens under the our framework.  */
+comment|/*  * NOTE: if a filename suffix is ".z", it is the file gziped by afio.  * it would be nice that we can show uncompressed file size and we can  * uncompressed file contents automatically, unfortunately we have nothing  * to get a uncompressed file size while reading each header. It means  * we also cannot uncompress file contents under our framework.  */
 end_comment
 
 begin_function

@@ -612,7 +612,7 @@ modifier|*
 name|parent
 decl_stmt|;
 comment|/* parent directory entry */
-comment|/* 	 * To manage sub directory files. 	 * We use 'chnext' a menber of struct file to chain. 	 */
+comment|/* 	 * To manage sub directory files. 	 * We use 'chnext' (a member of struct file) to chain. 	 */
 struct|struct
 block|{
 name|struct
@@ -811,7 +811,7 @@ name|struct
 name|heap_data
 name|toc
 decl_stmt|;
-comment|/* 	 * The list of all file entries is used to manage struct file 	 * objects. 	 * We use 'next' a menber of struct file to chain. 	 */
+comment|/* 	 * The list of all file entries is used to manage struct file 	 * objects. 	 * We use 'next' (a member of struct file) to chain. 	 */
 struct|struct
 block|{
 name|struct
@@ -828,7 +828,7 @@ decl_stmt|;
 block|}
 name|file_list
 struct|;
-comment|/* 	 * The list of hard-linked file entries. 	 * We use 'hlnext' a menber of struct file to chain. 	 */
+comment|/* 	 * The list of hard-linked file entries. 	 * We use 'hlnext' (a member of struct file) to chain. 	 */
 name|struct
 name|archive_rb_tree
 name|hardlink_rbtree
