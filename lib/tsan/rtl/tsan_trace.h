@@ -150,8 +150,9 @@ typedef|;
 struct|struct
 name|TraceHeader
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|BufferedStackTrace
 name|stack0
@@ -188,8 +189,9 @@ block|{
 name|Mutex
 name|mtx
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 comment|// Must be last to catch overflow as paging fault.
 comment|// Go shadow stack is dynamically allocated.

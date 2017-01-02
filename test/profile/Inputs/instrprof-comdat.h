@@ -61,7 +61,7 @@ argument_list|(
 argument|T ti
 argument_list|)
 block|{
-comment|// HEADER:  2| [[@LINE]]|template
+comment|// HEADER: [[@LINE]]|  2|template
 for|for
 control|(
 name|T
@@ -77,12 +77,12 @@ name|I
 operator|++
 control|)
 block|{
-comment|// HEADER: 22| [[@LINE]]|  for (T
+comment|// HEADER: [[@LINE]]| 22|  for (T
 name|t
 operator|+=
 name|I
 expr_stmt|;
-comment|// HEADER: 20| [[@LINE]]|    t += I;
+comment|// HEADER: [[@LINE]]| 20|    t += I;
 if|if
 condition|(
 name|I
@@ -91,21 +91,21 @@ name|ti
 operator|/
 literal|2
 condition|)
-comment|// HEADER: 20| [[@LINE]]|    if (I> ti
+comment|// HEADER: [[@LINE]]| 20|    if (I> ti
 name|t
 operator|-=
 literal|1
 expr_stmt|;
-comment|// HEADER:  8| [[@LINE]]|      t -= 1;
+comment|// HEADER: [[@LINE]]|  8|      t -= 1;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|// HEADER: 10| [[@LINE]]|  }
+comment|// HEADER: [[@LINE]]| 10|  }
 end_comment
 
 begin_comment
-comment|// HEADER:  1| [[@LINE]]|
+comment|// HEADER: [[@LINE]]|  1|
 end_comment
 
 begin_return
@@ -115,7 +115,7 @@ return|;
 end_return
 
 begin_comment
-comment|// HEADER:  1| [[@LINE]]|  return t;
+comment|// HEADER: [[@LINE]]|  1|  return t;
 end_comment
 
 unit|}

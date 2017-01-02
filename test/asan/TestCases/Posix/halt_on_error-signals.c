@@ -20,7 +20,7 @@ comment|// RUN: rm -f %t.log
 end_comment
 
 begin_comment
-comment|// RUN: %env_asan_opts=halt_on_error=false:suppress_equal_pcs=false %run %t 100>%t.log 2>&1 || true
+comment|// RUN: %env_asan_opts=halt_on_error=false:suppress_equal_pcs=false %run %t 100>>%t.log 2>&1 || true
 end_comment
 
 begin_comment

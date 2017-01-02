@@ -83,6 +83,20 @@ name|void
 name|__sanitizer_cov_dump
 parameter_list|()
 function_decl|;
+comment|//  Dump collected coverage info. Sorts pcs by module into individual
+comment|//  .sancov files.
+name|void
+name|__sanitizer_dump_coverage
+parameter_list|(
+specifier|const
+name|uintptr_t
+modifier|*
+name|pcs
+parameter_list|,
+name|uintptr_t
+name|len
+parameter_list|)
+function_decl|;
 comment|// Open<name>.sancov.packed in the coverage directory and return the file
 comment|// descriptor. Returns -1 on failure, or if coverage dumping is disabled.
 comment|// This is intended for use by sandboxing code.
@@ -117,20 +131,6 @@ comment|// Set *data to the array of covered PCs and return the size of that arr
 comment|// Some of the entries in *data will be zero.
 name|uintptr_t
 name|__sanitizer_get_coverage_guards
-parameter_list|(
-name|uintptr_t
-modifier|*
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
-comment|// Set *data to the growing buffer with covered PCs and return the size
-comment|// of the buffer. The entries are never zero.
-comment|// When only unique pcs are collected, the size is equal to
-comment|// __sanitizer_get_total_unique_coverage.
-comment|// WARNING: EXPERIMENTAL API.
-name|uintptr_t
-name|__sanitizer_get_coverage_pc_buffer
 parameter_list|(
 name|uintptr_t
 modifier|*

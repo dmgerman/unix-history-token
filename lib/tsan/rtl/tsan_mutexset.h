@@ -178,8 +178,9 @@ argument_list|)
 block|;   }
 name|private
 operator|:
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|uptr
 name|size_
@@ -211,8 +212,8 @@ empty_stmt|;
 comment|// Go does not have mutexes, so do not spend memory and time.
 comment|// (Go sync.Mutex is actually a semaphore -- can be unlocked
 comment|// in different goroutine).
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SANITIZER_GO
 name|MutexSet
 operator|::

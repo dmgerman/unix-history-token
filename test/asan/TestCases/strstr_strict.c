@@ -121,7 +121,7 @@ name|s2
 argument_list|)
 decl_stmt|;
 comment|// CHECK: {{.*ERROR: AddressSanitizer: heap-buffer-overflow on address}}
-comment|// CHECK: READ of size 101
+comment|// CHECK: READ of size {{101|100}}
 name|assert
 argument_list|(
 name|r

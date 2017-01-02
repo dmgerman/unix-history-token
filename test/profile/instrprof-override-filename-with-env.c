@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_profgen -o %t -O3 %s
+comment|// RUN: %clang_profgen=%t.bad.profraw -o %t -O3 %s
 end_comment
 
 begin_comment
@@ -15,16 +15,12 @@ begin_comment
 comment|// RUN: %clang_profuse=%t.profdata -o - -S -emit-llvm %s | FileCheck %s
 end_comment
 
-begin_function_decl
+begin_function
 name|void
-name|__llvm_profile_override_default_filename
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+name|bar
+parameter_list|()
+block|{}
+end_function
 
 begin_function
 name|int
@@ -50,13 +46,8 @@ condition|)
 return|return
 literal|1
 return|;
-name|__llvm_profile_override_default_filename
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
+name|bar
+argument_list|()
 expr_stmt|;
 return|return
 literal|0

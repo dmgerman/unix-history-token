@@ -351,12 +351,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!  * \brief Write instrumentation data to the current file.  *  * Writes to the file with the last name given to \a *  * __llvm_profile_set_filename(),  * or if it hasn't been called, the \c LLVM_PROFILE_FILE environment variable,  * or if that's not set, the last name given to  * \a __llvm_profile_override_default_filename(), or if that's not set,  * \c "default.profraw".  */
+comment|/*!  * \brief Write instrumentation data to the current file.  *  * Writes to the file with the last name given to \a *  * __llvm_profile_set_filename(),  * or if it hasn't been called, the \c LLVM_PROFILE_FILE environment variable,  * or if that's not set, the last name set to INSTR_PROF_PROFILE_NAME_VAR,  * or if that's not set,  \c "default.profraw".  */
 end_comment
 
 begin_function_decl
 name|int
 name|__llvm_profile_write_file
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!  * \brief this is a wrapper interface to \c __llvm_profile_write_file.  * After this interface is invoked, a arleady dumped flag will be set  * so that profile won't be dumped again during program exit.   * Invocation of interface __llvm_profile_reset_counters will clear  * the flag. This interface is designed to be used to collect profile  * data from user selected hot regions. The use model is  *      __llvm_profile_reset_counters();  *      ... hot region 1  *      __llvm_profile_dump();  *      .. some other code  *      __llvm_profile_reset_counters();  *       ... hot region 2  *      __llvm_profile_dump();  *  *  It is expected that on-line profile merging is on with \c %m specifier  *  used in profile filename . If merging is  not turned on, user is expected  *  to invoke __llvm_profile_set_filename  to specify different profile names  *  for different regions before dumping to avoid profile write clobbering.  */
+end_comment
+
+begin_function_decl
+name|int
+name|__llvm_profile_dump
 parameter_list|(
 name|void
 parameter_list|)
@@ -370,22 +383,6 @@ end_comment
 begin_function_decl
 name|void
 name|__llvm_profile_set_filename
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*!  * \brief Set the filename for writing instrumentation data, unless the  * \c LLVM_PROFILE_FILE environment variable was set.  *  * Unless overridden, sets the filename to be used for subsequent calls to  * \a __llvm_profile_write_file().  *  * \c Name is not copied, so it must remain valid.  Passing NULL resets the  * filename logic to the default behaviour (unless the \c LLVM_PROFILE_FILE  * was set in which case it has no effect).  */
-end_comment
-
-begin_function_decl
-name|void
-name|__llvm_profile_override_default_filename
 parameter_list|(
 specifier|const
 name|char
@@ -418,6 +415,19 @@ name|__llvm_profile_initialize_file
 parameter_list|(
 name|void
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!  * \brief Return path prefix (excluding the base filename) of the profile data.  * This is useful for users using \c -fprofile-generate=./path_prefix who do  * not care about the default raw profile name. It is also useful to collect  * more than more profile data files dumped in the same directory (Online  * merge mode is turned on for instrumented programs with shared libs).  * Side-effect: this API call will invoke malloc with dynamic memory allocation.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|__llvm_profile_get_path_prefix
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -469,14 +479,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!  * This variable is defined in InstrProfilingRuntime.cc as a hidden  * symbol. Its main purpose is to enable profile runtime user to  * bypass runtime initialization code -- if the client code explicitly  * define this variable, then InstProfileRuntime.o won't be linked in.  * Note that this variable's visibility needs to be hidden so that the  * definition of this variable in an instrumented shared library won't  * affect runtime initialization decision of the main program.  */
+comment|/*!  * This variable is defined in InstrProfilingRuntime.cc as a hidden  * symbol. Its main purpose is to enable profile runtime user to  * bypass runtime initialization code -- if the client code explicitly  * define this variable, then InstProfileRuntime.o won't be linked in.  * Note that this variable's visibility needs to be hidden so that the  * definition of this variable in an instrumented shared library won't  * affect runtime initialization decision of the main program.  *  __llvm_profile_profile_runtime. */
 end_comment
 
 begin_decl_stmt
 name|COMPILER_RT_VISIBILITY
 specifier|extern
 name|int
-name|__llvm_profile_runtime
+name|INSTR_PROF_PROFILE_RUNTIME_VAR
 decl_stmt|;
 end_decl_stmt
 
@@ -487,9 +497,31 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uint64_t
-name|__llvm_profile_raw_version
+name|INSTR_PROF_RAW_VERSION_VAR
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* __llvm_profile_raw_version */
+end_comment
+
+begin_comment
+comment|/*!  * This variable is a weak symbol defined in InstrProfiling.c. It allows  * compiler instrumentation to provide overriding definition with value  * from compiler command line. This variable has default visibility.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|INSTR_PROF_PROFILE_NAME_VAR
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* __llvm_profile_filename. */
+end_comment
 
 begin_endif
 endif|#

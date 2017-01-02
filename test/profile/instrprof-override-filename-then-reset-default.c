@@ -29,7 +29,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|__llvm_profile_override_default_filename
+name|__llvm_profile_set_filename
 parameter_list|(
 specifier|const
 name|char
@@ -62,7 +62,7 @@ condition|)
 return|return
 literal|1
 return|;
-name|__llvm_profile_override_default_filename
+name|__llvm_profile_set_filename
 argument_list|(
 name|argv
 index|[
@@ -70,7 +70,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|__llvm_profile_override_default_filename
+name|__llvm_profile_set_filename
 argument_list|(
 literal|0
 argument_list|)

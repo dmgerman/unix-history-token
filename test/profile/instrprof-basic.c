@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: shell
-end_comment
-
-begin_comment
 comment|// RUN: %clang_profgen -o %t -O3 %s
 end_comment
 
@@ -24,19 +20,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: rm -f %t.profraw_e_*
+comment|// RUN: rm -fr %t.dir1
 end_comment
 
 begin_comment
-comment|// RUN: env LLVM_PROFILE_FILE=%t.profraw_e_%1m %run %t
+comment|// RUN: mkdir -p %t.dir1
 end_comment
 
 begin_comment
-comment|// RUN: env LLVM_PROFILE_FILE=%t.profraw_e_%1m %run %t
+comment|// RUN: env LLVM_PROFILE_FILE=%t.dir1/profraw_e_%1m %run %t
 end_comment
 
 begin_comment
-comment|// RUN: llvm-profdata merge -o %t.em.profdata %t.profraw_e_*
+comment|// RUN: env LLVM_PROFILE_FILE=%t.dir1/profraw_e_%1m %run %t
+end_comment
+
+begin_comment
+comment|// RUN: llvm-profdata merge -o %t.em.profdata %t.dir1
 end_comment
 
 begin_comment
@@ -48,11 +48,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_profgen=%t.%m.profraw -o %t.merge -O3 %s
+comment|// RUN: rm -fr %t.dir2
 end_comment
 
 begin_comment
-comment|// RUN: rm -f %t.*.profraw*
+comment|// RUN: mkdir -p %t.dir2
+end_comment
+
+begin_comment
+comment|// RUN: %clang_profgen=%t.dir2/%m.profraw -o %t.merge -O3 %s
 end_comment
 
 begin_comment
@@ -64,11 +68,107 @@ comment|// RUN: %run %t.merge
 end_comment
 
 begin_comment
-comment|// RUN: llvm-profdata merge -o %t.m.profdata %t.*.profraw
+comment|// RUN: llvm-profdata merge -o %t.m.profdata %t.dir2/
 end_comment
 
 begin_comment
 comment|// RUN: %clang_profuse=%t.m.profdata -o - -S -emit-llvm %s | FileCheck %s --check-prefix=COMMON --check-prefix=MERGE
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Test that merging is enabled by default with -fprofile-generate=
+end_comment
+
+begin_comment
+comment|// RUN: rm -fr %t.dir3
+end_comment
+
+begin_comment
+comment|// RUN: mkdir -p %t.dir3
+end_comment
+
+begin_comment
+comment|// RUN: %clang_pgogen=%t.dir3/ -o %t.merge3 -O0 %s
+end_comment
+
+begin_comment
+comment|// RUN: %run %t.merge3
+end_comment
+
+begin_comment
+comment|// RUN: %run %t.merge3
+end_comment
+
+begin_comment
+comment|// RUN: %run %t.merge3
+end_comment
+
+begin_comment
+comment|// RUN: %run %t.merge3
+end_comment
+
+begin_comment
+comment|// RUN: llvm-profdata merge -o %t.m3.profdata %t.dir3/
+end_comment
+
+begin_comment
+comment|// RUN: %clang_profuse=%t.m3.profdata -O0 -o - -S -emit-llvm %s | FileCheck %s --check-prefix=COMMON --check-prefix=PGOMERGE
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Test that merging is enabled by default with -fprofile-generate
+end_comment
+
+begin_comment
+comment|// RUN: rm -fr %t.dir4
+end_comment
+
+begin_comment
+comment|// RUN: mkdir -p %t.dir4
+end_comment
+
+begin_comment
+comment|// RUN: %clang_pgogen -o %t.dir4/merge4 -O0 %s
+end_comment
+
+begin_comment
+comment|// RUN: cd %t.dir4
+end_comment
+
+begin_comment
+comment|// RUN: %run %t.dir4/merge4
+end_comment
+
+begin_comment
+comment|// RUN: %run %t.dir4/merge4
+end_comment
+
+begin_comment
+comment|// RUN: %run %t.dir4/merge4
+end_comment
+
+begin_comment
+comment|// RUN: %run %t.dir4/merge4
+end_comment
+
+begin_comment
+comment|// RUN: rm -f %t.dir4/merge4
+end_comment
+
+begin_comment
+comment|// RUN: llvm-profdata merge -o %t.m4.profdata ./
+end_comment
+
+begin_comment
+comment|// RUN: %clang_profuse=%t.m4.profdata -O0 -o - -S -emit-llvm %s | FileCheck %s --check-prefix=COMMON  --check-prefix=PGOMERGE
 end_comment
 
 begin_function
@@ -167,6 +267,14 @@ end_comment
 
 begin_comment
 comment|// MERGE: ![[PD2]] = !{!"branch_weights", i32 3, i32 1}
+end_comment
+
+begin_comment
+comment|// PGOMERGE: ![[PD1]] = !{!"branch_weights", i32 0, i32 4}
+end_comment
+
+begin_comment
+comment|// PGOMERGE: ![[PD2]] = !{!"branch_weights", i32 4, i32 0}
 end_comment
 
 end_unit

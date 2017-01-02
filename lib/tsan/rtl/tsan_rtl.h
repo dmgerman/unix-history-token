@@ -244,8 +244,9 @@ begin_decl_stmt
 name|namespace
 name|__tsan
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 struct_decl|struct
 name|MapUnmapCallback
@@ -334,13 +335,24 @@ name|PrimaryAllocator
 expr_stmt|;
 else|#
 directive|else
-typedef|typedef
-name|SizeClassAllocator64
-operator|<
+struct|struct
+name|AP64
+block|{
+comment|// Allocator64 parameters. Deliberately using a short name.
+specifier|static
+specifier|const
+name|uptr
+name|kSpaceBeg
+init|=
 name|Mapping
 operator|::
 name|kHeapMemBeg
-operator|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|uptr
+name|kSpaceSize
+init|=
 name|Mapping
 operator|::
 name|kHeapMemEnd
@@ -348,12 +360,37 @@ operator|-
 name|Mapping
 operator|::
 name|kHeapMemBeg
-operator|,
+decl_stmt|;
+specifier|static
+specifier|const
+name|uptr
+name|kMetadataSize
+init|=
 literal|0
-operator|,
+decl_stmt|;
+typedef|typedef
 name|DefaultSizeClassMap
-operator|,
+name|SizeClassMap
+typedef|;
+typedef|typedef
+name|__tsan
+operator|::
 name|MapUnmapCallback
+name|MapUnmapCallback
+expr_stmt|;
+specifier|static
+specifier|const
+name|uptr
+name|kFlags
+init|=
+literal|0
+decl_stmt|;
+block|}
+struct|;
+typedef|typedef
+name|SizeClassAllocator64
+operator|<
+name|AP64
 operator|>
 name|PrimaryAllocator
 expr_stmt|;
@@ -1807,8 +1844,9 @@ modifier|*
 name|thr
 decl_stmt|;
 comment|// currently wired thread, or nullptr
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|AllocatorCache
 name|alloc_cache
@@ -1835,11 +1873,12 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
-end_ifndef
+end_if
 
 begin_comment
 comment|// ScopedGlobalProcessor temporary setups a global processor for the current
@@ -1908,8 +1947,9 @@ name|int
 name|ignore_sync
 decl_stmt|;
 comment|// Go does not support ignores.
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|IgnoreSet
 name|mop_ignore_set
@@ -1949,8 +1989,9 @@ decl_stmt|;
 name|ThreadClock
 name|clock
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|Vector
 operator|<
@@ -2040,8 +2081,9 @@ name|Processor
 modifier|*
 name|proc1
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|Processor
 modifier|*
@@ -2068,8 +2110,9 @@ name|ThreadSignalContext
 modifier|*
 name|signal_ctx
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|u32
 name|last_sleep_stack_id
@@ -2125,11 +2168,12 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
-end_ifndef
+end_if
 
 begin_if
 if|#
@@ -2542,8 +2586,9 @@ block|{
 name|ScopedIgnoreInterceptors
 argument_list|()
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|cur_thread
 argument_list|()
@@ -2558,8 +2603,9 @@ operator|~
 name|ScopedIgnoreInterceptors
 argument_list|()
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|cur_thread
 argument_list|()
@@ -2741,6 +2787,21 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+name|ThreadContext
+modifier|*
+name|IsThreadStackOrTls
+parameter_list|(
+name|uptr
+name|addr
+parameter_list|,
+name|bool
+modifier|*
+name|is_stack
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -4559,8 +4620,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 name|HACKY_CALL
 argument_list|(
@@ -4628,11 +4690,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
-end_ifndef
+end_if
 
 begin_function
 name|uptr

@@ -119,7 +119,7 @@ comment|// any memory accesses solely based on 'this' and stack_size_log.
 comment|// Allocate() flips the appropriate allocation flag atomically, thus achieving
 comment|// async-signal safety.
 comment|// This allocator does not have quarantine per se, but it tries to allocate the
-comment|// frames in round robin fasion to maximize the delay between a deallocation
+comment|// frames in round robin fashion to maximize the delay between a deallocation
 comment|// and the next allocation.
 name|class
 name|FakeStack
@@ -336,7 +336,7 @@ name|class_id
 operator|)
 return|;
 block|}
-comment|// Divide n by the numbe of frames in size class.
+comment|// Divide n by the number of frames in size class.
 specifier|static
 name|uptr
 name|ModuloNumberOfFrames
@@ -366,7 +366,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|// The the pointer to the flags of the given class_id.
+comment|// The pointer to the flags of the given class_id.
 name|u8
 modifier|*
 name|GetFlags

@@ -16,7 +16,7 @@ comment|// Sanity checking a test in pure C with -pie.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_asan -O2 %s -pie -fPIE -o %t
+comment|// RUN: %clang_asan -O2 %s %pie %fPIE -o %t
 end_comment
 
 begin_comment
@@ -24,11 +24,7 @@ comment|// RUN: not %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// XFAIL: arm-linux-gnueabi
-end_comment
-
-begin_comment
-comment|// XFAIL: armv7l-unknown-linux-gnueabihf
+comment|// REQUIRES: stable-runtime
 end_comment
 
 begin_include

@@ -213,10 +213,14 @@ parameter_list|)
 function_decl|;
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__x86_64__
 argument_list|)
+operator|||
+name|SANITIZER_MIPS64
+operator|)
 operator|&&
 operator|!
 name|SANITIZER_GO

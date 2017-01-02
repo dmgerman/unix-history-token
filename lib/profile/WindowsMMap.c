@@ -32,6 +32,18 @@ directive|include
 file|"InstrProfiling.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|WIN32_LEAN_AND_MEAN
+end_define
+
+begin_include
+include|#
+directive|include
+file|<windows.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

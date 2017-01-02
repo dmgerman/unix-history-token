@@ -50,6 +50,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"int_lib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -65,6 +71,12 @@ directive|include
 file|<math.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__arm__
+end_if
+
 begin_function_decl
 specifier|extern
 name|COMPILER_RT_ABI
@@ -76,12 +88,6 @@ name|a
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|__arm__
-end_if
 
 begin_function
 name|int

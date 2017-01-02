@@ -133,6 +133,7 @@ name|ctxfunc_started
 operator|=
 literal|1
 expr_stmt|;
+comment|// printf("ctxfunc\n");
 name|pthread_cond_signal
 argument_list|(
 operator|&
@@ -201,7 +202,7 @@ name|malloc
 argument_list|(
 literal|1
 operator|<<
-literal|10
+literal|11
 argument_list|)
 expr_stmt|;
 if|if
@@ -233,7 +234,7 @@ name|ss_size
 operator|=
 literal|1
 operator|<<
-literal|10
+literal|11
 expr_stmt|;
 name|makecontext
 argument_list|(

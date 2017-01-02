@@ -232,6 +232,15 @@ name|memory_order_acquire
 argument_list|)
 return|;
 block|}
+name|uptr
+name|GetCacheSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|max_cache_size_
+return|;
+block|}
 name|void
 name|Put
 parameter_list|(

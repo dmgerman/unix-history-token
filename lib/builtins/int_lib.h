@@ -474,7 +474,8 @@ name|uint32_t
 name|value
 parameter_list|)
 block|{
-name|uint32_t
+name|unsigned
+name|long
 name|trailing_zero
 init|=
 literal|0
@@ -507,7 +508,8 @@ name|uint32_t
 name|value
 parameter_list|)
 block|{
-name|uint32_t
+name|unsigned
+name|long
 name|leading_zero
 init|=
 literal|0
@@ -556,7 +558,8 @@ name|uint64_t
 name|value
 parameter_list|)
 block|{
-name|uint32_t
+name|unsigned
+name|long
 name|leading_zero
 init|=
 literal|0

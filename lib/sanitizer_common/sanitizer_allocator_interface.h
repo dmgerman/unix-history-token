@@ -179,6 +179,15 @@ modifier|*
 name|ptr
 parameter_list|)
 function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|SANITIZER_WEAK_ATTRIBUTE
+name|void
+name|__sanitizer_print_memory_profile
+parameter_list|(
+name|int
+name|top_percent
+parameter_list|)
+function_decl|;
 block|}
 end_extern
 

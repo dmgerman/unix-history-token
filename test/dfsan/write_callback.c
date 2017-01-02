@@ -15,6 +15,10 @@ begin_comment
 comment|// a callback set using dfsan_set_write_callback().
 end_comment
 
+begin_comment
+comment|// REQUIRES: stable-runtime
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -190,6 +190,35 @@ modifier|*
 name|strip_path_prefix
 parameter_list|)
 function_decl|;
+comment|// Same as RenderFrame, but for data section (global variables).
+comment|// Accepts %s, %l from above.
+comment|// Also accepts:
+comment|//   %g - name of the global variable.
+name|void
+name|RenderData
+parameter_list|(
+name|InternalScopedString
+modifier|*
+name|buffer
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+specifier|const
+name|DataInfo
+modifier|*
+name|DI
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|strip_path_prefix
+init|=
+literal|""
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -81,6 +81,22 @@ begin_comment
 comment|// All functions in this header are extern "C" and start with __esan_.
 end_comment
 
+begin_expr_stmt
+name|using
+name|__sanitizer
+operator|::
+name|uptr
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|using
+name|__sanitizer
+operator|::
+name|u32
+expr_stmt|;
+end_expr_stmt
+
 begin_extern
 extern|extern
 literal|"C"

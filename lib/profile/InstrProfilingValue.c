@@ -701,6 +701,11 @@ comment|/* Bump down the min count node's count. If it reaches 0,      * evict i
 if|if
 condition|(
 operator|!
+name|MinCountVNode
+operator|->
+name|Count
+operator|||
+operator|!
 operator|(
 operator|--
 name|MinCountVNode

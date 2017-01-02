@@ -456,8 +456,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|// Calls __sanitizer::FlushUnneededShadowMemory() on
-comment|// [MemToShadow(p), MemToShadow(p+size)] with proper rounding.
+comment|// Calls __sanitizer::ReleaseMemoryPagesToOS() on
+comment|// [MemToShadow(p), MemToShadow(p+size)].
 name|void
 name|FlushUnneededASanShadowMemory
 parameter_list|(

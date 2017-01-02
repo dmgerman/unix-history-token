@@ -1017,14 +1017,51 @@ begin_comment
 comment|////////////////////////////////////////////////////////////////////////////////
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SIZEOF_INT128__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|OPTIMISED_CASES
 define|\
-value|OPTIMISED_CASE(1, IS_LOCK_FREE_1, uint8_t)\   OPTIMISED_CASE(2, IS_LOCK_FREE_2, uint16_t)\   OPTIMISED_CASE(4, IS_LOCK_FREE_4, uint32_t)\   OPTIMISED_CASE(8, IS_LOCK_FREE_8, uint64_t)\
-comment|/* FIXME: __uint128_t isn't available on 32 bit platforms.   OPTIMISED_CASE(16, IS_LOCK_FREE_16, __uint128_t)*/
-value|\  #define OPTIMISED_CASE(n, lockfree, type)\ type __atomic_load_##n(type *src, int model) {\   if (lockfree)\     return __c11_atomic_load((_Atomic(type)*)src, model);\   Lock *l = lock_for_pointer(src);\   lock(l);\   type val = *src;\   unlock(l);\   return val;\ }
+value|OPTIMISED_CASE(1, IS_LOCK_FREE_1, uint8_t)\   OPTIMISED_CASE(2, IS_LOCK_FREE_2, uint16_t)\   OPTIMISED_CASE(4, IS_LOCK_FREE_4, uint32_t)\   OPTIMISED_CASE(8, IS_LOCK_FREE_8, uint64_t)\   OPTIMISED_CASE(16, IS_LOCK_FREE_16, __uint128_t)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OPTIMISED_CASES
+define|\
+value|OPTIMISED_CASE(1, IS_LOCK_FREE_1, uint8_t)\   OPTIMISED_CASE(2, IS_LOCK_FREE_2, uint16_t)\   OPTIMISED_CASE(4, IS_LOCK_FREE_4, uint32_t)\   OPTIMISED_CASE(8, IS_LOCK_FREE_8, uint64_t)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|OPTIMISED_CASE
+parameter_list|(
+name|n
+parameter_list|,
+name|lockfree
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|type __atomic_load_##n(type *src, int model) {\   if (lockfree)\     return __c11_atomic_load((_Atomic(type)*)src, model);\   Lock *l = lock_for_pointer(src);\   lock(l);\   type val = *src;\   unlock(l);\   return val;\ }
 end_define
 
 begin_expr_stmt

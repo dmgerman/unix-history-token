@@ -113,10 +113,7 @@ end_define
 begin_elif
 elif|#
 directive|elif
-name|defined
-argument_list|(
 name|SANITIZER_GO
-argument_list|)
 end_elif
 
 begin_define
@@ -165,10 +162,7 @@ name|SANITIZER_WINDOWS
 operator|)
 operator|&&
 operator|!
-name|defined
-argument_list|(
 name|SANITIZER_GO
-argument_list|)
 end_if
 
 begin_define
@@ -1284,11 +1278,26 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+extern|extern
+literal|"C"
+name|void
+modifier|*
+name|_AddressOfReturnAddress
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 pragma|#
 directive|pragma
 name|intrinsic
 name|(
 name|_ReturnAddress
+name|)
+pragma|#
+directive|pragma
+name|intrinsic
+name|(
+name|_AddressOfReturnAddress
 name|)
 define|#
 directive|define
@@ -1296,13 +1305,11 @@ name|GET_CALLER_PC
 parameter_list|()
 value|(uptr)_ReturnAddress()
 comment|// CaptureStackBackTrace doesn't need to know BP on Windows.
-comment|// FIXME: This macro is still used when printing error reports though it's not
-comment|// clear if the BP value is needed in the ASan reports on Windows.
 define|#
 directive|define
 name|GET_CURRENT_FRAME
 parameter_list|()
-value|(uptr)0xDEADBEEF
+value|(((uptr)_AddressOfReturnAddress()) + sizeof(uptr))
 extern|extern
 literal|"C"
 name|void
@@ -1352,10 +1359,164 @@ comment|// namespace __sanitizer
 end_comment
 
 begin_decl_stmt
+name|namespace
+name|__asan
+block|{
 name|using
 name|namespace
 name|__sanitizer
 decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__dsan
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__dfsan
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__esan
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__lsan
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__msan
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__tsan
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__scudo
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__ubsan
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__xray
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__interception
+block|{
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

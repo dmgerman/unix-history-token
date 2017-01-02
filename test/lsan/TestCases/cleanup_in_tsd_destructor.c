@@ -65,6 +65,12 @@ directive|include
 file|"sanitizer/lsan_interface.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sanitizer_common/print_address.h"
+end_include
+
 begin_decl_stmt
 name|pthread_key_t
 name|key
@@ -112,11 +118,11 @@ argument_list|(
 literal|1337
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|print_address
 argument_list|(
-name|stderr
+literal|"Test alloc: "
 argument_list|,
-literal|"Test alloc: %p.\n"
+literal|1
 argument_list|,
 name|p
 argument_list|)
@@ -219,7 +225,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: Test alloc: [[ADDR:.*]].
+comment|// CHECK: Test alloc: [[ADDR:0x[0-9,a-f]+]]
 end_comment
 
 begin_comment

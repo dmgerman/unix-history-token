@@ -58,6 +58,17 @@ name|jptr
 name|size
 parameter_list|)
 function_decl|;
+name|jptr
+name|__tsan_java_find
+parameter_list|(
+name|jptr
+modifier|*
+name|from_ptr
+parameter_list|,
+name|jptr
+name|to
+parameter_list|)
+function_decl|;
 name|void
 name|__tsan_java_move
 parameter_list|(

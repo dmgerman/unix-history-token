@@ -347,6 +347,51 @@ name|void
 name|__sanitizer_print_stack_trace
 parameter_list|()
 function_decl|;
+comment|// Symbolizes the supplied 'pc' using the format string 'fmt'.
+comment|// Outputs at most 'out_buf_size' bytes into 'out_buf'.
+comment|// The format syntax is described in
+comment|// lib/sanitizer_common/sanitizer_stacktrace_printer.h.
+name|void
+name|__sanitizer_symbolize_pc
+parameter_list|(
+name|void
+modifier|*
+name|pc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|char
+modifier|*
+name|out_buf
+parameter_list|,
+name|size_t
+name|out_buf_size
+parameter_list|)
+function_decl|;
+comment|// Same as __sanitizer_symbolize_pc, but for data section (i.e. globals).
+name|void
+name|__sanitizer_symbolize_global
+parameter_list|(
+name|void
+modifier|*
+name|data_ptr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|char
+modifier|*
+name|out_buf
+parameter_list|,
+name|size_t
+name|out_buf_size
+parameter_list|)
+function_decl|;
 comment|// Sets the callback to be called right before death on error.
 comment|// Passing 0 will unset the callback.
 name|void
@@ -604,6 +649,38 @@ parameter_list|(
 name|void
 modifier|*
 name|fake_stack_save
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+modifier|*
+name|bottom_old
+parameter_list|,
+name|size_t
+modifier|*
+name|size_old
+parameter_list|)
+function_decl|;
+comment|// Get full module name and calculate pc offset within it.
+comment|// Returns 1 if pc belongs to some module, 0 if module was not found.
+name|int
+name|__sanitizer_get_module_and_offset_for_pc
+parameter_list|(
+name|void
+modifier|*
+name|pc
+parameter_list|,
+name|char
+modifier|*
+name|module_path
+parameter_list|,
+name|size_t
+name|module_path_len
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|pc_offset
 parameter_list|)
 function_decl|;
 ifdef|#

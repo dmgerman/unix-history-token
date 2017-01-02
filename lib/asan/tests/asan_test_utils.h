@@ -320,6 +320,14 @@ literal|4096
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// Big enough to be handled by secondary allocator and small enough to fit into
+end_comment
+
+begin_comment
+comment|// quarantine for all configurations.
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|size_t
@@ -327,7 +335,7 @@ name|kLargeMalloc
 init|=
 literal|1
 operator|<<
-literal|24
+literal|22
 decl_stmt|;
 end_decl_stmt
 

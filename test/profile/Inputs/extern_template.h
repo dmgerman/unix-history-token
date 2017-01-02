@@ -22,7 +22,7 @@ argument_list|(
 argument|int N
 argument_list|)
 block|{
-comment|// CHECK: 2| [[@LINE]]|  void doIt
+comment|// CHECK: [[@LINE]]| 2|  void doIt
 if|if
 condition|(
 name|N
@@ -30,20 +30,20 @@ operator|>
 literal|10
 condition|)
 block|{
-comment|// CHECK: 2| [[@LINE]]|    if (N> 10) {
+comment|// CHECK: [[@LINE]]| 2|    if (N> 10) {
 name|M
 operator|+=
 literal|2
 expr_stmt|;
-comment|// CHECK: 1| [[@LINE]]|      M += 2;
+comment|// CHECK: [[@LINE]]| 1|      M += 2;
 block|}
 else|else
-comment|// CHECK: 1| [[@LINE]]|    } else
+comment|// CHECK: [[@LINE]]| 1|    } else
 name|M
 operator|-=
 literal|2
 expr_stmt|;
-comment|// CHECK: 1| [[@LINE]]|      M -= 2;
+comment|// CHECK: [[@LINE]]| 1|      M -= 2;
 block|}
 name|T
 name|M

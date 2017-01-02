@@ -47,6 +47,10 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_comment
+comment|// REQUIRES: x86-target-arch
+end_comment
+
 begin_function
 name|int
 name|main

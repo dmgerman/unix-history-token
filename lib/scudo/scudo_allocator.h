@@ -59,23 +59,6 @@ directive|define
 name|SCUDO_ALLOCATOR_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__x86_64__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"The Scudo hardened allocator currently only supports x86_64."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -86,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"sanitizer_common/sanitizer_allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<atomic>
 end_include
 
 begin_decl_stmt
@@ -119,6 +108,161 @@ block|,
 comment|// Memory block came from memalign, posix_memalign, etc.
 block|}
 enum|;
+enum|enum
+name|ChunkState
+enum|:
+name|u8
+block|{
+name|ChunkAvailable
+init|=
+literal|0
+block|,
+name|ChunkAllocated
+init|=
+literal|1
+block|,
+name|ChunkQuarantine
+init|=
+literal|2
+block|}
+enum|;
+comment|// Our header requires 64 bits of storage. Having the offset saves us from
+comment|// using functions such as GetBlockBegin, that is fairly costly. Our first
+comment|// implementation used the MetaData as well, which offers the advantage of
+comment|// being stored away from the chunk itself, but accessing it was costly as
+comment|// well. The header will be atomically loaded and stored using the 16-byte
+comment|// primitives offered by the platform (likely requires cmpxchg16b support).
+typedef|typedef
+name|u64
+name|PackedHeader
+typedef|;
+struct|struct
+name|UnpackedHeader
+block|{
+name|u64
+name|Checksum
+range|:
+literal|16
+decl_stmt|;
+name|u64
+name|UnusedBytes
+range|:
+literal|20
+decl_stmt|;
+comment|// Needed for reallocation purposes.
+name|u64
+name|State
+range|:
+literal|2
+decl_stmt|;
+comment|// available, allocated, or quarantined
+name|u64
+name|AllocType
+range|:
+literal|2
+decl_stmt|;
+comment|// malloc, new, new[], or memalign
+name|u64
+name|Offset
+range|:
+literal|16
+decl_stmt|;
+comment|// Offset from the beginning of the backend
+comment|// allocation to the beginning of the chunk itself,
+comment|// in multiples of MinAlignment. See comment about
+comment|// its maximum value and test in init().
+name|u64
+name|Salt
+range|:
+literal|8
+decl_stmt|;
+block|}
+struct|;
+typedef|typedef
+name|std
+operator|::
+name|atomic
+operator|<
+name|PackedHeader
+operator|>
+name|AtomicPackedHeader
+expr_stmt|;
+name|COMPILER_CHECK
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|UnpackedHeader
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|PackedHeader
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// Minimum alignment of 8 bytes for 32-bit, 16 for 64-bit
+specifier|const
+name|uptr
+name|MinAlignmentLog
+init|=
+name|FIRST_32_SECOND_64
+argument_list|(
+literal|3
+argument_list|,
+literal|4
+argument_list|)
+decl_stmt|;
+specifier|const
+name|uptr
+name|MaxAlignmentLog
+init|=
+literal|24
+decl_stmt|;
+comment|// 16 MB
+specifier|const
+name|uptr
+name|MinAlignment
+init|=
+literal|1
+operator|<<
+name|MinAlignmentLog
+decl_stmt|;
+specifier|const
+name|uptr
+name|MaxAlignment
+init|=
+literal|1
+operator|<<
+name|MaxAlignmentLog
+decl_stmt|;
+specifier|const
+name|uptr
+name|ChunkHeaderSize
+init|=
+sizeof|sizeof
+argument_list|(
+name|PackedHeader
+argument_list|)
+decl_stmt|;
+specifier|const
+name|uptr
+name|AlignedChunkHeaderSize
+init|=
+operator|(
+name|ChunkHeaderSize
+operator|+
+name|MinAlignment
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+operator|(
+name|MinAlignment
+operator|-
+literal|1
+operator|)
+decl_stmt|;
 struct|struct
 name|AllocatorOptions
 block|{
@@ -130,6 +274,9 @@ name|ThreadLocalQuarantineSizeKb
 decl_stmt|;
 name|bool
 name|MayReturnNull
+decl_stmt|;
+name|s32
+name|ReleaseToOSIntervalMs
 decl_stmt|;
 name|bool
 name|DeallocationTypeMismatch
@@ -302,6 +449,9 @@ modifier|*
 name|Ptr
 parameter_list|)
 function_decl|;
+include|#
+directive|include
+file|"scudo_allocator_secondary.h"
 block|}
 end_decl_stmt
 
