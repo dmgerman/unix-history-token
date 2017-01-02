@@ -9815,6 +9815,7 @@ name|knl
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|SLIST_EMPTY
 argument_list|(
 operator|&
@@ -9822,6 +9823,7 @@ name|knl
 operator|->
 name|kl_list
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10888,7 +10890,9 @@ operator|->
 name|kq_knlistsize
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|list
 operator|=
@@ -10914,7 +10918,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|list
 operator|=
@@ -10946,7 +10952,9 @@ name|kn_link
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -11518,7 +11526,9 @@ name|td
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
