@@ -2008,7 +2008,7 @@ decl_stmt|;
 name|boolean_t
 name|restoring
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|efx_rc_t
@@ -2306,7 +2306,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|boolean_t
@@ -3032,7 +3032,7 @@ name|efx_filter_spec_t
 modifier|*
 name|spec
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|uint32_t
@@ -3321,7 +3321,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|boolean_t

@@ -4151,7 +4151,7 @@ decl_stmt|;
 name|int
 name|index
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|EFSYS_LOCK
@@ -4833,7 +4833,7 @@ decl_stmt|;
 name|int
 name|filter_idx
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|uint32_t
@@ -5081,7 +5081,7 @@ name|unsigned
 name|int
 name|depth
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|uint32_t
@@ -5433,7 +5433,7 @@ name|unsigned
 name|int
 name|depth
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|uint32_t
