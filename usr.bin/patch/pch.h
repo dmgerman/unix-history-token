@@ -113,7 +113,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|unsigned
+name|short
 name|pch_line_len
 parameter_list|(
 name|LINENUM
