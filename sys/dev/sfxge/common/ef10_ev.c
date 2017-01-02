@@ -475,6 +475,10 @@ name|uint32_t
 name|us
 parameter_list|,
 name|__in
+name|uint32_t
+name|flags
+parameter_list|,
+name|__in
 name|boolean_t
 name|low_latency
 parameter_list|)
@@ -619,6 +623,16 @@ name|irq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * On Huntington RX and TX event batching can only be requested together 	 * (even if the datapath firmware doesn't actually support RX 	 * batching). If event cut through is enabled no RX batching will occur. 	 * 	 * So always enable RX and TX event batching, and enable event cut 	 * through if we want low latency operation. 	 */
+switch|switch
+condition|(
+name|flags
+operator|&
+name|EFX_EVQ_FLAGS_TYPE_MASK
+condition|)
+block|{
+case|case
+name|EFX_EVQ_FLAGS_TYPE_AUTO
+case|:
 name|ev_cut_through
 operator|=
 name|low_latency
@@ -627,6 +641,32 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+break|break;
+case|case
+name|EFX_EVQ_FLAGS_TYPE_THROUGHPUT
+case|:
+name|ev_cut_through
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|EFX_EVQ_FLAGS_TYPE_LOW_LATENCY
+case|:
+name|ev_cut_through
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|rc
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|fail2
+goto|;
+block|}
 name|MCDI_IN_POPULATE_DWORD_6
 argument_list|(
 name|req
@@ -719,7 +759,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|fail2
+name|fail3
 goto|;
 name|MCDI_IN_SET_DWORD
 argument_list|(
@@ -859,7 +899,7 @@ operator|.
 name|emr_rc
 expr_stmt|;
 goto|goto
-name|fail3
+name|fail4
 goto|;
 block|}
 if|if
@@ -876,7 +916,7 @@ operator|=
 name|EMSGSIZE
 expr_stmt|;
 goto|goto
-name|fail4
+name|fail5
 goto|;
 block|}
 comment|/* NOTE: ignore the returned IRQ param as firmware does not set it. */
@@ -885,6 +925,13 @@ operator|(
 literal|0
 operator|)
 return|;
+name|fail5
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail5
+argument_list|)
+expr_stmt|;
 name|fail4
 label|:
 name|EFSYS_PROBE
@@ -957,6 +1004,10 @@ parameter_list|,
 name|__in
 name|uint32_t
 name|us
+parameter_list|,
+name|__in
+name|uint32_t
+name|flags
 parameter_list|)
 block|{
 name|efx_mcdi_req_t
@@ -978,6 +1029,10 @@ argument_list|,
 name|MC_CMD_INIT_EVQ_V2_OUT_LEN
 argument_list|)
 index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|evq_type
 decl_stmt|;
 name|efx_qword_t
 modifier|*
@@ -1095,6 +1150,46 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|flags
+operator|&
+name|EFX_EVQ_FLAGS_TYPE_MASK
+condition|)
+block|{
+case|case
+name|EFX_EVQ_FLAGS_TYPE_AUTO
+case|:
+name|evq_type
+operator|=
+name|MC_CMD_INIT_EVQ_V2_IN_FLAG_TYPE_AUTO
+expr_stmt|;
+break|break;
+case|case
+name|EFX_EVQ_FLAGS_TYPE_THROUGHPUT
+case|:
+name|evq_type
+operator|=
+name|MC_CMD_INIT_EVQ_V2_IN_FLAG_TYPE_THROUGHPUT
+expr_stmt|;
+break|break;
+case|case
+name|EFX_EVQ_FLAGS_TYPE_LOW_LATENCY
+case|:
+name|evq_type
+operator|=
+name|MC_CMD_INIT_EVQ_V2_IN_FLAG_TYPE_LOW_LATENCY
+expr_stmt|;
+break|break;
+default|default:
+name|rc
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|fail2
+goto|;
+block|}
 name|MCDI_IN_POPULATE_DWORD_4
 argument_list|(
 name|req
@@ -1115,7 +1210,7 @@ literal|0
 argument_list|,
 name|INIT_EVQ_V2_IN_FLAG_TYPE
 argument_list|,
-name|MC_CMD_INIT_EVQ_V2_IN_FLAG_TYPE_AUTO
+name|evq_type
 argument_list|)
 expr_stmt|;
 comment|/* If the value is zero then disable the timer */
@@ -1179,7 +1274,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|fail2
+name|fail3
 goto|;
 name|MCDI_IN_SET_DWORD
 argument_list|(
@@ -1319,7 +1414,7 @@ operator|.
 name|emr_rc
 expr_stmt|;
 goto|goto
-name|fail3
+name|fail4
 goto|;
 block|}
 if|if
@@ -1336,7 +1431,7 @@ operator|=
 name|EMSGSIZE
 expr_stmt|;
 goto|goto
-name|fail4
+name|fail5
 goto|;
 block|}
 comment|/* NOTE: ignore the returned IRQ param as firmware does not set it. */
@@ -1359,6 +1454,13 @@ operator|(
 literal|0
 operator|)
 return|;
+name|fail5
+label|:
+name|EFSYS_PROBE
+argument_list|(
+name|fail5
+argument_list|)
+expr_stmt|;
 name|fail4
 label|:
 name|EFSYS_PROBE
@@ -1610,6 +1712,10 @@ name|uint32_t
 name|us
 parameter_list|,
 name|__in
+name|uint32_t
+name|flags
+parameter_list|,
+name|__in
 name|efx_evq_t
 modifier|*
 name|eep
@@ -1761,7 +1867,7 @@ operator|->
 name|enc_init_evq_v2_supported
 condition|)
 block|{
-comment|/* 		 * On Medford the low latency license is required to enable RX 		 * and event cut through and to disable RX batching.  We let the 		 * firmware decide the settings to use. If the adapter has a low 		 * latency license, it will choose the best settings for low 		 * latency, otherwise it choose the best settings for 		 * throughput. 		 */
+comment|/* 		 * On Medford the low latency license is required to enable RX 		 * and event cut through and to disable RX batching.  If event 		 * queue type in flags is auto, we let the firmware decide the 		 * settings to use. If the adapter has a low latency license, 		 * it will choose the best settings for low latency, otherwise 		 * it will choose the best settings for throughput. 		 */
 name|rc
 operator|=
 name|efx_mcdi_init_evq_v2
@@ -1777,6 +1883,8 @@ argument_list|,
 name|irq
 argument_list|,
 name|us
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -1791,13 +1899,13 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 		 * On Huntington we need to specify the settings to use. We 		 * favour latency if the adapter is running low-latency firmware 		 * and throughput otherwise, and assume not support RX batching 		 * implies the adapter is running low-latency firmware.  (This 		 * is how it's been done since Huntington GA. It doesn't make 		 * much sense with hindsight as the 'low-latency' firmware 		 * variant is also best for throughput, and does now support RX 		 * batching). 		 */
+comment|/* 		 * On Huntington we need to specify the settings to use. 		 * If event queue type in flags is auto, we favour throughput 		 * if the adapter is running virtualization supporting firmware 		 * (i.e. the full featured firmware variant) 		 * and latency otherwise. The Ethernet Virtual Bridging 		 * capability is used to make this decision. (Note though that 		 * the low latency firmware variant is also best for 		 * throughput and corresponding type should be specified 		 * to choose it.) 		 */
 name|boolean_t
 name|low_latency
 init|=
 name|encp
 operator|->
-name|enc_rx_batching_enabled
+name|enc_datapath_cap_evb
 condition|?
 literal|0
 else|:
@@ -1818,6 +1926,8 @@ argument_list|,
 name|irq
 argument_list|,
 name|us
+argument_list|,
+name|flags
 argument_list|,
 name|low_latency
 argument_list|)
