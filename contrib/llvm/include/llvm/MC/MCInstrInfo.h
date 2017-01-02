@@ -183,9 +183,7 @@ index|]
 return|;
 block|}
 comment|/// \brief Returns the name for the instructions with the given opcode.
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getName
 argument_list|(
 name|unsigned
@@ -203,6 +201,8 @@ literal|"Invalid opcode!"
 argument_list|)
 expr_stmt|;
 return|return
+name|StringRef
+argument_list|(
 operator|&
 name|InstrNameData
 index|[
@@ -211,6 +211,7 @@ index|[
 name|Opcode
 index|]
 index|]
+argument_list|)
 return|;
 block|}
 block|}

@@ -237,6 +237,8 @@ range|:
 literal|24
 decl_stmt|;
 comment|// Space for subclasses to store data.
+comment|// Note that this should be synchronized with
+comment|// MAX_INT_BITS value in IntegerType class.
 name|protected
 label|:
 name|friend
@@ -341,10 +343,6 @@ return|return
 name|TyID
 operator|==
 name|ArrayTyID
-operator|||
-name|TyID
-operator|==
-name|PointerTyID
 operator|||
 name|TyID
 operator|==
@@ -557,6 +555,7 @@ return|return
 name|APFloat
 operator|::
 name|IEEEhalf
+argument_list|()
 return|;
 case|case
 name|FloatTyID
@@ -565,6 +564,7 @@ return|return
 name|APFloat
 operator|::
 name|IEEEsingle
+argument_list|()
 return|;
 case|case
 name|DoubleTyID
@@ -573,6 +573,7 @@ return|return
 name|APFloat
 operator|::
 name|IEEEdouble
+argument_list|()
 return|;
 case|case
 name|X86_FP80TyID
@@ -581,6 +582,7 @@ return|return
 name|APFloat
 operator|::
 name|x87DoubleExtended
+argument_list|()
 return|;
 case|case
 name|FP128TyID
@@ -589,6 +591,7 @@ return|return
 name|APFloat
 operator|::
 name|IEEEquad
+argument_list|()
 return|;
 case|case
 name|PPC_FP128TyID
@@ -597,6 +600,7 @@ return|return
 name|APFloat
 operator|::
 name|PPCDoubleDouble
+argument_list|()
 return|;
 default|default:
 name|llvm_unreachable
@@ -1202,9 +1206,19 @@ name|getArrayElementType
 argument_list|()
 specifier|const
 block|{
-return|return
-name|getSequentialElementType
+name|assert
+argument_list|(
+name|getTypeID
 argument_list|()
+operator|==
+name|ArrayTyID
+argument_list|)
+block|;
+return|return
+name|ContainedTys
+index|[
+literal|0
+index|]
 return|;
 block|}
 specifier|inline
@@ -1219,9 +1233,19 @@ name|getVectorElementType
 argument_list|()
 specifier|const
 block|{
-return|return
-name|getSequentialElementType
+name|assert
+argument_list|(
+name|getTypeID
 argument_list|()
+operator|==
+name|VectorTyID
+argument_list|)
+block|;
+return|return
+name|ContainedTys
+index|[
+literal|0
+index|]
 return|;
 block|}
 name|Type
@@ -1230,9 +1254,19 @@ name|getPointerElementType
 argument_list|()
 specifier|const
 block|{
-return|return
-name|getSequentialElementType
+name|assert
+argument_list|(
+name|getTypeID
 argument_list|()
+operator|==
+name|PointerTyID
+argument_list|)
+block|;
+return|return
+name|ContainedTys
+index|[
+literal|0
+index|]
 return|;
 block|}
 comment|/// Get the address space of this pointer or pointer vector type.
@@ -1759,7 +1793,8 @@ operator|>
 block|{
 typedef|typedef
 name|Type
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 typedef|typedef
 name|Type
@@ -1768,9 +1803,7 @@ name|subtype_iterator
 name|ChildIteratorType
 expr_stmt|;
 specifier|static
-specifier|inline
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|Type *T
@@ -1781,11 +1814,10 @@ name|T
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 argument_list|(
-argument|NodeType *N
+argument|NodeRef N
 argument_list|)
 block|{
 return|return
@@ -1796,11 +1828,10 @@ argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 argument_list|(
-argument|NodeType *N
+argument|NodeRef N
 argument_list|)
 block|{
 return|return
@@ -1826,7 +1857,8 @@ block|{
 typedef|typedef
 specifier|const
 name|Type
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 typedef|typedef
 name|Type
@@ -1835,13 +1867,10 @@ name|subtype_iterator
 name|ChildIteratorType
 expr_stmt|;
 specifier|static
-specifier|inline
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|T
 parameter_list|)
 block|{
@@ -1850,12 +1879,10 @@ name|T
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1867,12 +1894,10 @@ argument_list|()
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{

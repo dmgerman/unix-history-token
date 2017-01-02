@@ -447,7 +447,9 @@ name|llvm_shutdown_obj
 block|{
 name|llvm_shutdown_obj
 argument_list|()
-block|{ }
+operator|=
+expr|default
+expr_stmt|;
 operator|~
 name|llvm_shutdown_obj
 argument_list|()
@@ -459,11 +461,19 @@ block|}
 struct|;
 end_struct
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_MANAGEDSTATIC_H
+end_comment
 
 end_unit
 

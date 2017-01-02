@@ -79,6 +79,36 @@ directive|include
 file|"llvm/MC/MCDisassembler/MCDisassembler.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCDisassembler/MCRelocationInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCDisassembler/MCSymbolizer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -98,6 +128,9 @@ decl_stmt|;
 name|class
 name|Twine
 decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|// AMDGPUDisassembler
+comment|//===----------------------------------------------------------------------===//
 name|class
 name|AMDGPUDisassembler
 range|:
@@ -137,7 +170,10 @@ block|{}
 operator|~
 name|AMDGPUDisassembler
 argument_list|()
-block|{}
+name|override
+operator|=
+expr|default
+block|;
 name|DecodeStatus
 name|getInstruction
 argument_list|(
@@ -195,7 +231,7 @@ name|errOperand
 argument_list|(
 argument|unsigned V
 argument_list|,
-argument|const llvm::Twine& ErrMsg
+argument|const Twine& ErrMsg
 argument_list|)
 specifier|const
 block|;
@@ -234,6 +270,13 @@ argument_list|)
 specifier|const
 block|;
 name|MCOperand
+name|decodeOperand_VSrc16
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
 name|decodeOperand_VReg_64
 argument_list|(
 argument|unsigned Val
@@ -262,7 +305,7 @@ argument_list|)
 specifier|const
 block|;
 name|MCOperand
-name|decodeOperand_SReg_32_XM0
+name|decodeOperand_SReg_32_XM0_XEXEC
 argument_list|(
 argument|unsigned Val
 argument_list|)
@@ -270,6 +313,13 @@ specifier|const
 block|;
 name|MCOperand
 name|decodeOperand_SReg_64
+argument_list|(
+argument|unsigned Val
+argument_list|)
+specifier|const
+block|;
+name|MCOperand
+name|decodeOperand_SReg_64_XEXEC
 argument_list|(
 argument|unsigned Val
 argument_list|)
@@ -295,7 +345,7 @@ argument_list|(
 argument|unsigned Val
 argument_list|)
 specifier|const
-block|;      enum
+block|;    enum
 name|OpWidthTy
 block|{
 name|OPW32
@@ -303,6 +353,8 @@ block|,
 name|OPW64
 block|,
 name|OPW128
+block|,
+name|OPW16
 block|,
 name|OPW_LAST_
 block|,
@@ -343,7 +395,7 @@ specifier|static
 name|MCOperand
 name|decodeFPImmed
 argument_list|(
-argument|bool Is32
+argument|OpWidthTy Width
 argument_list|,
 argument|unsigned Imm
 argument_list|)
@@ -375,13 +427,98 @@ argument_list|(
 argument|unsigned Val
 argument_list|)
 specifier|const
-block|;   }
+block|; }
+decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|// AMDGPUSymbolizer
+comment|//===----------------------------------------------------------------------===//
+name|class
+name|AMDGPUSymbolizer
+range|:
+name|public
+name|MCSymbolizer
+block|{
+name|private
+operator|:
+name|void
+operator|*
+name|DisInfo
+block|;
+name|public
+operator|:
+name|AMDGPUSymbolizer
+argument_list|(
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MCRelocationInfo
+operator|>
+operator|&&
+name|RelInfo
+argument_list|,
+name|void
+operator|*
+name|disInfo
+argument_list|)
+operator|:
+name|MCSymbolizer
+argument_list|(
+name|Ctx
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|RelInfo
+argument_list|)
+argument_list|)
+block|,
+name|DisInfo
+argument_list|(
+argument|disInfo
+argument_list|)
+block|{}
+name|bool
+name|tryAddingSymbolicOperand
+argument_list|(
+argument|MCInst&Inst
+argument_list|,
+argument|raw_ostream&cStream
+argument_list|,
+argument|int64_t Value
+argument_list|,
+argument|uint64_t Address
+argument_list|,
+argument|bool IsBranch
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|uint64_t InstSize
+argument_list|)
+name|override
+block|;
+name|void
+name|tryAddingPcLoadReferenceComment
+argument_list|(
+argument|raw_ostream&cStream
+argument_list|,
+argument|int64_t Value
+argument_list|,
+argument|uint64_t Address
+argument_list|)
+name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -390,7 +527,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//LLVM_LIB_TARGET_AMDGPU_DISASSEMBLER_AMDGPUDISASSEMBLER_H
+comment|// LLVM_LIB_TARGET_AMDGPU_DISASSEMBLER_AMDGPUDISASSEMBLER_H
 end_comment
 
 end_unit

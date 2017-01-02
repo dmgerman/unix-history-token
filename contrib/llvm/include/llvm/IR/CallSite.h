@@ -110,13 +110,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
@@ -134,19 +140,79 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Intrinsics.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Use.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/User.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|CallInst
-decl_stmt|;
-name|class
-name|InvokeInst
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -521,14 +587,65 @@ argument_list|()
 operator|=
 name|V
 block|;   }
+comment|/// Return the intrinsic ID of the intrinsic called by this CallSite,
+comment|/// or Intrinsic::not_intrinsic if the called function is not an
+comment|/// intrinsic, or if this CallSite is an indirect call.
+name|Intrinsic
+operator|::
+name|ID
+name|getIntrinsicID
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|auto
+operator|*
+name|F
+operator|=
+name|getCalledFunction
+argument_list|()
+condition|)
+return|return
+name|F
+operator|->
+name|getIntrinsicID
+argument_list|()
+return|;
+comment|// Don't use Intrinsic::not_intrinsic, as it will require pulling
+comment|// Intrinsics.h into every header that uses CallSite.
+return|return
+name|static_cast
+operator|<
+name|Intrinsic
+operator|::
+name|ID
+operator|>
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// isCallee - Determine whether the passed iterator points to the
+end_comment
+
+begin_comment
 comment|/// callee operand's Use.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isCallee
 argument_list|(
-argument|Value::const_user_iterator UI
+name|Value
+operator|::
+name|const_user_iterator
+name|UI
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|isCallee
@@ -541,7 +658,13 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Determine whether this Use is the callee operand's Use.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isCallee
 argument_list|(
@@ -559,8 +682,17 @@ operator|==
 name|U
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether the passed iterator points to an argument
+end_comment
+
+begin_comment
 comment|/// operand.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isArgOperand
 argument_list|(
@@ -582,7 +714,13 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether the passed use points to an argument operand.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isArgOperand
 argument_list|(
@@ -616,7 +754,13 @@ name|arg_end
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether the passed iterator points to a bundle operand.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isBundleOperand
 argument_list|(
@@ -638,7 +782,13 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether the passed use points to a bundle operand.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isBundleOperand
 argument_list|(
@@ -694,7 +844,13 @@ name|getBundleOperandsEndIndex
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether the passed iterator points to a data operand.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isDataOperand
 argument_list|(
@@ -716,7 +872,13 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether the passed use points to a data operand.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isDataOperand
 argument_list|(
@@ -739,6 +901,9 @@ name|data_operands_end
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|ValTy
 modifier|*
 name|getArgument
@@ -771,6 +936,9 @@ name|ArgNo
 operator|)
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setArgument
 parameter_list|(
@@ -814,8 +982,17 @@ name|newVal
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// Given a value use iterator, returns the argument that corresponds to it.
+end_comment
+
+begin_comment
 comment|/// Iterator must actually correspond to an argument.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|getArgumentNo
 argument_list|(
@@ -837,8 +1014,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Given a use for an argument, get the argument number that corresponds to
+end_comment
+
+begin_comment
 comment|/// it.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|getArgumentNo
 argument_list|(
@@ -874,12 +1060,24 @@ name|arg_begin
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// arg_iterator - The type of iterator to use when looping over actual
+end_comment
+
+begin_comment
 comment|/// arguments at this call site.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|IterTy
 name|arg_iterator
 typedef|;
+end_typedef
+
+begin_expr_stmt
 name|iterator_range
 operator|<
 name|IterTy
@@ -899,6 +1097,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|arg_empty
 argument_list|()
@@ -912,6 +1113,9 @@ name|arg_begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|arg_size
 argument_list|()
@@ -928,9 +1132,21 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Given a value use iterator, returns the data operand that corresponds to
+end_comment
+
+begin_comment
 comment|/// it.
+end_comment
+
+begin_comment
 comment|/// Iterator must actually correspond to a data operand.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|getDataOperandNo
 argument_list|(
@@ -952,8 +1168,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Given a use for a data operand, get the data operand number that
+end_comment
+
+begin_comment
 comment|/// corresponds to it.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|getDataOperandNo
 argument_list|(
@@ -989,17 +1214,44 @@ name|data_operands_begin
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Type of iterator to use when looping over data operands at this call site
+end_comment
+
+begin_comment
 comment|/// (see below).
+end_comment
+
+begin_typedef
 typedef|typedef
 name|IterTy
 name|data_operand_iterator
 typedef|;
+end_typedef
+
+begin_comment
 comment|/// data_operands_begin/data_operands_end - Return iterators iterating over
+end_comment
+
+begin_comment
 comment|/// the call / invoke argument list and bundle operands.  For invokes, this is
+end_comment
+
+begin_comment
 comment|/// the set of instruction operands except the invoke target and the two
+end_comment
+
+begin_comment
 comment|/// successor blocks; and for calls this is the set of instruction operands
+end_comment
+
+begin_comment
 comment|/// except the call target.
+end_comment
+
+begin_expr_stmt
 name|IterTy
 name|data_operands_begin
 argument_list|()
@@ -1023,6 +1275,9 @@ name|op_begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|IterTy
 name|data_operands_end
 argument_list|()
@@ -1055,6 +1310,9 @@ literal|3
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|iterator_range
 operator|<
 name|IterTy
@@ -1074,6 +1332,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|data_operands_empty
 argument_list|()
@@ -1087,6 +1348,9 @@ name|data_operands_begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|data_operands_size
 argument_list|()
@@ -1105,8 +1369,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getType - Return the type of the instruction that generated this call site
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|Type
 operator|*
 name|getType
@@ -1123,8 +1396,17 @@ name|getType
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getCaller - Return the caller function for this call site
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|FunTy
 operator|*
 name|getCaller
@@ -1144,8 +1426,17 @@ name|getParent
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Tests if this call site must be tail call optimized.  Only a
+end_comment
+
+begin_comment
 comment|/// CallInst can be tail call optimized.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMustTailCall
 argument_list|()
@@ -1168,7 +1459,13 @@ name|isMustTailCall
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Tests if this call site is marked as a tail call.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isTailCall
 argument_list|()
@@ -1191,6 +1488,9 @@ name|isTailCall
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_define
 define|#
 directive|define
 name|CALLSITE_DELEGATE_GETTER
@@ -1199,6 +1499,9 @@ name|METHOD
 parameter_list|)
 define|\
 value|InstrTy *II = getInstruction();    \   return isCall()                        \     ? cast<CallInst>(II)->METHOD         \     : cast<InvokeInst>(II)->METHOD
+end_define
+
+begin_define
 define|#
 directive|define
 name|CALLSITE_DELEGATE_SETTER
@@ -1207,6 +1510,9 @@ name|METHOD
 parameter_list|)
 define|\
 value|InstrTy *II = getInstruction();    \   if (isCall())                          \     cast<CallInst>(II)->METHOD;          \   else                                   \     cast<InvokeInst>(II)->METHOD
+end_define
+
+begin_expr_stmt
 name|unsigned
 name|getNumArgOperands
 argument_list|()
@@ -1269,13 +1575,16 @@ operator|->
 name|isInlineAsm
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// getCallingConv/setCallingConv - get or set the calling convention of the
 end_comment
 
@@ -1284,7 +1593,7 @@ comment|/// call.
 end_comment
 
 begin_expr_stmt
-name|CallingConv
+unit|CallingConv
 operator|::
 name|ID
 name|getCallingConv
@@ -1340,9 +1649,7 @@ argument_list|)
 block|;   }
 comment|/// getAttributes/setAttributes - get or set the parameter attributes of
 comment|/// the call.
-specifier|const
 name|AttributeSet
-operator|&
 name|getAttributes
 argument_list|()
 specifier|const
@@ -1356,7 +1663,7 @@ block|;   }
 name|void
 name|setAttributes
 argument_list|(
-argument|const AttributeSet&PAL
+argument|AttributeSet PAL
 argument_list|)
 block|{
 name|CALLSITE_DELEGATE_SETTER
@@ -1390,28 +1697,6 @@ name|addAttribute
 argument_list|(
 argument|unsigned i
 argument_list|,
-argument|StringRef Kind
-argument_list|,
-argument|StringRef Value
-argument_list|)
-block|{
-name|CALLSITE_DELEGATE_SETTER
-argument_list|(
-name|addAttribute
-argument_list|(
-name|i
-argument_list|,
-name|Kind
-argument_list|,
-name|Value
-argument_list|)
-argument_list|)
-block|;   }
-name|void
-name|addAttribute
-argument_list|(
-argument|unsigned i
-argument_list|,
 argument|Attribute Attr
 argument_list|)
 block|{
@@ -1458,24 +1743,6 @@ argument_list|(
 name|i
 argument_list|,
 name|Kind
-argument_list|)
-argument_list|)
-block|;   }
-name|void
-name|removeAttribute
-argument_list|(
-argument|unsigned i
-argument_list|,
-argument|Attribute Attr
-argument_list|)
-block|{
-name|CALLSITE_DELEGATE_SETTER
-argument_list|(
-name|removeAttribute
-argument_list|(
-name|i
-argument_list|,
-name|Attr
 argument_list|)
 argument_list|)
 block|;   }
@@ -2010,6 +2277,21 @@ name|ID
 argument_list|)
 argument_list|)
 block|;   }
+name|bool
+name|isBundleOperand
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|isBundleOperand
+argument_list|(
+name|Idx
+argument_list|)
+argument_list|)
+block|;   }
 name|IterTy
 name|arg_begin
 argument_list|()
@@ -2506,7 +2788,9 @@ name|public
 label|:
 name|CallSite
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|CallSite
 argument_list|(
 argument|CallSiteBase B
@@ -2628,6 +2912,13 @@ return|;
 block|}
 name|private
 label|:
+name|friend
+block|struct
+name|DenseMapInfo
+operator|<
+name|CallSite
+operator|>
+expr_stmt|;
 name|User
 operator|::
 name|op_iterator
@@ -2642,7 +2933,123 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|CallSite
+operator|>
+block|{
+name|using
+name|BaseInfo
+operator|=
+name|DenseMapInfo
+operator|<
+name|decltype
+argument_list|(
+name|CallSite
+operator|::
+name|I
+argument_list|)
+operator|>
+block|;
+specifier|static
+name|CallSite
+name|getEmptyKey
+argument_list|()
+block|{
+name|CallSite
+name|CS
+block|;
+name|CS
+operator|.
+name|I
+operator|=
+name|BaseInfo
+operator|::
+name|getEmptyKey
+argument_list|()
+block|;
+return|return
+name|CS
+return|;
+block|}
+specifier|static
+name|CallSite
+name|getTombstoneKey
+argument_list|()
+block|{
+name|CallSite
+name|CS
+block|;
+name|CS
+operator|.
+name|I
+operator|=
+name|BaseInfo
+operator|::
+name|getTombstoneKey
+argument_list|()
+block|;
+return|return
+name|CS
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+specifier|static
+name|unsigned
+name|getHashValue
+parameter_list|(
+specifier|const
+name|CallSite
+modifier|&
+name|CS
+parameter_list|)
+block|{
+return|return
+name|BaseInfo
+operator|::
+name|getHashValue
+argument_list|(
+name|CS
+operator|.
+name|I
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|isEqual
+parameter_list|(
+specifier|const
+name|CallSite
+modifier|&
+name|LHS
+parameter_list|,
+specifier|const
+name|CallSite
+modifier|&
+name|RHS
+parameter_list|)
+block|{
+return|return
+name|LHS
+operator|==
+name|RHS
+return|;
+block|}
+end_function
+
 begin_comment
+unit|};
 comment|/// ImmutableCallSite - establish a view to a call site for examination
 end_comment
 
@@ -2659,7 +3066,9 @@ name|public
 operator|:
 name|ImmutableCallSite
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|ImmutableCallSite
 argument_list|(
 specifier|const
@@ -2730,13 +3139,17 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_CALLSITE_H
+end_comment
 
 end_unit
 

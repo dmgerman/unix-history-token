@@ -1500,6 +1500,11 @@ name|Ty
 argument_list|,
 name|unsigned
 name|Idx
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl|const
 decl_stmt|;

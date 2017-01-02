@@ -97,10 +97,14 @@ name|RemoteIndirectStubsOwnerDoesNotExist
 block|,
 name|RemoteIndirectStubsOwnerIdAlreadyInUse
 block|,
+name|RPCResponseAbandoned
+block|,
 name|UnexpectedRPCCall
 block|,
 name|UnexpectedRPCResponse
-block|, }
+block|,
+name|UnknownRPCFunction
+block|}
 decl_stmt|;
 name|Error
 name|orcError

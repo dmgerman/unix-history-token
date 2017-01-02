@@ -106,6 +106,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
@@ -122,7 +134,9 @@ label|:
 name|explicit
 name|NoFolder
 parameter_list|()
-block|{}
+init|=
+init|default
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Binary Operators
 comment|//===--------------------------------------------------------------------===//
@@ -1884,10 +1898,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_NOFOLDER_H
+end_comment
 
 end_unit
 

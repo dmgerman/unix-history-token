@@ -990,9 +990,7 @@ argument_list|)
 block|;
 name|private
 operator|:
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const

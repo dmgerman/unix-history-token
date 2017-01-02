@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- GCOV.h - LLVM coverage tool ----------------------------------------===//
+comment|//===- GCOV.h - LLVM coverage tool ------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -72,6 +72,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/MapVector.h"
 end_include
 
@@ -90,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -103,6 +115,42 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -221,7 +269,7 @@ decl_stmt|;
 block|}
 struct|;
 block|}
-comment|// end GCOV namespace
+comment|// end namespace GCOV
 comment|/// GCOVBuffer - A wrapper around MemoryBuffer to provide GCOV specific
 comment|/// read operations.
 name|class
@@ -1231,9 +1279,6 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Functions
-argument_list|()
-operator|,
 name|RunCount
 argument_list|(
 literal|0
@@ -1696,17 +1741,8 @@ argument_list|)
 operator|,
 name|DstEdgesAreSorted
 argument_list|(
-name|true
+argument|true
 argument_list|)
-operator|,
-name|SrcEdges
-argument_list|()
-operator|,
-name|DstEdges
-argument_list|()
-operator|,
-name|Lines
-argument_list|()
 block|{}
 operator|~
 name|GCOVBlock
@@ -2171,9 +2207,6 @@ argument_list|(
 name|Options
 argument_list|)
 operator|,
-name|LineInfo
-argument_list|()
-operator|,
 name|RunCount
 argument_list|(
 literal|0
@@ -2575,11 +2608,19 @@ name|FuncCoverages
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+unit|};  }
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}; }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_GCOV_H
+end_comment
 
 end_unit
 

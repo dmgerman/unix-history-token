@@ -106,6 +106,9 @@ name|class
 name|MCRelocationInfo
 decl_stmt|;
 name|class
+name|MCTargetOptions
+decl_stmt|;
+name|class
 name|Target
 decl_stmt|;
 name|class
@@ -120,12 +123,16 @@ decl_stmt|;
 name|class
 name|raw_pwrite_stream
 decl_stmt|;
-specifier|extern
 name|Target
-name|TheX86_32Target
-decl_stmt|,
-name|TheX86_64Target
-decl_stmt|;
+modifier|&
+name|getTheX86_32Target
+parameter_list|()
+function_decl|;
+name|Target
+modifier|&
+name|getTheX86_64Target
+parameter_list|()
+function_decl|;
 comment|/// Flavour of dwarf regnumbers
 comment|///
 name|namespace
@@ -281,6 +288,11 @@ name|TT
 parameter_list|,
 name|StringRef
 name|CPU
+parameter_list|,
+specifier|const
+name|MCTargetOptions
+modifier|&
+name|Options
 parameter_list|)
 function_decl|;
 name|MCAsmBackend
@@ -304,6 +316,11 @@ name|TT
 parameter_list|,
 name|StringRef
 name|CPU
+parameter_list|,
+specifier|const
+name|MCTargetOptions
+modifier|&
+name|Options
 parameter_list|)
 function_decl|;
 comment|/// Construct an X86 Windows COFF machine code streamer which will generate

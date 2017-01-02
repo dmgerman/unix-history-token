@@ -426,7 +426,8 @@ operator|>
 block|{
 typedef|typedef
 name|Interval
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 typedef|typedef
 name|Interval
@@ -435,8 +436,7 @@ name|succ_iterator
 name|ChildIteratorType
 expr_stmt|;
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
 name|Interval
@@ -450,12 +450,10 @@ return|;
 block|}
 comment|/// nodes_iterator/begin/end - Allow iteration over all nodes in the graph
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -467,12 +465,10 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -506,7 +502,8 @@ expr|>
 block|{
 typedef|typedef
 name|Interval
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 end_expr_stmt
 
@@ -521,8 +518,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 name|Inverse
@@ -543,12 +539,10 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -563,12 +557,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{

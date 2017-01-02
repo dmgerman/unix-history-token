@@ -107,6 +107,10 @@ comment|/// Per-function flag to indicate if frame CFI info should be emitted.
 name|bool
 name|shouldEmitCFI
 block|;
+comment|/// Per-module flag to indicate if .cfi_section has beeen emitted.
+name|bool
+name|hasEmittedCFISections
+block|;
 name|void
 name|markFunctionEnd
 argument_list|()
@@ -140,11 +144,6 @@ block|;
 comment|/// Per-function flag to indicate if frame moves info should be emitted.
 name|bool
 name|shouldEmitMoves
-block|;
-name|AsmPrinter
-operator|::
-name|CFIMoveType
-name|moveTypeModule
 block|;
 name|public
 operator|:
@@ -237,7 +236,7 @@ name|void
 name|endModule
 argument_list|()
 name|override
-block|;
+block|{}
 comment|/// Gather pre-function exception information.  Assumes being emitted
 comment|/// immediately after the function entry point.
 name|void

@@ -290,14 +290,19 @@ comment|/// when the function this was computed for changes. When it returns fal
 comment|/// the information is preserved across those changes.
 name|bool
 name|invalidate
-parameter_list|(
+argument_list|(
 name|Function
-modifier|&
-parameter_list|,
+operator|&
+argument_list|,
 specifier|const
 name|PreservedAnalyses
-modifier|&
-parameter_list|)
+operator|&
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+argument_list|)
 block|{
 comment|// FIXME: We should probably in some way ensure that the subtarget
 comment|// information for a function hasn't changed.
@@ -615,16 +620,18 @@ comment|/// restriction.
 name|unsigned
 name|Threshold
 decl_stmt|;
-comment|/// If complete unrolling will reduce the cost of the loop below its
-comment|/// expected dynamic cost while rolled by this percentage, apply a discount
-comment|/// (below) to its unrolled cost.
+comment|/// If complete unrolling will reduce the cost of the loop, we will boost
+comment|/// the Threshold by a certain percent to allow more aggressive complete
+comment|/// unrolling. This value provides the maximum boost percentage that we
+comment|/// can apply to Threshold (The value should be no less than 100).
+comment|/// BoostedThreshold = Threshold * min(RolledCost / UnrolledCost,
+comment|///                                    MaxPercentThresholdBoost / 100)
+comment|/// E.g. if complete unrolling reduces the loop execution time by 50%
+comment|/// then we boost the threshold by the factor of 2x. If unrolling is not
+comment|/// expected to reduce the running time, then we do not increase the
+comment|/// threshold.
 name|unsigned
-name|PercentDynamicCostSavedThreshold
-decl_stmt|;
-comment|/// The discount applied to the unrolled cost when the *dynamic* cost
-comment|/// savings of unrolling exceed the \c PercentDynamicCostSavedThreshold.
-name|unsigned
-name|DynamicCostSavingsDiscount
+name|MaxPercentThresholdBoost
 decl_stmt|;
 comment|/// The cost threshold for the unrolled loop when optimizing for size (set
 comment|/// to UINT_MAX to disable).
@@ -649,6 +656,17 @@ comment|/// threshold and other factors.
 name|unsigned
 name|Count
 decl_stmt|;
+comment|/// A forced peeling factor (the number of bodied of the original loop
+comment|/// that should be peeled off before the loop body). When set to 0, the
+comment|/// unrolling transformation will select a peeling factor based on profile
+comment|/// information and other factors.
+name|unsigned
+name|PeelCount
+decl_stmt|;
+comment|/// Default unroll count for loops with run-time trip count.
+name|unsigned
+name|DefaultUnrollRuntimeCount
+decl_stmt|;
 comment|// Set the maximum unrolling factor. The unrolling factor may be selected
 comment|// using the appropriate cost threshold, but may not exceed this number
 comment|// (set to UINT_MAX to disable). This does not apply in cases where the
@@ -661,6 +679,13 @@ comment|/// applies even if full unrolling is selected. This allows a target to 
 comment|/// back to Partial unrolling if full unrolling is above FullUnrollMaxCount.
 name|unsigned
 name|FullUnrollMaxCount
+decl_stmt|;
+comment|// Represents number of instructions optimized when "back edge"
+comment|// becomes "fall through" in unrolled loop.
+comment|// For now we count a conditional branch on a backedge and a comparison
+comment|// feeding it.
+name|unsigned
+name|BEInsns
 decl_stmt|;
 comment|/// Allow partial unrolling (unrolling of loops to expand the size of the
 comment|/// loop body, not only to eliminate small constant-trip-count loops).
@@ -686,6 +711,14 @@ comment|/// Apply loop unroll on any kind of loop
 comment|/// (mainly to loops that fail runtime unrolling).
 name|bool
 name|Force
+decl_stmt|;
+comment|/// Allow using trip count upper bound to unroll loops.
+name|bool
+name|UpperBound
+decl_stmt|;
+comment|/// Allow peeling off loop iterations for loops with low dynamic tripcount.
+name|bool
+name|AllowPeeling
 decl_stmt|;
 block|}
 struct|;
@@ -855,6 +888,22 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return true if target supports the load / store
+comment|/// instruction with the given Offset on the form reg + Offset. It
+comment|/// may be that Offset is too big for a certain type (register
+comment|/// class).
+name|bool
+name|isFoldableMemAccessOffset
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+name|int64_t
+name|Offset
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return true if it's free to truncate a value of type Ty1 to type
 comment|/// Ty2. e.g. On x86 it's free to truncate a i32 value in register EAX to i16
 comment|/// by referencing its sub-register AX.
@@ -911,6 +960,17 @@ name|shouldBuildLookupTables
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return true if switches should be turned into lookup tables
+comment|/// containing this constant value for the target.
+name|bool
+name|shouldBuildLookupTablesForConstant
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Don't restrict interleaved unrolling to small loops.
 name|bool
 name|enableAggressiveInterleaving
@@ -942,6 +1002,10 @@ comment|/// \brief Determine if the target supports unaligned memory accesses.
 name|bool
 name|allowsMisalignedMemoryAccesses
 argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
 name|unsigned
 name|BitWidth
 argument_list|,
@@ -1101,7 +1165,15 @@ name|SK_InsertSubvector
 block|,
 comment|///< InsertSubvector. Index indicates start offset.
 name|SK_ExtractSubvector
+block|,
 comment|///< ExtractSubvector Index indicates start offset.
+name|SK_PermuteTwoSrc
+block|,
+comment|///< Merge elements from two source vectors into one
+comment|///< with any shuffle mask.
+name|SK_PermuteSingleSrc
+comment|///< Shuffle elements of single source vector with any
+comment|///< shuffle mask.
 block|}
 enum|;
 comment|/// \brief Additional information about an operand's possible values.
@@ -1151,16 +1223,6 @@ name|getRegisterBitWidth
 argument_list|(
 name|bool
 name|Vector
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \return The bitwidth of the largest vector type that should be used to
-comment|/// load/store in the given address space.
-name|unsigned
-name|getLoadStoreVecRegBitWidth
-argument_list|(
-name|unsigned
-name|AddrSpace
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1656,6 +1718,106 @@ name|Callee
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns The bitwidth of the largest vector type that should be used to
+comment|/// load/store in the given address space.
+name|unsigned
+name|getLoadStoreVecRegBitWidth
+argument_list|(
+name|unsigned
+name|AddrSpace
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns True if the load instruction is legal to vectorize.
+name|bool
+name|isLegalToVectorizeLoad
+argument_list|(
+name|LoadInst
+operator|*
+name|LI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns True if the store instruction is legal to vectorize.
+name|bool
+name|isLegalToVectorizeStore
+argument_list|(
+name|StoreInst
+operator|*
+name|SI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns True if it is legal to vectorize the given load chain.
+name|bool
+name|isLegalToVectorizeLoadChain
+argument_list|(
+name|unsigned
+name|ChainSizeInBytes
+argument_list|,
+name|unsigned
+name|Alignment
+argument_list|,
+name|unsigned
+name|AddrSpace
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns True if it is legal to vectorize the given store chain.
+name|bool
+name|isLegalToVectorizeStoreChain
+argument_list|(
+name|unsigned
+name|ChainSizeInBytes
+argument_list|,
+name|unsigned
+name|Alignment
+argument_list|,
+name|unsigned
+name|AddrSpace
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns The new vector factor value if the target doesn't support \p
+comment|/// SizeInBytes loads or has a better vector factor.
+name|unsigned
+name|getLoadVectorFactor
+argument_list|(
+name|unsigned
+name|VF
+argument_list|,
+name|unsigned
+name|LoadSize
+argument_list|,
+name|unsigned
+name|ChainSizeInBytes
+argument_list|,
+name|VectorType
+operator|*
+name|VecTy
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns The new vector factor value if the target doesn't support \p
+comment|/// SizeInBytes stores or has a better vector factor.
+name|unsigned
+name|getStoreVectorFactor
+argument_list|(
+name|unsigned
+name|VF
+argument_list|,
+name|unsigned
+name|StoreSize
+argument_list|,
+name|unsigned
+name|ChainSizeInBytes
+argument_list|,
+name|VectorType
+operator|*
+name|VecTy
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 name|private
 label|:
@@ -1980,6 +2142,17 @@ literal|0
 block|;
 name|virtual
 name|bool
+name|isFoldableMemAccessOffset
+argument_list|(
+argument|Instruction *I
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
 name|isTruncateFree
 argument_list|(
 name|Type
@@ -2038,6 +2211,17 @@ literal|0
 block|;
 name|virtual
 name|bool
+name|shouldBuildLookupTablesForConstant
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
 name|enableAggressiveInterleaving
 argument_list|(
 argument|bool LoopHasReductions
@@ -2063,6 +2247,8 @@ name|virtual
 name|bool
 name|allowsMisalignedMemoryAccesses
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|unsigned BitWidth
 argument_list|,
 argument|unsigned AddressSpace
@@ -2180,15 +2366,6 @@ name|unsigned
 name|getRegisterBitWidth
 argument_list|(
 argument|bool Vector
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
-name|unsigned
-name|getLoadStoreVecRegBitWidth
-argument_list|(
-argument|unsigned AddrSpace
 argument_list|)
 operator|=
 literal|0
@@ -2532,6 +2709,96 @@ argument_list|(
 argument|const Function *Caller
 argument_list|,
 argument|const Function *Callee
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getLoadStoreVecRegBitWidth
+argument_list|(
+argument|unsigned AddrSpace
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalToVectorizeLoad
+argument_list|(
+argument|LoadInst *LI
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalToVectorizeStore
+argument_list|(
+argument|StoreInst *SI
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalToVectorizeLoadChain
+argument_list|(
+argument|unsigned ChainSizeInBytes
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalToVectorizeStoreChain
+argument_list|(
+argument|unsigned ChainSizeInBytes
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getLoadVectorFactor
+argument_list|(
+argument|unsigned VF
+argument_list|,
+argument|unsigned LoadSize
+argument_list|,
+argument|unsigned ChainSizeInBytes
+argument_list|,
+argument|VectorType *VecTy
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getStoreVectorFactor
+argument_list|(
+argument|unsigned VF
+argument_list|,
+argument|unsigned StoreSize
+argument_list|,
+argument|unsigned ChainSizeInBytes
+argument_list|,
+argument|VectorType *VecTy
 argument_list|)
 specifier|const
 operator|=
@@ -3006,6 +3273,26 @@ argument_list|)
 return|;
 block|}
 name|bool
+name|isFoldableMemAccessOffset
+argument_list|(
+argument|Instruction *I
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isFoldableMemAccessOffset
+argument_list|(
+name|I
+argument_list|,
+name|Offset
+argument_list|)
+return|;
+block|}
+name|bool
 name|isTruncateFree
 argument_list|(
 argument|Type *Ty1
@@ -3094,6 +3381,22 @@ argument_list|()
 return|;
 block|}
 name|bool
+name|shouldBuildLookupTablesForConstant
+argument_list|(
+argument|Constant *C
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|shouldBuildLookupTablesForConstant
+argument_list|(
+name|C
+argument_list|)
+return|;
+block|}
+name|bool
 name|enableAggressiveInterleaving
 argument_list|(
 argument|bool LoopHasReductions
@@ -3136,6 +3439,8 @@ block|}
 name|bool
 name|allowsMisalignedMemoryAccesses
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|unsigned BitWidth
 argument_list|,
 argument|unsigned AddressSpace
@@ -3151,6 +3456,8 @@ name|Impl
 operator|.
 name|allowsMisalignedMemoryAccesses
 argument_list|(
+name|Context
+argument_list|,
 name|BitWidth
 argument_list|,
 name|AddressSpace
@@ -3342,22 +3649,6 @@ operator|.
 name|getRegisterBitWidth
 argument_list|(
 name|Vector
-argument_list|)
-return|;
-block|}
-name|unsigned
-name|getLoadStoreVecRegBitWidth
-argument_list|(
-argument|unsigned AddrSpace
-argument_list|)
-name|override
-block|{
-return|return
-name|Impl
-operator|.
-name|getLoadStoreVecRegBitWidth
-argument_list|(
-name|AddrSpace
 argument_list|)
 return|;
 block|}
@@ -3947,6 +4238,165 @@ name|Callee
 argument_list|)
 return|;
 block|}
+name|unsigned
+name|getLoadStoreVecRegBitWidth
+argument_list|(
+argument|unsigned AddrSpace
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getLoadStoreVecRegBitWidth
+argument_list|(
+name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalToVectorizeLoad
+argument_list|(
+argument|LoadInst *LI
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalToVectorizeLoad
+argument_list|(
+name|LI
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalToVectorizeStore
+argument_list|(
+argument|StoreInst *SI
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalToVectorizeStore
+argument_list|(
+name|SI
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalToVectorizeLoadChain
+argument_list|(
+argument|unsigned ChainSizeInBytes
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalToVectorizeLoadChain
+argument_list|(
+name|ChainSizeInBytes
+argument_list|,
+name|Alignment
+argument_list|,
+name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLegalToVectorizeStoreChain
+argument_list|(
+argument|unsigned ChainSizeInBytes
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isLegalToVectorizeStoreChain
+argument_list|(
+name|ChainSizeInBytes
+argument_list|,
+name|Alignment
+argument_list|,
+name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getLoadVectorFactor
+argument_list|(
+argument|unsigned VF
+argument_list|,
+argument|unsigned LoadSize
+argument_list|,
+argument|unsigned ChainSizeInBytes
+argument_list|,
+argument|VectorType *VecTy
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getLoadVectorFactor
+argument_list|(
+name|VF
+argument_list|,
+name|LoadSize
+argument_list|,
+name|ChainSizeInBytes
+argument_list|,
+name|VecTy
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getStoreVectorFactor
+argument_list|(
+argument|unsigned VF
+argument_list|,
+argument|unsigned StoreSize
+argument_list|,
+argument|unsigned ChainSizeInBytes
+argument_list|,
+argument|VectorType *VecTy
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getStoreVectorFactor
+argument_list|(
+name|VF
+argument_list|,
+name|StoreSize
+argument_list|,
+name|ChainSizeInBytes
+argument_list|,
+name|VecTy
+argument_list|)
+return|;
+block|}
 expr|}
 block|;
 name|template
@@ -4101,10 +4551,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 argument_list|)
 block|;
@@ -4117,8 +4564,8 @@ name|TargetIRAnalysis
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 comment|/// \brief The callback used to produce a result.
 comment|///

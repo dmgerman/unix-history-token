@@ -69,6 +69,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|FileCoverageSummary
+struct_decl|;
 comment|/// \brief A coverage printer for html output.
 name|class
 name|CoveragePrinterHTML
@@ -100,7 +103,9 @@ block|;
 name|Error
 name|createIndexFile
 argument_list|(
-argument|ArrayRef<StringRef> SourceFiles
+argument|ArrayRef<std::string> SourceFiles
+argument_list|,
+argument|const coverage::CoverageMapping&Coverage
 argument_list|)
 name|override
 block|;
@@ -117,7 +122,21 @@ argument_list|(
 argument|Opts
 argument_list|)
 block|{}
-block|}
+name|private
+operator|:
+name|void
+name|emitFileSummary
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|StringRef SF
+argument_list|,
+argument|const FileCoverageSummary&FCS
+argument_list|,
+argument|bool IsTotals = false
+argument_list|)
+specifier|const
+block|; }
 decl_stmt|;
 comment|/// \brief A code coverage view which supports html-based rendering.
 name|class
@@ -144,6 +163,8 @@ name|void
 name|renderSourceName
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|bool WholeFile
 argument_list|)
 name|override
 block|;
@@ -256,6 +277,26 @@ argument_list|,
 argument|CoverageSegmentArray Segments
 argument_list|,
 argument|unsigned ViewDepth
+argument_list|)
+name|override
+block|;
+name|void
+name|renderTitle
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|StringRef Title
+argument_list|)
+name|override
+block|;
+name|void
+name|renderTableHeader
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|unsigned FirstUncoveredLineNo
+argument_list|,
+argument|unsigned IndentLevel
 argument_list|)
 name|override
 block|;

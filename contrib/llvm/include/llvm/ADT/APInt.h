@@ -167,6 +167,17 @@ name|integerPart
 argument_list|)
 operator|)
 decl_stmt|;
+name|class
+name|APInt
+decl_stmt|;
+specifier|inline
+name|APInt
+name|operator
+operator|-
+operator|(
+name|APInt
+operator|)
+expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                              APInt Class
 comment|//===----------------------------------------------------------------------===//
@@ -197,6 +208,7 @@ comment|///   * In general, the class tries to follow the style of computation t
 comment|///     uses in its IR. This simplifies its use for LLVM.
 comment|///
 name|class
+name|LLVM_NODISCARD
 name|APInt
 block|{
 name|unsigned
@@ -2384,55 +2396,6 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Unary negation operator
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Negates *this using two's complement logic.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \returns An APInt value representing the negation of *this.
-end_comment
-
-begin_expr_stmt
-name|APInt
-name|operator
-operator|-
-operator|(
-operator|)
-specifier|const
-block|{
-name|APInt
-name|Result
-argument_list|(
-operator|*
-name|this
-argument_list|)
-block|;
-name|Result
-operator|.
-name|flipAllBits
-argument_list|()
-block|;
-operator|++
-name|Result
-block|;
-return|return
-name|Result
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Logical negation operator.
 end_comment
 
@@ -2975,6 +2938,18 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|APInt
+operator|&
+name|operator
+operator|+=
+operator|(
+name|uint64_t
+name|RHS
+operator|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// \brief Subtraction assignment operator.
 end_comment
@@ -3004,6 +2979,18 @@ operator|(
 specifier|const
 name|APInt
 operator|&
+name|RHS
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|APInt
+operator|&
+name|operator
+operator|-=
+operator|(
+name|uint64_t
 name|RHS
 operator|)
 expr_stmt|;
@@ -3138,7 +3125,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|And
 argument_list|(
 specifier|const
@@ -3257,17 +3243,16 @@ begin_comment
 comment|/// \returns An APInt value representing the bitwise OR of *this and RHS.
 end_comment
 
-begin_decl_stmt
+begin_macro
 unit|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|Or
 argument_list|(
-specifier|const
-name|APInt
-operator|&
-name|RHS
+argument|const APInt&RHS
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 return|return
 name|this
@@ -3279,7 +3264,7 @@ name|RHS
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Bitwise XOR operator.
@@ -3376,7 +3361,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|Xor
 argument_list|(
 specifier|const
@@ -3423,82 +3407,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// \brief Addition operator.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Adds RHS to this APInt and returns the result.
-end_comment
-
-begin_expr_stmt
-name|APInt
-name|operator
-operator|+
-operator|(
-specifier|const
-name|APInt
-operator|&
-name|RHS
-operator|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|APInt
-name|operator
-operator|+
-operator|(
-name|uint64_t
-name|RHS
-operator|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Subtraction operator.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Subtracts RHS from this APInt and returns the result.
-end_comment
-
-begin_expr_stmt
-name|APInt
-name|operator
-operator|-
-operator|(
-specifier|const
-name|APInt
-operator|&
-name|RHS
-operator|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|APInt
-name|operator
-operator|-
-operator|(
-name|uint64_t
-name|RHS
-operator|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/// \brief Left logical shift operator.
@@ -3578,7 +3486,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|ashr
 argument_list|(
 name|unsigned
@@ -3602,7 +3509,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|lshr
 argument_list|(
 name|unsigned
@@ -3626,7 +3532,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|shl
 argument_list|(
 name|unsigned
@@ -3690,7 +3595,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|rotl
 argument_list|(
 name|unsigned
@@ -3706,7 +3610,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|rotr
 argument_list|(
 name|unsigned
@@ -3730,7 +3633,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|ashr
 argument_list|(
 specifier|const
@@ -3756,7 +3658,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|lshr
 argument_list|(
 specifier|const
@@ -3782,7 +3683,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|shl
 argument_list|(
 specifier|const
@@ -3800,7 +3700,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|rotl
 argument_list|(
 specifier|const
@@ -3818,7 +3717,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|rotr
 argument_list|(
 specifier|const
@@ -3856,7 +3754,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|udiv
 argument_list|(
 specifier|const
@@ -3882,7 +3779,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sdiv
 argument_list|(
 specifier|const
@@ -3932,7 +3828,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|urem
 argument_list|(
 specifier|const
@@ -3958,7 +3853,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|srem
 argument_list|(
 specifier|const
@@ -5388,7 +5282,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|trunc
 argument_list|(
 name|unsigned
@@ -5424,7 +5317,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sext
 argument_list|(
 name|unsigned
@@ -5456,7 +5348,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|zext
 argument_list|(
 name|unsigned
@@ -5484,7 +5375,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sextOrTrunc
 argument_list|(
 name|unsigned
@@ -5512,7 +5402,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|zextOrTrunc
 argument_list|(
 name|unsigned
@@ -5540,7 +5429,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sextOrSelf
 argument_list|(
 name|unsigned
@@ -5568,7 +5456,6 @@ end_comment
 
 begin_decl_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|zextOrSelf
 argument_list|(
 name|unsigned
@@ -6696,7 +6583,6 @@ end_comment
 
 begin_expr_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|byteSwap
 argument_list|()
 specifier|const
@@ -6713,7 +6599,6 @@ end_comment
 
 begin_expr_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|reverseBits
 argument_list|()
 specifier|const
@@ -6915,7 +6800,6 @@ end_comment
 begin_function
 specifier|static
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|doubleToBits
 parameter_list|(
 name|double
@@ -6974,7 +6858,6 @@ end_comment
 begin_function
 specifier|static
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|floatToBits
 parameter_list|(
 name|float
@@ -7057,15 +6940,20 @@ name|ceilLogBase2
 argument_list|()
 specifier|const
 block|{
+name|APInt
+name|temp
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+operator|--
+name|temp
+block|;
 return|return
 name|BitWidth
 operator|-
-operator|(
-operator|*
-name|this
-operator|-
-literal|1
-operator|)
+name|temp
 operator|.
 name|countLeadingZeros
 argument_list|()
@@ -7237,14 +7125,16 @@ unit|}
 comment|/// \brief Compute the square root
 end_comment
 
-begin_expr_stmt
+begin_macro
 unit|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|sqrt
 argument_list|()
+end_macro
+
+begin_decl_stmt
 specifier|const
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Get the absolute value;
@@ -7260,7 +7150,6 @@ end_comment
 
 begin_expr_stmt
 name|APInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|abs
 argument_list|()
 specifier|const
@@ -8221,6 +8110,254 @@ argument_list|)
 block|;
 return|return
 name|OS
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|APInt
+name|operator
+operator|-
+operator|(
+name|APInt
+name|v
+operator|)
+block|{
+name|v
+operator|.
+name|flipAllBits
+argument_list|()
+block|;
+operator|++
+name|v
+block|;
+return|return
+name|v
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|APInt
+name|operator
+operator|+
+operator|(
+name|APInt
+name|a
+operator|,
+specifier|const
+name|APInt
+operator|&
+name|b
+operator|)
+block|{
+name|a
+operator|+=
+name|b
+block|;
+return|return
+name|a
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|APInt
+name|operator
+operator|+
+operator|(
+specifier|const
+name|APInt
+operator|&
+name|a
+operator|,
+name|APInt
+operator|&&
+name|b
+operator|)
+block|{
+name|b
+operator|+=
+name|a
+block|;
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+name|b
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|APInt
+name|operator
+operator|+
+operator|(
+name|APInt
+name|a
+operator|,
+name|uint64_t
+name|RHS
+operator|)
+block|{
+name|a
+operator|+=
+name|RHS
+block|;
+return|return
+name|a
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|APInt
+name|operator
+operator|+
+operator|(
+name|uint64_t
+name|LHS
+operator|,
+name|APInt
+name|b
+operator|)
+block|{
+name|b
+operator|+=
+name|LHS
+block|;
+return|return
+name|b
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|APInt
+name|operator
+operator|-
+operator|(
+name|APInt
+name|a
+operator|,
+specifier|const
+name|APInt
+operator|&
+name|b
+operator|)
+block|{
+name|a
+operator|-=
+name|b
+block|;
+return|return
+name|a
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|APInt
+name|operator
+operator|-
+operator|(
+specifier|const
+name|APInt
+operator|&
+name|a
+operator|,
+name|APInt
+operator|&&
+name|b
+operator|)
+block|{
+name|b
+operator|=
+operator|-
+name|std
+operator|::
+name|move
+argument_list|(
+name|b
+argument_list|)
+block|;
+name|b
+operator|+=
+name|a
+block|;
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+name|b
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|APInt
+name|operator
+operator|-
+operator|(
+name|APInt
+name|a
+operator|,
+name|uint64_t
+name|RHS
+operator|)
+block|{
+name|a
+operator|-=
+name|RHS
+block|;
+return|return
+name|a
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|APInt
+name|operator
+operator|-
+operator|(
+name|uint64_t
+name|LHS
+operator|,
+name|APInt
+name|b
+operator|)
+block|{
+name|b
+operator|=
+operator|-
+name|std
+operator|::
+name|move
+argument_list|(
+name|b
+argument_list|)
+block|;
+name|b
+operator|+=
+name|LHS
+block|;
+return|return
+name|b
 return|;
 block|}
 end_expr_stmt

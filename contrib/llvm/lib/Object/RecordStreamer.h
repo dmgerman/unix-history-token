@@ -68,13 +68,15 @@ name|NeverSeen
 block|,
 name|Global
 block|,
-name|GlobalWeak
-block|,
 name|Defined
 block|,
 name|DefinedGlobal
 block|,
+name|DefinedWeak
+block|,
 name|Used
+block|,
+name|UndefinedWeak
 block|}
 block|;
 name|private

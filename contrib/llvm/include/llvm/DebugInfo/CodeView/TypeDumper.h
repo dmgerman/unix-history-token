@@ -235,14 +235,14 @@ comment|/// Action to take on unknown types. By default, they are ignored.
 name|Error
 name|visitUnknownType
 argument_list|(
-argument|const CVRecord<TypeLeafKind>&Record
+argument|CVType&Record
 argument_list|)
 name|override
 block|;
 name|Error
 name|visitUnknownMember
 argument_list|(
-argument|const CVRecord<TypeLeafKind>&Record
+argument|CVMemberRecord&Record
 argument_list|)
 name|override
 block|;
@@ -251,14 +251,28 @@ comment|/// including the fixed-length record prefix.
 name|Error
 name|visitTypeBegin
 argument_list|(
-argument|const CVRecord<TypeLeafKind>&Record
+argument|CVType&Record
 argument_list|)
 name|override
 block|;
 name|Error
 name|visitTypeEnd
 argument_list|(
-argument|const CVRecord<TypeLeafKind>&Record
+argument|CVType&Record
+argument_list|)
+name|override
+block|;
+name|Error
+name|visitMemberBegin
+argument_list|(
+argument|CVMemberRecord&Record
+argument_list|)
+name|override
+block|;
+name|Error
+name|visitMemberEnd
+argument_list|(
+argument|CVMemberRecord&Record
 argument_list|)
 name|override
 block|;
@@ -273,7 +287,7 @@ parameter_list|,
 name|Name
 parameter_list|)
 define|\
-value|Error visit##Name(Name##Record&Record) override;
+value|Error visitKnownRecord(CVType&CVR, Name##Record&Record) override;
 define|#
 directive|define
 name|MEMBER_RECORD
@@ -285,7 +299,7 @@ parameter_list|,
 name|Name
 parameter_list|)
 define|\
-value|TYPE_RECORD(EnumName, EnumVal, Name)
+value|Error visitKnownMember(CVMemberRecord&CVR, Name##Record&Record) override;
 define|#
 directive|define
 name|TYPE_RECORD_ALIAS
@@ -334,6 +348,11 @@ block|;
 name|ScopedPrinter
 operator|*
 name|W
+block|;
+name|bool
+name|IsInFieldList
+operator|=
+name|false
 block|;
 name|bool
 name|PrintRecordBytes

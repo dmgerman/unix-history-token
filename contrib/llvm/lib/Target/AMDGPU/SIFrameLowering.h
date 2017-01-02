@@ -54,6 +54,18 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|SIInstrInfo
+decl_stmt|;
+name|class
+name|SIMachineFunctionInfo
+decl_stmt|;
+name|class
+name|SIRegisterInfo
+decl_stmt|;
+name|class
+name|SISubtarget
+decl_stmt|;
+name|class
 name|SIFrameLowering
 name|final
 range|:
@@ -89,7 +101,9 @@ operator|~
 name|SIFrameLowering
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 name|void
 name|emitPrologue
 argument_list|(
@@ -122,6 +136,49 @@ name|override
 block|;
 name|private
 operator|:
+name|void
+name|emitFlatScratchInit
+argument_list|(
+argument|const SIInstrInfo *TII
+argument_list|,
+argument|const SIRegisterInfo* TRI
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getReservedPrivateSegmentBufferReg
+argument_list|(
+argument|const SISubtarget&ST
+argument_list|,
+argument|const SIInstrInfo *TII
+argument_list|,
+argument|const SIRegisterInfo *TRI
+argument_list|,
+argument|SIMachineFunctionInfo *MFI
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getReservedPrivateSegmentWaveByteOffsetReg
+argument_list|(
+argument|const SISubtarget&ST
+argument_list|,
+argument|const SIInstrInfo *TII
+argument_list|,
+argument|const SIRegisterInfo *TRI
+argument_list|,
+argument|SIMachineFunctionInfo *MFI
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Emits debugger prologue.
 name|void
 name|emitDebuggerPrologue
@@ -136,10 +193,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AMDGPU_SIFRAMELOWERING_H
+end_comment
 
 end_unit
 

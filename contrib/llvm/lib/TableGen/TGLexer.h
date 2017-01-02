@@ -201,6 +201,8 @@ name|XADD
 block|,
 name|XAND
 block|,
+name|XOR
+block|,
 name|XSRA
 block|,
 name|XSRL

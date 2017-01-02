@@ -65,6 +65,18 @@ directive|include
 file|"llvm/IR/User.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -72,14 +84,6 @@ block|{
 name|class
 name|APInt
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
 comment|/// This is an important base class in LLVM. It provides the common facilities
 comment|/// of all constant values in an LLVM program. A constant is a value that is
 comment|/// immutable at runtime. Functions are constants because their address is
@@ -103,26 +107,6 @@ range|:
 name|public
 name|User
 block|{
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|Constant
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
-name|Constant
-argument_list|(
-specifier|const
-name|Constant
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
 name|void
 name|anchor
 argument_list|()
@@ -154,6 +138,26 @@ argument_list|)
 block|{}
 name|public
 operator|:
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Constant
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
+name|Constant
+argument_list|(
+specifier|const
+name|Constant
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
 comment|/// Return true if this is the value that would be returned by getNullValue.
 name|bool
 name|isNullValue
@@ -419,13 +423,17 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_CONSTANT_H
+end_comment
 
 end_unit
 

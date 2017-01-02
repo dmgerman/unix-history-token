@@ -153,6 +153,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MDNode
+decl_stmt|;
 comment|/// This class represents a range of values.
 comment|///
 name|class
@@ -443,8 +446,42 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|/// If this set contains all but a single element, return it, otherwise return
+comment|/// null.
+specifier|const
+name|APInt
+operator|*
+name|getSingleMissingElement
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|Lower
+operator|==
+name|Upper
+operator|+
+literal|1
+condition|)
+return|return
+operator|&
+name|Upper
+return|;
+return|return
+name|nullptr
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Return true if this set contains exactly one member.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isSingleElement
 argument_list|()
@@ -457,43 +494,97 @@ operator|!=
 name|nullptr
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Return the number of elements in this set.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|APInt
 name|getSetSize
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Return the largest unsigned value contained in the ConstantRange.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|APInt
 name|getUnsignedMax
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Return the smallest unsigned value contained in the ConstantRange.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|APInt
 name|getUnsignedMin
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Return the largest signed value contained in the ConstantRange.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|APInt
 name|getSignedMax
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Return the smallest signed value contained in the ConstantRange.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|APInt
 name|getSignedMin
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Return true if this range is equal to another range.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|==
@@ -519,6 +610,9 @@ operator|.
 name|Upper
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|operator
 operator|!=
@@ -539,7 +633,13 @@ name|CR
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Subtract the specified constant from the endpoints of this constant range.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|subtract
 argument_list|(
@@ -550,8 +650,17 @@ name|CI
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Subtract the specified range from this range (aka relative
+end_comment
+
+begin_comment
 comment|/// complement of the sets).
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|difference
 argument_list|(
@@ -562,13 +671,37 @@ name|CR
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return the range that results from the intersection of
+end_comment
+
+begin_comment
 comment|/// this range with another range.  The resultant range is guaranteed to
+end_comment
+
+begin_comment
 comment|/// include all elements contained in both input ranges, and to have the
+end_comment
+
+begin_comment
 comment|/// smallest possible set size that does so.  Because there may be two
+end_comment
+
+begin_comment
 comment|/// intersections with the same set size, A.intersectWith(B) might not
+end_comment
+
+begin_comment
 comment|/// be equal to B.intersectWith(A).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|intersectWith
 argument_list|(
@@ -579,12 +712,33 @@ name|CR
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return the range that results from the union of this range
+end_comment
+
+begin_comment
 comment|/// with another range.  The resultant range is guaranteed to include the
+end_comment
+
+begin_comment
 comment|/// elements of both sets, but may contain more.  For example, [3, 9) union
+end_comment
+
+begin_comment
 comment|/// [12,15) is [3, 15), which includes 9, 10, and 11, which were not included
+end_comment
+
+begin_comment
 comment|/// in either set before.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|unionWith
 argument_list|(
@@ -595,10 +749,65 @@ name|CR
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
+comment|/// from an application of the specified cast operator to this range. \p
+end_comment
+
+begin_comment
+comment|/// BitWidth is the target bitwidth of the cast.  For casts which don't
+end_comment
+
+begin_comment
+comment|/// change bitwidth, it must be the same as the source bitwidth.  For casts
+end_comment
+
+begin_comment
+comment|/// which do change bitwidth, the bitwidth must be consistent with the
+end_comment
+
+begin_comment
+comment|/// requested cast and source bitwidth.
+end_comment
+
+begin_decl_stmt
+name|ConstantRange
+name|castOp
+argument_list|(
+name|Instruction
+operator|::
+name|CastOps
+name|CastOp
+argument_list|,
+name|uint32_t
+name|BitWidth
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range in the specified integer type, which must
+end_comment
+
+begin_comment
 comment|/// be strictly larger than the current type.  The returned range will
+end_comment
+
+begin_comment
 comment|/// correspond to the possible range of values if the source range had been
+end_comment
+
+begin_comment
 comment|/// zero extended to BitWidth.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|zeroExtend
 argument_list|(
@@ -607,10 +816,25 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range in the specified integer type, which must
+end_comment
+
+begin_comment
 comment|/// be strictly larger than the current type.  The returned range will
+end_comment
+
+begin_comment
 comment|/// correspond to the possible range of values if the source range had been
+end_comment
+
+begin_comment
 comment|/// sign extended to BitWidth.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|signExtend
 argument_list|(
@@ -619,10 +843,25 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range in the specified integer type, which must be
+end_comment
+
+begin_comment
 comment|/// strictly smaller than the current type.  The returned range will
+end_comment
+
+begin_comment
 comment|/// correspond to the possible range of values if the source range had been
+end_comment
+
+begin_comment
 comment|/// truncated to the specified type.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|truncate
 argument_list|(
@@ -631,8 +870,17 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Make this range have the bit width given by \p BitWidth. The
+end_comment
+
+begin_comment
 comment|/// value is zero extended, truncated, or left alone to make it that width.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|zextOrTrunc
 argument_list|(
@@ -641,8 +889,17 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Make this range have the bit width given by \p BitWidth. The
+end_comment
+
+begin_comment
 comment|/// value is sign extended, truncated, or left alone to make it that width.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|sextOrTrunc
 argument_list|(
@@ -651,8 +908,47 @@ name|BitWidth
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
+comment|/// from an application of the specified binary operator to an left hand side
+end_comment
+
+begin_comment
+comment|/// of this range and a right hand side of \p Other.
+end_comment
+
+begin_decl_stmt
+name|ConstantRange
+name|binaryOp
+argument_list|(
+name|Instruction
+operator|::
+name|BinaryOps
+name|BinOp
+argument_list|,
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from an addition of a value in this range and a value in \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|add
 argument_list|(
@@ -663,8 +959,38 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Return a new range representing the possible values resulting from a
+end_comment
+
+begin_comment
+comment|/// known NSW addition of a value in this range and \p Other constant.
+end_comment
+
+begin_decl_stmt
+name|ConstantRange
+name|addWithNoSignedWrap
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from a subtraction of a value in this range and a value in \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|sub
 argument_list|(
@@ -675,9 +1001,21 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from a multiplication of a value in this range and a value in \p Other,
+end_comment
+
+begin_comment
 comment|/// treating both this and \p Other as unsigned ranges.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|multiply
 argument_list|(
@@ -688,8 +1026,17 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from a signed maximum of a value in this range and a value in \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|smax
 argument_list|(
@@ -700,8 +1047,17 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from an unsigned maximum of a value in this range and a value in \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|umax
 argument_list|(
@@ -712,8 +1068,17 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from a signed minimum of a value in this range and a value in \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|smin
 argument_list|(
@@ -724,8 +1089,17 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from an unsigned minimum of a value in this range and a value in \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|umin
 argument_list|(
@@ -736,9 +1110,21 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from an unsigned division of a value in this range and a value in
+end_comment
+
+begin_comment
 comment|/// \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|udiv
 argument_list|(
@@ -749,8 +1135,17 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from a binary-and of a value in this range by a value in \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|binaryAnd
 argument_list|(
@@ -761,8 +1156,17 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from a binary-or of a value in this range by a value in \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|binaryOr
 argument_list|(
@@ -773,9 +1177,21 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting
+end_comment
+
+begin_comment
 comment|/// from a left shift of a value in this range by a value in \p Other.
+end_comment
+
+begin_comment
 comment|/// TODO: This isn't fully implemented yet.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|shl
 argument_list|(
@@ -786,8 +1202,17 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range representing the possible values resulting from a
+end_comment
+
+begin_comment
 comment|/// logical right shift of a value in this range and a value in \p Other.
+end_comment
+
+begin_decl_stmt
 name|ConstantRange
 name|lshr
 argument_list|(
@@ -798,15 +1223,33 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Return a new range that is the logical not of the current set.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|ConstantRange
 name|inverse
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Print out the bounds to a stream.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -816,21 +1259,26 @@ name|OS
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Allow printing from a debugger easily.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_expr_stmt
+unit|};
 specifier|inline
 name|raw_ostream
 operator|&
@@ -859,6 +1307,30 @@ name|OS
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Parse out a conservative ConstantRange from !range metadata.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// E.g. if RangeMD is !{i32 0, i32 10, i32 15, i32 20} then return [0, 20).
+end_comment
+
+begin_function_decl
+name|ConstantRange
+name|getConstantRangeFromMetadata
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|&
+name|RangeMD
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}

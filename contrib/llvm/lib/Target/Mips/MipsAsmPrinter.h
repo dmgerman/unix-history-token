@@ -413,9 +413,7 @@ argument_list|(
 argument|*this
 argument_list|)
 block|{}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const

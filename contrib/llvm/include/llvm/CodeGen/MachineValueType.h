@@ -563,7 +563,7 @@ enum|;
 name|SimpleValueType
 name|SimpleTy
 decl_stmt|;
-name|LLVM_CONSTEXPR
+name|constexpr
 name|MVT
 argument_list|()
 operator|:
@@ -572,7 +572,7 @@ argument_list|(
 argument|INVALID_SIMPLE_VALUE_TYPE
 argument_list|)
 block|{}
-name|LLVM_CONSTEXPR
+name|constexpr
 name|MVT
 argument_list|(
 argument|SimpleValueType SVT
@@ -582,7 +582,7 @@ name|SimpleTy
 argument_list|(
 argument|SVT
 argument_list|)
-block|{ }
+block|{}
 name|bool
 name|operator
 operator|>

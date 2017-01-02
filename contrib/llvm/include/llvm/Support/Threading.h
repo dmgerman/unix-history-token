@@ -469,6 +469,15 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+comment|/// Get the amount of currency to use for tasks requiring significant
+comment|/// memory or other resources. Currently based on physical cores, if
+comment|/// available for the host system, otherwise falls back to
+comment|/// thread::hardware_concurrency().
+comment|/// Returns 1 when LLVM is configured with LLVM_ENABLE_THREADS=OFF
+name|unsigned
+name|heavyweight_hardware_concurrency
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

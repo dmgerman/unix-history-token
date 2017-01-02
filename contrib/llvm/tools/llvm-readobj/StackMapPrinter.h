@@ -114,6 +114,13 @@ name|F
 operator|.
 name|getStackSize
 argument_list|()
+operator|<<
+literal|", callsite record count: "
+operator|<<
+name|F
+operator|.
+name|getRecordCount
+argument_list|()
 expr_stmt|;
 comment|// Constants:
 name|OS

@@ -82,6 +82,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -90,17 +102,11 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|PointerType
-decl_stmt|;
-name|class
 name|FunctionType
 decl_stmt|;
 name|class
-name|Module
+name|PointerType
 decl_stmt|;
-struct_decl|struct
-name|InlineAsmKeyType
-struct_decl|;
 name|template
 operator|<
 name|class
@@ -137,26 +143,6 @@ name|ConstantUniqueMap
 operator|<
 name|InlineAsm
 operator|>
-block|;
-name|InlineAsm
-argument_list|(
-specifier|const
-name|InlineAsm
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|InlineAsm
-operator|&
-operator|)
-operator|=
-name|delete
 block|;
 name|std
 operator|::
@@ -206,6 +192,27 @@ argument_list|()
 block|;
 name|public
 operator|:
+name|InlineAsm
+argument_list|(
+specifier|const
+name|InlineAsm
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|InlineAsm
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|InlineAsm
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 comment|/// InlineAsm::get - Return the specified uniqued inline asm string.
 comment|///
 specifier|static
@@ -1226,13 +1233,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_INLINEASM_H
+end_comment
 
 end_unit
 

@@ -453,7 +453,6 @@ argument_list|(
 argument|const MachineFunction *MF
 argument_list|)
 specifier|const
-name|override
 block|;
 specifier|const
 name|uint32_t
@@ -479,6 +478,15 @@ specifier|const
 name|uint32_t
 operator|*
 name|getTLSCallPreservedMask
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getSjLjDispatchPreservedMask
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)

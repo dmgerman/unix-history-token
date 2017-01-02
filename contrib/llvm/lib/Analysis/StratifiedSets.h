@@ -249,24 +249,14 @@ argument_list|()
 operator|=
 expr|default
 block|;
-comment|// TODO: Figure out how to make MSVC not call the copy ctor here, and delete
-comment|// it.
-comment|// Can't default these due to compile errors in MSVC2013
 name|StratifiedSets
 argument_list|(
-argument|StratifiedSets&&Other
+name|StratifiedSets
+operator|&&
 argument_list|)
-block|{
-operator|*
-name|this
 operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|Other
-argument_list|)
-block|; }
+expr|default
+block|;
 name|StratifiedSets
 operator|&
 name|operator
@@ -274,36 +264,10 @@ operator|=
 operator|(
 name|StratifiedSets
 operator|&&
-name|Other
 operator|)
-block|{
-name|Values
 operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|Other
-operator|.
-name|Values
-argument_list|)
+expr|default
 block|;
-name|Links
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|Other
-operator|.
-name|Links
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 name|StratifiedSets
 argument_list|(
 name|DenseMap

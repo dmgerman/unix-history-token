@@ -142,10 +142,6 @@ argument_list|(
 name|StringRef
 name|Arg0
 argument_list|,
-name|LLVMContext
-operator|&
-name|Context
-argument_list|,
 name|Module
 operator|&
 name|M
@@ -176,6 +172,12 @@ name|ShouldPreserveAssemblyUseListOrder
 argument_list|,
 name|bool
 name|ShouldPreserveBitcodeUseListOrder
+argument_list|,
+name|bool
+name|EmitSummaryIndex
+argument_list|,
+name|bool
+name|EmitModuleHash
 argument_list|)
 decl_stmt|;
 block|}

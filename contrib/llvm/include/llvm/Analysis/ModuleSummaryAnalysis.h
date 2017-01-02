@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -84,41 +90,21 @@ block|{
 name|class
 name|BlockFrequencyInfo
 decl_stmt|;
-comment|/// Class to build a module summary index for the given Module, possibly from
-comment|/// a Pass.
 name|class
-name|ModuleSummaryIndexBuilder
-block|{
-comment|/// The index being built
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|ModuleSummaryIndex
-operator|>
-name|Index
-expr_stmt|;
-comment|/// The module for which we are building an index
-specifier|const
-name|Module
-modifier|*
-name|M
+name|ProfileSummaryInfo
 decl_stmt|;
-name|public
-label|:
-comment|/// Default constructor
-name|ModuleSummaryIndexBuilder
-argument_list|()
-operator|=
-expr|default
-expr_stmt|;
-comment|/// Constructor that builds an index for the given Module. An optional
-comment|/// callback can be supplied to obtain the frequency info for a function.
-name|ModuleSummaryIndexBuilder
+comment|/// Direct function to compute a \c ModuleSummaryIndex from a given module.
+comment|///
+comment|/// If operating within a pass manager which has defined ways to compute the \c
+comment|/// BlockFrequencyInfo for a given function, that can be provided via
+comment|/// a std::function callback. Otherwise, this routine will manually construct
+comment|/// that information.
+name|ModuleSummaryIndex
+name|buildModuleSummaryIndex
 argument_list|(
 specifier|const
 name|Module
-operator|*
+operator|&
 name|M
 argument_list|,
 name|std
@@ -134,86 +120,74 @@ operator|&
 name|F
 operator|)
 operator|>
-name|Ftor
-operator|=
-name|nullptr
-argument_list|)
-expr_stmt|;
-comment|/// Get a reference to the index owned by builder
-name|ModuleSummaryIndex
-operator|&
-name|getIndex
-argument_list|()
-specifier|const
-block|{
-return|return
+name|GetBFICallback
+argument_list|,
+name|ProfileSummaryInfo
 operator|*
-name|Index
-return|;
-block|}
-comment|/// Take ownership of the built index
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|ModuleSummaryIndex
-operator|>
-name|takeIndex
-argument_list|()
-block|{
-return|return
-name|std
-operator|::
-name|move
-argument_list|(
-name|Index
+name|PSI
 argument_list|)
-return|;
+decl_stmt|;
+comment|/// Analysis pass to provide the ModuleSummaryIndex object.
+name|class
+name|ModuleSummaryIndexAnalysis
+range|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|ModuleSummaryIndexAnalysis
+operator|>
+block|{
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|ModuleSummaryIndexAnalysis
+operator|>
+block|;
+specifier|static
+name|AnalysisKey
+name|Key
+block|;
+name|public
+operator|:
+typedef|typedef
+name|ModuleSummaryIndex
+name|Result
+typedef|;
+name|Result
+name|run
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|ModuleAnalysisManager
+operator|&
+name|AM
+argument_list|)
+decl_stmt|;
 block|}
-name|private
-label|:
-comment|/// Compute summary for given function with optional frequency information
-name|void
-name|computeFunctionSummary
-parameter_list|(
-specifier|const
-name|Function
-modifier|&
-name|F
-parameter_list|,
-name|BlockFrequencyInfo
-modifier|*
-name|BFI
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
-comment|/// Compute summary for given variable with optional frequency information
-name|void
-name|computeVariableSummary
-parameter_list|(
-specifier|const
-name|GlobalVariable
-modifier|&
-name|V
-parameter_list|)
-function_decl|;
-block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// Legacy wrapper pass to provide the ModuleSummaryIndex object.
+end_comment
+
+begin_decl_stmt
 name|class
 name|ModuleSummaryIndexWrapperPass
 range|:
 name|public
 name|ModulePass
 block|{
-name|std
-operator|::
-name|unique_ptr
+name|Optional
 operator|<
-name|ModuleSummaryIndexBuilder
+name|ModuleSummaryIndex
 operator|>
-name|IndexBuilder
+name|Index
 block|;
 name|public
 operator|:
@@ -231,10 +205,8 @@ name|getIndex
 argument_list|()
 block|{
 return|return
-name|IndexBuilder
-operator|->
-name|getIndex
-argument_list|()
+operator|*
+name|Index
 return|;
 block|}
 specifier|const
@@ -245,10 +217,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IndexBuilder
-operator|->
-name|getIndex
-argument_list|()
+operator|*
+name|Index
 return|;
 block|}
 name|bool
@@ -274,32 +244,38 @@ specifier|const
 name|override
 block|; }
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// createModuleSummaryIndexWrapperPass - This pass builds a ModuleSummaryIndex
+end_comment
+
+begin_comment
 comment|// object for the module, to be written to bitcode or LLVM assembly.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_function_decl
 name|ModulePass
 modifier|*
 name|createModuleSummaryIndexWrapperPass
 parameter_list|()
 function_decl|;
-comment|/// Returns true if \p M is eligible for ThinLTO promotion.
-comment|///
-comment|/// Currently we check if it has any any InlineASM that uses an internal symbol.
-name|bool
-name|moduleCanBeRenamedForThinLTO
-parameter_list|(
-specifier|const
-name|Module
-modifier|&
-name|M
-parameter_list|)
-function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

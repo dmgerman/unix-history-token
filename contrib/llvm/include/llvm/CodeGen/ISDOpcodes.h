@@ -149,6 +149,8 @@ name|FRAMEADDR
 block|,
 name|RETURNADDR
 block|,
+name|ADDROFRETURNADDR
+block|,
 comment|/// LOCAL_RECOVER - Represents the llvm.localrecover intrinsic.
 comment|/// Materializes the offset from the local object pointer of another
 comment|/// function to a particular local object passed to llvm.localescape. The

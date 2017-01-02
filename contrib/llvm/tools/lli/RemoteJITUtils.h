@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/Orc/RPCChannel.h"
+file|"llvm/ExecutionEngine/Orc/RawByteChannel.h"
 end_include
 
 begin_include
@@ -121,7 +121,7 @@ end_comment
 
 begin_decl_stmt
 name|class
-name|FDRPCChannel
+name|FDRawChannel
 name|final
 range|:
 name|public
@@ -129,13 +129,13 @@ name|llvm
 operator|::
 name|orc
 operator|::
-name|remote
+name|rpc
 operator|::
-name|RPCChannel
+name|RawByteChannel
 block|{
 name|public
 operator|:
-name|FDRPCChannel
+name|FDRawChannel
 argument_list|(
 argument|int InFD
 argument_list|,
@@ -407,7 +407,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|FDRPCChannel
+name|FDRawChannel
 operator|>
 name|launchRemote
 argument_list|()
@@ -418,7 +418,8 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// ForwardingMM - Adapter to connect MCJIT to Orc's Remote memory manager.
+comment|// ForwardingMM - Adapter to connect MCJIT to Orc's Remote8
+comment|// memory manager.
 name|class
 name|ForwardingMemoryManager
 range|:
@@ -449,7 +450,7 @@ block|;   }
 name|void
 name|setResolver
 argument_list|(
-argument|std::unique_ptr<RuntimeDyld::SymbolResolver> Resolver
+argument|std::unique_ptr<JITSymbolResolver> Resolver
 argument_list|)
 block|{
 name|this
@@ -655,9 +656,7 @@ name|RTDyldMemoryManager
 operator|::
 name|notifyObjectLoaded
 block|;
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbol
 argument_list|(
 argument|const std::string&Name
@@ -673,9 +672,7 @@ name|Name
 argument_list|)
 return|;
 block|}
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbolInLogicalDylib
 argument_list|(
 argument|const std::string&Name
@@ -707,9 +704,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|Resolver
 block|; }

@@ -98,6 +98,14 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createGVNPass function. */
+name|void
+name|LLVMAddNewGVNPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/** See llvm::createIndVarSimplifyPass function. */
 name|void
 name|LLVMAddIndVarSimplifyPass
@@ -304,6 +312,14 @@ function_decl|;
 comment|/** See llvm::createEarlyCSEPass function */
 name|void
 name|LLVMAddEarlyCSEPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createEarlyCSEPass function */
+name|void
+name|LLVMAddEarlyCSEMemSSAPass
 parameter_list|(
 name|LLVMPassManagerRef
 name|PM

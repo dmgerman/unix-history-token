@@ -76,6 +76,8 @@ name|operation_unsupported
 operator|,
 name|corrupt_record
 operator|,
+name|unknown_member_record
+operator|,
 block|}
 empty_stmt|;
 comment|/// Base class for errors originating when parsing raw PDB files

@@ -77,6 +77,12 @@ name|SelectionDAGTargetInfo
 block|{
 name|public
 operator|:
+name|explicit
+name|HexagonSelectionDAGInfo
+argument_list|()
+operator|=
+expr|default
+block|;
 name|SDValue
 name|EmitTargetCodeForMemcpy
 argument_list|(

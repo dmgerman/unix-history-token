@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Format.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Format.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -117,6 +117,7 @@ comment|///< 0ffh
 block|}
 enum|;
 block|}
+comment|// end namespace HexStyle
 comment|/// \brief This is an instance of a target assembly language printer that
 comment|/// converts an MCInst to valid target assembly syntax.
 name|class
@@ -214,12 +215,12 @@ argument_list|)
 operator|,
 name|UseMarkup
 argument_list|(
-literal|0
+name|false
 argument_list|)
 operator|,
 name|PrintImmHex
 argument_list|(
-literal|0
+name|false
 argument_list|)
 operator|,
 name|PrintHexStyle
@@ -445,13 +446,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_MC_MCINSTPRINTER_H
+end_comment
 
 end_unit
 

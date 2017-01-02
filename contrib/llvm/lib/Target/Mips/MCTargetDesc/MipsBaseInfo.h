@@ -242,6 +242,14 @@ init|=
 literal|1
 operator|<<
 literal|5
+block|,
+comment|/// IsPCRelativeLoad - A Load instruction with implicit source register
+comment|///                    ($pc) with explicit offset and destination register
+name|IsPCRelativeLoad
+init|=
+literal|1
+operator|<<
+literal|6
 block|}
 enum|;
 block|}

@@ -87,14 +87,13 @@ decl_stmt|;
 name|class
 name|Triple
 decl_stmt|;
-name|struct
+name|class
 name|AArch64RegisterInfo
+name|final
 range|:
 name|public
 name|AArch64GenRegisterInfo
 block|{
-name|private
-operator|:
 specifier|const
 name|Triple
 operator|&
@@ -138,7 +137,6 @@ argument_list|(
 argument|const MachineFunction *MF
 argument_list|)
 specifier|const
-name|override
 block|;
 specifier|const
 name|uint32_t
@@ -197,6 +195,14 @@ name|BitVector
 name|getReservedRegs
 argument_list|(
 argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isConstantPhysReg
+argument_list|(
+argument|unsigned PhysReg
 argument_list|)
 specifier|const
 name|override
@@ -355,9 +361,21 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
-block|; }
-decl_stmt|;
+block|;
+name|bool
+name|trackLivenessAfterRegAlloc
+argument_list|(
+argument|const MachineFunction&
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

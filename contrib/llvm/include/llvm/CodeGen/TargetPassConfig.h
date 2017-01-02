@@ -291,11 +291,23 @@ name|PM
 block|;
 name|AnalysisID
 name|StartBefore
-block|,
+operator|=
+name|nullptr
+block|;
+name|AnalysisID
 name|StartAfter
+operator|=
+name|nullptr
+block|;
+name|AnalysisID
+name|StopBefore
+operator|=
+name|nullptr
 block|;
 name|AnalysisID
 name|StopAfter
+operator|=
+name|nullptr
 block|;
 name|bool
 name|Started
@@ -414,21 +426,35 @@ argument|AnalysisID StartBefore
 argument_list|,
 argument|AnalysisID StartAfter
 argument_list|,
+argument|AnalysisID StopBefore
+argument_list|,
 argument|AnalysisID StopAfter
 argument_list|)
 block|{
-if|if
-condition|(
-name|StartAfter
-condition|)
 name|assert
 argument_list|(
 operator|!
+operator|(
 name|StartBefore
+operator|&&
+name|StartAfter
+operator|)
 operator|&&
 literal|"Start after and start before passes are given"
 argument_list|)
-expr_stmt|;
+block|;
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|StopBefore
+operator|&&
+name|StopAfter
+operator|)
+operator|&&
+literal|"Stop after and stop before passed are given"
+argument_list|)
+block|;
 name|this
 operator|->
 name|StartBefore
@@ -440,6 +466,12 @@ operator|->
 name|StartAfter
 operator|=
 name|StartAfter
+block|;
+name|this
+operator|->
+name|StopBefore
+operator|=
+name|StopBefore
 block|;
 name|this
 operator|->
@@ -485,10 +517,9 @@ return|;
 block|}
 name|void
 name|setEnableTailMerge
-parameter_list|(
-name|bool
-name|Enable
-parameter_list|)
+argument_list|(
+argument|bool Enable
+argument_list|)
 block|{
 name|setOpt
 argument_list|(
@@ -496,49 +527,37 @@ name|EnableTailMerge
 argument_list|,
 name|Enable
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// Allow the target to override a specific pass without overriding the pass
 comment|/// pipeline. When passes are added to the standard pipeline at the
 comment|/// point where StandardID is expected, add TargetID in its place.
 name|void
 name|substitutePass
-parameter_list|(
-name|AnalysisID
-name|StandardID
-parameter_list|,
-name|IdentifyingPassPtr
-name|TargetID
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|AnalysisID StandardID
+argument_list|,
+argument|IdentifyingPassPtr TargetID
+argument_list|)
+block|;
 comment|/// Insert InsertedPassID pass after TargetPassID pass.
 name|void
 name|insertPass
-parameter_list|(
-name|AnalysisID
-name|TargetPassID
-parameter_list|,
-name|IdentifyingPassPtr
-name|InsertedPassID
-parameter_list|,
-name|bool
-name|VerifyAfter
-init|=
-name|true
-parameter_list|,
-name|bool
-name|PrintAfter
-init|=
-name|true
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|AnalysisID TargetPassID
+argument_list|,
+argument|IdentifyingPassPtr InsertedPassID
+argument_list|,
+argument|bool VerifyAfter = true
+argument_list|,
+argument|bool PrintAfter = true
+argument_list|)
+block|;
 comment|/// Allow the target to enable a specific standard pass by default.
 name|void
 name|enablePass
-parameter_list|(
-name|AnalysisID
-name|PassID
-parameter_list|)
+argument_list|(
+argument|AnalysisID PassID
+argument_list|)
 block|{
 name|substitutePass
 argument_list|(
@@ -546,15 +565,13 @@ name|PassID
 argument_list|,
 name|PassID
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|/// Allow the target to disable a specific standard pass by default.
 name|void
 name|disablePass
-parameter_list|(
-name|AnalysisID
-name|PassID
-parameter_list|)
+argument_list|(
+argument|AnalysisID PassID
+argument_list|)
 block|{
 name|substitutePass
 argument_list|(
@@ -563,79 +580,76 @@ argument_list|,
 name|IdentifyingPassPtr
 argument_list|()
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// Return the pass substituted for StandardID by the target.
 comment|/// If no substitution exists, return StandardID.
 name|IdentifyingPassPtr
 name|getPassSubstitution
 argument_list|(
-name|AnalysisID
-name|StandardID
+argument|AnalysisID StandardID
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// Return true if the pass has been substituted by the target or
 comment|/// overridden on the command line.
 name|bool
 name|isPassSubstitutedOrOverridden
 argument_list|(
-name|AnalysisID
-name|ID
+argument|AnalysisID ID
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// Return true if the optimized regalloc pipeline is enabled.
 name|bool
 name|getOptimizeRegAlloc
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Return true if shrink wrapping is enabled.
 name|bool
 name|getEnableShrinkWrap
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Return true if the default global register allocator is in use and
 comment|/// has not be overriden on the command line with '-regalloc=...'
 name|bool
 name|usingDefaultRegAlloc
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// Add common target configurable passes that perform LLVM IR to IR
 comment|/// transforms following machine independent optimization.
 name|virtual
 name|void
 name|addIRPasses
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// Add passes to lower exception handling for the code generator.
 name|void
 name|addPassesToHandleExceptions
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// Add pass to prepare the LLVM IR for code generation. This should be done
 comment|/// before exception handling preparation passes.
 name|virtual
 name|void
 name|addCodeGenPrepare
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// Add common passes that perform LLVM IR to IR transforms in preparation for
 comment|/// instruction selection.
 name|virtual
 name|void
 name|addISelPrepare
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// addInstSelector - This method should install an instruction selector pass,
 comment|/// which converts from LLVM code to machine instructions.
 name|virtual
 name|bool
 name|addInstSelector
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|true
@@ -646,7 +660,25 @@ comment|/// LLVM code to machine instructions with possibly generic opcodes.
 name|virtual
 name|bool
 name|addIRTranslator
-parameter_list|()
+argument_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// This method may be implemented by targets that want to run passes
+comment|/// immediately before legalization.
+name|virtual
+name|void
+name|addPreLegalizeMachineIR
+argument_list|()
+block|{}
+comment|/// This method should install a legalize pass, which converts the instruction
+comment|/// sequence into one that can be selected by the target.
+name|virtual
+name|bool
+name|addLegalizeMachineIR
+argument_list|()
 block|{
 return|return
 name|true
@@ -657,7 +689,7 @@ comment|/// immediately before the register bank selection.
 name|virtual
 name|void
 name|addPreRegBankSelect
-parameter_list|()
+argument_list|()
 block|{}
 comment|/// This method should install a register bank selector pass, which
 comment|/// assigns register banks to virtual registers without a register
@@ -665,7 +697,27 @@ comment|/// class or register banks.
 name|virtual
 name|bool
 name|addRegBankSelect
-parameter_list|()
+argument_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// This method may be implemented by targets that want to run passes
+comment|/// immediately before the (global) instruction selection.
+name|virtual
+name|void
+name|addPreGlobalInstructionSelect
+argument_list|()
+block|{}
+comment|/// This method should install a (global) instruction selector pass, which
+comment|/// converts possibly generic instructions to fully target-specific
+comment|/// instructions, thereby constraining all generic virtual registers to
+comment|/// register classes.
+name|virtual
+name|bool
+name|addGlobalInstructionSelect
+argument_list|()
 block|{
 return|return
 name|true
@@ -676,8 +728,8 @@ comment|/// Fully developed targets will not generally override this.
 name|virtual
 name|void
 name|addMachinePasses
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// Create an instance of ScheduleDAGInstrs to be run within the standard
 comment|/// MachineScheduler pass for this function and target at the current
 comment|/// optimization level.
@@ -689,14 +741,12 @@ comment|///
 comment|/// Return NULL to select the default (generic) machine scheduler.
 name|virtual
 name|ScheduleDAGInstrs
-modifier|*
+operator|*
 name|createMachineScheduler
 argument_list|(
-name|MachineSchedContext
-operator|*
-name|C
+argument|MachineSchedContext *C
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
@@ -706,14 +756,12 @@ comment|/// Similar to createMachineScheduler but used when postRA machine sched
 comment|/// is enabled.
 name|virtual
 name|ScheduleDAGInstrs
-modifier|*
+operator|*
 name|createPostMachineScheduler
 argument_list|(
-name|MachineSchedContext
-operator|*
-name|C
+argument|MachineSchedContext *C
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|nullptr
@@ -732,7 +780,7 @@ name|string
 operator|&
 name|Banner
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Add a pass to print the machine function if printing is enabled.
 name|void
 name|addPrintPass
@@ -744,7 +792,7 @@ name|string
 operator|&
 name|Banner
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Add a pass to perform basic verification of the machine function if
 comment|/// verification is enabled.
 name|void
@@ -757,21 +805,36 @@ name|string
 operator|&
 name|Banner
 argument_list|)
-decl_stmt|;
+block|;
+comment|/// Check whether or not GlobalISel should abort on error.
+comment|/// When this is disable, GlobalISel will fall back on SDISel instead of
+comment|/// erroring out.
+name|virtual
+name|bool
+name|isGlobalISelAbortEnabled
+argument_list|()
+specifier|const
+block|;
+comment|/// Check whether or not a diagnostic should be emitted when GlobalISel
+comment|/// uses the fallback path. In other words, it will emit a diagnostic
+comment|/// when GlobalISel failed and isGlobalISelAbortEnabled is false.
+name|virtual
+name|bool
+name|reportDiagnosticWhenGlobalISelFallback
+argument_list|()
+specifier|const
+block|;
 name|protected
-label|:
+operator|:
 comment|// Helper to verify the analysis is really immutable.
 name|void
 name|setOpt
-parameter_list|(
-name|bool
-modifier|&
-name|Opt
-parameter_list|,
-name|bool
-name|Val
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|bool&Opt
+argument_list|,
+argument|bool Val
+argument_list|)
+block|;
 comment|/// Methods with trivial inline returns are convenient points in the common
 comment|/// codegen pass pipeline where targets may insert passes. Methods with
 comment|/// out-of-line standard implementations are major CodeGen stages called by
@@ -783,7 +846,7 @@ comment|/// passes (which are run just before instruction selector).
 name|virtual
 name|bool
 name|addPreISel
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|true
@@ -794,8 +857,8 @@ comment|/// instructions in SSA form.
 name|virtual
 name|void
 name|addMachineSSAOptimization
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// Add passes that optimize instruction level parallelism for out-of-order
 comment|/// targets. These passes are run while the machine code is still in SSA
 comment|/// form, so they can use MachineTraceMetrics to control their heuristics.
@@ -805,7 +868,7 @@ comment|/// MachineLoopInfo, and MachineTraceMetrics analyses.
 name|virtual
 name|bool
 name|addILPOpts
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|false
@@ -816,41 +879,40 @@ comment|/// immediately before register allocation.
 name|virtual
 name|void
 name|addPreRegAlloc
-parameter_list|()
+argument_list|()
 block|{ }
 comment|/// createTargetRegisterAllocator - Create the register allocator pass for
 comment|/// this target at the current optimization level.
 name|virtual
 name|FunctionPass
-modifier|*
+operator|*
 name|createTargetRegisterAllocator
-parameter_list|(
-name|bool
-name|Optimized
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|bool Optimized
+argument_list|)
+block|;
 comment|/// addFastRegAlloc - Add the minimum set of target-independent passes that
 comment|/// are required for fast register allocation.
 name|virtual
 name|void
 name|addFastRegAlloc
-parameter_list|(
+argument_list|(
 name|FunctionPass
-modifier|*
+operator|*
 name|RegAllocPass
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// addOptimizedRegAlloc - Add passes related to register allocation.
 comment|/// LLVMTargetMachine provides standard regalloc passes for most targets.
 name|virtual
 name|void
 name|addOptimizedRegAlloc
-parameter_list|(
+argument_list|(
 name|FunctionPass
-modifier|*
+operator|*
 name|RegAllocPass
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// addPreRewrite - Add passes to the optimized register allocation pipeline
 comment|/// after register allocation is complete, but before virtual registers are
 comment|/// rewritten to physical registers.
@@ -862,7 +924,7 @@ comment|/// all virtual registers.
 name|virtual
 name|bool
 name|addPreRewrite
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|false
@@ -873,20 +935,20 @@ comment|/// register allocation pass pipeline but before prolog-epilog insertion
 name|virtual
 name|void
 name|addPostRegAlloc
-parameter_list|()
+argument_list|()
 block|{ }
 comment|/// Add passes that optimize machine instructions after register allocation.
 name|virtual
 name|void
 name|addMachineLateOptimization
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// This method may be implemented by targets that want to run passes after
 comment|/// prolog-epilog insertion and before the second instruction scheduling pass.
 name|virtual
 name|void
 name|addPreSched2
-parameter_list|()
+argument_list|()
 block|{ }
 comment|/// addGCPasses - Add late codegen passes that analyze code for garbage
 comment|/// collection. This should return true if GC info should be printed after
@@ -894,20 +956,20 @@ comment|/// these passes.
 name|virtual
 name|bool
 name|addGCPasses
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// Add standard basic block placement passes.
 name|virtual
 name|void
 name|addBlockPlacement
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// This pass may be implemented by targets that want to run passes
 comment|/// immediately before machine code is emitted.
 name|virtual
 name|void
 name|addPreEmitPass
-parameter_list|()
+argument_list|()
 block|{ }
 comment|/// Utilities for targets to add passes to the pass manager.
 comment|///
@@ -919,21 +981,14 @@ comment|/// @p verifyAfter   if true and adding a machine function pass add an e
 comment|///                  machine verification pass afterwards.
 name|AnalysisID
 name|addPass
-parameter_list|(
-name|AnalysisID
-name|PassID
-parameter_list|,
-name|bool
-name|verifyAfter
-init|=
-name|true
-parameter_list|,
-name|bool
-name|printAfter
-init|=
-name|true
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|AnalysisID PassID
+argument_list|,
+argument|bool verifyAfter = true
+argument_list|,
+argument|bool printAfter = true
+argument_list|)
+block|;
 comment|/// Add a pass to the PassManager if that pass is supposed to be run, as
 comment|/// determined by the StartAfter and StopAfter options. Takes ownership of the
 comment|/// pass.
@@ -943,41 +998,28 @@ comment|/// @p verifyAfter   if true and adding a machine function pass add an e
 comment|///                  machine verification pass afterwards.
 name|void
 name|addPass
-parameter_list|(
-name|Pass
-modifier|*
-name|P
-parameter_list|,
-name|bool
-name|verifyAfter
-init|=
-name|true
-parameter_list|,
-name|bool
-name|printAfter
-init|=
-name|true
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|Pass *P
+argument_list|,
+argument|bool verifyAfter = true
+argument_list|,
+argument|bool printAfter = true
+argument_list|)
+block|;
 comment|/// addMachinePasses helper to create the target-selected or overriden
 comment|/// regalloc pass.
 name|FunctionPass
-modifier|*
+operator|*
 name|createRegAllocPass
-parameter_list|(
-name|bool
-name|Optimized
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|bool Optimized
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

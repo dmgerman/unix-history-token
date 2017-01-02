@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits>
 end_include
 
@@ -592,12 +598,13 @@ specifier|const
 name|unsigned
 name|Idx
 block|;
-name|reference
-argument_list|()
-block|;
-comment|// Undefined
 name|public
 operator|:
+name|reference
+argument_list|()
+operator|=
+name|delete
+block|;
 name|reference
 argument_list|(
 argument|PackedVector&vec
@@ -979,13 +986,17 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_PACKEDVECTOR_H
+end_comment
 
 end_unit
 

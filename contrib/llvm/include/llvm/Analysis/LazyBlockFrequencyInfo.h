@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/LazyBranchProbabilityInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -149,7 +155,7 @@ argument_list|(
 name|nullptr
 argument_list|)
 block|,
-name|BPI
+name|BPIPass
 argument_list|(
 name|nullptr
 argument_list|)
@@ -165,7 +171,7 @@ name|setAnalysis
 argument_list|(
 argument|const Function *F
 argument_list|,
-argument|const BranchProbabilityInfo *BPI
+argument|LazyBranchProbabilityInfoPass *BPIPass
 argument_list|,
 argument|const LoopInfo *LI
 argument_list|)
@@ -178,9 +184,9 @@ name|F
 block|;
 name|this
 operator|->
-name|BPI
+name|BPIPass
 operator|=
-name|BPI
+name|BPIPass
 block|;
 name|this
 operator|->
@@ -204,7 +210,7 @@ name|assert
 argument_list|(
 name|F
 operator|&&
-name|BPI
+name|BPIPass
 operator|&&
 name|LI
 operator|&&
@@ -218,8 +224,10 @@ argument_list|(
 operator|*
 name|F
 argument_list|,
-operator|*
-name|BPI
+name|BPIPass
+operator|->
+name|getBPI
+argument_list|()
 argument_list|,
 operator|*
 name|LI
@@ -290,10 +298,9 @@ name|Function
 operator|*
 name|F
 block|;
-specifier|const
-name|BranchProbabilityInfo
+name|LazyBranchProbabilityInfoPass
 operator|*
-name|BPI
+name|BPIPass
 block|;
 specifier|const
 name|LoopInfo

@@ -96,6 +96,9 @@ decl_stmt|;
 name|class
 name|MCSymbol
 decl_stmt|;
+name|class
+name|MCSymbolRefExpr
+decl_stmt|;
 struct|struct
 name|ConstantPoolEntry
 block|{
@@ -164,6 +167,16 @@ expr_stmt|;
 name|EntryVecTy
 name|Entries
 decl_stmt|;
+name|DenseMap
+operator|<
+name|int64_t
+operator|,
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+operator|>
+name|CachedEntries
+expr_stmt|;
 name|public
 label|:
 comment|// Initialize a new empty constant pool

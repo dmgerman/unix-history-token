@@ -92,27 +92,29 @@ range|:
 name|public
 name|TargetLowering
 block|{
+name|private
+operator|:
+comment|/// \returns AMDGPUISD::FFBH_U32 node if the incoming \p Op may have been
+comment|/// legalized from a smaller type VT. Need to match pre-legalized type because
+comment|/// the generic legalization inserts the add/sub between the select and
+comment|/// compare.
+name|SDValue
+name|getFFBH_U32
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue Op
+argument_list|,
+argument|const SDLoc&DL
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 specifier|const
 name|AMDGPUSubtarget
 operator|*
 name|Subtarget
-block|;
-name|SDValue
-name|LowerConstantInitializer
-argument_list|(
-argument|const Constant* Init
-argument_list|,
-argument|const GlobalValue *GV
-argument_list|,
-argument|const SDValue&InitPtr
-argument_list|,
-argument|SDValue Chain
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
 block|;
 name|SDValue
 name|LowerEXTRACT_SUBVECTOR
@@ -136,17 +138,6 @@ name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
 argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Lower vector stores by merging the vector elements into an integer
-comment|/// of the same bitwidth.
-name|SDValue
-name|MergeVectorStore
-argument_list|(
-argument|const SDValue&Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -296,6 +287,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerFP_TO_FP16
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerFP_TO_UINT
 argument_list|(
 argument|SDValue Op
@@ -350,11 +350,19 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|performAndCombine
+name|splitBinaryBitConstantOpImpl
 argument_list|(
-argument|SDNode *N
-argument_list|,
 argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|const SDLoc&SL
+argument_list|,
+argument|unsigned Opc
+argument_list|,
+argument|SDValue LHS
+argument_list|,
+argument|uint32_t ValLo
+argument_list|,
+argument|uint32_t ValHi
 argument_list|)
 specifier|const
 block|;
@@ -395,6 +403,33 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|performMulhsCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performMulhuCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performMulLoHi24Combine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|performCtlzCombine
 argument_list|(
 argument|const SDLoc&SL
@@ -421,15 +456,6 @@ block|;
 specifier|static
 name|EVT
 name|getEquivalentMemType
-argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|EVT VT
-argument_list|)
-block|;
-specifier|static
-name|EVT
-name|getEquivalentBitType
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
@@ -552,22 +578,12 @@ argument|SmallVectorImpl<SDValue>&Results
 argument_list|)
 specifier|const
 block|;
-comment|/// The SelectionDAGBuilder will automatically promote function arguments
-comment|/// with illegal types.  However, this does not work for the AMDGPU targets
-comment|/// since the function arguments are stored in memory as these illegal types.
-comment|/// In order to handle this properly we need to get the origianl types sizes
-comment|/// from the LLVM IR Function and fixup the ISD:InputArg values before
-comment|/// passing them to AnalyzeFormalArguments()
 name|void
-name|getOriginalFunctionArgs
+name|analyzeFormalArgumentsCompute
 argument_list|(
-argument|SelectionDAG&DAG
-argument_list|,
-argument|const Function *F
+argument|CCState&State
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|SmallVectorImpl<ISD::InputArg>&OrigIns
 argument_list|)
 specifier|const
 block|;
@@ -870,16 +886,34 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|SDValue
-name|getRsqrtEstimate
+name|bool
+name|isFsqrtCheap
 argument_list|(
 argument|SDValue Operand
 argument_list|,
-argument|DAGCombinerInfo&DCI
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|SDValue
+name|getSqrtEstimate
+argument_list|(
+argument|SDValue Operand
 argument_list|,
-argument|unsigned&RefinementSteps
+argument|SelectionDAG&DAG
+argument_list|,
+argument|int Enabled
+argument_list|,
+argument|int&RefinementSteps
 argument_list|,
 argument|bool&UseOneConstNR
+argument_list|,
+argument|bool Reciprocal
 argument_list|)
 specifier|const
 name|override
@@ -889,9 +923,11 @@ name|getRecipEstimate
 argument_list|(
 argument|SDValue Operand
 argument_list|,
-argument|DAGCombinerInfo&DCI
+argument|SelectionDAG&DAG
 argument_list|,
-argument|unsigned&RefinementSteps
+argument|int Enabled
+argument_list|,
+argument|int&RefinementSteps
 argument_list|)
 specifier|const
 name|override
@@ -1017,6 +1053,17 @@ name|FRACT
 block|,
 name|CLAMP
 block|,
+comment|// This is SETCC with the full mask result which is used for a compare with a
+comment|// result bit per item in the wavefront.
+name|SETCC
+block|,
+name|SETREG
+block|,
+comment|// FP ops with input and output chain.
+name|FMA_W_CHAIN
+block|,
+name|FMUL_W_CHAIN
+block|,
 comment|// SIN_HW, COS_HW - f32 for SI, 1 ULP max error, valid from -100 pi to 100 pi.
 comment|// Denormals handled on some parts.
 name|COS_HW
@@ -1062,7 +1109,11 @@ name|RCP
 block|,
 name|RSQ
 block|,
+name|RCP_LEGACY
+block|,
 name|RSQ_LEGACY
+block|,
+name|FMUL_LEGACY
 block|,
 name|RSQ_CLAMP
 block|,
@@ -1091,17 +1142,33 @@ comment|// Insert a range of bits into a 32-bit word.
 name|FFBH_U32
 block|,
 comment|// ctlz with -1 if input is zero.
+name|FFBH_I32
+block|,
 name|MUL_U24
 block|,
 name|MUL_I24
+block|,
+name|MULHI_U24
+block|,
+name|MULHI_I24
 block|,
 name|MAD_U24
 block|,
 name|MAD_I24
 block|,
+name|MUL_LOHI_I24
+block|,
+name|MUL_LOHI_U24
+block|,
 name|TEXTURE_FETCH
 block|,
 name|EXPORT
+block|,
+comment|// exp on SI+
+name|EXPORT_DONE
+block|,
+comment|// exp on SI+ with done bit set
+name|R600_EXPORT
 block|,
 name|CONST_ADDRESS
 block|,
@@ -1151,6 +1218,8 @@ name|INTERP_P2
 block|,
 name|PC_ADD_REL_OFFSET
 block|,
+name|KILL
+block|,
 name|FIRST_MEM_OPCODE_NUMBER
 init|=
 name|ISD
@@ -1168,6 +1237,10 @@ block|,
 name|ATOMIC_INC
 block|,
 name|ATOMIC_DEC
+block|,
+name|BUFFER_LOAD
+block|,
+name|BUFFER_LOAD_FORMAT
 block|,
 name|LAST_AMDGPU_ISD_NUMBER
 block|}

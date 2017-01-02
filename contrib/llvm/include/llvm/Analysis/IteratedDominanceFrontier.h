@@ -279,15 +279,6 @@ operator|*
 operator|>
 operator|*
 name|DefBlocks
-block|;
-name|SmallVector
-operator|<
-name|BasicBlock
-operator|*
-block|,
-literal|32
-operator|>
-name|PHIBlocks
 block|; }
 expr_stmt|;
 typedef|typedef

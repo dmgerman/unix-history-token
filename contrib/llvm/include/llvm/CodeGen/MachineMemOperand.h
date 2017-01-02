@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Metadata.h"
 end_include
 
@@ -100,6 +106,12 @@ end_include
 begin_comment
 comment|// PointerLikeTypeTraits<Value*>
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/AtomicOrdering.h"
+end_include
 
 begin_include
 include|#
@@ -411,31 +423,38 @@ literal|1u
 operator|<<
 literal|3
 block|,
-comment|/// The memory access is invariant.
-name|MOInvariant
+comment|/// The memory access is dereferenceable (i.e., doesn't trap).
+name|MODereferenceable
 init|=
 literal|1u
 operator|<<
 literal|4
+block|,
+comment|/// The memory access always returns the same value (or traps).
+name|MOInvariant
+init|=
+literal|1u
+operator|<<
+literal|5
 block|,
 comment|// Reserved for use by target-specific passes.
 name|MOTargetFlag1
 init|=
 literal|1u
 operator|<<
-literal|5
+literal|6
 block|,
 name|MOTargetFlag2
 init|=
 literal|1u
 operator|<<
-literal|6
+literal|7
 block|,
 name|MOTargetFlag3
 init|=
 literal|1u
 operator|<<
-literal|7
+literal|8
 block|,
 name|LLVM_MARK_AS_BITMASK_ENUM
 argument_list|(
@@ -446,6 +465,35 @@ block|}
 enum|;
 name|private
 label|:
+comment|/// Atomic information for this memory operation.
+struct|struct
+name|MachineAtomicInfo
+block|{
+comment|/// Synchronization scope for this memory operation.
+name|unsigned
+name|SynchScope
+range|:
+literal|1
+decl_stmt|;
+comment|// enum SynchronizationScope
+comment|/// Atomic ordering requirements for this memory operation. For cmpxchg
+comment|/// atomic operations, atomic ordering requirements when store occurs.
+name|unsigned
+name|Ordering
+range|:
+literal|4
+decl_stmt|;
+comment|// enum AtomicOrdering
+comment|/// For cmpxchg atomic operations, atomic ordering requirements when store
+comment|/// does not occur.
+name|unsigned
+name|FailureOrdering
+range|:
+literal|4
+decl_stmt|;
+comment|// enum AtomicOrdering
+block|}
+struct|;
 name|MachinePointerInfo
 name|PtrInfo
 decl_stmt|;
@@ -459,6 +507,9 @@ name|uint16_t
 name|BaseAlignLog2
 decl_stmt|;
 comment|// log_2(base_alignment) + 1
+name|MachineAtomicInfo
+name|AtomicInfo
+decl_stmt|;
 name|AAMDNodes
 name|AAInfo
 decl_stmt|;
@@ -470,7 +521,10 @@ decl_stmt|;
 name|public
 label|:
 comment|/// Construct a MachineMemOperand object with the specified PtrInfo, flags,
-comment|/// size, and base alignment.
+comment|/// size, and base alignment. For atomic operations the synchronization scope
+comment|/// and atomic ordering requirements must also be specified. For cmpxchg
+comment|/// atomic operations the atomic ordering requirements when store does not
+comment|/// occur must also be specified.
 name|MachineMemOperand
 argument_list|(
 argument|MachinePointerInfo PtrInfo
@@ -484,6 +538,12 @@ argument_list|,
 argument|const AAMDNodes&AAInfo = AAMDNodes()
 argument_list|,
 argument|const MDNode *Ranges = nullptr
+argument_list|,
+argument|SynchronizationScope SynchScope = CrossThread
+argument_list|,
+argument|AtomicOrdering Ordering = AtomicOrdering::NotAtomic
+argument_list|,
+argument|AtomicOrdering FailureOrdering = AtomicOrdering::NotAtomic
 argument_list|)
 empty_stmt|;
 specifier|const
@@ -668,6 +728,63 @@ return|return
 name|Ranges
 return|;
 block|}
+comment|/// Return the synchronization scope for this memory operation.
+name|SynchronizationScope
+name|getSynchScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|SynchronizationScope
+operator|>
+operator|(
+name|AtomicInfo
+operator|.
+name|SynchScope
+operator|)
+return|;
+block|}
+comment|/// Return the atomic ordering requirements for this memory operation. For
+comment|/// cmpxchg atomic operations, return the atomic ordering requirements when
+comment|/// store occurs.
+name|AtomicOrdering
+name|getOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|AtomicOrdering
+operator|>
+operator|(
+name|AtomicInfo
+operator|.
+name|Ordering
+operator|)
+return|;
+block|}
+comment|/// For cmpxchg atomic operations, return the atomic ordering requirements
+comment|/// when store does not occur.
+name|AtomicOrdering
+name|getFailureOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|AtomicOrdering
+operator|>
+operator|(
+name|AtomicInfo
+operator|.
+name|FailureOrdering
+operator|)
+return|;
+block|}
 name|bool
 name|isLoad
 argument_list|()
@@ -713,6 +830,17 @@ name|MONonTemporal
 return|;
 block|}
 name|bool
+name|isDereferenceable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FlagVals
+operator|&
+name|MODereferenceable
+return|;
+block|}
+name|bool
 name|isInvariant
 argument_list|()
 specifier|const
@@ -721,6 +849,22 @@ return|return
 name|FlagVals
 operator|&
 name|MOInvariant
+return|;
+block|}
+comment|/// Returns true if this operation has an atomic ordering requirement of
+comment|/// unordered or higher, false otherwise.
+name|bool
+name|isAtomic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOrdering
+argument_list|()
+operator|!=
+name|AtomicOrdering
+operator|::
+name|NotAtomic
 return|;
 block|}
 comment|/// Returns true if this memory operation doesn't have any ordering

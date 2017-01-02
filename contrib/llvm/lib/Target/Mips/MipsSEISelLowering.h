@@ -441,6 +441,54 @@ argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
+block|;
+comment|/// \brief Emit the FILL_FW pseudo instruction
+name|MachineBasicBlock
+operator|*
+name|emitLD_F16_PSEUDO
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Emit the FILL_FD pseudo instruction
+name|MachineBasicBlock
+operator|*
+name|emitST_F16_PSEUDO
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Emit the FEXP2_W_1 pseudo instructions.
+name|MachineBasicBlock
+operator|*
+name|emitFPEXTEND_PSEUDO
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|bool IsFGR64
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Emit the FEXP2_D_1 pseudo instructions.
+name|MachineBasicBlock
+operator|*
+name|emitFPROUND_PSEUDO
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|MachineBasicBlock *BBi
+argument_list|,
+argument|bool IsFGR64
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

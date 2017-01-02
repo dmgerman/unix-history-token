@@ -72,7 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/CallingConvLower.h"
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ISDOpcodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineValueType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/SelectionDAGNodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
 begin_include
@@ -84,22 +108,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/InlineAsm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Return true when the given node fits in a positive half word.
-name|bool
-name|isPositiveHalfWord
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
 name|namespace
 name|HexagonISD
 block|{
@@ -121,11 +154,7 @@ block|,
 name|CONST32_GP
 block|,
 comment|// For marking data present in GP.
-name|FCONST32
-block|,
 name|ALLOCA
-block|,
-name|ARGEXTEND
 block|,
 name|AT_GOT
 block|,
@@ -133,12 +162,12 @@ comment|// Index in GOT.
 name|AT_PCREL
 block|,
 comment|// Offset relative to PC.
-name|CALLv3
+name|CALL
 block|,
-comment|// A V3+ call instruction.
-name|CALLv3nr
+comment|// Function call.
+name|CALLnr
 block|,
-comment|// A V3+ call instruction that doesn't return.
+comment|// Function call that does not return.
 name|CALLR
 block|,
 name|RET_FLAG
@@ -215,6 +244,8 @@ name|EXTRACTURP
 block|,
 name|VCOMBINE
 block|,
+name|VPACK
+block|,
 name|TC_RETURN
 block|,
 name|EH_RETURN
@@ -225,6 +256,7 @@ name|OP_END
 block|}
 enum|;
 block|}
+comment|// end namespace HexagonISD
 name|class
 name|HexagonSubtarget
 decl_stmt|;
@@ -238,6 +270,16 @@ name|int
 name|VarArgsFrameOffset
 block|;
 comment|// Frame offset to start of varargs area.
+specifier|const
+name|HexagonTargetMachine
+operator|&
+name|HTM
+block|;
+specifier|const
+name|HexagonSubtarget
+operator|&
+name|Subtarget
+block|;
 name|bool
 name|CanReturnSmallStruct
 argument_list|(
@@ -254,16 +296,6 @@ argument|MVT VT
 argument_list|,
 argument|MVT PromotedLdStVT
 argument_list|)
-block|;
-specifier|const
-name|HexagonTargetMachine
-operator|&
-name|HTM
-block|;
-specifier|const
-name|HexagonSubtarget
-operator|&
-name|Subtarget
 block|;
 name|public
 operator|:
@@ -337,6 +369,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Return true if an FMA operation is faster than a pair of mul and add
+comment|/// instructions. fmuladd intrinsics will be expanded to FMAs when this
+comment|/// method returns true (and FMAs are legal), otherwise fmuladd is
+comment|/// expanded to mul + add.
+name|bool
+name|isFMAFasterThanFMulAndFAdd
+argument_list|(
+argument|EVT
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|// Should we expand the build vector with shuffles?
 name|bool
 name|shouldExpandBuildVectorWithShuffles
@@ -344,6 +388,16 @@ argument_list|(
 argument|EVT VT
 argument_list|,
 argument|unsigned DefinedValues
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isShuffleMaskLegal
+argument_list|(
+argument|const SmallVectorImpl<int>&Mask
+argument_list|,
+argument|EVT VT
 argument_list|)
 specifier|const
 name|override
@@ -387,7 +441,34 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerEXTRACT_SUBVECTOR_HVX
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerINSERT_VECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerVECTOR_SHUFFLE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerVECTOR_SHIFT
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -677,17 +758,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|MachineBasicBlock
-operator|*
-name|EmitInstrWithCustomInserter
-argument_list|(
-argument|MachineInstr&MI
-argument_list|,
-argument|MachineBasicBlock *BB
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|/// If a physical register, this returns the register that receives the
 comment|/// exception address on entry to an EH pad.
 name|unsigned
@@ -959,6 +1029,34 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|EVT
+name|getOptimalMemOpType
+argument_list|(
+name|uint64_t
+name|Size
+argument_list|,
+name|unsigned
+name|DstAlign
+argument_list|,
+name|unsigned
+name|SrcAlign
+argument_list|,
+name|bool
+name|IsMemset
+argument_list|,
+name|bool
+name|ZeroMemset
+argument_list|,
+name|bool
+name|MemcpyStrSrc
+argument_list|,
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|bool
 name|allowsMisalignedMemoryAccesses
 argument_list|(
@@ -1122,7 +1220,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// Hexagon_ISELLOWERING_H
+comment|// LLVM_LIB_TARGET_HEXAGON_HEXAGONISELLOWERING_H
 end_comment
 
 end_unit

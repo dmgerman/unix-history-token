@@ -466,7 +466,6 @@ argument_list|(
 argument|const MachineFunction *MF
 argument_list|)
 specifier|const
-name|override
 block|;
 specifier|const
 name|uint32_t

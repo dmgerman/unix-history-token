@@ -184,6 +184,15 @@ modifier|*
 name|getBottomBlock
 parameter_list|()
 function_decl|;
+comment|/// \brief Find the block that contains the loop control variable and the
+comment|/// loop test. This will return the latch block if it's one of the exiting
+comment|/// blocks. Otherwise, return the exiting block. Return 'null' when
+comment|/// multiple exiting blocks are present.
+name|MachineBasicBlock
+modifier|*
+name|findLoopControlBlock
+parameter_list|()
+function_decl|;
 name|void
 name|dump
 argument_list|()
@@ -305,6 +314,21 @@ return|return
 name|LI
 return|;
 block|}
+comment|/// \brief Find the block that either is the loop preheader, or could
+comment|/// speculatively be used as the preheader. This is e.g. useful to place
+comment|/// loop setup code. Code that cannot be speculated should not be placed
+comment|/// here. SpeculativePreheader is controlling whether it also tries to
+comment|/// find the speculative preheader if the regular preheader is not present.
+name|MachineBasicBlock
+operator|*
+name|findLoopPreheader
+argument_list|(
+argument|MachineLoop *L
+argument_list|,
+argument|bool SpeculativePreheader = false
+argument_list|)
+specifier|const
+block|;
 comment|/// The iterator interface to the top-level loops in the current function.
 typedef|typedef
 name|LoopInfoBase
@@ -598,7 +622,8 @@ block|{
 typedef|typedef
 specifier|const
 name|MachineLoop
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 end_expr_stmt
 
@@ -613,8 +638,7 @@ end_typedef
 
 begin_function
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
 specifier|const
@@ -631,12 +655,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -651,12 +673,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -683,7 +703,8 @@ operator|>
 block|{
 typedef|typedef
 name|MachineLoop
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 end_expr_stmt
 
@@ -698,8 +719,7 @@ end_typedef
 
 begin_function
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
 name|MachineLoop
@@ -715,12 +735,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -735,12 +753,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{

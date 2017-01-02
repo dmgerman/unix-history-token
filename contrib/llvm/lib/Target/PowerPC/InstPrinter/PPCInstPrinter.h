@@ -208,6 +208,16 @@ argument|const char *Modifier = nullptr
 argument_list|)
 block|;
 name|void
+name|printATBitsAsHint
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printU1ImmOperand
 argument_list|(
 argument|const MCInst *MI

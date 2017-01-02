@@ -72,6 +72,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/BlockFrequencyInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DiagnosticInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/PassManager.h"
 end_include
 
@@ -86,13 +104,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|BlockFrequencyInfo
-decl_stmt|;
-name|class
 name|DebugLoc
-decl_stmt|;
-name|class
-name|Function
 decl_stmt|;
 name|class
 name|LLVMContext
@@ -109,6 +121,12 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
+comment|/// The optimization diagnostic interface.
+comment|///
+comment|/// It allows reporting when optimizations are performed and when they are not
+comment|/// along with the reasons for it.  Hotness information of the corresponding
+comment|/// code region can be included in the remark if DiagnosticHotnessRequested is
+comment|/// enabled in the LLVM context.
 name|class
 name|OptimizationRemarkEmitter
 block|{
@@ -135,6 +153,24 @@ argument_list|(
 argument|BFI
 argument_list|)
 block|{}
+comment|/// \brief This variant can be used to generate ORE on demand (without the
+comment|/// analysis pass).
+comment|///
+comment|/// Note that this ctor has a very different cost depending on whether
+comment|/// F->getContext().getDiagnosticHotnessRequested() is on or not.  If it's off
+comment|/// the operation is free.
+comment|///
+comment|/// Whereas if DiagnosticHotnessRequested is on, it is fairly expensive
+comment|/// operation since BFI and all its required analyses are computed.  This is
+comment|/// for example useful for CGSCC passes that can't use function analyses
+comment|/// passes in the old PM.
+name|OptimizationRemarkEmitter
+argument_list|(
+name|Function
+operator|*
+name|F
+argument_list|)
+expr_stmt|;
 name|OptimizationRemarkEmitter
 argument_list|(
 name|OptimizationRemarkEmitter
@@ -181,14 +217,114 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// The new interface to emit remarks.
+name|void
+name|emit
+parameter_list|(
+name|DiagnosticInfoOptimizationBase
+modifier|&
+name|OptDiag
+parameter_list|)
+function_decl|;
+comment|/// Emit an optimization-applied message.
+comment|///
+comment|/// \p PassName is the name of the pass emitting the message. If -Rpass= is
+comment|/// given and \p PassName matches the regular expression in -Rpass, then the
+comment|/// remark will be emitted. \p Fn is the function triggering the remark, \p
+comment|/// DLoc is the debug location where the diagnostic is generated. \p V is the
+comment|/// IR Value that identifies the code region. \p Msg is the message string to
+comment|/// use.
+name|void
+name|emitOptimizationRemark
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+specifier|const
+name|DebugLoc
+modifier|&
+name|DLoc
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+comment|/// \brief Same as above but derives the IR Value for the code region and the
+comment|/// debug location from the Loop parameter \p L.
+name|void
+name|emitOptimizationRemark
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+comment|/// \brief Same as above but derives the debug location and the code region
+comment|/// from the debug location and the basic block of \p Inst, respectively.
+name|void
+name|emitOptimizationRemark
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+name|Instruction
+modifier|*
+name|Inst
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+block|{
+name|emitOptimizationRemark
+argument_list|(
+name|PassName
+argument_list|,
+name|Inst
+operator|->
+name|getDebugLoc
+argument_list|()
+argument_list|,
+name|Inst
+operator|->
+name|getParent
+argument_list|()
+argument_list|,
+name|Msg
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// Emit an optimization-missed message.
 comment|///
 comment|/// \p PassName is the name of the pass emitting the message. If
 comment|/// -Rpass-missed= is given and the name matches the regular expression in
-comment|/// -Rpass, then the remark will be emitted. \p Fn is the function triggering
-comment|/// the remark, \p DLoc is the debug location where the diagnostic is
-comment|/// generated. \p V is the IR Value that identifies the code region. \p Msg is
-comment|/// the message string to use.
+comment|/// -Rpass, then the remark will be emitted.  \p DLoc is the debug location
+comment|/// where the diagnostic is generated. \p V is the IR Value that identifies
+comment|/// the code region. \p Msg is the message string to use.  If \p IsVerbose is
+comment|/// true, the message is considered verbose and will only be emitted when
+comment|/// verbose output is turned on.
 name|void
 name|emitOptimizationRemarkMissed
 parameter_list|(
@@ -202,6 +338,7 @@ name|DebugLoc
 modifier|&
 name|DLoc
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -210,6 +347,11 @@ specifier|const
 name|Twine
 modifier|&
 name|Msg
+parameter_list|,
+name|bool
+name|IsVerbose
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Same as above but derives the IR Value for the code region and the
@@ -230,8 +372,339 @@ specifier|const
 name|Twine
 modifier|&
 name|Msg
+parameter_list|,
+name|bool
+name|IsVerbose
+init|=
+name|false
 parameter_list|)
 function_decl|;
+comment|/// \brief Same as above but derives the debug location and the code region
+comment|/// from the debug location and the basic block of \p Inst, respectively.
+name|void
+name|emitOptimizationRemarkMissed
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+name|Instruction
+modifier|*
+name|Inst
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|,
+name|bool
+name|IsVerbose
+init|=
+name|false
+parameter_list|)
+block|{
+name|emitOptimizationRemarkMissed
+argument_list|(
+name|PassName
+argument_list|,
+name|Inst
+operator|->
+name|getDebugLoc
+argument_list|()
+argument_list|,
+name|Inst
+operator|->
+name|getParent
+argument_list|()
+argument_list|,
+name|Msg
+argument_list|,
+name|IsVerbose
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Emit an optimization analysis remark message.
+comment|///
+comment|/// \p PassName is the name of the pass emitting the message. If
+comment|/// -Rpass-analysis= is given and \p PassName matches the regular expression
+comment|/// in -Rpass, then the remark will be emitted. \p DLoc is the debug location
+comment|/// where the diagnostic is generated. \p V is the IR Value that identifies
+comment|/// the code region. \p Msg is the message string to use. If \p IsVerbose is
+comment|/// true, the message is considered verbose and will only be emitted when
+comment|/// verbose output is turned on.
+name|void
+name|emitOptimizationRemarkAnalysis
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+specifier|const
+name|DebugLoc
+modifier|&
+name|DLoc
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|,
+name|bool
+name|IsVerbose
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Same as above but derives the IR Value for the code region and the
+comment|/// debug location from the Loop parameter \p L.
+name|void
+name|emitOptimizationRemarkAnalysis
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|,
+name|bool
+name|IsVerbose
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Same as above but derives the debug location and the code region
+comment|/// from the debug location and the basic block of \p Inst, respectively.
+name|void
+name|emitOptimizationRemarkAnalysis
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+name|Instruction
+modifier|*
+name|Inst
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|,
+name|bool
+name|IsVerbose
+init|=
+name|false
+parameter_list|)
+block|{
+name|emitOptimizationRemarkAnalysis
+argument_list|(
+name|PassName
+argument_list|,
+name|Inst
+operator|->
+name|getDebugLoc
+argument_list|()
+argument_list|,
+name|Inst
+operator|->
+name|getParent
+argument_list|()
+argument_list|,
+name|Msg
+argument_list|,
+name|IsVerbose
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief This variant allows specifying what should be emitted for missed
+comment|/// and analysis remarks in one call.
+comment|///
+comment|/// \p PassName is the name of the pass emitting the message. If
+comment|/// -Rpass-missed= is given and \p PassName matches the regular expression, \p
+comment|/// MsgForMissedRemark is emitted.
+comment|///
+comment|/// If -Rpass-analysis= is given and \p PassName matches the regular
+comment|/// expression, \p MsgForAnalysisRemark is emitted.
+comment|///
+comment|/// The debug location and the code region is derived from \p Inst. If \p
+comment|/// IsVerbose is true, the message is considered verbose and will only be
+comment|/// emitted when verbose output is turned on.
+name|void
+name|emitOptimizationRemarkMissedAndAnalysis
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+name|Instruction
+modifier|*
+name|Inst
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|MsgForMissedRemark
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|MsgForAnalysisRemark
+parameter_list|,
+name|bool
+name|IsVerbose
+init|=
+name|false
+parameter_list|)
+block|{
+name|emitOptimizationRemarkAnalysis
+argument_list|(
+name|PassName
+argument_list|,
+name|Inst
+argument_list|,
+name|MsgForAnalysisRemark
+argument_list|,
+name|IsVerbose
+argument_list|)
+expr_stmt|;
+name|emitOptimizationRemarkMissed
+argument_list|(
+name|PassName
+argument_list|,
+name|Inst
+argument_list|,
+name|MsgForMissedRemark
+argument_list|,
+name|IsVerbose
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Emit an optimization analysis remark related to floating-point
+comment|/// non-commutativity.
+comment|///
+comment|/// \p PassName is the name of the pass emitting the message. If
+comment|/// -Rpass-analysis= is given and \p PassName matches the regular expression
+comment|/// in -Rpass, then the remark will be emitted. \p Fn is the function
+comment|/// triggering the remark, \p DLoc is the debug location where the diagnostic
+comment|/// is generated.\p V is the IR Value that identifies the code region.  \p Msg
+comment|/// is the message string to use.
+name|void
+name|emitOptimizationRemarkAnalysisFPCommute
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+specifier|const
+name|DebugLoc
+modifier|&
+name|DLoc
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit an optimization analysis remark related to pointer aliasing.
+comment|///
+comment|/// \p PassName is the name of the pass emitting the message. If
+comment|/// -Rpass-analysis= is given and \p PassName matches the regular expression
+comment|/// in -Rpass, then the remark will be emitted. \p Fn is the function
+comment|/// triggering the remark, \p DLoc is the debug location where the diagnostic
+comment|/// is generated.\p V is the IR Value that identifies the code region.  \p Msg
+comment|/// is the message string to use.
+name|void
+name|emitOptimizationRemarkAnalysisAliasing
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+specifier|const
+name|DebugLoc
+modifier|&
+name|DLoc
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+comment|/// \brief Same as above but derives the IR Value for the code region and the
+comment|/// debug location from the Loop parameter \p L.
+name|void
+name|emitOptimizationRemarkAnalysisAliasing
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|PassName
+parameter_list|,
+name|Loop
+modifier|*
+name|L
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Msg
+parameter_list|)
+function_decl|;
+comment|/// \brief Whether we allow for extra compile-time budget to perform more
+comment|/// analysis to produce fewer false positives.
+comment|///
+comment|/// This is useful when reporting missed optimizations.  In this case we can
+comment|/// use the extra analysis (1) to filter trivial false positives or (2) to
+comment|/// provide more context so that non-trivial false positives can be quickly
+comment|/// detected by the user.
+name|bool
+name|allowExtraAnalysis
+argument_list|()
+specifier|const
+block|{
+comment|// For now, only allow this with -fsave-optimization-record since the -Rpass
+comment|// options are handled in the front-end.
+return|return
+name|F
+operator|->
+name|getContext
+argument_list|()
+operator|.
+name|getDiagnosticsOutputFile
+argument_list|()
+return|;
+block|}
 name|private
 label|:
 name|Function
@@ -242,17 +715,50 @@ name|BlockFrequencyInfo
 modifier|*
 name|BFI
 decl_stmt|;
+comment|/// If we generate BFI on demand, we need to free it when ORE is freed.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|BlockFrequencyInfo
+operator|>
+name|OwnedBFI
+expr_stmt|;
+comment|/// Compute hotness from IR value (currently assumed to be a block) if PGO is
+comment|/// available.
 name|Optional
 operator|<
 name|uint64_t
 operator|>
 name|computeHotness
 argument_list|(
+specifier|const
 name|Value
 operator|*
 name|V
 argument_list|)
 expr_stmt|;
+comment|/// Similar but use value from \p OptDiag and update hotness there.
+name|void
+name|computeHotness
+parameter_list|(
+name|DiagnosticInfoOptimizationBase
+modifier|&
+name|OptDiag
+parameter_list|)
+function_decl|;
+comment|/// \brief Only allow verbose messages if we know we're filtering by hotness
+comment|/// (BFI is only set in this case).
+name|bool
+name|shouldEmitVerbose
+parameter_list|()
+block|{
+return|return
+name|BFI
+operator|!=
+name|nullptr
+return|;
+block|}
 name|OptimizationRemarkEmitter
 argument_list|(
 specifier|const
@@ -275,6 +781,39 @@ name|delete
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// \brief Add a small namespace to avoid name clashes with the classes used in
+comment|/// the streaming interface.  We want these to be short for better
+comment|/// write/readability.
+name|namespace
+name|ore
+block|{
+name|using
+name|NV
+init|=
+name|DiagnosticInfoOptimizationBase
+operator|::
+name|Argument
+decl_stmt|;
+name|using
+name|setIsVerbose
+init|=
+name|DiagnosticInfoOptimizationBase
+operator|::
+name|setIsVerbose
+decl_stmt|;
+name|using
+name|setExtraArgs
+init|=
+name|DiagnosticInfoOptimizationBase
+operator|::
+name|setExtraArgs
+decl_stmt|;
+block|}
+comment|/// OptimizationRemarkEmitter legacy analysis pass
+comment|///
+comment|/// Note that this pass shouldn't generally be marked as preserved by other
+comment|/// passes.  It's holding onto BFI, so if the pass does not preserve BFI, BFI
+comment|/// could be freed.
 name|class
 name|OptimizationRemarkEmitterWrapperPass
 range|:
@@ -347,8 +886,8 @@ name|OptimizationRemarkEmitterAnalysis
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -365,10 +904,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

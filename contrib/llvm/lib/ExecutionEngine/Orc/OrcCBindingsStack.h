@@ -190,8 +190,6 @@ name|GenericHandle
 argument_list|()
 block|{}
 name|virtual
-name|orc
-operator|::
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
@@ -241,8 +239,6 @@ argument_list|(
 argument|std::move(Handle)
 argument_list|)
 block|{}
-name|orc
-operator|::
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
@@ -539,7 +535,7 @@ specifier|static
 name|PtrTy
 name|fromTargetAddress
 argument_list|(
-argument|orc::TargetAddress Addr
+argument|JITTargetAddress Addr
 argument_list|)
 block|{
 return|return
@@ -560,32 +556,33 @@ return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
-name|orc
-operator|::
-name|TargetAddress
+begin_function
+name|JITTargetAddress
 name|createLazyCompileCallback
-argument_list|(
-argument|LLVMOrcLazyCompileCallbackFn Callback
-argument_list|,
-argument|void *CallbackCtx
-argument_list|)
+parameter_list|(
+name|LLVMOrcLazyCompileCallbackFn
+name|Callback
+parameter_list|,
+name|void
+modifier|*
+name|CallbackCtx
+parameter_list|)
 block|{
 name|auto
 name|CCInfo
-operator|=
+init|=
 name|CCMgr
 operator|->
 name|getCompileCallback
 argument_list|()
-block|;
+decl_stmt|;
 name|CCInfo
 operator|.
 name|setCompileAction
 argument_list|(
-argument|[=]() -> orc::TargetAddress {       return Callback(wrap(this), CallbackCtx);     }
+argument|[=]() -> JITTargetAddress {       return Callback(wrap(this), CallbackCtx);     }
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|CCInfo
 operator|.
@@ -593,20 +590,18 @@ name|getAddress
 argument_list|()
 return|;
 block|}
-end_expr_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 name|LLVMOrcErrorCode
 name|createIndirectStub
-argument_list|(
+parameter_list|(
 name|StringRef
 name|StubName
-argument_list|,
-name|orc
-operator|::
-name|TargetAddress
+parameter_list|,
+name|JITTargetAddress
 name|Addr
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|mapError
@@ -626,20 +621,18 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 name|LLVMOrcErrorCode
 name|setIndirectStubPointer
-argument_list|(
+parameter_list|(
 name|StringRef
 name|Name
-argument_list|,
-name|orc
-operator|::
-name|TargetAddress
+parameter_list|,
+name|JITTargetAddress
 name|Addr
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|mapError
@@ -655,16 +648,14 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|std
 operator|::
 name|unique_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|createResolver
 argument_list|(
@@ -678,133 +669,25 @@ name|orc
 operator|::
 name|createLambdaResolver
 argument_list|(
-index|[
-name|this
-operator|,
-name|ExternalResolver
-operator|,
-name|ExternalResolverCtx
-index|]
-operator|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-operator|)
-block|{
+argument|[this
+argument_list|,
+argument|ExternalResolver
+argument_list|,
+argument|ExternalResolverCtx](const std::string&Name)             -> JITSymbol {
 comment|// Search order:
 comment|// 1. JIT'd symbols.
 comment|// 2. Runtime overrides.
 comment|// 3. External resolver (if present).
-if|if
-condition|(
-name|auto
-name|Sym
-init|=
-name|CODLayer
-operator|.
-name|findSymbol
-argument_list|(
-name|Name
+argument|if (auto Sym = CODLayer.findSymbol(Name, true))             return Sym;           if (auto Sym = CXXRuntimeOverrides.searchOverrides(Name))             return Sym;            if (ExternalResolver)             return JITSymbol(                 ExternalResolver(Name.c_str(), ExternalResolverCtx),                 llvm::JITSymbolFlags::Exported);            return JITSymbol(nullptr);         }
 argument_list|,
-name|true
-argument_list|)
-condition|)
-return|return
-name|Sym
-operator|.
-name|toRuntimeDyldSymbol
-argument_list|()
-return|;
-if|if
-condition|(
-name|auto
-name|Sym
-init|=
-name|CXXRuntimeOverrides
-operator|.
-name|searchOverrides
-argument_list|(
-name|Name
-argument_list|)
-condition|)
-return|return
-name|Sym
-return|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|ExternalResolver
-condition|)
-return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
-argument_list|(
-name|ExternalResolver
-argument_list|(
-name|Name
-operator|.
-name|c_str
-argument_list|()
-argument_list|,
-name|ExternalResolverCtx
-argument_list|)
-argument_list|,
-name|llvm
-operator|::
-name|JITSymbolFlags
-operator|::
-name|Exported
-argument_list|)
-return|;
-end_if
-
-begin_return
-return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
-argument_list|(
-name|nullptr
-argument_list|)
-return|;
-end_return
-
-begin_expr_stmt
-unit|},
-index|[]
-operator|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-operator|)
-block|{
-return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
-argument_list|(
-name|nullptr
+argument|[](const std::string&Name) {           return JITSymbol(nullptr);         }
 argument_list|)
 return|;
 block|}
 end_expr_stmt
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
 begin_expr_stmt
-unit|}    template
+name|template
 operator|<
 name|typename
 name|LayerT
@@ -1206,15 +1089,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|orc
-operator|::
+begin_decl_stmt
 name|JITSymbol
 name|findSymbol
 argument_list|(
-argument|const std::string&Name
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
 argument_list|,
-argument|bool ExportedSymbolsOnly
+name|bool
+name|ExportedSymbolsOnly
 argument_list|)
 block|{
 if|if
@@ -1234,9 +1121,6 @@ condition|)
 return|return
 name|Sym
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|CODLayer
 operator|.
@@ -1250,19 +1134,25 @@ argument_list|,
 name|ExportedSymbolsOnly
 argument_list|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
-begin_expr_stmt
-unit|}    orc
-operator|::
+begin_decl_stmt
 name|JITSymbol
 name|findSymbolIn
 argument_list|(
-argument|ModuleHandleT H
+name|ModuleHandleT
+name|H
 argument_list|,
-argument|const std::string&Name
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
 argument_list|,
-argument|bool ExportedSymbolsOnly
+name|bool
+name|ExportedSymbolsOnly
 argument_list|)
 block|{
 return|return
@@ -1279,7 +1169,7 @@ name|ExportedSymbolsOnly
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_expr_stmt
 specifier|const

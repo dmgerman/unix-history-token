@@ -249,6 +249,32 @@ name|tell
 argument_list|()
 return|;
 block|}
+name|TypeRecordKind
+name|kind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+comment|/// Returns the number of bytes remaining before this record is larger than
+comment|/// the maximum record length. Accounts for the extra two byte size field in
+comment|/// the header.
+name|size_t
+name|maxBytesRemaining
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxRecordLength
+operator|-
+name|size
+argument_list|()
+operator|-
+literal|2
+return|;
+block|}
 name|void
 name|truncate
 parameter_list|(
@@ -287,6 +313,10 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
+name|Kind
+operator|=
+name|K
+expr_stmt|;
 name|writeTypeRecordKind
 argument_list|(
 name|K
@@ -295,6 +325,9 @@ expr_stmt|;
 block|}
 name|private
 label|:
+name|TypeRecordKind
+name|Kind
+decl_stmt|;
 name|llvm
 operator|::
 name|SmallVector

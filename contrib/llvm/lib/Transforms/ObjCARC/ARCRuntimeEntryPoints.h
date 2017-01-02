@@ -454,9 +454,7 @@ modifier|*
 modifier|&
 name|Decl
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 parameter_list|)
 block|{
@@ -554,9 +552,7 @@ modifier|*
 modifier|&
 name|Decl
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 parameter_list|,
 name|bool
@@ -673,9 +669,7 @@ modifier|*
 modifier|&
 name|Decl
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 parameter_list|)
 block|{

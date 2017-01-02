@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamArray.h"
+file|"llvm/DebugInfo/MSF/StreamArray.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamRef.h"
+file|"llvm/DebugInfo/MSF/StreamRef.h"
 end_include
 
 begin_include
@@ -202,21 +202,23 @@ name|ModuleSubstream
 argument_list|(
 argument|ModuleSubstreamKind Kind
 argument_list|,
-argument|StreamRef Data
+argument|msf::ReadableStreamRef Data
 argument_list|)
 empty_stmt|;
 specifier|static
 name|Error
 name|initialize
-parameter_list|(
-name|StreamRef
+argument_list|(
+name|msf
+operator|::
+name|ReadableStreamRef
 name|Stream
-parameter_list|,
+argument_list|,
 name|ModuleSubstream
-modifier|&
+operator|&
 name|Info
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|uint32_t
 name|getRecordLength
 argument_list|()
@@ -227,7 +229,9 @@ name|getSubstreamKind
 argument_list|()
 specifier|const
 expr_stmt|;
-name|StreamRef
+name|msf
+operator|::
+name|ReadableStreamRef
 name|getRecordData
 argument_list|()
 specifier|const
@@ -237,17 +241,35 @@ label|:
 name|ModuleSubstreamKind
 name|Kind
 decl_stmt|;
-name|StreamRef
+name|msf
+operator|::
+name|ReadableStreamRef
 name|Data
-decl_stmt|;
+expr_stmt|;
 block|}
 empty_stmt|;
+typedef|typedef
+name|msf
+operator|::
+name|VarStreamArray
+operator|<
+name|ModuleSubstream
+operator|>
+name|ModuleSubstreamArray
+expr_stmt|;
+block|}
+comment|// namespace codeview
+name|namespace
+name|msf
+block|{
 name|template
 operator|<
 operator|>
 expr|struct
 name|VarStreamArrayExtractor
 operator|<
+name|codeview
+operator|::
 name|ModuleSubstream
 operator|>
 block|{
@@ -255,13 +277,15 @@ name|Error
 name|operator
 argument_list|()
 operator|(
-name|StreamRef
+name|ReadableStreamRef
 name|Stream
 operator|,
 name|uint32_t
 operator|&
 name|Length
 operator|,
+name|codeview
+operator|::
 name|ModuleSubstream
 operator|&
 name|Info
@@ -273,6 +297,8 @@ condition|(
 name|auto
 name|EC
 init|=
+name|codeview
+operator|::
 name|ModuleSubstream
 operator|::
 name|initialize
@@ -301,18 +327,19 @@ return|;
 block|}
 block|}
 empty_stmt|;
-typedef|typedef
-name|VarStreamArray
-operator|<
-name|ModuleSubstream
-operator|>
-name|ModuleSubstreamArray
-expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// namespace msf
+end_comment
+
+begin_comment
 unit|}
+comment|// namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

@@ -197,6 +197,22 @@ name|PPC970_Shift
 comment|// Branch Unit
 block|}
 enum|;
+enum|enum
+block|{
+comment|/// Shift count to bypass PPC970 flags
+name|NewDef_Shift
+init|=
+literal|6
+block|,
+comment|/// The VSX instruction that uses VSX register (vs0-vs63), instead of VMX
+comment|/// register (v0-v31).
+name|UseVSXReg
+init|=
+literal|0x1
+operator|<<
+name|NewDef_Shift
+block|}
+enum|;
 block|}
 comment|// end namespace PPCII
 name|class
@@ -522,15 +538,17 @@ specifier|const
 name|override
 block|;
 name|unsigned
-name|RemoveBranch
+name|removeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int *BytesRemoved = nullptr
 argument_list|)
 specifier|const
 name|override
 block|;
 name|unsigned
-name|InsertBranch
+name|insertBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -541,6 +559,8 @@ argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|const DebugLoc&DL
+argument_list|,
+argument|int *BytesAdded = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -643,7 +663,7 @@ specifier|const
 name|override
 block|;
 name|bool
-name|ReverseBranchCondition
+name|reverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
@@ -829,11 +849,12 @@ comment|/// GetInstSize - Return the number of bytes of code the specified
 comment|/// instruction may be.  This returns the maximum number of bytes.
 comment|///
 name|unsigned
-name|GetInstSizeInBytes
+name|getInstSizeInBytes
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|getNoopForMachoTarget
@@ -900,6 +921,57 @@ argument|MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
+block|;
+specifier|static
+name|bool
+name|isVFRegister
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+return|return
+name|Reg
+operator|>=
+name|PPC
+operator|::
+name|VF0
+operator|&&
+name|Reg
+operator|<=
+name|PPC
+operator|::
+name|VF31
+return|;
+block|}
+specifier|static
+name|bool
+name|isVRRegister
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+return|return
+name|Reg
+operator|>=
+name|PPC
+operator|::
+name|V0
+operator|&&
+name|Reg
+operator|<=
+name|PPC
+operator|::
+name|V31
+return|;
+block|}
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|updatedRC
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

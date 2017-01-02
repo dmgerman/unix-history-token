@@ -100,7 +100,9 @@ block|;
 name|Error
 name|createIndexFile
 argument_list|(
-argument|ArrayRef<StringRef> SourceFiles
+argument|ArrayRef<std::string> SourceFiles
+argument_list|,
+argument|const coverage::CoverageMapping&Coverage
 argument_list|)
 name|override
 block|;
@@ -144,6 +146,8 @@ name|void
 name|renderSourceName
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|bool WholeFile
 argument_list|)
 name|override
 block|;
@@ -256,6 +260,26 @@ argument_list|,
 argument|CoverageSegmentArray Segments
 argument_list|,
 argument|unsigned ViewDepth
+argument_list|)
+name|override
+block|;
+name|void
+name|renderTitle
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|StringRef Title
+argument_list|)
+name|override
+block|;
+name|void
+name|renderTableHeader
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|unsigned FirstUncoveredLineNo
+argument_list|,
+argument|unsigned IndentLevel
 argument_list|)
 name|override
 block|;

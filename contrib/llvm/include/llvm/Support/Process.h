@@ -124,13 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Chrono.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/TimeValue.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -182,28 +182,38 @@ function_decl|;
 comment|/// This static function will set \p user_time to the amount of CPU time
 comment|/// spent in user (non-kernel) mode and \p sys_time to the amount of CPU
 comment|/// time spent in system (kernel) mode.  If the operating system does not
-comment|/// support collection of these metrics, a zero TimeValue will be for both
+comment|/// support collection of these metrics, a zero duration will be for both
 comment|/// values.
-comment|/// \param elapsed Returns the TimeValue::now() giving current time
+comment|/// \param elapsed Returns the system_clock::now() giving current time
 comment|/// \param user_time Returns the current amount of user time for the process
 comment|/// \param sys_time Returns the current amount of system time for the process
 specifier|static
 name|void
 name|GetTimeUsage
-parameter_list|(
-name|TimeValue
-modifier|&
+argument_list|(
+name|TimePoint
+operator|<
+operator|>
+operator|&
 name|elapsed
-parameter_list|,
-name|TimeValue
-modifier|&
+argument_list|,
+name|std
+operator|::
+name|chrono
+operator|::
+name|nanoseconds
+operator|&
 name|user_time
-parameter_list|,
-name|TimeValue
-modifier|&
+argument_list|,
+name|std
+operator|::
+name|chrono
+operator|::
+name|nanoseconds
+operator|&
 name|sys_time
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// This function makes the necessary calls to the operating system to
 comment|/// prevent core files or any other kind of large memory dumps that can
 comment|/// occur when a program fails.

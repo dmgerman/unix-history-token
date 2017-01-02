@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
@@ -141,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -159,6 +171,8 @@ specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|TRI
+init|=
+name|nullptr
 decl_stmt|;
 name|SparseSet
 operator|<
@@ -192,15 +206,9 @@ label|:
 comment|/// \brief Constructs a new empty LivePhysRegs set.
 name|LivePhysRegs
 argument_list|()
-operator|:
-name|TRI
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|LiveRegs
-argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// \brief Constructs and initialize an empty LivePhysRegs set.
 name|LivePhysRegs
 argument_list|(
@@ -236,20 +244,14 @@ comment|/// \brief Clear and initialize the LivePhysRegs set.
 name|void
 name|init
 argument_list|(
-argument|const TargetRegisterInfo *TRI
+argument|const TargetRegisterInfo&TRI
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|TRI
-operator|&&
-literal|"Invalid TargetRegisterInfo pointer."
-argument_list|)
-block|;
 name|this
 operator|->
 name|TRI
 operator|=
+operator|&
 name|TRI
 block|;
 name|LiveRegs
@@ -262,7 +264,7 @@ operator|.
 name|setUniverse
 argument_list|(
 name|TRI
-operator|->
+operator|.
 name|getNumRegs
 argument_list|()
 argument_list|)
@@ -593,6 +595,19 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+name|private
+label|:
+comment|/// Adds live-in registers from basic block @p MBB, taking associated
+comment|/// lane masks into consideration.
+name|void
+name|addBlockLiveIns
+parameter_list|(
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 specifier|inline
@@ -622,17 +637,42 @@ return|return
 name|OS
 return|;
 block|}
+comment|/// Compute the live-in list for \p MBB assuming all of its successors live-in
+comment|/// lists are up-to-date. Uses the given LivePhysReg instance \p LiveRegs; This
+comment|/// is just here to avoid repeated heap allocations when calling this multiple
+comment|/// times in a pass.
+name|void
+name|computeLiveIns
+parameter_list|(
+name|LivePhysRegs
+modifier|&
+name|LiveRegs
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|TRI
+parameter_list|,
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_LIVEPHYSREGS_H
+end_comment
 
 end_unit
 

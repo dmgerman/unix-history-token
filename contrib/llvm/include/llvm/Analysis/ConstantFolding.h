@@ -99,10 +99,16 @@ name|class
 name|ArrayRef
 expr_stmt|;
 name|class
+name|CallSite
+decl_stmt|;
+name|class
 name|Constant
 decl_stmt|;
 name|class
 name|ConstantExpr
+decl_stmt|;
+name|class
+name|ConstantVector
 decl_stmt|;
 name|class
 name|DataLayout
@@ -172,17 +178,17 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// ConstantFoldConstantExpression - Attempt to fold the constant expression
-comment|/// using the specified DataLayout.  If successful, the constant result is
-comment|/// result is returned, if not, null is returned.
+comment|/// ConstantFoldConstant - Attempt to fold the constant using the
+comment|/// specified DataLayout.
+comment|/// If successful, the constant result is returned, if not, null is returned.
 name|Constant
 modifier|*
-name|ConstantFoldConstantExpression
+name|ConstantFoldConstant
 parameter_list|(
 specifier|const
-name|ConstantExpr
+name|Constant
 modifier|*
-name|CE
+name|C
 parameter_list|,
 specifier|const
 name|DataLayout
@@ -210,45 +216,6 @@ argument_list|(
 name|Instruction
 operator|*
 name|I
-argument_list|,
-name|ArrayRef
-operator|<
-name|Constant
-operator|*
-operator|>
-name|Ops
-argument_list|,
-specifier|const
-name|DataLayout
-operator|&
-name|DL
-argument_list|,
-specifier|const
-name|TargetLibraryInfo
-operator|*
-name|TLI
-operator|=
-name|nullptr
-argument_list|)
-decl_stmt|;
-comment|/// ConstantFoldInstOperands - Attempt to constant fold an instruction with the
-comment|/// specified operands.  If successful, the constant result is returned, if not,
-comment|/// null is returned.  Note that this function can fail when attempting to
-comment|/// fold instructions like loads and stores, which have no constant expression
-comment|/// form.
-comment|///
-comment|/// This function doesn't work for compares (use ConstantFoldCompareInstOperands
-comment|/// for this) and GEPs.
-name|Constant
-modifier|*
-name|ConstantFoldInstOperands
-argument_list|(
-name|unsigned
-name|Opcode
-argument_list|,
-name|Type
-operator|*
-name|DestTy
 argument_list|,
 name|ArrayRef
 operator|<
@@ -498,6 +465,20 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
+comment|/// \brief Check whether the given call has no side-effects.
+comment|/// Specifically checks for math routimes which sometimes set errno.
+name|bool
+name|isMathLibCallNoop
+parameter_list|(
+name|CallSite
+name|CS
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

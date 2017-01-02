@@ -3248,7 +3248,8 @@ operator|>
 block|{
 typedef|typedef
 name|SUnit
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 end_expr_stmt
 
@@ -3261,9 +3262,7 @@ end_typedef
 
 begin_function
 specifier|static
-specifier|inline
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
 name|SUnit
@@ -3279,12 +3278,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -3301,12 +3298,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -3341,6 +3336,8 @@ operator|*
 operator|>
 block|{
 typedef|typedef
+name|pointer_iterator
+operator|<
 name|std
 operator|::
 name|vector
@@ -3349,6 +3346,7 @@ name|SUnit
 operator|>
 operator|::
 name|iterator
+operator|>
 name|nodes_iterator
 expr_stmt|;
 specifier|static
@@ -3359,12 +3357,15 @@ argument|ScheduleDAG *G
 argument_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|G
 operator|->
 name|SUnits
 operator|.
 name|begin
 argument_list|()
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -3375,12 +3376,15 @@ argument|ScheduleDAG *G
 argument_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|G
 operator|->
 name|SUnits
 operator|.
 name|end
 argument_list|()
+argument_list|)
 return|;
 block|}
 block|}

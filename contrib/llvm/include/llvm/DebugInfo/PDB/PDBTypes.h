@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<functional>
+file|"llvm/DebugInfo/PDB/Raw/RawTypes.h"
 end_include
 
 begin_include
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
 end_include
 
 begin_decl_stmt
@@ -246,20 +252,6 @@ literal|1
 operator|,
 block|}
 empty_stmt|;
-comment|/// Defines a 128-bit unique identifier.  This maps to a GUID on Windows, but
-comment|/// is abstracted here for the purposes of non-Windows platforms that don't have
-comment|/// the GUID structure defined.
-struct|struct
-name|PDB_UniqueId
-block|{
-name|char
-name|Guid
-index|[
-literal|16
-index|]
-decl_stmt|;
-block|}
-struct|;
 comment|/// An enumeration indicating the type of data contained in this table.
 name|enum
 name|class

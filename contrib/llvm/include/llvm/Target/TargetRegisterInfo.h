@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -145,25 +151,6 @@ decl_stmt|;
 name|class
 name|LiveRegMatrix
 decl_stmt|;
-comment|/// A bitmask representing the covering of a register with sub-registers.
-comment|///
-comment|/// This is typically used to track liveness at sub-register granularity.
-comment|/// Lane masks for sub-register indices are similar to register units for
-comment|/// physical registers. The individual bits in a lane mask can't be assigned
-comment|/// any specific meaning. They can be used to check if two sub-register
-comment|/// indices overlap.
-comment|///
-comment|/// Iff the target has a register such that:
-comment|///
-comment|///   getSubReg(Reg, A) overlaps getSubReg(Reg, B)
-comment|///
-comment|/// then:
-comment|///
-comment|///   (getSubRegIndexLaneMask(A)& getSubRegIndexLaneMask(B)) != 0
-typedef|typedef
-name|unsigned
-name|LaneBitmask
-typedef|;
 name|class
 name|TargetRegisterClass
 block|{
@@ -306,6 +293,34 @@ name|MC
 operator|->
 name|getNumRegs
 argument_list|()
+return|;
+block|}
+name|iterator_range
+operator|<
+name|SmallVectorImpl
+operator|<
+name|MCPhysReg
+operator|>
+operator|::
+name|const_iterator
+operator|>
+name|getRegisters
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|MC
+operator|->
+name|begin
+argument_list|()
+argument_list|,
+name|MC
+operator|->
+name|end
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// Return the specified register in the class.
@@ -883,7 +898,7 @@ comment|// List of regclasses
 end_comment
 
 begin_decl_stmt
-name|unsigned
+name|LaneBitmask
 name|CoveringLanes
 decl_stmt|;
 end_decl_stmt
@@ -906,7 +921,7 @@ argument|const char *const *SRINames
 argument_list|,
 argument|const LaneBitmask *SRILaneMasks
 argument_list|,
-argument|unsigned CoveringLanes
+argument|LaneBitmask CoveringLanes
 argument_list|)
 end_macro
 
@@ -1768,26 +1783,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|virtual
-specifier|const
-name|MCPhysReg
-modifier|*
-name|getCalleeSavedRegsViaCopy
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-decl|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
-end_decl_stmt
-
 begin_comment
 comment|/// Return a mask of call-preserved registers for the given calling convention
 end_comment
@@ -1961,11 +1956,35 @@ comment|/// register is a special register that has particular uses and should b
 end_comment
 
 begin_comment
-comment|/// considered unavailable at all times, e.g. SP, RA. This is
+comment|/// considered unavailable at all times, e.g. stack pointer, return address.
 end_comment
 
 begin_comment
-comment|/// used by register scavenger to determine what registers are free.
+comment|/// A reserved register:
+end_comment
+
+begin_comment
+comment|/// - is not allocatable
+end_comment
+
+begin_comment
+comment|/// - is considered always live
+end_comment
+
+begin_comment
+comment|/// - is ignored by liveness tracking
+end_comment
+
+begin_comment
+comment|/// It is often necessary to reserve the super registers of a reserved
+end_comment
+
+begin_comment
+comment|/// register as well, to avoid them getting allocated indirectly. You may use
+end_comment
+
+begin_comment
+comment|/// markSuperRegs() and checkAllSuperRegsMarked() in this case.
 end_comment
 
 begin_decl_stmt
@@ -1982,6 +2001,30 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Returns true if PhysReg is unallocatable and constant throughout the
+end_comment
+
+begin_comment
+comment|/// function.  Used by MachineRegisterInfo::isConstantPhysReg().
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|bool
+name|isConstantPhysReg
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -2104,7 +2147,7 @@ comment|// subreg index DefSubReg, reading from another source with class SrcRC 
 end_comment
 
 begin_comment
-comment|// subregister SrcSubReg return true if this is a preferrable copy
+comment|// subregister SrcSubReg return true if this is a preferable copy
 end_comment
 
 begin_comment
@@ -3468,6 +3511,32 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Returns true if the target requires using the RegScavenger directly for
+end_comment
+
+begin_comment
+comment|/// frame elimination despite using requiresFrameIndexScavenging.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|bool
+name|requiresFrameIndexReplacementScavenging
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Returns true if the target wants the LocalStackAllocation pass to be run
 end_comment
 
@@ -4003,6 +4072,59 @@ argument_list|)
 decl|const
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Mark a register and all its aliases as reserved in the given set.
+end_comment
+
+begin_decl_stmt
+name|void
+name|markSuperRegs
+argument_list|(
+name|BitVector
+operator|&
+name|RegisterSet
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Returns true if for every register in the set all super registers are part
+end_comment
+
+begin_comment
+comment|/// of the set as well.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|checkAllSuperRegsMarked
+argument_list|(
+specifier|const
+name|BitVector
+operator|&
+name|RegisterSet
+argument_list|,
+name|ArrayRef
+operator|<
+name|MCPhysReg
+operator|>
+name|Exceptions
+operator|=
+name|ArrayRef
+operator|<
+name|MCPhysReg
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 
@@ -4667,20 +4789,6 @@ specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|TRI
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Create Printable object to print LaneBitmasks on a \ref raw_ostream.
-end_comment
-
-begin_function_decl
-name|Printable
-name|PrintLaneMask
-parameter_list|(
-name|LaneBitmask
-name|LaneMask
 parameter_list|)
 function_decl|;
 end_function_decl

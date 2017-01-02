@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/TinyPtrVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Function.h"
 end_include
 
@@ -237,97 +243,73 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// \brief An abstract set of preserved analyses following a transformation pass
-comment|/// run.
+comment|/// A special type used by analysis passes to provide an address that
+comment|/// identifies that particular analysis pass type.
 comment|///
-comment|/// When a transformation pass is run, it can return a set of analyses whose
-comment|/// results were preserved by that transformation. The default set is "none",
-comment|/// and preserving analyses must be done explicitly.
+comment|/// Analysis passes should have a static data member of this type and derive
+comment|/// from the \c AnalysisInfoMixin to get a static ID method used to identify
+comment|/// the analysis in the pass management infrastructure.
+struct|struct
+name|alignas
+argument_list|(
+literal|8
+argument_list|)
+name|AnalysisKey
+block|{}
+struct|;
+comment|/// A special type used to provide an address that identifies a set of related
+comment|/// analyses.
 comment|///
-comment|/// There is also an explicit all state which can be used (for example) when
-comment|/// the IR is not mutated at all.
+comment|/// These sets are primarily used below to mark sets of analyses as preserved.
+comment|/// An example would be analyses depending only on the CFG of a function.
+comment|/// A transformation can mark that it is preserving the CFG of a function and
+comment|/// then analyses can check for this rather than each transform having to fully
+comment|/// enumerate every analysis preserved.
+struct|struct
+name|alignas
+argument_list|(
+literal|8
+argument_list|)
+name|AnalysisSetKey
+block|{}
+struct|;
+comment|/// Class for tracking what analyses are preserved after a transformation pass
+comment|/// runs over some unit of IR.
+comment|///
+comment|/// Transformation passes build and return these objects when run over the IR
+comment|/// to communicate which analyses remain valid afterward. For most passes this
+comment|/// is fairly simple: if they don't change anything all analyses are preserved,
+comment|/// otherwise only a short list of analyses that have been explicitly updated
+comment|/// are preserved.
+comment|///
+comment|/// This class also provides the ability to mark abstract *sets* of analyses as
+comment|/// preserved. These sets allow passes to indicate that they preserve broad
+comment|/// aspects of the IR (such as its CFG) and analyses to opt in to that being
+comment|/// sufficient without the passes having to fully enumerate such analyses.
+comment|///
+comment|/// Finally, this class can represent "abandoning" an analysis, which marks it
+comment|/// as not-preserved even if it would be covered by some abstract set of
+comment|/// analyses.
+comment|///
+comment|/// Given a `PreservedAnalyses` object, an analysis will typically want to
+comment|/// figure out whether it is preserved. In the example below, MyAnalysisType is
+comment|/// preserved if it's not abandoned, and (a) it's explicitly marked as
+comment|/// preserved, (b), the set AllAnalysesOn<MyIRUnit> is preserved, or (c) both
+comment|/// AnalysisSetA and AnalysisSetB are preserved.
+comment|///
+comment|/// ```
+comment|///   auto PAC = PA.getChecker<MyAnalysisType>();
+comment|///   if (PAC.preserved() || PAC.preservedSet<AllAnalysesOn<MyIRUnit>>() ||
+comment|///       (PAC.preservedSet<AnalysisSetA>()&&
+comment|///        PAC.preservedSet<AnalysisSetB>())) {
+comment|///     // The analysis has been successfully preserved ...
+comment|///   }
+comment|/// ```
 name|class
 name|PreservedAnalyses
 block|{
 name|public
 label|:
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|PreservedAnalyses
-argument_list|()
-block|{}
-name|PreservedAnalyses
-argument_list|(
-specifier|const
-name|PreservedAnalyses
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|PreservedPassIDs
-argument_list|(
-argument|Arg.PreservedPassIDs
-argument_list|)
-block|{}
-name|PreservedAnalyses
-argument_list|(
-name|PreservedAnalyses
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|PreservedPassIDs
-argument_list|(
-argument|std::move(Arg.PreservedPassIDs)
-argument_list|)
-block|{}
-name|friend
-name|void
-name|swap
-argument_list|(
-argument|PreservedAnalyses&LHS
-argument_list|,
-argument|PreservedAnalyses&RHS
-argument_list|)
-block|{
-name|using
-name|std
-operator|::
-name|swap
-block|;
-name|swap
-argument_list|(
-name|LHS
-operator|.
-name|PreservedPassIDs
-argument_list|,
-name|RHS
-operator|.
-name|PreservedPassIDs
-argument_list|)
-block|;   }
-name|PreservedAnalyses
-operator|&
-name|operator
-operator|=
-operator|(
-name|PreservedAnalyses
-name|RHS
-operator|)
-block|{
-name|swap
-argument_list|(
-operator|*
-name|this
-argument_list|,
-name|RHS
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 comment|/// \brief Convenience factory function for the empty preserved set.
 specifier|static
 name|PreservedAnalyses
@@ -350,26 +332,23 @@ name|PA
 decl_stmt|;
 name|PA
 operator|.
-name|PreservedPassIDs
+name|PreservedIDs
 operator|.
 name|insert
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|AllPassesID
+operator|&
+name|AllAnalysesKey
 argument_list|)
 expr_stmt|;
 return|return
 name|PA
 return|;
 block|}
-comment|/// \brief Mark a particular pass as preserved, adding it to the set.
+comment|/// Mark an analysis as preserved.
 name|template
 operator|<
 name|typename
-name|PassT
+name|AnalysisT
 operator|>
 name|void
 name|preserve
@@ -377,45 +356,143 @@ argument_list|()
 block|{
 name|preserve
 argument_list|(
-name|PassT
+name|AnalysisT
 operator|::
 name|ID
 argument_list|()
 argument_list|)
 block|; }
-comment|/// \brief Mark an abstract PassID as preserved, adding it to the set.
+comment|/// Mark an analysis as preserved using its ID.
 name|void
 name|preserve
 argument_list|(
-argument|void *PassID
+argument|AnalysisKey *ID
 argument_list|)
 block|{
+comment|// Clear this ID from the explicit not-preserved set if present.
+name|NotPreservedAnalysisIDs
+operator|.
+name|erase
+argument_list|(
+name|ID
+argument_list|)
+block|;
+comment|// If we're not already preserving all analyses (other than those in
+comment|// NotPreservedAnalysisIDs).
 if|if
 condition|(
 operator|!
 name|areAllPreserved
 argument_list|()
 condition|)
-name|PreservedPassIDs
+name|PreservedIDs
 operator|.
 name|insert
 argument_list|(
-name|PassID
+name|ID
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// Mark an analysis set as preserved.
+name|template
+operator|<
+name|typename
+name|AnalysisSetT
+operator|>
+name|void
+name|preserveSet
+argument_list|()
+block|{
+name|preserveSet
+argument_list|(
+name|AnalysisSetT
+operator|::
+name|ID
+argument_list|()
+argument_list|)
+block|;   }
+comment|/// Mark an analysis set as preserved using its ID.
+name|void
+name|preserveSet
+argument_list|(
+argument|AnalysisSetKey *ID
+argument_list|)
+block|{
+comment|// If we're not already in the saturated 'all' state, add this set.
+if|if
+condition|(
+operator|!
+name|areAllPreserved
+argument_list|()
+condition|)
+name|PreservedIDs
+operator|.
+name|insert
+argument_list|(
+name|ID
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Mark an analysis as abandoned.
+comment|///
+comment|/// An abandoned analysis is not preserved, even if it is nominally covered
+comment|/// by some other set or was previously explicitly marked as preserved.
+comment|///
+comment|/// Note that you can only abandon a specific analysis, not a *set* of
+comment|/// analyses.
+name|template
+operator|<
+name|typename
+name|AnalysisT
+operator|>
+name|void
+name|abandon
+argument_list|()
+block|{
+name|abandon
+argument_list|(
+name|AnalysisT
+operator|::
+name|ID
+argument_list|()
+argument_list|)
+block|; }
+comment|/// Mark an analysis as abandoned using its ID.
+comment|///
+comment|/// An abandoned analysis is not preserved, even if it is nominally covered
+comment|/// by some other set or was previously explicitly marked as preserved.
+comment|///
+comment|/// Note that you can only abandon a specific analysis, not a *set* of
+comment|/// analyses.
+name|void
+name|abandon
+argument_list|(
+argument|AnalysisKey *ID
+argument_list|)
+block|{
+name|PreservedIDs
+operator|.
+name|erase
+argument_list|(
+name|ID
+argument_list|)
+block|;
+name|NotPreservedAnalysisIDs
+operator|.
+name|insert
+argument_list|(
+name|ID
+argument_list|)
+block|;   }
 comment|/// \brief Intersect this set with another in place.
 comment|///
 comment|/// This is a mutating operation on this preserved set, removing all
 comment|/// preserved passes which are not also preserved in the argument.
 name|void
 name|intersect
-parameter_list|(
-specifier|const
-name|PreservedAnalyses
-modifier|&
-name|Arg
-parameter_list|)
+argument_list|(
+argument|const PreservedAnalyses&Arg
+argument_list|)
 block|{
 if|if
 condition|(
@@ -431,39 +508,64 @@ name|areAllPreserved
 argument_list|()
 condition|)
 block|{
-name|PreservedPassIDs
+operator|*
+name|this
 operator|=
 name|Arg
-operator|.
-name|PreservedPassIDs
 expr_stmt|;
 return|return;
 block|}
+comment|// The intersection requires the *union* of the explicitly not-preserved
+comment|// IDs and the *intersection* of the preserved IDs.
 for|for
 control|(
-name|void
-modifier|*
-name|P
+name|auto
+name|ID
 range|:
-name|PreservedPassIDs
+name|Arg
+operator|.
+name|NotPreservedAnalysisIDs
+control|)
+block|{
+name|PreservedIDs
+operator|.
+name|erase
+argument_list|(
+name|ID
+argument_list|)
+expr_stmt|;
+name|NotPreservedAnalysisIDs
+operator|.
+name|insert
+argument_list|(
+name|ID
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|auto
+name|ID
+range|:
+name|PreservedIDs
 control|)
 if|if
 condition|(
 operator|!
 name|Arg
 operator|.
-name|PreservedPassIDs
+name|PreservedIDs
 operator|.
 name|count
 argument_list|(
-name|P
+name|ID
 argument_list|)
 condition|)
-name|PreservedPassIDs
+name|PreservedIDs
 operator|.
 name|erase
 argument_list|(
-name|P
+name|ID
 argument_list|)
 expr_stmt|;
 block|}
@@ -493,182 +595,352 @@ name|areAllPreserved
 argument_list|()
 condition|)
 block|{
-name|PreservedPassIDs
+operator|*
+name|this
 operator|=
 name|std
 operator|::
 name|move
 argument_list|(
 name|Arg
-operator|.
-name|PreservedPassIDs
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|// The intersection requires the *union* of the explicitly not-preserved
+comment|// IDs and the *intersection* of the preserved IDs.
 for|for
 control|(
-name|void
-modifier|*
-name|P
+name|auto
+name|ID
 range|:
-name|PreservedPassIDs
+name|Arg
+operator|.
+name|NotPreservedAnalysisIDs
+control|)
+block|{
+name|PreservedIDs
+operator|.
+name|erase
+argument_list|(
+name|ID
+argument_list|)
+expr_stmt|;
+name|NotPreservedAnalysisIDs
+operator|.
+name|insert
+argument_list|(
+name|ID
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|auto
+name|ID
+range|:
+name|PreservedIDs
 control|)
 if|if
 condition|(
 operator|!
 name|Arg
 operator|.
-name|PreservedPassIDs
+name|PreservedIDs
 operator|.
 name|count
 argument_list|(
-name|P
+name|ID
 argument_list|)
 condition|)
-name|PreservedPassIDs
+name|PreservedIDs
 operator|.
 name|erase
 argument_list|(
-name|P
+name|ID
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Query whether a pass is marked as preserved by this set.
+comment|/// A checker object that makes it easy to query for whether an analysis or
+comment|/// some set covering it is preserved.
+name|class
+name|PreservedAnalysisChecker
+block|{
+name|friend
+name|class
+name|PreservedAnalyses
+decl_stmt|;
+specifier|const
+name|PreservedAnalyses
+modifier|&
+name|PA
+decl_stmt|;
+name|AnalysisKey
+modifier|*
+specifier|const
+name|ID
+decl_stmt|;
+specifier|const
+name|bool
+name|IsAbandoned
+decl_stmt|;
+comment|/// A PreservedAnalysisChecker is tied to a particular Analysis because
+comment|/// `preserved()` and `preservedSet()` both return false if the Analysis
+comment|/// was abandoned.
+name|PreservedAnalysisChecker
+argument_list|(
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|AnalysisKey
+operator|*
+name|ID
+argument_list|)
+operator|:
+name|PA
+argument_list|(
+name|PA
+argument_list|)
+operator|,
+name|ID
+argument_list|(
+name|ID
+argument_list|)
+operator|,
+name|IsAbandoned
+argument_list|(
+argument|PA.NotPreservedAnalysisIDs.count(ID)
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Returns true if the checker's analysis was not abandoned and the
+comment|/// analysis is either is explicitly preserved or all analyses are
+comment|/// preserved.
+name|bool
+name|preserved
+argument_list|()
+block|{
+return|return
+operator|!
+name|IsAbandoned
+operator|&&
+operator|(
+name|PA
+operator|.
+name|PreservedIDs
+operator|.
+name|count
+argument_list|(
+operator|&
+name|AllAnalysesKey
+argument_list|)
+operator|||
+name|PA
+operator|.
+name|PreservedIDs
+operator|.
+name|count
+argument_list|(
+name|ID
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/// Returns true if the checker's analysis was not abandoned and either the
+comment|/// provided set type is either explicitly preserved or all analyses are
+comment|/// preserved.
 name|template
 operator|<
 name|typename
-name|PassT
+name|AnalysisSetT
 operator|>
 name|bool
-name|preserved
+name|preservedSet
+argument_list|()
+block|{
+name|AnalysisSetKey
+operator|*
+name|SetID
+operator|=
+name|AnalysisSetT
+operator|::
+name|ID
+argument_list|()
+block|;
+return|return
+operator|!
+name|IsAbandoned
+operator|&&
+operator|(
+name|PA
+operator|.
+name|PreservedIDs
+operator|.
+name|count
+argument_list|(
+operator|&
+name|AllAnalysesKey
+argument_list|)
+operator|||
+name|PA
+operator|.
+name|PreservedIDs
+operator|.
+name|count
+argument_list|(
+name|SetID
+argument_list|)
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// Build a checker for this `PreservedAnalyses` and the specified analysis
+comment|/// type.
+comment|///
+comment|/// You can use the returned object to query whether an analysis was
+comment|/// preserved. See the example in the comment on `PreservedAnalysis`.
+name|template
+operator|<
+name|typename
+name|AnalysisT
+operator|>
+name|PreservedAnalysisChecker
+name|getChecker
 argument_list|()
 specifier|const
 block|{
 return|return
-name|preserved
+name|PreservedAnalysisChecker
 argument_list|(
-name|PassT
+operator|*
+name|this
+argument_list|,
+name|AnalysisT
 operator|::
 name|ID
 argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// \brief Query whether an abstract pass ID is marked as preserved by this
-comment|/// set.
-name|bool
-name|preserved
+comment|/// Build a checker for this `PreservedAnalyses` and the specified analysis
+comment|/// ID.
+comment|///
+comment|/// You can use the returned object to query whether an analysis was
+comment|/// preserved. See the example in the comment on `PreservedAnalysis`.
+name|PreservedAnalysisChecker
+name|getChecker
 argument_list|(
-name|void
+name|AnalysisKey
 operator|*
-name|PassID
+name|ID
 argument_list|)
 decl|const
 block|{
 return|return
-name|PreservedPassIDs
-operator|.
-name|count
+name|PreservedAnalysisChecker
 argument_list|(
-operator|(
-name|void
 operator|*
-operator|)
-name|AllPassesID
-argument_list|)
-operator|||
-name|PreservedPassIDs
-operator|.
-name|count
-argument_list|(
-name|PassID
+name|this
+argument_list|,
+name|ID
 argument_list|)
 return|;
 block|}
-comment|/// \brief Query whether all of the analyses in the set are preserved.
-name|bool
-name|preserved
-parameter_list|(
-name|PreservedAnalyses
-name|Arg
-parameter_list|)
-block|{
-if|if
-condition|(
-name|Arg
-operator|.
-name|areAllPreserved
-argument_list|()
-condition|)
-return|return
-name|areAllPreserved
-argument_list|()
-return|;
-for|for
-control|(
-name|void
-modifier|*
-name|P
-range|:
-name|Arg
-operator|.
-name|PreservedPassIDs
-control|)
-if|if
-condition|(
-operator|!
-name|preserved
-argument_list|(
-name|P
-argument_list|)
-condition|)
-return|return
-name|false
-return|;
-return|return
-name|true
-return|;
-block|}
-comment|/// \brief Test whether all passes are preserved.
+comment|/// Test whether all analyses are preserved (and none are abandoned).
 comment|///
-comment|/// This is used primarily to optimize for the case of no changes which will
-comment|/// common in many scenarios.
+comment|/// This lets analyses optimize for the common case where a transformation
+comment|/// made no changes to the IR.
 name|bool
 name|areAllPreserved
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PreservedPassIDs
+name|NotPreservedAnalysisIDs
+operator|.
+name|empty
+argument_list|()
+operator|&&
+name|PreservedIDs
 operator|.
 name|count
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|AllPassesID
+operator|&
+name|AllAnalysesKey
 argument_list|)
+return|;
+block|}
+comment|/// Directly test whether a set of analyses is preserved.
+comment|///
+comment|/// This is only true when no analyses have been explicitly abandoned.
+name|template
+operator|<
+name|typename
+name|AnalysisSetT
+operator|>
+name|bool
+name|allAnalysesInSetPreserved
+argument_list|()
+specifier|const
+block|{
+return|return
+name|allAnalysesInSetPreserved
+argument_list|(
+name|AnalysisSetT
+operator|::
+name|ID
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Directly test whether a set of analyses is preserved.
+comment|///
+comment|/// This is only true when no analyses have been explicitly abandoned.
+name|bool
+name|allAnalysesInSetPreserved
+argument_list|(
+name|AnalysisSetKey
+operator|*
+name|SetID
+argument_list|)
+decl|const
+block|{
+return|return
+name|NotPreservedAnalysisIDs
+operator|.
+name|empty
+argument_list|()
+operator|&&
+operator|(
+name|PreservedIDs
+operator|.
+name|count
+argument_list|(
+operator|&
+name|AllAnalysesKey
+argument_list|)
+operator|||
+name|PreservedIDs
+operator|.
+name|count
+argument_list|(
+name|SetID
+argument_list|)
+operator|)
 return|;
 block|}
 name|private
 label|:
-comment|// Note that this must not be -1 or -2 as those are already used by the
-comment|// SmallPtrSet.
+comment|/// A special key used to indicate all analyses.
 specifier|static
-specifier|const
-name|uintptr_t
-name|AllPassesID
-init|=
-call|(
-name|intptr_t
-call|)
-argument_list|(
-operator|-
-literal|3
-argument_list|)
+name|AnalysisSetKey
+name|AllAnalysesKey
 decl_stmt|;
+comment|/// The IDs of analyses and analysis sets that are preserved.
 name|SmallPtrSet
 operator|<
 name|void
@@ -676,23 +948,67 @@ operator|*
 operator|,
 literal|2
 operator|>
-name|PreservedPassIDs
+name|PreservedIDs
+expr_stmt|;
+comment|/// The IDs of explicitly not-preserved analyses.
+comment|///
+comment|/// If an analysis in this set is covered by a set in `PreservedIDs`, we
+comment|/// consider it not-preserved. That is, `NotPreservedAnalysisIDs` always
+comment|/// "wins" over analysis sets in `PreservedIDs`.
+comment|///
+comment|/// Also, a given ID should never occur both here and in `PreservedIDs`.
+name|SmallPtrSet
+operator|<
+name|AnalysisKey
+operator|*
+operator|,
+literal|2
+operator|>
+name|NotPreservedAnalysisIDs
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// Forward declare the analysis manager template.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 name|class
 name|AnalysisManager
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// A CRTP mix-in to automatically provide informational APIs needed for
+end_comment
+
+begin_comment
 comment|/// passes.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This provides some boiler plate for types that are passes.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -742,14 +1058,10 @@ return|return
 name|Name
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// A CRTP mix-in to automatically provide informational APIs needed for
 end_comment
 
@@ -787,10 +1099,14 @@ operator|<
 name|DerivedT
 operator|>
 block|{
-comment|/// Returns an opaque, unique ID for this pass type.
+comment|/// Returns an opaque, unique ID for this analysis type.
 comment|///
-comment|/// Note that this requires the derived type provide a static member whose
-comment|/// address can be converted to a void pointer.
+comment|/// This ID is a pointer type that is guaranteed to be 8-byte aligned and
+comment|/// thus suitable for use in sets, maps, and other data structures optimized
+comment|/// for pointer-like types using the alignment-provided low bits.
+comment|///
+comment|/// Note that this requires the derived type provide a static \c AnalysisKey
+comment|/// member called \c Key.
 comment|///
 comment|/// FIXME: The only reason the derived type needs to provide this rather than
 comment|/// this mixin providing it is due to broken implementations which cannot
@@ -799,28 +1115,123 @@ comment|/// for each instantiation and are definitively emitted once for each
 comment|/// instantiation. The only currently known platform with this limitation are
 comment|/// Windows DLL builds, specifically building each part of LLVM as a DLL. If
 comment|/// we ever remove that build configuration, this mixin can provide the
-comment|/// static PassID as well.
+comment|/// static key as well.
 specifier|static
-name|void
+name|AnalysisKey
 operator|*
 name|ID
 argument_list|()
 block|{
 return|return
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|DerivedT
 operator|::
-name|PassID
+name|Key
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
 unit|};
+comment|/// A class template to provide analysis sets for IR units.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Analyses operate on units of IR. It is useful to be able to talk about
+end_comment
+
+begin_comment
+comment|/// preservation of all analyses for a given unit of IR as a set. This class
+end_comment
+
+begin_comment
+comment|/// template can be used with the \c PreservedAnalyses API for that purpose and
+end_comment
+
+begin_comment
+comment|/// the \c AnalysisManager will automatically check and use this set to skip
+end_comment
+
+begin_comment
+comment|/// invalidation events.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that you must provide an explicit instantiation declaration and
+end_comment
+
+begin_comment
+comment|/// definition for this template in order to get the correct behavior on
+end_comment
+
+begin_comment
+comment|/// Windows. Otherwise, the address of SetKey will not be stable.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|IRUnitT
+operator|>
+name|class
+name|AllAnalysesOn
+block|{
+name|public
+operator|:
+specifier|static
+name|AnalysisSetKey
+operator|*
+name|ID
+argument_list|()
+block|{
+return|return
+operator|&
+name|SetKey
+return|;
+block|}
+name|private
+operator|:
+specifier|static
+name|AnalysisSetKey
+name|SetKey
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+name|typename
+name|IRUnitT
+operator|>
+name|AnalysisSetKey
+name|AllAnalysesOn
+operator|<
+name|IRUnitT
+operator|>
+operator|::
+name|SetKey
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern template class AllAnalysesOn<Module>;
+end_extern
+
+begin_extern
+extern|extern template class AllAnalysesOn<Function>;
+end_extern
+
+begin_comment
 comment|/// \brief Manages a sequence of passes over units of IR.
 end_comment
 
@@ -869,6 +1280,18 @@ name|template
 operator|<
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+name|AnalysisManagerT
+operator|=
+name|AnalysisManager
+operator|<
+name|IRUnitT
+operator|>
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 name|class
 name|PassManager
@@ -879,6 +1302,11 @@ operator|<
 name|PassManager
 operator|<
 name|IRUnitT
+operator|,
+name|AnalysisManagerT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>>
 block|{
 name|public
@@ -886,6 +1314,7 @@ operator|:
 comment|/// \brief Construct a pass manager.
 comment|///
 comment|/// It can be passed a flag to get debug logging as the passes are run.
+name|explicit
 name|PassManager
 argument_list|(
 argument|bool DebugLogging = false
@@ -896,8 +1325,10 @@ argument_list|(
 argument|DebugLogging
 argument_list|)
 block|{}
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
+comment|// FIXME: These are equivalent to the default move constructor/move
+comment|// assignment. However, using = default triggers linker errors due to the
+comment|// explicit instantiations below. Find away to use the default and remove the
+comment|// duplicated code here.
 name|PassManager
 argument_list|(
 name|PassManager
@@ -965,7 +1396,9 @@ name|run
 argument_list|(
 argument|IRUnitT&IR
 argument_list|,
-argument|AnalysisManager<IRUnitT>&AM
+argument|AnalysisManagerT&AM
+argument_list|,
+argument|ExtraArgTs... ExtraArgs
 argument_list|)
 block|{
 name|PreservedAnalyses
@@ -1058,30 +1491,24 @@ argument_list|(
 name|IR
 argument_list|,
 name|AM
+argument_list|,
+name|ExtraArgs
+operator|...
 argument_list|)
 decl_stmt|;
 comment|// Update the analysis manager as each pass runs and potentially
-comment|// invalidates analyses. We also update the preserved set of analyses
-comment|// based on what analyses we have already handled the invalidation for
-comment|// here and don't need to invalidate when finished.
-name|PassPA
-operator|=
+comment|// invalidates analyses.
 name|AM
 operator|.
 name|invalidate
 argument_list|(
 name|IR
 argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
 name|PassPA
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|// Finally, we intersect the final preserved analyses to compute the
-comment|// aggregate preserved set for this pass manager.
+comment|// Finally, we intersect the preserved analyses to compute the aggregate
+comment|// preserved set for this pass manager.
 name|PA
 operator|.
 name|intersect
@@ -1101,6 +1528,36 @@ comment|// in the new pass manager so it is currently omitted.
 comment|//IR.getContext().yield();
 block|}
 end_for
+
+begin_comment
+comment|// Invaliadtion was handled after each pass in the above loop for the
+end_comment
+
+begin_comment
+comment|// current unit of IR. Therefore, the remaining analysis results in the
+end_comment
+
+begin_comment
+comment|// AnalysisManager are preserved. We mark this with a set so that we don't
+end_comment
+
+begin_comment
+comment|// need to inspect each one individually.
+end_comment
+
+begin_expr_stmt
+name|PA
+operator|.
+name|preserveSet
+operator|<
+name|AllAnalysesOn
+operator|<
+name|IRUnitT
+operator|>>
+operator|(
+operator|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|if
@@ -1149,6 +1606,13 @@ operator|<
 name|IRUnitT
 operator|,
 name|PassT
+operator|,
+name|PreservedAnalyses
+operator|,
+name|AnalysisManagerT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>
 name|PassModelT
 expr_stmt|;
@@ -1169,37 +1633,15 @@ operator|::
 name|PassConcept
 operator|<
 name|IRUnitT
+operator|,
+name|AnalysisManagerT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>
 name|PassConceptT
 expr_stmt|;
 end_typedef
-
-begin_expr_stmt
-name|PassManager
-argument_list|(
-specifier|const
-name|PassManager
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|PassManager
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|PassManager
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|std
@@ -1263,165 +1705,856 @@ name|FunctionPassManager
 expr_stmt|;
 end_typedef
 
-begin_decl_stmt
-name|namespace
-name|detail
-block|{
-comment|/// \brief A CRTP base used to implement analysis managers.
+begin_comment
+comment|/// \brief A generic analysis pass manager with lazy running and caching of
+end_comment
+
+begin_comment
+comment|/// results.
+end_comment
+
+begin_comment
 comment|///
-comment|/// This class template serves as the boiler plate of an analysis manager. Any
-comment|/// analysis manager can be implemented on top of this base class. Any
-comment|/// implementation will be required to provide specific hooks:
-comment|///
-comment|/// - getResultImpl
-comment|/// - getCachedResultImpl
-comment|/// - invalidateImpl
-comment|///
-comment|/// The details of the call pattern are within.
-comment|///
-comment|/// Note that there is also a generic analysis manager template which implements
-comment|/// the above required functions along with common datastructures used for
-comment|/// managing analyses. This base class is factored so that if you need to
-comment|/// customize the handling of a specific IR unit, you can do so without
-comment|/// replicating *all* of the boilerplate.
+end_comment
+
+begin_comment
+comment|/// This analysis manager can be used for any IR unit where the address of the
+end_comment
+
+begin_comment
+comment|/// IR unit sufficies as its identity. It manages the cache for a unit of IR via
+end_comment
+
+begin_comment
+comment|/// the address of each unit of IR cached.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|DerivedT
+name|IRUnitT
 operator|,
 name|typename
-name|IRUnitT
+operator|...
+name|ExtraArgTs
 operator|>
 name|class
-name|AnalysisManagerBase
+name|AnalysisManager
 block|{
-name|DerivedT
-operator|*
-name|derived_this
-argument_list|()
-block|{
-return|return
-name|static_cast
-operator|<
-name|DerivedT
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-return|;
-block|}
-specifier|const
-name|DerivedT
-operator|*
-name|derived_this
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-specifier|const
-name|DerivedT
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-return|;
-block|}
-name|AnalysisManagerBase
-argument_list|(
-specifier|const
-name|AnalysisManagerBase
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|AnalysisManagerBase
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|AnalysisManagerBase
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
-name|protected
+name|public
 operator|:
+name|class
+name|Invalidator
+block|;
+name|private
+operator|:
+comment|// Now that we've defined our invalidator, we can build types for the concept
+comment|// types.
 typedef|typedef
 name|detail
 operator|::
 name|AnalysisResultConcept
 operator|<
 name|IRUnitT
+operator|,
+name|PreservedAnalyses
+operator|,
+name|Invalidator
 operator|>
 name|ResultConceptT
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|detail
 operator|::
 name|AnalysisPassConcept
 operator|<
 name|IRUnitT
+operator|,
+name|PreservedAnalyses
+operator|,
+name|Invalidator
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>
 name|PassConceptT
 expr_stmt|;
-comment|// FIXME: Provide template aliases for the models when we're using C++11 in
-comment|// a mode supporting them.
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|AnalysisManagerBase
-argument_list|()
-block|{}
-name|AnalysisManagerBase
-argument_list|(
-name|AnalysisManagerBase
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|AnalysisPasses
-argument_list|(
-argument|std::move(Arg.AnalysisPasses)
-argument_list|)
-block|{}
-name|AnalysisManagerBase
-operator|&
-name|operator
-operator|=
-operator|(
-name|AnalysisManagerBase
-operator|&&
-name|RHS
-operator|)
-block|{
-name|AnalysisPasses
-operator|=
+end_typedef
+
+begin_comment
+comment|/// \brief List of function analysis pass IDs and associated concept pointers.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Requires iterators to be valid across appending new entries and arbitrary
+end_comment
+
+begin_comment
+comment|/// erases. Provides the analysis ID to enable finding iterators to a given entry
+end_comment
+
+begin_comment
+comment|/// in maps below, and provides the storage for the actual result concept.
+end_comment
+
+begin_typedef
+typedef|typedef
 name|std
 operator|::
-name|move
+name|list
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|AnalysisKey
+operator|*
+operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ResultConceptT
+operator|>>>
+name|AnalysisResultListT
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief Map type from IRUnitT pointer to our custom list type.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|DenseMap
+operator|<
+name|IRUnitT
+operator|*
+operator|,
+name|AnalysisResultListT
+operator|>
+name|AnalysisResultListMapT
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief Map type from a pair of analysis ID and IRUnitT pointer to an
+end_comment
+
+begin_comment
+comment|/// iterator into a particular result list which is where the actual result
+end_comment
+
+begin_comment
+comment|/// is stored.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|AnalysisKey
+operator|*
+operator|,
+name|IRUnitT
+operator|*
+operator|>
+operator|,
+name|typename
+name|AnalysisResultListT
+operator|::
+name|iterator
+operator|>
+name|AnalysisResultMapT
+expr_stmt|;
+end_typedef
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_comment
+comment|/// API to communicate dependencies between analyses during invalidation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// When an analysis result embeds handles to other analysis results, it
+end_comment
+
+begin_comment
+comment|/// needs to be invalidated both when its own information isn't preserved and
+end_comment
+
+begin_comment
+comment|/// if any of those embedded analysis results end up invalidated. We pass in
+end_comment
+
+begin_comment
+comment|/// an \c Invalidator object from the analysis manager in order to let the
+end_comment
+
+begin_comment
+comment|/// analysis results themselves define the dependency graph on the fly. This
+end_comment
+
+begin_comment
+comment|/// avoids building an explicit data structure representation of the
+end_comment
+
+begin_comment
+comment|/// dependencies between analysis results.
+end_comment
+
+begin_decl_stmt
+name|class
+name|Invalidator
+block|{
+name|public
+label|:
+comment|/// Trigger the invalidation of some other analysis pass if not already
+comment|/// handled and return whether it will in fact be invalidated.
+comment|///
+comment|/// This is expected to be called from within a given analysis result's \c
+comment|/// invalidate method to trigger a depth-first walk of all inter-analysis
+comment|/// dependencies. The same \p IR unit and \p PA passed to that result's \c
+comment|/// invalidate method should in turn be provided to this routine.
+comment|///
+comment|/// The first time this is called for a given analysis pass, it will
+comment|/// trigger the corresponding result's \c invalidate method to be called.
+comment|/// Subsequent calls will use a cache of the results of that initial call.
+comment|/// It is an error to form cyclic dependencies between analysis results.
+comment|///
+comment|/// This returns true if the given analysis pass's result is invalid and
+comment|/// any dependecies on it will become invalid as a result.
+name|template
+operator|<
+name|typename
+name|PassT
+operator|>
+name|bool
+name|invalidate
 argument_list|(
-name|RHS
+argument|IRUnitT&IR
+argument_list|,
+argument|const PreservedAnalyses&PA
+argument_list|)
+block|{
+typedef|typedef
+name|detail
+operator|::
+name|AnalysisResultModel
+operator|<
+name|IRUnitT
+operator|,
+name|PassT
+operator|,
+name|typename
+name|PassT
+operator|::
+name|Result
+operator|,
+name|PreservedAnalyses
+operator|,
+name|Invalidator
+operator|>
+name|ResultModelT
+expr_stmt|;
+return|return
+name|invalidateImpl
+operator|<
+name|ResultModelT
+operator|>
+operator|(
+name|PassT
+operator|::
+name|ID
+argument_list|()
+operator|,
+name|IR
+operator|,
+name|PA
+operator|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// A type-erased variant of the above invalidate method with the same core
+end_comment
+
+begin_comment
+comment|/// API other than passing an analysis ID rather than an analysis type
+end_comment
+
+begin_comment
+comment|/// parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is sadly less efficient than the above routine, which leverages
+end_comment
+
+begin_comment
+comment|/// the type parameter to avoid the type erasure overhead.
+end_comment
+
+begin_function
+name|bool
+name|invalidate
+parameter_list|(
+name|AnalysisKey
+modifier|*
+name|ID
+parameter_list|,
+name|IRUnitT
+modifier|&
+name|IR
+parameter_list|,
+specifier|const
+name|PreservedAnalyses
+modifier|&
+name|PA
+parameter_list|)
+block|{
+return|return
+name|invalidateImpl
+operator|<
+operator|>
+operator|(
+name|ID
+operator|,
+name|IR
+operator|,
+name|PA
+operator|)
+return|;
+block|}
+end_function
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_decl_stmt
+name|friend
+name|class
+name|AnalysisManager
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|ResultT
+operator|=
+name|ResultConceptT
+operator|>
+name|bool
+name|invalidateImpl
+argument_list|(
+argument|AnalysisKey *ID
+argument_list|,
+argument|IRUnitT&IR
+argument_list|,
+argument|const PreservedAnalyses&PA
+argument_list|)
+block|{
+comment|// If we've already visited this pass, return true if it was invalidated
+comment|// and false otherwise.
+name|auto
+name|IMapI
+operator|=
+name|IsResultInvalidated
 operator|.
-name|AnalysisPasses
+name|find
+argument_list|(
+name|ID
+argument_list|)
+block|;
+if|if
+condition|(
+name|IMapI
+operator|!=
+name|IsResultInvalidated
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|IMapI
+operator|->
+name|second
+return|;
+comment|// Otherwise look up the result object.
+name|auto
+name|RI
+operator|=
+name|Results
+operator|.
+name|find
+argument_list|(
+block|{
+name|ID
+block|,
+operator|&
+name|IR
+block|}
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|assert
+argument_list|(
+name|RI
+operator|!=
+name|Results
+operator|.
+name|end
+argument_list|()
+operator|&&
+literal|"Trying to invalidate a dependent result that isn't in the "
+literal|"manager's cache is always an error, likely due to a stale result "
+literal|"handle!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|auto
+operator|&
+name|Result
+operator|=
+name|static_cast
+operator|<
+name|ResultT
+operator|&
+operator|>
+operator|(
+operator|*
+name|RI
+operator|->
+name|second
+operator|->
+name|second
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Insert into the map whether the result should be invalidated and
+end_comment
+
+begin_comment
+comment|// return that. Note that we cannot re-use IMapI and must do a fresh
+end_comment
+
+begin_comment
+comment|// insert here as calling the invalidate routine could (recursively)
+end_comment
+
+begin_comment
+comment|// insert things into the map making any iterator or reference invalid.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|Inserted
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|tie
+argument_list|(
+name|IMapI
+argument_list|,
+name|Inserted
+argument_list|)
+operator|=
+name|IsResultInvalidated
+operator|.
+name|insert
+argument_list|(
+block|{
+name|ID
+block|,
+name|Result
+operator|.
+name|invalidate
+argument_list|(
+argument|IR
+argument_list|,
+argument|PA
+argument_list|,
+argument|*this
+argument_list|)
+block|}
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|Inserted
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|assert
+argument_list|(
+name|Inserted
+operator|&&
+literal|"Should not have already inserted this ID, likely "
+literal|"indicates a dependency cycle!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|IMapI
+operator|->
+name|second
+return|;
+end_return
+
+begin_expr_stmt
+unit|}      Invalidator
+operator|(
+name|SmallDenseMap
+operator|<
+name|AnalysisKey
+operator|*
+operator|,
+name|bool
+operator|,
+literal|8
+operator|>
+operator|&
+name|IsResultInvalidated
+operator|,
+specifier|const
+name|AnalysisResultMapT
+operator|&
+name|Results
+operator|)
+operator|:
+name|IsResultInvalidated
+argument_list|(
+name|IsResultInvalidated
+argument_list|)
+operator|,
+name|Results
+argument_list|(
+argument|Results
+argument_list|)
+block|{}
+name|SmallDenseMap
+operator|<
+name|AnalysisKey
+operator|*
+operator|,
+name|bool
+operator|,
+literal|8
+operator|>
+operator|&
+name|IsResultInvalidated
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|const
+name|AnalysisResultMapT
+modifier|&
+name|Results
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};
+comment|/// \brief Construct an empty analysis manager.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// A flag can be passed to indicate that the manager should perform debug
+end_comment
+
+begin_comment
+comment|/// logging.
+end_comment
+
+begin_macro
+name|AnalysisManager
+argument_list|(
+argument|bool DebugLogging = false
+argument_list|)
+end_macro
+
+begin_macro
+unit|:
+name|DebugLogging
+argument_list|(
+argument|DebugLogging
+argument_list|)
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_expr_stmt
+name|AnalysisManager
+argument_list|(
+name|AnalysisManager
+operator|&&
+argument_list|)
+operator|=
+expr|default
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|AnalysisManager
+modifier|&
+name|operator
+init|=
+operator|(
+name|AnalysisManager
+operator|&&
+operator|)
+operator|=
+expr|default
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Returns true if the analysis manager has an empty results cache.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|AnalysisResults
+operator|.
+name|empty
+argument_list|()
+operator|==
+name|AnalysisResultLists
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"The storage and index of analysis results disagree on how many "
+literal|"there are!"
 argument_list|)
 block|;
 return|return
-operator|*
-name|this
+name|AnalysisResults
+operator|.
+name|empty
+argument_list|()
 return|;
 block|}
-name|public
-label|:
-comment|/// \brief Get the result of an analysis pass for this module.
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Clear any results for a single unit of IR.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
+comment|/// This doesn't invalidate but directly clears the results. It is useful
+end_comment
+
+begin_comment
+comment|/// when the IR is being removed and we want to clear out all the memory
+end_comment
+
+begin_comment
+comment|/// pinned for it.
+end_comment
+
+begin_function
+name|void
+name|clear
+parameter_list|(
+name|IRUnitT
+modifier|&
+name|IR
+parameter_list|)
+block|{
+if|if
+condition|(
+name|DebugLogging
+condition|)
+name|dbgs
+argument_list|()
+operator|<<
+literal|"Clearing all analysis results for: "
+operator|<<
+name|IR
+operator|.
+name|getName
+argument_list|()
+operator|<<
+literal|"\n"
+expr_stmt|;
+name|auto
+name|ResultsListI
+init|=
+name|AnalysisResultLists
+operator|.
+name|find
+argument_list|(
+operator|&
+name|IR
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ResultsListI
+operator|==
+name|AnalysisResultLists
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return;
+comment|// Clear the map pointing into the results list.
+for|for
+control|(
+name|auto
+operator|&
+name|IDAndResult
+operator|:
+name|ResultsListI
+operator|->
+name|second
+control|)
+name|AnalysisResults
+operator|.
+name|erase
+argument_list|(
+block|{
+name|IDAndResult
+operator|.
+name|first
+block|,
+operator|&
+name|IR
+block|}
+argument_list|)
+expr_stmt|;
+comment|// And actually destroy and erase the results associated with this IR.
+name|AnalysisResultLists
+operator|.
+name|erase
+argument_list|(
+name|ResultsListI
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Clear the analysis result cache.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine allows cleaning up when the set of IR units itself has
+end_comment
+
+begin_comment
+comment|/// potentially changed, and thus we can't even look up a a result and
+end_comment
+
+begin_comment
+comment|/// invalidate it directly. Notably, this does *not* call invalidate
+end_comment
+
+begin_comment
+comment|/// functions as there is nothing to be done for them.
+end_comment
+
+begin_function
+name|void
+name|clear
+parameter_list|()
+block|{
+name|AnalysisResults
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|AnalysisResultLists
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Get the result of an analysis pass for this module.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// If there is not a valid cached result in the manager already, this will
+end_comment
+
+begin_comment
 comment|/// re-run the analysis to produce a valid result.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1435,6 +2568,8 @@ operator|&
 name|getResult
 argument_list|(
 argument|IRUnitT&IR
+argument_list|,
+argument|ExtraArgTs... ExtraArgs
 argument_list|)
 block|{
 name|assert
@@ -1456,9 +2591,6 @@ name|ResultConceptT
 operator|&
 name|ResultConcept
 operator|=
-name|derived_this
-argument_list|()
-operator|->
 name|getResultImpl
 argument_list|(
 name|PassT
@@ -1467,6 +2599,9 @@ name|ID
 argument_list|()
 argument_list|,
 name|IR
+argument_list|,
+name|ExtraArgs
+operator|...
 argument_list|)
 block|;
 typedef|typedef
@@ -1482,9 +2617,16 @@ name|typename
 name|PassT
 operator|::
 name|Result
+operator|,
+name|PreservedAnalyses
+operator|,
+name|Invalidator
 operator|>
 name|ResultModelT
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|static_cast
 operator|<
@@ -1497,10 +2639,10 @@ operator|)
 operator|.
 name|Result
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Get the cached result of an analysis pass for this module.
 end_comment
 
@@ -1521,7 +2663,7 @@ comment|/// \returns null if there is no cached result.
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|PassT
@@ -1556,9 +2698,6 @@ name|ResultConceptT
 operator|*
 name|ResultConcept
 operator|=
-name|derived_this
-argument_list|()
-operator|->
 name|getCachedResultImpl
 argument_list|(
 name|PassT
@@ -1593,6 +2732,10 @@ name|typename
 name|PassT
 operator|::
 name|Result
+operator|,
+name|PreservedAnalyses
+operator|,
+name|Invalidator
 operator|>
 name|ResultModelT
 expr_stmt|;
@@ -1696,7 +2839,7 @@ operator|>
 name|bool
 name|registerPass
 argument_list|(
-argument|PassBuilderT PassBuilder
+argument|PassBuilderT&&PassBuilder
 argument_list|)
 block|{
 typedef|typedef
@@ -1717,6 +2860,13 @@ operator|<
 name|IRUnitT
 operator|,
 name|PassT
+operator|,
+name|PreservedAnalyses
+operator|,
+name|Invalidator
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>
 name|PassModelT
 expr_stmt|;
@@ -1811,9 +2961,6 @@ operator|&&
 literal|"This analysis pass was not registered prior to being invalidated"
 argument_list|)
 block|;
-name|derived_this
-argument_list|()
-operator|->
 name|invalidateImpl
 argument_list|(
 name|PassT
@@ -1828,53 +2975,332 @@ comment|/// \brief Invalidate analyses cached for an IR unit.
 comment|///
 comment|/// Walk through all of the analyses pertaining to this unit of IR and
 comment|/// invalidate them unless they are preserved by the PreservedAnalyses set.
-comment|/// We accept the PreservedAnalyses set by value and update it with each
-comment|/// analyis pass which has been successfully invalidated and thus can be
-comment|/// preserved going forward. The updated set is returned.
-name|PreservedAnalyses
+name|void
 name|invalidate
 argument_list|(
 argument|IRUnitT&IR
 argument_list|,
-argument|PreservedAnalyses PA
+argument|const PreservedAnalyses&PA
 argument_list|)
 block|{
-return|return
-name|derived_this
-argument_list|()
-operator|->
-name|invalidateImpl
-argument_list|(
-name|IR
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
+comment|// We're done if all analyses on this IR unit are preserved.
+if|if
+condition|(
 name|PA
-argument_list|)
-argument_list|)
-return|;
-block|}
+operator|.
+name|allAnalysesInSetPreserved
+operator|<
+name|AllAnalysesOn
+operator|<
+name|IRUnitT
+operator|>>
+operator|(
+operator|)
+condition|)
+return|return;
 end_expr_stmt
 
-begin_label
-name|protected
-label|:
-end_label
+begin_if
+if|if
+condition|(
+name|DebugLogging
+condition|)
+name|dbgs
+argument_list|()
+operator|<<
+literal|"Invalidating all non-preserved analyses for: "
+operator|<<
+name|IR
+operator|.
+name|getName
+argument_list|()
+operator|<<
+literal|"\n"
+expr_stmt|;
+end_if
 
 begin_comment
-comment|/// \brief Lookup a registered analysis pass.
+comment|// Track whether each pass's result is invalidated. Memoize the results
+end_comment
+
+begin_comment
+comment|// using the IsResultInvalidated map.
+end_comment
+
+begin_expr_stmt
+name|SmallDenseMap
+operator|<
+name|AnalysisKey
+operator|*
+operator|,
+name|bool
+operator|,
+literal|8
+operator|>
+name|IsResultInvalidated
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|Invalidator
+name|Inv
+parameter_list|(
+name|IsResultInvalidated
+parameter_list|,
+name|AnalysisResults
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|AnalysisResultListT
+modifier|&
+name|ResultsList
+init|=
+name|AnalysisResultLists
+index|[
+operator|&
+name|IR
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_for
+for|for
+control|(
+name|auto
+operator|&
+name|AnalysisResultPair
+operator|:
+name|ResultsList
+control|)
+block|{
+comment|// This is basically the same thing as Invalidator::invalidate, but we
+comment|// can't call it here because we're operating on the type-erased result.
+comment|// Moreover if we instead called invalidate() directly, it would do an
+comment|// unnecessary look up in ResultsList.
+name|AnalysisKey
+modifier|*
+name|ID
+init|=
+name|AnalysisResultPair
+operator|.
+name|first
+decl_stmt|;
+name|auto
+operator|&
+name|Result
+operator|=
+operator|*
+name|AnalysisResultPair
+operator|.
+name|second
+expr_stmt|;
+name|auto
+name|IMapI
+init|=
+name|IsResultInvalidated
+operator|.
+name|find
+argument_list|(
+name|ID
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|IMapI
+operator|!=
+name|IsResultInvalidated
+operator|.
+name|end
+argument_list|()
+condition|)
+comment|// This result was already handled via the Invalidator.
+continue|continue;
+comment|// Try to invalidate the result, giving it the Invalidator so it can
+comment|// recursively query for any dependencies it has and record the result.
+comment|// Note that we cannot re-use 'IMapI' here or pre-insert the ID as the
+comment|// invalidate method may insert things into the map as well, invalidating
+comment|// any iterator or pointer.
+name|bool
+name|Inserted
+init|=
+name|IsResultInvalidated
+operator|.
+name|insert
+argument_list|(
+block|{
+name|ID
+block|,
+name|Result
+operator|.
+name|invalidate
+argument_list|(
+argument|IR
+argument_list|,
+argument|PA
+argument_list|,
+argument|Inv
+argument_list|)
+block|}
+argument_list|)
+operator|.
+name|second
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|Inserted
+expr_stmt|;
+name|assert
+argument_list|(
+name|Inserted
+operator|&&
+literal|"Should never have already inserted this ID, likely "
+literal|"indicates a cycle!"
+argument_list|)
+expr_stmt|;
+block|}
+end_for
+
+begin_comment
+comment|// Now erase the results that were marked above as invalidated.
+end_comment
+
+begin_if
+if|if
+condition|(
+operator|!
+name|IsResultInvalidated
+operator|.
+name|empty
+argument_list|()
+condition|)
+block|{
+for|for
+control|(
+name|auto
+name|I
+init|=
+name|ResultsList
+operator|.
+name|begin
+argument_list|()
+init|,
+name|E
+init|=
+name|ResultsList
+operator|.
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+control|)
+block|{
+name|AnalysisKey
+modifier|*
+name|ID
+init|=
+name|I
+operator|->
+name|first
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|IsResultInvalidated
+operator|.
+name|lookup
+argument_list|(
+name|ID
+argument_list|)
+condition|)
+block|{
+operator|++
+name|I
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|DebugLogging
+condition|)
+name|dbgs
+argument_list|()
+operator|<<
+literal|"Invalidating analysis: "
+operator|<<
+name|this
+operator|->
+name|lookUpPass
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|name
+argument_list|()
+operator|<<
+literal|"\n"
+expr_stmt|;
+name|I
+operator|=
+name|ResultsList
+operator|.
+name|erase
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
+name|AnalysisResults
+operator|.
+name|erase
+argument_list|(
+block|{
+name|ID
+block|,
+operator|&
+name|IR
+block|}
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|ResultsList
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|AnalysisResultLists
+operator|.
+name|erase
+argument_list|(
+operator|&
+name|IR
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_comment
+unit|}  private:
+comment|/// \brief Look up a registered analysis pass.
 end_comment
 
 begin_function
 name|PassConceptT
 modifier|&
-name|lookupPass
+name|lookUpPass
 parameter_list|(
-name|void
+name|AnalysisKey
 modifier|*
-name|PassID
+name|ID
 parameter_list|)
 block|{
 name|typename
@@ -1887,7 +3313,7 @@ name|AnalysisPasses
 operator|.
 name|find
 argument_list|(
-name|PassID
+name|ID
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1912,18 +3338,18 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Lookup a registered analysis pass.
+comment|/// \brief Look up a registered analysis pass.
 end_comment
 
 begin_decl_stmt
 specifier|const
 name|PassConceptT
 modifier|&
-name|lookupPass
+name|lookUpPass
 argument_list|(
-name|void
+name|AnalysisKey
 operator|*
-name|PassID
+name|ID
 argument_list|)
 decl|const
 block|{
@@ -1937,7 +3363,7 @@ name|AnalysisPasses
 operator|.
 name|find
 argument_list|(
-name|PassID
+name|ID
 argument_list|)
 expr_stmt|;
 name|assert
@@ -1961,405 +3387,6 @@ return|;
 block|}
 end_decl_stmt
 
-begin_label
-name|private
-label|:
-end_label
-
-begin_comment
-comment|/// \brief Map type from module analysis pass ID to pass concept pointer.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|DenseMap
-operator|<
-name|void
-operator|*
-operator|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|PassConceptT
-operator|>>
-name|AnalysisPassMapT
-expr_stmt|;
-end_typedef
-
-begin_comment
-comment|/// \brief Collection of module analysis passes, indexed by ID.
-end_comment
-
-begin_decl_stmt
-name|AnalysisPassMapT
-name|AnalysisPasses
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};  }
-comment|// End namespace detail
-end_comment
-
-begin_comment
-comment|/// \brief A generic analysis pass manager with lazy running and caching of
-end_comment
-
-begin_comment
-comment|/// results.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This analysis manager can be used for any IR unit where the address of the
-end_comment
-
-begin_comment
-comment|/// IR unit sufficies as its identity. It manages the cache for a unit of IR via
-end_comment
-
-begin_comment
-comment|/// the address of each unit of IR cached.
-end_comment
-
-begin_expr_stmt
-unit|template
-operator|<
-name|typename
-name|IRUnitT
-operator|>
-name|class
-name|AnalysisManager
-operator|:
-name|public
-name|detail
-operator|::
-name|AnalysisManagerBase
-operator|<
-name|AnalysisManager
-operator|<
-name|IRUnitT
-operator|>
-operator|,
-name|IRUnitT
-operator|>
-block|{
-name|friend
-name|class
-name|detail
-operator|::
-name|AnalysisManagerBase
-operator|<
-name|AnalysisManager
-operator|<
-name|IRUnitT
-operator|>
-block|,
-name|IRUnitT
-operator|>
-block|;
-typedef|typedef
-name|detail
-operator|::
-name|AnalysisManagerBase
-operator|<
-name|AnalysisManager
-operator|<
-name|IRUnitT
-operator|>
-operator|,
-name|IRUnitT
-operator|>
-name|BaseT
-expr_stmt|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|typename
-name|BaseT
-operator|::
-name|ResultConceptT
-name|ResultConceptT
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|typename
-name|BaseT
-operator|::
-name|PassConceptT
-name|PassConceptT
-expr_stmt|;
-end_typedef
-
-begin_label
-name|public
-label|:
-end_label
-
-begin_comment
-comment|// Most public APIs are inherited from the CRTP base class.
-end_comment
-
-begin_comment
-comment|/// \brief Construct an empty analysis manager.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// A flag can be passed to indicate that the manager should perform debug
-end_comment
-
-begin_comment
-comment|/// logging.
-end_comment
-
-begin_macro
-name|AnalysisManager
-argument_list|(
-argument|bool DebugLogging = false
-argument_list|)
-end_macro
-
-begin_macro
-unit|:
-name|DebugLogging
-argument_list|(
-argument|DebugLogging
-argument_list|)
-end_macro
-
-begin_block
-block|{}
-end_block
-
-begin_comment
-comment|// We have to explicitly define all the special member functions because MSVC
-end_comment
-
-begin_comment
-comment|// refuses to generate them.
-end_comment
-
-begin_expr_stmt
-name|AnalysisManager
-argument_list|(
-name|AnalysisManager
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|BaseT
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|static_cast
-operator|<
-name|BaseT
-operator|&
-operator|>
-operator|(
-name|Arg
-operator|)
-argument_list|)
-argument_list|)
-operator|,
-name|AnalysisResults
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Arg
-operator|.
-name|AnalysisResults
-argument_list|)
-argument_list|)
-operator|,
-name|DebugLogging
-argument_list|(
-argument|std::move(Arg.DebugLogging)
-argument_list|)
-block|{}
-name|AnalysisManager
-operator|&
-name|operator
-operator|=
-operator|(
-name|AnalysisManager
-operator|&&
-name|RHS
-operator|)
-block|{
-name|BaseT
-operator|::
-name|operator
-operator|=
-operator|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|static_cast
-operator|<
-name|BaseT
-operator|&
-operator|>
-operator|(
-name|RHS
-operator|)
-argument_list|)
-operator|)
-block|;
-name|AnalysisResults
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|AnalysisResults
-argument_list|)
-block|;
-name|DebugLogging
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|DebugLogging
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Returns true if the analysis manager has an empty results cache.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|empty
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|AnalysisResults
-operator|.
-name|empty
-argument_list|()
-operator|==
-name|AnalysisResultLists
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"The storage and index of analysis results disagree on how many "
-literal|"there are!"
-argument_list|)
-block|;
-return|return
-name|AnalysisResults
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Clear the analysis result cache.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This routine allows cleaning up when the set of IR units itself has
-end_comment
-
-begin_comment
-comment|/// potentially changed, and thus we can't even look up a a result and
-end_comment
-
-begin_comment
-comment|/// invalidate it directly. Notably, this does *not* call invalidate functions
-end_comment
-
-begin_comment
-comment|/// as there is nothing to be done for them.
-end_comment
-
-begin_function
-name|void
-name|clear
-parameter_list|()
-block|{
-name|AnalysisResults
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|AnalysisResultLists
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_label
-name|private
-label|:
-end_label
-
-begin_expr_stmt
-name|AnalysisManager
-argument_list|(
-specifier|const
-name|AnalysisManager
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|AnalysisManager
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|AnalysisManager
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/// \brief Get an analysis result, running the pass if necessary.
 end_comment
@@ -2369,13 +3396,17 @@ name|ResultConceptT
 modifier|&
 name|getResultImpl
 parameter_list|(
-name|void
+name|AnalysisKey
 modifier|*
-name|PassID
+name|ID
 parameter_list|,
 name|IRUnitT
 modifier|&
 name|IR
+parameter_list|,
+name|ExtraArgTs
+modifier|...
+name|ExtraArgs
 parameter_list|)
 block|{
 name|typename
@@ -2404,7 +3435,7 @@ name|std
 operator|::
 name|make_pair
 argument_list|(
-argument|std::make_pair(PassID,&IR)
+argument|std::make_pair(ID,&IR)
 argument_list|,
 argument|typename AnalysisResultListT::iterator()
 argument_list|)
@@ -2423,9 +3454,9 @@ name|P
 operator|=
 name|this
 operator|->
-name|lookupPass
+name|lookUpPass
 argument_list|(
-name|PassID
+name|ID
 argument_list|)
 expr_stmt|;
 if|if
@@ -2458,7 +3489,7 @@ name|ResultList
 operator|.
 name|emplace_back
 argument_list|(
-name|PassID
+name|ID
 argument_list|,
 name|P
 operator|.
@@ -2468,6 +3499,9 @@ name|IR
 argument_list|,
 operator|*
 name|this
+argument_list|,
+name|ExtraArgs
+operator|...
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2479,15 +3513,12 @@ name|AnalysisResults
 operator|.
 name|find
 argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|PassID
-argument_list|,
+block|{
+name|ID
+block|,
 operator|&
 name|IR
-argument_list|)
+block|}
 argument_list|)
 expr_stmt|;
 name|assert
@@ -2537,9 +3568,9 @@ name|ResultConceptT
 modifier|*
 name|getCachedResultImpl
 argument_list|(
-name|void
+name|AnalysisKey
 operator|*
-name|PassID
+name|ID
 argument_list|,
 name|IRUnitT
 operator|&
@@ -2557,15 +3588,12 @@ name|AnalysisResults
 operator|.
 name|find
 argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|PassID
-argument_list|,
+block|{
+name|ID
+block|,
 operator|&
 name|IR
-argument_list|)
+block|}
 argument_list|)
 expr_stmt|;
 return|return
@@ -2597,9 +3625,9 @@ begin_function
 name|void
 name|invalidateImpl
 parameter_list|(
-name|void
+name|AnalysisKey
 modifier|*
-name|PassID
+name|ID
 parameter_list|,
 name|IRUnitT
 modifier|&
@@ -2616,15 +3644,12 @@ name|AnalysisResults
 operator|.
 name|find
 argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|PassID
-argument_list|,
+block|{
+name|ID
+block|,
 operator|&
 name|IR
-argument_list|)
+block|}
 argument_list|)
 expr_stmt|;
 if|if
@@ -2648,9 +3673,9 @@ literal|"Invalidating analysis: "
 operator|<<
 name|this
 operator|->
-name|lookupPass
+name|lookUpPass
 argument_list|(
-name|PassID
+name|ID
 argument_list|)
 operator|.
 name|name
@@ -2682,288 +3707,35 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Invalidate the results for a function..
-end_comment
-
-begin_function
-name|PreservedAnalyses
-name|invalidateImpl
-parameter_list|(
-name|IRUnitT
-modifier|&
-name|IR
-parameter_list|,
-name|PreservedAnalyses
-name|PA
-parameter_list|)
-block|{
-comment|// Short circuit for a common case of all analyses being preserved.
-if|if
-condition|(
-name|PA
-operator|.
-name|areAllPreserved
-argument_list|()
-condition|)
-return|return
-name|PA
-return|;
-if|if
-condition|(
-name|DebugLogging
-condition|)
-name|dbgs
-argument_list|()
-operator|<<
-literal|"Invalidating all non-preserved analyses for: "
-operator|<<
-name|IR
-operator|.
-name|getName
-argument_list|()
-operator|<<
-literal|"\n"
-expr_stmt|;
-comment|// Clear all the invalidated results associated specifically with this
-comment|// function.
-name|SmallVector
-operator|<
-name|void
-operator|*
-operator|,
-literal|8
-operator|>
-name|InvalidatedPassIDs
-expr_stmt|;
-name|AnalysisResultListT
-modifier|&
-name|ResultsList
-init|=
-name|AnalysisResultLists
-index|[
-operator|&
-name|IR
-index|]
-decl_stmt|;
-for|for
-control|(
-name|typename
-name|AnalysisResultListT
-operator|::
-name|iterator
-name|I
-operator|=
-name|ResultsList
-operator|.
-name|begin
-argument_list|()
-operator|,
-name|E
-operator|=
-name|ResultsList
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-control|)
-block|{
-name|void
-modifier|*
-name|PassID
-init|=
-name|I
-operator|->
-name|first
-decl_stmt|;
-comment|// Pass the invalidation down to the pass itself to see if it thinks it is
-comment|// necessary. The analysis pass can return false if no action on the part
-comment|// of the analysis manager is required for this invalidation event.
-if|if
-condition|(
-name|I
-operator|->
-name|second
-operator|->
-name|invalidate
-argument_list|(
-name|IR
-argument_list|,
-name|PA
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|DebugLogging
-condition|)
-name|dbgs
-argument_list|()
-operator|<<
-literal|"Invalidating analysis: "
-operator|<<
-name|this
-operator|->
-name|lookupPass
-argument_list|(
-name|PassID
-argument_list|)
-operator|.
-name|name
-argument_list|()
-operator|<<
-literal|"\n"
-expr_stmt|;
-name|InvalidatedPassIDs
-operator|.
-name|push_back
-argument_list|(
-name|I
-operator|->
-name|first
-argument_list|)
-expr_stmt|;
-name|I
-operator|=
-name|ResultsList
-operator|.
-name|erase
-argument_list|(
-name|I
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-operator|++
-name|I
-expr_stmt|;
-block|}
-comment|// After handling each pass, we mark it as preserved. Once we've
-comment|// invalidated any stale results, the rest of the system is allowed to
-comment|// start preserving this analysis again.
-name|PA
-operator|.
-name|preserve
-argument_list|(
-name|PassID
-argument_list|)
-expr_stmt|;
-block|}
-while|while
-condition|(
-operator|!
-name|InvalidatedPassIDs
-operator|.
-name|empty
-argument_list|()
-condition|)
-name|AnalysisResults
-operator|.
-name|erase
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|InvalidatedPassIDs
-operator|.
-name|pop_back_val
-argument_list|()
-argument_list|,
-operator|&
-name|IR
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ResultsList
-operator|.
-name|empty
-argument_list|()
-condition|)
-name|AnalysisResultLists
-operator|.
-name|erase
-argument_list|(
-operator|&
-name|IR
-argument_list|)
-expr_stmt|;
-return|return
-name|PA
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// \brief List of function analysis pass IDs and associated concept pointers.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Requires iterators to be valid across appending new entries and arbitrary
-end_comment
-
-begin_comment
-comment|/// erases. Provides both the pass ID and concept pointer such that it is
-end_comment
-
-begin_comment
-comment|/// half of a bijection and provides storage for the actual result concept.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|list
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|void
-operator|*
-operator|,
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|detail
-operator|::
-name|AnalysisResultConcept
-operator|<
-name|IRUnitT
-operator|>>>
-operator|>
-name|AnalysisResultListT
-expr_stmt|;
-end_typedef
-
-begin_comment
-comment|/// \brief Map type from function pointer to our custom list type.
+comment|/// \brief Map type from module analysis pass ID to pass concept pointer.
 end_comment
 
 begin_typedef
 typedef|typedef
 name|DenseMap
 operator|<
-name|IRUnitT
+name|AnalysisKey
 operator|*
 operator|,
-name|AnalysisResultListT
-operator|>
-name|AnalysisResultListMapT
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PassConceptT
+operator|>>
+name|AnalysisPassMapT
 expr_stmt|;
 end_typedef
+
+begin_comment
+comment|/// \brief Collection of module analysis passes, indexed by ID.
+end_comment
+
+begin_decl_stmt
+name|AnalysisPassMapT
+name|AnalysisPasses
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Map from function to a list of function analysis results.
@@ -2986,38 +3758,6 @@ name|AnalysisResultListMapT
 name|AnalysisResultLists
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// \brief Map type from a pair of analysis ID and function pointer to an
-end_comment
-
-begin_comment
-comment|/// iterator into a particular result list.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|DenseMap
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|void
-operator|*
-operator|,
-name|IRUnitT
-operator|*
-operator|>
-operator|,
-name|typename
-name|AnalysisResultListT
-operator|::
-name|iterator
-operator|>
-name|AnalysisResultMapT
-expr_stmt|;
-end_typedef
 
 begin_comment
 comment|/// \brief Map from an analysis ID and function to a particular cached
@@ -3136,6 +3876,10 @@ name|AnalysisManagerT
 operator|,
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 name|class
 name|InnerAnalysisManagerProxy
@@ -3162,12 +3906,12 @@ name|Result
 argument_list|(
 name|AnalysisManagerT
 operator|&
-name|AM
+name|InnerAM
 argument_list|)
 operator|:
-name|AM
+name|InnerAM
 argument_list|(
-argument|&AM
+argument|&InnerAM
 argument_list|)
 block|{}
 name|Result
@@ -3177,9 +3921,9 @@ operator|&&
 name|Arg
 argument_list|)
 operator|:
-name|AM
+name|InnerAM
 argument_list|(
-argument|std::move(Arg.AM)
+argument|std::move(Arg.InnerAM)
 argument_list|)
 block|{
 comment|// We have to null out the analysis manager in the moved-from state
@@ -3187,7 +3931,7 @@ comment|// because we are taking ownership of the responsibilty to clear the
 comment|// analysis state.
 name|Arg
 operator|.
-name|AM
+name|InnerAM
 operator|=
 name|nullptr
 block|;     }
@@ -3201,18 +3945,18 @@ operator|&&
 name|RHS
 operator|)
 block|{
-name|AM
+name|InnerAM
 operator|=
 name|RHS
 operator|.
-name|AM
+name|InnerAM
 block|;
 comment|// We have to null out the analysis manager in the moved-from state
 comment|// because we are taking ownership of the responsibilty to clear the
 comment|// analysis state.
 name|RHS
 operator|.
-name|AM
+name|InnerAM
 operator|=
 name|nullptr
 block|;
@@ -3225,16 +3969,16 @@ operator|~
 name|Result
 argument_list|()
 block|{
-comment|// AM is cleared in a moved from state where there is nothing to do.
+comment|// InnerAM is cleared in a moved from state where there is nothing to do.
 if|if
 condition|(
 operator|!
-name|AM
+name|InnerAM
 condition|)
 return|return;
 comment|// Clear out the analysis manager if we're being destroyed -- it means we
 comment|// didn't even see an invalidate call when we got invalidated.
-name|AM
+name|InnerAM
 operator|->
 name|clear
 argument_list|()
@@ -3247,13 +3991,13 @@ argument_list|()
 block|{
 return|return
 operator|*
-name|AM
+name|InnerAM
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Handler for invalidation of the module.
+comment|/// \brief Handler for invalidation of the outer IR unit.
 end_comment
 
 begin_comment
@@ -3265,15 +4009,15 @@ comment|/// If this analysis itself is preserved, then we assume that the set of
 end_comment
 
 begin_comment
-comment|/// Function objects in the \c Module hasn't changed and thus we don't need
+comment|/// IR units that the inner analysis manager controls hasn't changed and
 end_comment
 
 begin_comment
-comment|/// to invalidate *all* cached data associated with a \c Function* in the \c
+comment|/// thus we don't need to invalidate *all* cached data associated with any
 end_comment
 
 begin_comment
-comment|/// FunctionAnalysisManager.
+comment|/// \c IRUnitT* in the \c AnalysisManagerT.
 end_comment
 
 begin_comment
@@ -3285,55 +4029,69 @@ comment|/// Regardless of whether this analysis is marked as preserved, all of t
 end_comment
 
 begin_comment
-comment|/// analyses in the \c FunctionAnalysisManager are potentially invalidated
+comment|/// analyses in the \c AnalysisManagerT are potentially invalidated (for
 end_comment
 
 begin_comment
-comment|/// based on the set of preserved analyses.
+comment|/// the relevant inner set of their IR units) based on the set of preserved
 end_comment
 
-begin_function
+begin_comment
+comment|/// analyses.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Because this needs to understand the mapping from one IR unit to an
+end_comment
+
+begin_comment
+comment|/// inner IR unit, this method isn't defined in the primary template.
+end_comment
+
+begin_comment
+comment|/// Instead, each specialization of this template will need to provide an
+end_comment
+
+begin_comment
+comment|/// explicit specialization of this method to handle that particular pair
+end_comment
+
+begin_comment
+comment|/// of IR unit and inner AnalysisManagerT.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|invalidate
-parameter_list|(
+argument_list|(
 name|IRUnitT
-modifier|&
+operator|&
 name|IR
-parameter_list|,
+argument_list|,
 specifier|const
 name|PreservedAnalyses
-modifier|&
+operator|&
 name|PA
-parameter_list|)
-block|{
-comment|// If this proxy isn't marked as preserved, then we can't even invalidate
-comment|// individual function analyses, there may be an invalid set of Function
-comment|// objects in the cache making it impossible to incrementally preserve
-comment|// them. Just clear the entire manager.
-if|if
-condition|(
-operator|!
-name|PA
-operator|.
-name|preserved
-argument_list|(
-name|InnerAnalysisManagerProxy
+argument_list|,
+name|typename
+name|AnalysisManager
+operator|<
+name|IRUnitT
+argument_list|,
+name|ExtraArgTs
+operator|...
+operator|>
 operator|::
-name|ID
-argument_list|()
+name|Invalidator
+operator|&
+name|Inv
 argument_list|)
-condition|)
-name|AM
-operator|->
-name|clear
-argument_list|()
-expr_stmt|;
-comment|// Return false to indicate that this result is still a valid proxy.
-return|return
-name|false
-return|;
-block|}
-end_function
+decl_stmt|;
+end_decl_stmt
 
 begin_label
 name|private
@@ -3343,7 +4101,7 @@ end_label
 begin_decl_stmt
 name|AnalysisManagerT
 modifier|*
-name|AM
+name|InnerAM
 decl_stmt|;
 end_decl_stmt
 
@@ -3357,128 +4115,44 @@ name|InnerAnalysisManagerProxy
 argument_list|(
 name|AnalysisManagerT
 operator|&
-name|AM
+name|InnerAM
 argument_list|)
 operator|:
-name|AM
+name|InnerAM
 argument_list|(
-argument|&AM
+argument|&InnerAM
 argument_list|)
 block|{}
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|InnerAnalysisManagerProxy
-argument_list|(
-specifier|const
-name|InnerAnalysisManagerProxy
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|AM
-argument_list|(
-argument|Arg.AM
-argument_list|)
-block|{}
-name|InnerAnalysisManagerProxy
-argument_list|(
-name|InnerAnalysisManagerProxy
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|AM
-argument_list|(
-argument|std::move(Arg.AM)
-argument_list|)
-block|{}
-name|InnerAnalysisManagerProxy
-operator|&
-name|operator
-operator|=
-operator|(
-name|InnerAnalysisManagerProxy
-name|RHS
-operator|)
-block|{
-name|std
-operator|::
-name|swap
-argument_list|(
-name|AM
-argument_list|,
-name|RHS
-operator|.
-name|AM
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Run the analysis pass and create our proxy result object.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This doesn't do any interesting work, it is primarily used to insert our
-end_comment
-
-begin_comment
 comment|/// proxy result object into the module analysis cache so that we can proxy
-end_comment
-
-begin_comment
 comment|/// invalidation to the function analysis manager.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// In debug builds, it will also assert that the analysis manager is empty
-end_comment
-
-begin_comment
 comment|/// as no queries should arrive at the function analysis manager prior to
-end_comment
-
-begin_comment
 comment|/// this analysis being requested.
-end_comment
-
-begin_decl_stmt
 name|Result
 name|run
 argument_list|(
-name|IRUnitT
-operator|&
-name|IR
+argument|IRUnitT&IR
 argument_list|,
-name|AnalysisManager
-operator|<
-name|IRUnitT
-operator|>
-operator|&
+argument|AnalysisManager<IRUnitT
+argument_list|,
+argument|ExtraArgTs...>&AM
+argument_list|,
+argument|ExtraArgTs...
 argument_list|)
 block|{
 return|return
 name|Result
 argument_list|(
 operator|*
-name|AM
+name|InnerAM
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_label
 name|private
@@ -3500,15 +4174,15 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|AnalysisManagerT
 modifier|*
-name|AM
+name|InnerAM
 decl_stmt|;
 end_decl_stmt
 
@@ -3521,24 +4195,25 @@ name|AnalysisManagerT
 operator|,
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
-name|char
+name|AnalysisKey
 name|InnerAnalysisManagerProxy
 operator|<
 name|AnalysisManagerT
 operator|,
 name|IRUnitT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>
 operator|::
-name|PassID
+name|Key
 expr_stmt|;
 end_expr_stmt
-
-begin_extern
-extern|extern template class InnerAnalysisManagerProxy<FunctionAnalysisManager
-operator|,
-extern|Module>;
-end_extern
 
 begin_comment
 comment|/// Provide the \c FunctionAnalysisManager to \c Module proxy.
@@ -3555,6 +4230,57 @@ operator|>
 name|FunctionAnalysisManagerModuleProxy
 expr_stmt|;
 end_typedef
+
+begin_comment
+comment|/// Specialization of the invalidate method for the \c
+end_comment
+
+begin_comment
+comment|/// FunctionAnalysisManagerModuleProxy's result.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|bool
+name|FunctionAnalysisManagerModuleProxy
+operator|::
+name|Result
+operator|::
+name|invalidate
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|ModuleAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+name|Inv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Ensure the \c FunctionAnalysisManagerModuleProxy is provided as an extern
+end_comment
+
+begin_comment
+comment|// template.
+end_comment
+
+begin_extern
+extern|extern template class InnerAnalysisManagerProxy<FunctionAnalysisManager
+operator|,
+extern|Module>;
+end_extern
 
 begin_comment
 comment|/// \brief A function analysis which acts as a proxy for a module analysis
@@ -3593,15 +4319,31 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This proxy *doesn't* manage the invalidation in any way. That is handled by
+comment|/// The invalidation provided by this proxy involves tracking when an
 end_comment
 
 begin_comment
-comment|/// the recursive return path of each layer of the pass manager and the
+comment|/// invalidation event in the outer analysis manager needs to trigger an
 end_comment
 
 begin_comment
-comment|/// returned PreservedAnalysis set.
+comment|/// invalidation of a particular analysis on this IR unit.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Because outer analyses aren't invalidated while these IR units are being
+end_comment
+
+begin_comment
+comment|/// precessed, we have to register and handle these as deferred invalidation
+end_comment
+
+begin_comment
+comment|/// events.
 end_comment
 
 begin_expr_stmt
@@ -3612,6 +4354,10 @@ name|AnalysisManagerT
 operator|,
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 name|class
 name|OuterAnalysisManagerProxy
@@ -3648,58 +4394,6 @@ argument_list|(
 argument|&AM
 argument_list|)
 block|{}
-comment|// We have to explicitly define all the special member functions because
-comment|// MSVC refuses to generate them.
-name|Result
-argument_list|(
-specifier|const
-name|Result
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|AM
-argument_list|(
-argument|Arg.AM
-argument_list|)
-block|{}
-name|Result
-argument_list|(
-name|Result
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|AM
-argument_list|(
-argument|std::move(Arg.AM)
-argument_list|)
-block|{}
-name|Result
-operator|&
-name|operator
-operator|=
-operator|(
-name|Result
-name|RHS
-operator|)
-block|{
-name|std
-operator|::
-name|swap
-argument_list|(
-name|AM
-argument_list|,
-name|RHS
-operator|.
-name|AM
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 specifier|const
 name|AnalysisManagerT
 operator|&
@@ -3717,10 +4411,132 @@ name|bool
 name|invalidate
 argument_list|(
 argument|IRUnitT&
+argument_list|,
+argument|const PreservedAnalyses&
+argument_list|,
+argument|typename AnalysisManager<IRUnitT
+argument_list|,
+argument|ExtraArgTs...>::Invalidator&
 argument_list|)
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// Register a deferred invalidation event for when the outer analysis
+comment|/// manager processes its invalidations.
+name|template
+operator|<
+name|typename
+name|OuterAnalysisT
+operator|,
+name|typename
+name|InvalidatedAnalysisT
+operator|>
+name|void
+name|registerOuterAnalysisInvalidation
+argument_list|()
+block|{
+name|AnalysisKey
+operator|*
+name|OuterID
+operator|=
+name|OuterAnalysisT
+operator|::
+name|ID
+argument_list|()
+block|;
+name|AnalysisKey
+operator|*
+name|InvalidatedID
+operator|=
+name|InvalidatedAnalysisT
+operator|::
+name|ID
+argument_list|()
+block|;
+name|auto
+operator|&
+name|InvalidatedIDList
+operator|=
+name|OuterAnalysisInvalidationMap
+index|[
+name|OuterID
+index|]
+block|;
+comment|// Note, this is a linear scan. If we end up with large numbers of
+comment|// analyses that all trigger invalidation on the same outer analysis,
+comment|// this entire system should be changed to some other deterministic
+comment|// data structure such as a `SetVector` of a pair of pointers.
+name|auto
+name|InvalidatedIt
+operator|=
+name|std
+operator|::
+name|find
+argument_list|(
+name|InvalidatedIDList
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|InvalidatedIDList
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|InvalidatedID
+argument_list|)
+block|;
+if|if
+condition|(
+name|InvalidatedIt
+operator|==
+name|InvalidatedIDList
+operator|.
+name|end
+argument_list|()
+condition|)
+name|InvalidatedIDList
+operator|.
+name|push_back
+argument_list|(
+name|InvalidatedID
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Access the map from outer analyses to deferred invalidation requiring
+end_comment
+
+begin_comment
+comment|/// analyses.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|SmallDenseMap
+operator|<
+name|AnalysisKey
+operator|*
+operator|,
+name|TinyPtrVector
+operator|<
+name|AnalysisKey
+operator|*
+operator|>
+operator|,
+literal|2
+operator|>
+operator|&
+name|getOuterInvalidations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OuterAnalysisInvalidationMap
 return|;
 block|}
 end_expr_stmt
@@ -3738,6 +4554,32 @@ name|AM
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// A map from an outer analysis ID to the set of this IR-unit's analyses
+end_comment
+
+begin_comment
+comment|/// which need to be invalidated.
+end_comment
+
+begin_expr_stmt
+name|SmallDenseMap
+operator|<
+name|AnalysisKey
+operator|*
+operator|,
+name|TinyPtrVector
+operator|<
+name|AnalysisKey
+operator|*
+operator|>
+operator|,
+literal|2
+operator|>
+name|OuterAnalysisInvalidationMap
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 unit|};
 name|OuterAnalysisManagerProxy
@@ -3753,84 +4595,19 @@ argument_list|(
 argument|&AM
 argument_list|)
 block|{}
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|OuterAnalysisManagerProxy
-argument_list|(
-specifier|const
-name|OuterAnalysisManagerProxy
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|AM
-argument_list|(
-argument|Arg.AM
-argument_list|)
-block|{}
-name|OuterAnalysisManagerProxy
-argument_list|(
-name|OuterAnalysisManagerProxy
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|AM
-argument_list|(
-argument|std::move(Arg.AM)
-argument_list|)
-block|{}
-name|OuterAnalysisManagerProxy
-operator|&
-name|operator
-operator|=
-operator|(
-name|OuterAnalysisManagerProxy
-name|RHS
-operator|)
-block|{
-name|std
-operator|::
-name|swap
-argument_list|(
-name|AM
-argument_list|,
-name|RHS
-operator|.
-name|AM
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Run the analysis pass and create our proxy result object.
-end_comment
-
-begin_comment
 comment|/// Nothing to see here, it just forwards the \c AM reference into the
-end_comment
-
-begin_comment
 comment|/// result.
-end_comment
-
-begin_decl_stmt
 name|Result
 name|run
 argument_list|(
-name|IRUnitT
-operator|&
+argument|IRUnitT&
 argument_list|,
-name|AnalysisManager
-operator|<
-name|IRUnitT
-operator|>
-operator|&
+argument|AnalysisManager<IRUnitT
+argument_list|,
+argument|ExtraArgTs...>&
+argument_list|,
+argument|ExtraArgTs...
 argument_list|)
 block|{
 return|return
@@ -3841,7 +4618,7 @@ name|AM
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_label
 name|private
@@ -3863,8 +4640,8 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 decl_stmt|;
 end_decl_stmt
 
@@ -3885,16 +4662,23 @@ name|AnalysisManagerT
 operator|,
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
-name|char
+name|AnalysisKey
 name|OuterAnalysisManagerProxy
 operator|<
 name|AnalysisManagerT
 operator|,
 name|IRUnitT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>
 operator|::
-name|PassID
+name|Key
 expr_stmt|;
 end_expr_stmt
 
@@ -4038,80 +4822,6 @@ argument_list|(
 argument|std::move(Pass)
 argument_list|)
 block|{}
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|ModuleToFunctionPassAdaptor
-argument_list|(
-specifier|const
-name|ModuleToFunctionPassAdaptor
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|Pass
-argument_list|(
-argument|Arg.Pass
-argument_list|)
-block|{}
-name|ModuleToFunctionPassAdaptor
-argument_list|(
-name|ModuleToFunctionPassAdaptor
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|Pass
-argument_list|(
-argument|std::move(Arg.Pass)
-argument_list|)
-block|{}
-name|friend
-name|void
-name|swap
-argument_list|(
-argument|ModuleToFunctionPassAdaptor&LHS
-argument_list|,
-argument|ModuleToFunctionPassAdaptor&RHS
-argument_list|)
-block|{
-name|using
-name|std
-operator|::
-name|swap
-block|;
-name|swap
-argument_list|(
-name|LHS
-operator|.
-name|Pass
-argument_list|,
-name|RHS
-operator|.
-name|Pass
-argument_list|)
-block|;   }
-name|ModuleToFunctionPassAdaptor
-operator|&
-name|operator
-operator|=
-operator|(
-name|ModuleToFunctionPassAdaptor
-name|RHS
-operator|)
-block|{
-name|swap
-argument_list|(
-operator|*
-name|this
-argument_list|,
-name|RHS
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 comment|/// \brief Runs the function pass across every function in the module.
 name|PreservedAnalyses
 name|run
@@ -4178,23 +4888,14 @@ argument_list|)
 decl_stmt|;
 comment|// We know that the function pass couldn't have invalidated any other
 comment|// function's analyses (that's the contract of a function pass), so
-comment|// directly handle the function analysis manager's invalidation here and
-comment|// update our preserved set to reflect that these have already been
-comment|// handled.
-name|PassPA
-operator|=
+comment|// directly handle the function analysis manager's invalidation here.
 name|FAM
 operator|.
 name|invalidate
 argument_list|(
 name|F
 argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
 name|PassPA
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// Then intersect the preserved set so that invalidation of module
@@ -4212,10 +4913,21 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|// By definition we preserve the proxy. This precludes *any* invalidation
-comment|// of function analyses by the proxy, but that's OK because we've taken
-comment|// care to invalidate analyses in the function analysis manager
-comment|// incrementally above.
+comment|// By definition we preserve the proxy. We also preserve all analyses on
+comment|// Function units. This precludes *any* invalidation of function analyses
+comment|// by the proxy, but that's OK because we've taken care to invalidate
+comment|// analyses in the function analysis manager incrementally above.
+name|PA
+operator|.
+name|preserveSet
+operator|<
+name|AllAnalysesOn
+operator|<
+name|Function
+operator|>>
+operator|(
+operator|)
+block|;
 name|PA
 operator|.
 name|preserve
@@ -4224,17 +4936,19 @@ name|FunctionAnalysisManagerModuleProxy
 operator|>
 operator|(
 operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
+block|;
 return|return
 name|PA
 return|;
-end_return
+block|}
+end_expr_stmt
+
+begin_label
+name|private
+label|:
+end_label
 
 begin_decl_stmt
-unit|}  private:
 name|FunctionPassT
 name|Pass
 decl_stmt|;
@@ -4290,11 +5004,31 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This is a no-op pass which simply forces a specific analysis pass's result
+comment|/// If there are extra arguments at the pass's run level there may also be
 end_comment
 
 begin_comment
-comment|/// to be available when it is run.
+comment|/// extra arguments to the analysis manager's \c getResult routine. We can't
+end_comment
+
+begin_comment
+comment|/// guess how to effectively map the arguments from one to the other, and so
+end_comment
+
+begin_comment
+comment|/// this specialization just ignores them.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Specific patterns of run-method extra arguments and analysis manager extra
+end_comment
+
+begin_comment
+comment|/// arguments will have to be defined as appropriate specializations.
 end_comment
 
 begin_expr_stmt
@@ -4302,6 +5036,21 @@ name|template
 operator|<
 name|typename
 name|AnalysisT
+operator|,
+name|typename
+name|IRUnitT
+operator|,
+name|typename
+name|AnalysisManagerT
+operator|=
+name|AnalysisManager
+operator|<
+name|IRUnitT
+operator|>
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 expr|struct
 name|RequireAnalysisPass
@@ -4311,6 +5060,13 @@ operator|<
 name|RequireAnalysisPass
 operator|<
 name|AnalysisT
+operator|,
+name|IRUnitT
+operator|,
+name|AnalysisManagerT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>>
 block|{
 comment|/// \brief Run this pass over some unit of IR.
@@ -4319,17 +5075,14 @@ comment|/// This pass can be run over any unit of IR and use any analysis manage
 comment|/// provided they satisfy the basic API requirements. When this pass is
 comment|/// created, these methods can be instantiated to satisfy whatever the
 comment|/// context requires.
-name|template
-operator|<
-name|typename
-name|IRUnitT
-operator|>
 name|PreservedAnalyses
 name|run
 argument_list|(
 argument|IRUnitT&Arg
 argument_list|,
-argument|AnalysisManager<IRUnitT>&AM
+argument|AnalysisManagerT&AM
+argument_list|,
+argument|ExtraArgTs&&... Args
 argument_list|)
 block|{
 operator|(
@@ -4344,6 +5097,17 @@ name|AnalysisT
 operator|>
 operator|(
 name|Arg
+operator|,
+name|std
+operator|::
+name|forward
+operator|<
+name|ExtraArgTs
+operator|>
+operator|(
+name|Args
+operator|)
+operator|...
 operator|)
 block|;
 return|return
@@ -4402,33 +5166,43 @@ name|template
 operator|<
 name|typename
 name|IRUnitT
+block|,
+name|typename
+name|AnalysisManagerT
+block|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 name|PreservedAnalyses
 name|run
 argument_list|(
 argument|IRUnitT&Arg
 argument_list|,
-argument|AnalysisManager<IRUnitT>&AM
+argument|AnalysisManagerT&AM
+argument_list|,
+argument|ExtraArgTs&&...
 argument_list|)
 block|{
-comment|// We have to directly invalidate the analysis result as we can't
-comment|// enumerate all other analyses and use the preserved set to control it.
-name|AM
-operator|.
-name|template
-name|invalidate
-operator|<
-name|AnalysisT
-operator|>
-operator|(
-name|Arg
-operator|)
-block|;
-return|return
+name|auto
+name|PA
+operator|=
 name|PreservedAnalyses
 operator|::
 name|all
 argument_list|()
+block|;
+name|PA
+operator|.
+name|abandon
+operator|<
+name|AnalysisT
+operator|>
+operator|(
+operator|)
+block|;
+return|return
+name|PA
 return|;
 block|}
 end_expr_stmt
@@ -4464,13 +5238,22 @@ name|template
 operator|<
 name|typename
 name|IRUnitT
+block|,
+name|typename
+name|AnalysisManagerT
+block|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 name|PreservedAnalyses
 name|run
 argument_list|(
 argument|IRUnitT&
 argument_list|,
-argument|AnalysisManager<IRUnitT>&
+argument|AnalysisManagerT&
+argument_list|,
+argument|ExtraArgTs&&...
 argument_list|)
 block|{
 return|return
@@ -4481,10 +5264,168 @@ argument_list|()
 return|;
 block|}
 expr|}
-block|;  }
+block|;
+comment|/// A utility pass template that simply runs another pass multiple times.
+comment|///
+comment|/// This can be useful when debugging or testing passes. It also serves as an
+comment|/// example of how to extend the pass manager in ways beyond composition.
+name|template
+operator|<
+name|typename
+name|PassT
+operator|>
+name|class
+name|RepeatedPass
+operator|:
+name|public
+name|PassInfoMixin
+operator|<
+name|RepeatedPass
+operator|<
+name|PassT
+operator|>>
+block|{
+name|public
+operator|:
+name|RepeatedPass
+argument_list|(
+argument|int Count
+argument_list|,
+argument|PassT P
+argument_list|)
+operator|:
+name|Count
+argument_list|(
+name|Count
+argument_list|)
+block|,
+name|P
+argument_list|(
+argument|std::move(P)
+argument_list|)
+block|{}
+name|template
+operator|<
+name|typename
+name|IRUnitT
+block|,
+name|typename
+name|AnalysisManagerT
+block|,
+name|typename
+operator|...
+name|Ts
+operator|>
+name|PreservedAnalyses
+name|run
+argument_list|(
+argument|IRUnitT&Arg
+argument_list|,
+argument|AnalysisManagerT&AM
+argument_list|,
+argument|Ts&&... Args
+argument_list|)
+block|{
+name|auto
+name|PA
+operator|=
+name|PreservedAnalyses
+operator|::
+name|all
+argument_list|()
+block|;
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|Count
+condition|;
+operator|++
+name|i
+control|)
+name|PA
+operator|.
+name|intersect
+argument_list|(
+name|P
+operator|.
+name|run
+argument_list|(
+name|Arg
+argument_list|,
+name|AM
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|Ts
+operator|>
+operator|(
+name|Args
+operator|)
+operator|...
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|PA
+return|;
+block|}
+name|private
+operator|:
+name|int
+name|Count
+block|;
+name|PassT
+name|P
+block|; }
+decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|PassT
+operator|>
+name|RepeatedPass
+operator|<
+name|PassT
+operator|>
+name|createRepeatedPass
+argument_list|(
+argument|int Count
+argument_list|,
+argument|PassT P
+argument_list|)
+block|{
+return|return
+name|RepeatedPass
+operator|<
+name|PassT
+operator|>
+operator|(
+name|Count
+operator|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|P
+argument_list|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

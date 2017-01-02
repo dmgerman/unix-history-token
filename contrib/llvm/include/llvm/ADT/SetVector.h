@@ -86,13 +86,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallSet.h"
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -110,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<iterator>
 end_include
 
 begin_include
@@ -220,7 +232,9 @@ expr_stmt|;
 comment|/// \brief Construct an empty SetVector
 name|SetVector
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// \brief Initialize a SetVector with a range of elements
 name|template
 operator|<
@@ -251,6 +265,25 @@ specifier|const
 block|{
 return|return
 name|vector_
+return|;
+block|}
+comment|/// Clear the SetVector and return the underlying vector.
+name|Vector
+name|takeVector
+parameter_list|()
+block|{
+name|set_
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+name|vector_
+argument_list|)
 return|;
 block|}
 comment|/// \brief Determine if the SetVector is empty or not.
@@ -541,19 +574,9 @@ operator|::
 name|iterator
 name|I
 operator|=
-name|std
-operator|::
 name|find
 argument_list|(
 name|vector_
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|vector_
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|X
 argument_list|)
@@ -668,7 +691,7 @@ comment|/// This is intended to be equivalent to the following code, if we could
 comment|/// write it:
 comment|///
 comment|/// \code
-comment|///   V.erase(std::remove_if(V.begin(), V.end(), P), V.end());
+comment|///   V.erase(remove_if(V, P), V.end());
 comment|/// \endcode
 comment|///
 comment|/// However, SetVector doesn't expose non-const iterators, making any
@@ -692,19 +715,11 @@ operator|::
 name|iterator
 name|I
 operator|=
-name|std
+name|llvm
 operator|::
 name|remove_if
 argument_list|(
 name|vector_
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|vector_
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|TestAndEraseFromSet
 operator|<
@@ -834,8 +849,8 @@ block|}
 end_function
 
 begin_function
+name|LLVM_NODISCARD
 name|T
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|pop_back_val
 parameter_list|()
 block|{
@@ -1190,19 +1205,20 @@ operator|,
 name|N
 operator|>
 operator|,
-name|SmallSet
+name|SmallDenseSet
 operator|<
 name|T
 operator|,
 name|N
-operator|>
-expr|>
+operator|>>
 block|{
 name|public
 operator|:
 name|SmallSetVector
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// \brief Initialize a SmallSetVector with a range of elements
 name|template
 operator|<
@@ -1231,17 +1247,17 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// End llvm namespace
-end_comment
-
-begin_comment
-comment|// vim: sw=2 ai
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_SETVECTOR_H
+end_comment
 
 end_unit
 

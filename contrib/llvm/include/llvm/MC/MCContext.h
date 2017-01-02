@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCCodeView.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCDwarf.h"
 end_include
 
@@ -113,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_include
@@ -298,15 +298,15 @@ comment|/// Bindings of names to symbols.
 name|SymbolTable
 name|Symbols
 decl_stmt|;
-comment|/// ELF sections can have a corresponding symbol. This maps one to the
+comment|/// Sections can have a corresponding symbol. This maps one to the
 comment|/// other.
 name|DenseMap
 operator|<
 specifier|const
-name|MCSectionELF
+name|MCSection
 operator|*
 operator|,
-name|MCSymbolELF
+name|MCSymbol
 operator|*
 operator|>
 name|SectionSymbols
@@ -437,30 +437,6 @@ name|CurrentDwarfLoc
 decl_stmt|;
 name|bool
 name|DwarfLocSeen
-decl_stmt|;
-comment|/// The current CodeView line information from the last .cv_loc directive.
-name|MCCVLoc
-name|CurrentCVLoc
-init|=
-name|MCCVLoc
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|false
-argument_list|,
-name|true
-argument_list|)
-decl_stmt|;
-name|bool
-name|CVLocSeen
-init|=
-name|false
 decl_stmt|;
 comment|/// Generate dwarf debugging info for assembly source files.
 name|bool
@@ -1233,6 +1209,27 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Set value for a symbol.
+end_comment
+
+begin_function_decl
+name|void
+name|setSymbolValue
+parameter_list|(
+name|MCStreamer
+modifier|&
+name|Streamer
+parameter_list|,
+name|StringRef
+name|Sym
+parameter_list|,
+name|uint64_t
+name|Val
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// getSymbols - Get a reference for the symbol table for clients that
@@ -2582,6 +2579,23 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|dwarf
+operator|::
+name|DwarfFormat
+name|getDwarfFormat
+argument_list|()
+specifier|const
+block|{
+comment|// TODO: Support DWARF64
+return|return
+name|dwarf
+operator|::
+name|DWARF32
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 name|void
 name|setDwarfVersion
@@ -2608,169 +2622,6 @@ name|DwarfVersion
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// @}
-end_comment
-
-begin_comment
-comment|/// \name CodeView Management
-end_comment
-
-begin_comment
-comment|/// @{
-end_comment
-
-begin_comment
-comment|/// Creates an entry in the cv file table.
-end_comment
-
-begin_function_decl
-name|unsigned
-name|getCVFile
-parameter_list|(
-name|StringRef
-name|FileName
-parameter_list|,
-name|unsigned
-name|FileNumber
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Saves the information from the currently parsed .cv_loc directive
-end_comment
-
-begin_comment
-comment|/// and sets CVLocSeen.  When the next instruction is assembled an entry
-end_comment
-
-begin_comment
-comment|/// in the line number table with this information and the address of the
-end_comment
-
-begin_comment
-comment|/// instruction will be created.
-end_comment
-
-begin_function
-name|void
-name|setCurrentCVLoc
-parameter_list|(
-name|unsigned
-name|FunctionId
-parameter_list|,
-name|unsigned
-name|FileNo
-parameter_list|,
-name|unsigned
-name|Line
-parameter_list|,
-name|unsigned
-name|Column
-parameter_list|,
-name|bool
-name|PrologueEnd
-parameter_list|,
-name|bool
-name|IsStmt
-parameter_list|)
-block|{
-name|CurrentCVLoc
-operator|.
-name|setFunctionId
-argument_list|(
-name|FunctionId
-argument_list|)
-expr_stmt|;
-name|CurrentCVLoc
-operator|.
-name|setFileNum
-argument_list|(
-name|FileNo
-argument_list|)
-expr_stmt|;
-name|CurrentCVLoc
-operator|.
-name|setLine
-argument_list|(
-name|Line
-argument_list|)
-expr_stmt|;
-name|CurrentCVLoc
-operator|.
-name|setColumn
-argument_list|(
-name|Column
-argument_list|)
-expr_stmt|;
-name|CurrentCVLoc
-operator|.
-name|setPrologueEnd
-argument_list|(
-name|PrologueEnd
-argument_list|)
-expr_stmt|;
-name|CurrentCVLoc
-operator|.
-name|setIsStmt
-argument_list|(
-name|IsStmt
-argument_list|)
-expr_stmt|;
-name|CVLocSeen
-operator|=
-name|true
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|clearCVLocSeen
-parameter_list|()
-block|{
-name|CVLocSeen
-operator|=
-name|false
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|bool
-name|getCVLocSeen
-parameter_list|()
-block|{
-return|return
-name|CVLocSeen
-return|;
-block|}
-end_function
-
-begin_function
-specifier|const
-name|MCCVLoc
-modifier|&
-name|getCurrentCVLoc
-parameter_list|()
-block|{
-return|return
-name|CurrentCVLoc
-return|;
-block|}
-end_function
-
-begin_function_decl
-name|bool
-name|isValidCVFileNumber
-parameter_list|(
-name|unsigned
-name|FileNumber
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// @}
@@ -3068,7 +2919,7 @@ name|Alignment
 operator|=
 literal|8
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 return|return
 name|C
@@ -3125,7 +2976,7 @@ name|C
 argument_list|,
 name|size_t
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 name|C
 operator|.
@@ -3235,7 +3086,7 @@ name|Alignment
 operator|=
 literal|8
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 return|return
 name|C
@@ -3291,7 +3142,7 @@ name|MCContext
 operator|&
 name|C
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 name|C
 operator|.

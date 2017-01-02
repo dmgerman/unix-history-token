@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/LoopPassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/PassManager.h"
 end_include
 
@@ -88,7 +94,9 @@ block|{
 name|public
 operator|:
 name|LoopRotatePass
-argument_list|()
+argument_list|(
+argument|bool EnableHeaderDuplication = true
+argument_list|)
 block|;
 name|PreservedAnalyses
 name|run
@@ -97,13 +105,16 @@ name|Loop
 operator|&
 name|L
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Loop
-operator|>
+name|LoopAnalysisManager
 operator|&
 name|AM
 argument_list|)
+block|;
+name|private
+operator|:
+specifier|const
+name|bool
+name|EnableHeaderDuplication
 block|; }
 decl_stmt|;
 block|}

@@ -106,6 +106,12 @@ name|class
 name|DataLayout
 decl_stmt|;
 name|class
+name|InstructionSelector
+decl_stmt|;
+name|class
+name|LegalizerInfo
+decl_stmt|;
+name|class
 name|MachineFunction
 decl_stmt|;
 name|class
@@ -248,6 +254,16 @@ decl|~
 name|TargetSubtargetInfo
 argument_list|()
 empty_stmt|;
+name|virtual
+name|bool
+name|isXRaySupported
+argument_list|()
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|// Interfaces to the major aspects of target machine information:
 comment|//
 comment|// -- Instruction opcode and operand information
@@ -318,6 +334,22 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|// FIXME: This lets targets specialize the selector by subtarget (which lets
+comment|// us do things like a dedicated avx512 selector).  However, we might want
+comment|// to also specialize selectors by MachineFunction, which would let us be
+comment|// aware of optsize/optnone and such.
+name|virtual
+decl|const
+name|InstructionSelector
+modifier|*
+name|getInstructionSelector
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
 comment|/// Target can subclass this hook to select a different DAG scheduler.
 name|virtual
 name|RegisterScheduler
@@ -329,6 +361,18 @@ name|CodeGenOpt
 operator|::
 name|Level
 argument_list|)
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+decl|const
+name|LegalizerInfo
+modifier|*
+name|getLegalizerInfo
+argument_list|()
 decl|const
 block|{
 return|return
@@ -529,6 +573,16 @@ argument|std::vector<std::unique_ptr<ScheduleDAGMutation>>&Mutations
 argument_list|)
 specifier|const
 block|{   }
+comment|// \brief Provide an ordered list of schedule DAG mutations for the machine
+comment|// pipeliner.
+name|virtual
+name|void
+name|getSMSMutations
+argument_list|(
+argument|std::vector<std::unique_ptr<ScheduleDAGMutation>>&Mutations
+argument_list|)
+specifier|const
+block|{   }
 comment|// For use with PostRAScheduling: get the minimum optimization level needed
 comment|// to enable post-RA scheduling.
 name|virtual
@@ -595,6 +649,8 @@ name|nullptr
 return|;
 block|}
 comment|/// Enable tracking of subregister liveness in register allocator.
+comment|/// Please use MachineRegisterInfo::subRegLivenessEnabled() instead where
+comment|/// possible.
 name|virtual
 name|bool
 name|enableSubRegLiveness

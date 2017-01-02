@@ -124,6 +124,13 @@ specifier|const
 name|MachineBranchProbabilityInfo
 modifier|&
 name|MBPI
+parameter_list|,
+comment|// Min tail length to merge. Defaults to commandline
+comment|// flag. Ignored for optsize.
+name|unsigned
+name|MinCommonTailLength
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|bool
@@ -430,6 +437,9 @@ decl_stmt|;
 name|bool
 name|UpdateLiveIns
 decl_stmt|;
+name|unsigned
+name|MinCommonTailLength
+decl_stmt|;
 specifier|const
 name|TargetInstrInfo
 modifier|*
@@ -569,6 +579,9 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|PredBB
+parameter_list|,
+name|unsigned
+name|MinCommonTailLength
 parameter_list|)
 function_decl|;
 name|void
@@ -577,14 +590,6 @@ parameter_list|(
 name|MachineBasicBlock
 modifier|&
 name|TailMBB
-parameter_list|)
-function_decl|;
-name|void
-name|computeLiveIns
-parameter_list|(
-name|MachineBasicBlock
-modifier|&
-name|MBB
 parameter_list|)
 function_decl|;
 name|void
@@ -690,14 +695,6 @@ parameter_list|)
 function_decl|;
 name|void
 name|RemoveDeadBlock
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|MBB
-parameter_list|)
-function_decl|;
-name|bool
-name|OptimizeImpDefsBlock
 parameter_list|(
 name|MachineBasicBlock
 modifier|*

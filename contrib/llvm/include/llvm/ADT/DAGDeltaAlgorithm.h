@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -126,7 +132,9 @@ name|virtual
 operator|~
 name|DAGDeltaAlgorithm
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Run - Minimize the DAG formed by the \p Changes vertices and the
 comment|/// \p Dependencies edges by executing \see ExecuteOneTest() on subsets of
 comment|/// changes and returning the smallest set which still satisfies the test
@@ -157,7 +165,7 @@ operator|>
 operator|&
 name|Dependencies
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// UpdatedSearchState - Callback used when the search state changes.
 name|virtual
 name|void
@@ -205,6 +213,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_DAGDELTAALGORITHM_H
+end_comment
 
 end_unit
 

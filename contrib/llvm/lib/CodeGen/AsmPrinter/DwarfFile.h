@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/DIE.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Metadata.h"
 end_include
 
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|<memory>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_decl_stmt
@@ -155,22 +155,9 @@ name|BumpPtrAllocator
 name|AbbrevAllocator
 decl_stmt|;
 comment|// Used to uniquely define abbreviations.
-name|FoldingSet
-operator|<
-name|DIEAbbrev
-operator|>
-name|AbbreviationsSet
-expr_stmt|;
-comment|// A list of all the unique abbreviations in use.
-name|std
-operator|::
-name|vector
-operator|<
-name|DIEAbbrev
-operator|*
-operator|>
-name|Abbreviations
-expr_stmt|;
+name|DIEAbbrevSet
+name|Abbrevs
+decl_stmt|;
 comment|// A pointer to all units in the section.
 name|SmallVector
 operator|<
@@ -240,10 +227,6 @@ argument_list|,
 argument|BumpPtrAllocator&DA
 argument_list|)
 empty_stmt|;
-operator|~
-name|DwarfFile
-argument_list|()
-expr_stmt|;
 specifier|const
 name|SmallVectorImpl
 operator|<
@@ -286,19 +269,6 @@ parameter_list|(
 name|DwarfUnit
 modifier|*
 name|TheU
-parameter_list|)
-function_decl|;
-comment|/// Define a unique number for the abbreviation.
-comment|///
-comment|/// Compute the abbreviation for \c Die, look up its unique number, and
-comment|/// return a reference to it in the uniquing table.
-name|DIEAbbrev
-modifier|&
-name|assignAbbrevNumber
-parameter_list|(
-name|DIE
-modifier|&
-name|Die
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a unit to the list of CUs.

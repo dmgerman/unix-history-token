@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
+file|"llvm/ADT/CachedHashString.h"
 end_include
 
 begin_include
@@ -65,6 +65,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// \brief Utility for building string tables with deduplicated suffixes.
 name|class
 name|StringTableBuilder
@@ -85,18 +88,9 @@ block|}
 enum|;
 name|private
 label|:
-name|SmallString
-operator|<
-literal|256
-operator|>
-name|StringTable
-expr_stmt|;
 name|DenseMap
 operator|<
-name|CachedHash
-operator|<
-name|StringRef
-operator|>
+name|CachedHashStringRef
 operator|,
 name|size_t
 operator|>
@@ -113,12 +107,21 @@ decl_stmt|;
 name|unsigned
 name|Alignment
 decl_stmt|;
+name|bool
+name|Finalized
+init|=
+name|false
+decl_stmt|;
 name|void
 name|finalizeStringTable
 parameter_list|(
 name|bool
 name|Optimize
 parameter_list|)
+function_decl|;
+name|void
+name|initSize
+parameter_list|()
 function_decl|;
 name|public
 label|:
@@ -130,16 +133,37 @@ argument|unsigned Alignment =
 literal|1
 argument_list|)
 empty_stmt|;
+operator|~
+name|StringTableBuilder
+argument_list|()
+expr_stmt|;
 comment|/// \brief Add a string to the builder. Returns the position of S in the
 comment|/// table. The position will be changed if finalize is used.
 comment|/// Can only be used before the table is finalized.
 name|size_t
 name|add
 parameter_list|(
-name|StringRef
+name|CachedHashStringRef
 name|S
 parameter_list|)
 function_decl|;
+name|size_t
+name|add
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+block|{
+return|return
+name|add
+argument_list|(
+name|CachedHashStringRef
+argument_list|(
+name|S
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// \brief Analyze the strings and build the final table. No more strings can
 comment|/// be added after this point.
 name|void
@@ -152,25 +176,16 @@ name|void
 name|finalizeInOrder
 parameter_list|()
 function_decl|;
-comment|/// \brief Retrieve the string table data. Can only be used after the table
-comment|/// is finalized.
-name|StringRef
-name|data
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isFinalized
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|StringTable
-return|;
-block|}
 comment|/// \brief Get the offest of a string in the string table. Can only be used
 comment|/// after the table is finalized.
+name|size_t
+name|getOffset
+argument_list|(
+name|CachedHashStringRef
+name|S
+argument_list|)
+decl|const
+decl_stmt|;
 name|size_t
 name|getOffset
 argument_list|(
@@ -178,24 +193,15 @@ name|StringRef
 name|S
 argument_list|)
 decl|const
-decl_stmt|;
-specifier|const
-name|DenseMap
-operator|<
-name|CachedHash
-operator|<
-name|StringRef
-operator|>
-operator|,
-name|size_t
-operator|>
-operator|&
-name|getMap
-argument_list|()
-specifier|const
 block|{
 return|return
-name|StringIndexMap
+name|getOffset
+argument_list|(
+name|CachedHashStringRef
+argument_list|(
+name|S
+argument_list|)
+argument_list|)
 return|;
 block|}
 name|size_t
@@ -211,6 +217,24 @@ name|void
 name|clear
 parameter_list|()
 function_decl|;
+name|void
+name|write
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|write
+argument_list|(
+name|uint8_t
+operator|*
+name|Buf
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 name|bool
@@ -219,11 +243,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|StringTable
-operator|.
-name|empty
-argument_list|()
+name|Finalized
 return|;
 block|}
 block|}

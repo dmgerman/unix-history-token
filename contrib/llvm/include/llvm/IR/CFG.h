@@ -72,7 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/BasicBlock.h"
 end_include
 
 begin_include
@@ -85,6 +97,42 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/type_traits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -205,7 +253,9 @@ name|reference
 expr_stmt|;
 name|PredIterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 specifier|inline
 name|PredIterator
@@ -470,8 +520,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|pred_iterator
@@ -482,8 +530,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|const_pred_iterator
@@ -700,8 +746,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|succ_iterator
@@ -712,8 +756,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|iterator_range
 operator|<
 name|succ_const_iterator
@@ -965,17 +1007,10 @@ operator|>
 block|{
 typedef|typedef
 name|BasicBlock
-name|NodeType
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|BasicBlock
 modifier|*
 name|NodeRef
 typedef|;
-end_typedef
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -986,8 +1021,7 @@ end_typedef
 
 begin_function
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
 name|BasicBlock
@@ -1003,12 +1037,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1023,12 +1055,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1057,18 +1087,10 @@ block|{
 typedef|typedef
 specifier|const
 name|BasicBlock
-name|NodeType
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-specifier|const
-name|BasicBlock
 modifier|*
 name|NodeRef
 typedef|;
-end_typedef
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -1079,8 +1101,7 @@ end_typedef
 
 begin_function
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
 specifier|const
@@ -1097,12 +1118,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1117,12 +1136,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1167,22 +1184,14 @@ name|Inverse
 operator|<
 name|BasicBlock
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
-typedef|typedef
-name|BasicBlock
-name|NodeType
-typedef|;
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|BasicBlock
 modifier|*
 name|NodeRef
 typedef|;
-end_typedef
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -1193,8 +1202,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 name|Inverse
@@ -1215,12 +1223,10 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1235,12 +1241,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1266,24 +1270,15 @@ operator|<
 specifier|const
 name|BasicBlock
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
-typedef|typedef
-specifier|const
-name|BasicBlock
-name|NodeType
-typedef|;
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 specifier|const
 name|BasicBlock
 modifier|*
 name|NodeRef
 typedef|;
-end_typedef
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -1294,8 +1289,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 name|Inverse
@@ -1317,12 +1311,10 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1337,12 +1329,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1403,8 +1393,7 @@ operator|*
 operator|>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|Function *F
@@ -1426,9 +1415,12 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|pointer_iterator
+operator|<
 name|Function
 operator|::
 name|iterator
+operator|>
 name|nodes_iterator
 expr_stmt|;
 end_typedef
@@ -1444,10 +1436,13 @@ name|F
 parameter_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|F
 operator|->
 name|begin
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -1463,10 +1458,13 @@ name|F
 parameter_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|F
 operator|->
 name|end
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -1512,8 +1510,7 @@ operator|*
 operator|>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|const Function *F
@@ -1535,9 +1532,12 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|pointer_iterator
+operator|<
 name|Function
 operator|::
 name|const_iterator
+operator|>
 name|nodes_iterator
 expr_stmt|;
 end_typedef
@@ -1554,10 +1554,13 @@ name|F
 parameter_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|F
 operator|->
 name|begin
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -1574,10 +1577,13 @@ name|F
 parameter_list|)
 block|{
 return|return
+name|nodes_iterator
+argument_list|(
 name|F
 operator|->
 name|end
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_function
@@ -1634,8 +1640,7 @@ name|Inverse
 operator|<
 name|Function
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|:
 name|public
 name|GraphTraits
@@ -1644,15 +1649,13 @@ name|Inverse
 operator|<
 name|BasicBlock
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
-argument|Inverse<Function*> G
+argument|Inverse<Function *> G
 argument_list|)
 block|{
 return|return
@@ -1680,8 +1683,7 @@ operator|<
 specifier|const
 name|Function
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|:
 name|public
 name|GraphTraits
@@ -1691,12 +1693,10 @@ operator|<
 specifier|const
 name|BasicBlock
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|Inverse<const Function *> G
@@ -1716,13 +1716,17 @@ end_expr_stmt
 
 begin_comment
 unit|};  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_CFG_H
+end_comment
 
 end_unit
 

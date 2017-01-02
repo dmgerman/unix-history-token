@@ -125,14 +125,22 @@ operator|*
 name|MMI
 block|;
 comment|/// Previous instruction's location information. This is used to
-comment|/// determine label location to indicate scope boundries in dwarf
-comment|/// debug info.
+comment|/// determine label location to indicate scope boundaries in debug info.
+comment|/// We track the previous instruction's source location (if not line 0),
+comment|/// whether it was a label, and its parent BB.
 name|DebugLoc
 name|PrevInstLoc
 block|;
 name|MCSymbol
 operator|*
 name|PrevLabel
+operator|=
+name|nullptr
+block|;
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|PrevInstBB
 operator|=
 name|nullptr
 block|;
@@ -282,12 +290,12 @@ operator|*
 name|MI
 argument_list|)
 block|;
-comment|/// Determine the relative position of the pieces described by P1 and P2.
-comment|/// Returns  -1 if P1 is entirely before P2, 0 if P1 and P2 overlap,
-comment|/// 1 if P1 is entirely after P2.
+comment|/// Determine the relative position of the fragments described by P1 and P2.
+comment|/// Returns -1 if P1 is entirely before P2, 0 if P1 and P2 overlap, 1 if P1 is
+comment|/// entirely after P2.
 specifier|static
 name|int
-name|pieceCmp
+name|fragmentCmp
 argument_list|(
 specifier|const
 name|DIExpression
@@ -300,10 +308,10 @@ operator|*
 name|P2
 argument_list|)
 block|;
-comment|/// Determine whether two variable pieces overlap.
+comment|/// Determine whether two variable fragments overlap.
 specifier|static
 name|bool
-name|piecesOverlap
+name|fragmentsOverlap
 argument_list|(
 specifier|const
 name|DIExpression

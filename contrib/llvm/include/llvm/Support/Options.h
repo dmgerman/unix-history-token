@@ -320,9 +320,9 @@ specifier|static
 name|void
 name|registerOption
 argument_list|(
-argument|const char *ArgStr
+argument|StringRef ArgStr
 argument_list|,
-argument|const char *Desc
+argument|StringRef Desc
 argument_list|,
 argument|const ValT&InitValue
 argument_list|)

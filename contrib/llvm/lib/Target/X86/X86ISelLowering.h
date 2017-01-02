@@ -186,6 +186,8 @@ block|,
 comment|/// X86 Select
 name|SELECT
 block|,
+name|SELECTS
+block|,
 comment|// Same as SETCC except it's materialized with a sbb and the value is all
 comment|// one's or all zero's.
 name|SETCC_CARRY
@@ -195,6 +197,12 @@ comment|/// X86 FP SETCC, implemented with CMP{cc}SS/CMP{cc}SD.
 comment|/// Operands are two FP values to compare; result is a mask of
 comment|/// 0s or 1s.  Generally DTRT for C/C++ with NaNs.
 name|FSETCC
+block|,
+comment|/// X86 FP SETCC, similar to above, but with output as an i1 mask and
+comment|/// with optional rounding mode.
+name|FSETCCM
+block|,
+name|FSETCCM_RND
 block|,
 comment|/// X86 conditional moves. Operand 0 and operand 1 are the two values
 comment|/// to select from. Operand 2 is the condition code, and operand 3 is the
@@ -225,8 +233,9 @@ comment|/// On Darwin, this node represents the result of the popl
 comment|/// at function entry, used for PIC code.
 name|GlobalBaseReg
 block|,
-comment|/// A wrapper node for TargetConstantPool,
-comment|/// TargetExternalSymbol, and TargetGlobalAddress.
+comment|/// A wrapper node for TargetConstantPool, TargetJumpTable,
+comment|/// TargetExternalSymbol, TargetGlobalAddress, TargetGlobalTLSAddress,
+comment|/// MCSymbol and TargetBlockAddress.
 name|Wrapper
 block|,
 comment|/// Special wrapper used under X86-64 PIC mode for RIP
@@ -306,11 +315,17 @@ name|FMIN_RND
 block|,
 name|FSQRT_RND
 block|,
+name|FSQRTS_RND
+block|,
 comment|// FP vector get exponent.
 name|FGETEXP_RND
 block|,
+name|FGETEXPS_RND
+block|,
 comment|// Extract Normalized Mantissas.
 name|VGETMANT
+block|,
+name|VGETMANTS
 block|,
 comment|// FP Scale.
 name|SCALEF
@@ -414,13 +429,16 @@ block|,
 comment|// Vector FP extend.
 name|VFPEXT
 block|,
+name|VFPEXT_RND
+block|,
+name|VFPEXTS_RND
+block|,
 comment|// Vector FP round.
 name|VFPROUND
 block|,
-comment|// Vector signed/unsigned integer to double.
-name|CVTDQ2PD
+name|VFPROUND_RND
 block|,
-name|CVTUDQ2PD
+name|VFPROUNDS_RND
 block|,
 comment|// Convert a vector to mask, set bits base on MSB.
 name|CVT2MASK
@@ -618,8 +636,12 @@ block|,
 comment|// Reduce - Perform Reduction Transformation on scalar\packed FP.
 name|VREDUCE
 block|,
+name|VREDUCES
+block|,
 comment|// RndScale - Round FP Values To Include A Given Number Of Fraction Bits.
 name|VRNDSCALE
+block|,
+name|VRNDSCALES
 block|,
 comment|// Tests Types Of a FP Values for packed types.
 name|VFPCLASS
@@ -711,26 +733,70 @@ name|FMADDSUB_RND
 block|,
 name|FMSUBADD_RND
 block|,
+comment|// Scalar intrinsic FMA with rounding mode.
+comment|// Two versions, passthru bits on op1 or op3.
+name|FMADDS1_RND
+block|,
+name|FMADDS3_RND
+block|,
+name|FNMADDS1_RND
+block|,
+name|FNMADDS3_RND
+block|,
+name|FMSUBS1_RND
+block|,
+name|FMSUBS3_RND
+block|,
+name|FNMSUBS1_RND
+block|,
+name|FNMSUBS3_RND
+block|,
 comment|// Compress and expand.
 name|COMPRESS
 block|,
 name|EXPAND
 block|,
-comment|// Convert Unsigned/Integer to Scalar Floating-Point Value
-comment|// with rounding mode.
+comment|// Convert Unsigned/Integer to Floating-Point Value with rounding mode.
 name|SINT_TO_FP_RND
 block|,
 name|UINT_TO_FP_RND
 block|,
-comment|// Vector float/double to signed/unsigned integer.
-name|FP_TO_SINT_RND
+name|SCALAR_SINT_TO_FP_RND
 block|,
-name|FP_TO_UINT_RND
+name|SCALAR_UINT_TO_FP_RND
+block|,
+comment|// Vector float/double to signed/unsigned integer.
+name|CVTP2SI
+block|,
+name|CVTP2UI
+block|,
+name|CVTP2SI_RND
+block|,
+name|CVTP2UI_RND
 block|,
 comment|// Scalar float/double to signed/unsigned integer.
-name|SCALAR_FP_TO_SINT_RND
+name|CVTS2SI_RND
 block|,
-name|SCALAR_FP_TO_UINT_RND
+name|CVTS2UI_RND
+block|,
+comment|// Vector float/double to signed/unsigned integer with truncation.
+name|CVTTP2SI
+block|,
+name|CVTTP2UI
+block|,
+name|CVTTP2SI_RND
+block|,
+name|CVTTP2UI_RND
+block|,
+comment|// Scalar float/double to signed/unsigned integer with truncation.
+name|CVTTS2SI_RND
+block|,
+name|CVTTS2UI_RND
+block|,
+comment|// Vector signed/unsigned integer to float/double.
+name|CVTSI2P
+block|,
+name|CVTUI2P
 block|,
 comment|// Save xmm argument registers to the stack, according to %al. An operator
 comment|// is needed so that this can be expanded with control flow.
@@ -773,9 +839,18 @@ block|,
 comment|// ERI instructions.
 name|RSQRT28
 block|,
+name|RSQRT28S
+block|,
 name|RCP28
 block|,
+name|RCP28S
+block|,
 name|EXP2
+block|,
+comment|// Conversions between float and half-float.
+name|CVTPS2PH
+block|,
+name|CVTPH2PS
 block|,
 comment|// Compare and swap.
 name|LCMPXCHG_DAG
@@ -845,6 +920,16 @@ block|,
 comment|/// This instruction grabs the address of the next argument
 comment|/// from a va_list. (reads and modifies the va_list in memory)
 name|VAARG_64
+block|,
+comment|// Vector truncating store with unsigned/signed saturation
+name|VTRUNCSTOREUS
+block|,
+name|VTRUNCSTORES
+block|,
+comment|// Vector truncating masked store with unsigned/signed saturation
+name|VMTRUNCSTOREUS
+block|,
+name|VMTRUNCSTORES
 comment|// WARNING: Do not add anything in the end unless you want the node to
 comment|// have memop! In fact, starting from FIRST_TARGET_MEMORY_OPCODE all
 comment|// opcodes will be thought as target memory ops!
@@ -1288,6 +1373,12 @@ specifier|const
 name|override
 block|;
 name|bool
+name|isCtlzFast
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
 name|hasBitPreservingFPLogic
 argument_list|(
 argument|EVT VT
@@ -1315,138 +1406,247 @@ argument_list|()
 return|;
 block|}
 name|bool
-name|hasAndNotCompare
+name|isMultiStoresCheaperThanBitsMerge
 argument_list|(
-argument|SDValue Y
+argument|EVT LTy
+argument_list|,
+argument|EVT HTy
 argument_list|)
 specifier|const
 name|override
-block|;
+block|{
+comment|// If the pair to store is a mixture of float and int values, we will
+comment|// save two bitwise instructions and one float-to-int instruction and
+comment|// increase one store instruction. There is potentially a more
+comment|// significant benefit because it avoids the float->int domain switch
+comment|// for input value. So It is more likely a win.
+if|if
+condition|(
+operator|(
+name|LTy
+operator|.
+name|isFloatingPoint
+argument_list|()
+operator|&&
+name|HTy
+operator|.
+name|isInteger
+argument_list|()
+operator|)
+operator|||
+operator|(
+name|LTy
+operator|.
+name|isInteger
+argument_list|()
+operator|&&
+name|HTy
+operator|.
+name|isFloatingPoint
+argument_list|()
+operator|)
+condition|)
+return|return
+name|true
+return|;
+comment|// If the pair only contains int values, we will save two bitwise
+comment|// instructions and increase one store instruction (costing one more
+comment|// store buffer). Since the benefit is more blurred so we leave
+comment|// such pair out until we get testcase to prove it is a win.
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|hasAndNotCompare
+argument_list|(
+name|SDValue
+name|Y
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 comment|/// Return the value type to use for ISD::SETCC.
 name|EVT
 name|getSetCCResultType
 argument_list|(
-argument|const DataLayout&DL
-argument_list|,
-argument|LLVMContext&Context
-argument_list|,
-argument|EVT VT
-argument_list|)
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// Determine which of the bits specified in Mask are known to be either
 comment|/// zero or one and return them in the KnownZero/KnownOne bitsets.
 name|void
 name|computeKnownBitsForTargetNode
 argument_list|(
-argument|const SDValue Op
+specifier|const
+name|SDValue
+name|Op
 argument_list|,
-argument|APInt&KnownZero
+name|APInt
+operator|&
+name|KnownZero
 argument_list|,
-argument|APInt&KnownOne
+name|APInt
+operator|&
+name|KnownOne
 argument_list|,
-argument|const SelectionDAG&DAG
+specifier|const
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|,
-argument|unsigned Depth =
+name|unsigned
+name|Depth
+operator|=
 literal|0
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// Determine the number of bits in the operation that are sign bits.
 name|unsigned
 name|ComputeNumSignBitsForTargetNode
 argument_list|(
-argument|SDValue Op
+name|SDValue
+name|Op
 argument_list|,
-argument|const SelectionDAG&DAG
-argument_list|,
-argument|unsigned Depth
-argument_list|)
 specifier|const
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|unsigned
+name|Depth
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|bool
 name|isGAPlusOffset
 argument_list|(
-argument|SDNode *N
+name|SDNode
+operator|*
+name|N
 argument_list|,
-argument|const GlobalValue*&GA
-argument_list|,
-argument|int64_t&Offset
-argument_list|)
 specifier|const
+name|GlobalValue
+operator|*
+operator|&
+name|GA
+argument_list|,
+name|int64_t
+operator|&
+name|Offset
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|SDValue
 name|getReturnAddressFrameIndex
 argument_list|(
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|bool
 name|ExpandInlineAsm
 argument_list|(
-argument|CallInst *CI
+name|CallInst
+operator|*
+name|CI
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-argument|StringRef Constraint
+name|StringRef
+name|Constraint
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// Examine constraint string and operand type and determine a weight value.
 comment|/// The operand object must already have been set up with the operand type.
 name|ConstraintWeight
 name|getSingleConstraintMatchWeight
 argument_list|(
-argument|AsmOperandInfo&info
+name|AsmOperandInfo
+operator|&
+name|info
 argument_list|,
-argument|const char *constraint
-argument_list|)
-specifier|const
-name|override
-block|;
 specifier|const
 name|char
 operator|*
+name|constraint
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|LowerXConstraint
 argument_list|(
-argument|EVT ConstraintVT
+name|EVT
+name|ConstraintVT
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// Lower the specified operand into the Ops vector. If it is invalid, don't
 comment|/// add anything to Ops. If hasMemory is true it means one of the asm
 comment|/// constraint of the inline asm instruction being processed is 'm'.
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
-argument|SDValue Op
+name|SDValue
+name|Op
 argument_list|,
-argument|std::string&Constraint
+name|std
+operator|::
+name|string
+operator|&
+name|Constraint
 argument_list|,
-argument|std::vector<SDValue>&Ops
+name|std
+operator|::
+name|vector
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|Ops
 argument_list|,
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-argument|StringRef ConstraintCode
+name|StringRef
+name|ConstraintCode
 argument_list|)
-specifier|const
+decl|const
 name|override
 block|{
 if|if
@@ -2150,11 +2350,45 @@ name|supportSwiftError
 argument_list|()
 specifier|const
 name|override
+expr_stmt|;
+name|unsigned
+name|getMaxSupportedInterleaveFactor
+argument_list|()
+specifier|const
+name|override
 block|{
 return|return
-name|true
+literal|4
 return|;
 block|}
+comment|/// \brief Lower interleaved load(s) into target specific
+comment|/// instructions/intrinsics.
+name|bool
+name|lowerInterleavedLoad
+argument_list|(
+name|LoadInst
+operator|*
+name|LI
+argument_list|,
+name|ArrayRef
+operator|<
+name|ShuffleVectorInst
+operator|*
+operator|>
+name|Shuffles
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|protected
 label|:
 name|std
@@ -2303,7 +2537,7 @@ operator|&
 name|VA
 argument_list|,
 name|MachineFrameInfo
-operator|*
+operator|&
 name|MFI
 argument_list|,
 name|unsigned
@@ -2558,6 +2792,18 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
+name|unsigned
+name|getGlobalWrapperKind
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 name|SDValue
 name|LowerConstantPool
 argument_list|(
@@ -2713,22 +2959,15 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
-name|LowerFP_TO_SINT
+name|LowerFP_TO_INT
 argument_list|(
 name|SDValue
 name|Op
 argument_list|,
-name|SelectionDAG
+specifier|const
+name|X86Subtarget
 operator|&
-name|DAG
-argument_list|)
-decl|const
-decl_stmt|;
-name|SDValue
-name|LowerFP_TO_UINT
-argument_list|(
-name|SDValue
-name|Op
+name|Subtarget
 argument_list|,
 name|SelectionDAG
 operator|&
@@ -2856,6 +3095,18 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|LowerRETURNADDR
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerADDROFRETURNADDR
 argument_list|(
 name|SDValue
 name|Op
@@ -3568,24 +3819,44 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Use rsqrt* to speed up sqrt calculations.
-name|SDValue
-name|getRsqrtEstimate
+comment|/// Check if replacement of SQRT with RSQRT should be disabled.
+name|bool
+name|isFsqrtCheap
 argument_list|(
 name|SDValue
 name|Operand
 argument_list|,
-name|DAGCombinerInfo
+name|SelectionDAG
 operator|&
-name|DCI
+name|DAG
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+comment|/// Use rsqrt* to speed up sqrt calculations.
+name|SDValue
+name|getSqrtEstimate
+argument_list|(
+name|SDValue
+name|Operand
 argument_list|,
-name|unsigned
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|int
+name|Enabled
+argument_list|,
+name|int
 operator|&
 name|RefinementSteps
 argument_list|,
 name|bool
 operator|&
 name|UseOneConstNR
+argument_list|,
+name|bool
+name|Reciprocal
 argument_list|)
 decl|const
 name|override
@@ -3597,11 +3868,14 @@ argument_list|(
 name|SDValue
 name|Operand
 argument_list|,
-name|DAGCombinerInfo
+name|SelectionDAG
 operator|&
-name|DCI
+name|DAG
 argument_list|,
-name|unsigned
+name|int
+name|Enabled
+argument_list|,
+name|int
 operator|&
 name|RefinementSteps
 argument_list|)
@@ -3648,7 +3922,448 @@ comment|// end namespace X86
 end_comment
 
 begin_comment
-unit|}
+comment|// Base class for all X86 non-masked store operations.
+end_comment
+
+begin_decl_stmt
+name|class
+name|X86StoreSDNode
+range|:
+name|public
+name|MemSDNode
+block|{
+name|public
+operator|:
+name|X86StoreSDNode
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Order
+argument_list|,
+argument|const DebugLoc&dl
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|MemSDNode
+argument_list|(
+argument|Opcode
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|const
+name|SDValue
+operator|&
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+return|;
+block|}
+specifier|const
+name|SDValue
+operator|&
+name|getBasePtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|2
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|VTRUNCSTORES
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|VTRUNCSTOREUS
+return|;
+block|}
+expr|}
+block|;
+comment|// Base class for all X86 masked store operations.
+comment|// The class has the same order of operands as MaskedStoreSDNode for
+comment|// convenience.
+name|class
+name|X86MaskedStoreSDNode
+operator|:
+name|public
+name|MemSDNode
+block|{
+name|public
+operator|:
+name|X86MaskedStoreSDNode
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned Order
+argument_list|,
+argument|const DebugLoc&dl
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|MemSDNode
+argument_list|(
+argument|Opcode
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|const
+name|SDValue
+operator|&
+name|getBasePtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+return|;
+block|}
+specifier|const
+name|SDValue
+operator|&
+name|getMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|2
+argument_list|)
+return|;
+block|}
+specifier|const
+name|SDValue
+operator|&
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|3
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|VMTRUNCSTORES
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|VMTRUNCSTOREUS
+return|;
+block|}
+expr|}
+block|;
+comment|// X86 Truncating Store with Signed saturation.
+name|class
+name|TruncSStoreSDNode
+operator|:
+name|public
+name|X86StoreSDNode
+block|{
+name|public
+operator|:
+name|TruncSStoreSDNode
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|const DebugLoc&dl
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|X86StoreSDNode
+argument_list|(
+argument|X86ISD::VTRUNCSTORES
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|VTRUNCSTORES
+return|;
+block|}
+expr|}
+block|;
+comment|// X86 Truncating Store with Unsigned saturation.
+name|class
+name|TruncUSStoreSDNode
+operator|:
+name|public
+name|X86StoreSDNode
+block|{
+name|public
+operator|:
+name|TruncUSStoreSDNode
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|const DebugLoc&dl
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|X86StoreSDNode
+argument_list|(
+argument|X86ISD::VTRUNCSTOREUS
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|VTRUNCSTOREUS
+return|;
+block|}
+expr|}
+block|;
+comment|// X86 Truncating Masked Store with Signed saturation.
+name|class
+name|MaskedTruncSStoreSDNode
+operator|:
+name|public
+name|X86MaskedStoreSDNode
+block|{
+name|public
+operator|:
+name|MaskedTruncSStoreSDNode
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|const DebugLoc&dl
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|X86MaskedStoreSDNode
+argument_list|(
+argument|X86ISD::VMTRUNCSTORES
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|VMTRUNCSTORES
+return|;
+block|}
+expr|}
+block|;
+comment|// X86 Truncating Masked Store with Unsigned saturation.
+name|class
+name|MaskedTruncUSStoreSDNode
+operator|:
+name|public
+name|X86MaskedStoreSDNode
+block|{
+name|public
+operator|:
+name|MaskedTruncUSStoreSDNode
+argument_list|(
+argument|unsigned Order
+argument_list|,
+argument|const DebugLoc&dl
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|)
+operator|:
+name|X86MaskedStoreSDNode
+argument_list|(
+argument|X86ISD::VMTRUNCSTOREUS
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|X86ISD
+operator|::
+name|VMTRUNCSTOREUS
+return|;
+block|}
+expr|}
+block|;  }
+end_decl_stmt
+
+begin_comment
 comment|// end namespace llvm
 end_comment
 

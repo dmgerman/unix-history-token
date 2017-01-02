@@ -108,6 +108,9 @@ decl_stmt|;
 name|class
 name|MCStreamer
 decl_stmt|;
+name|class
+name|CodeViewContext
+decl_stmt|;
 comment|/// \brief Instances of this class represent the information from a
 comment|/// .cv_loc directive.
 name|class
@@ -137,10 +140,10 @@ literal|1
 decl_stmt|;
 name|private
 label|:
-comment|// MCContext manages these
+comment|// CodeViewContext manages these
 name|friend
 name|class
-name|MCContext
+name|CodeViewContext
 decl_stmt|;
 name|MCCVLoc
 argument_list|(
@@ -396,6 +399,118 @@ name|MCOS
 argument_list|)
 block|; }
 decl_stmt|;
+comment|/// Information describing a function or inlined call site introduced by
+comment|/// .cv_func_id or .cv_inline_site_id. Accumulates information from .cv_loc
+comment|/// directives used with this function's id or the id of an inlined call site
+comment|/// within this function or inlined call site.
+struct|struct
+name|MCCVFunctionInfo
+block|{
+comment|/// If this represents an inlined call site, then ParentFuncIdPlusOne will be
+comment|/// the parent function id plus one. If this represents a normal function,
+comment|/// then there is no parent, and ParentFuncIdPlusOne will be FunctionSentinel.
+comment|/// If this struct is an unallocated slot in the function info vector, then
+comment|/// ParentFuncIdPlusOne will be zero.
+name|unsigned
+name|ParentFuncIdPlusOne
+init|=
+literal|0
+decl_stmt|;
+enum_decl|enum :
+name|unsigned
+block|{
+name|FunctionSentinel
+init|=
+operator|~
+literal|0U
+block|}
+enum_decl|;
+struct|struct
+name|LineInfo
+block|{
+name|unsigned
+name|File
+decl_stmt|;
+name|unsigned
+name|Line
+decl_stmt|;
+name|unsigned
+name|Col
+decl_stmt|;
+block|}
+struct|;
+name|LineInfo
+name|InlinedAt
+decl_stmt|;
+comment|/// The section of the first .cv_loc directive used for this function, or null
+comment|/// if none has been seen yet.
+name|MCSection
+modifier|*
+name|Section
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// Map from inlined call site id to the inlined at location to use for that
+comment|/// call site. Call chains are collapsed, so for the call chain 'f -> g -> h',
+comment|/// the InlinedAtMap of 'f' will contain entries for 'g' and 'h' that both
+comment|/// list the line info for the 'g' call site.
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|LineInfo
+operator|>
+name|InlinedAtMap
+expr_stmt|;
+comment|/// Returns true if this is function info has not yet been used in a
+comment|/// .cv_func_id or .cv_inline_site_id directive.
+name|bool
+name|isUnallocatedFunctionInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParentFuncIdPlusOne
+operator|==
+literal|0
+return|;
+block|}
+comment|/// Returns true if this represents an inlined call site, meaning
+comment|/// ParentFuncIdPlusOne is neither zero nor ~0U.
+name|bool
+name|isInlinedCallSite
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isUnallocatedFunctionInfo
+argument_list|()
+operator|&&
+name|ParentFuncIdPlusOne
+operator|!=
+name|FunctionSentinel
+return|;
+block|}
+name|unsigned
+name|getParentFuncId
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isInlinedCallSite
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|ParentFuncIdPlusOne
+operator|-
+literal|1
+return|;
+block|}
+block|}
+struct|;
 comment|/// Holds state from .cv_file and .cv_loc directives for later emission.
 name|class
 name|CodeViewContext
@@ -438,6 +553,187 @@ return|return
 name|Filenames
 return|;
 block|}
+comment|/// Records the function id of a normal function. Returns false if the
+comment|/// function id has already been used, and true otherwise.
+name|bool
+name|recordFunctionId
+parameter_list|(
+name|unsigned
+name|FuncId
+parameter_list|)
+function_decl|;
+comment|/// Records the function id of an inlined call site. Records the "inlined at"
+comment|/// location info of the call site, including what function or inlined call
+comment|/// site it was inlined into. Returns false if the function id has already
+comment|/// been used, and true otherwise.
+name|bool
+name|recordInlinedCallSiteId
+parameter_list|(
+name|unsigned
+name|FuncId
+parameter_list|,
+name|unsigned
+name|IAFunc
+parameter_list|,
+name|unsigned
+name|IAFile
+parameter_list|,
+name|unsigned
+name|IALine
+parameter_list|,
+name|unsigned
+name|IACol
+parameter_list|)
+function_decl|;
+comment|/// Retreive the function info if this is a valid function id, or nullptr.
+name|MCCVFunctionInfo
+modifier|*
+name|getCVFunctionInfo
+parameter_list|(
+name|unsigned
+name|FuncId
+parameter_list|)
+block|{
+if|if
+condition|(
+name|FuncId
+operator|>=
+name|Functions
+operator|.
+name|size
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+if|if
+condition|(
+name|Functions
+index|[
+name|FuncId
+index|]
+operator|.
+name|isUnallocatedFunctionInfo
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+return|return
+operator|&
+name|Functions
+index|[
+name|FuncId
+index|]
+return|;
+block|}
+comment|/// Saves the information from the currently parsed .cv_loc directive
+comment|/// and sets CVLocSeen.  When the next instruction is assembled an entry
+comment|/// in the line number table with this information and the address of the
+comment|/// instruction will be created.
+name|void
+name|setCurrentCVLoc
+parameter_list|(
+name|unsigned
+name|FunctionId
+parameter_list|,
+name|unsigned
+name|FileNo
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|Column
+parameter_list|,
+name|bool
+name|PrologueEnd
+parameter_list|,
+name|bool
+name|IsStmt
+parameter_list|)
+block|{
+name|CurrentCVLoc
+operator|.
+name|setFunctionId
+argument_list|(
+name|FunctionId
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setFileNum
+argument_list|(
+name|FileNo
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setLine
+argument_list|(
+name|Line
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setColumn
+argument_list|(
+name|Column
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setPrologueEnd
+argument_list|(
+name|PrologueEnd
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setIsStmt
+argument_list|(
+name|IsStmt
+argument_list|)
+expr_stmt|;
+name|CVLocSeen
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|void
+name|clearCVLocSeen
+parameter_list|()
+block|{
+name|CVLocSeen
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|bool
+name|getCVLocSeen
+parameter_list|()
+block|{
+return|return
+name|CVLocSeen
+return|;
+block|}
+specifier|const
+name|MCCVLoc
+modifier|&
+name|getCurrentCVLoc
+parameter_list|()
+block|{
+return|return
+name|CurrentCVLoc
+return|;
+block|}
+name|bool
+name|isValidCVFileNumber
+parameter_list|(
+name|unsigned
+name|FileNumber
+parameter_list|)
+function_decl|;
 comment|/// \brief Add a line entry.
 name|void
 name|addLineEntry
@@ -723,41 +1019,35 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|emitInlineLineTableForFunction
-argument_list|(
+parameter_list|(
 name|MCObjectStreamer
-operator|&
+modifier|&
 name|OS
-argument_list|,
+parameter_list|,
 name|unsigned
 name|PrimaryFunctionId
-argument_list|,
+parameter_list|,
 name|unsigned
 name|SourceFileId
-argument_list|,
+parameter_list|,
 name|unsigned
 name|SourceLineNum
-argument_list|,
+parameter_list|,
 specifier|const
 name|MCSymbol
-operator|*
+modifier|*
 name|FnStartSym
-argument_list|,
+parameter_list|,
 specifier|const
 name|MCSymbol
-operator|*
+modifier|*
 name|FnEndSym
-argument_list|,
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|SecondaryFunctionIds
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Encodes the binary annotations once we have a layout.
@@ -857,6 +1147,39 @@ begin_label
 name|private
 label|:
 end_label
+
+begin_comment
+comment|/// The current CodeView line information from the last .cv_loc directive.
+end_comment
+
+begin_decl_stmt
+name|MCCVLoc
+name|CurrentCVLoc
+init|=
+name|MCCVLoc
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|true
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|CVLocSeen
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Map from string to string table offset.
@@ -982,6 +1305,21 @@ operator|<
 name|MCCVLineEntry
 operator|>
 name|MCCVLines
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// All known functions and inlined call sites, indexed by function id.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|MCCVFunctionInfo
+operator|>
+name|Functions
 expr_stmt|;
 end_expr_stmt
 

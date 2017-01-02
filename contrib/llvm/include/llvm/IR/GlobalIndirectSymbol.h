@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/IR/GlobalObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/GlobalValue.h"
 end_include
 
@@ -77,6 +83,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/OperandTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/User.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
 end_include
 
 begin_decl_stmt
@@ -89,26 +119,6 @@ range|:
 name|public
 name|GlobalValue
 block|{
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|GlobalIndirectSymbol
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
-name|GlobalIndirectSymbol
-argument_list|(
-specifier|const
-name|GlobalIndirectSymbol
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
 name|protected
 operator|:
 name|GlobalIndirectSymbol
@@ -128,6 +138,27 @@ argument_list|)
 block|;
 name|public
 operator|:
+name|GlobalIndirectSymbol
+argument_list|(
+specifier|const
+name|GlobalIndirectSymbol
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|GlobalIndirectSymbol
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|GlobalIndirectSymbol
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 comment|// allocate space for exactly one operand
 name|void
 operator|*
@@ -357,13 +388,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_GLOBALINDIRECTSYMBOL_H
+end_comment
 
 end_unit
 

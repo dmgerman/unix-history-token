@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/GlobalISel/GISelAccessor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -206,6 +212,8 @@ name|CortexR5
 block|,
 name|CortexR7
 block|,
+name|CortexR52
+block|,
 name|CortexM3
 block|,
 name|CortexA32
@@ -289,6 +297,8 @@ block|,
 name|ARMv8mMainline
 block|,
 name|ARMv8mBaseline
+block|,
+name|ARMv8r
 block|}
 block|;
 name|public
@@ -660,6 +670,12 @@ name|HasZeroCycleZeroing
 operator|=
 name|false
 block|;
+comment|/// HasFPAO - if true, processor  does positive address offset computation faster
+name|bool
+name|HasFPAO
+operator|=
+name|false
+block|;
 comment|/// If true, if conversion may decide to leave some instructions unpredicated.
 name|bool
 name|IsProfitableToUnpredicate
@@ -779,6 +795,12 @@ name|GenLongCalls
 operator|=
 name|false
 block|;
+comment|/// Generate code that does not contain data access to code sections.
+name|bool
+name|GenExecuteOnly
+operator|=
+name|false
+block|;
 comment|/// Target machine allowed unsafe FP math (such as use of NEON fp)
 name|bool
 name|UnsafeFPMath
@@ -874,6 +896,23 @@ argument_list|,
 argument|bool IsLittle
 argument_list|)
 block|;
+comment|/// This object will take onwership of \p GISelAccessor.
+name|void
+name|setGISelAccessor
+argument_list|(
+argument|GISelAccessor&GISel
+argument_list|)
+block|{
+name|this
+operator|->
+name|GISel
+operator|.
+name|reset
+argument_list|(
+operator|&
+name|GISel
+argument_list|)
+block|; }
 comment|/// getMaxInlineSizeThreshold - Returns the maximum memset / memcpy size
 comment|/// that still makes it profitable to inline the call.
 name|unsigned
@@ -978,6 +1017,38 @@ name|getRegisterInfo
 argument_list|()
 return|;
 block|}
+specifier|const
+name|CallLowering
+operator|*
+name|getCallLowering
+argument_list|()
+specifier|const
+name|override
+block|;
+specifier|const
+name|InstructionSelector
+operator|*
+name|getInstructionSelector
+argument_list|()
+specifier|const
+name|override
+block|;
+specifier|const
+name|LegalizerInfo
+operator|*
+name|getLegalizerInfo
+argument_list|()
+specifier|const
+name|override
+block|;
+specifier|const
+name|RegisterBankInfo
+operator|*
+name|getRegBankInfo
+argument_list|()
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 name|ARMSelectionDAGInfo
@@ -1003,6 +1074,17 @@ name|InstrInfo
 block|;
 name|ARMTargetLowering
 name|TLInfo
+block|;
+comment|/// Gather the accessor points to GlobalISel-related APIs.
+comment|/// This is used to avoid ifndefs spreading around while GISel is
+comment|/// an optional library.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|GISelAccessor
+operator|>
+name|GISel
 block|;
 name|void
 name|initializeEnvironment
@@ -1525,6 +1607,15 @@ name|HasZeroCycleZeroing
 return|;
 block|}
 name|bool
+name|hasFPAO
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFPAO
+return|;
+block|}
+name|bool
 name|isProfitableToUnpredicate
 argument_list|()
 specifier|const
@@ -1729,6 +1820,15 @@ specifier|const
 block|{
 return|return
 name|GenLongCalls
+return|;
+block|}
+name|bool
+name|genExecuteOnly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GenExecuteOnly
 return|;
 block|}
 name|bool
@@ -2142,6 +2242,13 @@ name|isAndroid
 argument_list|()
 return|;
 block|}
+name|virtual
+name|bool
+name|isXRaySupported
+argument_list|()
+specifier|const
+name|override
+block|;
 name|bool
 name|isAPCS_ABI
 argument_list|()
@@ -2154,6 +2261,16 @@ specifier|const
 block|;
 name|bool
 name|isAAPCS16_ABI
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isROPI
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isRWPI
 argument_list|()
 specifier|const
 block|;
@@ -2259,16 +2376,55 @@ operator|:
 name|ReserveR9
 return|;
 block|}
-comment|/// Returns true if the frame setup is split into two separate pushes (first
-comment|/// r0-r7,lr then r8-r11), principally so that the frame pointer is adjacent
-comment|/// to lr.
 name|bool
-name|splitFramePushPop
+name|useR7AsFramePointer
 argument_list|()
 specifier|const
 block|{
 return|return
-name|isTargetMachO
+name|isTargetDarwin
+argument_list|()
+operator|||
+operator|(
+operator|!
+name|isTargetWindows
+argument_list|()
+operator|&&
+name|isThumb
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Returns true if the frame setup is split into two separate pushes (first
+comment|/// r0-r7,lr then r8-r11), principally so that the frame pointer is adjacent
+comment|/// to lr. This is always required on Thumb1-only targets, as the push and
+comment|/// pop instructions can't access the high registers.
+name|bool
+name|splitFramePushPop
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+operator|(
+name|useR7AsFramePointer
+argument_list|()
+operator|&&
+name|MF
+operator|.
+name|getTarget
+argument_list|()
+operator|.
+name|Options
+operator|.
+name|DisableFramePointerElim
+argument_list|(
+name|MF
+argument_list|)
+operator|)
+operator|||
+name|isThumb1Only
 argument_list|()
 return|;
 block|}

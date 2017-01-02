@@ -74,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/ADT/iterator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
@@ -105,6 +111,24 @@ begin_include
 include|#
 directive|include
 file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
 end_include
 
 begin_decl_stmt
@@ -1795,13 +1819,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|Allocator
 operator|&
 literal|0x1
-operator|?
-name|false
-operator|:
-name|true
+operator|)
+operator|==
+literal|0
 return|;
 block|}
 end_expr_stmt
@@ -3557,11 +3581,19 @@ name|TreeTy
 expr_stmt|;
 name|ImutAVLTreeGenericIterator
 argument_list|()
-block|{}
+operator|=
+block|default
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|ImutAVLTreeGenericIterator
 argument_list|(
 argument|const TreeTy *Root
 argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -3581,7 +3613,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+end_block
 
 begin_expr_stmt
 name|TreeTy
@@ -5229,8 +5261,7 @@ operator|=
 name|ImutContainerInfo
 operator|<
 name|ValT
-operator|>
-expr|>
+operator|>>
 name|class
 name|ImmutableSet
 block|{
@@ -5329,7 +5360,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   ImmutableSet
+unit|}    ImmutableSet
 operator|(
 specifier|const
 name|ImmutableSet
@@ -5356,7 +5387,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   ImmutableSet
+unit|}    ImmutableSet
 operator|&
 name|operator
 operator|=
@@ -5424,7 +5455,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}   ~
+unit|}    ~
 name|ImmutableSet
 argument_list|()
 end_macro
@@ -5488,10 +5519,32 @@ argument_list|(
 argument|canonicalize
 argument_list|)
 block|{}
+name|Factory
+argument_list|(
+specifier|const
+name|Factory
+operator|&
+name|RHS
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|Factory
+operator|&
+name|RHS
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|/// getEmptySet - Returns an immutable set that contains no elements.
 name|ImmutableSet
 name|getEmptySet
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|ImmutableSet
@@ -5635,30 +5688,6 @@ name|F
 operator|)
 return|;
 block|}
-name|private
-label|:
-name|Factory
-argument_list|(
-specifier|const
-name|Factory
-operator|&
-name|RHS
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|Factory
-operator|&
-name|RHS
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -6085,8 +6114,7 @@ operator|=
 name|ImutContainerInfo
 operator|<
 name|ValT
-operator|>
-expr|>
+operator|>>
 name|class
 name|ImmutableSetRef
 block|{
@@ -6211,7 +6239,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   ImmutableSetRef
+unit|}    ImmutableSetRef
 operator|(
 specifier|const
 name|ImmutableSetRef
@@ -6245,7 +6273,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}   ImmutableSetRef
+unit|}    ImmutableSetRef
 operator|&
 name|operator
 operator|=
@@ -6774,6 +6802,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_IMMUTABLESET_H
+end_comment
 
 end_unit
 

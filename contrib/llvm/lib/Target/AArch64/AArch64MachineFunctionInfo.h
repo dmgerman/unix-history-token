@@ -91,6 +91,7 @@ comment|/// AArch64FunctionInfo - This class is derived from MachineFunctionInfo
 comment|/// contains private AArch64-specific information for each MachineFunction.
 name|class
 name|AArch64FunctionInfo
+name|final
 range|:
 name|public
 name|MachineFunctionInfo

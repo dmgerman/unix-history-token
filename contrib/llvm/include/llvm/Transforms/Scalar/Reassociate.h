@@ -287,6 +287,14 @@ argument_list|(
 name|Function
 operator|&
 name|F
+argument_list|,
+name|ReversePostOrderTraversal
+operator|<
+name|Function
+operator|*
+operator|>
+operator|&
+name|RPOT
 argument_list|)
 block|;
 name|unsigned

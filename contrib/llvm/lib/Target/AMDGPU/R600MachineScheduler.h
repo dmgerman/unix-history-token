@@ -69,6 +69,12 @@ directive|include
 file|"llvm/CodeGen/MachineScheduler.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|using
 name|namespace
@@ -97,20 +103,28 @@ specifier|const
 name|ScheduleDAGMILive
 operator|*
 name|DAG
+operator|=
+name|nullptr
 block|;
 specifier|const
 name|R600InstrInfo
 operator|*
 name|TII
+operator|=
+name|nullptr
 block|;
 specifier|const
 name|R600RegisterInfo
 operator|*
 name|TRI
+operator|=
+name|nullptr
 block|;
 name|MachineRegisterInfo
 operator|*
 name|MRI
+operator|=
+name|nullptr
 block|;    enum
 name|InstKind
 block|{
@@ -213,32 +227,16 @@ name|public
 operator|:
 name|R600SchedStrategy
 argument_list|()
-operator|:
-name|DAG
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|TII
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|TRI
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|MRI
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{   }
-name|virtual
+operator|=
+expr|default
+block|;
 operator|~
 name|R600SchedStrategy
 argument_list|()
-block|{}
+name|override
+operator|=
+expr|default
+block|;
 name|void
 name|initialize
 argument_list|(
@@ -395,7 +393,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -404,7 +402,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* R600MACHINESCHEDULER_H_ */
+comment|// LLVM_LIB_TARGET_AMDGPU_R600MACHINESCHEDULER_H
 end_comment
 
 end_unit

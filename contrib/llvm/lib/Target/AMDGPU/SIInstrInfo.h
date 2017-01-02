@@ -294,6 +294,21 @@ specifier|const
 block|;
 name|protected
 operator|:
+name|bool
+name|swapSourceModifiers
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|MachineOperand&Src0
+argument_list|,
+argument|unsigned Src0OpName
+argument_list|,
+argument|MachineOperand&Src1
+argument_list|,
+argument|unsigned Src1OpName
+argument_list|)
+specifier|const
+block|;
 name|MachineInstr
 operator|*
 name|commuteInstructionImpl
@@ -318,9 +333,38 @@ name|MO_NONE
 operator|=
 literal|0
 block|,
+comment|// MO_GOTPCREL -> symbol@GOTPCREL -> R_AMDGPU_GOTPCREL.
 name|MO_GOTPCREL
 operator|=
 literal|1
+block|,
+comment|// MO_GOTPCREL32_LO -> symbol@gotpcrel32@lo -> R_AMDGPU_GOTPCREL32_LO.
+name|MO_GOTPCREL32
+operator|=
+literal|2
+block|,
+name|MO_GOTPCREL32_LO
+operator|=
+literal|2
+block|,
+comment|// MO_GOTPCREL32_HI -> symbol@gotpcrel32@hi -> R_AMDGPU_GOTPCREL32_HI.
+name|MO_GOTPCREL32_HI
+operator|=
+literal|3
+block|,
+comment|// MO_REL32_LO -> symbol@rel32@lo -> R_AMDGPU_REL32_LO.
+name|MO_REL32
+operator|=
+literal|4
+block|,
+name|MO_REL32_LO
+operator|=
+literal|4
+block|,
+comment|// MO_REL32_HI -> symbol@rel32@hi -> R_AMDGPU_REL32_HI.
+name|MO_REL32_HI
+operator|=
+literal|5
 block|}
 block|;
 name|explicit
@@ -487,10 +531,29 @@ name|LLVM_READONLY
 name|int
 name|commuteOpcode
 argument_list|(
-argument|const MachineInstr&MI
+argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;
+name|LLVM_READONLY
+specifier|inline
+name|int
+name|commuteOpcode
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|commuteOpcode
+argument_list|(
+name|MI
+operator|.
+name|getOpcode
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|bool
 name|findCommutedOpIndices
 argument_list|(
@@ -502,6 +565,58 @@ argument|unsigned&SrcOpIdx2
 argument_list|)
 specifier|const
 name|override
+block|;
+name|bool
+name|isBranchOffsetInRange
+argument_list|(
+argument|unsigned BranchOpc
+argument_list|,
+argument|int64_t BrOffset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MachineBasicBlock
+operator|*
+name|getBranchDestBlock
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|insertIndirectBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock&NewDestBB
+argument_list|,
+argument|const DebugLoc&DL
+argument_list|,
+argument|int64_t BrOffset
+argument_list|,
+argument|RegScavenger *RS = nullptr
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|analyzeBranchImpl
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|MachineBasicBlock *&TBB
+argument_list|,
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify
+argument_list|)
+specifier|const
 block|;
 name|bool
 name|analyzeBranch
@@ -520,15 +635,17 @@ specifier|const
 name|override
 block|;
 name|unsigned
-name|RemoveBranch
+name|removeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int *BytesRemoved = nullptr
 argument_list|)
 specifier|const
 name|override
 block|;
 name|unsigned
-name|InsertBranch
+name|insertBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -539,12 +656,14 @@ argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|const DebugLoc&DL
+argument_list|,
+argument|int *BytesAdded = nullptr
 argument_list|)
 specifier|const
 name|override
 block|;
 name|bool
-name|ReverseBranchCondition
+name|reverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
@@ -1382,6 +1501,46 @@ return|;
 block|}
 specifier|static
 name|bool
+name|isEXP
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|EXP
+return|;
+block|}
+name|bool
+name|isEXP
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|EXP
+return|;
+block|}
+specifier|static
+name|bool
 name|isWQM
 argument_list|(
 argument|const MachineInstr&MI
@@ -1498,6 +1657,46 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|VGPRSpill
+return|;
+block|}
+specifier|static
+name|bool
+name|isSGPRSpill
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SGPRSpill
+return|;
+block|}
+name|bool
+name|isSGPRSpill
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SGPRSpill
 return|;
 block|}
 specifier|static
@@ -1586,6 +1785,128 @@ operator|::
 name|VM_CNT
 return|;
 block|}
+specifier|static
+name|bool
+name|sopkIsZext
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SOPK_ZEXT
+return|;
+block|}
+name|bool
+name|sopkIsZext
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SOPK_ZEXT
+return|;
+block|}
+comment|/// \returns true if this is an s_store_dword* instruction. This is more
+comment|/// specific than than isSMEM&& mayStore.
+specifier|static
+name|bool
+name|isScalarStore
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SCALAR_STORE
+return|;
+block|}
+name|bool
+name|isScalarStore
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|SCALAR_STORE
+return|;
+block|}
+specifier|static
+name|bool
+name|isFixedSize
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|FIXED_SIZE
+return|;
+block|}
+name|bool
+name|isFixedSize
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|FIXED_SIZE
+return|;
+block|}
 name|bool
 name|isVGPRCopy
 argument_list|(
@@ -1650,6 +1971,95 @@ name|Dest
 argument_list|)
 return|;
 block|}
+specifier|static
+name|int
+name|operandBitWidth
+argument_list|(
+argument|uint8_t OperandType
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|OperandType
+condition|)
+block|{
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_IMM_INT32
+case|:
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_IMM_FP32
+case|:
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_INLINE_C_INT32
+case|:
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_INLINE_C_FP32
+case|:
+return|return
+literal|32
+return|;
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_IMM_INT64
+case|:
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_IMM_FP64
+case|:
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_INLINE_C_INT64
+case|:
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_INLINE_C_FP64
+case|:
+return|return
+literal|64
+return|;
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_INLINE_C_INT16
+case|:
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_INLINE_C_FP16
+case|:
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_IMM_INT16
+case|:
+case|case
+name|AMDGPU
+operator|::
+name|OPERAND_REG_IMM_FP16
+case|:
+return|return
+literal|16
+return|;
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"unexpected operand type"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|bool
 name|isInlineConstant
 argument_list|(
@@ -1662,96 +2072,489 @@ name|isInlineConstant
 argument_list|(
 argument|const MachineOperand&MO
 argument_list|,
-argument|unsigned OpSize
+argument|uint8_t OperandType
 argument_list|)
 specifier|const
 block|;
 name|bool
-name|isLiteralConstant
+name|isInlineConstant
 argument_list|(
 argument|const MachineOperand&MO
 argument_list|,
-argument|unsigned OpSize
+argument|const MCOperandInfo&OpInfo
 argument_list|)
 specifier|const
-block|;
+block|{
+return|return
+name|isInlineConstant
+argument_list|(
+name|MO
+argument_list|,
+name|OpInfo
+operator|.
+name|OperandType
+argument_list|)
+return|;
+block|}
+comment|/// \p returns true if \p UseMO is substituted with \p DefMO in \p MI it would
+comment|/// be an inline immediate.
 name|bool
-name|isImmOperandLegal
+name|isInlineConstant
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|,
-argument|unsigned OpNo
+argument|const MachineOperand&UseMO
+argument_list|,
+argument|const MachineOperand&DefMO
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|UseMO
+operator|.
+name|getParent
+argument_list|()
+operator|==
+operator|&
+name|MI
+argument_list|)
+block|;
+name|int
+name|OpIdx
+operator|=
+name|MI
+operator|.
+name|getOperandNo
+argument_list|(
+operator|&
+name|UseMO
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|OpInfo
+operator|||
+name|OpIdx
+operator|>=
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|NumOperands
+condition|)
+block|{
+return|return
+name|false
+return|;
+block|}
+return|return
+name|isInlineConstant
+argument_list|(
+name|DefMO
+argument_list|,
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|OpInfo
+index|[
+name|OpIdx
+index|]
+argument_list|)
+return|;
+block|}
+comment|/// \p returns true if the operand \p OpIdx in \p MI is a valid inline
+comment|/// immediate.
+name|bool
+name|isInlineConstant
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned OpIdx
+argument_list|)
+specifier|const
+block|{
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+operator|=
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+name|OpIdx
+argument_list|)
+block|;
+return|return
+name|isInlineConstant
+argument_list|(
+name|MO
+argument_list|,
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|OpInfo
+index|[
+name|OpIdx
+index|]
+operator|.
+name|OperandType
+argument_list|)
+return|;
+block|}
+name|bool
+name|isInlineConstant
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned OpIdx
 argument_list|,
 argument|const MachineOperand&MO
 argument_list|)
 specifier|const
-block|;
+block|{
+if|if
+condition|(
+operator|!
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|OpInfo
+operator|||
+name|OpIdx
+operator|>=
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|NumOperands
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|MI
+operator|.
+name|isCopy
+argument_list|()
+condition|)
+block|{
+name|unsigned
+name|Size
+init|=
+name|getOpSize
+argument_list|(
+name|MI
+argument_list|,
+name|OpIdx
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|Size
+operator|==
+literal|8
+operator|||
+name|Size
+operator|==
+literal|4
+argument_list|)
+expr_stmt|;
+name|uint8_t
+name|OpType
+init|=
+operator|(
+name|Size
+operator|==
+literal|8
+operator|)
+condition|?
+name|AMDGPU
+operator|::
+name|OPERAND_REG_IMM_INT64
+else|:
+name|AMDGPU
+operator|::
+name|OPERAND_REG_IMM_INT32
+decl_stmt|;
+return|return
+name|isInlineConstant
+argument_list|(
+name|MO
+argument_list|,
+name|OpType
+argument_list|)
+return|;
+block|}
+return|return
+name|isInlineConstant
+argument_list|(
+name|MO
+argument_list|,
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|OpInfo
+index|[
+name|OpIdx
+index|]
+operator|.
+name|OperandType
+argument_list|)
+return|;
+block|}
+name|bool
+name|isInlineConstant
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|)
+decl|const
+block|{
+specifier|const
+name|MachineInstr
+modifier|*
+name|Parent
+init|=
+name|MO
+operator|.
+name|getParent
+argument_list|()
+decl_stmt|;
+return|return
+name|isInlineConstant
+argument_list|(
+operator|*
+name|Parent
+argument_list|,
+name|Parent
+operator|->
+name|getOperandNo
+argument_list|(
+operator|&
+name|MO
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLiteralConstant
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|,
+specifier|const
+name|MCOperandInfo
+operator|&
+name|OpInfo
+argument_list|)
+decl|const
+block|{
+return|return
+name|MO
+operator|.
+name|isImm
+argument_list|()
+operator|&&
+operator|!
+name|isInlineConstant
+argument_list|(
+name|MO
+argument_list|,
+name|OpInfo
+operator|.
+name|OperandType
+argument_list|)
+return|;
+block|}
+name|bool
+name|isLiteralConstant
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|int
+name|OpIdx
+argument_list|)
+decl|const
+block|{
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+init|=
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+name|OpIdx
+argument_list|)
+decl_stmt|;
+return|return
+name|MO
+operator|.
+name|isImm
+argument_list|()
+operator|&&
+operator|!
+name|isInlineConstant
+argument_list|(
+name|MI
+argument_list|,
+name|OpIdx
+argument_list|)
+return|;
+block|}
+comment|// Returns true if this operand could potentially require a 32-bit literal
+comment|// operand, but not necessarily. A FrameIndex for example could resolve to an
+comment|// inline immediate value that will not require an additional 4-bytes; this
+comment|// assumes that it will.
+name|bool
+name|isLiteralConstantLike
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|,
+specifier|const
+name|MCOperandInfo
+operator|&
+name|OpInfo
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|isImmOperandLegal
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpNo
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return true if this 64-bit VALU instruction has a 32-bit encoding.
 comment|/// This function will return false if you pass it a 32-bit instruction.
 name|bool
 name|hasVALU32BitEncoding
 argument_list|(
-argument|unsigned Opcode
+name|unsigned
+name|Opcode
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// \brief Returns true if this operand uses the constant bus.
 name|bool
 name|usesConstantBus
 argument_list|(
-argument|const MachineRegisterInfo&MRI
-argument_list|,
-argument|const MachineOperand&MO
-argument_list|,
-argument|unsigned OpSize
-argument_list|)
 specifier|const
-block|;
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|,
+specifier|const
+name|MCOperandInfo
+operator|&
+name|OpInfo
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return true if this instruction has any modifiers.
 comment|///  e.g. src[012]_mod, omod, clamp.
 name|bool
 name|hasModifiers
 argument_list|(
-argument|unsigned Opcode
+name|unsigned
+name|Opcode
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|bool
 name|hasModifiersSet
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned OpName
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpName
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|verifyInstruction
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|StringRef&ErrInfo
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|StringRef
+operator|&
+name|ErrInfo
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 specifier|static
 name|unsigned
 name|getVALUOp
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
+function_decl|;
+name|bool
+name|isSALUOpSupportedOnVALU
 argument_list|(
 specifier|const
 name|MachineInstr
 operator|&
 name|MI
 argument_list|)
-block|;
-name|bool
-name|isSALUOpSupportedOnVALU
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// \brief Return the correct register class for \p OpNo.  For target-specific
 comment|/// instructions, this will return the register class that has been defined
 comment|/// in tablegen.  For generic instructions, like REG_SEQUENCE it will return
@@ -1759,31 +2562,37 @@ comment|/// the register class of its machine operand.
 comment|/// to infer the correct register class base on the other operands.
 specifier|const
 name|TargetRegisterClass
-operator|*
+modifier|*
 name|getOpRegClass
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpNo
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return the size in bytes of the operand OpNo on the given
 comment|// instruction opcode.
 name|unsigned
 name|getOpSize
 argument_list|(
-argument|uint16_t Opcode
+name|uint16_t
+name|Opcode
 argument_list|,
-argument|unsigned OpNo
+name|unsigned
+name|OpNo
 argument_list|)
-specifier|const
+decl|const
 block|{
 specifier|const
 name|MCOperandInfo
-operator|&
+modifier|&
 name|OpInfo
-operator|=
+init|=
 name|get
 argument_list|(
 name|Opcode
@@ -1793,7 +2602,7 @@ name|OpInfo
 index|[
 name|OpNo
 index|]
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|OpInfo
@@ -1839,11 +2648,15 @@ comment|/// with unknown register classes.
 name|unsigned
 name|getOpSize
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpNo
+argument_list|)
+decl|const
 block|{
 return|return
 name|getOpRegClass
@@ -1862,12 +2675,16 @@ comment|/// to read a VGPR.
 name|bool
 name|canReadVGPR
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpNo
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Legalize the \p OpIndex operand of this instruction by inserting
 comment|/// a MOV.  For example:
 comment|/// ADD_I32_e32 VGPR0, 15
@@ -1880,73 +2697,111 @@ comment|/// instead of MOV.
 name|void
 name|legalizeOpWithMove
 argument_list|(
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|unsigned OpIdx
+name|unsigned
+name|OpIdx
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// \brief Check if \p MO is a legal operand if it was the \p OpIdx Operand
 comment|/// for \p MI.
 name|bool
 name|isOperandLegal
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned OpIdx
-argument_list|,
-argument|const MachineOperand *MO = nullptr
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpIdx
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|*
+name|MO
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Check if \p MO would be a valid operand for the given operand
 comment|/// definition \p OpInfo. Note this does not attempt to validate constant bus
 comment|/// restrictions (e.g. literal constant usage).
 name|bool
 name|isLegalVSrcOperand
 argument_list|(
-argument|const MachineRegisterInfo&MRI
-argument_list|,
-argument|const MCOperandInfo&OpInfo
-argument_list|,
-argument|const MachineOperand&MO
-argument_list|)
 specifier|const
-block|;
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
+name|MCOperandInfo
+operator|&
+name|OpInfo
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Check if \p MO (a register operand) is a legal register for the
 comment|/// given operand description.
 name|bool
 name|isLegalRegOperand
 argument_list|(
-argument|const MachineRegisterInfo&MRI
-argument_list|,
-argument|const MCOperandInfo&OpInfo
-argument_list|,
-argument|const MachineOperand&MO
-argument_list|)
 specifier|const
-block|;
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
+name|MCOperandInfo
+operator|&
+name|OpInfo
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Legalize operands in \p MI by either commuting it or inserting a
 comment|/// copy of src1.
 name|void
 name|legalizeOperandsVOP2
 argument_list|(
-argument|MachineRegisterInfo&MRI
+name|MachineRegisterInfo
+operator|&
+name|MRI
 argument_list|,
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// \brief Fix operands in \p MI to satisfy constant bus requirements.
 name|void
 name|legalizeOperandsVOP3
 argument_list|(
-argument|MachineRegisterInfo&MRI
+name|MachineRegisterInfo
+operator|&
+name|MRI
 argument_list|,
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// Copy a value from a VGPR (\p SrcReg) to SGPR.  This function can only
 comment|/// be used when it is know that the value in SrcReg is same across all
 comment|/// threads in the wave.
@@ -1954,96 +2809,162 @@ comment|/// \returns The SGPR register that \p SrcReg was copied to.
 name|unsigned
 name|readlaneVGPRToSGPR
 argument_list|(
-argument|unsigned SrcReg
+name|unsigned
+name|SrcReg
 argument_list|,
-argument|MachineInstr&UseMI
+name|MachineInstr
+operator|&
+name|UseMI
 argument_list|,
-argument|MachineRegisterInfo&MRI
+name|MachineRegisterInfo
+operator|&
+name|MRI
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|void
 name|legalizeOperandsSMRD
 argument_list|(
-argument|MachineRegisterInfo&MRI
+name|MachineRegisterInfo
+operator|&
+name|MRI
 argument_list|,
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|legalizeGenericOperand
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|InsertMBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|,
 specifier|const
-block|;
+name|TargetRegisterClass
+operator|*
+name|DstRC
+argument_list|,
+name|MachineOperand
+operator|&
+name|Op
+argument_list|,
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
+name|DebugLoc
+operator|&
+name|DL
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Legalize all operands in this instruction.  This function may
 comment|/// create new instruction and insert them before \p MI.
 name|void
 name|legalizeOperands
 argument_list|(
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// \brief Replace this instruction's opcode with the equivalent VALU
 comment|/// opcode.  This function will also move the users of \p MI to the
 comment|/// VALU if necessary.
 name|void
 name|moveToVALU
 argument_list|(
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|void
 name|insertWaitStates
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
 argument_list|,
-argument|int Count
+name|int
+name|Count
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|void
 name|insertNoop
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MI
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// \brief Return the number of wait states that result from executing this
 comment|/// instruction.
 name|unsigned
 name|getNumWaitStates
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Returns the operand named \p Op.  If \p MI does not have an
 comment|/// operand named \c Op, this function returns nullptr.
 name|LLVM_READONLY
 name|MachineOperand
-operator|*
+modifier|*
 name|getNamedOperand
 argument_list|(
-argument|MachineInstr&MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|unsigned OperandName
+name|unsigned
+name|OperandName
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|LLVM_READONLY
 specifier|const
 name|MachineOperand
-operator|*
+modifier|*
 name|getNamedOperand
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned OpName
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpName
+argument_list|)
+decl|const
 block|{
 return|return
 name|getNamedOperand
@@ -2065,15 +2986,19 @@ comment|/// Get required immediate operand
 name|int64_t
 name|getNamedImmOperand
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned OpName
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|unsigned
+name|OpName
+argument_list|)
+decl|const
 block|{
 name|int
 name|Idx
-operator|=
+init|=
 name|AMDGPU
 operator|::
 name|getNamedOperandIdx
@@ -2085,7 +3010,7 @@ argument_list|()
 argument_list|,
 name|OpName
 argument_list|)
-block|;
+decl_stmt|;
 return|return
 name|MI
 operator|.
@@ -2102,36 +3027,43 @@ name|uint64_t
 name|getDefaultRsrcDataFormat
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|uint64_t
 name|getScratchRsrcWords23
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|bool
 name|isLowLatencyInstruction
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|isHighLatencyInstruction
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return the descriptor of the target-specific machine instruction
 comment|/// that corresponds to the specified pseudo or native opcode.
 specifier|const
 name|MCInstrDesc
-operator|&
+modifier|&
 name|getMCOpcodeFromPseudo
 argument_list|(
-argument|unsigned Opcode
+name|unsigned
+name|Opcode
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|get
@@ -2144,12 +3076,84 @@ argument_list|)
 return|;
 block|}
 name|unsigned
+name|isStackAccess
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|int
+operator|&
+name|FrameIndex
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|isSGPRStackAccess
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|int
+operator|&
+name|FrameIndex
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|isLoadFromStackSlot
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|int
+operator|&
+name|FrameIndex
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|unsigned
+name|isStoreToStackSlot
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|int
+operator|&
+name|FrameIndex
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|unsigned
 name|getInstSizeInBytes
 argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
 specifier|const
-block|;
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|mayAccessFlatAddressSpace
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
 name|ArrayRef
 operator|<
 name|std
@@ -2157,7 +3161,7 @@ operator|::
 name|pair
 operator|<
 name|int
-block|,
+operator|,
 specifier|const
 name|char
 operator|*
@@ -2166,28 +3170,44 @@ name|getSerializableTargetIndices
 argument_list|()
 specifier|const
 name|override
-block|;
+expr_stmt|;
 name|ScheduleHazardRecognizer
-operator|*
+modifier|*
 name|CreateTargetPostRAHazardRecognizer
 argument_list|(
-argument|const InstrItineraryData *II
+specifier|const
+name|InstrItineraryData
+operator|*
+name|II
 argument_list|,
-argument|const ScheduleDAG *DAG
-argument_list|)
 specifier|const
-name|override
-block|;
-name|ScheduleHazardRecognizer
+name|ScheduleDAG
 operator|*
+name|DAG
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|ScheduleHazardRecognizer
+modifier|*
 name|CreateTargetPostRAHazardRecognizer
 argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
 specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
 name|override
-block|; }
 decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|namespace
 name|AMDGPU
 block|{
@@ -2247,6 +3267,14 @@ name|uint16_t
 name|Opcode
 parameter_list|)
 function_decl|;
+name|LLVM_READONLY
+name|int
+name|getSOPKOp
+parameter_list|(
+name|uint16_t
+name|Opcode
+parameter_list|)
+function_decl|;
 specifier|const
 name|uint64_t
 name|RSRC_DATA_FORMAT
@@ -2288,8 +3316,31 @@ operator|+
 literal|23
 operator|)
 decl_stmt|;
+comment|// For MachineOperands.
+enum|enum
+name|TargetFlags
+block|{
+name|TF_LONG_BRANCH_FORWARD
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+name|TF_LONG_BRANCH_BACKWARD
+init|=
+literal|1
+operator|<<
+literal|1
 block|}
+enum|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|// End namespace AMDGPU
+end_comment
+
+begin_decl_stmt
 name|namespace
 name|SI
 block|{
@@ -2340,11 +3391,14 @@ enum|;
 block|}
 comment|// End namespace KernelInputOffsets
 block|}
-comment|// End namespace SI
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// End namespace SI
+end_comment
+
+begin_comment
+unit|}
 comment|// End namespace llvm
 end_comment
 

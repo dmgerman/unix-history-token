@@ -191,6 +191,8 @@ argument_list|,
 argument|SDValue&Offset
 argument_list|,
 argument|unsigned OffsetBits
+argument_list|,
+argument|unsigned ShiftAmount
 argument_list|)
 specifier|const
 block|;
@@ -232,17 +234,6 @@ name|override
 block|;
 name|bool
 name|selectAddrRegImm9
-argument_list|(
-argument|SDValue Addr
-argument_list|,
-argument|SDValue&Base
-argument_list|,
-argument|SDValue&Offset
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|selectAddrRegImm10
 argument_list|(
 argument|SDValue Addr
 argument_list|,
@@ -334,7 +325,43 @@ specifier|const
 name|override
 block|;
 name|bool
-name|selectIntAddrMSA
+name|selectIntAddrSImm10
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|selectIntAddrSImm10Lsl1
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|selectIntAddrSImm10Lsl2
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|selectIntAddrSImm10Lsl3
 argument_list|(
 argument|SDValue Addr
 argument_list|,

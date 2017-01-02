@@ -578,6 +578,11 @@ name|TT
 operator|,
 name|StringRef
 name|CPU
+operator|,
+specifier|const
+name|MCTargetOptions
+operator|&
+name|Options
 operator|)
 argument_list|;   typedef
 name|MCTargetAsmParser
@@ -1125,6 +1130,18 @@ operator|!=
 name|nullptr
 return|;
 block|}
+comment|/// hasMCAsmParser - Check if this target supports assembly parsing.
+name|bool
+name|hasMCAsmParser
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCAsmParserCtorFn
+operator|!=
+name|nullptr
+return|;
+block|}
 comment|/// @}
 comment|/// @name Feature Constructors
 comment|/// @{
@@ -1431,6 +1448,11 @@ name|TheTriple
 argument_list|,
 name|StringRef
 name|CPU
+argument_list|,
+specifier|const
+name|MCTargetOptions
+operator|&
+name|Options
 argument_list|)
 decl|const
 block|{
@@ -1456,6 +1478,8 @@ name|TheTriple
 argument_list|)
 argument_list|,
 name|CPU
+argument_list|,
+name|Options
 argument_list|)
 return|;
 block|}
@@ -3652,11 +3676,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Target TheFooTarget; // The global target instance.
+comment|/// Target&getTheFooTarget() { // The global target instance.
 end_comment
 
 begin_comment
-comment|///
+comment|///   static Target TheFooTarget;
+end_comment
+
+begin_comment
+comment|///   return TheFooTarget;
+end_comment
+
+begin_comment
+comment|/// }
 end_comment
 
 begin_comment
@@ -3664,7 +3696,11 @@ comment|/// extern "C" void LLVMInitializeFooTargetInfo() {
 end_comment
 
 begin_comment
-comment|///   RegisterTarget<Triple::foo> X(TheFooTarget, "foo", "Foo description");
+comment|///   RegisterTarget<Triple::foo> X(getTheFooTarget(), "foo", "Foo
+end_comment
+
+begin_comment
+comment|///   description");
 end_comment
 
 begin_comment
@@ -4601,6 +4637,8 @@ argument_list|,
 argument|const Triple&TheTriple
 argument_list|,
 argument|StringRef CPU
+argument_list|,
+argument|const MCTargetOptions&Options
 argument_list|)
 block|{
 return|return

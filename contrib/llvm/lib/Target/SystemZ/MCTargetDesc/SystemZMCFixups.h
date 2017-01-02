@@ -60,9 +60,13 @@ enum|enum
 name|FixupKind
 block|{
 comment|// These correspond directly to R_390_* relocations.
-name|FK_390_PC16DBL
+name|FK_390_PC12DBL
 init|=
 name|FirstTargetFixupKind
+block|,
+name|FK_390_PC16DBL
+block|,
+name|FK_390_PC24DBL
 block|,
 name|FK_390_PC32DBL
 block|,

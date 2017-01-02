@@ -116,6 +116,8 @@ name|invalid_section_index
 operator|,
 name|bitcode_section_not_found
 operator|,
+name|invalid_symbol_index
+operator|,
 block|}
 empty_stmt|;
 specifier|inline

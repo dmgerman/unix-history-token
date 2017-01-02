@@ -110,6 +110,14 @@ argument_list|,
 name|CGSCCAnalysisManager
 operator|&
 name|AM
+argument_list|,
+name|LazyCallGraph
+operator|&
+name|CG
+argument_list|,
+name|CGSCCUpdateResult
+operator|&
+name|UR
 argument_list|)
 block|; }
 decl_stmt|;
@@ -148,10 +156,7 @@ name|Module
 operator|&
 name|M
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Module
-operator|>
+name|ModuleAnalysisManager
 operator|&
 name|AM
 argument_list|)

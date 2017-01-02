@@ -119,6 +119,8 @@ name|colon
 block|,
 name|coloncolon
 block|,
+name|dot
+block|,
 name|exclaim
 block|,
 name|lparen
@@ -145,6 +147,8 @@ block|,
 name|kw_def
 block|,
 name|kw_dead
+block|,
+name|kw_dereferenceable
 block|,
 name|kw_killed
 block|,
@@ -173,6 +177,8 @@ block|,
 name|kw_cfi_def_cfa
 block|,
 name|kw_blockaddress
+block|,
+name|kw_intrinsic
 block|,
 name|kw_target_index
 block|,
@@ -218,6 +224,10 @@ name|kw_liveins
 block|,
 name|kw_successors
 block|,
+name|kw_floatpred
+block|,
+name|kw_intpred
+block|,
 comment|// Named metadata keywords
 name|md_tbaa
 block|,
@@ -238,6 +248,10 @@ name|MachineBasicBlockLabel
 block|,
 name|MachineBasicBlock
 block|,
+name|PointerType
+block|,
+name|ScalarType
+block|,
 name|StackObject
 block|,
 name|FixedStackObject
@@ -252,6 +266,8 @@ comment|// Other tokens
 name|IntegerLiteral
 block|,
 name|FloatingPointLiteral
+block|,
+name|HexLiteral
 block|,
 name|VirtualRegister
 block|,
@@ -462,6 +478,10 @@ operator|||
 name|Kind
 operator|==
 name|kw_non_temporal
+operator|||
+name|Kind
+operator|==
+name|kw_dereferenceable
 operator|||
 name|Kind
 operator|==

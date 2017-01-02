@@ -141,9 +141,9 @@ block|}
 name|void
 name|dump
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
+argument_list|,
+argument|bool Brief = false
 argument_list|)
 block|;
 specifier|static

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- HexagonBlockRanges.h ---------------------------------------------===//
+comment|//===--- HexagonBlockRanges.h -----------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -58,12 +58,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCRegisterInfo.h"
+file|<cassert>
 end_include
-
-begin_comment
-comment|// For MCPhysReg.
-end_comment
 
 begin_include
 include|#
@@ -83,13 +79,16 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Function
-decl_stmt|;
 name|class
 name|HexagonSubtarget
 decl_stmt|;
@@ -103,22 +102,13 @@ name|class
 name|MachineInstr
 decl_stmt|;
 name|class
-name|MCInstrDesc
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
 name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
-name|TargetRegisterClass
-decl_stmt|;
-name|class
 name|TargetRegisterInfo
-decl_stmt|;
-name|class
-name|Type
 decl_stmt|;
 struct|struct
 name|HexagonBlockRanges
@@ -208,22 +198,6 @@ literal|11
 comment|// 10th + 1st
 block|}
 enum_decl|;
-specifier|static
-name|bool
-name|isInstr
-parameter_list|(
-name|IndexType
-name|X
-parameter_list|)
-block|{
-return|return
-name|X
-operator|.
-name|Index
-operator|>=
-name|First
-return|;
-block|}
 name|IndexType
 argument_list|()
 operator|:
@@ -242,6 +216,21 @@ argument_list|(
 argument|Idx
 argument_list|)
 block|{}
+specifier|static
+name|bool
+name|isInstr
+argument_list|(
+argument|IndexType X
+argument_list|)
+block|{
+return|return
+name|X
+operator|.
+name|Index
+operator|>=
+name|First
+return|;
+block|}
 name|operator
 name|unsigned
 argument_list|()
@@ -361,17 +350,9 @@ name|public
 label|:
 name|IndexRange
 argument_list|()
-operator|:
-name|Fixed
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|TiedEnd
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|IndexRange
 argument_list|(
 argument|IndexType Start
@@ -382,7 +363,7 @@ argument|bool F = false
 argument_list|,
 argument|bool T = false
 argument_list|)
-operator|:
+block|:
 name|std
 operator|::
 name|pair
@@ -477,10 +458,14 @@ parameter_list|)
 function_decl|;
 name|bool
 name|Fixed
+init|=
+name|false
 decl_stmt|;
 comment|// Can be renamed?  "Fixed" means "no".
 name|bool
 name|TiedEnd
+init|=
+name|false
 decl_stmt|;
 comment|// The end is not a use, but a dead def tied to a use.
 name|private
@@ -830,6 +815,16 @@ specifier|const
 name|MachineBasicBlock
 modifier|&
 name|B
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|&
+name|MRI
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|TRI
 parameter_list|)
 function_decl|;
 name|void
@@ -1297,13 +1292,17 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// HEXAGON_BLOCK_RANGES_H
+end_comment
 
 end_unit
 

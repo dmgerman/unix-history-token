@@ -111,25 +111,6 @@ operator|>
 block|;
 name|public
 operator|:
-name|explicit
-name|ScopedNoAliasAAResult
-argument_list|()
-operator|:
-name|AAResultBase
-argument_list|()
-block|{}
-name|ScopedNoAliasAAResult
-argument_list|(
-name|ScopedNoAliasAAResult
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|AAResultBase
-argument_list|(
-argument|std::move(Arg)
-argument_list|)
-block|{}
 comment|/// Handle invalidation events from the new pass manager.
 comment|///
 comment|/// By definition, this result is stateless and so remains valid.
@@ -139,6 +120,8 @@ argument_list|(
 argument|Function&
 argument_list|,
 argument|const PreservedAnalyses&
+argument_list|,
+argument|FunctionAnalysisManager::Invalidator&
 argument_list|)
 block|{
 return|return
@@ -185,17 +168,6 @@ argument_list|,
 argument|const MDNode *NoAlias
 argument_list|)
 specifier|const
-block|;
-name|void
-name|collectMDInDomain
-argument_list|(
-argument|const MDNode *List
-argument_list|,
-argument|const MDNode *Domain
-argument_list|,
-argument|SmallPtrSetImpl<const MDNode *>&Nodes
-argument_list|)
-specifier|const
 block|; }
 decl_stmt|;
 comment|/// Analysis pass providing a never-invalidated alias analysis result.
@@ -215,8 +187,8 @@ name|ScopedNoAliasAA
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -231,10 +203,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

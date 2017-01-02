@@ -73,7 +73,7 @@ name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// Simple wrapper around std::function<void(raw_ostream&)>.
-comment|/// This class is usefull to construct print helpers for raw_ostream.
+comment|/// This class is useful to construct print helpers for raw_ostream.
 comment|///
 comment|/// Example:
 comment|///     Printable PrintRegister(unsigned Register) {

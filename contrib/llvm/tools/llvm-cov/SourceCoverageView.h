@@ -305,90 +305,6 @@ argument_list|(
 argument|std::move(View)
 argument_list|)
 block|{}
-name|InstantiationView
-argument_list|(
-name|InstantiationView
-operator|&&
-name|RHS
-argument_list|)
-operator|:
-name|FunctionName
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|FunctionName
-argument_list|)
-argument_list|)
-operator|,
-name|Line
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|Line
-argument_list|)
-argument_list|)
-operator|,
-name|View
-argument_list|(
-argument|std::move(RHS.View)
-argument_list|)
-block|{}
-name|InstantiationView
-operator|&
-name|operator
-operator|=
-operator|(
-name|InstantiationView
-operator|&&
-name|RHS
-operator|)
-block|{
-name|FunctionName
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|FunctionName
-argument_list|)
-block|;
-name|Line
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|Line
-argument_list|)
-block|;
-name|View
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|View
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 name|friend
 name|bool
 name|operator
@@ -518,11 +434,6 @@ comment|/// \brief A file manager that handles format-aware file creation.
 name|class
 name|CoveragePrinter
 block|{
-specifier|const
-name|CoverageViewOptions
-modifier|&
-name|Opts
-decl_stmt|;
 name|public
 label|:
 struct|struct
@@ -554,6 +465,11 @@ decl|>
 decl_stmt|;
 name|protected
 label|:
+specifier|const
+name|CoverageViewOptions
+modifier|&
+name|Opts
+decl_stmt|;
 name|CoveragePrinter
 argument_list|(
 specifier|const
@@ -583,6 +499,7 @@ argument|bool InToplevel
 argument_list|,
 argument|bool Relative = true
 argument_list|)
+specifier|const
 expr_stmt|;
 comment|/// \brief If directory output is enabled, create a file in that directory
 comment|/// at the path given by getOutputPath(). Otherwise, return stdout.
@@ -598,6 +515,7 @@ argument|StringRef Extension
 argument_list|,
 argument|bool InToplevel
 argument_list|)
+specifier|const
 expr_stmt|;
 comment|/// \brief Return the sub-directory name for file coverage reports.
 specifier|static
@@ -666,9 +584,18 @@ name|createIndexFile
 argument_list|(
 name|ArrayRef
 operator|<
-name|StringRef
+name|std
+operator|::
+name|string
 operator|>
 name|SourceFiles
+argument_list|,
+specifier|const
+name|coverage
+operator|::
+name|CoverageMapping
+operator|&
+name|Coverage
 argument_list|)
 init|=
 literal|0
@@ -725,6 +652,11 @@ name|InstantiationView
 operator|>
 name|InstantiationSubViews
 expr_stmt|;
+comment|/// Get the first uncovered line number for the source file.
+name|unsigned
+name|getFirstUncoveredLineNo
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 struct|struct
@@ -801,6 +733,9 @@ parameter_list|(
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|,
+name|bool
+name|WholeFile
 parameter_list|)
 init|=
 literal|0
@@ -1000,6 +935,40 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Render \p Title, a project title if one is available, and the
+comment|/// created time.
+name|virtual
+name|void
+name|renderTitle
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|StringRef
+name|CellText
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Render the table header for a given source file.
+name|virtual
+name|void
+name|renderTableHeader
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|unsigned
+name|FirstUncoveredLineNo
+parameter_list|,
+name|unsigned
+name|IndentLevel
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// @}
 comment|/// \brief Format a count using engineering notation with 3 significant
 comment|/// digits.
@@ -1083,15 +1052,14 @@ operator|~
 name|SourceCoverageView
 argument_list|()
 block|{}
-name|StringRef
+comment|/// \brief Return the source name formatted for the host OS.
+name|std
+operator|::
+name|string
 name|getSourceName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SourceName
-return|;
-block|}
+expr_stmt|;
 specifier|const
 name|CoverageViewOptions
 operator|&

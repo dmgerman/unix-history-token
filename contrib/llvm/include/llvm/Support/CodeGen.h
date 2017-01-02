@@ -79,6 +79,12 @@ block|,
 name|PIC_
 block|,
 name|DynamicNoPIC
+block|,
+name|ROPI
+block|,
+name|RWPI
+block|,
+name|ROPI_RWPI
 block|}
 enum|;
 block|}

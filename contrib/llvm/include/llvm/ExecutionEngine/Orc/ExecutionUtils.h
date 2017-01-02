@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"JITSymbol.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
@@ -132,9 +132,9 @@ name|Element
 argument_list|(
 argument|unsigned Priority
 argument_list|,
-argument|const Function *Func
+argument|Function *Func
 argument_list|,
-argument|const Value *Data
+argument|Value *Data
 argument_list|)
 block|:
 name|Priority
@@ -155,12 +155,10 @@ block|{}
 name|unsigned
 name|Priority
 expr_stmt|;
-specifier|const
 name|Function
 modifier|*
 name|Func
 decl_stmt|;
-specifier|const
 name|Value
 modifier|*
 name|Data
@@ -514,9 +512,7 @@ argument_list|)
 argument_list|)
 block|;   }
 comment|/// Search overrided symbols.
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITEvaluatedSymbol
 name|searchOverrides
 argument_list|(
 argument|const std::string&Name
@@ -542,9 +538,7 @@ name|end
 argument_list|()
 condition|)
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITEvaluatedSymbol
 argument_list|(
 name|I
 operator|->
@@ -587,7 +581,7 @@ operator|<
 name|typename
 name|PtrTy
 operator|>
-name|TargetAddress
+name|JITTargetAddress
 name|toTargetAddress
 argument_list|(
 argument|PtrTy* P
@@ -596,7 +590,7 @@ block|{
 return|return
 name|static_cast
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 operator|>
 operator|(
 name|reinterpret_cast
@@ -622,7 +616,7 @@ name|string
 operator|&
 name|Name
 argument_list|,
-name|TargetAddress
+name|JITTargetAddress
 name|Addr
 argument_list|)
 block|{
@@ -646,7 +640,7 @@ end_decl_stmt
 begin_expr_stmt
 name|StringMap
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 operator|>
 name|CXXRuntimeOverrides
 expr_stmt|;

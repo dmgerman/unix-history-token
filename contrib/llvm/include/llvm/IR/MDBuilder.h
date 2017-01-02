@@ -206,6 +206,15 @@ name|uint64_t
 name|Count
 parameter_list|)
 function_decl|;
+comment|/// Return metadata containing the section prefix for a function.
+name|MDNode
+modifier|*
+name|createFunctionSectionPrefix
+parameter_list|(
+name|StringRef
+name|Prefix
+parameter_list|)
+function_decl|;
 comment|//===------------------------------------------------------------------===//
 comment|// Range metadata.
 comment|//===------------------------------------------------------------------===//

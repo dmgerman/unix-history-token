@@ -90,6 +90,21 @@ directive|include
 file|<endian.h>
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sys/machine.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -232,6 +247,13 @@ operator|&
 name|Features
 argument_list|)
 decl_stmt|;
+comment|/// Get the number of physical cores (as opposed to logical cores returned
+comment|/// from thread::hardware_concurrency(), which includes hyperthreads).
+comment|/// Returns -1 if unknown for the current host system.
+name|int
+name|getHostNumPhysicalCores
+parameter_list|()
+function_decl|;
 block|}
 block|}
 end_decl_stmt

@@ -553,10 +553,7 @@ name|Module
 operator|&
 name|M
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Module
-operator|>
+name|ModuleAnalysisManager
 operator|&
 name|AM
 argument_list|)

@@ -66,19 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRecip.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCTargetOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCAsmInfo.h"
 end_include
 
 begin_decl_stmt
@@ -158,6 +146,24 @@ block|,
 comment|// POSIX Threads
 name|Single
 comment|// Single Threaded Environment
+block|}
+enum|;
+block|}
+name|namespace
+name|FPDenormal
+block|{
+enum|enum
+name|DenormalMode
+block|{
+name|IEEE
+block|,
+comment|// IEEE 754 denormal numbers
+name|PreserveSign
+block|,
+comment|// the sign of a flushed-to-zero number is preserved in
+comment|// the sign of 0
+name|PositiveZero
+comment|// denormals are flushed to positive zero
 block|}
 enum|;
 block|}
@@ -241,6 +247,11 @@ name|false
 argument_list|)
 operator|,
 name|NoNaNsFPMath
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|NoTrappingFPMath
 argument_list|(
 name|false
 argument_list|)
@@ -339,19 +350,6 @@ operator|::
 name|Standard
 argument_list|)
 operator|,
-name|Reciprocals
-argument_list|(
-name|TargetRecip
-argument_list|()
-argument_list|)
-operator|,
-name|JTType
-argument_list|(
-name|JumpTable
-operator|::
-name|Single
-argument_list|)
-operator|,
 name|ThreadModel
 argument_list|(
 name|ThreadModel
@@ -371,6 +369,13 @@ argument_list|(
 name|DebuggerKind
 operator|::
 name|Default
+argument_list|)
+operator|,
+name|FPDenormalMode
+argument_list|(
+name|FPDenormal
+operator|::
+name|IEEE
 argument_list|)
 operator|,
 name|ExceptionModel
@@ -439,6 +444,14 @@ comment|/// this flag is off (the default), the code generator is not allowed to
 comment|/// assume the FP arithmetic arguments and results are never NaNs.
 name|unsigned
 name|NoNaNsFPMath
+range|:
+literal|1
+decl_stmt|;
+comment|/// NoTrappingFPMath - This flag is enabled when the
+comment|/// -enable-no-trapping-fp-math is specified on the command line. This
+comment|/// specifies that there are no trap handlers to handle exceptions.
+name|unsigned
+name|NoTrappingFPMath
 range|:
 literal|1
 decl_stmt|;
@@ -591,17 +604,6 @@ operator|::
 name|FPOpFusionMode
 name|AllowFPOpFusion
 expr_stmt|;
-comment|/// This class encapsulates options for reciprocal-estimate code generation.
-name|TargetRecip
-name|Reciprocals
-decl_stmt|;
-comment|/// JTType - This flag specifies the type of jump-instruction table to
-comment|/// create for functions that have the jumptable attribute.
-name|JumpTable
-operator|::
-name|JumpTableType
-name|JTType
-expr_stmt|;
 comment|/// ThreadModel - This flag specifies the type of threading model to assume
 comment|/// for things like atomics
 name|ThreadModel
@@ -617,6 +619,13 @@ comment|/// Which debugger to tune for.
 name|DebuggerKind
 name|DebuggerTuning
 decl_stmt|;
+comment|/// FPDenormalMode - This flags specificies which denormal numbers the code
+comment|/// is permitted to require.
+name|FPDenormal
+operator|::
+name|DenormalMode
+name|FPDenormalMode
+expr_stmt|;
 comment|/// What exception model to use
 name|ExceptionHandling
 name|ExceptionModel
@@ -665,6 +674,11 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|NoNaNsFPMath
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|NoTrappingFPMath
 argument_list|)
 operator|&&
 name|ARE_EQUAL
@@ -719,16 +733,6 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
-name|Reciprocals
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
-name|JTType
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
 name|ThreadModel
 argument_list|)
 operator|&&
@@ -740,6 +744,11 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|DebuggerTuning
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|FPDenormalMode
 argument_list|)
 operator|&&
 name|ARE_EQUAL

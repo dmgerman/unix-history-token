@@ -83,10 +83,16 @@ name|class
 name|MCInst
 decl_stmt|;
 name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
 name|MCOperand
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
+decl_stmt|;
+name|class
+name|FeatureBitset
 decl_stmt|;
 name|class
 name|AMDGPUMCCodeEmitter
@@ -99,6 +105,26 @@ name|void
 name|anchor
 argument_list|()
 block|;
+name|protected
+operator|:
+specifier|const
+name|MCInstrInfo
+operator|&
+name|MCII
+block|;
+name|AMDGPUMCCodeEmitter
+argument_list|(
+specifier|const
+name|MCInstrInfo
+operator|&
+name|mcii
+argument_list|)
+operator|:
+name|MCII
+argument_list|(
+argument|mcii
+argument_list|)
+block|{}
 name|public
 operator|:
 name|uint64_t
@@ -148,8 +174,26 @@ return|return
 literal|0
 return|;
 block|}
-expr|}
-block|;  }
+name|protected
+operator|:
+name|uint64_t
+name|computeAvailableFeatures
+argument_list|(
+argument|const FeatureBitset&FB
+argument_list|)
+specifier|const
+block|;
+name|void
+name|verifyInstructionPredicates
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|uint64_t AvailableFeatures
+argument_list|)
+specifier|const
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

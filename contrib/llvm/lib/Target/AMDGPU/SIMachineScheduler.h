@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SIMachineScheduler.h - SI Scheduler Interface -*- C++ -*-------===//
+comment|//===-- SIMachineScheduler.h - SI Scheduler Interface -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineScheduler.h"
 end_include
 
@@ -81,12 +87,47 @@ directive|include
 file|"llvm/CodeGen/RegisterPressure.h"
 end_include
 
-begin_decl_stmt
-name|using
-name|namespace
-name|llvm
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ScheduleDAG.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -339,15 +380,6 @@ argument_list|(
 name|BC
 argument_list|)
 operator|,
-name|SUnits
-argument_list|()
-operator|,
-name|TopReadySUs
-argument_list|()
-operator|,
-name|ScheduledSUnits
-argument_list|()
-operator|,
 name|TopRPTracker
 argument_list|(
 name|TopPressure
@@ -368,22 +400,16 @@ argument_list|(
 name|ID
 argument_list|)
 operator|,
-name|Preds
-argument_list|()
-operator|,
-name|Succs
-argument_list|()
-operator|,
 name|NumHighLatencySuccessors
 argument_list|(
 literal|0
 argument_list|)
 block|{}
-expr_stmt|;
 operator|~
 name|SIScheduleBlock
 argument_list|()
-block|{}
+operator|=
+expr|default
 expr_stmt|;
 name|unsigned
 name|getID
@@ -608,6 +634,8 @@ comment|// The best SUnit candidate.
 name|SUnit
 operator|*
 name|SU
+operator|=
+name|nullptr
 block|;
 name|unsigned
 name|SGPRUsage
@@ -626,12 +654,9 @@ name|HasLowLatencyNonWaitedParent
 block|;
 name|SISchedCandidate
 argument_list|()
-operator|:
-name|SU
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|bool
 name|isValid
 argument_list|()
@@ -1202,7 +1227,8 @@ empty_stmt|;
 operator|~
 name|SIScheduleBlockScheduler
 argument_list|()
-block|{}
+operator|=
+expr|default
 expr_stmt|;
 name|std
 operator|::
@@ -1218,7 +1244,6 @@ return|return
 name|BlocksScheduled
 return|;
 block|}
-empty_stmt|;
 name|unsigned
 name|getVGPRUsage
 parameter_list|()
@@ -1227,7 +1252,6 @@ return|return
 name|maxVregUsage
 return|;
 block|}
-empty_stmt|;
 name|unsigned
 name|getSGPRUsage
 parameter_list|()
@@ -1236,7 +1260,6 @@ return|return
 name|maxSregUsage
 return|;
 block|}
-empty_stmt|;
 name|private
 label|:
 name|struct
@@ -1248,6 +1271,8 @@ comment|// The best Block candidate.
 name|SIScheduleBlock
 operator|*
 name|Block
+operator|=
+name|nullptr
 block|;
 name|bool
 name|IsHighLatency
@@ -1269,12 +1294,9 @@ name|Height
 block|;
 name|SIBlockSchedCandidate
 argument_list|()
-operator|:
-name|Block
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|bool
 name|isValid
 argument_list|()
@@ -1509,11 +1531,11 @@ argument_list|(
 argument|DAG
 argument_list|)
 block|{}
-expr_stmt|;
 operator|~
 name|SIScheduler
 argument_list|()
-block|{}
+operator|=
+expr|default
 expr_stmt|;
 name|struct
 name|SIScheduleBlockResult
@@ -1642,7 +1664,6 @@ return|return
 name|CurrentTop
 return|;
 block|}
-block|;
 name|MachineBasicBlock
 operator|::
 name|iterator
@@ -1653,7 +1674,6 @@ return|return
 name|CurrentBottom
 return|;
 block|}
-block|;
 name|LiveIntervals
 operator|*
 name|getLIS
@@ -1692,7 +1712,6 @@ return|return
 name|EntrySU
 return|;
 block|}
-block|;
 name|SUnit
 operator|&
 name|getExitSU
@@ -1702,7 +1721,6 @@ return|return
 name|ExitSU
 return|;
 block|}
-block|;
 name|void
 name|restoreSULinksLeft
 argument_list|()
@@ -1770,7 +1788,6 @@ return|return
 name|InRegs
 return|;
 block|}
-block|;
 name|unsigned
 name|getVGPRSetID
 argument_list|()
@@ -1850,7 +1867,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -1859,7 +1876,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SIMACHINESCHEDULER_H_ */
+comment|// LLVM_LIB_TARGET_AMDGPU_SIMACHINESCHEDULER_H
 end_comment
 
 end_unit

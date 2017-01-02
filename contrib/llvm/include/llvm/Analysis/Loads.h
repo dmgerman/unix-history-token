@@ -208,15 +208,13 @@ comment|/// to be merged.  (This doesn't matter for store-to-load forwarding bec
 comment|/// the only relevant load gets deleted.)
 comment|///
 comment|/// \param Load The load we want to replace.
-comment|/// \param ScanBB The basic block to scan. FIXME: This is redundant.
+comment|/// \param ScanBB The basic block to scan.
 comment|/// \param [in,out] ScanFrom The location to start scanning from. When this
 comment|/// function returns, it points at the last instruction scanned.
 comment|/// \param MaxInstsToScan The maximum number of instructions to scan. If this
 comment|/// is zero, the whole block will be scanned.
 comment|/// \param AA Optional pointer to alias analysis, to make the scan more
 comment|/// precise.
-comment|/// \param [out] AATags The aliasing metadata for the operation which produced
-comment|/// the value. FIXME: This is basically useless.
 comment|/// \param [out] IsLoadCSE Whether the returned value is a load from the same
 comment|/// location in memory, as opposed to the value operand of a store.
 comment|///
@@ -247,12 +245,6 @@ argument_list|,
 name|AliasAnalysis
 operator|*
 name|AA
-operator|=
-name|nullptr
-argument_list|,
-name|AAMDNodes
-operator|*
-name|AATags
 operator|=
 name|nullptr
 argument_list|,

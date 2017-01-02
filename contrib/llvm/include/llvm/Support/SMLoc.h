@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -194,6 +200,13 @@ name|End
 decl_stmt|;
 name|SMRange
 argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|SMRange
+argument_list|(
+argument|NoneType
+argument_list|)
 block|{}
 name|SMRange
 argument_list|(
@@ -252,6 +265,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_SMLOC_H
+end_comment
 
 end_unit
 

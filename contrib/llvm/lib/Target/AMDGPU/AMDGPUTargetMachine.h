@@ -75,6 +75,48 @@ directive|include
 file|"AMDGPUSubtarget.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/TargetTransformInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -139,6 +181,7 @@ block|;
 operator|~
 name|AMDGPUTargetMachine
 argument_list|()
+name|override
 block|;
 specifier|const
 name|AMDGPUSubtarget
@@ -156,6 +199,8 @@ argument|const Function&
 argument_list|)
 specifier|const
 name|override
+operator|=
+literal|0
 block|;
 specifier|const
 name|AMDGPUIntrinsicInfo
@@ -189,15 +234,21 @@ name|get
 argument_list|()
 return|;
 block|}
-expr|}
-block|;
+name|void
+name|addEarlyAsPossiblePasses
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|)
+name|override
+block|; }
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// R600 Target Machine (R600 -> Cayman)
 comment|//===----------------------------------------------------------------------===//
 name|class
 name|R600TargetMachine
 name|final
-operator|:
+range|:
 name|public
 name|AMDGPUTargetMachine
 block|{
@@ -253,14 +304,14 @@ argument_list|)
 specifier|const
 name|override
 block|; }
-block|;
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// GCN Target Machine (SI+)
 comment|//===----------------------------------------------------------------------===//
 name|class
 name|GCNTargetMachine
 name|final
-operator|:
+range|:
 name|public
 name|AMDGPUTargetMachine
 block|{
@@ -316,75 +367,22 @@ argument_list|)
 specifier|const
 name|override
 block|; }
-block|;
-specifier|inline
-specifier|const
-name|AMDGPUSubtarget
-operator|*
-name|AMDGPUTargetMachine
-operator|::
-name|getSubtargetImpl
-argument_list|(
-argument|const Function&F
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|getTargetTriple
-argument_list|()
-operator|.
-name|getArch
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|amdgcn
-condition|)
-return|return
-name|static_cast
-operator|<
-specifier|const
-name|GCNTargetMachine
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getSubtargetImpl
-argument_list|(
-name|F
-argument_list|)
-return|;
-return|return
-name|static_cast
-operator|<
-specifier|const
-name|R600TargetMachine
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getSubtargetImpl
-argument_list|(
-name|F
-argument_list|)
-return|;
-block|}
+decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AMDGPU_AMDGPUTARGETMACHINE_H
+end_comment
 
 end_unit
 

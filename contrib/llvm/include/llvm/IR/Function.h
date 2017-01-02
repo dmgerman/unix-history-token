@@ -78,7 +78,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ilist_node.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -114,13 +126,61 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Intrinsics.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/OperandTraits.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/IR/SymbolTableListTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -136,6 +196,9 @@ name|class
 name|Optional
 expr_stmt|;
 name|class
+name|AssemblyAnnotationWriter
+decl_stmt|;
+name|class
 name|FunctionType
 decl_stmt|;
 name|class
@@ -144,22 +207,6 @@ decl_stmt|;
 name|class
 name|DISubprogram
 decl_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|SymbolTableListSentinelTraits
-operator|<
-name|Argument
-operator|>
-operator|:
-name|public
-name|ilist_half_embedded_sentinel_traits
-operator|<
-name|Argument
-operator|>
-block|{}
-expr_stmt|;
 name|class
 name|Function
 range|:
@@ -225,10 +272,14 @@ name|ArgumentListType
 name|ArgumentList
 decl_stmt|;
 comment|///< The formal arguments
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ValueSymbolTable
-modifier|*
+operator|>
 name|SymTab
-decl_stmt|;
+expr_stmt|;
 comment|///< Symbol table of args/instructions
 name|AttributeSet
 name|AttributeSets
@@ -251,14 +302,6 @@ operator|<
 name|Function
 operator|>
 expr_stmt|;
-name|void
-name|setParent
-parameter_list|(
-name|Module
-modifier|*
-name|parent
-parameter_list|)
-function_decl|;
 comment|/// hasLazyArguments/CheckLazyArguments - The argument list of a function is
 comment|/// built on demand, so that the list isn't allocated until the first client
 comment|/// needs it.  The hasLazyArguments predicate returns true if the arg list
@@ -301,6 +344,24 @@ name|void
 name|BuildLazyArguments
 parameter_list|()
 function_decl|const;
+comment|/// Function ctor - If the (optional) Module argument is specified, the
+comment|/// function is automatically inserted into the end of the function list for
+comment|/// the module.
+comment|///
+name|Function
+argument_list|(
+argument|FunctionType *Ty
+argument_list|,
+argument|LinkageTypes Linkage
+argument_list|,
+argument|const Twine&N =
+literal|""
+argument_list|,
+argument|Module *M = nullptr
+argument_list|)
+empty_stmt|;
+name|public
+label|:
 name|Function
 argument_list|(
 specifier|const
@@ -321,24 +382,11 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-comment|/// Function ctor - If the (optional) Module argument is specified, the
-comment|/// function is automatically inserted into the end of the function list for
-comment|/// the module.
-comment|///
+operator|~
 name|Function
-argument_list|(
-argument|FunctionType *Ty
-argument_list|,
-argument|LinkageTypes Linkage
-argument_list|,
-argument|const Twine&N =
-literal|""
-argument_list|,
-argument|Module *M = nullptr
-argument_list|)
-empty_stmt|;
-name|public
-label|:
+argument_list|()
+name|override
+expr_stmt|;
 specifier|static
 name|Function
 modifier|*
@@ -379,31 +427,26 @@ name|M
 argument_list|)
 return|;
 block|}
-operator|~
-name|Function
-argument_list|()
-name|override
-expr_stmt|;
-comment|/// \brief Provide fast operand accessors
+comment|// Provide fast operand accessors.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
+comment|/// Returns the type of the ret val.
 name|Type
 operator|*
 name|getReturnType
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// Return the type of the ret val
+comment|/// Returns the FunctionType for me.
 name|FunctionType
 operator|*
 name|getFunctionType
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// Return the FunctionType for me
 comment|/// getContext - Return a reference to the LLVMContext associated with this
 comment|/// function.
 name|LLVMContext
@@ -449,21 +492,27 @@ return|return
 name|IntID
 return|;
 block|}
+comment|/// isIntrinsic - Returns true if the function's name starts with "llvm.".
+comment|/// It's possible for this function to return true while getIntrinsicID()
+comment|/// returns Intrinsic::not_intrinsic!
 name|bool
 name|isIntrinsic
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getName
-argument_list|()
-operator|.
-name|startswith
-argument_list|(
-literal|"llvm."
-argument_list|)
+name|HasLLVMReservedName
 return|;
 block|}
+specifier|static
+name|Intrinsic
+operator|::
+name|ID
+name|lookupIntrinsicID
+argument_list|(
+argument|StringRef Name
+argument_list|)
+expr_stmt|;
 comment|/// \brief Recalculate the ID for this function if it is an Intrinsic defined
 comment|/// in llvm/Intrinsics.h.  Sets the intrinsic ID to Intrinsic::not_intrinsic
 comment|/// if the name of this function does not match an intrinsic in that header.
@@ -586,24 +635,67 @@ argument_list|(
 name|Attribute
 operator|::
 name|AttrKind
-name|N
+name|Kind
 argument_list|)
 block|{
-name|setAttributes
-argument_list|(
-name|AttributeSets
-operator|.
 name|addAttribute
 argument_list|(
-name|getContext
-argument_list|()
-argument_list|,
 name|AttributeSet
 operator|::
 name|FunctionIndex
 argument_list|,
-name|N
+name|Kind
 argument_list|)
+expr_stmt|;
+block|}
+comment|/// @brief Add function attributes to this function.
+name|void
+name|addFnAttr
+parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
+name|StringRef
+name|Val
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+block|{
+name|addAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|get
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|Kind
+argument_list|,
+name|Val
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|addFnAttr
+parameter_list|(
+name|Attribute
+name|Attr
+parameter_list|)
+block|{
+name|addAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attr
 argument_list|)
 expr_stmt|;
 block|}
@@ -616,6 +708,24 @@ operator|::
 name|AttrKind
 name|Kind
 argument_list|)
+block|{
+name|removeAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Kind
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// @brief Remove function attribute from this function.
+name|void
+name|removeFnAttr
+parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|)
 block|{
 name|setAttributes
 argument_list|(
@@ -635,63 +745,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// @brief Add function attributes to this function.
-name|void
-name|addFnAttr
-parameter_list|(
-name|StringRef
-name|Kind
-parameter_list|)
-block|{
-name|setAttributes
-argument_list|(
-name|AttributeSets
-operator|.
-name|addAttribute
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|,
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
-name|Kind
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|addFnAttr
-parameter_list|(
-name|StringRef
-name|Kind
-parameter_list|,
-name|StringRef
-name|Value
-parameter_list|)
-block|{
-name|setAttributes
-argument_list|(
-name|AttributeSets
-operator|.
-name|addAttribute
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|,
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
-name|Kind
-argument_list|,
-name|Value
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// Set the entry count for this function.
+comment|/// \brief Set the entry count for this function.
+comment|///
+comment|/// Entry count is the number of times this function was executed based on
+comment|/// pgo data.
 name|void
 name|setEntryCount
 parameter_list|(
@@ -699,12 +756,32 @@ name|uint64_t
 name|Count
 parameter_list|)
 function_decl|;
-comment|/// Get the entry count for this function.
+comment|/// \brief Get the entry count for this function.
+comment|///
+comment|/// Entry count is the number of times the function was executed based on
+comment|/// pgo data.
 name|Optional
 operator|<
 name|uint64_t
 operator|>
 name|getEntryCount
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Set the section prefix for this function.
+name|void
+name|setSectionPrefix
+parameter_list|(
+name|StringRef
+name|Prefix
+parameter_list|)
+function_decl|;
+comment|/// Get the section prefix for this function.
+name|Optional
+operator|<
+name|StringRef
+operator|>
+name|getSectionPrefix
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -739,12 +816,8 @@ block|{
 return|return
 name|AttributeSets
 operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Kind
 argument_list|)
 return|;
@@ -1225,7 +1298,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// @brief Determine if the function may only access memory that is
-comment|//  either inaccessible from the IR or pointed to by its arguments.
+comment|///  either inaccessible from the IR or pointed to by its arguments.
 name|bool
 name|onlyAccessesInaccessibleMemOrArgMem
 argument_list|()
@@ -1651,7 +1724,6 @@ name|MinSize
 argument_list|)
 return|;
 block|}
-empty_stmt|;
 comment|/// Optimize this function for size (-Os) or minimum size (-Oz).
 name|bool
 name|optForSize
@@ -1833,30 +1905,34 @@ return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Symbol Table Accessing functions...
-comment|/// getSymbolTable() - Return the symbol table...
+comment|/// getSymbolTable() - Return the symbol table if any, otherwise nullptr.
 comment|///
 specifier|inline
 name|ValueSymbolTable
-modifier|&
+modifier|*
 name|getValueSymbolTable
 parameter_list|()
 block|{
 return|return
-operator|*
 name|SymTab
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 specifier|inline
 specifier|const
 name|ValueSymbolTable
-operator|&
+operator|*
 name|getValueSymbolTable
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
 name|SymTab
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -2347,8 +2423,8 @@ operator|*
 name|C
 argument_list|)
 expr_stmt|;
-comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
-comment|// subclasses cannot accidentally use it.
+comment|/// Shadow Value::setValueSubclassData with a private forwarding method so
+comment|/// that subclasses cannot accidentally use it.
 name|void
 name|setValueSubclassData
 parameter_list|(
@@ -2412,13 +2488,17 @@ end_macro
 
 begin_comment
 unit|}
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_FUNCTION_H
+end_comment
 
 end_unit
 

@@ -291,6 +291,9 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|TargetPassConfig
+decl_stmt|;
+name|class
 name|TargetRegisterInfo
 decl_stmt|;
 comment|/// This pass implements the reg bank selector pass used in the GlobalISel
@@ -1663,11 +1666,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Current target configuration. Controls how the pass handles errors.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|TargetPassConfig
+modifier|*
+name|TPC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Assign the register bank of each operand of \p MI.
 end_comment
 
+begin_comment
+comment|/// \return True on success, false otherwise.
+end_comment
+
 begin_function_decl
-name|void
+name|bool
 name|assignInstr
 parameter_list|(
 name|MachineInstr
@@ -1850,8 +1869,16 @@ begin_comment
 comment|/// I.e., Reg = op ... =><NewRegs> = NewOp ...
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \return True if the repairing worked, false otherwise.
+end_comment
+
 begin_decl_stmt
-name|void
+name|bool
 name|repairReg
 argument_list|(
 name|MachineOperand
@@ -2092,8 +2119,12 @@ begin_comment
 comment|/// applied.
 end_comment
 
+begin_comment
+comment|/// \return True if the mapping was applied sucessfully, false otherwise.
+end_comment
+
 begin_decl_stmt
-name|void
+name|bool
 name|applyMapping
 argument_list|(
 name|MachineInstr
@@ -2138,9 +2169,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_expr_stmt
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
@@ -2164,6 +2193,61 @@ decl|const
 name|override
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MachineFunctionProperties
+name|getRequiredProperties
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|MachineFunctionProperties
+argument_list|()
+operator|.
+name|set
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
+name|IsSSA
+argument_list|)
+operator|.
+name|set
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
+name|Legalized
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|MachineFunctionProperties
+name|getSetProperties
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|MachineFunctionProperties
+argument_list|()
+operator|.
+name|set
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
+name|RegBankSelected
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// Walk through \p MF and assign a register bank to every virtual register

@@ -70,19 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringSwitch.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Support/AlignOf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
@@ -118,7 +118,61 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cctype>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -128,6 +182,10 @@ block|{
 name|namespace
 name|yaml
 block|{
+struct|struct
+name|EmptyContext
+block|{}
+struct|;
 comment|/// This class should be specialized by any type that needs to be converted
 comment|/// to/from a YAML mapping.  For example:
 comment|///
@@ -150,6 +208,38 @@ comment|// Must provide:
 comment|// static void mapping(IO&io, T&fields);
 comment|// Optionally may provide:
 comment|// static StringRef validate(IO&io, T&fields);
+comment|//
+comment|// The optional flow flag will cause generated YAML to use a flow mapping
+comment|// (e.g. { a: 0, b: 1 }):
+comment|// static const bool flow = true;
+block|}
+expr_stmt|;
+comment|/// This class is similar to MappingTraits<T> but allows you to pass in
+comment|/// additional context for each map operation.  For example:
+comment|///
+comment|///     struct MappingContextTraits<MyStruct, MyContext> {
+comment|///       static void mapping(IO&io, MyStruct&s, MyContext&c) {
+comment|///         io.mapRequired("name", s.name);
+comment|///         io.mapRequired("size", s.size);
+comment|///         io.mapOptional("age",  s.age);
+comment|///         ++c.TimesMapped;
+comment|///       }
+comment|///     };
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|Context
+operator|>
+expr|struct
+name|MappingContextTraits
+block|{
+comment|// Must provide:
+comment|// static void mapping(IO&io, T&fields, Context&Ctx);
+comment|// Optionally may provide:
+comment|// static StringRef validate(IO&io, T&fields, Context&Ctx);
 comment|//
 comment|// The optional flow flag will cause generated YAML to use a flow mapping
 comment|// (e.g. { a: 0, b: 1 }):
@@ -319,17 +409,6 @@ comment|// static size_t size(IO&io, T&seq);
 comment|// static T::value_type& element(IO&io, T&seq, size_t index);
 block|}
 expr_stmt|;
-comment|// Only used by compiler if both template types are the same
-name|template
-operator|<
-name|typename
-name|T
-operator|,
-name|T
-operator|>
-expr|struct
-name|SameType
-expr_stmt|;
 comment|// Only used for better diagnostics of missing traits
 name|template
 operator|<
@@ -411,8 +490,7 @@ operator|<
 name|ScalarEnumerationTraits
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 operator|(
 name|nullptr
 operator|)
@@ -495,8 +573,7 @@ operator|<
 name|ScalarBitSetTraits
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 operator|(
 name|nullptr
 operator|)
@@ -813,6 +890,111 @@ end_decl_stmt
 
 begin_comment
 unit|};
+comment|// Test if MappingContextTraits<T> is defined on type T.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|Context
+operator|>
+expr|struct
+name|has_MappingTraits
+block|{
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|Signature_mapping
+function_decl|)
+parameter_list|(
+name|class
+name|IO
+modifier|&
+parameter_list|,
+name|T
+modifier|&
+parameter_list|,
+name|Context
+modifier|&
+parameter_list|)
+function_decl|;
+name|template
+operator|<
+name|typename
+name|U
+operator|>
+specifier|static
+name|char
+name|test
+argument_list|(
+name|SameType
+operator|<
+name|Signature_mapping
+argument_list|,
+operator|&
+name|U
+operator|::
+name|mapping
+operator|>
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|U
+operator|>
+specifier|static
+name|double
+name|test
+argument_list|(
+operator|...
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_decl_stmt
+specifier|static
+name|bool
+specifier|const
+name|value
+init|=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|test
+operator|<
+name|MappingContextTraits
+operator|<
+name|T
+argument_list|,
+name|Context
+operator|>>
+operator|(
+name|nullptr
+operator|)
+argument_list|)
+operator|==
+literal|1
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};
 comment|// Test if MappingTraits<T> is defined on type T.
 end_comment
 
@@ -824,6 +1006,11 @@ name|T
 operator|>
 expr|struct
 name|has_MappingTraits
+operator|<
+name|T
+operator|,
+name|EmptyContext
+operator|>
 block|{
 typedef|typedef
 name|void
@@ -897,8 +1084,112 @@ operator|<
 name|MappingTraits
 operator|<
 name|T
+operator|>>
+operator|(
+name|nullptr
+operator|)
+argument_list|)
+operator|==
+literal|1
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};
+comment|// Test if MappingContextTraits<T>::validate() is defined on type T.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|Context
 operator|>
-expr|>
+expr|struct
+name|has_MappingValidateTraits
+block|{
+typedef|typedef
+name|StringRef
+function_decl|(
+modifier|*
+name|Signature_validate
+function_decl|)
+parameter_list|(
+name|class
+name|IO
+modifier|&
+parameter_list|,
+name|T
+modifier|&
+parameter_list|,
+name|Context
+modifier|&
+parameter_list|)
+function_decl|;
+name|template
+operator|<
+name|typename
+name|U
+operator|>
+specifier|static
+name|char
+name|test
+argument_list|(
+name|SameType
+operator|<
+name|Signature_validate
+argument_list|,
+operator|&
+name|U
+operator|::
+name|validate
+operator|>
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|U
+operator|>
+specifier|static
+name|double
+name|test
+argument_list|(
+operator|...
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_decl_stmt
+specifier|static
+name|bool
+specifier|const
+name|value
+init|=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|test
+operator|<
+name|MappingContextTraits
+operator|<
+name|T
+argument_list|,
+name|Context
+operator|>>
 operator|(
 name|nullptr
 operator|)
@@ -922,6 +1213,11 @@ name|T
 operator|>
 expr|struct
 name|has_MappingValidateTraits
+operator|<
+name|T
+operator|,
+name|EmptyContext
+operator|>
 block|{
 typedef|typedef
 name|StringRef
@@ -995,8 +1291,7 @@ operator|<
 name|MappingTraits
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 operator|(
 name|nullptr
 operator|)
@@ -1093,8 +1388,7 @@ operator|<
 name|SequenceTraits
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 operator|(
 name|nullptr
 operator|)
@@ -1367,8 +1661,7 @@ operator|<
 name|DocumentListTraits
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 operator|(
 name|nullptr
 operator|)
@@ -1855,6 +2148,9 @@ name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 expr|struct
 name|missingTraits
@@ -1902,6 +2198,8 @@ operator|!
 name|has_MappingTraits
 operator|<
 name|T
+operator|,
+name|Context
 operator|>
 operator|::
 name|value
@@ -1931,6 +2229,9 @@ name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 expr|struct
 name|validatedMappingTraits
@@ -1945,6 +2246,8 @@ operator|,
 name|has_MappingTraits
 operator|<
 name|T
+operator|,
+name|Context
 operator|>
 operator|::
 name|value
@@ -1952,6 +2255,8 @@ operator|&&
 name|has_MappingValidateTraits
 operator|<
 name|T
+operator|,
+name|Context
 operator|>
 operator|::
 name|value
@@ -1965,6 +2270,9 @@ name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 expr|struct
 name|unvalidatedMappingTraits
@@ -1979,6 +2287,8 @@ operator|,
 name|has_MappingTraits
 operator|<
 name|T
+operator|,
+name|Context
 operator|>
 operator|::
 name|value
@@ -1987,6 +2297,8 @@ operator|!
 name|has_MappingValidateTraits
 operator|<
 name|T
+operator|,
+name|Context
 operator|>
 operator|::
 name|value
@@ -2378,6 +2690,9 @@ name|matchEnumFallback
 argument_list|()
 condition|)
 block|{
+name|EmptyContext
+name|Context
+decl_stmt|;
 comment|// FIXME: Force integral conversion to allow strong typedefs to convert.
 name|FBT
 name|Res
@@ -2401,6 +2716,8 @@ argument_list|,
 name|Res
 argument_list|,
 name|true
+argument_list|,
+name|Context
 argument_list|)
 expr_stmt|;
 name|Val
@@ -2613,9 +2930,43 @@ operator|>
 name|void
 name|mapRequired
 argument_list|(
-argument|const char* Key
+argument|const char *Key
 argument_list|,
-argument|T& Val
+argument|T&Val
+argument_list|)
+block|{
+name|EmptyContext
+name|Ctx
+block|;
+name|this
+operator|->
+name|processKey
+argument_list|(
+name|Key
+argument_list|,
+name|Val
+argument_list|,
+name|true
+argument_list|,
+name|Ctx
+argument_list|)
+block|;   }
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|Context
+operator|>
+name|void
+name|mapRequired
+argument_list|(
+argument|const char *Key
+argument_list|,
+argument|T&Val
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 name|this
@@ -2627,12 +2978,71 @@ argument_list|,
 name|Val
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 block|;   }
 name|template
 operator|<
 name|typename
 name|T
+operator|>
+name|void
+name|mapOptional
+argument_list|(
+argument|const char *Key
+argument_list|,
+argument|T&Val
+argument_list|)
+block|{
+name|EmptyContext
+name|Ctx
+block|;
+name|mapOptionalWithContext
+argument_list|(
+name|Key
+argument_list|,
+name|Val
+argument_list|,
+name|Ctx
+argument_list|)
+block|;   }
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|void
+name|mapOptional
+argument_list|(
+argument|const char *Key
+argument_list|,
+argument|T&Val
+argument_list|,
+argument|const T&Default
+argument_list|)
+block|{
+name|EmptyContext
+name|Ctx
+block|;
+name|mapOptionalWithContext
+argument_list|(
+name|Key
+argument_list|,
+name|Val
+argument_list|,
+name|Default
+argument_list|,
+name|Ctx
+argument_list|)
+block|;   }
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|typename
 name|std
@@ -2650,11 +3060,13 @@ name|void
 operator|>
 operator|::
 name|type
-name|mapOptional
+name|mapOptionalWithContext
 argument_list|(
-argument|const char* Key
+argument|const char *Key
 argument_list|,
-argument|T& Val
+argument|T&Val
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 comment|// omit key/value instead of outputting empty sequence
@@ -2688,6 +3100,8 @@ argument_list|,
 name|Val
 argument_list|,
 name|false
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -2698,15 +3112,22 @@ name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|void
-name|mapOptional
+name|mapOptionalWithContext
 argument_list|(
-argument|const char* Key
+argument|const char *Key
 argument_list|,
 argument|Optional<T>&Val
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
+name|this
+operator|->
 name|processKeyWithDefault
 argument_list|(
 name|Key
@@ -2722,12 +3143,17 @@ operator|)
 argument_list|,
 comment|/*Required=*/
 name|false
+argument_list|,
+name|Ctx
 argument_list|)
 block|;   }
 name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|typename
 name|std
@@ -2746,11 +3172,13 @@ name|void
 operator|>
 operator|::
 name|type
-name|mapOptional
+name|mapOptionalWithContext
 argument_list|(
-argument|const char* Key
+argument|const char *Key
 argument_list|,
-argument|T& Val
+argument|T&Val
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 name|this
@@ -2762,21 +3190,28 @@ argument_list|,
 name|Val
 argument_list|,
 name|false
+argument_list|,
+name|Ctx
 argument_list|)
 block|;   }
 name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|void
-name|mapOptional
+name|mapOptionalWithContext
 argument_list|(
-argument|const char* Key
+argument|const char *Key
 argument_list|,
-argument|T& Val
+argument|T&Val
 argument_list|,
-argument|const T& Default
+argument|const T&Default
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 name|this
@@ -2790,6 +3225,8 @@ argument_list|,
 name|Default
 argument_list|,
 name|false
+argument_list|,
+name|Ctx
 argument_list|)
 block|;   }
 name|private
@@ -2798,6 +3235,9 @@ name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|void
 name|processKeyWithDefault
@@ -2809,6 +3249,8 @@ argument_list|,
 argument|const Optional<T>&DefaultValue
 argument_list|,
 argument|bool Required
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 name|assert
@@ -2892,6 +3334,8 @@ name|getValue
 argument_list|()
 argument_list|,
 name|Required
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|this
@@ -2920,6 +3364,9 @@ unit|}    template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|void
 name|processKeyWithDefault
@@ -2928,9 +3375,11 @@ argument|const char *Key
 argument_list|,
 argument|T&Val
 argument_list|,
-argument|const T& DefaultValue
+argument|const T&DefaultValue
 argument_list|,
 argument|bool Required
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 name|void
@@ -2977,6 +3426,8 @@ argument_list|,
 name|Val
 argument_list|,
 name|Required
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|this
@@ -3008,6 +3459,9 @@ unit|}    template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|void
 name|processKey
@@ -3017,6 +3471,8 @@ argument_list|,
 argument|T&Val
 argument_list|,
 argument|bool Required
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 name|void
@@ -3052,6 +3508,8 @@ argument_list|,
 name|Val
 argument_list|,
 name|Required
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|this
@@ -3072,8 +3530,80 @@ name|Ctxt
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 unit|};
+name|namespace
+name|detail
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|Context
+operator|>
+name|void
+name|doMapping
+argument_list|(
+argument|IO&io
+argument_list|,
+argument|T&Val
+argument_list|,
+argument|Context&Ctx
+argument_list|)
+block|{
+name|MappingContextTraits
+operator|<
+name|T
+block|,
+name|Context
+operator|>
+operator|::
+name|mapping
+argument_list|(
+name|io
+argument_list|,
+name|Val
+argument_list|,
+name|Ctx
+argument_list|)
+block|; }
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|void
+name|doMapping
+argument_list|(
+argument|IO&io
+argument_list|,
+argument|T&Val
+argument_list|,
+argument|EmptyContext&Ctx
+argument_list|)
+block|{
+name|MappingTraits
+operator|<
+name|T
+operator|>
+operator|::
+name|mapping
+argument_list|(
+name|io
+argument_list|,
+name|Val
+argument_list|)
+block|; }
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace detail
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3102,6 +3632,8 @@ argument_list|,
 argument|T&Val
 argument_list|,
 argument|bool
+argument_list|,
+argument|EmptyContext&Ctx
 argument_list|)
 block|{
 name|io
@@ -3154,6 +3686,8 @@ argument_list|,
 argument|T&Val
 argument_list|,
 argument|bool
+argument_list|,
+argument|EmptyContext&Ctx
 argument_list|)
 block|{
 name|bool
@@ -3232,6 +3766,8 @@ argument_list|,
 argument|T&Val
 argument_list|,
 argument|bool
+argument_list|,
+argument|EmptyContext&Ctx
 argument_list|)
 block|{
 if|if
@@ -3397,6 +3933,8 @@ argument_list|,
 argument|T&Val
 argument_list|,
 argument|bool
+argument_list|,
+argument|EmptyContext&Ctx
 argument_list|)
 block|{
 if|if
@@ -3516,6 +4054,9 @@ unit|}  template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|typename
 name|std
@@ -3525,6 +4066,8 @@ operator|<
 name|validatedMappingTraits
 operator|<
 name|T
+operator|,
+name|Context
 operator|>
 operator|::
 name|value
@@ -3540,6 +4083,8 @@ argument_list|,
 argument|T&Val
 argument_list|,
 argument|bool
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 if|if
@@ -3623,16 +4168,15 @@ block|}
 end_if
 
 begin_expr_stmt
-name|MappingTraits
-operator|<
-name|T
-operator|>
+name|detail
 operator|::
-name|mapping
+name|doMapping
 argument_list|(
 name|io
 argument_list|,
 name|Val
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3710,6 +4254,9 @@ unit|}  template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|typename
 name|std
@@ -3719,6 +4266,8 @@ operator|<
 name|unvalidatedMappingTraits
 operator|<
 name|T
+operator|,
+name|Context
 operator|>
 operator|::
 name|value
@@ -3734,6 +4283,8 @@ argument_list|,
 argument|T&Val
 argument_list|,
 argument|bool
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 if|if
@@ -3753,16 +4304,15 @@ operator|.
 name|beginFlowMapping
 argument_list|()
 expr_stmt|;
-name|MappingTraits
-operator|<
-name|T
-operator|>
+name|detail
 operator|::
-name|mapping
+name|doMapping
 argument_list|(
 name|io
 argument_list|,
 name|Val
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|io
@@ -3781,16 +4331,15 @@ operator|.
 name|beginMapping
 argument_list|()
 expr_stmt|;
-name|MappingTraits
-operator|<
-name|T
-operator|>
+name|detail
 operator|::
-name|mapping
+name|doMapping
 argument_list|(
 name|io
 argument_list|,
 name|Val
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|io
@@ -3815,6 +4364,8 @@ operator|<
 name|missingTraits
 operator|<
 name|T
+operator|,
+name|EmptyContext
 operator|>
 operator|::
 name|value
@@ -3830,6 +4381,8 @@ argument_list|,
 argument|T&Val
 argument_list|,
 argument|bool
+argument_list|,
+argument|EmptyContext&Ctx
 argument_list|)
 block|{
 name|char
@@ -3848,6 +4401,9 @@ name|template
 operator|<
 name|typename
 name|T
+operator|,
+name|typename
+name|Context
 operator|>
 name|typename
 name|std
@@ -3872,6 +4428,8 @@ argument_list|,
 argument|T&Seq
 argument_list|,
 argument|bool
+argument_list|,
+argument|Context&Ctx
 argument_list|)
 block|{
 if|if
@@ -3967,6 +4525,8 @@ name|i
 argument_list|)
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|io
@@ -4070,6 +4630,8 @@ name|i
 argument_list|)
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|io
@@ -5653,7 +6215,9 @@ name|virtual
 operator|~
 name|HNode
 argument_list|()
-block|{ }
+operator|=
+expr|default
+block|;
 specifier|static
 specifier|inline
 name|bool
@@ -6319,8 +6883,6 @@ name|canElideEmptySequence
 argument_list|()
 name|override
 block|;
-name|public
-operator|:
 comment|// These are only used by operator<<. They could be private
 comment|// if that templated operator could be made a friend.
 name|void
@@ -6473,7 +7035,7 @@ parameter_list|,
 name|_type
 parameter_list|)
 define|\
-value|struct _type {                                                             \         _type() { }                                                            \         _type(const _base v) : value(v) { }                                    \         _type(const _type&v) : value(v.value) {}                              \         _type&operator=(const _type&rhs) { value = rhs.value; return *this; }\         _type&operator=(const _base&rhs) { value = rhs; return *this; }      \         operator const _base& () const { return value; }                      \         bool operator==(const _type&rhs) const { return value == rhs.value; } \         bool operator==(const _base&rhs) const { return value == rhs; }       \         bool operator<(const _type&rhs) const { return value< rhs.value; }   \         _base value;                                                           \         typedef _base BaseType;                                                \     };
+value|struct _type {                                                             \         _type() = default;                                                     \         _type(const _base v) : value(v) {}                                     \         _type(const _type&v) = default;                                       \         _type&operator=(const _type&rhs) = default;                          \         _type&operator=(const _base&rhs) { value = rhs; return *this; }      \         operator const _base& () const { return value; }                      \         bool operator==(const _type&rhs) const { return value == rhs.value; } \         bool operator==(const _base&rhs) const { return value == rhs; }       \         bool operator<(const _type&rhs) const { return value< rhs.value; }   \         _base value;                                                           \         typedef _base BaseType;                                                \     };
 end_define
 
 begin_comment
@@ -6789,6 +7351,9 @@ name|i
 operator|=
 literal|0
 block|;
+name|EmptyContext
+name|Ctx
+block|;
 while|while
 condition|(
 name|yin
@@ -6816,6 +7381,8 @@ name|i
 argument_list|)
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -6865,6 +7432,8 @@ operator|<
 name|has_MappingTraits
 operator|<
 name|T
+operator|,
+name|EmptyContext
 operator|>
 operator|::
 name|value
@@ -6886,6 +7455,9 @@ operator|&
 name|docMap
 operator|)
 block|{
+name|EmptyContext
+name|Ctx
+block|;
 name|yin
 operator|.
 name|setCurrentDocument
@@ -6898,6 +7470,8 @@ argument_list|,
 name|docMap
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 block|;
 return|return
@@ -6950,6 +7524,9 @@ operator|&
 name|docSeq
 operator|)
 block|{
+name|EmptyContext
+name|Ctx
+block|;
 if|if
 condition|(
 name|yin
@@ -6964,6 +7541,8 @@ argument_list|,
 name|docSeq
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7015,6 +7594,9 @@ operator|&
 name|Val
 operator|)
 block|{
+name|EmptyContext
+name|Ctx
+block|;
 if|if
 condition|(
 name|In
@@ -7029,6 +7611,8 @@ argument_list|,
 name|Val
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7059,6 +7643,8 @@ operator|<
 name|missingTraits
 operator|<
 name|T
+operator|,
+name|EmptyContext
 operator|>
 operator|::
 name|value
@@ -7138,6 +7724,9 @@ operator|&
 name|docList
 operator|)
 block|{
+name|EmptyContext
+name|Ctx
+block|;
 name|yout
 operator|.
 name|beginDocuments
@@ -7203,6 +7792,8 @@ name|i
 argument_list|)
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|yout
@@ -7247,6 +7838,8 @@ operator|<
 name|has_MappingTraits
 operator|<
 name|T
+operator|,
+name|EmptyContext
 operator|>
 operator|::
 name|value
@@ -7268,6 +7861,9 @@ operator|&
 name|map
 operator|)
 block|{
+name|EmptyContext
+name|Ctx
+block|;
 name|yout
 operator|.
 name|beginDocuments
@@ -7290,6 +7886,8 @@ argument_list|,
 name|map
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|yout
@@ -7352,6 +7950,9 @@ operator|&
 name|seq
 operator|)
 block|{
+name|EmptyContext
+name|Ctx
+block|;
 name|yout
 operator|.
 name|beginDocuments
@@ -7374,6 +7975,8 @@ argument_list|,
 name|seq
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|yout
@@ -7436,6 +8039,9 @@ operator|&
 name|Val
 operator|)
 block|{
+name|EmptyContext
+name|Ctx
+block|;
 name|Out
 operator|.
 name|beginDocuments
@@ -7458,6 +8064,8 @@ argument_list|,
 name|Val
 argument_list|,
 name|true
+argument_list|,
+name|Ctx
 argument_list|)
 expr_stmt|;
 name|Out
@@ -7499,6 +8107,8 @@ operator|<
 name|missingTraits
 operator|<
 name|T
+operator|,
+name|EmptyContext
 operator|>
 operator|::
 name|value
@@ -7538,14 +8148,92 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|SequenceTraitsImpl
+block|{
+typedef|typedef
+name|typename
+name|T
+operator|::
+name|value_type
+name|_type
+expr_stmt|;
+specifier|static
+name|size_t
+name|size
+argument_list|(
+argument|IO&io
+argument_list|,
+argument|T&seq
+argument_list|)
+block|{
+return|return
+name|seq
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+specifier|static
+name|_type
+operator|&
+name|element
+argument_list|(
+argument|IO&io
+argument_list|,
+argument|T&seq
+argument_list|,
+argument|size_t index
+argument_list|)
+block|{
+if|if
+condition|(
+name|index
+operator|>=
+name|seq
+operator|.
+name|size
+argument_list|()
+condition|)
+name|seq
+operator|.
+name|resize
+argument_list|(
+name|index
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|seq
+index|[
+name|index
+index|]
+return|;
+end_return
+
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 unit|}
-comment|// namespace yaml
+comment|// end namespace yaml
 end_comment
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_comment
@@ -7564,7 +8252,7 @@ parameter_list|(
 name|_type
 parameter_list|)
 define|\
-value|namespace llvm {                                                          \   namespace yaml {                                                          \     template<>                                                              \     struct SequenceTraits< std::vector<_type>> {                           \       static size_t size(IO&io, std::vector<_type>&seq) {                 \         return seq.size();                                                  \       }                                                                     \       static _type& element(IO&io, std::vector<_type>&seq, size_t index) {\         if ( index>= seq.size() )                                          \           seq.resize(index+1);                                              \         return seq[index];                                                  \       }                                                                     \     };                                                                      \   }                                                                         \   }
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<>                                                                  \   struct SequenceTraits<std::vector<_type>>                                    \       : public SequenceTraitsImpl<std::vector<_type>> {};                      \   template<unsigned N>                                                        \   struct SequenceTraits<SmallVector<_type, N>>                                 \       : public SequenceTraitsImpl<SmallVector<_type, N>> {};                   \   }                                                                            \   }
 end_define
 
 begin_comment
@@ -7575,6 +8263,26 @@ begin_comment
 comment|/// should be considered a YAML flow sequence.
 end_comment
 
+begin_comment
+comment|/// We need to do a partial specialization on the vector version, not a full.
+end_comment
+
+begin_comment
+comment|/// If this is a full specialization, the compiler is a bit too "smart" and
+end_comment
+
+begin_comment
+comment|/// decides to warn on -Wunused-const-variable.  This workaround can be
+end_comment
+
+begin_comment
+comment|/// removed and we can do a full specialization on std::vector<T> once
+end_comment
+
+begin_comment
+comment|/// PR28878 is fixed.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -7583,9 +8291,7 @@ parameter_list|(
 name|_type
 parameter_list|)
 define|\
-value|namespace llvm {                                                          \   namespace yaml {                                                          \     template<>                                                              \     struct SequenceTraits< std::vector<_type>> {                           \       static size_t size(IO&io, std::vector<_type>&seq) {                 \         return seq.size();                                                  \       }                                                                     \       static _type& element(IO&io, std::vector<_type>&seq, size_t index) {\         (void)flow;
-comment|/* Remove this workaround after PR17897 is fixed */
-value|\         if ( index>= seq.size() )                                          \           seq.resize(index+1);                                              \         return seq[index];                                                  \       }                                                                     \       static const bool flow = true;                                        \     };                                                                      \   }                                                                         \   }
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<unsigned N>                                                        \   struct SequenceTraits<SmallVector<_type, N>>                                 \       : public SequenceTraitsImpl<SmallVector<_type, N>> {                     \     static const bool flow = true;                                             \   };                                                                           \   template<typename Allocator>                                                \   struct SequenceTraits<std::vector<_type, Allocator>>                         \       : public SequenceTraitsImpl<std::vector<_type, Allocator>> {             \     static const bool flow = true;                                             \   };                                                                           \   }                                                                            \   }
 end_define
 
 begin_comment
@@ -7604,7 +8310,7 @@ parameter_list|(
 name|_type
 parameter_list|)
 define|\
-value|namespace llvm {                                                          \   namespace yaml {                                                          \     template<>                                                              \     struct DocumentListTraits< std::vector<_type>> {                       \       static size_t size(IO&io, std::vector<_type>&seq) {                 \         return seq.size();                                                  \       }                                                                     \       static _type& element(IO&io, std::vector<_type>&seq, size_t index) {\         if ( index>= seq.size() )                                          \           seq.resize(index+1);                                              \         return seq[index];                                                  \       }                                                                     \     };                                                                      \   }                                                                         \   }
+value|namespace llvm {                                                             \   namespace yaml {                                                             \   template<unsigned N>                                                        \   struct DocumentListTraits<SmallVector<_type, N>>                             \       : public SequenceTraitsImpl<SmallVector<_type, N>> {};                   \   template<>                                                                  \   struct DocumentListTraits<std::vector<_type>>                                \       : public SequenceTraitsImpl<std::vector<_type>> {};                      \   }                                                                            \   }
 end_define
 
 begin_endif

@@ -420,11 +420,13 @@ comment|// instructions.
 name|MEMCPY
 block|,
 comment|// Vector load N-element structure to all lanes:
-name|VLD2DUP
+name|VLD1DUP
 init|=
 name|ISD
 operator|::
 name|FIRST_TARGET_MEMORY_OPCODE
+block|,
+name|VLD2DUP
 block|,
 name|VLD3DUP
 block|,
@@ -444,6 +446,8 @@ block|,
 name|VLD3LN_UPD
 block|,
 name|VLD4LN_UPD
+block|,
+name|VLD1DUP_UPD
 block|,
 name|VLD2DUP_UPD
 block|,
@@ -723,6 +727,24 @@ comment|/// isLegalAddressingMode - Return true if the addressing mode represent
 comment|/// by AM is legal for this target, for a load/store of the specified type.
 name|bool
 name|isLegalAddressingMode
+argument_list|(
+argument|const DataLayout&DL
+argument_list|,
+argument|const AddrMode&AM
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|unsigned AS
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// getScalingFactorCost - Return the cost of the scaling used in
+comment|/// addressing mode represented by AM.
+comment|/// If the AM is supported, the return value must be>= 0.
+comment|/// If the AM is not supported, the return value must be negative.
+name|int
+name|getScalingFactorCost
 argument_list|(
 argument|const DataLayout&DL
 argument_list|,
@@ -1160,6 +1182,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Return true if EXTRACT_SUBVECTOR is cheap for this result type
+comment|/// with this index.
+name|bool
+name|isExtractSubvectorCheap
+argument_list|(
+argument|EVT ResVT
+argument_list|,
+argument|unsigned Index
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// \brief Returns true if an argument of type Ty needs to be passed in a
 comment|/// contiguous block of registers in calling convention CallConv.
 name|bool
@@ -1402,6 +1436,26 @@ return|return
 name|HasStandaloneRem
 return|;
 block|}
+name|CCAssignFn
+operator|*
+name|CCAssignFnForCall
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|bool isVarArg
+argument_list|)
+specifier|const
+block|;
+name|CCAssignFn
+operator|*
+name|CCAssignFnForReturn
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|bool isVarArg
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 name|std
@@ -1456,6 +1510,10 @@ name|bool
 name|HasStandaloneRem
 operator|=
 name|true
+block|;
+name|void
+name|InitLibcallCallingConvs
+argument_list|()
 block|;
 name|void
 name|addTypeForNEON

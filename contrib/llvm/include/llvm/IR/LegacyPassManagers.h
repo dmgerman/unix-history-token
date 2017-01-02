@@ -1796,9 +1796,7 @@ name|Offset
 argument_list|)
 name|override
 decl_stmt|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const

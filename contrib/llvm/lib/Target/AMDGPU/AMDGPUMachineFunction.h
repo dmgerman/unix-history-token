@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<map>
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_decl_stmt
@@ -65,16 +65,37 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
+comment|/// A map to keep track of local memory objects and their offsets within the
+comment|/// local memory space.
+name|SmallDenseMap
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+block|,
+name|unsigned
+block|,
+literal|4
+operator|>
+name|LocalMemoryObjects
+block|;
 name|uint64_t
 name|KernArgSize
 block|;
 name|unsigned
 name|MaxKernArgAlign
 block|;
-name|virtual
-name|void
-name|anchor
-argument_list|()
+comment|/// Number of bytes in the LDS that are being used.
+name|unsigned
+name|LDSSize
+block|;
+comment|// FIXME: This should probably be removed.
+comment|/// Start of implicit kernel args
+name|unsigned
+name|ABIArgOffset
+block|;
+name|bool
+name|IsKernel
 block|;
 name|public
 operator|:
@@ -135,38 +156,74 @@ return|return
 name|Result
 return|;
 block|}
-comment|/// A map to keep track of local memory objects and their offsets within
-comment|/// the local memory space.
-name|std
-operator|::
-name|map
-operator|<
+name|uint64_t
+name|getKernArgSize
+argument_list|()
 specifier|const
-name|GlobalValue
-operator|*
-block|,
+block|{
+return|return
+name|KernArgSize
+return|;
+block|}
 name|unsigned
-operator|>
-name|LocalMemoryObjects
-block|;
-comment|/// Number of bytes in the LDS that are being used.
-name|unsigned
-name|LDSSize
-block|;
-comment|/// Start of implicit kernel args
-name|unsigned
+name|getMaxKernArgAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxKernArgAlign
+return|;
+block|}
+name|void
+name|setABIArgOffset
+argument_list|(
+argument|unsigned NewOffset
+argument_list|)
+block|{
 name|ABIArgOffset
-block|;
+operator|=
+name|NewOffset
+block|;   }
+name|unsigned
+name|getABIArgOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ABIArgOffset
+return|;
+block|}
+name|unsigned
+name|getLDSSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LDSSize
+return|;
+block|}
 name|bool
 name|isKernel
 argument_list|()
 specifier|const
-block|;
-name|unsigned
-name|ScratchSize
-block|;
-name|bool
+block|{
+return|return
 name|IsKernel
+return|;
+block|}
+name|unsigned
+name|allocateLDSGlobal
+argument_list|(
+specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+specifier|const
+name|GlobalValue
+operator|&
+name|GV
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

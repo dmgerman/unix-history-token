@@ -74,6 +74,7 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|LLVM_NODISCARD
 name|APSInt
 range|:
 name|public
@@ -323,7 +324,6 @@ argument_list|()
 return|;
 block|}
 name|APSInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|trunc
 argument_list|(
 argument|uint32_t width
@@ -345,7 +345,6 @@ argument_list|)
 return|;
 block|}
 name|APSInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|extend
 argument_list|(
 argument|uint32_t width
@@ -381,7 +380,6 @@ argument_list|)
 return|;
 block|}
 name|APSInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|extOrTrunc
 argument_list|(
 argument|uint32_t width
@@ -1562,7 +1560,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|APSInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|And
 argument_list|(
 specifier|const
@@ -1631,7 +1628,6 @@ end_expr_stmt
 
 begin_decl_stmt
 name|APSInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|Or
 argument_list|(
 specifier|const
@@ -1700,7 +1696,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|APSInt
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|Xor
 argument_list|(
 specifier|const

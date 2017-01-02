@@ -161,9 +161,9 @@ name|emitIndirectFunctionType
 argument_list|(
 argument|StringRef name
 argument_list|,
-argument|SmallVectorImpl<MVT>&SignatureVTs
+argument|SmallVectorImpl<MVT>&Params
 argument_list|,
-argument|size_t NumResults
+argument|SmallVectorImpl<MVT>&Results
 argument_list|)
 block|{
 name|llvm_unreachable
@@ -171,7 +171,29 @@ argument_list|(
 literal|"emitIndirectFunctionType not implemented"
 argument_list|)
 block|;   }
-block|}
+comment|/// .indidx
+name|virtual
+name|void
+name|emitIndIdx
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+name|Value
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|/// .import_global
+name|virtual
+name|void
+name|emitGlobalImport
+argument_list|(
+argument|StringRef name
+argument_list|)
+operator|=
+literal|0
+block|; }
 decl_stmt|;
 comment|/// This part is for ascii assembly output
 name|class
@@ -229,9 +251,23 @@ name|emitIndirectFunctionType
 argument_list|(
 argument|StringRef name
 argument_list|,
-argument|SmallVectorImpl<MVT>&SignatureVTs
+argument|SmallVectorImpl<MVT>&Params
 argument_list|,
-argument|size_t NumResults
+argument|SmallVectorImpl<MVT>&Results
+argument_list|)
+name|override
+block|;
+name|void
+name|emitIndIdx
+argument_list|(
+argument|const MCExpr *Value
+argument_list|)
+name|override
+block|;
+name|void
+name|emitGlobalImport
+argument_list|(
+argument|StringRef name
 argument_list|)
 name|override
 block|; }
@@ -278,6 +314,31 @@ block|;
 name|void
 name|emitEndFunc
 argument_list|()
+name|override
+block|;
+name|void
+name|emitIndirectFunctionType
+argument_list|(
+argument|StringRef name
+argument_list|,
+argument|SmallVectorImpl<MVT>&Params
+argument_list|,
+argument|SmallVectorImpl<MVT>&Results
+argument_list|)
+name|override
+block|;
+name|void
+name|emitIndIdx
+argument_list|(
+argument|const MCExpr *Value
+argument_list|)
+name|override
+block|;
+name|void
+name|emitGlobalImport
+argument_list|(
+argument|StringRef name
+argument_list|)
 name|override
 block|; }
 decl_stmt|;

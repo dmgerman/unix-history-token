@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -786,19 +792,9 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|std
-operator|::
 name|all_of
 argument_list|(
 name|Expr
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Expr
-operator|.
-name|end
-argument_list|()
 argument_list|,
 index|[]
 operator|(
@@ -813,7 +809,7 @@ name|E
 operator|&&
 name|E
 operator|->
-name|isBitPiece
+name|isFragment
 argument_list|()
 return|;
 block|}
@@ -1195,14 +1191,29 @@ name|DebugLocs
 block|;
 comment|/// This is a collection of subprogram MDNodes that are processed to
 comment|/// create DIEs.
-name|SmallPtrSet
+name|SetVector
 operator|<
 specifier|const
-name|MDNode
+name|DISubprogram
+operator|*
+block|,
+name|SmallVector
+operator|<
+specifier|const
+name|DISubprogram
 operator|*
 block|,
 literal|16
 operator|>
+block|,
+name|SmallPtrSet
+operator|<
+specifier|const
+name|DISubprogram
+operator|*
+block|,
+literal|16
+operator|>>
 name|ProcessedSPNodes
 block|;
 comment|/// If nonnull, stores the current machine function we're processing.
@@ -1277,10 +1288,6 @@ block|;
 comment|/// Whether to emit all linkage names, or just abstract subprograms.
 name|bool
 name|UseAllLinkageNames
-block|;
-comment|/// Version of dwarf we're emitting.
-name|unsigned
-name|DwarfVersion
 block|;
 comment|/// DWARF5 Experimental Options
 comment|/// @{
@@ -2085,16 +2092,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Collect variable information from the side table maintained
-end_comment
-
-begin_comment
-comment|/// by MMI.
+comment|/// Collect variable information from the side table maintained by MF.
 end_comment
 
 begin_decl_stmt
 name|void
-name|collectVariableInfoFromMMITable
+name|collectVariableInfoFromMFTable
 argument_list|(
 name|DenseSet
 operator|<
@@ -2444,15 +2447,11 @@ comment|/// Returns the Dwarf Version.
 end_comment
 
 begin_expr_stmt
-name|unsigned
+name|uint16_t
 name|getDwarfVersion
 argument_list|()
 specifier|const
-block|{
-return|return
-name|DwarfVersion
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -2581,33 +2580,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|/// Find the DwarfCompileUnit for the given CU Die.
-end_comment
-
-begin_decl_stmt
-name|DwarfCompileUnit
-modifier|*
-name|lookupUnit
-argument_list|(
-specifier|const
-name|DIE
-operator|*
-name|CU
-argument_list|)
-decl|const
-block|{
-return|return
-name|CUDieMap
-operator|.
-name|lookup
-argument_list|(
-name|CU
-argument_list|)
-return|;
-block|}
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|addSubprogramNames
@@ -2731,29 +2703,6 @@ name|Scope
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// FIXME: Sink these functions down into DwarfFile/Dwarf*Unit.
-end_comment
-
-begin_expr_stmt
-name|SmallPtrSet
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-literal|16
-operator|>
-operator|&
-name|getProcessedSPNodes
-argument_list|()
-block|{
-return|return
-name|ProcessedSPNodes
-return|;
-block|}
-end_expr_stmt
 
 begin_comment
 unit|}; }

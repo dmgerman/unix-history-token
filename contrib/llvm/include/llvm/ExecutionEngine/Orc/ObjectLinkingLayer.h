@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"JITSymbol.h"
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -80,7 +86,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/SectionMemoryManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/ObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
 end_include
 
 begin_include
@@ -93,6 +141,24 @@ begin_include
 include|#
 directive|include
 file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -117,6 +183,13 @@ comment|/// for taking any action required to handle the missing symbols.
 name|class
 name|LinkedObjectSet
 block|{
+name|public
+label|:
+name|LinkedObjectSet
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|LinkedObjectSet
 argument_list|(
 specifier|const
@@ -137,25 +210,20 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|public
-label|:
+name|virtual
+operator|~
 name|LinkedObjectSet
 argument_list|()
 operator|=
 expr|default
 expr_stmt|;
 name|virtual
-operator|~
-name|LinkedObjectSet
-argument_list|()
-block|{}
-name|virtual
 name|void
 name|finalize
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 name|JITSymbol
 operator|::
@@ -176,7 +244,7 @@ name|void
 operator|*
 name|LocalAddress
 argument_list|,
-name|TargetAddress
+name|JITTargetAddress
 name|TargetAddr
 argument_list|)
 decl|const
@@ -222,6 +290,9 @@ name|SymEntry
 operator|->
 name|second
 operator|.
+name|getFlags
+argument_list|()
+operator|.
 name|isExported
 argument_list|()
 operator|&&
@@ -264,9 +335,7 @@ name|protected
 label|:
 name|StringMap
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITEvaluatedSymbol
 operator|>
 name|SymbolTable
 expr_stmt|;
@@ -479,6 +548,12 @@ operator|=
 operator|&
 name|RTDyld
 block|;
+name|this
+operator|->
+name|Finalized
+operator|=
+name|true
+block|;
 name|PFC
 operator|->
 name|Finalizer
@@ -510,12 +585,6 @@ name|updateSymbolTable
 argument_list|(
 name|RTDyld
 argument_list|)
-block|;
-name|this
-operator|->
-name|Finalized
-operator|=
-name|true
 block|;                      }
 argument_list|)
 block|;
@@ -576,7 +645,7 @@ name|mapSectionAddress
 argument_list|(
 argument|const void *LocalAddress
 argument_list|,
-argument|TargetAddress TargetAddr
+argument|JITTargetAddress TargetAddr
 argument_list|)
 specifier|const
 name|override
@@ -686,9 +755,9 @@ block|}
 name|auto
 name|Flags
 init|=
-name|JITSymbol
+name|JITSymbolFlags
 operator|::
-name|flagsFromObjectSymbol
+name|fromObjectSymbol
 argument_list|(
 name|Symbol
 argument_list|)
@@ -704,9 +773,7 @@ argument_list|(
 operator|*
 name|SymbolName
 argument_list|,
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITEvaluatedSymbol
 argument_list|(
 literal|0
 argument_list|,
@@ -1443,7 +1510,7 @@ name|void
 modifier|*
 name|LocalAddress
 parameter_list|,
-name|TargetAddress
+name|JITTargetAddress
 name|TargetAddr
 parameter_list|)
 block|{
@@ -1569,12 +1636,12 @@ end_decl_stmt
 
 begin_comment
 unit|};  }
-comment|// End namespace orc.
+comment|// end namespace orc
 end_comment
 
 begin_comment
 unit|}
-comment|// End namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

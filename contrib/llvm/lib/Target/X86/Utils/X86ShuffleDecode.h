@@ -271,6 +271,23 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
+name|void
+name|DecodeVALIGNMask
+argument_list|(
+name|MVT
+name|VT
+argument_list|,
+name|unsigned
+name|Imm
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
 comment|/// Decodes the shuffle masks for pshufd/pshufw/vpermilpd/vpermilps.
 comment|/// VT indicates the type of the vector allowing it to handle different
 comment|/// datatypes and vector widths.

@@ -80,7 +80,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -110,8 +134,7 @@ operator|::
 name|less
 operator|<
 name|T
-operator|>
-expr|>
+operator|>>
 name|class
 name|SmallSet
 block|{
@@ -180,9 +203,11 @@ name|size_type
 typedef|;
 name|SmallSet
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
+name|LLVM_NODISCARD
 name|bool
-name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|empty
 argument_list|()
 specifier|const
@@ -656,6 +681,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_SMALLSET_H
+end_comment
 
 end_unit
 

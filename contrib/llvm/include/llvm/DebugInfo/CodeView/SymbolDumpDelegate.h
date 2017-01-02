@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"SymbolVisitorDelegate.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -64,7 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|"llvm/DebugInfo/CodeView/SymbolVisitorDelegate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -82,11 +82,13 @@ name|SymbolVisitorDelegate
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|SymbolDumpDelegate
 argument_list|()
-block|{}
+name|override
+operator|=
+expr|default
+block|;
 name|virtual
 name|void
 name|printRelocatedField

@@ -98,15 +98,6 @@ name|unsigned
 name|StackAlignBasePhysReg
 block|;
 comment|//                             (physical)
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-name|AllocaAdjustInsts
-block|;
 name|int
 name|VarArgsFrameIndex
 block|;
@@ -214,35 +205,6 @@ name|SRetReturnReg
 operator|=
 name|Reg
 block|; }
-name|void
-name|addAllocaAdjustInst
-argument_list|(
-argument|MachineInstr* MI
-argument_list|)
-block|{
-name|AllocaAdjustInsts
-operator|.
-name|push_back
-argument_list|(
-name|MI
-argument_list|)
-block|;   }
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-operator|&
-name|getAllocaAdjustInsts
-argument_list|()
-block|{
-return|return
-name|AllocaAdjustInsts
-return|;
-block|}
 name|void
 name|setVarArgsFrameIndex
 argument_list|(

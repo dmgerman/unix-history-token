@@ -220,7 +220,7 @@ name|SF_Global
 return|;
 block|}
 name|basic_symbol_iterator
-name|symbol_begin_impl
+name|symbol_begin
 argument_list|()
 specifier|const
 name|override
@@ -236,7 +236,7 @@ argument_list|)
 return|;
 block|}
 name|basic_symbol_iterator
-name|symbol_end_impl
+name|symbol_end
 argument_list|()
 specifier|const
 name|override

@@ -396,9 +396,9 @@ name|transferNodesFromList
 argument_list|(
 argument|SymbolTableListTraits&L2
 argument_list|,
-argument|ilist_iterator<ValueSubClass> first
+argument|iterator first
 argument_list|,
-argument|ilist_iterator<ValueSubClass> last
+argument|iterator last
 argument_list|)
 block|{
 comment|// We only have to do work here if transferring instructions between BBs
@@ -417,14 +417,15 @@ operator|.
 name|getListOwner
 argument_list|()
 block|;
-if|if
-condition|(
+name|assert
+argument_list|(
 name|NewIP
-operator|==
+operator|!=
 name|OldIP
-condition|)
-return|return;
-comment|// No work to do at all...
+operator|&&
+literal|"Expected different list owners"
+argument_list|)
+block|;
 comment|// We only have to update symbol table entries if we are transferring the
 comment|// instructions to a different symtab object...
 name|ValueSymbolTable
@@ -435,22 +436,16 @@ name|getSymTab
 argument_list|(
 name|NewIP
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 name|ValueSymbolTable
-modifier|*
+operator|*
 name|OldST
-init|=
+operator|=
 name|getSymTab
 argument_list|(
 name|OldIP
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
+block|;
 if|if
 condition|(
 name|NewST
@@ -522,8 +517,10 @@ name|V
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
+end_expr_stmt
+
+begin_block
+unit|} else
 block|{
 comment|// Just transferring between blocks in the same function, simply update the
 comment|// parent fields in the instructions...
@@ -545,7 +542,7 @@ name|NewIP
 argument_list|)
 expr_stmt|;
 block|}
-end_if
+end_block
 
 begin_comment
 unit|}  }

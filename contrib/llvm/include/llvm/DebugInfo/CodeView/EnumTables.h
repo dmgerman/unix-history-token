@@ -93,6 +93,15 @@ name|ArrayRef
 operator|<
 name|EnumEntry
 operator|<
+name|TypeLeafKind
+operator|>>
+name|getTypeLeafNames
+argument_list|()
+expr_stmt|;
+name|ArrayRef
+operator|<
+name|EnumEntry
+operator|<
 name|uint16_t
 operator|>>
 name|getRegisterNames

@@ -137,6 +137,13 @@ name|MCContext
 operator|*
 name|Ctx
 block|;
+comment|/// Name-mangler for global names.
+name|Mangler
+operator|*
+name|Mang
+operator|=
+name|nullptr
+block|;
 name|TargetLoweringObjectFile
 argument_list|(
 specifier|const
@@ -165,6 +172,16 @@ block|;
 name|bool
 name|SupportGOTPCRelWithOffset
 block|;
+comment|/// This section contains the static constructor pointer list.
+name|MCSection
+operator|*
+name|StaticCtorSection
+block|;
+comment|/// This section contains the static destructor pointer list.
+name|MCSection
+operator|*
+name|StaticDtorSection
+block|;
 name|public
 operator|:
 name|MCContext
@@ -178,6 +195,17 @@ operator|*
 name|Ctx
 return|;
 block|}
+name|Mangler
+operator|&
+name|getMangler
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|Mang
+return|;
+block|}
 name|TargetLoweringObjectFile
 argument_list|()
 operator|:
@@ -185,6 +213,11 @@ name|MCObjectFileInfo
 argument_list|()
 block|,
 name|Ctx
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|Mang
 argument_list|(
 name|nullptr
 argument_list|)
@@ -242,8 +275,6 @@ argument|MCStreamer&Streamer
 argument_list|,
 argument|ArrayRef<Module::ModuleFlagEntry> Flags
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
@@ -272,9 +303,9 @@ name|SectionKind
 name|getKindForGlobal
 argument_list|(
 specifier|const
-name|GlobalValue
+name|GlobalObject
 operator|*
-name|GV
+name|GO
 argument_list|,
 specifier|const
 name|TargetMachine
@@ -289,11 +320,9 @@ name|MCSection
 operator|*
 name|SectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -306,9 +335,7 @@ name|MCSection
 operator|*
 name|SectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|Mangler&Mang
+argument|const GlobalObject *GO
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -317,16 +344,14 @@ block|{
 return|return
 name|SectionForGlobal
 argument_list|(
-name|GV
+name|GO
 argument_list|,
 name|getKindForGlobal
 argument_list|(
-name|GV
+name|GO
 argument_list|,
 name|TM
 argument_list|)
-argument_list|,
-name|Mang
 argument_list|,
 name|TM
 argument_list|)
@@ -340,8 +365,6 @@ argument|SmallVectorImpl<char>&OutName
 argument_list|,
 argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
@@ -352,8 +375,6 @@ operator|*
 name|getSectionForJumpTable
 argument_list|(
 argument|const Function&F
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -371,17 +392,15 @@ specifier|const
 block|;
 comment|/// Targets should implement this method to assign a section to globals with
 comment|/// an explicit section specfied. The implementation of this method can
-comment|/// assume that GV->hasSection() is true.
+comment|/// assume that GO->hasSection() is true.
 name|virtual
 name|MCSection
 operator|*
 name|getExplicitSectionGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -389,25 +408,6 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|/// Allow the target to completely override section assignment of a global.
-name|virtual
-specifier|const
-name|MCSection
-operator|*
-name|getSpecialCasedSectionGlobals
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
-argument_list|)
-specifier|const
-block|{
-return|return
-name|nullptr
-return|;
-block|}
 comment|/// Return an MCExpr to use for a reference to the specified global variable
 comment|/// from exception handling information.
 name|virtual
@@ -419,8 +419,6 @@ argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
 argument|unsigned Encoding
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
@@ -440,8 +438,6 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|StringRef Suffix
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
@@ -453,8 +449,6 @@ operator|*
 name|getCFIPersonalitySymbol
 argument_list|(
 argument|const GlobalValue *GV
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
@@ -527,8 +521,6 @@ argument|const GlobalValue *LHS
 argument_list|,
 argument|const GlobalValue *RHS
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
@@ -589,8 +581,6 @@ argument_list|(
 argument|raw_ostream&OS
 argument_list|,
 argument|const GlobalValue *GV
-argument_list|,
-argument|const Mangler&Mang
 argument_list|)
 specifier|const
 block|{}
@@ -601,11 +591,9 @@ name|MCSection
 operator|*
 name|SelectSectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)

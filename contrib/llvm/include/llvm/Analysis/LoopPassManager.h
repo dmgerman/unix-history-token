@@ -72,7 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/LoopInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/ScalarEvolution.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/TargetLibraryInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Dominators.h"
 end_include
 
 begin_include
@@ -112,9 +136,6 @@ name|Loop
 operator|>
 name|LoopAnalysisManager
 expr_stmt|;
-extern|extern template class InnerAnalysisManagerProxy<LoopAnalysisManager
-operator|,
-extern|Function>;
 comment|/// A proxy from a \c LoopAnalysisManager to a \c Function.
 typedef|typedef
 name|InnerAnalysisManagerProxy
@@ -125,6 +146,39 @@ name|Function
 operator|>
 name|LoopAnalysisManagerFunctionProxy
 expr_stmt|;
+comment|/// Specialization of the invalidate method for the \c
+comment|/// LoopAnalysisManagerFunctionProxy's result.
+name|template
+operator|<
+operator|>
+name|bool
+name|LoopAnalysisManagerFunctionProxy
+operator|::
+name|Result
+operator|::
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+name|Inv
+argument_list|)
+expr_stmt|;
+comment|// Ensure the \c LoopAnalysisManagerFunctionProxy is provided as an extern
+comment|// template.
+extern|extern template class InnerAnalysisManagerProxy<LoopAnalysisManager
+operator|,
+extern|Function>;
 extern|extern template class OuterAnalysisManagerProxy<FunctionAnalysisManager
 operator|,
 extern|Loop>;
@@ -179,80 +233,6 @@ argument_list|(
 argument|std::move(Pass)
 argument_list|)
 block|{}
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|FunctionToLoopPassAdaptor
-argument_list|(
-specifier|const
-name|FunctionToLoopPassAdaptor
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|Pass
-argument_list|(
-argument|Arg.Pass
-argument_list|)
-block|{}
-name|FunctionToLoopPassAdaptor
-argument_list|(
-name|FunctionToLoopPassAdaptor
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|Pass
-argument_list|(
-argument|std::move(Arg.Pass)
-argument_list|)
-block|{}
-name|friend
-name|void
-name|swap
-argument_list|(
-argument|FunctionToLoopPassAdaptor&LHS
-argument_list|,
-argument|FunctionToLoopPassAdaptor&RHS
-argument_list|)
-block|{
-name|using
-name|std
-operator|::
-name|swap
-block|;
-name|swap
-argument_list|(
-name|LHS
-operator|.
-name|Pass
-argument_list|,
-name|RHS
-operator|.
-name|Pass
-argument_list|)
-block|;   }
-name|FunctionToLoopPassAdaptor
-operator|&
-name|operator
-operator|=
-operator|(
-name|FunctionToLoopPassAdaptor
-name|RHS
-operator|)
-block|{
-name|swap
-argument_list|(
-operator|*
-name|this
-argument_list|,
-name|RHS
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 comment|/// \brief Runs the loop passes across every loop in the function.
 name|PreservedAnalyses
 name|run
@@ -290,6 +270,61 @@ operator|.
 name|getResult
 operator|<
 name|LoopAnalysis
+operator|>
+operator|(
+name|F
+operator|)
+block|;
+comment|// Also precompute all of the function analyses used by loop passes.
+comment|// FIXME: These should be handed into the loop passes when the loop pass
+comment|// management layer is reworked to follow the design of CGSCC.
+operator|(
+name|void
+operator|)
+name|AM
+operator|.
+name|getResult
+operator|<
+name|AAManager
+operator|>
+operator|(
+name|F
+operator|)
+block|;
+operator|(
+name|void
+operator|)
+name|AM
+operator|.
+name|getResult
+operator|<
+name|DominatorTreeAnalysis
+operator|>
+operator|(
+name|F
+operator|)
+block|;
+operator|(
+name|void
+operator|)
+name|AM
+operator|.
+name|getResult
+operator|<
+name|ScalarEvolutionAnalysis
+operator|>
+operator|(
+name|F
+operator|)
+block|;
+operator|(
+name|void
+operator|)
+name|AM
+operator|.
+name|getResult
+operator|<
+name|TargetLibraryAnalysis
 operator|>
 operator|(
 name|F
@@ -407,26 +442,11 @@ argument_list|,
 name|LAM
 argument_list|)
 decl_stmt|;
-name|assert
-argument_list|(
-name|PassPA
-operator|.
-name|preserved
-argument_list|(
-name|getLoopPassPreservedAnalyses
-argument_list|()
-argument_list|)
-operator|&&
-literal|"Loop passes must preserve all relevant analyses"
-argument_list|)
-expr_stmt|;
+comment|// FIXME: We should verify the set of analyses relevant to Loop passes
+comment|// are preserved.
 comment|// We know that the loop pass couldn't have invalidated any other loop's
 comment|// analyses (that's the contract of a loop pass), so directly handle the
-comment|// loop analysis manager's invalidation here.  Also, update the
-comment|// preserved analyses to reflect that once invalidated these can again
-comment|// be preserved.
-name|PassPA
-operator|=
+comment|// loop analysis manager's invalidation here.
 name|LAM
 operator|.
 name|invalidate
@@ -434,12 +454,7 @@ argument_list|(
 operator|*
 name|L
 argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
 name|PassPA
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// Then intersect the preserved set so that invalidation of module
@@ -457,9 +472,21 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|// By definition we preserve the proxy. This precludes *any* invalidation of
-comment|// loop analyses by the proxy, but that's OK because we've taken care to
-comment|// invalidate analyses in the loop analysis manager incrementally above.
+comment|// By definition we preserve the proxy. We also preserve all analyses on
+comment|// Loops. This precludes *any* invalidation of loop analyses by the proxy,
+comment|// but that's OK because we've taken care to invalidate analyses in the
+comment|// loop analysis manager incrementally above.
+name|PA
+operator|.
+name|preserveSet
+operator|<
+name|AllAnalysesOn
+operator|<
+name|Loop
+operator|>>
+operator|(
+operator|)
+expr_stmt|;
 name|PA
 operator|.
 name|preserve
@@ -468,7 +495,7 @@ name|LoopAnalysisManagerFunctionProxy
 operator|>
 operator|(
 operator|)
-expr_stmt|;
+block|;
 return|return
 name|PA
 return|;

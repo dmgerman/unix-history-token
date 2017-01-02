@@ -69,9 +69,6 @@ name|class
 name|MCInst
 decl_stmt|;
 name|class
-name|MemoryObject
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
 name|class

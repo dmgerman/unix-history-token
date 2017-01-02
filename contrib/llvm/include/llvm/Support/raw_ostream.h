@@ -74,7 +74,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -88,6 +112,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|formatv_object_base
+decl_stmt|;
+name|class
 name|format_object_base
 decl_stmt|;
 name|class
@@ -96,14 +123,9 @@ decl_stmt|;
 name|class
 name|FormattedNumber
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
 name|class
-name|SmallVectorImpl
-expr_stmt|;
+name|FormattedBytes
+decl_stmt|;
 name|namespace
 name|sys
 block|{
@@ -116,7 +138,9 @@ enum_decl|:
 name|unsigned
 enum_decl|;
 block|}
+comment|// end namespace fs
 block|}
+comment|// end namespace sys
 comment|/// This class implements an extremely fast bulk output stream that can *only*
 comment|/// output to a stream.  It does not support seeking, reopening, rewinding, line
 comment|/// buffered disciplines etc. It is a simple buffer that outputs
@@ -126,26 +150,6 @@ name|raw_ostream
 block|{
 name|private
 label|:
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|raw_ostream
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-name|raw_ostream
-argument_list|(
-specifier|const
-name|raw_ostream
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
 comment|/// The buffer is handled in such a way that the buffer is
 comment|/// uninitialized, unbuffered, or out of space when OutBufCur>=
 comment|/// OutBufEnd. Thus a single comparison suffices to determine if we
@@ -235,6 +239,26 @@ operator|=
 name|nullptr
 expr_stmt|;
 block|}
+name|raw_ostream
+argument_list|(
+specifier|const
+name|raw_ostream
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|raw_ostream
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|raw_ostream
@@ -616,8 +640,6 @@ name|operator
 operator|<<
 operator|(
 specifier|const
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -895,6 +917,40 @@ operator|<<
 operator|(
 specifier|const
 name|FormattedNumber
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Formatted output, see the formatv() function in Support/FormatVariadic.h.
+end_comment
+
+begin_expr_stmt
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|formatv_object_base
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Formatted output, see the format_bytes() function in Support/Format.h.
+end_comment
+
+begin_expr_stmt
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|FormattedBytes
 operator|&
 operator|)
 expr_stmt|;
@@ -1832,7 +1888,9 @@ operator|~
 name|raw_svector_ostream
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 name|void
 name|flush
 argument_list|()
@@ -1902,7 +1960,9 @@ operator|:
 name|explicit
 name|raw_null_ostream
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 operator|~
 name|raw_null_ostream
 argument_list|()
@@ -1961,7 +2021,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

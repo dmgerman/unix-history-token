@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCTargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -111,10 +117,11 @@ decl_stmt|;
 name|class
 name|raw_pwrite_stream
 decl_stmt|;
-specifier|extern
 name|Target
-name|TheLanaiTarget
-decl_stmt|;
+modifier|&
+name|getTheLanaiTarget
+parameter_list|()
+function_decl|;
 name|MCCodeEmitter
 modifier|*
 name|createLanaiMCCodeEmitter
@@ -155,6 +162,11 @@ name|TheTriple
 parameter_list|,
 name|StringRef
 name|CPU
+parameter_list|,
+specifier|const
+name|MCTargetOptions
+modifier|&
+name|Options
 parameter_list|)
 function_decl|;
 name|MCObjectWriter
