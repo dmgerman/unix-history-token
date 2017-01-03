@@ -422,8 +422,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PQ_COUNT
+name|PQ_UNSWAPPABLE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PQ_COUNT
+value|4
 end_define
 
 begin_expr_stmt
@@ -1095,7 +1102,7 @@ file|<machine/atomic.h>
 end_include
 
 begin_comment
-comment|/*  * Each pageable resident page falls into one of four lists:  *  *	free  *		Available for allocation now.  *  *	inactive  *		Low activity, candidates for reclamation.  *		This list is approximately LRU ordered.  *  *	laundry  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active", i.e., they have been  *		recently referenced.  *  */
+comment|/*  * Each pageable resident page falls into one of five lists:  *  *	free  *		Available for allocation now.  *  *	inactive  *		Low activity, candidates for reclamation.  *		This list is approximately LRU ordered.  *  *	laundry  *		This is the list of pages that should be  *		paged out next.  *  *	unswappable  *		Dirty anonymous pages that cannot be paged  *		out because no swap device is configured.  *  *	active  *		Pages that are "active", i.e., they have been  *		recently referenced.  *  */
 end_comment
 
 begin_decl_stmt
@@ -1963,6 +1970,16 @@ name|ma
 parameter_list|,
 name|int
 name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_unswappable
+parameter_list|(
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2871,6 +2888,12 @@ operator|->
 name|queue
 operator|==
 name|PQ_LAUNDRY
+operator|||
+name|m
+operator|->
+name|queue
+operator|==
+name|PQ_UNSWAPPABLE
 operator|)
 return|;
 block|}

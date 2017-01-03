@@ -256,6 +256,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|swap_pager_nswapdev
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|swap_pager_reserve
 parameter_list|(
 name|vm_object_t

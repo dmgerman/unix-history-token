@@ -5927,6 +5927,21 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|swap_pager_nswapdev
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|nswapdev
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * SWP_PAGER_FORCE_PAGEIN() - force a swap block to be paged in  *  *	This routine dissociates the page at the given index within an object  *	from its backing store, paging it in if it does not reside in memory.  *	If the page is paged in, it is marked dirty and placed in the laundry  *	queue.  The page is marked dirty because it no longer has backing  *	store.  It is placed in the laundry queue because it has not been  *	accessed recently.  Otherwise, it would already reside in memory.  *  *	We also attempt to swap in all other pages in the swap block.  *	However, we only guarantee that the one at the specified index is  *	paged in.  *  *	XXX - The code to page the whole block in doesn't work, so we  *	      revert to the one-by-one behavior for now.  Sigh.  */
 end_comment
@@ -6363,6 +6378,13 @@ goto|goto
 name|full_rescan
 goto|;
 block|}
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|swapoff
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8147,6 +8169,13 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|sw_dev_mtx
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|swapon
+argument_list|,
+name|sp
 argument_list|)
 expr_stmt|;
 block|}
