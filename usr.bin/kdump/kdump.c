@@ -4273,9 +4273,9 @@ argument_list|(
 literal|','
 argument_list|)
 expr_stmt|;
-name|print_mask_arg
+name|print_integer_arg
 argument_list|(
-name|sysdecode_getfsstat_flags
+name|sysdecode_getfsstat_mode
 argument_list|,
 operator|*
 name|ip

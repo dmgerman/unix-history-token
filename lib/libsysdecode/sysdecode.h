@@ -278,19 +278,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
-name|sysdecode_getfsstat_flags
+specifier|const
+name|char
+modifier|*
+name|sysdecode_getfsstat_mode
 parameter_list|(
-name|FILE
-modifier|*
-name|_fp
-parameter_list|,
 name|int
-name|_flags
-parameter_list|,
-name|int
-modifier|*
-name|_rem
+name|_mode
 parameter_list|)
 function_decl|;
 end_function_decl
