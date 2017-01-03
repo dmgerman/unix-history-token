@@ -833,7 +833,7 @@ decl_stmt|;
 name|grant_ref_t
 name|grant_ref
 index|[
-name|NET_TX_RING_SIZE
+name|NET_RX_RING_SIZE
 operator|+
 literal|1
 index|]
