@@ -217,9 +217,7 @@ if|if
 condition|(
 name|elf_getshstrndx
 argument_list|(
-name|ecp
-operator|->
-name|ein
+name|e
 argument_list|,
 operator|&
 name|indx
@@ -472,9 +470,7 @@ name|name
 operator|=
 name|elf_strptr
 argument_list|(
-name|ecp
-operator|->
-name|ein
+name|e
 argument_list|,
 name|indx
 argument_list|,
@@ -926,6 +922,15 @@ name|pb_off
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sh
+operator|.
+name|sh_type
+operator|!=
+name|SHT_NOBITS
+condition|)
+block|{
 name|pb
 operator|->
 name|pb_size
@@ -983,6 +988,7 @@ operator|.
 name|sh_size
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|elferr
 operator|=
