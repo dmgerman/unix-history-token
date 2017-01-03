@@ -1695,6 +1695,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|MTX_READ_VALUE
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->mtx_lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|mtx_initialized
 parameter_list|(
 name|m
@@ -1705,11 +1715,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|lv_mtx_owner
+parameter_list|(
+name|v
+parameter_list|)
+value|((struct thread *)((v)& ~MTX_FLAGMASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_owner
+parameter_list|(
+name|m
+parameter_list|)
+value|lv_mtx_owner(MTX_READ_VALUE(m))
+end_define
+
+begin_define
+define|#
+directive|define
 name|mtx_owned
 parameter_list|(
 name|m
 parameter_list|)
-value|(((m)->mtx_lock& ~MTX_FLAGMASK) == (uintptr_t)curthread)
+value|(mtx_owner(m) == curthread)
 end_define
 
 begin_define
