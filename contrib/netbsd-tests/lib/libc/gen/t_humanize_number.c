@@ -1295,6 +1295,16 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
