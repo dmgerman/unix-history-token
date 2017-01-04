@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_HVUTIL_H_
+name|_VMBUS_ICVAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_HVUTIL_H_
+name|_VMBUS_ICVAR_H_
 end_define
 
 begin_include
@@ -27,21 +27,16 @@ directive|include
 file|<dev/hyperv/include/vmbus.h>
 end_include
 
-begin_comment
-comment|/**  * hv_util related structures  *  */
-end_comment
-
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 block|{
 name|device_t
 name|ic_dev
 decl_stmt|;
 name|uint8_t
 modifier|*
-name|receive_buffer
+name|ic_buf
 decl_stmt|;
 name|int
 name|ic_buflen
@@ -55,9 +50,8 @@ name|ic_msgver
 decl_stmt|;
 comment|/* message version */
 block|}
-name|hv_util_sc
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -86,7 +80,7 @@ end_define
 
 begin_function_decl
 name|int
-name|hv_util_attach
+name|vmbus_ic_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -99,7 +93,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|hv_util_detach
+name|vmbus_ic_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -128,7 +122,7 @@ name|int
 name|vmbus_ic_negomsg
 parameter_list|(
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -149,10 +143,41 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|vmbus_ic_sendresp
+parameter_list|(
+name|struct
+name|vmbus_ic_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|dlen
+parameter_list|,
+name|uint64_t
+name|xactid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_VMBUS_ICVAR_H_ */
+end_comment
 
 end_unit
 
