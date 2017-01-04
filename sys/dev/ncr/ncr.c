@@ -13937,7 +13937,7 @@ name|base_transfer_speed
 operator|=
 literal|3300
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->
@@ -13948,7 +13948,7 @@ argument_list|,
 name|SIM_IDLEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->
@@ -13959,7 +13959,7 @@ argument_list|,
 name|HBA_IDLEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->

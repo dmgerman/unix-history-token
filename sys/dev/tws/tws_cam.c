@@ -1925,7 +1925,7 @@ name|base_transfer_speed
 operator|=
 literal|6000000
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ccb
 operator|->
@@ -1938,7 +1938,7 @@ argument_list|,
 name|SIM_IDLEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ccb
 operator|->
@@ -1951,7 +1951,7 @@ argument_list|,
 name|HBA_IDLEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ccb
 operator|->
