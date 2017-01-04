@@ -31352,10 +31352,6 @@ comment|/// \brief The explicitly-specified template arguments were not valid
 comment|/// template arguments for the given template.
 name|TDK_InvalidExplicitArguments
 block|,
-comment|/// \brief The arguments included an overloaded function name that could
-comment|/// not be resolved to a suitable function.
-name|TDK_FailedOverloadResolution
-block|,
 comment|/// \brief Deduction failed; that's all we know.
 name|TDK_MiscellaneousDeductionFailure
 block|,
