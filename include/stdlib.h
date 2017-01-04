@@ -989,15 +989,8 @@ name|size_t
 parameter_list|,
 name|size_t
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/* (ADV) */
