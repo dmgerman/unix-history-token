@@ -3244,6 +3244,8 @@ block|{
 specifier|const
 name|directory_iterator
 name|end_itr
+init|=
+block|{}
 decl_stmt|;
 if|if
 condition|(
@@ -3524,6 +3526,8 @@ expr_stmt|;
 specifier|const
 name|directory_iterator
 name|end_itr
+init|=
+block|{}
 decl_stmt|;
 name|std
 operator|::

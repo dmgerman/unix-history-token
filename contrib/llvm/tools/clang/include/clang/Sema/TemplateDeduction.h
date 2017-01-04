@@ -178,9 +178,9 @@ argument_list|(
 name|DeducedDepth
 argument_list|)
 operator|,
-name|Expression
+name|CallArgIndex
 argument_list|(
-argument|nullptr
+literal|0
 argument_list|)
 block|{}
 comment|/// \brief Returns the location at which template argument is
@@ -467,17 +467,6 @@ comment|/// FIXME: Finish documenting this.
 name|TemplateArgument
 name|SecondArg
 decl_stmt|;
-union|union
-block|{
-comment|/// \brief The expression which caused a deduction failure.
-comment|///
-comment|///   TDK_FailedOverloadResolution: this argument is the reference to
-comment|///   an overloaded function which could not be resolved to a specific
-comment|///   function.
-name|Expr
-modifier|*
-name|Expression
-decl_stmt|;
 comment|/// \brief The index of the function argument that caused a deduction
 comment|/// failure.
 comment|///
@@ -486,8 +475,6 @@ comment|///   different argument type from its substituted parameter type.
 name|unsigned
 name|CallArgIndex
 decl_stmt|;
-block|}
-union|;
 comment|/// \brief Information on packs that we're currently expanding.
 comment|///
 comment|/// FIXME: This should be kept internal to SemaTemplateDeduction.
@@ -575,13 +562,6 @@ specifier|const
 name|TemplateArgument
 modifier|*
 name|getSecondArg
-parameter_list|()
-function_decl|;
-comment|/// \brief Return the expression this deduction failure refers to,
-comment|/// if any.
-name|Expr
-modifier|*
-name|getExpr
 parameter_list|()
 function_decl|;
 comment|/// \brief Return the index of the call argument that this deduction
