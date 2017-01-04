@@ -2830,9 +2830,10 @@ argument_list|)
 expr_stmt|;
 name|v
 operator|=
+name|MTX_READ_VALUE
+argument_list|(
 name|m
-operator|->
-name|mtx_lock
+argument_list|)
 expr_stmt|;
 name|owner
 operator|=
