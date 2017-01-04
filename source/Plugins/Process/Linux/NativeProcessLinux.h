@@ -395,8 +395,14 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|pair
+operator|<
 name|MemoryRegionInfo
-operator|>
+block|,
+name|FileSpec
+operator|>>
 name|m_mem_region_cache
 block|;
 name|lldb
@@ -664,6 +670,10 @@ argument_list|)
 block|;
 name|void
 name|SigchldHandler
+argument_list|()
+block|;
+name|Error
+name|PopulateMemoryRegionCache
 argument_list|()
 block|; }
 decl_stmt|;
