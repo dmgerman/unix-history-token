@@ -9834,7 +9834,7 @@ name|snmp_object
 argument_list|)
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
