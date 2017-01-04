@@ -184,6 +184,15 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|void
+modifier|*
+name|dl_handle
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* try to trick the compiler */
 name|size_t
 function_decl|(
@@ -451,6 +460,29 @@ block|}
 block|, 	}
 decl_stmt|;
 comment|/* 	 * During testing it is useful have the rest of the program 	 * use a known good version! 	 */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|dl_handle
+operator|=
+name|dlopen
+argument_list|(
+name|NULL
+argument_list|,
+name|RTLD_LAZY
+argument_list|)
+expr_stmt|;
+name|strlen_fn
+operator|=
+name|dlsym
+argument_list|(
+name|dl_handle
+argument_list|,
+literal|"test_strlen"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|strlen_fn
 operator|=
 name|dlsym
@@ -465,6 +497,8 @@ argument_list|,
 literal|"test_strlen"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -673,6 +707,19 @@ expr_stmt|;
 block|}
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|(
+name|void
+operator|)
+name|dlclose
+argument_list|(
+name|dl_handle
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
