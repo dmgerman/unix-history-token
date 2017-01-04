@@ -515,6 +515,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|ATF_REQUIRE_MSG
+argument_list|(
+name|sd
+operator|!=
+operator|-
+literal|1
+argument_list|,
+literal|"socket failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|val
 operator|=
 name|IP_PORTRANGE_LOW
