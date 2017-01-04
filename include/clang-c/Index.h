@@ -2497,9 +2497,14 @@ name|CXCursor_OMPTargetTeamsDistributeParallelForDirective
 init|=
 literal|277
 block|,
+comment|/** \brief OpenMP target teams distribute parallel for simd directive.    */
+name|CXCursor_OMPTargetTeamsDistributeParallelForSimdDirective
+init|=
+literal|278
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_OMPTargetTeamsDistributeParallelForDirective
+name|CXCursor_OMPTargetTeamsDistributeParallelForSimdDirective
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit

@@ -16,7 +16,15 @@ comment|// NULL has an integer type that is more narrow than a pointer. On such
 end_comment
 
 begin_comment
-comment|// platforms we widen null pointer constants to a pointer-sized integer.
+comment|// platforms we widen null pointer constants passed to variadic functions to a
+end_comment
+
+begin_comment
+comment|// pointer-sized integer. We don't apply this special case to K&R-style
+end_comment
+
+begin_comment
+comment|// unprototyped functions, because MSVC doesn't either.
 end_comment
 
 begin_define
@@ -37,6 +45,13 @@ name|f
 parameter_list|,
 modifier|...
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kr
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -63,6 +78,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|kr
+argument_list|(
+name|f
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -75,11 +103,19 @@ comment|// WINDOWS: call void (i8*, ...) @v(i8* {{.*}}, i32 1, i32 2, i32 3, i64
 end_comment
 
 begin_comment
+comment|// WINDOWS: call void bitcast (void (...)* @kr to void (i8*, i32, i32, i32, i32)*)(i8* {{.*}}, i32 1, i32 2, i32 3, i32 0)
+end_comment
+
+begin_comment
 comment|// LINUX: define void @f(i8* %f)
 end_comment
 
 begin_comment
 comment|// LINUX: call void (i8*, ...) @v(i8* {{.*}}, i32 1, i32 2, i32 3, i32 0)
+end_comment
+
+begin_comment
+comment|// LINUX: call void (i8*, i32, i32, i32, i32, ...) bitcast (void (...)* @kr to void (i8*, i32, i32, i32, i32, ...)*)(i8* {{.*}}, i32 1, i32 2, i32 3, i32 0)
 end_comment
 
 end_unit

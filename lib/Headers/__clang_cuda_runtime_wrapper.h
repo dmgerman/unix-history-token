@@ -1076,6 +1076,31 @@ begin_comment
 comment|// reason about our code.
 end_comment
 
+begin_if
+if|#
+directive|if
+name|CUDA_VERSION
+operator|>=
+literal|8000
+end_if
+
+begin_include
+include|#
+directive|include
+file|"sm_60_atomic_functions.hpp"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sm_61_intrinsics.hpp"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_undef
 undef|#
 directive|undef

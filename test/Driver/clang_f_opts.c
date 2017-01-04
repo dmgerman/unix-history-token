@@ -1779,5 +1779,21 @@ begin_comment
 comment|// CHECK-NO-NEW-PM-NOT: -fexperimental-new-pass-manager
 end_comment
 
+begin_comment
+comment|// RUN: %clang -### -S -fstrict-return %s 2>&1 | FileCheck -check-prefix=CHECK-STRICT-RETURN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fno-strict-return %s 2>&1 | FileCheck -check-prefix=CHECK-NO-STRICT-RETURN %s
+end_comment
+
+begin_comment
+comment|// CHECK-STRICT-RETURN-NOT: "-fno-strict-return"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-STRICT-RETURN: "-fno-strict-return"
+end_comment
+
 end_unit
 

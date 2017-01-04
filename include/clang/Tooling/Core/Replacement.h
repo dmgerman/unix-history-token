@@ -1094,14 +1094,6 @@ operator|::
 name|string
 name|MainSourceFile
 expr_stmt|;
-comment|/// A freeform chunk of text to describe the context of the replacements.
-comment|/// Will be printed, for example, when detecting conflicts during replacement
-comment|/// deduplication.
-name|std
-operator|::
-name|string
-name|Context
-expr_stmt|;
 name|std
 operator|::
 name|vector

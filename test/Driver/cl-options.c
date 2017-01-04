@@ -872,6 +872,34 @@ comment|// NOSTRICT: "-relaxed-aliasing"
 end_comment
 
 begin_comment
+comment|// We recognize -f[no-]delayed-template-parsing.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -c -### -- %s 2>&1 | FileCheck -check-prefix=DELAYEDDEFAULT %s
+end_comment
+
+begin_comment
+comment|// DELAYEDDEFAULT: "-fdelayed-template-parsing"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -c -fdelayed-template-parsing -### -- %s 2>&1 | FileCheck -check-prefix=DELAYEDON %s
+end_comment
+
+begin_comment
+comment|// DELAYEDON: "-fdelayed-template-parsing"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -c -fno-delayed-template-parsing -### -- %s 2>&1 | FileCheck -check-prefix=DELAYEDOFF %s
+end_comment
+
+begin_comment
+comment|// DELAYEDOFF-NOT: "-fdelayed-template-parsing"
+end_comment
+
+begin_comment
 comment|// For some warning ids, we can map from MSVC warning to Clang warning.
 end_comment
 

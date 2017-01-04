@@ -2915,5 +2915,65 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|incomplete_char_array
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK-LABEL: @incomplete_and_function_types
+end_comment
+
+begin_function
+name|int
+name|incomplete_and_function_types
+parameter_list|()
+block|{
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8
+name|gi
+operator|=
+name|__builtin_object_size
+argument_list|(
+name|incomplete_char_array
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8
+name|gi
+operator|=
+name|__builtin_object_size
+argument_list|(
+name|incomplete_char_array
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call i64 @llvm.objectsize.i64.p0i8
+name|gi
+operator|=
+name|__builtin_object_size
+argument_list|(
+name|incomplete_char_array
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store i32 0
+name|gi
+operator|=
+name|__builtin_object_size
+argument_list|(
+name|incomplete_char_array
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
