@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-2013 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-2016 Jean-loup Gailly, Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -159,7 +159,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* compile with -Dlocal if your debugger can't find static symbols */
+comment|/* since "static" is used to mean two completely different things in C, we    define "local" for the non-static meaning of "static", for readability    (compile with -Dlocal if your debugger can't find static symbols) */
 end_comment
 
 begin_typedef
@@ -526,7 +526,7 @@ begin_define
 define|#
 directive|define
 name|OS_CODE
-value|0x01
+value|1
 end_define
 
 begin_endif
@@ -552,7 +552,7 @@ begin_define
 define|#
 directive|define
 name|OS_CODE
-value|0x02
+value|2
 end_define
 
 begin_define
@@ -567,6 +567,64 @@ parameter_list|)
 define|\
 value|fopen((name), (mode), "mbc=60", "ctx=stm", "rfm=fix", "mrs=512")
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__370__
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|__TARGET_LIB__
+operator|<
+literal|0x20000000
+end_if
+
+begin_define
+define|#
+directive|define
+name|OS_CODE
+value|4
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__TARGET_LIB__
+operator|<
+literal|0x40000000
+end_elif
+
+begin_define
+define|#
+directive|define
+name|OS_CODE
+value|11
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OS_CODE
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -591,7 +649,7 @@ begin_define
 define|#
 directive|define
 name|OS_CODE
-value|0x05
+value|5
 end_define
 
 begin_endif
@@ -609,7 +667,7 @@ begin_define
 define|#
 directive|define
 name|OS_CODE
-value|0x06
+value|6
 end_define
 
 begin_if
@@ -661,7 +719,7 @@ begin_define
 define|#
 directive|define
 name|OS_CODE
-value|0x07
+value|7
 end_define
 
 begin_ifndef
@@ -747,14 +805,14 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TOPS20
+name|__acorn
 end_ifdef
 
 begin_define
 define|#
 directive|define
 name|OS_CODE
-value|0x0a
+value|13
 end_define
 
 begin_endif
@@ -762,33 +820,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WIN32
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|__CYGWIN__
-end_ifndef
-
-begin_comment
-comment|/* Cygwin is Unix, not Win32 */
-end_comment
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|OS_CODE
-value|0x0b
+value|10
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -798,18 +850,50 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__50SERIES
+name|_BEOS_
 end_ifdef
-
-begin_comment
-comment|/* Prime/PRIMOS */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|OS_CODE
-value|0x0f
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__TOS_OS400__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OS_CODE
+value|18
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OS_CODE
+value|19
 end_define
 
 begin_endif
@@ -1077,7 +1161,7 @@ begin_define
 define|#
 directive|define
 name|OS_CODE
-value|0x03
+value|3
 end_define
 
 begin_comment
@@ -1369,7 +1453,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 end_ifdef
 
 begin_include

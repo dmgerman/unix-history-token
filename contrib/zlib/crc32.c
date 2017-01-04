@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-2006, 2010, 2011, 2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  *  * Thanks to Rodney Brown<rbrown64@csc.com.au> for his contribution of faster  * CRC methods: exclusive-oring 32 bits of data at a time, and pre-computing  * tables for updating the shift register in one step with three exclusive-ors  * instead of four steps with four exclusive-ors.  This results in about a  * factor of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.  */
+comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-2006, 2010, 2011, 2012, 2016 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  *  * Thanks to Rodney Brown<rbrown64@csc.com.au> for his contribution of faster  * CRC methods: exclusive-oring 32 bits of data at a time, and pre-computing  * tables for updating the shift register in one step with three exclusive-ors  * instead of four steps with four exclusive-ors.  This results in about a  * factor of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.  */
 end_comment
 
 begin_comment
@@ -63,13 +63,6 @@ begin_comment
 comment|/* for STDC and FAR definitions */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|local
-value|static
-end_define
-
 begin_comment
 comment|/* Definitions for doing the crc four data bytes at a time. */
 end_comment
@@ -123,7 +116,7 @@ name|char
 name|FAR
 operator|*
 operator|,
-name|unsigned
+name|z_size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -146,7 +139,7 @@ name|char
 name|FAR
 operator|*
 operator|,
-name|unsigned
+name|z_size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -955,7 +948,7 @@ begin_function
 name|unsigned
 name|long
 name|ZEXPORT
-name|crc32
+name|crc32_z
 parameter_list|(
 name|crc
 parameter_list|,
@@ -974,7 +967,7 @@ name|FAR
 modifier|*
 name|buf
 decl_stmt|;
-name|uInt
+name|z_size_t
 name|len
 decl_stmt|;
 block|{
@@ -1107,11 +1100,59 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ========================================================================= */
+end_comment
+
+begin_function
+name|unsigned
+name|long
+name|ZEXPORT
+name|crc32
+parameter_list|(
+name|crc
+parameter_list|,
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
+name|unsigned
+name|long
+name|crc
+decl_stmt|;
+specifier|const
+name|unsigned
+name|char
+name|FAR
+modifier|*
+name|buf
+decl_stmt|;
+name|uInt
+name|len
+decl_stmt|;
+block|{
+return|return
+name|crc32_z
+argument_list|(
+name|crc
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|BYFOUR
 end_ifdef
+
+begin_comment
+comment|/*    This BYFOUR code accesses the passed unsigned char * buffer with a 32-bit    integer pointer type. This violates the strict aliasing rule, where a    compiler can assume, for optimization purposes, that two pointers to    fundamentally different types won't ever point to the same memory. This can    manifest as a problem only if one of the pointers is written to. This code    only reads from those pointers. So long as this code remains isolated in    this compilation unit, there won't be a problem. For this reason, this code    should not be copied and pasted into a compilation unit in which other code    writes to the buffer that is passed to these routines.  */
+end_comment
 
 begin_comment
 comment|/* ========================================================================= */
@@ -1158,7 +1199,7 @@ name|FAR
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|z_size_t
 name|len
 decl_stmt|;
 block|{
@@ -1342,7 +1383,7 @@ begin_define
 define|#
 directive|define
 name|DOBIG4
-value|c ^= *++buf4; \         c = crc_table[4][c& 0xff] ^ crc_table[5][(c>> 8)& 0xff] ^ \             crc_table[6][(c>> 16)& 0xff] ^ crc_table[7][c>> 24]
+value|c ^= *buf4++; \         c = crc_table[4][c& 0xff] ^ crc_table[5][(c>> 8)& 0xff] ^ \             crc_table[6][(c>> 16)& 0xff] ^ crc_table[7][c>> 24]
 end_define
 
 begin_define
@@ -1379,7 +1420,7 @@ name|FAR
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|z_size_t
 name|len
 decl_stmt|;
 block|{
@@ -1467,9 +1508,6 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
-name|buf4
-operator|--
-expr_stmt|;
 while|while
 condition|(
 name|len
@@ -1498,9 +1536,6 @@ operator|-=
 literal|4
 expr_stmt|;
 block|}
-name|buf4
-operator|++
-expr_stmt|;
 name|buf
 operator|=
 operator|(

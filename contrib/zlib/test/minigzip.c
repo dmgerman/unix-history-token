@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* minigzip.c -- simulate gzip using the zlib compression library  * Copyright (C) 1995-2006, 2010, 2011 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* minigzip.c -- simulate gzip using the zlib compression library  * Copyright (C) 1995-2006, 2010, 2011, 2016 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -157,11 +157,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_MSC_VER
-end_ifdef
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|<
+literal|1900
+end_if
 
 begin_define
 define|#
@@ -744,9 +751,10 @@ decl_stmt|,
 name|m
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
 name|q
-operator|=
-name|Z_NULL
 expr_stmt|;
 return|return
 name|calloc
@@ -778,9 +786,10 @@ end_function
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|q
-operator|=
-name|Z_NULL
 expr_stmt|;
 name|free
 argument_list|(
@@ -1753,6 +1762,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|prog
@@ -2640,7 +2650,7 @@ decl_stmt|;
 name|gzFile
 name|in
 decl_stmt|;
-name|size_t
+name|unsigned
 name|len
 init|=
 name|strlen

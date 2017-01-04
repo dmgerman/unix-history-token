@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* example.c -- usage example of the zlib compression library  * Copyright (C) 1995-2006, 2011 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* example.c -- usage example of the zlib compression library  * Copyright (C) 1995-2006, 2011, 2016 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -93,6 +93,7 @@ value|{ \     if (err != Z_OK) { \         fprintf(stderr, "%s error: %d\n", msg
 end_define
 
 begin_decl_stmt
+specifier|static
 name|z_const
 name|char
 name|hello
@@ -107,6 +108,7 @@ comment|/* "hello world" would be more standard, but the repeated "hello"  * str
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 name|dictionary
@@ -117,6 +119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uLong
 name|dictId
 decl_stmt|;
@@ -377,9 +380,10 @@ decl_stmt|,
 name|m
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
 name|q
-operator|=
-name|Z_NULL
 expr_stmt|;
 return|return
 name|calloc
@@ -405,9 +409,10 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|q
-operator|=
-name|Z_NULL
 expr_stmt|;
 name|free
 argument_list|(
@@ -2407,6 +2412,8 @@ name|uInt
 operator|)
 name|uncomprLen
 expr_stmt|;
+name|err
+operator|=
 name|inflate
 argument_list|(
 operator|&
@@ -3133,15 +3140,15 @@ block|}
 ifdef|#
 directive|ifdef
 name|Z_SOLO
+operator|(
+name|void
+operator|)
 name|argc
-operator|=
-name|strlen
-argument_list|(
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|argv
-index|[
-literal|0
-index|]
-argument_list|)
 expr_stmt|;
 else|#
 directive|else

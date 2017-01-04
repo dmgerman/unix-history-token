@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2013 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2016 Jean-loup Gailly, Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ name|Z_PREFIX_SET
 end_define
 
 begin_comment
-comment|/* all linked symbols */
+comment|/* all linked symbols and init macros */
 end_comment
 
 begin_define
@@ -120,6 +120,13 @@ name|adler32_combine64
 value|z_adler32_combine64
 end_define
 
+begin_define
+define|#
+directive|define
+name|adler32_z
+value|z_adler32_z
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -176,6 +183,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|crc32_z
+value|z_crc32_z
+end_define
+
+begin_define
+define|#
+directive|define
 name|deflate
 value|z_deflate
 end_define
@@ -199,6 +213,27 @@ define|#
 directive|define
 name|deflateEnd
 value|z_deflateEnd
+end_define
+
+begin_define
+define|#
+directive|define
+name|deflateGetDictionary
+value|z_deflateGetDictionary
+end_define
+
+begin_define
+define|#
+directive|define
+name|deflateInit
+value|z_deflateInit
+end_define
+
+begin_define
+define|#
+directive|define
+name|deflateInit2
+value|z_deflateInit2
 end_define
 
 begin_define
@@ -385,6 +420,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|gzfread
+value|z_gzfread
+end_define
+
+begin_define
+define|#
+directive|define
+name|gzfwrite
+value|z_gzfwrite
+end_define
+
+begin_define
+define|#
+directive|define
 name|gzgetc
 value|z_gzgetc
 end_define
@@ -454,13 +503,6 @@ define|#
 directive|define
 name|gzprintf
 value|z_gzprintf
-end_define
-
-begin_define
-define|#
-directive|define
-name|gzvprintf
-value|z_gzvprintf
 end_define
 
 begin_define
@@ -536,6 +578,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|gzvprintf
+value|z_gzvprintf
+end_define
+
+begin_define
+define|#
+directive|define
 name|gzwrite
 value|z_gzwrite
 end_define
@@ -569,8 +618,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|inflateBackInit
+value|z_inflateBackInit
+end_define
+
+begin_define
+define|#
+directive|define
 name|inflateBackInit_
 value|z_inflateBackInit_
+end_define
+
+begin_define
+define|#
+directive|define
+name|inflateCodesUsed
+value|z_inflateCodesUsed
 end_define
 
 begin_define
@@ -590,8 +653,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|inflateGetDictionary
+value|z_inflateGetDictionary
+end_define
+
+begin_define
+define|#
+directive|define
 name|inflateGetHeader
 value|z_inflateGetHeader
+end_define
+
+begin_define
+define|#
+directive|define
+name|inflateInit
+value|z_inflateInit
+end_define
+
+begin_define
+define|#
+directive|define
+name|inflateInit2
+value|z_inflateInit2
 end_define
 
 begin_define
@@ -639,15 +723,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|inflateSetDictionary
-value|z_inflateSetDictionary
+name|inflateResetKeep
+value|z_inflateResetKeep
 end_define
 
 begin_define
 define|#
 directive|define
-name|inflateGetDictionary
-value|z_inflateGetDictionary
+name|inflateSetDictionary
+value|z_inflateSetDictionary
 end_define
 
 begin_define
@@ -674,8 +758,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|inflateResetKeep
-value|z_inflateResetKeep
+name|inflateValidate
+value|z_inflateValidate
 end_define
 
 begin_define
@@ -710,6 +794,13 @@ define|#
 directive|define
 name|uncompress
 value|z_uncompress
+end_define
+
+begin_define
+define|#
+directive|define
+name|uncompress2
+value|z_uncompress2
 end_define
 
 begin_endif
@@ -1466,39 +1557,94 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Some Mac compilers merge all .h files incorrectly: */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|Z_SOLO
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|z_size_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|z_longlong
+value|long long
+end_define
 
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|__MWERKS__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|applec
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|THINK_C
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__SC__
+name|NO_SIZE_T
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|NO_DUMMY_DECL
-end_define
+begin_typedef
+typedef|typedef
+name|unsigned
+name|NO_SIZE_T
+name|z_size_t
+typedef|;
+end_typedef
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|STDC
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|size_t
+name|z_size_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|z_size_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|z_longlong
+end_undef
 
 begin_endif
 endif|#
@@ -1577,7 +1723,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The memory requirements for deflate are (in bytes):             (1<< (windowBits+2)) +  (1<< (memLevel+9))  that is: 128K for windowBits=15  +  128K for memLevel = 8  (default values)  plus a few kilobytes for small objects. For example, if you want to reduce  the default memory requirements from 256K to 128K, compile with      make CFLAGS="-O -DMAX_WBITS=14 -DMAX_MEM_LEVEL=7"  Of course this will generally degrade compression (there's no free lunch).     The memory requirements for inflate are (in bytes) 1<< windowBits  that is, 32K for windowBits=15 (default value) plus a few kilobytes  for small objects. */
+comment|/* The memory requirements for deflate are (in bytes):             (1<< (windowBits+2)) +  (1<< (memLevel+9))  that is: 128K for windowBits=15  +  128K for memLevel = 8  (default values)  plus a few kilobytes for small objects. For example, if you want to reduce  the default memory requirements from 256K to 128K, compile with      make CFLAGS="-O -DMAX_WBITS=14 -DMAX_MEM_LEVEL=7"  Of course this will generally degrade compression (there's no free lunch).     The memory requirements for inflate are (in bytes) 1<< windowBits  that is, 32K for windowBits=15 (default value) plus about 7 kilobytes  for small objects. */
 end_comment
 
 begin_comment

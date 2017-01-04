@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyright (C) 1995-2011 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* adler32.c -- compute the Adler-32 checksum of a data stream  * Copyright (C) 1995-2011, 2016 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -12,13 +12,6 @@ include|#
 directive|include
 file|"zutil.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|local
-value|static
-end_define
 
 begin_decl_stmt
 name|local
@@ -44,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|BASE
-value|65521
+value|65521U
 end_define
 
 begin_comment
@@ -227,7 +220,7 @@ end_comment
 begin_function
 name|uLong
 name|ZEXPORT
-name|adler32
+name|adler32_z
 parameter_list|(
 name|adler
 parameter_list|,
@@ -243,7 +236,7 @@ name|Bytef
 modifier|*
 name|buf
 decl_stmt|;
-name|uInt
+name|z_size_t
 name|len
 decl_stmt|;
 block|{
@@ -502,6 +495,46 @@ comment|/* =====================================================================
 end_comment
 
 begin_function
+name|uLong
+name|ZEXPORT
+name|adler32
+parameter_list|(
+name|adler
+parameter_list|,
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
+name|uLong
+name|adler
+decl_stmt|;
+specifier|const
+name|Bytef
+modifier|*
+name|buf
+decl_stmt|;
+name|uInt
+name|len
+decl_stmt|;
+block|{
+return|return
+name|adler32_z
+argument_list|(
+name|adler
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ========================================================================= */
+end_comment
+
+begin_function
 name|local
 name|uLong
 name|adler32_combine_
@@ -637,6 +670,10 @@ condition|(
 name|sum2
 operator|>=
 operator|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|BASE
 operator|<<
 literal|1
@@ -645,6 +682,10 @@ condition|)
 name|sum2
 operator|-=
 operator|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|BASE
 operator|<<
 literal|1
