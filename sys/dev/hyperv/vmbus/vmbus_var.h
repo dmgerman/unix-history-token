@@ -268,6 +268,7 @@ comment|/* compat evtflgs from host */
 name|struct
 name|vmbus_channel
 modifier|*
+specifier|volatile
 modifier|*
 name|vmbus_chmap
 decl_stmt|;
