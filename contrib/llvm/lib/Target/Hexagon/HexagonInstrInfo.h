@@ -74,19 +74,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBranchProbabilityInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetFrameLowering.h"
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_define
@@ -117,14 +147,14 @@ range|:
 name|public
 name|HexagonGenInstrInfo
 block|{
+specifier|const
+name|HexagonRegisterInfo
+name|RI
+block|;
 name|virtual
 name|void
 name|anchor
 argument_list|()
-block|;
-specifier|const
-name|HexagonRegisterInfo
-name|RI
 block|;
 name|public
 operator|:
@@ -608,8 +638,7 @@ argument|const InstrItineraryData *ItinData
 argument_list|,
 argument|const MachineInstr&MI
 argument_list|,
-argument|unsigned *PredCost =
-literal|0
+argument|unsigned *PredCost = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -1592,10 +1621,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_HEXAGONINSTRINFO_H
+end_comment
 
 end_unit
 

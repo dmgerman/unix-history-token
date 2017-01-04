@@ -407,15 +407,15 @@ comment|// corresponding to a machine instruction.
 name|uint16_t
 name|File
 decl_stmt|;
-comment|// An unsigned integer whose value encodes the applicable instruction set
-comment|// architecture for the current instruction.
-name|uint8_t
-name|Isa
-decl_stmt|;
 comment|// An unsigned integer representing the DWARF path discriminator value
 comment|// for this location.
 name|uint32_t
 name|Discriminator
+decl_stmt|;
+comment|// An unsigned integer whose value encodes the applicable instruction set
+comment|// architecture for the current instruction.
+name|uint8_t
+name|Isa
 decl_stmt|;
 comment|// A boolean indicating that the current instruction is the beginning of a
 comment|// statement.

@@ -13770,6 +13770,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|EmitOMPTargetTeamsDistributeParallelForSimdDirective
+parameter_list|(
+specifier|const
+name|OMPTargetTeamsDistributeParallelForSimdDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// Emit outlined function for the target directive.
 end_comment
@@ -19527,10 +19539,17 @@ name|ArgTypes
 operator|.
 name|push_back
 argument_list|(
+name|CallArgTypeInfo
+condition|?
 name|getVarArgType
 argument_list|(
 name|A
 argument_list|)
+else|:
+name|A
+operator|->
+name|getType
+argument_list|()
 argument_list|)
 expr_stmt|;
 end_for

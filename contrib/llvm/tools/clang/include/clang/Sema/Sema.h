@@ -40608,6 +40608,51 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Called on well-formed '\#pragma omp target teams distribute parallel for
+end_comment
+
+begin_comment
+comment|/// simd' after parsing of the associated statement.
+end_comment
+
+begin_decl_stmt
+name|StmtResult
+name|ActOnOpenMPTargetTeamsDistributeParallelForSimdDirective
+argument_list|(
+name|ArrayRef
+operator|<
+name|OMPClause
+operator|*
+operator|>
+name|Clauses
+argument_list|,
+name|Stmt
+operator|*
+name|AStmt
+argument_list|,
+name|SourceLocation
+name|StartLoc
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|,
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|ValueDecl
+operator|*
+argument_list|,
+name|Expr
+operator|*
+operator|>
+operator|&
+name|VarsWithImplicitDSA
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Checks correctness of linear modifiers.
 end_comment
 

@@ -1019,9 +1019,14 @@ operator|*
 name|Section
 block|; }
 decl_stmt|;
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
 name|class
 name|Undefined
-range|:
+operator|:
 name|public
 name|SymbolBody
 block|{
@@ -1056,6 +1061,20 @@ operator|==
 name|UndefinedKind
 return|;
 block|}
+comment|// If non-null the symbol has a Thunk that may be used as an alternative
+comment|// destination for callers of this Symbol. When linking a DSO undefined
+comment|// symbols are implicitly imported, the symbol lookup will be performed by
+comment|// the dynamic loader. A call to an undefined symbol will be given a PLT
+comment|// entry and on ARM this may need a Thunk if the caller is in Thumb state.
+name|Thunk
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|ThunkData
+operator|=
+name|nullptr
+block|;
 name|InputFile
 operator|*
 name|file
@@ -1920,6 +1939,13 @@ operator|,
 name|DefinedSynthetic
 operator|,
 name|Undefined
+operator|<
+name|llvm
+operator|::
+name|object
+operator|::
+name|ELF64LE
+operator|>
 operator|,
 name|SharedSymbol
 operator|<

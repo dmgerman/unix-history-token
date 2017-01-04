@@ -92,11 +92,11 @@ comment|//   void foo() {
 end_comment
 
 begin_comment
-comment|//     // Objects that inherit from RefCountedBase should always be instantiated
+comment|//     // Constructing an IntrusiveRefCntPtr increases the pointee's refcount by
 end_comment
 
 begin_comment
-comment|//     // on the heap, never on the stack.
+comment|//     // 1 (from 0 in this case).
 end_comment
 
 begin_comment
@@ -255,9 +255,6 @@ comment|/// The lifetime of an object which inherits from RefCountedBase is mana
 comment|/// calls to Release() and Retain(), which increment and decrement the object's
 comment|/// refcount, respectively.  When a Release() call decrements the refcount to 0,
 comment|/// the object deletes itself.
-comment|///
-comment|/// Objects that inherit from RefCountedBase should always be allocated with
-comment|/// operator new.
 name|template
 operator|<
 name|class

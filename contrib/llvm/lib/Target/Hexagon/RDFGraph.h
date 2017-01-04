@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- RDFGraph.h -------------------------------------------------------===//
+comment|//===--- RDFGraph.h ---------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -894,13 +894,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|RDF_GRAPH_H
+name|LLVM_LIB_TARGET_HEXAGON_RDFGRAPH_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|RDF_GRAPH_H
+name|LLVM_LIB_TARGET_HEXAGON_RDFGRAPH_H
 end_define
 
 begin_include
@@ -912,13 +912,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/LaneBitmask.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Debug.h"
+file|"llvm/Support/MathExtras.h"
 end_include
 
 begin_include
@@ -930,13 +942,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Timer.h"
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
 end_include
 
 begin_include
@@ -961,6 +985,12 @@ begin_include
 include|#
 directive|include
 file|<unordered_map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -1392,12 +1422,7 @@ argument_list|()
 operator|:
 name|Addr
 argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|Id
-argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|NodeAddr
@@ -1415,6 +1440,42 @@ block|,
 name|Id
 argument_list|(
 argument|I
+argument_list|)
+block|{}
+comment|// Type cast (casting constructor). The reason for having this class
+comment|// instead of std::pair.
+name|template
+operator|<
+name|typename
+name|S
+operator|>
+name|NodeAddr
+argument_list|(
+specifier|const
+name|NodeAddr
+operator|<
+name|S
+operator|>
+operator|&
+name|NA
+argument_list|)
+operator|:
+name|Addr
+argument_list|(
+name|static_cast
+operator|<
+name|T
+operator|>
+operator|(
+name|NA
+operator|.
+name|Addr
+operator|)
+argument_list|)
+block|,
+name|Id
+argument_list|(
+argument|NA.Id
 argument_list|)
 block|{}
 name|bool
@@ -1481,47 +1542,13 @@ name|NA
 operator|)
 return|;
 block|}
-comment|// Type cast (casting constructor). The reason for having this class
-comment|// instead of std::pair.
-name|template
-operator|<
-name|typename
-name|S
-operator|>
-name|NodeAddr
-argument_list|(
-specifier|const
-name|NodeAddr
-operator|<
-name|S
-operator|>
-operator|&
-name|NA
-argument_list|)
-operator|:
-name|Addr
-argument_list|(
-name|static_cast
-operator|<
-name|T
-operator|>
-operator|(
-name|NA
-operator|.
-name|Addr
-operator|)
-argument_list|)
-block|,
-name|Id
-argument_list|(
-argument|NA.Id
-argument_list|)
-block|{}
 name|T
 name|Addr
 block|;
 name|NodeId
 name|Id
+operator|=
+literal|0
 block|;   }
 expr_stmt|;
 struct_decl|struct
@@ -1575,18 +1602,10 @@ argument_list|)
 operator|,
 name|IndexMask
 argument_list|(
-operator|(
+argument|(
 literal|1
-operator|<<
-name|BitsPerIndex
-operator|)
-operator|-
+argument|<< BitsPerIndex)-
 literal|1
-argument_list|)
-operator|,
-name|ActiveEnd
-argument_list|(
-argument|nullptr
 argument_list|)
 block|{
 name|assert
@@ -1719,6 +1738,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|ActiveEnd
+init|=
+name|nullptr
 decl_stmt|;
 name|std
 operator|::
@@ -1905,17 +1926,23 @@ name|virtual
 operator|~
 name|TargetOperandInfo
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|bool
 name|isPreserving
 argument_list|(
-argument|const MachineInstr&In
-argument_list|,
-argument|unsigned OpNum
-argument_list|)
 specifier|const
-expr_stmt|;
+name|MachineInstr
+operator|&
+name|In
+argument_list|,
+name|unsigned
+name|OpNum
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|bool
 name|isClobbering
@@ -2304,9 +2331,6 @@ operator|&
 name|tri
 argument_list|)
 operator|:
-name|Masks
-argument_list|()
-block|,
 name|ExpAliasUnits
 argument_list|(
 name|tri
@@ -2332,33 +2356,9 @@ name|RegisterAggr
 operator|&
 name|RG
 argument_list|)
-operator|:
-name|Masks
-argument_list|(
-name|RG
-operator|.
-name|Masks
-argument_list|)
-block|,
-name|ExpAliasUnits
-argument_list|(
-name|RG
-operator|.
-name|ExpAliasUnits
-argument_list|)
-block|,
-name|CheckUnits
-argument_list|(
-name|RG
-operator|.
-name|CheckUnits
-argument_list|)
-block|,
-name|TRI
-argument_list|(
-argument|RG.TRI
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|bool
 name|empty
 argument_list|()
@@ -5642,12 +5642,12 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// namespace rdf
+comment|// end namespace rdf
 end_comment
 
 begin_comment
 unit|}
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -5656,7 +5656,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// RDF_GRAPH_H
+comment|// LLVM_LIB_TARGET_HEXAGON_RDFGRAPH_H
 end_comment
 
 end_unit

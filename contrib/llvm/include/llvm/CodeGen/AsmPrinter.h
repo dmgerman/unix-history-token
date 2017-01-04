@@ -679,6 +679,20 @@ name|Function
 modifier|*
 name|Fn
 decl_stmt|;
+name|void
+name|emit
+argument_list|(
+name|int
+argument_list|,
+name|MCStreamer
+operator|*
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 struct|;
 comment|// All the sleds to be emitted.
@@ -706,6 +720,11 @@ parameter_list|,
 name|SledKind
 name|Kind
 parameter_list|)
+function_decl|;
+comment|/// Emit a table with all XRay instrumentation points.
+name|void
+name|emitXRayTable
+parameter_list|()
 function_decl|;
 comment|//===------------------------------------------------------------------===//
 comment|// MachineFunctionPass Implementation.

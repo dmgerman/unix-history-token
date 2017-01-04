@@ -1210,6 +1210,8 @@ name|CONST_DATA_PTR
 block|,
 name|SENDMSG
 block|,
+name|SENDMSGHALT
+block|,
 name|INTERP_MOV
 block|,
 name|INTERP_P1
