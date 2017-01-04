@@ -592,6 +592,13 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|vm_page_t
+name|bogus_page
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|__inline

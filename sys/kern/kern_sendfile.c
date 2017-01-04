@@ -179,13 +179,6 @@ directive|include
 file|<vm/vm_pager.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|vm_page_t
-name|bogus_page
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Structure describing a single sendfile(2) I/O, which may consist of  * several underlying pager I/Os.  *  * The syscall context allocates the structure and initializes 'nios'  * to 1.  As sendfile_swapin() runs through pages and starts asynchronous  * paging operations, it increments 'nios'.  *  * Every I/O completion calls sendfile_iodone(), which decrements the 'nios',  * and the syscall also calls sendfile_iodone() after allocating all mbufs,  * linking them and sending to socket.  Whoever reaches zero 'nios' is  * responsible to * call pru_ready on the socket, to notify it of readyness  * of the data.  */
 end_comment

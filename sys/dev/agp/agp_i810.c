@@ -9213,13 +9213,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|vm_page_t
-name|bogus_page
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|agp_intel_gtt_clear_range

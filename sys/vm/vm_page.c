@@ -258,6 +258,16 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * bogus page -- for I/O to/from partially complete buffers,  * or for paging into sparsely invalid regions.  */
+end_comment
+
+begin_decl_stmt
+name|vm_page_t
+name|bogus_page
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|vm_page_t
 name|vm_page_array
@@ -455,7 +465,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vm_page_init_fakepg
+name|vm_page_init
 parameter_list|(
 name|void
 modifier|*
@@ -530,7 +540,7 @@ name|SI_SUB_VM
 argument_list|,
 name|SI_ORDER_SECOND
 argument_list|,
-name|vm_page_init_fakepg
+name|vm_page_init
 argument_list|,
 name|NULL
 argument_list|)
@@ -540,7 +550,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|void
-name|vm_page_init_fakepg
+name|vm_page_init
 parameter_list|(
 name|void
 modifier|*
@@ -572,6 +582,21 @@ argument_list|,
 name|UMA_ZONE_NOFREE
 operator||
 name|UMA_ZONE_VM
+argument_list|)
+expr_stmt|;
+name|bogus_page
+operator|=
+name|vm_page_alloc
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|VM_ALLOC_NOOBJ
+operator||
+name|VM_ALLOC_NORMAL
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 block|}

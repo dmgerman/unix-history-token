@@ -346,17 +346,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Page expended to mark partially backed buffers */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|vm_page_t
-name|bogus_page
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Read data to a buf, including read-ahead if we find this to be beneficial.  * cluster_read replaces bread.  */
 end_comment
 

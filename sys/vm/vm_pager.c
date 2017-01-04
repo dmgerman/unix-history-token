@@ -118,13 +118,6 @@ file|<vm/vm_extern.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|vm_page_t
-name|bogus_page
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cluster_pbuf_freecnt
 init|=
