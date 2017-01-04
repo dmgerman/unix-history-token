@@ -57,6 +57,20 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|codeview
+block|{
+union_decl|union
+name|DebugInfo
+union_decl|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|lld
 block|{
 name|namespace
@@ -84,6 +98,15 @@ operator|<
 name|uint8_t
 operator|>
 name|SectionTable
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|codeview
+operator|::
+name|DebugInfo
+operator|*
+name|DI
 argument_list|)
 decl_stmt|;
 block|}
