@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|RTWN_TXBUFSZ
-value|(RTWN_TX_DESC_SIZE + IEEE80211_MAX_LEN)
+value|(16 * 1024)
 end_define
 
 begin_define
