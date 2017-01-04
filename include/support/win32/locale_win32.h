@@ -47,6 +47,20 @@ directive|define
 name|_LIBCPP_SUPPORT_WIN32_LOCALE_WIN32_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<crtversion.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|_VC_CRT_MAJOR_VERSION
+operator|<
+literal|14
+end_if
+
 begin_comment
 comment|// ctype mask table defined in msvcrt.dll
 end_comment
@@ -64,6 +78,11 @@ name|_ctype
 index|[]
 decl_stmt|;
 end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

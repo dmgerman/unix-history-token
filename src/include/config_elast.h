@@ -43,12 +43,18 @@ directive|define
 name|_LIBCPP_CONFIG_ELAST
 end_define
 
+begin_include
+include|#
+directive|include
+file|<__config>
+end_include
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|_WIN32
+name|_LIBCPP_MSVCRT
 argument_list|)
 end_if
 
@@ -169,7 +175,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_WIN32
+name|_LIBCPP_MSCVRT
 argument_list|)
 end_elif
 

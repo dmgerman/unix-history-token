@@ -644,8 +644,19 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_WIN64
+name|_LIBCPP_HAS_BITSCAN64
 argument_list|)
+operator|(
+name|defined
+argument_list|(
+name|_M_AMD64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+operator|)
 if|if
 condition|(
 name|_BitScanForward64
@@ -665,12 +676,8 @@ operator|(
 name|where
 operator|)
 return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
+else|#
+directive|else
 comment|// Win32 doesn't have _BitScanForward64 so emulate it with two 32 bit calls.
 comment|// Scan the Low Word.
 if|if
@@ -715,11 +722,6 @@ literal|32
 operator|)
 return|;
 comment|// Create a bit offset from the LSB.
-else|#
-directive|else
-error|#
-directive|error
-literal|"Implementation of __builtin_ctzll required"
 endif|#
 directive|endif
 return|return
@@ -843,7 +845,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_WIN64
+name|_LIBCPP_HAS_BITSCAN64
 argument_list|)
 if|if
 condition|(
@@ -866,12 +868,8 @@ operator|-
 name|where
 operator|)
 return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
+else|#
+directive|else
 comment|// Scan the high 32 bits.
 if|if
 condition|(
@@ -921,11 +919,6 @@ operator|-
 name|where
 operator|)
 return|;
-else|#
-directive|else
-error|#
-directive|error
-literal|"Implementation of __builtin_clzll required"
 endif|#
 directive|endif
 return|return
