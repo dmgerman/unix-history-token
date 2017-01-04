@@ -4422,6 +4422,10 @@ name|int
 name|j
 init|=
 literal|1
+init|,
+name|prev
+init|=
+literal|1
 init|;
 name|j
 operator|<
@@ -4432,6 +4436,19 @@ condition|;
 name|j
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_pages
+index|[
+name|j
+index|]
+operator|==
+name|bogus_page
+condition|)
+continue|continue;
 name|KASSERT
 argument_list|(
 name|bp
@@ -4443,18 +4460,18 @@ index|]
 operator|->
 name|pindex
 operator|-
-literal|1
-operator|==
 name|bp
 operator|->
 name|b_pages
 index|[
-name|j
-operator|-
-literal|1
+name|prev
 index|]
 operator|->
 name|pindex
+operator|==
+name|j
+operator|-
+name|prev
 argument_list|,
 operator|(
 literal|"%s: pages array not consecutive, bp %p"
@@ -4465,6 +4482,11 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
+name|prev
+operator|=
+name|j
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Recalculate first offset and bytecount with regards to read behind. 	 * Truncate bytecount to vnode real size and round up physical size 	 * for real devices. 	 */
