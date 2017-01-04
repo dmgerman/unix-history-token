@@ -437,6 +437,17 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|m
+operator|.
+name|msg_flags
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|child
 operator|=
 name|fork

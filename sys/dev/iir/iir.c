@@ -8034,7 +8034,7 @@ name|base_transfer_speed
 operator|=
 literal|3300
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->
@@ -8053,7 +8053,7 @@ name|sc_vendor
 operator|==
 name|INTEL_VENDOR_ID_IIR
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->
@@ -8065,7 +8065,7 @@ name|HBA_IDLEN
 argument_list|)
 expr_stmt|;
 else|else
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->
@@ -8076,7 +8076,7 @@ argument_list|,
 name|HBA_IDLEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->

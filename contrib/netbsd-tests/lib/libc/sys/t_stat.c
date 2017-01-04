@@ -2147,6 +2147,19 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

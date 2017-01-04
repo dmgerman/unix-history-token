@@ -4962,6 +4962,12 @@ name|error
 operator|=
 name|EWOULDBLOCK
 expr_stmt|;
+name|cm
+operator|->
+name|cm_data
+operator|=
+name|NULL
+expr_stmt|;
 name|free
 argument_list|(
 name|buffer
@@ -5544,6 +5550,14 @@ condition|)
 block|{
 continue|continue;
 block|}
+comment|/* 		 * The stop_at_shutdown flag will be set if this device is 		 * a SATA direct-access end device. 		 */
+if|if
+condition|(
+name|target
+operator|->
+name|stop_at_shutdown
+condition|)
+block|{
 name|ccb
 operator|=
 name|xpt_alloc_ccb_nowait
@@ -5568,14 +5582,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * The stop_at_shutdown flag will be set if this device is 		 * a SATA direct-access end device. 		 */
-if|if
-condition|(
-name|target
-operator|->
-name|stop_at_shutdown
-condition|)
-block|{
 if|if
 condition|(
 name|xpt_create_path

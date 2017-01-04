@@ -382,6 +382,30 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Defined in a33_padconf.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOC_ALLWINNER_A33
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|allwinner_padconf
+name|a33_padconf
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Defined in h3_padconf.c */
 end_comment
 
@@ -582,6 +606,21 @@ name|uintptr_t
 operator|)
 operator|&
 name|a31_r_padconf
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SOC_ALLWINNER_A33
+block|{
+literal|"allwinner,sun6i-a33-pinctrl"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|a33_padconf
 block|}
 block|,
 endif|#

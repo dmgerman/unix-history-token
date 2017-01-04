@@ -750,6 +750,10 @@ begin_comment
 comment|/* VHT160 channel */
 end_comment
 
+begin_comment
+comment|/* XXX note: 0x80000000 is used in src/sbin/ifconfig/ifieee80211.c :( */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -783,12 +787,8 @@ define|#
 directive|define
 name|IEEE80211_CHAN_BITS
 define|\
-value|"\20\1PRIV0\2PRIV2\3PRIV3\4PRIV4\5TURBO\6CCK\7OFDM\0102GHZ\0115GHZ" \ 	"\12PASSIVE\13DYN\14GFSK\15GSM\16STURBO\17HALF\20QUARTER\21HT20" \ 	"\22HT40U\23HT40D\24DFS\0254MSXMIT\26NOADHOC\27NOHOSTAP\03011D"
+value|"\20\1PRIV0\2PRIV2\3PRIV3\4PRIV4\5TURBO\6CCK\7OFDM\0102GHZ\0115GHZ" \ 	"\12PASSIVE\13DYN\14GFSK\15GSM\16STURBO\17HALF\20QUARTER\21HT20" \ 	"\22HT40U\23HT40D\24DFS\0254MSXMIT\26NOADHOC\27NOHOSTAP\03011D" \ 	"\031VHT20\032VHT40U\033VHT40D\034VHT80\035VHT80_80\036VHT160"
 end_define
-
-begin_comment
-comment|/* XXX TODO: add VHT bits */
-end_comment
 
 begin_comment
 comment|/*  * Useful combinations of channel characteristics.  */

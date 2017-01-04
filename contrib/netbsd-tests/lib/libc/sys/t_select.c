@@ -631,6 +631,16 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -706,6 +716,12 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+break|break;
+endif|#
+directive|endif
 case|case
 operator|-
 literal|1

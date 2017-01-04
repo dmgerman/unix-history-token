@@ -87,6 +87,12 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"h_common.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -160,6 +166,31 @@ operator|*
 operator|)
 name|param
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|PTHREAD_REQUIRE
+argument_list|(
+name|pthread_condattr_init
+argument_list|(
+operator|&
+name|attr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PTHREAD_REQUIRE
+argument_list|(
+name|pthread_condattr_setclock
+argument_list|(
+operator|&
+name|attr
+argument_list|,
+name|clck
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|pthread_condattr_init
 argument_list|(
 operator|&
@@ -175,6 +206,8 @@ name|clck
 argument_list|)
 expr_stmt|;
 comment|/* MONOTONIC or MONOTONIC */
+endif|#
+directive|endif
 name|pthread_cond_init
 argument_list|(
 operator|&
