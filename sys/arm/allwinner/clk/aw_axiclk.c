@@ -121,6 +121,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"allwinner,sun8i-a23-axi-clk"
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
