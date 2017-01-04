@@ -2936,13 +2936,6 @@ expr_stmt|;
 block|}
 name|pi
 operator|->
-name|linkdnrc
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|pi
-operator|->
 name|dev
 operator|=
 name|device_add_child

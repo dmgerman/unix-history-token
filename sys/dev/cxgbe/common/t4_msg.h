@@ -9490,7 +9490,7 @@ name|V_T6_COMPR_RXERR_VEC
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< S_T6_COMPR_RXERR_LEN)
+value|((x)<< S_T6_COMPR_RXERR_VEC)
 end_define
 
 begin_define
@@ -9546,7 +9546,7 @@ name|V_T6_COMPR_RXERR_LEN
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< S_COMPR_T6_RXERR_LEN)
+value|((x)<< S_T6_COMPR_RXERR_LEN)
 end_define
 
 begin_define
