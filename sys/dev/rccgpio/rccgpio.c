@@ -146,7 +146,11 @@ block|{
 operator|.
 name|pin
 operator|=
+operator|(
+literal|1
+operator|<<
 literal|11
+operator|)
 block|,
 operator|.
 name|name
@@ -163,7 +167,11 @@ block|{
 operator|.
 name|pin
 operator|=
+operator|(
+literal|1
+operator|<<
 literal|15
+operator|)
 block|,
 operator|.
 name|name
@@ -180,7 +188,11 @@ block|{
 operator|.
 name|pin
 operator|=
+operator|(
+literal|1
+operator|<<
 literal|17
+operator|)
 block|,
 operator|.
 name|name
@@ -196,7 +208,7 @@ block|,
 if|#
 directive|if
 literal|0
-block|{ .pin = 16, .name = "HD1 LED", .caps = GPIO_PIN_OUTPUT }, 	{ .pin = 18, .name = "HD2 LED", .caps = GPIO_PIN_OUTPUT },
+block|{ .pin = (1<< 16), .name = "HD1 LED", .caps = GPIO_PIN_OUTPUT }, 	{ .pin = (1<< 18), .name = "HD2 LED", .caps = GPIO_PIN_OUTPUT },
 endif|#
 directive|endif
 block|}
@@ -306,7 +318,7 @@ name|uint32_t
 name|mask
 parameter_list|,
 name|uint32_t
-name|bit
+name|writebits
 parameter_list|)
 block|{
 name|uint32_t
@@ -329,19 +341,11 @@ expr_stmt|;
 name|value
 operator|&=
 operator|~
-operator|(
-literal|1
-operator|<<
 name|mask
-operator|)
 expr_stmt|;
 name|value
 operator||=
-operator|(
-literal|1
-operator|<<
-name|bit
-operator|)
+name|writebits
 expr_stmt|;
 name|RCC_WRITE
 argument_list|(
