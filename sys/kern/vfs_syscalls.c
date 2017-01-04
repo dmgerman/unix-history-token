@@ -1943,6 +1943,17 @@ name|MNT_NOWAIT
 case|:
 break|break;
 default|default:
+if|if
+condition|(
+name|bufseg
+operator|==
+name|UIO_SYSSPACE
+condition|)
+operator|*
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
