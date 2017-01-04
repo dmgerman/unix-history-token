@@ -124,7 +124,7 @@ index|[
 name|EXT2FS_MAXNAMLEN
 index|]
 decl_stmt|;
-comment|/* name with length<=EXT2FS_MAXNAMLEN */
+comment|/* name with 						 * length<=EXT2FS_MAXNAMLEN */
 block|}
 struct|;
 end_struct

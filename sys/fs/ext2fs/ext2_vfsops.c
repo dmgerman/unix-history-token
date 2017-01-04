@@ -3157,7 +3157,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * Calculate the maximum contiguous blocks and size of cluster summary 	 * array.  In FFS this is done by newfs; however, the superblock  	 * in ext2fs doesn't have these variables, so we can calculate  	 * them here. 	 */
+comment|/* 	 * Calculate the maximum contiguous blocks and size of cluster summary 	 * array.  In FFS this is done by newfs; however, the superblock 	 * in ext2fs doesn't have these variables, so we can calculate 	 * them here. 	 */
 name|e2fs_maxcontig
 operator|=
 name|MAX

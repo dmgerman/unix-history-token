@@ -5148,7 +5148,7 @@ ifdef|#
 directive|ifdef
 name|SUIDDIR
 block|{
-comment|/* 		 * if we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * The new directory also inherits the SUID bit.  		 * If user's UID and dir UID are the same, 		 * 'give it away' so that the SUID is still forced on. 		 */
+comment|/* 		 * if we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * The new directory also inherits the SUID bit. 		 * If user's UID and dir UID are the same, 		 * 'give it away' so that the SUID is still forced on. 		 */
 if|if
 condition|(
 operator|(
@@ -5343,7 +5343,7 @@ name|dp
 operator|->
 name|i_number
 expr_stmt|;
-comment|/* note that in ext2 DIRBLKSIZ == blocksize, not DEV_BSIZE  	 * so let's just redefine it - for this function only 	 */
+comment|/* 	 * note that in ext2 DIRBLKSIZ == blocksize, not DEV_BSIZE so let's 	 * just redefine it - for this function only 	 */
 undef|#
 directive|undef
 name|DIRBLKSIZ
@@ -6429,7 +6429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Kqfilter wrapper for fifos.  *  * Fall through to ext2 kqfilter routines if needed   */
+comment|/*  * Kqfilter wrapper for fifos.  *  * Fall through to ext2 kqfilter routines if needed  */
 end_comment
 
 begin_function
@@ -7360,7 +7360,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/*EXT4_EXT_LOCK(ip);*/
+comment|/* EXT4_EXT_LOCK(ip); */
 if|if
 condition|(
 name|ip
@@ -7384,7 +7384,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-comment|/*EXT4_EXT_UNLOCK(ip);*/
+comment|/* EXT4_EXT_UNLOCK(ip); */
 return|return
 operator|(
 name|error
@@ -8002,7 +8002,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * This can only happen in the case of an error 	 * because the loop above resets bp to NULL on each iteration 	 * and on normal completion has not set a new value into it. 	 * so it must have come from a 'break' statement 	 */
+comment|/* 	 * This can only happen in the case of an error because the loop 	 * above resets bp to NULL on each iteration and on normal 	 * completion has not set a new value into it. so it must have come 	 * from a 'break' statement 	 */
 if|if
 condition|(
 name|bp

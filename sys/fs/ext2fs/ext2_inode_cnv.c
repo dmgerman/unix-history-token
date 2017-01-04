@@ -412,7 +412,7 @@ name|ei
 operator|->
 name|e2di_nlink
 expr_stmt|;
-comment|/* Godmar thinks - if the link count is zero, then the inode is 	   unused - according to ext2 standards. Ufs marks this fact 	   by setting i_mode to zero - why ? 	   I can see that this might lead to problems in an undelete. 	*/
+comment|/* 	 * Godmar thinks - if the link count is zero, then the inode is 	 * unused - according to ext2 standards. Ufs marks this fact by 	 * setting i_mode to zero - why ? I can see that this might lead to 	 * problems in an undelete. 	 */
 name|ip
 operator|->
 name|i_mode
@@ -805,7 +805,7 @@ name|ip
 operator|->
 name|i_nlink
 expr_stmt|;
-comment|/*  	   Godmar thinks: if dtime is nonzero, ext2 says this inode 	   has been deleted, this would correspond to a zero link count 	 */
+comment|/* 	 * Godmar thinks: if dtime is nonzero, ext2 says this inode has been 	 * deleted, this would correspond to a zero link count 	 */
 name|ei
 operator|->
 name|e2di_dtime

@@ -206,7 +206,7 @@ name|ip
 operator|->
 name|i_ump
 expr_stmt|;
-comment|/* 	 * check if this is a sequential block allocation.  	 * If so, increment next_alloc fields to allow ext2_blkpref  	 * to make a good guess 	 */
+comment|/* 	 * check if this is a sequential block allocation. 	 * If so, increment next_alloc fields to allow ext2_blkpref 	 * to make a good guess 	 */
 if|if
 condition|(
 name|lbn
@@ -246,7 +246,7 @@ index|[
 name|lbn
 index|]
 expr_stmt|;
-comment|/* no new block is to be allocated, and no need to expand 		   the file */
+comment|/* 		 * no new block is to be allocated, and no need to expand 		 * the file 		 */
 if|if
 condition|(
 name|nb
@@ -410,7 +410,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Godmar thinks: this shouldn't happen w/o fragments */
+comment|/* 				 * Godmar thinks: this shouldn't happen w/o 				 * fragments 				 */
 name|printf
 argument_list|(
 literal|"nsize %d(%d)> osize %d(%d) nb %d\n"
