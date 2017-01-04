@@ -102,6 +102,14 @@ argument_list|)
 name|override
 block|;
 name|void
+name|getAnalysisUsage
+argument_list|(
+argument|AnalysisUsage&AU
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
 name|addDSPCtrlRegOperands
 argument_list|(
 argument|bool IsDef

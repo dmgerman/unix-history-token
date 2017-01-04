@@ -199,6 +199,14 @@ literal|32
 operator|>
 name|NewBBs
 block|;
+comment|/// The DominatorTreeBase that is used to compute a normal dominator tree
+name|DominatorTreeBase
+operator|<
+name|MachineBasicBlock
+operator|>
+operator|*
+name|DT
+block|;
 comment|/// \brief Apply all the recorded critical edges to the DT.
 comment|/// This updates the underlying DT information in a way that uses
 comment|/// the fast query path of DT as much as possible.
@@ -216,13 +224,6 @@ name|char
 name|ID
 block|;
 comment|// Pass ID, replacement for typeid
-name|DominatorTreeBase
-operator|<
-name|MachineBasicBlock
-operator|>
-operator|*
-name|DT
-block|;
 name|MachineDominatorTree
 argument_list|()
 block|;

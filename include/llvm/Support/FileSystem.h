@@ -2793,25 +2793,10 @@ name|DirIterState
 operator|&
 argument_list|)
 expr_stmt|;
-comment|/// DirIterState - Keeps state for the directory_iterator. It is reference
-comment|/// counted in order to preserve InputIterator semantics on copy.
-name|struct
+comment|/// Keeps state for the directory_iterator.
+struct|struct
 name|DirIterState
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|DirIterState
-operator|>
 block|{
-name|DirIterState
-argument_list|()
-operator|:
-name|IterationHandle
-argument_list|(
-literal|0
-argument_list|)
-block|{}
 operator|~
 name|DirIterState
 argument_list|()
@@ -2824,11 +2809,14 @@ argument_list|)
 block|;     }
 name|intptr_t
 name|IterationHandle
-block|;
+operator|=
+literal|0
+expr_stmt|;
 name|directory_entry
 name|CurrentEntry
-block|;   }
 decl_stmt|;
+block|}
+struct|;
 block|}
 comment|// end namespace detail
 comment|/// directory_iterator - Iterates through the entries in path. There is no
@@ -2837,7 +2825,9 @@ comment|/// it call report_fatal_error on error.
 name|class
 name|directory_iterator
 block|{
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|detail
 operator|::
@@ -2864,10 +2854,16 @@ argument_list|)
 block|{
 name|State
 operator|=
-name|new
+name|std
+operator|::
+name|make_shared
+operator|<
 name|detail
 operator|::
 name|DirIterState
+operator|>
+operator|(
+operator|)
 expr_stmt|;
 name|SmallString
 operator|<
@@ -2910,10 +2906,16 @@ argument_list|)
 block|{
 name|State
 operator|=
-name|new
+name|std
+operator|::
+name|make_shared
+operator|<
 name|detail
 operator|::
 name|DirIterState
+operator|>
+operator|(
+operator|)
 expr_stmt|;
 name|ec
 operator|=
@@ -2934,18 +2936,19 @@ block|}
 comment|/// Construct end iterator.
 name|directory_iterator
 argument_list|()
-operator|:
-name|State
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|// No operator++ because we need error_code.
 name|directory_iterator
-operator|&
+modifier|&
 name|increment
 argument_list|(
-argument|std::error_code&ec
+name|std
+operator|::
+name|error_code
+operator|&
+name|ec
 argument_list|)
 block|{
 name|ec
@@ -2955,7 +2958,7 @@ argument_list|(
 operator|*
 name|State
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 operator|*
 name|this

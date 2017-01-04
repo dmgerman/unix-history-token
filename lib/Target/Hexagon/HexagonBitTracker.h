@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- HexagonBitTracker.h ----------------------------------------------===//
+comment|//===--- HexagonBitTracker.h ------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HEXAGONBITTRACKER_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONBITTRACKER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HEXAGONBITTRACKER_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONBITTRACKER_H
 end_define
 
 begin_include
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -257,32 +263,18 @@ block|,
 name|ZExt
 block|}
 enum|;
-name|char
-name|Type
-decl_stmt|;
-name|uint16_t
-name|Width
-decl_stmt|;
 name|ExtType
 argument_list|()
-operator|:
-name|Type
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Width
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|ExtType
 argument_list|(
 argument|char t
 argument_list|,
 argument|uint16_t w
 argument_list|)
-operator|:
+block|:
 name|Type
 argument_list|(
 name|t
@@ -293,6 +285,16 @@ argument_list|(
 argument|w
 argument_list|)
 block|{}
+name|char
+name|Type
+operator|=
+literal|0
+expr_stmt|;
+name|uint16_t
+name|Width
+init|=
+literal|0
+decl_stmt|;
 block|}
 struct|;
 comment|// Map VR -> extension type.
@@ -324,6 +326,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_HEXAGONBITTRACKER_H
+end_comment
 
 end_unit
 

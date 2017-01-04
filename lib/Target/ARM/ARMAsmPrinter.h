@@ -391,12 +391,6 @@ operator|&
 name|MI
 argument_list|)
 block|;
-comment|// Helper function that emits the XRay sleds we've collected for a particular
-comment|// function.
-name|void
-name|EmitXRayTable
-argument_list|()
-block|;
 name|private
 operator|:
 name|void
