@@ -77,12 +77,6 @@ directive|include
 file|<dev/hyperv/utilities/vmbus_icvar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"vmbus_if.h"
-end_include
-
 begin_define
 define|#
 directive|define
