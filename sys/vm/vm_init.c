@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -771,18 +765,11 @@ else|#
 directive|else
 name|exec_map_entries
 operator|=
-name|min
-argument_list|(
-literal|8
-operator|*
-name|mp_ncpus
-argument_list|,
 literal|2
 operator|*
 name|mp_ncpus
 operator|+
 literal|4
-argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
