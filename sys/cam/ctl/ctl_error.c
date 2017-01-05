@@ -1277,7 +1277,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ctl_ua_to_acsq
+name|ctl_ua_to_ascq
 parameter_list|(
 name|struct
 name|ctl_lun
@@ -1738,7 +1738,7 @@ name|info
 operator|=
 name|NULL
 expr_stmt|;
-name|ctl_ua_to_acsq
+name|ctl_ua_to_ascq
 argument_list|(
 name|lun
 argument_list|,
@@ -2023,7 +2023,7 @@ name|info
 operator|=
 name|NULL
 expr_stmt|;
-name|ctl_ua_to_acsq
+name|ctl_ua_to_ascq
 argument_list|(
 name|lun
 argument_list|,
