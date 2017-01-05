@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -196,7 +196,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|2
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 operator|&
 name|kernel_boot_timestamp

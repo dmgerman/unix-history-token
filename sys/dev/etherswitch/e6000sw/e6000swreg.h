@@ -39,13 +39,6 @@ begin_comment
 comment|/*  * Definitions for the Marvell 88E6000 series Ethernet Switch.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CPU_PORT
-value|0x5
-end_define
-
 begin_comment
 comment|/*  * Switch Registers  */
 end_comment
@@ -650,11 +643,29 @@ name|PHY_PAGE_REG
 value|22
 end_define
 
+begin_comment
+comment|/*  * Scratch and Misc register accessed via  * 'Switch Global Registers' (REG_GLOBAL2)  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|E6000SW_NUM_PHYS
-value|5
+name|SCR_AND_MISC_REG
+value|0x1a
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCR_AND_MISC_PTR_CFG
+value|0x7000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCR_AND_MISC_DATA_CFG_MASK
+value|0xf0
 end_define
 
 begin_define
@@ -667,13 +678,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E6000SW_CPUPORTS_MASK
-value|((1<< 5) | (1<< 6))
-end_define
-
-begin_define
-define|#
-directive|define
 name|E6000SW_NUM_VGROUPS
 value|8
 end_define
@@ -681,8 +685,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|E6000SW_NUM_PORTS
-value|7
+name|E6000SW_MAX_PORTS
+value|10
 end_define
 
 begin_define
@@ -706,22 +710,11 @@ name|E6000SW_RETRIES
 value|100
 end_define
 
-begin_comment
-comment|/* Default vlangroups */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|E6000SW_DEF_VLANGROUP0
-value|(1 | (1<< 1) | (1<< 2) | (1<< 3) | \     (1<< 6))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E6000SW_DEF_VLANGROUP1
-value|((1<< 4) | (1<< 5))
+name|E6000SW_SMI_TIMEOUT
+value|16
 end_define
 
 begin_endif

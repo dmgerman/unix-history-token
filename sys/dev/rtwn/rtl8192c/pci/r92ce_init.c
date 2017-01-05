@@ -394,26 +394,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rtwn_bb_read
-argument_list|(
-name|sc
-argument_list|,
-name|R92C_HSSI_PARAM2
-argument_list|(
-literal|0
-argument_list|)
-argument_list|)
-operator|&
-name|R92C_HSSI_PARAM2_CCK_HIPWR
-condition|)
-name|sc
-operator|->
-name|sc_flags
-operator||=
-name|RTWN_FLAG_CCK_HIPWR
-expr_stmt|;
 block|}
 end_function
 

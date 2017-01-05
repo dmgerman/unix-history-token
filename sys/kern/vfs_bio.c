@@ -1822,16 +1822,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * bogus page -- for I/O to/from partially complete buffers  * this is a temporary solution to the problem, but it is not  * really that bad.  it would be better to split the buffer  * for input in the case of buffers partially already in memory,  * but the code is intricate enough already.  */
-end_comment
-
-begin_decl_stmt
-name|vm_page_t
-name|bogus_page
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Synchronization (sleep/wakeup) variable for active buffer space requests.  * Set when wait starts, cleared prior to wakeup().  * Used in runningbufwakeup() and waitrunningbufspace().  */
 end_comment
 
@@ -4571,21 +4561,6 @@ expr_stmt|;
 name|numfreebuffers
 operator|=
 name|nbuf
-expr_stmt|;
-name|bogus_page
-operator|=
-name|vm_page_alloc
-argument_list|(
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|VM_ALLOC_NOOBJ
-operator||
-name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_WIRED
-argument_list|)
 expr_stmt|;
 comment|/* Setup the kva and free list allocators. */
 name|vmem_set_reclaim

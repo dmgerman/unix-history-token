@@ -1501,6 +1501,9 @@ condition|)
 return|return
 name|AF_UNSPEC
 return|;
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|sa
@@ -1523,6 +1526,8 @@ condition|)
 return|return
 name|AF_INET
 return|;
+endif|#
+directive|endif
 return|return
 name|sa
 operator|->
@@ -6658,6 +6663,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* tftpd opens a new connection then needs more infos */
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 operator|(
@@ -6778,6 +6786,8 @@ literal|"setsockopt (IPV6_V6ONLY): %m"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 undef|#
 directive|undef
 name|turnon
@@ -7016,10 +7026,15 @@ name|netid2
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in
 name|sock
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|netbuf
 name|nbuf
@@ -7124,6 +7139,9 @@ name|udpconf
 else|:
 name|tcpconf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 else|else
 block|{
 name|netid
@@ -7205,6 +7223,8 @@ name|sin6_port
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|debug

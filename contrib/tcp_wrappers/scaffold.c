@@ -1233,29 +1233,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* dummy function  to intercept the real rfc931() */
-comment|/* ARGSUSED */
-name|void
-name|rfc931
-parameter_list|(
-name|request
-parameter_list|)
-name|struct
-name|request_info
-modifier|*
-name|request
-decl_stmt|;
-block|{
-name|strcpy
-argument_list|(
-name|request
-operator|->
-name|user
-argument_list|,
-name|unknown
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* check_path - examine accessibility */
 name|int
 name|check_path

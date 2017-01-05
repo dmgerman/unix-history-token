@@ -1749,7 +1749,10 @@ decl_stmt|;
 name|char
 name|linknum
 index|[
-literal|10
+sizeof|sizeof
+argument_list|(
+literal|"<Link#32767>"
+argument_list|)
 index|]
 decl_stmt|;
 name|sdl
@@ -1763,9 +1766,14 @@ name|ifa
 operator|->
 name|ifa_addr
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|linknum
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|linknum
+argument_list|)
 argument_list|,
 literal|"<Link#%d>"
 argument_list|,
