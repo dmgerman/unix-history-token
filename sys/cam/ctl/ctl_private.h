@@ -864,7 +864,7 @@ name|CTL_PAGE_FLAG_ALL
 block|,
 name|NULL
 block|,
-name|NULL
+name|ctl_default_page_handler
 block|}
 block|,
 block|{
