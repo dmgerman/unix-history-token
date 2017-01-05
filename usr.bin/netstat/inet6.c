@@ -4201,8 +4201,6 @@ name|strlen
 argument_list|(
 name|cp
 argument_list|)
-operator|-
-literal|1
 expr_stmt|;
 name|alen
 operator|--
