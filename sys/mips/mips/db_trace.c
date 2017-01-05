@@ -434,6 +434,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|stacktrace_subr
 parameter_list|(
@@ -445,19 +446,6 @@ name|sp
 parameter_list|,
 name|register_t
 name|ra
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|printfn
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
 parameter_list|)
 block|{
 name|InstFmt
@@ -565,10 +553,7 @@ operator|>
 literal|100
 condition|)
 block|{
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|"\nstackframe count exceeded\n"
 argument_list|)
@@ -590,10 +575,7 @@ name|sp
 argument_list|)
 condition|)
 block|{
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|"SP 0x%jx: not in kernel\n"
 argument_list|,
@@ -851,10 +833,7 @@ name|pc
 argument_list|)
 condition|)
 block|{
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|"PC 0x%jx: not in kernel\n"
 argument_list|,
@@ -1697,21 +1676,23 @@ block|}
 block|}
 name|done
 label|:
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
-literal|"%s+%x ("
+literal|"%s+%jx ("
 argument_list|,
 name|fn_name
 argument_list|(
 name|subr
 argument_list|)
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|pc
 operator|-
 name|subr
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1734,10 +1715,7 @@ name|j
 operator|>
 literal|0
 condition|)
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|","
 argument_list|)
@@ -1749,10 +1727,7 @@ index|[
 name|j
 index|]
 condition|)
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|"%jx"
 argument_list|,
@@ -1769,19 +1744,13 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|"?"
 argument_list|)
 expr_stmt|;
 block|}
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|") ra %jx sp %jx sz %d\n"
 argument_list|,
@@ -1996,10 +1965,7 @@ directive|endif
 undef|#
 directive|undef
 name|TF_REG
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|"--- exception, cause %jx badvaddr %jx ---\n"
 argument_list|,
@@ -2034,10 +2000,7 @@ name|stksize
 operator|==
 literal|0
 condition|)
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|"stacktrace: loop!\n"
 argument_list|)
@@ -2069,10 +2032,7 @@ if|if
 condition|(
 name|curproc
 condition|)
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|"pid %d\n"
 argument_list|,
@@ -2082,10 +2042,7 @@ name|p_pid
 argument_list|)
 expr_stmt|;
 else|else
-call|(
-modifier|*
-name|printfn
-call|)
+name|db_printf
 argument_list|(
 literal|"curproc NULL\n"
 argument_list|)
@@ -2209,8 +2166,6 @@ argument_list|,
 name|sp
 argument_list|,
 name|ra
-argument_list|,
-name|db_printf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2293,8 +2248,6 @@ argument_list|,
 name|sp
 argument_list|,
 name|ra
-argument_list|,
-name|db_printf
 argument_list|)
 expr_stmt|;
 return|return
