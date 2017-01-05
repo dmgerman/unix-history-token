@@ -345,12 +345,45 @@ name|uint64_t
 name|ic_vmtime
 decl_stmt|;
 name|uint64_t
+name|ic_rtt
+decl_stmt|;
+name|uint8_t
+name|ic_tsflags
+decl_stmt|;
+comment|/* VMBUS_ICMSG_TS_FLAG_ */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* VMBUS_ICMSG_TYPE_TIMESYNC, MSGVER4 */
+end_comment
+
+begin_struct
+struct|struct
+name|vmbus_icmsg_timesync4
+block|{
+name|struct
+name|vmbus_icmsg_hdr
+name|ic_hdr
+decl_stmt|;
+name|uint64_t
+name|ic_hvtime
+decl_stmt|;
+name|uint64_t
 name|ic_sent_tc
 decl_stmt|;
 name|uint8_t
 name|ic_tsflags
 decl_stmt|;
 comment|/* VMBUS_ICMSG_TS_FLAG_ */
+name|uint8_t
+name|ic_rsvd
+index|[
+literal|5
+index|]
+decl_stmt|;
 block|}
 name|__packed
 struct|;

@@ -116,12 +116,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_TIMESYNC_MSGVER4
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|VMBUS_ICVER_LE(VMBUS_IC_VERSION(4, 0), (sc)->ic_msgver)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMBUS_TIMESYNC_DORTT
 parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|((sc)->ic_msgver>= VMBUS_IC_VERSION(4, 0)&& \ 	 (hyperv_features& CPUID_HV_MSR_TIME_REFCNT))
+value|(VMBUS_TIMESYNC_MSGVER4((sc))&&\ 	 (hyperv_features& CPUID_HV_MSR_TIME_REFCNT))
 end_define
 
 begin_function_decl
@@ -586,7 +597,7 @@ name|VMBUS_ICMSG_TS_FLAG_SAMPLE
 operator|)
 operator|&&
 name|vmbus_ts_sample_thresh
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
@@ -739,12 +750,6 @@ name|vmbus_icmsg_hdr
 modifier|*
 name|hdr
 decl_stmt|;
-specifier|const
-name|struct
-name|vmbus_icmsg_timesync
-modifier|*
-name|msg
-decl_stmt|;
 name|int
 name|dlen
 decl_stmt|,
@@ -883,6 +888,75 @@ name|VMBUS_ICMSG_TYPE_TIMESYNC
 case|:
 if|if
 condition|(
+name|VMBUS_TIMESYNC_MSGVER4
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
+specifier|const
+name|struct
+name|vmbus_icmsg_timesync4
+modifier|*
+name|msg4
+decl_stmt|;
+if|if
+condition|(
+name|dlen
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|msg4
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|ic_dev
+argument_list|,
+literal|"invalid timesync4 "
+literal|"len %d\n"
+argument_list|,
+name|dlen
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|msg4
+operator|=
+name|data
+expr_stmt|;
+name|vmbus_timesync
+argument_list|(
+name|sc
+argument_list|,
+name|msg4
+operator|->
+name|ic_hvtime
+argument_list|,
+name|msg4
+operator|->
+name|ic_sent_tc
+argument_list|,
+name|msg4
+operator|->
+name|ic_tsflags
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+specifier|const
+name|struct
+name|vmbus_icmsg_timesync
+modifier|*
+name|msg
+decl_stmt|;
+if|if
+condition|(
 name|dlen
 operator|<
 sizeof|sizeof
@@ -898,7 +972,8 @@ name|sc
 operator|->
 name|ic_dev
 argument_list|,
-literal|"invalid timesync len %d\n"
+literal|"invalid timesync "
+literal|"len %d\n"
 argument_list|,
 name|dlen
 argument_list|)
@@ -917,15 +992,14 @@ name|msg
 operator|->
 name|ic_hvtime
 argument_list|,
-name|msg
-operator|->
-name|ic_sent_tc
+literal|0
 argument_list|,
 name|msg
 operator|->
 name|ic_tsflags
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|device_printf
