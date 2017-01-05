@@ -219,12 +219,7 @@ operator|&&
 operator|(
 name|lun
 operator|->
-name|mode_pages
-operator|.
-name|control_page
-index|[
-name|CTL_PAGE_CURRENT
-index|]
+name|MODE_CTRL
 operator|.
 name|rlec
 operator|&
