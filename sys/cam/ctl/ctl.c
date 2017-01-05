@@ -1118,6 +1118,8 @@ name|SCP_DSENSE
 block|,
 comment|/*queue_flags*/
 name|SCP_QUEUE_ALG_MASK
+operator||
+name|SCP_NUAR
 block|,
 comment|/*eca_and_aen*/
 name|SCP_SWP
@@ -44456,7 +44458,7 @@ name|pr_res_type
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * if this isn't an exclusive access 		 * res generate UA for all other 		 * registrants. 		 */
+comment|/* 		 * If this isn't an exclusive access reservation and NUAR 		 * is not set, generate UA for all other registrants. 		 */
 if|if
 condition|(
 name|type
@@ -44466,6 +44468,18 @@ operator|&&
 name|type
 operator|!=
 name|SPR_TYPE_WR_EX
+operator|&&
+operator|(
+name|lun
+operator|->
+name|MODE_CTRL
+operator|.
+name|queue_flags
+operator|&
+name|SCP_NUAR
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 for|for
@@ -45227,7 +45241,7 @@ break|break;
 case|case
 name|CTL_PR_RELEASE
 case|:
-comment|/* 		 * if this isn't an exclusive access res generate UA for all 		 * other registrants. 		 */
+comment|/* 		 * If this isn't an exclusive access reservation and NUAR 		 * is not set, generate UA for all other registrants. 		 */
 if|if
 condition|(
 name|lun
@@ -45241,6 +45255,18 @@ operator|->
 name|pr_res_type
 operator|!=
 name|SPR_TYPE_WR_EX
+operator|&&
+operator|(
+name|lun
+operator|->
+name|MODE_CTRL
+operator|.
+name|queue_flags
+operator|&
+name|SCP_NUAR
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 for|for
