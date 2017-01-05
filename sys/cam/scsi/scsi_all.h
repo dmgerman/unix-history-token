@@ -5097,6 +5097,10 @@ define|#
 directive|define
 name|RSO_OPTIONS_OC_SA
 value|0x02
+define|#
+directive|define
+name|RSO_OPTIONS_OC_ASA
+value|0x03
 name|uint8_t
 name|requested_opcode
 decl_stmt|;
