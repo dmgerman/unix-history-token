@@ -2303,11 +2303,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|AcpiDbUserCommands
-argument_list|(
-literal|':'
-argument_list|,
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

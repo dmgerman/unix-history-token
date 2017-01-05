@@ -2104,7 +2104,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|AH_TABLE
-name|AcpiSupportedTables
+name|Gbl_AcpiSupportedTables
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -2700,6 +2700,17 @@ name|ACPI_OP_WALK_INFO
 modifier|*
 name|Info
 parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiDmIsTempName
+parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op

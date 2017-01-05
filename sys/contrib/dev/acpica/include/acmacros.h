@@ -20,7 +20,7 @@ name|__ACMACROS_H__
 end_define
 
 begin_comment
-comment|/*  * Extract data using a pointer. Any more than a byte and we  * get into potential aligment issues -- see the STORE macros below.  * Use with care.  */
+comment|/*  * Extract data using a pointer. Any more than a byte and we  * get into potential alignment issues -- see the STORE macros below.  * Use with care.  */
 end_comment
 
 begin_define
@@ -152,7 +152,7 @@ value|(*ACPI_CAST64 (ptr) = (UINT64) (val))
 end_define
 
 begin_comment
-comment|/*  * printf() format helper. This macros is a workaround for the difficulties  * with emitting 64-bit integers and 64-bit pointers with the same code  * for both 32-bit and 64-bit hosts.  */
+comment|/*  * printf() format helper. This macro is a workaround for the difficulties  * with emitting 64-bit integers and 64-bit pointers with the same code  * for both 32-bit and 64-bit hosts.  */
 end_comment
 
 begin_define
@@ -996,7 +996,336 @@ value|(((ACPI_SIZE) value)& (sizeof(ACPI_SIZE)-1))
 end_define
 
 begin_comment
-comment|/*  * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  */
+comment|/* Generic bit manipulation */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_NATIVE_BIT_FINDER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_2
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8)  (a))& 0x02) ? (r)+1 : (r))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_4
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8)  (a))& 0x0C) ? \                                              __ACPI_FIND_LAST_BIT_2  ((a)>>2,  (r)+2) : \                                              __ACPI_FIND_LAST_BIT_2  ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_8
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8)  (a))& 0xF0) ? \                                              __ACPI_FIND_LAST_BIT_4  ((a)>>4,  (r)+4) : \                                              __ACPI_FIND_LAST_BIT_4  ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_16
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT16) (a))& 0xFF00) ? \                                              __ACPI_FIND_LAST_BIT_8  ((a)>>8,  (r)+8) : \                                              __ACPI_FIND_LAST_BIT_8  ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_32
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT32) (a))& 0xFFFF0000) ? \                                              __ACPI_FIND_LAST_BIT_16 ((a)>>16, (r)+16) : \                                              __ACPI_FIND_LAST_BIT_16 ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_64
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT64) (a))& 0xFFFFFFFF00000000) ? \                                              __ACPI_FIND_LAST_BIT_32 ((a)>>32, (r)+32) : \                                              __ACPI_FIND_LAST_BIT_32 ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_LAST_BIT_8
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_LAST_BIT_8 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_LAST_BIT_16
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_LAST_BIT_16 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_LAST_BIT_32
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_LAST_BIT_32 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_LAST_BIT_64
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_LAST_BIT_64 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_2
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8) (a))& 0x01) ? (r) : (r)+1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_4
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8) (a))& 0x03) ? \                                              __ACPI_FIND_FIRST_BIT_2  ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_2  ((a)>>2, (r)+2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_8
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8) (a))& 0x0F) ? \                                              __ACPI_FIND_FIRST_BIT_4  ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_4  ((a)>>4, (r)+4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_16
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT16) (a))& 0x00FF) ? \                                              __ACPI_FIND_FIRST_BIT_8  ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_8  ((a)>>8, (r)+8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_32
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT32) (a))& 0x0000FFFF) ? \                                              __ACPI_FIND_FIRST_BIT_16 ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_16 ((a)>>16, (r)+16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_64
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT64) (a))& 0x00000000FFFFFFFF) ? \                                              __ACPI_FIND_FIRST_BIT_32 ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_32 ((a)>>32, (r)+32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_FIRST_BIT_8
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_FIRST_BIT_8 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_FIRST_BIT_16
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_FIRST_BIT_16 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_FIRST_BIT_32
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_FIRST_BIT_32 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_FIRST_BIT_64
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_FIRST_BIT_64 (a, 1) : 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_USE_NATIVE_BIT_FINDER */
+end_comment
+
+begin_comment
+comment|/* Generic (power-of-two) rounding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_UP_POWER_OF_TWO_8
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT8) \                                             (((UINT16) 1)<<  ACPI_FIND_LAST_BIT_8  ((a)  - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_DOWN_POWER_OF_TWO_8
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT8) \                                             (((UINT16) 1)<< (ACPI_FIND_LAST_BIT_8  ((a)) - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_UP_POWER_OF_TWO_16
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT16) \                                             (((UINT32) 1)<<  ACPI_FIND_LAST_BIT_16 ((a)  - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_DOWN_POWER_OF_TWO_16
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT16) \                                             (((UINT32) 1)<< (ACPI_FIND_LAST_BIT_16 ((a)) - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_UP_POWER_OF_TWO_32
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT32) \                                             (((UINT64) 1)<<  ACPI_FIND_LAST_BIT_32 ((a)  - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_DOWN_POWER_OF_TWO_32
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT32) \                                             (((UINT64) 1)<< (ACPI_FIND_LAST_BIT_32 ((a)) - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ALIGNED
+parameter_list|(
+name|a
+parameter_list|,
+name|s
+parameter_list|)
+value|(((a)& ((s) - 1)) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_POWER_OF_TWO
+parameter_list|(
+name|a
+parameter_list|)
+value|ACPI_IS_ALIGNED(a, a)
+end_define
+
+begin_comment
+comment|/*  * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  * MASK_BITS_ABOVE/BELOW accepts a bit offset to create a mask  * MASK_BITS_ABOVE/BELOW_32/64 accepts a bit width to create a mask  * Note: The ACPI_INTEGER_BIT_SIZE check is used to bypass compiler  * differences with the shift operator  */
 end_comment
 
 begin_define
@@ -1017,6 +1346,46 @@ parameter_list|(
 name|position
 parameter_list|)
 value|((ACPI_UINT64_MAX)<< ((UINT32) (position)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_ABOVE_32
+parameter_list|(
+name|width
+parameter_list|)
+value|((UINT32) ACPI_MASK_BITS_ABOVE(width))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_BELOW_32
+parameter_list|(
+name|width
+parameter_list|)
+value|((UINT32) ACPI_MASK_BITS_BELOW(width))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_ABOVE_64
+parameter_list|(
+name|width
+parameter_list|)
+value|((width) == ACPI_INTEGER_BIT_SIZE ? \                                                 ACPI_UINT64_MAX : \                                                 ACPI_MASK_BITS_ABOVE(width))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_BELOW_64
+parameter_list|(
+name|width
+parameter_list|)
+value|((width) == ACPI_INTEGER_BIT_SIZE ? \                                                 (UINT64) 0 : \                                                 ACPI_MASK_BITS_BELOW(width))
 end_define
 
 begin_comment
@@ -1718,7 +2087,7 @@ name|ACPI_NO_ERROR_MESSAGES
 end_ifndef
 
 begin_comment
-comment|/*  * Error reporting. Callers module and line number are inserted by AE_INFO,  * the plist contains a set of parens to allow variable-length lists.  * These macros are used for both the debug and non-debug versions of the code.  */
+comment|/*  * Error reporting. The callers module and line number are inserted by AE_INFO,  * the plist contains a set of parens to allow variable-length lists.  * These macros are used for both the debug and non-debug versions of the code.  */
 end_comment
 
 begin_define

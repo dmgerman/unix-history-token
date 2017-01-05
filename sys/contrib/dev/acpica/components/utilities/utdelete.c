@@ -1029,7 +1029,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ALLOCATIONS
 operator|,
-literal|"Obj %p Type %.2X Refs %.2X [Incremented]\n"
+literal|"Obj %p Type %.2X [%s] Refs %.2X [Incremented]\n"
 operator|,
 name|Object
 operator|,
@@ -1038,6 +1038,11 @@ operator|->
 name|Common
 operator|.
 name|Type
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|Object
+argument_list|)
 operator|,
 name|NewCount
 operator|)

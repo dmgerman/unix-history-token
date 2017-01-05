@@ -46,7 +46,7 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|AH_UUID
-name|AcpiUuids
+name|Gbl_AcpiUuids
 index|[]
 init|=
 block|{
@@ -246,7 +246,7 @@ for|for
 control|(
 name|Info
 operator|=
-name|AcpiUuids
+name|Gbl_AcpiUuids
 init|;
 name|Info
 operator|->

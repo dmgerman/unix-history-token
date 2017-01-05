@@ -218,7 +218,7 @@ name|OpInfo
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"PsAppendArg"
+name|PsAppendArg
 argument_list|)
 expr_stmt|;
 if|if

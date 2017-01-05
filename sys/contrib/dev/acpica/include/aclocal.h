@@ -2506,7 +2506,7 @@ comment|/* Op name (debug only) */
 end_comment
 
 begin_comment
-comment|/* Flags for DisasmFlags field  above */
+comment|/* Internal opcodes for DisasmOpcode field above */
 end_comment
 
 begin_define
@@ -2633,12 +2633,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_DASM_IGNORE
+name|ACPI_DASM_IGNORE_SINGLE
 value|0x0B
 end_define
 
 begin_comment
-comment|/* Not used at this time */
+comment|/* Ignore the opcode but not it's children */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_SWITCH_PREDICATE
+value|0x0C
+end_define
+
+begin_comment
+comment|/* Object is a predicate for a Switch or Case block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_CASE
+value|0x0D
+end_define
+
+begin_comment
+comment|/* If/Else is a Case in a Switch/Case block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_DEFAULT
+value|0x0E
+end_define
+
+begin_comment
+comment|/* Else is a Default in a Switch/Case block */
 end_comment
 
 begin_comment
