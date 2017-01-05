@@ -859,13 +859,17 @@ decl_stmt|;
 comment|/* VHT extended capabilities (TODO) */
 name|struct
 name|ieee80211_vht_mcs_info
-name|iv_vht_mcsinfo
+name|ic_vht_mcsinfo
 decl_stmt|;
 comment|/* Support TX/RX VHT MCS */
 name|uint32_t
+name|ic_flags_vht
+decl_stmt|;
+comment|/* VHT state flags */
+name|uint32_t
 name|ic_vht_spare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* optional state for Atheros SuperG protocol extensions */
@@ -3289,6 +3293,25 @@ define|#
 directive|define
 name|IEEE80211_FVEN_BITS
 value|"\20"
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FVHT_VHT
+value|0x000000001
+end_define
+
+begin_comment
+comment|/* CONF: VHT supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_VFHT_BITS
+define|\
+value|"\20\1VHT"
 end_define
 
 begin_function_decl
