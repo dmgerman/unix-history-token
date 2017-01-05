@@ -315,6 +315,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|vmbus_xact
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|vmbus_xact_ctx
 struct_decl|;
 end_struct_decl
@@ -374,6 +380,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/*  * vmbus_chan_open_br()  *  * Return values:  * 0			Succeeded.  * EISCONN		Failed, and the memory passed through 'br' is still  *			connected.  Callers must _not_ free the the memory  *			passed through 'br', if this error happens.  * other values		Failed.  The memory passed through 'br' is no longer  *			connected.  Callers are free to do anything with the  *			memory passed through 'br'.  *  *  *  * vmbus_chan_close_direct()  *  * NOTE:  * Callers of this function _must_ make sure to close all sub-channels before  * closing the primary channel.  *  * Return values:  * 0			Succeeded.  * EISCONN		Failed, and the memory associated with the bufring  *			is still connected.  Callers must _not_ free the the  *			memory associated with the bufring, if this error  *			happens.  * other values		Failed.  The memory associated with the bufring is  *			no longer connected.  Callers are free to do anything  *			with the memory associated with the bufring.  */
+end_comment
 
 begin_function_decl
 name|int
@@ -454,6 +464,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vmbus_chan_close_direct
+parameter_list|(
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vmbus_chan_intr_drain
 parameter_list|(
@@ -506,6 +528,33 @@ name|struct
 name|vmbus_channel
 modifier|*
 name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|void
+modifier|*
+name|vmbus_chan_xact_wait
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+name|struct
+name|vmbus_xact
+modifier|*
+name|xact
+parameter_list|,
+name|size_t
+modifier|*
+name|resp_len
+parameter_list|,
+name|bool
+name|can_sleep
 parameter_list|)
 function_decl|;
 end_function_decl
