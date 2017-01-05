@@ -906,7 +906,7 @@ name|CTL_PAGE_FLAG_DIRECT
 block|,
 name|NULL
 block|,
-name|NULL
+name|ctl_default_page_handler
 block|}
 block|,
 block|{
