@@ -53045,7 +53045,7 @@ name|inq_ptr
 operator|->
 name|version
 operator|=
-name|SCSI_REV_SPC4
+name|SCSI_REV_SPC5
 expr_stmt|;
 comment|/* 	 * According to SAM-3, even if a device only supports a single 	 * level of LUN addressing, it should still set the HISUP bit: 	 * 	 * 4.9.1 Logical unit numbers overview 	 * 	 * All logical unit number formats described in this standard are 	 * hierarchical in structure even when only a single level in that 	 * hierarchy is used. The HISUP bit shall be set to one in the 	 * standard INQUIRY data (see SPC-2) when any logical unit number 	 * format described in this standard is used.  Non-hierarchical 	 * formats are outside the scope of this standard. 	 * 	 * Therefore we set the HiSup bit here. 	 * 	 * The response format is 2, per SPC-3. 	 */
 name|inq_ptr
@@ -53498,20 +53498,20 @@ name|SID_SPI_QAS
 operator||
 name|SID_SPI_IUS
 expr_stmt|;
-comment|/* SAM-5 (no version claimed) */
+comment|/* SAM-6 (no version claimed) */
 name|scsi_ulto2b
 argument_list|(
-literal|0x00A0
+literal|0x00C0
 argument_list|,
 name|inq_ptr
 operator|->
 name|version1
 argument_list|)
 expr_stmt|;
-comment|/* SPC-4 (no version claimed) */
+comment|/* SPC-5 (no version claimed) */
 name|scsi_ulto2b
 argument_list|(
-literal|0x0460
+literal|0x05C0
 argument_list|,
 name|inq_ptr
 operator|->
