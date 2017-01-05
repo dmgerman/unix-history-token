@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -2123,7 +2129,8 @@ parameter_list|)
 block|{
 name|struct
 name|statfs
-name|sb
+modifier|*
+name|sp
 decl_stmt|;
 name|sx_assert
 argument_list|(
@@ -2174,6 +2181,21 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Stopping here is better than continuing, maybe it will be VBAD 	 * next time around. 	 */
+name|sp
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|statfs
+argument_list|)
+argument_list|,
+name|M_STATFS
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|VFS_STATFS
@@ -2182,13 +2204,21 @@ name|acct_vp
 operator|->
 name|v_mount
 argument_list|,
-operator|&
-name|sb
+name|sp
 argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|sp
+argument_list|,
+name|M_STATFS
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|acct_suspended
@@ -2196,8 +2226,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|sb
-operator|.
+name|sp
+operator|->
 name|f_bavail
 operator|>
 call|(
@@ -2206,8 +2236,8 @@ call|)
 argument_list|(
 name|acctresume
 operator|*
-name|sb
-operator|.
+name|sp
+operator|->
 name|f_blocks
 operator|/
 literal|100
@@ -2231,8 +2261,8 @@ else|else
 block|{
 if|if
 condition|(
-name|sb
-operator|.
+name|sp
+operator|->
 name|f_bavail
 operator|<=
 call|(
@@ -2241,8 +2271,8 @@ call|)
 argument_list|(
 name|acctsuspend
 operator|*
-name|sb
-operator|.
+name|sp
+operator|->
 name|f_blocks
 operator|/
 literal|100
@@ -2262,6 +2292,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|sp
+argument_list|,
+name|M_STATFS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
