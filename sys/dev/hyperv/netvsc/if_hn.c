@@ -470,7 +470,8 @@ name|HN_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|sx_xlock(&(sc)->hn_lock)
+define|\
+value|do {							\ 	while (sx_try_xlock(&(sc)->hn_lock) == 0)	\ 		DELAY(1000);				\ } while (0)
 end_define
 
 begin_define
@@ -3871,10 +3872,6 @@ name|filter
 operator||=
 name|NDIS_PACKET_TYPE_BROADCAST
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* 		 * See the comment in SIOCADDMULTI/SIOCDELMULTI. 		 */
 comment|/* TODO: support multicast list */
 if|if
 condition|(
@@ -3899,15 +3896,6 @@ name|filter
 operator||=
 name|NDIS_PACKET_TYPE_ALL_MULTICAST
 expr_stmt|;
-else|#
-directive|else
-comment|/* Always enable ALLMULTI */
-name|filter
-operator||=
-name|NDIS_PACKET_TYPE_ALL_MULTICAST
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -11227,17 +11215,32 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
+block|{
+comment|/* 				 * Caller meight hold mutex, e.g. 				 * bpf; use busy-wait for the RNDIS 				 * reply. 				 */
+name|HN_NO_SLEEPING
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|hn_set_rxfilter
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|HN_SLEEPING_OK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|hn_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -11498,10 +11501,6 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* 		 * XXX 		 * Multicast uses mutex, while RNDIS RX filter setting 		 * sleeps.  We workaround this by always enabling 		 * ALLMULTI.  ALLMULTI would actually always be on, even 		 * if we supported the SIOCADDMULTI/SIOCDELMULTI, since 		 * we don't support multicast address list configuration 		 * for this driver. 		 */
 name|HN_LOCK
 argument_list|(
 name|sc
@@ -11535,18 +11534,29 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
+block|{
+comment|/* 			 * Multicast uses mutex; use busy-wait for 			 * the RNDIS reply. 			 */
+name|HN_NO_SLEEPING
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|hn_set_rxfilter
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|HN_SLEEPING_OK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|HN_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|SIOCSIFMEDIA

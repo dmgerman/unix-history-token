@@ -733,6 +733,46 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_FLAG_NO_SLEEPING
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NO_SLEEPING
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|do {						\ 	(sc)->hn_flags |= HN_FLAG_NO_SLEEPING;	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_SLEEPING_OK
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|do {						\ 	(sc)->hn_flags&= ~HN_FLAG_NO_SLEEPING;	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_CAN_SLEEP
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|(((sc)->hn_flags& HN_FLAG_NO_SLEEPING) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_CAP_VLAN
 value|0x0001
 end_define
