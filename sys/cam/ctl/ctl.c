@@ -1227,7 +1227,7 @@ comment|/*prio*/
 literal|0
 block|,
 comment|/*max_sense*/
-literal|0
+literal|0xff
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -48234,6 +48234,11 @@ decl_stmt|;
 name|int
 name|have_error
 decl_stmt|;
+name|u_int
+name|sense_len
+init|=
+name|SSD_FULL_SIZE
+decl_stmt|;
 name|scsi_sense_data_type
 name|sense_format
 decl_stmt|;
@@ -48412,6 +48417,9 @@ comment|/* "Logical unit not supported" */
 name|ctl_set_sense_data
 argument_list|(
 name|sense_ptr
+argument_list|,
+operator|&
+name|sense_len
 argument_list|,
 name|NULL
 argument_list|,
@@ -48636,6 +48644,9 @@ name|initidx
 argument_list|,
 name|sense_ptr
 argument_list|,
+operator|&
+name|sense_len
+argument_list|,
 name|sense_format
 argument_list|)
 expr_stmt|;
@@ -48685,6 +48696,9 @@ block|}
 name|ctl_set_sense_data
 argument_list|(
 name|sense_ptr
+argument_list|,
+operator|&
+name|sense_len
 argument_list|,
 name|lun
 argument_list|,
@@ -60214,6 +60228,11 @@ block|{
 name|ctl_ua_type
 name|ua_type
 decl_stmt|;
+name|u_int
+name|sense_len
+init|=
+literal|0
+decl_stmt|;
 name|ua_type
 operator|=
 name|ctl_build_ua
@@ -60226,6 +60245,9 @@ operator|&
 name|ctsio
 operator|->
 name|sense_data
+argument_list|,
+operator|&
+name|sense_len
 argument_list|,
 name|SSD_TYPE_NONE
 argument_list|)
@@ -60265,7 +60287,7 @@ name|ctsio
 operator|->
 name|sense_len
 operator|=
-name|SSD_FULL_SIZE
+name|sense_len
 expr_stmt|;
 name|ctl_done
 argument_list|(
