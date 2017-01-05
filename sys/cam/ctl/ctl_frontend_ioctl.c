@@ -1441,7 +1441,7 @@ operator|.
 name|ioctl_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check the state here, and don't sleep if the state has 		 * already changed (i.e. wakeup has already occured, but we 		 * weren't waiting yet). 		 */
+comment|/* 		 * Check the state here, and don't sleep if the state has 		 * already changed (i.e. wakeup has already occurred, but we 		 * weren't waiting yet). 		 */
 if|if
 condition|(
 name|params

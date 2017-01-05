@@ -372,7 +372,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This is primarly intended to allow for error injection to test the CAM  * sense data and sense residual handling code.  This sets the maximum  * amount of SCSI sense data that we will report to CAM.  */
+comment|/*  * This is primarily intended to allow for error injection to test the CAM  * sense data and sense residual handling code.  This sets the maximum  * amount of SCSI sense data that we will report to CAM.  */
 end_comment
 
 begin_decl_stmt
