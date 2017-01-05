@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/utilities/hv_util.h>
+file|<dev/hyperv/utilities/vmbus_icreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/utilities/vmbus_icreg.h>
+file|<dev/hyperv/utilities/vmbus_icvar.h>
 end_include
 
 begin_include
@@ -192,7 +192,7 @@ name|xsc
 parameter_list|)
 block|{
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 init|=
@@ -229,7 +229,7 @@ name|data
 operator|=
 name|sc
 operator|->
-name|receive_buffer
+name|ic_buf
 expr_stmt|;
 name|dlen
 operator|=
@@ -432,45 +432,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Send response by echoing the updated request back. 	 */
-name|hdr
-operator|->
-name|ic_flags
-operator|=
-name|VMBUS_ICMSG_FLAG_XACT
-operator||
-name|VMBUS_ICMSG_FLAG_RESP
-expr_stmt|;
-name|error
-operator|=
-name|vmbus_chan_send
+comment|/* 	 * Send response by echoing the request back. 	 */
+name|vmbus_ic_sendresp
 argument_list|(
+name|sc
+argument_list|,
 name|chan
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-literal|0
 argument_list|,
 name|data
 argument_list|,
 name|dlen
 argument_list|,
 name|xactid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|ic_dev
-argument_list|,
-literal|"resp send failed: %d\n"
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 if|if
@@ -518,7 +491,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|hv_util_attach
+name|vmbus_ic_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -555,7 +528,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|hv_util_detach
+name|vmbus_ic_detach
 argument_list|)
 block|,
 block|{
@@ -579,7 +552,8 @@ name|shutdown_methods
 block|,
 expr|sizeof
 operator|(
-name|hv_util_sc
+expr|struct
+name|vmbus_ic_softc
 operator|)
 block|}
 decl_stmt|;
