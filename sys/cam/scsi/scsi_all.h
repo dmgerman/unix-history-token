@@ -8426,6 +8426,14 @@ name|SVPD_ID_TYPE_SCSI_NAME
 value|0x08
 define|#
 directive|define
+name|SVPD_ID_TYPE_PROTO
+value|0x09
+define|#
+directive|define
+name|SVPD_ID_TYPE_UUID
+value|0x0a
+define|#
+directive|define
 name|SVPD_ID_TYPE_MASK
 value|0x0f
 name|u_int8_t
