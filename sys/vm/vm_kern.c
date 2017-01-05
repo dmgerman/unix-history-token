@@ -198,6 +198,18 @@ name|VM_MAXUSER_ADDRESS
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|exec_map_entry_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|exec_map_entries
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
