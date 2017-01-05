@@ -2874,9 +2874,6 @@ operator|==
 name|HN_NDIS_LSOV2_CAP_IP6
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notyet
 name|caps
 operator||=
 name|HN_CAP_TSO6
@@ -2923,8 +2920,6 @@ name|ndis_lsov2
 operator|.
 name|ndis_ip6_minsg
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|sc
 operator|->

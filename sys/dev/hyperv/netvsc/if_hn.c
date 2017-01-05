@@ -3018,7 +3018,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -5893,6 +5893,29 @@ operator|=
 name|ifp
 operator|->
 name|if_capabilities
+expr_stmt|;
+comment|/* 	 * Disable IPv6 TSO and TXCSUM by default, they still can 	 * be enabled through SIOCSIFCAP. 	 */
+name|ifp
+operator|->
+name|if_capenable
+operator|&=
+operator|~
+operator|(
+name|IFCAP_TXCSUM_IPV6
+operator||
+name|IFCAP_TSO6
+operator|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hwassist
+operator|&=
+operator|~
+operator|(
+name|HN_CSUM_IP6_MASK
+operator||
+name|CSUM_IP6_TSO
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -12071,7 +12094,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12195,7 +12218,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12561,7 +12584,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12635,7 +12658,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12728,7 +12751,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12802,7 +12825,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12890,7 +12913,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_tx_ring_inuse
+name|hn_tx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12964,7 +12987,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_tx_ring_inuse
+name|hn_tx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -13108,7 +13131,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_tx_ring_inuse
+name|hn_tx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -17610,7 +17633,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_tx_ring_inuse
+name|hn_tx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -17873,9 +17896,6 @@ name|csum_assist
 operator||=
 name|CSUM_IP_UDP
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|sc
@@ -17900,8 +17920,6 @@ name|csum_assist
 operator||=
 name|CSUM_IP6_UDP
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|i
