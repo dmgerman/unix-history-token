@@ -704,10 +704,6 @@ name|EFSYS_OPT_DIAG
 value|0
 define|#
 directive|define
-name|EFSYS_OPT_WOL
-value|1
-define|#
-directive|define
 name|EFSYS_OPT_RX_SCALE
 value|1
 define|#

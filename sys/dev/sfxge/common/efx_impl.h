@@ -201,10 +201,6 @@ name|EFX_MOD_MON
 value|0x00000400
 define|#
 directive|define
-name|EFX_MOD_WOL
-value|0x00000800
-define|#
-directive|define
 name|EFX_MOD_FILTER
 value|0x00001000
 define|#
