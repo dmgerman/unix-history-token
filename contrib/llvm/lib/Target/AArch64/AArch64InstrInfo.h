@@ -583,6 +583,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|// This tells target independent code that it is okay to pass instructions
+comment|// with subreg operands to foldMemoryOperandImpl.
+name|bool
+name|isSubregFoldable
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 name|using
 name|TargetInstrInfo
 operator|::

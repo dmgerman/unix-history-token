@@ -1675,18 +1675,20 @@ argument_list|)
 operator|)
 return|;
 block|}
+expr|}
+comment|// namespace coff
 name|std
 operator|::
 name|string
 name|toString
 argument_list|(
+name|coff
+operator|::
 name|SymbolBody
 operator|&
 name|B
 argument_list|)
-block|;  }
-comment|// namespace coff
-block|}
+block|; }
 end_decl_stmt
 
 begin_comment

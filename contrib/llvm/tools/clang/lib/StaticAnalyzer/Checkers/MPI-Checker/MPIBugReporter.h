@@ -333,8 +333,12 @@ argument_list|(
 name|RequestRegion
 argument_list|)
 block|;     }
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *N

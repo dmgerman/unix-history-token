@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -187,7 +181,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|BitCodeAbbrev
 operator|>>
@@ -1394,7 +1390,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|BitCodeAbbrev
 operator|>>
@@ -1409,7 +1407,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|BitCodeAbbrev
 operator|>>
@@ -1963,8 +1963,8 @@ name|get
 argument_list|()
 return|;
 block|}
-comment|/// Read the current record and discard it.
-name|void
+comment|/// Read the current record and discard it, returning the code for the record.
+name|unsigned
 name|skipRecord
 parameter_list|(
 name|unsigned

@@ -100,7 +100,7 @@ range|:
 name|public
 name|CGOpenMPRuntime
 block|{
-name|public
+name|private
 operator|:
 expr|struct
 name|EntryFunctionState
@@ -148,62 +148,6 @@ name|CGM
 argument_list|)
 block|;   }
 block|;
-comment|/// \brief Helper for target entry function. Guide the master and worker
-comment|/// threads to their respective locations.
-name|void
-name|emitEntryHeader
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-name|EntryFunctionState
-operator|&
-name|EST
-argument_list|,
-name|WorkerFunctionState
-operator|&
-name|WST
-argument_list|)
-block|;
-comment|/// \brief Signal termination of OMP execution.
-name|void
-name|emitEntryFooter
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-name|EntryFunctionState
-operator|&
-name|EST
-argument_list|)
-block|;
-name|private
-operator|:
-comment|//
-comment|// Private state and methods.
-comment|//
-comment|// Master-worker control state.
-comment|// Number of requested OMP threads in parallel region.
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|ActiveWorkers
-block|;
-comment|// Outlined function for the workers to execute.
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|WorkID
-block|;
-comment|/// \brief Initialize master-worker control state.
-name|void
-name|initializeEnvironment
-argument_list|()
-block|;
 comment|/// \brief Emit the worker function for the current target region.
 name|void
 name|emitWorkerFunction
@@ -226,6 +170,38 @@ operator|&
 name|WST
 argument_list|)
 block|;
+comment|/// \brief Helper for generic target entry function. Guide the master and
+comment|/// worker threads to their respective locations.
+name|void
+name|emitGenericEntryHeader
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|EntryFunctionState
+operator|&
+name|EST
+argument_list|,
+name|WorkerFunctionState
+operator|&
+name|WST
+argument_list|)
+block|;
+comment|/// \brief Signal termination of OMP execution for generic target entry
+comment|/// function.
+name|void
+name|emitGenericEntryFooter
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|EntryFunctionState
+operator|&
+name|EST
+argument_list|)
+block|;
 comment|/// \brief Returns specified OpenMP runtime function for the current OpenMP
 comment|/// implementation.  Specialized for the NVPTX device.
 comment|/// \param Function OpenMP runtime function.
@@ -243,7 +219,7 @@ comment|//
 comment|// Base class overrides.
 comment|//
 comment|/// \brief Creates offloading entry for the provided entry ID \a ID,
-comment|/// address \a Addr and size \a Size.
+comment|/// address \a Addr, size \a Size, and flags \a Flags.
 name|void
 name|createOffloadEntry
 argument_list|(
@@ -252,8 +228,36 @@ argument_list|,
 argument|llvm::Constant *Addr
 argument_list|,
 argument|uint64_t Size
+argument_list|,
+argument|int32_t Flags =
+literal|0
 argument_list|)
 name|override
+block|;
+comment|/// \brief Emit outlined function specialized for the Fork-Join
+comment|/// programming model for applicable target directives on the NVPTX device.
+comment|/// \param D Directive to emit.
+comment|/// \param ParentName Name of the function that encloses the target region.
+comment|/// \param OutlinedFn Outlined function value to be defined by this call.
+comment|/// \param OutlinedFnID Outlined function ID value to be defined by this call.
+comment|/// \param IsOffloadEntry True if the outlined function is an offload entry.
+comment|/// An outlined function may not be an entry if, e.g. the if clause always
+comment|/// evaluates to false.
+name|void
+name|emitGenericKernel
+argument_list|(
+argument|const OMPExecutableDirective&D
+argument_list|,
+argument|StringRef ParentName
+argument_list|,
+argument|llvm::Function *&OutlinedFn
+argument_list|,
+argument|llvm::Constant *&OutlinedFnID
+argument_list|,
+argument|bool IsOffloadEntry
+argument_list|,
+argument|const RegionCodeGenTy&CodeGen
+argument_list|)
 block|;
 comment|/// \brief Emit outlined function for 'target' directive on the NVPTX
 comment|/// device.

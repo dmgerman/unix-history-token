@@ -1549,6 +1549,13 @@ operator|::
 name|string
 name|IRName
 expr_stmt|;
+comment|/// Keep track if the symbol is visible outside of ThinLTO (i.e. in
+comment|/// either a regular object or the regular LTO partition).
+name|bool
+name|VisibleOutsideThinLTO
+init|=
+name|false
+decl_stmt|;
 name|bool
 name|UnnamedAddr
 init|=
@@ -1586,6 +1593,11 @@ name|External
 init|=
 operator|-
 literal|2u
+block|,
+comment|/// The RegularLTO partition
+name|RegularLTO
+init|=
+literal|0
 block|,     }
 enum_decl|;
 block|}

@@ -443,6 +443,10 @@ name|DwarfDebug
 modifier|*
 name|DD
 decl_stmt|;
+comment|/// If the current module uses dwarf CFI annotations strictly for debugging.
+name|bool
+name|isCFIMoveForDebugging
+decl_stmt|;
 name|protected
 label|:
 name|explicit
@@ -835,6 +839,17 @@ name|CFIMoveType
 name|needsCFIMoves
 parameter_list|()
 function_decl|;
+comment|/// Returns false if needsCFIMoves() == CFI_M_EH for any function
+comment|/// in the module.
+name|bool
+name|needsOnlyDebugCFIMoves
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isCFIMoveForDebugging
+return|;
+block|}
 name|bool
 name|needsSEHMoves
 parameter_list|()

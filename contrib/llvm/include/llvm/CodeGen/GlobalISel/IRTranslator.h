@@ -534,6 +534,19 @@ name|MIRBuilder
 argument_list|)
 block|;
 name|bool
+name|translateSwitch
+argument_list|(
+specifier|const
+name|User
+operator|&
+name|U
+argument_list|,
+name|MachineIRBuilder
+operator|&
+name|MIRBuilder
+argument_list|)
+block|;
+name|bool
 name|translateExtractValue
 argument_list|(
 specifier|const
@@ -1248,18 +1261,6 @@ return|;
 block|}
 comment|// Stubs to keep the compiler happy while we implement the rest of the
 comment|// translation.
-name|bool
-name|translateSwitch
-argument_list|(
-argument|const User&U
-argument_list|,
-argument|MachineIRBuilder&MIRBuilder
-argument_list|)
-block|{
-return|return
-name|false
-return|;
-block|}
 name|bool
 name|translateIndirectBr
 argument_list|(

@@ -11491,6 +11491,7 @@ name|NamedDecl
 operator|*
 name|getInstantiatedFromUsingDecl
 argument_list|()
+specifier|const
 block|{
 return|return
 name|InstantiatedFrom

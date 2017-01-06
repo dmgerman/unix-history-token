@@ -143,7 +143,7 @@ block|,
 name|FCTIWZ
 block|,
 comment|/// Newer FCTI[D,W]UZ floating-point-to-integer conversion instructions for
-comment|/// unsigned integers.
+comment|/// unsigned integers with round toward zero.
 name|FCTIDUZ
 block|,
 name|FCTIWUZ

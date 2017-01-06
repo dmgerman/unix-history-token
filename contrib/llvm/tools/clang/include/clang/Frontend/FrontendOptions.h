@@ -802,7 +802,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|ModuleFileExtension
 operator|>>

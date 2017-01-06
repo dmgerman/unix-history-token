@@ -49,6 +49,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -178,6 +184,18 @@ operator|::
 name|string
 name|ABIName
 expr_stmt|;
+comment|/// Additional paths to search for `.include` directives when using the
+comment|/// integrated assembler.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|IASSearchPaths
+expr_stmt|;
 name|MCTargetOptions
 argument_list|()
 expr_stmt|;
@@ -281,6 +299,11 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|ABIName
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|IASSearchPaths
 argument_list|)
 operator|)
 return|;

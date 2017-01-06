@@ -1446,16 +1446,10 @@ comment|// Path "pieces" for path-sensitive diagnostics.
 comment|//===----------------------------------------------------------------------===//
 name|class
 name|PathDiagnosticPiece
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|PathDiagnosticPiece
-operator|>
 block|{
 name|public
-operator|:
-expr|enum
+label|:
+enum|enum
 name|Kind
 block|{
 name|ControlFlow
@@ -1468,42 +1462,43 @@ name|Call
 block|,
 name|Note
 block|}
-block|;   enum
+enum|;
+enum|enum
 name|DisplayHint
 block|{
 name|Above
 block|,
 name|Below
 block|}
-block|;
+enum|;
 name|private
-operator|:
+label|:
 specifier|const
 name|std
 operator|::
 name|string
 name|str
-block|;
+expr_stmt|;
 specifier|const
 name|Kind
 name|kind
-block|;
+decl_stmt|;
 specifier|const
 name|DisplayHint
 name|Hint
-block|;
+decl_stmt|;
 comment|/// \brief In the containing bug report, this piece is the last piece from
 comment|/// the main source file.
 name|bool
 name|LastInMainSourceFile
-block|;
+decl_stmt|;
 comment|/// A constant string that can be used to tag the PathDiagnosticPiece,
 comment|/// typically with the identification of the creator.  The actual pointer
 comment|/// value is meant to be an identifier; the string itself is useful for
 comment|/// debugging.
 name|StringRef
 name|Tag
-block|;
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -1511,12 +1506,12 @@ operator|<
 name|SourceRange
 operator|>
 name|ranges
-block|;
+expr_stmt|;
 name|PathDiagnosticPiece
 argument_list|()
 operator|=
 name|delete
-block|;
+expr_stmt|;
 name|PathDiagnosticPiece
 argument_list|(
 specifier|const
@@ -1526,10 +1521,10 @@ name|P
 argument_list|)
 operator|=
 name|delete
-block|;
+expr_stmt|;
 name|void
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|PathDiagnosticPiece
@@ -1538,9 +1533,9 @@ name|P
 operator|)
 operator|=
 name|delete
-block|;
+decl_stmt|;
 name|protected
-operator|:
+label|:
 name|PathDiagnosticPiece
 argument_list|(
 argument|StringRef s
@@ -1549,21 +1544,21 @@ argument|Kind k
 argument_list|,
 argument|DisplayHint hint = Below
 argument_list|)
-block|;
+empty_stmt|;
 name|PathDiagnosticPiece
 argument_list|(
 argument|Kind k
 argument_list|,
 argument|DisplayHint hint = Below
 argument_list|)
-block|;
+empty_stmt|;
 name|public
-operator|:
+label|:
 name|virtual
 operator|~
 name|PathDiagnosticPiece
 argument_list|()
-block|;
+expr_stmt|;
 name|StringRef
 name|getString
 argument_list|()
@@ -1576,14 +1571,18 @@ block|}
 comment|/// Tag this PathDiagnosticPiece with the given C-string.
 name|void
 name|setTag
-argument_list|(
-argument|const char *tag
-argument_list|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|tag
+parameter_list|)
 block|{
 name|Tag
 operator|=
 name|tag
-block|; }
+expr_stmt|;
+block|}
 comment|/// Return the opaque tag (if any) on the PathDiagnosticPiece.
 specifier|const
 name|void
@@ -1628,14 +1627,14 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|virtual
 name|void
 name|flattenLocations
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-block|;
+function_decl|;
 name|Kind
 name|getKind
 argument_list|()
@@ -1647,9 +1646,10 @@ return|;
 block|}
 name|void
 name|addRange
-argument_list|(
-argument|SourceRange R
-argument_list|)
+parameter_list|(
+name|SourceRange
+name|R
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1666,14 +1666,17 @@ name|push_back
 argument_list|(
 name|R
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|void
 name|addRange
-argument_list|(
-argument|SourceLocation B
-argument_list|,
-argument|SourceLocation E
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|B
+parameter_list|,
+name|SourceLocation
+name|E
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1701,15 +1704,9 @@ argument_list|,
 name|E
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return the SourceRanges associated with this PathDiagnosticPiece.
-end_comment
-
-begin_expr_stmt
 name|ArrayRef
 operator|<
 name|SourceRange
@@ -1722,9 +1719,6 @@ return|return
 name|ranges
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|virtual
 name|void
 name|Profile
@@ -1737,9 +1731,6 @@ name|ID
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|setAsLastInMainSourceFile
 parameter_list|()
@@ -1749,9 +1740,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|isLastInMainSourceFile
 argument_list|()
@@ -1761,9 +1749,6 @@ return|return
 name|LastInMainSourceFile
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|virtual
 name|void
 name|dump
@@ -1772,10 +1757,8 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-unit|};
+block|}
+empty_stmt|;
 name|class
 name|PathPieces
 range|:
@@ -1784,11 +1767,12 @@ name|std
 operator|::
 name|list
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|PathDiagnosticPiece
-operator|>
-expr|>
+operator|>>
 block|{
 name|void
 name|flattenTo
@@ -1832,9 +1816,6 @@ argument_list|()
 specifier|const
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|PathDiagnosticSpotPiece
 range|:
@@ -2451,7 +2432,9 @@ return|return
 name|callEnter
 return|;
 block|}
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|PathDiagnosticEventPiece
 operator|>
@@ -2459,7 +2442,9 @@ name|getCallEnterEvent
 argument_list|()
 specifier|const
 block|;
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|PathDiagnosticEventPiece
 operator|>
@@ -2467,7 +2452,9 @@ name|getCallEnterWithinCallerEvent
 argument_list|()
 specifier|const
 block|;
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|PathDiagnosticEventPiece
 operator|>
@@ -2526,8 +2513,12 @@ argument_list|()
 expr_stmt|;
 block|}
 specifier|static
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticCallPiece
-operator|*
+operator|>
 name|construct
 argument_list|(
 specifier|const
@@ -2912,9 +2903,6 @@ specifier|const
 name|override
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|PathDiagnosticMacroPiece
 range|:
@@ -3030,9 +3018,6 @@ specifier|const
 name|override
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|PathDiagnosticNotePiece
 range|:
@@ -3098,21 +3083,9 @@ specifier|const
 name|override
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// PathDiagnostic - PathDiagnostic objects represent a single path-sensitive
-end_comment
-
-begin_comment
 comment|///  diagnostic.  It represents an ordered-collection of PathDiagnosticPieces,
-end_comment
-
-begin_comment
 comment|///  each which represent the pieces of the path.
-end_comment
-
-begin_decl_stmt
 name|class
 name|PathDiagnostic
 range|:
@@ -3247,13 +3220,7 @@ name|back
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Return a mutable version of 'path'.
-end_comment
-
-begin_function
 name|PathPieces
 modifier|&
 name|getMutablePieces
@@ -3263,20 +3230,11 @@ return|return
 name|pathImpl
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Return the unrolled size of the path.
-end_comment
-
-begin_function_decl
 name|unsigned
 name|full_size
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function
 name|void
 name|pushActivePath
 parameter_list|(
@@ -3293,9 +3251,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|popActivePath
 parameter_list|()
@@ -3314,9 +3269,6 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|isWithinCall
 argument_list|()
@@ -3330,9 +3282,6 @@ name|empty
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|setEndOfPath
 argument_list|(
@@ -3378,16 +3327,15 @@ argument_list|()
 operator|.
 name|push_back
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|EndPiece
-operator|.
-name|release
-argument_list|()
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|appendToDesc
 parameter_list|(
@@ -3412,9 +3360,6 @@ operator|+=
 name|S
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|resetPath
 parameter_list|()
@@ -3435,28 +3380,13 @@ name|PathDiagnosticLocation
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief If the last piece of the report point to the header file, resets
-end_comment
-
-begin_comment
 comment|/// the location of the report to be the last location in the main source
-end_comment
-
-begin_comment
 comment|/// file.
-end_comment
-
-begin_function_decl
 name|void
 name|resetDiagnosticLocationToMainFile
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|StringRef
 name|getVerboseDescription
 argument_list|()
@@ -3466,9 +3396,6 @@ return|return
 name|VerboseDesc
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|StringRef
 name|getShortDescription
 argument_list|()
@@ -3485,9 +3412,6 @@ operator|:
 name|ShortDesc
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|StringRef
 name|getCheckName
 argument_list|()
@@ -3497,9 +3421,6 @@ return|return
 name|CheckName
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|StringRef
 name|getBugType
 argument_list|()
@@ -3509,9 +3430,6 @@ return|return
 name|BugType
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|StringRef
 name|getCategory
 argument_list|()
@@ -3521,21 +3439,9 @@ return|return
 name|Category
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Return the semantic context where an issue occurred.  If the
-end_comment
-
-begin_comment
 comment|/// issue occurs along a path, this represents the "central" area
-end_comment
-
-begin_comment
 comment|/// where the bug manifests.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|Decl
 operator|*
@@ -3547,9 +3453,6 @@ return|return
 name|DeclWithIssue
 return|;
 block|}
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -3563,9 +3466,6 @@ operator|::
 name|const_iterator
 name|meta_iterator
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|meta_iterator
 name|meta_begin
 argument_list|()
@@ -3578,9 +3478,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|meta_iterator
 name|meta_end
 argument_list|()
@@ -3593,9 +3490,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|addMeta
 parameter_list|(
@@ -3611,9 +3505,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|PathDiagnosticLocation
 name|getLocation
 argument_list|()
@@ -3633,13 +3524,7 @@ return|return
 name|Loc
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Get the location on which the report should be uniqued.
-end_comment
-
-begin_expr_stmt
 name|PathDiagnosticLocation
 name|getUniqueingLoc
 argument_list|()
@@ -3649,13 +3534,7 @@ return|return
 name|UniqueingLoc
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Get the declaration containing the uniqueing location.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|Decl
 operator|*
@@ -3667,9 +3546,6 @@ return|return
 name|UniqueingDecl
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|flattenLocations
 parameter_list|()
@@ -3714,25 +3590,10 @@ name|flattenLocations
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Profiles the diagnostic, independent of the path it references.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This can be used to merge diagnostics that refer to the same issue
-end_comment
-
-begin_comment
 comment|/// along different paths.
-end_comment
-
-begin_decl_stmt
 name|void
 name|Profile
 argument_list|(
@@ -3744,25 +3605,10 @@ name|ID
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Profiles the diagnostic, including its path.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Two diagnostics with the same issue along different paths will generate
-end_comment
-
-begin_comment
 comment|/// different profiles.
-end_comment
-
-begin_decl_stmt
 name|void
 name|FullProfile
 argument_list|(
@@ -3774,10 +3620,15 @@ name|ID
 argument_list|)
 decl|const
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};    }
+unit|}
 comment|// end GR namespace
 end_comment
 

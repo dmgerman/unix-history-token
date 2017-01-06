@@ -1687,8 +1687,13 @@ name|Discarded
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|// namespace elf
+end_comment
+
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|class
 name|ELFT
@@ -1699,6 +1704,8 @@ name|string
 name|toString
 argument_list|(
 specifier|const
+name|elf
+operator|::
 name|InputSectionBase
 operator|<
 name|ELFT
@@ -1707,11 +1714,6 @@ operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-unit|}
-comment|// namespace elf
-end_comment
 
 begin_comment
 unit|}

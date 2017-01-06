@@ -380,20 +380,14 @@ comment|///
 comment|/// It follows a similar interface as VariantMatcher itself.
 name|class
 name|Payload
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|Payload
-operator|>
 block|{
 name|public
-operator|:
+label|:
 name|virtual
 operator|~
 name|Payload
 argument_list|()
-block|;
+expr_stmt|;
 name|virtual
 name|llvm
 operator|::
@@ -406,7 +400,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|virtual
 name|std
 operator|::
@@ -416,7 +410,7 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|virtual
 name|llvm
 operator|::
@@ -431,20 +425,26 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|virtual
 name|bool
 name|isConvertibleTo
 argument_list|(
-argument|ast_type_traits::ASTNodeKind Kind
+name|ast_type_traits
+operator|::
+name|ASTNodeKind
+name|Kind
 argument_list|,
-argument|unsigned *Specificity
+name|unsigned
+operator|*
+name|Specificity
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-block|;   }
 decl_stmt|;
+block|}
+empty_stmt|;
 name|public
 label|:
 comment|/// \brief A null matcher.
@@ -682,14 +682,18 @@ label|:
 name|explicit
 name|VariantMatcher
 argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|Payload
-operator|*
+operator|>
 name|Value
 argument_list|)
-operator|:
+range|:
 name|Value
 argument_list|(
-argument|Value
+argument|std::move(Value)
 argument_list|)
 block|{}
 name|template
@@ -699,7 +703,7 @@ name|T
 operator|>
 expr|struct
 name|TypedMatcherOps
-expr_stmt|;
+decl_stmt|;
 name|class
 name|SinglePayload
 decl_stmt|;
@@ -709,7 +713,9 @@ decl_stmt|;
 name|class
 name|VariadicOpPayload
 decl_stmt|;
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 specifier|const
 name|Payload

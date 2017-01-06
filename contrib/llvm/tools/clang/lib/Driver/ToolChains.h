@@ -201,7 +201,7 @@ name|llvm
 operator|::
 name|Triple
 operator|&
-name|Triple
+name|HostTriple
 argument_list|,
 specifier|const
 name|llvm
@@ -2680,6 +2680,24 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|void
+name|AddCudaIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|printVerboseInfo
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+name|override
+block|;
 name|protected
 operator|:
 name|Tool
@@ -2707,6 +2725,9 @@ name|override
 block|;
 name|private
 operator|:
+name|CudaInstallationDetector
+name|CudaInstallation
+block|;
 name|std
 operator|::
 name|string
@@ -3590,6 +3611,25 @@ operator|&
 name|Args
 argument_list|)
 block|;
+name|virtual
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|*
+name|getAuxTriple
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|HostTC
+operator|.
+name|getTriple
+argument_list|()
+return|;
+block|}
 name|llvm
 operator|::
 name|opt
@@ -3748,6 +3788,16 @@ block|;
 name|SanitizerMask
 name|getSupportedSanitizers
 argument_list|()
+specifier|const
+name|override
+block|;
+name|VersionTuple
+name|computeMSVCVersion
+argument_list|(
+argument|const Driver *D
+argument_list|,
+argument|const llvm::opt::ArgList&Args
+argument_list|)
 specifier|const
 name|override
 block|;
@@ -4738,6 +4788,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|void
+name|AddCudaIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|getWindowsSDKDir
 argument_list|(
@@ -4826,6 +4886,14 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|void
+name|printVerboseInfo
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+name|override
+block|;
 name|protected
 operator|:
 name|void
@@ -4872,6 +4940,9 @@ name|VersionTuple
 name|getMSVCVersionFromExe
 argument_list|()
 specifier|const
+block|;
+name|CudaInstallationDetector
+name|CudaInstallation
 block|; }
 block|;
 name|class
@@ -5640,7 +5711,61 @@ argument_list|()
 specifier|const
 name|override
 block|; }
-block|;  }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|AVRToolChain
+operator|:
+name|public
+name|Generic_ELF
+block|{
+name|protected
+operator|:
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+name|override
+block|;
+name|public
+operator|:
+name|AVRToolChain
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;   }
 comment|// end namespace toolchains
 block|}
 comment|// end namespace driver

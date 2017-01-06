@@ -1512,14 +1512,7 @@ name|livein_iterator
 name|livein_begin
 argument_list|()
 specifier|const
-block|{
-return|return
-name|LiveIns
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 name|livein_iterator
 name|livein_end
 argument_list|()

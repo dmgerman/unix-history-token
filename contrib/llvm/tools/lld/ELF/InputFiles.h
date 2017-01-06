@@ -151,6 +151,27 @@ block|{
 name|namespace
 name|elf
 block|{
+name|class
+name|InputFile
+decl_stmt|;
+block|}
+comment|// Returns "(internal)", "foo.a(bar.o)" or "baz.o".
+name|std
+operator|::
+name|string
+name|toString
+argument_list|(
+specifier|const
+name|elf
+operator|::
+name|InputFile
+operator|*
+name|F
+argument_list|)
+expr_stmt|;
+name|namespace
+name|elf
+block|{
 name|using
 name|llvm
 operator|::
@@ -158,9 +179,6 @@ name|object
 operator|::
 name|Archive
 expr_stmt|;
-name|class
-name|InputFile
-decl_stmt|;
 name|class
 name|Lazy
 decl_stmt|;
@@ -274,18 +292,6 @@ name|FileKind
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|// Returns "(internal)", "foo.a(bar.o)" or "baz.o".
-name|std
-operator|::
-name|string
-name|toString
-argument_list|(
-specifier|const
-name|InputFile
-operator|*
-name|F
-argument_list|)
-expr_stmt|;
 name|template
 operator|<
 name|typename

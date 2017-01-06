@@ -78,12 +78,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -687,37 +681,17 @@ comment|/// abbreviation allows a complex record that has redundancy to be store
 comment|/// specialized format instead of the fully-general, fully-vbr, format.
 name|class
 name|BitCodeAbbrev
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|BitCodeAbbrev
-operator|>
 block|{
 name|SmallVector
 operator|<
 name|BitCodeAbbrevOp
-block|,
+operator|,
 literal|32
 operator|>
 name|OperandList
-block|;
-comment|// Only RefCountedBase is allowed to delete.
-operator|~
-name|BitCodeAbbrev
-argument_list|()
-operator|=
-expr|default
-block|;
-name|friend
-name|class
-name|RefCountedBase
-operator|<
-name|BitCodeAbbrev
-operator|>
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 name|unsigned
 name|getNumOperandInfos
 argument_list|()
@@ -738,12 +712,13 @@ return|;
 block|}
 specifier|const
 name|BitCodeAbbrevOp
-operator|&
+modifier|&
 name|getOperandInfo
 argument_list|(
-argument|unsigned N
+name|unsigned
+name|N
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|OperandList
@@ -754,9 +729,12 @@ return|;
 block|}
 name|void
 name|Add
-argument_list|(
-argument|const BitCodeAbbrevOp&OpInfo
-argument_list|)
+parameter_list|(
+specifier|const
+name|BitCodeAbbrevOp
+modifier|&
+name|OpInfo
+parameter_list|)
 block|{
 name|OperandList
 operator|.
@@ -764,9 +742,11 @@ name|push_back
 argument_list|(
 name|OpInfo
 argument_list|)
-block|;   }
-expr|}
-block|; }
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

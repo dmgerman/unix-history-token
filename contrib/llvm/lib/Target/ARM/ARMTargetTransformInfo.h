@@ -459,8 +459,14 @@ name|Type
 modifier|*
 name|Val
 parameter_list|,
-name|bool
-name|IsComplex
+name|ScalarEvolution
+modifier|*
+name|SE
+parameter_list|,
+specifier|const
+name|SCEV
+modifier|*
+name|Ptr
 parameter_list|)
 function_decl|;
 name|int

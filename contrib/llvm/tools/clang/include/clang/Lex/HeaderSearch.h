@@ -392,7 +392,9 @@ decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Header-search options used to initialize this header search.
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|HeaderSearchOptions
 operator|>
@@ -699,7 +701,9 @@ name|public
 label|:
 name|HeaderSearch
 argument_list|(
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|HeaderSearchOptions
 operator|>

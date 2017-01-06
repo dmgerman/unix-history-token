@@ -1007,6 +1007,17 @@ name|bool
 name|multiline
 parameter_list|)
 function_decl|;
+name|bool
+name|CompleteCharacter
+parameter_list|(
+name|char
+name|ch
+parameter_list|,
+name|EditLineCharType
+modifier|&
+name|out
+parameter_list|)
+function_decl|;
 name|private
 label|:
 if|#
