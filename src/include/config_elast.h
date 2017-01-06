@@ -175,7 +175,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_LIBCPP_MSCVRT
+name|_LIBCPP_MSVCRT
 argument_list|)
 end_elif
 
