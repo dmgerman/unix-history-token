@@ -33,6 +33,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_STDFILE_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_STDFILE_DECLARED
+end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|__sFILE
+name|FILE
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Structure to describe one communications endpoint. */
 end_comment
