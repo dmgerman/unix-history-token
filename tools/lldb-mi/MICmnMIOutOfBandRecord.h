@@ -225,6 +225,10 @@ block|,
 name|eOutOfBand_TargetModuleUnloaded
 block|,
 name|eOutOfBand_TargetStreamOutput
+block|,
+name|eOutOfBand_ConsoleStreamOutput
+block|,
+name|eOutOfBand_LogStreamOutput
 block|}
 block|;
 comment|// Methods:

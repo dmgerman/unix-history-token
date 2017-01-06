@@ -213,15 +213,11 @@ return|;
 default|default:
 break|break;
 block|}
-name|assert
+name|llvm_unreachable
 argument_list|(
-operator|!
 literal|"Invalid hash function index"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 specifier|static
 specifier|const

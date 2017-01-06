@@ -345,6 +345,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
+name|OptionFnDisassemblyFlavor
+argument_list|(
+specifier|const
+name|CMIUtilString
+operator|::
+name|VecString_t
+operator|&
+name|vrWords
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
 name|OptionFnFallback
 argument_list|(
 specifier|const
