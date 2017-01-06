@@ -128,17 +128,6 @@ begin_comment
 comment|/* 100ms in 1us units */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SFXGE_MCDI_WATCHDOG_INTERVAL
-value|10000000
-end_define
-
-begin_comment
-comment|/* 10s in 1us units */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -196,6 +185,9 @@ name|struct
 name|sfxge_softc
 modifier|*
 name|sc
+parameter_list|,
+name|uint32_t
+name|timeout_us
 parameter_list|)
 block|{
 name|efx_nic_t
@@ -250,7 +242,7 @@ if|if
 condition|(
 name|delay_total
 operator|>
-name|SFXGE_MCDI_WATCHDOG_INTERVAL
+name|timeout_us
 condition|)
 block|{
 name|aborted
@@ -354,6 +346,11 @@ name|sfxge_mcdi
 modifier|*
 name|mcdi
 decl_stmt|;
+name|uint32_t
+name|timeout_us
+init|=
+literal|0
+decl_stmt|;
 name|sc
 operator|=
 operator|(
@@ -389,6 +386,29 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Issue request and poll for completion. */
+name|efx_mcdi_get_timeout
+argument_list|(
+name|sc
+operator|->
+name|enp
+argument_list|,
+name|emrp
+argument_list|,
+operator|&
+name|timeout_us
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|timeout_us
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"MCDI timeout not initialized"
+operator|)
+argument_list|)
+expr_stmt|;
 name|efx_mcdi_request_start
 argument_list|(
 name|sc
@@ -403,6 +423,8 @@ expr_stmt|;
 name|sfxge_mcdi_poll
 argument_list|(
 name|sc
+argument_list|,
+name|timeout_us
 argument_list|)
 expr_stmt|;
 name|SFXGE_MCDI_UNLOCK
