@@ -934,7 +934,7 @@ literal|"i.MX6 Dual"
 argument_list|,
 literal|0
 argument_list|,
-literal|"fsl,imx6d"
+literal|"fsl,imx6dl"
 argument_list|,
 literal|0
 argument_list|)
