@@ -2944,6 +2944,10 @@ decl_stmt|;
 name|uint32_t
 name|enc_max_pcie_link_gen
 decl_stmt|;
+comment|/* Firmware verifies integrity of NVRAM updates */
+name|uint32_t
+name|enc_fw_verified_nvram_update_required
+decl_stmt|;
 block|}
 name|efx_nic_cfg_t
 typedef|;
@@ -3487,7 +3491,8 @@ name|pref_chunkp
 parameter_list|)
 function_decl|;
 specifier|extern
-name|void
+name|__checkReturn
+name|efx_rc_t
 name|efx_nvram_rw_finish
 parameter_list|(
 name|__in

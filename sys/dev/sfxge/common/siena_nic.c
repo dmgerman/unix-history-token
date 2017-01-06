@@ -570,6 +570,12 @@ name|enc_max_pcie_link_gen
 operator|=
 name|EFX_PCIE_LINK_SPEED_GEN2
 expr_stmt|;
+name|encp
+operator|->
+name|enc_fw_verified_nvram_update_required
+operator|=
+name|B_FALSE
+expr_stmt|;
 return|return
 operator|(
 literal|0
