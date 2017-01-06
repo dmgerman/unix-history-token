@@ -490,14 +490,6 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
-name|std
-operator|::
-name|string
-name|toString
-argument_list|(
-argument|uint32_t RelType
-argument_list|)
-expr_stmt|;
 name|uint64_t
 name|getPPC64TocBase
 parameter_list|()
@@ -520,6 +512,14 @@ name|createTarget
 parameter_list|()
 function_decl|;
 block|}
+name|std
+operator|::
+name|string
+name|toString
+argument_list|(
+argument|uint32_t RelType
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

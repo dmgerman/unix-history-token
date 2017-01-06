@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/TarWriter.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -359,9 +365,11 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|CpioFile
+name|llvm
+operator|::
+name|TarWriter
 operator|>
-name|Cpio
+name|Tar
 expr_stmt|;
 comment|// for /linkrepro
 comment|// Opens a file. Path has to be resolved already.

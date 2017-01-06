@@ -52,19 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringSet.h"
 end_include
 
 begin_include
@@ -77,9 +65,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|raw_fd_ostream
-decl_stmt|;
 name|namespace
 name|opt
 block|{
@@ -94,77 +79,6 @@ begin_decl_stmt
 name|namespace
 name|lld
 block|{
-comment|// This class creates a .cpio file for --reproduce (ELF) or /linkrepro (COFF).
-comment|//
-comment|// If "--reproduce foo" is given, we create a file "foo.cpio" and
-comment|// copy all input files to the archive, along with a response file
-comment|// to re-run the same command with the same inputs.
-comment|// It is useful for reporting issues to LLD developers.
-comment|//
-comment|// Cpio as a file format is a deliberate choice. It's standardized in
-comment|// POSIX and very easy to create. cpio command is available virtually
-comment|// on all Unix systems. See
-comment|// http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pax.html#tag_20_92_13_07
-comment|// for the format details.
-name|class
-name|CpioFile
-block|{
-name|public
-label|:
-specifier|static
-name|ErrorOr
-operator|<
-name|CpioFile
-operator|*
-operator|>
-name|create
-argument_list|(
-argument|StringRef OutputPath
-argument_list|)
-expr_stmt|;
-name|void
-name|append
-parameter_list|(
-name|StringRef
-name|Path
-parameter_list|,
-name|StringRef
-name|Data
-parameter_list|)
-function_decl|;
-name|private
-label|:
-name|CpioFile
-argument_list|(
-argument|std::unique_ptr<llvm::raw_fd_ostream> OS
-argument_list|,
-argument|StringRef Basename
-argument_list|)
-empty_stmt|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|llvm
-operator|::
-name|raw_fd_ostream
-operator|>
-name|OS
-expr_stmt|;
-name|llvm
-operator|::
-name|StringSet
-operator|<
-operator|>
-name|Seen
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|Basename
-expr_stmt|;
-block|}
-empty_stmt|;
 comment|// Makes a given pathname an absolute path first, and then remove
 comment|// beginning /. For example, "../foo.o" is converted to "home/john/foo.o",
 comment|// assuming that the current directory is "/home/john/bar".
@@ -199,7 +113,7 @@ comment|// Returns the string form of the given argument.
 name|std
 operator|::
 name|string
-name|stringize
+name|toString
 argument_list|(
 name|llvm
 operator|::

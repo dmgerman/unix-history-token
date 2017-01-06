@@ -2171,24 +2171,26 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|// namespace elf
+end_comment
+
 begin_expr_stmt
-name|std
+unit|std
 operator|::
 name|string
 name|toString
 argument_list|(
 specifier|const
+name|elf
+operator|::
 name|SymbolBody
 operator|&
 name|B
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-unit|}
-comment|// namespace elf
-end_comment
 
 begin_comment
 unit|}

@@ -851,18 +851,20 @@ operator|>
 name|M
 block|; }
 decl_stmt|;
+block|}
+comment|// namespace coff
 name|std
 operator|::
 name|string
 name|toString
 argument_list|(
+name|coff
+operator|::
 name|InputFile
 operator|*
 name|File
 argument_list|)
 expr_stmt|;
-block|}
-comment|// namespace coff
 block|}
 end_decl_stmt
 
