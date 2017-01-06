@@ -470,6 +470,13 @@ argument_list|)
 block|,
 name|RTWN_RTL8192CU_DEV
 argument_list|(
+name|REALTEK
+argument_list|,
+name|RTL8192CU_1
+argument_list|)
+block|,
+name|RTWN_RTL8192CU_DEV
+argument_list|(
 name|SITECOMEU
 argument_list|,
 name|RTL8188CU_1

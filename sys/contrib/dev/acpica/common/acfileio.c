@@ -888,7 +888,7 @@ name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"AcValidateTableHeader"
+name|AcValidateTableHeader
 argument_list|)
 expr_stmt|;
 comment|/* Read a potential table header */

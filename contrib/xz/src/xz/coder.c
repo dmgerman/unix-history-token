@@ -214,11 +214,19 @@ name|true
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_ENCODERS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|MYTHREAD_ENABLED
-end_ifdef
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -779,6 +787,8 @@ argument_list|)
 decl_stmt|;
 name|uint64_t
 name|memory_usage
+init|=
+name|UINT64_MAX
 decl_stmt|;
 if|if
 condition|(
@@ -787,6 +797,9 @@ operator|==
 name|MODE_COMPRESS
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_ENCODERS
 ifdef|#
 directive|ifdef
 name|MYTHREAD_ENABLED
@@ -864,9 +877,14 @@ name|filters
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_DECODERS
 name|memory_usage
 operator|=
 name|lzma_raw_decoder_memusage
@@ -874,6 +892,8 @@ argument_list|(
 name|filters
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -891,6 +911,9 @@ argument_list|)
 expr_stmt|;
 comment|// Print memory usage info before possible dictionary
 comment|// size auto-adjusting.
+comment|//
+comment|// NOTE: If only encoder support was built, we cannot show the
+comment|// what the decoder memory usage will be.
 name|message_mem_needed
 argument_list|(
 name|V_DEBUG
@@ -898,6 +921,9 @@ argument_list|,
 name|memory_usage
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DECODERS
 if|if
 condition|(
 name|opt_mode
@@ -942,6 +968,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|memory_usage
@@ -973,6 +1001,9 @@ operator|==
 name|MODE_COMPRESS
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_ENCODERS
 ifdef|#
 directive|ifdef
 name|MYTHREAD_ENABLED
@@ -1298,9 +1329,17 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DECODERS
+end_ifdef
 
 begin_comment
 comment|/// Return true if the data in in_buf seems to be in the .xz format.
@@ -1578,6 +1617,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/// Detect the input file type (for now, this done only when decompressing),
 end_comment
@@ -1621,6 +1665,9 @@ operator|==
 name|MODE_COMPRESS
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_ENCODERS
 switch|switch
 condition|(
 name|opt_format
@@ -1710,9 +1757,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_DECODERS
 name|uint32_t
 name|flags
 init|=
@@ -1935,6 +1987,8 @@ name|LZMA_RUN
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 if|if
 condition|(

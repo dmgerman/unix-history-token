@@ -60,7 +60,7 @@ specifier|static
 name|void
 name|decode_buffer
 parameter_list|(
-name|lzma_coder
+name|lzma_delta_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -141,9 +141,9 @@ specifier|static
 name|lzma_ret
 name|delta_decode
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -181,6 +181,12 @@ name|lzma_action
 name|action
 parameter_list|)
 block|{
+name|lzma_delta_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|assert
 argument_list|(
 name|coder

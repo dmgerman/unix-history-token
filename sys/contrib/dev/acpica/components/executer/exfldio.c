@@ -2354,29 +2354,14 @@ operator|.
 name|AccessByteWidth
 argument_list|)
 expr_stmt|;
-comment|/*      * Create the bitmasks used for bit insertion.      * Note: This if/else is used to bypass compiler differences with the      * shift operator      */
-if|if
-condition|(
-name|AccessBitWidth
-operator|==
-name|ACPI_INTEGER_BIT_SIZE
-condition|)
-block|{
+comment|/* Create the bitmasks used for bit insertion */
 name|WidthMask
 operator|=
-name|ACPI_UINT64_MAX
-expr_stmt|;
-block|}
-else|else
-block|{
-name|WidthMask
-operator|=
-name|ACPI_MASK_BITS_ABOVE
+name|ACPI_MASK_BITS_ABOVE_64
 argument_list|(
 name|AccessBitWidth
 argument_list|)
 expr_stmt|;
-block|}
 name|Mask
 operator|=
 name|WidthMask

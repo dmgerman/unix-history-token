@@ -440,20 +440,7 @@ argument_list|,
 name|free_func
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|free_func
-operator|!=
-name|NULL
-condition|)
-name|free_func
-argument_list|(
-name|node
-argument_list|,
-name|allocator
-argument_list|)
-expr_stmt|;
-name|lzma_free
 argument_list|(
 name|node
 argument_list|,
@@ -465,19 +452,19 @@ block|}
 end_function
 
 begin_comment
-comment|/// Free the meory allocated for a tree. If free_func is not NULL,
+comment|/// Free the memory allocated for a tree. Each node is freed using the
 end_comment
 
 begin_comment
-comment|/// it is called on each node before freeing the node. This is used
+comment|/// given free_func which is either&lzma_free or&index_stream_end.
 end_comment
 
 begin_comment
-comment|/// to free the Record groups from each index_stream before freeing
+comment|/// The latter is used to free the Record groups from each index_stream
 end_comment
 
 begin_comment
-comment|/// the index_stream itself.
+comment|/// before freeing the index_stream itself.
 end_comment
 
 begin_function
@@ -511,6 +498,13 @@ name|allocator
 parameter_list|)
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|free_func
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tree
@@ -1191,7 +1185,15 @@ name|groups
 argument_list|,
 name|allocator
 argument_list|,
-name|NULL
+operator|&
+name|lzma_free
+argument_list|)
+expr_stmt|;
+name|lzma_free
+argument_list|(
+name|s
+argument_list|,
+name|allocator
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3216,6 +3218,8 @@ argument_list|,
 name|allocator
 argument_list|)
 expr_stmt|;
+comment|// NOTE: newg isn't leaked here because
+comment|// newg == (void *)&newg->node.
 block|}
 block|}
 comment|// Add all the Streams from src to dest. Update the base offsets
@@ -3403,24 +3407,14 @@ argument_list|,
 name|allocator
 argument_list|)
 decl_stmt|;
-comment|// Return immediately if allocation failed or if there are
-comment|// no groups to duplicate.
 if|if
 condition|(
 name|dest
 operator|==
 name|NULL
-operator|||
-name|src
-operator|->
-name|groups
-operator|.
-name|leftmost
-operator|==
-name|NULL
 condition|)
 return|return
-name|dest
+name|NULL
 return|;
 comment|// Copy the overall information.
 name|dest
@@ -3455,6 +3449,20 @@ name|src
 operator|->
 name|stream_padding
 expr_stmt|;
+comment|// Return if there are no groups to duplicate.
+if|if
+condition|(
+name|src
+operator|->
+name|groups
+operator|.
+name|leftmost
+operator|==
+name|NULL
+condition|)
+return|return
+name|dest
+return|;
 comment|// Allocate memory for the Records. We put all the Records into
 comment|// a single group. It's simplest and also tends to make
 comment|// lzma_index_locate() a little bit faster with very big Indexes.

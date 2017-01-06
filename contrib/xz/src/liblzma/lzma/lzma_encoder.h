@@ -65,6 +65,14 @@ directive|include
 file|"common.h"
 end_include
 
+begin_typedef
+typedef|typedef
+name|struct
+name|lzma_lzma1_encoder_s
+name|lzma_lzma1_encoder
+typedef|;
+end_typedef
+
 begin_function_decl
 specifier|extern
 name|lzma_ret
@@ -153,7 +161,7 @@ specifier|extern
 name|lzma_ret
 name|lzma_lzma_encoder_create
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 modifier|*
 name|coder_ptr
@@ -184,7 +192,7 @@ specifier|extern
 name|lzma_ret
 name|lzma_lzma_encoder_reset
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|,
@@ -201,7 +209,7 @@ specifier|extern
 name|lzma_ret
 name|lzma_lzma_encode
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|restrict
 name|coder

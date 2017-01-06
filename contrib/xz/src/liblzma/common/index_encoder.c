@@ -61,9 +61,9 @@ directive|include
 file|"check.h"
 end_include
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|lzma_coder_s
 block|{
 enum|enum
 block|{
@@ -102,17 +102,18 @@ name|uint32_t
 name|crc32
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|lzma_index_coder
+typedef|;
+end_typedef
 
 begin_decl_stmt
 specifier|static
 name|lzma_ret
 name|index_encode
 argument_list|(
-name|lzma_coder
+name|void
 operator|*
-name|coder
+name|coder_ptr
 argument_list|,
 specifier|const
 name|lzma_allocator
@@ -180,6 +181,12 @@ operator|)
 argument_list|)
 argument_list|)
 block|{
+name|lzma_index_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 comment|// Position where to start calculating CRC32. The idea is that we
 comment|// need to call lzma_crc32() only once per call to index_encode().
 specifier|const
@@ -583,7 +590,7 @@ specifier|static
 name|void
 name|index_encoder_end
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,
@@ -609,7 +616,7 @@ specifier|static
 name|void
 name|index_encoder_reset
 parameter_list|(
-name|lzma_coder
+name|lzma_index_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -713,7 +720,7 @@ name|lzma_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_index_coder
 argument_list|)
 argument_list|,
 name|allocator
@@ -874,7 +881,7 @@ name|LZMA_BUF_ERROR
 return|;
 comment|// The Index encoder needs just one small data structure so we can
 comment|// allocate it on stack.
-name|lzma_coder
+name|lzma_index_coder
 name|coder
 decl_stmt|;
 name|index_encoder_reset

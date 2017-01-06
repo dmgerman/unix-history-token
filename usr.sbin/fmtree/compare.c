@@ -796,14 +796,20 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%slink_count expected %u found %u\n"
+literal|"%slink_count expected %ju found %ju\n"
 argument_list|,
 name|tab
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|s
 operator|->
 name|st_nlink
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|p
 operator|->
 name|fts_statp

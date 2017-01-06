@@ -61,9 +61,9 @@ directive|include
 file|"delta_common.h"
 end_include
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|lzma_coder_s
 block|{
 comment|/// Next coder in the chain
 name|lzma_next_coder
@@ -85,8 +85,9 @@ name|LZMA_DELTA_DIST_MAX
 index|]
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|lzma_delta_coder
+typedef|;
+end_typedef
 
 begin_function_decl
 specifier|extern

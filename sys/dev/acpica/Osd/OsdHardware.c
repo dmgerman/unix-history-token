@@ -39,6 +39,28 @@ directive|include
 file|<machine/pci_cfgreg.h>
 end_include
 
+begin_function
+name|ACPI_STATUS
+name|AcpiOsEnterSleep
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|,
+name|UINT32
+name|RegaValue
+parameter_list|,
+name|UINT32
+name|RegbValue
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * ACPICA's rather gung-ho approach to hardware resource ownership is a little  * troublesome insofar as there is no easy way for us to know in advance  * exactly which I/O resources it's going to want to use.  *  * In order to deal with this, we ignore resource ownership entirely, and simply  * use the native I/O space accessor functionality.  This is Evil, but it works.  */
 end_comment

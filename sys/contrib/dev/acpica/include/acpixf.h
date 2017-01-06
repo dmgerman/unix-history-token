@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20161117
+value|0x20161222
 end_define
 
 begin_include
@@ -703,6 +703,46 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Debugger command handshake globals. Host OSes need to access these  * variables to implement their own command handshake mechanism.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUGGER
+end_ifdef
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|BOOLEAN
+argument_list|,
+name|AcpiGbl_MethodExecuting
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ACPI_GLOBAL
+argument_list|(
+name|char
+argument_list|,
+name|AcpiGbl_DbLineBuf
+index|[
+name|ACPI_DB_LINE_BUFFER_SIZE
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Other miscellaneous globals  */
@@ -1988,6 +2028,17 @@ name|void
 name|AcpiTerminateDebugger
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiRunDebugger
+parameter_list|(
+name|char
+modifier|*
+name|BatchBuffer
 parameter_list|)
 function_decl|;
 end_function_decl

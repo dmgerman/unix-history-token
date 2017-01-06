@@ -213,6 +213,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CAPSICUM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ENABLE_SANDBOX
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -279,11 +297,22 @@ directive|include
 file|"util.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DECODERS
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"list.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

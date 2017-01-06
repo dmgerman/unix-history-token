@@ -1050,7 +1050,7 @@ comment|/*      * The absolute minimum resource template is one EndTag descripto
 if|if
 condition|(
 name|AmlLength
-operator|<=
+operator|<
 sizeof|sizeof
 argument_list|(
 name|AML_RESOURCE_END_TAG

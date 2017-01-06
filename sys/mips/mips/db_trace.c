@@ -333,6 +333,9 @@ name|db_printf
 argument_list|(
 literal|"SP 0x%jx: not in kernel\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sp
 argument_list|)
 expr_stmt|;
@@ -590,6 +593,9 @@ name|db_printf
 argument_list|(
 literal|"PC 0x%jx: not in kernel\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pc
 argument_list|)
 expr_stmt|;

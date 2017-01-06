@@ -40,7 +40,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|AH_TABLE
-name|AcpiSupportedTables
+name|Gbl_AcpiSupportedTables
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -69,7 +69,7 @@ for|for
 control|(
 name|Info
 operator|=
-name|AcpiSupportedTables
+name|Gbl_AcpiSupportedTables
 init|;
 name|Info
 operator|->
@@ -113,7 +113,7 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|AH_TABLE
-name|AcpiSupportedTables
+name|Gbl_AcpiSupportedTables
 index|[]
 init|=
 block|{

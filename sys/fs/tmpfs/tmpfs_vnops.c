@@ -2106,11 +2106,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|tmpfs_set_status
+argument_list|(
 name|node
-operator|->
-name|tn_status
-operator||=
+argument_list|,
 name|TMPFS_NODE_ACCESSED
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5010,12 +5011,17 @@ expr_stmt|;
 comment|/* Check flags to see if we are allowed to remove the directory. */
 if|if
 condition|(
+operator|(
 name|dnode
 operator|->
 name|tn_flags
 operator|&
 name|APPEND
+operator|)
+operator|!=
+literal|0
 operator|||
+operator|(
 name|node
 operator|->
 name|tn_flags
@@ -5027,6 +5033,9 @@ name|IMMUTABLE
 operator||
 name|APPEND
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|error
@@ -5096,7 +5105,6 @@ name|TMPFS_NODE_ACCESSED
 operator||
 name|TMPFS_NODE_CHANGED
 operator||
-expr|\
 name|TMPFS_NODE_MODIFIED
 expr_stmt|;
 name|TMPFS_NODE_UNLOCK
@@ -5125,7 +5133,6 @@ name|tn_status
 operator||=
 name|TMPFS_NODE_ACCESSED
 operator||
-expr|\
 name|TMPFS_NODE_CHANGED
 operator||
 name|TMPFS_NODE_MODIFIED
@@ -5628,14 +5635,17 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+name|tmpfs_set_status
+argument_list|(
 name|node
-operator|->
-name|tn_status
-operator||=
+argument_list|,
 name|TMPFS_NODE_ACCESSED
+argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -5891,7 +5901,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_TMPFS, tmpfs_node %p, flags 0x%lx, links %d\n"
+literal|"tag VT_TMPFS, tmpfs_node %p, flags 0x%lx, links %jd\n"
 argument_list|,
 name|node
 argument_list|,
@@ -5899,6 +5909,9 @@ name|node
 operator|->
 name|tn_flags
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|node
 operator|->
 name|tn_links
