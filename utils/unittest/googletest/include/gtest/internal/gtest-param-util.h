@@ -138,7 +138,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
 end_include
 
 begin_include
@@ -199,6 +211,77 @@ begin_decl_stmt
 name|namespace
 name|testing
 block|{
+comment|// Input to a parameterized test name generator, describing a test parameter.
+comment|// Consists of the parameter value and the integer parameter index.
+name|template
+operator|<
+name|class
+name|ParamType
+operator|>
+expr|struct
+name|TestParamInfo
+block|{
+name|TestParamInfo
+argument_list|(
+argument|const ParamType& a_param
+argument_list|,
+argument|size_t an_index
+argument_list|)
+operator|:
+name|param
+argument_list|(
+name|a_param
+argument_list|)
+block|,
+name|index
+argument_list|(
+argument|an_index
+argument_list|)
+block|{}
+name|ParamType
+name|param
+block|;
+name|size_t
+name|index
+block|; }
+expr_stmt|;
+comment|// A builtin parameterized test name generator which returns the result of
+comment|// testing::PrintToString.
+struct|struct
+name|PrintToStringParamName
+block|{
+name|template
+operator|<
+name|class
+name|ParamType
+operator|>
+name|std
+operator|::
+name|string
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|TestParamInfo
+operator|<
+name|ParamType
+operator|>
+operator|&
+name|info
+operator|)
+specifier|const
+block|{
+return|return
+name|PrintToString
+argument_list|(
+name|info
+operator|.
+name|param
+argument_list|)
+return|;
+block|}
+block|}
+struct|;
 name|namespace
 name|internal
 block|{
@@ -217,13 +300,8 @@ name|char
 modifier|*
 name|test_case_name
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
+name|CodeLocation
+name|code_location
 parameter_list|)
 function_decl|;
 name|template
@@ -1003,9 +1081,15 @@ argument_list|()
 block|{
 name|value_
 operator|=
+name|static_cast
+operator|<
+name|T
+operator|>
+operator|(
 name|value_
 operator|+
 name|step_
+operator|)
 block|;
 name|index_
 operator|++
@@ -1212,9 +1296,15 @@ name|end
 condition|;
 name|i
 operator|=
+name|static_cast
+operator|<
+name|T
+operator|>
+operator|(
 name|i
 operator|+
 name|step
+operator|)
 control|)
 name|end_index
 operator|++
@@ -1335,11 +1425,12 @@ argument_list|,
 argument|end
 argument_list|)
 block|{}
+name|virtual
 operator|~
 name|ValuesInIteratorRangeGenerator
 argument_list|()
-name|override
 block|{}
+name|virtual
 name|ParamIteratorInterface
 operator|<
 name|T
@@ -1348,7 +1439,6 @@ operator|*
 name|Begin
 argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 name|new
@@ -1363,6 +1453,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|virtual
 name|ParamIteratorInterface
 operator|<
 name|T
@@ -1371,7 +1462,6 @@ operator|*
 name|End
 argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 name|new
@@ -1436,11 +1526,12 @@ argument_list|(
 argument|iterator
 argument_list|)
 block|{}
+name|virtual
 operator|~
 name|Iterator
 argument_list|()
-name|override
 block|{}
+name|virtual
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -1450,16 +1541,15 @@ operator|*
 name|BaseGenerator
 argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 name|base_
 return|;
 block|}
+name|virtual
 name|void
 name|Advance
 argument_list|()
-name|override
 block|{
 operator|++
 name|iterator_
@@ -1469,6 +1559,7 @@ operator|.
 name|reset
 argument_list|()
 block|;     }
+name|virtual
 name|ParamIteratorInterface
 operator|<
 name|T
@@ -1477,7 +1568,6 @@ operator|*
 name|Clone
 argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 name|new
@@ -1495,13 +1585,13 @@ comment|// value_ is updated here and not in Advance() because Advance()
 comment|// can advance iterator_ beyond the end of the range, and we cannot
 comment|// detect that fact. The client code, on the other hand, is
 comment|// responsible for not calling Current() on an out-of-range iterator.
+name|virtual
 specifier|const
 name|T
 operator|*
 name|Current
 argument_list|()
 specifier|const
-name|override
 block|{
 if|if
 condition|(
@@ -1529,6 +1619,7 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
+name|virtual
 name|bool
 name|Equals
 argument_list|(
@@ -1541,7 +1632,6 @@ operator|&
 name|other
 argument_list|)
 decl|const
-name|override
 block|{
 comment|// Having the same base generator guarantees that the other
 comment|// iterator is of the same type and we can downcast.
@@ -1711,6 +1801,148 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Default parameterized test name generator, returns a string containing the
+end_comment
+
+begin_comment
+comment|// integer test parameter index.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ParamType
+operator|>
+name|std
+operator|::
+name|string
+name|DefaultParamName
+argument_list|(
+argument|const TestParamInfo<ParamType>& info
+argument_list|)
+block|{
+name|Message
+name|name_stream
+block|;
+name|name_stream
+operator|<<
+name|info
+operator|.
+name|index
+block|;
+return|return
+name|name_stream
+operator|.
+name|GetString
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Parameterized test name overload helpers, which help the
+end_comment
+
+begin_comment
+comment|// INSTANTIATE_TEST_CASE_P macro choose between the default parameterized
+end_comment
+
+begin_comment
+comment|// test name generator and user param name generator.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ParamType
+operator|,
+name|class
+name|ParamNameGenFunctor
+operator|>
+name|ParamNameGenFunctor
+name|GetParamNameGen
+argument_list|(
+argument|ParamNameGenFunctor func
+argument_list|)
+block|{
+return|return
+name|func
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ParamType
+operator|>
+expr|struct
+name|ParamNameGenFunc
+block|{
+typedef|typedef
+name|std
+operator|::
+name|string
+name|Type
+argument_list|(
+specifier|const
+name|TestParamInfo
+operator|<
+name|ParamType
+operator|>
+operator|&
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ParamType
+operator|>
+name|typename
+name|ParamNameGenFunc
+operator|<
+name|ParamType
+operator|>
+operator|::
+name|Type
+operator|*
+name|GetParamNameGen
+argument_list|()
+block|{
+return|return
+name|DefaultParamName
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Stores a parameter value and later creates tests parameterized with that
 end_comment
 
@@ -1750,11 +1982,11 @@ argument_list|(
 argument|parameter
 argument_list|)
 block|{}
+name|virtual
 name|Test
 operator|*
 name|CreateTest
 argument_list|()
-name|override
 block|{
 name|TestClass
 operator|::
@@ -1900,13 +2132,13 @@ expr_stmt|;
 name|TestMetaFactory
 argument_list|()
 block|{}
+name|virtual
 name|TestFactoryBase
 operator|*
 name|CreateTestFactory
 argument_list|(
 argument|ParamType parameter
 argument_list|)
-name|override
 block|{
 return|return
 name|new
@@ -1985,7 +2217,7 @@ name|virtual
 operator|~
 name|ParameterizedTestCaseInfoBase
 argument_list|()
-expr_stmt|;
+block|{}
 comment|// Base part of test case name for display purposes.
 name|virtual
 specifier|const
@@ -2107,32 +2339,52 @@ argument_list|()
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|typename
+name|ParamNameGenFunc
+operator|<
+name|ParamType
+operator|>
+operator|::
+name|Type
+name|ParamNameGeneratorFunc
+expr_stmt|;
+end_typedef
+
 begin_macro
 name|explicit
 end_macro
 
-begin_expr_stmt
+begin_macro
 name|ParameterizedTestCaseInfo
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|name
+argument|const char* name
+argument_list|,
+argument|CodeLocation code_location
 argument_list|)
-operator|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|test_case_name_
 argument_list|(
-argument|name
+name|name
+argument_list|)
+operator|,
+name|code_location_
+argument_list|(
+argument|code_location
 argument_list|)
 block|{}
 comment|// Test case base name for display purposes.
+name|virtual
 specifier|const
 name|string
 operator|&
 name|GetTestCaseName
 argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 name|test_case_name_
@@ -2145,11 +2397,11 @@ comment|// Test case id to verify identity.
 end_comment
 
 begin_expr_stmt
+name|virtual
 name|TypeId
 name|GetTestCaseTypeId
 argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 name|GetTypeId
@@ -2253,27 +2505,34 @@ name|GeneratorCreationFunc
 modifier|*
 name|func
 parameter_list|,
+name|ParamNameGeneratorFunc
+modifier|*
+name|name_func
+parameter_list|,
 specifier|const
 name|char
 modifier|*
-comment|/* file */
+name|file
 parameter_list|,
 name|int
-comment|/* line */
+name|line
 parameter_list|)
 block|{
 name|instantiations_
 operator|.
 name|push_back
 argument_list|(
-operator|::
-name|std
-operator|::
-name|make_pair
+name|InstantiationInfo
 argument_list|(
 name|instantiation_name
 argument_list|,
 name|func
+argument_list|,
+name|name_func
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2305,10 +2564,10 @@ comment|// UnitTest has a guard to prevent from calling this method more then on
 end_comment
 
 begin_function
+name|virtual
 name|void
 name|RegisterTests
 parameter_list|()
-function|override
 block|{
 for|for
 control|(
@@ -2374,7 +2633,7 @@ name|instantiation_name
 init|=
 name|gen_it
 operator|->
-name|first
+name|name
 decl_stmt|;
 name|ParamGenerator
 operator|<
@@ -2386,13 +2645,37 @@ call|(
 modifier|*
 name|gen_it
 operator|->
-name|second
+name|generator
 call|)
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|Message
-name|test_case_name_stream
+name|ParamNameGeneratorFunc
+modifier|*
+name|name_func
+init|=
+name|gen_it
+operator|->
+name|name_func
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+init|=
+name|gen_it
+operator|->
+name|file
+decl_stmt|;
+name|int
+name|line
+init|=
+name|gen_it
+operator|->
+name|line
+decl_stmt|;
+name|string
+name|test_case_name
 decl_stmt|;
 if|if
 condition|(
@@ -2402,23 +2685,33 @@ operator|.
 name|empty
 argument_list|()
 condition|)
-name|test_case_name_stream
-operator|<<
+name|test_case_name
+operator|=
 name|instantiation_name
-operator|<<
+operator|+
 literal|"/"
 expr_stmt|;
-name|test_case_name_stream
-operator|<<
+name|test_case_name
+operator|+=
 name|test_info
 operator|->
 name|test_case_base_name
 expr_stmt|;
-name|int
+name|size_t
 name|i
 init|=
 literal|0
 decl_stmt|;
+name|std
+operator|::
+name|set
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|test_param_names
+expr_stmt|;
 for|for
 control|(
 name|typename
@@ -2452,6 +2745,84 @@ block|{
 name|Message
 name|test_name_stream
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|param_name
+operator|=
+name|name_func
+argument_list|(
+name|TestParamInfo
+operator|<
+name|ParamType
+operator|>
+operator|(
+operator|*
+name|param_it
+operator|,
+name|i
+operator|)
+argument_list|)
+expr_stmt|;
+name|GTEST_CHECK_
+argument_list|(
+name|IsValidParamName
+argument_list|(
+name|param_name
+argument_list|)
+argument_list|)
+operator|<<
+literal|"Parameterized test name '"
+operator|<<
+name|param_name
+operator|<<
+literal|"' is invalid, in "
+operator|<<
+name|file
+operator|<<
+literal|" line "
+operator|<<
+name|line
+operator|<<
+name|std
+operator|::
+name|endl
+expr_stmt|;
+name|GTEST_CHECK_
+argument_list|(
+name|test_param_names
+operator|.
+name|count
+argument_list|(
+name|param_name
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+operator|<<
+literal|"Duplicate parameterized test name '"
+operator|<<
+name|param_name
+operator|<<
+literal|"', in "
+operator|<<
+name|file
+operator|<<
+literal|" line "
+operator|<<
+name|line
+operator|<<
+name|std
+operator|::
+name|endl
+expr_stmt|;
+name|test_param_names
+operator|.
+name|insert
+argument_list|(
+name|param_name
+argument_list|)
+expr_stmt|;
 name|test_name_stream
 operator|<<
 name|test_info
@@ -2460,14 +2831,11 @@ name|test_base_name
 operator|<<
 literal|"/"
 operator|<<
-name|i
+name|param_name
 expr_stmt|;
 name|MakeAndRegisterTestInfo
 argument_list|(
-name|test_case_name_stream
-operator|.
-name|GetString
-argument_list|()
+name|test_case_name
 operator|.
 name|c_str
 argument_list|()
@@ -2491,6 +2859,8 @@ argument_list|)
 operator|.
 name|c_str
 argument_list|()
+argument_list|,
+name|code_location_
 argument_list|,
 name|GetTestCaseTypeId
 argument_list|()
@@ -2618,12 +2988,83 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|// Keeps pairs of<Instantiation name, Sequence generator creation function>
+comment|// Records data received from INSTANTIATE_TEST_CASE_P macros:
 end_comment
 
 begin_comment
-comment|// received from INSTANTIATE_TEST_CASE_P macros.
+comment|//<Instantiation name, Sequence generator creation function,
 end_comment
+
+begin_comment
+comment|//     Name generator function, Source file, Source line>
+end_comment
+
+begin_struct
+struct|struct
+name|InstantiationInfo
+block|{
+name|InstantiationInfo
+argument_list|(
+argument|const std::string&name_in
+argument_list|,
+argument|GeneratorCreationFunc* generator_in
+argument_list|,
+argument|ParamNameGeneratorFunc* name_func_in
+argument_list|,
+argument|const char* file_in
+argument_list|,
+argument|int line_in
+argument_list|)
+block|:
+name|name
+argument_list|(
+name|name_in
+argument_list|)
+operator|,
+name|generator
+argument_list|(
+name|generator_in
+argument_list|)
+operator|,
+name|name_func
+argument_list|(
+name|name_func_in
+argument_list|)
+operator|,
+name|file
+argument_list|(
+name|file_in
+argument_list|)
+operator|,
+name|line
+argument_list|(
+argument|line_in
+argument_list|)
+block|{}
+name|std
+operator|::
+name|string
+name|name
+expr_stmt|;
+name|GeneratorCreationFunc
+modifier|*
+name|generator
+decl_stmt|;
+name|ParamNameGeneratorFunc
+modifier|*
+name|name_func
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|int
+name|line
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
@@ -2632,24 +3073,97 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|string
-operator|,
-name|GeneratorCreationFunc
-operator|*
+name|InstantiationInfo
 operator|>
-expr|>
 name|InstantiationContainer
 expr_stmt|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
+name|bool
+name|IsValidParamName
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|name
+argument_list|)
+block|{
+comment|// Check for empty string
+if|if
+condition|(
+name|name
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+comment|// Check for invalid characters
+for|for
+control|(
+name|std
+operator|::
+name|string
+operator|::
+name|size_type
+name|index
+operator|=
+literal|0
+init|;
+name|index
+operator|<
+name|name
+operator|.
+name|size
+argument_list|()
+condition|;
+operator|++
+name|index
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isalnum
+argument_list|(
+name|name
+index|[
+name|index
+index|]
+argument_list|)
+operator|&&
+name|name
+index|[
+name|index
+index|]
+operator|!=
+literal|'_'
+condition|)
+return|return
+name|false
+return|;
+block|}
+return|return
+name|true
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|string
 name|test_case_name_
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CodeLocation
+name|code_location_
 decl_stmt|;
 end_decl_stmt
 
@@ -2760,9 +3274,7 @@ name|GetTestCasePatternHolder
 argument_list|(
 argument|const char* test_case_name
 argument_list|,
-argument|const char* file
-argument_list|,
-argument|int line
+argument|CodeLocation code_location
 argument_list|)
 block|{
 name|ParameterizedTestCaseInfo
@@ -2835,9 +3347,7 @@ name|ReportInvalidTestCaseType
 argument_list|(
 name|test_case_name
 argument_list|,
-name|file
-argument_list|,
-name|line
+name|code_location
 argument_list|)
 expr_stmt|;
 name|posix
@@ -2885,6 +3395,8 @@ name|TestCase
 operator|>
 operator|(
 name|test_case_name
+operator|,
+name|code_location
 operator|)
 expr_stmt|;
 name|test_case_infos_

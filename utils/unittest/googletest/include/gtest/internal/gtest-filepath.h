@@ -217,24 +217,9 @@ name|explicit
 name|FilePath
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|pathname
-argument_list|)
-operator|:
-name|pathname_
-argument_list|(
-argument|pathname
-argument_list|)
-block|{
-name|Normalize
-argument_list|()
-block|;   }
-name|explicit
-name|FilePath
-argument_list|(
-specifier|const
-name|String
+name|std
+operator|::
+name|string
 operator|&
 name|pathname
 argument_list|)
@@ -284,8 +269,12 @@ operator|.
 name|pathname_
 expr_stmt|;
 block|}
-name|String
-name|ToString
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|string
 argument_list|()
 specifier|const
 block|{
@@ -386,23 +375,17 @@ modifier|*
 name|extension
 parameter_list|)
 function_decl|;
-comment|// Returns true iff the path is NULL or "".
+comment|// Returns true iff the path is "".
 name|bool
 name|IsEmpty
 argument_list|()
 specifier|const
 block|{
 return|return
-name|c_str
+name|pathname_
+operator|.
+name|empty
 argument_list|()
-operator|==
-name|NULL
-operator|||
-operator|*
-name|c_str
-argument_list|()
-operator|==
-literal|'\0'
 return|;
 block|}
 comment|// If input name has a trailing separator character, removes it and returns
@@ -527,7 +510,7 @@ name|void
 name|Normalize
 parameter_list|()
 function_decl|;
-comment|// Returns a pointer to the last occurrence of a valid path separator in
+comment|// Returns a pointer to the last occurence of a valid path separator in
 comment|// the FilePath. On Windows, for example, both '/' and '\' are valid path
 comment|// separators. Returns NULL if no path separator was found.
 specifier|const
@@ -537,9 +520,11 @@ name|FindLastPathSeparator
 argument_list|()
 specifier|const
 expr_stmt|;
-name|String
+name|std
+operator|::
+name|string
 name|pathname_
-decl_stmt|;
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|// class FilePath

@@ -163,7 +163,7 @@ name|GTEST_IMPLEMENTATION_
 end_if
 
 begin_comment
-comment|// A user is trying to include this from his code - just say no.
+comment|// If this file is included from the user's code, just say no.
 end_comment
 
 begin_error
@@ -257,6 +257,37 @@ include|#
 directive|include
 file|"gtest/internal/gtest-port.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|GTEST_CAN_STREAM_RESULTS_
+end_if
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -423,6 +454,13 @@ index|[]
 init|=
 literal|"throw_on_failure"
 decl_stmt|;
+specifier|const
+name|char
+name|kFlagfileFlag
+index|[]
+init|=
+literal|"flagfile"
+decl_stmt|;
 comment|// A valid random seed must be in [1, kMaxRandomSeed].
 specifier|const
 name|int
@@ -458,6 +496,19 @@ name|std
 operator|::
 name|string
 name|FormatTimeInMillisAsSeconds
+argument_list|(
+argument|TimeInMillis ms
+argument_list|)
+expr_stmt|;
+comment|// Converts the given time in milliseconds to a date string in the ISO 8601
+comment|// format, without the timezone information.  N.B.: due to the use the
+comment|// non-reentrant localtime() function, this function is not thread safe.  Do
+comment|// not use it in any code that can be called from multiple threads.
+name|GTEST_API_
+name|std
+operator|::
+name|string
+name|FormatEpochTimeInMillisAsIso8601
 argument_list|(
 argument|TimeInMillis ms
 argument_list|)
@@ -621,69 +672,6 @@ comment|// The c'tor.
 name|GTestFlagSaver
 argument_list|()
 block|{
-name|color_
-operator|=
-name|GTEST_FLAG
-argument_list|(
-name|color
-argument_list|)
-expr_stmt|;
-name|death_test_style_
-operator|=
-name|GTEST_FLAG
-argument_list|(
-name|death_test_style
-argument_list|)
-expr_stmt|;
-name|filter_
-operator|=
-name|GTEST_FLAG
-argument_list|(
-name|filter
-argument_list|)
-expr_stmt|;
-name|internal_run_death_test_
-operator|=
-name|GTEST_FLAG
-argument_list|(
-name|internal_run_death_test
-argument_list|)
-expr_stmt|;
-name|output_
-operator|=
-name|GTEST_FLAG
-argument_list|(
-name|output
-argument_list|)
-expr_stmt|;
-name|stream_result_to_
-operator|=
-name|GTEST_FLAG
-argument_list|(
-name|stream_result_to
-argument_list|)
-expr_stmt|;
-name|random_seed_
-operator|=
-name|GTEST_FLAG
-argument_list|(
-name|random_seed
-argument_list|)
-expr_stmt|;
-name|repeat_
-operator|=
-name|GTEST_FLAG
-argument_list|(
-name|repeat
-argument_list|)
-expr_stmt|;
-name|stack_trace_depth_
-operator|=
-name|GTEST_FLAG
-argument_list|(
-name|stack_trace_depth
-argument_list|)
-expr_stmt|;
 name|also_run_disabled_tests_
 operator|=
 name|GTEST_FLAG
@@ -705,11 +693,39 @@ argument_list|(
 name|catch_exceptions
 argument_list|)
 expr_stmt|;
+name|color_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|color
+argument_list|)
+expr_stmt|;
+name|death_test_style_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|death_test_style
+argument_list|)
+expr_stmt|;
 name|death_test_use_fork_
 operator|=
 name|GTEST_FLAG
 argument_list|(
 name|death_test_use_fork
+argument_list|)
+expr_stmt|;
+name|filter_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|filter
+argument_list|)
+expr_stmt|;
+name|internal_run_death_test_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|internal_run_death_test
 argument_list|)
 expr_stmt|;
 name|list_tests_
@@ -719,6 +735,13 @@ argument_list|(
 name|list_tests
 argument_list|)
 expr_stmt|;
+name|output_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|output
+argument_list|)
+expr_stmt|;
 name|print_time_
 operator|=
 name|GTEST_FLAG
@@ -726,11 +749,39 @@ argument_list|(
 name|print_time
 argument_list|)
 expr_stmt|;
+name|random_seed_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|random_seed
+argument_list|)
+expr_stmt|;
+name|repeat_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|repeat
+argument_list|)
+expr_stmt|;
 name|shuffle_
 operator|=
 name|GTEST_FLAG
 argument_list|(
 name|shuffle
+argument_list|)
+expr_stmt|;
+name|stack_trace_depth_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|stack_trace_depth
+argument_list|)
+expr_stmt|;
+name|stream_result_to_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|stream_result_to
 argument_list|)
 expr_stmt|;
 name|throw_on_failure_
@@ -748,69 +799,6 @@ argument_list|()
 block|{
 name|GTEST_FLAG
 argument_list|(
-name|color
-argument_list|)
-operator|=
-name|color_
-block|;
-name|GTEST_FLAG
-argument_list|(
-name|death_test_style
-argument_list|)
-operator|=
-name|death_test_style_
-block|;
-name|GTEST_FLAG
-argument_list|(
-name|filter
-argument_list|)
-operator|=
-name|filter_
-block|;
-name|GTEST_FLAG
-argument_list|(
-name|internal_run_death_test
-argument_list|)
-operator|=
-name|internal_run_death_test_
-block|;
-name|GTEST_FLAG
-argument_list|(
-name|output
-argument_list|)
-operator|=
-name|output_
-block|;
-name|GTEST_FLAG
-argument_list|(
-name|stream_result_to
-argument_list|)
-operator|=
-name|stream_result_to_
-block|;
-name|GTEST_FLAG
-argument_list|(
-name|random_seed
-argument_list|)
-operator|=
-name|random_seed_
-block|;
-name|GTEST_FLAG
-argument_list|(
-name|repeat
-argument_list|)
-operator|=
-name|repeat_
-block|;
-name|GTEST_FLAG
-argument_list|(
-name|stack_trace_depth
-argument_list|)
-operator|=
-name|stack_trace_depth_
-block|;
-name|GTEST_FLAG
-argument_list|(
 name|also_run_disabled_tests
 argument_list|)
 operator|=
@@ -832,10 +820,38 @@ name|catch_exceptions_
 block|;
 name|GTEST_FLAG
 argument_list|(
+name|color
+argument_list|)
+operator|=
+name|color_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|death_test_style
+argument_list|)
+operator|=
+name|death_test_style_
+block|;
+name|GTEST_FLAG
+argument_list|(
 name|death_test_use_fork
 argument_list|)
 operator|=
 name|death_test_use_fork_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|filter
+argument_list|)
+operator|=
+name|filter_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|internal_run_death_test
+argument_list|)
+operator|=
+name|internal_run_death_test_
 block|;
 name|GTEST_FLAG
 argument_list|(
@@ -846,6 +862,13 @@ name|list_tests_
 block|;
 name|GTEST_FLAG
 argument_list|(
+name|output
+argument_list|)
+operator|=
+name|output_
+block|;
+name|GTEST_FLAG
+argument_list|(
 name|print_time
 argument_list|)
 operator|=
@@ -853,10 +876,38 @@ name|print_time_
 block|;
 name|GTEST_FLAG
 argument_list|(
+name|random_seed
+argument_list|)
+operator|=
+name|random_seed_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|repeat
+argument_list|)
+operator|=
+name|repeat_
+block|;
+name|GTEST_FLAG
+argument_list|(
 name|shuffle
 argument_list|)
 operator|=
 name|shuffle_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|stack_trace_depth
+argument_list|)
+operator|=
+name|stack_trace_depth_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|stream_result_to
+argument_list|)
+operator|=
+name|stream_result_to_
 block|;
 name|GTEST_FLAG
 argument_list|(
@@ -868,23 +919,48 @@ block|;   }
 name|private
 operator|:
 comment|// Fields for saving the original values of flags.
-name|String
+name|bool
+name|also_run_disabled_tests_
+expr_stmt|;
+name|bool
+name|break_on_failure_
+decl_stmt|;
+name|bool
+name|catch_exceptions_
+decl_stmt|;
+name|std
+operator|::
+name|string
 name|color_
 expr_stmt|;
-name|String
+name|std
+operator|::
+name|string
 name|death_test_style_
+expr_stmt|;
+name|bool
+name|death_test_use_fork_
 decl_stmt|;
-name|String
+name|std
+operator|::
+name|string
 name|filter_
-decl_stmt|;
-name|String
+expr_stmt|;
+name|std
+operator|::
+name|string
 name|internal_run_death_test_
+expr_stmt|;
+name|bool
+name|list_tests_
 decl_stmt|;
-name|String
+name|std
+operator|::
+name|string
 name|output_
-decl_stmt|;
-name|String
-name|stream_result_to_
+expr_stmt|;
+name|bool
+name|print_time_
 decl_stmt|;
 name|internal
 operator|::
@@ -896,32 +972,19 @@ operator|::
 name|Int32
 name|repeat_
 expr_stmt|;
+name|bool
+name|shuffle_
+decl_stmt|;
 name|internal
 operator|::
 name|Int32
 name|stack_trace_depth_
 expr_stmt|;
-name|bool
-name|also_run_disabled_tests_
-decl_stmt|;
-name|bool
-name|break_on_failure_
-decl_stmt|;
-name|bool
-name|catch_exceptions_
-decl_stmt|;
-name|bool
-name|death_test_use_fork_
-decl_stmt|;
-name|bool
-name|list_tests_
-decl_stmt|;
-name|bool
-name|print_time_
-decl_stmt|;
-name|bool
-name|shuffle_
-decl_stmt|;
+name|std
+operator|::
+name|string
+name|stream_result_to_
+expr_stmt|;
 name|bool
 name|throw_on_failure_
 decl_stmt|;
@@ -931,24 +994,18 @@ expr_stmt|;
 comment|// Converts a Unicode code point to a narrow string in UTF-8 encoding.
 comment|// code_point parameter is of type UInt32 because wchar_t may not be
 comment|// wide enough to contain a code point.
-comment|// The output buffer str must containt at least 32 characters.
-comment|// The function returns the address of the output buffer.
 comment|// If the code_point is not a valid Unicode code point
-comment|// (i.e. outside of Unicode range U+0 to U+10FFFF) it will be output
-comment|// as '(Invalid Unicode 0xXXXXXXXX)'.
+comment|// (i.e. outside of Unicode range U+0 to U+10FFFF) it will be converted
+comment|// to "(Invalid Unicode 0xXXXXXXXX)".
 name|GTEST_API_
-name|char
-modifier|*
+name|std
+operator|::
+name|string
 name|CodePointToUtf8
-parameter_list|(
-name|UInt32
-name|code_point
-parameter_list|,
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|UInt32 code_point
+argument_list|)
+expr_stmt|;
 comment|// Converts a wide string to a narrow string in UTF-8 encoding.
 comment|// The wide string is assumed to have the following encoding:
 comment|//   UTF-16 if sizeof(wchar_t) == 2 (on Windows, Cygwin, Symbian OS)
@@ -963,18 +1020,16 @@ comment|// as '(Invalid Unicode 0xXXXXXXXX)'. If the string is in UTF16 encoding
 comment|// and contains invalid UTF-16 surrogate pairs, values in those pairs
 comment|// will be encoded as individual Unicode characters from Basic Normal Plane.
 name|GTEST_API_
-name|String
+name|std
+operator|::
+name|string
 name|WideStringToUtf8
-parameter_list|(
-specifier|const
-name|wchar_t
-modifier|*
-name|str
-parameter_list|,
-name|int
-name|num_chars
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const wchar_t* str
+argument_list|,
+argument|int num_chars
+argument_list|)
+expr_stmt|;
 comment|// Reads the GTEST_SHARD_STATUS_FILE environment variable, and creates the file
 comment|// if the variable is present. If a file already exists at this location, this
 comment|// function will write over it. If the variable is present, but the file cannot
@@ -1402,8 +1457,10 @@ name|explicit
 name|TestPropertyKeyIs
 argument_list|(
 specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
+operator|&
 name|key
 argument_list|)
 operator|:
@@ -1425,25 +1482,19 @@ operator|)
 specifier|const
 block|{
 return|return
-name|String
-argument_list|(
 name|test_property
 operator|.
 name|key
 argument_list|()
-argument_list|)
-operator|.
-name|Compare
-argument_list|(
-name|key_
-argument_list|)
 operator|==
-literal|0
+name|key_
 return|;
 block|}
 name|private
 operator|:
-name|String
+name|std
+operator|::
+name|string
 name|key_
 block|; }
 expr_stmt|;
@@ -1466,18 +1517,22 @@ label|:
 comment|// Functions for processing the gtest_output flag.
 comment|// Returns the output format, or "" for normal printed output.
 specifier|static
-name|String
+name|std
+operator|::
+name|string
 name|GetOutputFormat
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|// Returns the absolute path of the requested output file, or the
 comment|// default (test_detail.xml in the original working directory) if
 comment|// none was explicitly specified.
 specifier|static
-name|String
+name|std
+operator|::
+name|string
 name|GetAbsolutePathToOutputFile
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|// Functions for processing the gtest_filter flag.
 comment|// Returns true iff the wildcard pattern matches the string.  The
 comment|// first ':' or '\0' character in pattern marks the end of it.
@@ -1504,18 +1559,22 @@ comment|// name and the test name.
 specifier|static
 name|bool
 name|FilterMatchesTest
-parameter_list|(
+argument_list|(
 specifier|const
-name|String
-modifier|&
+name|std
+operator|::
+name|string
+operator|&
 name|test_case_name
-parameter_list|,
+argument_list|,
 specifier|const
-name|String
-modifier|&
+name|std
+operator|::
+name|string
+operator|&
 name|test_name
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 if|#
 directive|if
 name|GTEST_OS_WINDOWS
@@ -1539,18 +1598,20 @@ comment|// filters in "filter".
 specifier|static
 name|bool
 name|MatchesFilter
-parameter_list|(
+argument_list|(
 specifier|const
-name|String
-modifier|&
+name|std
+operator|::
+name|string
+operator|&
 name|name
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|filter
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|// Returns the current application's name, removing directory path if that
@@ -1573,26 +1634,24 @@ name|virtual
 operator|~
 name|OsStackTraceGetterInterface
 argument_list|()
-expr_stmt|;
-comment|// Returns the current OS stack trace as a String.  Parameters:
+block|{}
+comment|// Returns the current OS stack trace as an std::string.  Parameters:
 comment|//
 comment|//   max_depth  - the maximum number of stack frames to be included
 comment|//                in the trace.
 comment|//   skip_count - the number of top frames to be skipped; doesn't count
 comment|//                against max_depth.
 name|virtual
-name|String
+name|string
 name|CurrentStackTrace
-parameter_list|(
-name|int
-name|max_depth
-parameter_list|,
-name|int
-name|skip_count
-parameter_list|)
-init|=
+argument_list|(
+argument|int max_depth
+argument_list|,
+argument|int skip_count
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 comment|// UponLeavingGTest() should be called immediately before Google Test calls
 comment|// user code. It saves some information about the current stack that
 comment|// CurrentStackTrace() will use to find and hide Google Test stack frames.
@@ -1603,6 +1662,15 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+comment|// This string is inserted in place of stack frames that are part of
+comment|// Google Test's implementation.
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|kElidedFramesMarker
+decl_stmt|;
 name|private
 label|:
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
@@ -1623,49 +1691,23 @@ name|public
 operator|:
 name|OsStackTraceGetter
 argument_list|()
-operator|:
-name|caller_frame_
-argument_list|(
-argument|NULL
-argument_list|)
 block|{}
-name|String
+name|virtual
+name|string
 name|CurrentStackTrace
 argument_list|(
 argument|int max_depth
 argument_list|,
 argument|int skip_count
 argument_list|)
-name|override
 block|;
+name|virtual
 name|void
 name|UponLeavingGTest
 argument_list|()
-name|override
-block|;
-comment|// This string is inserted in place of stack frames that are part of
-comment|// Google Test's implementation.
-specifier|static
-specifier|const
-name|char
-operator|*
-specifier|const
-name|kElidedFramesMarker
 block|;
 name|private
 operator|:
-name|Mutex
-name|mutex_
-block|;
-comment|// protects all internal state
-comment|// We save the stack frame below the frame that calls user code.
-comment|// We do this because the address of the frame immediately below
-comment|// the user code changes between the call to UponLeavingGTest()
-comment|// and any calls to CurrentStackTrace() from within the user code.
-name|void
-operator|*
-name|caller_frame_
-block|;
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
 argument_list|(
 name|OsStackTraceGetter
@@ -1684,9 +1726,11 @@ decl_stmt|;
 name|int
 name|line
 decl_stmt|;
-name|String
+name|std
+operator|::
+name|string
 name|message
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 comment|// This is the default global test part result reporter used in UnitTestImpl.
@@ -1709,12 +1753,15 @@ argument_list|)
 block|;
 comment|// Implements the TestPartResultReporterInterface. Reports the test part
 comment|// result in the current test.
+name|virtual
 name|void
 name|ReportTestPartResult
 argument_list|(
-argument|const TestPartResult&result
+specifier|const
+name|TestPartResult
+operator|&
+name|result
 argument_list|)
-name|override
 block|;
 name|private
 operator|:
@@ -1749,12 +1796,15 @@ argument_list|)
 block|;
 comment|// Implements the TestPartResultReporterInterface. The implementation just
 comment|// delegates to the current global test part result reporter of *unit_test_.
+name|virtual
 name|void
 name|ReportTestPartResult
 argument_list|(
-argument|const TestPartResult&result
+specifier|const
+name|TestPartResult
+operator|&
+name|result
 argument_list|)
-name|override
 block|;
 name|private
 operator|:
@@ -1865,9 +1915,21 @@ name|failed_test_count
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// Gets the number of disabled tests that will be reported in the XML report.
+name|int
+name|reportable_disabled_test_count
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Gets the number of disabled tests.
 name|int
 name|disabled_test_count
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Gets the number of tests to be printed in the XML report.
+name|int
+name|reportable_test_count
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1883,6 +1945,17 @@ name|test_to_run_count
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// Gets the time of the test program start, in ms from the start of the
+comment|// UNIX epoch.
+name|TimeInMillis
+name|start_timestamp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|start_timestamp_
+return|;
+block|}
 comment|// Gets the elapsed time, in milliseconds.
 name|TimeInMillis
 name|elapsed_time
@@ -2053,7 +2126,7 @@ modifier|*
 name|os_stack_trace_getter
 parameter_list|()
 function_decl|;
-comment|// Returns the current OS stack trace as a String.
+comment|// Returns the current OS stack trace as an std::string.
 comment|//
 comment|// The maximum number of stack frames to be included is specified by
 comment|// the gtest_stack_trace_depth flag.  The skip_count parameter
@@ -2063,13 +2136,15 @@ comment|//
 comment|// For example, if Foo() calls Bar(), which in turn calls
 comment|// CurrentOsStackTraceExceptTop(1), Foo() will be included in the
 comment|// trace but Bar() and CurrentOsStackTraceExceptTop() won't.
-name|String
+name|std
+operator|::
+name|string
 name|CurrentOsStackTraceExceptTop
-parameter_list|(
-name|int
-name|skip_count
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|int skip_count
+argument_list|)
+name|GTEST_NO_INLINE_
+expr_stmt|;
 comment|// Finds and returns a TestCase with the given name.  If one doesn't
 comment|// exist, creates one and returns it.
 comment|//
@@ -2283,6 +2358,19 @@ name|Clear
 argument_list|()
 expr_stmt|;
 block|}
+comment|// Adds a TestProperty to the current TestResult object when invoked in a
+comment|// context of a test or a test case, or to the global property set. If the
+comment|// result already contains a property with the same key, the value will be
+comment|// updated.
+name|void
+name|RecordProperty
+parameter_list|(
+specifier|const
+name|TestProperty
+modifier|&
+name|test_property
+parameter_list|)
+function_decl|;
 enum|enum
 name|ReactionToSharding
 block|{
@@ -2701,6 +2789,11 @@ operator|::
 name|Random
 name|random_
 expr_stmt|;
+comment|// The time of the test program start, in ms from the start of the
+comment|// UNIX epoch.
+name|TimeInMillis
+name|start_timestamp_
+decl_stmt|;
 comment|// How long the test took to run, in milliseconds.
 name|TimeInMillis
 name|elapsed_time_
@@ -2959,111 +3052,12 @@ name|GTEST_HAS_DEATH_TEST
 comment|// Returns the message describing the last system error, regardless of the
 comment|// platform.
 name|GTEST_API_
-name|String
-name|GetLastErrnoDescription
-parameter_list|()
-function_decl|;
-if|#
-directive|if
-name|GTEST_OS_WINDOWS
-comment|// Provides leak-safe Windows kernel handle ownership.
-name|class
-name|AutoHandle
-block|{
-name|public
-label|:
-name|AutoHandle
-argument_list|()
-operator|:
-name|handle_
-argument_list|(
-argument|INVALID_HANDLE_VALUE
-argument_list|)
-block|{}
-name|explicit
-name|AutoHandle
-argument_list|(
-argument|HANDLE handle
-argument_list|)
-operator|:
-name|handle_
-argument_list|(
-argument|handle
-argument_list|)
-block|{}
-operator|~
-name|AutoHandle
-argument_list|()
-block|{
-name|Reset
-argument_list|()
-block|; }
-name|HANDLE
-name|Get
-argument_list|()
-specifier|const
-block|{
-return|return
-name|handle_
-return|;
-block|}
-name|void
-name|Reset
-parameter_list|()
-block|{
-name|Reset
-argument_list|(
-name|INVALID_HANDLE_VALUE
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|Reset
-parameter_list|(
-name|HANDLE
-name|handle
-parameter_list|)
-block|{
-if|if
-condition|(
-name|handle
-operator|!=
-name|handle_
-condition|)
-block|{
-if|if
-condition|(
-name|handle_
-operator|!=
-name|INVALID_HANDLE_VALUE
-condition|)
+name|std
 operator|::
-name|CloseHandle
-argument_list|(
-name|handle_
-argument_list|)
+name|string
+name|GetLastErrnoDescription
+argument_list|()
 expr_stmt|;
-name|handle_
-operator|=
-name|handle
-expr_stmt|;
-block|}
-block|}
-name|private
-label|:
-name|HANDLE
-name|handle_
-decl_stmt|;
-name|GTEST_DISALLOW_COPY_AND_ASSIGN_
-argument_list|(
-name|AutoHandle
-argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
-endif|#
-directive|endif
-comment|// GTEST_OS_WINDOWS
 comment|// Attempts to parse a string into a positive integer pointed to by the
 comment|// number parameter.  Returns true if that is possible.
 comment|// GTEST_HAS_DEATH_TEST implies that we have ::std::string, so we can use
@@ -3261,21 +3255,30 @@ label|:
 specifier|static
 name|void
 name|RecordProperty
-parameter_list|(
+argument_list|(
 name|TestResult
-modifier|*
+operator|*
 name|test_result
-parameter_list|,
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|xml_element
+argument_list|,
 specifier|const
 name|TestProperty
-modifier|&
+operator|&
 name|property
-parameter_list|)
+argument_list|)
 block|{
 name|test_result
 operator|->
 name|RecordProperty
 argument_list|(
+name|xml_element
+argument_list|,
 name|property
 argument_list|)
 expr_stmt|;
@@ -3320,10 +3323,623 @@ return|;
 block|}
 block|}
 empty_stmt|;
+if|#
+directive|if
+name|GTEST_CAN_STREAM_RESULTS_
+comment|// Streams test results to the given port on the given host machine.
+name|class
+name|GTEST_API_
+name|StreamingListener
+range|:
+name|public
+name|EmptyTestEventListener
+block|{
+name|public
+operator|:
+comment|// Abstract base class for writing strings to a socket.
+name|class
+name|AbstractSocketWriter
+block|{
+name|public
+operator|:
+name|virtual
+operator|~
+name|AbstractSocketWriter
+argument_list|()
+block|{}
+comment|// Sends a string to the socket.
+name|virtual
+name|void
+name|Send
+argument_list|(
+specifier|const
+name|string
+operator|&
+name|message
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|// Closes the socket.
+name|virtual
+name|void
+name|CloseConnection
+argument_list|()
+block|{}
+comment|// Sends a string and a newline to the socket.
+name|void
+name|SendLn
+argument_list|(
+argument|const string& message
+argument_list|)
+block|{
+name|Send
+argument_list|(
+name|message
+operator|+
+literal|"\n"
+argument_list|)
+block|;     }
+block|}
+block|;
+comment|// Concrete class for actually writing strings to a socket.
+name|class
+name|SocketWriter
+operator|:
+name|public
+name|AbstractSocketWriter
+block|{
+name|public
+operator|:
+name|SocketWriter
+argument_list|(
+specifier|const
+name|string
+operator|&
+name|host
+argument_list|,
+specifier|const
+name|string
+operator|&
+name|port
+argument_list|)
+operator|:
+name|sockfd_
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+block|,
+name|host_name_
+argument_list|(
+name|host
+argument_list|)
+block|,
+name|port_num_
+argument_list|(
+argument|port
+argument_list|)
+block|{
+name|MakeConnection
+argument_list|()
+block|;     }
+name|virtual
+operator|~
+name|SocketWriter
+argument_list|()
+block|{
+if|if
+condition|(
+name|sockfd_
+operator|!=
+operator|-
+literal|1
+condition|)
+name|CloseConnection
+argument_list|()
+expr_stmt|;
+block|}
+comment|// Sends a string to the socket.
+name|virtual
+name|void
+name|Send
+argument_list|(
+argument|const string& message
+argument_list|)
+block|{
+name|GTEST_CHECK_
+argument_list|(
+name|sockfd_
+operator|!=
+operator|-
+literal|1
+argument_list|)
+operator|<<
+literal|"Send() can be called only when there is a connection."
+block|;
+specifier|const
+name|int
+name|len
+operator|=
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
+name|message
+operator|.
+name|length
+argument_list|()
+operator|)
+block|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|sockfd_
+argument_list|,
+name|message
+operator|.
+name|c_str
+argument_list|()
+argument_list|,
+name|len
+argument_list|)
+operator|!=
+name|len
+condition|)
+block|{
+name|GTEST_LOG_
+argument_list|(
+name|WARNING
+argument_list|)
+operator|<<
+literal|"stream_result_to: failed to stream to "
+operator|<<
+name|host_name_
+operator|<<
+literal|":"
+operator|<<
+name|port_num_
+expr_stmt|;
+block|}
+block|}
+name|private
+operator|:
+comment|// Creates a client socket and connects to the server.
+name|void
+name|MakeConnection
+argument_list|()
+block|;
+comment|// Closes the socket.
+name|void
+name|CloseConnection
+argument_list|()
+block|{
+name|GTEST_CHECK_
+argument_list|(
+name|sockfd_
+operator|!=
+operator|-
+literal|1
+argument_list|)
+operator|<<
+literal|"CloseConnection() can be called only when there is a connection."
+block|;
+name|close
+argument_list|(
+name|sockfd_
+argument_list|)
+block|;
+name|sockfd_
+operator|=
+operator|-
+literal|1
+block|;     }
+name|int
+name|sockfd_
+block|;
+comment|// socket file descriptor
+specifier|const
+name|string
+name|host_name_
+block|;
+specifier|const
+name|string
+name|port_num_
+block|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|SocketWriter
+argument_list|)
+block|;   }
+block|;
+comment|// class SocketWriter
+comment|// Escapes '=', '&', '%', and '\n' characters in str as "%xx".
+specifier|static
+name|string
+name|UrlEncode
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|str
+argument_list|)
+block|;
+name|StreamingListener
+argument_list|(
+specifier|const
+name|string
+operator|&
+name|host
+argument_list|,
+specifier|const
+name|string
+operator|&
+name|port
+argument_list|)
+operator|:
+name|socket_writer_
+argument_list|(
+argument|new SocketWriter(host, port)
+argument_list|)
+block|{
+name|Start
+argument_list|()
+block|; }
+name|explicit
+name|StreamingListener
+argument_list|(
+name|AbstractSocketWriter
+operator|*
+name|socket_writer
+argument_list|)
+operator|:
+name|socket_writer_
+argument_list|(
+argument|socket_writer
+argument_list|)
+block|{
+name|Start
+argument_list|()
+block|; }
+name|void
+name|OnTestProgramStart
+argument_list|(
+argument|const UnitTest&
+comment|/* unit_test */
+argument_list|)
+block|{
+name|SendLn
+argument_list|(
+literal|"event=TestProgramStart"
+argument_list|)
+block|;   }
+name|void
+name|OnTestProgramEnd
+argument_list|(
+argument|const UnitTest& unit_test
+argument_list|)
+block|{
+comment|// Note that Google Test current only report elapsed time for each
+comment|// test iteration, not for the entire test program.
+name|SendLn
+argument_list|(
+literal|"event=TestProgramEnd&passed="
+operator|+
+name|FormatBool
+argument_list|(
+name|unit_test
+operator|.
+name|Passed
+argument_list|()
+argument_list|)
+argument_list|)
+block|;
+comment|// Notify the streaming server to stop.
+name|socket_writer_
+operator|->
+name|CloseConnection
+argument_list|()
+block|;   }
+name|void
+name|OnTestIterationStart
+argument_list|(
+argument|const UnitTest&
+comment|/* unit_test */
+argument_list|,
+argument|int iteration
+argument_list|)
+block|{
+name|SendLn
+argument_list|(
+literal|"event=TestIterationStart&iteration="
+operator|+
+name|StreamableToString
+argument_list|(
+name|iteration
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|OnTestIterationEnd
+argument_list|(
+argument|const UnitTest& unit_test
+argument_list|,
+argument|int
+comment|/* iteration */
+argument_list|)
+block|{
+name|SendLn
+argument_list|(
+literal|"event=TestIterationEnd&passed="
+operator|+
+name|FormatBool
+argument_list|(
+name|unit_test
+operator|.
+name|Passed
+argument_list|()
+argument_list|)
+operator|+
+literal|"&elapsed_time="
+operator|+
+name|StreamableToString
+argument_list|(
+name|unit_test
+operator|.
+name|elapsed_time
+argument_list|()
+argument_list|)
+operator|+
+literal|"ms"
+argument_list|)
+block|;   }
+name|void
+name|OnTestCaseStart
+argument_list|(
+argument|const TestCase& test_case
+argument_list|)
+block|{
+name|SendLn
+argument_list|(
+name|std
+operator|::
+name|string
+argument_list|(
+literal|"event=TestCaseStart&name="
+argument_list|)
+operator|+
+name|test_case
+operator|.
+name|name
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|OnTestCaseEnd
+argument_list|(
+argument|const TestCase& test_case
+argument_list|)
+block|{
+name|SendLn
+argument_list|(
+literal|"event=TestCaseEnd&passed="
+operator|+
+name|FormatBool
+argument_list|(
+name|test_case
+operator|.
+name|Passed
+argument_list|()
+argument_list|)
+operator|+
+literal|"&elapsed_time="
+operator|+
+name|StreamableToString
+argument_list|(
+name|test_case
+operator|.
+name|elapsed_time
+argument_list|()
+argument_list|)
+operator|+
+literal|"ms"
+argument_list|)
+block|;   }
+name|void
+name|OnTestStart
+argument_list|(
+argument|const TestInfo& test_info
+argument_list|)
+block|{
+name|SendLn
+argument_list|(
+name|std
+operator|::
+name|string
+argument_list|(
+literal|"event=TestStart&name="
+argument_list|)
+operator|+
+name|test_info
+operator|.
+name|name
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|OnTestEnd
+argument_list|(
+argument|const TestInfo& test_info
+argument_list|)
+block|{
+name|SendLn
+argument_list|(
+literal|"event=TestEnd&passed="
+operator|+
+name|FormatBool
+argument_list|(
+operator|(
+name|test_info
+operator|.
+name|result
+argument_list|()
+operator|)
+operator|->
+name|Passed
+argument_list|()
+argument_list|)
+operator|+
+literal|"&elapsed_time="
+operator|+
+name|StreamableToString
+argument_list|(
+operator|(
+name|test_info
+operator|.
+name|result
+argument_list|()
+operator|)
+operator|->
+name|elapsed_time
+argument_list|()
+argument_list|)
+operator|+
+literal|"ms"
+argument_list|)
+block|;   }
+name|void
+name|OnTestPartResult
+argument_list|(
+argument|const TestPartResult& test_part_result
+argument_list|)
+block|{
+specifier|const
+name|char
+operator|*
+name|file_name
+operator|=
+name|test_part_result
+operator|.
+name|file_name
+argument_list|()
+block|;
+if|if
+condition|(
+name|file_name
+operator|==
+name|NULL
+condition|)
+name|file_name
+operator|=
+literal|""
+expr_stmt|;
+name|SendLn
+argument_list|(
+literal|"event=TestPartResult&file="
+operator|+
+name|UrlEncode
+argument_list|(
+name|file_name
+argument_list|)
+operator|+
+literal|"&line="
+operator|+
+name|StreamableToString
+argument_list|(
+name|test_part_result
+operator|.
+name|line_number
+argument_list|()
+argument_list|)
+operator|+
+literal|"&message="
+operator|+
+name|UrlEncode
+argument_list|(
+name|test_part_result
+operator|.
+name|message
+argument_list|()
+argument_list|)
+argument_list|)
+block|;   }
+name|private
+operator|:
+comment|// Sends the given message and a newline to the socket.
+name|void
+name|SendLn
+argument_list|(
+argument|const string& message
+argument_list|)
+block|{
+name|socket_writer_
+operator|->
+name|SendLn
+argument_list|(
+name|message
+argument_list|)
+block|; }
+comment|// Called at the start of streaming to notify the receiver what
+comment|// protocol we are using.
+name|void
+name|Start
+argument_list|()
+block|{
+name|SendLn
+argument_list|(
+literal|"gtest_streaming_protocol_version=1.0"
+argument_list|)
+block|; }
+name|string
+name|FormatBool
+argument_list|(
+argument|bool value
+argument_list|)
+block|{
+return|return
+name|value
+operator|?
+literal|"1"
+operator|:
+literal|"0"
+return|;
+block|}
+specifier|const
+name|scoped_ptr
+operator|<
+name|AbstractSocketWriter
+operator|>
+name|socket_writer_
+expr_stmt|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|StreamingListener
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+comment|// class StreamingListener
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_CAN_STREAM_RESULTS_
+end_comment
+
+begin_comment
+unit|}
 comment|// namespace internal
 end_comment
 

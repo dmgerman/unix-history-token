@@ -196,6 +196,13 @@ operator|&
 name|FileName
 argument_list|)
 expr_stmt|;
+comment|// Returns path to a TmpDir.
+name|std
+operator|::
+name|string
+name|TmpDir
+argument_list|()
+expr_stmt|;
 name|void
 name|DupAndCloseStderr
 parameter_list|()

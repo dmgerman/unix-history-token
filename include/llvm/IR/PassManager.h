@@ -258,13 +258,13 @@ name|AnalysisKey
 block|{}
 struct|;
 comment|/// A special type used to provide an address that identifies a set of related
-comment|/// analyses.
+comment|/// analyses.  These sets are primarily used below to mark sets of analyses as
+comment|/// preserved.
 comment|///
-comment|/// These sets are primarily used below to mark sets of analyses as preserved.
-comment|/// An example would be analyses depending only on the CFG of a function.
-comment|/// A transformation can mark that it is preserving the CFG of a function and
-comment|/// then analyses can check for this rather than each transform having to fully
-comment|/// enumerate every analysis preserved.
+comment|/// For example, a transformation can indicate that it preserves the CFG of a
+comment|/// function by preserving the appropriate AnalysisSetKey.  An analysis that
+comment|/// depends only on the CFG can then check if that AnalysisSetKey is preserved;
+comment|/// if it is, the analysis knows that it itself is preserved.
 struct|struct
 name|alignas
 argument_list|(
@@ -273,23 +273,22 @@ argument_list|)
 name|AnalysisSetKey
 block|{}
 struct|;
-comment|/// Class for tracking what analyses are preserved after a transformation pass
-comment|/// runs over some unit of IR.
+comment|/// A set of analyses that are preserved following a run of a transformation
+comment|/// pass.
 comment|///
-comment|/// Transformation passes build and return these objects when run over the IR
-comment|/// to communicate which analyses remain valid afterward. For most passes this
-comment|/// is fairly simple: if they don't change anything all analyses are preserved,
+comment|/// Transformation passes build and return these objects to communicate which
+comment|/// analyses are still valid after the transformation. For most passes this is
+comment|/// fairly simple: if they don't change anything all analyses are preserved,
 comment|/// otherwise only a short list of analyses that have been explicitly updated
 comment|/// are preserved.
 comment|///
-comment|/// This class also provides the ability to mark abstract *sets* of analyses as
-comment|/// preserved. These sets allow passes to indicate that they preserve broad
-comment|/// aspects of the IR (such as its CFG) and analyses to opt in to that being
-comment|/// sufficient without the passes having to fully enumerate such analyses.
+comment|/// This class also lets transformation passes mark abstract *sets* of analyses
+comment|/// as preserved. A transformation that (say) does not alter the CFG can
+comment|/// indicate such by marking a particular AnalysisSetKey as preserved, and
+comment|/// then analyses can query whether that AnalysisSetKey is preserved.
 comment|///
-comment|/// Finally, this class can represent "abandoning" an analysis, which marks it
-comment|/// as not-preserved even if it would be covered by some abstract set of
-comment|/// analyses.
+comment|/// Finally, this class can represent an "abandoned" analysis, which is
+comment|/// not preserved even if it would be covered by some abstract set of analyses.
 comment|///
 comment|/// Given a `PreservedAnalyses` object, an analysis will typically want to
 comment|/// figure out whether it is preserved. In the example below, MyAnalysisType is
@@ -362,7 +361,8 @@ name|ID
 argument_list|()
 argument_list|)
 block|; }
-comment|/// Mark an analysis as preserved using its ID.
+comment|/// \brief Given an analysis's ID, mark the analysis as preserved, adding it
+comment|/// to the set.
 name|void
 name|preserve
 argument_list|(
@@ -716,9 +716,9 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// Returns true if the checker's analysis was not abandoned and the
-comment|/// analysis is either is explicitly preserved or all analyses are
-comment|/// preserved.
+comment|/// Returns true if the checker's analysis was not abandoned and either
+comment|///  - the analysis is explicitly preserved or
+comment|///  - all analyses are preserved.
 name|bool
 name|preserved
 argument_list|()
@@ -749,9 +749,9 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/// Returns true if the checker's analysis was not abandoned and either the
-comment|/// provided set type is either explicitly preserved or all analyses are
-comment|/// preserved.
+comment|/// Returns true if the checker's analysis was not abandoned and either
+comment|///  - \p AnalysisSetT is explicitly preserved or
+comment|///  - all analyses are preserved.
 name|template
 operator|<
 name|typename
@@ -852,8 +852,8 @@ return|;
 block|}
 comment|/// Test whether all analyses are preserved (and none are abandoned).
 comment|///
-comment|/// This lets analyses optimize for the common case where a transformation
-comment|/// made no changes to the IR.
+comment|/// This is used primarily to optimize for the common case of a transformation
+comment|/// which makes no changes to the IR.
 name|bool
 name|areAllPreserved
 argument_list|()
@@ -1005,7 +1005,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This provides some boiler plate for types that are passes.
+comment|/// This provides some boilerplate for types that are passes.
 end_comment
 
 begin_expr_stmt
@@ -1017,7 +1017,7 @@ operator|>
 expr|struct
 name|PassInfoMixin
 block|{
-comment|/// Returns the name of the derived pass type.
+comment|/// Gets the name of the pass we are mixed into.
 specifier|static
 name|StringRef
 name|name
@@ -1062,11 +1062,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// A CRTP mix-in to automatically provide informational APIs needed for
-end_comment
-
-begin_comment
-comment|/// analysis passes.
+comment|/// A CRTP mix-in that provides informational APIs needed for analysis passes.
 end_comment
 
 begin_comment
@@ -1074,15 +1070,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This provides some boiler plate for types that are analysis passes. It
+comment|/// This provides some boilerplate for types that are analysis passes. It
 end_comment
 
 begin_comment
-comment|/// automatically mixes in \c PassInfoMixin and adds informational APIs
-end_comment
-
-begin_comment
-comment|/// specifically used for analyses.
+comment|/// automatically mixes in \c PassInfoMixin.
 end_comment
 
 begin_expr_stmt
@@ -1101,21 +1093,19 @@ operator|>
 block|{
 comment|/// Returns an opaque, unique ID for this analysis type.
 comment|///
-comment|/// This ID is a pointer type that is guaranteed to be 8-byte aligned and
-comment|/// thus suitable for use in sets, maps, and other data structures optimized
-comment|/// for pointer-like types using the alignment-provided low bits.
+comment|/// This ID is a pointer type that is guaranteed to be 8-byte aligned and thus
+comment|/// suitable for use in sets, maps, and other data structures that use the low
+comment|/// bits of pointers.
 comment|///
 comment|/// Note that this requires the derived type provide a static \c AnalysisKey
 comment|/// member called \c Key.
 comment|///
-comment|/// FIXME: The only reason the derived type needs to provide this rather than
-comment|/// this mixin providing it is due to broken implementations which cannot
-comment|/// correctly unique a templated static so that they have the same addresses
-comment|/// for each instantiation and are definitively emitted once for each
-comment|/// instantiation. The only currently known platform with this limitation are
-comment|/// Windows DLL builds, specifically building each part of LLVM as a DLL. If
-comment|/// we ever remove that build configuration, this mixin can provide the
-comment|/// static key as well.
+comment|/// FIXME: The only reason the mixin type itself can't declare the Key value
+comment|/// is that some compilers cannot correctly unique a templated static variable
+comment|/// so it has the same addresses in each instantiation. The only currently
+comment|/// known platform with this limitation is Windows DLL builds, specifically
+comment|/// building each part of LLVM as a DLL. If we ever remove that build
+comment|/// configuration, this mixin can provide the static key as well.
 specifier|static
 name|AnalysisKey
 operator|*
@@ -1133,7 +1123,15 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// A class template to provide analysis sets for IR units.
+comment|/// This templated class represents "all analyses that operate over \<a
+end_comment
+
+begin_comment
+comment|/// particular IR unit\>" (e.g. a Function or a Module) in instances of
+end_comment
+
+begin_comment
+comment|/// PreservedAnalysis.
 end_comment
 
 begin_comment
@@ -1141,23 +1139,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Analyses operate on units of IR. It is useful to be able to talk about
-end_comment
-
-begin_comment
-comment|/// preservation of all analyses for a given unit of IR as a set. This class
-end_comment
-
-begin_comment
-comment|/// template can be used with the \c PreservedAnalyses API for that purpose and
-end_comment
-
-begin_comment
-comment|/// the \c AnalysisManager will automatically check and use this set to skip
-end_comment
-
-begin_comment
-comment|/// invalidation events.
+comment|/// This lets a transformation say e.g. "I preserved all function analyses".
 end_comment
 
 begin_comment
@@ -1232,7 +1214,7 @@ extern|extern template class AllAnalysesOn<Function>;
 end_extern
 
 begin_comment
-comment|/// \brief Manages a sequence of passes over units of IR.
+comment|/// \brief Manages a sequence of passes over a particular unit of IR.
 end_comment
 
 begin_comment
@@ -1240,19 +1222,23 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// A pass manager contains a sequence of passes to run over units of IR. It is
+comment|/// A pass manager contains a sequence of passes to run over a particular unit
 end_comment
 
 begin_comment
-comment|/// itself a valid pass over that unit of IR, and when over some given IR will
+comment|/// of IR (e.g. Functions, Modules). It is itself a valid pass over that unit of
 end_comment
 
 begin_comment
-comment|/// run each pass in sequence. This is the primary and most basic building
+comment|/// IR, and when run over some given IR will run each of its contained passes in
 end_comment
 
 begin_comment
-comment|/// block of a pass pipeline.
+comment|/// sequence. Pass managers are the primary and most basic building block of a
+end_comment
+
+begin_comment
+comment|/// pass pipeline.
 end_comment
 
 begin_comment
@@ -1260,19 +1246,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If it is run with an \c AnalysisManager<IRUnitT> argument, it will propagate
+comment|/// When you run a pass manager, you provide an \c AnalysisManager<IRUnitT>
 end_comment
 
 begin_comment
-comment|/// that analysis manager to each pass it runs, as well as calling the analysis
+comment|/// argument. The pass manager will propagate that analysis manager to each
 end_comment
 
 begin_comment
-comment|/// manager's invalidation routine with the PreservedAnalyses of each pass it
+comment|/// pass it runs, and will call the analysis manager's invalidation routine with
 end_comment
 
 begin_comment
-comment|/// runs.
+comment|/// the PreservedAnalyses of each pass it runs.
 end_comment
 
 begin_expr_stmt
@@ -1313,7 +1299,7 @@ name|public
 operator|:
 comment|/// \brief Construct a pass manager.
 comment|///
-comment|/// It can be passed a flag to get debug logging as the passes are run.
+comment|/// If \p DebugLogging is true, we'll log our progress to llvm::dbgs().
 name|explicit
 name|PassManager
 argument_list|(
@@ -1390,7 +1376,8 @@ operator|*
 name|this
 return|;
 block|}
-comment|/// \brief Run all of the passes in this manager over the IR.
+comment|/// \brief Run all of the passes in this manager over the given unit of IR.
+comment|/// ExtraArgs are passed to each pass.
 name|PreservedAnalyses
 name|run
 argument_list|(
@@ -1507,7 +1494,7 @@ argument_list|,
 name|PassPA
 argument_list|)
 expr_stmt|;
-comment|// Finally, we intersect the preserved analyses to compute the aggregate
+comment|// Finally, intersect the preserved analyses to compute the aggregate
 comment|// preserved set for this pass manager.
 name|PA
 operator|.
@@ -1706,7 +1693,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|/// \brief A generic analysis pass manager with lazy running and caching of
+comment|/// \brief A container for analyses that lazily runs them and caches their
 end_comment
 
 begin_comment
@@ -1718,15 +1705,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This analysis manager can be used for any IR unit where the address of the
+comment|/// This class can manage analyses for any IR unit where the address of the IR
 end_comment
 
 begin_comment
-comment|/// IR unit sufficies as its identity. It manages the cache for a unit of IR via
-end_comment
-
-begin_comment
-comment|/// the address of each unit of IR cached.
+comment|/// unit sufficies as its identity.
 end_comment
 
 begin_expr_stmt
@@ -1749,8 +1732,7 @@ name|Invalidator
 block|;
 name|private
 operator|:
-comment|// Now that we've defined our invalidator, we can build types for the concept
-comment|// types.
+comment|// Now that we've defined our invalidator, we can define the concept types.
 typedef|typedef
 name|detail
 operator|::
@@ -1786,7 +1768,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|/// \brief List of function analysis pass IDs and associated concept pointers.
+comment|/// \brief List of analysis pass IDs and associated concept pointers.
 end_comment
 
 begin_comment
@@ -1798,11 +1780,15 @@ comment|/// Requires iterators to be valid across appending new entries and arbi
 end_comment
 
 begin_comment
-comment|/// erases. Provides the analysis ID to enable finding iterators to a given entry
+comment|/// erases. Provides the analysis ID to enable finding iterators to a given
 end_comment
 
 begin_comment
-comment|/// in maps below, and provides the storage for the actual result concept.
+comment|/// entry in maps below, and provides the storage for the actual result
+end_comment
+
+begin_comment
+comment|/// concept.
 end_comment
 
 begin_typedef
@@ -1850,11 +1836,11 @@ comment|/// \brief Map type from a pair of analysis ID and IRUnitT pointer to an
 end_comment
 
 begin_comment
-comment|/// iterator into a particular result list which is where the actual result
+comment|/// iterator into a particular result list (which is where the actual analysis
 end_comment
 
 begin_comment
-comment|/// is stored.
+comment|/// result is stored).
 end_comment
 
 begin_typedef
@@ -1903,19 +1889,19 @@ comment|/// needs to be invalidated both when its own information isn't preserve
 end_comment
 
 begin_comment
-comment|/// if any of those embedded analysis results end up invalidated. We pass in
+comment|/// when any of its embedded analysis results end up invalidated. We pass an
 end_comment
 
 begin_comment
-comment|/// an \c Invalidator object from the analysis manager in order to let the
+comment|/// \c Invalidator object as an argument to \c invalidate() in order to let
 end_comment
 
 begin_comment
-comment|/// analysis results themselves define the dependency graph on the fly. This
+comment|/// the analysis results themselves define the dependency graph on the fly.
 end_comment
 
 begin_comment
-comment|/// avoids building an explicit data structure representation of the
+comment|/// This lets us avoid building building an explicit representation of the
 end_comment
 
 begin_comment
@@ -1929,20 +1915,20 @@ block|{
 name|public
 label|:
 comment|/// Trigger the invalidation of some other analysis pass if not already
-comment|/// handled and return whether it will in fact be invalidated.
+comment|/// handled and return whether it was in fact invalidated.
 comment|///
 comment|/// This is expected to be called from within a given analysis result's \c
 comment|/// invalidate method to trigger a depth-first walk of all inter-analysis
 comment|/// dependencies. The same \p IR unit and \p PA passed to that result's \c
 comment|/// invalidate method should in turn be provided to this routine.
 comment|///
-comment|/// The first time this is called for a given analysis pass, it will
-comment|/// trigger the corresponding result's \c invalidate method to be called.
-comment|/// Subsequent calls will use a cache of the results of that initial call.
-comment|/// It is an error to form cyclic dependencies between analysis results.
+comment|/// The first time this is called for a given analysis pass, it will call
+comment|/// the corresponding result's \c invalidate method.  Subsequent calls will
+comment|/// use a cache of the results of that initial call.  It is an error to form
+comment|/// cyclic dependencies between analysis results.
 comment|///
-comment|/// This returns true if the given analysis pass's result is invalid and
-comment|/// any dependecies on it will become invalid as a result.
+comment|/// This returns true if the given analysis's result is invalid. Any
+comment|/// dependecies on it will become invalid as a result.
 name|template
 operator|<
 name|typename
@@ -2165,19 +2151,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// Insert into the map whether the result should be invalidated and
+comment|// Insert into the map whether the result should be invalidated and return
 end_comment
 
 begin_comment
-comment|// return that. Note that we cannot re-use IMapI and must do a fresh
+comment|// that. Note that we cannot reuse IMapI and must do a fresh insert here,
 end_comment
 
 begin_comment
-comment|// insert here as calling the invalidate routine could (recursively)
+comment|// as calling invalidate could (recursively) insert things into the map,
 end_comment
 
 begin_comment
-comment|// insert things into the map making any iterator or reference invalid.
+comment|// making any iterator or reference invalid.
 end_comment
 
 begin_decl_stmt
@@ -2308,11 +2294,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// A flag can be passed to indicate that the manager should perform debug
-end_comment
-
-begin_comment
-comment|/// logging.
+comment|/// If \p DebugLogging is true, we'll log our progress to llvm::dbgs().
 end_comment
 
 begin_macro
@@ -2395,7 +2377,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Clear any results for a single unit of IR.
+comment|/// \brief Clear any cached analysis results for a single unit of IR.
 end_comment
 
 begin_comment
@@ -2403,15 +2385,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This doesn't invalidate but directly clears the results. It is useful
+comment|/// This doesn't invalidate, but instead simply deletes, the relevant results.
 end_comment
 
 begin_comment
-comment|/// when the IR is being removed and we want to clear out all the memory
+comment|/// It is useful when the IR is being removed and we want to clear out all the
 end_comment
 
 begin_comment
-comment|/// pinned for it.
+comment|/// memory pinned for it.
 end_comment
 
 begin_function
@@ -2460,7 +2442,7 @@ name|end
 argument_list|()
 condition|)
 return|return;
-comment|// Clear the map pointing into the results list.
+comment|// Delete the map entries that point into the results list.
 for|for
 control|(
 name|auto
@@ -2497,7 +2479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Clear the analysis result cache.
+comment|/// \brief Clear all analysis results cached by this AnalysisManager.
 end_comment
 
 begin_comment
@@ -2505,19 +2487,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This routine allows cleaning up when the set of IR units itself has
+comment|/// Like \c clear(IRUnitT&), this doesn't invalidate the results; it simply
 end_comment
 
 begin_comment
-comment|/// potentially changed, and thus we can't even look up a a result and
+comment|/// deletes them.  This lets you clean up the AnalysisManager when the set of
 end_comment
 
 begin_comment
-comment|/// invalidate it directly. Notably, this does *not* call invalidate
+comment|/// IR units itself has potentially changed, and thus we can't even look up a
 end_comment
 
 begin_comment
-comment|/// functions as there is nothing to be done for them.
+comment|/// a result and invalidate/clear it directly.
 end_comment
 
 begin_function
@@ -2539,7 +2521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Get the result of an analysis pass for this module.
+comment|/// \brief Get the result of an analysis pass for a given IR unit.
 end_comment
 
 begin_comment
@@ -2547,11 +2529,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If there is not a valid cached result in the manager already, this will
-end_comment
-
-begin_comment
-comment|/// re-run the analysis to produce a valid result.
+comment|/// Runs the analysis if a cached result is not available.
 end_comment
 
 begin_expr_stmt
@@ -2643,7 +2621,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief Get the cached result of an analysis pass for this module.
+comment|/// \brief Get the cached result of an analysis pass for a given IR unit.
 end_comment
 
 begin_comment
@@ -2767,35 +2745,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// The argument is a callable whose result is a pass. This allows passing in
+comment|/// The parameter is a callable whose result is an analysis pass. This allows
 end_comment
 
 begin_comment
-comment|/// a lambda to construct the pass.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// The pass type registered is the result type of calling the argument. If
-end_comment
-
-begin_comment
-comment|/// that pass has already been registered, then the argument will not be
-end_comment
-
-begin_comment
-comment|/// called and this function will return false. Otherwise, the pass type
-end_comment
-
-begin_comment
-comment|/// becomes registered, with the instance provided by calling the argument
-end_comment
-
-begin_comment
-comment|/// once, and this function returns true.
+comment|/// passing in a lambda to construct the analysis.
 end_comment
 
 begin_comment
@@ -2803,31 +2757,51 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// While this returns whether or not the pass type was already registered,
+comment|/// The analysis type to register is the type returned by calling the \c
 end_comment
 
 begin_comment
-comment|/// there in't an independent way to query that as that would be prone to
+comment|/// PassBuilder argument. If that type has already been registered, then the
 end_comment
 
 begin_comment
-comment|/// risky use when *querying* the analysis manager. Instead, the only
+comment|/// argument will not be called and this function will return false.
 end_comment
 
 begin_comment
-comment|/// supported use case is avoiding duplicate registry of an analysis. This
+comment|/// Otherwise, we register the analysis returned by calling \c PassBuilder(),
 end_comment
 
 begin_comment
-comment|/// interface also lends itself to minimizing the number of times we have to
+comment|/// and this function returns true.
 end_comment
 
 begin_comment
-comment|/// do lookups for analyses or construct complex passes only to throw them
+comment|///
 end_comment
 
 begin_comment
-comment|/// away.
+comment|/// (Note: Although the return value of this function indicates whether or not
+end_comment
+
+begin_comment
+comment|/// an analysis was previously registered, there intentionally isn't a way to
+end_comment
+
+begin_comment
+comment|/// query this directly.  Instead, you should just register all the analyses
+end_comment
+
+begin_comment
+comment|/// you might want and let this class run them lazily.  This idiom lets us
+end_comment
+
+begin_comment
+comment|/// minimize the number of times we have to look up analyses in our
+end_comment
+
+begin_comment
+comment|/// hashtable.)
 end_comment
 
 begin_expr_stmt
@@ -2931,7 +2905,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Note that the analysis result can disregard invalidation.
+comment|/// Note that the analysis result can disregard invalidation, if it determines
+end_comment
+
+begin_comment
+comment|/// it is in fact still valid.
 end_comment
 
 begin_expr_stmt
@@ -2971,10 +2949,10 @@ argument_list|,
 name|IR
 argument_list|)
 block|;   }
-comment|/// \brief Invalidate analyses cached for an IR unit.
+comment|/// \brief Invalidate cached analyses for an IR unit.
 comment|///
 comment|/// Walk through all of the analyses pertaining to this unit of IR and
-comment|/// invalidate them unless they are preserved by the PreservedAnalyses set.
+comment|/// invalidate them, unless they are preserved by the PreservedAnalyses set.
 name|void
 name|invalidate
 argument_list|(
@@ -3020,11 +2998,11 @@ expr_stmt|;
 end_if
 
 begin_comment
-comment|// Track whether each pass's result is invalidated. Memoize the results
+comment|// Track whether each analysis's result is invalidated in
 end_comment
 
 begin_comment
-comment|// using the IsResultInvalidated map.
+comment|// IsResultInvalidated.
 end_comment
 
 begin_expr_stmt
@@ -3119,9 +3097,9 @@ comment|// This result was already handled via the Invalidator.
 continue|continue;
 comment|// Try to invalidate the result, giving it the Invalidator so it can
 comment|// recursively query for any dependencies it has and record the result.
-comment|// Note that we cannot re-use 'IMapI' here or pre-insert the ID as the
-comment|// invalidate method may insert things into the map as well, invalidating
-comment|// any iterator or pointer.
+comment|// Note that we cannot reuse 'IMapI' here or pre-insert the ID, as
+comment|// Result.invalidate may insert things into the map, invalidating our
+comment|// iterator.
 name|bool
 name|Inserted
 init|=
@@ -3774,7 +3752,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief A flag indicating whether debug logging is enabled.
+comment|/// \brief Indicates whether we log to \c llvm::dbgs().
 end_comment
 
 begin_decl_stmt

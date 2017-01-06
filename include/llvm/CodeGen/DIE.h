@@ -2825,6 +2825,11 @@ name|Tag
 operator|)
 literal|0
 block|;
+comment|/// Set to true to force a DIE to emit an abbreviation that says it has
+comment|/// children even when it doesn't. This is used for unit testing purposes.
+name|bool
+name|ForceChildren
+block|;
 comment|/// Children DIEs.
 name|IntrusiveBackList
 operator|<
@@ -2867,7 +2872,12 @@ argument_list|)
 block|,
 name|Tag
 argument_list|(
-argument|Tag
+name|Tag
+argument_list|)
+block|,
+name|ForceChildren
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|public
@@ -2982,6 +2992,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|ForceChildren
+operator|||
 operator|!
 name|Children
 operator|.
@@ -2989,6 +3001,16 @@ name|empty
 argument_list|()
 return|;
 block|}
+name|void
+name|setForceChildren
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|ForceChildren
+operator|=
+name|B
+block|; }
 typedef|typedef
 name|IntrusiveBackList
 operator|<

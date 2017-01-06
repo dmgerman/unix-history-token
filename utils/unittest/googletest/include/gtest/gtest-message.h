@@ -196,16 +196,160 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gtest/internal/gtest-string.h"
+file|"gtest/internal/gtest-port.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|GTEST_NO_LLVM_RAW_OSTREAM
+end_if
 
 begin_include
 include|#
 directive|include
-file|"gtest/internal/gtest-internal.h"
+file|"llvm/Support/raw_os_ostream.h"
 end_include
 
+begin_comment
+comment|// LLVM INTERNAL CHANGE: To allow operator<< to work with both
+end_comment
+
+begin_comment
+comment|// std::ostreams and LLVM's raw_ostreams, we define a special
+end_comment
+
+begin_comment
+comment|// std::ostream with an implicit conversion to raw_ostream& and stream
+end_comment
+
+begin_comment
+comment|// to that.  This causes the compiler to prefer std::ostream overloads
+end_comment
+
+begin_comment
+comment|// but still find raw_ostream& overloads.
+end_comment
+
 begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|convertible_fwd_ostream
+range|:
+name|public
+name|std
+operator|::
+name|ostream
+block|{
+name|raw_os_ostream
+name|ros_
+block|;
+name|public
+operator|:
+name|convertible_fwd_ostream
+argument_list|(
+name|std
+operator|::
+name|ostream
+operator|&
+name|os
+argument_list|)
+operator|:
+name|std
+operator|::
+name|ostream
+argument_list|(
+name|os
+operator|.
+name|rdbuf
+argument_list|()
+argument_list|)
+block|,
+name|ros_
+argument_list|(
+argument|*this
+argument_list|)
+block|{}
+name|operator
+name|raw_ostream
+operator|&
+operator|(
+operator|)
+block|{
+return|return
+name|ros_
+return|;
+block|}
+expr|}
+block|; }
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|void
+name|GTestStreamToHelper
+argument_list|(
+argument|std::ostream& os
+argument_list|,
+argument|const T& val
+argument_list|)
+block|{
+name|llvm
+operator|::
+name|convertible_fwd_ostream
+name|cos
+argument_list|(
+name|os
+argument_list|)
+block|;
+name|cos
+operator|<<
+name|val
+block|; }
+else|#
+directive|else
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|void
+name|GTestStreamToHelper
+argument_list|(
+argument|std::ostream& os
+argument_list|,
+argument|const T& val
+argument_list|)
+block|{
+name|os
+operator|<<
+name|val
+block|; }
+endif|#
+directive|endif
+comment|// Ensures that there is at least one operator<< in the global namespace.
+comment|// See Message& operator<<(...) below for why.
+name|void
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|testing
+operator|::
+name|internal
+operator|::
+name|Secret
+operator|&
+expr|,
+name|int
+operator|)
+decl_stmt|;
 name|namespace
 name|testing
 block|{
@@ -262,39 +406,9 @@ expr_stmt|;
 name|public
 label|:
 comment|// Constructs an empty Message.
-comment|// We allocate the stringstream separately because otherwise each use of
-comment|// ASSERT/EXPECT in a procedure adds over 200 bytes to the procedure's
-comment|// stack frame leading to huge stack frames in some cases; gcc does not reuse
-comment|// the stack space.
 name|Message
 argument_list|()
-operator|:
-name|ss_
-argument_list|(
-argument|new ::std::stringstream
-argument_list|)
-block|{
-comment|// By default, we want there to be enough precision when printing
-comment|// a double to a Message.
-operator|*
-name|ss_
-operator|<<
-name|std
-operator|::
-name|setprecision
-argument_list|(
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|double
-operator|>
-operator|::
-name|digits10
-operator|+
-literal|2
-argument_list|)
-block|;   }
+expr_stmt|;
 comment|// Copy constructor.
 name|Message
 argument_list|(
@@ -391,17 +505,46 @@ operator|&
 name|val
 operator|)
 block|{
+comment|// Some libraries overload<< for STL containers.  These
+comment|// overloads are defined in the global namespace instead of ::std.
+comment|//
+comment|// C++'s symbol lookup rule (i.e. Koenig lookup) says that these
+comment|// overloads are visible in either the std namespace or the global
+comment|// namespace, but not other namespaces, including the testing
+comment|// namespace which Google Test's Message class is in.
+comment|//
+comment|// To allow STL containers (and other types that has a<< operator
+comment|// defined in the global namespace) to be used in Google Test
+comment|// assertions, testing::Message must access the custom<< operator
+comment|// from the global namespace.  With this using declaration,
+comment|// overloads of<< defined in the global namespace and those
+comment|// visible via Koenig lookup are both exposed in this function.
+if|#
+directive|if
+name|GTEST_NO_LLVM_RAW_OSTREAM
+name|using
+operator|::
+name|operator
+operator|<<
+block|;
+operator|*
+name|ss_
+operator|<<
+name|val
+block|;
+else|#
+directive|else
 operator|::
 name|GTestStreamToHelper
 argument_list|(
+operator|*
 name|ss_
-operator|.
-name|get
-argument_list|()
 argument_list|,
 name|val
 argument_list|)
 block|;
+endif|#
+directive|endif
 return|return
 operator|*
 name|this
@@ -454,17 +597,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|#
+directive|if
+name|GTEST_NO_LLVM_RAW_OSTREAM
+operator|*
+name|ss_
+operator|<<
+name|pointer
+expr_stmt|;
+else|#
+directive|else
 operator|::
 name|GTestStreamToHelper
 argument_list|(
+operator|*
 name|ss_
-operator|.
-name|get
-argument_list|()
 argument_list|,
 name|pointer
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|*
@@ -534,21 +687,7 @@ name|wchar_t
 operator|*
 name|wide_c_str
 operator|)
-block|{
-return|return
-operator|*
-name|this
-operator|<<
-name|internal
-operator|::
-name|String
-operator|::
-name|ShowWideCString
-argument_list|(
-name|wide_c_str
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 name|Message
 operator|&
 name|operator
@@ -558,21 +697,7 @@ name|wchar_t
 operator|*
 name|wide_c_str
 operator|)
-block|{
-return|return
-operator|*
-name|this
-operator|<<
-name|internal
-operator|::
-name|String
-operator|::
-name|ShowWideCString
-argument_list|(
-name|wide_c_str
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 if|#
 directive|if
 name|GTEST_HAS_STD_WSTRING
@@ -615,29 +740,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|// GTEST_HAS_GLOBAL_WSTRING
-comment|// Gets the text streamed to this object so far as a String.
+comment|// Gets the text streamed to this object so far as an std::string.
 comment|// Each '\0' character in the buffer is replaced with "\\0".
 comment|//
 comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
-name|internal
+name|std
 operator|::
-name|String
+name|string
 name|GetString
 argument_list|()
 specifier|const
-block|{
-return|return
-name|internal
-operator|::
-name|StringStreamToString
-argument_list|(
-name|ss_
-operator|.
-name|get
-argument_list|()
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 name|private
 label|:
 if|#
@@ -657,7 +770,7 @@ name|void
 name|StreamHelper
 argument_list|(
 argument|internal::true_type
-comment|/*dummy*/
+comment|/*is_pointer*/
 argument_list|,
 argument|T* pointer
 argument_list|)
@@ -677,16 +790,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|::
-name|GTestStreamToHelper
-argument_list|(
+operator|*
 name|ss_
-operator|.
-name|get
-argument_list|()
-argument_list|,
+operator|<<
 name|pointer
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -700,21 +807,22 @@ name|void
 name|StreamHelper
 argument_list|(
 argument|internal::false_type
-comment|/*dummy*/
+comment|/*is_pointer*/
 argument_list|,
 argument|const T& value
 argument_list|)
 block|{
+comment|// See the comments in Message& operator<<(const T&) above for why
+comment|// we need this using statement.
+name|using
 operator|::
-name|GTestStreamToHelper
-argument_list|(
+name|operator
+operator|<<
+block|;
+operator|*
 name|ss_
-operator|.
-name|get
-argument_list|()
-argument_list|,
+operator|<<
 name|value
-argument_list|)
 block|;   }
 endif|#
 directive|endif
@@ -775,6 +883,40 @@ name|GetString
 argument_list|()
 return|;
 block|}
+name|namespace
+name|internal
+block|{
+comment|// Converts a streamable value to an std::string.  A NULL pointer is
+comment|// converted to "(null)".  When the input value is a ::string,
+comment|// ::std::string, ::wstring, or ::std::wstring object, each NUL
+comment|// character in it is replaced with "\\0".
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|std
+operator|::
+name|string
+name|StreamableToString
+argument_list|(
+argument|const T& streamable
+argument_list|)
+block|{
+return|return
+operator|(
+name|Message
+argument_list|()
+operator|<<
+name|streamable
+operator|)
+operator|.
+name|GetString
+argument_list|()
+return|;
+block|}
+block|}
+comment|// namespace internal
 block|}
 end_decl_stmt
 

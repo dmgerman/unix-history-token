@@ -114,12 +114,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -169,6 +163,12 @@ begin_include
 include|#
 directive|include
 file|<ctime>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -3098,36 +3098,16 @@ unit|};
 name|namespace
 name|detail
 block|{
-comment|/// RecDirIterState - Keeps state for the recursive_directory_iterator. It is
-comment|/// reference counted in order to preserve InputIterator semantics on copy.
-name|struct
+comment|/// Keeps state for the recursive_directory_iterator.
+struct|struct
 name|RecDirIterState
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|RecDirIterState
-operator|>
 block|{
-name|RecDirIterState
-argument_list|()
-operator|:
-name|Level
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasNoPushRequest
-argument_list|(
-argument|false
-argument_list|)
-block|{}
 name|std
 operator|::
 name|stack
 operator|<
 name|directory_iterator
-block|,
+operator|,
 name|std
 operator|::
 name|vector
@@ -3135,14 +3115,19 @@ operator|<
 name|directory_iterator
 operator|>>
 name|Stack
-block|;
+expr_stmt|;
 name|uint16_t
 name|Level
-block|;
+init|=
+literal|0
+decl_stmt|;
 name|bool
 name|HasNoPushRequest
-block|;   }
+init|=
+name|false
 decl_stmt|;
+block|}
+struct|;
 block|}
 end_decl_stmt
 
@@ -3162,7 +3147,9 @@ begin_decl_stmt
 name|class
 name|recursive_directory_iterator
 block|{
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|detail
 operator|::
@@ -3194,7 +3181,7 @@ argument_list|)
 range|:
 name|State
 argument_list|(
-argument|new detail::RecDirIterState
+argument|std::make_shared<detail::RecDirIterState>()
 argument_list|)
 block|{
 name|State

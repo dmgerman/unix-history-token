@@ -142,7 +142,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|BitCodeAbbrev
 operator|>>
@@ -161,7 +163,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|BitCodeAbbrev
 operator|>>
@@ -207,7 +211,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|BitCodeAbbrev
 operator|>>
@@ -2351,8 +2357,9 @@ begin_function
 name|void
 name|EncodeAbbrev
 parameter_list|(
+specifier|const
 name|BitCodeAbbrev
-modifier|*
+modifier|&
 name|Abbv
 parameter_list|)
 block|{
@@ -2366,7 +2373,7 @@ expr_stmt|;
 name|EmitVBR
 argument_list|(
 name|Abbv
-operator|->
+operator|.
 name|getNumOperandInfos
 argument_list|()
 argument_list|,
@@ -2388,7 +2395,7 @@ name|unsigned
 operator|>
 operator|(
 name|Abbv
-operator|->
+operator|.
 name|getNumOperandInfos
 argument_list|()
 operator|)
@@ -2407,7 +2414,7 @@ modifier|&
 name|Op
 init|=
 name|Abbv
-operator|->
+operator|.
 name|getOperandInfo
 argument_list|(
 name|i
@@ -2489,18 +2496,23 @@ begin_comment
 comment|/// method takes ownership of the specified abbrev.
 end_comment
 
-begin_function
+begin_decl_stmt
 name|unsigned
 name|EmitAbbrev
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|BitCodeAbbrev
-modifier|*
+operator|>
 name|Abbv
-parameter_list|)
+argument_list|)
 block|{
 comment|// Emit the abbreviation as a record.
 name|EncodeAbbrev
 argument_list|(
+operator|*
 name|Abbv
 argument_list|)
 expr_stmt|;
@@ -2508,7 +2520,12 @@ name|CurAbbrevs
 operator|.
 name|push_back
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|Abbv
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2530,7 +2547,7 @@ operator|::
 name|FIRST_APPLICATION_ABBREV
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -2695,17 +2712,21 @@ begin_comment
 comment|/// BlockID.
 end_comment
 
-begin_function
+begin_decl_stmt
 name|unsigned
 name|EmitBlockInfoAbbrev
-parameter_list|(
+argument_list|(
 name|unsigned
 name|BlockID
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|BitCodeAbbrev
-modifier|*
+operator|>
 name|Abbv
-parameter_list|)
+argument_list|)
 block|{
 name|SwitchToBlockID
 argument_list|(
@@ -2714,6 +2735,7 @@ argument_list|)
 expr_stmt|;
 name|EncodeAbbrev
 argument_list|(
+operator|*
 name|Abbv
 argument_list|)
 expr_stmt|;
@@ -2733,7 +2755,12 @@ name|Abbrevs
 operator|.
 name|push_back
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|Abbv
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2751,7 +2778,7 @@ operator|::
 name|FIRST_APPLICATION_ABBREV
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 unit|};   }

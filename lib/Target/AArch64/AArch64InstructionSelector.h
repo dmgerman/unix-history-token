@@ -110,7 +110,6 @@ operator|&
 name|RBI
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|select
 argument_list|(
@@ -160,13 +159,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AARCH64_AARCH64INSTRUCTIONSELECTOR_H
+end_comment
 
 end_unit
 

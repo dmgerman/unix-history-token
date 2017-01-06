@@ -261,13 +261,13 @@ name|virtual
 operator|~
 name|DeathTest
 argument_list|()
-expr_stmt|;
+block|{ }
 comment|// A helper class that aborts a death test when it's deleted.
 name|class
 name|ReturnSentinel
 block|{
 name|public
-label|:
+operator|:
 name|explicit
 name|ReturnSentinel
 argument_list|(
@@ -298,13 +298,12 @@ name|DeathTest
 operator|*
 specifier|const
 name|test_
-expr_stmt|;
+block|;
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
 argument_list|(
 name|ReturnSentinel
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|GTEST_ATTRIBUTE_UNUSED_
 expr_stmt|;
 comment|// An enumeration of possible roles that may be taken when a death
@@ -387,20 +386,24 @@ function_decl|;
 specifier|static
 name|void
 name|set_last_death_test_message
-parameter_list|(
+argument_list|(
 specifier|const
-name|String
-modifier|&
+name|std
+operator|::
+name|string
+operator|&
 name|message
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 comment|// A string containing a description of the outcome of the last death test.
 specifier|static
-name|String
+name|std
+operator|::
+name|string
 name|last_death_test_message_
-decl_stmt|;
+expr_stmt|;
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
 argument_list|(
 name|DeathTest
@@ -418,37 +421,24 @@ name|virtual
 operator|~
 name|DeathTestFactory
 argument_list|()
-expr_stmt|;
+block|{ }
 name|virtual
 name|bool
 name|Create
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|statement
-parameter_list|,
-specifier|const
-name|RE
-modifier|*
-name|regex
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|,
-name|DeathTest
-modifier|*
-modifier|*
-name|test
-parameter_list|)
-init|=
+argument_list|(
+argument|const char* statement
+argument_list|,
+argument|const RE* regex
+argument_list|,
+argument|const char* file
+argument_list|,
+argument|int line
+argument_list|,
+argument|DeathTest** test
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|// A concrete DeathTestFactory implementation for normal use.
@@ -460,20 +450,20 @@ name|DeathTestFactory
 block|{
 name|public
 operator|:
+name|virtual
 name|bool
 name|Create
 argument_list|(
-argument|const char *statement
+argument|const char* statement
 argument_list|,
-argument|const RE *regex
+argument|const RE* regex
 argument_list|,
-argument|const char *file
+argument|const char* file
 argument_list|,
 argument|int line
 argument_list|,
-argument|DeathTest **test
+argument|DeathTest** test
 argument_list|)
-name|override
 block|; }
 decl_stmt|;
 comment|// Returns true if exit_status describes a process that was terminated
@@ -533,6 +523,20 @@ define|\
 value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (::testing::internal::AlwaysTrue()) { \     const ::testing::internal::RE& gtest_regex = (regex); \     ::testing::internal::DeathTest* gtest_dt; \     if (!::testing::internal::DeathTest::Create(#statement,&gtest_regex, \         __FILE__, __LINE__,&gtest_dt)) { \       goto GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__); \     } \     if (gtest_dt != NULL) { \       ::testing::internal::scoped_ptr< ::testing::internal::DeathTest> \           gtest_dt_ptr(gtest_dt); \       switch (gtest_dt->AssumeRole()) { \         case ::testing::internal::DeathTest::OVERSEE_TEST: \           if (!gtest_dt->Passed(predicate(gtest_dt->Wait()))) { \             goto GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__); \           } \           break; \         case ::testing::internal::DeathTest::EXECUTE_TEST: { \           ::testing::internal::DeathTest::ReturnSentinel \               gtest_sentinel(gtest_dt); \           GTEST_EXECUTE_DEATH_TEST_STATEMENT_(statement, gtest_dt); \           gtest_dt->Abort(::testing::internal::DeathTest::TEST_DID_NOT_DIE); \           break; \         } \       } \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__): \       fail(::testing::internal::DeathTest::LastMessage())
 comment|// The symbol "fail" here expands to something into which a message
 comment|// can be streamed.
+comment|// This macro is for implementing ASSERT/EXPECT_DEBUG_DEATH when compiled in
+comment|// NDEBUG mode. In this case we need the statements to be executed, the regex is
+comment|// ignored, and the macro must accept a streamed message even though the message
+comment|// is never printed.
+define|#
+directive|define
+name|GTEST_EXECUTE_STATEMENT_
+parameter_list|(
+name|statement
+parameter_list|,
+name|regex
+parameter_list|)
+define|\
+value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (::testing::internal::AlwaysTrue()) { \      GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement); \   } else \     ::testing::Message()
 comment|// A class representing the parsed contents of the
 comment|// --gtest_internal_run_death_test flag, as it existed when
 comment|// RUN_ALL_TESTS was called.
@@ -543,7 +547,7 @@ name|public
 label|:
 name|InternalRunDeathTestFlag
 argument_list|(
-argument|const String& a_file
+argument|const std::string& a_file
 argument_list|,
 argument|int a_line
 argument_list|,
@@ -590,7 +594,11 @@ name|write_fd_
 argument_list|)
 expr_stmt|;
 block|}
-name|String
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
 name|file
 argument_list|()
 specifier|const
@@ -628,9 +636,11 @@ return|;
 block|}
 name|private
 label|:
-name|String
+name|std
+operator|::
+name|string
 name|file_
-decl_stmt|;
+expr_stmt|;
 name|int
 name|line_
 decl_stmt|;

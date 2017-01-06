@@ -216,6 +216,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ostream>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -294,7 +300,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// The user can define GTEST_HAS_GLOBAL_STRING to 1 to indicate that
+comment|// You can define GTEST_HAS_GLOBAL_STRING to 1 to indicate that
 end_comment
 
 begin_comment
@@ -310,11 +316,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// If the user's ::std::string and ::string are the same class due to
+comment|// If ::std::string and ::string are the same class on your platform
 end_comment
 
 begin_comment
-comment|// aliasing, they should define GTEST_HAS_GLOBAL_STRING to 0.
+comment|// due to aliasing, you should define GTEST_HAS_GLOBAL_STRING to 0.
 end_comment
 
 begin_comment
@@ -322,7 +328,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// If the user doesn't define GTEST_HAS_GLOBAL_STRING, it is defined
+comment|// If you do not define GTEST_HAS_GLOBAL_STRING, it is defined
 end_comment
 
 begin_comment
@@ -467,6 +473,9 @@ name|class
 name|GTestFlagSaver
 decl_stmt|;
 name|class
+name|StreamingListenerTest
+decl_stmt|;
+name|class
 name|TestResultAccessor
 decl_stmt|;
 name|class
@@ -474,6 +483,9 @@ name|TestEventListenersAccessor
 decl_stmt|;
 name|class
 name|TestEventRepeater
+decl_stmt|;
+name|class
+name|UnitTestRecordPropertyTestHelper
 decl_stmt|;
 name|class
 name|WindowsDeathTest
@@ -493,41 +505,13 @@ name|Type
 name|result_type
 argument_list|,
 specifier|const
-name|String
+name|std
+operator|::
+name|string
 operator|&
 name|message
 argument_list|)
 decl_stmt|;
-comment|// Converts a streamable value to a String.  A NULL pointer is
-comment|// converted to "(null)".  When the input value is a ::string,
-comment|// ::std::string, ::wstring, or ::std::wstring object, each NUL
-comment|// character in it is replaced with "\\0".
-comment|// Declared in gtest-internal.h but defined here, so that it has access
-comment|// to the definition of the Message class, required by the ARM
-comment|// compiler.
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|String
-name|StreamableToString
-argument_list|(
-argument|const T& streamable
-argument_list|)
-block|{
-return|return
-operator|(
-name|Message
-argument_list|()
-operator|<<
-name|streamable
-operator|)
-operator|.
-name|GetString
-argument_list|()
-return|;
-block|}
 block|}
 comment|// namespace internal
 comment|// The friend relationship of some of these classes is cyclic.
@@ -640,18 +624,62 @@ operator|&
 name|other
 argument_list|)
 expr_stmt|;
+name|GTEST_DISABLE_MSC_WARNINGS_PUSH_
+argument_list|(
+literal|4800
+comment|/* forcing value to bool */
+argument_list|)
 comment|// Used in the EXPECT_TRUE/FALSE(bool_expression).
+comment|//
+comment|// T must be contextually convertible to bool.
+comment|//
+comment|// The second parameter prevents this overload from being considered if
+comment|// the argument is implicitly convertible to AssertionResult. In that case
+comment|// we want AssertionResult's copy constructor to be used.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 name|explicit
 name|AssertionResult
 argument_list|(
-argument|bool success
+argument|const T& success
+argument_list|,
+argument|typename internal::EnableIf<           !internal::ImplicitlyConvertible<T
+argument_list|,
+argument|AssertionResult>::value>::type*
+comment|/*enabler*/
+argument|= NULL
 argument_list|)
-block|:
+operator|:
 name|success_
 argument_list|(
 argument|success
 argument_list|)
 block|{}
+name|GTEST_DISABLE_MSC_WARNINGS_POP_
+argument_list|()
+comment|// Assignment operator.
+name|AssertionResult
+operator|&
+name|operator
+operator|=
+operator|(
+name|AssertionResult
+name|other
+operator|)
+block|{
+name|swap
+argument_list|(
+name|other
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 comment|// Returns true iff the assertion succeeded.
 name|operator
 name|bool
@@ -827,6 +855,15 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+comment|// Swap the contents of this AssertionResult with other.
+name|void
+name|swap
+parameter_list|(
+name|AssertionResult
+modifier|&
+name|other
+parameter_list|)
+function_decl|;
 comment|// Stores result of the assertion predicate.
 name|bool
 name|success_
@@ -845,11 +882,6 @@ operator|::
 name|string
 operator|>
 name|message_
-expr_stmt|;
-name|GTEST_DISALLOW_ASSIGN_
-argument_list|(
-name|AssertionResult
-argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -891,8 +923,8 @@ comment|// to be used a TEST_F.  For example:
 comment|//
 comment|//   class FooTest : public testing::Test {
 comment|//    protected:
-comment|//     virtual void SetUp() { ... }
-comment|//     virtual void TearDown() { ... }
+comment|//     void SetUp() override { ... }
+comment|//     void TearDown() override { ... }
 comment|//     ...
 comment|//   };
 comment|//
@@ -979,46 +1011,53 @@ name|HasNonfatalFailure
 argument_list|()
 return|;
 block|}
-comment|// Logs a property for the current test.  Only the last value for a given
-comment|// key is remembered.
-comment|// These are public static so they can be called from utility functions
-comment|// that are not members of the test fixture.
-comment|// The arguments are const char* instead strings, as Google Test is used
-comment|// on platforms where string doesn't compile.
-comment|//
-comment|// Note that a driving consideration for these RecordProperty methods
-comment|// was to produce xml output suited to the Greenspan charting utility,
-comment|// which at present will only chart values that fit in a 32-bit int. It
-comment|// is the user's responsibility to restrict their values to 32-bit ints
-comment|// if they intend them to be used with Greenspan.
+comment|// Logs a property for the current test, test case, or for the entire
+comment|// invocation of the test program when used outside of the context of a
+comment|// test case.  Only the last value for a given key is remembered.  These
+comment|// are public static so they can be called from utility functions that are
+comment|// not members of the test fixture.  Calls to RecordProperty made during
+comment|// lifespan of the test (from the moment its constructor starts to the
+comment|// moment its destructor finishes) will be output in XML as attributes of
+comment|// the<testcase> element.  Properties recorded from fixture's
+comment|// SetUpTestCase or TearDownTestCase are logged as attributes of the
+comment|// corresponding<testsuite> element.  Calls to RecordProperty made in the
+comment|// global context (before or after invocation of RUN_ALL_TESTS and from
+comment|// SetUp/TearDown method of Environment objects registered with Google
+comment|// Test) will be output as attributes of the<testsuites> element.
 specifier|static
 name|void
 name|RecordProperty
-parameter_list|(
+argument_list|(
 specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
+operator|&
 name|key
-parameter_list|,
+argument_list|,
 specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
+operator|&
 name|value
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|void
 name|RecordProperty
-parameter_list|(
+argument_list|(
 specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
+operator|&
 name|key
-parameter_list|,
+argument_list|,
 name|int
 name|value
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 comment|// Creates a Test object.
@@ -1074,26 +1113,26 @@ name|delete
 name|this
 decl_stmt|;
 block|}
-comment|// Uses a GTestFlagSaver to save and restore all Google Test flags.
 specifier|const
 name|internal
 operator|::
-name|GTestFlagSaver
-operator|*
-specifier|const
+name|scoped_ptr
+operator|<
+name|GTEST_FLAG_SAVER_
+operator|>
 name|gtest_flag_saver_
 expr_stmt|;
-comment|// Often a user mis-spells SetUp() as Setup() and spends a long time
+comment|// Often a user misspells SetUp() as Setup() and spends a long time
 comment|// wondering why it is never called by Google Test.  The declaration of
 comment|// the following method is solely for catching such an error at
 comment|// compile time:
 comment|//
 comment|//   - The return type is deliberately chosen to be not void, so it
-comment|//   will be a conflict if a user declares void Setup() in his test
-comment|//   fixture.
+comment|//   will be a conflict if void Setup() is declared in the user's
+comment|//   test fixture.
 comment|//
 comment|//   - This method is private, so it will be another compiler error
-comment|//   if a user calls it from his test fixture.
+comment|//   if the method is called from the user's test fixture.
 comment|//
 comment|// DO NOT OVERRIDE THIS FUNCTION.
 comment|//
@@ -1142,13 +1181,17 @@ comment|// TestProperty object.
 name|TestProperty
 argument_list|(
 specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
+operator|&
 name|a_key
 argument_list|,
 specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
+operator|&
 name|a_value
 argument_list|)
 operator|:
@@ -1195,12 +1238,14 @@ block|}
 comment|// Sets a new value, overriding the one supplied in the constructor.
 name|void
 name|SetValue
-parameter_list|(
+argument_list|(
 specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
+operator|&
 name|new_value
-parameter_list|)
+argument_list|)
 block|{
 name|value_
 operator|=
@@ -1210,15 +1255,15 @@ block|}
 name|private
 label|:
 comment|// The key supplied by the user.
-name|internal
+name|std
 operator|::
-name|String
+name|string
 name|key_
 expr_stmt|;
 comment|// The value supplied by the user.
-name|internal
+name|std
 operator|::
-name|String
+name|string
 name|value_
 expr_stmt|;
 block|}
@@ -1331,6 +1376,10 @@ name|TestInfo
 decl_stmt|;
 name|friend
 name|class
+name|TestCase
+decl_stmt|;
+name|friend
+name|class
 name|UnitTest
 decl_stmt|;
 name|friend
@@ -1414,29 +1463,44 @@ comment|// Adds a test property to the list. The property is validated and may a
 comment|// a non-fatal failure if invalid (e.g., if it conflicts with reserved
 comment|// key names). If a property is already recorded for the same key, the
 comment|// value will be updated, rather than storing multiple values for the same
-comment|// key.
+comment|// key.  xml_element specifies the element for which the property is being
+comment|// recorded and is used for validation.
 name|void
 name|RecordProperty
-parameter_list|(
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|xml_element
+argument_list|,
 specifier|const
 name|TestProperty
-modifier|&
+operator|&
 name|test_property
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|// Adds a failure if the key is a reserved attribute of Google Test
 comment|// testcase tags.  Returns true if the property is valid.
 comment|// TODO(russr): Validate attribute names are legal and human readable.
 specifier|static
 name|bool
 name|ValidateTestProperty
-parameter_list|(
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|xml_element
+argument_list|,
 specifier|const
 name|TestProperty
-modifier|&
+operator|&
 name|test_property
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|// Adds a test part result to the list.
 name|void
 name|AddTestPartResult
@@ -1631,15 +1695,56 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Returns true if this test should run, that is if the test is not disabled
+comment|// Returns the file name where this test is defined.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|char
+operator|*
+name|file
+argument_list|()
+specifier|const
+block|{
+return|return
+name|location_
+operator|.
+name|file
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Returns the line where this test is defined.
+end_comment
+
+begin_expr_stmt
+name|int
+name|line
+argument_list|()
+specifier|const
+block|{
+return|return
+name|location_
+operator|.
+name|line
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Returns true if this test should run, that is if the test is not
 end_comment
 
 begin_comment
-comment|// (or it is disabled but the also_run_disabled_tests flag has been specified)
+comment|// disabled (or it is disabled but the also_run_disabled_tests flag has
 end_comment
 
 begin_comment
-comment|// and its full name matches the user-specified filter.
+comment|// been specified) and its full name matches the user-specified filter.
 end_comment
 
 begin_comment
@@ -1702,6 +1807,25 @@ specifier|const
 block|{
 return|return
 name|should_run_
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Returns true iff this test will appear in the XML report.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|is_reportable
+argument_list|()
+specifier|const
+block|{
+comment|// For now, the XML report includes all tests matching the filter.
+comment|// In the future, we may trim tests that are excluded because of
+comment|// sharding.
+return|return
+name|matches_filter_
 return|;
 block|}
 end_expr_stmt
@@ -1779,6 +1903,15 @@ end_expr_stmt
 
 begin_expr_stmt
 name|friend
+name|class
+name|internal
+operator|::
+name|StreamingListenerTest
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
 name|TestInfo
 operator|*
 name|internal
@@ -1792,6 +1925,8 @@ argument_list|,
 argument|const char* type_param
 argument_list|,
 argument|const char* value_param
+argument_list|,
+argument|internal::CodeLocation code_location
 argument_list|,
 argument|internal::TypeId fixture_class_id
 argument_list|,
@@ -1815,13 +1950,17 @@ end_comment
 begin_macro
 name|TestInfo
 argument_list|(
-argument|const char* test_case_name
+argument|const std::string& test_case_name
 argument_list|,
-argument|const char* name
+argument|const std::string& name
 argument_list|,
 argument|const char* a_type_param
 argument_list|,
+comment|// NULL if not a type-parameterized test
 argument|const char* a_value_param
+argument_list|,
+comment|// NULL if not a value-parameterized test
+argument|internal::CodeLocation a_code_location
 argument_list|,
 argument|internal::TypeId fixture_class_id
 argument_list|,
@@ -1965,6 +2104,14 @@ operator|::
 name|string
 operator|>
 name|value_param_
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|internal
+operator|::
+name|CodeLocation
+name|location_
 expr_stmt|;
 end_expr_stmt
 
@@ -2190,12 +2337,36 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|// Gets the number of disabled tests that will be reported in the XML report.
+end_comment
+
+begin_expr_stmt
+name|int
+name|reportable_disabled_test_count
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Gets the number of disabled tests in this test case.
 end_comment
 
 begin_expr_stmt
 name|int
 name|disabled_test_count
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Gets the number of tests to be printed in the XML report.
+end_comment
+
+begin_expr_stmt
+name|int
+name|reportable_test_count
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -2298,6 +2469,28 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// Returns the TestResult that holds test properties recorded during
+end_comment
+
+begin_comment
+comment|// execution of SetUpTestCase and TearDownTestCase.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|TestResult
+operator|&
+name|ad_hoc_test_result
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ad_hoc_test_result_
+return|;
+block|}
+end_expr_stmt
 
 begin_label
 name|private
@@ -2576,6 +2769,38 @@ block|}
 end_function
 
 begin_comment
+comment|// Returns true iff the test is disabled and will be reported in the XML
+end_comment
+
+begin_comment
+comment|// report.
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|TestReportableDisabled
+parameter_list|(
+specifier|const
+name|TestInfo
+modifier|*
+name|test_info
+parameter_list|)
+block|{
+return|return
+name|test_info
+operator|->
+name|is_reportable
+argument_list|()
+operator|&&
+name|test_info
+operator|->
+name|is_disabled_
+return|;
+block|}
+end_function
+
+begin_comment
 comment|// Returns true iff test is disabled.
 end_comment
 
@@ -2594,6 +2819,30 @@ return|return
 name|test_info
 operator|->
 name|is_disabled_
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// Returns true iff this test will appear in the XML report.
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|TestReportable
+parameter_list|(
+specifier|const
+name|TestInfo
+modifier|*
+name|test_info
+parameter_list|)
+block|{
+return|return
+name|test_info
+operator|->
+name|is_reportable
+argument_list|()
 return|;
 block|}
 end_function
@@ -2655,9 +2904,9 @@ comment|// Name of the test case.
 end_comment
 
 begin_expr_stmt
-name|internal
+name|std
 operator|::
-name|String
+name|string
 name|name_
 expr_stmt|;
 end_expr_stmt
@@ -2774,6 +3023,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// Holds test properties recorded during execution of SetUpTestCase and
+end_comment
+
+begin_comment
+comment|// TearDownTestCase.
+end_comment
+
+begin_decl_stmt
+name|TestResult
+name|ad_hoc_test_result_
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// We disallow copying TestCases.
 end_comment
 
@@ -2791,7 +3054,7 @@ comment|// An Environment object is capable of setting up and tearing down an
 end_comment
 
 begin_comment
-comment|// environment.  The user should subclass this to define his own
+comment|// environment.  You should subclass this to define your own
 end_comment
 
 begin_comment
@@ -2853,27 +3116,27 @@ name|virtual
 operator|~
 name|Environment
 argument_list|()
-expr_stmt|;
+block|{}
 comment|// Override this to define how to set up the environment.
 name|virtual
 name|void
 name|SetUp
-parameter_list|()
+argument_list|()
 block|{}
 comment|// Override this to define how to tear down the environment.
 name|virtual
 name|void
 name|TearDown
-parameter_list|()
+argument_list|()
 block|{}
 name|private
-label|:
+operator|:
 comment|// If you see an error about overriding the following function or
 comment|// about it being private, you have mis-spelled SetUp() as Setup().
-struct|struct
+expr|struct
 name|Setup_should_be_spelled_SetUp
 block|{}
-struct|;
+expr_stmt|;
 name|virtual
 name|Setup_should_be_spelled_SetUp
 modifier|*
@@ -2909,20 +3172,20 @@ name|virtual
 operator|~
 name|TestEventListener
 argument_list|()
-expr_stmt|;
+block|{}
 comment|// Fired before any test activity starts.
 name|virtual
 name|void
 name|OnTestProgramStart
-parameter_list|(
+argument_list|(
 specifier|const
 name|UnitTest
-modifier|&
+operator|&
 name|unit_test
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 comment|// Fired before each iteration of tests starts.  There may be more than
 comment|// one iteration if GTEST_FLAG(repeat) is set. iteration is the iteration
 comment|// index, starting from 0.
@@ -3121,21 +3384,17 @@ range|:
 name|public
 name|TestEventListener
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|public
 operator|:
+name|virtual
 name|void
 name|OnTestProgramStart
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnTestIterationStart
 argument_list|(
@@ -3145,80 +3404,80 @@ argument_list|,
 argument|int
 comment|/*iteration*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnEnvironmentsSetUpStart
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnEnvironmentsSetUpEnd
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnTestCaseStart
 argument_list|(
 argument|const TestCase&
 comment|/*test_case*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnTestStart
 argument_list|(
 argument|const TestInfo&
 comment|/*test_info*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnTestPartResult
 argument_list|(
 argument|const TestPartResult&
 comment|/*test_part_result*/
 argument_list|)
-name|override
-block|{    }
+block|{}
+name|virtual
 name|void
 name|OnTestEnd
 argument_list|(
 argument|const TestInfo&
 comment|/*test_info*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnTestCaseEnd
 argument_list|(
 argument|const TestCase&
 comment|/*test_case*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnEnvironmentsTearDownStart
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnEnvironmentsTearDownEnd
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnTestIterationEnd
 argument_list|(
@@ -3228,15 +3487,14 @@ argument_list|,
 argument|int
 comment|/*iteration*/
 argument_list|)
-name|override
 block|{}
+name|virtual
 name|void
 name|OnTestProgramEnd
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
-name|override
 block|{}
 block|}
 decl_stmt|;
@@ -3507,6 +3765,10 @@ operator|*
 name|current_test_case
 argument_list|()
 specifier|const
+name|GTEST_LOCK_EXCLUDED_
+argument_list|(
+name|mutex_
+argument_list|)
 expr_stmt|;
 comment|// Returns the TestInfo object for the test that's currently running,
 comment|// or NULL if no test is running.
@@ -3516,6 +3778,10 @@ operator|*
 name|current_test_info
 argument_list|()
 specifier|const
+name|GTEST_LOCK_EXCLUDED_
+argument_list|(
+name|mutex_
+argument_list|)
 expr_stmt|;
 comment|// Returns the random seed used at the start of the current test run.
 name|int
@@ -3536,6 +3802,10 @@ name|ParameterizedTestCaseRegistry
 operator|&
 name|parameterized_test_registry
 argument_list|()
+name|GTEST_LOCK_EXCLUDED_
+argument_list|(
+name|mutex_
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -3577,9 +3847,21 @@ name|failed_test_count
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// Gets the number of disabled tests that will be reported in the XML report.
+name|int
+name|reportable_disabled_test_count
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Gets the number of disabled tests.
 name|int
 name|disabled_test_count
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Gets the number of tests to be printed in the XML report.
+name|int
+name|reportable_test_count
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -3592,6 +3874,13 @@ expr_stmt|;
 comment|// Gets the number of tests that should run.
 name|int
 name|test_to_run_count
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// Gets the time of the test program start, in ms from the start of the
+comment|// UNIX epoch.
+name|TimeInMillis
+name|start_timestamp
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -3626,6 +3915,15 @@ name|i
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// Returns the TestResult containing information on test failures and
+comment|// properties logged outside of individual test cases.
+specifier|const
+name|TestResult
+operator|&
+name|ad_hoc_test_result
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Returns the list of event listeners that can be used to track events
 comment|// inside Google Test.
 name|TestEventListeners
@@ -3674,36 +3972,47 @@ name|int
 name|line_number
 argument_list|,
 specifier|const
-name|internal
+name|std
 operator|::
-name|String
+name|string
 operator|&
 name|message
 argument_list|,
 specifier|const
-name|internal
+name|std
 operator|::
-name|String
+name|string
 operator|&
 name|os_stack_trace
 argument_list|)
+name|GTEST_LOCK_EXCLUDED_
+argument_list|(
+name|mutex_
+argument_list|)
 decl_stmt|;
-comment|// Adds a TestProperty to the current TestResult object. If the result already
-comment|// contains a property with the same key, the value will be updated.
+comment|// Adds a TestProperty to the current TestResult object when invoked from
+comment|// inside a test, to current TestCase's ad_hoc_test_result_ when invoked
+comment|// from SetUpTestCase or TearDownTestCase, or to the global property set
+comment|// when invoked elsewhere.  If the result already contains a property with
+comment|// the same key, the value will be updated.
 name|void
-name|RecordPropertyForCurrentTest
-parameter_list|(
+name|RecordProperty
+argument_list|(
 specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
+operator|&
 name|key
-parameter_list|,
+argument_list|,
 specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
+operator|&
 name|value
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|// Gets the i-th test case among all the test cases. i can range from 0 to
 comment|// total_test_case_count() - 1. If i is not in that range, returns NULL.
 name|TestCase
@@ -3758,6 +4067,18 @@ operator|::
 name|ScopedTrace
 expr_stmt|;
 name|friend
+name|class
+name|internal
+operator|::
+name|StreamingListenerTest
+expr_stmt|;
+name|friend
+name|class
+name|internal
+operator|::
+name|UnitTestRecordPropertyTestHelper
+expr_stmt|;
+name|friend
 name|Environment
 modifier|*
 name|AddGlobalTestEnvironment
@@ -3785,7 +4106,7 @@ name|ReportFailureInUnknownLocation
 argument_list|(
 argument|TestPartResult::Type result_type
 argument_list|,
-argument|const internal::String& message
+argument|const std::string& message
 argument_list|)
 expr_stmt|;
 comment|// Creates an empty UnitTest.
@@ -3810,11 +4131,19 @@ name|TraceInfo
 operator|&
 name|trace
 argument_list|)
+name|GTEST_LOCK_EXCLUDED_
+argument_list|(
+name|mutex_
+argument_list|)
 decl_stmt|;
 comment|// Pops a trace from the per-thread Google Test trace stack.
 name|void
 name|PopGTestTrace
 parameter_list|()
+function_decl|GTEST_LOCK_EXCLUDED_
+parameter_list|(
+name|mutex_
+parameter_list|)
 function_decl|;
 comment|// Protects mutable state in *impl_.  This is mutable as some const
 comment|// methods need to lock it too.
@@ -4026,18 +4355,9 @@ begin_decl_stmt
 name|namespace
 name|internal
 block|{
-comment|// Formats a comparison assertion (e.g. ASSERT_EQ, EXPECT_LT, and etc)
-comment|// operand to be used in a failure message.  The type (but not value)
-comment|// of the other operand may affect the format.  This allows us to
-comment|// print a char* as a raw pointer when it is compared against another
-comment|// char*, and print it as a C string when it is compared against an
-comment|// std::string object, for example.
-comment|//
-comment|// The default implementation ignores the type of the other operand.
-comment|// Some specialized versions are used to handle formatting wide or
-comment|// narrow C strings.
-comment|//
-comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
+comment|// Separate the error generating code from the code path to reduce the stack
+comment|// frame size of CmpHelperEQ. This helps reduce the overhead of some sanitizers
+comment|// when calling EXPECT_* in a tight loop.
 name|template
 operator|<
 name|typename
@@ -4046,24 +4366,40 @@ operator|,
 name|typename
 name|T2
 operator|>
-name|String
-name|FormatForComparisonFailureMessage
+name|AssertionResult
+name|CmpHelperEQFailure
 argument_list|(
-argument|const T1& value
+argument|const char* lhs_expression
 argument_list|,
-argument|const T2&
-comment|/* other_operand */
+argument|const char* rhs_expression
+argument_list|,
+argument|const T1& lhs
+argument_list|,
+argument|const T2& rhs
 argument_list|)
 block|{
-comment|// C++Builder compiles this incorrectly if the namespace isn't explicitly
-comment|// given.
 return|return
-operator|::
-name|testing
-operator|::
-name|PrintToString
+name|EqFailure
 argument_list|(
-name|value
+name|lhs_expression
+argument_list|,
+name|rhs_expression
+argument_list|,
+name|FormatForComparisonFailureMessage
+argument_list|(
+name|lhs
+argument_list|,
+name|rhs
+argument_list|)
+argument_list|,
+name|FormatForComparisonFailureMessage
+argument_list|(
+name|rhs
+argument_list|,
+name|lhs
+argument_list|)
+argument_list|,
+name|false
 argument_list|)
 return|;
 block|}
@@ -4079,52 +4415,25 @@ operator|>
 name|AssertionResult
 name|CmpHelperEQ
 argument_list|(
-argument|const char* expected_expression
+argument|const char* lhs_expression
 argument_list|,
-argument|const char* actual_expression
+argument|const char* rhs_expression
 argument_list|,
-argument|const T1& expected
+argument|const T1& lhs
 argument_list|,
-argument|const T2& actual
+argument|const T2& rhs
 argument_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|push
-name|)
-comment|// Saves the current warning state.
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4389
-name|)
-comment|// Temporarily disables warning on
-comment|// signed/unsigned mismatch.
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4805
-name|)
-comment|// Temporarily disables warning on
-comment|// unsafe mix of types
-endif|#
-directive|endif
+name|GTEST_DISABLE_MSC_WARNINGS_PUSH_
+argument_list|(
+literal|4389
+comment|/* signed/unsigned mismatch */
+argument_list|)
 if|if
 condition|(
-name|expected
+name|lhs
 operator|==
-name|actual
+name|rhs
 condition|)
 block|{
 return|return
@@ -4132,40 +4441,18 @@ name|AssertionSuccess
 argument_list|()
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|pop
-name|)
-comment|// Restores the warning state.
-endif|#
-directive|endif
+name|GTEST_DISABLE_MSC_WARNINGS_POP_
+argument_list|()
 return|return
-name|EqFailure
+name|CmpHelperEQFailure
 argument_list|(
-name|expected_expression
+name|lhs_expression
 argument_list|,
-name|actual_expression
+name|rhs_expression
 argument_list|,
-name|FormatForComparisonFailureMessage
-argument_list|(
-name|expected
+name|lhs
 argument_list|,
-name|actual
-argument_list|)
-argument_list|,
-name|FormatForComparisonFailureMessage
-argument_list|(
-name|actual
-argument_list|,
-name|expected
-argument_list|)
-argument_list|,
-name|false
+name|rhs
 argument_list|)
 return|;
 block|}
@@ -4179,18 +4466,18 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|expected_expression
+name|lhs_expression
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|actual_expression
+name|rhs_expression
 parameter_list|,
 name|BiggestInt
-name|expected
+name|lhs
 parameter_list|,
 name|BiggestInt
-name|actual
+name|rhs
 parameter_list|)
 function_decl|;
 comment|// The helper class for {ASSERT|EXPECT}_EQ.  The template argument
@@ -4220,25 +4507,25 @@ specifier|static
 name|AssertionResult
 name|Compare
 argument_list|(
-argument|const char* expected_expression
+argument|const char* lhs_expression
 argument_list|,
-argument|const char* actual_expression
+argument|const char* rhs_expression
 argument_list|,
-argument|const T1& expected
+argument|const T1& lhs
 argument_list|,
-argument|const T2& actual
+argument|const T2& rhs
 argument_list|)
 block|{
 return|return
 name|CmpHelperEQ
 argument_list|(
-name|expected_expression
+name|lhs_expression
 argument_list|,
-name|actual_expression
+name|rhs_expression
 argument_list|,
-name|expected
+name|lhs
 argument_list|,
-name|actual
+name|rhs
 argument_list|)
 return|;
 block|}
@@ -4252,25 +4539,25 @@ specifier|static
 name|AssertionResult
 name|Compare
 argument_list|(
-argument|const char* expected_expression
+argument|const char* lhs_expression
 argument_list|,
-argument|const char* actual_expression
+argument|const char* rhs_expression
 argument_list|,
-argument|BiggestInt expected
+argument|BiggestInt lhs
 argument_list|,
-argument|BiggestInt actual
+argument|BiggestInt rhs
 argument_list|)
 block|{
 return|return
 name|CmpHelperEQ
 argument_list|(
-name|expected_expression
+name|lhs_expression
 argument_list|,
-name|actual_expression
+name|rhs_expression
 argument_list|,
-name|expected
+name|lhs
 argument_list|,
-name|actual
+name|rhs
 argument_list|)
 return|;
 block|}
@@ -4305,13 +4592,13 @@ specifier|static
 name|AssertionResult
 name|Compare
 argument_list|(
-argument|const char* expected_expression
+argument|const char* lhs_expression
 argument_list|,
-argument|const char* actual_expression
+argument|const char* rhs_expression
 argument_list|,
-argument|const T1& expected
+argument|const T1& lhs
 argument_list|,
-argument|const T2& actual
+argument|const T2& rhs
 argument_list|,
 comment|// The following line prevents this overload from being considered if T2
 comment|// is not a pointer type.  We need this because ASSERT_EQ(NULL, my_ptr)
@@ -4325,13 +4612,13 @@ block|{
 return|return
 name|CmpHelperEQ
 argument_list|(
-name|expected_expression
+name|lhs_expression
 argument_list|,
-name|actual_expression
+name|rhs_expression
 argument_list|,
-name|expected
+name|lhs
 argument_list|,
-name|actual
+name|rhs
 argument_list|)
 return|;
 block|}
@@ -4346,9 +4633,9 @@ specifier|static
 name|AssertionResult
 name|Compare
 argument_list|(
-argument|const char* expected_expression
+argument|const char* lhs_expression
 argument_list|,
-argument|const char* actual_expression
+argument|const char* rhs_expression
 argument_list|,
 comment|// We used to have a second template parameter instead of Secret*.  That
 comment|// template parameter would deduce to 'long', making this a better match
@@ -4357,18 +4644,18 @@ comment|// Unfortunately, gcc with -Wconversion-null warns when "passing NULL to
 comment|// non-pointer argument" (even a deduced integral argument), so the old
 comment|// implementation caused warnings in user code.
 argument|Secret*
-comment|/* expected (NULL) */
+comment|/* lhs (NULL) */
 argument_list|,
-argument|T* actual
+argument|T* rhs
 argument_list|)
 block|{
-comment|// We already know that 'expected' is a null pointer.
+comment|// We already know that 'lhs' is a null pointer.
 return|return
 name|CmpHelperEQ
 argument_list|(
-name|expected_expression
+name|lhs_expression
 argument_list|,
-name|actual_expression
+name|rhs_expression
 argument_list|,
 name|static_cast
 operator|<
@@ -4379,12 +4666,72 @@ operator|(
 name|NULL
 operator|)
 argument_list|,
-name|actual
+name|rhs
 argument_list|)
 return|;
 block|}
 expr|}
 block|;
+comment|// Separate the error generating code from the code path to reduce the stack
+comment|// frame size of CmpHelperOP. This helps reduce the overhead of some sanitizers
+comment|// when calling EXPECT_OP in a tight loop.
+name|template
+operator|<
+name|typename
+name|T1
+block|,
+name|typename
+name|T2
+operator|>
+name|AssertionResult
+name|CmpHelperOpFailure
+argument_list|(
+argument|const char* expr1
+argument_list|,
+argument|const char* expr2
+argument_list|,
+argument|const T1& val1
+argument_list|,
+argument|const T2& val2
+argument_list|,
+argument|const char* op
+argument_list|)
+block|{
+return|return
+name|AssertionFailure
+argument_list|()
+operator|<<
+literal|"Expected: ("
+operator|<<
+name|expr1
+operator|<<
+literal|") "
+operator|<<
+name|op
+operator|<<
+literal|" ("
+operator|<<
+name|expr2
+operator|<<
+literal|"), actual: "
+operator|<<
+name|FormatForComparisonFailureMessage
+argument_list|(
+name|val1
+argument_list|,
+name|val2
+argument_list|)
+operator|<<
+literal|" vs "
+operator|<<
+name|FormatForComparisonFailureMessage
+argument_list|(
+name|val2
+argument_list|,
+name|val1
+argument_list|)
+return|;
+block|}
 comment|// A macro for implementing the helper functions needed to implement
 comment|// ASSERT_?? and EXPECT_??.  It is here just to avoid copy-and-paste
 comment|// of similar code.
@@ -4404,7 +4751,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|template<typename T1, typename T2>\ AssertionResult CmpHelper##op_name(const char* expr1, const char* expr2, \                                    const T1& val1, const T2& val2) {\   if (val1 op val2) {\     return AssertionSuccess();\   } else {\     return AssertionFailure() \<< "Expected: ("<< expr1<< ") " #op " ("<< expr2\<< "), actual: "<< FormatForComparisonFailureMessage(val1, val2)\<< " vs "<< FormatForComparisonFailureMessage(val2, val1);\   }\ }\ GTEST_API_ AssertionResult CmpHelper##op_name(\     const char* expr1, const char* expr2, BiggestInt val1, BiggestInt val2)
+value|template<typename T1, typename T2>\ AssertionResult CmpHelper##op_name(const char* expr1, const char* expr2, \                                    const T1& val1, const T2& val2) {\   if (val1 op val2) {\     return AssertionSuccess();\   } else {\     return CmpHelperOpFailure(expr1, expr2, val1, val2, #op);\   }\ }\ GTEST_API_ AssertionResult CmpHelper##op_name(\     const char* expr1, const char* expr2, BiggestInt val1, BiggestInt val2)
 comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
 comment|// Implements the helper function for {ASSERT|EXPECT}_NE
 name|GTEST_IMPL_CMP_HELPER_
@@ -4459,22 +4806,22 @@ argument_list|(
 specifier|const
 name|char
 operator|*
-name|expected_expression
+name|s1_expression
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|actual_expression
+name|s2_expression
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|expected
+name|s1
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|actual
+name|s2
 argument_list|)
 block|;
 comment|// The helper function for {ASSERT|EXPECT}_STRCASEEQ.
@@ -4487,22 +4834,22 @@ argument_list|(
 specifier|const
 name|char
 operator|*
-name|expected_expression
+name|s1_expression
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|actual_expression
+name|s2_expression
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|expected
+name|s1
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|actual
+name|s2
 argument_list|)
 block|;
 comment|// The helper function for {ASSERT|EXPECT}_STRNE.
@@ -4571,22 +4918,22 @@ argument_list|(
 specifier|const
 name|char
 operator|*
-name|expected_expression
+name|s1_expression
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|actual_expression
+name|s2_expression
 argument_list|,
 specifier|const
 name|wchar_t
 operator|*
-name|expected
+name|s1
 argument_list|,
 specifier|const
 name|wchar_t
 operator|*
-name|actual
+name|s2
 argument_list|)
 block|;
 comment|// Helper function for *_STRNE on wide strings.
@@ -4874,13 +5221,13 @@ operator|>
 name|AssertionResult
 name|CmpHelperFloatingPointEQ
 argument_list|(
-argument|const char* expected_expression
+argument|const char* lhs_expression
 argument_list|,
-argument|const char* actual_expression
+argument|const char* rhs_expression
 argument_list|,
-argument|RawType expected
+argument|RawType lhs_value
 argument_list|,
-argument|RawType actual
+argument|RawType rhs_value
 argument_list|)
 block|{
 specifier|const
@@ -4890,12 +5237,12 @@ name|RawType
 operator|>
 name|lhs
 argument_list|(
-name|expected
+name|lhs_value
 argument_list|)
 block|,
 name|rhs
 argument_list|(
-name|actual
+name|rhs_value
 argument_list|)
 block|;
 if|if
@@ -4917,9 +5264,9 @@ operator|::
 name|std
 operator|::
 name|stringstream
-name|expected_ss
+name|lhs_ss
 expr_stmt|;
-name|expected_ss
+name|lhs_ss
 operator|<<
 name|std
 operator|::
@@ -4937,15 +5284,15 @@ operator|+
 literal|2
 argument_list|)
 operator|<<
-name|expected
+name|lhs_value
 block|;
 operator|::
 name|std
 operator|::
 name|stringstream
-name|actual_ss
+name|rhs_ss
 block|;
-name|actual_ss
+name|rhs_ss
 operator|<<
 name|std
 operator|::
@@ -4963,25 +5310,25 @@ operator|+
 literal|2
 argument_list|)
 operator|<<
-name|actual
+name|rhs_value
 block|;
 return|return
 name|EqFailure
 argument_list|(
-name|expected_expression
+name|lhs_expression
 argument_list|,
-name|actual_expression
+name|rhs_expression
 argument_list|,
 name|StringStreamToString
 argument_list|(
 operator|&
-name|expected_ss
+name|lhs_ss
 argument_list|)
 argument_list|,
 name|StringStreamToString
 argument_list|(
 operator|&
-name|actual_ss
+name|rhs_ss
 argument_list|)
 argument_list|,
 name|false
@@ -5101,7 +5448,9 @@ name|int
 specifier|const
 name|line
 block|;
-name|String
+name|std
+operator|::
+name|string
 specifier|const
 name|message
 block|;
@@ -5192,6 +5541,17 @@ name|GetParam
 argument_list|()
 specifier|const
 block|{
+name|GTEST_CHECK_
+argument_list|(
+name|parameter_
+operator|!=
+name|NULL
+argument_list|)
+operator|<<
+literal|"GetParam() can only be called inside a value-parameterized test "
+operator|<<
+literal|"-- did you intend to write TEST_P instead of TEST_F?"
+block|;
 return|return
 operator|*
 name|parameter_
@@ -5366,30 +5726,6 @@ end_comment
 
 begin_comment
 comment|// and EXPECT_* more.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Examples:
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//   EXPECT_TRUE(server.StatusIsOK());
-end_comment
-
-begin_comment
-comment|//   ASSERT_FALSE(server.HasPendingRequest(port))
-end_comment
-
-begin_comment
-comment|//<< "There are still pending requests "<< "on port "<< port;
 end_comment
 
 begin_comment
@@ -5627,7 +5963,7 @@ parameter_list|(
 name|condition
 parameter_list|)
 define|\
-value|GTEST_TEST_BOOLEAN_(condition, #condition, false, true, \                       GTEST_NONFATAL_FAILURE_)
+value|GTEST_TEST_BOOLEAN_((condition), #condition, false, true, \                       GTEST_NONFATAL_FAILURE_)
 end_define
 
 begin_define
@@ -5649,7 +5985,7 @@ parameter_list|(
 name|condition
 parameter_list|)
 define|\
-value|GTEST_TEST_BOOLEAN_(condition, #condition, false, true, \                       GTEST_FATAL_FAILURE_)
+value|GTEST_TEST_BOOLEAN_((condition), #condition, false, true, \                       GTEST_FATAL_FAILURE_)
 end_define
 
 begin_define
@@ -5686,27 +6022,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|//    * {ASSERT|EXPECT}_EQ(expected, actual): Tests that expected == actual
+comment|//    * {ASSERT|EXPECT}_EQ(v1, v2): Tests that v1 == v2
 end_comment
 
 begin_comment
-comment|//    * {ASSERT|EXPECT}_NE(v1, v2):           Tests that v1 != v2
+comment|//    * {ASSERT|EXPECT}_NE(v1, v2): Tests that v1 != v2
 end_comment
 
 begin_comment
-comment|//    * {ASSERT|EXPECT}_LT(v1, v2):           Tests that v1< v2
+comment|//    * {ASSERT|EXPECT}_LT(v1, v2): Tests that v1< v2
 end_comment
 
 begin_comment
-comment|//    * {ASSERT|EXPECT}_LE(v1, v2):           Tests that v1<= v2
+comment|//    * {ASSERT|EXPECT}_LE(v1, v2): Tests that v1<= v2
 end_comment
 
 begin_comment
-comment|//    * {ASSERT|EXPECT}_GT(v1, v2):           Tests that v1> v2
+comment|//    * {ASSERT|EXPECT}_GT(v1, v2): Tests that v1> v2
 end_comment
 
 begin_comment
-comment|//    * {ASSERT|EXPECT}_GE(v1, v2):           Tests that v1>= v2
+comment|//    * {ASSERT|EXPECT}_GE(v1, v2): Tests that v1>= v2
 end_comment
 
 begin_comment
@@ -5794,11 +6130,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|//   3. {ASSERT|EXPECT}_EQ(expected, actual) is preferred to
+comment|//   3. {ASSERT|EXPECT}_EQ(v1, v2) is preferred to
 end_comment
 
 begin_comment
-comment|//   {ASSERT|EXPECT}_TRUE(expected == actual), as the former tells you
+comment|//   {ASSERT|EXPECT}_TRUE(v1 == v2), as the former tells you
 end_comment
 
 begin_comment
@@ -5862,12 +6198,12 @@ define|#
 directive|define
 name|EXPECT_EQ
 parameter_list|(
-name|expected
+name|val1
 parameter_list|,
-name|actual
+name|val2
 parameter_list|)
 define|\
-value|EXPECT_PRED_FORMAT2(::testing::internal:: \                       EqHelper<GTEST_IS_NULL_LITERAL_(expected)>::Compare, \                       expected, actual)
+value|EXPECT_PRED_FORMAT2(::testing::internal:: \                       EqHelper<GTEST_IS_NULL_LITERAL_(val1)>::Compare, \                       val1, val2)
 end_define
 
 begin_define
@@ -5875,12 +6211,12 @@ define|#
 directive|define
 name|EXPECT_NE
 parameter_list|(
-name|expected
+name|val1
 parameter_list|,
-name|actual
+name|val2
 parameter_list|)
 define|\
-value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperNE, expected, actual)
+value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperNE, val1, val2)
 end_define
 
 begin_define
@@ -5940,12 +6276,12 @@ define|#
 directive|define
 name|GTEST_ASSERT_EQ
 parameter_list|(
-name|expected
+name|val1
 parameter_list|,
-name|actual
+name|val2
 parameter_list|)
 define|\
-value|ASSERT_PRED_FORMAT2(::testing::internal:: \                       EqHelper<GTEST_IS_NULL_LITERAL_(expected)>::Compare, \                       expected, actual)
+value|ASSERT_PRED_FORMAT2(::testing::internal:: \                       EqHelper<GTEST_IS_NULL_LITERAL_(val1)>::Compare, \                       val1, val2)
 end_define
 
 begin_define
@@ -6166,7 +6502,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// C String Comparisons.  All tests treat NULL and any non-NULL string
+comment|// C-string Comparisons.  All tests treat NULL and any non-NULL string
 end_comment
 
 begin_comment
@@ -6230,12 +6566,12 @@ define|#
 directive|define
 name|EXPECT_STREQ
 parameter_list|(
-name|expected
+name|s1
 parameter_list|,
-name|actual
+name|s2
 parameter_list|)
 define|\
-value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperSTREQ, expected, actual)
+value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperSTREQ, s1, s2)
 end_define
 
 begin_define
@@ -6256,12 +6592,12 @@ define|#
 directive|define
 name|EXPECT_STRCASEEQ
 parameter_list|(
-name|expected
+name|s1
 parameter_list|,
-name|actual
+name|s2
 parameter_list|)
 define|\
-value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperSTRCASEEQ, expected, actual)
+value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperSTRCASEEQ, s1, s2)
 end_define
 
 begin_define
@@ -6282,12 +6618,12 @@ define|#
 directive|define
 name|ASSERT_STREQ
 parameter_list|(
-name|expected
+name|s1
 parameter_list|,
-name|actual
+name|s2
 parameter_list|)
 define|\
-value|ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperSTREQ, expected, actual)
+value|ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperSTREQ, s1, s2)
 end_define
 
 begin_define
@@ -6308,12 +6644,12 @@ define|#
 directive|define
 name|ASSERT_STRCASEEQ
 parameter_list|(
-name|expected
+name|s1
 parameter_list|,
-name|actual
+name|s2
 parameter_list|)
 define|\
-value|ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperSTRCASEEQ, expected, actual)
+value|ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperSTRCASEEQ, s1, s2)
 end_define
 
 begin_define
@@ -6338,7 +6674,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//    * {ASSERT|EXPECT}_FLOAT_EQ(expected, actual):
+comment|//    * {ASSERT|EXPECT}_FLOAT_EQ(val1, val2):
 end_comment
 
 begin_comment
@@ -6346,7 +6682,7 @@ comment|//         Tests that two float values are almost equal.
 end_comment
 
 begin_comment
-comment|//    * {ASSERT|EXPECT}_DOUBLE_EQ(expected, actual):
+comment|//    * {ASSERT|EXPECT}_DOUBLE_EQ(val1, val2):
 end_comment
 
 begin_comment
@@ -6386,12 +6722,12 @@ define|#
 directive|define
 name|EXPECT_FLOAT_EQ
 parameter_list|(
-name|expected
+name|val1
 parameter_list|,
-name|actual
+name|val2
 parameter_list|)
 define|\
-value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperFloatingPointEQ<float>, \                       expected, actual)
+value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperFloatingPointEQ<float>, \                       val1, val2)
 end_define
 
 begin_define
@@ -6399,12 +6735,12 @@ define|#
 directive|define
 name|EXPECT_DOUBLE_EQ
 parameter_list|(
-name|expected
+name|val1
 parameter_list|,
-name|actual
+name|val2
 parameter_list|)
 define|\
-value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperFloatingPointEQ<double>, \                       expected, actual)
+value|EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperFloatingPointEQ<double>, \                       val1, val2)
 end_define
 
 begin_define
@@ -6412,12 +6748,12 @@ define|#
 directive|define
 name|ASSERT_FLOAT_EQ
 parameter_list|(
-name|expected
+name|val1
 parameter_list|,
-name|actual
+name|val2
 parameter_list|)
 define|\
-value|ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperFloatingPointEQ<float>, \                       expected, actual)
+value|ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperFloatingPointEQ<float>, \                       val1, val2)
 end_define
 
 begin_define
@@ -6425,12 +6761,12 @@ define|#
 directive|define
 name|ASSERT_DOUBLE_EQ
 parameter_list|(
-name|expected
+name|val1
 parameter_list|,
-name|actual
+name|val2
 parameter_list|)
 define|\
-value|ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperFloatingPointEQ<double>, \                       expected, actual)
+value|ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperFloatingPointEQ<double>, \                       val1, val2)
 end_define
 
 begin_define
@@ -6933,11 +7269,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// The user should put his test code between braces after using this
+comment|// Test code should appear between braces after an invocation of
 end_comment
 
 begin_comment
-comment|// macro.  Example:
+comment|// this macro.  Example:
 end_comment
 
 begin_comment
@@ -7155,7 +7491,12 @@ value|GTEST_TEST_(test_fixture, test_name, test_fixture, \               ::testi
 end_define
 
 begin_comment
-comment|// Use this macro in main() to run all tests.  It returns 0 if all
+unit|}
+comment|// namespace testing
+end_comment
+
+begin_comment
+comment|// Use this function in main() to run all tests.  It returns 0 if all
 end_comment
 
 begin_comment
@@ -7174,19 +7515,49 @@ begin_comment
 comment|// parsed by InitGoogleTest().
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RUN_ALL_TESTS
-parameter_list|()
-define|\
-value|(::testing::UnitTest::GetInstance()->Run())
-end_define
+begin_comment
+comment|//
+end_comment
 
 begin_comment
-unit|}
-comment|// namespace testing
+comment|// This function was formerly a macro; thus, it is in the global
 end_comment
+
+begin_comment
+comment|// namespace and has an all-caps name.
+end_comment
+
+begin_macro
+unit|int
+name|RUN_ALL_TESTS
+argument_list|()
+end_macro
+
+begin_expr_stmt
+name|GTEST_MUST_USE_RESULT_
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|inline
+name|int
+name|RUN_ALL_TESTS
+parameter_list|()
+block|{
+return|return
+operator|::
+name|testing
+operator|::
+name|UnitTest
+operator|::
+name|GetInstance
+argument_list|()
+operator|->
+name|Run
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

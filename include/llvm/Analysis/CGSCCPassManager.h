@@ -478,7 +478,7 @@ extern|CGSCCUpdateResult&>;
 comment|/// \brief The CGSCC pass manager.
 comment|///
 comment|/// See the documentation for the PassManager template for details. It runs
-comment|/// a sequency of SCC passes over each SCC that the manager is run over. This
+comment|/// a sequence of SCC passes over each SCC that the manager is run over. This
 comment|/// typedef serves as a convenient way to refer to this construct.
 typedef|typedef
 name|PassManager

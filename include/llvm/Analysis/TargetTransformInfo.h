@@ -153,6 +153,12 @@ name|class
 name|Loop
 decl_stmt|;
 name|class
+name|ScalarEvolution
+decl_stmt|;
+name|class
+name|SCEV
+decl_stmt|;
+name|class
 name|Type
 decl_stmt|;
 name|class
@@ -1632,9 +1638,9 @@ comment|/// \returns The cost of the address computation. For most targets this 
 comment|/// merged into the instruction indexing mode. Some targets might want to
 comment|/// distinguish between address computation for memory operations on vector
 comment|/// types and scalar types. Such targets should override this function.
-comment|/// The 'IsComplex' parameter is a hint that the address computation is likely
-comment|/// to involve multiple instructions and as such unlikely to be merged into
-comment|/// the address indexing mode.
+comment|/// The 'SE' parameter holds pointer for the scalar evolution object which
+comment|/// is used in order to get the Ptr step value in case of constant stride.
+comment|/// The 'Ptr' parameter holds SCEV of the access pointer.
 name|int
 name|getAddressComputationCost
 argument_list|(
@@ -1642,10 +1648,18 @@ name|Type
 operator|*
 name|Ty
 argument_list|,
-name|bool
-name|IsComplex
+name|ScalarEvolution
+operator|*
+name|SE
 operator|=
-name|false
+name|nullptr
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Ptr
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2650,9 +2664,18 @@ name|virtual
 name|int
 name|getAddressComputationCost
 argument_list|(
-argument|Type *Ty
+name|Type
+operator|*
+name|Ty
 argument_list|,
-argument|bool IsComplex
+name|ScalarEvolution
+operator|*
+name|SE
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Ptr
 argument_list|)
 operator|=
 literal|0
@@ -4145,7 +4168,9 @@ name|getAddressComputationCost
 argument_list|(
 argument|Type *Ty
 argument_list|,
-argument|bool IsComplex
+argument|ScalarEvolution *SE
+argument_list|,
+argument|const SCEV *Ptr
 argument_list|)
 name|override
 block|{
@@ -4156,7 +4181,9 @@ name|getAddressComputationCost
 argument_list|(
 name|Ty
 argument_list|,
-name|IsComplex
+name|SE
+argument_list|,
+name|Ptr
 argument_list|)
 return|;
 block|}

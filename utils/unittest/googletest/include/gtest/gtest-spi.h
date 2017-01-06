@@ -203,22 +203,25 @@ argument|TestPartResultArray* result
 argument_list|)
 block|;
 comment|// The d'tor restores the previous test part result reporter.
+name|virtual
 operator|~
 name|ScopedFakeTestPartResultReporter
 argument_list|()
-name|override
 block|;
 comment|// Appends the TestPartResult object to the TestPartResultArray
 comment|// received in the constructor.
 comment|//
 comment|// This method is from the TestPartResultReporterInterface
 comment|// interface.
+name|virtual
 name|void
 name|ReportTestPartResult
 argument_list|(
-argument|const TestPartResult&result
+specifier|const
+name|TestPartResult
+operator|&
+name|result
 argument_list|)
-name|override
 block|;
 name|private
 operator|:
@@ -576,7 +579,7 @@ parameter_list|,
 name|substr
 parameter_list|)
 define|\
-value|do {\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TestPartResult::kNonFatalFailure, \         (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ALL_THREADS,\&gtest_failures);\       if (::testing::internal::AlwaysTrue()) { statement; }\     }\   } while (::testing::internal::AlwaysFalse())
+value|do {\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TestPartResult::kNonFatalFailure, \         (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ALL_THREADS, \&gtest_failures);\       if (::testing::internal::AlwaysTrue()) { statement; }\     }\   } while (::testing::internal::AlwaysFalse())
 end_define
 
 begin_endif

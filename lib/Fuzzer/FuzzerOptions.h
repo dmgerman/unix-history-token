@@ -293,6 +293,11 @@ name|HandleTerm
 init|=
 name|false
 decl_stmt|;
+name|bool
+name|HandleXfsz
+init|=
+name|false
+decl_stmt|;
 block|}
 struct|;
 block|}

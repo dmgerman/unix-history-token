@@ -177,12 +177,6 @@ directive|include
 file|"gtest/internal/gtest-port.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"gtest/internal/gtest-string.h"
-end_include
-
 begin_comment
 comment|// #ifdef __GNUC__ is too general here.  It is possible to use gcc without using
 end_comment
@@ -191,11 +185,11 @@ begin_comment
 comment|// libstdc++ (which is where cxxabi.h comes from).
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GLIBCXX__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_CXXABI_H_
+end_if
 
 begin_include
 include|#
@@ -224,7 +218,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// __GLIBCXX__
+comment|// GTEST_HASH_CXXABI_H_
 end_comment
 
 begin_decl_stmt
@@ -242,7 +236,9 @@ operator|<
 name|typename
 name|T
 operator|>
-name|String
+name|std
+operator|::
+name|string
 name|GetTypeName
 argument_list|()
 block|{
@@ -265,10 +261,7 @@ argument_list|()
 block|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__GLIBCXX__
-argument_list|)
+name|GTEST_HAS_CXXABI_H_
 operator|||
 name|defined
 argument_list|(
@@ -281,9 +274,9 @@ literal|0
 block|;
 comment|// gcc's implementation of typeid(T).name() mangles the type name,
 comment|// so we have to demangle it.
-ifdef|#
-directive|ifdef
-name|__GLIBCXX__
+if|#
+directive|if
+name|GTEST_HAS_CXXABI_H_
 name|using
 name|abi
 operator|::
@@ -291,7 +284,7 @@ name|__cxa_demangle
 block|;
 endif|#
 directive|endif
-comment|// __GLIBCXX__
+comment|// GTEST_HAS_CXXABI_H_
 name|char
 operator|*
 specifier|const
@@ -310,7 +303,9 @@ name|status
 argument_list|)
 block|;
 specifier|const
-name|String
+name|std
+operator|::
+name|string
 name|name_str
 argument_list|(
 name|status
@@ -337,7 +332,7 @@ name|name
 return|;
 endif|#
 directive|endif
-comment|// __GLIBCXX__ || __HP_aCC
+comment|// GTEST_HAS_CXXABI_H_ || __HP_aCC
 else|#
 directive|else
 return|return

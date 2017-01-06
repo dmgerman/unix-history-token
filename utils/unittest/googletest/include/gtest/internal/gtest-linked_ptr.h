@@ -340,7 +340,6 @@ comment|// protect all linked_ptr objects.  This can create serious
 comment|// contention in production code, but is acceptable in a testing
 comment|// framework.
 comment|// Join an existing circle.
-comment|// L< g_linked_ptr_mutex
 name|void
 name|join
 parameter_list|(
@@ -348,6 +347,10 @@ name|linked_ptr_internal
 specifier|const
 modifier|*
 name|ptr
+parameter_list|)
+function|GTEST_LOCK_EXCLUDED_
+parameter_list|(
+name|g_linked_ptr_mutex
 parameter_list|)
 block|{
 name|MutexLock
@@ -372,12 +375,26 @@ name|next_
 operator|!=
 name|ptr
 condition|)
+block|{
+name|assert
+argument_list|(
+name|p
+operator|->
+name|next_
+operator|!=
+name|this
+operator|&&
+literal|"Trying to join() a linked ring we are already in. "
+literal|"Is GMock thread safety enabled?"
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|p
 operator|->
 name|next_
 expr_stmt|;
+block|}
 name|p
 operator|->
 name|next_
@@ -391,10 +408,13 @@ expr_stmt|;
 block|}
 comment|// Leave whatever circle we're part of.  Returns true if we were the
 comment|// last member of the circle.  Once this is done, you can join() another.
-comment|// L< g_linked_ptr_mutex
 name|bool
 name|depart
 parameter_list|()
+function|GTEST_LOCK_EXCLUDED_
+parameter_list|(
+name|g_linked_ptr_mutex
+parameter_list|)
 block|{
 name|MutexLock
 name|lock
@@ -427,12 +447,26 @@ name|next_
 operator|!=
 name|this
 condition|)
+block|{
+name|assert
+argument_list|(
+name|p
+operator|->
+name|next_
+operator|!=
+name|next_
+operator|&&
+literal|"Trying to depart() a linked ring we are not in. "
+literal|"Is GMock thread safety enabled?"
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|p
 operator|->
 name|next_
 expr_stmt|;
+block|}
 name|p
 operator|->
 name|next_

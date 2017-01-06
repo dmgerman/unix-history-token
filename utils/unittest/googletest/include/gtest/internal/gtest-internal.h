@@ -196,10 +196,33 @@ begin_comment
 comment|// GTEST_OS_LINUX
 end_comment
 
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_EXCEPTIONS
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdexcept>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<float.h>
 end_include
 
 begin_include
@@ -223,7 +246,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gtest/gtest-message.h"
 end_include
 
 begin_include
@@ -243,24 +290,6 @@ include|#
 directive|include
 file|"gtest/internal/gtest-type-util.h"
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|GTEST_NO_LLVM_RAW_OSTREAM
-end_if
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_os_ostream.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|// Due to C++ preprocessor weirdness, we need double indirection to
@@ -318,244 +347,13 @@ parameter_list|)
 value|foo ## bar
 end_define
 
-begin_comment
-comment|// Google Test defines the testing::Message class to allow construction of
-end_comment
-
-begin_comment
-comment|// test messages via the<< operator.  The idea is that anything
-end_comment
-
-begin_comment
-comment|// streamable to std::ostream can be streamed to a testing::Message.
-end_comment
-
-begin_comment
-comment|// This allows a user to use his own types in Google Test assertions by
-end_comment
-
-begin_comment
-comment|// overloading the<< operator.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// util/gtl/stl_logging-inl.h overloads<< for STL containers.  These
-end_comment
-
-begin_comment
-comment|// overloads cannot be defined in the std namespace, as that will be
-end_comment
-
-begin_comment
-comment|// undefined behavior.  Therefore, they are defined in the global
-end_comment
-
-begin_comment
-comment|// namespace instead.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// C++'s symbol lookup rule (i.e. Koenig lookup) says that these
-end_comment
-
-begin_comment
-comment|// overloads are visible in either the std namespace or the global
-end_comment
-
-begin_comment
-comment|// namespace, but not other namespaces, including the testing
-end_comment
-
-begin_comment
-comment|// namespace which Google Test's Message class is in.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// To allow STL containers (and other types that has a<< operator
-end_comment
-
-begin_comment
-comment|// defined in the global namespace) to be used in Google Test assertions,
-end_comment
-
-begin_comment
-comment|// testing::Message must access the custom<< operator from the global
-end_comment
-
-begin_comment
-comment|// namespace.  Hence this helper function.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Note: Jeffrey Yasskin suggested an alternative fix by "using
-end_comment
-
-begin_comment
-comment|// ::operator<<;" in the definition of Message's operator<<.  That fix
-end_comment
-
-begin_comment
-comment|// doesn't require a helper function, but unfortunately doesn't
-end_comment
-
-begin_comment
-comment|// compile with MSVC.
-end_comment
-
-begin_comment
-comment|// LLVM INTERNAL CHANGE: To allow operator<< to work with both
-end_comment
-
-begin_comment
-comment|// std::ostreams and LLVM's raw_ostreams, we define a special
-end_comment
-
-begin_comment
-comment|// std::ostream with an implicit conversion to raw_ostream& and stream
-end_comment
-
-begin_comment
-comment|// to that.  This causes the compiler to prefer std::ostream overloads
-end_comment
-
-begin_comment
-comment|// but still find raw_ostream& overloads.
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|GTEST_NO_LLVM_RAW_OSTREAM
-end_if
-
 begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|convertible_fwd_ostream
-range|:
-name|public
-name|std
-operator|::
-name|ostream
-block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|raw_os_ostream
-name|ros_
-block|;
-name|public
-operator|:
-name|convertible_fwd_ostream
-argument_list|(
-name|std
-operator|::
-name|ostream
-operator|&
-name|os
-argument_list|)
-operator|:
-name|std
-operator|::
-name|ostream
-argument_list|(
-name|os
-operator|.
-name|rdbuf
-argument_list|()
-argument_list|)
-block|,
-name|ros_
-argument_list|(
-argument|*this
-argument_list|)
-block|{}
-name|operator
-name|raw_ostream
-operator|&
-operator|(
-operator|)
-block|{
-return|return
-name|ros_
-return|;
-block|}
-expr|}
-block|; }
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-specifier|inline
-name|void
-name|GTestStreamToHelper
-argument_list|(
-argument|std::ostream* os
-argument_list|,
-argument|const T& val
-argument_list|)
-block|{
-name|llvm
-operator|::
-name|convertible_fwd_ostream
-name|cos
-argument_list|(
-operator|*
-name|os
-argument_list|)
-block|;
-name|cos
-operator|<<
-name|val
-block|; }
-else|#
-directive|else
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-specifier|inline
-name|void
-name|GTestStreamToHelper
-argument_list|(
-argument|std::ostream* os
-argument_list|,
-argument|const T& val
-argument_list|)
-block|{
-operator|*
-name|os
-operator|<<
-name|val
-block|; }
-endif|#
-directive|endif
 name|class
 name|ProtocolMessage
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|namespace
 name|proto2
 block|{
@@ -563,6 +361,9 @@ name|class
 name|Message
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|namespace
 name|testing
 block|{
@@ -627,11 +428,6 @@ name|class
 name|UnitTestImpl
 decl_stmt|;
 comment|// Opaque implementation of UnitTest
-comment|// How many times InitGoogleTest() has been called.
-specifier|extern
-name|int
-name|g_init_gtest_count
-decl_stmt|;
 comment|// The text used in failure messages to indicate the start of the
 comment|// stack trace.
 name|GTEST_API_
@@ -640,12 +436,6 @@ specifier|const
 name|char
 name|kStackTraceMarker
 index|[]
-decl_stmt|;
-comment|// A secret type that Google Test users don't know about.  It has no
-comment|// definition on purpose.  Therefore it's impossible to create a
-comment|// Secret object, which is what we want.
-name|class
-name|Secret
 decl_stmt|;
 comment|// Two overloaded helpers for checking at compile time whether an
 comment|// expression is a null pointer literal (i.e. NULL or any 0-valued
@@ -712,20 +502,58 @@ directive|endif
 comment|// GTEST_ELLIPSIS_NEEDS_POD_
 comment|// Appends the user-supplied message to the Google-Test-generated message.
 name|GTEST_API_
-name|String
+name|std
+operator|::
+name|string
 name|AppendUserMessage
-parameter_list|(
+argument_list|(
 specifier|const
-name|String
-modifier|&
+name|std
+operator|::
+name|string
+operator|&
 name|gtest_msg
-parameter_list|,
+argument_list|,
 specifier|const
 name|Message
-modifier|&
+operator|&
 name|user_msg
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|GTEST_HAS_EXCEPTIONS
+comment|// This exception is thrown by (and only by) a failed Google Test
+comment|// assertion when GTEST_FLAG(throw_on_failure) is true (if exceptions
+comment|// are enabled).  We derive it from std::runtime_error, which is for
+comment|// errors presumably detectable only at run time.  Since
+comment|// std::runtime_error inherits from std::exception, many testing
+comment|// frameworks know how to extract and print the message inside it.
+name|class
+name|GTEST_API_
+name|GoogleTestFailureException
+range|:
+name|public
+operator|::
+name|std
+operator|::
+name|runtime_error
+block|{
+name|public
+operator|:
+name|explicit
+name|GoogleTestFailureException
+argument_list|(
+specifier|const
+name|TestPartResult
+operator|&
+name|failure
+argument_list|)
+block|; }
+decl_stmt|;
+endif|#
+directive|endif
+comment|// GTEST_HAS_EXCEPTIONS
 comment|// A helper class for creating scoped traces in user programs.
 name|class
 name|GTEST_API_
@@ -765,144 +593,137 @@ expr_stmt|;
 comment|// A ScopedTrace object does its job in its
 comment|// c'tor and d'tor.  Therefore it doesn't
 comment|// need to be used otherwise.
-comment|// Converts a streamable value to a String.  A NULL pointer is
-comment|// converted to "(null)".  When the input value is a ::string,
-comment|// ::std::string, ::wstring, or ::std::wstring object, each NUL
-comment|// character in it is replaced with "\\0".
-comment|// Declared here but defined in gtest.h, so that it has access
-comment|// to the definition of the Message class, required by the ARM
-comment|// compiler.
-name|template
+name|namespace
+name|edit_distance
+block|{
+comment|// Returns the optimal edits to go from 'left' to 'right'.
+comment|// All edits cost the same, with replace having lower priority than
+comment|// add/remove.
+comment|// Simple implementation of the WagnerâFischer algorithm.
+comment|// See http://en.wikipedia.org/wiki/Wagner-Fischer_algorithm
+enum|enum
+name|EditType
+block|{
+name|kMatch
+block|,
+name|kAdd
+block|,
+name|kRemove
+block|,
+name|kReplace
+block|}
+enum|;
+name|GTEST_API_
+name|std
+operator|::
+name|vector
 operator|<
-name|typename
-name|T
+name|EditType
 operator|>
-name|String
-name|StreamableToString
+name|CalculateOptimalEdits
 argument_list|(
 specifier|const
-name|T
+name|std
+operator|::
+name|vector
+operator|<
+name|size_t
+operator|>
 operator|&
-name|streamable
+name|left
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|size_t
+operator|>
+operator|&
+name|right
 argument_list|)
 expr_stmt|;
-comment|// The Symbian compiler has a bug that prevents it from selecting the
-comment|// correct overload of FormatForComparisonFailureMessage (see below)
-comment|// unless we pass the first argument by reference.  If we do that,
-comment|// however, Visual Age C++ 10.1 generates a compiler error.  Therefore
-comment|// we only apply the work-around for Symbian.
-if|#
-directive|if
-name|defined
+comment|// Same as above, but the input is represented as strings.
+name|GTEST_API_
+name|std
+operator|::
+name|vector
+operator|<
+name|EditType
+operator|>
+name|CalculateOptimalEdits
 argument_list|(
-name|__SYMBIAN32__
-argument_list|)
-define|#
-directive|define
-name|GTEST_CREF_WORKAROUND_
-value|const&
-else|#
-directive|else
-define|#
-directive|define
-name|GTEST_CREF_WORKAROUND_
-endif|#
-directive|endif
-comment|// When this operand is a const char* or char*, if the other operand
-comment|// is a ::std::string or ::string, we print this operand as a C string
-comment|// rather than a pointer (we do the same for wide strings); otherwise
-comment|// we print it as a pointer to be safe.
-comment|// This internal macro is used to avoid duplicated code.
-define|#
-directive|define
-name|GTEST_FORMAT_IMPL_
-parameter_list|(
-name|operand2_type
-parameter_list|,
-name|operand1_printer
-parameter_list|)
-define|\
-value|inline String FormatForComparisonFailureMessage(\     operand2_type::value_type* GTEST_CREF_WORKAROUND_ str, \     const operand2_type&
-comment|/*operand2*/
-value|) {\   return operand1_printer(str);\ }\ inline String FormatForComparisonFailureMessage(\     const operand2_type::value_type* GTEST_CREF_WORKAROUND_ str, \     const operand2_type&
-comment|/*operand2*/
-value|) {\   return operand1_printer(str);\ }
-name|GTEST_FORMAT_IMPL_
-argument_list|(
-argument|::std::string
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|left
 argument_list|,
-argument|String::ShowCStringQuoted
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|right
 argument_list|)
-if|#
-directive|if
-name|GTEST_HAS_STD_WSTRING
-name|GTEST_FORMAT_IMPL_
+expr_stmt|;
+comment|// Create a diff of the input strings in Unified diff format.
+name|GTEST_API_
+name|std
+operator|::
+name|string
+name|CreateUnifiedDiff
 argument_list|(
-argument|::std::wstring
+argument|const std::vector<std::string>& left
 argument_list|,
-argument|String::ShowWideCStringQuoted
-argument_list|)
-endif|#
-directive|endif
-comment|// GTEST_HAS_STD_WSTRING
-if|#
-directive|if
-name|GTEST_HAS_GLOBAL_STRING
-name|GTEST_FORMAT_IMPL_
-argument_list|(
-argument|::string
+argument|const std::vector<std::string>& right
 argument_list|,
-argument|String::ShowCStringQuoted
+argument|size_t context =
+literal|2
 argument_list|)
-endif|#
-directive|endif
-comment|// GTEST_HAS_GLOBAL_STRING
-if|#
-directive|if
-name|GTEST_HAS_GLOBAL_WSTRING
-name|GTEST_FORMAT_IMPL_
+expr_stmt|;
+block|}
+comment|// namespace edit_distance
+comment|// Calculate the diff between 'left' and 'right' and return it in unified diff
+comment|// format.
+comment|// If not null, stores in 'total_line_count' the total number of lines found
+comment|// in left + right.
+name|GTEST_API_
+name|std
+operator|::
+name|string
+name|DiffStrings
 argument_list|(
-argument|::wstring
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|left
 argument_list|,
-argument|String::ShowWideCStringQuoted
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|right
+argument_list|,
+name|size_t
+operator|*
+name|total_line_count
 argument_list|)
-endif|#
-directive|endif
-comment|// GTEST_HAS_GLOBAL_WSTRING
-undef|#
-directive|undef
-name|GTEST_FORMAT_IMPL_
-comment|// The next four overloads handle the case where the operand being
-comment|// printed is a char/wchar_t pointer and the other operand is not a
-comment|// string/wstring object.  In such cases, we just print the operand as
-comment|// a pointer to be safe.
-define|#
-directive|define
-name|GTEST_FORMAT_CHAR_PTR_IMPL_
-parameter_list|(
-name|CharType
-parameter_list|)
-define|\
-value|template<typename T>                                             \   String FormatForComparisonFailureMessage(CharType* GTEST_CREF_WORKAROUND_ p, \                                            const T&) { \     return PrintToString(static_cast<const void*>(p));              \   }
-name|GTEST_FORMAT_CHAR_PTR_IMPL_
-argument_list|(
-argument|char
-argument_list|)
-name|GTEST_FORMAT_CHAR_PTR_IMPL_
-argument_list|(
-argument|const char
-argument_list|)
-name|GTEST_FORMAT_CHAR_PTR_IMPL_
-argument_list|(
-argument|wchar_t
-argument_list|)
-name|GTEST_FORMAT_CHAR_PTR_IMPL_
-argument_list|(
-argument|const wchar_t
-argument_list|)
-undef|#
-directive|undef
-name|GTEST_FORMAT_CHAR_PTR_IMPL_
+expr_stmt|;
 comment|// Constructs and returns the message for an equality assertion
 comment|// (e.g. ASSERT_EQ, EXPECT_STREQ, etc) failure.
 comment|//
@@ -921,57 +742,63 @@ comment|// be inserted into the message.
 name|GTEST_API_
 name|AssertionResult
 name|EqFailure
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|expected_expression
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|actual_expression
-parameter_list|,
+argument_list|,
 specifier|const
-name|String
-modifier|&
+name|std
+operator|::
+name|string
+operator|&
 name|expected_value
-parameter_list|,
+argument_list|,
 specifier|const
-name|String
-modifier|&
+name|std
+operator|::
+name|string
+operator|&
 name|actual_value
-parameter_list|,
+argument_list|,
 name|bool
 name|ignoring_case
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|// Constructs a failure message for Boolean assertions such as EXPECT_TRUE.
 name|GTEST_API_
-name|String
+name|std
+operator|::
+name|string
 name|GetBoolAssertionFailureMessage
-parameter_list|(
+argument_list|(
 specifier|const
 name|AssertionResult
-modifier|&
+operator|&
 name|assertion_result
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|expression_text
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|actual_predicate_value
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|expected_predicate_value
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|// This template class represents an IEEE floating-point number
 comment|// (either single-precision or double-precision, depending on the
 comment|// template parameters).
@@ -1134,7 +961,7 @@ comment|// calculations are done with 80-bit precision, while double has 64
 comment|// bits.  Therefore, 4 should be enough for ordinary use.
 comment|//
 comment|// See the following article for more details on ULP:
-comment|// http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm.
+comment|// http://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
 specifier|static
 specifier|const
 name|size_t
@@ -1212,6 +1039,12 @@ name|kExponentBitMask
 argument_list|)
 return|;
 block|}
+comment|// Returns the maximum representable finite floating-point number.
+specifier|static
+name|RawType
+name|Max
+parameter_list|()
+function_decl|;
 comment|// Non-static methods
 comment|// Returns the bits that represents this number.
 specifier|const
@@ -1467,6 +1300,42 @@ name|u_
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|// We cannot use std::numeric_limits<T>::max() as it clashes with the max()
+comment|// macro defined by<windows.h>.
+name|template
+operator|<
+operator|>
+specifier|inline
+name|float
+name|FloatingPoint
+operator|<
+name|float
+operator|>
+operator|::
+name|Max
+argument_list|()
+block|{
+return|return
+name|FLT_MAX
+return|;
+block|}
+name|template
+operator|<
+operator|>
+specifier|inline
+name|double
+name|FloatingPoint
+operator|<
+name|double
+operator|>
+operator|::
+name|Max
+argument_list|()
+block|{
+return|return
+name|DBL_MAX
+return|;
+block|}
 comment|// Typedefs the instances of the FloatingPoint template class that we
 comment|// care to use.
 typedef|typedef
@@ -1577,17 +1446,17 @@ name|virtual
 operator|~
 name|TestFactoryBase
 argument_list|()
-expr_stmt|;
+block|{}
 comment|// Creates a test instance to run. The instance is both created and destroyed
 comment|// within TestInfoImpl::Run()
 name|virtual
 name|Test
-modifier|*
+operator|*
 name|CreateTest
-parameter_list|()
-init|=
+argument_list|()
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 name|protected
 label|:
 name|TestFactoryBase
@@ -1617,11 +1486,11 @@ name|TestFactoryBase
 block|{
 name|public
 operator|:
+name|virtual
 name|Test
 operator|*
 name|CreateTest
 argument_list|()
-name|override
 block|{
 return|return
 name|new
@@ -1677,6 +1546,34 @@ name|TearDownTestCaseFunc
 function_decl|)
 parameter_list|()
 function_decl|;
+struct|struct
+name|CodeLocation
+block|{
+name|CodeLocation
+argument_list|(
+argument|const string& a_file
+argument_list|,
+argument|int a_line
+argument_list|)
+block|:
+name|file
+argument_list|(
+name|a_file
+argument_list|)
+operator|,
+name|line
+argument_list|(
+argument|a_line
+argument_list|)
+block|{}
+name|string
+name|file
+expr_stmt|;
+name|int
+name|line
+decl_stmt|;
+block|}
+struct|;
 comment|// Creates a new TestInfo object and registers it with Google Test;
 comment|// returns the created object.
 comment|//
@@ -1685,9 +1582,10 @@ comment|//
 comment|//   test_case_name:   name of the test case
 comment|//   name:             name of the test
 comment|//   type_param        the name of the test's type parameter, or NULL if
-comment|//                     this is not  a typed or a type-parameterized test.
+comment|//                     this is not a typed or a type-parameterized test.
 comment|//   value_param       text representation of the test's value parameter,
 comment|//                     or NULL if this is not a type-parameterized test.
+comment|//   code_location:    code location where the test is defined
 comment|//   fixture_class_id: ID of the test fixture class
 comment|//   set_up_tc:        pointer to the function that sets up the test case
 comment|//   tear_down_tc:     pointer to the function that tears down the test case
@@ -1718,6 +1616,9 @@ specifier|const
 name|char
 modifier|*
 name|value_param
+parameter_list|,
+name|CodeLocation
+name|code_location
 parameter_list|,
 name|TypeId
 name|fixture_class_id
@@ -1825,15 +1726,93 @@ name|Abort
 argument_list|()
 expr_stmt|;
 block|}
-name|defined_test_names_
+name|registered_tests_
 operator|.
 name|insert
 argument_list|(
+operator|::
+name|std
+operator|::
+name|make_pair
+argument_list|(
 name|test_name
+argument_list|,
+name|CodeLocation
+argument_list|(
+name|file
+argument_list|,
+name|line
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
 name|true
+return|;
+block|}
+name|bool
+name|TestExists
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|test_name
+argument_list|)
+decl|const
+block|{
+return|return
+name|registered_tests_
+operator|.
+name|count
+argument_list|(
+name|test_name
+argument_list|)
+operator|>
+literal|0
+return|;
+block|}
+specifier|const
+name|CodeLocation
+modifier|&
+name|GetCodeLocation
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|test_name
+argument_list|)
+decl|const
+block|{
+name|RegisteredTestsMap
+operator|::
+name|const_iterator
+name|it
+operator|=
+name|registered_tests_
+operator|.
+name|find
+argument_list|(
+name|test_name
+argument_list|)
+expr_stmt|;
+name|GTEST_CHECK_
+argument_list|(
+name|it
+operator|!=
+name|registered_tests_
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|it
+operator|->
+name|second
 return|;
 block|}
 comment|// Verifies that registered_tests match the test names in
@@ -1860,24 +1839,42 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-name|bool
-name|registered_
-decl_stmt|;
+typedef|typedef
 operator|::
 name|std
 operator|::
-name|set
+name|map
 operator|<
-specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
+operator|,
+name|CodeLocation
 operator|>
-name|defined_test_names_
+name|RegisteredTestsMap
 expr_stmt|;
+name|bool
+name|registered_
+decl_stmt|;
+name|RegisteredTestsMap
+name|registered_tests_
+decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// Skips to the first non-space char after the first comma in 'str';
+end_comment
+
+begin_comment
 comment|// returns NULL if no comma is found in 'str'.
+end_comment
+
+begin_function
 specifier|inline
 specifier|const
 name|char
@@ -1929,57 +1926,125 @@ return|return
 name|comma
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Returns the prefix of 'str' before the first comma in it; returns
+end_comment
+
+begin_comment
 comment|// the entire string if it contains no comma.
+end_comment
+
+begin_expr_stmt
 specifier|inline
-name|String
+name|std
+operator|::
+name|string
 name|GetPrefixUntilComma
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
+argument_list|(
+argument|const char* str
+argument_list|)
 block|{
 specifier|const
 name|char
-modifier|*
+operator|*
 name|comma
-init|=
+operator|=
 name|strchr
 argument_list|(
 name|str
 argument_list|,
 literal|','
 argument_list|)
-decl_stmt|;
+block|;
 return|return
 name|comma
 operator|==
 name|NULL
 condition|?
-name|String
-argument_list|(
 name|str
-argument_list|)
 else|:
-name|String
+name|std
+operator|::
+name|string
 argument_list|(
 name|str
 argument_list|,
 name|comma
-operator|-
-name|str
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|// Splits a given string on a given delimiter, populating a given
+end_comment
+
+begin_comment
+comment|// vector with the fields.
+end_comment
+
+begin_decl_stmt
+name|void
+name|SplitString
+argument_list|(
+specifier|const
+operator|::
+name|std
+operator|::
+name|string
+operator|&
+name|str
+argument_list|,
+name|char
+name|delimiter
+argument_list|,
+operator|::
+name|std
+operator|::
+name|vector
+operator|<
+operator|::
+name|std
+operator|::
+name|string
+operator|>
+operator|*
+name|dest
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// TypeParameterizedTest<Fixture, TestSel, Types>::Register()
+end_comment
+
+begin_comment
 comment|// registers a list of type-parameterized tests with Google Test.  The
+end_comment
+
+begin_comment
 comment|// return value is insignificant - we just need to return something
+end_comment
+
+begin_comment
 comment|// such that we can call this function in a namespace scope.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// Implementation note: The GTEST_TEMPLATE_ macro declares a template
+end_comment
+
+begin_comment
 comment|// template parameter.  It's defined in gtest-type-util.h.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|GTEST_TEMPLATE_
@@ -2006,6 +2071,8 @@ name|Register
 argument_list|(
 argument|const char* prefix
 argument_list|,
+argument|CodeLocation code_location
+argument_list|,
 argument|const char* case_name
 argument_list|,
 argument|const char* test_names
@@ -2027,6 +2094,9 @@ name|Type
 operator|>
 name|FixtureClass
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|typename
 name|GTEST_BIND_
@@ -2037,13 +2107,20 @@ name|Type
 argument_list|)
 name|TestClass
 typedef|;
+end_typedef
+
+begin_comment
 comment|// First, registers the first type-parameterized test in the type
+end_comment
+
+begin_comment
 comment|// list.
+end_comment
+
+begin_macro
 name|MakeAndRegisterTestInfo
 argument_list|(
-argument|String::Format(
-literal|"%s%s%s/%d"
-argument|, prefix, prefix[
+argument|(std::string(prefix) + (prefix[
 literal|0
 argument|] ==
 literal|'\0'
@@ -2051,15 +2128,19 @@ argument|?
 literal|""
 argument|:
 literal|"/"
-argument|,                        case_name, index).c_str()
+argument|) + case_name +
+literal|"/"
+argument|+ StreamableToString(index)).c_str()
 argument_list|,
-argument|GetPrefixUntilComma(test_names).c_str()
+argument|StripTrailingSpaces(GetPrefixUntilComma(test_names)).c_str()
 argument_list|,
 argument|GetTypeName<Type>().c_str()
 argument_list|,
 argument|NULL
 argument_list|,
 comment|// No value parameter.
+argument|code_location
+argument_list|,
 argument|GetTypeId<FixtureClass>()
 argument_list|,
 argument|TestClass::SetUpTestCase
@@ -2068,8 +2149,17 @@ argument|TestClass::TearDownTestCase
 argument_list|,
 argument|new TestFactoryImpl<TestClass>
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// Next, recurses (at compile time) with the tail of the type list.
+end_comment
+
+begin_return
 return|return
 name|TypeParameterizedTest
 operator|<
@@ -2087,6 +2177,8 @@ name|Register
 argument_list|(
 name|prefix
 argument_list|,
+name|code_location
+argument_list|,
 name|case_name
 argument_list|,
 name|test_names
@@ -2096,11 +2188,14 @@ operator|+
 literal|1
 argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
+
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|// The base case for the compile time recursion.
 end_comment
 
@@ -2131,6 +2226,8 @@ name|Register
 argument_list|(
 argument|const char*
 comment|/*prefix*/
+argument_list|,
+argument|CodeLocation
 argument_list|,
 argument|const char*
 comment|/*case_name*/
@@ -2188,11 +2285,93 @@ name|Register
 argument_list|(
 argument|const char* prefix
 argument_list|,
+argument|CodeLocation code_location
+argument_list|,
+argument|const TypedTestCasePState* state
+argument_list|,
 argument|const char* case_name
 argument_list|,
 argument|const char* test_names
 argument_list|)
 block|{
+name|std
+operator|::
+name|string
+name|test_name
+operator|=
+name|StripTrailingSpaces
+argument_list|(
+name|GetPrefixUntilComma
+argument_list|(
+name|test_names
+argument_list|)
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|state
+operator|->
+name|TestExists
+argument_list|(
+name|test_name
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Failed to get code location for test %s.%s at %s."
+argument_list|,
+name|case_name
+argument_list|,
+name|test_name
+operator|.
+name|c_str
+argument_list|()
+argument_list|,
+name|FormatFileLocation
+argument_list|(
+name|code_location
+operator|.
+name|file
+operator|.
+name|c_str
+argument_list|()
+argument_list|,
+name|code_location
+operator|.
+name|line
+argument_list|)
+operator|.
+name|c_str
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|posix
+operator|::
+name|Abort
+argument_list|()
+expr_stmt|;
+block|}
+specifier|const
+name|CodeLocation
+operator|&
+name|test_location
+operator|=
+name|state
+operator|->
+name|GetCodeLocation
+argument_list|(
+name|test_name
+argument_list|)
+block|;
 typedef|typedef
 name|typename
 name|Tests
@@ -2214,14 +2393,22 @@ name|Register
 argument_list|(
 name|prefix
 argument_list|,
+name|test_location
+argument_list|,
 name|case_name
 argument_list|,
 name|test_names
 argument_list|,
 literal|0
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Next, recurses (at compile time) with the tail of the test list.
+end_comment
+
+begin_return
 return|return
 name|TypeParameterizedTestCase
 operator|<
@@ -2239,6 +2426,10 @@ name|Register
 argument_list|(
 name|prefix
 argument_list|,
+name|code_location
+argument_list|,
+name|state
+argument_list|,
 name|case_name
 argument_list|,
 name|SkipComma
@@ -2247,11 +2438,14 @@ name|test_names
 argument_list|)
 argument_list|)
 return|;
-block|}
-end_expr_stmt
+end_return
+
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|// The base case for the compile time recursion.
 end_comment
 
@@ -2283,6 +2477,11 @@ argument_list|(
 argument|const char*
 comment|/*prefix*/
 argument_list|,
+argument|CodeLocation
+argument_list|,
+argument|const TypedTestCasePState*
+comment|/*state*/
+argument_list|,
 argument|const char*
 comment|/*case_name*/
 argument_list|,
@@ -2307,7 +2506,7 @@ comment|// GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 end_comment
 
 begin_comment
-comment|// Returns the current OS stack trace as a String.
+comment|// Returns the current OS stack trace as an std::string.
 end_comment
 
 begin_comment
@@ -2346,20 +2545,19 @@ begin_comment
 comment|// the trace but Bar() and GetCurrentOsStackTraceExceptTop() won't.
 end_comment
 
-begin_function_decl
+begin_expr_stmt
 name|GTEST_API_
-name|String
+name|std
+operator|::
+name|string
 name|GetCurrentOsStackTraceExceptTop
-parameter_list|(
-name|UnitTest
-modifier|*
-name|unit_test
-parameter_list|,
-name|int
-name|skip_count
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|UnitTest* unit_test
+argument_list|,
+argument|int skip_count
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// Helpers for suppressing warnings on unreachable code or constant
@@ -2730,33 +2928,6 @@ begin_comment
 comment|// char[3][4]'.  The following specialization works around the bug.
 end_comment
 
-begin_comment
-comment|// However, it causes trouble with GCC and thus needs to be
-end_comment
-
-begin_comment
-comment|// conditionally compiled.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__SUNPRO_CC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__IBMCPP__
-argument_list|)
-end_if
-
 begin_expr_stmt
 name|template
 operator|<
@@ -2770,6 +2941,69 @@ expr|struct
 name|RemoveConst
 operator|<
 specifier|const
+name|T
+index|[
+name|N
+index|]
+operator|>
+block|{
+typedef|typedef
+name|typename
+name|RemoveConst
+operator|<
+name|T
+operator|>
+operator|::
+name|type
+name|type
+index|[
+name|N
+index|]
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|<
+literal|1400
+end_if
+
+begin_comment
+comment|// This is the only specialization that allows VC++ 7.1 to remove const in
+end_comment
+
+begin_comment
+comment|// 'const int[3] and 'const int[3][4]'.  However, it causes trouble with GCC
+end_comment
+
+begin_comment
+comment|// and thus needs to be conditionally compiled.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|size_t
+name|N
+operator|>
+expr|struct
+name|RemoveConst
+operator|<
 name|T
 index|[
 name|N
@@ -2999,7 +3233,13 @@ comment|// MakeFrom() is an expression whose type is From.  We cannot simply
 comment|// use From(), as the type From may not have a public default
 comment|// constructor.
 specifier|static
+name|typename
+name|AddReference
+operator|<
 name|From
+operator|>
+operator|::
+name|type
 name|MakeFrom
 argument_list|()
 block|;
@@ -3038,55 +3278,8 @@ comment|// We have to put the 'public' section after the 'private' section,
 comment|// or MSVC refuses to compile the code.
 name|public
 operator|:
-comment|// MSVC warns about implicitly converting from double to int for
-comment|// possible loss of data, so we need to temporarily disable the
-comment|// warning.
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|push
-name|)
-comment|// Saves the current warning state.
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4244
-name|)
-comment|// Temporarily disables warning 4244.
-specifier|static
-specifier|const
-name|bool
-name|value
-operator|=
-sizeof|sizeof
-argument_list|(
-name|Helper
-argument_list|(
-name|ImplicitlyConvertible
-operator|::
-name|MakeFrom
-argument_list|()
-argument_list|)
-argument_list|)
-operator|==
-literal|1
-block|;
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|pop
-name|)
-comment|// Restores the warning state.
-elif|#
-directive|elif
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__BORLANDC__
@@ -3108,6 +3301,13 @@ argument_list|)
 block|;
 else|#
 directive|else
+comment|// MSVC warns about implicitly converting from double to int for
+comment|// possible loss of data, so we need to temporarily disable the
+comment|// warning.
+name|GTEST_DISABLE_MSC_WARNINGS_PUSH_
+argument_list|(
+literal|4244
+argument_list|)
 specifier|static
 specifier|const
 name|bool
@@ -3126,9 +3326,11 @@ argument_list|)
 operator|==
 literal|1
 block|;
+name|GTEST_DISABLE_MSC_WARNINGS_POP_
+argument_list|()
 endif|#
 directive|endif
-comment|// _MSV_VER
+comment|// __BORLANDC__
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -3814,25 +4016,33 @@ begin_comment
 comment|// native array it represents.
 end_comment
 
+begin_comment
+comment|// We use 2 different structs to allow non-copyable types to be used, as long
+end_comment
+
+begin_comment
+comment|// as RelationToSourceReference() is passed.
+end_comment
+
 begin_macro
-unit|enum
-name|RelationToSource
+unit|struct
+name|RelationToSourceReference
 end_macro
 
 begin_block
-block|{
-name|kReference
-operator|,
-comment|// The NativeArray references the native array.
-name|kCopy
-comment|// The NativeArray makes a copy of the native array and
-comment|// owns the copy.
-block|}
+block|{}
 end_block
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_struct
+struct|struct
+name|RelationToSourceCopy
+block|{}
+struct|;
+end_struct
 
 begin_comment
 comment|// Adapts a native array to a read-only STL-style container.  Instead
@@ -3902,7 +4112,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// Constructs from a native array.
+comment|// Constructs from a native array. References the source.
 end_comment
 
 begin_macro
@@ -3912,19 +4122,44 @@ argument|const Element* array
 argument_list|,
 argument|size_t count
 argument_list|,
-argument|RelationToSource relation
+argument|RelationToSourceReference
 argument_list|)
 end_macro
 
 begin_block
 block|{
-name|Init
+name|InitRef
 argument_list|(
 name|array
 argument_list|,
 name|count
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|// Constructs from a native array. Copies the source.
+end_comment
+
+begin_macro
+name|NativeArray
+argument_list|(
+argument|const Element* array
 argument_list|,
-name|relation
+argument|size_t count
+argument_list|,
+argument|RelationToSourceCopy
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|InitCopy
+argument_list|(
+name|array
+argument_list|,
+name|count
 argument_list|)
 expr_stmt|;
 block|}
@@ -3943,20 +4178,22 @@ end_macro
 
 begin_block
 block|{
-name|Init
-argument_list|(
+operator|(
+name|this
+operator|->*
+name|rhs
+operator|.
+name|clone_
+operator|)
+operator|(
 name|rhs
 operator|.
 name|array_
-argument_list|,
+operator|,
 name|rhs
 operator|.
 name|size_
-argument_list|,
-name|rhs
-operator|.
-name|relation_to_source_
-argument_list|)
+operator|)
 expr_stmt|;
 block|}
 end_block
@@ -3966,31 +4203,14 @@ operator|~
 name|NativeArray
 argument_list|()
 block|{
-comment|// Ensures that the user doesn't instantiate NativeArray with a
-comment|// const or reference type.
-name|static_cast
-operator|<
-name|void
-operator|>
-operator|(
-name|StaticAssertTypeEqHelper
-operator|<
-name|Element
-operator|,
-name|GTEST_REMOVE_REFERENCE_AND_CONST_
-argument_list|(
-name|Element
-argument_list|)
-operator|>
-operator|(
-operator|)
-operator|)
-block|;
 if|if
 condition|(
-name|relation_to_source_
-operator|==
-name|kCopy
+name|clone_
+operator|!=
+operator|&
+name|NativeArray
+operator|::
+name|InitRef
 condition|)
 name|delete
 index|[]
@@ -4084,17 +4304,32 @@ name|private
 label|:
 end_label
 
-begin_comment
-comment|// Initializes this object; makes a copy of the input array if
-end_comment
+begin_enum
+enum|enum
+block|{
+name|kCheckTypeIsNotConstOrAReference
+init|=
+name|StaticAssertTypeEqHelper
+operator|<
+name|Element
+block|,
+name|GTEST_REMOVE_REFERENCE_AND_CONST_
+argument_list|(
+name|Element
+argument_list|)
+decl|>::
+name|value
+block|,   }
+enum|;
+end_enum
 
 begin_comment
-comment|// 'relation' is kCopy.
+comment|// Initializes this object with a copy of the input.
 end_comment
 
 begin_function
 name|void
-name|Init
+name|InitCopy
 parameter_list|(
 specifier|const
 name|Element
@@ -4103,24 +4338,7 @@ name|array
 parameter_list|,
 name|size_t
 name|a_size
-parameter_list|,
-name|RelationToSource
-name|relation
 parameter_list|)
-block|{
-if|if
-condition|(
-name|relation
-operator|==
-name|kReference
-condition|)
-block|{
-name|array_
-operator|=
-name|array
-expr_stmt|;
-block|}
-else|else
 block|{
 name|Element
 modifier|*
@@ -4146,14 +4364,51 @@ name|array_
 operator|=
 name|copy
 expr_stmt|;
-block|}
 name|size_
 operator|=
 name|a_size
 expr_stmt|;
-name|relation_to_source_
+name|clone_
 operator|=
-name|relation
+operator|&
+name|NativeArray
+operator|::
+name|InitCopy
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Initializes this object with a reference of the input.
+end_comment
+
+begin_function
+name|void
+name|InitRef
+parameter_list|(
+specifier|const
+name|Element
+modifier|*
+name|array
+parameter_list|,
+name|size_t
+name|a_size
+parameter_list|)
+block|{
+name|array_
+operator|=
+name|array
+expr_stmt|;
+name|size_
+operator|=
+name|a_size
+expr_stmt|;
+name|clone_
+operator|=
+operator|&
+name|NativeArray
+operator|::
+name|InitRef
 expr_stmt|;
 block|}
 end_function
@@ -4172,11 +4427,23 @@ name|size_
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|RelationToSource
-name|relation_to_source_
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|void
+argument_list|(
+name|NativeArray
+operator|::
+operator|*
+name|clone_
+argument_list|)
+argument_list|(
+specifier|const
+name|Element
+operator|*
+argument_list|,
+name|size_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|GTEST_DISALLOW_ASSIGN_
@@ -4402,7 +4669,7 @@ parameter_list|,
 name|parent_id
 parameter_list|)
 define|\
-value|class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) : public parent_class {\  public:\   GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {}\  private:\   virtual void TestBody();\   static ::testing::TestInfo* const test_info_ GTEST_ATTRIBUTE_UNUSED_;\   GTEST_DISALLOW_COPY_AND_ASSIGN_(\       GTEST_TEST_CLASS_NAME_(test_case_name, test_name));\ };\ \ ::testing::TestInfo* const GTEST_TEST_CLASS_NAME_(test_case_name, test_name)\   ::test_info_ =\     ::testing::internal::MakeAndRegisterTestInfo(\         #test_case_name, #test_name, NULL, NULL, \         (parent_id), \         parent_class::SetUpTestCase, \         parent_class::TearDownTestCase, \         new ::testing::internal::TestFactoryImpl<\             GTEST_TEST_CLASS_NAME_(test_case_name, test_name)>);\ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
+value|class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) : public parent_class {\  public:\   GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {}\  private:\   virtual void TestBody();\   static ::testing::TestInfo* const test_info_ GTEST_ATTRIBUTE_UNUSED_;\   GTEST_DISALLOW_COPY_AND_ASSIGN_(\       GTEST_TEST_CLASS_NAME_(test_case_name, test_name));\ };\ \ ::testing::TestInfo* const GTEST_TEST_CLASS_NAME_(test_case_name, test_name)\   ::test_info_ =\     ::testing::internal::MakeAndRegisterTestInfo(\         #test_case_name, #test_name, NULL, NULL, \         ::testing::internal::CodeLocation(__FILE__, __LINE__), \         (parent_id), \         parent_class::SetUpTestCase, \         parent_class::TearDownTestCase, \         new ::testing::internal::TestFactoryImpl<\             GTEST_TEST_CLASS_NAME_(test_case_name, test_name)>);\ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
 end_define
 
 begin_endif

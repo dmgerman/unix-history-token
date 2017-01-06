@@ -118,6 +118,17 @@ name|HasExportedFunctions
 init|=
 name|false
 decl_stmt|;
+comment|/// Set of llvm.*used values, in order to validate that we don't try
+comment|/// to promote any non-renamable values.
+name|SmallPtrSet
+operator|<
+name|GlobalValue
+operator|*
+operator|,
+literal|8
+operator|>
+name|Used
+expr_stmt|;
 comment|/// Check if we should promote the given local value to global scope.
 name|bool
 name|shouldPromoteLocalToGlobal
@@ -128,6 +139,24 @@ modifier|*
 name|SGV
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|/// Check if the given value is a local that can't be renamed (promoted).
+comment|/// Only used in assertion checking, and disabled under NDEBUG since the Used
+comment|/// set will not be populated.
+name|bool
+name|isNonRenamableLocal
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|&
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
+endif|#
+directive|endif
 comment|/// Helper methods to check if we are importing from or potentially
 comment|/// exporting from the current source module.
 name|bool
@@ -263,6 +292,33 @@ argument_list|(
 name|M
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|// First collect those in the llvm.used set.
+name|collectUsedGlobalVariables
+argument_list|(
+name|M
+argument_list|,
+name|Used
+argument_list|,
+comment|/*CompilerUsed*/
+name|false
+argument_list|)
+expr_stmt|;
+comment|// Next collect those in the llvm.compiler.used set.
+name|collectUsedGlobalVariables
+argument_list|(
+name|M
+argument_list|,
+name|Used
+argument_list|,
+comment|/*CompilerUsed*/
+name|true
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|bool
 name|run
@@ -288,9 +344,21 @@ name|GlobalsToImport
 argument_list|)
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// Perform in-place global value handling on the given Module for
+end_comment
+
+begin_comment
 comment|/// exported local functions renamed and promoted for ThinLTO.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|renameModuleForThinLTO
 argument_list|(
@@ -315,10 +383,10 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-block|}
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

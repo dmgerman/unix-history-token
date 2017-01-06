@@ -202,6 +202,11 @@ argument_list|,
 argument|const SequenceIdT&SeqNo
 argument_list|)
 block|{
+name|writeLock
+operator|.
+name|lock
+argument_list|()
+block|;
 if|if
 condition|(
 name|auto
@@ -220,11 +225,6 @@ condition|)
 return|return
 name|Err
 return|;
-name|writeLock
-operator|.
-name|lock
-argument_list|()
-expr_stmt|;
 return|return
 name|Error
 operator|::

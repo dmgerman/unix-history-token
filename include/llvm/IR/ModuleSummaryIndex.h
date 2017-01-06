@@ -119,6 +119,18 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|yaml
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|MappingTraits
+expr_stmt|;
+block|}
 comment|/// \brief Class to accumulate and hold information about a callee.
 struct|struct
 name|CalleeInfo
@@ -509,7 +521,7 @@ block|,
 name|GlobalVarKind
 block|}
 enum|;
-comment|/// Group flags (Linkage, noRename, isOptSize, etc.) as a bitfield.
+comment|/// Group flags (Linkage, NotEligibleToImport, etc.) as a bitfield.
 struct|struct
 name|GVFlags
 block|{
@@ -525,27 +537,18 @@ name|Linkage
 range|:
 literal|4
 decl_stmt|;
-comment|/// Indicate if the global value cannot be renamed (in a specific section,
-comment|/// possibly referenced from inline assembly, etc).
+comment|/// Indicate if the global value cannot be imported (e.g. it cannot
+comment|/// be renamed or references something that can't be renamed).
 name|unsigned
-name|NoRename
+name|NotEligibleToImport
 range|:
 literal|1
 decl_stmt|;
-comment|/// Indicate if a function contains inline assembly (which is opaque),
-comment|/// that may reference a local value. This is used to prevent importing
-comment|/// of this function, since we can't promote and rename the uses of the
-comment|/// local in the inline assembly. Use a flag rather than bloating the
-comment|/// summary with references to every possible local value in the
-comment|/// llvm.used set.
+comment|/// Indicate that the global value must be considered a live root for
+comment|/// index-based liveness analysis. Used for special LLVM values such as
+comment|/// llvm.global_ctors that the linker does not know about.
 name|unsigned
-name|HasInlineAsmMaybeReferencingInternal
-range|:
-literal|1
-decl_stmt|;
-comment|/// Indicate if the function is not viable to inline.
-name|unsigned
-name|IsNotViableToInline
+name|LiveRoot
 range|:
 literal|1
 decl_stmt|;
@@ -559,13 +562,10 @@ name|LinkageTypes
 name|Linkage
 argument_list|,
 name|bool
-name|NoRename
+name|NotEligibleToImport
 argument_list|,
 name|bool
-name|HasInlineAsmMaybeReferencingInternal
-argument_list|,
-name|bool
-name|IsNotViableToInline
+name|LiveRoot
 argument_list|)
 range|:
 name|Linkage
@@ -573,80 +573,16 @@ argument_list|(
 name|Linkage
 argument_list|)
 decl_stmt|,
-name|NoRename
+name|NotEligibleToImport
 argument_list|(
-name|NoRename
+name|NotEligibleToImport
 argument_list|)
 decl_stmt|,
-name|HasInlineAsmMaybeReferencingInternal
+name|LiveRoot
 argument_list|(
-name|HasInlineAsmMaybeReferencingInternal
-argument_list|)
-decl_stmt|,
-name|IsNotViableToInline
-argument_list|(
-name|IsNotViableToInline
+name|LiveRoot
 argument_list|)
 block|{}
-name|GVFlags
-argument_list|(
-specifier|const
-name|GlobalValue
-operator|&
-name|GV
-argument_list|)
-operator|:
-name|Linkage
-argument_list|(
-name|GV
-operator|.
-name|getLinkage
-argument_list|()
-argument_list|)
-operator|,
-name|NoRename
-argument_list|(
-name|GV
-operator|.
-name|hasSection
-argument_list|()
-argument_list|)
-operator|,
-name|HasInlineAsmMaybeReferencingInternal
-argument_list|(
-argument|false
-argument_list|)
-block|{
-name|IsNotViableToInline
-operator|=
-name|false
-block|;
-if|if
-condition|(
-specifier|const
-specifier|auto
-modifier|*
-name|F
-init|=
-name|dyn_cast
-operator|<
-name|Function
-operator|>
-operator|(
-operator|&
-name|GV
-operator|)
-condition|)
-comment|// Inliner doesn't handle variadic functions.
-comment|// FIXME: refactor this to use the same code that inliner is using.
-name|IsNotViableToInline
-operator|=
-name|F
-operator|->
-name|isVarArg
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 struct|;
 name|private
@@ -834,82 +770,52 @@ operator|=
 name|Linkage
 expr_stmt|;
 block|}
+comment|/// Return true if this global value can't be imported.
 name|bool
-name|isNotViableToInline
+name|notEligibleToImport
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Flags
 operator|.
-name|IsNotViableToInline
+name|NotEligibleToImport
 return|;
 block|}
-comment|/// Return true if this summary is for a GlobalValue that needs promotion
-comment|/// to be referenced from another module.
+comment|/// Return true if this global value must be considered a root for live
+comment|/// value analysis on the index.
 name|bool
-name|needsRenaming
-argument_list|()
-specifier|const
-block|{
-return|return
-name|GlobalValue
-operator|::
-name|isLocalLinkage
-argument_list|(
-name|linkage
-argument_list|()
-argument_list|)
-return|;
-block|}
-comment|/// Return true if this global value cannot be renamed (in a specific section,
-comment|/// possibly referenced from inline assembly, etc).
-name|bool
-name|noRename
+name|liveRoot
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Flags
 operator|.
-name|NoRename
+name|LiveRoot
 return|;
 block|}
-comment|/// Flag that this global value cannot be renamed (in a specific section,
-comment|/// possibly referenced from inline assembly, etc).
+comment|/// Flag that this global value must be considered a root for live
+comment|/// value analysis on the index.
 name|void
-name|setNoRename
+name|setLiveRoot
 parameter_list|()
 block|{
 name|Flags
 operator|.
-name|NoRename
+name|LiveRoot
 operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/// Return true if this global value possibly references another value
-comment|/// that can't be renamed.
-name|bool
-name|hasInlineAsmMaybeReferencingInternal
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Flags
-operator|.
-name|HasInlineAsmMaybeReferencingInternal
-return|;
-block|}
-comment|/// Flag that this global value possibly references another value that
-comment|/// can't be renamed.
+comment|/// Flag that this global value cannot be imported.
 name|void
-name|setHasInlineAsmMaybeReferencingInternal
+name|setNotEligibleToImport
 parameter_list|()
 block|{
 name|Flags
 operator|.
-name|HasInlineAsmMaybeReferencingInternal
+name|NotEligibleToImport
 operator|=
 name|true
 expr_stmt|;
@@ -1240,6 +1146,51 @@ name|GlobalVarKind
 return|;
 block|}
 expr|}
+block|;  struct
+name|TypeTestResolution
+block|{
+comment|/// Specifies which kind of type check we should emit for this byte array.
+comment|/// See http://clang.llvm.org/docs/ControlFlowIntegrityDesign.html for full
+comment|/// details on each kind of check; the enumerators are described with
+comment|/// reference to that document.
+block|enum
+name|Kind
+block|{
+name|Unsat
+block|,
+comment|///< Unsatisfiable type (i.e. no global has this type metadata)
+name|ByteArray
+block|,
+comment|///< Test a byte array (first example)
+name|Inline
+block|,
+comment|///< Inlined bit vector ("Short Inline Bit Vectors")
+name|Single
+block|,
+comment|///< Single element (last example in "Short Inline Bit Vectors")
+name|AllOnes
+block|,
+comment|///< All-ones bit vector ("Eliminating Bit Vector Checks for
+comment|///  All-Ones Bit Vectors")
+block|}
+name|TheKind
+operator|=
+name|Unsat
+block|;
+comment|/// Range of the size expressed as a bit width. For example, if the size is in
+comment|/// range [0,256), this number will be 8. This helps generate the most compact
+comment|/// instruction sequences.
+name|unsigned
+name|SizeBitWidth
+operator|=
+literal|0
+block|; }
+block|;  struct
+name|TypeIdSummary
+block|{
+name|TypeTestResolution
+name|TTRes
+block|; }
 block|;
 comment|/// 160 bits SHA1
 typedef|typedef
@@ -1405,6 +1356,30 @@ comment|/// Holds strings for combined index, mapping to the corresponding modul
 name|ModulePathStringTableTy
 name|ModulePathStringTable
 decl_stmt|;
+comment|/// Mapping from type identifiers to summary information for that type
+comment|/// identifier.
+comment|// FIXME: Add bitcode read/write support for this field.
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|TypeIdSummary
+operator|>
+name|TypeIdMap
+expr_stmt|;
+comment|// YAML I/O support.
+name|friend
+name|yaml
+operator|::
+name|MappingTraits
+operator|<
+name|ModuleSummaryIndex
+operator|>
+expr_stmt|;
 name|public
 label|:
 name|gvsummary_iterator
@@ -1450,6 +1425,18 @@ return|return
 name|GlobalValueMap
 operator|.
 name|end
+argument_list|()
+return|;
+block|}
+name|size_t
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GlobalValueMap
+operator|.
+name|size
 argument_list|()
 return|;
 block|}

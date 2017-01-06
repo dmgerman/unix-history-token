@@ -210,6 +210,12 @@ operator|,
 name|file_name_
 argument_list|(
 name|a_file_name
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|a_file_name
 argument_list|)
 operator|,
 name|line_number_
@@ -250,6 +256,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|file_name_
+operator|.
+name|empty
+argument_list|()
+operator|?
+name|NULL
+operator|:
 name|file_name_
 operator|.
 name|c_str
@@ -353,9 +366,9 @@ decl_stmt|;
 comment|// Gets the summary of the failure message by omitting the stack
 comment|// trace in it.
 specifier|static
-name|internal
+name|std
 operator|::
-name|String
+name|string
 name|ExtractSummary
 argument_list|(
 specifier|const
@@ -365,10 +378,10 @@ name|message
 argument_list|)
 expr_stmt|;
 comment|// The name of the source file where the test part took place, or
-comment|// NULL if the source file is unknown.
-name|internal
+comment|// "" if the source file is unknown.
+name|std
 operator|::
-name|String
+name|string
 name|file_name_
 expr_stmt|;
 comment|// The line in the source file where the test part took place, or -1
@@ -376,15 +389,15 @@ comment|// if the line number is unknown.
 name|int
 name|line_number_
 decl_stmt|;
-name|internal
+name|std
 operator|::
-name|String
+name|string
 name|summary_
 expr_stmt|;
 comment|// The test failure summary.
-name|internal
+name|std
 operator|::
-name|String
+name|string
 name|message_
 expr_stmt|;
 comment|// The test failure message.
@@ -477,19 +490,19 @@ name|virtual
 operator|~
 name|TestPartResultReporterInterface
 argument_list|()
-expr_stmt|;
+block|{}
 name|virtual
 name|void
 name|ReportTestPartResult
-parameter_list|(
+argument_list|(
 specifier|const
 name|TestPartResult
-modifier|&
+operator|&
 name|result
-parameter_list|)
-init|=
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 block|}
 empty_stmt|;
 name|namespace
@@ -513,17 +526,20 @@ operator|:
 name|HasNewFatalFailureHelper
 argument_list|()
 block|;
+name|virtual
 operator|~
 name|HasNewFatalFailureHelper
 argument_list|()
-name|override
 block|;
+name|virtual
 name|void
 name|ReportTestPartResult
 argument_list|(
-argument|const TestPartResult&result
+specifier|const
+name|TestPartResult
+operator|&
+name|result
 argument_list|)
-name|override
 block|;
 name|bool
 name|has_new_fatal_failure

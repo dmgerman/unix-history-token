@@ -4830,8 +4830,12 @@ name|Type
 modifier|*
 name|Ty
 parameter_list|,
-name|bool
-name|IsComplex
+name|ScalarEvolution
+modifier|*
+parameter_list|,
+specifier|const
+name|SCEV
+modifier|*
 parameter_list|)
 block|{
 return|return

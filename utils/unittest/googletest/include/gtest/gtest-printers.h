@@ -425,6 +425,23 @@ directive|include
 file|"gtest/internal/gtest-internal.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_STD_TUPLE_
+end_if
+
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|namespace
 name|testing
@@ -846,6 +863,290 @@ block|{
 name|namespace
 name|internal
 block|{
+comment|// FormatForComparison<ToPrint, OtherOperand>::Format(value) formats a
+comment|// value of type ToPrint that is an operand of a comparison assertion
+comment|// (e.g. ASSERT_EQ).  OtherOperand is the type of the other operand in
+comment|// the comparison, and is used to help determine the best way to
+comment|// format the value.  In particular, when the value is a C string
+comment|// (char pointer) and the other operand is an STL string object, we
+comment|// want to format the C string as a string, since we know it is
+comment|// compared by value with the string object.  If the value is a char
+comment|// pointer but the other operand is not an STL string object, we don't
+comment|// know whether the pointer is supposed to point to a NUL-terminated
+comment|// string, and thus want to print it as a pointer to be safe.
+comment|//
+comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
+comment|// The default case.
+name|template
+operator|<
+name|typename
+name|ToPrint
+operator|,
+name|typename
+name|OtherOperand
+operator|>
+name|class
+name|FormatForComparison
+block|{
+name|public
+operator|:
+specifier|static
+operator|::
+name|std
+operator|::
+name|string
+name|Format
+argument_list|(
+argument|const ToPrint& value
+argument_list|)
+block|{
+return|return
+operator|::
+name|testing
+operator|::
+name|PrintToString
+argument_list|(
+name|value
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|// Array.
+name|template
+operator|<
+name|typename
+name|ToPrint
+block|,
+name|size_t
+name|N
+block|,
+name|typename
+name|OtherOperand
+operator|>
+name|class
+name|FormatForComparison
+operator|<
+name|ToPrint
+index|[
+name|N
+index|]
+block|,
+name|OtherOperand
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+operator|::
+name|std
+operator|::
+name|string
+name|Format
+argument_list|(
+argument|const ToPrint* value
+argument_list|)
+block|{
+return|return
+name|FormatForComparison
+operator|<
+specifier|const
+name|ToPrint
+operator|*
+operator|,
+name|OtherOperand
+operator|>
+operator|::
+name|Format
+argument_list|(
+name|value
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|// By default, print C string as pointers to be safe, as we don't know
+comment|// whether they actually point to a NUL-terminated string.
+define|#
+directive|define
+name|GTEST_IMPL_FORMAT_C_STRING_AS_POINTER_
+parameter_list|(
+name|CharType
+parameter_list|)
+define|\
+value|template<typename OtherOperand>                                      \   class FormatForComparison<CharType*, OtherOperand> {                  \    public:                                                              \     static ::std::string Format(CharType* value) {                      \       return ::testing::PrintToString(static_cast<const void*>(value)); \     }                                                                   \   }
+name|GTEST_IMPL_FORMAT_C_STRING_AS_POINTER_
+argument_list|(
+name|char
+argument_list|)
+block|;
+name|GTEST_IMPL_FORMAT_C_STRING_AS_POINTER_
+argument_list|(
+specifier|const
+name|char
+argument_list|)
+block|;
+name|GTEST_IMPL_FORMAT_C_STRING_AS_POINTER_
+argument_list|(
+name|wchar_t
+argument_list|)
+block|;
+name|GTEST_IMPL_FORMAT_C_STRING_AS_POINTER_
+argument_list|(
+specifier|const
+name|wchar_t
+argument_list|)
+block|;
+undef|#
+directive|undef
+name|GTEST_IMPL_FORMAT_C_STRING_AS_POINTER_
+comment|// If a C string is compared with an STL string object, we know it's meant
+comment|// to point to a NUL-terminated string, and thus can print it as a string.
+define|#
+directive|define
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+parameter_list|(
+name|CharType
+parameter_list|,
+name|OtherStringType
+parameter_list|)
+define|\
+value|template<>                                                           \   class FormatForComparison<CharType*, OtherStringType> {               \    public:                                                              \     static ::std::string Format(CharType* value) {                      \       return ::testing::PrintToString(value);                           \     }                                                                   \   }
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+argument_list|(
+name|char
+argument_list|,
+operator|::
+name|std
+operator|::
+name|string
+argument_list|)
+block|;
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+argument_list|(
+specifier|const
+name|char
+argument_list|,
+operator|::
+name|std
+operator|::
+name|string
+argument_list|)
+block|;
+if|#
+directive|if
+name|GTEST_HAS_GLOBAL_STRING
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+argument_list|(
+name|char
+argument_list|,
+operator|::
+name|string
+argument_list|)
+block|;
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+argument_list|(
+specifier|const
+name|char
+argument_list|,
+operator|::
+name|string
+argument_list|)
+block|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|GTEST_HAS_GLOBAL_WSTRING
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+argument_list|(
+name|wchar_t
+argument_list|,
+operator|::
+name|wstring
+argument_list|)
+block|;
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+argument_list|(
+specifier|const
+name|wchar_t
+argument_list|,
+operator|::
+name|wstring
+argument_list|)
+block|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|GTEST_HAS_STD_WSTRING
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+argument_list|(
+name|wchar_t
+argument_list|,
+operator|::
+name|std
+operator|::
+name|wstring
+argument_list|)
+block|;
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+argument_list|(
+specifier|const
+name|wchar_t
+argument_list|,
+operator|::
+name|std
+operator|::
+name|wstring
+argument_list|)
+block|;
+endif|#
+directive|endif
+undef|#
+directive|undef
+name|GTEST_IMPL_FORMAT_C_STRING_AS_STRING_
+comment|// Formats a comparison assertion (e.g. ASSERT_EQ, EXPECT_LT, and etc)
+comment|// operand to be used in a failure message.  The type (but not value)
+comment|// of the other operand may affect the format.  This allows us to
+comment|// print a char* as a raw pointer when it is compared against another
+comment|// char* or void*, and print it as a C string when it is compared
+comment|// against an std::string object, for example.
+comment|//
+comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
+name|template
+operator|<
+name|typename
+name|T1
+block|,
+name|typename
+name|T2
+operator|>
+name|std
+operator|::
+name|string
+name|FormatForComparisonFailureMessage
+argument_list|(
+argument|const T1& value
+argument_list|,
+argument|const T2&
+comment|/* other_operand */
+argument_list|)
+block|{
+return|return
+name|FormatForComparison
+operator|<
+name|T1
+operator|,
+name|T2
+operator|>
+operator|::
+name|Format
+argument_list|(
+name|value
+argument_list|)
+return|;
+block|}
 comment|// UniversalPrinter<T>::Print(value, ostream_ptr) prints the given
 comment|// value to the given ostream.  The caller must ensure that
 comment|// 'ostream_ptr' is not NULL, or the behavior is undefined.
@@ -860,7 +1161,7 @@ name|T
 operator|>
 name|class
 name|UniversalPrinter
-expr_stmt|;
+block|;
 name|template
 operator|<
 name|typename
@@ -881,7 +1182,7 @@ name|ostream
 operator|*
 name|os
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Used to print an STL-style container when the user doesn't define
 comment|// a PrintTo() for it.
 name|template
@@ -1227,36 +1528,23 @@ argument|unsigned char c
 argument_list|,
 argument|::std::ostream* os
 argument_list|)
-expr_stmt|;
+block|;
 name|GTEST_API_
 name|void
 name|PrintTo
 argument_list|(
-name|signed
-name|char
-name|c
+argument|signed char c
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
-decl_stmt|;
+block|;
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-name|char
-name|c
+argument|char c
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 comment|// When printing a plain char, we always treat it as unsigned.  This
@@ -1268,22 +1556,15 @@ argument|static_cast<unsigned char>(c)
 argument_list|,
 argument|os
 argument_list|)
-empty_stmt|;
-block|}
+block|; }
 comment|// Overloads for other simple built-in types.
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-name|bool
-name|x
+argument|bool x
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 operator|*
@@ -1291,13 +1572,12 @@ name|os
 operator|<<
 operator|(
 name|x
-condition|?
+operator|?
 literal|"true"
-else|:
+operator|:
 literal|"false"
 operator|)
-expr_stmt|;
-block|}
+block|; }
 comment|// Overload for wchar_t type.
 comment|// Prints a wchar_t as a symbol if it is printable or as its internal
 comment|// code otherwise and also as its decimal code (except for L'\0').
@@ -1309,17 +1589,11 @@ name|GTEST_API_
 name|void
 name|PrintTo
 argument_list|(
-name|wchar_t
-name|wc
+argument|wchar_t wc
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
-decl_stmt|;
+block|;
 comment|// Overloads for C strings.
 name|GTEST_API_
 name|void
@@ -1337,21 +1611,14 @@ name|ostream
 operator|*
 name|os
 argument_list|)
-decl_stmt|;
+block|;
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-name|char
-operator|*
-name|s
+argument|char* s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintTo
@@ -1368,26 +1635,16 @@ operator|)
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|// signed/unsigned char is often used for representing binary data, so
 comment|// we print pointers to it as void* to be safe.
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-specifier|const
-name|signed
-name|char
-operator|*
-name|s
+argument|const signed char* s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintTo
@@ -1404,23 +1661,14 @@ operator|)
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-name|signed
-name|char
-operator|*
-name|s
+argument|signed char* s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintTo
@@ -1437,24 +1685,14 @@ operator|)
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-name|s
+argument|const unsigned char* s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintTo
@@ -1471,23 +1709,14 @@ operator|)
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-name|unsigned
-name|char
-operator|*
-name|s
+argument|unsigned char* s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintTo
@@ -1504,8 +1733,7 @@ operator|)
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|// MSVC can be configured to define wchar_t as a typedef of unsigned
 comment|// short.  It defines _NATIVE_WCHAR_T_DEFINED when wchar_t is a native
 comment|// type.  When wchar_t is a typedef, defining an overload for const
@@ -1540,21 +1768,14 @@ name|ostream
 operator|*
 name|os
 argument_list|)
-decl_stmt|;
+block|;
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-name|wchar_t
-operator|*
-name|s
+argument|wchar_t* s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintTo
@@ -1571,8 +1792,7 @@ operator|)
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 endif|#
 directive|endif
 comment|// Overload for C arrays.  Multi-dimensional arrays are printed
@@ -1657,23 +1877,14 @@ name|ostream
 operator|*
 name|os
 argument_list|)
-expr_stmt|;
+block|;
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-specifier|const
-operator|::
-name|string
-operator|&
-name|s
+argument|const ::string& s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintStringTo
@@ -1682,8 +1893,7 @@ name|s
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 endif|#
 directive|endif
 comment|// GTEST_HAS_GLOBAL_STRING
@@ -1706,25 +1916,14 @@ name|ostream
 operator|*
 name|os
 argument_list|)
-decl_stmt|;
+block|;
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-specifier|const
-operator|::
-name|std
-operator|::
-name|string
-operator|&
-name|s
+argument|const ::std::string& s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintStringTo
@@ -1733,8 +1932,7 @@ name|s
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 comment|// Overloads for ::wstring and ::std::wstring.
 if|#
 directive|if
@@ -1756,23 +1954,14 @@ name|ostream
 operator|*
 name|os
 argument_list|)
-decl_stmt|;
+block|;
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-specifier|const
-operator|::
-name|wstring
-operator|&
-name|s
+argument|const ::wstring& s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintWideStringTo
@@ -1781,8 +1970,7 @@ name|s
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 endif|#
 directive|endif
 comment|// GTEST_HAS_GLOBAL_WSTRING
@@ -1808,25 +1996,14 @@ name|ostream
 operator|*
 name|os
 argument_list|)
-decl_stmt|;
+block|;
 specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-specifier|const
-operator|::
-name|std
-operator|::
-name|wstring
-operator|&
-name|s
+argument|const ::std::wstring& s
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintWideStringTo
@@ -1835,16 +2012,15 @@ name|s
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 endif|#
 directive|endif
 comment|// GTEST_HAS_STD_WSTRING
 if|#
 directive|if
 name|GTEST_HAS_TR1_TUPLE
-comment|// Overload for ::std::tr1::tuple.  Needed for printing function arguments,
-comment|// which are packed as tuples.
+operator|||
+name|GTEST_HAS_STD_TUPLE_
 comment|// Helper function for printing a tuple.  T must be instantiated with
 comment|// a tuple type.
 name|template
@@ -1867,7 +2043,15 @@ name|ostream
 operator|*
 name|os
 argument_list|)
-expr_stmt|;
+block|;
+endif|#
+directive|endif
+comment|// GTEST_HAS_TR1_TUPLE || GTEST_HAS_STD_TUPLE_
+if|#
+directive|if
+name|GTEST_HAS_TR1_TUPLE
+comment|// Overload for ::std::tr1::tuple.  Needed for printing function arguments,
+comment|// which are packed as tuples.
 comment|// Overloaded PrintTo() for tuples of various arities.  We support
 comment|// tuples of up-to 10 fields.  The following implementation works
 comment|// regardless of whether tr1::tuple is implemented using the
@@ -1876,24 +2060,9 @@ specifier|inline
 name|void
 name|PrintTo
 argument_list|(
-specifier|const
-operator|::
-name|std
-operator|::
-name|tr1
-operator|::
-name|tuple
-operator|<
-operator|>
-operator|&
-name|t
+argument|const ::std::tr1::tuple<>& t
 argument_list|,
-operator|::
-name|std
-operator|::
-name|ostream
-operator|*
-name|os
+argument|::std::ostream* os
 argument_list|)
 block|{
 name|PrintTupleTo
@@ -1902,8 +2071,7 @@ name|t
 argument_list|,
 name|os
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 name|template
 operator|<
 name|typename
@@ -1928,7 +2096,7 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
 operator|>
@@ -1953,10 +2121,10 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
-operator|,
+block|,
 name|typename
 name|T3
 operator|>
@@ -1983,13 +2151,13 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
-operator|,
+block|,
 name|typename
 name|T3
-operator|,
+block|,
 name|typename
 name|T4
 operator|>
@@ -2018,16 +2186,16 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
-operator|,
+block|,
 name|typename
 name|T3
-operator|,
+block|,
 name|typename
 name|T4
-operator|,
+block|,
 name|typename
 name|T5
 operator|>
@@ -2058,19 +2226,19 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
-operator|,
+block|,
 name|typename
 name|T3
-operator|,
+block|,
 name|typename
 name|T4
-operator|,
+block|,
 name|typename
 name|T5
-operator|,
+block|,
 name|typename
 name|T6
 operator|>
@@ -2103,22 +2271,22 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
-operator|,
+block|,
 name|typename
 name|T3
-operator|,
+block|,
 name|typename
 name|T4
-operator|,
+block|,
 name|typename
 name|T5
-operator|,
+block|,
 name|typename
 name|T6
-operator|,
+block|,
 name|typename
 name|T7
 operator|>
@@ -2153,25 +2321,25 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
-operator|,
+block|,
 name|typename
 name|T3
-operator|,
+block|,
 name|typename
 name|T4
-operator|,
+block|,
 name|typename
 name|T5
-operator|,
+block|,
 name|typename
 name|T6
-operator|,
+block|,
 name|typename
 name|T7
-operator|,
+block|,
 name|typename
 name|T8
 operator|>
@@ -2208,28 +2376,28 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
-operator|,
+block|,
 name|typename
 name|T3
-operator|,
+block|,
 name|typename
 name|T4
-operator|,
+block|,
 name|typename
 name|T5
-operator|,
+block|,
 name|typename
 name|T6
-operator|,
+block|,
 name|typename
 name|T7
-operator|,
+block|,
 name|typename
 name|T8
-operator|,
+block|,
 name|typename
 name|T9
 operator|>
@@ -2268,31 +2436,31 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
-operator|,
+block|,
 name|typename
 name|T3
-operator|,
+block|,
 name|typename
 name|T4
-operator|,
+block|,
 name|typename
 name|T5
-operator|,
+block|,
 name|typename
 name|T6
-operator|,
+block|,
 name|typename
 name|T7
-operator|,
+block|,
 name|typename
 name|T8
-operator|,
+block|,
 name|typename
 name|T9
-operator|,
+block|,
 name|typename
 name|T10
 operator|>
@@ -2332,12 +2500,39 @@ block|; }
 endif|#
 directive|endif
 comment|// GTEST_HAS_TR1_TUPLE
+if|#
+directive|if
+name|GTEST_HAS_STD_TUPLE_
+name|template
+operator|<
+name|typename
+operator|...
+name|Types
+operator|>
+name|void
+name|PrintTo
+argument_list|(
+argument|const ::std::tuple<Types...>& t
+argument_list|,
+argument|::std::ostream* os
+argument_list|)
+block|{
+name|PrintTupleTo
+argument_list|(
+name|t
+argument_list|,
+name|os
+argument_list|)
+block|; }
+endif|#
+directive|endif
+comment|// GTEST_HAS_STD_TUPLE_
 comment|// Overload for std::pair.
 name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
 operator|>
@@ -2410,28 +2605,10 @@ name|public
 operator|:
 comment|// MSVC warns about adding const to a function type, so we want to
 comment|// disable the warning.
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|push
-name|)
-comment|// Saves the current warning state.
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4180
-name|)
-comment|// Temporarily disables warning 4180.
-endif|#
-directive|endif
-comment|// _MSC_VER
+name|GTEST_DISABLE_MSC_WARNINGS_PUSH_
+argument_list|(
+literal|4180
+argument_list|)
 comment|// Note: we deliberately don't call this PrintTo(), as that name
 comment|// conflicts with ::testing::internal::PrintTo in the body of the
 comment|// function.
@@ -2459,21 +2636,10 @@ argument_list|,
 name|os
 argument_list|)
 block|;   }
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|pop
-name|)
-comment|// Restores the warning state.
-endif|#
-directive|endif
-comment|// _MSC_VER
+name|GTEST_DISABLE_MSC_WARNINGS_POP_
+argument_list|()
 block|}
-expr_stmt|;
+block|;
 comment|// UniversalPrintArray(begin, len, os) prints an array of 'len'
 comment|// elements, starting at address 'begin'.
 name|template
@@ -2592,13 +2758,25 @@ argument|size_t len
 argument_list|,
 argument|::std::ostream* os
 argument_list|)
-expr_stmt|;
+block|;
+comment|// This overload prints a (const) wchar_t array compactly.
+name|GTEST_API_
+name|void
+name|UniversalPrintArray
+argument_list|(
+argument|const wchar_t* begin
+argument_list|,
+argument|size_t len
+argument_list|,
+argument|::std::ostream* os
+argument_list|)
+block|;
 comment|// Implements printing an array type T[N].
 name|template
 operator|<
 name|typename
 name|T
-operator|,
+block|,
 name|size_t
 name|N
 operator|>
@@ -2634,7 +2812,7 @@ name|os
 argument_list|)
 block|;   }
 block|}
-expr_stmt|;
+block|;
 comment|// Implements printing a reference type T&.
 name|template
 operator|<
@@ -2652,28 +2830,10 @@ name|public
 operator|:
 comment|// MSVC warns about adding const to a function type, so we want to
 comment|// disable the warning.
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|push
-name|)
-comment|// Saves the current warning state.
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4180
-name|)
-comment|// Temporarily disables warning 4180.
-endif|#
-directive|endif
-comment|// _MSC_VER
+name|GTEST_DISABLE_MSC_WARNINGS_PUSH_
+argument_list|(
+literal|4180
+argument_list|)
 specifier|static
 name|void
 name|Print
@@ -2711,21 +2871,10 @@ argument_list|,
 name|os
 argument_list|)
 block|;   }
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|pop
-name|)
-comment|// Restores the warning state.
-endif|#
-directive|endif
-comment|// _MSC_VER
+name|GTEST_DISABLE_MSC_WARNINGS_POP_
+argument_list|()
 block|}
-expr_stmt|;
+block|;
 comment|// Prints a value tersely: for a reference type, the referenced value
 comment|// (but not the address) is printed; for a (const) char pointer, the
 comment|// NUL-terminated string (but not the pointer) is printed.
@@ -2734,8 +2883,14 @@ operator|<
 name|typename
 name|T
 operator|>
+name|class
+name|UniversalTersePrinter
+block|{
+name|public
+operator|:
+specifier|static
 name|void
-name|UniversalTersePrint
+name|Print
 argument_list|(
 argument|const T& value
 argument_list|,
@@ -2748,10 +2903,102 @@ name|value
 argument_list|,
 name|os
 argument_list|)
-block|; }
-specifier|inline
+block|;   }
+block|}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|UniversalTersePrinter
+operator|<
+name|T
+operator|&
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
 name|void
-name|UniversalTersePrint
+name|Print
+argument_list|(
+argument|const T& value
+argument_list|,
+argument|::std::ostream* os
+argument_list|)
+block|{
+name|UniversalPrint
+argument_list|(
+name|value
+argument_list|,
+name|os
+argument_list|)
+block|;   }
+block|}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+block|,
+name|size_t
+name|N
+operator|>
+name|class
+name|UniversalTersePrinter
+operator|<
+name|T
+index|[
+name|N
+index|]
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+name|void
+name|Print
+argument_list|(
+argument|const T (&value)[N]
+argument_list|,
+argument|::std::ostream* os
+argument_list|)
+block|{
+name|UniversalPrinter
+operator|<
+name|T
+index|[
+name|N
+index|]
+operator|>
+operator|::
+name|Print
+argument_list|(
+name|value
+argument_list|,
+name|os
+argument_list|)
+block|;   }
+block|}
+block|;
+name|template
+operator|<
+operator|>
+name|class
+name|UniversalTersePrinter
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+name|void
+name|Print
 argument_list|(
 argument|const char* str
 argument_list|,
@@ -2785,26 +3032,162 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-specifier|inline
+block|}
+block|;
+name|template
+operator|<
+operator|>
+name|class
+name|UniversalTersePrinter
+operator|<
+name|char
+operator|*
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
 name|void
-name|UniversalTersePrint
+name|Print
 argument_list|(
 argument|char* str
 argument_list|,
 argument|::std::ostream* os
 argument_list|)
 block|{
-name|UniversalTersePrint
-argument_list|(
-name|static_cast
+name|UniversalTersePrinter
 operator|<
 specifier|const
 name|char
 operator|*
 operator|>
-operator|(
+operator|::
+name|Print
+argument_list|(
 name|str
-operator|)
+argument_list|,
+name|os
+argument_list|)
+block|;   }
+block|}
+block|;
+if|#
+directive|if
+name|GTEST_HAS_STD_WSTRING
+name|template
+operator|<
+operator|>
+name|class
+name|UniversalTersePrinter
+operator|<
+specifier|const
+name|wchar_t
+operator|*
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+name|void
+name|Print
+argument_list|(
+argument|const wchar_t* str
+argument_list|,
+argument|::std::ostream* os
+argument_list|)
+block|{
+if|if
+condition|(
+name|str
+operator|==
+name|NULL
+condition|)
+block|{
+operator|*
+name|os
+operator|<<
+literal|"NULL"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|UniversalPrint
+argument_list|(
+operator|::
+name|std
+operator|::
+name|wstring
+argument_list|(
+name|str
+argument_list|)
+argument_list|,
+name|os
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+block|;
+endif|#
+directive|endif
+name|template
+operator|<
+operator|>
+name|class
+name|UniversalTersePrinter
+operator|<
+name|wchar_t
+operator|*
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+name|void
+name|Print
+argument_list|(
+argument|wchar_t* str
+argument_list|,
+argument|::std::ostream* os
+argument_list|)
+block|{
+name|UniversalTersePrinter
+operator|<
+specifier|const
+name|wchar_t
+operator|*
+operator|>
+operator|::
+name|Print
+argument_list|(
+name|str
+argument_list|,
+name|os
+argument_list|)
+block|;   }
+block|}
+block|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|void
+name|UniversalTersePrint
+argument_list|(
+argument|const T& value
+argument_list|,
+argument|::std::ostream* os
+argument_list|)
+block|{
+name|UniversalTersePrinter
+operator|<
+name|T
+operator|>
+operator|::
+name|Print
+argument_list|(
+name|value
 argument_list|,
 name|os
 argument_list|)
@@ -2826,9 +3209,15 @@ argument_list|,
 argument|::std::ostream* os
 argument_list|)
 block|{
+comment|// A workarond for the bug in VC++ 7.1 that prevents us from instantiating
+comment|// UniversalPrinter with T directly.
+typedef|typedef
+name|T
+name|T1
+typedef|;
 name|UniversalPrinter
 operator|<
-name|T
+name|T1
 operator|>
 operator|::
 name|Print
@@ -2838,9 +3227,6 @@ argument_list|,
 name|os
 argument_list|)
 block|; }
-if|#
-directive|if
-name|GTEST_HAS_TR1_TUPLE
 typedef|typedef
 operator|::
 name|std
@@ -2851,13 +3237,327 @@ name|string
 operator|>
 name|Strings
 expr_stmt|;
+comment|// TuplePolicy<TupleT> must provide:
+comment|// - tuple_size
+comment|//     size of tuple TupleT.
+comment|// - get<size_t I>(const TupleT& t)
+comment|//     static function extracting element I of tuple TupleT.
+comment|// - tuple_element<size_t I>::type
+comment|//     type of element I of tuple TupleT.
+name|template
+operator|<
+name|typename
+name|TupleT
+operator|>
+block|struct
+name|TuplePolicy
+expr_stmt|;
+if|#
+directive|if
+name|GTEST_HAS_TR1_TUPLE
+name|template
+operator|<
+name|typename
+name|TupleT
+operator|>
+expr|struct
+name|TuplePolicy
+block|{
+typedef|typedef
+name|TupleT
+name|Tuple
+typedef|;
+specifier|static
+specifier|const
+name|size_t
+name|tuple_size
+operator|=
+operator|::
+name|std
+operator|::
+name|tr1
+operator|::
+name|tuple_size
+operator|<
+name|Tuple
+operator|>
+operator|::
+name|value
+expr_stmt|;
+name|template
+operator|<
+name|size_t
+name|I
+operator|>
+expr|struct
+name|tuple_element
+operator|:
+operator|::
+name|std
+operator|::
+name|tr1
+operator|::
+name|tuple_element
+operator|<
+name|I
+operator|,
+name|Tuple
+operator|>
+block|{}
+expr_stmt|;
+name|template
+operator|<
+name|size_t
+name|I
+operator|>
+specifier|static
+name|typename
+name|AddReference
+operator|<
+specifier|const
+name|typename
+operator|::
+name|std
+operator|::
+name|tr1
+operator|::
+name|tuple_element
+operator|<
+name|I
+operator|,
+name|Tuple
+operator|>
+operator|::
+name|type
+operator|>
+operator|::
+name|type
+name|get
+argument_list|(
+argument|const Tuple& tuple
+argument_list|)
+block|{
+return|return
+operator|::
+name|std
+operator|::
+name|tr1
+operator|::
+name|get
+operator|<
+name|I
+operator|>
+operator|(
+name|tuple
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
+name|template
+operator|<
+name|typename
+name|TupleT
+operator|>
+specifier|const
+name|size_t
+name|TuplePolicy
+operator|<
+name|TupleT
+operator|>
+operator|::
+name|tuple_size
+expr_stmt|;
+endif|#
+directive|endif
+comment|// GTEST_HAS_TR1_TUPLE
+if|#
+directive|if
+name|GTEST_HAS_STD_TUPLE_
+name|template
+operator|<
+name|typename
+operator|...
+name|Types
+operator|>
+expr|struct
+name|TuplePolicy
+operator|<
+operator|::
+name|std
+operator|::
+name|tuple
+operator|<
+name|Types
+operator|...
+operator|>
+expr|>
+block|{
+typedef|typedef
+operator|::
+name|std
+operator|::
+name|tuple
+operator|<
+name|Types
+operator|...
+operator|>
+name|Tuple
+expr_stmt|;
+specifier|static
+specifier|const
+name|size_t
+name|tuple_size
+operator|=
+operator|::
+name|std
+operator|::
+name|tuple_size
+operator|<
+name|Tuple
+operator|>
+operator|::
+name|value
+expr_stmt|;
+name|template
+operator|<
+name|size_t
+name|I
+operator|>
+expr|struct
+name|tuple_element
+operator|:
+operator|::
+name|std
+operator|::
+name|tuple_element
+operator|<
+name|I
+operator|,
+name|Tuple
+operator|>
+block|{}
+expr_stmt|;
+name|template
+operator|<
+name|size_t
+name|I
+operator|>
+specifier|static
+specifier|const
+name|typename
+operator|::
+name|std
+operator|::
+name|tuple_element
+operator|<
+name|I
+operator|,
+name|Tuple
+operator|>
+operator|::
+name|type
+operator|&
+name|get
+argument_list|(
+argument|const Tuple& tuple
+argument_list|)
+block|{
+return|return
+operator|::
+name|std
+operator|::
+name|get
+operator|<
+name|I
+operator|>
+operator|(
+name|tuple
+operator|)
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+operator|...
+name|Types
+operator|>
+specifier|const
+name|size_t
+name|TuplePolicy
+operator|<
+operator|::
+name|std
+operator|::
+name|tuple
+operator|<
+name|Types
+operator|...
+operator|>
+expr|>
+operator|::
+name|tuple_size
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_HAS_STD_TUPLE_
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_TR1_TUPLE
+operator|||
+name|GTEST_HAS_STD_TUPLE_
+end_if
+
+begin_comment
 comment|// This helper template allows PrintTo() for tuples and
+end_comment
+
+begin_comment
 comment|// UniversalTersePrintTupleFieldsToStrings() to be defined by
+end_comment
+
+begin_comment
 comment|// induction on the number of tuple fields.  The idea is that
+end_comment
+
+begin_comment
 comment|// TuplePrefixPrinter<N>::PrintPrefixTo(t, os) prints the first N
+end_comment
+
+begin_comment
 comment|// fields in tuple t, and can be defined in terms of
+end_comment
+
+begin_comment
 comment|// TuplePrefixPrinter<N - 1>.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// The inductive case.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|size_t
@@ -2895,26 +3595,37 @@ argument_list|,
 name|os
 argument_list|)
 block|;
+name|GTEST_INTENTIONAL_CONST_COND_PUSH_
+argument_list|()
+if|if
+condition|(
+name|N
+operator|>
+literal|1
+condition|)
+block|{
+name|GTEST_INTENTIONAL_CONST_COND_POP_
+argument_list|()
 operator|*
 name|os
 operator|<<
 literal|", "
-block|;
+expr_stmt|;
+block|}
 name|UniversalPrinter
 operator|<
 name|typename
+name|TuplePolicy
+operator|<
+name|Tuple
+operator|>
 operator|::
-name|std
-operator|::
-name|tr1
-operator|::
+name|template
 name|tuple_element
 operator|<
 name|N
 operator|-
 literal|1
-block|,
-name|Tuple
 operator|>
 operator|::
 name|type
@@ -2922,22 +3633,11 @@ operator|>
 operator|::
 name|Print
 argument_list|(
-operator|::
-name|std
-operator|::
-name|tr1
-operator|::
-name|get
-operator|<
-name|N
-operator|-
+argument|TuplePolicy<Tuple>::template get<N -
 literal|1
-operator|>
-operator|(
-name|t
-operator|)
+argument|>(t)
 argument_list|,
-name|os
+argument|os
 argument_list|)
 block|;   }
 comment|// Tersely prints the first N fields of a tuple to a string vector,
@@ -2978,23 +3678,11 @@ name|ss
 block|;
 name|UniversalTersePrint
 argument_list|(
-operator|::
-name|std
-operator|::
-name|tr1
-operator|::
-name|get
-operator|<
-name|N
-operator|-
+argument|TuplePolicy<Tuple>::template get<N -
 literal|1
-operator|>
-operator|(
-name|t
-operator|)
+argument|>(t)
 argument_list|,
-operator|&
-name|ss
+argument|&ss
 argument_list|)
 block|;
 name|strings
@@ -3007,9 +3695,14 @@ name|str
 argument_list|()
 argument_list|)
 block|;   }
-block|}
-expr_stmt|;
-comment|// Base cases.
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|// Base case.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -3049,132 +3742,26 @@ argument_list|)
 block|{}
 block|}
 expr_stmt|;
-comment|// We have to specialize the entire TuplePrefixPrinter<> class
-comment|// template here, even though the definition of
-comment|// TersePrintPrefixToStrings() is the same as the generic version, as
-comment|// Embarcadero (formerly CodeGear, formerly Borland) C++ doesn't
-comment|// support specializing a method template of a class template.
-name|template
-operator|<
-operator|>
-expr|struct
-name|TuplePrefixPrinter
-operator|<
-literal|1
-operator|>
-block|{
+end_expr_stmt
+
+begin_comment
+comment|// Helper function for printing a tuple.
+end_comment
+
+begin_comment
+comment|// Tuple must be either std::tr1::tuple or std::tuple type.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|Tuple
-operator|>
-specifier|static
-name|void
-name|PrintPrefixTo
-argument_list|(
-argument|const Tuple& t
-argument_list|,
-argument|::std::ostream* os
-argument_list|)
-block|{
-name|UniversalPrinter
-operator|<
-name|typename
-operator|::
-name|std
-operator|::
-name|tr1
-operator|::
-name|tuple_element
-operator|<
-literal|0
-block|,
-name|Tuple
-operator|>
-operator|::
-name|type
-operator|>
-operator|::
-name|Print
-argument_list|(
-operator|::
-name|std
-operator|::
-name|tr1
-operator|::
-name|get
-operator|<
-literal|0
-operator|>
-operator|(
-name|t
-operator|)
-argument_list|,
-name|os
-argument_list|)
-block|;   }
-name|template
-operator|<
-name|typename
-name|Tuple
-operator|>
-specifier|static
-name|void
-name|TersePrintPrefixToStrings
-argument_list|(
-argument|const Tuple& t
-argument_list|,
-argument|Strings* strings
-argument_list|)
-block|{
-operator|::
-name|std
-operator|::
-name|stringstream
-name|ss
-block|;
-name|UniversalTersePrint
-argument_list|(
-operator|::
-name|std
-operator|::
-name|tr1
-operator|::
-name|get
-operator|<
-literal|0
-operator|>
-operator|(
-name|t
-operator|)
-argument_list|,
-operator|&
-name|ss
-argument_list|)
-block|;
-name|strings
-operator|->
-name|push_back
-argument_list|(
-name|ss
-operator|.
-name|str
-argument_list|()
-argument_list|)
-block|;   }
-block|}
-expr_stmt|;
-comment|// Helper function for printing a tuple.  T must be instantiated with
-comment|// a tuple type.
-name|template
-operator|<
-name|typename
-name|T
 operator|>
 name|void
 name|PrintTupleTo
 argument_list|(
-argument|const T& t
+argument|const Tuple& t
 argument_list|,
 argument|::std::ostream* os
 argument_list|)
@@ -3186,17 +3773,12 @@ literal|"("
 block|;
 name|TuplePrefixPrinter
 operator|<
-operator|::
-name|std
-operator|::
-name|tr1
-operator|::
-name|tuple_size
+name|TuplePolicy
 operator|<
-name|T
+name|Tuple
 operator|>
 operator|::
-name|value
+name|tuple_size
 operator|>
 operator|::
 name|PrintPrefixTo
@@ -3230,17 +3812,12 @@ name|result
 block|;
 name|TuplePrefixPrinter
 operator|<
-operator|::
-name|std
-operator|::
-name|tr1
-operator|::
-name|tuple_size
+name|TuplePolicy
 operator|<
 name|Tuple
 operator|>
 operator|::
-name|value
+name|tuple_size
 operator|>
 operator|::
 name|TersePrintPrefixToStrings
@@ -3255,12 +3832,24 @@ return|return
 name|result
 return|;
 block|}
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
-comment|// GTEST_HAS_TR1_TUPLE
-block|}
+end_endif
+
+begin_comment
+comment|// GTEST_HAS_TR1_TUPLE || GTEST_HAS_STD_TUPLE_
+end_comment
+
+begin_comment
+unit|}
 comment|// namespace internal
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|T
@@ -3282,7 +3871,12 @@ name|ss
 block|;
 name|internal
 operator|::
-name|UniversalTersePrint
+name|UniversalTersePrinter
+operator|<
+name|T
+operator|>
+operator|::
+name|Print
 argument_list|(
 name|value
 argument_list|,
@@ -3297,12 +3891,30 @@ name|str
 argument_list|()
 return|;
 block|}
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|// namespace testing
 end_comment
+
+begin_comment
+comment|// Include any custom printer added by the local installation.
+end_comment
+
+begin_comment
+comment|// We must include this header at the end to make sure it can use the
+end_comment
+
+begin_comment
+comment|// declarations from this file.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"gtest/internal/custom/gtest-printers.h"
+end_include
 
 begin_endif
 endif|#

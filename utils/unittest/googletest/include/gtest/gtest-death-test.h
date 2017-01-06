@@ -178,6 +178,21 @@ expr_stmt|;
 if|#
 directive|if
 name|GTEST_HAS_DEATH_TEST
+name|namespace
+name|internal
+block|{
+comment|// Returns a Boolean value indicating whether the caller is currently
+comment|// executing in the context of the death test child process.  Tools such as
+comment|// Valgrind heap checkers may need this to modify their behavior in death
+comment|// tests.  IMPORTANT: This is an internal utility.  Using it may break the
+comment|// implementation of death tests.  User code MUST NOT use it.
+name|GTEST_API_
+name|bool
+name|InDeathTestChild
+parameter_list|()
+function_decl|;
+block|}
+comment|// namespace internal
 comment|// The following macros are useful for writing death tests.
 comment|// Here's what happens when an ASSERT_DEATH* or EXPECT_DEATH* is
 comment|// executed:
@@ -201,7 +216,7 @@ comment|//   ASSERT_DEATH(server.SendMessage(56, "Hello"), "Invalid port number"
 comment|//   for (int i = 0; i< 5; i++) {
 comment|//     EXPECT_DEATH(server.ProcessRequest(i),
 comment|//                  "Invalid request .* in ProcessRequest()")
-comment|//<< "Failed to die on request "<< i);
+comment|//<< "Failed to die on request "<< i;
 comment|//   }
 comment|//
 comment|//   ASSERT_EXIT(server.ExitNow(), ::testing::ExitedWithCode(0), "Exiting");
@@ -467,7 +482,7 @@ parameter_list|,
 name|regex
 parameter_list|)
 define|\
-value|do { statement; } while (::testing::internal::AlwaysFalse())
+value|GTEST_EXECUTE_STATEMENT_(statement, regex)
 define|#
 directive|define
 name|ASSERT_DEBUG_DEATH
@@ -477,7 +492,7 @@ parameter_list|,
 name|regex
 parameter_list|)
 define|\
-value|do { statement; } while (::testing::internal::AlwaysFalse())
+value|GTEST_EXECUTE_STATEMENT_(statement, regex)
 else|#
 directive|else
 define|#

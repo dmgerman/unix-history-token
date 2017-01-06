@@ -336,6 +336,11 @@ name|void
 name|StaticInterruptCallback
 parameter_list|()
 function_decl|;
+specifier|static
+name|void
+name|StaticFileSizeExceedCallback
+parameter_list|()
+function_decl|;
 name|void
 name|ExecuteCallback
 parameter_list|(

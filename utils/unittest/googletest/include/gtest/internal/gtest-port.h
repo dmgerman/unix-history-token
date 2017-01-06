@@ -128,11 +128,39 @@ comment|// Low-level types and utilities for porting Google Test to various
 end_comment
 
 begin_comment
-comment|// platforms.  They are subject to change without notice.  DO NOT USE
+comment|// platforms.  All macros ending with _ and symbols defined in an
 end_comment
 
 begin_comment
-comment|// THEM IN USER CODE.
+comment|// internal namespace are subject to change without notice.  Code
+end_comment
+
+begin_comment
+comment|// outside Google Test MUST NOT USE THEM DIRECTLY.  Macros that don't
+end_comment
+
+begin_comment
+comment|// end with _ are part of Google Test's public API and can be used by
+end_comment
+
+begin_comment
+comment|// code outside Google Test.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is fundamental to Google Test.  All other Google Test source
+end_comment
+
+begin_comment
+comment|// files are expected to #include this.  Therefore, it cannot #include
+end_comment
+
+begin_comment
+comment|// any other Google Test header.
 end_comment
 
 begin_ifndef
@@ -148,15 +176,99 @@ name|GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 end_define
 
 begin_comment
-comment|// The user can define the following macros in the build script to
+comment|// Environment-describing macros
 end_comment
 
 begin_comment
-comment|// control Google Test's behavior.  If the user doesn't define a macro
+comment|// -----------------------------
 end_comment
 
 begin_comment
-comment|// in this list, Google Test will define it.
+comment|//
+end_comment
+
+begin_comment
+comment|// Google Test can be used in many different environments.  Macros in
+end_comment
+
+begin_comment
+comment|// this section tell Google Test what kind of environment it is being
+end_comment
+
+begin_comment
+comment|// used in, such that Google Test can provide environment-specific
+end_comment
+
+begin_comment
+comment|// features and implementations.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Google Test tries to automatically detect the properties of its
+end_comment
+
+begin_comment
+comment|// environment, so users usually don't need to worry about these
+end_comment
+
+begin_comment
+comment|// macros.  However, the automatic detection is not perfect.
+end_comment
+
+begin_comment
+comment|// Sometimes it's necessary for a user to define some of the following
+end_comment
+
+begin_comment
+comment|// macros in the build script to override Google Test's decisions.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// If the user doesn't define a macro in the list, Google Test will
+end_comment
+
+begin_comment
+comment|// provide a default definition.  After this header is #included, all
+end_comment
+
+begin_comment
+comment|// macros in this list will be defined to either 1 or 0.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Notes to maintainers:
+end_comment
+
+begin_comment
+comment|//   - Each macro here is a user-tweakable knob; do not grow the list
+end_comment
+
+begin_comment
+comment|//     lightly.
+end_comment
+
+begin_comment
+comment|//   - Use #if to key off these macros.  Don't use #ifdef or "#if
+end_comment
+
+begin_comment
+comment|//     defined(...)", which will not work as these macros are ALWAYS
+end_comment
+
+begin_comment
+comment|//     defined.
 end_comment
 
 begin_comment
@@ -292,6 +404,14 @@ comment|//                              GTEST_HAS_TR1_TUPLE to 0.
 end_comment
 
 begin_comment
+comment|//   GTEST_LANG_CXX11         - Define it to 1/0 to indicate that Google Test
+end_comment
+
+begin_comment
+comment|//                              is building in C++11/C++98 mode.
+end_comment
+
+begin_comment
 comment|//   GTEST_LINKED_AS_SHARED_LIBRARY
 end_comment
 
@@ -320,7 +440,11 @@ comment|//                              as a shared library.
 end_comment
 
 begin_comment
-comment|// This header defines the following utilities:
+comment|// Platform-indicating macros
+end_comment
+
+begin_comment
+comment|// --------------------------
 end_comment
 
 begin_comment
@@ -328,11 +452,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Macros indicating the current platform (defined to 1 if compiled on
+comment|// Macros indicating the platform on which Google Test is being used
 end_comment
 
 begin_comment
-comment|// the given platform; otherwise undefined):
+comment|// (a macro is defined to 1 if compiled on the given platform;
+end_comment
+
+begin_comment
+comment|// otherwise UNDEFINED -- it's never defined to 0.).  Google Test
+end_comment
+
+begin_comment
+comment|// defines these macros automatically.  Code outside Google Test MUST
+end_comment
+
+begin_comment
+comment|// NOT define them.
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -368,11 +508,23 @@ comment|//   GTEST_OS_MAC      - Mac OS X
 end_comment
 
 begin_comment
+comment|//     GTEST_OS_IOS    - iOS
+end_comment
+
+begin_comment
 comment|//   GTEST_OS_MINIX    - Minix
 end_comment
 
 begin_comment
 comment|//   GTEST_OS_NACL     - Google Native Client (NaCl)
+end_comment
+
+begin_comment
+comment|//   GTEST_OS_OPENBSD  - OpenBSD
+end_comment
+
+begin_comment
+comment|//   GTEST_OS_QNX      - QNX
 end_comment
 
 begin_comment
@@ -397,6 +549,14 @@ end_comment
 
 begin_comment
 comment|//     GTEST_OS_WINDOWS_MOBILE   - Windows Mobile
+end_comment
+
+begin_comment
+comment|//     GTEST_OS_WINDOWS_PHONE    - Windows Phone
+end_comment
+
+begin_comment
+comment|//     GTEST_OS_WINDOWS_RT       - Windows Store App/WinRT
 end_comment
 
 begin_comment
@@ -436,7 +596,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Note that it is possible that none of the GTEST_OS_* macros are defined.
+comment|// It is possible that none of the GTEST_OS_* macros are defined.
+end_comment
+
+begin_comment
+comment|// Feature-indicating macros
+end_comment
+
+begin_comment
+comment|// -------------------------
 end_comment
 
 begin_comment
@@ -444,11 +612,59 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Macros indicating available Google Test features (defined to 1 if
+comment|// Macros indicating which Google Test features are available (a macro
 end_comment
 
 begin_comment
-comment|// the corresponding feature is supported; otherwise undefined):
+comment|// is defined to 1 if the corresponding feature is supported;
+end_comment
+
+begin_comment
+comment|// otherwise UNDEFINED -- it's never defined to 0.).  Google Test
+end_comment
+
+begin_comment
+comment|// defines these macros automatically.  Code outside Google Test MUST
+end_comment
+
+begin_comment
+comment|// NOT define them.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// These macros are public so that portable tests can be written.
+end_comment
+
+begin_comment
+comment|// Such tests typically surround code using a feature with an #if
+end_comment
+
+begin_comment
+comment|// which controls that code.  For example:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// #if GTEST_HAS_DEATH_TEST
+end_comment
+
+begin_comment
+comment|//   EXPECT_DEATH(DoSomethingDeadly());
+end_comment
+
+begin_comment
+comment|// #endif
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 begin_comment
@@ -476,6 +692,10 @@ comment|//   GTEST_HAS_TYPED_TEST_P - type-parameterized tests
 end_comment
 
 begin_comment
+comment|//   GTEST_IS_THREADSAFE    - Google Test is thread-safe.
+end_comment
+
+begin_comment
 comment|//   GTEST_USES_POSIX_RE    - enhanced POSIX regex is used. Do not confuse with
 end_comment
 
@@ -497,6 +717,46 @@ end_comment
 
 begin_comment
 comment|//   GTEST_CAN_COMPARE_NULL - accepts untyped NULL in EXPECT_EQ().
+end_comment
+
+begin_comment
+comment|// Misc public macros
+end_comment
+
+begin_comment
+comment|// ------------------
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   GTEST_FLAG(flag_name)  - references the variable corresponding to
+end_comment
+
+begin_comment
+comment|//                            the given Google Test flag.
+end_comment
+
+begin_comment
+comment|// Internal utilities
+end_comment
+
+begin_comment
+comment|// ------------------
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The following macros and utilities are for Google Test's INTERNAL
+end_comment
+
+begin_comment
+comment|// use only.  Code outside Google Test MUST NOT USE THEM DIRECTLY.
 end_comment
 
 begin_comment
@@ -532,6 +792,38 @@ comment|//   GTEST_MUST_USE_RESULT_   - declares that a function's result must b
 end_comment
 
 begin_comment
+comment|//   GTEST_INTENTIONAL_CONST_COND_PUSH_ - start code section where MSVC C4127 is
+end_comment
+
+begin_comment
+comment|//                                        suppressed (constant conditional).
+end_comment
+
+begin_comment
+comment|//   GTEST_INTENTIONAL_CONST_COND_POP_  - finish code section where MSVC C4127
+end_comment
+
+begin_comment
+comment|//                                        is suppressed.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// C++11 feature wrappers:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   testing::internal::move  - portability wrapper for std::move.
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -544,19 +836,7 @@ comment|//   Mutex, MutexLock, ThreadLocal, GetThreadCount()
 end_comment
 
 begin_comment
-comment|//                  - synchronization primitives.
-end_comment
-
-begin_comment
-comment|//   GTEST_IS_THREADSAFE - defined to 1 to indicate that the above
-end_comment
-
-begin_comment
-comment|//                         synchronization primitives have real implementations
-end_comment
-
-begin_comment
-comment|//                         and Google Test is thread-safe; or 0 otherwise.
+comment|//                            - synchronization primitives.
 end_comment
 
 begin_comment
@@ -700,10 +980,6 @@ comment|// Command-line utilities:
 end_comment
 
 begin_comment
-comment|//   GTEST_FLAG()       - references a flag.
-end_comment
-
-begin_comment
 comment|//   GTEST_DECLARE_*()  - declares a flag.
 end_comment
 
@@ -712,7 +988,7 @@ comment|//   GTEST_DEFINE_*()   - defines a flag.
 end_comment
 
 begin_comment
-comment|//   GetArgvs()         - returns the command line as a vector of strings.
+comment|//   GetInjectableArgvs() - returns the command line as a vector of strings.
 end_comment
 
 begin_comment
@@ -804,6 +1080,40 @@ begin_comment
 comment|// !_WIN32_WCE
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__APPLE__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<AvailabilityMacros.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<TargetConditionals.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_comment
+comment|// NOLINT
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -833,6 +1143,44 @@ end_include
 begin_comment
 comment|// NOLINT
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"gtest/internal/gtest-port-arch.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gtest/internal/custom/gtest-port.h"
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GTEST_DEV_EMAIL_
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -873,8 +1221,43 @@ begin_define
 define|#
 directive|define
 name|GTEST_PROJECT_URL_
-value|"http://code.google.com/p/googletest/"
+value|"https://github.com/google/googletest/"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(GTEST_DEV_EMAIL_)
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GTEST_INIT_GOOGLE_TEST_NAME_
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_INIT_GOOGLE_TEST_NAME_
+value|"testing::InitGoogleTest"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(GTEST_INIT_GOOGLE_TEST_NAME_)
+end_comment
 
 begin_comment
 comment|// Determines the version of gcc that is used to compile this.
@@ -908,81 +1291,123 @@ comment|// __GNUC__
 end_comment
 
 begin_comment
-comment|// Determines the platform on which Google Test is compiled.
+comment|// Macros for disabling Microsoft Visual C++ warnings.
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__CYGWIN__
-end_ifdef
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   GTEST_DISABLE_MSC_WARNINGS_PUSH_(4800 4385)
+end_comment
+
+begin_comment
+comment|//   /* code that triggers warnings C4800 and C4385 */
+end_comment
+
+begin_comment
+comment|//   GTEST_DISABLE_MSC_WARNINGS_POP_()
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+operator|>=
+literal|1500
+end_if
 
 begin_define
 define|#
 directive|define
-name|GTEST_OS_CYGWIN
-value|1
+name|GTEST_DISABLE_MSC_WARNINGS_PUSH_
+parameter_list|(
+name|warnings
+parameter_list|)
+define|\
+value|__pragma(warning(push))                        \     __pragma(warning(disable: warnings))
 end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-name|__SYMBIAN32__
-end_elif
 
 begin_define
 define|#
 directive|define
-name|GTEST_OS_SYMBIAN
-value|1
+name|GTEST_DISABLE_MSC_WARNINGS_POP_
+parameter_list|()
+define|\
+value|__pragma(warning(pop))
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-name|_WIN32
-end_elif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// Older versions of MSVC don't have __pragma.
+end_comment
 
 begin_define
 define|#
 directive|define
-name|GTEST_OS_WINDOWS
-value|1
+name|GTEST_DISABLE_MSC_WARNINGS_PUSH_
+parameter_list|(
+name|warnings
+parameter_list|)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_WIN32_WCE
-end_ifdef
 
 begin_define
 define|#
 directive|define
-name|GTEST_OS_WINDOWS_MOBILE
-value|1
+name|GTEST_DISABLE_MSC_WARNINGS_POP_
+parameter_list|()
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__MINGW__
-argument_list|)
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GTEST_LANG_CXX11
+end_ifndef
+
+begin_comment
+comment|// gcc and clang define __GXX_EXPERIMENTAL_CXX0X__ when
+end_comment
+
+begin_comment
+comment|// -std={c,gnu}++{0x,11} is passed.  The C++11 standard specifies a
+end_comment
+
+begin_comment
+comment|// value for __cplusplus, and recent versions of clang, gcc, and
+end_comment
+
+begin_comment
+comment|// probably other compilers set that too in C++11 mode.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__GXX_EXPERIMENTAL_CXX0X__
 operator|||
-name|defined
-argument_list|(
-name|__MINGW32__
-argument_list|)
-end_elif
+name|__cplusplus
+operator|>=
+literal|201103L
+end_if
+
+begin_comment
+comment|// Compiling in at least C++11 mode.
+end_comment
 
 begin_define
 define|#
 directive|define
-name|GTEST_OS_WINDOWS_MINGW
+name|GTEST_LANG_CXX11
 value|1
 end_define
 
@@ -994,7 +1419,112 @@ end_else
 begin_define
 define|#
 directive|define
-name|GTEST_OS_WINDOWS_DESKTOP
+name|GTEST_LANG_CXX11
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// Distinct from C++11 language support, some environments don't provide
+end_comment
+
+begin_comment
+comment|// proper C++11 library support. Notably, it's possible to build in
+end_comment
+
+begin_comment
+comment|// C++11 mode when targeting Mac OS X 10.6, which has an old libstdc++
+end_comment
+
+begin_comment
+comment|// with no C++11 support.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// libstdc++ has sufficient C++11 support as of GCC 4.6.0, __GLIBCXX__
+end_comment
+
+begin_comment
+comment|// 20110325, but maintenance releases in the 4.4 and 4.5 series followed
+end_comment
+
+begin_comment
+comment|// this date, so check for those versions by their date stamps.
+end_comment
+
+begin_comment
+comment|// https://gcc.gnu.org/onlinedocs/libstdc++/manual/abi.html#abi.versioning
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_LANG_CXX11
+operator|&&
+expr|\
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__GLIBCXX__
+argument_list|)
+operator|||
+operator|(
+expr|\
+name|__GLIBCXX__
+operator|>=
+literal|20110325ul
+operator|&&
+comment|/* GCC>= 4.6.0 */
+expr|\
+comment|/* Blacklist of patch releases of older branches: */
+expr|\
+name|__GLIBCXX__
+operator|!=
+literal|20110416ul
+operator|&&
+comment|/* GCC 4.4.6 */
+expr|\
+name|__GLIBCXX__
+operator|!=
+literal|20120313ul
+operator|&&
+comment|/* GCC 4.4.7 */
+expr|\
+name|__GLIBCXX__
+operator|!=
+literal|20110428ul
+operator|&&
+comment|/* GCC 4.5.3 */
+expr|\
+name|__GLIBCXX__
+operator|!=
+literal|20120702ul
+operator|)
+operator|)
+end_if
+
+begin_comment
+comment|/* GCC 4.5.4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_STDLIB_CXX11
 value|1
 end_define
 
@@ -1004,48 +1534,94 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _WIN32_WCE
+comment|// Only use C++11 library features if the library provides them.
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-name|__APPLE__
-end_elif
+begin_if
+if|#
+directive|if
+name|GTEST_STDLIB_CXX11
+end_if
 
 begin_define
 define|#
 directive|define
-name|GTEST_OS_MAC
+name|GTEST_HAS_STD_BEGIN_AND_END_
 value|1
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-name|__FreeBSD__
-end_elif
-
 begin_define
 define|#
 directive|define
-name|GTEST_OS_FREEBSD
+name|GTEST_HAS_STD_FORWARD_LIST_
 value|1
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-name|__linux__
-end_elif
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_STD_FUNCTION_
+value|1
+end_define
 
 begin_define
 define|#
 directive|define
-name|GTEST_OS_LINUX
+name|GTEST_HAS_STD_INITIALIZER_LIST_
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_STD_MOVE_
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_STD_SHARED_PTR_
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_STD_TYPE_TRAITS_
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_STD_UNIQUE_PTR_
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// C++11 specifies that<tuple> provides std::tuple.
+end_comment
+
+begin_comment
+comment|// Some platforms still might not have it, however.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_LANG_CXX11
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_STD_TUPLE_
 value|1
 end_define
 
@@ -1054,152 +1630,138 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ANDROID
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ANDROID__
+name|__clang__
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|GTEST_OS_LINUX_ANDROID
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|// ANDROID
+comment|// Inspired by http://clang.llvm.org/docs/LanguageExtensions.html#__has_include
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-name|__MVS__
-end_elif
-
-begin_define
-define|#
-directive|define
-name|GTEST_OS_ZOS
-value|1
-end_define
-
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
-name|__sun
+name|__has_include
 argument_list|)
 operator|&&
-name|defined
+operator|!
+name|__has_include
 argument_list|(
-name|__SVR4
+operator|<
+name|tuple
+operator|>
 argument_list|)
-end_elif
+end_if
 
-begin_define
-define|#
-directive|define
-name|GTEST_OS_SOLARIS
-value|1
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_AIX
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|GTEST_OS_AIX
-value|1
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__hpux
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|GTEST_OS_HPUX
-value|1
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-name|__native_client__
-end_elif
-
-begin_define
-define|#
-directive|define
-name|GTEST_OS_NACL
-value|1
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__HAIKU__
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|GTEST_OS_HAIKU
-value|1
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_MINIX
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|GTEST_OS_MINIX
-value|1
-end_define
+begin_undef
+undef|#
+directive|undef
+name|GTEST_HAS_STD_TUPLE_
+end_undef
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
 begin_comment
-comment|// __CYGWIN__
+comment|// Inspired by boost/config/stdlib/dinkumware.hpp
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_CPPLIB_VER
+argument_list|)
+operator|&&
+name|_CPPLIB_VER
+operator|<
+literal|520
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|GTEST_HAS_STD_TUPLE_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GLIBCXX__
+argument_list|)
+end_elif
+
+begin_comment
+comment|// Inspired by boost/config/stdlib/libstdcpp3.hpp,
+end_comment
+
+begin_comment
+comment|// http://gcc.gnu.org/gcc-4.2/changes.html and
+end_comment
+
+begin_comment
+comment|// http://gcc.gnu.org/onlinedocs/libstdc++/manual/bk01pt01ch01.html#manual.intro.status.standard.200x
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|<
+literal|4
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|4
+operator|&&
+name|__GNUC_MINOR__
+operator|<
+literal|2
+operator|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|GTEST_HAS_STD_TUPLE_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// Brings in definitions for functions used in the testing::internal::posix
@@ -1216,68 +1778,15 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|!
 name|GTEST_OS_WINDOWS
 end_if
-
-begin_comment
-comment|// This assumes that non-Windows OSes provide unistd.h. For OSes where this
-end_comment
-
-begin_comment
-comment|// is not the case, we need to include headers that provide the functions
-end_comment
-
-begin_comment
-comment|// mentioned above.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
 
 begin_if
 if|#
 directive|if
 operator|!
-name|GTEST_OS_NACL
-end_if
-
-begin_comment
-comment|// TODO(vladl@google.com): Remove this condition when Native Client SDK adds
-end_comment
-
-begin_comment
-comment|// strings.h (tracked in
-end_comment
-
-begin_comment
-comment|// http://code.google.com/p/nativeclient/issues/detail?id=1175).
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_comment
-comment|// Native Client doesn't provide strings.h.
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_elif
-elif|#
-directive|elif
-operator|!
 name|GTEST_OS_WINDOWS_MOBILE
-end_elif
+end_if
 
 begin_include
 include|#
@@ -1297,6 +1806,91 @@ directive|endif
 end_endif
 
 begin_comment
+comment|// In order to avoid having to include<windows.h>, use forward declaration
+end_comment
+
+begin_comment
+comment|// assuming CRITICAL_SECTION is a typedef of _RTL_CRITICAL_SECTION.
+end_comment
+
+begin_comment
+comment|// This assumption is verified by
+end_comment
+
+begin_comment
+comment|// WindowsTypesTest.CRITICAL_SECTIONIs_RTL_CRITICAL_SECTION.
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|_RTL_CRITICAL_SECTION
+struct_decl|;
+end_struct_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// This assumes that non-Windows OSes provide unistd.h. For OSes where this
+end_comment
+
+begin_comment
+comment|// is not the case, we need to include headers that provide the functions
+end_comment
+
+begin_comment
+comment|// mentioned above.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_OS_WINDOWS
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_OS_LINUX_ANDROID
+end_if
+
+begin_comment
+comment|// Used to define __ANDROID_API__ matching the target NDK API level.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<android/api-level.h>
+end_include
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// Defines this to true iff Google Test can use POSIX regular expressions.
 end_comment
 
@@ -1305,6 +1899,28 @@ ifndef|#
 directive|ifndef
 name|GTEST_HAS_POSIX_RE
 end_ifndef
+
+begin_if
+if|#
+directive|if
+name|GTEST_OS_LINUX_ANDROID
+end_if
+
+begin_comment
+comment|// On Android,<regex.h> is only available starting with Gingerbread.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_POSIX_RE
+value|(__ANDROID_API__>= 9)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -1318,11 +1934,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
-name|GTEST_HAS_POSIX_RE
+name|GTEST_USES_PCRE
 end_if
+
+begin_comment
+comment|// The appropriate headers have already been included.
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|GTEST_HAS_POSIX_RE
+end_elif
 
 begin_comment
 comment|// On some platforms,<regex.h> needs someone to define size_t, and
@@ -1404,7 +2035,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// GTEST_HAS_POSIX_RE
+comment|// GTEST_USES_PCRE
 end_comment
 
 begin_ifndef
@@ -1474,6 +2105,50 @@ define|#
 directive|define
 name|GTEST_HAS_EXCEPTIONS
 value|_HAS_EXCEPTIONS
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_elif
+
+begin_comment
+comment|// clang defines __EXCEPTIONS iff exceptions are enabled before clang 220714,
+end_comment
+
+begin_comment
+comment|// but iff cleanups are enabled after that. In Obj-C++ files, there can be
+end_comment
+
+begin_comment
+comment|// cleanups for ObjC exceptions which also need cleanups, even if C++ exceptions
+end_comment
+
+begin_comment
+comment|// are disabled. clang has __has_feature(cxx_exceptions) which checks for C++
+end_comment
+
+begin_comment
+comment|// exceptions starting at clang r206352, but which checked for cleanups prior to
+end_comment
+
+begin_comment
+comment|// that. To reliably check for C++ exception availability with clang, check for
+end_comment
+
+begin_comment
+comment|// __EXCEPTIONS&& __has_feature(cxx_exceptions).
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_EXCEPTIONS
+value|(__EXCEPTIONS&& __has_feature(cxx_exceptions))
 end_define
 
 begin_elif
@@ -1860,12 +2535,67 @@ directive|ifdef
 name|__GXX_RTTI
 end_ifdef
 
+begin_comment
+comment|// When building against STLport with the Android NDK and with
+end_comment
+
+begin_comment
+comment|// -frtti -fno-exceptions, the build fails at link time with undefined
+end_comment
+
+begin_comment
+comment|// references to __cxa_bad_typeid. Note sure if STL or toolchain bug,
+end_comment
+
+begin_comment
+comment|// so disable RTTI when detected.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_OS_LINUX_ANDROID
+operator|&&
+name|defined
+argument_list|(
+name|_STLPORT_MAJOR
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__EXCEPTIONS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_RTTI
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|GTEST_HAS_RTTI
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_OS_LINUX_ANDROID&& __STLPORT_MAJOR&& !__EXCEPTIONS
+end_comment
 
 begin_else
 else|#
@@ -1887,6 +2617,34 @@ end_endif
 begin_comment
 comment|// __GXX_RTTI
 end_comment
+
+begin_comment
+comment|// Clang defines __GXX_RTTI starting with version 3.0, but its manual recommends
+end_comment
+
+begin_comment
+comment|// using has_feature instead. has_feature(cxx_rtti) is supported since 2.7, the
+end_comment
+
+begin_comment
+comment|// first version with C++ support.
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_RTTI
+value|__has_feature(cxx_rtti)
+end_define
 
 begin_comment
 comment|// Starting with version 9.0 IBM Visual Age defines __RTTI_ALL__ to 1 if
@@ -2011,11 +2769,11 @@ name|GTEST_HAS_PTHREAD
 end_ifndef
 
 begin_comment
-comment|// The user didn't tell us explicitly, so we assume pthreads support is
+comment|// The user didn't tell us explicitly, so we make reasonable assumptions about
 end_comment
 
 begin_comment
-comment|// available on Linux and Mac.
+comment|// which platforms have pthreads support.
 end_comment
 
 begin_comment
@@ -2034,7 +2792,7 @@ begin_define
 define|#
 directive|define
 name|GTEST_HAS_PTHREAD
-value|(GTEST_OS_LINUX || GTEST_OS_MAC || \           GTEST_OS_HPUX || GTEST_OS_FREEBSD)
+value|(GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_HPUX \     || GTEST_OS_QNX || GTEST_OS_FREEBSD || GTEST_OS_NACL)
 end_define
 
 begin_endif
@@ -2090,6 +2848,70 @@ directive|endif
 end_endif
 
 begin_comment
+comment|// Determines if hash_map/hash_set are available.
+end_comment
+
+begin_comment
+comment|// Only used for testing against those containers.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GTEST_HAS_HASH_MAP_
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_HASH_MAP_
+value|1
+end_define
+
+begin_comment
+comment|// Indicates that hash_map is available.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_HASH_SET_
+value|1
+end_define
+
+begin_comment
+comment|// Indicates that hash_set is available.
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// _MSC_VER
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(GTEST_HAS_HASH_MAP_)
+end_comment
+
+begin_comment
 comment|// Determines whether Google Test can use tr1/tuple.  You can define
 end_comment
 
@@ -2107,6 +2929,33 @@ directive|ifndef
 name|GTEST_HAS_TR1_TUPLE
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|GTEST_OS_LINUX_ANDROID
+operator|&&
+name|defined
+argument_list|(
+name|_STLPORT_MAJOR
+argument_list|)
+end_if
+
+begin_comment
+comment|// STLport, provided with the Android NDK, has neither<tr1/tuple> or<tuple>.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_TR1_TUPLE
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|// The user didn't tell us not to do it, so we assume it's OK.
 end_comment
@@ -2117,6 +2966,11 @@ directive|define
 name|GTEST_HAS_TR1_TUPLE
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2150,27 +3004,39 @@ comment|// We use our own TR1 tuple if we aren't sure the user has an
 end_comment
 
 begin_comment
-comment|// implementation of it already.  At this time, GCC 4.0.0+ and MSVC
+comment|// implementation of it already.  At this time, libstdc++ 4.0.0+ and
 end_comment
 
 begin_comment
-comment|// 2010 are the only mainstream compilers that come with a TR1 tuple
+comment|// MSVC 2010 are the only mainstream standard libraries that come
 end_comment
 
 begin_comment
-comment|// implementation.  NVIDIA's CUDA NVCC compiler pretends to be GCC by
+comment|// with a TR1 tuple implementation.  NVIDIA's CUDA NVCC compiler
 end_comment
 
 begin_comment
-comment|// defining __GNUC__ and friends, but cannot compile GCC's tuple
+comment|// pretends to be GCC by defining __GNUC__ and friends, but cannot
 end_comment
 
 begin_comment
-comment|// implementation.  MSVC 2008 (9.0) provides TR1 tuple in a 323 MB
+comment|// compile GCC's tuple implementation.  MSVC 2008 (9.0) provides TR1
 end_comment
 
 begin_comment
-comment|// Feature Pack download, which we cannot assume the user has.
+comment|// tuple in a 323 MB Feature Pack download, which we cannot assume the
+end_comment
+
+begin_comment
+comment|// user has.  QNX's QCC compiler is a modified GCC but it doesn't
+end_comment
+
+begin_comment
+comment|// support TR1 tuple.  libc++ only provides std::tuple, in C++11 mode,
+end_comment
+
+begin_comment
+comment|// and it can be used with some compilers that define __GNUC__.
 end_comment
 
 begin_if
@@ -2183,30 +3049,93 @@ name|__GNUC__
 argument_list|)
 operator|&&
 operator|!
-operator|(
 name|defined
 argument_list|(
 name|__CUDACC__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__clang__
-argument_list|)
-operator|)
-expr|\
 operator|&&
 operator|(
 name|GTEST_GCC_VER_
 operator|>=
 literal|40000
 operator|)
-operator|)
 expr|\
+operator|&&
+operator|!
+name|GTEST_OS_QNX
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LIBCPP_VERSION
+argument_list|)
+operator|)
 operator|||
 name|_MSC_VER
 operator|>=
 literal|1600
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_ENV_HAS_TR1_TUPLE_
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// C++11 specifies that<tuple> provides std::tuple. Use that if gtest is used
+end_comment
+
+begin_comment
+comment|// in C++11 mode and libstdc++ isn't very old (binaries targeting OS X 10.6
+end_comment
+
+begin_comment
+comment|// can build with clang but need to use gcc4.2's libstdc++).
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_LANG_CXX11
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__GLIBCXX__
+argument_list|)
+operator|||
+name|__GLIBCXX__
+operator|>
+literal|20110325
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_ENV_HAS_STD_TUPLE_
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|GTEST_ENV_HAS_TR1_TUPLE_
+operator|||
+name|GTEST_ENV_HAS_STD_TUPLE_
 end_if
 
 begin_define
@@ -2251,7 +3180,47 @@ comment|// gtest-port.h's responsibility to #include the header implementing
 end_comment
 
 begin_comment
-comment|// tr1/tuple.
+comment|// tuple.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_STD_TUPLE_
+end_if
+
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
+begin_comment
+comment|// IWYU pragma: export
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_TUPLE_NAMESPACE_
+value|::std
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_HAS_STD_TUPLE_
+end_comment
+
+begin_comment
+comment|// We include tr1::tuple even if std::tuple is available to define printers for
+end_comment
+
+begin_comment
+comment|// them.
 end_comment
 
 begin_if
@@ -2259,6 +3228,28 @@ if|#
 directive|if
 name|GTEST_HAS_TR1_TUPLE
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GTEST_TUPLE_NAMESPACE_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GTEST_TUPLE_NAMESPACE_
+value|::std::tr1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_TUPLE_NAMESPACE_
+end_comment
 
 begin_if
 if|#
@@ -2271,6 +3262,79 @@ include|#
 directive|include
 file|"gtest/internal/gtest-tuple.h"
 end_include
+
+begin_comment
+comment|// IWYU pragma: export  // NOLINT
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|GTEST_ENV_HAS_STD_TUPLE_
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<tuple>
+end_include
+
+begin_comment
+comment|// C++11 puts its tuple into the ::std namespace rather than
+end_comment
+
+begin_comment
+comment|// ::std::tr1.  gtest expects tuple to live in ::std::tr1, so put it there.
+end_comment
+
+begin_comment
+comment|// This causes undefined behavior, but supported compilers react in
+end_comment
+
+begin_comment
+comment|// the way we intend.
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|std
+block|{
+name|namespace
+name|tr1
+block|{
+name|using
+operator|::
+name|std
+operator|::
+name|get
+expr_stmt|;
+name|using
+operator|::
+name|std
+operator|::
+name|make_tuple
+expr_stmt|;
+name|using
+operator|::
+name|std
+operator|::
+name|tuple
+expr_stmt|;
+name|using
+operator|::
+name|std
+operator|::
+name|tuple_element
+expr_stmt|;
+name|using
+operator|::
+name|std
+operator|::
+name|tuple_size
+expr_stmt|;
+block|}
+block|}
+end_decl_stmt
 
 begin_elif
 elif|#
@@ -2338,6 +3402,10 @@ include|#
 directive|include
 file|<tuple>
 end_include
+
+begin_comment
+comment|// IWYU pragma: export  // NOLINT
+end_comment
 
 begin_elif
 elif|#
@@ -2417,7 +3485,7 @@ comment|// Allows the user to #include
 end_comment
 
 begin_comment
-comment|//<tr1/functional> if they choose to.
+comment|//<tr1/functional> if he chooses to.
 end_comment
 
 begin_else
@@ -2464,7 +3532,7 @@ file|<tuple>
 end_include
 
 begin_comment
-comment|// NOLINT
+comment|// IWYU pragma: export  // NOLINT
 end_comment
 
 begin_endif
@@ -2523,12 +3591,69 @@ name|__ia64__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|GTEST_OS_LINUX_ANDROID
+end_if
+
+begin_comment
+comment|// On Android, clone() is only available on ARM starting with Gingerbread.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|&&
+name|__ANDROID_API__
+operator|>=
+literal|9
+end_if
+
 begin_define
 define|#
 directive|define
 name|GTEST_HAS_CLONE
 value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_CLONE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_CLONE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -2588,6 +3713,11 @@ directive|if
 name|GTEST_OS_WINDOWS_MOBILE
 operator|||
 name|GTEST_OS_SYMBIAN
+operator|||
+expr|\
+name|GTEST_OS_WINDOWS_PHONE
+operator|||
+name|GTEST_OS_WINDOWS_RT
 end_if
 
 begin_define
@@ -2649,11 +3779,17 @@ directive|if
 operator|(
 name|GTEST_OS_LINUX
 operator|||
-name|GTEST_OS_MAC
-operator|||
 name|GTEST_OS_CYGWIN
 operator|||
 name|GTEST_OS_SOLARIS
+operator|||
+expr|\
+operator|(
+name|GTEST_OS_MAC
+operator|&&
+operator|!
+name|GTEST_OS_IOS
+operator|)
 operator|||
 expr|\
 operator|(
@@ -2669,8 +3805,12 @@ name|GTEST_OS_WINDOWS_MINGW
 operator|||
 name|GTEST_OS_AIX
 operator|||
-expr|\
 name|GTEST_OS_HPUX
+operator|||
+expr|\
+name|GTEST_OS_OPENBSD
+operator|||
+name|GTEST_OS_QNX
 operator|||
 name|GTEST_OS_FREEBSD
 operator|)
@@ -2682,16 +3822,6 @@ directive|define
 name|GTEST_HAS_DEATH_TEST
 value|1
 end_define
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_comment
-comment|// NOLINT
-end_comment
 
 begin_endif
 endif|#
@@ -2990,10 +4120,46 @@ name|GTEST_ATTRIBUTE_UNUSED_
 value|__attribute__ ((unused))
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_elif
+
+begin_if
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
+name|unused
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_UNUSED_
+value|__attribute__ ((unused))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GTEST_ATTRIBUTE_UNUSED_
+end_ifndef
 
 begin_define
 define|#
@@ -3113,6 +4279,56 @@ comment|// __GNUC__&& (GTEST_GCC_VER_>= 30400)&& !COMPILER_ICC
 end_comment
 
 begin_comment
+comment|// MS C++ compiler emits warning when a conditional expression is compile time
+end_comment
+
+begin_comment
+comment|// constant. In some contexts this warning is false positive and needs to be
+end_comment
+
+begin_comment
+comment|// suppressed. Use the following two macros in such cases:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// GTEST_INTENTIONAL_CONST_COND_PUSH_()
+end_comment
+
+begin_comment
+comment|// while (true) {
+end_comment
+
+begin_comment
+comment|// GTEST_INTENTIONAL_CONST_COND_POP_()
+end_comment
+
+begin_comment
+comment|// }
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_INTENTIONAL_CONST_COND_PUSH_
+parameter_list|()
+define|\
+value|GTEST_DISABLE_MSC_WARNINGS_PUSH_(4127)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTEST_INTENTIONAL_CONST_COND_POP_
+parameter_list|()
+define|\
+value|GTEST_DISABLE_MSC_WARNINGS_POP_()
+end_define
+
+begin_comment
 comment|// Determine whether the compiler supports Microsoft's Structured Exception
 end_comment
 
@@ -3189,6 +4405,14 @@ begin_comment
 comment|// GTEST_HAS_SEH
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GTEST_IS_THREADSAFE
+define|\
+value|(GTEST_HAS_MUTEX_AND_THREAD_LOCAL_ \      || (GTEST_OS_WINDOWS&& !GTEST_OS_WINDOWS_PHONE&& !GTEST_OS_WINDOWS_RT) \      || GTEST_HAS_PTHREAD)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3225,6 +4449,26 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_elif
+elif|#
+directive|elif
+name|__GNUC__
+operator|>=
+literal|4
+operator|||
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GTEST_API_
+value|__attribute__((visibility ("default")))
+end_define
 
 begin_endif
 endif|#
@@ -3285,6 +4529,308 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// _LIBCPP_VERSION is defined by the libc++ library from the LLVM project.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__has_include
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|__has_include
+argument_list|(
+operator|<
+name|cxxabi
+operator|.
+name|h
+operator|>
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_CXXABI_H_
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_CXXABI_H_
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GLIBCXX__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_LIBCPP_VERSION
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_CXXABI_H_
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_CXXABI_H_
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// A function level attribute to disable checking for use of uninitialized
+end_comment
+
+begin_comment
+comment|// memory when built with MemorySanitizer.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|memory_sanitizer
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_NO_SANITIZE_MEMORY_
+define|\
+value|__attribute__((no_sanitize_memory))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_NO_SANITIZE_MEMORY_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// __has_feature(memory_sanitizer)
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_NO_SANITIZE_MEMORY_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// __clang__
+end_comment
+
+begin_comment
+comment|// A function level attribute to disable AddressSanitizer instrumentation.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|address_sanitizer
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_NO_SANITIZE_ADDRESS_
+define|\
+value|__attribute__((no_sanitize_address))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_NO_SANITIZE_ADDRESS_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// __has_feature(address_sanitizer)
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_NO_SANITIZE_ADDRESS_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// __clang__
+end_comment
+
+begin_comment
+comment|// A function level attribute to disable ThreadSanitizer instrumentation.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|thread_sanitizer
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_NO_SANITIZE_THREAD_
+define|\
+value|__attribute__((no_sanitize_thread))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_NO_SANITIZE_THREAD_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// __has_feature(thread_sanitizer)
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_ATTRIBUTE_NO_SANITIZE_THREAD_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// __clang__
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|testing
@@ -3292,18 +4838,58 @@ block|{
 name|class
 name|Message
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|GTEST_TUPLE_NAMESPACE_
+argument_list|)
+comment|// Import tuple and friends into the ::testing namespace.
+comment|// It is part of our interface, having them in ::testing allows us to change
+comment|// their types as needed.
+name|using
+name|GTEST_TUPLE_NAMESPACE_
+operator|::
+name|get
+expr_stmt|;
+name|using
+name|GTEST_TUPLE_NAMESPACE_
+operator|::
+name|make_tuple
+expr_stmt|;
+name|using
+name|GTEST_TUPLE_NAMESPACE_
+operator|::
+name|tuple
+expr_stmt|;
+name|using
+name|GTEST_TUPLE_NAMESPACE_
+operator|::
+name|tuple_size
+expr_stmt|;
+name|using
+name|GTEST_TUPLE_NAMESPACE_
+operator|::
+name|tuple_element
+expr_stmt|;
+endif|#
+directive|endif
+comment|// defined(GTEST_TUPLE_NAMESPACE_)
 name|namespace
 name|internal
 block|{
+comment|// A secret type that Google Test users don't know about.  It has no
+comment|// definition on purpose.  Therefore it's impossible to create a
+comment|// Secret object, which is what we want.
 name|class
-name|String
+name|Secret
 decl_stmt|;
 comment|// The GTEST_COMPILE_ASSERT_ macro can be used to verify that a compile time
 comment|// expression is true. For example, you could use it to verify the
 comment|// size of a static array:
 comment|//
-comment|//   GTEST_COMPILE_ASSERT_(ARRAYSIZE(content_type_names) == CONTENT_NUM_TYPES,
-comment|//                         content_type_names_incorrect_size);
+comment|//   GTEST_COMPILE_ASSERT_(GTEST_ARRAY_SIZE_(names) == NUM_NAMES,
+comment|//                         names_incorrect_size);
 comment|//
 comment|// or to make sure a struct is smaller than a certain size:
 comment|//
@@ -3312,6 +4898,21 @@ comment|//
 comment|// The second argument to the macro is the name of the variable. If
 comment|// the expression is false, most compilers will issue a warning/error
 comment|// containing the name of the variable.
+if|#
+directive|if
+name|GTEST_LANG_CXX11
+define|#
+directive|define
+name|GTEST_COMPILE_ASSERT_
+parameter_list|(
+name|expr
+parameter_list|,
+name|msg
+parameter_list|)
+value|static_assert(expr, #msg)
+else|#
+directive|else
+comment|// !GTEST_LANG_CXX11
 name|template
 operator|<
 name|bool
@@ -3329,8 +4930,13 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|typedef ::testing::internal::CompileAssert<(bool(expr))> \       msg[bool(expr) ? 1 : -1]
+value|typedef ::testing::internal::CompileAssert<(static_cast<bool>(expr))> \       msg[static_cast<bool>(expr) ? 1 : -1] GTEST_ATTRIBUTE_UNUSED_
+endif|#
+directive|endif
+comment|// !GTEST_LANG_CXX11
 comment|// Implementation details of GTEST_COMPILE_ASSERT_:
+comment|//
+comment|// (In C++11, we simply use static_assert instead of the following)
 comment|//
 comment|// - GTEST_COMPILE_ASSERT_ works by defining an array type that has -1
 comment|//   elements (and thus is invalid) when the expression is false.
@@ -3396,8 +5002,22 @@ name|T
 operator|,
 name|T
 operator|>
-block|{}
+block|{   enum
+block|{
+name|value
+operator|=
+name|true
+block|}
+block|; }
 expr_stmt|;
+comment|// Evaluates to the number of elements in 'array'.
+define|#
+directive|define
+name|GTEST_ARRAY_SIZE_
+parameter_list|(
+name|array
+parameter_list|)
+value|(sizeof(array) / sizeof(array[0]))
 if|#
 directive|if
 name|GTEST_HAS_GLOBAL_STRING
@@ -3583,6 +5203,36 @@ operator|=
 name|p
 expr_stmt|;
 block|}
+block|}
+name|friend
+name|void
+name|swap
+parameter_list|(
+name|scoped_ptr
+modifier|&
+name|a
+parameter_list|,
+name|scoped_ptr
+modifier|&
+name|b
+parameter_list|)
+block|{
+name|using
+name|std
+operator|::
+name|swap
+expr_stmt|;
+name|swap
+argument_list|(
+name|a
+operator|.
+name|ptr_
+argument_list|,
+name|b
+operator|.
+name|ptr_
+argument_list|)
+expr_stmt|;
 block|}
 name|private
 label|:
@@ -3872,10 +5522,9 @@ modifier|*
 name|regex
 parameter_list|)
 function_decl|;
-comment|// We use a const char* instead of a string, as Google Test may be used
-comment|// where string is not available.  We also do not use Google Test's own
-comment|// String type here, in order to simplify dependencies between the
-comment|// files.
+comment|// We use a const char* instead of an std::string, as Google Test used to be
+comment|// used where std::string is not available.  TODO(wan@google.com): change to
+comment|// std::string.
 specifier|const
 name|char
 modifier|*
@@ -4069,6 +5718,16 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GTEST_LOG_
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -4101,6 +5760,25 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(GTEST_LOG_)
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GTEST_CHECK_
+argument_list|)
+end_if
 
 begin_comment
 comment|// INTERNAL IMPLEMENTATION - DO NOT USE.
@@ -4169,6 +5847,15 @@ define|\
 value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \     if (::testing::internal::IsTrue(condition)) \       ; \     else \       GTEST_LOG_(FATAL)<< "Condition " #condition " failed. "
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(GTEST_CHECK_)
+end_comment
+
 begin_comment
 comment|// An all-mode assert to verify that the given POSIX-style function
 end_comment
@@ -4199,6 +5886,58 @@ parameter_list|)
 define|\
 value|if (const int gtest_error = (posix_call)) \     GTEST_LOG_(FATAL)<< #posix_call<< "failed with error " \<< gtest_error
 end_define
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_STD_MOVE_
+end_if
+
+begin_expr_stmt
+name|using
+name|std
+operator|::
+name|move
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// GTEST_HAS_STD_MOVE_
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|const
+name|T
+operator|&
+name|move
+argument_list|(
+argument|const T& t
+argument_list|)
+block|{
+return|return
+name|t
+return|;
+block|}
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_HAS_STD_MOVE_
+end_comment
 
 begin_comment
 comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
@@ -4405,11 +6144,15 @@ comment|// Ensures that To is a sub-type of From *.  This test is here only
 comment|// for compile-time type checking, and has no overhead in an
 comment|// optimized build at run-time, as it will be optimized away
 comment|// completely.
+name|GTEST_INTENTIONAL_CONST_COND_PUSH_
+argument_list|()
 if|if
 condition|(
 name|false
 condition|)
 block|{
+name|GTEST_INTENTIONAL_CONST_COND_POP_
+argument_list|()
 specifier|const
 name|To
 name|to
@@ -4525,6 +6268,31 @@ name|Derived
 argument_list|)
 argument_list|)
 block|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|GTEST_HAS_DOWNCAST_
+return|return
+operator|::
+name|down_cast
+operator|<
+name|Derived
+operator|*
+operator|>
+operator|(
+name|base
+operator|)
+return|;
+end_expr_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|GTEST_HAS_RTTI
+end_elif
+
+begin_return
 return|return
 name|dynamic_cast
 operator|<
@@ -4535,7 +6303,7 @@ operator|(
 name|base
 operator|)
 return|;
-end_expr_stmt
+end_return
 
 begin_comment
 comment|// NOLINT
@@ -4607,13 +6375,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_expr_stmt
 name|GTEST_API_
-name|String
+name|std
+operator|::
+name|string
 name|GetCapturedStdout
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|GTEST_API_
@@ -4623,13 +6393,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_expr_stmt
 name|GTEST_API_
-name|String
+name|std
+operator|::
+name|string
 name|GetCapturedStderr
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -4640,23 +6412,83 @@ begin_comment
 comment|// GTEST_HAS_STREAM_REDIRECTION
 end_comment
 
+begin_comment
+comment|// Returns a path to temporary directory.
+end_comment
+
+begin_expr_stmt
+name|GTEST_API_
+name|std
+operator|::
+name|string
+name|TempDir
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Returns the size (in bytes) of a file.
+end_comment
+
+begin_function_decl
+name|GTEST_API_
+name|size_t
+name|GetFileSize
+parameter_list|(
+name|FILE
+modifier|*
+name|file
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// Reads the entire content of a file as a string.
+end_comment
+
+begin_expr_stmt
+name|GTEST_API_
+name|std
+operator|::
+name|string
+name|ReadEntireFile
+argument_list|(
+name|FILE
+operator|*
+name|file
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// All command line arguments.
+end_comment
+
+begin_expr_stmt
+name|GTEST_API_
+specifier|const
+operator|::
+name|std
+operator|::
+name|vector
+operator|<
+name|testing
+operator|::
+name|internal
+operator|::
+name|string
+operator|>
+operator|&
+name|GetArgvs
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|#
 directive|if
 name|GTEST_HAS_DEATH_TEST
 end_if
-
-begin_comment
-comment|// A copy of all command line arguments.  Set by InitGoogleTest().
-end_comment
-
-begin_extern
-extern|extern ::std::vector<String> g_argvs;
-end_extern
-
-begin_comment
-comment|// GTEST_HAS_DEATH_TEST implies we have ::std::string.
-end_comment
 
 begin_expr_stmt
 specifier|const
@@ -4665,13 +6497,39 @@ name|std
 operator|::
 name|vector
 operator|<
-name|String
+name|testing
+operator|::
+name|internal
+operator|::
+name|string
 operator|>
 operator|&
-name|GetArgvs
+name|GetInjectableArgvs
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|SetInjectableArgvs
+argument_list|(
+specifier|const
+operator|::
+name|std
+operator|::
+name|vector
+operator|<
+name|testing
+operator|::
+name|internal
+operator|::
+name|string
+operator|>
+operator|*
+name|new_argvs
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -4689,19 +6547,25 @@ end_comment
 begin_if
 if|#
 directive|if
+name|GTEST_IS_THREADSAFE
+end_if
+
+begin_if
+if|#
+directive|if
 name|GTEST_HAS_PTHREAD
 end_if
 
 begin_comment
-comment|// Sleeps for (roughly) n milli-seconds.  This function is only for
+comment|// Sleeps for (roughly) n milliseconds.  This function is only for testing
 end_comment
 
 begin_comment
-comment|// testing Google Test's own constructs.  Don't use it in user tests,
+comment|// Google Test's own constructs.  Don't use it in user tests, either
 end_comment
 
 begin_comment
-comment|// either directly or indirectly.
+comment|// directly or indirectly.
 end_comment
 
 begin_function
@@ -4741,6 +6605,35 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_HAS_PTHREAD
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_NOTIFICATION_
+end_if
+
+begin_comment
+comment|// Notification has already been imported into the namespace.
+end_comment
+
+begin_comment
+comment|// Nothing to do here.
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|GTEST_HAS_PTHREAD
+end_elif
+
 begin_comment
 comment|// Allows a controller thread to pause execution of newly created
 end_comment
@@ -4778,29 +6671,85 @@ name|notified_
 argument_list|(
 argument|false
 argument_list|)
-block|{}
+block|{
+name|GTEST_CHECK_POSIX_SUCCESS_
+argument_list|(
+name|pthread_mutex_init
+argument_list|(
+operator|&
+name|mutex_
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+block|;   }
+operator|~
+name|Notification
+argument_list|()
+block|{
+name|pthread_mutex_destroy
+argument_list|(
+operator|&
+name|mutex_
+argument_list|)
+block|;   }
 comment|// Notifies all threads created with this notification to start. Must
 comment|// be called from the controller thread.
 name|void
 name|Notify
 argument_list|()
 block|{
+name|pthread_mutex_lock
+argument_list|(
+operator|&
+name|mutex_
+argument_list|)
+block|;
 name|notified_
 operator|=
 name|true
-block|; }
+block|;
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|mutex_
+argument_list|)
+block|;   }
 comment|// Blocks until the controller thread notifies. Must be called from a test
 comment|// thread.
 name|void
 name|WaitForNotification
 argument_list|()
 block|{
-while|while
-condition|(
-operator|!
-name|notified_
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
+name|pthread_mutex_lock
+argument_list|(
+operator|&
+name|mutex_
+argument_list|)
+expr_stmt|;
+specifier|const
+name|bool
+name|notified
+init|=
+name|notified_
+decl_stmt|;
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|mutex_
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|notified
+condition|)
+break|break;
 name|SleepMilliseconds
 argument_list|(
 literal|10
@@ -4810,10 +6759,12 @@ block|}
 block|}
 name|private
 operator|:
-specifier|volatile
+name|pthread_mutex_t
+name|mutex_
+expr_stmt|;
 name|bool
 name|notified_
-expr_stmt|;
+decl_stmt|;
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
 argument_list|(
 name|Notification
@@ -4825,6 +6776,195 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|GTEST_OS_WINDOWS
+operator|&&
+operator|!
+name|GTEST_OS_WINDOWS_PHONE
+operator|&&
+operator|!
+name|GTEST_OS_WINDOWS_RT
+end_elif
+
+begin_function_decl
+name|GTEST_API_
+name|void
+name|SleepMilliseconds
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// Provides leak-safe Windows kernel handle ownership.
+end_comment
+
+begin_comment
+comment|// Used in death tests and in threading support.
+end_comment
+
+begin_decl_stmt
+name|class
+name|GTEST_API_
+name|AutoHandle
+block|{
+name|public
+label|:
+comment|// Assume that Win32 HANDLE type is equivalent to void*. Doing so allows us to
+comment|// avoid including<windows.h> in this header file. Including<windows.h> is
+comment|// undesirable because it defines a lot of symbols and macros that tend to
+comment|// conflict with client code. This assumption is verified by
+comment|// WindowsTypesTest.HANDLEIsVoidStar.
+typedef|typedef
+name|void
+modifier|*
+name|Handle
+typedef|;
+name|AutoHandle
+argument_list|()
+expr_stmt|;
+name|explicit
+name|AutoHandle
+parameter_list|(
+name|Handle
+name|handle
+parameter_list|)
+function_decl|;
+operator|~
+name|AutoHandle
+argument_list|()
+expr_stmt|;
+name|Handle
+name|Get
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|Reset
+parameter_list|()
+function_decl|;
+name|void
+name|Reset
+parameter_list|(
+name|Handle
+name|handle
+parameter_list|)
+function_decl|;
+name|private
+label|:
+comment|// Returns true iff the handle is a valid handle object that can be closed.
+name|bool
+name|IsCloseable
+parameter_list|()
+function_decl|const;
+name|Handle
+name|handle_
+decl_stmt|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|AutoHandle
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Allows a controller thread to pause execution of newly created
+end_comment
+
+begin_comment
+comment|// threads until notified.  Instances of this class must be created
+end_comment
+
+begin_comment
+comment|// and destroyed in the controller thread.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This class is only for testing Google Test's own constructs. Do not
+end_comment
+
+begin_comment
+comment|// use it in user tests, either directly or indirectly.
+end_comment
+
+begin_decl_stmt
+name|class
+name|GTEST_API_
+name|Notification
+block|{
+name|public
+label|:
+name|Notification
+argument_list|()
+expr_stmt|;
+name|void
+name|Notify
+parameter_list|()
+function_decl|;
+name|void
+name|WaitForNotification
+parameter_list|()
+function_decl|;
+name|private
+label|:
+name|AutoHandle
+name|event_
+decl_stmt|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|Notification
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_HAS_NOTIFICATION_
+end_comment
+
+begin_comment
+comment|// On MinGW, we can have both GTEST_OS_WINDOWS and GTEST_HAS_PTHREAD
+end_comment
+
+begin_comment
+comment|// defined, but we don't want to use MinGW's pthreads implementation, which
+end_comment
+
+begin_comment
+comment|// has conformance problems with some versions of the POSIX standard.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_PTHREAD
+operator|&&
+operator|!
+name|GTEST_OS_WINDOWS_MINGW
+end_if
 
 begin_comment
 comment|// As a C-function, ThreadFuncWithCLinkage cannot be templated itself.
@@ -4856,14 +6996,14 @@ name|virtual
 operator|~
 name|ThreadWithParamBase
 argument_list|()
-expr_stmt|;
+block|{}
 name|virtual
 name|void
 name|Run
-parameter_list|()
-init|=
+argument_list|()
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -4990,17 +7130,14 @@ name|public
 operator|:
 typedef|typedef
 name|void
-function_decl|(
-modifier|*
 name|UserThreadFunc
-function_decl|)
 parameter_list|(
 name|T
 parameter_list|)
 function_decl|;
 name|ThreadWithParam
 argument_list|(
-argument|UserThreadFunc func
+argument|UserThreadFunc* func
 argument_list|,
 argument|T param
 argument_list|,
@@ -5055,7 +7192,6 @@ block|;   }
 operator|~
 name|ThreadWithParam
 argument_list|()
-name|override
 block|{
 name|Join
 argument_list|()
@@ -5087,17 +7223,11 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_macro
-unit|}    void
+begin_function
+unit|}    virtual
+name|void
 name|Run
-argument_list|()
-end_macro
-
-begin_macro
-name|override
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -5116,7 +7246,7 @@ name|param_
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_label
 name|private
@@ -5124,8 +7254,9 @@ label|:
 end_label
 
 begin_decl_stmt
-specifier|const
 name|UserThreadFunc
+modifier|*
+specifier|const
 name|func_
 decl_stmt|;
 end_decl_stmt
@@ -5189,13 +7320,52 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
+begin_endif
 unit|};
-comment|// MutexBase and Mutex implement mutex on pthreads-based platforms. They
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !GTEST_OS_WINDOWS&& GTEST_HAS_PTHREAD ||
 end_comment
 
 begin_comment
-comment|// are used in conjunction with class MutexLock:
+comment|// GTEST_HAS_MUTEX_AND_THREAD_LOCAL_
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_MUTEX_AND_THREAD_LOCAL_
+end_if
+
+begin_comment
+comment|// Mutex and ThreadLocal have already been imported into the namespace.
+end_comment
+
+begin_comment
+comment|// Nothing to do here.
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|GTEST_OS_WINDOWS
+operator|&&
+operator|!
+name|GTEST_OS_WINDOWS_PHONE
+operator|&&
+operator|!
+name|GTEST_OS_WINDOWS_RT
+end_elif
+
+begin_comment
+comment|// Mutex implements mutex on Windows platforms.  It is used in conjunction
+end_comment
+
+begin_comment
+comment|// with class MutexLock:
 end_comment
 
 begin_comment
@@ -5211,47 +7381,27 @@ comment|//   ...
 end_comment
 
 begin_comment
-comment|//   MutexLock lock(&mutex);  // Acquires the mutex and releases it at the end
+comment|//   MutexLock lock(&mutex);  // Acquires the mutex and releases it at the
 end_comment
 
 begin_comment
-comment|//                            // of the current scope.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// MutexBase implements behavior for both statically and dynamically
-end_comment
-
-begin_comment
-comment|// allocated mutexes.  Do not use MutexBase directly.  Instead, write
-end_comment
-
-begin_comment
-comment|// the following to define a static mutex:
+comment|//                            // end of the current scope.
 end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// A static Mutex *must* be defined or declared using one of the following
+end_comment
+
+begin_comment
+comment|// macros:
 end_comment
 
 begin_comment
 comment|//   GTEST_DEFINE_STATIC_MUTEX_(g_some_mutex);
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// You can forward declare a static mutex like this:
-end_comment
-
-begin_comment
-comment|//
 end_comment
 
 begin_comment
@@ -5263,7 +7413,987 @@ comment|//
 end_comment
 
 begin_comment
-comment|// To create a dynamic mutex, just define an object of type Mutex.
+comment|// (A non-static Mutex is defined/declared in the usual way).
+end_comment
+
+begin_decl_stmt
+name|class
+name|GTEST_API_
+name|Mutex
+block|{
+name|public
+label|:
+enum|enum
+name|MutexType
+block|{
+name|kStatic
+init|=
+literal|0
+block|,
+name|kDynamic
+init|=
+literal|1
+block|}
+enum|;
+comment|// We rely on kStaticMutex being 0 as it is to what the linker initializes
+comment|// type_ in static mutexes.  critical_section_ will be initialized lazily
+comment|// in ThreadSafeLazyInit().
+enum|enum
+name|StaticConstructorSelector
+block|{
+name|kStaticMutex
+init|=
+literal|0
+block|}
+enum|;
+comment|// This constructor intentionally does nothing.  It relies on type_ being
+comment|// statically initialized to 0 (effectively setting it to kStatic) and on
+comment|// ThreadSafeLazyInit() to lazily initialize the rest of the members.
+name|explicit
+name|Mutex
+parameter_list|(
+name|StaticConstructorSelector
+comment|/*dummy*/
+parameter_list|)
+block|{}
+name|Mutex
+argument_list|()
+expr_stmt|;
+operator|~
+name|Mutex
+argument_list|()
+expr_stmt|;
+name|void
+name|Lock
+parameter_list|()
+function_decl|;
+name|void
+name|Unlock
+parameter_list|()
+function_decl|;
+comment|// Does nothing if the current thread holds the mutex. Otherwise, crashes
+comment|// with high probability.
+name|void
+name|AssertHeld
+parameter_list|()
+function_decl|;
+name|private
+label|:
+comment|// Initializes owner_thread_id_ and critical_section_ in static mutexes.
+name|void
+name|ThreadSafeLazyInit
+parameter_list|()
+function_decl|;
+comment|// Per http://blogs.msdn.com/b/oldnewthing/archive/2004/02/23/78395.aspx,
+comment|// we assume that 0 is an invalid value for thread IDs.
+name|unsigned
+name|int
+name|owner_thread_id_
+decl_stmt|;
+comment|// For static mutexes, we rely on these members being initialized to zeros
+comment|// by the linker.
+name|MutexType
+name|type_
+decl_stmt|;
+name|long
+name|critical_section_init_phase_
+decl_stmt|;
+comment|// NOLINT
+name|_RTL_CRITICAL_SECTION
+modifier|*
+name|critical_section_
+decl_stmt|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|Mutex
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|GTEST_DECLARE_STATIC_MUTEX_
+parameter_list|(
+name|mutex
+parameter_list|)
+define|\
+value|extern ::testing::internal::Mutex mutex
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTEST_DEFINE_STATIC_MUTEX_
+parameter_list|(
+name|mutex
+parameter_list|)
+define|\
+value|::testing::internal::Mutex mutex(::testing::internal::Mutex::kStaticMutex)
+end_define
+
+begin_comment
+comment|// We cannot name this class MutexLock because the ctor declaration would
+end_comment
+
+begin_comment
+comment|// conflict with a macro named MutexLock, which is defined on some
+end_comment
+
+begin_comment
+comment|// platforms. That macro is used as a defensive measure to prevent against
+end_comment
+
+begin_comment
+comment|// inadvertent misuses of MutexLock like "MutexLock(&mu)" rather than
+end_comment
+
+begin_comment
+comment|// "MutexLock l(&mu)".  Hence the typedef trick below.
+end_comment
+
+begin_decl_stmt
+name|class
+name|GTestMutexLock
+block|{
+name|public
+label|:
+name|explicit
+name|GTestMutexLock
+argument_list|(
+name|Mutex
+operator|*
+name|mutex
+argument_list|)
+operator|:
+name|mutex_
+argument_list|(
+argument|mutex
+argument_list|)
+block|{
+name|mutex_
+operator|->
+name|Lock
+argument_list|()
+block|; }
+operator|~
+name|GTestMutexLock
+argument_list|()
+block|{
+name|mutex_
+operator|->
+name|Unlock
+argument_list|()
+block|; }
+name|private
+operator|:
+name|Mutex
+operator|*
+specifier|const
+name|mutex_
+expr_stmt|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|GTestMutexLock
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_typedef
+typedef|typedef
+name|GTestMutexLock
+name|MutexLock
+typedef|;
+end_typedef
+
+begin_comment
+comment|// Base class for ValueHolder<T>.  Allows a caller to hold and delete a value
+end_comment
+
+begin_comment
+comment|// without knowing its type.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ThreadLocalValueHolderBase
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|ThreadLocalValueHolderBase
+argument_list|()
+block|{}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Provides a way for a thread to send notifications to a ThreadLocal
+end_comment
+
+begin_comment
+comment|// regardless of its parameter type.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ThreadLocalBase
+block|{
+name|public
+label|:
+comment|// Creates a new ValueHolder<T> object holding a default value passed to
+comment|// this ThreadLocal<T>'s constructor and returns it.  It is the caller's
+comment|// responsibility not to call this when the ThreadLocal<T> instance already
+comment|// has a value on the current thread.
+name|virtual
+name|ThreadLocalValueHolderBase
+operator|*
+name|NewValueForCurrentThread
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|protected
+label|:
+name|ThreadLocalBase
+argument_list|()
+block|{}
+name|virtual
+operator|~
+name|ThreadLocalBase
+argument_list|()
+block|{}
+name|private
+operator|:
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|ThreadLocalBase
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Maps a thread to a set of ThreadLocals that have values instantiated on that
+end_comment
+
+begin_comment
+comment|// thread and notifies them when the thread exits.  A ThreadLocal instance is
+end_comment
+
+begin_comment
+comment|// expected to persist until all threads it has values on have terminated.
+end_comment
+
+begin_decl_stmt
+name|class
+name|GTEST_API_
+name|ThreadLocalRegistry
+block|{
+name|public
+label|:
+comment|// Registers thread_local_instance as having value on the current thread.
+comment|// Returns a value that can be used to identify the thread from other threads.
+specifier|static
+name|ThreadLocalValueHolderBase
+modifier|*
+name|GetValueOnCurrentThread
+parameter_list|(
+specifier|const
+name|ThreadLocalBase
+modifier|*
+name|thread_local_instance
+parameter_list|)
+function_decl|;
+comment|// Invoked when a ThreadLocal instance is destroyed.
+specifier|static
+name|void
+name|OnThreadLocalDestroyed
+parameter_list|(
+specifier|const
+name|ThreadLocalBase
+modifier|*
+name|thread_local_instance
+parameter_list|)
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|class
+name|GTEST_API_
+name|ThreadWithParamBase
+block|{
+name|public
+label|:
+name|void
+name|Join
+parameter_list|()
+function_decl|;
+name|protected
+label|:
+name|class
+name|Runnable
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|Runnable
+argument_list|()
+block|{}
+name|virtual
+name|void
+name|Run
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+block|}
+empty_stmt|;
+name|ThreadWithParamBase
+argument_list|(
+name|Runnable
+operator|*
+name|runnable
+argument_list|,
+name|Notification
+operator|*
+name|thread_can_start
+argument_list|)
+expr_stmt|;
+name|virtual
+operator|~
+name|ThreadWithParamBase
+argument_list|()
+expr_stmt|;
+name|private
+label|:
+name|AutoHandle
+name|thread_
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Helper class for testing Google Test's multi-threading constructs.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ThreadWithParam
+operator|:
+name|public
+name|ThreadWithParamBase
+block|{
+name|public
+operator|:
+typedef|typedef
+name|void
+name|UserThreadFunc
+parameter_list|(
+name|T
+parameter_list|)
+function_decl|;
+name|ThreadWithParam
+argument_list|(
+argument|UserThreadFunc* func
+argument_list|,
+argument|T param
+argument_list|,
+argument|Notification* thread_can_start
+argument_list|)
+operator|:
+name|ThreadWithParamBase
+argument_list|(
+argument|new RunnableImpl(func, param)
+argument_list|,
+argument|thread_can_start
+argument_list|)
+block|{   }
+name|virtual
+operator|~
+name|ThreadWithParam
+argument_list|()
+block|{}
+name|private
+operator|:
+name|class
+name|RunnableImpl
+operator|:
+name|public
+name|Runnable
+block|{
+name|public
+operator|:
+name|RunnableImpl
+argument_list|(
+argument|UserThreadFunc* func
+argument_list|,
+argument|T param
+argument_list|)
+operator|:
+name|func_
+argument_list|(
+name|func
+argument_list|)
+block|,
+name|param_
+argument_list|(
+argument|param
+argument_list|)
+block|{     }
+name|virtual
+operator|~
+name|RunnableImpl
+argument_list|()
+block|{}
+name|virtual
+name|void
+name|Run
+argument_list|()
+block|{
+name|func_
+argument_list|(
+name|param_
+argument_list|)
+block|;     }
+name|private
+operator|:
+name|UserThreadFunc
+operator|*
+specifier|const
+name|func_
+block|;
+specifier|const
+name|T
+name|param_
+block|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|RunnableImpl
+argument_list|)
+block|;   }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|ThreadWithParam
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|// Implements thread-local storage on Windows systems.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   // Thread 1
+end_comment
+
+begin_comment
+comment|//   ThreadLocal<int> tl(100);  // 100 is the default value for each thread.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   // Thread 2
+end_comment
+
+begin_comment
+comment|//   tl.set(150);  // Changes the value for thread 2 only.
+end_comment
+
+begin_comment
+comment|//   EXPECT_EQ(150, tl.get());
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   // Thread 1
+end_comment
+
+begin_comment
+comment|//   EXPECT_EQ(100, tl.get());  // In thread 1, tl has the original value.
+end_comment
+
+begin_comment
+comment|//   tl.set(200);
+end_comment
+
+begin_comment
+comment|//   EXPECT_EQ(200, tl.get());
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The template type argument T must have a public copy constructor.
+end_comment
+
+begin_comment
+comment|// In addition, the default ThreadLocal constructor requires T to have
+end_comment
+
+begin_comment
+comment|// a public default constructor.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The users of a TheadLocal instance have to make sure that all but one
+end_comment
+
+begin_comment
+comment|// threads (including the main one) using that instance have exited before
+end_comment
+
+begin_comment
+comment|// destroying it. Otherwise, the per-thread objects managed for them by the
+end_comment
+
+begin_comment
+comment|// ThreadLocal instance are not guaranteed to be destroyed on all platforms.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Google Test only uses global ThreadLocal objects.  That means they
+end_comment
+
+begin_comment
+comment|// will die after main() has returned.  Therefore, no per-thread
+end_comment
+
+begin_comment
+comment|// object managed by Google Test will be leaked as long as all threads
+end_comment
+
+begin_comment
+comment|// using Google Test have exited when main() returns.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ThreadLocal
+operator|:
+name|public
+name|ThreadLocalBase
+block|{
+name|public
+operator|:
+name|ThreadLocal
+argument_list|()
+operator|:
+name|default_factory_
+argument_list|(
+argument|new DefaultValueHolderFactory()
+argument_list|)
+block|{}
+name|explicit
+name|ThreadLocal
+argument_list|(
+specifier|const
+name|T
+operator|&
+name|value
+argument_list|)
+operator|:
+name|default_factory_
+argument_list|(
+argument|new InstanceValueHolderFactory(value)
+argument_list|)
+block|{}
+operator|~
+name|ThreadLocal
+argument_list|()
+block|{
+name|ThreadLocalRegistry
+operator|::
+name|OnThreadLocalDestroyed
+argument_list|(
+name|this
+argument_list|)
+block|; }
+name|T
+operator|*
+name|pointer
+argument_list|()
+block|{
+return|return
+name|GetOrCreateValue
+argument_list|()
+return|;
+block|}
+specifier|const
+name|T
+operator|*
+name|pointer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetOrCreateValue
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|T
+operator|&
+name|get
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|pointer
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|set
+parameter_list|(
+specifier|const
+name|T
+modifier|&
+name|value
+parameter_list|)
+block|{
+operator|*
+name|pointer
+argument_list|()
+operator|=
+name|value
+expr_stmt|;
+block|}
+end_function
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_comment
+comment|// Holds a value of T.  Can be deleted via its base class without the caller
+end_comment
+
+begin_comment
+comment|// knowing the type of T.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ValueHolder
+range|:
+name|public
+name|ThreadLocalValueHolderBase
+block|{
+name|public
+operator|:
+name|ValueHolder
+argument_list|()
+operator|:
+name|value_
+argument_list|()
+block|{}
+name|explicit
+name|ValueHolder
+argument_list|(
+specifier|const
+name|T
+operator|&
+name|value
+argument_list|)
+operator|:
+name|value_
+argument_list|(
+argument|value
+argument_list|)
+block|{}
+name|T
+operator|*
+name|pointer
+argument_list|()
+block|{
+return|return
+operator|&
+name|value_
+return|;
+block|}
+name|private
+operator|:
+name|T
+name|value_
+block|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|ValueHolder
+argument_list|)
+block|;   }
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|T
+operator|*
+name|GetOrCreateValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ValueHolder
+operator|*
+operator|>
+operator|(
+name|ThreadLocalRegistry
+operator|::
+name|GetValueOnCurrentThread
+argument_list|(
+name|this
+argument_list|)
+operator|)
+operator|->
+name|pointer
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|virtual
+name|ThreadLocalValueHolderBase
+operator|*
+name|NewValueForCurrentThread
+argument_list|()
+specifier|const
+block|{
+return|return
+name|default_factory_
+operator|->
+name|MakeNewHolder
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|class
+name|ValueHolderFactory
+block|{
+name|public
+label|:
+name|ValueHolderFactory
+argument_list|()
+block|{}
+name|virtual
+operator|~
+name|ValueHolderFactory
+argument_list|()
+block|{}
+name|virtual
+name|ValueHolder
+operator|*
+name|MakeNewHolder
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|private
+label|:
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|ValueHolderFactory
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|class
+name|DefaultValueHolderFactory
+range|:
+name|public
+name|ValueHolderFactory
+block|{
+name|public
+operator|:
+name|DefaultValueHolderFactory
+argument_list|()
+block|{}
+name|virtual
+name|ValueHolder
+operator|*
+name|MakeNewHolder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|new
+name|ValueHolder
+argument_list|()
+return|;
+block|}
+name|private
+operator|:
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|DefaultValueHolderFactory
+argument_list|)
+block|;   }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|class
+name|InstanceValueHolderFactory
+range|:
+name|public
+name|ValueHolderFactory
+block|{
+name|public
+operator|:
+name|explicit
+name|InstanceValueHolderFactory
+argument_list|(
+specifier|const
+name|T
+operator|&
+name|value
+argument_list|)
+operator|:
+name|value_
+argument_list|(
+argument|value
+argument_list|)
+block|{}
+name|virtual
+name|ValueHolder
+operator|*
+name|MakeNewHolder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|new
+name|ValueHolder
+argument_list|(
+name|value_
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+specifier|const
+name|T
+name|value_
+block|;
+comment|// The value for each thread.
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|InstanceValueHolderFactory
+argument_list|)
+block|;   }
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|scoped_ptr
+operator|<
+name|ValueHolderFactory
+operator|>
+name|default_factory_
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|ThreadLocal
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_elif
+unit|};
+elif|#
+directive|elif
+name|GTEST_HAS_PTHREAD
+end_elif
+
+begin_comment
+comment|// MutexBase and Mutex implement mutex on pthreads-based platforms.
 end_comment
 
 begin_decl_stmt
@@ -5291,18 +8421,23 @@ operator|=
 name|pthread_self
 argument_list|()
 expr_stmt|;
+name|has_owner_
+operator|=
+name|true
+expr_stmt|;
 block|}
 comment|// Releases this mutex.
 name|void
 name|Unlock
 parameter_list|()
 block|{
-comment|// We don't protect writing to owner_ here, as it's the caller's
-comment|// responsibility to ensure that the current thread holds the
+comment|// Since the lock is being released the owner_ field should no longer be
+comment|// considered valid. We don't protect writing to has_owner_ here, as it's
+comment|// the caller's responsibility to ensure that the current thread holds the
 comment|// mutex when this is called.
-name|owner_
+name|has_owner_
 operator|=
-literal|0
+name|false
 expr_stmt|;
 name|GTEST_CHECK_POSIX_SUCCESS_
 argument_list|(
@@ -5323,10 +8458,15 @@ specifier|const
 block|{
 name|GTEST_CHECK_
 argument_list|(
+name|has_owner_
+operator|&&
+name|pthread_equal
+argument_list|(
 name|owner_
-operator|==
+argument_list|,
 name|pthread_self
 argument_list|()
+argument_list|)
 argument_list|)
 operator|<<
 literal|"The current thread is not holding the mutex @"
@@ -5344,10 +8484,19 @@ name|pthread_mutex_t
 name|mutex_
 expr_stmt|;
 comment|// The underlying pthread mutex.
+comment|// has_owner_ indicates whether the owner_ field below contains a valid thread
+comment|// ID and is therefore safe to inspect (e.g., to use in pthread_equal()). All
+comment|// accesses to the owner_ field should be protected by a check of this field.
+comment|// An alternative might be to memset() owner_ to all zeros, but there's no
+comment|// guarantee that a zero'd pthread_t is necessarily invalid or even different
+comment|// from pthread_self().
+name|bool
+name|has_owner_
+decl_stmt|;
 name|pthread_t
 name|owner_
 decl_stmt|;
-comment|// The thread holding the mutex; 0 means no one holds it.
+comment|// The thread holding the mutex.
 block|}
 end_decl_stmt
 
@@ -5382,7 +8531,7 @@ parameter_list|(
 name|mutex
 parameter_list|)
 define|\
-value|::testing::internal::MutexBase mutex = { PTHREAD_MUTEX_INITIALIZER, 0 }
+value|::testing::internal::MutexBase mutex = { PTHREAD_MUTEX_INITIALIZER, false, pthread_t() }
 end_define
 
 begin_comment
@@ -5416,9 +8565,9 @@ name|NULL
 argument_list|)
 argument_list|)
 block|;
-name|owner_
+name|has_owner_
 operator|=
-literal|0
+name|false
 block|;   }
 operator|~
 name|Mutex
@@ -5444,7 +8593,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// We cannot name this class MutexLock as the ctor declaration would
+comment|// We cannot name this class MutexLock because the ctor declaration would
 end_comment
 
 begin_comment
@@ -5452,7 +8601,15 @@ comment|// conflict with a macro named MutexLock, which is defined on some
 end_comment
 
 begin_comment
-comment|// platforms.  Hence the typedef trick below.
+comment|// platforms. That macro is used as a defensive measure to prevent against
+end_comment
+
+begin_comment
+comment|// inadvertent misuses of MutexLock like "MutexLock(&mu)" rather than
+end_comment
+
+begin_comment
+comment|// "MutexLock l(&mu)".  Hence the typedef trick below.
 end_comment
 
 begin_decl_stmt
@@ -5544,7 +8701,7 @@ name|virtual
 operator|~
 name|ThreadLocalValueHolderBase
 argument_list|()
-expr_stmt|;
+block|{}
 block|}
 end_decl_stmt
 
@@ -5589,118 +8746,6 @@ begin_comment
 comment|// Implements thread-local storage on pthreads-based systems.
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//   // Thread 1
-end_comment
-
-begin_comment
-comment|//   ThreadLocal<int> tl(100);  // 100 is the default value for each thread.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//   // Thread 2
-end_comment
-
-begin_comment
-comment|//   tl.set(150);  // Changes the value for thread 2 only.
-end_comment
-
-begin_comment
-comment|//   EXPECT_EQ(150, tl.get());
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//   // Thread 1
-end_comment
-
-begin_comment
-comment|//   EXPECT_EQ(100, tl.get());  // In thread 1, tl has the original value.
-end_comment
-
-begin_comment
-comment|//   tl.set(200);
-end_comment
-
-begin_comment
-comment|//   EXPECT_EQ(200, tl.get());
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// The template type argument T must have a public copy constructor.
-end_comment
-
-begin_comment
-comment|// In addition, the default ThreadLocal constructor requires T to have
-end_comment
-
-begin_comment
-comment|// a public default constructor.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// An object managed for a thread by a ThreadLocal instance is deleted
-end_comment
-
-begin_comment
-comment|// when the thread exits.  Or, if the ThreadLocal instance dies in
-end_comment
-
-begin_comment
-comment|// that thread, when the ThreadLocal dies.  It's the user's
-end_comment
-
-begin_comment
-comment|// responsibility to ensure that all other threads using a ThreadLocal
-end_comment
-
-begin_comment
-comment|// have exited when it dies, or the per-thread objects for those
-end_comment
-
-begin_comment
-comment|// threads will not be deleted.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Google Test only uses global ThreadLocal objects.  That means they
-end_comment
-
-begin_comment
-comment|// will die after main() has returned.  Therefore, no per-thread
-end_comment
-
-begin_comment
-comment|// object managed by Google Test will be leaked as long as all threads
-end_comment
-
-begin_comment
-comment|// using Google Test have exited when main() returns.
-end_comment
-
 begin_expr_stmt
 name|template
 operator|<
@@ -5721,8 +8766,10 @@ name|CreateKey
 argument_list|()
 argument_list|)
 block|,
-name|default_
-argument_list|()
+name|default_factory_
+argument_list|(
+argument|new DefaultValueHolderFactory()
+argument_list|)
 block|{}
 name|explicit
 name|ThreadLocal
@@ -5739,9 +8786,9 @@ name|CreateKey
 argument_list|()
 argument_list|)
 block|,
-name|default_
+name|default_factory_
 argument_list|(
-argument|value
+argument|new InstanceValueHolderFactory(value)
 argument_list|)
 block|{}
 operator|~
@@ -5844,6 +8891,12 @@ name|ThreadLocalValueHolderBase
 block|{
 name|public
 operator|:
+name|ValueHolder
+argument_list|()
+operator|:
+name|value_
+argument_list|()
+block|{}
 name|explicit
 name|ValueHolder
 argument_list|(
@@ -5959,11 +9012,10 @@ operator|*
 specifier|const
 name|new_holder
 operator|=
-name|new
-name|ValueHolder
-argument_list|(
-name|default_
-argument_list|)
+name|default_factory_
+operator|->
+name|MakeNewHolder
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -5999,28 +9051,153 @@ argument_list|()
 return|;
 end_return
 
+begin_macro
+unit|}    class
+name|ValueHolderFactory
+end_macro
+
+begin_block
+block|{
+name|public
+label|:
+name|ValueHolderFactory
+argument_list|()
+block|{}
+name|virtual
+operator|~
+name|ValueHolderFactory
+argument_list|()
+block|{}
+name|virtual
+name|ValueHolder
+operator|*
+name|MakeNewHolder
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|private
+label|:
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|ValueHolderFactory
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|class
+name|DefaultValueHolderFactory
+range|:
+name|public
+name|ValueHolderFactory
+block|{
+name|public
+operator|:
+name|DefaultValueHolderFactory
+argument_list|()
+block|{}
+name|virtual
+name|ValueHolder
+operator|*
+name|MakeNewHolder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|new
+name|ValueHolder
+argument_list|()
+return|;
+block|}
+name|private
+operator|:
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|DefaultValueHolderFactory
+argument_list|)
+block|;   }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|class
+name|InstanceValueHolderFactory
+range|:
+name|public
+name|ValueHolderFactory
+block|{
+name|public
+operator|:
+name|explicit
+name|InstanceValueHolderFactory
+argument_list|(
+specifier|const
+name|T
+operator|&
+name|value
+argument_list|)
+operator|:
+name|value_
+argument_list|(
+argument|value
+argument_list|)
+block|{}
+name|virtual
+name|ValueHolder
+operator|*
+name|MakeNewHolder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|new
+name|ValueHolder
+argument_list|(
+name|value_
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+specifier|const
+name|T
+name|value_
+block|;
+comment|// The value for each thread.
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|InstanceValueHolderFactory
+argument_list|)
+block|;   }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-unit|}
 comment|// A key pthreads uses for looking up per-thread values.
 end_comment
 
 begin_decl_stmt
-unit|const
+specifier|const
 name|pthread_key_t
 name|key_
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|T
-name|default_
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// The default value for each thread.
-end_comment
+begin_expr_stmt
+name|scoped_ptr
+operator|<
+name|ValueHolderFactory
+operator|>
+name|default_factory_
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
@@ -6030,13 +9207,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
+begin_endif
 unit|};
-define|#
-directive|define
-name|GTEST_IS_THREADSAFE
-value|1
-end_define
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_HAS_MUTEX_AND_THREAD_LOCAL_
+end_comment
 
 begin_else
 else|#
@@ -6044,7 +9223,7 @@ directive|else
 end_else
 
 begin_comment
-comment|// GTEST_HAS_PTHREAD
+comment|// GTEST_IS_THREADSAFE
 end_comment
 
 begin_comment
@@ -6071,6 +9250,14 @@ name|public
 label|:
 name|Mutex
 argument_list|()
+block|{}
+name|void
+name|Lock
+parameter_list|()
+block|{}
+name|void
+name|Unlock
+parameter_list|()
 block|{}
 name|void
 name|AssertHeld
@@ -6104,6 +9291,26 @@ name|mutex
 parameter_list|)
 value|::testing::internal::Mutex mutex
 end_define
+
+begin_comment
+comment|// We cannot name this class MutexLock because the ctor declaration would
+end_comment
+
+begin_comment
+comment|// conflict with a macro named MutexLock, which is defined on some
+end_comment
+
+begin_comment
+comment|// platforms. That macro is used as a defensive measure to prevent against
+end_comment
+
+begin_comment
+comment|// inadvertent misuses of MutexLock like "MutexLock(&mu)" rather than
+end_comment
+
+begin_comment
+comment|// "MutexLock l(&mu)".  Hence the typedef trick below.
+end_comment
 
 begin_decl_stmt
 name|class
@@ -6230,29 +9437,14 @@ name|value_
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-unit|};
-comment|// The above synchronization primitives have dummy implementations.
-end_comment
-
-begin_comment
-comment|// Therefore Google Test is not thread-safe.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GTEST_IS_THREADSAFE
-value|0
-end_define
-
 begin_endif
+unit|};
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|// GTEST_HAS_PTHREAD
+comment|// GTEST_IS_THREADSAFE
 end_comment
 
 begin_comment
@@ -6790,6 +9982,44 @@ end_function
 
 begin_function
 specifier|inline
+name|bool
+name|IsXDigit
+parameter_list|(
+name|wchar_t
+name|ch
+parameter_list|)
+block|{
+specifier|const
+name|unsigned
+name|char
+name|low_byte
+init|=
+name|static_cast
+operator|<
+name|unsigned
+name|char
+operator|>
+operator|(
+name|ch
+operator|)
+decl_stmt|;
+return|return
+name|ch
+operator|==
+name|low_byte
+operator|&&
+name|isxdigit
+argument_list|(
+name|low_byte
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
 name|char
 name|ToLower
 parameter_list|(
@@ -6836,7 +10066,63 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|inline
+name|std
+operator|::
+name|string
+name|StripTrailingSpaces
+argument_list|(
+argument|std::string str
+argument_list|)
+block|{
+name|std
+operator|::
+name|string
+operator|::
+name|iterator
+name|it
+operator|=
+name|str
+operator|.
+name|end
+argument_list|()
+block|;
+while|while
+condition|(
+name|it
+operator|!=
+name|str
+operator|.
+name|begin
+argument_list|()
+operator|&&
+name|IsSpace
+argument_list|(
+operator|*
+operator|--
+name|it
+argument_list|)
+condition|)
+name|it
+operator|=
+name|str
+operator|.
+name|erase
+argument_list|(
+name|it
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|str
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|// The testing::internal::posix namespace holds wrappers for common
 end_comment
 
@@ -6856,9 +10142,12 @@ begin_comment
 comment|// as the wrapped function.
 end_comment
 
-begin_decl_stmt
-name|namespace
+begin_macro
+unit|namespace
 name|posix
+end_macro
+
+begin_block
 block|{
 comment|// Functions with a different name on Windows.
 if|#
@@ -7265,26 +10554,11 @@ endif|#
 directive|endif
 comment|// GTEST_OS_WINDOWS
 comment|// Functions deprecated by MSVC 8.0.
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-comment|// Temporarily disable warning 4996 (deprecated function).
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|push
-name|)
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4996
-name|)
-endif|#
-directive|endif
+name|GTEST_DISABLE_MSC_WARNINGS_PUSH_
+argument_list|(
+literal|4996
+comment|/* deprecated function */
+argument_list|)
 specifier|inline
 specifier|const
 name|char
@@ -7322,6 +10596,12 @@ if|#
 directive|if
 operator|!
 name|GTEST_OS_WINDOWS_MOBILE
+operator|&&
+operator|!
+name|GTEST_OS_WINDOWS_PHONE
+operator|&&
+operator|!
+name|GTEST_OS_WINDOWS_RT
 specifier|inline
 name|int
 name|ChDir
@@ -7562,7 +10842,20 @@ block|{
 if|#
 directive|if
 name|GTEST_OS_WINDOWS_MOBILE
+operator|||
+name|GTEST_OS_WINDOWS_PHONE
+operator||
+name|GTEST_OS_WINDOWS_RT
 comment|// We are on Windows CE, which has no environment variables.
+name|static_cast
+operator|<
+name|void
+operator|>
+operator|(
+name|name
+operator|)
+expr_stmt|;
+comment|// To prevent 'unused argument' warning.
 return|return
 name|NULL
 return|;
@@ -7624,18 +10917,8 @@ return|;
 endif|#
 directive|endif
 block|}
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|pop
-name|)
-comment|// Restores the warning state.
-endif|#
-directive|endif
+name|GTEST_DISABLE_MSC_WARNINGS_POP_
+argument_list|()
 if|#
 directive|if
 name|GTEST_OS_WINDOWS_MOBILE
@@ -7661,11 +10944,104 @@ endif|#
 directive|endif
 comment|// GTEST_OS_WINDOWS_MOBILE
 block|}
-end_decl_stmt
+end_block
 
 begin_comment
 comment|// namespace posix
 end_comment
+
+begin_comment
+comment|// MSVC "deprecates" snprintf and issues warnings wherever it is used.  In
+end_comment
+
+begin_comment
+comment|// order to avoid these warnings, we need to use _snprintf or _snprintf_s on
+end_comment
+
+begin_comment
+comment|// MSVC-based platforms.  We map the GTEST_SNPRINTF_ macro to the appropriate
+end_comment
+
+begin_comment
+comment|// function in order to achieve that.  We use macro definition here because
+end_comment
+
+begin_comment
+comment|// snprintf is a variadic function.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+operator|>=
+literal|1400
+operator|&&
+operator|!
+name|GTEST_OS_WINDOWS_MOBILE
+end_if
+
+begin_comment
+comment|// MSVC 2005 and above support variadic macros.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_SNPRINTF_
+parameter_list|(
+name|buffer
+parameter_list|,
+name|size
+parameter_list|,
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|_snprintf_s(buffer, size, size, format, __VA_ARGS__)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_comment
+comment|// Windows CE does not define _snprintf_s and MSVC prior to 2005 doesn't
+end_comment
+
+begin_comment
+comment|// complain about _snprintf.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_SNPRINTF_
+value|_snprintf
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_SNPRINTF_
+value|snprintf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// The maximum number a BiggestInt can represent.  This definition
@@ -8004,6 +11380,16 @@ begin_comment
 comment|// Macro for referencing flags.
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GTEST_FLAG
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -8012,6 +11398,58 @@ parameter_list|(
 name|name
 parameter_list|)
 value|FLAGS_gtest_##name
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(GTEST_FLAG)
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GTEST_USE_OWN_FLAGFILE_FLAG_
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_USE_OWN_FLAGFILE_FLAG_
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(GTEST_USE_OWN_FLAGFILE_FLAG_)
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GTEST_DECLARE_bool_
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_FLAG_SAVER_
+value|::testing::internal::GTestFlagSaver
 end_define
 
 begin_comment
@@ -8047,7 +11485,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|GTEST_API_ extern ::testing::internal::String GTEST_FLAG(name)
+value|GTEST_API_ extern ::std::string GTEST_FLAG(name)
 end_define
 
 begin_comment
@@ -8096,8 +11534,58 @@ parameter_list|,
 name|doc
 parameter_list|)
 define|\
-value|GTEST_API_ ::testing::internal::String GTEST_FLAG(name) = (default_val)
+value|GTEST_API_ ::std::string GTEST_FLAG(name) = (default_val)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(GTEST_DECLARE_bool_)
+end_comment
+
+begin_comment
+comment|// Thread annotations
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|GTEST_EXCLUSIVE_LOCK_REQUIRED_
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_EXCLUSIVE_LOCK_REQUIRED_
+parameter_list|(
+name|locks
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTEST_LOCK_EXCLUDED_
+parameter_list|(
+name|locks
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(GTEST_EXCLUSIVE_LOCK_REQUIRED_)
+end_comment
 
 begin_comment
 comment|// Parses 'str' for a 32-bit signed integer.  If successful, writes the result
@@ -8183,24 +11671,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|const
-name|char
-modifier|*
+begin_expr_stmt
+name|std
+operator|::
+name|string
 name|StringFromGTestEnv
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|flag
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|default_val
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|}
