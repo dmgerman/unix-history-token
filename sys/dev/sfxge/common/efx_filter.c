@@ -498,17 +498,6 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-comment|/* Check that efx_filter_spec_t is 64 bytes. */
-name|EFX_STATIC_ASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|efx_filter_spec_t
-argument_list|)
-operator|==
-literal|64
-argument_list|)
-expr_stmt|;
 name|EFSYS_ASSERT3U
 argument_list|(
 name|enp
@@ -1537,7 +1526,7 @@ name|spec
 operator|->
 name|efs_match_flags
 operator||=
-name|EFX_FILTER_MATCH_LOC_MAC_IG
+name|EFX_FILTER_MATCH_UNKNOWN_UCAST_DST
 expr_stmt|;
 return|return
 operator|(
@@ -1575,16 +1564,7 @@ name|spec
 operator|->
 name|efs_match_flags
 operator||=
-name|EFX_FILTER_MATCH_LOC_MAC_IG
-expr_stmt|;
-name|spec
-operator|->
-name|efs_loc_mac
-index|[
-literal|0
-index|]
-operator|=
-literal|1
+name|EFX_FILTER_MATCH_UNKNOWN_MCAST_DST
 expr_stmt|;
 return|return
 operator|(
