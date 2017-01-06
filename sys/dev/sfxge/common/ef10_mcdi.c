@@ -558,6 +558,9 @@ operator|&
 name|hdr
 argument_list|)
 expr_stmt|;
+name|EFSYS_MEM_READ_BARRIER
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EFX_DWORD_FIELD
