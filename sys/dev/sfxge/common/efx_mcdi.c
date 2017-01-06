@@ -73,6 +73,9 @@ comment|/* emco_fini */
 name|siena_mcdi_feature_supported
 block|,
 comment|/* emco_feature_supported */
+name|siena_mcdi_get_timeout
+block|,
+comment|/* emco_get_timeout */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -122,6 +125,9 @@ comment|/* emco_fini */
 name|ef10_mcdi_feature_supported
 block|,
 comment|/* emco_feature_supported */
+name|ef10_mcdi_get_timeout
+block|,
+comment|/* emco_get_timeout */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2378,6 +2384,51 @@ operator|(
 name|aborted
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|efx_mcdi_get_timeout
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|,
+name|__in
+name|efx_mcdi_req_t
+modifier|*
+name|emrp
+parameter_list|,
+name|__out
+name|uint32_t
+modifier|*
+name|timeoutp
+parameter_list|)
+block|{
+specifier|const
+name|efx_mcdi_ops_t
+modifier|*
+name|emcop
+init|=
+name|enp
+operator|->
+name|en_mcdi
+operator|.
+name|em_emcop
+decl_stmt|;
+name|emcop
+operator|->
+name|emco_get_timeout
+argument_list|(
+name|enp
+argument_list|,
+name|emrp
+argument_list|,
+name|timeoutp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
