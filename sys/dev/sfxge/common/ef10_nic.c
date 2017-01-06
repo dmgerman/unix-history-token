@@ -4355,6 +4355,22 @@ name|B_TRUE
 else|:
 name|B_FALSE
 expr_stmt|;
+comment|/* 	 * Check if firmware-verified NVRAM updates must be used. 	 * 	 * The firmware trusted installer requires all NVRAM updates to use 	 * version 2 of MC_CMD_NVRAM_UPDATE_START (to enable verified update) 	 * and version 2 of MC_CMD_NVRAM_UPDATE_FINISH (to verify the updated 	 * partition and report the result). 	 */
+name|encp
+operator|->
+name|enc_fw_verified_nvram_update_required
+operator|=
+name|CAP_FLAG2
+argument_list|(
+name|flags2
+argument_list|,
+name|NVRAM_UPDATE_REPORT_VERIFY_RESULT
+argument_list|)
+condition|?
+name|B_TRUE
+else|:
+name|B_FALSE
+expr_stmt|;
 undef|#
 directive|undef
 name|CAP_FLAG

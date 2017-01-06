@@ -315,7 +315,8 @@ name|partn
 parameter_list|)
 function_decl|;
 specifier|extern
-name|void
+name|__checkReturn
+name|efx_rc_t
 name|siena_nvram_partn_unlock
 parameter_list|(
 name|__in
@@ -548,7 +549,8 @@ name|size
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|void
+name|__checkReturn
+name|efx_rc_t
 name|siena_nvram_partn_rw_finish
 parameter_list|(
 name|__in
