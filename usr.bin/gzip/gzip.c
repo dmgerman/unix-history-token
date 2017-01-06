@@ -5970,10 +5970,13 @@ condition|)
 block|{
 name|maybe_warnx
 argument_list|(
-literal|"%s has %d other link%s -- skipping"
+literal|"%s has %ju other link%s -- skipping"
 argument_list|,
 name|file
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|isb
 operator|.
 name|st_nlink
@@ -6949,10 +6952,13 @@ condition|)
 block|{
 name|maybe_warnx
 argument_list|(
-literal|"%s has %d other links -- skipping"
+literal|"%s has %ju other links -- skipping"
 argument_list|,
 name|file
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|isb
 operator|.
 name|st_nlink

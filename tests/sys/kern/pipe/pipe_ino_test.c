@@ -145,12 +145,18 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"FAIL: wrong dev number %d %d"
+literal|"FAIL: wrong dev number %ju %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|st1
 operator|.
 name|st_dev
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|st2
 operator|.
 name|st_dev
@@ -170,8 +176,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"FAIL: inode numbers are equal: %d"
+literal|"FAIL: inode numbers are equal: %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|st1
 operator|.
 name|st_ino

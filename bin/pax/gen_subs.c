@@ -343,10 +343,13 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s%2u %-12s %-12s "
+literal|"%s%2ju %-12s %-12s "
 argument_list|,
 name|f_mode
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sbp
 operator|->
 name|st_nlink
