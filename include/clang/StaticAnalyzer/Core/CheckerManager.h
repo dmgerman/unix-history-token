@@ -348,7 +348,8 @@ specifier|const
 name|LangOptions
 name|LangOpts
 decl_stmt|;
-name|AnalyzerOptionsRef
+name|AnalyzerOptions
+modifier|&
 name|AOptions
 decl_stmt|;
 name|CheckName
@@ -358,11 +359,16 @@ name|public
 label|:
 name|CheckerManager
 argument_list|(
-argument|const LangOptions&langOpts
+specifier|const
+name|LangOptions
+operator|&
+name|langOpts
 argument_list|,
-argument|AnalyzerOptionsRef AOptions
+name|AnalyzerOptions
+operator|&
+name|AOptions
 argument_list|)
-block|:
+operator|:
 name|LangOpts
 argument_list|(
 name|langOpts
@@ -370,7 +376,7 @@ argument_list|)
 operator|,
 name|AOptions
 argument_list|(
-argument|std::move(AOptions)
+argument|AOptions
 argument_list|)
 block|{}
 operator|~
@@ -424,7 +430,6 @@ name|getAnalyzerOptions
 parameter_list|()
 block|{
 return|return
-operator|*
 name|AOptions
 return|;
 block|}

@@ -676,8 +676,12 @@ comment|/// a command line argument vector.
 comment|///
 comment|/// \return A CompilerInvocation, or 0 if none was built for the given
 comment|/// argument vector.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CompilerInvocation
-operator|*
+operator|>
 name|createInvocationFromCommandLine
 argument_list|(
 name|ArrayRef

@@ -1359,8 +1359,12 @@ block|;
 name|void
 name|setPreprocessor
 argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|Preprocessor
-operator|&
+operator|>
 name|PP
 argument_list|)
 block|;

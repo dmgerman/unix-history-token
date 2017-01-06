@@ -31336,6 +31336,11 @@ comment|/// \brief After substituting deduced template arguments, a dependent
 comment|/// parameter type did not match the corresponding argument.
 name|TDK_DeducedMismatch
 block|,
+comment|/// \brief After substituting deduced template arguments, an element of
+comment|/// a dependent parameter type did not match the corresponding element
+comment|/// of the corresponding argument (when deducing from an initializer list).
+name|TDK_DeducedMismatchNested
+block|,
 comment|/// \brief A non-depnedent component of the parameter did not match the
 comment|/// corresponding component of the argument.
 name|TDK_NonDeducedMismatch
@@ -31460,6 +31465,8 @@ name|OriginalCallArg
 argument_list|(
 argument|QualType OriginalParamType
 argument_list|,
+argument|bool DecomposedParam
+argument_list|,
 argument|unsigned ArgIdx
 argument_list|,
 argument|QualType OriginalArgType
@@ -31468,6 +31475,11 @@ block|:
 name|OriginalParamType
 argument_list|(
 name|OriginalParamType
+argument_list|)
+operator|,
+name|DecomposedParam
+argument_list|(
+name|DecomposedParam
 argument_list|)
 operator|,
 name|ArgIdx
@@ -31479,10 +31491,13 @@ name|OriginalArgType
 argument_list|(
 argument|OriginalArgType
 argument_list|)
-block|{ }
+block|{}
 name|QualType
 name|OriginalParamType
 expr_stmt|;
+name|bool
+name|DecomposedParam
+decl_stmt|;
 name|unsigned
 name|ArgIdx
 decl_stmt|;

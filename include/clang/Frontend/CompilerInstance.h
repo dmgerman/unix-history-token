@@ -232,7 +232,9 @@ name|public
 name|ModuleLoader
 block|{
 comment|/// The options used in this compiler instance.
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|CompilerInvocation
 operator|>
@@ -283,7 +285,9 @@ operator|>
 name|SourceMgr
 block|;
 comment|/// The preprocessor.
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|Preprocessor
 operator|>
@@ -610,8 +614,12 @@ comment|/// setInvocation - Replace the current invocation.
 name|void
 name|setInvocation
 argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|CompilerInvocation
-operator|*
+operator|>
 name|Value
 argument_list|)
 block|;
@@ -800,6 +808,23 @@ return|return
 name|Invocation
 operator|->
 name|getHeaderSearchOpts
+argument_list|()
+return|;
+block|}
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|HeaderSearchOptions
+operator|>
+name|getHeaderSearchOptsPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Invocation
+operator|->
+name|getHeaderSearchOptsPtr
 argument_list|()
 return|;
 block|}
@@ -1248,29 +1273,38 @@ operator|*
 name|PP
 return|;
 block|}
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|Preprocessor
+operator|>
+name|getPreprocessorPtr
+argument_list|()
+block|{
+return|return
+name|PP
+return|;
+block|}
 name|void
 name|resetAndLeakPreprocessor
 argument_list|()
 block|{
 name|BuryPointer
 argument_list|(
-name|PP
-operator|.
-name|get
-argument_list|()
+argument|new std::shared_ptr<Preprocessor>(PP)
 argument_list|)
-block|;
-name|PP
-operator|.
-name|resetWithoutRelease
-argument_list|()
 block|;   }
 comment|/// Replace the current preprocessor.
 name|void
 name|setPreprocessor
 argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|Preprocessor
-operator|*
+operator|>
 name|Value
 argument_list|)
 block|;
@@ -1882,7 +1916,7 @@ argument|ASTContext&Context
 argument_list|,
 argument|const PCHContainerReader&PCHContainerRdr
 argument_list|,
-argument|ArrayRef<IntrusiveRefCntPtr<ModuleFileExtension>> Extensions
+argument|ArrayRef<std::shared_ptr<ModuleFileExtension>> Extensions
 argument_list|,
 argument|void *DeserializationListener
 argument_list|,

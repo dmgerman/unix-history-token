@@ -4387,6 +4387,75 @@ name|override
 block|; }
 block|;  }
 comment|// end namespace NVPTX
+name|namespace
+name|AVR
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Linker
+operator|:
+name|public
+name|GnuTool
+block|{
+name|public
+operator|:
+name|Linker
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|GnuTool
+argument_list|(
+literal|"AVR::Linker"
+argument_list|,
+literal|"avr-ld"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|; }
+comment|// end namespace AVR
 block|}
 comment|// end namespace tools
 block|}

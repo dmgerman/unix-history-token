@@ -169,8 +169,12 @@ comment|///
 comment|/// The last parameter can be used to register a new visitor with the given
 comment|/// BugReport while processing a node.
 name|virtual
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 specifier|const
@@ -389,8 +393,12 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *N
@@ -492,8 +500,12 @@ operator|*
 name|getTag
 argument_list|()
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *N
@@ -553,8 +565,12 @@ operator|&
 name|x
 argument_list|)
 block|;   }
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *N
@@ -646,8 +662,12 @@ operator|*
 name|getTag
 argument_list|()
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *N
@@ -660,8 +680,12 @@ argument|BugReport&BR
 argument_list|)
 name|override
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNodeImpl
 argument_list|(
 specifier|const
@@ -683,8 +707,12 @@ operator|&
 name|BR
 argument_list|)
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitTerminator
 argument_list|(
 specifier|const
@@ -716,8 +744,12 @@ operator|&
 name|BRC
 argument_list|)
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitTrueTest
 argument_list|(
 argument|const Expr *Cond
@@ -731,8 +763,12 @@ argument_list|,
 argument|const ExplodedNode *N
 argument_list|)
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitTrueTest
 argument_list|(
 argument|const Expr *Cond
@@ -748,8 +784,12 @@ argument_list|,
 argument|const ExplodedNode *N
 argument_list|)
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitTrueTest
 argument_list|(
 argument|const Expr *Cond
@@ -765,8 +805,12 @@ argument_list|,
 argument|const ExplodedNode *N
 argument_list|)
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitConditionVariable
 argument_list|(
 argument|StringRef LhsString
@@ -886,8 +930,12 @@ name|getTag
 argument_list|()
 argument_list|)
 block|;   }
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *N
@@ -986,8 +1034,12 @@ argument_list|(
 name|R
 argument_list|)
 block|;   }
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *N
@@ -1054,8 +1106,12 @@ operator|*
 name|getTag
 argument_list|()
 block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *Succ
@@ -1100,8 +1156,12 @@ argument_list|)
 specifier|const
 name|override
 block|{}
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *Succ

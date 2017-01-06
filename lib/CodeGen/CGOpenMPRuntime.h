@@ -531,7 +531,7 @@ modifier|&
 name|CGM
 decl_stmt|;
 comment|/// \brief Creates offloading entry for the provided entry ID \a ID,
-comment|/// address \a Addr and size \a Size.
+comment|/// address \a Addr, size \a Size, and flags \a Flags.
 name|virtual
 name|void
 name|createOffloadEntry
@@ -550,6 +550,11 @@ name|Addr
 argument_list|,
 name|uint64_t
 name|Size
+argument_list|,
+name|int32_t
+name|Flags
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// \brief Helper to emit outlined function for 'target' directive.
@@ -907,13 +912,13 @@ name|OffloadingEntriesNum
 decl_stmt|;
 name|public
 label|:
-comment|/// \brief Base class of the entries info.
+comment|/// Base class of the entries info.
 name|class
 name|OffloadEntryInfo
 block|{
 name|public
 label|:
-comment|/// \brief Kind of a given entry. Currently, only target regions are
+comment|/// Kind of a given entry. Currently, only target regions are
 comment|/// supported.
 enum|enum
 name|OffloadingEntryInfoKinds
@@ -935,6 +940,11 @@ enum|;
 name|OffloadEntryInfo
 argument_list|()
 operator|:
+name|Flags
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Order
 argument_list|(
 operator|~
@@ -952,8 +962,15 @@ argument_list|(
 argument|OffloadingEntryInfoKinds Kind
 argument_list|,
 argument|unsigned Order
+argument_list|,
+argument|int32_t Flags
 argument_list|)
 operator|:
+name|Flags
+argument_list|(
+name|Flags
+argument_list|)
+operator|,
 name|Order
 argument_list|(
 name|Order
@@ -994,6 +1011,27 @@ return|return
 name|Kind
 return|;
 block|}
+name|int32_t
+name|getFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+return|;
+block|}
+name|void
+name|setFlags
+parameter_list|(
+name|int32_t
+name|NewFlags
+parameter_list|)
+block|{
+name|Flags
+operator|=
+name|NewFlags
+expr_stmt|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -1008,9 +1046,13 @@ return|return
 name|true
 return|;
 block|}
-name|protected
+name|private
 label|:
-comment|// \brief Order this entry was emitted.
+comment|/// Flags associated with the device global.
+name|int32_t
+name|Flags
+decl_stmt|;
+comment|/// Order this entry was emitted.
 name|unsigned
 name|Order
 decl_stmt|;
@@ -1087,6 +1129,9 @@ name|OFFLOAD_ENTRY_INFO_TARGET_REGION
 argument_list|,
 operator|~
 literal|0u
+argument_list|,
+comment|/*Flags=*/
+literal|0
 argument_list|)
 block|,
 name|Addr
@@ -1107,6 +1152,8 @@ argument_list|,
 argument|llvm::Constant *Addr
 argument_list|,
 argument|llvm::Constant *ID
+argument_list|,
+argument|int32_t Flags
 argument_list|)
 operator|:
 name|OffloadEntryInfo
@@ -1114,6 +1161,8 @@ argument_list|(
 name|OFFLOAD_ENTRY_INFO_TARGET_REGION
 argument_list|,
 name|Order
+argument_list|,
+name|Flags
 argument_list|)
 block|,
 name|Addr
@@ -1234,6 +1283,8 @@ argument_list|,
 argument|llvm::Constant *Addr
 argument_list|,
 argument|llvm::Constant *ID
+argument_list|,
+argument|int32_t Flags
 argument_list|)
 block|;
 comment|/// \brief Return true if a target region entry with the provided

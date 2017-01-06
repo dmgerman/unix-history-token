@@ -3454,9 +3454,9 @@ block|{
 comment|// CHECK-BE: shufflevector<8 x i16> {{.+}},<8 x i16> {{.+}},<8 x i32><i32 undef, i32 0, i32 undef, i32 1, i32 undef, i32 2, i32 undef, i32 3>
 comment|// CHECK-BE: @llvm.ppc.vsx.xvcvhpsp(<8 x i16> {{.+}})
 comment|// CHECK-BE-NEXT: ret<4 x float>
-comment|// CHECK-LE: shufflevector<8 x i16> {{.+}},<8 x i16> {{.+}},<8 x i32><i32 0, i32 undef, i32 1, i32 undef, i32 2, i32 undef, i32 3, i32 undef>
-comment|// CHECK-LE: @llvm.ppc.vsx.xvcvhpsp(<8 x i16> {{.+}})
-comment|// CHECK-LE-NEXT: ret<4 x float>
+comment|// CHECK: shufflevector<8 x i16> {{.+}},<8 x i16> {{.+}},<8 x i32><i32 0, i32 undef, i32 1, i32 undef, i32 2, i32 undef, i32 3, i32 undef>
+comment|// CHECK: @llvm.ppc.vsx.xvcvhpsp(<8 x i16> {{.+}})
+comment|// CHECK-NEXT: ret<4 x float>
 return|return
 name|vec_extract_fp32_from_shorth
 argument_list|(
@@ -3477,13 +3477,122 @@ block|{
 comment|// CHECK-BE: shufflevector<8 x i16> {{.+}},<8 x i16> {{.+}},<8 x i32><i32 undef, i32 4, i32 undef, i32 5, i32 undef, i32 6, i32 undef, i32 7>
 comment|// CHECK-BE: @llvm.ppc.vsx.xvcvhpsp(<8 x i16> {{.+}})
 comment|// CHECK-BE-NEXT: ret<4 x float>
-comment|// CHECK-LE: shufflevector<8 x i16> {{.+}},<8 x i16> {{.+}},<8 x i32><i32 4, i32 undef, i32 5, i32 undef, i32 6, i32 undef, i32 7, i32 undef>
-comment|// CHECK-LE: @llvm.ppc.vsx.xvcvhpsp(<8 x i16> {{.+}})
-comment|// CHECK-LE-NEXT: ret<4 x float>
+comment|// CHECK: shufflevector<8 x i16> {{.+}},<8 x i16> {{.+}},<8 x i32><i32 4, i32 undef, i32 5, i32 undef, i32 6, i32 undef, i32 7, i32 undef>
+comment|// CHECK: @llvm.ppc.vsx.xvcvhpsp(<8 x i16> {{.+}})
+comment|// CHECK-NEXT: ret<4 x float>
 return|return
 name|vec_extract_fp32_from_shortl
 argument_list|(
 name|vusa
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|vector
+name|unsigned
+name|char
+name|test116
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// CHECK-BE: [[T1:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxinsertw(<4 x i32> {{.+}},<2 x i64> {{.+}}, i32 7)
+comment|// CHECK-BE-NEXT: bitcast<4 x i32> [[T1]] to<16 x i8>
+comment|// CHECK: [[T1:%.+]] = shufflevector<2 x i64> {{.+}},<2 x i64> {{.+}},<2 x i32><i32 1, i32 0>
+comment|// CHECK-NEXT: [[T2:%.+]] =  bitcast<2 x i64> [[T1]] to<4 x i32>
+comment|// CHECK-NEXT: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxinsertw(<4 x i32> [[T2]],<2 x i64> {{.+}}, i32 5)
+comment|// CHECK-NEXT: bitcast<4 x i32> [[T3]] to<16 x i8>
+return|return
+name|vec_insert4b
+argument_list|(
+name|vuia
+argument_list|,
+name|vuca
+argument_list|,
+literal|7
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|vector
+name|unsigned
+name|char
+name|test117
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// CHECK-BE: [[T1:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxinsertw(<4 x i32> {{.+}},<2 x i64> {{.+}}, i32 12)
+comment|// CHECK-BE-NEXT: bitcast<4 x i32> [[T1]] to<16 x i8>
+comment|// CHECK: [[T1:%.+]] = shufflevector<2 x i64> {{.+}},<2 x i64> {{.+}},<2 x i32><i32 1, i32 0>
+comment|// CHECK-NEXT: [[T2:%.+]] =  bitcast<2 x i64> [[T1]] to<4 x i32>
+comment|// CHECK-NEXT: [[T3:%.+]] = call<4 x i32> @llvm.ppc.vsx.xxinsertw(<4 x i32> [[T2]],<2 x i64> {{.+}}, i32 0)
+comment|// CHECK-NEXT: bitcast<4 x i32> [[T3]] to<16 x i8>
+return|return
+name|vec_insert4b
+argument_list|(
+name|vuia
+argument_list|,
+name|vuca
+argument_list|,
+literal|13
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|vector
+name|unsigned
+name|long
+name|long
+name|test118
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// CHECK-BE: call<2 x i64> @llvm.ppc.vsx.xxextractuw(<2 x i64> {{.+}}, i32 11)
+comment|// CHECK-BE-NEXT: ret<2 x i64>
+comment|// CHECK: [[T1:%.+]] = call<2 x i64> @llvm.ppc.vsx.xxextractuw(<2 x i64> {{.+}}, i32 1)
+comment|// CHECK-NEXT: shufflevector<2 x i64> [[T1]],<2 x i64> [[T1]],<2 x i32><i32 1, i32 0>
+comment|// CHECK-NEXT: ret<2 x i64>
+return|return
+name|vec_extract4b
+argument_list|(
+name|vuca
+argument_list|,
+literal|11
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|vector
+name|unsigned
+name|long
+name|long
+name|test119
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// CHECK-BE: call<2 x i64> @llvm.ppc.vsx.xxextractuw(<2 x i64> {{.+}}, i32 0)
+comment|// CHECK-BE-NEXT: ret<2 x i64>
+comment|// CHECK: [[T1:%.+]] = call<2 x i64> @llvm.ppc.vsx.xxextractuw(<2 x i64> {{.+}}, i32 12)
+comment|// CHECK-NEXT: shufflevector<2 x i64> [[T1]],<2 x i64> [[T1]],<2 x i32><i32 1, i32 0>
+comment|// CHECK-NEXT: ret<2 x i64>
+return|return
+name|vec_extract4b
+argument_list|(
+name|vuca
+argument_list|,
+operator|-
+literal|5
 argument_list|)
 return|;
 block|}

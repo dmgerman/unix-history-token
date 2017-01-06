@@ -1279,9 +1279,13 @@ comment|/// \brief The receiver of deserialization events.
 name|ASTDeserializationListener
 modifier|*
 name|DeserializationListener
+init|=
+name|nullptr
 decl_stmt|;
 name|bool
 name|OwnsDeserializationListener
+init|=
+name|false
 decl_stmt|;
 name|SourceManager
 modifier|&
@@ -1305,6 +1309,8 @@ comment|/// AST files and the translation unit that uses it.
 name|Sema
 modifier|*
 name|SemaObj
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// \brief The preprocessor that will be loading the source file.
 name|Preprocessor
@@ -1320,6 +1326,8 @@ comment|/// \brief The AST consumer.
 name|ASTConsumer
 modifier|*
 name|Consumer
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// \brief The module manager which manages modules and their dependencies
 name|ModuleManager
@@ -1336,7 +1344,9 @@ name|llvm
 operator|::
 name|StringMap
 operator|<
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|ModuleFileExtension
 operator|>>
@@ -2415,10 +2425,16 @@ decl_stmt|;
 comment|/// \brief The PragmaMSStructKind pragma ms_struct state if set, or -1.
 name|int
 name|PragmaMSStructState
+init|=
+operator|-
+literal|1
 decl_stmt|;
 comment|/// \brief The PragmaMSPointersToMembersKind pragma pointers_to_members state.
 name|int
 name|PragmaMSPointersToMembersState
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|SourceLocation
 name|PointersToMembersPragmaLocation
@@ -2585,10 +2601,14 @@ decl_stmt|;
 comment|/// \brief Whether we have tried loading the global module index yet.
 name|bool
 name|TriedLoadingGlobalIndex
+init|=
+name|false
 decl_stmt|;
 comment|///\brief Whether we are currently processing update records.
 name|bool
 name|ProcessingUpdateRecords
+init|=
+name|false
 decl_stmt|;
 typedef|typedef
 name|llvm
@@ -2617,88 +2637,130 @@ comment|/// \brief The number of source location entries de-serialized from
 comment|/// the PCH file.
 name|unsigned
 name|NumSLocEntriesRead
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of source location entries in the chain.
 name|unsigned
 name|TotalNumSLocEntries
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of statements (and expressions) de-serialized
 comment|/// from the chain.
 name|unsigned
 name|NumStatementsRead
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The total number of statements (and expressions) stored
 comment|/// in the chain.
 name|unsigned
 name|TotalNumStatements
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of macros de-serialized from the chain.
 name|unsigned
 name|NumMacrosRead
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The total number of macros stored in the chain.
 name|unsigned
 name|TotalNumMacros
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of lookups into identifier tables.
 name|unsigned
 name|NumIdentifierLookups
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of lookups into identifier tables that succeed.
 name|unsigned
 name|NumIdentifierLookupHits
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of selectors that have been read.
 name|unsigned
 name|NumSelectorsRead
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of method pool entries that have been read.
 name|unsigned
 name|NumMethodPoolEntriesRead
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of times we have looked up a selector in the method
 comment|/// pool.
 name|unsigned
 name|NumMethodPoolLookups
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of times we have looked up a selector in the method
 comment|/// pool and found something.
 name|unsigned
 name|NumMethodPoolHits
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of times we have looked up a selector in the method
 comment|/// pool within a specific module.
 name|unsigned
 name|NumMethodPoolTableLookups
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The number of times we have looked up a selector in the method
 comment|/// pool within a specific module and found something.
 name|unsigned
 name|NumMethodPoolTableHits
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief The total number of method pool entries in the selector table.
 name|unsigned
 name|TotalNumMethodPoolEntries
+init|=
+literal|0
 decl_stmt|;
 comment|/// Number of lexical decl contexts read/total.
 name|unsigned
 name|NumLexicalDeclContextsRead
+init|=
+literal|0
 decl_stmt|,
 name|TotalLexicalDeclContexts
+init|=
+literal|0
 decl_stmt|;
 comment|/// Number of visible decl contexts read/total.
 name|unsigned
 name|NumVisibleDeclContextsRead
+init|=
+literal|0
 decl_stmt|,
 name|TotalVisibleDeclContexts
+init|=
+literal|0
 decl_stmt|;
 comment|/// Total size of modules, in bits, currently loaded
 name|uint64_t
 name|TotalModulesSizeInBits
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Number of Decl/types that are currently deserializing.
 name|unsigned
 name|NumCurrentElementsDeserializing
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief Set true while we are in the process of passing deserialized
 comment|/// "interesting" decls to consumer inside FinishedDeserializing().
@@ -2706,6 +2768,8 @@ comment|/// This is used as a guard to avoid recursively repeating the process o
 comment|/// passing decls to consumer.
 name|bool
 name|PassingDeclsToConsumer
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief The set of identifiers that were read while the AST reader was
 comment|/// (recursively) loading declarations.
@@ -2997,6 +3061,8 @@ enum|;
 comment|/// \brief What kind of records we are reading.
 name|ReadingKind
 name|ReadingKind
+init|=
+name|Read_None
 decl_stmt|;
 comment|/// \brief RAII object to change the reading kind.
 name|class
@@ -4526,7 +4592,7 @@ argument|ASTContext&Context
 argument_list|,
 argument|const PCHContainerReader&PCHContainerRdr
 argument_list|,
-argument|ArrayRef<IntrusiveRefCntPtr<ModuleFileExtension>> Extensions
+argument|ArrayRef<std::shared_ptr<ModuleFileExtension>> Extensions
 argument_list|,
 argument|StringRef isysroot =
 literal|""

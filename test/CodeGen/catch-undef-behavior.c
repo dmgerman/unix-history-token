@@ -24,11 +24,11 @@ comment|// FIXME: When we only emit each type once, use [[INT]] more below.
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN: @[[LINE_100:.*]] = private unnamed_addr global {{.*}}, i32 100, i32 5 {{.*}} @[[INT]], i64 4, i8 1
+comment|// CHECK-UBSAN: @[[LINE_100:.*]] = private unnamed_addr global {{.*}}, i32 100, i32 5 {{.*}} @[[INT]], i8 2, i8 1
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN: @[[LINE_200:.*]] = {{.*}}, i32 200, i32 10 {{.*}}, i64 4, i8 0
+comment|// CHECK-UBSAN: @[[LINE_200:.*]] = {{.*}}, i32 200, i32 10 {{.*}}, i8 2, i8 0
 end_comment
 
 begin_comment
@@ -40,11 +40,11 @@ comment|// CHECK-UBSAN: @[[LINE_400:.*]] = {{.*}}, i32 400, i32 12 {{.*}} @{{.*}
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN: @[[LINE_500:.*]] = {{.*}}, i32 500, i32 10 {{.*}} @{{.*}}, i64 4, i8 0 }
+comment|// CHECK-UBSAN: @[[LINE_500:.*]] = {{.*}}, i32 500, i32 10 {{.*}} @{{.*}}, i8 2, i8 0 }
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN: @[[LINE_600:.*]] = {{.*}}, i32 600, i32 3 {{.*}} @{{.*}}, i64 4, i8 1 }
+comment|// CHECK-UBSAN: @[[LINE_600:.*]] = {{.*}}, i32 600, i32 3 {{.*}} @{{.*}}, i8 2, i8 1 }
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// CHECK-UBSAN: @[[STRUCT_S:.*]] = private unnamed_addr constant { i16, 
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN: @[[LINE_700:.*]] = {{.*}}, i32 700, i32 14 {{.*}} @[[STRUCT_S]], i64 4, i8 3 }
+comment|// CHECK-UBSAN: @[[LINE_700:.*]] = {{.*}}, i32 700, i32 14 {{.*}} @[[STRUCT_S]], i8 2, i8 3 }
 end_comment
 
 begin_comment
@@ -148,13 +148,13 @@ comment|// CHECK-COMMON-NEXT:  %[[OK:.*]] = and i1 %[[CHECK01]], %[[CHECK2]]
 comment|// CHECK-UBSAN: br i1 %[[OK]], {{.*}} !prof ![[WEIGHT_MD:.*]], !nosanitize
 comment|// CHECK-TRAP:  br i1 %[[OK]], {{.*}}
 comment|// CHECK-UBSAN:      %[[ARG:.*]] = ptrtoint {{.*}} %[[PTR]] to i64
-comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_100]] to i8*), i64 %[[ARG]])
+comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_type_mismatch_v1(i8* bitcast ({{.*}} @[[LINE_100]] to i8*), i64 %[[ARG]])
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW:#[0-9]+]]
 comment|// CHECK-TRAP-NEXT: unreachable
 comment|// With -fsanitize=null, only perform the null check.
 comment|// CHECK-NULL: %[[NULL:.*]] = icmp ne {{.*}}, null
 comment|// CHECK-NULL: br i1 %[[NULL]]
-comment|// CHECK-NULL: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_100]] to i8*), i64 %{{.*}})
+comment|// CHECK-NULL: call void @__ubsan_handle_type_mismatch_v1(i8* bitcast ({{.*}} @[[LINE_100]] to i8*), i64 %{{.*}})
 line|#
 directive|line
 number|100
@@ -186,7 +186,7 @@ comment|// CHECK-COMMON:      %[[PTRINT:.*]] = ptrtoint
 comment|// CHECK-COMMON-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRINT]], 3
 comment|// CHECK-COMMON-NEXT: icmp eq i64 %[[MISALIGN]], 0
 comment|// CHECK-UBSAN:      %[[ARG:.*]] = ptrtoint
-comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_200]] to i8*), i64 %[[ARG]])
+comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_type_mismatch_v1(i8* bitcast ({{.*}} @[[LINE_200]] to i8*), i64 %[[ARG]])
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 line|#
@@ -324,7 +324,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK-UBSAN: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_500]] to i8*), i64 %{{.*}})
+comment|// CHECK-UBSAN: call void @__ubsan_handle_type_mismatch_v1(i8* bitcast ({{.*}} @[[LINE_500]] to i8*), i64 %{{.*}})
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 line|#
@@ -353,7 +353,7 @@ name|int
 name|q
 parameter_list|)
 block|{
-comment|// CHECK-UBSAN: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_600]] to i8*), i64 %{{.*}})
+comment|// CHECK-UBSAN: call void @__ubsan_handle_type_mismatch_v1(i8* bitcast ({{.*}} @[[LINE_600]] to i8*), i64 %{{.*}})
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 line|#
@@ -393,7 +393,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK-UBSAN: call void @__ubsan_handle_type_mismatch(i8* bitcast ({{.*}} @[[LINE_700]] to i8*), i64 %{{.*}})
+comment|// CHECK-UBSAN: call void @__ubsan_handle_type_mismatch_v1(i8* bitcast ({{.*}} @[[LINE_700]] to i8*), i64 %{{.*}})
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
 line|#

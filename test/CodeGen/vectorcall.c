@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple=i386-pc-win32 | FileCheck %s
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - -ffreestanding -triple=i386-pc-win32       | FileCheck %s --check-prefix=X32
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple=x86_64-pc-win32 | FileCheck %s --check-prefix=X64
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - -ffreestanding -triple=x86_64-pc-win32     | FileCheck %s --check-prefix=X64
 end_comment
 
 begin_function
@@ -22,7 +22,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01v1@@8"(i32 inreg %a, i32 inreg %b)
+comment|// X32: define x86_vectorcallcc void @"\01v1@@8"(i32 inreg %a, i32 inreg %b)
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01v2@@8"(i8 inreg signext %a, i8 inreg signext %b)
+comment|// X32: define x86_vectorcallcc void @"\01v2@@8"(i8 inreg signext %a, i8 inreg signext %b)
 end_comment
 
 begin_comment
@@ -81,7 +81,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01v3@@12"(i32 inreg %a, i32 %b.0, i32 inreg %c)
+comment|// X32: define x86_vectorcallcc void @"\01v3@@12"(i32 inreg %a, i32 %b.0, i32 inreg %c)
 end_comment
 
 begin_comment
@@ -121,7 +121,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01v4@@28"(i32 inreg %a, %struct.Large* byval align 4 %b, i32 inreg %c)
+comment|// X32: define x86_vectorcallcc void @"\01v4@@28"(i32 inreg %a, %struct.Large* byval align 4 %b, i32 inreg %c)
 end_comment
 
 begin_comment
@@ -196,11 +196,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01hfa1@@40"(i32 inreg %a, double %b.0, double %b.1, double %b.2, double %b.3, i32 inreg %c)
+comment|// X32: define x86_vectorcallcc void @"\01hfa1@@40"(i32 inreg %a, %struct.HFA4 inreg %b.coerce, i32 inreg %c)
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01hfa1@@48"(i32 %a, double %b.0, double %b.1, double %b.2, double %b.3, i32 %c)
+comment|// X64: define x86_vectorcallcc void @"\01hfa1@@48"(i32 %a, %struct.HFA4 inreg %b.coerce, i32 %c)
 end_comment
 
 begin_comment
@@ -235,11 +235,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01hfa2@@72"(double %a.0, double %a.1, double %a.2, double %a.3, %struct.HFA4* inreg %b, double %c)
+comment|// X32: define x86_vectorcallcc void @"\01hfa2@@72"(%struct.HFA4 inreg %a.coerce, %struct.HFA4* inreg %b, double %c)
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01hfa2@@72"(double %a.0, double %a.1, double %a.2, double %a.3, %struct.HFA4* %b, double %c)
+comment|// X64: define x86_vectorcallcc void @"\01hfa2@@72"(%struct.HFA4 inreg %a.coerce, %struct.HFA4* %b, double %c)
 end_comment
 
 begin_comment
@@ -278,7 +278,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01hfa3@@56"(double %a, double %b, double %c, double %d, double %e, %struct.HFA2* inreg %f)
+comment|// X32: define x86_vectorcallcc void @"\01hfa3@@56"(double %a, double %b, double %c, double %d, double %e, %struct.HFA2* inreg %f)
 end_comment
 
 begin_comment
@@ -310,7 +310,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01hfa4@@40"(%struct.HFA5* byval align 4)
+comment|// X32: define x86_vectorcallcc void @"\01hfa4@@40"(%struct.HFA5* byval align 4)
 end_comment
 
 begin_comment
@@ -345,7 +345,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc %struct.HFA2 @"\01hfa5@@0"()
+comment|// X32: define x86_vectorcallcc %struct.HFA2 @"\01hfa5@@0"()
 end_comment
 
 begin_comment
@@ -383,6 +383,21 @@ end_struct
 
 begin_struct
 struct|struct
+name|HVA3
+block|{
+name|v4f32
+name|w
+decl_stmt|,
+name|x
+decl_stmt|,
+name|y
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|HVA4
 block|{
 name|v4f32
@@ -398,8 +413,27 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|HVA5
+block|{
+name|v4f32
+name|w
+decl_stmt|,
+name|x
+decl_stmt|,
+name|y
+decl_stmt|,
+name|z
+decl_stmt|,
+name|p
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function
-name|void
+name|v4f32
 name|__vectorcall
 name|hva1
 parameter_list|(
@@ -413,19 +447,25 @@ parameter_list|,
 name|int
 name|c
 parameter_list|)
-block|{}
+block|{
+return|return
+name|b
+operator|.
+name|w
+return|;
+block|}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01hva1@@72"(i32 inreg %a,<4 x float> %b.0,<4 x float> %b.1,<4 x float> %b.2,<4 x float> %b.3, i32 inreg %c)
+comment|// X32: define x86_vectorcallcc<4 x float> @"\01hva1@@72"(i32 inreg %a, %struct.HVA4 inreg %b.coerce, i32 inreg %c)
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01hva1@@80"(i32 %a,<4 x float> %b.0,<4 x float> %b.1,<4 x float> %b.2,<4 x float> %b.3, i32 %c)
+comment|// X64: define x86_vectorcallcc<4 x float> @"\01hva1@@80"(i32 %a, %struct.HVA4 inreg %b.coerce, i32 %c)
 end_comment
 
 begin_function
-name|void
+name|v4f32
 name|__vectorcall
 name|hva2
 parameter_list|(
@@ -440,19 +480,23 @@ parameter_list|,
 name|v4f32
 name|c
 parameter_list|)
-block|{}
+block|{
+return|return
+name|c
+return|;
+block|}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01hva2@@144"(<4 x float> %a.0,<4 x float> %a.1,<4 x float> %a.2,<4 x float> %a.3, %struct.HVA4* inreg %b,<4 x float> %c)
+comment|// X32: define x86_vectorcallcc<4 x float> @"\01hva2@@144"(%struct.HVA4 inreg %a.coerce, %struct.HVA4* inreg %b,<4 x float> %c)
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01hva2@@144"(<4 x float> %a.0,<4 x float> %a.1,<4 x float> %a.2,<4 x float> %a.3, %struct.HVA4* %b,<4 x float> %c)
+comment|// X64: define x86_vectorcallcc<4 x float> @"\01hva2@@144"(%struct.HVA4 inreg %a.coerce, %struct.HVA4* %b,<4 x float> %c)
 end_comment
 
 begin_function
-name|void
+name|v4f32
 name|__vectorcall
 name|hva3
 parameter_list|(
@@ -475,15 +519,193 @@ name|struct
 name|HVA2
 name|f
 parameter_list|)
-block|{}
+block|{
+return|return
+name|f
+operator|.
+name|x
+return|;
+block|}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01hva3@@112"(<4 x float> %a,<4 x float> %b,<4 x float> %c,<4 x float> %d,<4 x float> %e, %struct.HVA2* inreg %f)
+comment|// X32: define x86_vectorcallcc<4 x float> @"\01hva3@@112"(<4 x float> %a,<4 x float> %b,<4 x float> %c,<4 x float> %d,<4 x float> %e, %struct.HVA2* inreg %f)
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01hva3@@112"(<4 x float> %a,<4 x float> %b,<4 x float> %c,<4 x float> %d,<4 x float> %e, %struct.HVA2* %f)
+comment|// X64: define x86_vectorcallcc<4 x float> @"\01hva3@@112"(<4 x float> %a,<4 x float> %b,<4 x float> %c,<4 x float> %d,<4 x float> %e, %struct.HVA2* %f)
+end_comment
+
+begin_comment
+comment|// vector types have higher priority then HVA structures, So vector types are allocated first
+end_comment
+
+begin_comment
+comment|// and HVAs are allocated if enough registers are available
+end_comment
+
+begin_function
+name|v4f32
+name|__vectorcall
+name|hva4
+parameter_list|(
+name|struct
+name|HVA4
+name|a
+parameter_list|,
+name|struct
+name|HVA2
+name|b
+parameter_list|,
+name|v4f32
+name|c
+parameter_list|)
+block|{
+return|return
+name|b
+operator|.
+name|y
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// X32: define x86_vectorcallcc<4 x float> @"\01hva4@@112"(%struct.HVA4 inreg %a.coerce, %struct.HVA2* inreg %b,<4 x float> %c)
+end_comment
+
+begin_comment
+comment|// X64: define x86_vectorcallcc<4 x float> @"\01hva4@@112"(%struct.HVA4 inreg %a.coerce, %struct.HVA2* %b,<4 x float> %c)
+end_comment
+
+begin_function
+name|v4f32
+name|__vectorcall
+name|hva5
+parameter_list|(
+name|struct
+name|HVA3
+name|a
+parameter_list|,
+name|struct
+name|HVA3
+name|b
+parameter_list|,
+name|v4f32
+name|c
+parameter_list|,
+name|struct
+name|HVA2
+name|d
+parameter_list|)
+block|{
+return|return
+name|d
+operator|.
+name|y
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// X32: define x86_vectorcallcc<4 x float> @"\01hva5@@144"(%struct.HVA3 inreg %a.coerce, %struct.HVA3* inreg %b,<4 x float> %c, %struct.HVA2 inreg %d.coerce)
+end_comment
+
+begin_comment
+comment|// X64: define x86_vectorcallcc<4 x float> @"\01hva5@@144"(%struct.HVA3 inreg %a.coerce, %struct.HVA3* %b,<4 x float> %c, %struct.HVA2 inreg %d.coerce)
+end_comment
+
+begin_function
+name|struct
+name|HVA4
+name|__vectorcall
+name|hva6
+parameter_list|(
+name|struct
+name|HVA4
+name|a
+parameter_list|,
+name|struct
+name|HVA4
+name|b
+parameter_list|)
+block|{
+return|return
+name|b
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// X32: define x86_vectorcallcc %struct.HVA4 @"\01hva6@@128"(%struct.HVA4 inreg %a.coerce, %struct.HVA4* inreg %b)
+end_comment
+
+begin_comment
+comment|// X64: define x86_vectorcallcc %struct.HVA4 @"\01hva6@@128"(%struct.HVA4 inreg %a.coerce, %struct.HVA4* %b)
+end_comment
+
+begin_function
+name|struct
+name|HVA5
+name|__vectorcall
+name|hva7
+parameter_list|()
+block|{
+name|struct
+name|HVA5
+name|a
+init|=
+block|{}
+decl_stmt|;
+return|return
+name|a
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// X32: define x86_vectorcallcc void @"\01hva7@@0"(%struct.HVA5* inreg noalias sret %agg.result)
+end_comment
+
+begin_comment
+comment|// X64: define x86_vectorcallcc void @"\01hva7@@0"(%struct.HVA5* noalias sret %agg.result)
+end_comment
+
+begin_function
+name|v4f32
+name|__vectorcall
+name|hva8
+parameter_list|(
+name|v4f32
+name|a
+parameter_list|,
+name|v4f32
+name|b
+parameter_list|,
+name|v4f32
+name|c
+parameter_list|,
+name|v4f32
+name|d
+parameter_list|,
+name|int
+name|e
+parameter_list|,
+name|v4f32
+name|f
+parameter_list|)
+block|{
+return|return
+name|f
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// X32: define x86_vectorcallcc<4 x float> @"\01hva8@@84"(<4 x float> %a,<4 x float> %b,<4 x float> %c,<4 x float> %d, i32 inreg %e,<4 x float> %f)
+end_comment
+
+begin_comment
+comment|// X64: define x86_vectorcallcc<4 x float> @"\01hva8@@88"(<4 x float> %a,<4 x float> %b,<4 x float> %c,<4 x float> %d, i32 %e,<4 x float> %f)
 end_comment
 
 begin_typedef
@@ -528,11 +750,64 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01odd_size_hva@@32"(<3 x float> %a.0,<3 x float> %a.1)
+comment|// X32: define x86_vectorcallcc void @"\01odd_size_hva@@32"(%struct.OddSizeHVA inreg %a.coerce)
 end_comment
 
 begin_comment
-comment|// X64: define x86_vectorcallcc void @"\01odd_size_hva@@32"(<3 x float> %a.0,<3 x float> %a.1)
+comment|// X64: define x86_vectorcallcc void @"\01odd_size_hva@@32"(%struct.OddSizeHVA inreg %a.coerce)
+end_comment
+
+begin_comment
+comment|// The Vectorcall ABI only allows passing the first 6 items in registers, so this shouldn't
+end_comment
+
+begin_comment
+comment|// consider 'p7' as a register.  Instead p5 gets put into the register on the second pass.
+end_comment
+
+begin_function
+name|struct
+name|HFA2
+name|__vectorcall
+name|AddParticles
+parameter_list|(
+name|struct
+name|HFA2
+name|p1
+parameter_list|,
+name|float
+name|p2
+parameter_list|,
+name|struct
+name|HFA4
+name|p3
+parameter_list|,
+name|int
+name|p4
+parameter_list|,
+name|struct
+name|HFA2
+name|p5
+parameter_list|,
+name|float
+name|p6
+parameter_list|,
+name|float
+name|p7
+parameter_list|)
+block|{
+return|return
+name|p1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// X32: define x86_vectorcallcc %struct.HFA2 @"\01AddParticles@@80"(%struct.HFA2 inreg %p1.coerce, float %p2, %struct.HFA4* inreg %p3, i32 inreg %p4, %struct.HFA2 inreg %p5.coerce, float %p6, float %p7)
+end_comment
+
+begin_comment
+comment|// X64: define x86_vectorcallcc %struct.HFA2 @"\01AddParticles@@96"(%struct.HFA2 inreg %p1.coerce, float %p2, %struct.HFA4* %p3, i32 %p4, %struct.HFA2 inreg %p5.coerce, float %p6, float %p7)
 end_comment
 
 end_unit

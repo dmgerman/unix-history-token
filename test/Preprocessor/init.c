@@ -36619,5 +36619,689 @@ begin_comment
 comment|// CYGWIN-X64: #define __USER_LABEL_PREFIX__
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=avr \
+end_comment
+
+begin_comment
+comment|// RUN:< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines -check-prefix=AVR %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// AVR:#define __ATOMIC_ACQUIRE 2
+end_comment
+
+begin_comment
+comment|// AVR:#define __ATOMIC_ACQ_REL 4
+end_comment
+
+begin_comment
+comment|// AVR:#define __ATOMIC_CONSUME 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __ATOMIC_RELAXED 0
+end_comment
+
+begin_comment
+comment|// AVR:#define __ATOMIC_RELEASE 3
+end_comment
+
+begin_comment
+comment|// AVR:#define __ATOMIC_SEQ_CST 5
+end_comment
+
+begin_comment
+comment|// AVR:#define __AVR__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __BIGGEST_ALIGNMENT__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// AVR:#define __CHAR16_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __CHAR32_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_DECIMAL_DIG__ 9
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_DENORM_MIN__ 1.40129846e-45
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_DIG__ 6
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_EPSILON__ 1.19209290e-7
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_MAX__ 3.40282347e+38
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// AVR:#define __DBL_MIN__ 1.17549435e-38
+end_comment
+
+begin_comment
+comment|// AVR:#define __FINITE_MATH_ONLY__ 0
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_DECIMAL_DIG__ 9
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// AVR:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_BOOL_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_CHAR16_T_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_CHAR32_T_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_CHAR_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_INT_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_LLONG_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_LONG_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_POINTER_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_SHORT_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_TEST_AND_SET_TRUEVAL 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GCC_ATOMIC_WCHAR_T_LOCK_FREE 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __GXX_ABI_VERSION 1002
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT16_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT32_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT32_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT32_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT8_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AVR:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// AVR:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AVR:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INTPTR_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AVR:#define __INTPTR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_FAST16_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_FAST32_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_FAST32_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_LEAST16_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_LEAST32_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_LEAST32_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AVR:#define __INT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_DECIMAL_DIG__ 9
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_DENORM_MIN__ 1.40129846e-45L
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_DIG__ 6
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_EPSILON__ 1.19209290e-7L
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_MAX__ 3.40282347e+38L
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// AVR:#define __LDBL_MIN__ 1.17549435e-38L
+end_comment
+
+begin_comment
+comment|// AVR:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AVR:#define __LONG_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// AVR:#define __NO_INLINE__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __ORDER_BIG_ENDIAN__ 4321
+end_comment
+
+begin_comment
+comment|// AVR:#define __ORDER_LITTLE_ENDIAN__ 1234
+end_comment
+
+begin_comment
+comment|// AVR:#define __ORDER_PDP_ENDIAN__ 3412
+end_comment
+
+begin_comment
+comment|// AVR:#define __PRAGMA_REDEFINE_EXTNAME 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __PTRDIFF_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AVR:#define __PTRDIFF_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AVR:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AVR:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIG_ATOMIC_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIG_ATOMIC_WIDTH__ 8
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_DOUBLE__ 4
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_INT__ 2
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_LONG_DOUBLE__ 4
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_POINTER__ 2
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_PTRDIFF_T__ 2
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_SIZE_T__ 2
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_WCHAR_T__ 2
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZEOF_WINT_T__ 2
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZE_MAX__ 65535U
+end_comment
+
+begin_comment
+comment|// AVR:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __STDC__ 1
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT16_MAX__ 65535U
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT32_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT32_MAX__ 4294967295UL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT32_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT8_C_SUFFIX__
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINTPTR_MAX__ 65535U
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_FAST16_MAX__ 65535U
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_FAST16_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_FAST32_MAX__ 4294967295UL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_FAST32_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_LEAST16_MAX__ 65535U
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_LEAST16_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_LEAST32_MAX__ 4294967295UL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_LEAST32_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AVR:#define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AVR:#define __USER_LABEL_PREFIX__
+end_comment
+
+begin_comment
+comment|// AVR:#define __WCHAR_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AVR:#define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AVR:#define __WINT_TYPE__ int
+end_comment
+
 end_unit
 

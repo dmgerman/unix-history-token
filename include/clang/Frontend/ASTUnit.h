@@ -378,7 +378,9 @@ name|TargetInfo
 operator|>
 name|Target
 block|;
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|Preprocessor
 operator|>
@@ -398,7 +400,9 @@ name|TargetOptions
 operator|>
 name|TargetOpts
 block|;
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|HeaderSearchOptions
 operator|>
@@ -448,7 +452,9 @@ name|TheSema
 block|;
 comment|/// Optional owned invocation, just used to make the invocation used in
 comment|/// LoadFromCommandLine available.
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|CompilerInvocation
 operator|>
@@ -1266,7 +1272,9 @@ comment|/// \brief Retrieve the allocator used to cache global code completions.
 end_comment
 
 begin_expr_stmt
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|GlobalCodeCompletionAllocator
 operator|>
@@ -1291,11 +1299,23 @@ operator|!
 name|CCTUInfo
 condition|)
 name|CCTUInfo
-operator|.
-name|reset
-argument_list|(
-argument|new CodeCompletionTUInfo(                                             new GlobalCodeCompletionAllocator)
-argument_list|)
+operator|=
+name|llvm
+operator|::
+name|make_unique
+operator|<
+name|CodeCompletionTUInfo
+operator|>
+operator|(
+name|std
+operator|::
+name|make_shared
+operator|<
+name|GlobalCodeCompletionAllocator
+operator|>
+operator|(
+operator|)
+operator|)
 expr_stmt|;
 return|return
 operator|*
@@ -1314,7 +1334,9 @@ comment|/// \brief Allocator used to store cached code completions.
 end_comment
 
 begin_expr_stmt
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|GlobalCodeCompletionAllocator
 operator|>
@@ -1931,6 +1953,23 @@ block|}
 end_function
 
 begin_expr_stmt
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|Preprocessor
+operator|>
+name|getPreprocessorPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PP
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|ASTContext
 operator|&
@@ -1974,16 +2013,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|setPreprocessor
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|Preprocessor
-modifier|*
+operator|>
 name|pp
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|bool
@@ -3027,30 +3070,26 @@ begin_comment
 comment|/// \brief Create a ASTUnit. Gets ownership of the passed CompilerInvocation.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTUnit
-modifier|*
+operator|>
 name|create
 argument_list|(
-name|CompilerInvocation
-operator|*
-name|CI
+argument|std::shared_ptr<CompilerInvocation> CI
 argument_list|,
-name|IntrusiveRefCntPtr
-operator|<
-name|DiagnosticsEngine
-operator|>
-name|Diags
+argument|IntrusiveRefCntPtr<DiagnosticsEngine> Diags
 argument_list|,
-name|bool
-name|CaptureDiagnostics
+argument|bool CaptureDiagnostics
 argument_list|,
-name|bool
-name|UserFilesAreVolatile
+argument|bool UserFilesAreVolatile
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Create a ASTUnit from an AST file.
@@ -3307,8 +3346,12 @@ name|ASTUnit
 modifier|*
 name|LoadFromCompilerInvocationAction
 argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|CompilerInvocation
-operator|*
+operator|>
 name|CI
 argument_list|,
 name|std
@@ -3458,7 +3501,7 @@ name|ASTUnit
 operator|>
 name|LoadFromCompilerInvocation
 argument_list|(
-argument|CompilerInvocation *CI
+argument|std::shared_ptr<CompilerInvocation> CI
 argument_list|,
 argument|std::shared_ptr<PCHContainerOperations> PCHContainerOps
 argument_list|,

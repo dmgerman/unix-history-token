@@ -568,6 +568,25 @@ return|return
 name|Triple
 return|;
 block|}
+comment|/// Get the toolchain's aux triple, if it has one.
+comment|///
+comment|/// Exactly what the aux triple represents depends on the toolchain, but for
+comment|/// example when compiling CUDA code for the GPU, the triple might be NVPTX,
+comment|/// while the aux triple is the host (CPU) toolchain, e.g. x86-linux-gnu.
+name|virtual
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|*
+name|getAuxTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
 name|llvm
 operator|::
 name|Triple

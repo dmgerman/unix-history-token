@@ -1178,14 +1178,8 @@ name|GlobalCodeCompletionAllocator
 range|:
 name|public
 name|CodeCompletionAllocator
-decl_stmt|,
-name|public
-name|RefCountedBase
-decl|<
-name|GlobalCodeCompletionAllocator
-decl|>
-block|{  }
-empty_stmt|;
+block|{}
+decl_stmt|;
 name|class
 name|CodeCompletionTUInfo
 block|{
@@ -1201,7 +1195,9 @@ name|StringRef
 operator|>
 name|ParentNames
 expr_stmt|;
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|GlobalCodeCompletionAllocator
 operator|>
@@ -1212,7 +1208,9 @@ label|:
 name|explicit
 name|CodeCompletionTUInfo
 argument_list|(
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|GlobalCodeCompletionAllocator
 operator|>
@@ -1224,7 +1222,9 @@ argument_list|(
 argument|std::move(Allocator)
 argument_list|)
 block|{}
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|GlobalCodeCompletionAllocator
 operator|>
@@ -2722,7 +2722,7 @@ argument_list|)
 block|,
 name|CCTUInfo
 argument_list|(
-argument|new GlobalCodeCompletionAllocator
+argument|std::make_shared<GlobalCodeCompletionAllocator>()
 argument_list|)
 block|{}
 comment|/// \brief Prints the finalized code-completion results.

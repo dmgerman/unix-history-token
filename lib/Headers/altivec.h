@@ -86038,6 +86038,20 @@ directive|ifdef
 name|__POWER9_VECTOR__
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|vec_insert4b
+value|__builtin_vsx_insertword
+end_define
+
+begin_define
+define|#
+directive|define
+name|vec_extract4b
+value|__builtin_vsx_extractuword
+end_define
+
 begin_comment
 comment|/* vec_extract_exp */
 end_comment

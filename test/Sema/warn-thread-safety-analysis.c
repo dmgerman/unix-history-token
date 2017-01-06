@@ -828,5 +828,39 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// We had a problem where we'd skip all attributes that follow a late-parsed
+end_comment
+
+begin_comment
+comment|// attribute in a single __attribute__.
+end_comment
+
+begin_function_decl
+name|void
+name|run
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(guarded_by
+parameter_list|(
+name|mu1
+parameter_list|)
+operator|,
+function_decl|guarded_by
+parameter_list|(
+name|mu1
+parameter_list|)
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-warning 2{{only applies to fields and global variables}}
+end_comment
+
 end_unit
 

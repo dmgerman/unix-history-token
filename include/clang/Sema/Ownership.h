@@ -644,6 +644,8 @@ specifier|const
 name|void
 operator|*
 argument_list|)
+operator|=
+name|delete
 block|;
 name|ActionResult
 argument_list|(
@@ -651,6 +653,8 @@ specifier|volatile
 name|void
 operator|*
 argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|isInvalid
@@ -865,6 +869,8 @@ specifier|const
 name|void
 operator|*
 argument_list|)
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -875,6 +881,8 @@ specifier|volatile
 name|void
 operator|*
 argument_list|)
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 

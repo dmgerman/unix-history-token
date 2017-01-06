@@ -195,16 +195,10 @@ argument_list|)
 decl_stmt|;
 name|class
 name|CompilerInvocationBase
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|CompilerInvocation
-operator|>
 block|{
 name|void
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|CompilerInvocationBase
@@ -212,9 +206,9 @@ operator|&
 operator|)
 operator|=
 name|delete
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 comment|/// Options controlling the language variant.
 name|std
 operator|::
@@ -223,7 +217,7 @@ operator|<
 name|LangOptions
 operator|>
 name|LangOpts
-block|;
+expr_stmt|;
 comment|/// Options controlling the target.
 name|std
 operator|::
@@ -232,35 +226,39 @@ operator|<
 name|TargetOptions
 operator|>
 name|TargetOpts
-block|;
+expr_stmt|;
 comment|/// Options controlling the diagnostic engine.
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticOptions
 operator|>
 name|DiagnosticOpts
-block|;
+expr_stmt|;
 comment|/// Options controlling the \#include directive.
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|HeaderSearchOptions
 operator|>
 name|HeaderSearchOpts
-block|;
+expr_stmt|;
 comment|/// Options controlling the preprocessor (aside from \#include handling).
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|PreprocessorOptions
 operator|>
 name|PreprocessorOpts
-block|;
+expr_stmt|;
 name|CompilerInvocationBase
 argument_list|()
-block|;
+expr_stmt|;
 operator|~
 name|CompilerInvocationBase
 argument_list|()
-block|;
+expr_stmt|;
 name|CompilerInvocationBase
 argument_list|(
 specifier|const
@@ -268,11 +266,11 @@ name|CompilerInvocationBase
 operator|&
 name|X
 argument_list|)
-block|;
+expr_stmt|;
 name|LangOptions
-operator|*
+modifier|*
 name|getLangOpts
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|LangOpts
@@ -296,9 +294,9 @@ argument_list|()
 return|;
 block|}
 name|TargetOptions
-operator|&
+modifier|&
 name|getTargetOpts
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|*
@@ -335,9 +333,9 @@ name|DiagnosticOpts
 return|;
 block|}
 name|HeaderSearchOptions
-operator|&
+modifier|&
 name|getHeaderSearchOpts
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|*
@@ -356,10 +354,37 @@ operator|*
 name|HeaderSearchOpts
 return|;
 block|}
-name|PreprocessorOptions
-operator|&
-name|getPreprocessorOpts
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|HeaderSearchOptions
+operator|>
+name|getHeaderSearchOptsPtr
 argument_list|()
+specifier|const
+block|{
+return|return
+name|HeaderSearchOpts
+return|;
+block|}
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PreprocessorOptions
+operator|>
+name|getPreprocessorOptsPtr
+argument_list|()
+block|{
+return|return
+name|PreprocessorOpts
+return|;
+block|}
+name|PreprocessorOptions
+modifier|&
+name|getPreprocessorOpts
+parameter_list|()
 block|{
 return|return
 operator|*
@@ -378,8 +403,8 @@ operator|*
 name|PreprocessorOpts
 return|;
 block|}
-expr|}
-block|;
+block|}
+empty_stmt|;
 comment|/// \brief Helper class for holding the data necessary to invoke the compiler.
 comment|///
 comment|/// This class is designed to represent an abstract "invocation" of the
@@ -387,7 +412,7 @@ comment|/// compiler, including data such as the include paths, the code generat
 comment|/// options, the warning flags, and so on.
 name|class
 name|CompilerInvocation
-operator|:
+range|:
 name|public
 name|CompilerInvocationBase
 block|{

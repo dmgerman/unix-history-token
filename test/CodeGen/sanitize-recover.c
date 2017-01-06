@@ -76,9 +76,9 @@ comment|// PARTIAL:      %[[CHECK02:.*]] = and i1 %[[CHECK0]], %[[CHECK2]]
 comment|// PARTIAL-NEXT: %[[CHECK012:.*]] = and i1 %[[CHECK02]], %[[CHECK1]]
 comment|// PARTIAL:      br i1 %[[CHECK012]], {{.*}} !prof ![[WEIGHT_MD:.*]], !nosanitize
 comment|// PARTIAL:      br i1 %[[CHECK02]], {{.*}}
-comment|// PARTIAL:      call void @__ubsan_handle_type_mismatch_abort(
+comment|// PARTIAL:      call void @__ubsan_handle_type_mismatch_v1_abort(
 comment|// PARTIAL-NEXT: unreachable
-comment|// PARTIAL:      call void @__ubsan_handle_type_mismatch(
+comment|// PARTIAL:      call void @__ubsan_handle_type_mismatch_v1(
 block|}
 end_function
 
