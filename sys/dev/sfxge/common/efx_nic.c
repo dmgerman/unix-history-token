@@ -827,8 +827,6 @@ name|EFX_FEATURE_LINK_EVENTS
 operator||
 name|EFX_FEATURE_PERIODIC_MAC_STATS
 operator||
-name|EFX_FEATURE_WOL
-operator||
 name|EFX_FEATURE_MCDI
 operator||
 name|EFX_FEATURE_LOOKAHEAD_SPLIT
@@ -854,7 +852,6 @@ operator|=
 operator|&
 name|__efx_nic_hunt_ops
 expr_stmt|;
-comment|/* FIXME: Add WOL support */
 name|enp
 operator|->
 name|en_features
