@@ -11935,7 +11935,9 @@ name|size1
 argument_list|)
 argument_list|,
 operator|(
-literal|"vm_map_entry_delete: object->charge< 0"
+literal|"object %p charge< 0"
+operator|,
+name|object
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12655,13 +12657,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|src_object
 operator|->
 name|handle
 operator|==
 name|NULL
-operator|)
 operator|&&
 operator|(
 name|src_object
@@ -12849,21 +12849,17 @@ name|src_entry
 operator|->
 name|eflags
 operator||=
-operator|(
 name|MAP_ENTRY_COW
 operator||
 name|MAP_ENTRY_NEEDS_COPY
-operator|)
 expr_stmt|;
 name|dst_entry
 operator|->
 name|eflags
 operator||=
-operator|(
 name|MAP_ENTRY_COW
 operator||
 name|MAP_ENTRY_NEEDS_COPY
-operator|)
 expr_stmt|;
 name|dst_entry
 operator|->
