@@ -3754,10 +3754,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX-BZ aruments should be swapped. */
-end_comment
-
 begin_function
 specifier|static
 name|int32_t
@@ -3768,14 +3764,14 @@ name|snmp_toolinfo
 modifier|*
 name|snmptoolctx
 parameter_list|,
-name|char
-modifier|*
-name|str
-parameter_list|,
 name|struct
 name|snmp_object
 modifier|*
 name|object
+parameter_list|,
+name|char
+modifier|*
+name|str
 parameter_list|)
 block|{
 name|uint32_t
@@ -4181,11 +4177,11 @@ name|parse_syntax_strval
 argument_list|(
 name|snmptoolctx
 argument_list|,
+name|obj
+argument_list|,
 name|ptr
 operator|+
 literal|1
-argument_list|,
-name|obj
 argument_list|)
 operator|<
 literal|0
