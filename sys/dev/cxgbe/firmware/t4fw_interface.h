@@ -15315,7 +15315,7 @@ name|__be32
 name|lsodisable_to_flags
 decl_stmt|;
 name|__be32
-name|ddraddr
+name|r5
 decl_stmt|;
 name|__be32
 name|ctxloc_to_exp
@@ -15333,11 +15333,46 @@ name|__u8
 name|pdusinplenmax_pkd
 decl_stmt|;
 name|__u8
-name|r9
+name|r10
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|S_FW_TLSTX_DATA_WR_OPCODE
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_TLSTX_DATA_WR_OPCODE
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_TLSTX_DATA_WR_OPCODE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_TLSTX_DATA_WR_OPCODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_TLSTX_DATA_WR_OPCODE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_TLSTX_DATA_WR_OPCODE)& M_FW_TLSTX_DATA_WR_OPCODE)
+end_define
 
 begin_define
 define|#
@@ -15864,7 +15899,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x)>> S_FW_TLSTX_DATA_WR_ADJUSTEDPLEN)& \                   M_FW_TLSTX_DATA_WR_ADJUSTEDPLEN)
+value|(((x)>> S_FW_TLSTX_DATA_WR_ADJUSTEDPLEN)& \      M_FW_TLSTX_DATA_WR_ADJUSTEDPLEN)
 end_define
 
 begin_define
@@ -15900,7 +15935,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x)>> S_FW_TLSTX_DATA_WR_EXPINPLENMAX)& \                   M_FW_TLSTX_DATA_WR_EXPINPLENMAX)
+value|(((x)>> S_FW_TLSTX_DATA_WR_EXPINPLENMAX)& \      M_FW_TLSTX_DATA_WR_EXPINPLENMAX)
 end_define
 
 begin_define
@@ -15936,7 +15971,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x)>> S_FW_TLSTX_DATA_WR_PDUSINPLENMAX)& \                   M_FW_TLSTX_DATA_WR_PDUSINPLENMAX)
+value|(((x)>> S_FW_TLSTX_DATA_WR_PDUSINPLENMAX)& \      M_FW_TLSTX_DATA_WR_PDUSINPLENMAX)
 end_define
 
 begin_struct
@@ -16048,11 +16083,8 @@ decl_stmt|;
 name|__u8
 name|protocol
 decl_stmt|;
-name|__u8
-name|r7
-index|[
-literal|2
-index|]
+name|__be16
+name|mfs
 decl_stmt|;
 name|__be32
 name|ftid
@@ -43158,7 +43190,7 @@ literal|0x10
 block|,
 name|T4FW_VERSION_MICRO
 init|=
-literal|0x16
+literal|0x1a
 block|,
 name|T4FW_VERSION_BUILD
 init|=
@@ -43174,7 +43206,7 @@ literal|0x10
 block|,
 name|T5FW_VERSION_MICRO
 init|=
-literal|0x16
+literal|0x1a
 block|,
 name|T5FW_VERSION_BUILD
 init|=
@@ -43190,7 +43222,7 @@ literal|0x10
 block|,
 name|T6FW_VERSION_MICRO
 init|=
-literal|0x16
+literal|0x1a
 block|,
 name|T6FW_VERSION_BUILD
 init|=
