@@ -2454,6 +2454,17 @@ begin_comment
 comment|/* for use by socket callbacks - soreceive (TCP) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MSG_MORETOCOME
+value|0x20000
+end_define
+
+begin_comment
+comment|/* additional data pending */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
