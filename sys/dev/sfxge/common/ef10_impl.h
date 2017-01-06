@@ -1056,6 +1056,11 @@ parameter_list|,
 name|__in
 name|uint32_t
 name|partn
+parameter_list|,
+name|__out_opt
+name|uint32_t
+modifier|*
+name|resultp
 parameter_list|)
 function_decl|;
 endif|#
