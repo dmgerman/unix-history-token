@@ -91,13 +91,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-vd"
-argument_list|,
-literal|"Display compiler build date and time"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-vo"
 argument_list|,
 literal|"Enable optimization comments"

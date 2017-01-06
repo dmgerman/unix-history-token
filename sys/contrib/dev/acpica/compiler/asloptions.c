@@ -104,26 +104,6 @@ name|ASL_SUPPORTED_OPTIONS
 value|"@:a:b|c|d^D:e:f^gh^i|I:l^m:no|p:P^r:s|t|T+G^v^w|x:z"
 end_define
 
-begin_decl_stmt
-specifier|static
-name|char
-name|ASL_BUILD_DATE
-index|[]
-init|=
-name|__DATE__
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|ASL_BUILD_TIME
-index|[]
-init|=
-name|__TIME__
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AslCommandLine  *  * PARAMETERS:  argc/argv  *  * RETURN:      Last argv index  *  * DESCRIPTION: Command line processing  *  ******************************************************************************/
 end_comment
@@ -1528,25 +1508,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
-case|case
-literal|'d'
-case|:
-name|printf
-argument_list|(
-literal|"%s Build date/time: %s %s\n"
-argument_list|,
-name|ASL_COMPILER_NAME
-argument_list|,
-name|ASL_BUILD_DATE
-argument_list|,
-name|ASL_BUILD_TIME
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 case|case
 literal|'e'
 case|:
