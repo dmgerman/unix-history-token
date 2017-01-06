@@ -173,12 +173,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tcpd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -211,6 +205,23 @@ include|#
 directive|include
 file|"tftp-options.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBWRAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<tcpd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1099,6 +1110,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|LIBWRAP
 comment|/* 	 * See if the client is allowed to talk to me. 	 * (This needs to be done before the chroot()) 	 */
 block|{
 name|struct
@@ -1270,6 +1284,8 @@ literal|"in /etc/hosts.allow"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Since we exit here, we should do that only after the above 	 * recvfrom to keep inetd from constantly forking should there 	 * be a problem.  See the above comment about system clogging. 	 */
 if|if
 condition|(
