@@ -312,6 +312,9 @@ name|char
 modifier|*
 name|current_load_cmd_addr_
 decl_stmt|;
+name|bool
+name|current_instrumented_
+decl_stmt|;
 endif|#
 directive|endif
 block|}

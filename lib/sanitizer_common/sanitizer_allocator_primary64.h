@@ -1447,9 +1447,8 @@ argument_list|)
 decl_stmt|;
 name|Printf
 argument_list|(
-literal|"  %02zd (%zd): mapped: %zdK allocs: %zd frees: %zd inuse: %zd "
-literal|"num_freed_chunks %zd"
-literal|" avail: %zd rss: %zdK releases: %zd\n"
+literal|"  %02zd (%6zd): mapped: %6zdK allocs: %7zd frees: %7zd inuse: %6zd "
+literal|"num_freed_chunks %7zd avail: %6zd rss: %6zdK releases: %6zd\n"
 argument_list|,
 name|class_id
 argument_list|,

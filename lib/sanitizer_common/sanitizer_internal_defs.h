@@ -1252,12 +1252,12 @@ define|#
 directive|define
 name|GET_CALLER_PC
 parameter_list|()
-value|(uptr)__builtin_return_address(0)
+value|(__sanitizer::uptr) __builtin_return_address(0)
 define|#
 directive|define
 name|GET_CURRENT_FRAME
 parameter_list|()
-value|(uptr)__builtin_frame_address(0)
+value|(__sanitizer::uptr) __builtin_frame_address(0)
 specifier|inline
 name|void
 name|Trap
@@ -1303,13 +1303,14 @@ define|#
 directive|define
 name|GET_CALLER_PC
 parameter_list|()
-value|(uptr)_ReturnAddress()
+value|(__sanitizer::uptr) _ReturnAddress()
 comment|// CaptureStackBackTrace doesn't need to know BP on Windows.
 define|#
 directive|define
 name|GET_CURRENT_FRAME
 parameter_list|()
-value|(((uptr)_AddressOfReturnAddress()) + sizeof(uptr))
+define|\
+value|(((__sanitizer::uptr)_AddressOfReturnAddress()) + sizeof(__sanitizer::uptr))
 extern|extern
 literal|"C"
 name|void
@@ -1350,7 +1351,7 @@ define|#
 directive|define
 name|ENABLE_FRAME_POINTER
 define|\
-value|do {                                                             \     volatile uptr enable_fp;                                       \     enable_fp = GET_CURRENT_FRAME();                               \     (void)enable_fp;                                               \   } while (0)
+value|do {                                    \     volatile __sanitizer::uptr enable_fp; \     enable_fp = GET_CURRENT_FRAME();      \     (void)enable_fp;                      \   } while (0)
 block|}
 end_decl_stmt
 
