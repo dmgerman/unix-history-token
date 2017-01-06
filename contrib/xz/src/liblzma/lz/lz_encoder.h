@@ -413,7 +413,7 @@ typedef|typedef
 struct|struct
 block|{
 comment|/// Data specific to the LZ-based encoder
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 decl_stmt|;
@@ -424,9 +424,8 @@ modifier|*
 name|code
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-specifier|restrict
 name|coder
 parameter_list|,
 name|lzma_mf
@@ -455,7 +454,7 @@ modifier|*
 name|end
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,
@@ -472,7 +471,7 @@ modifier|*
 name|options_update
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,

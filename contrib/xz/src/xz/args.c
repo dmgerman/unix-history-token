@@ -2477,6 +2477,51 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+comment|// If encoder or decoder support was omitted at build time,
+comment|// show an error now so that the rest of the code can rely on
+comment|// that whatever is in opt_mode is also supported.
+ifndef|#
+directive|ifndef
+name|HAVE_ENCODERS
+if|if
+condition|(
+name|opt_mode
+operator|==
+name|MODE_COMPRESS
+condition|)
+name|message_fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"Compression support was disabled "
+literal|"at build time"
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|HAVE_DECODERS
+comment|// Even MODE_LIST cannot work without decoder support so MODE_COMPRESS
+comment|// is the only valid choice.
+if|if
+condition|(
+name|opt_mode
+operator|!=
+name|MODE_COMPRESS
+condition|)
+name|message_fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"Decompression support was disabled "
+literal|"at build time"
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|// Never remove the source file when the destination is not on disk.
 comment|// In test mode the data is written nowhere, but setting opt_stdout
 comment|// will make the rest of the code behave well.

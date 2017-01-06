@@ -69,9 +69,9 @@ directive|include
 file|"lz_decoder.h"
 end_include
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|lzma_coder_s
 block|{
 comment|/// Dictionary (history buffer)
 name|lzma_dict
@@ -118,8 +118,9 @@ block|}
 name|temp
 struct|;
 block|}
-struct|;
-end_struct
+name|lzma_coder
+typedef|;
+end_typedef
 
 begin_function
 specifier|static
@@ -444,9 +445,9 @@ specifier|static
 name|lzma_ret
 name|lz_decode
 argument_list|(
-name|lzma_coder
+name|void
 operator|*
-name|coder
+name|coder_ptr
 argument_list|,
 specifier|const
 name|lzma_allocator
@@ -490,6 +491,12 @@ name|lzma_action
 name|action
 argument_list|)
 block|{
+name|lzma_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 if|if
 condition|(
 name|coder
@@ -754,9 +761,9 @@ specifier|static
 name|void
 name|lz_decoder_end
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -764,6 +771,12 @@ modifier|*
 name|allocator
 parameter_list|)
 block|{
+name|lzma_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|lzma_next_end
 argument_list|(
 operator|&
@@ -879,17 +892,21 @@ parameter_list|)
 parameter_list|)
 block|{
 comment|// Allocate the base structure if it isn't already allocated.
-if|if
-condition|(
+name|lzma_coder
+modifier|*
+name|coder
+init|=
 name|next
 operator|->
+name|coder
+decl_stmt|;
+if|if
+condition|(
 name|coder
 operator|==
 name|NULL
 condition|)
 block|{
-name|next
-operator|->
 name|coder
 operator|=
 name|lzma_alloc
@@ -904,8 +921,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|==
 name|NULL
@@ -913,6 +928,12 @@ condition|)
 return|return
 name|LZMA_MEM_ERROR
 return|;
+name|next
+operator|->
+name|coder
+operator|=
+name|coder
+expr_stmt|;
 name|next
 operator|->
 name|code
@@ -927,8 +948,6 @@ operator|=
 operator|&
 name|lz_decoder_end
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -937,8 +956,6 @@ name|buf
 operator|=
 name|NULL
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -947,16 +964,12 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|lz
 operator|=
 name|LZMA_LZ_DECODER_INIT
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|next
@@ -974,8 +987,6 @@ argument_list|(
 name|lz_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|lz
@@ -1058,8 +1069,6 @@ expr_stmt|;
 comment|// Allocate and initialize the dictionary.
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -1073,8 +1082,6 @@ condition|)
 block|{
 name|lzma_free
 argument_list|(
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -1084,8 +1091,6 @@ argument_list|,
 name|allocator
 argument_list|)
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -1103,8 +1108,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -1116,8 +1119,6 @@ condition|)
 return|return
 name|LZMA_MEM_ERROR
 return|;
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -1181,8 +1182,6 @@ name|copy_size
 decl_stmt|;
 name|memcpy
 argument_list|(
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -1198,8 +1197,6 @@ argument_list|,
 name|copy_size
 argument_list|)
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -1208,8 +1205,6 @@ name|pos
 operator|=
 name|copy_size
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|dict
@@ -1220,24 +1215,18 @@ name|copy_size
 expr_stmt|;
 block|}
 comment|// Miscellaneous initializations
-name|next
-operator|->
 name|coder
 operator|->
 name|next_finished
 operator|=
 name|false
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|this_finished
 operator|=
 name|false
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|temp
@@ -1246,8 +1235,6 @@ name|pos
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|temp
@@ -1261,8 +1248,6 @@ return|return
 name|lzma_next_filter_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|next
@@ -1307,14 +1292,20 @@ specifier|extern
 name|void
 name|lzma_lz_decoder_uncompressed
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 name|lzma_vli
 name|uncompressed_size
 parameter_list|)
 block|{
+name|lzma_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|coder
 operator|->
 name|lz

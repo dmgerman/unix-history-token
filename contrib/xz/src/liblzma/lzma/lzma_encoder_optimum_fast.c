@@ -69,7 +69,7 @@ specifier|extern
 name|void
 name|lzma_lzma_optimum_fast
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|restrict
 name|coder

@@ -61,14 +61,75 @@ directive|include
 file|"common.h"
 end_include
 
+begin_comment
+comment|// If the function for external SHA-256 is missing, use the internal SHA-256
+end_comment
+
+begin_comment
+comment|// code. Due to how configure works, these defines can only get defined when
+end_comment
+
+begin_comment
+comment|// both a usable header and a type have already been found.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|HAVE_CC_SHA256_INIT
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|HAVE_SHA256_INIT
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|HAVE_SHA256INIT
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTERNAL_SHA256
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_COMMONCRYPTO_COMMONDIGEST_H
+name|HAVE_INTERNAL_SHA256
 argument_list|)
 end_if
+
+begin_comment
+comment|// Nothing
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_COMMONCRYPTO_COMMONDIGEST_H
+argument_list|)
+end_elif
 
 begin_include
 include|#
@@ -118,27 +179,6 @@ directive|include
 file|<sha2.h>
 end_include
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|HAVE_MINIX_SHA2_H
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<minix/sha2.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -149,9 +189,42 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_CC_SHA256_CTX
+name|HAVE_INTERNAL_SHA256
 argument_list|)
 end_if
+
+begin_comment
+comment|/// State for the internal SHA-256 implementation
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/// Internal state
+name|uint32_t
+name|state
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/// Size of the message excluding padding
+name|uint64_t
+name|size
+decl_stmt|;
+block|}
+name|lzma_sha256_state
+typedef|;
+end_typedef
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_CC_SHA256_CTX
+argument_list|)
+end_elif
 
 begin_typedef
 typedef|typedef
@@ -192,35 +265,6 @@ name|lzma_sha256_state
 typedef|;
 end_typedef
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/// State for the internal SHA-256 implementation
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-comment|/// Internal state
-name|uint32_t
-name|state
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/// Size of the message excluding padding
-name|uint64_t
-name|size
-decl_stmt|;
-block|}
-name|lzma_sha256_state
-typedef|;
-end_typedef
-
 begin_endif
 endif|#
 directive|endif
@@ -231,9 +275,22 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_CC_SHA256_INIT
+name|HAVE_INTERNAL_SHA256
 argument_list|)
 end_if
+
+begin_comment
+comment|// Nothing
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_CC_SHA256_INIT
+argument_list|)
+end_elif
 
 begin_define
 define|#

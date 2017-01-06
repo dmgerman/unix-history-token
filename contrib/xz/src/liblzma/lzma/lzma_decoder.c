@@ -265,9 +265,9 @@ name|lzma_length_decoder
 typedef|;
 end_typedef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|lzma_coder_s
 block|{
 comment|///////////////////
 comment|// Probabilities //
@@ -503,18 +503,18 @@ name|uint32_t
 name|len
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|lzma_lzma1_decoder
+typedef|;
+end_typedef
 
 begin_function
 specifier|static
 name|lzma_ret
 name|lzma_decode
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-specifier|restrict
-name|coder
+name|coder_ptr
 parameter_list|,
 name|lzma_dict
 modifier|*
@@ -536,6 +536,13 @@ name|size_t
 name|in_size
 parameter_list|)
 block|{
+name|lzma_lzma1_decoder
+modifier|*
+specifier|restrict
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 comment|////////////////////
 comment|// Initialization //
 comment|////////////////////
@@ -2543,14 +2550,20 @@ specifier|static
 name|void
 name|lzma_decoder_uncompressed
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 name|lzma_vli
 name|uncompressed_size
 parameter_list|)
 block|{
+name|lzma_lzma1_decoder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|coder
 operator|->
 name|uncompressed_size
@@ -2560,18 +2573,14 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* extern void lzma_lzma_decoder_uncompressed(void *coder_ptr, lzma_vli uncompressed_size) { 	// This is hack. 	(*(lzma_coder **)(coder))->uncompressed_size = uncompressed_size; } */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|lzma_decoder_reset
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|void
@@ -2579,6 +2588,12 @@ modifier|*
 name|opt
 parameter_list|)
 block|{
+name|lzma_lzma1_decoder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 specifier|const
 name|lzma_options_lzma
 modifier|*
@@ -3078,7 +3093,7 @@ name|lzma_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_lzma1_decoder
 argument_list|)
 argument_list|,
 name|allocator
@@ -3402,7 +3417,7 @@ decl_stmt|;
 return|return
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_lzma1_decoder
 argument_list|)
 operator|+
 name|lzma_lz_decoder_memusage
