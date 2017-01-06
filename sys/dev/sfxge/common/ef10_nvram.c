@@ -7068,6 +7068,8 @@ argument_list|(
 name|enp
 argument_list|,
 name|partn
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|EFSYS_KMEM_FREE
@@ -7119,6 +7121,8 @@ argument_list|(
 name|enp
 argument_list|,
 name|partn
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|fail3
@@ -7871,6 +7875,11 @@ parameter_list|,
 name|__in
 name|uint32_t
 name|partn
+parameter_list|,
+name|__out_opt
+name|uint32_t
+modifier|*
+name|resultp
 parameter_list|)
 block|{
 name|boolean_t
@@ -7878,15 +7887,20 @@ name|reboot
 init|=
 name|B_FALSE
 decl_stmt|;
-name|uint32_t
-name|result
-init|=
-literal|0
-decl_stmt|;
-comment|/* FIXME: MC_CMD_NVRAM_VERIFY_RC_UNKNOWN */
 name|efx_rc_t
 name|rc
 decl_stmt|;
+if|if
+condition|(
+name|resultp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|resultp
+operator|=
+name|MC_CMD_NVRAM_VERIFY_RC_UNKNOWN
+expr_stmt|;
 name|rc
 operator|=
 name|efx_mcdi_nvram_update_finish
@@ -7897,8 +7911,7 @@ name|partn
 argument_list|,
 name|reboot
 argument_list|,
-operator|&
-name|result
+name|resultp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7926,7 +7939,6 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: log result if verified firmware update fails */
 return|return
 operator|(
 name|rc
@@ -9486,6 +9498,8 @@ argument_list|(
 name|enp
 argument_list|,
 name|partn
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|!=
