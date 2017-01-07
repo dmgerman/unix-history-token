@@ -460,7 +460,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Active open failed.  */
+comment|/*  * Active open succeeded.  */
 end_comment
 
 begin_function
@@ -873,6 +873,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Active open failed.  */
+end_comment
 
 begin_function
 specifier|static
