@@ -2209,6 +2209,10 @@ name|asn_len
 operator|=
 name|len
 expr_stmt|;
+name|ret
+operator|=
+name|SNMPD_INPUT_OK
+expr_stmt|;
 comment|/* look whether we have enough bytes for the entire PDU. */
 switch|switch
 condition|(
@@ -2361,10 +2365,6 @@ name|pdu
 argument_list|,
 name|ip
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|SNMPD_INPUT_OK
 expr_stmt|;
 name|decoded
 label|:
