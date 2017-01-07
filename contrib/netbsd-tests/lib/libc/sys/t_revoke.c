@@ -779,6 +779,19 @@ argument_list|(
 literal|"revoke(2) did not obey permissions"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE
 argument_list|(
 name|unlink
