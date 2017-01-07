@@ -1678,6 +1678,10 @@ name|uint32_t
 name|dc_htcaps
 decl_stmt|;
 comment|/* HT/802.11n support */
+name|uint32_t
+name|dc_vhtcaps
+decl_stmt|;
+comment|/* VHT/802.11ac capabilities */
 name|struct
 name|ieee80211req_chaninfo
 name|dc_chaninfo
@@ -2838,6 +2842,21 @@ end_define
 
 begin_comment
 comment|/* LDPC Tx/RX (on, off) */
+end_comment
+
+begin_comment
+comment|/* VHT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_VHTCONF
+value|130
+end_define
+
+begin_comment
+comment|/* VHT config (off, on; widths) */
 end_comment
 
 begin_define
