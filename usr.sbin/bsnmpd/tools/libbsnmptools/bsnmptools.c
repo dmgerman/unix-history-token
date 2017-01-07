@@ -840,14 +840,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"malloc() failed - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc() failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1141,14 +1136,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"strdup() failed - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"strdup() failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1178,14 +1168,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"calloc() failed - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"calloc() failed"
 argument_list|)
 expr_stmt|;
 name|free
@@ -3286,16 +3271,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Bad 'engine-boots' value %s - %s"
+literal|"Bad 'engine-boots' value %s"
 argument_list|,
 name|val
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -3366,16 +3346,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Bad 'engine-time' value %s - %s"
+literal|"Bad 'engine-time' value %s"
 argument_list|,
 name|val
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -3948,14 +3923,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Error parsing timeout value - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Error parsing timeout value"
 argument_list|)
 expr_stmt|;
 name|errno
@@ -4037,14 +4007,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Error parsing retries count - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Error parsing retries count"
 argument_list|)
 expr_stmt|;
 name|errno
@@ -4124,14 +4089,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Error parsing version - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Error parsing version"
 argument_list|)
 expr_stmt|;
 name|errno
@@ -4324,14 +4284,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Error parsing buffer size - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Error parsing buffer size"
 argument_list|)
 expr_stmt|;
 name|errno
@@ -4884,16 +4839,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Integer value %s not supported - %s"
+literal|"Integer value %s not supported"
 argument_list|,
 name|str
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -5339,16 +5289,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Integer value %s not supported - %s\n"
+literal|"Integer value %s not supported"
 argument_list|,
 name|str
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -5445,16 +5390,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Integer value %s not supported - %s"
+literal|"Integer value %s not supported"
 argument_list|,
 name|str
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
