@@ -297,6 +297,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee80211_syncflag_vht
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee80211_syncflag_ext
 parameter_list|(
 name|struct
@@ -2240,9 +2254,14 @@ decl_stmt|;
 comment|/* start of MESHCONF element */
 name|uint8_t
 modifier|*
+name|bo_vhtinfo
+decl_stmt|;
+comment|/* start of VHT info element (XXX VHTCAP?) */
+name|uint8_t
+modifier|*
 name|bo_spare
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 block|}
