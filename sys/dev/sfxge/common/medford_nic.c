@@ -922,6 +922,22 @@ name|enc_rx_push_align
 operator|=
 name|EF10_RX_WPTR_ALIGN
 expr_stmt|;
+name|encp
+operator|->
+name|enc_tx_dma_desc_size_max
+operator|=
+name|EFX_MASK32
+argument_list|(
+name|ESF_DZ_RX_KER_BYTE_CNT
+argument_list|)
+expr_stmt|;
+comment|/* No boundary crossing limits */
+name|encp
+operator|->
+name|enc_tx_dma_desc_boundary
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Set resource limits for MC_CMD_ALLOC_VIS. Note that we cannot use 	 * MC_CMD_GET_RESOURCE_LIMITS here as that reports the available 	 * resources (allocated to this PCIe function), which is zero until 	 * after we have allocated VIs. 	 */
 name|encp
 operator|->
