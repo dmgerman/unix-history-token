@@ -33,6 +33,18 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -250,6 +262,33 @@ argument_list|,
 name|oself
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|ATF_REQUIRE_MSG
+argument_list|(
+name|swapcontext
+argument_list|(
+operator|&
+name|octx
+argument_list|,
+operator|&
+name|nctx
+argument_list|)
+operator|!=
+operator|-
+literal|1
+argument_list|,
+literal|"swapcontext failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|PTHREAD_REQUIRE
 argument_list|(
 name|swapcontext
@@ -262,6 +301,8 @@ name|nctx
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* NOTREACHED */
 return|return
 name|NULL
@@ -338,6 +379,30 @@ argument_list|(
 literal|"Testing if swapcontext() alters pthread_self()\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|ATF_REQUIRE_MSG
+argument_list|(
+name|getcontext
+argument_list|(
+operator|&
+name|nctx
+argument_list|)
+operator|!=
+operator|-
+literal|1
+argument_list|,
+literal|"getcontext failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|PTHREAD_REQUIRE
 argument_list|(
 name|getcontext
@@ -347,6 +412,8 @@ name|nctx
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|PTHREAD_REQUIRE
 argument_list|(
 name|pthread_create
