@@ -619,6 +619,16 @@ argument_list|,
 name|tid
 argument_list|,
 name|toep
+argument_list|,
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_IPV6
+condition|?
+literal|2
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

@@ -1635,6 +1635,14 @@ argument_list|(
 name|sc
 argument_list|,
 name|tid
+argument_list|,
+name|toep
+operator|->
+name|ce
+condition|?
+literal|2
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 name|release_tid
@@ -2185,6 +2193,9 @@ parameter_list|,
 name|void
 modifier|*
 name|ctx
+parameter_list|,
+name|int
+name|ntids
 parameter_list|)
 block|{
 name|struct
@@ -2213,7 +2224,7 @@ name|t
 operator|->
 name|tids_in_use
 argument_list|,
-literal|1
+name|ntids
 argument_list|)
 expr_stmt|;
 block|}
@@ -2306,6 +2317,9 @@ name|sc
 parameter_list|,
 name|int
 name|tid
+parameter_list|,
+name|int
+name|ntids
 parameter_list|)
 block|{
 name|struct
@@ -2334,7 +2348,7 @@ name|t
 operator|->
 name|tids_in_use
 argument_list|,
-literal|1
+name|ntids
 argument_list|)
 expr_stmt|;
 block|}
