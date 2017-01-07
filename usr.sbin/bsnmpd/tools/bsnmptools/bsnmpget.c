@@ -1655,14 +1655,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Snmp dialog - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Snmp dialog"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2287,14 +2282,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|warnx
+name|warn
 argument_list|(
-literal|"Snmp dialog - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Snmp dialog"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2405,16 +2395,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Value %s not supported - %s"
+literal|"Value %s not supported"
 argument_list|,
 name|val
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -2816,16 +2801,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Value %s not supported - %s"
+literal|"Value %s not supported"
 argument_list|,
 name|val
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -3035,16 +3015,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Value %s not supported - %s"
+literal|"Value %s not supported"
 argument_list|,
 name|val
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -3270,14 +3245,9 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Value %s not supported - %s"
+literal|"Value %s not supported"
 argument_list|,
 name|val
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -5055,14 +5025,9 @@ name|resp
 argument_list|)
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Snmp dialog - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Snmp dialog"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5693,14 +5658,9 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Failed to open snmp session: %s."
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Failed to open snmp session"
 argument_list|)
 expr_stmt|;
 name|snmp_tool_freeall
@@ -5755,14 +5715,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Unknown SNMP Engine ID: %s."
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Unknown SNMP Engine ID"
 argument_list|)
 expr_stmt|;
 name|rc
@@ -5853,14 +5808,9 @@ operator|!=
 name|SNMP_CODE_OK
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Failed to get keys: %s."
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"Failed to get keys"
 argument_list|)
 expr_stmt|;
 name|rc
