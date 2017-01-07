@@ -281,6 +281,15 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|void
+modifier|*
+name|dl_handle
+decl_stmt|;
+endif|#
+directive|endif
 name|unsigned
 name|int
 name|t
@@ -647,6 +656,29 @@ block|,
 literal|"abcdefgh/abcdefgh/"
 block|, 	}
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|dl_handle
+operator|=
+name|dlopen
+argument_list|(
+name|NULL
+argument_list|,
+name|RTLD_LAZY
+argument_list|)
+expr_stmt|;
+name|strchr_fn
+operator|=
+name|dlsym
+argument_list|(
+name|dl_handle
+argument_list|,
+literal|"test_strlen"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|strchr_fn
 operator|=
 name|dlsym
@@ -661,6 +693,8 @@ argument_list|,
 literal|"test_strchr"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -875,6 +909,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|(
+name|void
+operator|)
+name|dlclose
+argument_list|(
+name|dl_handle
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
