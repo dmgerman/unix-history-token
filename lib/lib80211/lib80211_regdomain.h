@@ -216,6 +216,14 @@ name|netband_head
 name|bands_11na
 decl_stmt|;
 comment|/* 11na operation */
+name|netband_head
+name|bands_11ac
+decl_stmt|;
+comment|/* 11ac 5GHz operation */
+name|netband_head
+name|bands_11acg
+decl_stmt|;
+comment|/* 11ac 2GHz operation */
 name|LIST_ENTRY
 argument_list|(
 argument|regdomain
