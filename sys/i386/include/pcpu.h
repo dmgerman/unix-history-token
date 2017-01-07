@@ -44,6 +44,18 @@ directive|include
 file|<machine/tss.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_comment
 comment|/*  * The SMP parts are setup in pmap.c and locore.s for the BSP, and  * mp_machdep.c sets up the data for the AP's to "see" when they awake.  * The reason for doing it via a struct is so that an array of pointers  * to each CPU's data can be set up for things like "check curproc on all  * other processors"  */
 end_comment
@@ -65,11 +77,11 @@ value|\ 	u_int	pc_cmci_mask;
 comment|/* MCx banks for CMCI */
 value|\ 	u_int	pc_vcpu_id;
 comment|/* Xen vCPU ID */
-value|\ 	vm_offset_t pc_qmap_addr;
+value|\ 	struct	mtx pc_cmap_lock;					\ 	void	*pc_cmap_pte1;						\ 	void	*pc_cmap_pte2;						\ 	caddr_t	pc_cmap_addr1;						\ 	caddr_t	pc_cmap_addr2;						\ 	vm_offset_t pc_qmap_addr;
 comment|/* KVA for temporary mappings */
 value|\ 	uint32_t pc_smp_tlb_done;
 comment|/* TLB op acknowledgement */
-value|\ 	char	__pad[225]
+value|\ 	char	__pad[189]
 end_define
 
 begin_ifdef
