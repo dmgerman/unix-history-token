@@ -1514,9 +1514,13 @@ block|{
 name|cd_ino_t
 name|ino
 decl_stmt|;
+comment|/* 	 * Note there is an inverse calculation in 	 * cd9660_vfsops.c:cd9660_vget_internal(): 	 *   ip->iso_start = ino>> imp->im_bshift; 	 * and also a calculation of the isodir pointer 	 * from an inode in cd9660_vnops.c:cd9660_readlink() 	 */
 name|ino
 operator|=
 operator|(
+operator|(
+name|cd_ino_t
+operator|)
 name|isonum_733
 argument_list|(
 name|isodir
@@ -1537,9 +1541,7 @@ operator|->
 name|im_bshift
 expr_stmt|;
 return|return
-operator|(
 name|ino
-operator|)
 return|;
 block|}
 end_function
