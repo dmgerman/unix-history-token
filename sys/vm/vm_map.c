@@ -4550,13 +4550,13 @@ name|prev_entry
 decl_stmt|,
 name|temp_entry
 decl_stmt|;
-name|vm_eflags_t
-name|protoeflags
-decl_stmt|;
 name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+name|vm_eflags_t
+name|protoeflags
 decl_stmt|;
 name|vm_inherit_t
 name|inheritance
@@ -4613,27 +4613,21 @@ expr_stmt|;
 comment|/* 	 * Check that the start and end points are not bogus. 	 */
 if|if
 condition|(
-operator|(
 name|start
 operator|<
 name|map
 operator|->
 name|min_offset
-operator|)
 operator|||
-operator|(
 name|end
 operator|>
 name|map
 operator|->
 name|max_offset
-operator|)
 operator|||
-operator|(
 name|start
 operator|>=
 name|end
-operator|)
 condition|)
 return|return
 operator|(
@@ -4665,7 +4659,6 @@ expr_stmt|;
 comment|/* 	 * Assert that the next entry doesn't overlap the end point. 	 */
 if|if
 condition|(
-operator|(
 name|prev_entry
 operator|->
 name|next
@@ -4674,9 +4667,7 @@ operator|&
 name|map
 operator|->
 name|header
-operator|)
 operator|&&
-operator|(
 name|prev_entry
 operator|->
 name|next
@@ -4684,7 +4675,6 @@ operator|->
 name|start
 operator|<
 name|end
-operator|)
 condition|)
 return|return
 operator|(
@@ -4861,6 +4851,8 @@ name|protoeflags
 operator|&
 name|MAP_ENTRY_NEEDS_COPY
 operator|)
+operator|!=
+literal|0
 operator|||
 name|object
 operator|->
@@ -4869,7 +4861,7 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"OVERCOMMIT: vm_map_insert o %p"
+literal|"overcommit: vm_map_insert o %p"
 operator|,
 name|object
 operator|)
@@ -4943,22 +4935,18 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|prev_entry
 operator|!=
 operator|&
 name|map
 operator|->
 name|header
-operator|)
 operator|&&
-operator|(
 name|prev_entry
 operator|->
 name|eflags
 operator|==
 name|protoeflags
-operator|)
 operator|&&
 operator|(
 name|cow
@@ -4972,21 +4960,17 @@ operator|)
 operator|==
 literal|0
 operator|&&
-operator|(
 name|prev_entry
 operator|->
 name|end
 operator|==
 name|start
-operator|)
 operator|&&
-operator|(
 name|prev_entry
 operator|->
 name|wired_count
 operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|prev_entry
@@ -5004,7 +4988,6 @@ name|vm_object
 operator|!=
 name|NULL
 operator|&&
-operator|(
 name|prev_entry
 operator|->
 name|object
@@ -5014,7 +4997,6 @@ operator|->
 name|cred
 operator|==
 name|cred
-operator|)
 operator|)
 operator|)
 operator|&&
@@ -5071,42 +5053,34 @@ block|{
 comment|/* 		 * We were able to extend the object.  Determine if we 		 * can extend the previous map entry to include the 		 * new range as well. 		 */
 if|if
 condition|(
-operator|(
 name|prev_entry
 operator|->
 name|inheritance
 operator|==
 name|inheritance
-operator|)
 operator|&&
-operator|(
 name|prev_entry
 operator|->
 name|protection
 operator|==
 name|prot
-operator|)
 operator|&&
-operator|(
 name|prev_entry
 operator|->
 name|max_protection
 operator|==
 name|max
-operator|)
 condition|)
 block|{
 name|map
 operator|->
 name|size
 operator|+=
-operator|(
 name|end
 operator|-
 name|prev_entry
 operator|->
 name|end
-operator|)
 expr_stmt|;
 name|prev_entry
 operator|->
@@ -5315,7 +5289,7 @@ name|new_entry
 argument_list|)
 argument_list|,
 operator|(
-literal|"OVERCOMMIT: vm_map_insert leaks vm_map %p"
+literal|"overcommit: vm_map_insert leaks vm_map %p"
 operator|,
 name|new_entry
 operator|)
@@ -5359,6 +5333,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cow
 operator|&
 operator|(
@@ -5366,6 +5341,9 @@ name|MAP_PREFAULT
 operator||
 name|MAP_PREFAULT_PARTIAL
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vm_map_pmap_enter
