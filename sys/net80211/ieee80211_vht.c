@@ -1152,7 +1152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note: this just uses the current channel information;  * it doesn't use the node info after parsing.  */
+comment|/*  * Note: this just uses the current channel information;  * it doesn't use the node info after parsing.  *  * XXX TODO: need to make the basic MCS set configurable.  * XXX TODO: read 802.11-2013 to determine what to set  *           chwidth to when scanning.  I have a feeling  *           it isn't involved in scanning and we shouldn't  *           be sending it; and I don't yet know what to set  *           it to for IBSS or hostap where the peer may be  *           a completely different channel width to us.  */
 end_comment
 
 begin_function
@@ -1240,7 +1240,7 @@ name|ni
 operator|->
 name|ni_chan
 operator|->
-name|ic_vht_ch_freq1
+name|ic_vht_ch_freq2
 expr_stmt|;
 comment|/* 16-bit basic MCS set - just MCS0..7 for NSS=1 for now */
 name|ADDSHORT
