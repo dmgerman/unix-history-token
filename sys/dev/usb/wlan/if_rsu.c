@@ -3765,6 +3765,14 @@ argument_list|)
 argument_list|,
 name|bands
 argument_list|,
+operator|(
+name|ic
+operator|->
+name|ic_htcaps
+operator|&
+name|IEEE80211_HTCAP_CHWIDTH40
+operator|)
+operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
