@@ -3972,8 +3972,6 @@ name|timeout
 decl_stmt|;
 name|uint32_t
 name|mask
-decl_stmt|,
-name|state
 decl_stmt|;
 name|slot
 operator|->
@@ -4033,16 +4031,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Read controller present state. */
-name|state
-operator|=
-name|RD4
-argument_list|(
-name|slot
-argument_list|,
-name|SDHCI_PRESENT_STATE
-argument_list|)
-expr_stmt|;
 comment|/* Do not issue command if there is no card, clock or power. 	 * Controller will not detect timeout without clock active. */
 if|if
 condition|(
@@ -4129,9 +4117,14 @@ literal|250
 expr_stmt|;
 while|while
 condition|(
-name|state
-operator|&
 name|mask
+operator|&
+name|RD4
+argument_list|(
+name|slot
+argument_list|,
+name|SDHCI_PRESENT_STATE
+argument_list|)
 condition|)
 block|{
 if|if
@@ -4173,15 +4166,6 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000
-argument_list|)
-expr_stmt|;
-name|state
-operator|=
-name|RD4
-argument_list|(
-name|slot
-argument_list|,
-name|SDHCI_PRESENT_STATE
 argument_list|)
 expr_stmt|;
 block|}
