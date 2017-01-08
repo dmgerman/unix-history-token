@@ -136,7 +136,7 @@ modifier|*
 name|imp
 decl_stmt|;
 comment|/* mount structure */
-name|ino_t
+name|cd_ino_t
 modifier|*
 name|inump
 decl_stmt|;
@@ -209,7 +209,7 @@ name|u_short
 modifier|*
 name|outlen
 parameter_list|,
-name|ino_t
+name|cd_ino_t
 modifier|*
 name|inump
 parameter_list|,

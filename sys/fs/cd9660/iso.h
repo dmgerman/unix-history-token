@@ -1766,6 +1766,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * When ino_t becomes 64-bit, we can remove this definition in favor of ino_t.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cd_ino_t
+value|uint64_t
+end_define
+
 begin_struct
 struct|struct
 name|iso_mnt
@@ -1862,7 +1873,7 @@ decl_stmt|;
 name|u_short
 name|ifid_pad
 decl_stmt|;
-name|int
+name|cd_ino_t
 name|ifid_ino
 decl_stmt|;
 name|long
@@ -1940,7 +1951,7 @@ name|struct
 name|mount
 modifier|*
 parameter_list|,
-name|ino_t
+name|cd_ino_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -2064,7 +2075,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ino_t
+name|cd_ino_t
 name|isodirino
 parameter_list|(
 name|struct

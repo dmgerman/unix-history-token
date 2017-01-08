@@ -2999,7 +2999,7 @@ name|u_short
 modifier|*
 name|outlen
 decl_stmt|;
-name|ino_t
+name|cd_ino_t
 modifier|*
 name|inump
 decl_stmt|;

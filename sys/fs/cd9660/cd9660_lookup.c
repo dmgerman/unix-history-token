@@ -81,10 +81,10 @@ begin_struct
 struct|struct
 name|cd9660_ino_alloc_arg
 block|{
-name|ino_t
+name|cd_ino_t
 name|ino
 decl_stmt|;
-name|ino_t
+name|cd_ino_t
 name|i_ino
 decl_stmt|;
 name|struct
@@ -262,7 +262,7 @@ comment|/* block offset mask */
 name|int
 name|error
 decl_stmt|;
-name|ino_t
+name|cd_ino_t
 name|ino
 decl_stmt|,
 name|i_ino

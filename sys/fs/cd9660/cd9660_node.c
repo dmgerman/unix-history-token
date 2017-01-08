@@ -1493,7 +1493,7 @@ block|}
 end_function
 
 begin_function
-name|ino_t
+name|cd_ino_t
 name|isodirino
 parameter_list|(
 name|isodir
@@ -1511,7 +1511,7 @@ modifier|*
 name|imp
 decl_stmt|;
 block|{
-name|ino_t
+name|cd_ino_t
 name|ino
 decl_stmt|;
 name|ino
