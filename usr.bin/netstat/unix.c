@@ -242,9 +242,14 @@ index|[
 sizeof|sizeof
 expr|"net.local.seqpacket.pcblist"]
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|mibvar
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mibvar
+argument_list|)
 argument_list|,
 literal|"net.local.%s.pcblist"
 argument_list|,
