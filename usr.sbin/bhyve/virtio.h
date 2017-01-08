@@ -270,15 +270,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|VIRTIO_DEV_RANDOM
-value|0x1002
+name|VIRTIO_DEV_CONSOLE
+value|0x1003
 end_define
 
 begin_define
 define|#
 directive|define
-name|VIRTIO_DEV_CONSOLE
-value|0x1003
+name|VIRTIO_DEV_RANDOM
+value|0x1005
 end_define
 
 begin_comment
