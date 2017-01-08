@@ -63,12 +63,6 @@ directive|include
 file|<err.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<isofs/cd9660/cd9660_node.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -86,6 +80,12 @@ undef|#
 directive|undef
 name|_KERNEL
 end_undef
+
+begin_include
+include|#
+directive|include
+file|<isofs/cd9660/cd9660_node.h>
+end_include
 
 begin_include
 include|#
