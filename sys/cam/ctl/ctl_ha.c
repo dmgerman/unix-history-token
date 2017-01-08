@@ -2226,10 +2226,12 @@ condition|(
 name|error
 operator|!=
 literal|0
-operator|&&
-name|bootverbose
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"%s: soconnect() error %d\n"
