@@ -226,6 +226,17 @@ begin_comment
 comment|/* 11n bss */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ROAM_MCS_11AC_DEFAULT
+value|(1 | IEEE80211_RATE_MCS)
+end_define
+
+begin_comment
+comment|/* 11ac bss; XXX not used yet */
+end_comment
+
 begin_function
 name|void
 name|ieee80211_scan_attach
@@ -456,7 +467,39 @@ name|rate
 operator|=
 name|ROAM_MCS_11N_DEFAULT
 block|}
-block|, }
+block|,
+index|[
+name|IEEE80211_MODE_VHT_2GHZ
+index|]
+operator|=
+block|{
+operator|.
+name|rssi
+operator|=
+name|ROAM_RSSI_11B_DEFAULT
+block|,
+operator|.
+name|rate
+operator|=
+name|ROAM_MCS_11AC_DEFAULT
+block|}
+block|,
+index|[
+name|IEEE80211_MODE_VHT_5GHZ
+index|]
+operator|=
+block|{
+operator|.
+name|rssi
+operator|=
+name|ROAM_RSSI_11A_DEFAULT
+block|,
+operator|.
+name|rate
+operator|=
+name|ROAM_MCS_11AC_DEFAULT
+block|}
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
