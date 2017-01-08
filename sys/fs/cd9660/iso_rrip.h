@@ -105,6 +105,12 @@ name|ISO_SUSP_UNKNOWN
 value|0x8000
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -262,6 +268,15 @@ name|imp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 end_unit
 
