@@ -136,6 +136,8 @@ specifier|static
 name|char
 name|__crashreporter_info_buff__
 index|[
+name|__sanitizer
+operator|::
 name|kErrorMessageBufferSize
 index|]
 init|=
@@ -167,7 +169,10 @@ begin_comment
 comment|// extern "C"
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+name|namespace
+name|__sanitizer
+block|{
 specifier|static
 name|BlockingMutex
 name|crashreporter_info_mutex
@@ -175,9 +180,6 @@ parameter_list|(
 name|LINKER_INITIALIZED
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
 name|INLINE
 name|void
 name|CRAppendCrashLogMessage
@@ -208,7 +210,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace __sanitizer
+end_comment
 
 begin_endif
 endif|#

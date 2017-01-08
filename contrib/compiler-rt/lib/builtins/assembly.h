@@ -348,6 +348,10 @@ argument_list|(
 name|__ARM_FEATURE_CLZ
 argument_list|)
 operator|&&
+name|__ARM_ARCH_ISA_THUMB
+operator|!=
+literal|1
+operator|&&
 expr|\
 operator|(
 name|__ARM_ARCH
@@ -701,7 +705,7 @@ parameter_list|,
 name|target
 parameter_list|)
 define|\
-value|.globl SYMBOL_NAME(name) SEPARATOR                                           \   SYMBOL_IS_FUNC(SYMBOL_NAME(name)) SEPARATOR                                  \   .set SYMBOL_NAME(name), SYMBOL_NAME(target) SEPARATOR
+value|.globl SYMBOL_NAME(name) SEPARATOR                                           \   SYMBOL_IS_FUNC(SYMBOL_NAME(name)) SEPARATOR                                  \   DECLARE_SYMBOL_VISIBILITY(SYMBOL_NAME(name)) SEPARATOR                       \   .set SYMBOL_NAME(name), SYMBOL_NAME(target) SEPARATOR
 end_define
 
 begin_if

@@ -75,6 +75,22 @@ directive|include
 file|"dfsan_platform.h"
 end_include
 
+begin_expr_stmt
+name|using
+name|__sanitizer
+operator|::
+name|uptr
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|using
+name|__sanitizer
+operator|::
+name|u16
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|// Copy declarations from public sanitizer/dfsan_interface.h header here.
 end_comment
