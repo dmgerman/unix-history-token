@@ -1743,6 +1743,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bool
+name|sdhci_generic_get_card_present
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
