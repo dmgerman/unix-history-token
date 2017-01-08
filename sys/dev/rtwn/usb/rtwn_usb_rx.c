@@ -695,7 +695,24 @@ name|totlen
 operator|>
 name|len
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: totlen (%d)> len (%d)!\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|totlen
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|m0
