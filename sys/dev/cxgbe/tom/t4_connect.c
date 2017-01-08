@@ -460,7 +460,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Active open failed.  */
+comment|/*  * Active open succeeded.  */
 end_comment
 
 begin_function
@@ -619,6 +619,16 @@ argument_list|,
 name|tid
 argument_list|,
 name|toep
+argument_list|,
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_IPV6
+condition|?
+literal|2
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -873,6 +883,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Active open failed.  */
+end_comment
 
 begin_function
 specifier|static

@@ -466,6 +466,11 @@ directive|define
 name|IEEE80211_NODE_AMSDU_TX
 value|0x080000
 comment|/* AMSDU tx enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_VHT
+value|0x100000
+comment|/* VHT enabled */
 name|uint16_t
 name|ni_associd
 decl_stmt|;
@@ -787,8 +792,11 @@ comment|/* VHT state */
 name|uint32_t
 name|ni_vhtcap
 decl_stmt|;
-name|uint32_t
-name|ni_vhtinfo
+name|uint16_t
+name|ni_vht_basicmcs
+decl_stmt|;
+name|uint16_t
+name|ni_vht_pad2
 decl_stmt|;
 name|struct
 name|ieee80211_vht_mcs_info
@@ -802,7 +810,11 @@ name|uint8_t
 name|ni_vht_chan2
 decl_stmt|;
 comment|/* 80+80 - VHT chan2 */
-name|uint16_t
+name|uint8_t
+name|ni_vht_chanwidth
+decl_stmt|;
+comment|/* IEEE80211_VHT_CHANWIDTH_ */
+name|uint8_t
 name|ni_vht_pad1
 decl_stmt|;
 name|uint32_t

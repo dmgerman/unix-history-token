@@ -2964,7 +2964,7 @@ name|start
 operator|+
 name|size
 decl_stmt|;
-comment|/* Fragments must not span 4k boundaries. */
+comment|/* 		 * Fragments must not span 4k boundaries. 		 * Here it is a stricter requirement than the maximum length. 		 */
 name|EFSYS_ASSERT
 argument_list|(
 name|P2ROUNDUP
@@ -2973,7 +2973,13 @@ name|start
 operator|+
 literal|1
 argument_list|,
-literal|4096
+name|etp
+operator|->
+name|et_enp
+operator|->
+name|en_nic_cfg
+operator|.
+name|enc_tx_dma_desc_boundary
 argument_list|)
 operator|>=
 name|end
@@ -4087,7 +4093,7 @@ modifier|*
 name|edp
 parameter_list|)
 block|{
-comment|/* Fragments must not span 4k boundaries. */
+comment|/* 	 * Fragments must not span 4k boundaries. 	 * Here it is a stricter requirement than the maximum length. 	 */
 name|EFSYS_ASSERT
 argument_list|(
 name|P2ROUNDUP
@@ -4096,7 +4102,13 @@ name|addr
 operator|+
 literal|1
 argument_list|,
-literal|4096
+name|etp
+operator|->
+name|et_enp
+operator|->
+name|en_nic_cfg
+operator|.
+name|enc_tx_dma_desc_boundary
 argument_list|)
 operator|>=
 name|addr

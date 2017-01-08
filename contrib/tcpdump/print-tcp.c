@@ -1180,8 +1180,7 @@ modifier|*
 name|tcp_seq_hash
 decl_stmt|;
 specifier|const
-name|struct
-name|in6_addr
+name|void
 modifier|*
 name|src
 decl_stmt|,
@@ -1557,8 +1556,7 @@ modifier|*
 name|tcp_seq_hash
 decl_stmt|;
 specifier|const
-name|struct
-name|in_addr
+name|void
 modifier|*
 name|src
 decl_stmt|,

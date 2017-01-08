@@ -105,6 +105,12 @@ name|ISO_SUSP_UNKNOWN
 value|0x8000
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -136,7 +142,7 @@ modifier|*
 name|imp
 decl_stmt|;
 comment|/* mount structure */
-name|ino_t
+name|cd_ino_t
 modifier|*
 name|inump
 decl_stmt|;
@@ -209,7 +215,7 @@ name|u_short
 modifier|*
 name|outlen
 parameter_list|,
-name|ino_t
+name|cd_ino_t
 modifier|*
 name|inump
 parameter_list|,
@@ -262,6 +268,15 @@ name|imp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 end_unit
 

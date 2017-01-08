@@ -584,11 +584,13 @@ block|}
 if|if
 condition|(
 operator|!
+operator|(
 name|ifmr
 operator|.
 name|ifm_status
 operator|&
 name|IFM_AVALID
+operator|)
 condition|)
 block|{
 name|aif

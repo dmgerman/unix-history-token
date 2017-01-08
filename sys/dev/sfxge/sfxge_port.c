@@ -1302,11 +1302,10 @@ comment|/* Push link state update to the OS */
 name|link_state
 operator|=
 operator|(
-name|port
-operator|->
-name|link_mode
-operator|!=
-name|EFX_LINK_DOWN
+name|SFXGE_LINK_UP
+argument_list|(
+name|sc
+argument_list|)
 condition|?
 name|LINK_STATE_UP
 else|:

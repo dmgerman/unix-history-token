@@ -68,7 +68,7 @@ modifier|*
 name|i_vnode
 decl_stmt|;
 comment|/* vnode associated with this inode */
-name|ino_t
+name|cd_ino_t
 name|i_number
 decl_stmt|;
 comment|/* the identity of the inode */

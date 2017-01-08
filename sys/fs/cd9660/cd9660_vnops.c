@@ -2256,6 +2256,9 @@ name|cookies
 init|=
 name|NULL
 decl_stmt|;
+name|cd_ino_t
+name|ino
+decl_stmt|;
 name|dp
 operator|=
 name|VTOI
@@ -2704,6 +2707,14 @@ block|{
 case|case
 name|ISO_FTYPE_RRIP
 case|:
+name|ino
+operator|=
+name|idp
+operator|->
+name|current
+operator|.
+name|d_fileno
+expr_stmt|;
 name|cd9660_rrip_getname
 argument_list|(
 name|ep
@@ -2718,14 +2729,18 @@ operator|&
 name|namelen
 argument_list|,
 operator|&
+name|ino
+argument_list|,
+name|imp
+argument_list|)
+expr_stmt|;
 name|idp
 operator|->
 name|current
 operator|.
 name|d_fileno
-argument_list|,
-name|imp
-argument_list|)
+operator|=
+name|ino
 expr_stmt|;
 name|idp
 operator|->
@@ -3841,8 +3856,11 @@ directive|ifdef
 name|ISOFS_DBG
 name|printf
 argument_list|(
-literal|"vptofh: ino %d, start %ld\n"
+literal|"vptofh: ino %jd, start %ld\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ifh
 operator|.
 name|ifid_ino

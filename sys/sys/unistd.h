@@ -141,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_PRIORITY_SCHEDULING
-value|200112L
+value|0
 end_define
 
 begin_define

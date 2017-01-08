@@ -105,6 +105,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -125,6 +131,14 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|sig_atomic_t
+name|siginfo
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -151,6 +165,23 @@ name|hflag
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|void
+name|siginfo_handler
+parameter_list|(
+name|int
+name|sig
+name|__unused
+parameter_list|)
+block|{
+name|siginfo
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -409,6 +440,16 @@ literal|2
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGINFO
+argument_list|,
+name|siginfo_handler
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -746,6 +787,8 @@ elseif|else
 if|if
 condition|(
 name|vflag
+operator|||
+name|siginfo
 condition|)
 block|{
 operator|(
@@ -765,6 +808,8 @@ condition|(
 name|vflag
 operator|>
 literal|1
+operator|||
+name|siginfo
 condition|)
 block|{
 name|char
@@ -844,6 +889,10 @@ name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
+expr_stmt|;
+name|siginfo
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}

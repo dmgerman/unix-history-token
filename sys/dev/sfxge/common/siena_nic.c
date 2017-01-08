@@ -423,6 +423,22 @@ name|enc_rx_push_align
 operator|=
 literal|1
 expr_stmt|;
+name|encp
+operator|->
+name|enc_tx_dma_desc_size_max
+operator|=
+name|EFX_MASK32
+argument_list|(
+name|FSF_AZ_TX_KER_BYTE_COUNT
+argument_list|)
+expr_stmt|;
+comment|/* Fragments must not span 4k boundaries. */
+name|encp
+operator|->
+name|enc_tx_dma_desc_boundary
+operator|=
+literal|4096
+expr_stmt|;
 comment|/* Resource limits */
 name|rc
 operator|=

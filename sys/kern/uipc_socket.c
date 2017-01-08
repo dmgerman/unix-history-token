@@ -5161,6 +5161,12 @@ name|PRUS_EOF
 else|:
 comment|/* If there is more to send set PRUS_MORETOCOME */
 operator|(
+name|flags
+operator|&
+name|MSG_MORETOCOME
+operator|)
+operator|||
+operator|(
 name|resid
 operator|>
 literal|0
@@ -5963,6 +5969,12 @@ condition|?
 name|PRUS_EOF
 else|:
 comment|/* If there is more to send set PRUS_MORETOCOME. */
+operator|(
+name|flags
+operator|&
+name|MSG_MORETOCOME
+operator|)
+operator|||
 operator|(
 name|resid
 operator|>

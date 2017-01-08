@@ -1650,23 +1650,18 @@ decl_stmt|;
 name|efx_qword_t
 name|qword
 decl_stmt|;
-comment|/* Fragments must not span 4k boundaries. */
+comment|/* No limitations on boundary crossing */
 name|EFSYS_ASSERT
 argument_list|(
-name|P2ROUNDUP
-argument_list|(
-name|addr
-operator|+
-literal|1
-argument_list|,
-literal|4096
-argument_list|)
-operator|>=
-operator|(
-name|addr
-operator|+
 name|size
-operator|)
+operator|<=
+name|etp
+operator|->
+name|et_enp
+operator|->
+name|en_nic_cfg
+operator|.
+name|enc_tx_dma_desc_size_max
 argument_list|)
 expr_stmt|;
 name|id
@@ -2271,21 +2266,18 @@ modifier|*
 name|edp
 parameter_list|)
 block|{
-comment|/* Fragments must not span 4k boundaries. */
+comment|/* No limitations on boundary crossing */
 name|EFSYS_ASSERT
 argument_list|(
-name|P2ROUNDUP
-argument_list|(
-name|addr
-operator|+
-literal|1
-argument_list|,
-literal|4096
-argument_list|)
-operator|>=
-name|addr
-operator|+
 name|size
+operator|<=
+name|etp
+operator|->
+name|et_enp
+operator|->
+name|en_nic_cfg
+operator|.
+name|enc_tx_dma_desc_size_max
 argument_list|)
 expr_stmt|;
 name|EFSYS_PROBE4

@@ -2899,6 +2899,14 @@ comment|/* Number of rx descriptors the hardware requires for a push. */
 name|uint32_t
 name|enc_rx_push_align
 decl_stmt|;
+comment|/* Maximum amount of data in DMA descriptor */
+name|uint32_t
+name|enc_tx_dma_desc_size_max
+decl_stmt|;
+comment|/* 	 * Boundary which DMA descriptor data must not cross or 0 if no 	 * limitation. 	 */
+name|uint32_t
+name|enc_tx_dma_desc_boundary
+decl_stmt|;
 comment|/* 	 * Maximum number of bytes into the packet the TCP header can start for 	 * the hardware to apply TSO packet edits. 	 */
 name|uint32_t
 name|enc_tx_tso_tcp_header_offset_limit

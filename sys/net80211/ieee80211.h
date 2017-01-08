@@ -3716,66 +3716,6 @@ comment|/*  * 802.11ac definitions - 802.11ac-2013 .  */
 end_comment
 
 begin_comment
-comment|/* VHT opmode bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_VHT_OPMODE_CHANWIDTH_MASK
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_VHT_OPMODE_CHANWIDTH_20MHZ
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_VHT_OPMODE_CHANWIDTH_40MHZ
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_VHT_OPMODE_CHANWIDTH_80MHZ
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_VHT_OPMODE_CHANWIDTH_160MHZ
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_VHT_OPMODE_RX_NSS_MASK
-value|0x70
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_VHT_OPMODE_RX_NSS_SHIFT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_VHT_OPMODE_RX_NSS_TYPE_BF
-value|0x80
-end_define
-
-begin_comment
 comment|/*  * Maximum length of A-MPDU that the STA can RX in VHT.  * Length = 2 ^ (13 + max_ampdu_length_exp) - 1 (octets)  */
 end_comment
 
@@ -3929,6 +3869,10 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/* VHT operation mode subfields - 802.11ac-2013 Table 8.183x */
+end_comment
 
 begin_define
 define|#
@@ -4234,6 +4178,18 @@ define|#
 directive|define
 name|IEEE80211_VHTCAP_TX_ANTENNA_PATTERN
 value|0x20000000
+end_define
+
+begin_comment
+comment|/*  * XXX TODO: add the rest of the bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_VHTCAP_BITS
+define|\
+value|"\20\1MPDU7991\2MPDU11454\3CHAN160\4CHAN8080\5RXLDPC\6SHORTGI80" \ 	"\7SHORTGI160\10RXSTBC1\11RXSTBC2\12RXSTBC3\13RXSTBC4\14BFERCAP" \ 	"\15BFEECAP\27VHT\37RXANTPTN\40TXANTPTN"
 end_define
 
 begin_comment
