@@ -1455,6 +1455,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MMC_OCR_MIN_VOLTAGE_SHIFT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
 name|MMC_OCR_200_210
 value|(1U<< 8)
 end_define
@@ -1462,13 +1469,6 @@ end_define
 begin_comment
 comment|/* Vdd voltage 2.00 ~ 2.10 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MMC_OCR_MIN_VOLTAGE_SHIFT
-value|8
-end_define
 
 begin_define
 define|#
