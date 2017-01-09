@@ -158,6 +158,8 @@ directive|if
 operator|(
 name|SANITIZER_LINUX
 operator|||
+name|SANITIZER_MAC
+operator|||
 name|SANITIZER_WINDOWS
 operator|)
 operator|&&

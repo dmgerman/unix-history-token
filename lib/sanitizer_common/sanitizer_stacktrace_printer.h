@@ -184,6 +184,9 @@ parameter_list|,
 name|uptr
 name|offset
 parameter_list|,
+name|ModuleArch
+name|arch
+parameter_list|,
 specifier|const
 name|char
 modifier|*

@@ -481,13 +481,15 @@ operator|:
 specifier|const
 name|char
 operator|*
-name|SendCommand
+name|FormatAndSendCommand
 argument_list|(
 argument|bool is_data
 argument_list|,
 argument|const char *module_name
 argument_list|,
 argument|uptr module_offset
+argument_list|,
+argument|ModuleArch arch
 argument_list|)
 block|;
 name|LLVMSymbolizerProcess
