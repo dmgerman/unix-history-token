@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * Copyright (c) 2014-2015 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_backend.h#2 $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * Copyright (c) 2014-2017 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_backend.h#2 $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -19,68 +19,11 @@ directive|define
 name|_CTL_BACKEND_H_
 end_define
 
-begin_comment
-comment|/*  * XXX KDM move this to another header file?  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_BE_NAME_LEN
-value|32
-end_define
-
-begin_comment
-comment|/*  * The ID_REQ flag is used to say that the caller has requested a  * particular LUN ID in the req_lun_id field.  If we cannot allocate that  * LUN ID, the ctl_add_lun() call will fail.  *  * The STOPPED flag tells us that the LUN should default to the powered  * off state.  It will return 0x04,0x02 until it is powered up.  ("Logical  * unit not ready, initializing command required.")  *  * The NO_MEDIA flag tells us that the LUN has no media inserted.  *  * The PRIMARY flag tells us that this LUN is registered as a Primary LUN  * which is accessible via the Master shelf controller in an HA. This flag  * being set indicates a Primary LUN. This flag being reset represents a  * Secondary LUN controlled by the Secondary controller in an HA  * configuration. Flag is applicable at this time to T_DIRECT types.   *  * The SERIAL_NUM flag tells us that the serial_num field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x80.  *  * The DEVID flag tells us that the device_id field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x83.  *  * The DEV_TYPE flag tells us that the device_type field is filled in.  *  * The EJECTED flag tells us that the removable LUN has tray open.  *  * The UNMAP flag tells us that this LUN supports UNMAP.  *  * The OFFLINE flag tells us that this LUN can not access backing store.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTL_LUN_FLAG_ID_REQ
-init|=
-literal|0x01
-block|,
-name|CTL_LUN_FLAG_STOPPED
-init|=
-literal|0x02
-block|,
-name|CTL_LUN_FLAG_NO_MEDIA
-init|=
-literal|0x04
-block|,
-name|CTL_LUN_FLAG_PRIMARY
-init|=
-literal|0x08
-block|,
-name|CTL_LUN_FLAG_SERIAL_NUM
-init|=
-literal|0x10
-block|,
-name|CTL_LUN_FLAG_DEVID
-init|=
-literal|0x20
-block|,
-name|CTL_LUN_FLAG_DEV_TYPE
-init|=
-literal|0x40
-block|,
-name|CTL_LUN_FLAG_UNMAP
-init|=
-literal|0x80
-block|,
-name|CTL_LUN_FLAG_EJECTED
-init|=
-literal|0x100
-block|,
-name|CTL_LUN_FLAG_READONLY
-init|=
-literal|0x200
-block|}
-name|ctl_backend_lun_flags
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<cam/ctl/ctl_ioctl.h>
+end_include
 
 begin_typedef
 typedef|typedef
