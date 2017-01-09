@@ -262,6 +262,19 @@ name|HYPERV_GUID_STRLEN
 value|40
 end_define
 
+begin_typedef
+typedef|typedef
+name|uint64_t
+function_decl|(
+modifier|*
+name|hyperv_tc64_t
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_function_decl
 name|int
 name|hyperv_guid2str
@@ -278,6 +291,17 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * hyperv_tc64 could be NULL, if there were no suitable Hyper-V  * specific timecounter.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|hyperv_tc64_t
+name|hyperv_tc64
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

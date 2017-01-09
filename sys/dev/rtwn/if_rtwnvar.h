@@ -31,13 +31,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RTWN_RXBUFSZ
-value|(8 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RTWN_TXBUFSZ
 value|(16 * 1024)
 end_define

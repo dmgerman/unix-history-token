@@ -132,7 +132,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|(VMBUS_TIMESYNC_MSGVER4((sc))&&\ 	 (hyperv_features& CPUID_HV_MSR_TIME_REFCNT))
+value|(VMBUS_TIMESYNC_MSGVER4((sc))&& hyperv_tc64 != NULL)
 end_define
 
 begin_function_decl
@@ -478,10 +478,8 @@ argument_list|)
 condition|)
 name|rtt
 operator|=
-name|rdmsr
-argument_list|(
-name|MSR_HV_TIME_REF_COUNT
-argument_list|)
+name|hyperv_tc64
+argument_list|()
 operator|-
 name|sent_tc
 expr_stmt|;

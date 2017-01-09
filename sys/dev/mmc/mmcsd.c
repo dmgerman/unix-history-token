@@ -2848,6 +2848,15 @@ operator||=
 name|BIO_ERROR
 expr_stmt|;
 block|}
+else|else
+block|{
+name|bp
+operator|->
+name|bio_resid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|biodone
 argument_list|(
 name|bp

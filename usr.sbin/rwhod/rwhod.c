@@ -73,13 +73,25 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/capsicum.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/procdesc.h>
 end_include
 
 begin_include
@@ -103,19 +115,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/procdesc.h>
 end_include
 
 begin_include
@@ -2883,7 +2883,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|2
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 operator|&
 name|tm
@@ -3318,7 +3321,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|6
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -3361,7 +3367,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|6
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,

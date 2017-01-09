@@ -423,7 +423,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|0xffffffff
+value|0xffffefff
 end_define
 
 begin_define

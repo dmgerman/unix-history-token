@@ -667,6 +667,7 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+comment|/* XXX recheck */
 name|error
 operator|=
 name|rtwn_usb_alloc_list
@@ -679,7 +680,11 @@ name|uc_rx
 argument_list|,
 name|RTWN_USB_RX_LIST_COUNT
 argument_list|,
-name|RTWN_RXBUFSZ
+name|sc
+operator|->
+name|rx_dma_size
+operator|+
+literal|1024
 argument_list|)
 expr_stmt|;
 if|if

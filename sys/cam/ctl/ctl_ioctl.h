@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * Copyright (c) 2011 Spectra Logic Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_ioctl.h#4 $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003 Silicon Graphics International Corp.  * Copyright (c) 2011 Spectra Logic Corporation  * Copyright (c) 2014-2017 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_ioctl.h#4 $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -126,6 +126,14 @@ name|CTL_MINOR
 value|225
 end_define
 
+begin_comment
+comment|/* Legacy statistics accumulated for every port for every LU. */
+end_comment
+
+begin_comment
+comment|//#define CTL_LEGACY_STATS	1
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -222,6 +230,42 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|CTL_SS_OK
+block|,
+name|CTL_SS_NEED_MORE_SPACE
+block|,
+name|CTL_SS_ERROR
+block|}
+name|ctl_stats_status
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTL_STATS_FLAG_NONE
+init|=
+literal|0x00
+block|,
+name|CTL_STATS_FLAG_TIME_VALID
+init|=
+literal|0x01
+block|}
+name|ctl_stats_flags
+typedef|;
+end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTL_LEGACY_STATS
+end_ifdef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
 name|CTL_LUN_STATS_NO_BLOCKSIZE
 init|=
 literal|0x01
@@ -300,36 +344,6 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTL_SS_OK
-block|,
-name|CTL_SS_NEED_MORE_SPACE
-block|,
-name|CTL_SS_ERROR
-block|}
-name|ctl_stats_status
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTL_STATS_FLAG_NONE
-init|=
-literal|0x00
-block|,
-name|CTL_STATS_FLAG_TIME_VALID
-init|=
-literal|0x01
-block|}
-name|ctl_stats_flags
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|ctl_stats
@@ -350,6 +364,101 @@ decl_stmt|;
 comment|/* passed to userland */
 name|int
 name|num_luns
+decl_stmt|;
+comment|/* passed to userland */
+name|ctl_stats_status
+name|status
+decl_stmt|;
+comment|/* passed to userland */
+name|ctl_stats_flags
+name|flags
+decl_stmt|;
+comment|/* passed to userland */
+name|struct
+name|timespec
+name|timestamp
+decl_stmt|;
+comment|/* passed to userland */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CTL_LEGACY_STATS */
+end_comment
+
+begin_struct
+struct|struct
+name|ctl_io_stats
+block|{
+name|uint32_t
+name|item
+decl_stmt|;
+name|uint64_t
+name|bytes
+index|[
+name|CTL_STATS_NUM_TYPES
+index|]
+decl_stmt|;
+name|uint64_t
+name|operations
+index|[
+name|CTL_STATS_NUM_TYPES
+index|]
+decl_stmt|;
+name|uint64_t
+name|dmas
+index|[
+name|CTL_STATS_NUM_TYPES
+index|]
+decl_stmt|;
+name|struct
+name|bintime
+name|time
+index|[
+name|CTL_STATS_NUM_TYPES
+index|]
+decl_stmt|;
+name|struct
+name|bintime
+name|dma_time
+index|[
+name|CTL_STATS_NUM_TYPES
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ctl_get_io_stats
+block|{
+name|struct
+name|ctl_io_stats
+modifier|*
+name|stats
+decl_stmt|;
+comment|/* passed to/from kernel */
+name|size_t
+name|alloc_len
+decl_stmt|;
+comment|/* passed to kernel */
+name|size_t
+name|fill_len
+decl_stmt|;
+comment|/* passed to userland */
+name|int
+name|first_item
+decl_stmt|;
+comment|/* passed to kernel */
+name|int
+name|num_items
 decl_stmt|;
 comment|/* passed to userland */
 name|ctl_stats_status
@@ -789,7 +898,59 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * LUN creation parameters:  *  * flags:		Various LUN flags, see ctl_backend.h for a  *			description of the flag values and meanings.  *  * device_type:		The SCSI device type.  e.g. 0 for Direct Access,  *			3 for Processor, etc.  Only certain backends may  *			support setting this field.  The CTL_LUN_FLAG_DEV_TYPE  *			flag should be set in the flags field if the device  *			type is set.  *  * lun_size_bytes:	The size of the LUN in bytes.  For some backends  *			this is relevant (e.g. ramdisk), for others, it may  *			be ignored in favor of using the properties of the  *			backing store.  If specified, this should be a  *			multiple of the blocksize.  *  *			The actual size of the LUN is returned in this  *			field.  *  * blocksize_bytes:	The LUN blocksize in bytes.  For some backends this  *			is relevant, for others it may be ignored in  *			favor of using the properties of the backing store.   *  *			The actual blocksize of the LUN is returned in this  *			field.  *  * req_lun_id:		The requested LUN ID.  The CTL_LUN_FLAG_ID_REQ flag  *			should be set if this is set.  The request will be  *			granted if the LUN number is available, otherwise  * 			the LUN addition request will fail.  *  *			The allocated LUN number is returned in this field.  *  * serial_num:		This is the value returned in SCSI INQUIRY VPD page  *			0x80.  If it is specified, the CTL_LUN_FLAG_SERIAL_NUM  *			flag should be set.  *  *			The serial number value used is returned in this  *			field.  *  * device_id:		This is the value returned in the T10 vendor ID  *			based DESIGNATOR field in the SCSI INQUIRY VPD page  *			0x83 data.  If it is specified, the CTL_LUN_FLAG_DEVID  *			flag should be set.  *  *			The device id value used is returned in this field.  */
+comment|/*  * The ID_REQ flag is used to say that the caller has requested a  * particular LUN ID in the req_lun_id field.  If we cannot allocate that  * LUN ID, the ctl_add_lun() call will fail.  *  * The STOPPED flag tells us that the LUN should default to the powered  * off state.  It will return 0x04,0x02 until it is powered up.  ("Logical  * unit not ready, initializing command required.")  *  * The NO_MEDIA flag tells us that the LUN has no media inserted.  *  * The PRIMARY flag tells us that this LUN is registered as a Primary LUN  * which is accessible via the Master shelf controller in an HA. This flag  * being set indicates a Primary LUN. This flag being reset represents a  * Secondary LUN controlled by the Secondary controller in an HA  * configuration. Flag is applicable at this time to T_DIRECT types.   *  * The SERIAL_NUM flag tells us that the serial_num field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x80.  *  * The DEVID flag tells us that the device_id field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x83.  *  * The DEV_TYPE flag tells us that the device_type field is filled in.  *  * The EJECTED flag tells us that the removable LUN has tray open.  *  * The UNMAP flag tells us that this LUN supports UNMAP.  *  * The OFFLINE flag tells us that this LUN can not access backing store.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTL_LUN_FLAG_ID_REQ
+init|=
+literal|0x01
+block|,
+name|CTL_LUN_FLAG_STOPPED
+init|=
+literal|0x02
+block|,
+name|CTL_LUN_FLAG_NO_MEDIA
+init|=
+literal|0x04
+block|,
+name|CTL_LUN_FLAG_PRIMARY
+init|=
+literal|0x08
+block|,
+name|CTL_LUN_FLAG_SERIAL_NUM
+init|=
+literal|0x10
+block|,
+name|CTL_LUN_FLAG_DEVID
+init|=
+literal|0x20
+block|,
+name|CTL_LUN_FLAG_DEV_TYPE
+init|=
+literal|0x40
+block|,
+name|CTL_LUN_FLAG_UNMAP
+init|=
+literal|0x80
+block|,
+name|CTL_LUN_FLAG_EJECTED
+init|=
+literal|0x100
+block|,
+name|CTL_LUN_FLAG_READONLY
+init|=
+literal|0x200
+block|}
+name|ctl_backend_lun_flags
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * LUN creation parameters:  *  * flags:		Various LUN flags, see above.  *  * device_type:		The SCSI device type.  e.g. 0 for Direct Access,  *			3 for Processor, etc.  Only certain backends may  *			support setting this field.  The CTL_LUN_FLAG_DEV_TYPE  *			flag should be set in the flags field if the device  *			type is set.  *  * lun_size_bytes:	The size of the LUN in bytes.  For some backends  *			this is relevant (e.g. ramdisk), for others, it may  *			be ignored in favor of using the properties of the  *			backing store.  If specified, this should be a  *			multiple of the blocksize.  *  *			The actual size of the LUN is returned in this  *			field.  *  * blocksize_bytes:	The LUN blocksize in bytes.  For some backends this  *			is relevant, for others it may be ignored in  *			favor of using the properties of the backing store.   *  *			The actual blocksize of the LUN is returned in this  *			field.  *  * req_lun_id:		The requested LUN ID.  The CTL_LUN_FLAG_ID_REQ flag  *			should be set if this is set.  The request will be  *			granted if the LUN number is available, otherwise  * 			the LUN addition request will fail.  *  *			The allocated LUN number is returned in this field.  *  * serial_num:		This is the value returned in SCSI INQUIRY VPD page  *			0x80.  If it is specified, the CTL_LUN_FLAG_SERIAL_NUM  *			flag should be set.  *  *			The serial number value used is returned in this  *			field.  *  * device_id:		This is the value returned in the T10 vendor ID  *			based DESIGNATOR field in the SCSI INQUIRY VPD page  *			0x83 data.  If it is specified, the CTL_LUN_FLAG_DEVID  *			flag should be set.  *  *			The device id value used is returned in this field.  */
 end_comment
 
 begin_struct
@@ -892,6 +1053,10 @@ begin_struct
 struct|struct
 name|ctl_lun_req
 block|{
+define|#
+directive|define
+name|CTL_BE_NAME_LEN
+value|32
 name|char
 name|backend
 index|[
@@ -1744,6 +1909,20 @@ define|#
 directive|define
 name|CTL_LUN_MAP
 value|_IOW(CTL_MINOR, 0x28, struct ctl_lun_map)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_GET_LUN_STATS
+value|_IOWR(CTL_MINOR, 0x29, struct ctl_get_io_stats)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_GET_PORT_STATS
+value|_IOWR(CTL_MINOR, 0x2a, struct ctl_get_io_stats)
 end_define
 
 begin_endif
