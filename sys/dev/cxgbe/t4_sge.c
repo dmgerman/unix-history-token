@@ -19022,7 +19022,7 @@ name|htobe32
 argument_list|(
 name|V_FW_EQ_CTRL_CMD_HOSTFCMODE
 argument_list|(
-name|X_HOSTFCMODE_NONE
+name|X_HOSTFCMODE_STATUS_PAGE
 argument_list|)
 operator||
 name|V_FW_EQ_CTRL_CMD_PCIECHN
@@ -19056,6 +19056,11 @@ operator||
 name|V_FW_EQ_CTRL_CMD_FBMAX
 argument_list|(
 name|X_FETCHBURSTMAX_512B
+argument_list|)
+operator||
+name|V_FW_EQ_CTRL_CMD_CIDXFTHRESH
+argument_list|(
+name|X_CIDXFLUSHTHRESH_32
 argument_list|)
 operator||
 name|V_FW_EQ_CTRL_CMD_EQSIZE
