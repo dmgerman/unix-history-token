@@ -27,7 +27,6 @@ name|struct
 name|snmp_context
 modifier|*
 name|ctx
-name|__unused
 parameter_list|,
 name|struct
 name|snmp_value
