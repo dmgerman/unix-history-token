@@ -1287,7 +1287,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knote
 parameter_list|(
@@ -1306,7 +1305,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knote_fork
 parameter_list|(
@@ -1322,7 +1320,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|knlist
 modifier|*
@@ -1337,7 +1334,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knlist_detach
 parameter_list|(
@@ -1350,7 +1346,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knlist_add
 parameter_list|(
@@ -1371,7 +1366,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knlist_remove
 parameter_list|(
@@ -1392,7 +1386,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|knlist_empty
 parameter_list|(
@@ -1405,7 +1398,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knlist_init
 parameter_list|(
@@ -1462,7 +1454,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knlist_init_mtx
 parameter_list|(
@@ -1480,7 +1471,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knlist_init_rw_reader
 parameter_list|(
@@ -1498,7 +1488,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knlist_destroy
 parameter_list|(
@@ -1511,7 +1500,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|knlist_cleardel
 parameter_list|(
@@ -1563,7 +1551,6 @@ value|knlist_cleardel((knl), (td), (islocked), 1)
 end_define
 
 begin_function_decl
-specifier|extern
 name|void
 name|knote_fdclose
 parameter_list|(
@@ -1579,7 +1566,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|kqfd_register
 parameter_list|(
@@ -1603,7 +1589,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|kqueue_add_filteropts
 parameter_list|(
@@ -1619,7 +1604,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|kqueue_del_filteropts
 parameter_list|(
