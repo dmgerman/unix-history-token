@@ -2441,6 +2441,17 @@ name|opt
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|mods
+index|[
+name|opt
+index|]
+operator|==
+name|NULL
+condition|)
+comment|/* smiGetModule failed above */
+continue|continue;
 name|n
 operator|=
 name|smiGetFirstNode
