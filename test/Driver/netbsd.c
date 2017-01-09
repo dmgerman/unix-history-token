@@ -96,6 +96,30 @@ comment|// RUN: | FileCheck -check-prefix=AARCH64-7 %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target aarch64_be--netbsd \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=AARCH64_BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target aarch64_be--netbsd7.0.0 \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=AARCH64_BE-7 %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -no-canonical-prefixes -target arm--netbsd-eabi \
 end_comment
 
@@ -333,6 +357,30 @@ end_comment
 
 begin_comment
 comment|// RUN: | FileCheck -check-prefix=S-AARCH64-7 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target aarch64_be--netbsd -static \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=S-AARCH64_BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target aarch64_be--netbsd7.0.0 -static \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=S-AARCH64_BE-7 %s
 end_comment
 
 begin_comment
@@ -645,6 +693,46 @@ end_comment
 
 begin_comment
 comment|// AARCH64-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE: clang{{.*}}" "-cc1" "-triple" "aarch64_be--netbsd"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "/libexec/ld.elf_so"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE-7: clang{{.*}}" "-cc1" "-triple" "aarch64_be--netbsd7.0.0"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE-7: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "/libexec/ld.elf_so"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE-7: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE-7:  "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// AARCH64_BE-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment
@@ -1133,6 +1221,46 @@ end_comment
 
 begin_comment
 comment|// S-AARCH64-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE: clang{{.*}}" "-cc1" "-triple" "aarch64_be--netbsd"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE-7: clang{{.*}}" "-cc1" "-triple" "aarch64_be--netbsd7.0.0"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE-7: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE-7: "-o" "a.out" "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE-7: "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o" "{{.*}}.o" "-lc"
+end_comment
+
+begin_comment
+comment|// S-AARCH64_BE-7: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment

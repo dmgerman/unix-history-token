@@ -12,7 +12,7 @@ comment|// RUN: %clang %s -### -o %t.o -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:     -B %S/Inputs/B_opt_tree/dir1 2>&1 \
+comment|// RUN:     -B %S/Inputs/B_opt_tree/dir1 -fuse-ld=ld 2>&1 \
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|// RUN: %clang %s -### -o %t.o -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:     -B %S/Inputs/B_opt_tree/dir2 2>&1 \
+comment|// RUN:     -B %S/Inputs/B_opt_tree/dir2 -fuse-ld=ld 2>&1 \
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// RUN: %clang %s -### -o %t.o -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:     -B %S/Inputs/B_opt_tree/dir3/prefix- 2>&1 \
+comment|// RUN:     -B %S/Inputs/B_opt_tree/dir3/prefix- -fuse-ld=ld 2>&1 \
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ comment|// RUN:     -B %S/Inputs/B_opt_tree/dir3/prefix- \
 end_comment
 
 begin_comment
-comment|// RUN:     -B %S/Inputs/B_opt_tree/dir2 2>&1 \
+comment|// RUN:     -B %S/Inputs/B_opt_tree/dir2 2>&1 -fuse-ld=ld \
 end_comment
 
 begin_comment

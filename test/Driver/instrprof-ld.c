@@ -12,7 +12,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -fprofile-instr-generate \
+comment|// RUN:     -target i386-unknown-linux -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -fprofile-instr-generate \
+comment|// RUN:     -target x86_64-unknown-linux -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -fprofile-instr-generate -nostdlib \
+comment|// RUN:     -target x86_64-unknown-linux -fprofile-instr-generate -nostdlib -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-freebsd -fprofile-instr-generate \
+comment|// RUN:     -target x86_64-unknown-freebsd -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -160,7 +160,7 @@ comment|// RUN:     -shared \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -fprofile-instr-generate \
+comment|// RUN:     -target i386-unknown-linux -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ comment|// RUN:     -shared \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -fprofile-instr-generate \
+comment|// RUN:     -target x86_64-unknown-linux -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -240,7 +240,7 @@ comment|// RUN:     -shared \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-freebsd -fprofile-instr-generate \
+comment|// RUN:     -target x86_64-unknown-freebsd -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -276,7 +276,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-apple-darwin14 -fprofile-instr-generate \
+comment|// RUN:     -target x86_64-apple-darwin14 -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -308,7 +308,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-apple-darwin14 -fprofile-instr-generate -nostdlib \
+comment|// RUN:     -target x86_64-apple-darwin14 -fprofile-instr-generate -nostdlib -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -340,7 +340,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm64-apple-ios -fprofile-instr-generate \
+comment|// RUN:     -target arm64-apple-ios -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -372,7 +372,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target armv7-apple-darwin -mtvos-version-min=8.3 -fprofile-instr-generate \
+comment|// RUN:     -target armv7-apple-darwin -mtvos-version-min=8.3 -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -404,7 +404,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target armv7s-apple-darwin10 -mwatchos-version-min=2.0 -arch armv7k -fprofile-instr-generate \
+comment|// RUN:     -target armv7s-apple-darwin10 -mwatchos-version-min=2.0 -arch armv7k -fprofile-instr-generate -fuse-ld=ld \
 end_comment
 
 begin_comment

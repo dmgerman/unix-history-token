@@ -1933,6 +1933,13 @@ name|Expr
 operator|*
 operator|>
 name|Args
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|This
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;

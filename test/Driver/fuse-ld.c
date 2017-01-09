@@ -104,7 +104,7 @@ comment|// CHECK-FREEBSD-PLIB: error: invalid linker name
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -### \
+comment|// RUN: %clang %s -### -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -164,7 +164,7 @@ comment|// CHECK-ANDROID-ARM-GOLD: Inputs/basic_android_tree/bin{{/|\\+}}arm-lin
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -### \
+comment|// RUN: %clang %s -### -fuse-ld=ld \
 end_comment
 
 begin_comment

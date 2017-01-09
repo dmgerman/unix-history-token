@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/TypeOrdering.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/ExpressionTraits.h"
 end_include
 
@@ -514,6 +520,13 @@ decl_stmt|;
 name|class
 name|ImplicitConversionSequence
 decl_stmt|;
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|ImplicitConversionSequence
+operator|>
+name|ConversionSequenceList
+expr_stmt|;
 name|class
 name|InitListExpr
 decl_stmt|;
@@ -2448,6 +2461,12 @@ comment|/// no code will be generated to evaluate the value of the expression at
 comment|/// run time.
 name|Unevaluated
 block|,
+comment|/// \brief The current expression occurs within a braced-init-list within
+comment|/// an unevaluated operand. This is mostly like a regular unevaluated
+comment|/// context, except that we still instantiate constexpr functions that are
+comment|/// referenced here so that we can perform narrowing checks correctly.
+name|UnevaluatedList
+block|,
 comment|/// \brief The current expression occurs within a discarded statement.
 comment|/// This behaves largely similarly to an unevaluated operand in preventing
 comment|/// definitions from being required, but not in other ways.
@@ -2640,6 +2659,10 @@ operator|||
 name|Context
 operator|==
 name|UnevaluatedAbstract
+operator|||
+name|Context
+operator|==
+name|UnevaluatedList
 return|;
 block|}
 block|}
@@ -11425,6 +11448,11 @@ name|bool
 name|AllowExplicit
 operator|=
 name|false
+argument_list|,
+name|ConversionSequenceList
+name|EarlyConversions
+operator|=
+name|None
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -11483,6 +11511,10 @@ operator|::
 name|Classification
 name|ObjectClassification
 argument_list|,
+name|Expr
+operator|*
+name|ThisArg
+argument_list|,
 name|ArrayRef
 operator|<
 name|Expr
@@ -11525,6 +11557,10 @@ operator|::
 name|Classification
 name|ObjectClassification
 argument_list|,
+name|Expr
+operator|*
+name|ThisArg
+argument_list|,
 name|ArrayRef
 operator|<
 name|Expr
@@ -11545,6 +11581,11 @@ name|bool
 name|PartialOverloading
 operator|=
 name|false
+argument_list|,
+name|ConversionSequenceList
+name|EarlyConversions
+operator|=
+name|None
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -11575,6 +11616,10 @@ name|Expr
 operator|::
 name|Classification
 name|ObjectClassification
+argument_list|,
+name|Expr
+operator|*
+name|ThisArg
 argument_list|,
 name|ArrayRef
 operator|<
@@ -11635,6 +11680,60 @@ name|bool
 name|PartialOverloading
 operator|=
 name|false
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|CheckNonDependentConversions
+argument_list|(
+name|FunctionTemplateDecl
+operator|*
+name|FunctionTemplate
+argument_list|,
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+name|ParamTypes
+argument_list|,
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|Args
+argument_list|,
+name|OverloadCandidateSet
+operator|&
+name|CandidateSet
+argument_list|,
+name|ConversionSequenceList
+operator|&
+name|Conversions
+argument_list|,
+name|bool
+name|SuppressUserConversions
+argument_list|,
+name|CXXRecordDecl
+operator|*
+name|ActingContext
+operator|=
+name|nullptr
+argument_list|,
+name|QualType
+name|ObjectType
+operator|=
+name|QualType
+argument_list|()
+argument_list|,
+name|Expr
+operator|::
+name|Classification
+name|ObjectClassification
+operator|=
+block|{}
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -11954,6 +12053,159 @@ name|false
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// Check the diagnose_if attributes on the given function. Returns the
+end_comment
+
+begin_comment
+comment|/// first succesful fatal attribute, or null if calling Function(Args) isn't
+end_comment
+
+begin_comment
+comment|/// an error.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This only considers ArgDependent DiagnoseIfAttrs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This will populate Nonfatal with all non-error DiagnoseIfAttrs that
+end_comment
+
+begin_comment
+comment|/// succeed. If this function returns non-null, the contents of Nonfatal are
+end_comment
+
+begin_comment
+comment|/// unspecified.
+end_comment
+
+begin_decl_stmt
+name|DiagnoseIfAttr
+modifier|*
+name|checkArgDependentDiagnoseIf
+argument_list|(
+name|FunctionDecl
+operator|*
+name|Function
+argument_list|,
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|Args
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|DiagnoseIfAttr
+operator|*
+operator|>
+operator|&
+name|Nonfatal
+argument_list|,
+name|bool
+name|MissingImplicitThis
+operator|=
+name|false
+argument_list|,
+name|Expr
+operator|*
+name|ThisArg
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Check the diagnose_if expressions on the given function. Returns the
+end_comment
+
+begin_comment
+comment|/// first succesful fatal attribute, or null if using Function isn't
+end_comment
+
+begin_comment
+comment|/// an error.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This ignores all ArgDependent DiagnoseIfAttrs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This will populate Nonfatal with all non-error DiagnoseIfAttrs that
+end_comment
+
+begin_comment
+comment|/// succeed. If this function returns non-null, the contents of Nonfatal are
+end_comment
+
+begin_comment
+comment|/// unspecified.
+end_comment
+
+begin_decl_stmt
+name|DiagnoseIfAttr
+modifier|*
+name|checkArgIndependentDiagnoseIf
+argument_list|(
+name|FunctionDecl
+operator|*
+name|Function
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|DiagnoseIfAttr
+operator|*
+operator|>
+operator|&
+name|Nonfatal
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Emits the diagnostic contained in the given DiagnoseIfAttr at Loc. Also
+end_comment
+
+begin_comment
+comment|/// emits a note about the location of said attribute.
+end_comment
+
+begin_function_decl
+name|void
+name|emitDiagnoseIfDiagnostic
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|DiagnoseIfAttr
+modifier|*
+name|DIA
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Returns whether the given function's address can be taken or not,
@@ -18317,6 +18569,18 @@ name|Loc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Mark all of the declarations referenced within a particular AST node as
+end_comment
+
+begin_comment
+comment|/// referenced. Used when template instantiation instantiates a non-dependent
+end_comment
+
+begin_comment
+comment|/// type -- entities referenced by the type are now referenced.
+end_comment
 
 begin_function_decl
 name|void
@@ -31357,6 +31621,9 @@ comment|/// \brief The explicitly-specified template arguments were not valid
 comment|/// template arguments for the given template.
 name|TDK_InvalidExplicitArguments
 block|,
+comment|/// \brief Checking non-dependent argument conversions failed.
+name|TDK_NonDependentConversionFailure
+block|,
 comment|/// \brief Deduction failed; that's all we know.
 name|TDK_MiscellaneousDeductionFailure
 block|,
@@ -31551,9 +31818,28 @@ name|bool
 name|PartialOverloading
 operator|=
 name|false
-argument_list|)
-decl_stmt|;
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|bool
+argument_list|()
+operator|>
+name|CheckNonDependent
+operator|=
+index|[]
+block|{
+return|return
+name|false
+return|;
+block|}
 end_decl_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 name|TemplateDeductionResult
@@ -31587,8 +31873,20 @@ name|Info
 argument_list|,
 name|bool
 name|PartialOverloading
-operator|=
-name|false
+argument_list|,
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|bool
+argument_list|(
+name|ArrayRef
+operator|<
+name|QualType
+operator|>
+argument_list|)
+operator|>
+name|CheckNonDependent
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -32515,6 +32813,25 @@ operator|,
 name|unsigned
 operator|>>
 name|InstantiatingSpecializations
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Non-dependent types used in templates that have already been instantiated
+end_comment
+
+begin_comment
+comment|/// by some template instantiation.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|QualType
+operator|>
+name|InstantiatedNonDependentTypes
 expr_stmt|;
 end_expr_stmt
 
@@ -49406,6 +49723,71 @@ argument_list|,
 name|IsDecltype
 argument_list|)
 expr_stmt|;
+block|}
+enum|enum
+name|InitListTag
+block|{
+name|InitList
+block|}
+enum|;
+name|EnterExpressionEvaluationContext
+argument_list|(
+argument|Sema&Actions
+argument_list|,
+argument|InitListTag
+argument_list|,
+argument|bool ShouldEnter = true
+argument_list|)
+block|:
+name|Actions
+argument_list|(
+name|Actions
+argument_list|)
+operator|,
+name|Entered
+argument_list|(
+argument|false
+argument_list|)
+block|{
+comment|// In C++11 onwards, narrowing checks are performed on the contents of
+comment|// braced-init-lists, even when they occur within unevaluated operands.
+comment|// Therefore we still need to instantiate constexpr functions used in such
+comment|// a context.
+if|if
+condition|(
+name|ShouldEnter
+operator|&&
+name|Actions
+operator|.
+name|isUnevaluatedContext
+argument_list|()
+operator|&&
+name|Actions
+operator|.
+name|getLangOpts
+argument_list|()
+operator|.
+name|CPlusPlus11
+condition|)
+block|{
+name|Actions
+operator|.
+name|PushExpressionEvaluationContext
+argument_list|(
+name|Sema
+operator|::
+name|UnevaluatedList
+argument_list|,
+name|nullptr
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+name|Entered
+operator|=
+name|true
+expr_stmt|;
+block|}
 block|}
 operator|~
 name|EnterExpressionEvaluationContext

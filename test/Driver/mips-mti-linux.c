@@ -36,7 +36,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mips-mti-linux -mips32r2 -mhard-float -rtlib=platform \
+comment|// RUN:     --target=mips-mti-linux -mips32r2 -mhard-float -rtlib=platform -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=mips-mti-linux -mips32r2 -EL -mhard-float -rtlib=platform \
+comment|// RUN:     --target=mips-mti-linux -mips32r2 -EL -mhard-float -rtlib=platform -fuse-ld=ld \
 end_comment
 
 begin_comment

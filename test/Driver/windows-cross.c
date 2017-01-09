@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -stdlib=libstdc++ -rtlib=platform -o /dev/null %s 2>&1 \
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=ld -stdlib=libstdc++ -rtlib=platform -o /dev/null %s 2>&1 \
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// CHECK-BASIC: armv7-windows-itanium-ld" "--sysroot={{.*}}/Inputs/Windo
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %s/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -rtlib=compiler-rt -stdlib=libstdc++ -o /dev/null %s 2>&1 \
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %s/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=ld -rtlib=compiler-rt -stdlib=libstdc++ -o /dev/null %s 2>&1 \
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// CHECK-RTLIB: armv7-windows-itanium-ld" "--sysroot={{.*}}/Inputs/Windo
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -rtlib=compiler-rt -stdlib=libc++ -o /dev/null %s 2>&1 \
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=ld -rtlib=compiler-rt -stdlib=libc++ -o /dev/null %s 2>&1 \
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// CHECK-C-LIBCXX: armv7-windows-itanium-ld" "--sysroot={{.*}}/Inputs/Wi
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -rtlib=compiler-rt -stdlib=libc++ -o /dev/null %s 2>&1 \
+comment|// RUN: %clangxx -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=ld -rtlib=compiler-rt -stdlib=libc++ -o /dev/null %s 2>&1 \
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// CHECK-LIBCXX: armv7-windows-itanium-ld" "--sysroot={{.*}}/Inputs/Wind
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -shared -rtlib=compiler-rt -stdlib=libc++ -o shared.dll %s 2>&1 \
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=ld -shared -rtlib=compiler-rt -stdlib=libc++ -o shared.dll %s 2>&1 \
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// CHECK-SHARED: armv7-windows-itanium-ld" "--sysroot={{.*}}/Inputs/Wind
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %s/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -shared -rtlib=compiler-rt -stdlib=libc++ -nostartfiles -o shared.dll %s 2>&1 \
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %s/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=ld -shared -rtlib=compiler-rt -stdlib=libc++ -nostartfiles -o shared.dll %s 2>&1 \
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ comment|// CHECK-NOSTARTFILES: armv7-windows-itanium-ld" "--sysroot={{.*}}/Input
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -shared -rtlib=compiler-rt -stdlib=libc++ -nostartfiles -nodefaultlibs -o shared.dll %s 2>&1 \
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -fuse-ld=ld -shared -rtlib=compiler-rt -stdlib=libc++ -nostartfiles -nodefaultlibs -o shared.dll %s 2>&1 \
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|// RUN: %clang %s -### -no-canonical-prefixes --target=x86_64-unknown-fu
 end_comment
 
 begin_comment
-comment|// RUN:     --sysroot=%S/platform 2>&1 | FileCheck %s
+comment|// RUN:     --sysroot=%S/platform -fuse-ld=ld 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

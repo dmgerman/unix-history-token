@@ -12,7 +12,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux --coverage \
+comment|// RUN:     -target i386-unknown-linux --coverage -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux --coverage \
+comment|// RUN:     -target x86_64-unknown-linux --coverage -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-freebsd --coverage \
+comment|// RUN:     -target x86_64-unknown-freebsd --coverage -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi --coverage \
+comment|// RUN:     -target arm-linux-androideabi --coverage -fuse-ld=ld \
 end_comment
 
 begin_comment

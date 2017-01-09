@@ -4,6 +4,14 @@ comment|// RUN: %clang -S -emit-llvm -o - -O2 %s | FileCheck %s -check-prefixes=
 end_comment
 
 begin_comment
+comment|// RUN: %clang -S -emit-llvm -o - -O2 -Xclang -disable-lifetime-markers %s \
+end_comment
+
+begin_comment
+comment|// RUN:       | FileCheck %s -check-prefixes=CHECK,O0
+end_comment
+
+begin_comment
 comment|// RUN: %clang -S -emit-llvm -o - -O0 %s | FileCheck %s -check-prefixes=CHECK,O0
 end_comment
 

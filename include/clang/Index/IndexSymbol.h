@@ -143,6 +143,19 @@ name|CXX
 operator|,
 block|}
 empty_stmt|;
+comment|/// Language specific sub-kinds.
+name|enum
+name|class
+name|SymbolSubKind
+block|{
+name|None
+operator|,
+name|CXXCopyConstructor
+operator|,
+name|CXXMoveConstructor
+operator|,
+block|}
+empty_stmt|;
 comment|/// Set of properties that provide additional info about a symbol.
 name|enum
 name|class
@@ -357,6 +370,9 @@ block|{
 name|SymbolKind
 name|Kind
 decl_stmt|;
+name|SymbolSubKind
+name|SubKind
+decl_stmt|;
 name|SymbolPropertySet
 name|Properties
 decl_stmt|;
@@ -426,6 +442,13 @@ name|StringRef
 name|getSymbolKindString
 parameter_list|(
 name|SymbolKind
+name|K
+parameter_list|)
+function_decl|;
+name|StringRef
+name|getSymbolSubKindString
+parameter_list|(
+name|SymbolSubKind
 name|K
 parameter_list|)
 function_decl|;

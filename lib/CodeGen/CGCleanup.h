@@ -2596,6 +2596,16 @@ block|;
 specifier|static
 specifier|const
 name|EHPersonality
+name|GNU_ObjC_SJLJ
+block|;
+specifier|static
+specifier|const
+name|EHPersonality
+name|GNU_ObjC_SEH
+block|;
+specifier|static
+specifier|const
+name|EHPersonality
 name|GNUstep_ObjC
 block|;
 specifier|static

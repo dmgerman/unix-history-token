@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -### -B%S/Inputs/prefixed_tools_tree -o %t.o -no-integrated-as \
+comment|// RUN: %clang -### -B%S/Inputs/prefixed_tools_tree -o %t.o -no-integrated-as -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: FileCheck --check-prefix=CHECK-M64 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -B%S/Inputs/prefixed_tools_tree -o %t.o -no-integrated-as \
+comment|// RUN: %clang -### -B%S/Inputs/prefixed_tools_tree -o %t.o -no-integrated-as -fuse-ld=ld \
 end_comment
 
 begin_comment

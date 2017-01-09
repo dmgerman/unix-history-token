@@ -52,7 +52,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -Wno-liblto -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i686-pc-linux-gnu -nostdlib --rtlib=compiler-rt \
+comment|// RUN:     -target i686-pc-linux-gnu -nostdlib --rtlib=compiler-rt -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -Wno-liblto -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i686-pc-linux-gnu --rtlib=compiler-rt -nostdlib \
+comment|// RUN:     -target i686-pc-linux-gnu --rtlib=compiler-rt -nostdlib -fuse-ld=ld \
 end_comment
 
 begin_comment

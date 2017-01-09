@@ -1681,6 +1681,36 @@ name|construct
 argument_list|()
 expr_stmt|;
 block|}
+name|void
+name|setAsIdentityConversion
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+name|setStandard
+argument_list|()
+expr_stmt|;
+name|Standard
+operator|.
+name|setAsIdentityConversion
+argument_list|()
+expr_stmt|;
+name|Standard
+operator|.
+name|setFromType
+argument_list|(
+name|T
+argument_list|)
+expr_stmt|;
+name|Standard
+operator|.
+name|setAllToTypes
+argument_list|(
+name|T
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Whether the target is really a std::initializer_list, and the
 comment|/// sequence only represents the worst element conversion.
 name|bool
@@ -1799,8 +1829,23 @@ name|ovl_fail_addr_not_available
 block|,
 comment|/// This candidate was not viable because its OpenCL extension is disabled.
 name|ovl_fail_ext_disabled
+block|,
+comment|/// This inherited constructor is not viable because it would slice the
+comment|/// argument.
+name|ovl_fail_inhctor_slice
 block|,   }
 enum|;
+comment|/// A list of implicit conversion sequences for the arguments of an
+comment|/// OverloadCandidate.
+typedef|typedef
+name|llvm
+operator|::
+name|MutableArrayRef
+operator|<
+name|ImplicitConversionSequence
+operator|>
+name|ConversionSequenceList
+expr_stmt|;
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).
 struct|struct
 name|OverloadCandidate
@@ -1841,21 +1886,14 @@ name|CXXConversionDecl
 modifier|*
 name|Surrogate
 decl_stmt|;
-comment|/// Conversions - The conversion sequences used to convert the
-comment|/// function arguments to the function parameters, the pointer points to a
-comment|/// fixed size array with NumConversions elements. The memory is owned by
-comment|/// the OverloadCandidateSet.
-name|ImplicitConversionSequence
-modifier|*
+comment|/// The conversion sequences used to convert the function arguments
+comment|/// to the function parameters.
+name|ConversionSequenceList
 name|Conversions
 decl_stmt|;
 comment|/// The FixIt hints which can be used to fix the Bad candidate.
 name|ConversionFixItGenerator
 name|Fix
-decl_stmt|;
-comment|/// NumConversions - The number of elements in the Conversions array.
-name|unsigned
-name|NumConversions
 decl_stmt|;
 comment|/// Viable - True to indicate that this overload candidate is viable.
 name|bool
@@ -1888,6 +1926,74 @@ comment|/// to be used while performing partial ordering of function templates.
 name|unsigned
 name|ExplicitCallArguments
 decl_stmt|;
+comment|/// The number of diagnose_if attributes that this overload triggered.
+comment|/// If any of the triggered attributes are errors, this won't count
+comment|/// diagnose_if warnings.
+name|unsigned
+name|NumTriggeredDiagnoseIfs
+init|=
+literal|0
+decl_stmt|;
+comment|/// Basically a TinyPtrVector<DiagnoseIfAttr *> that doesn't own the vector:
+comment|/// If NumTriggeredDiagnoseIfs is 0 or 1, this is a DiagnoseIfAttr *,
+comment|/// otherwise it's a pointer to an array of `NumTriggeredDiagnoseIfs`
+comment|/// DiagnoseIfAttr *s.
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|DiagnoseIfAttr
+operator|*
+operator|,
+name|DiagnoseIfAttr
+operator|*
+operator|*
+operator|>
+name|DiagnoseIfInfo
+expr_stmt|;
+comment|/// Gets an ArrayRef for the data at DiagnoseIfInfo. Note that this may give
+comment|/// you a pointer into DiagnoseIfInfo.
+name|ArrayRef
+operator|<
+name|DiagnoseIfAttr
+operator|*
+operator|>
+name|getDiagnoseIfInfo
+argument_list|()
+specifier|const
+block|{
+name|auto
+operator|*
+name|Ptr
+operator|=
+name|NumTriggeredDiagnoseIfs
+operator|<=
+literal|1
+operator|?
+name|DiagnoseIfInfo
+operator|.
+name|getAddrOfPtr1
+argument_list|()
+operator|:
+name|DiagnoseIfInfo
+operator|.
+name|get
+operator|<
+name|DiagnoseIfAttr
+operator|*
+operator|*
+operator|>
+operator|(
+operator|)
+block|;
+return|return
+block|{
+name|Ptr
+block|,
+name|NumTriggeredDiagnoseIfs
+block|}
+return|;
+block|}
 union|union
 block|{
 name|DeductionFailureInfo
@@ -1911,30 +2017,17 @@ specifier|const
 block|{
 for|for
 control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|NumConversions
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
+name|auto
+operator|&
+name|C
+operator|:
+name|Conversions
 control|)
 block|{
 if|if
 condition|(
 operator|!
-name|Conversions
-index|[
-name|i
-index|]
+name|C
 operator|.
 name|isInitialized
 argument_list|()
@@ -1944,10 +2037,7 @@ name|false
 return|;
 if|if
 condition|(
-name|Conversions
-index|[
-name|i
-index|]
+name|C
 operator|.
 name|isAmbiguous
 argument_list|()
@@ -2145,12 +2235,13 @@ literal|16
 operator|>
 name|Functions
 expr_stmt|;
-comment|// Allocator for OverloadCandidate::Conversions. We store the first few
-comment|// elements inline to avoid allocation for small sets.
+comment|// Allocator for ConversionSequenceLists and DiagnoseIfAttr* arrays.
+comment|// We store the first few of each of these inline to avoid allocation for
+comment|// small sets.
 name|llvm
 operator|::
 name|BumpPtrAllocator
-name|ConversionSequenceAllocator
+name|SlabAllocator
 expr_stmt|;
 name|SourceLocation
 name|Loc
@@ -2158,8 +2249,20 @@ decl_stmt|;
 name|CandidateSetKind
 name|Kind
 decl_stmt|;
+name|constexpr
+specifier|static
 name|unsigned
-name|NumInlineSequences
+name|NumInlineBytes
+init|=
+literal|24
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ImplicitConversionSequence
+argument_list|)
+decl_stmt|;
+name|unsigned
+name|NumInlineBytesUsed
 decl_stmt|;
 name|llvm
 operator|::
@@ -2167,18 +2270,147 @@ name|AlignedCharArray
 operator|<
 name|alignof
 argument_list|(
-name|ImplicitConversionSequence
+name|void
+operator|*
 argument_list|)
 operator|,
-literal|16
-operator|*
-sizeof|sizeof
-argument_list|(
-name|ImplicitConversionSequence
-argument_list|)
+name|NumInlineBytes
 operator|>
 name|InlineSpace
 expr_stmt|;
+comment|/// If we have space, allocates from inline storage. Otherwise, allocates
+comment|/// from the slab allocator.
+comment|/// FIXME: It would probably be nice to have a SmallBumpPtrAllocator
+comment|/// instead.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+operator|*
+name|slabAllocate
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+comment|// It's simpler if this doesn't need to consider alignment.
+name|static_assert
+argument_list|(
+name|alignof
+argument_list|(
+name|T
+argument_list|)
+operator|==
+name|alignof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|,
+literal|"Only works for pointer-aligned types."
+argument_list|)
+block|;
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|is_trivial
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|||
+name|std
+operator|::
+name|is_same
+operator|<
+name|ImplicitConversionSequence
+argument_list|,
+name|T
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"Add destruction logic to OverloadCandidateSet::clear()."
+argument_list|)
+block|;
+name|unsigned
+name|NBytes
+operator|=
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|*
+name|N
+block|;
+if|if
+condition|(
+name|NBytes
+operator|>
+name|NumInlineBytes
+operator|-
+name|NumInlineBytesUsed
+condition|)
+return|return
+name|SlabAllocator
+operator|.
+name|Allocate
+operator|<
+name|T
+operator|>
+operator|(
+name|N
+operator|)
+return|;
+name|char
+operator|*
+name|FreeSpaceStart
+operator|=
+name|InlineSpace
+operator|.
+name|buffer
+operator|+
+name|NumInlineBytesUsed
+expr_stmt|;
+name|assert
+argument_list|(
+name|uintptr_t
+argument_list|(
+name|FreeSpaceStart
+argument_list|)
+operator|%
+name|alignof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|==
+literal|0
+operator|&&
+literal|"Misaligned storage!"
+argument_list|)
+expr_stmt|;
+name|NumInlineBytesUsed
+operator|+=
+name|NBytes
+expr_stmt|;
+return|return
+name|reinterpret_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|FreeSpaceStart
+operator|)
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|OverloadCandidateSet
 argument_list|(
 specifier|const
@@ -2188,6 +2420,9 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -2199,19 +2434,31 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|destroyCandidates
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_macro
 name|OverloadCandidateSet
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|CandidateSetKind CSK
 argument_list|)
-block|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|Loc
 argument_list|(
 name|Loc
@@ -2222,7 +2469,7 @@ argument_list|(
 name|CSK
 argument_list|)
 operator|,
-name|NumInlineSequences
+name|NumInlineBytesUsed
 argument_list|(
 literal|0
 argument_list|)
@@ -2243,6 +2490,9 @@ return|return
 name|Loc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|CandidateSetKind
 name|getKind
 argument_list|()
@@ -2252,8 +2502,45 @@ return|return
 name|Kind
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Make a DiagnoseIfAttr* array in a block of memory that will live for
+end_comment
+
+begin_comment
+comment|/// as long as this OverloadCandidateSet. Returns a pointer to the start
+end_comment
+
+begin_comment
+comment|/// of that array.
+end_comment
+
+begin_decl_stmt
+name|DiagnoseIfAttr
+modifier|*
+modifier|*
+name|addDiagnoseIfComplaints
+argument_list|(
+name|ArrayRef
+operator|<
+name|DiagnoseIfAttr
+operator|*
+operator|>
+name|CA
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine when this overload candidate will be new to the
+end_comment
+
+begin_comment
 comment|/// overload set.
+end_comment
+
+begin_function
 name|bool
 name|isNewCandidate
 parameter_list|(
@@ -2276,11 +2563,20 @@ operator|.
 name|second
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Clear out all of the candidates.
+end_comment
+
+begin_function_decl
 name|void
 name|clear
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_typedef
 typedef|typedef
 name|SmallVectorImpl
 operator|<
@@ -2290,6 +2586,9 @@ operator|::
 name|iterator
 name|iterator
 expr_stmt|;
+end_typedef
+
+begin_function
 name|iterator
 name|begin
 parameter_list|()
@@ -2301,6 +2600,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 name|iterator
 name|end
 parameter_list|()
@@ -2312,6 +2614,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|size_t
 name|size
 argument_list|()
@@ -2324,6 +2629,9 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|empty
 argument_list|()
@@ -2336,8 +2644,78 @@ name|empty
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Allocate storage for conversion sequences for NumConversions
+end_comment
+
+begin_comment
+comment|/// conversions.
+end_comment
+
+begin_function
+name|ConversionSequenceList
+name|allocateConversionSequences
+parameter_list|(
+name|unsigned
+name|NumConversions
+parameter_list|)
+block|{
+name|ImplicitConversionSequence
+modifier|*
+name|Conversions
+init|=
+name|slabAllocate
+operator|<
+name|ImplicitConversionSequence
+operator|>
+operator|(
+name|NumConversions
+operator|)
+decl_stmt|;
+comment|// Construct the new objects.
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|;
+name|I
+operator|!=
+name|NumConversions
+condition|;
+operator|++
+name|I
+control|)
+name|new
+argument_list|(
+argument|&Conversions[I]
+argument_list|)
+name|ImplicitConversionSequence
+argument_list|()
+expr_stmt|;
+return|return
+name|ConversionSequenceList
+argument_list|(
+name|Conversions
+argument_list|,
+name|NumConversions
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Add a new candidate with NumConversions conversion sequence slots
+end_comment
+
+begin_comment
 comment|/// to the overload set.
+end_comment
+
+begin_function
 name|OverloadCandidate
 modifier|&
 name|addCandidate
@@ -2346,8 +2724,32 @@ name|unsigned
 name|NumConversions
 init|=
 literal|0
+parameter_list|,
+name|ConversionSequenceList
+name|Conversions
+init|=
+name|None
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+name|Conversions
+operator|.
+name|empty
+argument_list|()
+operator|||
+name|Conversions
+operator|.
+name|size
+argument_list|()
+operator|==
+name|NumConversions
+operator|)
+operator|&&
+literal|"preallocated conversion sequence has wrong length"
+argument_list|)
+expr_stmt|;
 name|Candidates
 operator|.
 name|push_back
@@ -2365,95 +2767,33 @@ operator|.
 name|back
 argument_list|()
 decl_stmt|;
-comment|// Assign space from the inline array if there are enough free slots
-comment|// available.
-if|if
-condition|(
-name|NumConversions
-operator|+
-name|NumInlineSequences
-operator|<=
-literal|16
-condition|)
-block|{
-name|ImplicitConversionSequence
-modifier|*
-name|I
-init|=
-operator|(
-name|ImplicitConversionSequence
-operator|*
-operator|)
-name|InlineSpace
-operator|.
-name|buffer
-decl_stmt|;
 name|C
 operator|.
 name|Conversions
 operator|=
-operator|&
-name|I
-index|[
-name|NumInlineSequences
-index|]
-expr_stmt|;
-name|NumInlineSequences
-operator|+=
-name|NumConversions
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|// Otherwise get memory from the allocator.
-name|C
-operator|.
 name|Conversions
-operator|=
-name|ConversionSequenceAllocator
 operator|.
-name|Allocate
-operator|<
-name|ImplicitConversionSequence
-operator|>
-operator|(
-name|NumConversions
-operator|)
-expr_stmt|;
-block|}
-comment|// Construct the new objects.
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|!=
-name|NumConversions
-condition|;
-operator|++
-name|i
-control|)
-name|new
-argument_list|(
-argument|&C.Conversions[i]
-argument_list|)
-name|ImplicitConversionSequence
+name|empty
 argument_list|()
-expr_stmt|;
-name|C
-operator|.
+condition|?
+name|allocateConversionSequences
+argument_list|(
 name|NumConversions
-operator|=
-name|NumConversions
+argument_list|)
+else|:
+name|Conversions
 expr_stmt|;
 return|return
 name|C
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Find the best viable function on this overload set, if it exists.
+end_comment
+
+begin_decl_stmt
 name|OverloadingResult
 name|BestViableFunction
 argument_list|(
@@ -2476,6 +2816,9 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|NoteCandidates
 argument_list|(
@@ -2526,9 +2869,12 @@ return|return
 name|true
 return|;
 block|}
-block|)
-decl_stmt|;
 end_decl_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 unit|};

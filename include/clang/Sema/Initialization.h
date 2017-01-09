@@ -557,6 +557,7 @@ name|ASTContext
 modifier|&
 name|Context
 parameter_list|,
+specifier|const
 name|ParmVarDecl
 modifier|*
 name|Parm
@@ -586,6 +587,7 @@ name|ASTContext
 modifier|&
 name|Context
 parameter_list|,
+specifier|const
 name|ParmVarDecl
 modifier|*
 name|Parm

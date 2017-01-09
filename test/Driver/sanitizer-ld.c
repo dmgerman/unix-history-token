@@ -8,7 +8,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -fsanitize=address \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld -fsanitize=address \
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -fsanitize=address -shared-libasan \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld -fsanitize=address -shared-libasan \
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.so -shared 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -fsanitize=address -shared-libasan \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld -fsanitize=address -shared-libasan \
 end_comment
 
 begin_comment
@@ -196,7 +196,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-freebsd -fsanitize=address \
+comment|// RUN:     -target i386-unknown-freebsd -fuse-ld=ld -fsanitize=address \
 end_comment
 
 begin_comment
@@ -256,7 +256,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-freebsd -fsanitize=address \
+comment|// RUN:     -target i386-unknown-freebsd -fuse-ld=ld -fsanitize=address \
 end_comment
 
 begin_comment
@@ -288,7 +288,7 @@ comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -stdlib=platform -fsanitize=address \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld -stdlib=platform -fsanitize=address \
 end_comment
 
 begin_comment
@@ -352,7 +352,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o /dev/null -fsanitize=ad
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -stdlib=platform \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld -stdlib=platform \
 end_comment
 
 begin_comment
@@ -388,7 +388,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-gnueabi -fsanitize=address \
+comment|// RUN:     -target arm-linux-gnueabi -fuse-ld=ld -fsanitize=address \
 end_comment
 
 begin_comment
@@ -424,7 +424,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target armv7l-linux-gnueabi -fsanitize=address \
+comment|// RUN:     -target armv7l-linux-gnueabi -fuse-ld=ld -fsanitize=address \
 end_comment
 
 begin_comment
@@ -456,7 +456,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi -fsanitize=address \
+comment|// RUN:     -target arm-linux-androideabi -fuse-ld=ld -fsanitize=address \
 end_comment
 
 begin_comment
@@ -536,7 +536,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi -fsanitize=address \
+comment|// RUN:     -target arm-linux-androideabi -fuse-ld=ld -fsanitize=address \
 end_comment
 
 begin_comment
@@ -576,7 +576,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target sparcel-myriad-rtems-elf -fsanitize=address \
+comment|// RUN:     -target sparcel-myriad-rtems-elf -fuse-ld=ld -fsanitize=address \
 end_comment
 
 begin_comment
@@ -608,7 +608,7 @@ comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -stdlib=platform -lstdc++ \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld -stdlib=platform -lstdc++ \
 end_comment
 
 begin_comment
@@ -680,7 +680,7 @@ comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -stdlib=platform -lstdc++ \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld -stdlib=platform -lstdc++ \
 end_comment
 
 begin_comment
@@ -752,7 +752,7 @@ comment|// RUN: %clang -fsanitize=undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -828,7 +828,7 @@ comment|// RUN: %clangxx -fsanitize=undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -stdlib=platform \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld -stdlib=platform \
 end_comment
 
 begin_comment
@@ -884,7 +884,7 @@ comment|// RUN: %clang -fsanitize=address,undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -920,7 +920,7 @@ comment|// RUN: %clangxx -fsanitize=address,undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -stdlib=platform \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld -stdlib=platform \
 end_comment
 
 begin_comment
@@ -960,7 +960,7 @@ comment|// RUN: %clangxx -fsanitize=memory,undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -988,7 +988,7 @@ comment|// RUN: %clangxx -fsanitize=thread,undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1016,7 +1016,7 @@ comment|// RUN: %clang -fsanitize=undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux \
+comment|// RUN:     -target i386-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1056,7 +1056,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -fsanitize=leak \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld -fsanitize=leak \
 end_comment
 
 begin_comment
@@ -1100,7 +1100,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:  -target x86_64-unknown-linux -fsanitize=leak -fsanitize-coverage=func \
+comment|// RUN:  -target x86_64-unknown-linux -fuse-ld=ld -fsanitize=leak -fsanitize-coverage=func \
 end_comment
 
 begin_comment
@@ -1148,7 +1148,7 @@ comment|// RUN: %clang -fsanitize=leak,address %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1180,7 +1180,7 @@ comment|// RUN: %clang -fsanitize=address -fsanitize-coverage=func %s -### -o %t
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1216,7 +1216,7 @@ comment|// RUN: %clang -fsanitize=memory -fsanitize-coverage=func %s -### -o %t.
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1252,7 +1252,7 @@ comment|// RUN: %clang -fsanitize=dataflow -fsanitize-coverage=func %s -### -o %
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1288,7 +1288,7 @@ comment|// RUN: %clang -fsanitize=undefined -fsanitize-coverage=func %s -### -o 
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1320,7 +1320,7 @@ comment|// RUN: %clang -fsanitize-coverage=func %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1356,7 +1356,7 @@ comment|// RUN: %clang -fsanitize=cfi %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -rtlib=platform \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld -rtlib=platform \
 end_comment
 
 begin_comment
@@ -1388,7 +1388,7 @@ comment|// RUN:     %s -### -o %t.o 2>&1\
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1416,7 +1416,7 @@ comment|// RUN: %clang -fsanitize=cfi -fsanitize-cfi-cross-dso %s -### -o %t.o 2
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1452,7 +1452,7 @@ comment|// RUN:     -fno-sanitize-trap=cfi -fsanitize-recover=cfi \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1484,7 +1484,7 @@ comment|// RUN:     -mmacosx-version-min=10.6 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-apple-darwin13.4.0 -stdlib=platform \
+comment|// RUN:     -target x86_64-apple-darwin13.4.0 -fuse-ld=ld -stdlib=platform \
 end_comment
 
 begin_comment
@@ -1512,7 +1512,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -fsanitize=safe-stack \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld -fsanitize=safe-stack \
 end_comment
 
 begin_comment
@@ -1552,7 +1552,7 @@ comment|// RUN: %clang -fsanitize=cfi -fsanitize-stats %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1584,7 +1584,7 @@ comment|// RUN: %clang -fsanitize=cfi -fsanitize-stats %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-apple-darwin \
+comment|// RUN:     -target x86_64-apple-darwin -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1668,7 +1668,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi -fsanitize=safe-stack \
+comment|// RUN:     -target arm-linux-androideabi -fuse-ld=ld -fsanitize=safe-stack \
 end_comment
 
 begin_comment
@@ -1696,7 +1696,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o -shared 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi -fsanitize=safe-stack \
+comment|// RUN:     -target arm-linux-androideabi -fuse-ld=ld -fsanitize=safe-stack \
 end_comment
 
 begin_comment
@@ -1724,7 +1724,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target aarch64-linux-android -fsanitize=safe-stack \
+comment|// RUN:     -target aarch64-linux-android -fuse-ld=ld -fsanitize=safe-stack \
 end_comment
 
 begin_comment
@@ -1752,7 +1752,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi -fsanitize=cfi \
+comment|// RUN:     -target arm-linux-androideabi -fuse-ld=ld -fsanitize=cfi \
 end_comment
 
 begin_comment
@@ -1784,7 +1784,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target arm-linux-androideabi -fsanitize=cfi \
+comment|// RUN:     -target arm-linux-androideabi -fuse-ld=ld -fsanitize=cfi \
 end_comment
 
 begin_comment
@@ -1824,7 +1824,7 @@ comment|// RUN: %clang -fsanitize=undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-scei-ps4 \
+comment|// RUN:     -target x86_64-scei-ps4 -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1848,7 +1848,7 @@ comment|// RUN: %clang -fsanitize=address %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-scei-ps4 \
+comment|// RUN:     -target x86_64-scei-ps4 -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1872,7 +1872,7 @@ comment|// RUN: %clang -fsanitize=address,undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-scei-ps4 \
+comment|// RUN:     -target x86_64-scei-ps4 -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1896,7 +1896,7 @@ comment|// RUN: %clang -fsanitize=efficiency-cache-frag %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
@@ -1908,7 +1908,7 @@ comment|// RUN: %clang -fsanitize=efficiency-working-set %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux -fuse-ld=ld \
 end_comment
 
 begin_comment
