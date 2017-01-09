@@ -2799,6 +2799,9 @@ name|start
 decl_stmt|,
 name|stop
 decl_stmt|;
+name|uint16_t
+name|locale
+decl_stmt|;
 name|uint8_t
 name|status
 decl_stmt|;
@@ -3007,10 +3010,6 @@ argument_list|(
 name|optarg
 argument_list|,
 operator|&
-name|filter
-operator|.
-name|members
-operator|.
 name|locale
 argument_list|)
 operator|<
@@ -3037,6 +3036,14 @@ name|error
 operator|)
 return|;
 block|}
+name|filter
+operator|.
+name|members
+operator|.
+name|locale
+operator|=
+name|locale
+expr_stmt|;
 break|break;
 case|case
 literal|'n'
