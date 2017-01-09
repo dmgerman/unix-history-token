@@ -111,6 +111,11 @@ name|PassRegistry
 modifier|&
 parameter_list|)
 function_decl|;
+name|ModulePass
+modifier|*
+name|createWebAssemblyFixFunctionBitcasts
+parameter_list|()
+function_decl|;
 name|FunctionPass
 modifier|*
 name|createWebAssemblyOptimizeReturned

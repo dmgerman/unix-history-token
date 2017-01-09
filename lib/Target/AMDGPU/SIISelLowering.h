@@ -115,6 +115,8 @@ argument_list|,
 argument|unsigned Offset
 argument_list|,
 argument|bool Signed
+argument_list|,
+argument|const ISD::InputArg *Arg = nullptr
 argument_list|)
 specifier|const
 block|;

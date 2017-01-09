@@ -439,12 +439,38 @@ modifier|*
 name|createBarrierNoopPass
 parameter_list|()
 function_decl|;
+comment|/// What to do with the summary when running the LowerTypeTests pass.
+name|enum
+name|class
+name|LowerTypeTestsSummaryAction
+block|{
+name|None
+operator|,
+comment|///< Do nothing.
+name|Import
+operator|,
+comment|///< Import typeid resolutions from summary and globals.
+name|Export
+operator|,
+comment|///< Export typeid resolutions to summary and globals.
+block|}
+empty_stmt|;
 comment|/// \brief This pass lowers type metadata and the llvm.type.test intrinsic to
 comment|/// bitsets.
+comment|/// \param Action What to do with the summary passed as Index.
+comment|/// \param Index The summary to use for importing or exporting, this can be null
+comment|///              when Action is None.
 name|ModulePass
 modifier|*
 name|createLowerTypeTestsPass
-parameter_list|()
+parameter_list|(
+name|LowerTypeTestsSummaryAction
+name|Action
+parameter_list|,
+name|ModuleSummaryIndex
+modifier|*
+name|Index
+parameter_list|)
 function_decl|;
 comment|/// \brief This pass export CFI checks for use by external modules.
 name|ModulePass

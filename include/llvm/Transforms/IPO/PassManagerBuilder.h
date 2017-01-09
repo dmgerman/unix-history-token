@@ -92,9 +92,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|ModuleSummaryIndex
-decl_stmt|;
-name|class
 name|Pass
 decl_stmt|;
 name|class

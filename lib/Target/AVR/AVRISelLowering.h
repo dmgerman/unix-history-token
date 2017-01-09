@@ -363,6 +363,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|unsigned
+name|getRegisterByName
+argument_list|(
+argument|const char* RegName
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 name|SDValue

@@ -159,6 +159,16 @@ argument_list|,
 argument|int64_t Addend
 argument_list|)
 block|;
+name|bool
+name|resolveAArch64ShortBranch
+argument_list|(
+argument|unsigned SectionID
+argument_list|,
+argument|relocation_iterator RelI
+argument_list|,
+argument|const RelocationValueRef&Value
+argument_list|)
+block|;
 name|void
 name|resolveARMRelocation
 argument_list|(

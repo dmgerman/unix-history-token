@@ -413,7 +413,7 @@ range|:
 name|public
 name|rpc
 operator|::
-name|SingleThreadedRPC
+name|SingleThreadedRPCEndpoint
 operator|<
 name|rpc
 operator|::
@@ -517,7 +517,7 @@ argument_list|)
 operator|:
 name|rpc
 operator|::
-name|SingleThreadedRPC
+name|SingleThreadedRPCEndpoint
 operator|<
 name|rpc
 operator|::
