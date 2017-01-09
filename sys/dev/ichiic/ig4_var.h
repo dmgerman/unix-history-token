@@ -129,7 +129,7 @@ name|uint8_t
 name|last_slave
 decl_stmt|;
 name|int
-name|pci_attached
+name|platform_attached
 range|:
 literal|1
 decl_stmt|;
