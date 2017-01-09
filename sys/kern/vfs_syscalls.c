@@ -1781,6 +1781,8 @@ expr_stmt|;
 if|if
 condition|(
 name|mp
+operator|!=
+name|NULL
 condition|)
 name|vfs_ref
 argument_list|(
