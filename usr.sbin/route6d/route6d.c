@@ -12579,7 +12579,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|6
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -12628,7 +12631,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|6
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
@@ -13402,7 +13408,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|6
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -13449,7 +13458,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|6
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
