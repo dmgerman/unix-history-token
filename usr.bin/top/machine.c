@@ -2948,7 +2948,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|2
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 operator|&
 name|boottime
