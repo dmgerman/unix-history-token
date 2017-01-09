@@ -183,7 +183,7 @@ begin_define
 define|#
 directive|define
 name|_LIBCPP_ELAST
-value|_sys_nerr
+value|(_sys_nerr - 1)
 end_define
 
 begin_else
