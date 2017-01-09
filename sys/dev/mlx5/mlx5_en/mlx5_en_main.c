@@ -1338,6 +1338,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This function reads the physical port counters from the firmware  * using a pre-defined layout defined by various MLX5E_PPORT_XXX()  * macros. The output is converted from big-endian 64-bit values into  * host endian ones and stored in the "priv->stats.pport" structure.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1409,6 +1413,7 @@ decl_stmt|;
 name|unsigned
 name|y
 decl_stmt|;
+comment|/* allocate firmware request structures */
 name|in
 operator|=
 name|mlx5_vzalloc
@@ -1436,6 +1441,7 @@ condition|)
 goto|goto
 name|free_out
 goto|;
+comment|/* 	 * Get pointer to the 64-bit counter set which is located at a 	 * fixed offset in the output firmware request structure: 	 */
 name|ptr
 operator|=
 operator|(
@@ -1463,6 +1469,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* read IEEE802_3 counter group using predefined counter layout */
 name|MLX5_SET
 argument_list|(
 name|ppcnt_reg
@@ -1526,6 +1533,7 @@ name|x
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* read RFC2819 counter group using predefined counter layout */
 name|MLX5_SET
 argument_list|(
 name|ppcnt_reg
@@ -1620,6 +1628,7 @@ name|x
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* read RFC2863 counter group using predefined counter layout */
 name|MLX5_SET
 argument_list|(
 name|ppcnt_reg
@@ -1681,6 +1690,7 @@ name|x
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* read physical layer stats counter group using predefined counter layout */
 name|MLX5_SET
 argument_list|(
 name|ppcnt_reg
@@ -1744,6 +1754,7 @@ argument_list|)
 expr_stmt|;
 name|free_out
 label|:
+comment|/* free firmware request structures */
 name|kvfree
 argument_list|(
 name|in
@@ -1756,6 +1767,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This function is called regularly to collect all statistics  * counters from the firmware. The values can be viewed through the  * sysctl interface. Execution is serialized using the priv's global  * configuration lock.  */
+end_comment
 
 begin_function
 specifier|static
