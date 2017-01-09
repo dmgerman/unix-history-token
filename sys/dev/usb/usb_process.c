@@ -1516,6 +1516,9 @@ name|up_cv
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
 comment|/* Check if we are still cold booted */
 if|if
 condition|(
@@ -1537,6 +1540,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 name|cv_wait
 argument_list|(
 operator|&
