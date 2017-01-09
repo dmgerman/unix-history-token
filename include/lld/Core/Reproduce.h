@@ -124,15 +124,6 @@ operator|*
 name|Arg
 argument_list|)
 expr_stmt|;
-comment|// Replaces backslashes with slashes if Windows.
-name|std
-operator|::
-name|string
-name|convertToUnixPathSeparator
-argument_list|(
-argument|StringRef S
-argument_list|)
-expr_stmt|;
 block|}
 end_decl_stmt
 

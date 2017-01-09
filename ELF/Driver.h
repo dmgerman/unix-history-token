@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/TarWriter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -144,17 +138,6 @@ name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|llvm
-operator|::
-name|TarWriter
-operator|>
-name|Tar
-expr_stmt|;
-comment|// for reproduce
 name|private
 label|:
 name|std
@@ -166,17 +149,6 @@ operator|>
 name|getArchiveMembers
 argument_list|(
 argument|MemoryBufferRef MB
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|MemoryBufferRef
-operator|>
-name|readFile
-argument_list|(
-argument|StringRef Path
 argument_list|)
 expr_stmt|;
 name|void
