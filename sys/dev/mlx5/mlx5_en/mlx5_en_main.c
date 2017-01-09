@@ -1390,6 +1390,7 @@ name|u32
 modifier|*
 name|out
 decl_stmt|;
+specifier|const
 name|u64
 modifier|*
 name|ptr
@@ -1438,6 +1439,7 @@ goto|;
 name|ptr
 operator|=
 operator|(
+specifier|const
 name|uint64_t
 operator|*
 operator|)
