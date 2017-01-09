@@ -2474,8 +2474,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|sdhci_handle_card_present
+name|sdhci_handle_card_present_locked
 parameter_list|(
 name|struct
 name|sdhci_slot
@@ -2490,11 +2491,6 @@ name|bool
 name|was_present
 decl_stmt|;
 comment|/* 	 * If there was no card and now there is one, schedule the task to 	 * create the child device after a short delay.  The delay is to 	 * debounce the card insert (sometimes the card detect pin stabilizes 	 * before the other pins have made good contact). 	 * 	 * If there was a card present and now it's gone, immediately schedule 	 * the task to delete the child device.  No debouncing -- gone is gone, 	 * because once power is removed, a full card re-init is needed, and 	 * that happens by deleting and recreating the child device. 	 */
-name|SDHCI_LOCK
-argument_list|(
-name|slot
-argument_list|)
-expr_stmt|;
 name|was_present
 operator|=
 name|slot
@@ -2545,6 +2541,34 @@ name|card_task
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|sdhci_handle_card_present
+parameter_list|(
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|,
+name|bool
+name|is_present
+parameter_list|)
+block|{
+name|SDHCI_LOCK
+argument_list|(
+name|slot
+argument_list|)
+expr_stmt|;
+name|sdhci_handle_card_present_locked
+argument_list|(
+name|slot
+argument_list|,
+name|is_present
+argument_list|)
+expr_stmt|;
 name|SDHCI_UNLOCK
 argument_list|(
 name|slot
@@ -6845,7 +6869,7 @@ name|SDHCI_INT_CARD_REMOVE
 operator|)
 argument_list|)
 expr_stmt|;
-name|sdhci_handle_card_present
+name|sdhci_handle_card_present_locked
 argument_list|(
 name|slot
 argument_list|,
