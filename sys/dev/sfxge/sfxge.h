@@ -1059,7 +1059,8 @@ name|SFXGE_LINK_UP
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->port.link_mode != EFX_LINK_DOWN)
+define|\
+value|((sc)->port.link_mode != EFX_LINK_DOWN&& \ 	 (sc)->port.link_mode != EFX_LINK_UNKNOWN)
 end_define
 
 begin_define
