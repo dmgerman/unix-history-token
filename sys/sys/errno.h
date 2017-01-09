@@ -1287,11 +1287,19 @@ begin_comment
 comment|/* _POSIX_SOURCE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_KERNEL_ERRNO
+argument_list|)
+end_if
 
 begin_comment
 comment|/* pseudo-errors returned inside kernel to modify return to process */
