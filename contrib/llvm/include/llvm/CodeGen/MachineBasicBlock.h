@@ -1508,6 +1508,46 @@ operator|::
 name|const_iterator
 name|livein_iterator
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|/// Unlike livein_begin, this method does not check that the liveness
+comment|/// information is accurate. Still for debug purposes it may be useful
+comment|/// to have iterators that won't assert if the liveness information
+comment|/// is not current.
+name|livein_iterator
+name|livein_begin_dbg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LiveIns
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator_range
+operator|<
+name|livein_iterator
+operator|>
+name|liveins_dbg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|livein_begin_dbg
+argument_list|()
+argument_list|,
+name|livein_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+endif|#
+directive|endif
 name|livein_iterator
 name|livein_begin
 argument_list|()

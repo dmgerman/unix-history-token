@@ -297,6 +297,15 @@ argument|std::string&Sysroot
 argument_list|,
 argument|std::string&OutputFile
 argument_list|)
+block|;
+name|bool
+name|BeginSourceFileAction
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef Filename
+argument_list|)
+name|override
 block|; }
 block|;
 name|class

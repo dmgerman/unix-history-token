@@ -134,6 +134,9 @@ block|{
 name|class
 name|DWARFDebugLine
 decl_stmt|;
+name|class
+name|TarWriter
+decl_stmt|;
 name|namespace
 name|lto
 block|{
@@ -185,6 +188,21 @@ decl_stmt|;
 name|class
 name|SymbolBody
 decl_stmt|;
+comment|// If -reproduce option is given, all input files are written
+comment|// to this tar archive.
+extern|extern llvm::TarWriter *Tar;
+comment|// Opens a given file.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|MemoryBufferRef
+operator|>
+name|readFile
+argument_list|(
+argument|StringRef Path
+argument_list|)
+expr_stmt|;
 comment|// The root class of input files.
 name|class
 name|InputFile

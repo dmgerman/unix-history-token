@@ -207,11 +207,7 @@ operator|.
 name|lock
 argument_list|()
 block|;
-if|if
-condition|(
-name|auto
-name|Err
-init|=
+return|return
 name|serializeSeq
 argument_list|(
 operator|*
@@ -221,15 +217,6 @@ name|FnId
 argument_list|,
 name|SeqNo
 argument_list|)
-condition|)
-return|return
-name|Err
-return|;
-return|return
-name|Error
-operator|::
-name|success
-argument_list|()
 return|;
 block|}
 comment|/// Notify the channel that we're ending a message send.

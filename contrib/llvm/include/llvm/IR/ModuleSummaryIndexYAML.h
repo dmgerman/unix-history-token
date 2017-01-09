@@ -169,7 +169,7 @@ argument_list|)
 block|{
 name|io
 operator|.
-name|mapRequired
+name|mapOptional
 argument_list|(
 literal|"Kind"
 argument_list|,
@@ -180,7 +180,7 @@ argument_list|)
 block|;
 name|io
 operator|.
-name|mapRequired
+name|mapOptional
 argument_list|(
 literal|"SizeBitWidth"
 argument_list|,
@@ -211,7 +211,7 @@ argument_list|)
 block|{
 name|io
 operator|.
-name|mapRequired
+name|mapOptional
 argument_list|(
 literal|"TTRes"
 argument_list|,
@@ -278,7 +278,7 @@ argument_list|)
 block|{
 name|io
 operator|.
-name|mapRequired
+name|mapOptional
 argument_list|(
 literal|"TypeTests"
 argument_list|,
@@ -580,7 +580,7 @@ argument_list|)
 block|{
 name|io
 operator|.
-name|mapRequired
+name|mapOptional
 argument_list|(
 literal|"GlobalValueMap"
 argument_list|,
@@ -591,7 +591,7 @@ argument_list|)
 block|;
 name|io
 operator|.
-name|mapRequired
+name|mapOptional
 argument_list|(
 literal|"TypeIdMap"
 argument_list|,

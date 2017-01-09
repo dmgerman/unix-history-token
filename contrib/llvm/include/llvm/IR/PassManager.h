@@ -3799,35 +3799,15 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|/// \brief A module analysis which acts as a proxy for a function analysis
+comment|/// \brief An analysis over an "outer" IR unit that provides access to an
 end_comment
 
 begin_comment
-comment|/// manager.
+comment|/// analysis manager over an "inner" IR unit.  The inner unit must be contained
 end_comment
 
 begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This primarily proxies invalidation information from the module analysis
-end_comment
-
-begin_comment
-comment|/// manager and module pass manager to a function analysis manager. You should
-end_comment
-
-begin_comment
-comment|/// never use a function analysis manager from within (transitively) a module
-end_comment
-
-begin_comment
-comment|/// pass manager unless your parent module pass has received a proxy result
-end_comment
-
-begin_comment
-comment|/// object for it.
+comment|/// in the outer unit.
 end_comment
 
 begin_comment
@@ -3835,15 +3815,51 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Note that the proxy's result is a move-only object and represents ownership
+comment|/// Fore example, InnerAnalysisManagerProxy<FunctionAnalysisManager, Module> is
 end_comment
 
 begin_comment
-comment|/// of the validity of the analyses in the \c FunctionAnalysisManager it
+comment|/// an analysis over Modules (the "outer" unit) that provides access to a
 end_comment
 
 begin_comment
-comment|/// provides.
+comment|/// Function analysis manager.  The FunctionAnalysisManager is the "inner"
+end_comment
+
+begin_comment
+comment|/// manager being proxied, and Functions are the "inner" unit.  The inner/outer
+end_comment
+
+begin_comment
+comment|/// relationship is valid because each Function is contained in one Module.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If you're (transitively) within a pass manager for an IR unit U that
+end_comment
+
+begin_comment
+comment|/// contains IR unit V, you should never use an analysis manager over V, except
+end_comment
+
+begin_comment
+comment|/// via one of these proxies.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that the proxy's result is a move-only RAII object.  The validity of
+end_comment
+
+begin_comment
+comment|/// the analyses in the inner analysis manager is tied to its lifetime.
 end_comment
 
 begin_expr_stmt
@@ -3975,7 +3991,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Handler for invalidation of the outer IR unit.
+comment|/// \brief Handler for invalidation of the outer IR unit, \c IRUnitT.
 end_comment
 
 begin_comment
@@ -3983,39 +3999,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If this analysis itself is preserved, then we assume that the set of \c
+comment|/// If the proxy analysis itself is not preserved, we assume that the set of
 end_comment
 
 begin_comment
-comment|/// IR units that the inner analysis manager controls hasn't changed and
+comment|/// inner IR objects contained in IRUnit may have changed.  In this case,
 end_comment
 
 begin_comment
-comment|/// thus we don't need to invalidate *all* cached data associated with any
+comment|/// we have to call \c clear() on the inner analysis manager, as it may now
 end_comment
 
 begin_comment
-comment|/// \c IRUnitT* in the \c AnalysisManagerT.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Regardless of whether this analysis is marked as preserved, all of the
-end_comment
-
-begin_comment
-comment|/// analyses in the \c AnalysisManagerT are potentially invalidated (for
-end_comment
-
-begin_comment
-comment|/// the relevant inner set of their IR units) based on the set of preserved
-end_comment
-
-begin_comment
-comment|/// analyses.
+comment|/// have stale pointers to its inner IR objects.
 end_comment
 
 begin_comment
@@ -4023,23 +4019,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Because this needs to understand the mapping from one IR unit to an
+comment|/// Regardless of whether the proxy analysis is marked as preserved, all of
 end_comment
 
 begin_comment
-comment|/// inner IR unit, this method isn't defined in the primary template.
+comment|/// the analyses in the inner analysis manager are potentially invalidated
 end_comment
 
 begin_comment
-comment|/// Instead, each specialization of this template will need to provide an
-end_comment
-
-begin_comment
-comment|/// explicit specialization of this method to handle that particular pair
-end_comment
-
-begin_comment
-comment|/// of IR unit and inner AnalysisManagerT.
+comment|/// based on the set of preserved analyses.
 end_comment
 
 begin_decl_stmt
@@ -4103,13 +4091,9 @@ argument_list|)
 block|{}
 comment|/// \brief Run the analysis pass and create our proxy result object.
 comment|///
-comment|/// This doesn't do any interesting work, it is primarily used to insert our
-comment|/// proxy result object into the module analysis cache so that we can proxy
-comment|/// invalidation to the function analysis manager.
-comment|///
-comment|/// In debug builds, it will also assert that the analysis manager is empty
-comment|/// as no queries should arrive at the function analysis manager prior to
-comment|/// this analysis being requested.
+comment|/// This doesn't do any interesting work; it is primarily used to insert our
+comment|/// proxy result object into the outer analysis cache so that we can proxy
+comment|/// invalidation to the inner analysis manager.
 name|Result
 name|run
 argument_list|(
@@ -4261,35 +4245,15 @@ extern|Module>;
 end_extern
 
 begin_comment
-comment|/// \brief A function analysis which acts as a proxy for a module analysis
+comment|/// \brief An analysis over an "inner" IR unit that provides access to an
 end_comment
 
 begin_comment
-comment|/// manager.
+comment|/// analysis manager over a "outer" IR unit.  The inner unit must be contained
 end_comment
 
 begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This primarily provides an accessor to a parent module analysis manager to
-end_comment
-
-begin_comment
-comment|/// function passes. Only the const interface of the module analysis manager is
-end_comment
-
-begin_comment
-comment|/// provided to indicate that once inside of a function analysis pass you
-end_comment
-
-begin_comment
-comment|/// cannot request a module analysis to actually run. Instead, the user must
-end_comment
-
-begin_comment
-comment|/// rely on the \c getCachedResult API.
+comment|/// in the outer unit.
 end_comment
 
 begin_comment
@@ -4297,15 +4261,23 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// The invalidation provided by this proxy involves tracking when an
+comment|/// For example OuterAnalysisManagerProxy<ModuleAnalysisManager, Function> is an
 end_comment
 
 begin_comment
-comment|/// invalidation event in the outer analysis manager needs to trigger an
+comment|/// analysis over Functions (the "inner" unit) which provides access to a Module
 end_comment
 
 begin_comment
-comment|/// invalidation of a particular analysis on this IR unit.
+comment|/// analysis manager.  The ModuleAnalysisManager is the "outer" manager being
+end_comment
+
+begin_comment
+comment|/// proxied, and Modules are the "outer" IR unit.  The inner/outer relationship
+end_comment
+
+begin_comment
+comment|/// is valid because each Function is contained in one Module.
 end_comment
 
 begin_comment
@@ -4313,15 +4285,35 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// Because outer analyses aren't invalidated while these IR units are being
+comment|/// This proxy only exposes the const interface of the outer analysis manager,
 end_comment
 
 begin_comment
-comment|/// precessed, we have to register and handle these as deferred invalidation
+comment|/// to indicate that you cannot cause an outer analysis to run from within an
 end_comment
 
 begin_comment
-comment|/// events.
+comment|/// inner pass.  Instead, you must rely on the \c getCachedResult API.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This proxy doesn't manage invalidation in any way -- that is handled by the
+end_comment
+
+begin_comment
+comment|/// recursive return path of each layer of the pass manager.  A consequence of
+end_comment
+
+begin_comment
+comment|/// this is the outer analyses may be stale.  We invalidate the outer analyses
+end_comment
+
+begin_comment
+comment|/// only when we're done running passes over the inner IR units.
 end_comment
 
 begin_expr_stmt
@@ -4384,7 +4376,7 @@ operator|*
 name|AM
 return|;
 block|}
-comment|/// \brief Handle invalidation by ignoring it, this pass is immutable.
+comment|/// \brief Handle invalidation by ignoring it; this pass is immutable.
 name|bool
 name|invalidate
 argument_list|(
@@ -4667,7 +4659,7 @@ extern|Function>;
 end_extern
 
 begin_comment
-comment|/// Provide the \c ModuleAnalysisManager to \c Fucntion proxy.
+comment|/// Provide the \c ModuleAnalysisManager to \c Function proxy.
 end_comment
 
 begin_typedef
@@ -4695,23 +4687,11 @@ comment|/// Designed to allow composition of a FunctionPass(Manager) and
 end_comment
 
 begin_comment
-comment|/// a ModulePassManager. Note that if this pass is constructed with a pointer
+comment|/// a ModulePassManager, by running the FunctionPass(Manager) over every
 end_comment
 
 begin_comment
-comment|/// to a \c ModuleAnalysisManager it will run the
-end_comment
-
-begin_comment
-comment|/// \c FunctionAnalysisManagerModuleProxy analysis prior to running the function
-end_comment
-
-begin_comment
-comment|/// pass over the module to enable a \c FunctionAnalysisManager to be used
-end_comment
-
-begin_comment
-comment|/// within this run safely.
+comment|/// function in the module.
 end_comment
 
 begin_comment
@@ -4770,6 +4750,22 @@ begin_comment
 comment|/// violate this principle.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that although function passes can access module analyses, module
+end_comment
+
+begin_comment
+comment|/// analyses are not invalidated while the function passes are running, so they
+end_comment
+
+begin_comment
+comment|/// may be stale.  Function analyses will not be stale.
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -4809,7 +4805,6 @@ argument_list|,
 argument|ModuleAnalysisManager&AM
 argument_list|)
 block|{
-comment|// Setup the function analysis manager from its proxy.
 name|FunctionAnalysisManager
 operator|&
 name|FAM
@@ -4891,10 +4886,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|// By definition we preserve the proxy. We also preserve all analyses on
-comment|// Function units. This precludes *any* invalidation of function analyses
-comment|// by the proxy, but that's OK because we've taken care to invalidate
-comment|// analyses in the function analysis manager incrementally above.
+comment|// The FunctionAnalysisManagerModuleProxy is preserved because (we assume)
+comment|// the function passes we ran didn't add or remove any functions.
+comment|//
+comment|// We also preserve all analyses on Functions, because we did all the
+comment|// invalidation we needed to do above.
 name|PA
 operator|.
 name|preserveSet
@@ -4974,7 +4970,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief A template utility pass to force an analysis result to be available.
+comment|/// \brief A utility pass template to force an analysis result to be available.
 end_comment
 
 begin_comment
@@ -5099,23 +5095,11 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// \brief A template utility pass to force an analysis result to be
+comment|/// \brief A no-op pass template which simply forces a specific analysis result
 end_comment
 
 begin_comment
-comment|/// invalidated.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This is a no-op pass which simply forces a specific analysis result to be
-end_comment
-
-begin_comment
-comment|/// invalidated when it is run.
+comment|/// to be invalidated.
 end_comment
 
 begin_expr_stmt
@@ -5136,7 +5120,7 @@ operator|>>
 block|{
 comment|/// \brief Run this pass over some unit of IR.
 comment|///
-comment|/// This pass can be run over any unit of IR and use any analysis manager
+comment|/// This pass can be run over any unit of IR and use any analysis manager,
 comment|/// provided they satisfy the basic API requirements. When this pass is
 comment|/// created, these methods can be instantiated to satisfy whatever the
 comment|/// context requires.
@@ -5187,7 +5171,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// \brief A utility pass that does nothing but preserves no analyses.
+comment|/// \brief A utility pass that does nothing, but preserves no analyses.
 end_comment
 
 begin_comment
@@ -5195,11 +5179,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// As a consequence fo not preserving any analyses, this pass will force all
+comment|/// Because this preserves no analyses, any analysis passes queried after this
 end_comment
 
 begin_comment
-comment|/// analysis passes to be re-run to produce fresh results if any are needed.
+comment|/// pass runs will recompute fresh results.
 end_comment
 
 begin_decl_stmt

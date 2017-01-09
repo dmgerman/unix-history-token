@@ -369,8 +369,7 @@ comment|/// FIXME: There is room for improvement in this case, in terms of
 comment|/// grouping overaligned allocas into a "secondary stack frame" and
 comment|/// then only use a single alloca to allocate this frame and only a
 comment|/// single virtual register to access it. Currently, without such an
-comment|/// optimization, each such alloca gets it's own dynamic
-comment|/// realignment.
+comment|/// optimization, each such alloca gets its own dynamic realignment.
 name|bool
 name|StackRealignable
 decl_stmt|;

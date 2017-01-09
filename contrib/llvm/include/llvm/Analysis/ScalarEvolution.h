@@ -5464,6 +5464,25 @@ name|verify
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|invalidate
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+specifier|const
+name|PreservedAnalyses
+operator|&
+name|PA
+argument_list|,
+name|FunctionAnalysisManager
+operator|::
+name|Invalidator
+operator|&
+name|Inv
+argument_list|)
+decl_stmt|;
 comment|/// Collect parametric terms occurring in step expressions (first step of
 comment|/// delinearization).
 name|void

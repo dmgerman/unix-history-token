@@ -1352,7 +1352,7 @@ name|second
 return|;
 block|}
 comment|/// Returns extension attribute kind to be used for i32 parameters
-comment|/// correpsonding to C-level int or unsigned int.  May be zeroext, signext,
+comment|/// corresponding to C-level int or unsigned int.  May be zeroext, signext,
 comment|/// or none.
 name|Attribute
 operator|::
@@ -1398,7 +1398,7 @@ name|None
 return|;
 block|}
 comment|/// Returns extension attribute kind to be used for i32 return values
-comment|/// correpsonding to C-level int or unsigned int.  May be zeroext, signext,
+comment|/// corresponding to C-level int or unsigned int.  May be zeroext, signext,
 comment|/// or none.
 name|Attribute
 operator|::
