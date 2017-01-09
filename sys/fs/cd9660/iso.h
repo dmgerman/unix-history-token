@@ -1770,12 +1770,12 @@ begin_comment
 comment|/*  * When ino_t becomes 64-bit, we can remove this definition in favor of ino_t.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_typedef
+typedef|typedef
+name|__uint64_t
 name|cd_ino_t
-value|uint64_t
-end_define
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
