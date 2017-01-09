@@ -118,6 +118,11 @@ parameter_list|()
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
+name|__tsan_flush_memory
+parameter_list|()
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
 name|__tsan_read1
 parameter_list|(
 name|void
