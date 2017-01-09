@@ -3,6 +3,61 @@ begin_comment
 comment|/*   * @(#) tcpd.h 1.5 96/03/19 16:22:24   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   *   * $FreeBSD$   */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TCPD_SOCKADDR
+value|struct sockaddr
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TCPD_SOCKADDR
+value|struct sockaddr_in
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_STDFILE_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_STDFILE_DECLARED
+end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|__sFILE
+name|FILE
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Structure to describe one communications endpoint. */
 end_comment
@@ -36,25 +91,11 @@ name|STRING_LENGTH
 index|]
 decl_stmt|;
 comment|/* access via eval_hostaddr(host) */
-ifdef|#
-directive|ifdef
-name|INET6
-name|struct
-name|sockaddr
+name|TCPD_SOCKADDR
 modifier|*
 name|sin
 decl_stmt|;
 comment|/* socket address or 0 */
-else|#
-directive|else
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
-comment|/* socket address or 0 */
-endif|#
-directive|endif
 name|struct
 name|t_unitdata
 modifier|*
@@ -332,10 +373,13 @@ argument_list|)
 end_if
 
 begin_function_decl
-specifier|extern
 name|void
 name|fromhost
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -365,10 +409,13 @@ directive|endif
 end_endif
 
 begin_function_decl
-specifier|extern
 name|int
 name|hosts_access
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -377,10 +424,21 @@ comment|/* access control */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|hosts_ctl
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -389,10 +447,12 @@ comment|/* wrapper around request_init() */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|shell_cmd
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -401,11 +461,22 @@ comment|/* execute shell command */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|percent_x
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -414,10 +485,18 @@ comment|/* do %<char> expansion */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|rfc931
-parameter_list|()
+parameter_list|(
+name|TCPD_SOCKADDR
+modifier|*
+parameter_list|,
+name|TCPD_SOCKADDR
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -426,10 +505,13 @@ comment|/* client name from RFC 931 daemon */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|clean_exit
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -438,10 +520,13 @@ comment|/* clean up and exit */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|refuse
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -450,11 +535,18 @@ comment|/* clean up and exit */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|xgets
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -463,11 +555,15 @@ comment|/* fgets() on steroids */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|split_at
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -476,11 +572,13 @@ comment|/* strchr() and split */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|unsigned
 name|long
 name|dot_quad_addr
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -575,14 +673,7 @@ begin_comment
 comment|/*   * Routines for controlled initialization and update of request structure   * attributes. Each attribute has its own key.   */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function_decl
-specifier|extern
 name|struct
 name|request_info
 modifier|*
@@ -594,37 +685,6 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|request_info
-modifier|*
-name|request_set
-parameter_list|(
-name|struct
-name|request_info
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|struct
-name|request_info
-modifier|*
-name|request_init
-parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -633,23 +693,23 @@ comment|/* initialize request */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|struct
 name|request_info
 modifier|*
 name|request_set
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
 comment|/* update request structure */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -755,11 +815,14 @@ comment|/*   * Routines for delayed evaluation of request attributes. Each attri
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|eval_user
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -768,11 +831,14 @@ comment|/* client user */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|eval_hostname
-parameter_list|()
+parameter_list|(
+name|struct
+name|host_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -781,11 +847,14 @@ comment|/* printable hostname */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|eval_hostaddr
-parameter_list|()
+parameter_list|(
+name|struct
+name|host_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -794,11 +863,14 @@ comment|/* printable host address */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|eval_hostinfo
-parameter_list|()
+parameter_list|(
+name|struct
+name|host_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -807,11 +879,14 @@ comment|/* host name or address */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|eval_client
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -820,11 +895,14 @@ comment|/* whatever is available */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|eval_server
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -865,10 +943,13 @@ comment|/* Socket-specific methods, including DNS hostname lookups. */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|sock_host
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -877,10 +958,13 @@ comment|/* look up endpoint addresses */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|sock_hostname
-parameter_list|()
+parameter_list|(
+name|struct
+name|host_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -889,10 +973,13 @@ comment|/* translate address to hostname */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|sock_hostaddr
-parameter_list|()
+parameter_list|(
+name|struct
+name|host_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -935,10 +1022,13 @@ argument_list|)
 end_if
 
 begin_function_decl
-specifier|extern
 name|void
 name|tli_host
-parameter_list|()
+parameter_list|(
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -955,14 +1045,7 @@ begin_comment
 comment|/*   * Problem reporting interface. Additional file/line context is reported   * when available. The jump buffer (tcpd_buf) is not declared here, or   * everyone would have to include<setjmp.h>.   */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function_decl
-specifier|extern
 name|void
 name|tcpd_warn
 parameter_list|(
@@ -979,7 +1062,6 @@ comment|/* report problem and proceed */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|tcpd_jump
 parameter_list|(
@@ -994,32 +1076,6 @@ end_function_decl
 begin_comment
 comment|/* report problem and jump */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|void
-name|tcpd_warn
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|tcpd_jump
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -1088,10 +1144,16 @@ comment|/*   * In verification mode an option function should just say what it w
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|process_options
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|request_info
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1132,10 +1194,12 @@ value|fix_inet_addr
 end_define
 
 begin_function_decl
-specifier|extern
 name|long
 name|fix_inet_addr
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1162,11 +1226,18 @@ value|fix_fgets
 end_define
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|fix_fgets
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1193,10 +1264,25 @@ value|fix_recvfrom
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|fix_recvfrom
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1223,10 +1309,18 @@ value|fix_getpeername
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|fix_getpeername
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1253,12 +1347,14 @@ value|fix_gethostbyname
 end_define
 
 begin_function_decl
-specifier|extern
 name|struct
 name|hostent
 modifier|*
 name|fix_gethostbyname
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1285,11 +1381,16 @@ value|fix_strtok
 end_define
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|fix_strtok
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1316,11 +1417,16 @@ value|my_strtok
 end_define
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|my_strtok
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
