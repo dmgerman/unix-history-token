@@ -8,7 +8,7 @@ comment|/*	$KAME: route6d.c,v 1.104 2003/10/31 00:30:20 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -6360,7 +6360,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Further validation: since this program does not send off-link 	 * requests, an incoming response must always come from an on-link 	 * node.  Although this is normally ensured by the source address 	 * check above, it may not 100% be safe because there are router 	 * implementations that (invalidly) allow a packet with a link-local 	 * source address to be forwarded to a different link. 	 * So we also check whether the destination address is a link-local 	 * address or the hop limit is 255.  Note that RFC2080 does not require 	 * the specific hop limit for a unicast response, so we cannot assume  	 * the limitation. 	 */
+comment|/* 	 * Further validation: since this program does not send off-link 	 * requests, an incoming response must always come from an on-link 	 * node.  Although this is normally ensured by the source address 	 * check above, it may not 100% be safe because there are router 	 * implementations that (invalidly) allow a packet with a link-local 	 * source address to be forwarded to a different link. 	 * So we also check whether the destination address is a link-local 	 * address or the hop limit is 255.  Note that RFC2080 does not require 	 * the specific hop limit for a unicast response, so we cannot assume 	 * the limitation. 	 */
 if|if
 condition|(
 operator|!
@@ -7350,7 +7350,7 @@ name|t
 expr_stmt|;
 block|}
 block|}
-comment|/*  			 * if nq->rip6_metric == HOPCNT_INFINITY6 then 			 * do not update age value.  Do nothing. 			 */
+comment|/* 			 * if nq->rip6_metric == HOPCNT_INFINITY6 then 			 * do not update age value.  Do nothing. 			 */
 block|}
 elseif|else
 if|if
@@ -9676,7 +9676,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (rta[RTAX_DST] == NULL) { 			trace(1, "\tno destination, ignored\n"); 			continue;	 		} 		if (rta[RTAX_DST]->sin6_family != AF_INET6) { 			trace(1, "\taf mismatch, ignored\n"); 			continue; 		} 		if (IN6_IS_ADDR_LINKLOCAL(&rta[RTAX_DST]->sin6_addr)) { 			trace(1, "\tlinklocal destination, ignored\n"); 			continue; 		} 		if (IN6_ARE_ADDR_EQUAL(&rta[RTAX_DST]->sin6_addr,&in6addr_loopback)) { 			trace(1, "\tloopback destination, ignored\n"); 			continue;
+block|if (rta[RTAX_DST] == NULL) { 			trace(1, "\tno destination, ignored\n"); 			continue; 		} 		if (rta[RTAX_DST]->sin6_family != AF_INET6) { 			trace(1, "\taf mismatch, ignored\n"); 			continue; 		} 		if (IN6_IS_ADDR_LINKLOCAL(&rta[RTAX_DST]->sin6_addr)) { 			trace(1, "\tlinklocal destination, ignored\n"); 			continue; 		} 		if (IN6_ARE_ADDR_EQUAL(&rta[RTAX_DST]->sin6_addr,&in6addr_loopback)) { 			trace(1, "\tloopback destination, ignored\n"); 			continue;
 comment|/* Loopback */
 block|} 		if (IN6_IS_ADDR_MULTICAST(&rta[RTAX_DST]->sin6_addr)) { 			trace(1, "\tmulticast destination, ignored\n"); 			continue; 		}
 endif|#
@@ -17325,7 +17325,7 @@ block|if (getroute(&rrt->rrt_info,&gw)) {
 if|#
 directive|if
 literal|0
-comment|/* 			 * When the address has already been registered in the 			 * kernel routing table, it should be removed  			 */
+comment|/* 			 * When the address has already been registered in the 			 * kernel routing table, it should be removed 			 */
 block|delroute(&rrt->rrt_info,&gw);
 else|#
 directive|else
