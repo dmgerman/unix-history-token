@@ -73,11 +73,13 @@ directive|include
 file|"test_macros.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LIBCPP_HAS_NO_DELETED_FUNCTIONS
-end_ifndef
+begin_if
+if|#
+directive|if
+name|TEST_STD_VER
+operator|>=
+literal|11
+end_if
 
 begin_define
 define|#

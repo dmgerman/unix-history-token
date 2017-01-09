@@ -69,6 +69,24 @@ name|ignored
 literal|"-Wmissing-braces"
 end_pragma
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+end_elif
+
+begin_pragma
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|ignored
+literal|"-Wmissing-braces"
+end_pragma
+
 begin_endif
 endif|#
 directive|endif
