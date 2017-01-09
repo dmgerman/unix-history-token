@@ -640,14 +640,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|argc
-operator|-=
-name|optind
-expr_stmt|;
-name|argv
-operator|+=
-name|optind
-expr_stmt|;
 comment|/* 	 * Initialize symbol names list. 	 */
 for|for
 control|(
@@ -1555,6 +1547,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
