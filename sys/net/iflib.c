@@ -1529,16 +1529,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|mtx_held
-parameter_list|(
-name|m
-parameter_list|)
-value|(((m)->mtx_lock& ~MTX_FLAGMASK) != (uintptr_t)0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTX_ACTIVE
 parameter_list|(
 name|ctx
