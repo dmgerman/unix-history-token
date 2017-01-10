@@ -916,6 +916,10 @@ name|EM_RISCV
 case|:
 break|break;
 case|case
+name|EM_S390
+case|:
+break|break;
+case|case
 name|EM_SPARCV9
 case|:
 break|break;
