@@ -990,10 +990,12 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|mt_options
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

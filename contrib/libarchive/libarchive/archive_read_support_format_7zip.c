@@ -2468,7 +2468,7 @@ name|bytes
 decl_stmt|,
 name|window
 decl_stmt|;
-comment|/* 	 * If bytes_avail> SFX_MIN_ADDR we do not have to call 	 * __archive_read_seek() at this time since we have 	 * alredy had enough data. 	 */
+comment|/* 	 * If bytes_avail> SFX_MIN_ADDR we do not have to call 	 * __archive_read_seek() at this time since we have 	 * already had enough data. 	 */
 if|if
 condition|(
 name|bytes_avail
@@ -3479,7 +3479,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If there is no synname, handle it as a regular 			 * file. */
+comment|/* If there is no symname, handle it as a regular 			 * file. */
 name|zip_entry
 operator|->
 name|mode
@@ -17033,7 +17033,7 @@ operator|(
 name|r
 operator|)
 return|;
-comment|/* 	 * Skip the bytes we alrady has skipped in skip_stream(). 	 */
+comment|/* 	 * Skip the bytes we already has skipped in skip_stream(). 	 */
 while|while
 condition|(
 name|skip_bytes
@@ -18210,7 +18210,7 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-comment|/* Allocate memory for the decorded data of a sub 			 * stream. */
+comment|/* Allocate memory for the decoded data of a sub 			 * stream. */
 name|b
 index|[
 name|i
@@ -18691,7 +18691,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Optimization for a list mode. 		 * Avoid unncecessary decoding operations. 		 */
+comment|/* 		 * Optimization for a list mode. 		 * Avoid unnecessary decoding operations. 		 */
 name|zip
 operator|->
 name|si

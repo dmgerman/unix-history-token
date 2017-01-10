@@ -3046,7 +3046,7 @@ name|cf
 operator|->
 name|min_xfer_size
 expr_stmt|;
-comment|/* Increase a buffer size up to 64K bytes in 			 * a proper incremant size. */
+comment|/* Increase a buffer size up to 64K bytes in 			 * a proper increment size. */
 while|while
 condition|(
 name|asize
@@ -7977,7 +7977,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* Usuall come here unless NetBSD supports _PC_REC_XFER_ALIGN 		 * for pathconf() function. */
+comment|/* Usually come here unless NetBSD supports _PC_REC_XFER_ALIGN 		 * for pathconf() function. */
 name|t
 operator|->
 name|current_filesystem
@@ -9608,7 +9608,7 @@ condition|)
 endif|#
 directive|endif
 comment|/* _PC_NAME_MAX */
-comment|/* 		 * Some sysmtes (HP-UX or others?) incorrectly defined 		 * NAME_MAX macro to be a smaller value. 		 */
+comment|/* 		 * Some systems (HP-UX or others?) incorrectly defined 		 * NAME_MAX macro to be a smaller value. 		 */
 if|#
 directive|if
 name|defined

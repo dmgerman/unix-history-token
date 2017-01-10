@@ -26,7 +26,7 @@ end_macro
 
 begin_block
 block|{
-comment|/* This file is password protected (Traditional PKWARE Enctypted). 	   The headers are NOT encrypted. Password is "12345678". */
+comment|/* This file is password protected (Traditional PKWARE Encrypted). 	   The headers are NOT encrypted. Password is "12345678". */
 specifier|const
 name|char
 modifier|*
@@ -50,7 +50,7 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-comment|/* Check if running system has cryptographic functionarity. */
+comment|/* Check if running system has cryptographic functionality. */
 name|assert
 argument_list|(
 operator|(
