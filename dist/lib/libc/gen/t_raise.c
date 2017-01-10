@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_raise.c,v 1.5 2011/05/10 12:43:42 jruoho Exp $ */
+comment|/*	$NetBSD: t_raise.c,v 1.6 2016/11/03 22:08:31 kamil Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_raise.c,v 1.5 2011/05/10 12:43:42 jruoho Exp $"
+literal|"$NetBSD: t_raise.c,v 1.6 2016/11/03 22:08:31 kamil Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -711,7 +711,7 @@ name|maxiter
 condition|)
 name|atf_tc_fail
 argument_list|(
-literal|"not all signals were catched"
+literal|"not all signals were caught"
 argument_list|)
 expr_stmt|;
 block|}
