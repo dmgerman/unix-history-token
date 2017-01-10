@@ -740,7 +740,7 @@ end_function
 begin_macro
 name|ACPI_EXPORT_SYMBOL
 argument_list|(
-argument|AcpiGetTable
+argument|AcpiGetTableWithSize
 argument_list|)
 end_macro
 
