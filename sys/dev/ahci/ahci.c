@@ -7321,13 +7321,6 @@ argument_list|,
 name|AHCI_P_IS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|istatus
-operator|==
-literal|0
-condition|)
-return|return;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -7408,13 +7401,6 @@ argument_list|,
 name|AHCI_P_IS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|istatus
-operator|==
-literal|0
-condition|)
-return|return;
 name|mtx_lock
 argument_list|(
 operator|&
