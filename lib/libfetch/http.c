@@ -3729,7 +3729,7 @@ name|struct
 name|tm
 name|tm
 decl_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|locale
 argument_list|,
