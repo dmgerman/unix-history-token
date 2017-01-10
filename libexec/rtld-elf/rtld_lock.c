@@ -4,7 +4,7 @@ comment|/*-  * Copyright 1999, 2000 John D. Polstra.  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * Thread locking implementation for the dynamic linker.  *  * We use the "simple, non-scalable reader-preference lock" from:  *  *   J. M. Mellor-Crummey and M. L. Scott. "Scalable Reader-Writer  *   Synchronization for Shared-Memory Multiprocessors." 3rd ACM Symp. on  *   Principles and Practice of Parallel Programming, April 1991.  *  * In this algorithm the lock is a single word.  Its low-order bit is  * set when a writer holds the lock.  The remaining high-order bits  * contain a count of readers desiring the lock.  The algorithm requires  * atomic "compare_and_store" and "add" operations, which we implement  * using assembly language sequences in "rtld_start.S".  */
+comment|/*  * Thread locking implementation for the dynamic linker.  *  * We use the "simple, non-scalable reader-preference lock" from:  *  *   J. M. Mellor-Crummey and M. L. Scott. "Scalable Reader-Writer  *   Synchronization for Shared-Memory Multiprocessors." 3rd ACM Symp. on  *   Principles and Practice of Parallel Programming, April 1991.  *  * In this algorithm the lock is a single word.  Its low-order bit is  * set when a writer holds the lock.  The remaining high-order bits  * contain a count of readers desiring the lock.  The algorithm requires  * atomic "compare_and_store" and "add" operations, which we take  * from machine/atomic.h.  */
 end_comment
 
 begin_include
@@ -144,7 +144,9 @@ specifier|static
 name|void
 modifier|*
 name|def_lock_create
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|void
 modifier|*
@@ -934,7 +936,9 @@ end_function
 begin_function
 name|void
 name|lockdflt_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
