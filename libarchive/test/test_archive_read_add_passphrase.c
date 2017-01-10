@@ -771,7 +771,7 @@ argument_list|(
 name|ar
 argument_list|)
 expr_stmt|;
-comment|/* After reset passphrase, we should get "passCallBack"passphrase. */
+comment|/* After reset passphrase, we should get "passCallBack" passphrase. */
 name|assertEqualString
 argument_list|(
 literal|"passCallBack"

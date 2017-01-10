@@ -6938,7 +6938,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Close a file descritor. 	 * It will not be used for SetFileTime() because it has been opened 	 * by a read only mode. 	 */
+comment|/* Close a file descriptor. 	 * It will not be used for SetFileTime() because it has been opened 	 * by a read only mode. 	 */
 if|if
 condition|(
 name|h

@@ -981,7 +981,7 @@ name|write
 operator|==
 name|NULL
 condition|)
-comment|/* If unset, a fatal error has already ocuured, so this filter 		 * didn't open. We cannot write anything. */
+comment|/* If unset, a fatal error has already occurred, so this filter 		 * didn't open. We cannot write anything. */
 return|return
 operator|(
 name|ARCHIVE_FATAL

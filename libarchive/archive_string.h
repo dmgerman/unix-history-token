@@ -216,6 +216,29 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Append a raw array to an archive_string, resizing as necessary */
+end_comment
+
+begin_function_decl
+name|struct
+name|archive_string
+modifier|*
+name|archive_array_append
+parameter_list|(
+name|struct
+name|archive_string
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Convert a Unicode string to current locale and append the result. */
 end_comment
 

@@ -4265,7 +4265,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* AES vendoer version AE-2 does not store a CRC. 		 * WinZip 11 uses AE-1, which does store the CRC, 		 * but it does not store the CRC when the file size 		 * is less than 20 bytes. So we simulate what 		 * WinZip 11 does. 		 * NOTE: WinZip 9.0 and 10.0 uses AE-2 by default. */
+comment|/* AES vendor version AE-2 does not store a CRC. 		 * WinZip 11 uses AE-1, which does store the CRC, 		 * but it does not store the CRC when the file size 		 * is less than 20 bytes. So we simulate what 		 * WinZip 11 does. 		 * NOTE: WinZip 9.0 and 10.0 uses AE-2 by default. */
 if|if
 condition|(
 name|archive_entry_size_is_set
@@ -4959,7 +4959,7 @@ block|{
 case|case
 name|ENCRYPTION_TRADITIONAL
 case|:
-comment|/* Initialize traditoinal PKWARE encryption context. */
+comment|/* Initialize traditional PKWARE encryption context. */
 if|if
 condition|(
 operator|!
@@ -7740,7 +7740,7 @@ end_function
 begin_function
 specifier|static
 name|uint8_t
-name|trad_enc_decypt_byte
+name|trad_enc_decrypt_byte
 parameter_list|(
 name|struct
 name|trad_enc_ctx
@@ -7860,7 +7860,7 @@ index|]
 operator|=
 name|t
 operator|^
-name|trad_enc_decypt_byte
+name|trad_enc_decrypt_byte
 argument_list|(
 name|ctx
 argument_list|)
@@ -8431,7 +8431,7 @@ name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
-comment|/* Set a passowrd verification value after the 'salt'. */
+comment|/* Set a password verification value after the 'salt'. */
 name|salt
 index|[
 name|salt_len

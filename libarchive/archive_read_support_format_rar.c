@@ -4603,7 +4603,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
-comment|/* Main header is password encrytped, so we cannot read any          file names or any other info about files from the header. */
+comment|/* Main header is password encrypted, so we cannot read any          file names or any other info about files from the header. */
 if|if
 condition|(
 name|rar
