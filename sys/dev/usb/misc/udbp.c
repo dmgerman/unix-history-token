@@ -977,6 +977,17 @@ block|{
 block|{
 name|USB_VPI
 argument_list|(
+argument|USB_VENDOR_BELKIN
+argument_list|,
+argument|USB_PRODUCT_BELKIN_F5U258
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
 argument|USB_VENDOR_NETCHIP
 argument_list|,
 argument|USB_PRODUCT_NETCHIP_TURBOCONNECT
