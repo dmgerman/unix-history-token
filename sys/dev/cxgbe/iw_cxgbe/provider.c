@@ -2431,9 +2431,7 @@ name|ibdev
 operator|->
 name|dma_device
 operator|=
-name|sc
-operator|->
-name|dev
+name|NULL
 expr_stmt|;
 name|ibdev
 operator|->
