@@ -215,6 +215,9 @@ modifier|*
 name|efrm
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|IEEE80211_DEBUG
 name|ieee80211_note
 argument_list|(
 name|ni
@@ -240,6 +243,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -269,6 +274,9 @@ modifier|*
 name|arg0
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|IEEE80211_DEBUG
 name|ieee80211_note
 argument_list|(
 name|ni
@@ -284,6 +292,8 @@ argument_list|,
 name|action
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
