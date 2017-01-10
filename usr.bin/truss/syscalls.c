@@ -15989,7 +15989,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ %s, %lu }"
+literal|"{ %s, %ju }"
 argument_list|,
 name|xlookup
 argument_list|(
@@ -16000,6 +16000,9 @@ operator|.
 name|st_filetype
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|fsb
 operator|.
 name|st_size
