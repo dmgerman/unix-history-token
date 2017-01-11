@@ -367,13 +367,15 @@ argument_list|)
 expr_stmt|;
 name|scif_cb_domain_device_removed
 argument_list|(
-name|isci_controller
+name|scif_controller
 argument_list|,
 name|isci_remote_device
 operator|->
 name|domain
+operator|->
+name|sci_object
 argument_list|,
-name|isci_remote_device
+name|remote_device
 argument_list|)
 expr_stmt|;
 block|}
