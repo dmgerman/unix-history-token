@@ -170,7 +170,7 @@ decl_stmt|;
 define|#
 directive|define
 name|R92C_TXDW4_RTSRATE_M
-value|0x0000003f
+value|0x0000001f
 define|#
 directive|define
 name|R92C_TXDW4_RTSRATE_S
