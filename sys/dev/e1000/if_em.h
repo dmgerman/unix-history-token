@@ -1117,8 +1117,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|CSUM_OFFLOAD
+name|EM_CSUM_OFFLOAD
 value|7
+end_define
+
+begin_comment
+comment|/* Offload bits in mbuf flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_CSUM_OFFLOAD
+value|0x0E0F
 end_define
 
 begin_comment

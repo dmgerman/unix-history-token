@@ -786,7 +786,7 @@ name|pi
 operator|->
 name|ipi_csum_flags
 operator|&
-name|CSUM_OFFLOAD
+name|IGB_CSUM_OFFLOAD
 operator|)
 operator|==
 literal|0

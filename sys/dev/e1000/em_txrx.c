@@ -1486,7 +1486,7 @@ if|if
 condition|(
 name|csum_flags
 operator|&
-name|CSUM_OFFLOAD
+name|EM_CSUM_OFFLOAD
 condition|)
 block|{
 name|i
