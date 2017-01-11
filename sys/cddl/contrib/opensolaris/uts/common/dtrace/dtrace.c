@@ -16254,7 +16254,6 @@ operator|.
 name|dttk_value
 argument_list|)
 expr_stmt|;
-comment|/* XXX - should be only LC_SLEEPABLE? */
 name|regs
 index|[
 name|rd
@@ -16270,11 +16269,7 @@ argument_list|)
 operator|->
 name|lc_flags
 operator|&
-operator|(
 name|LC_SLEEPLOCK
-operator||
-name|LC_SLEEPABLE
-operator|)
 operator|)
 operator|!=
 literal|0
