@@ -126,17 +126,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
 begin_comment
 comment|/*  * regprint - print a regexp for debugging  */
 end_comment
