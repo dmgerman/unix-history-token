@@ -1282,6 +1282,16 @@ name|inp
 operator|=
 name|inp
 expr_stmt|;
+name|lctx
+operator|->
+name|vnet
+operator|=
+name|inp
+operator|->
+name|inp_socket
+operator|->
+name|so_vnet
+expr_stmt|;
 name|in_pcbref
 argument_list|(
 name|inp
@@ -6725,6 +6735,13 @@ argument_list|)
 argument_list|)
 index|]
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|lctx
+operator|->
+name|vnet
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Use the MAC index to lookup the associated VI.  If this SYN 	 * didn't match a perfect MAC filter, punt. 	 */
 if|if
 condition|(
@@ -6961,6 +6978,20 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* 	 * Don't offload if the ifnet that the SYN came in on is not in the same 	 * vnet as the listening socket. 	 */
+if|if
+condition|(
+name|lctx
+operator|->
+name|vnet
+operator|!=
+name|ifp
+operator|->
+name|if_vnet
+condition|)
+name|REJECT_PASS_ACCEPT
+argument_list|()
+expr_stmt|;
 name|e
 operator|=
 name|get_l2te_for_nexthop
@@ -7142,13 +7173,6 @@ operator|=
 name|inp
 operator|->
 name|inp_socket
-expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
 expr_stmt|;
 name|mtu_idx
 operator|=
@@ -7470,9 +7494,6 @@ name|inp
 argument_list|)
 expr_stmt|;
 comment|/* ok to assert, we have a ref on the inp */
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If we replied during syncache_add (synqe->wr has been consumed), 	 * good.  Otherwise, set it to 0 so that further syncache_respond 	 * attempts by the kernel will be ignored. 	 */
 if|if
 condition|(
@@ -7688,6 +7709,9 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|release_synqe
 argument_list|(
 name|synqe
@@ -7701,6 +7725,9 @@ operator|)
 return|;
 name|reject
 label|:
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_CXGBE
@@ -8161,6 +8188,13 @@ name|synqe
 operator|)
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|lctx
+operator|->
+name|vnet
+argument_list|)
+expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -8245,6 +8279,9 @@ argument_list|(
 operator|&
 name|V_tcbinfo
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -8393,6 +8430,9 @@ argument_list|(
 operator|&
 name|V_tcbinfo
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -8612,6 +8652,25 @@ argument_list|(
 name|new_inp
 argument_list|)
 expr_stmt|;
+name|MPASS
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+operator|==
+name|lctx
+operator|->
+name|vnet
+argument_list|)
+expr_stmt|;
+name|toep
+operator|->
+name|vnet
+operator|=
+name|lctx
+operator|->
+name|vnet
+expr_stmt|;
 comment|/* 	 * This is for the unlikely case where the syncache entry that we added 	 * has been evicted from the syncache, but the syncache_expand above 	 * works because of syncookies. 	 * 	 * XXX: we've held the tcbinfo lock throughout so there's no risk of 	 * anyone accept'ing a connection before we've installed our hooks, but 	 * this somewhat defeats the purpose of having a tod_offload_socket :-( 	 */
 if|if
 condition|(
@@ -8696,6 +8755,9 @@ argument_list|(
 operator|&
 name|V_tcbinfo
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 name|release_synqe
 argument_list|(
