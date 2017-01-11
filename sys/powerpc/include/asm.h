@@ -372,11 +372,21 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|TOC_REF
+name|TOC_NAME_FOR_REF
 parameter_list|(
 name|name
 parameter_list|)
 value|__CONCAT(.L,name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOC_REF
+parameter_list|(
+name|name
+parameter_list|)
+value|TOC_NAME_FOR_REF(name)@toc
 end_define
 
 begin_define
@@ -387,7 +397,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.section ".toc","aw"; \ 	TOC_REF(name): \         .tc name[TC],name
+value|.section ".toc","aw"; \ 	TOC_NAME_FOR_REF(name): \         .tc name[TC],name
 end_define
 
 begin_endif
