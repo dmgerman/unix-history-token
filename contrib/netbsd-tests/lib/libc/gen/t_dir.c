@@ -154,7 +154,7 @@ name|x
 parameter_list|,
 name|m
 parameter_list|)
-value|do {					\ 		int _creat_fd;					\ 		ATF_REQUIRE_MSG((_creat_fd = creat((x), (m))),	\ 		    "creat(%s, %x) failed: %s", (x), (m),	\ 		    strerror(errno));				\ 		(void)close(_creat_fd);			\ 	} while(0);
+value|do {						\ 		int _creat_fd;						\ 		ATF_REQUIRE_MSG((_creat_fd = creat((x), (m))) != -1,	\ 		    "creat(%s, %x) failed: %s", (x), (m),		\ 		    strerror(errno));					\ 		(void)close(_creat_fd);					\ 	} while(0);
 name|ATF_REQUIRE_MSG
 argument_list|(
 name|mkdir
