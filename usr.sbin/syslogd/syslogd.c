@@ -215,6 +215,20 @@ directive|include
 file|<sys/syslimits.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -224,13 +238,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<arpa/inet.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<netdb.h>
 end_include
 
 begin_include
@@ -436,6 +455,12 @@ parameter_list|)
 value|((struct sockaddr *)(ss))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -455,6 +480,17 @@ name|sa
 parameter_list|)
 value|((struct sockaddr_in *)(void *)(sa))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_define
 define|#
@@ -496,6 +532,11 @@ name|m
 parameter_list|)
 value|(	\ 	(((d)->s6_addr32[0] ^ (a)->s6_addr32[0])& (m)->s6_addr32[0]) == 0&& \ 	(((d)->s6_addr32[1] ^ (a)->s6_addr32[1])& (m)->s6_addr32[1]) == 0&& \ 	(((d)->s6_addr32[2] ^ (a)->s6_addr32[2])& (m)->s6_addr32[2]) == 0&& \ 	(((d)->s6_addr32[3] ^ (a)->s6_addr32[3])& (m)->s6_addr32[3]) == 0 )
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * List of peers and sockets for binding.  */
@@ -6778,6 +6819,9 @@ operator|->
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -6801,6 +6845,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -9887,6 +9933,23 @@ break|break;
 case|case
 name|F_FORW
 case|:
+switch|switch
+condition|(
+name|f
+operator|->
+name|fu_forw_addr
+operator|->
+name|ai_addr
+operator|->
+name|sa_family
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET
+case|case
+name|AF_INET
+case|:
 name|port
 operator|=
 name|ntohs
@@ -9903,6 +9966,40 @@ operator|->
 name|sin_port
 argument_list|)
 expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
+name|port
+operator|=
+name|ntohs
+argument_list|(
+name|satosin6
+argument_list|(
+name|f
+operator|->
+name|fu_forw_addr
+operator|->
+name|ai_addr
+argument_list|)
+operator|->
+name|sin6_port
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+default|default:
+name|port
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|port
@@ -12148,6 +12245,17 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|char
 modifier|*
 name|cp1
@@ -13109,6 +13217,8 @@ name|port
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

@@ -3184,6 +3184,33 @@ operator|=
 literal|"2T2R"
 expr_stmt|;
 break|break;
+case|case
+literal|0x3
+case|:
+comment|/* "green" NIC */
+name|sc
+operator|->
+name|sc_rftype
+operator|=
+name|RTL8712_RFCONFIG_1T2R
+expr_stmt|;
+name|sc
+operator|->
+name|sc_nrxstream
+operator|=
+literal|2
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ntxstream
+operator|=
+literal|1
+expr_stmt|;
+name|rft
+operator|=
+literal|"1T2R ('green')"
+expr_stmt|;
+break|break;
 default|default:
 name|device_printf
 argument_list|(

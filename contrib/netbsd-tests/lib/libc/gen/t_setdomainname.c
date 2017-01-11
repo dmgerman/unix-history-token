@@ -178,7 +178,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-comment|/*  		 * Sanity checks to ensure that the wrong invariant isn't being 		 * tested for per PR # 181127 		 */
+comment|/* 		 * Sanity checks to ensure that the wrong invariant isn't being 		 * tested for per PR # 181127 		 */
 name|ATF_REQUIRE_EQ
 argument_list|(
 sizeof|sizeof

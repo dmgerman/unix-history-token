@@ -39,7 +39,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Compatibility: uudecode command ignores junk data placed ater the "end"  * marker.  */
+comment|/*  * Compatibility: uudecode command ignores junk data placed after the "end"  * marker.  */
 end_comment
 
 begin_macro

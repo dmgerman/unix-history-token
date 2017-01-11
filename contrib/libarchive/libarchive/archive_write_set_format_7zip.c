@@ -7026,7 +7026,7 @@ operator|(
 name|r
 operator|)
 return|;
-comment|/* Write Nume size. */
+comment|/* Write Name size. */
 name|r
 operator|=
 name|enc_uint64

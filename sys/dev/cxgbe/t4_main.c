@@ -3784,6 +3784,13 @@ block|}
 block|,
 comment|/* T6 PE10K6 FPGA (PF0) */
 block|{
+literal|0x6400
+block|,
+literal|"Chelsio T6225-DBG"
+block|}
+block|,
+comment|/* 2 x 10/25G, debug */
+block|{
 literal|0x6401
 block|,
 literal|"Chelsio T6225-CR"

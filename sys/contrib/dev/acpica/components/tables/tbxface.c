@@ -584,12 +584,12 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTableWithSize  *  * PARAMETERS:  Signature           - ACPI signature of needed table  *              Instance            - Which instance (for SSDTs)  *              OutTable            - Where the pointer to the table is returned  *              TblSize             - Size of the table  *  * RETURN:      Status and pointer to the requested table  *  * DESCRIPTION: Finds and verifies an ACPI table. Table must be in the  *              RSDT/XSDT.  *              Note that an early stage AcpiGetTable() call must be paired  *              with an early stage AcpiPutTable() call. otherwise the table  *              pointer mapped by the early stage mapping implementation may be  *              erroneously unmapped by the late stage unmapping implementation  *              in an AcpiPutTable() invoked during the late stage.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTable  *  * PARAMETERS:  Signature           - ACPI signature of needed table  *              Instance            - Which instance (for SSDTs)  *              OutTable            - Where the pointer to the table is returned  *  * RETURN:      Status and pointer to the requested table  *  * DESCRIPTION: Finds and verifies an ACPI table. Table must be in the  *              RSDT/XSDT.  *              Note that an early stage AcpiGetTable() call must be paired  *              with an early stage AcpiPutTable() call. otherwise the table  *              pointer mapped by the early stage mapping implementation may be  *              erroneously unmapped by the late stage unmapping implementation  *              in an AcpiPutTable() invoked during the late stage.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiGetTableWithSize
+name|AcpiGetTable
 parameter_list|(
 name|char
 modifier|*
@@ -602,10 +602,6 @@ name|ACPI_TABLE_HEADER
 modifier|*
 modifier|*
 name|OutTable
-parameter_list|,
-name|ACPI_SIZE
-modifier|*
-name|TblSize
 parameter_list|)
 block|{
 name|UINT32
@@ -839,55 +835,6 @@ begin_macro
 name|ACPI_EXPORT_SYMBOL
 argument_list|(
 argument|AcpiPutTable
-argument_list|)
-end_macro
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTable  *  * PARAMETERS:  Signature           - ACPI signature of needed table  *              Instance            - Which instance (for SSDTs)  *              OutTable            - Where the pointer to the table is returned  *  * RETURN:      Status and pointer to the requested table  *  * DESCRIPTION: Finds and verifies an ACPI table. Table must be in the  *              RSDT/XSDT.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiGetTable
-parameter_list|(
-name|char
-modifier|*
-name|Signature
-parameter_list|,
-name|UINT32
-name|Instance
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-modifier|*
-name|OutTable
-parameter_list|)
-block|{
-name|ACPI_SIZE
-name|Size
-decl_stmt|;
-return|return
-operator|(
-name|AcpiGetTableWithSize
-argument_list|(
-name|Signature
-argument_list|,
-name|Instance
-argument_list|,
-name|OutTable
-argument_list|,
-operator|&
-name|Size
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_macro
-name|ACPI_EXPORT_SYMBOL
-argument_list|(
-argument|AcpiGetTable
 argument_list|)
 end_macro
 

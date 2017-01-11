@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_humanize_number.c,v 1.8 2012/03/18 07:14:08 jruoho Exp $	*/
+comment|/*	$NetBSD: t_humanize_number.c,v 1.9 2017/01/10 15:20:44 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -1295,16 +1295,11 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|free
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

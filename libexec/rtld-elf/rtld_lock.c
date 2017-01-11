@@ -4,7 +4,7 @@ comment|/*-  * Copyright 1999, 2000 John D. Polstra.  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * Thread locking implementation for the dynamic linker.  *  * We use the "simple, non-scalable reader-preference lock" from:  *  *   J. M. Mellor-Crummey and M. L. Scott. "Scalable Reader-Writer  *   Synchronization for Shared-Memory Multiprocessors." 3rd ACM Symp. on  *   Principles and Practice of Parallel Programming, April 1991.  *  * In this algorithm the lock is a single word.  Its low-order bit is  * set when a writer holds the lock.  The remaining high-order bits  * contain a count of readers desiring the lock.  The algorithm requires  * atomic "compare_and_store" and "add" operations, which we implement  * using assembly language sequences in "rtld_start.S".  */
+comment|/*  * Thread locking implementation for the dynamic linker.  *  * We use the "simple, non-scalable reader-preference lock" from:  *  *   J. M. Mellor-Crummey and M. L. Scott. "Scalable Reader-Writer  *   Synchronization for Shared-Memory Multiprocessors." 3rd ACM Symp. on  *   Principles and Practice of Parallel Programming, April 1991.  *  * In this algorithm the lock is a single word.  Its low-order bit is  * set when a writer holds the lock.  The remaining high-order bits  * contain a count of readers desiring the lock.  The algorithm requires  * atomic "compare_and_store" and "add" operations, which we take  * from machine/atomic.h.  */
 end_comment
 
 begin_include
@@ -136,6 +136,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|thread_flag
+decl_stmt|,
+name|wnested
 decl_stmt|;
 end_decl_stmt
 
@@ -144,7 +146,9 @@ specifier|static
 name|void
 modifier|*
 name|def_lock_create
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|void
 modifier|*
@@ -345,16 +349,18 @@ block|{
 name|Lock
 modifier|*
 name|l
-init|=
+decl_stmt|;
+name|sigset_t
+name|tmp_oldsigmask
+decl_stmt|;
+name|l
+operator|=
 operator|(
 name|Lock
 operator|*
 operator|)
 name|lock
-decl_stmt|;
-name|sigset_t
-name|tmp_oldsigmask
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -398,6 +404,18 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|atomic_fetchadd_int
+argument_list|(
+operator|&
+name|wnested
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|oldsigmask
 operator|=
 name|tmp_oldsigmask
@@ -418,13 +436,15 @@ block|{
 name|Lock
 modifier|*
 name|l
-init|=
+decl_stmt|;
+name|l
+operator|=
 operator|(
 name|Lock
 operator|*
 operator|)
 name|lock
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -450,6 +470,13 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|assert
+argument_list|(
+name|wnested
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
 name|atomic_add_rel_int
 argument_list|(
 operator|&
@@ -461,6 +488,19 @@ operator|-
 name|WAFLAG
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|atomic_fetchadd_int
+argument_list|(
+operator|&
+name|wnested
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|1
+condition|)
 name|sigprocmask
 argument_list|(
 name|SIG_SETMASK
@@ -934,7 +974,9 @@ end_function
 begin_function
 name|void
 name|lockdflt_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1445,7 +1487,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Warning: this does not work with the rtld compat locks 	 * above, since the thread signal mask is corrupted (set to 	 * all signals blocked) if two locks are taken in write mode. 	 * The caller of the _rtld_atfork_pre() must provide the 	 * working implementation of the locks, and libthr locks are 	 * fine. 	 */
+comment|/* 	 * Warning: this did not worked well with the rtld compat 	 * locks above, when the thread signal mask was corrupted (set 	 * to all signals blocked) if two locks were taken 	 * simultaneously in the write mode.  The caller of the 	 * _rtld_atfork_pre() must provide the working implementation 	 * of the locks anyway, and libthr locks are fine. 	 */
 name|wlock_acquire
 argument_list|(
 name|rtld_phdr_lock

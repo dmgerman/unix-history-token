@@ -1402,6 +1402,39 @@ block|}
 end_function
 
 begin_function
+name|struct
+name|archive_string
+modifier|*
+name|archive_array_append
+parameter_list|(
+name|struct
+name|archive_string
+modifier|*
+name|as
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|size_t
+name|s
+parameter_list|)
+block|{
+return|return
+name|archive_string_append
+argument_list|(
+name|as
+argument_list|,
+name|p
+argument_list|,
+name|s
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|archive_string_concat
 parameter_list|(
@@ -3126,7 +3159,7 @@ name|dest
 operator|->
 name|length
 expr_stmt|;
-comment|/* 	 * We cannot use mbsrtowcs/mbstowcs here because those may convert 	 * extra MBS when strlen(p)> len and one wide character consis of 	 * multi bytes. 	 */
+comment|/* 	 * We cannot use mbsrtowcs/mbstowcs here because those may convert 	 * extra MBS when strlen(p)> len and one wide character consists of 	 * multi bytes. 	 */
 while|while
 condition|(
 operator|*
@@ -6021,7 +6054,7 @@ name|SCONV_BEST_EFFORT
 operator|)
 condition|)
 block|{
-comment|/* 			 * Unfortunaly, all of iconv implements do support  			 * "CP932" character-set, so we should use "SJIS" 			 * instead if iconv_open failed. 			 */
+comment|/* 			 * Unfortunately, all of iconv implements do support 			 * "CP932" character-set, so we should use "SJIS" 			 * instead if iconv_open failed. 			 */
 if|if
 condition|(
 name|strcmp
@@ -6080,7 +6113,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-comment|/* 		 * archive_mstring on Windows directly convert multi-bytes 		 * into archive_wstring in order not to depend on locale 		 * so that you can do a I18N programing. This will be 		 * used only in archive_mstring_copy_mbs_len_l so far. 		 */
+comment|/* 		 * archive_mstring on Windows directly convert multi-bytes 		 * into archive_wstring in order not to depend on locale 		 * so that you can do a I18N programming. This will be 		 * used only in archive_mstring_copy_mbs_len_l so far. 		 */
 if|if
 condition|(
 name|flag
@@ -8392,7 +8425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * archive_string_default_conversion_*_archive() are provided for Windows  * platform because other archiver application use CP_OEMCP for  * MultiByteToWideChar() and WideCharToMultiByte() for the filenames  * in tar or zip files. But mbstowcs/wcstombs(CRT) usually use CP_ACP  * unless you use setlocale(LC_ALL, ".OCP")(specify CP_OEMCP).  * So we should make a string conversion between CP_ACP and CP_OEMCP  * for compatibillty.  */
+comment|/*  * archive_string_default_conversion_*_archive() are provided for Windows  * platform because other archiver application use CP_OEMCP for  * MultiByteToWideChar() and WideCharToMultiByte() for the filenames  * in tar or zip files. But mbstowcs/wcstombs(CRT) usually use CP_ACP  * unless you use setlocale(LC_ALL, ".OCP")(specify CP_OEMCP).  * So we should make a string conversion between CP_ACP and CP_OEMCP  * for compatibility.  */
 end_comment
 
 begin_if
@@ -10702,7 +10735,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * If a character is ASCII, this just copies it. If not, this 	 * assigns '?' charater instead but in UTF-8 locale this assigns 	 * byte sequence 0xEF 0xBD 0xBD, which are code point U+FFFD, 	 * a Replacement Character in Unicode. 	 */
+comment|/* 	 * If a character is ASCII, this just copies it. If not, this 	 * assigns '?' character instead but in UTF-8 locale this assigns 	 * byte sequence 0xEF 0xBD 0xBD, which are code point U+FFFD, 	 * a Replacement Character in Unicode. 	 */
 name|remaining
 operator|=
 name|length
@@ -12712,7 +12745,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Surrogate pair values(0xd800 through 0xdfff) are only 	 * used by UTF-16, so, after above culculation, the code 	 * must not be surrogate values, and Unicode has no codes 	 * larger than 0x10ffff. Thus, those are not legal Unicode 	 * values. 	 */
+comment|/* 	 * Surrogate pair values(0xd800 through 0xdfff) are only 	 * used by UTF-16, so, after above calculation, the code 	 * must not be surrogate values, and Unicode has no codes 	 * larger than 0x10ffff. Thus, those are not legal Unicode 	 * values. 	 */
 if|if
 condition|(
 name|IS_SURROGATE_PAIR_LA
@@ -14198,7 +14231,7 @@ value|do {		\ 	int _i;					\ 	for (_i = start; _i< FDC_MAX ; _i++) {	\ 		nx = pa
 end_define
 
 begin_comment
-comment|/*  * Normalize UTF-8/UTF-16BE characters to Form C and copy the result.  *  * TODO: Convert composition exclusions,which are never converted  * from NFC,NFD,NFKC and NFKD, to Form C.  */
+comment|/*  * Normalize UTF-8/UTF-16BE characters to Form C and copy the result.  *  * TODO: Convert composition exclusions, which are never converted  * from NFC,NFD,NFKC and NFKD, to Form C.  */
 end_comment
 
 begin_function
@@ -16643,7 +16676,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* 		 * As libarchie 2.x, translates the UTF-8 characters into 		 * wide-characters in the assumption that WCS is Unicode. 		 */
+comment|/* 		 * As libarchive 2.x, translates the UTF-8 characters into 		 * wide-characters in the assumption that WCS is Unicode. 		 */
 if|if
 condition|(
 name|n
@@ -19275,7 +19308,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-comment|/* 	 * Internationalization programing on Windows must use Wide 	 * characters because Windows platform cannot make locale UTF-8. 	 */
+comment|/* 	 * Internationalization programming on Windows must use Wide 	 * characters because Windows platform cannot make locale UTF-8. 	 */
 if|if
 condition|(
 name|sc
@@ -20031,7 +20064,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-comment|/* 	 * Internationalization programing on Windows must use Wide 	 * characters because Windows platform cannot make locale UTF-8. 	 */
+comment|/* 	 * Internationalization programming on Windows must use Wide 	 * characters because Windows platform cannot make locale UTF-8. 	 */
 if|if
 condition|(
 name|sc

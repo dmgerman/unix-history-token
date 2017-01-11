@@ -521,7 +521,7 @@ decl_stmt|;
 name|char
 name|tctx_valid
 decl_stmt|;
-comment|/* WinZip AES decyption. */
+comment|/* WinZip AES decryption. */
 comment|/* Contexts used for AES decryption. */
 name|archive_crypto_ctx
 name|cctx
@@ -716,7 +716,7 @@ end_function
 begin_function
 specifier|static
 name|uint8_t
-name|trad_enc_decypt_byte
+name|trad_enc_decrypt_byte
 parameter_list|(
 name|struct
 name|trad_enc_ctx
@@ -829,7 +829,7 @@ index|[
 name|i
 index|]
 operator|^
-name|trad_enc_decypt_byte
+name|trad_enc_decrypt_byte
 argument_list|(
 name|ctx
 argument_list|)
@@ -2712,7 +2712,7 @@ block|}
 case|case
 literal|0x9901
 case|:
-comment|/* WinZIp AES extra data field. */
+comment|/* WinZip AES extra data field. */
 if|if
 condition|(
 name|p
@@ -6857,7 +6857,7 @@ case|case
 literal|0x6801
 case|:
 comment|/* RC4 */
-comment|/* Suuported encryption algorithm. */
+comment|/* Supported encryption algorithm. */
 break|break;
 default|default:
 name|archive_set_error
@@ -7427,7 +7427,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*return (ARCHIVE_OK); 	 * This is not fully implemnted yet.*/
+comment|/*return (ARCHIVE_OK); 	 * This is not fully implemented yet.*/
 name|archive_set_error
 argument_list|(
 operator|&
@@ -7806,7 +7806,7 @@ name|ARCHIVE_FAILED
 operator|)
 return|;
 block|}
-comment|/* 		 * Initialize ctx for Traditional PKWARE Decyption. 		 */
+comment|/* 		 * Initialize ctx for Traditional PKWARE Decryption. 		 */
 name|r
 operator|=
 name|trad_enc_init

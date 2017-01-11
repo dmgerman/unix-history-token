@@ -1649,7 +1649,9 @@ name|EFIAPI
 modifier|*
 name|EFI_RESERVED_SERVICE
 function_decl|)
-parameter_list|(     )
+parameter_list|(
+name|VOID
+parameter_list|)
 function_decl|;
 end_typedef
 

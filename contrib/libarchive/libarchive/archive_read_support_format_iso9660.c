@@ -1376,7 +1376,7 @@ comment|/* Set true if RR extensions are used. */
 name|char
 name|seenSUSP
 decl_stmt|;
-comment|/* Set true if SUSP is beging used. */
+comment|/* Set true if SUSP is being used. */
 name|char
 name|seenJoliet
 decl_stmt|;

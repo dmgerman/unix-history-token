@@ -47,7 +47,7 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-comment|/* Check if running system has cryptographic functionarity. */
+comment|/* Check if running system has cryptographic functionality. */
 name|assert
 argument_list|(
 operator|(

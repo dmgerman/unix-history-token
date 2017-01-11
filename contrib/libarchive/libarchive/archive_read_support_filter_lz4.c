@@ -686,7 +686,7 @@ index|[
 literal|5
 index|]
 expr_stmt|;
-comment|/* A block maximum size shuld be more than 3. */
+comment|/* A block maximum size should be more than 3. */
 if|if
 condition|(
 operator|(
@@ -1806,7 +1806,7 @@ condition|)
 goto|goto
 name|malformed_error
 goto|;
-comment|/* Get a maxinum block size. */
+comment|/* Get a maximum block size. */
 switch|switch
 condition|(
 name|read_buf
@@ -2804,7 +2804,7 @@ name|stage
 operator|=
 name|READ_DEFAULT_STREAM
 expr_stmt|;
-comment|/* First, read a desciprtor. */
+comment|/* First, read a descriptor. */
 if|if
 condition|(
 operator|(
