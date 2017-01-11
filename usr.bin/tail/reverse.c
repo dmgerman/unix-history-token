@@ -606,17 +606,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|size_t
-name|bsz
-init|=
-literal|128
-operator|*
-literal|1024
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|BSZ
+value|(128 * 1024)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -635,7 +630,7 @@ decl_stmt|;
 name|char
 name|l
 index|[
-name|bsz
+name|BSZ
 index|]
 decl_stmt|;
 block|}
@@ -668,16 +663,11 @@ modifier|*
 name|tl
 decl_stmt|,
 modifier|*
-name|temp
-decl_stmt|,
-modifier|*
 name|first
 init|=
 name|NULL
 decl_stmt|;
 name|size_t
-name|len
-decl_stmt|,
 name|llen
 decl_stmt|;
 name|char
@@ -712,6 +702,9 @@ name|fp
 argument_list|)
 condition|)
 block|{
+name|size_t
+name|len
+decl_stmt|;
 comment|/* 		 * Allocate a new block and link it into place in a doubly 		 * linked list.  If out of memory, toss the LRU block and 		 * keep going. 		 */
 while|while
 condition|(
@@ -802,7 +795,7 @@ operator|)
 operator|&&
 name|len
 operator|<
-name|bsz
+name|BSZ
 condition|)
 block|{
 name|p
@@ -821,7 +814,7 @@ name|p
 argument_list|,
 literal|1
 argument_list|,
-name|bsz
+name|BSZ
 operator|-
 name|len
 argument_list|,
@@ -897,6 +890,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|struct
+name|bfelem
+modifier|*
+name|temp
+decl_stmt|;
 for|for
 control|(
 name|p
@@ -964,7 +962,7 @@ if|if
 condition|(
 name|start
 operator|&&
-name|len
+name|llen
 condition|)
 name|WR
 argument_list|(
