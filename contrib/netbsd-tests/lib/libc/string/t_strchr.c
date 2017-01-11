@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_strchr.c,v 1.1 2011/07/07 08:59:33 jruoho Exp $ */
+comment|/* $NetBSD: t_strchr.c,v 1.2 2017/01/10 15:34:49 christos Exp $ */
 end_comment
 
 begin_comment
@@ -281,20 +281,9 @@ end_macro
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|void
 modifier|*
 name|dl_handle
-decl_stmt|;
-endif|#
-directive|endif
-name|unsigned
-name|int
-name|t
-decl_stmt|,
-name|a
 decl_stmt|;
 name|char
 modifier|*
@@ -305,6 +294,12 @@ name|buf
 index|[
 literal|32
 index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|t
+decl_stmt|,
+name|a
 decl_stmt|;
 specifier|const
 name|char
@@ -656,9 +651,6 @@ block|,
 literal|"abcdefgh/abcdefgh/"
 block|, 	}
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|dl_handle
 operator|=
 name|dlopen
@@ -677,24 +669,6 @@ argument_list|,
 literal|"test_strlen"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|strchr_fn
-operator|=
-name|dlsym
-argument_list|(
-name|dlopen
-argument_list|(
-literal|0
-argument_list|,
-name|RTLD_LAZY
-argument_list|)
-argument_list|,
-literal|"test_strchr"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -909,9 +883,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 operator|(
 name|void
 operator|)
@@ -920,8 +891,6 @@ argument_list|(
 name|dl_handle
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
