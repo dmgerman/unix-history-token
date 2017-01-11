@@ -4026,6 +4026,8 @@ literal|0
 operator|&&
 operator|!
 name|no_port_forwarding_flag
+operator|&&
+name|use_privsep
 condition|)
 block|{
 name|c
@@ -5536,6 +5538,9 @@ operator|==
 literal|0
 operator|||
 name|no_port_forwarding_flag
+operator|||
+operator|!
+name|use_privsep
 condition|)
 block|{
 name|success
