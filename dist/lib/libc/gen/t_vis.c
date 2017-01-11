@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_vis.c,v 1.8 2015/05/23 14:02:11 christos Exp $	*/
+comment|/*	$NetBSD: t_vis.c,v 1.9 2017/01/10 15:16:57 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -697,6 +697,12 @@ block|}
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIS_NOLOCALE
+end_ifdef
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -933,6 +939,15 @@ expr_stmt|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIS_NOLOCALE */
+end_comment
+
 begin_macro
 name|ATF_TP_ADD_TCS
 argument_list|(
@@ -970,6 +985,9 @@ argument_list|,
 name|strunvis_hex
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIS_NOLOCALE
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -977,6 +995,9 @@ argument_list|,
 name|strvis_locale
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* VIS_NOLOCALE */
 return|return
 name|atf_no_error
 argument_list|()

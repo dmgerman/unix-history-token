@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_ttyname.c,v 1.3 2011/05/01 18:14:01 jruoho Exp $ */
+comment|/*	$NetBSD: t_ttyname.c,v 1.4 2017/01/10 15:33:40 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_ttyname.c,v 1.3 2011/05/01 18:14:01 jruoho Exp $"
+literal|"$NetBSD: t_ttyname.c,v 1.4 2017/01/10 15:33:40 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -228,6 +228,14 @@ argument_list|(
 name|errno
 operator|==
 name|ENOTTY
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 block|}

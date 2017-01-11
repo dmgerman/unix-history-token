@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_dir.c,v 1.6 2013/10/19 17:45:00 christos Exp $ */
+comment|/* $NetBSD: t_dir.c,v 1.8 2017/01/11 07:26:17 christos Exp $ */
 end_comment
 
 begin_comment
@@ -10,13 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<atf-c.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
 end_include
 
 begin_include
@@ -29,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -59,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_expr_stmt
@@ -126,28 +132,49 @@ decl_stmt|;
 name|long
 name|here
 decl_stmt|;
+define|#
+directive|define
+name|CREAT
+parameter_list|(
+name|x
+parameter_list|,
+name|m
+parameter_list|)
+value|do {						\ 		int _creat_fd;						\ 		ATF_REQUIRE_MSG((_creat_fd = creat((x), (m)) != -1),	\ 		    "creat(%s, %x) failed: %s", (x), (m),		\ 		    strerror(errno));					\ 		(void)close(_creat_fd);					\ 	} while(0);
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|mkdir
 argument_list|(
 literal|"t"
 argument_list|,
 literal|0755
 argument_list|)
+operator|==
+literal|0
+argument_list|,
+literal|"mkdir failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|creat
+name|CREAT
 argument_list|(
 literal|"t/a"
 argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
-name|creat
+name|CREAT
 argument_list|(
 literal|"t/b"
 argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
-name|creat
+name|CREAT
 argument_list|(
 literal|"t/c"
 argument_list|,
@@ -200,6 +227,21 @@ operator|=
 name|telldir
 argument_list|(
 name|dp
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE_MSG
+argument_list|(
+name|here
+operator|!=
+operator|-
+literal|1
+argument_list|,
+literal|"telldir failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* get second entry */
@@ -380,6 +422,11 @@ expr_stmt|;
 name|closedir
 argument_list|(
 name|dp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|wasname
 argument_list|)
 expr_stmt|;
 block|}

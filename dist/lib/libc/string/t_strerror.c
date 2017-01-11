@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_strerror.c,v 1.3 2011/05/10 06:55:27 jruoho Exp $ */
+comment|/* $NetBSD: t_strerror.c,v 1.4 2017/01/10 20:35:49 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_strerror.c,v 1.3 2011/05/10 06:55:27 jruoho Exp $"
+literal|"$NetBSD: t_strerror.c,v 1.4 2017/01/10 20:35:49 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,6 +32,16 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* Needed for sys_nerr on FreeBSD */
+end_comment
 
 begin_include
 include|#

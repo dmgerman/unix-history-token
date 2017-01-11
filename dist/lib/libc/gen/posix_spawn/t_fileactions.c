@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_fileactions.c,v 1.5 2012/04/09 19:42:07 martin Exp $ */
+comment|/* $NetBSD: t_fileactions.c,v 1.6 2017/01/10 22:36:29 christos Exp $ */
 end_comment
 
 begin_comment
@@ -11,6 +11,18 @@ begin_include
 include|#
 directive|include
 file|<atf-c.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -53,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
 end_include
 
 begin_expr_stmt

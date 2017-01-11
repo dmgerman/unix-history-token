@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_mincore.c,v 1.8 2012/06/08 07:18:58 martin Exp $ */
+comment|/* $NetBSD: t_mincore.c,v 1.9 2017/01/10 22:36:29 christos Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_mincore.c,v 1.8 2012/06/08 07:18:58 martin Exp $"
+literal|"$NetBSD: t_mincore.c,v 1.9 2017/01/10 22:36:29 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include

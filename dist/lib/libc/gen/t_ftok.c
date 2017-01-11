@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_ftok.c,v 1.1 2011/11/08 05:47:00 jruoho Exp $ */
+comment|/*	$NetBSD: t_ftok.c,v 1.2 2017/01/10 15:19:52 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_ftok.c,v 1.1 2011/11/08 05:47:00 jruoho Exp $"
+literal|"$NetBSD: t_ftok.c,v 1.2 2017/01/10 15:19:52 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -220,6 +220,14 @@ argument_list|(
 name|fd
 operator|>=
 literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
