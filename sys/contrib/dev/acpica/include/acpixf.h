@@ -1272,13 +1272,6 @@ end_macro
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiGetTableWithSize (     ACPI_STRING             Signature,     UINT32                  Instance,     ACPI_TABLE_HEADER       **OutTable,     ACPI_SIZE               *TblSize)
-argument_list|)
-end_macro
-
-begin_macro
-name|ACPI_EXTERNAL_RETURN_STATUS
-argument_list|(
 argument|ACPI_STATUS AcpiGetTable (     ACPI_STRING             Signature,     UINT32                  Instance,     ACPI_TABLE_HEADER       **OutTable)
 argument_list|)
 end_macro
@@ -1361,13 +1354,6 @@ begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
 argument|ACPI_STATUS AcpiGetData (     ACPI_HANDLE             Object,     ACPI_OBJECT_HANDLER     Handler,     void                    **Data)
-argument_list|)
-end_macro
-
-begin_macro
-name|ACPI_EXTERNAL_RETURN_STATUS
-argument_list|(
-argument|ACPI_STATUS AcpiGetDataFull (     ACPI_HANDLE             Object,     ACPI_OBJECT_HANDLER     Handler,     void                    **Data,     void (*Callback)(void *))
 argument_list|)
 end_macro
 
