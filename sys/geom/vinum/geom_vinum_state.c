@@ -694,9 +694,11 @@ comment|/* 		 * Only do this if we're forced, since it usually is done 		 * inte
 if|if
 condition|(
 operator|!
+operator|(
 name|flags
 operator|&
 name|GV_SETSTATE_FORCE
+operator|)
 condition|)
 return|return
 operator|(
