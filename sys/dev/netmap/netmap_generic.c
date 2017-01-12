@@ -396,18 +396,6 @@ begin_comment
 comment|/*  * Newer versions of FreeBSD, using a straightforward scheme.  *  * We allocate mbufs with m_gethdr(), since the mbuf header is needed  * by the driver. We also attach a customly-provided external storage,  * which in this case is a netmap buffer. When calling m_extadd(), however  * we pass a NULL address, since the real address (and length) will be  * filled in by nm_os_generic_xmit_frame() right before calling  * if_transmit().  *  * The dtor function does nothing, however we need it since mb_free_ext()  * has a KASSERT(), checking that the mbuf dtor function is not NULL.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SET_MBUF_DESTRUCTOR
-parameter_list|(
-name|m
-parameter_list|,
-name|fn
-parameter_list|)
-value|do {		\ 	(m)->m_ext.ext_free = (void *)fn;	\ } while (0)
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -428,6 +416,18 @@ name|arg2
 parameter_list|)
 block|{ }
 end_function
+
+begin_define
+define|#
+directive|define
+name|SET_MBUF_DESTRUCTOR
+parameter_list|(
+name|m
+parameter_list|,
+name|fn
+parameter_list|)
+value|do {		\ 	(m)->m_ext.ext_free = fn ? (void *)fn : (void *)void_mbuf_dtor;	\ } while (0)
+end_define
 
 begin_function
 specifier|static
