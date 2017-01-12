@@ -2139,6 +2139,8 @@ block|}
 if|if
 condition|(
 name|sfsp
+operator|!=
+name|NULL
 operator|&&
 name|count
 operator|<
@@ -2386,6 +2388,8 @@ expr_stmt|;
 if|if
 condition|(
 name|sfsp
+operator|!=
+name|NULL
 operator|&&
 name|count
 operator|>
