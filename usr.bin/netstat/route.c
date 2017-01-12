@@ -2466,7 +2466,7 @@ name|cq
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|cq
+name|buf
 argument_list|)
 argument_list|,
 literal|"(%d)"
