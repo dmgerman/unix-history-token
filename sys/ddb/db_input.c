@@ -165,16 +165,6 @@ end_define
 
 begin_function_decl
 specifier|static
-name|int
-name|cnmaygetc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|db_delete
 parameter_list|(
@@ -1126,21 +1116,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|int
-name|cnmaygetc
-parameter_list|()
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|int
 name|db_readline
 parameter_list|(
@@ -1329,7 +1304,7 @@ name|c
 decl_stmt|;
 name|c
 operator|=
-name|cnmaygetc
+name|cncheckc
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -1369,7 +1344,7 @@ do|do
 block|{
 name|c
 operator|=
-name|cnmaygetc
+name|cncheckc
 argument_list|()
 expr_stmt|;
 if|if
