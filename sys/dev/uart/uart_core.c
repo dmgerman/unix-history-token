@@ -2736,12 +2736,6 @@ condition|)
 block|{
 name|sc
 operator|->
-name|sc_irid
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
 name|sc_ires
 operator|=
 name|bus_alloc_resource_any
