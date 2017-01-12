@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -65,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -2408,6 +2420,22 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|jailed_without_vnet
+argument_list|(
+name|curthread
+operator|->
+name|td_ucred
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 name|sbuf_new
 argument_list|(
 operator|&
