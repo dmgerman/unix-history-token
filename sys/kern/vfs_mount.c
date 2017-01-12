@@ -272,6 +272,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_STATFS
+argument_list|,
+literal|"statfs"
+argument_list|,
+literal|"statfs structure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
