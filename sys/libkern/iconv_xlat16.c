@@ -1477,7 +1477,6 @@ name|void
 modifier|*
 name|d2p
 parameter_list|,
-specifier|register
 name|int
 name|c
 parameter_list|)
@@ -1494,7 +1493,6 @@ operator|*
 operator|)
 name|d2p
 decl_stmt|;
-specifier|register
 name|int
 name|c1
 decl_stmt|,
@@ -1638,7 +1636,6 @@ name|void
 modifier|*
 name|d2p
 parameter_list|,
-specifier|register
 name|int
 name|c
 parameter_list|)
@@ -1655,7 +1652,6 @@ operator|*
 operator|)
 name|d2p
 decl_stmt|;
-specifier|register
 name|int
 name|c1
 decl_stmt|,

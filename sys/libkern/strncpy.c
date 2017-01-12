@@ -54,14 +54,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|d
 init|=
 name|dst
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
