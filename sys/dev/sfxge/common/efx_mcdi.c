@@ -6900,6 +6900,10 @@ parameter_list|,
 name|__in
 name|efx_stats_action_t
 name|action
+parameter_list|,
+name|__in
+name|uint16_t
+name|period_ms
 parameter_list|)
 block|{
 name|efx_mcdi_req_t
@@ -7050,7 +7054,7 @@ operator||
 name|events
 operator|)
 condition|?
-literal|1000
+name|period_ms
 else|:
 literal|0
 argument_list|)
@@ -7257,6 +7261,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|EFX_STATS_CLEAR
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -7321,6 +7327,8 @@ argument_list|,
 name|esmp
 argument_list|,
 name|EFX_STATS_UPLOAD
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -7370,7 +7378,7 @@ name|esmp
 parameter_list|,
 name|__in
 name|uint16_t
-name|period
+name|period_ms
 parameter_list|,
 name|__in
 name|boolean_t
@@ -7380,10 +7388,10 @@ block|{
 name|efx_rc_t
 name|rc
 decl_stmt|;
-comment|/* 	 * The MC DMAs aggregate statistics for our convenience, so we can 	 * avoid having to pull the statistics buffer into the cache to 	 * maintain cumulative statistics. 	 * Huntington uses a fixed 1sec period, so use that on Siena too. 	 */
+comment|/* 	 * The MC DMAs aggregate statistics for our convenience, so we can 	 * avoid having to pull the statistics buffer into the cache to 	 * maintain cumulative statistics. 	 * Huntington uses a fixed 1sec period. 	 * Medford uses a fixed 1sec period before v6.2.1.1033 firmware. 	 */
 if|if
 condition|(
-name|period
+name|period_ms
 operator|==
 literal|0
 condition|)
@@ -7396,6 +7404,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|EFX_STATS_DISABLE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -7412,6 +7422,8 @@ argument_list|,
 name|esmp
 argument_list|,
 name|EFX_STATS_ENABLE_EVENTS
+argument_list|,
+name|period_ms
 argument_list|)
 expr_stmt|;
 else|else
@@ -7424,6 +7436,8 @@ argument_list|,
 name|esmp
 argument_list|,
 name|EFX_STATS_ENABLE_NOEVENTS
+argument_list|,
+name|period_ms
 argument_list|)
 expr_stmt|;
 if|if
