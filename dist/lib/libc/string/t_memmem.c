@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_memmem.c,v 1.2 2011/07/07 08:27:36 jruoho Exp $ */
+comment|/*	$NetBSD: t_memmem.c,v 1.3 2017/01/11 18:07:37 christos Exp $ */
 end_comment
 
 begin_comment
@@ -164,6 +164,23 @@ name|int
 name|lp7
 init|=
 literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|p8
+index|[]
+init|=
+literal|"89abc"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lp8
+init|=
+literal|5
 decl_stmt|;
 end_decl_stmt
 
@@ -454,6 +471,22 @@ argument_list|,
 name|p7
 argument_list|,
 name|lp7
+argument_list|)
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
+name|expect
+argument_list|(
+name|memmem
+argument_list|(
+name|b2
+argument_list|,
+name|lb2
+argument_list|,
+name|p8
+argument_list|,
+name|lp8
 argument_list|)
 operator|==
 name|NULL

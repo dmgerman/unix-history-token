@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_memcpy.c,v 1.5 2013/03/17 02:23:31 christos Exp $ */
+comment|/* $NetBSD: t_memcpy.c,v 1.6 2017/01/11 18:05:54 christos Exp $ */
 end_comment
 
 begin_comment
@@ -436,7 +436,7 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE_EQ
+name|ATF_REQUIRE_EQ_MSG
 argument_list|(
 name|strcmp
 argument_list|(
@@ -446,6 +446,12 @@ name|goodResult
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+literal|"%s != %s"
+argument_list|,
+name|result
+argument_list|,
+name|goodResult
 argument_list|)
 expr_stmt|;
 block|}
