@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_basic.c,v 1.12 2013/10/19 17:45:00 christos Exp $	*/
+comment|/*	$NetBSD: t_basic.c,v 1.13 2016/12/01 14:49:04 hannken Exp $	*/
 end_comment
 
 begin_include
@@ -1368,7 +1368,7 @@ argument_list|(
 name|FSTEST_MNTNAME
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE_EQ
+name|ATF_REQUIRE
 argument_list|(
 name|pargs
 operator|->
@@ -1376,8 +1376,8 @@ name|pta_vn_toserv_ops
 index|[
 name|PUFFS_VN_INACTIVE
 index|]
-argument_list|,
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_EQ
@@ -1871,7 +1871,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE_EQ
+name|ATF_REQUIRE
 argument_list|(
 name|pargs
 operator|->
@@ -1879,10 +1879,8 @@ name|pta_vn_toserv_ops
 index|[
 name|PUFFS_VN_INACTIVE
 index|]
-argument_list|,
+operator|>
 name|ianow
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_STREQ

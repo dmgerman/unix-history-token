@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_mqueue.c,v 1.4 2014/03/02 19:56:48 jmmv Exp $ */
+comment|/*	$NetBSD: t_mqueue.c,v 1.5 2017/01/10 22:10:22 christos Exp $ */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|<atf-c.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include

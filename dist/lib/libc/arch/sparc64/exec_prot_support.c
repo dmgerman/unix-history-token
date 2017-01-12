@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: exec_prot_support.c,v 1.1 2011/07/18 23:16:10 jym Exp $ */
+comment|/*      $NetBSD: exec_prot_support.c,v 1.2 2016/12/31 11:51:20 martin Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: exec_prot_support.c,v 1.1 2011/07/18 23:16:10 jym Exp $"
+literal|"$NetBSD: exec_prot_support.c,v 1.2 2016/12/31 11:51:20 martin Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -35,7 +35,7 @@ name|void
 parameter_list|)
 block|{
 return|return
-name|NOTIMPL
+name|PERPAGE_XP
 return|;
 block|}
 end_function

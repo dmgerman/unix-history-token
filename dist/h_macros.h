@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: h_macros.h,v 1.12 2016/08/04 11:49:07 jakllsch Exp $ */
+comment|/* $NetBSD: h_macros.h,v 1.13 2016/08/20 15:49:08 christos Exp $ */
 end_comment
 
 begin_comment
@@ -95,6 +95,21 @@ parameter_list|(
 name|x
 parameter_list|)
 value|REQUIRE_LIBC(x, -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RLF
+parameter_list|(
+name|x
+parameter_list|,
+name|fmt
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|ATF_CHECK_MSG((x) != -1, "%s [" fmt "]: %s", #x, arg, strerror(errno))
 end_define
 
 begin_define

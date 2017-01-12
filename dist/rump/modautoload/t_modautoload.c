@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_modautoload.c,v 1.4 2015/12/27 08:21:44 pgoyette Exp $	*/
+comment|/*	$NetBSD: t_modautoload.c,v 1.5 2016/09/14 03:19:11 ozaki-r Exp $	*/
 end_comment
 
 begin_include
@@ -192,6 +192,13 @@ expr_stmt|;
 name|new_autoload
 operator|=
 name|true
+expr_stmt|;
+name|old_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|old_autoload
+argument_list|)
 expr_stmt|;
 name|new_len
 operator|=
