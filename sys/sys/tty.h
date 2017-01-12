@@ -131,6 +131,10 @@ argument_list|)
 name|t_list
 expr_stmt|;
 comment|/* (l) TTY list entry. */
+name|int
+name|t_drainwait
+decl_stmt|;
+comment|/* (t) TIOCDRAIN timeout seconds. */
 name|unsigned
 name|int
 name|t_flags
