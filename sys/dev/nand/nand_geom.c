@@ -1971,6 +1971,12 @@ operator|.
 name|dev_id
 argument_list|)
 expr_stmt|;
+name|ndisk
+operator|->
+name|d_rotation_rate
+operator|=
+name|DISK_RR_NON_ROTATING
+expr_stmt|;
 name|disk_create
 argument_list|(
 name|ndisk
@@ -2097,6 +2103,12 @@ name|id
 operator|.
 name|dev_id
 argument_list|)
+expr_stmt|;
+name|disk
+operator|->
+name|d_rotation_rate
+operator|=
+name|DISK_RR_NON_ROTATING
 expr_stmt|;
 name|disk_create
 argument_list|(

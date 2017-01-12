@@ -1537,11 +1537,6 @@ argument_list|,
 name|NVME_MODEL_NUMBER_LENGTH
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|900034
 name|strlcpy
 argument_list|(
 name|disk
@@ -1556,8 +1551,12 @@ name|descr
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|disk
+operator|->
+name|d_rotation_rate
+operator|=
+name|DISK_RR_NON_ROTATING
+expr_stmt|;
 name|ndisk
 operator|->
 name|ns
