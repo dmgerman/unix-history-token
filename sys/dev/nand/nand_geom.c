@@ -2104,7 +2104,7 @@ operator|.
 name|dev_id
 argument_list|)
 expr_stmt|;
-name|disk
+name|rdisk
 operator|->
 name|d_rotation_rate
 operator|=
