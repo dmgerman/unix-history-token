@@ -3706,6 +3706,11 @@ comment|/*NOTREACHED*/
 block|}
 endif|#
 directive|endif
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -3797,6 +3802,11 @@ argument_list|,
 name|res
 operator|->
 name|ai_addrlen
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4272,6 +4282,13 @@ name|EAFNOSUPPORT
 condition|)
 block|{
 comment|/* Protocol not supported */
+if|if
+condition|(
+name|ifcp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|tracet
 argument_list|(
 literal|1
@@ -4294,6 +4311,7 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* As if down for AF_INET6 */
 name|ifcp
 operator|->
 name|ifc_flags
@@ -4301,7 +4319,25 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
-comment|/* As if down for AF_INET6 */
+block|}
+else|else
+block|{
+name|tracet
+argument_list|(
+literal|1
+argument_list|,
+literal|"Could not send info to %s\n"
+argument_list|,
+name|inet6_n2p
+argument_list|(
+operator|&
+name|sin6
+operator|->
+name|sin6_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
