@@ -109,6 +109,10 @@ name|now
 decl_stmt|;
 name|unsigned
 name|int
+name|min_ticks
+decl_stmt|;
+name|unsigned
+name|int
 name|count
 decl_stmt|;
 name|int
@@ -139,6 +143,18 @@ goto|goto
 name|out
 goto|;
 block|}
+name|min_ticks
+operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
+name|hz
+operator|*
+name|SFXGE_STATS_UPDATE_PERIOD_MS
+operator|/
+literal|1000
+expr_stmt|;
 name|now
 operator|=
 name|ticks
@@ -159,11 +175,7 @@ operator|.
 name|update_time
 argument_list|)
 operator|<
-operator|(
-name|unsigned
-name|int
-operator|)
-name|hz
+name|min_ticks
 condition|)
 block|{
 name|rc
@@ -2164,7 +2176,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Update MAC stats by DMA every second */
+comment|/* Update MAC stats by DMA every period */
 if|if
 condition|(
 operator|(
@@ -2181,7 +2193,7 @@ name|mac_stats
 operator|.
 name|dma_buf
 argument_list|,
-literal|1000
+name|SFXGE_STATS_UPDATE_PERIOD_MS
 argument_list|,
 name|B_FALSE
 argument_list|)
