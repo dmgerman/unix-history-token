@@ -16691,14 +16691,20 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\tfileid %ld fsid 0x%x"
+literal|"\tfileid %jd fsid 0x%jx"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|np
 operator|->
 name|n_vattr
 operator|.
 name|na_fileid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|np
 operator|->
 name|n_vattr

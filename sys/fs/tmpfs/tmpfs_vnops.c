@@ -5901,7 +5901,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_TMPFS, tmpfs_node %p, flags 0x%lx, links %d\n"
+literal|"tag VT_TMPFS, tmpfs_node %p, flags 0x%lx, links %jd\n"
 argument_list|,
 name|node
 argument_list|,
@@ -5909,6 +5909,9 @@ name|node
 operator|->
 name|tn_flags
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|node
 operator|->
 name|tn_links

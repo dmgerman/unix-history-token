@@ -1747,8 +1747,11 @@ name|fp
 argument_list|,
 name|pathlast
 argument_list|,
-literal|"nlink=%d"
+literal|"nlink=%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cur
 operator|->
 name|st_nlink

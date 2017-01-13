@@ -299,8 +299,11 @@ name|F_NLINK
 condition|)
 name|printf
 argument_list|(
-literal|" nlink=%d"
+literal|" nlink=%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|n
 operator|->
 name|st_nlink

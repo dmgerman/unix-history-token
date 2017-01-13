@@ -4839,7 +4839,7 @@ argument_list|)
 expr_stmt|;
 name|uprintf
 argument_list|(
-literal|"%s: Bad link count %d on parent inode %d in file system %s\n"
+literal|"%s: Bad link count %d on parent inode %jd in file system %s\n"
 argument_list|,
 name|funcname
 argument_list|,
@@ -4847,6 +4847,9 @@ name|dip
 operator|->
 name|i_effnlink
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|dip
 operator|->
 name|i_number

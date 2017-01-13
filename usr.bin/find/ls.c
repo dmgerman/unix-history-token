@@ -215,10 +215,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s %3u %-*s %-*s "
+literal|"%s %3ju %-*s %-*s "
 argument_list|,
 name|modep
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sb
 operator|->
 name|st_nlink

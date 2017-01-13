@@ -6946,13 +6946,16 @@ name|LINK_MAX
 condition|)
 name|err_suj
 argument_list|(
-literal|"ino %ju nlink manipulation error, new %d, old %d\n"
+literal|"ino %ju nlink manipulation error, new %ju, old %d\n"
 argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|nlink
 argument_list|,
 name|DIP
@@ -6969,13 +6972,16 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"Adjusting ino %ju, nlink %d, old link %d lastmode %o\n"
+literal|"Adjusting ino %ju, nlink %ju, old link %d lastmode %o\n"
 argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|nlink
 argument_list|,
 name|DIP
@@ -7082,15 +7088,21 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %ju not enough links to live %d< %d\n"
+literal|"ino %ju not enough links to live %ju< %ju\n"
 argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|nlink
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|reqlink
 argument_list|)
 expr_stmt|;
@@ -8298,7 +8310,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"jrefrec: op %d ino %ju, nlink %d, parent %d, "
+literal|"jrefrec: op %d ino %ju, nlink %ju, parent %ju, "
 literal|"diroff %jd, mode %o, isat %d, isdot %d\n"
 argument_list|,
 name|rrec
@@ -8312,14 +8324,23 @@ name|rrec
 operator|->
 name|jr_ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rrec
 operator|->
 name|jr_nlink
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rrec
 operator|->
 name|jr_parent
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rrec
 operator|->
 name|jr_diroff
@@ -8372,19 +8393,31 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino %ju nlink %d newlinks %d removes %d dotlinks %d\n"
+literal|"ino %ju nlink %ju newlinks %ju removes %ju dotlinks %ju\n"
 argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|nlink
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|newlinks
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|removes
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dotlinks
 argument_list|)
 expr_stmt|;
@@ -9658,20 +9691,33 @@ name|JOP_MVREF
 condition|)
 name|printf
 argument_list|(
-literal|"ino move: ino %d, parent %d, diroff %jd, oldoff %jd\n"
+literal|"ino move: ino %ju, parent %ju, "
+literal|"diroff %jd, oldoff %jd\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|mvrec
 operator|->
 name|jm_ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|mvrec
 operator|->
 name|jm_parent
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|mvrec
 operator|->
 name|jm_newoff
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|mvrec
 operator|->
 name|jm_oldoff
@@ -9698,25 +9744,37 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"ino ref: op %d, ino %d, nlink %d, "
-literal|"parent %d, diroff %jd\n"
+literal|"ino ref: op %d, ino %ju, nlink %ju, "
+literal|"parent %ju, diroff %jd\n"
 argument_list|,
 name|refrec
 operator|->
 name|jr_op
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|refrec
 operator|->
 name|jr_ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|refrec
 operator|->
 name|jr_nlink
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|refrec
 operator|->
 name|jr_parent
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|refrec
 operator|->
 name|jr_diroff
@@ -10612,12 +10670,15 @@ condition|)
 name|printf
 argument_list|(
 literal|"blk_build: op %d blkno %jd frags %d oldfrags %d "
-literal|"ino %d lbn %jd\n"
+literal|"ino %ju lbn %jd\n"
 argument_list|,
 name|blkrec
 operator|->
 name|jb_op
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|blkrec
 operator|->
 name|jb_blkno
@@ -10630,10 +10691,16 @@ name|blkrec
 operator|->
 name|jb_oldfrags
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|blkrec
 operator|->
 name|jb_ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|blkrec
 operator|->
 name|jb_lbn
@@ -10869,16 +10936,22 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"ino_build_trunc: op %d ino %d, size %jd\n"
+literal|"ino_build_trunc: op %d ino %ju, size %jd\n"
 argument_list|,
 name|rec
 operator|->
 name|jt_op
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rec
 operator|->
 name|jt_ino
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rec
 operator|->
 name|jt_size

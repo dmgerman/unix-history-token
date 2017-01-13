@@ -1183,8 +1183,11 @@ argument_list|,
 operator|&
 name|offset
 argument_list|,
-literal|"nlink=%u"
+literal|"nlink=%ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|p
 operator|->
 name|fts_statp

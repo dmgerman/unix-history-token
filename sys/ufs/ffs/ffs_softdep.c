@@ -54404,8 +54404,11 @@ condition|)
 name|panic
 argument_list|(
 literal|"handle_written_inodeblock: Invalid link count "
-literal|"%d for inodedep %p"
+literal|"%jd for inodedep %p"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inodedep
 operator|->
 name|id_savednlink
@@ -66001,7 +66004,7 @@ parameter_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%p fs %p st %x ino %jd inoblk %jd delta %d nlink %d"
+literal|"%p fs %p st %x ino %jd inoblk %jd delta %jd nlink %jd"
 literal|" saveino %p\n"
 argument_list|,
 name|inodedep
@@ -66042,10 +66045,16 @@ name|id_ino
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|inodedep
 operator|->
 name|id_nlinkdelta
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|inodedep
 operator|->
 name|id_savednlink
