@@ -406,9 +406,13 @@ name|TTYBUF_MAX
 value|65536
 end_define
 
+begin_comment
+comment|/*  * Allocate buffer space if necessary, and set low watermarks, based on speed.  * Note that the ttyxxxq_setsize() functions may drop and then reacquire the tty  * lock during memory allocation.  They will return ENXIO if the tty disappears  * while unlocked.  */
+end_comment
+
 begin_function
 specifier|static
-name|void
+name|int
 name|tty_watermarks
 parameter_list|(
 name|struct
@@ -421,6 +425,9 @@ name|size_t
 name|bs
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|/* Provide an input buffer for 0.2 seconds of data. */
 if|if
@@ -448,6 +455,8 @@ argument_list|,
 name|TTYBUF_MAX
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|ttyinq_setsize
 argument_list|(
 operator|&
@@ -460,6 +469,17 @@ argument_list|,
 name|bs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* Set low watermark at 10% (when 90% is available). */
 name|tp
 operator|->
@@ -495,6 +515,8 @@ argument_list|,
 name|TTYBUF_MAX
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|ttyoutq_setsize
 argument_list|(
 operator|&
@@ -507,6 +529,17 @@ argument_list|,
 name|bs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* Set low watermark at 10% (when 90% is available). */
 name|tp
 operator|->
@@ -526,6 +559,11 @@ operator|)
 operator|/
 literal|10
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1275,12 +1313,22 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|tty_watermarks
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* XXXGL: drops lock */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* Wait for Carrier Detect. */
 if|if
@@ -7430,11 +7478,22 @@ operator|->
 name|c_ospeed
 expr_stmt|;
 comment|/* Baud rate has changed - update watermarks. */
+name|error
+operator|=
 name|tty_watermarks
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 comment|/* Copy new non-device driver parameters. */
 name|tp

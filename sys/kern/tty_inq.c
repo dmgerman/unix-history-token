@@ -230,7 +230,7 @@ value|do {					\ 	if (ti->ti_quota<= ti->ti_nblocks)				\ 		uma_zfree(ttyinq_zon
 end_define
 
 begin_function
-name|void
+name|int
 name|ttyinq_setsize
 parameter_list|(
 name|struct
@@ -294,6 +294,27 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tty_gone
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+block|{
+name|uma_zfree
+argument_list|(
+name|ttyinq_zone
+argument_list|,
+name|tib
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|TTYINQ_INSERT_TAIL
 argument_list|(
 name|ti
@@ -302,6 +323,11 @@ name|tib
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
