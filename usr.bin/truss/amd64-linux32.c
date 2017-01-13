@@ -385,6 +385,17 @@ block|,
 name|amd64_linux32_fetch_args
 block|,
 name|amd64_linux32_fetch_retval
+block|,
+name|STAILQ_HEAD_INITIALIZER
+argument_list|(
+name|amd64_linux32
+operator|.
+name|extra_syscalls
+argument_list|)
+block|,
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

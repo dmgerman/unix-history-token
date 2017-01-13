@@ -518,6 +518,17 @@ block|,
 name|mips_fetch_args
 block|,
 name|mips_fetch_retval
+block|,
+name|STAILQ_HEAD_INITIALIZER
+argument_list|(
+name|mips_freebsd
+operator|.
+name|extra_syscalls
+argument_list|)
+block|,
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

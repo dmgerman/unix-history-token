@@ -363,6 +363,17 @@ block|,
 name|i386_linux_fetch_args
 block|,
 name|i386_linux_fetch_retval
+block|,
+name|STAILQ_HEAD_INITIALIZER
+argument_list|(
+name|i386_linux
+operator|.
+name|extra_syscalls
+argument_list|)
+block|,
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
