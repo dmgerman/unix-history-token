@@ -1665,7 +1665,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc %zd bytes"
+literal|"malloc %zu bytes"
 argument_list|,
 name|size
 argument_list|)
@@ -2805,7 +2805,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|2
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 operator|&
 name|boottime
@@ -4632,7 +4635,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"malloc(%d)"
+literal|"malloc(%zu)"
 argument_list|,
 name|argbuflen
 operator|+
@@ -5284,12 +5287,17 @@ argument_list|)
 argument_list|,
 literal|"%*d "
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|thr_buf
 argument_list|)
 operator|-
 literal|2
+argument_list|)
 argument_list|,
 name|pp
 operator|->
