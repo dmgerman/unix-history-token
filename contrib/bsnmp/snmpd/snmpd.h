@@ -677,6 +677,17 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
+name|ssize_t
+function_decl|(
+modifier|*
+name|recv
+function_decl|)
+parameter_list|(
+name|struct
+name|port_input
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
