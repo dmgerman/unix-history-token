@@ -394,6 +394,17 @@ parameter_list|)
 value|((ic)->ic_vhtcaps != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CONF_SEQNO_OFFLOAD
+parameter_list|(
+name|ic
+parameter_list|)
+define|\
+value|((ic)->ic_flags_ext& IEEE80211_FEXT_SEQNO_OFFLOAD)
+end_define
+
 begin_comment
 comment|/*  * 802.11 control state is split into a common portion that maps  * 1-1 to a physical device and one or more "Virtual AP's" (VAP)  * that are bound to an ieee80211com instance and share a single  * underlying device.  Each VAP has a corresponding OS device  * entity through which traffic flows and that applications use  * for issuing ioctls, etc.  */
 end_comment
