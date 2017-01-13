@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_ttyio.c,v 1.2 2011/04/19 20:07:53 martin Exp $ */
+comment|/*	$NetBSD: t_ttyio.c,v 1.3 2017/01/10 01:31:40 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_ttyio.c,v 1.2 2011/04/19 20:07:53 martin Exp $"
+literal|"$NetBSD: t_ttyio.c,v 1.3 2017/01/10 01:31:40 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -626,9 +626,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 operator|(
 name|void
 operator|)
@@ -637,8 +634,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ATF_REQUIRE_EQ
 argument_list|(
 name|rc
