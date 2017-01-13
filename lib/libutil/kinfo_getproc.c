@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/user.h>
 end_include
 
 begin_include
@@ -115,7 +115,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|4
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -158,7 +161,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|4
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|kipp
 argument_list|,
