@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_fnmatch.c,v 1.6 2014/10/12 22:33:41 christos Exp $ */
+comment|/* $NetBSD: t_fnmatch.c,v 1.7 2016/10/31 05:08:53 dholland Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_fnmatch.c,v 1.6 2014/10/12 22:33:41 christos Exp $"
+literal|"$NetBSD: t_fnmatch.c,v 1.7 2016/10/31 05:08:53 dholland Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1124,6 +1124,20 @@ argument_list|(
 literal|"[!]-_]"
 argument_list|,
 literal|"X"
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|ATF_CHECK
+argument_list|(
+name|fnmatch
+argument_list|(
+literal|"[A-\\\\]"
+argument_list|,
+literal|"["
 argument_list|,
 literal|0
 argument_list|)

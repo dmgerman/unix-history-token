@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: h_execthr.c,v 1.3 2014/08/13 00:03:00 pooka Exp $	*/
+comment|/*	$NetBSD: h_execthr.c,v 1.7 2016/11/24 00:37:29 dholland Exp $	*/
 end_comment
 
 begin_comment
@@ -78,6 +78,45 @@ include|#
 directive|include
 file|<rump/rump_syscalls.h>
 end_include
+
+begin_comment
+comment|//#define VERBOSE
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VERBOSE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SAY
+parameter_list|(
+modifier|...
+parameter_list|)
+value|printf(__VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SAY
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -376,6 +415,13 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|SAY
+argument_list|(
+literal|"execd: %d\n"
+argument_list|,
+name|execd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rumpclient_init
@@ -410,6 +456,11 @@ operator|=
 name|rump_sys_getpid
 argument_list|()
 expr_stmt|;
+name|SAY
+argument_list|(
+literal|"rumpclient_init finished.\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|execd
@@ -419,8 +470,8 @@ name|canreturn
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
+name|errno
+operator|=
 name|pthread_create
 argument_list|(
 operator|&
@@ -439,14 +490,23 @@ name|uintptr_t
 operator|)
 name|P2_0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
 literal|"exec pthread_create"
+argument_list|)
+expr_stmt|;
+name|SAY
+argument_list|(
+literal|"startup pthread_create finished.\n"
 argument_list|)
 expr_stmt|;
 name|i
@@ -471,6 +531,11 @@ argument_list|(
 name|pt
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|SAY
+argument_list|(
+literal|"startup pthread_join finished.\n"
 argument_list|)
 expr_stmt|;
 name|n
@@ -506,12 +571,22 @@ argument_list|,
 literal|"post-exec cloexec works"
 argument_list|)
 expr_stmt|;
+name|SAY
+argument_list|(
+literal|"startup rump_sys_read finished.\n"
+argument_list|)
+expr_stmt|;
 name|getproc
 argument_list|(
 name|mypid
 argument_list|,
 operator|&
 name|p
+argument_list|)
+expr_stmt|;
+name|SAY
+argument_list|(
+literal|"startup getproc finished.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -544,11 +619,18 @@ name|execd
 operator|>
 literal|10
 condition|)
+block|{
+name|SAY
+argument_list|(
+literal|"done.\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|rump_sys_close
 argument_list|(
 name|P2_0
@@ -560,6 +642,11 @@ name|P2_1
 argument_list|)
 expr_stmt|;
 block|}
+name|SAY
+argument_list|(
+literal|"making pipes...\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rump_sys_pipe
@@ -698,6 +785,11 @@ argument_list|,
 literal|"cloexec"
 argument_list|)
 expr_stmt|;
+name|SAY
+argument_list|(
+literal|"making threads...\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -711,8 +803,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|errno
+operator|=
 name|pthread_create
 argument_list|(
 operator|&
@@ -734,10 +827,14 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -746,6 +843,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -759,8 +857,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|errno
+operator|=
 name|pthread_create
 argument_list|(
 operator|&
@@ -782,16 +881,26 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
 literal|"pthread_create 2 %d"
 argument_list|,
 name|i
+argument_list|)
+expr_stmt|;
+block|}
+name|SAY
+argument_list|(
+literal|"waiting for threads to start...\n"
 argument_list|)
 expr_stmt|;
 comment|/* wait for all the threads to be enjoying themselves */
@@ -807,6 +916,11 @@ name|mypid
 argument_list|,
 operator|&
 name|p
+argument_list|)
+expr_stmt|;
+name|SAY
+argument_list|(
+literal|"getproc finished.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -828,6 +942,11 @@ literal|10000
 argument_list|)
 expr_stmt|;
 block|}
+name|SAY
+argument_list|(
+literal|"making some more threads start...\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * load up one more (big) set.  these won't start executing, though, 	 * but we're interested in if they create blockage 	 */
 for|for
 control|(
@@ -844,8 +963,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|errno
+operator|=
 name|pthread_create
 argument_list|(
 operator|&
@@ -867,16 +987,26 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"pthread_create 1 %d"
+literal|"pthread_create 3 %d"
 argument_list|,
 name|i
+argument_list|)
+expr_stmt|;
+block|}
+name|SAY
+argument_list|(
+literal|"calling exec...\n"
 argument_list|)
 expr_stmt|;
 comment|/* then, we exec! */

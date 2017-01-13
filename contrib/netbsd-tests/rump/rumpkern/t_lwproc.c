@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_lwproc.c,v 1.7 2015/01/21 15:19:01 pooka Exp $	*/
+comment|/*	$NetBSD: t_lwproc.c,v 1.8 2017/01/10 22:36:29 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
