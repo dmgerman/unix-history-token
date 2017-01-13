@@ -282,6 +282,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OBJ_POPULATE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* pager implements populate() */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OBJ_DEAD
 value|0x0008
 end_define
