@@ -359,7 +359,7 @@ name|vnode
 modifier|*
 name|tn_vnode
 decl_stmt|;
-comment|/* interlock to protect tn_vpstate */
+comment|/* Interlock to protect tn_vpstate, and tn_status under shared 	 * vnode lock. 	 */
 name|struct
 name|mtx
 name|tn_interlock
@@ -1200,6 +1200,21 @@ specifier|const
 name|struct
 name|timespec
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tmpfs_set_status
+parameter_list|(
+name|struct
+name|tmpfs_node
+modifier|*
+name|node
+parameter_list|,
+name|int
+name|status
 parameter_list|)
 function_decl|;
 end_function_decl
