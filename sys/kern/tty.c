@@ -429,7 +429,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Provide an input buffer for 0.2 seconds of data. */
+comment|/* Provide an input buffer for 2 seconds of data. */
 if|if
 condition|(
 name|tp
@@ -499,7 +499,7 @@ operator|)
 operator|/
 literal|10
 expr_stmt|;
-comment|/* Provide an output buffer for 0.2 seconds of data. */
+comment|/* Provide an output buffer for 2 seconds of data. */
 name|bs
 operator|=
 name|MIN
