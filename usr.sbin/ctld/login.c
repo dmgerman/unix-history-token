@@ -3637,11 +3637,11 @@ condition|)
 block|{
 name|conn
 operator|->
-name|conn_max_send_data_segment_limit
+name|conn_max_send_data_segment_length
 operator|=
 name|conn
 operator|->
-name|conn_max_send_data_segment_length
+name|conn_max_send_data_segment_limit
 expr_stmt|;
 block|}
 block|}
