@@ -18483,6 +18483,7 @@ name|cmap_pte2
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Unpin the thread before releasing the lock.  Otherwise the thread 	 * could be rescheduled while still bound to the current CPU, only 	 * to unpin itself immediately upon resuming execution. 	 */
 name|sched_unpin
 argument_list|()
 expr_stmt|;
