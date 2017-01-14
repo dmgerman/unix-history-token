@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_sigaction.c,v 1.3 2014/11/04 00:20:19 justin Exp $ */
+comment|/* $NetBSD: t_sigaction.c,v 1.5 2017/01/13 21:30:41 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_sigaction.c,v 1.3 2014/11/04 00:20:19 justin Exp $"
+literal|"$NetBSD: t_sigaction.c,v 1.5 2017/01/13 21:30:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -71,33 +71,11 @@ directive|include
 file|<atf-c.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../../../h_macros.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|"h_macros.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -111,24 +89,12 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|handler
 parameter_list|(
 name|int
 name|signo
 name|__unused
 parameter_list|)
-else|#
-directive|else
-function|handler
-parameter_list|(
-name|int
-name|signo
-parameter_list|)
-endif|#
-directive|endif
 block|{
 name|handler_called
 operator|=
@@ -266,24 +232,12 @@ end_function
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|catch
 parameter_list|(
 name|int
 name|sig
 name|__unused
 parameter_list|)
-else|#
-directive|else
-function|catch
-parameter_list|(
-name|int
-name|sig
-parameter_list|)
-endif|#
-directive|endif
 block|{
 return|return;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_exhaust.c,v 1.7 2011/11/16 18:37:31 christos Exp $	*/
+comment|/*	$NetBSD: t_exhaust.c,v 1.8 2017/01/14 00:50:56 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_exhaust.c,v 1.7 2011/11/16 18:37:31 christos Exp $"
+literal|"$NetBSD: t_exhaust.c,v 1.8 2017/01/14 00:50:56 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -24,25 +24,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/resource.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<regex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<atf-c.h>
 end_include
 
 begin_include
@@ -54,25 +42,26 @@ end_include
 begin_include
 include|#
 directive|include
-file|<atf-c.h>
+file|<regex.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sys/resource.h>
+file|<stdio.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -766,9 +755,6 @@ argument_list|,
 literal|"600"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|atf_tc_set_md_var
 argument_list|(
 name|tc
@@ -778,19 +764,6 @@ argument_list|,
 literal|"64M"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|atf_tc_set_md_var
-argument_list|(
-name|tc
-argument_list|,
-literal|"require.memory"
-argument_list|,
-literal|"120M"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -808,21 +781,13 @@ block|{
 name|regex_t
 name|re
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|struct
 name|rlimit
 name|limit
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|e
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|limit
 operator|.
 name|rlim_cur
@@ -851,8 +816,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|size_t

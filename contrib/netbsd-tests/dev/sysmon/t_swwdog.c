@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_swwdog.c,v 1.6 2015/04/23 04:49:37 pgoyette Exp $	*/
+comment|/*	$NetBSD: t_swwdog.c,v 1.7 2017/01/13 21:30:39 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../h_macros.h"
+file|"h_macros.h"
 end_include
 
 begin_decl_stmt

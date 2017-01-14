@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_unlink.c,v 1.2 2014/04/21 18:05:17 martin Exp $ */
+comment|/* $NetBSD: t_unlink.c,v 1.3 2017/01/13 19:33:03 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_unlink.c,v 1.2 2014/04/21 18:05:17 martin Exp $"
+literal|"$NetBSD: t_unlink.c,v 1.3 2017/01/13 19:33:03 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -430,9 +430,6 @@ end_macro
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|int
 name|fd
 decl_stmt|;
@@ -467,22 +464,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ATF_REQUIRE
-argument_list|(
-name|mkfifo
-argument_list|(
-name|path
-argument_list|,
-literal|0666
-argument_list|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ATF_REQUIRE
 argument_list|(
 name|unlink

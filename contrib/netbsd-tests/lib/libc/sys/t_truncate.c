@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_truncate.c,v 1.2 2011/08/18 19:48:03 dholland Exp $ */
+comment|/* $NetBSD: t_truncate.c,v 1.3 2017/01/13 20:03:51 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_truncate.c,v 1.2 2011/08/18 19:48:03 dholland Exp $"
+literal|"$NetBSD: t_truncate.c,v 1.3 2017/01/13 20:03:51 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -711,17 +717,12 @@ end_macro
 
 begin_block
 block|{
-ifndef|#
-directive|ifndef
-name|__NetBSD__
 name|char
 name|buf
 index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|errno
 operator|=
 literal|0
@@ -788,26 +789,6 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|ATF_REQUIRE_ERRNO
-argument_list|(
-name|EACCES
-argument_list|,
-name|truncate
-argument_list|(
-literal|"/usr/bin/fpr"
-argument_list|,
-literal|999
-argument_list|)
-operator|==
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|snprintf
 argument_list|(
 name|buf
@@ -842,8 +823,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_sigqueue.c,v 1.6 2016/08/04 06:43:43 christos Exp $ */
+comment|/* $NetBSD: t_sigqueue.c,v 1.7 2017/01/13 20:44:10 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_sigqueue.c,v 1.6 2016/08/04 06:43:43 christos Exp $"
+literal|"$NetBSD: t_sigqueue.c,v 1.7 2017/01/13 20:44:10 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -113,9 +125,6 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|handler
 parameter_list|(
 name|int
@@ -125,30 +134,12 @@ parameter_list|,
 name|siginfo_t
 modifier|*
 name|info
-name|__unused
 parameter_list|,
 name|void
 modifier|*
 name|data
 name|__unused
 parameter_list|)
-else|#
-directive|else
-function|handler
-parameter_list|(
-name|int
-name|signo
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|info
-parameter_list|,
-name|void
-modifier|*
-name|data
-parameter_list|)
-endif|#
-directive|endif
 block|{
 name|value
 operator|=
@@ -487,6 +478,7 @@ parameter_list|,
 name|void
 modifier|*
 name|context
+name|__unused
 parameter_list|)
 block|{
 name|delivered
@@ -497,9 +489,6 @@ index|]
 operator|=
 name|signo
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|printf
 argument_list|(
 literal|"Signal #%zu: signo: %d\n"
@@ -512,8 +501,6 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -894,9 +881,6 @@ condition|;
 name|i
 operator|++
 control|)
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 if|if
 condition|(
 name|sigaddset
@@ -918,21 +902,6 @@ argument_list|(
 literal|"sigaddset"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sigaddset
-argument_list|(
-operator|&
-name|mask
-argument_list|,
-name|signals
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ATF_REQUIRE
 argument_list|(
 name|sigprocmask
@@ -1004,9 +973,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|ATF_CHECK_MSG
 argument_list|(
 operator|(
@@ -1026,29 +992,6 @@ argument_list|,
 name|ndelivered
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ATF_REQUIRE_MSG
-argument_list|(
-operator|(
-name|size_t
-operator|)
-name|count
-operator|==
-name|ndelivered
-argument_list|,
-literal|"count %zu != ndelivered %zu"
-argument_list|,
-operator|(
-name|size_t
-operator|)
-name|count
-argument_list|,
-name|ndelivered
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|size_t
@@ -1090,11 +1033,11 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|count
 operator|>
 name|ndelivered
@@ -1108,6 +1051,9 @@ name|ndelivered
 init|;
 name|i
 operator|<
+operator|(
+name|size_t
+operator|)
 name|count
 condition|;
 name|i
@@ -1125,8 +1071,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|size_t

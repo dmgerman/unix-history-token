@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_regex_att.c,v 1.1 2012/08/24 20:24:40 jmmv Exp $	*/
+comment|/*	$NetBSD: t_regex_att.c,v 1.2 2017/01/14 00:50:56 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_regex_att.c,v 1.1 2012/08/24 20:24:40 jmmv Exp $"
+literal|"$NetBSD: t_regex_att.c,v 1.2 2017/01/14 00:50:56 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1953,9 +1953,6 @@ operator|+=
 name|l
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|ATF_CHECK_STREQ_MSG
 argument_list|(
 name|res
@@ -1967,21 +1964,6 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ATF_REQUIRE_STREQ_MSG
-argument_list|(
-name|res
-argument_list|,
-name|matches
-argument_list|,
-literal|" at line %zu"
-argument_list|,
-name|lineno
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|free
 argument_list|(
 name|res

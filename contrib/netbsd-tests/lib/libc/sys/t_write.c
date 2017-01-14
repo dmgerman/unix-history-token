@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_write.c,v 1.2 2011/10/19 16:19:30 jruoho Exp $ */
+comment|/* $NetBSD: t_write.c,v 1.3 2017/01/13 19:27:23 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_write.c,v 1.2 2011/10/19 16:19:30 jruoho Exp $"
+literal|"$NetBSD: t_write.c,v 1.3 2017/01/13 19:27:23 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -34,23 +34,6 @@ include|#
 directive|include
 file|<sys/uio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/syslimits.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -79,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -99,23 +88,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -150,24 +122,12 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|sighandler
 parameter_list|(
 name|int
 name|signo
 name|__unused
 parameter_list|)
-else|#
-directive|else
-function|sighandler
-parameter_list|(
-name|int
-name|signo
-parameter_list|)
-endif|#
-directive|endif
 block|{
 name|fail
 operator|=
