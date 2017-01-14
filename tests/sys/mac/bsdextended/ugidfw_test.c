@@ -669,7 +669,7 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"1..%lu\n"
+literal|"1..%zu\n"
 argument_list|,
 name|nitems
 argument_list|(
