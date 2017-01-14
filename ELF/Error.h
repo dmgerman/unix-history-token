@@ -198,6 +198,20 @@ operator|&
 name|Prefix
 argument_list|)
 decl_stmt|;
+name|LLVM_ATTRIBUTE_NORETURN
+name|void
+name|fatal
+parameter_list|(
+name|Error
+modifier|&
+name|E
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Prefix
+parameter_list|)
+function_decl|;
 comment|// check() functions are convenient functions to strip errors
 comment|// from error-or-value objects.
 name|template
@@ -255,13 +269,19 @@ condition|(
 operator|!
 name|E
 condition|)
-name|handleAllErrors
+name|fatal
 argument_list|(
-argument|std::move(E.takeError())
-argument_list|,
-argument|[](llvm::ErrorInfoBase&EIB) -> Error {                       fatal(EIB.message());                       return Error::success();                     }
+name|llvm
+operator|::
+name|toString
+argument_list|(
+name|E
+operator|.
+name|takeError
+argument_list|()
 argument_list|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 return|return
 name|std
 operator|::

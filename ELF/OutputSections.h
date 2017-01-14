@@ -1091,6 +1091,17 @@ name|Bss
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+specifier|static
+name|OutputSection
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|BssRelRo
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|OutputSectionBase
@@ -1405,6 +1416,26 @@ name|ELFT
 operator|>
 operator|::
 name|Bss
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|OutputSection
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|Out
+operator|<
+name|ELFT
+operator|>
+operator|::
+name|BssRelRo
 expr_stmt|;
 end_expr_stmt
 
