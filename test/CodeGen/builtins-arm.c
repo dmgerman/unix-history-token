@@ -211,7 +211,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: call {{.*}} @llvm.arm.rbit(i32 %a)
+comment|// CHECK: call {{.*}} @llvm.bitreverse.i32(i32 %a)
 end_comment
 
 begin_function

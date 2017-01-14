@@ -117,19 +117,61 @@ comment|// DEFAULT: getelementptr inbounds i32, i32*
 comment|// WRAPV: getelementptr i32, i32*
 comment|// TRAPV: getelementptr inbounds i32, i32*
 comment|// CATCH_UB: getelementptr inbounds i32, i32*
-comment|// PR9350: char increment never overflows.
+comment|// PR9350: char pre-increment never overflows.
 specifier|extern
 specifier|volatile
 name|signed
 name|char
-name|PR9350
+name|PR9350_char_inc
 decl_stmt|;
 comment|// DEFAULT: add i8 {{.*}}, 1
 comment|// WRAPV: add i8 {{.*}}, 1
 comment|// TRAPV: add i8 {{.*}}, 1
 comment|// CATCH_UB: add i8 {{.*}}, 1
 operator|++
-name|PR9350
+name|PR9350_char_inc
+expr_stmt|;
+comment|// PR9350: char pre-decrement never overflows.
+specifier|extern
+specifier|volatile
+name|signed
+name|char
+name|PR9350_char_dec
+decl_stmt|;
+comment|// DEFAULT: add i8 {{.*}}, -1
+comment|// WRAPV: add i8 {{.*}}, -1
+comment|// TRAPV: add i8 {{.*}}, -1
+comment|// CATCH_UB: add i8 {{.*}}, -1
+operator|--
+name|PR9350_char_dec
+expr_stmt|;
+comment|// PR9350: short pre-increment never overflows.
+specifier|extern
+specifier|volatile
+name|signed
+name|short
+name|PR9350_short_inc
+decl_stmt|;
+comment|// DEFAULT: add i16 {{.*}}, 1
+comment|// WRAPV: add i16 {{.*}}, 1
+comment|// TRAPV: add i16 {{.*}}, 1
+comment|// CATCH_UB: add i16 {{.*}}, 1
+operator|++
+name|PR9350_short_inc
+expr_stmt|;
+comment|// PR9350: short pre-decrement never overflows.
+specifier|extern
+specifier|volatile
+name|signed
+name|short
+name|PR9350_short_dec
+decl_stmt|;
+comment|// DEFAULT: add i16 {{.*}}, -1
+comment|// WRAPV: add i16 {{.*}}, -1
+comment|// TRAPV: add i16 {{.*}}, -1
+comment|// CATCH_UB: add i16 {{.*}}, -1
+operator|--
+name|PR9350_short_dec
 expr_stmt|;
 comment|// PR24256: don't instrument __builtin_frame_address.
 name|__builtin_frame_address

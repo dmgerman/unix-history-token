@@ -976,6 +976,27 @@ operator|=
 name|Dir
 expr_stmt|;
 block|}
+comment|/// \brief Get the directory that contains Clang-supplied include files.
+specifier|const
+name|DirectoryEntry
+operator|*
+name|getBuiltinDir
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BuiltinIncludeDir
+return|;
+block|}
+comment|/// \brief Is this a compiler builtin header?
+specifier|static
+name|bool
+name|isBuiltinHeader
+parameter_list|(
+name|StringRef
+name|FileName
+parameter_list|)
+function_decl|;
 comment|/// \brief Add a module map callback.
 name|void
 name|addModuleMapCallbacks

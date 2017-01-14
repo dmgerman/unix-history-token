@@ -102,7 +102,20 @@ name|CGOpenMPRuntime
 block|{
 name|private
 operator|:
-expr|struct
+comment|// Parallel outlined function work for workers to execute.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|llvm
+operator|::
+name|Function
+operator|*
+block|,
+literal|16
+operator|>
+name|Work
+block|;    struct
 name|EntryFunctionState
 block|{
 name|llvm
@@ -285,6 +298,45 @@ argument|const RegionCodeGenTy&CodeGen
 argument_list|)
 name|override
 block|;
+comment|/// \brief Emits code for parallel or serial call of the \a OutlinedFn with
+comment|/// variables captured in a record which address is stored in \a
+comment|/// CapturedStruct.
+comment|/// This call is for the Generic Execution Mode.
+comment|/// \param OutlinedFn Outlined function to be run in parallel threads. Type of
+comment|/// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
+comment|/// \param CapturedVars A pointer to the record with the references to
+comment|/// variables used in \a OutlinedFn function.
+comment|/// \param IfCond Condition in the associated 'if' clause, if it was
+comment|/// specified, nullptr otherwise.
+name|void
+name|emitGenericParallelCall
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::Value *OutlinedFn
+argument_list|,
+argument|ArrayRef<llvm::Value *> CapturedVars
+argument_list|,
+argument|const Expr *IfCond
+argument_list|)
+block|;
+name|protected
+operator|:
+comment|/// \brief Get the function name of an outlined region.
+comment|//  The name can be customized depending on the target.
+comment|//
+name|StringRef
+name|getOutlinedHelperName
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|"__omp_outlined__"
+return|;
+block|}
 name|public
 operator|:
 name|explicit
@@ -358,6 +410,30 @@ argument_list|,
 argument|llvm::Value *OutlinedFn
 argument_list|,
 argument|ArrayRef<llvm::Value *> CapturedVars
+argument_list|)
+name|override
+block|;
+comment|/// \brief Emits code for parallel or serial call of the \a OutlinedFn with
+comment|/// variables captured in a record which address is stored in \a
+comment|/// CapturedStruct.
+comment|/// \param OutlinedFn Outlined function to be run in parallel threads. Type of
+comment|/// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
+comment|/// \param CapturedVars A pointer to the record with the references to
+comment|/// variables used in \a OutlinedFn function.
+comment|/// \param IfCond Condition in the associated 'if' clause, if it was
+comment|/// specified, nullptr otherwise.
+name|void
+name|emitParallelCall
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::Value *OutlinedFn
+argument_list|,
+argument|ArrayRef<llvm::Value *> CapturedVars
+argument_list|,
+argument|const Expr *IfCond
 argument_list|)
 name|override
 block|; }

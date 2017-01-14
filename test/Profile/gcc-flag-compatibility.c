@@ -68,7 +68,7 @@ comment|// RUN: llvm-profdata merge %S/Inputs/gcc-flag-compatibility.proftext -o
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -o - -mllvm -disable-llvm-passes -emit-llvm -S -fprofile-use=%t.dir/some/path | FileCheck -check-prefix=PROFILE-USE-2 %s
+comment|// RUN: %clang %s -o - -Xclang -disable-llvm-passes -emit-llvm -S -fprofile-use=%t.dir/some/path | FileCheck -check-prefix=PROFILE-USE-2 %s
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ comment|// RUN: llvm-profdata merge %S/Inputs/gcc-flag-compatibility.proftext -o
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -o - -mllvm -disable-llvm-passes -emit-llvm -S -fprofile-use=%t.dir/some/path/file.prof | FileCheck -check-prefix=PROFILE-USE-3 %s
+comment|// RUN: %clang %s -o - -Xclang -disable-llvm-passes -emit-llvm -S -fprofile-use=%t.dir/some/path/file.prof | FileCheck -check-prefix=PROFILE-USE-3 %s
 end_comment
 
 begin_comment

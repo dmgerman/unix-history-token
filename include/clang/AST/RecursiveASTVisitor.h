@@ -7666,6 +7666,15 @@ argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
 argument_list|)
 end_macro
 
+begin_macro
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|OMPTargetTeamsDistributeSimdDirective
+argument_list|,
+argument|{ TRY_TO(TraverseOMPExecutableDirective(S)); }
+argument_list|)
+end_macro
+
 begin_comment
 comment|// OpenMP clauses.
 end_comment

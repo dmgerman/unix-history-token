@@ -13782,6 +13782,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|EmitOMPTargetTeamsDistributeSimdDirective
+parameter_list|(
+specifier|const
+name|OMPTargetTeamsDistributeSimdDirective
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// Emit outlined function for the target directive.
 end_comment

@@ -2555,11 +2555,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// CHECK-BE: %[[RES1:.+]] = shl<4 x i32
+comment|// CHECK-BE: %[[RES2:.+]] = or<4 x i32> %[[RES1]]
 comment|// CHECK-BE: @llvm.ppc.altivec.vrlwnm(<4 x i32
-comment|// CHECK-BE: and<4 x i32
 comment|// CHECK-BE: ret<4 x i32>
+comment|// CHECK: %[[RES1:.+]] = shl<4 x i32
+comment|// CHECK: %[[RES2:.+]] = or<4 x i32> %[[RES1]]
 comment|// CHECK: @llvm.ppc.altivec.vrlwnm(<4 x i32
-comment|// CHECK: and<4 x i32
 comment|// CHECK: ret<4 x i32>
 return|return
 name|vec_rlnm
@@ -2584,11 +2586,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// CHECK-BE: %[[RES1:.+]] = shl<2 x i64
+comment|// CHECK-BE: %[[RES2:.+]] = or<2 x i64> %[[RES1]]
 comment|// CHECK-BE: @llvm.ppc.altivec.vrldnm(<2 x i64
-comment|// CHECK-BE: and<2 x i64
 comment|// CHECK-BE-NEXT: ret<2 x i64>
+comment|// CHECK: %[[RES1:.+]] = shl<2 x i64
+comment|// CHECK: %[[RES2:.+]] = or<2 x i64> %[[RES1]]
 comment|// CHECK: @llvm.ppc.altivec.vrldnm(<2 x i64
-comment|// CHECK: and<2 x i64
 comment|// CHECK-NEXT: ret<2 x i64>
 return|return
 name|vec_rlnm

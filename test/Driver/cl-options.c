@@ -1732,7 +1732,7 @@ comment|// RUN:     -fno-ms-extensions \
 end_comment
 
 begin_comment
-comment|// RUN:     -mllvm -disable-llvm-passes \
+comment|// RUN:     -Xclang -disable-llvm-passes \
 end_comment
 
 begin_comment

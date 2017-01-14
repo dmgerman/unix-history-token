@@ -154,6 +154,10 @@ name|CXXCopyConstructor
 operator|,
 name|CXXMoveConstructor
 operator|,
+name|AccessorGetter
+operator|,
+name|AccessorSetter
+operator|,
 block|}
 empty_stmt|;
 comment|/// Set of properties that provide additional info about a symbol.
@@ -222,7 +226,7 @@ name|enum
 name|class
 name|SymbolRole
 range|:
-name|uint16_t
+name|uint32_t
 block|{
 name|Declaration
 operator|=
@@ -320,6 +324,18 @@ operator|=
 literal|1
 operator|<<
 literal|15
+block|,
+name|RelationContainedBy
+operator|=
+literal|1
+operator|<<
+literal|16
+block|,
+name|RelationIBTypeOf
+operator|=
+literal|1
+operator|<<
+literal|17
 block|, }
 decl_stmt|;
 specifier|static
@@ -327,7 +343,7 @@ specifier|const
 name|unsigned
 name|SymbolRoleBitNum
 init|=
-literal|16
+literal|18
 decl_stmt|;
 typedef|typedef
 name|unsigned

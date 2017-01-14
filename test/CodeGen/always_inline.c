@@ -12,7 +12,7 @@ comment|// RUN: not grep 'call ' %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang -mllvm -disable-llvm-passes -emit-llvm -S -o %t %s
+comment|// RUN: %clang -Xclang -disable-llvm-passes -emit-llvm -S -o %t %s
 end_comment
 
 begin_comment

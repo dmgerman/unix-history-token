@@ -152,6 +152,102 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-unknown-unknown -c -### %s -march=skylake 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=skylake
+end_comment
+
+begin_comment
+comment|// skylake: "-target-cpu" "skylake"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-unknown -c -### %s -march=skylake-avx512 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=skylake-avx512
+end_comment
+
+begin_comment
+comment|// skylake-avx512: "-target-cpu" "skylake-avx512"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-unknown -c -### %s -march=skx 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=skx
+end_comment
+
+begin_comment
+comment|// skx: "-target-cpu" "skx"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-unknown -c -### %s -march=knl 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=knl
+end_comment
+
+begin_comment
+comment|// knl: "-target-cpu" "knl"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-unknown -c -### %s -march=cannonlake 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=cannonlake
+end_comment
+
+begin_comment
+comment|// cannonlake: "-target-cpu" "cannonlake"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-unknown -c -### %s -march=lakemont 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=lakemont
+end_comment
+
+begin_comment
+comment|// lakemont: "-target-cpu" "lakemont"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-unknown-unknown -c -### %s -march=bonnell 2>&1 \
 end_comment
 
@@ -417,6 +513,22 @@ end_comment
 
 begin_comment
 comment|// btver2: "-target-cpu" "btver2"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-unknown -c -### %s -march=znver1 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=znver1
+end_comment
+
+begin_comment
+comment|// znver1: "-target-cpu" "znver1"
 end_comment
 
 end_unit

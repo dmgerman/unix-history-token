@@ -42,6 +42,12 @@ return|;
 block|}
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<type_traits>
+end_include
+
 begin_endif
 endif|#
 directive|endif

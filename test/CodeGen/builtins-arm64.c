@@ -44,7 +44,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: call {{.*}} @llvm.aarch64.rbit.i32(i32 %a)
+comment|// CHECK: call {{.*}} @llvm.bitreverse.i32(i32 %a)
 end_comment
 
 begin_function
@@ -65,7 +65,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: call {{.*}} @llvm.aarch64.rbit.i64(i64 %a)
+comment|// CHECK: call {{.*}} @llvm.bitreverse.i64(i64 %a)
 end_comment
 
 begin_function

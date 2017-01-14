@@ -18,7 +18,6 @@ begin_enum
 enum|enum
 block|{
 name|MyValToSet
-empty_stmt|;
 block|}
 enum|;
 end_enum
@@ -78,7 +77,7 @@ literal|0
 index|]
 operator|=
 block|{
-comment|// CHECK: [[@LINE+2]]:14 | field/C | myfield | {{.*}} | Ref |
+comment|// CHECK: [[@LINE+2]]:14 | field/C | myfield | {{.*}} | Ref,RelCont |
 comment|// CHECK: [[@LINE+1]]:24 | enumerator/C | MyValToSet |
 operator|.
 name|myfield

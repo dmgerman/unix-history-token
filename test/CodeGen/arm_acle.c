@@ -994,11 +994,11 @@ comment|// ARM-LABEL: test_rbit
 end_comment
 
 begin_comment
-comment|// AArch32: call i32 @llvm.arm.rbit
+comment|// AArch32: call i32 @llvm.bitreverse.i32
 end_comment
 
 begin_comment
-comment|// AArch64: call i32 @llvm.aarch64.rbit.i32
+comment|// AArch64: call i32 @llvm.bitreverse.i32
 end_comment
 
 begin_function
@@ -1023,11 +1023,11 @@ comment|// ARM-LABEL: test_rbitl
 end_comment
 
 begin_comment
-comment|// AArch32: call i32 @llvm.arm.rbit
+comment|// AArch32: call i32 @llvm.bitreverse.i32
 end_comment
 
 begin_comment
-comment|// AArch64: call i64 @llvm.aarch64.rbit.i64
+comment|// AArch64: call i64 @llvm.bitreverse.i64
 end_comment
 
 begin_function
@@ -1052,15 +1052,15 @@ comment|// ARM-LABEL: test_rbitll
 end_comment
 
 begin_comment
-comment|// AArch32: call i32 @llvm.arm.rbit
+comment|// AArch32: call i32 @llvm.bitreverse.i32
 end_comment
 
 begin_comment
-comment|// AArch32: call i32 @llvm.arm.rbit
+comment|// AArch32: call i32 @llvm.bitreverse.i32
 end_comment
 
 begin_comment
-comment|// AArch64: call i64 @llvm.aarch64.rbit.i64
+comment|// AArch64: call i64 @llvm.bitreverse.i64
 end_comment
 
 begin_function

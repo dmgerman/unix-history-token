@@ -8500,6 +8500,13 @@ name|getReturnTypeSourceRange
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Attempt to compute an informative source range covering the
+comment|/// function exception specification, if any.
+name|SourceRange
+name|getExceptionSpecSourceRange
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Determine the type of an expression that calls this function.
 name|QualType
 name|getCallResultType

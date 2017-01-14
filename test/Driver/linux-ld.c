@@ -2480,6 +2480,86 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Check openSuse Leap 42.2 on AArch64
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=arm64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/opensuse_42.2_aarch64_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-OPENSUSE-42-2-AARCH64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=aarch64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/opensuse_42.2_aarch64_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-OPENSUSE-42-2-AARCH64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-42-2-AARCH64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-42-2-AARCH64: "{{.*}}/usr/lib64/gcc/aarch64-suse-linux/4.8/../../../../lib64{{/|\\\\}}crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-42-2-AARCH64: "{{.*}}/usr/lib64/gcc/aarch64-suse-linux/4.8/../../../../lib64{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-42-2-AARCH64: "{{.*}}/usr/lib64/gcc/aarch64-suse-linux/4.8{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-42-2-AARCH64: "-L[[SYSROOT]]/usr/lib64/gcc/aarch64-suse-linux/4.8"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-42-2-AARCH64: "-L[[SYSROOT]]/usr/lib64/gcc/aarch64-suse-linux/4.8/../../../../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-42-2-AARCH64: "{{.*}}/usr/lib64/gcc/aarch64-suse-linux/4.8{{/|\\\\}}crtend.o"
+end_comment
+
+begin_comment
+comment|// CHECK-OPENSUSE-42-2-AARCH64: "{{.*}}/usr/lib64/gcc/aarch64-suse-linux/4.8/../../../../lib64{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Check dynamic-linker for different archs
 end_comment
 

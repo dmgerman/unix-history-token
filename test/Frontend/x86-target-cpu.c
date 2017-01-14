@@ -44,6 +44,26 @@ comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -target-cpu broadwell 
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -target-cpu skylake -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -target-cpu skylake-avx512 -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -target-cpu skx -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -target-cpu cannonlake -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -target-cpu knl -verify %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -target-cpu bonnell -verify %s
 end_comment
 
@@ -109,6 +129,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -target-cpu btver2 -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -target-cpu znver1 -verify %s
 end_comment
 
 begin_comment

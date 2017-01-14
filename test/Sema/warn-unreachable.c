@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -fblocks -Wunreachable-code-aggressive -Wno-unused-value -Wno-covered-switch-default -I %S/Inputs
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -fblocks -Wunreachable-code-aggressive -Wno-unused-value -Wno-covered-switch-default -fdiagnostics-parseable-fixits -I %S/Inputs %s 2>&1 | FileCheck %s
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1467,6 +1471,226 @@ else|else
 name|calledFun
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// rdar://24570531
+end_comment
+
+begin_struct
+struct|struct
+name|StructWithPointer
+block|{
+name|void
+modifier|*
+name|p
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|emitJustOneWarningForOr
+parameter_list|(
+name|struct
+name|StructWithPointer
+modifier|*
+name|s
+parameter_list|)
+block|{
+if|if
+condition|(
+literal|1
+operator|||
+operator|!
+name|s
+operator|->
+name|p
+condition|)
+comment|// expected-note {{silence by adding parentheses to mark code as explicitly dead}}
+return|return;
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:7-[[@LINE-1]]:7}:"/* DISABLES CODE */ ("
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-2]]:8-[[@LINE-2]]:8}:")"
+name|emitJustOneWarningForOr
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{code will never be executed}}
+block|}
+end_function
+
+begin_function
+name|void
+name|emitJustOneWarningForOrSilenced
+parameter_list|(
+name|struct
+name|StructWithPointer
+modifier|*
+name|s
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+literal|1
+operator|)
+operator|||
+operator|!
+name|s
+operator|->
+name|p
+condition|)
+return|return;
+name|emitJustOneWarningForOrSilenced
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|// no warning
+block|}
+end_function
+
+begin_function
+name|void
+name|emitJustOneWarningForOr2
+parameter_list|(
+name|struct
+name|StructWithPointer
+modifier|*
+name|s
+parameter_list|)
+block|{
+if|if
+condition|(
+literal|1
+operator|||
+operator|!
+name|s
+operator|->
+name|p
+condition|)
+comment|// expected-warning {{code will never be executed}}
+return|return;
+comment|// expected-note@-1 {{silence by adding parentheses to mark code as explicitly dead}}
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-2]]:7-[[@LINE-2]]:7}:"/* DISABLES CODE */ ("
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-3]]:8-[[@LINE-3]]:8}:")"
+block|}
+end_function
+
+begin_function
+name|void
+name|wrapOneInFixit
+parameter_list|(
+name|struct
+name|StructWithPointer
+modifier|*
+name|s
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|p
+operator|||
+literal|1
+condition|)
+comment|// expected-note {{silence by adding parentheses to mark code as explicitly dead}}
+return|return;
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:16-[[@LINE-1]]:16}:"/* DISABLES CODE */ ("
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-2]]:17-[[@LINE-2]]:17}:")"
+name|wrapOneInFixit
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{code will never be executed}}
+block|}
+end_function
+
+begin_function
+name|void
+name|unaryOpNoFixit
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|-
+literal|1
+condition|)
+return|return;
+comment|// CHECK-NOT: fix-it:"{{.*}}":{[[@LINE-1]]
+name|unaryOpNoFixit
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{code will never be executed}}
+block|}
+end_function
+
+begin_function
+name|void
+name|unaryOpStrictFixit
+parameter_list|(
+name|struct
+name|StructWithPointer
+modifier|*
+name|s
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|s
+operator|->
+name|p
+operator|&&
+literal|0
+operator|)
+condition|)
+comment|// expected-note {{silence by adding parentheses to mark code as explicitly dead}}
+return|return;
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:17-[[@LINE-1]]:17}:"/* DISABLES CODE */ ("
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-2]]:18-[[@LINE-2]]:18}:")"
+name|unaryOpStrictFixit
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{code will never be executed}}
+block|}
+end_function
+
+begin_function
+name|void
+name|unaryOpFixitCastSubExpr
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|int
+operator|)
+literal|0
+condition|)
+comment|// expected-note {{silence by adding parentheses to mark code as explicitly dead}}
+return|return;
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:7-[[@LINE-1]]:7}:"/* DISABLES CODE */ ("
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-2]]:15-[[@LINE-2]]:15}:")"
+name|unaryOpFixitCastSubExpr
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{code will never be executed}}
 block|}
 end_function
 

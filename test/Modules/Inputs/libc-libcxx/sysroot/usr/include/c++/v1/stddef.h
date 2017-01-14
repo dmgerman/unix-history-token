@@ -17,6 +17,10 @@ directive|include
 file|<__config>
 end_include
 
+begin_empty
+empty|#include_next<stddef.h>
+end_empty
+
 begin_endif
 endif|#
 directive|endif
