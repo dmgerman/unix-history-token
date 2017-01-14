@@ -807,6 +807,9 @@ name|struct
 name|sfxge_hw_stats
 name|mac_stats
 decl_stmt|;
+name|uint16_t
+name|stats_update_period_ms
+decl_stmt|;
 name|efx_link_mode_t
 name|link_mode
 decl_stmt|;

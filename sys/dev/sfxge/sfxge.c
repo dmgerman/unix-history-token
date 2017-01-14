@@ -2389,7 +2389,11 @@ name|tick_callout
 argument_list|,
 name|hz
 operator|*
-name|SFXGE_STATS_UPDATE_PERIOD_MS
+name|sc
+operator|->
+name|port
+operator|.
+name|stats_update_period_ms
 operator|/
 literal|1000
 argument_list|,
@@ -2702,7 +2706,11 @@ name|tick_callout
 argument_list|,
 name|hz
 operator|*
-name|SFXGE_STATS_UPDATE_PERIOD_MS
+name|sc
+operator|->
+name|port
+operator|.
+name|stats_update_period_ms
 operator|/
 literal|1000
 argument_list|,
