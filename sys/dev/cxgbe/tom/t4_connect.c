@@ -460,7 +460,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Active open failed.  */
+comment|/*  * Active open succeeded.  */
 end_comment
 
 begin_function
@@ -601,6 +601,13 @@ argument_list|,
 name|atid
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|toep
+operator|->
+name|vnet
+argument_list|)
+expr_stmt|;
 name|INP_WLOCK
 argument_list|(
 name|inp
@@ -619,6 +626,16 @@ argument_list|,
 name|tid
 argument_list|,
 name|toep
+argument_list|,
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_IPV6
+condition|?
+literal|2
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -679,6 +696,9 @@ name|INP_WUNLOCK
 argument_list|(
 name|inp
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -827,6 +847,13 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|toep
+operator|->
+name|vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|status
@@ -871,8 +898,15 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Active open failed.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1738,6 +1772,14 @@ name|DONT_OFFLOAD_ACTIVE_OPEN
 argument_list|(
 name|ENOMEM
 argument_list|)
+expr_stmt|;
+name|toep
+operator|->
+name|vnet
+operator|=
+name|so
+operator|->
+name|so_vnet
 expr_stmt|;
 if|if
 condition|(

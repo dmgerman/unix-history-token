@@ -1697,6 +1697,14 @@ argument_list|(
 name|sc
 argument_list|,
 name|tid
+argument_list|,
+name|toep
+operator|->
+name|ce
+condition|?
+literal|2
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 name|release_tid
@@ -2234,6 +2242,9 @@ parameter_list|,
 name|void
 modifier|*
 name|ctx
+parameter_list|,
+name|int
+name|ntids
 parameter_list|)
 block|{
 name|struct
@@ -2262,7 +2273,7 @@ name|t
 operator|->
 name|tids_in_use
 argument_list|,
-literal|1
+name|ntids
 argument_list|)
 expr_stmt|;
 block|}
@@ -2355,6 +2366,9 @@ name|sc
 parameter_list|,
 name|int
 name|tid
+parameter_list|,
+name|int
+name|ntids
 parameter_list|)
 block|{
 name|struct
@@ -2383,7 +2397,7 @@ name|t
 operator|->
 name|tids_in_use
 argument_list|,
-literal|1
+name|ntids
 argument_list|)
 expr_stmt|;
 block|}
@@ -4264,16 +4278,22 @@ decl_stmt|,
 modifier|*
 name|ce_temp
 decl_stmt|;
+name|struct
+name|vi_info
+modifier|*
+name|vi
+decl_stmt|;
 name|int
 name|rc
 decl_stmt|,
 name|gen
-init|=
-name|atomic_load_acq_int
-argument_list|(
-operator|&
-name|in6_ifaddr_gen
-argument_list|)
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|uintptr_t
+name|last_vnet
 decl_stmt|;
 name|ASSERT_SYNCHRONIZED_OP
 argument_list|(
@@ -4289,6 +4309,14 @@ operator|&
 name|td
 operator|->
 name|clip_table_lock
+argument_list|)
+expr_stmt|;
+name|gen
+operator|=
+name|atomic_load_acq_int
+argument_list|(
+operator|&
+name|in6_ifaddr_gen
 argument_list|)
 expr_stmt|;
 if|if
@@ -4319,6 +4347,56 @@ operator|->
 name|clip_table
 argument_list|,
 name|link
+argument_list|)
+expr_stmt|;
+comment|/* 	 * last_vnet optimizes the common cases where all if_vnet = NULL (no 	 * VIMAGE) or all if_vnet = vnet0. 	 */
+name|last_vnet
+operator|=
+call|(
+name|uintptr_t
+call|)
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|for_each_port
+argument_list|(
+argument|sc
+argument_list|,
+argument|i
+argument_list|)
+name|for_each_vi
+argument_list|(
+argument|sc->port[i]
+argument_list|,
+argument|j
+argument_list|,
+argument|vi
+argument_list|)
+block|{
+if|if
+condition|(
+name|last_vnet
+operator|==
+operator|(
+name|uintptr_t
+operator|)
+name|vi
+operator|->
+name|ifp
+operator|->
+name|if_vnet
+condition|)
+continue|continue;
+comment|/* XXX: races with if_vmove */
+name|CURVNET_SET
+argument_list|(
+name|vi
+operator|->
+name|ifp
+operator|->
+name|if_vnet
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -4387,8 +4465,8 @@ name|lip
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * XXX: how to weed out the link local address for the loopback 		 * interface?  It's fe80::1 usually (always?). 		 */
-comment|/* 		 * If it's in the main list then we already know it's not stale. 		 */
+comment|/* 			 * XXX: how to weed out the link local address for the 			 * loopback interface?  It's fe80::1 usually (always?). 			 */
+comment|/* 			 * If it's in the main list then we already know it's 			 * not stale. 			 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ce
@@ -4414,7 +4492,7 @@ goto|goto
 name|next
 goto|;
 block|}
-comment|/* 		 * If it's in the stale list we should move it to the main list. 		 */
+comment|/* 			 * If it's in the stale list we should move it to the 			 * main list. 			 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ce
@@ -4583,6 +4661,21 @@ block|}
 name|next
 label|:
 continue|continue;
+block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+name|last_vnet
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|vi
+operator|->
+name|ifp
+operator|->
+name|if_vnet
+expr_stmt|;
 block|}
 comment|/* 	 * Remove stale addresses (those no longer in V_in6_ifaddrhead) that are 	 * no longer referenced by the driver. 	 */
 name|TAILQ_FOREACH_SAFE
