@@ -1079,7 +1079,7 @@ name|struct
 name|ifreq
 name|ifr
 decl_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
@@ -2333,7 +2333,7 @@ block|}
 block|}
 name|out
 label|:
-name|strncpy
+name|strlcpy
 argument_list|(
 name|irr
 operator|.
@@ -7110,7 +7110,7 @@ name|addreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|addreq
 operator|.
@@ -7297,7 +7297,7 @@ name|delreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|delreq
 operator|.
@@ -7409,7 +7409,7 @@ name|req
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|req
 operator|.
