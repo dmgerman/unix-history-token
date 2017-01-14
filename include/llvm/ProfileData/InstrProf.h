@@ -660,6 +660,34 @@ modifier|&
 name|Symtab
 parameter_list|)
 function_decl|;
+comment|/// Check if INSTR_PROF_RAW_VERSION_VAR is defined. This global is only being
+comment|/// set in IR PGO compilation.
+name|bool
+name|isIRPGOFlagSet
+parameter_list|(
+specifier|const
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
+comment|/// Check if we can safely rename this Comdat function. Instances of the same
+comment|/// comdat function may have different control flows thus can not share the
+comment|/// same counter variable.
+name|bool
+name|canRenameComdatFunc
+parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|F
+parameter_list|,
+name|bool
+name|CheckAddressTaken
+init|=
+name|false
+parameter_list|)
+function_decl|;
 enum|enum
 name|InstrProfValueKind
 enum|:

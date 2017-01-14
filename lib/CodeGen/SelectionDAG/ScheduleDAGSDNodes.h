@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/ISDOpcodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -75,10 +87,43 @@ directive|include
 file|"llvm/CodeGen/ScheduleDAG.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/SelectionDAGNodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|InstrItineraryData
+decl_stmt|;
 comment|/// ScheduleDAGSDNodes - A ScheduleDAG for scheduling SDNode-based DAGs.
 comment|///
 comment|/// Edges between SUnits are initially based on edges in the SelectionDAG,
@@ -137,7 +182,9 @@ operator|~
 name|ScheduleDAGSDNodes
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// Run - perform scheduling.
 comment|///
 name|void
@@ -852,11 +899,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+unit|};  }
+comment|// end namespace llvm
+end_comment
+
 begin_endif
-unit|}; }
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_CODEGEN_SELECTIONDAG_SCHEDULEDAGSDNODES_H
+end_comment
 
 end_unit
 

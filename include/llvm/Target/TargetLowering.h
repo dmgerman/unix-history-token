@@ -98,13 +98,49 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/DAGCombine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ISDOpcodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -117,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
 begin_include
@@ -140,6 +182,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DataLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/IRBuilder.h"
 end_include
 
@@ -152,13 +206,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/AtomicOrdering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -176,13 +260,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<climits>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -199,9 +319,6 @@ name|class
 name|BranchProbability
 decl_stmt|;
 name|class
-name|CallInst
-decl_stmt|;
-name|class
 name|CCState
 decl_stmt|;
 name|class
@@ -212,9 +329,6 @@ name|FastISel
 decl_stmt|;
 name|class
 name|FunctionLoweringInfo
-decl_stmt|;
-name|class
-name|ImmutableCallSite
 decl_stmt|;
 name|class
 name|IntrinsicInst
@@ -238,27 +352,10 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
-name|Mangler
-decl_stmt|;
-name|class
 name|MCContext
 decl_stmt|;
 name|class
 name|MCExpr
-decl_stmt|;
-name|class
-name|MCSymbol
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
-name|class
-name|DataLayout
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -267,7 +364,7 @@ name|class
 name|TargetLibraryInfo
 decl_stmt|;
 name|class
-name|TargetLoweringObjectFile
+name|TargetRegisterInfo
 decl_stmt|;
 name|class
 name|Value
@@ -298,31 +395,12 @@ comment|// Scheduling for VLIW targets.
 block|}
 enum|;
 block|}
+comment|// end namespace Sched
 comment|/// This base class for TargetLowering contains the SelectionDAG-independent
 comment|/// parts that can be used from the rest of CodeGen.
 name|class
 name|TargetLoweringBase
 block|{
-name|TargetLoweringBase
-argument_list|(
-specifier|const
-name|TargetLoweringBase
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|TargetLoweringBase
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|public
 label|:
 comment|/// This enum indicates whether operations are valid for a target, and if not,
@@ -523,18 +601,40 @@ operator|&
 name|TM
 argument_list|)
 expr_stmt|;
+name|TargetLoweringBase
+argument_list|(
+specifier|const
+name|TargetLoweringBase
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|TargetLoweringBase
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|virtual
 operator|~
 name|TargetLoweringBase
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|protected
-operator|:
+label|:
 comment|/// \brief Initialize all of the actions to default values.
 name|void
 name|initActions
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 name|public
 label|:
 specifier|const
@@ -1787,6 +1887,8 @@ name|IntrinsicInfo
 block|{
 name|unsigned
 name|opc
+init|=
+literal|0
 decl_stmt|;
 comment|// target opcode
 name|EVT
@@ -1797,76 +1899,52 @@ specifier|const
 name|Value
 modifier|*
 name|ptrVal
+init|=
+name|nullptr
 decl_stmt|;
 comment|// value representing memory location
 name|int
 name|offset
+init|=
+literal|0
 decl_stmt|;
 comment|// offset off of ptrVal
 name|unsigned
 name|size
+init|=
+literal|0
 decl_stmt|;
 comment|// the size of the memory location
 comment|// (taken from memVT if zero)
 name|unsigned
 name|align
+init|=
+literal|1
 decl_stmt|;
 comment|// alignment
 name|bool
 name|vol
+init|=
+name|false
 decl_stmt|;
 comment|// is volatile?
 name|bool
 name|readMem
+init|=
+name|false
 decl_stmt|;
 comment|// reads memory?
 name|bool
 name|writeMem
+init|=
+name|false
 decl_stmt|;
 comment|// writes memory?
 name|IntrinsicInfo
 argument_list|()
-operator|:
-name|opc
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ptrVal
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|offset
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|size
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|align
-argument_list|(
-literal|1
-argument_list|)
-operator|,
-name|vol
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|readMem
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|writeMem
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 block|}
 struct|;
 comment|/// Given an intrinsic, checks if on the target the intrinsic will need to map
@@ -5787,39 +5865,29 @@ block|{
 name|GlobalValue
 modifier|*
 name|BaseGV
+init|=
+name|nullptr
 decl_stmt|;
 name|int64_t
 name|BaseOffs
+init|=
+literal|0
 decl_stmt|;
 name|bool
 name|HasBaseReg
+init|=
+name|false
 decl_stmt|;
 name|int64_t
 name|Scale
+init|=
+literal|0
 decl_stmt|;
 name|AddrMode
 argument_list|()
-operator|:
-name|BaseGV
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|BaseOffs
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|HasBaseReg
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|Scale
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 block|}
 struct|;
 comment|/// Return true if the addressing mode represented by AM is legal for this
@@ -6949,8 +7017,6 @@ name|VT
 argument_list|)
 decl|const
 decl_stmt|;
-name|private
-label|:
 comment|/// Targets can specify ISD nodes that they would like PerformDAGCombine
 comment|/// callbacks for by calling setTargetDAGCombine(), which sets a bit in this
 comment|/// array.
@@ -7128,8 +7194,6 @@ comment|/// \see enableExtLdPromotion.
 name|bool
 name|EnableExtLdPromotion
 decl_stmt|;
-name|protected
-label|:
 comment|/// Return true if the value types that can be represented by the specified
 comment|/// register class are all legal.
 name|bool
@@ -7192,6 +7256,11 @@ range|:
 name|public
 name|TargetLoweringBase
 block|{
+name|public
+operator|:
+expr|struct
+name|DAGCombinerInfo
+block|;
 name|TargetLowering
 argument_list|(
 specifier|const
@@ -7211,11 +7280,6 @@ operator|&
 operator|)
 operator|=
 name|delete
-block|;
-name|public
-operator|:
-expr|struct
-name|DAGCombinerInfo
 block|;
 comment|/// NOTE: The TargetMachine owns TLOF.
 name|explicit
@@ -8203,7 +8267,7 @@ name|Alignment
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 name|void
 name|setAttributes
 argument_list|(
@@ -10402,6 +10466,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Get a pointer to vector element \p Idx located in memory for a vector of
+end_comment
+
+begin_comment
+comment|/// type \p VecVT starting at a base address of \p VecPtr. If \p Idx is out of
+end_comment
+
+begin_comment
+comment|/// bounds the returned pointer is unspecified, but will be within the vector
+end_comment
+
+begin_comment
+comment|/// bounds.
+end_comment
+
+begin_decl_stmt
+name|SDValue
+name|getVectorElementPointer
+argument_list|(
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|SDValue
+name|VecPtr
+argument_list|,
+name|EVT
+name|VecVT
+argument_list|,
+name|SDValue
+name|Idx
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -10654,13 +10755,17 @@ end_decl_stmt
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETLOWERING_H
+end_comment
 
 end_unit
 

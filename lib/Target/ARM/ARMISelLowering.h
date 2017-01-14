@@ -72,7 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/CallingConvLower.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -84,13 +108,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/SelectionDAGNodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ValueTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InlineAsm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -98,10 +158,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|ARMConstantPoolValue
+name|ARMSubtarget
 decl_stmt|;
 name|class
-name|ARMSubtarget
+name|InstrItineraryData
 decl_stmt|;
 name|namespace
 name|ARMISD
@@ -472,6 +532,7 @@ name|VST4LN_UPD
 block|}
 enum|;
 block|}
+comment|// end namespace ARMISD
 comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|ARM
@@ -484,6 +545,7 @@ name|v
 parameter_list|)
 function_decl|;
 block|}
+comment|// end namespace ARM
 comment|//===--------------------------------------------------------------------===//
 comment|//  ARMTargetLowering - ARM Implementation of the TargetLowering interface
 name|class
@@ -2887,14 +2949,22 @@ function_decl|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// end namespace ARM
+end_comment
+
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|// ARMISELLOWERING_H
+comment|// LLVM_LIB_TARGET_ARM_ARMISELLOWERING_H
 end_comment
 
 end_unit

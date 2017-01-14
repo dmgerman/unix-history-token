@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Constants.h"
 end_include
 
@@ -7554,6 +7560,23 @@ operator|,
 name|MDGlobalAttachmentMap
 operator|>
 name|GlobalObjectMetadata
+expr_stmt|;
+comment|/// Collection of per-GlobalObject sections used in this context.
+name|DenseMap
+operator|<
+specifier|const
+name|GlobalObject
+operator|*
+operator|,
+name|StringRef
+operator|>
+name|GlobalObjectSections
+expr_stmt|;
+comment|/// Stable collection of section strings.
+name|StringSet
+operator|<
+operator|>
+name|SectionStrings
 expr_stmt|;
 comment|/// DiscriminatorTable - This table maps file:line locations to an
 comment|/// integer representing the next DWARF path discriminator to assign to

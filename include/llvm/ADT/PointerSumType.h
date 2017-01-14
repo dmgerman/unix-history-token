@@ -487,6 +487,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|explicit
 name|operator
 name|bool
 argument_list|()

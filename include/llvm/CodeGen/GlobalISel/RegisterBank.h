@@ -117,13 +117,17 @@ name|RegisterBankInfo
 decl_stmt|;
 name|public
 label|:
-comment|/// The default constructor will leave the object in
-comment|/// an invalid state. I.e. isValid() == false.
-comment|/// The fields must be updated to fix that and only
-comment|/// RegisterBankInfo instances are allowed to do that
 name|RegisterBank
-argument_list|()
-expr_stmt|;
+argument_list|(
+argument|unsigned ID
+argument_list|,
+argument|const char *Name
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|const uint32_t *ContainedRegClasses
+argument_list|)
+empty_stmt|;
 comment|/// Get the identifier of this register bank.
 name|unsigned
 name|getID

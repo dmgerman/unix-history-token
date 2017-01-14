@@ -645,13 +645,6 @@ end_macro
 begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
-argument|llvm::yaml::Hex64
-argument_list|)
-end_macro
-
-begin_macro
-name|LLVM_YAML_IS_SEQUENCE_VECTOR
-argument_list|(
 argument|int64_t
 argument_list|)
 end_macro

@@ -62,6 +62,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/PBQPRAConstraint.h"
 end_include
 
@@ -92,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -103,16 +127,10 @@ name|class
 name|CallLowering
 decl_stmt|;
 name|class
-name|DataLayout
-decl_stmt|;
-name|class
 name|InstructionSelector
 decl_stmt|;
 name|class
 name|LegalizerInfo
-decl_stmt|;
-name|class
-name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -122,6 +140,9 @@ name|RegisterBankInfo
 decl_stmt|;
 name|class
 name|SDep
+decl_stmt|;
+name|class
+name|SelectionDAGTargetInfo
 decl_stmt|;
 name|class
 name|SUnit
@@ -144,20 +165,9 @@ decl_stmt|;
 name|class
 name|TargetSchedModel
 decl_stmt|;
-name|class
-name|SelectionDAGTargetInfo
-decl_stmt|;
 struct_decl|struct
 name|MachineSchedPolicy
 struct_decl|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetSubtargetInfo - Generic base class for all target subtargets.  All
@@ -170,31 +180,6 @@ range|:
 name|public
 name|MCSubtargetInfo
 block|{
-name|TargetSubtargetInfo
-argument_list|(
-specifier|const
-name|TargetSubtargetInfo
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|TargetSubtargetInfo
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
-name|TargetSubtargetInfo
-argument_list|()
-operator|=
-name|delete
-block|;
 name|protected
 operator|:
 comment|// Can only create subclasses...
@@ -249,6 +234,31 @@ operator|*
 operator|>
 name|RegClassVector
 expr_stmt|;
+name|TargetSubtargetInfo
+argument_list|()
+init|=
+name|delete
+empty_stmt|;
+name|TargetSubtargetInfo
+argument_list|(
+specifier|const
+name|TargetSubtargetInfo
+operator|&
+argument_list|)
+init|=
+name|delete
+empty_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|TargetSubtargetInfo
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 name|virtual
 decl|~
 name|TargetSubtargetInfo
@@ -667,13 +677,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETSUBTARGETINFO_H
+end_comment
 
 end_unit
 

@@ -118,6 +118,9 @@ name|class
 name|LoopInfo
 decl_stmt|;
 name|class
+name|OptimizationRemarkEmitter
+decl_stmt|;
+name|class
 name|Pass
 decl_stmt|;
 name|class
@@ -1364,8 +1367,8 @@ comment|/// reverse depth first order w.r.t the DominatorTree. This allows us to
 comment|/// uses before definitions, allowing us to sink a loop body in one pass without
 comment|/// iteration. Takes DomTreeNode, AliasAnalysis, LoopInfo, DominatorTree,
 comment|/// DataLayout, TargetLibraryInfo, Loop, AliasSet information for all
-comment|/// instructions of the loop and loop safety information as arguments.
-comment|/// It returns changed status.
+comment|/// instructions of the loop and loop safety information as
+comment|/// arguments. Diagnostics is emitted via \p ORE. It returns changed status.
 name|bool
 name|sinkRegion
 parameter_list|(
@@ -1392,6 +1395,10 @@ modifier|*
 parameter_list|,
 name|LoopSafetyInfo
 modifier|*
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
 parameter_list|)
 function_decl|;
 comment|/// \brief Walk the specified region of the CFG (defined by all blocks
@@ -1400,7 +1407,8 @@ comment|/// first order w.r.t the DominatorTree.  This allows us to visit defini
 comment|/// before uses, allowing us to hoist a loop body in one pass without iteration.
 comment|/// Takes DomTreeNode, AliasAnalysis, LoopInfo, DominatorTree, DataLayout,
 comment|/// TargetLibraryInfo, Loop, AliasSet information for all instructions of the
-comment|/// loop and loop safety information as arguments. It returns changed status.
+comment|/// loop and loop safety information as arguments. Diagnostics is emitted via \p
+comment|/// ORE. It returns changed status.
 name|bool
 name|hoistRegion
 parameter_list|(
@@ -1427,6 +1435,10 @@ modifier|*
 parameter_list|,
 name|LoopSafetyInfo
 modifier|*
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
 parameter_list|)
 function_decl|;
 comment|/// \brief Try to promote memory values to scalars by sinking stores out of
@@ -1435,7 +1447,8 @@ comment|/// the stores in the loop, looking for stores to Must pointers which ar
 comment|/// loop invariant. It takes AliasSet, Loop exit blocks vector, loop exit blocks
 comment|/// insertion point vector, PredIteratorCache, LoopInfo, DominatorTree, Loop,
 comment|/// AliasSet information for all instructions of the loop and loop safety
-comment|/// information as arguments. It returns changed status.
+comment|/// information as arguments. Diagnostics is emitted via \p ORE. It returns
+comment|/// changed status.
 name|bool
 name|promoteLoopAccessesToScalars
 argument_list|(
@@ -1476,6 +1489,9 @@ name|AliasSetTracker
 operator|*
 argument_list|,
 name|LoopSafetyInfo
+operator|*
+argument_list|,
+name|OptimizationRemarkEmitter
 operator|*
 argument_list|)
 decl_stmt|;
@@ -1603,8 +1619,8 @@ comment|/// If SafetyInfo is null, we are checking for sinking instructions from
 comment|/// preheader to loop body (no speculation).
 comment|/// If SafetyInfo is not null, we are checking for hoisting/sinking
 comment|/// instructions from loop body to preheader/exit. Check if the instruction
-comment|/// can execute specultatively.
-comment|///
+comment|/// can execute speculatively.
+comment|/// If \p ORE is set use it to emit optimization remarks.
 name|bool
 name|canSinkOrHoistInst
 parameter_list|(
@@ -1631,6 +1647,12 @@ parameter_list|,
 name|LoopSafetyInfo
 modifier|*
 name|SafetyInfo
+parameter_list|,
+name|OptimizationRemarkEmitter
+modifier|*
+name|ORE
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}

@@ -1052,6 +1052,18 @@ argument_list|)
 block|{}
 block|}
 struct|;
+comment|/// Cache storing single nonlocal def for the instruction.
+comment|/// It is set when nonlocal def would be found in function returning only
+comment|/// local dependencies.
+name|DenseMap
+operator|<
+name|Instruction
+operator|*
+operator|,
+name|NonLocalDepResult
+operator|>
+name|NonLocalDefsCache
+expr_stmt|;
 comment|/// This map stores the cached results of doing a pointer lookup at the
 comment|/// bottom of a block.
 comment|///
@@ -1404,9 +1416,9 @@ decl_stmt|;
 comment|/// This analysis looks for other loads and stores with invariant.group
 comment|/// metadata and the same pointer operand. Returns Unknown if it does not
 comment|/// find anything, and Def if it can be assumed that 2 instructions load or
-comment|/// store the same value.
-comment|/// FIXME: This analysis works only on single block because of restrictions
-comment|/// at the call site.
+comment|/// store the same value and NonLocal which indicate that non-local Def was
+comment|/// found, which can be retrieved by calling getNonLocalPointerDependency
+comment|/// with the same queried instruction.
 name|MemDepResult
 name|getInvariantGroupPointerDependency
 parameter_list|(

@@ -78,7 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
@@ -223,6 +235,21 @@ operator|,
 literal|4
 operator|>
 name|AllImportedModules
+expr_stmt|;
+comment|/// Map Macro parent (which can be DIMacroFile or nullptr) to a list of
+comment|/// Metadata all of type DIMacroNode.
+comment|/// DIMacroNode's with nullptr parent are DICompileUnit direct children.
+name|MapVector
+operator|<
+name|MDNode
+operator|*
+operator|,
+name|SetVector
+operator|<
+name|Metadata
+operator|*
+operator|>>
+name|AllMacrosPerParent
 expr_stmt|;
 comment|/// Track nodes that may be unresolved.
 name|SmallVector
@@ -411,6 +438,58 @@ name|StringRef
 argument_list|()
 argument_list|)
 decl_stmt|;
+comment|/// Create debugging information entry for a macro.
+comment|/// \param Parent     Macro parent (could be nullptr).
+comment|/// \param Line       Source line number where the macro is defined.
+comment|/// \param MacroType  DW_MACINFO_define or DW_MACINFO_undef.
+comment|/// \param Name       Macro name.
+comment|/// \param Value      Macro value.
+name|DIMacro
+modifier|*
+name|createMacro
+parameter_list|(
+name|DIMacroFile
+modifier|*
+name|Parent
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|MacroType
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|Value
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+function_decl|;
+comment|/// Create debugging information temporary entry for a macro file.
+comment|/// List of macro node direct children will be calculated by DIBuilder,
+comment|/// using the \p Parent relationship.
+comment|/// \param Parent     Macro file parent (could be nullptr).
+comment|/// \param Line       Source line number where the macro file is included.
+comment|/// \param File       File descriptor containing the name of the macro file.
+name|DIMacroFile
+modifier|*
+name|createTempMacroFile
+parameter_list|(
+name|DIMacroFile
+modifier|*
+name|Parent
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
 comment|/// Create a single enumerator value.
 name|DIEnumerator
 modifier|*
@@ -1419,6 +1498,18 @@ function_decl|;
 comment|/// Get a DINodeArray, create one if required.
 name|DINodeArray
 name|getOrCreateArray
+argument_list|(
+name|ArrayRef
+operator|<
+name|Metadata
+operator|*
+operator|>
+name|Elements
+argument_list|)
+decl_stmt|;
+comment|/// Get a DIMacroNodeArray, create one if required.
+name|DIMacroNodeArray
+name|getOrCreateMacroArray
 argument_list|(
 name|ArrayRef
 operator|<

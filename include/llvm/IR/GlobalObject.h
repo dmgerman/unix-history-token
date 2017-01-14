@@ -159,12 +159,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|;   }
-name|std
-operator|::
-name|string
-name|Section
-block|;
-comment|// Section to emit this into, empty means default
 name|Comdat
 operator|*
 name|ObjComdat
@@ -175,6 +169,8 @@ operator|=
 literal|4
 block|,
 name|HasMetadataHashEntryBit
+block|,
+name|HasSectionHashEntryBit
 block|,
 name|GlobalObjectBits
 block|,   }
@@ -281,29 +277,50 @@ argument_list|(
 argument|unsigned Val
 argument_list|)
 block|;
+comment|/// Check if this global has a custom object file section.
+comment|///
+comment|/// This is more efficient than calling getSection() and checking for an empty
+comment|/// string.
 name|bool
 name|hasSection
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|getSection
+name|getGlobalValueSubClassData
 argument_list|()
-operator|.
-name|empty
-argument_list|()
+operator|&
+operator|(
+literal|1
+operator|<<
+name|HasSectionHashEntryBit
+operator|)
 return|;
 block|}
+comment|/// Get the custom section of this global if it has one.
+comment|///
+comment|/// If this global does not have a custom section, this will be empty and the
+comment|/// default object file section (.text, .data, etc) will be used.
 name|StringRef
 name|getSection
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Section
+name|hasSection
+argument_list|()
+operator|?
+name|getSectionImpl
+argument_list|()
+operator|:
+name|StringRef
+argument_list|()
 return|;
 block|}
+comment|/// Change the section for this global.
+comment|///
+comment|/// Setting the section to the empty string tells LLVM to choose an
+comment|/// appropriate default object file section.
 name|void
 name|setSection
 argument_list|(
@@ -526,6 +543,40 @@ argument_list|()
 block|;
 name|private
 operator|:
+name|void
+name|setGlobalObjectFlag
+argument_list|(
+argument|unsigned Bit
+argument_list|,
+argument|bool Val
+argument_list|)
+block|{
+name|unsigned
+name|Mask
+operator|=
+literal|1
+operator|<<
+name|Bit
+block|;
+name|setGlobalValueSubClassData
+argument_list|(
+operator|(
+operator|~
+name|Mask
+operator|&
+name|getGlobalValueSubClassData
+argument_list|()
+operator|)
+operator||
+operator|(
+name|Val
+condition|?
+name|Mask
+else|:
+literal|0u
+operator|)
+argument_list|)
+block|;   }
 name|bool
 name|hasMetadataHashEntry
 argument_list|()
@@ -548,34 +599,20 @@ argument_list|(
 argument|bool HasEntry
 argument_list|)
 block|{
-name|unsigned
-name|Mask
-operator|=
-literal|1
-operator|<<
-name|HasMetadataHashEntryBit
-block|;
-name|setGlobalValueSubClassData
+name|setGlobalObjectFlag
 argument_list|(
-operator|(
-operator|~
-name|Mask
-operator|&
-name|getGlobalValueSubClassData
-argument_list|()
-operator|)
-operator||
-operator|(
+name|HasMetadataHashEntryBit
+argument_list|,
 name|HasEntry
-condition|?
-name|Mask
-else|:
-literal|0u
-operator|)
 argument_list|)
 block|;   }
-expr|}
-block|;  }
+name|StringRef
+name|getSectionImpl
+argument_list|()
+specifier|const
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

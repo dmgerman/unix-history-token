@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/LoopPassManager.h"
+file|"llvm/IR/PassManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/PassManager.h"
+file|"llvm/Transforms/Scalar/LoopPassManager.h"
 end_include
 
 begin_decl_stmt
@@ -115,6 +115,14 @@ argument_list|,
 name|LoopAnalysisManager
 operator|&
 name|AM
+argument_list|,
+name|LoopStandardAnalysisResults
+operator|&
+name|AR
+argument_list|,
+name|LPMUpdater
+operator|&
+name|U
 argument_list|)
 block|; }
 decl_stmt|;

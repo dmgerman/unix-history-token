@@ -296,6 +296,9 @@ decl_stmt|;
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// This pass implements the reg bank selector pass used in the GlobalISel
 comment|/// pipeline. At the end of this pass, all register operands have been assigned
 name|class
@@ -1565,6 +1568,50 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// Print this on dbgs() stream.
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Print this on \p OS;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Overload the stream operator for easy debug printing.
+name|friend
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|MappingCost
+operator|&
+name|Cost
+operator|)
+block|{
+name|Cost
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -2354,7 +2401,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|}; }
+unit|};  }
 comment|// End namespace llvm.
 end_comment
 

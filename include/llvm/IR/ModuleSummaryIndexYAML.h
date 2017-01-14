@@ -182,11 +182,11 @@ name|io
 operator|.
 name|mapOptional
 argument_list|(
-literal|"SizeBitWidth"
+literal|"SizeM1BitWidth"
 argument_list|,
 name|res
 operator|.
-name|SizeBitWidth
+name|SizeM1BitWidth
 argument_list|)
 block|;   }
 block|}

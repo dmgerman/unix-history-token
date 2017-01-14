@@ -5977,14 +5977,6 @@ comment|///
 comment|/// Check \c this can be discriminated from \c RHS in a linetable entry.
 comment|/// Scope and inlined-at chains are not recorded in the linetable, so they
 comment|/// cannot be used to distinguish basic blocks.
-comment|///
-comment|/// The current implementation is weaker than it should be, since it just
-comment|/// checks filename and line.
-comment|///
-comment|/// FIXME: Add a check for getDiscriminator().
-comment|/// FIXME: Add a check for getColumn().
-comment|/// FIXME: Change the getFilename() check to getFile() (or add one for
-comment|/// getDirectory()).
 name|bool
 name|canDiscriminate
 argument_list|(
@@ -5993,6 +5985,30 @@ argument_list|)
 specifier|const
 block|{
 return|return
+name|getLine
+argument_list|()
+operator|!=
+name|RHS
+operator|.
+name|getLine
+argument_list|()
+operator|||
+name|getColumn
+argument_list|()
+operator|!=
+name|RHS
+operator|.
+name|getColumn
+argument_list|()
+operator|||
+name|getDiscriminator
+argument_list|()
+operator|!=
+name|RHS
+operator|.
+name|getDiscriminator
+argument_list|()
+operator|||
 name|getFilename
 argument_list|()
 operator|!=
@@ -6001,12 +6017,12 @@ operator|.
 name|getFilename
 argument_list|()
 operator|||
-name|getLine
+name|getDirectory
 argument_list|()
 operator|!=
 name|RHS
 operator|.
-name|getLine
+name|getDirectory
 argument_list|()
 return|;
 block|}
@@ -6041,9 +6057,11 @@ comment|/// different files/lines the location is ambiguous and can't be
 comment|/// represented in a single line entry.  In this case, no location
 comment|/// should be set.
 comment|///
-comment|/// Currently this function is simply a stub, and no location will be
-comment|/// used for all cases.
+comment|/// Currently the function does not create a new location. If the locations
+comment|/// are the same, or cannot be discriminated, the first location is returned.
+comment|/// Otherwise an empty location will be used.
 specifier|static
+specifier|const
 name|DILocation
 operator|*
 name|getMergedLocation
@@ -6053,6 +6071,30 @@ argument_list|,
 argument|const DILocation *LocB
 argument_list|)
 block|{
+if|if
+condition|(
+name|LocA
+operator|&&
+name|LocB
+operator|&&
+operator|(
+name|LocA
+operator|==
+name|LocB
+operator|||
+operator|!
+name|LocA
+operator|->
+name|canDiscriminate
+argument_list|(
+operator|*
+name|LocB
+argument_list|)
+operator|)
+condition|)
+return|return
+name|LocA
+return|;
 return|return
 name|nullptr
 return|;

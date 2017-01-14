@@ -632,6 +632,8 @@ enum|;
 comment|/// Line Number Standard Opcode Encodings.
 enum|enum
 name|LineNumberOps
+enum|:
+name|uint8_t
 block|{
 define|#
 directive|define

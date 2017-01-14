@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- NVPTXAsmPrinter.h - NVPTX LLVM assembly writer --------------------===//
+comment|//===-- NVPTXAsmPrinter.h - NVPTX LLVM assembly writer ----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -84,7 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringExtras.h"
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -96,7 +108,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineLoopInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Constants.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DerivedTypes.h"
 end_include
 
 begin_include
@@ -108,7 +144,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCAsmInfo.h"
+file|"llvm/IR/GlobalValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
 end_include
 
 begin_include
@@ -132,7 +174,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/FormattedStream.h"
+file|"llvm/PassAnalysisSupport.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
@@ -144,7 +210,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fstream>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_comment
@@ -244,6 +346,15 @@ operator|=
 name|filename
 expr_stmt|;
 block|}
+operator|~
+name|LineReader
+argument_list|()
+block|{
+name|fstr
+operator|.
+name|close
+argument_list|()
+block|; }
 name|std
 operator|::
 name|string
@@ -254,15 +365,6 @@ return|return
 name|theFileName
 return|;
 block|}
-operator|~
-name|LineReader
-argument_list|()
-block|{
-name|fstr
-operator|.
-name|close
-argument_list|()
-block|; }
 name|std
 operator|::
 name|string
@@ -1408,8 +1510,7 @@ operator|<
 specifier|const
 name|GlobalVariable
 operator|*
-operator|>
-expr|>
+operator|>>
 name|localDecls
 expr_stmt|;
 comment|// To record filename to ID mapping
@@ -1612,6 +1713,8 @@ decl_stmt|;
 name|LineReader
 modifier|*
 name|reader
+init|=
+name|nullptr
 decl_stmt|;
 name|LineReader
 modifier|*
@@ -1671,36 +1774,21 @@ name|EmitGeneric
 argument_list|(
 argument|static_cast<NVPTXTargetMachine&>(TM).getDrvInterface() ==                     NVPTX::CUDA
 argument_list|)
-block|{
-name|CurrentBankselLabelInBasicBlock
-operator|=
-literal|""
-block|;
-name|reader
-operator|=
-name|nullptr
-block|;   }
+block|{}
 operator|~
 name|NVPTXAsmPrinter
 argument_list|()
+name|override
 block|{
-if|if
-condition|(
-operator|!
-name|reader
-condition|)
 name|delete
 name|reader
-decl_stmt|;
-block|}
+block|;   }
 name|bool
 name|runOnMachineFunction
-parameter_list|(
-name|MachineFunction
-modifier|&
-name|F
-parameter_list|)
-function|override
+argument_list|(
+argument|MachineFunction&F
+argument_list|)
+name|override
 block|{
 name|nvptxSubtarget
 operator|=
@@ -1713,7 +1801,7 @@ name|NVPTXSubtarget
 operator|>
 operator|(
 operator|)
-expr_stmt|;
+block|;
 return|return
 name|AsmPrinter
 operator|::
@@ -1787,13 +1875,17 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// end of namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_NVPTX_NVPTXASMPRINTER_H
+end_comment
 
 end_unit
 

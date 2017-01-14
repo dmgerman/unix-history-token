@@ -453,6 +453,15 @@ argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|performFNegCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
 specifier|static
 name|EVT
 name|getEquivalentMemType

@@ -1763,19 +1763,6 @@ operator|&
 name|NewIndices
 argument_list|)
 decl_stmt|;
-name|Instruction
-modifier|*
-name|FoldOpIntoSelect
-parameter_list|(
-name|Instruction
-modifier|&
-name|Op
-parameter_list|,
-name|SelectInst
-modifier|*
-name|SI
-parameter_list|)
-function_decl|;
 comment|/// Classify whether a cast is worth optimizing.
 comment|///
 comment|/// This is a helper to decide whether the simplification of
@@ -2872,14 +2859,39 @@ modifier|&
 name|Inst
 parameter_list|)
 function_decl|;
-comment|// FoldOpIntoPhi - Given a binary operator, cast instruction, or select
-comment|// which has a PHI node as operand #0, see if we can fold the instruction
-comment|// into the PHI (which is only possible if all operands to the PHI are
-comment|// constants).
-comment|//
+comment|/// Given a binary operator, cast instruction, or select which has a PHI node
+comment|/// as operand #0, see if we can fold the instruction into the PHI (which is
+comment|/// only possible if all operands to the PHI are constants).
 name|Instruction
 modifier|*
 name|FoldOpIntoPhi
+parameter_list|(
+name|Instruction
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+comment|/// Given an instruction with a select as one operand and a constant as the
+comment|/// other operand, try to fold the binary operator into the select arguments.
+comment|/// This also works for Cast instructions, which obviously do not have a
+comment|/// second operand.
+name|Instruction
+modifier|*
+name|FoldOpIntoSelect
+parameter_list|(
+name|Instruction
+modifier|&
+name|Op
+parameter_list|,
+name|SelectInst
+modifier|*
+name|SI
+parameter_list|)
+function_decl|;
+comment|/// This is a convenience wrapper function for the above two functions.
+name|Instruction
+modifier|*
+name|foldOpWithConstantIntoOperand
 parameter_list|(
 name|Instruction
 modifier|&

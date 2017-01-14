@@ -4193,35 +4193,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Pass for printing a loop's contents as LLVM's text IR assembly.
+comment|/// Function to print a loop's contents as LLVM's text IR assembly.
 end_comment
 
 begin_decl_stmt
-name|class
-name|PrintLoopPass
-range|:
-name|public
-name|PassInfoMixin
-operator|<
-name|PrintLoopPass
-operator|>
-block|{
-name|raw_ostream
-operator|&
-name|OS
-block|;
-name|std
-operator|::
-name|string
-name|Banner
-block|;
-name|public
-operator|:
-name|PrintLoopPass
-argument_list|()
-block|;
-name|PrintLoopPass
+name|void
+name|printLoop
 argument_list|(
+name|Loop
+operator|&
+name|L
+argument_list|,
 name|raw_ostream
 operator|&
 name|OS
@@ -4235,21 +4217,6 @@ name|Banner
 operator|=
 literal|""
 argument_list|)
-block|;
-name|PreservedAnalyses
-name|run
-argument_list|(
-name|Loop
-operator|&
-name|L
-argument_list|,
-name|AnalysisManager
-operator|<
-name|Loop
-operator|>
-operator|&
-argument_list|)
-block|; }
 decl_stmt|;
 end_decl_stmt
 
