@@ -41,6 +41,10 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_comment
+comment|/* for kqueue(2) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
