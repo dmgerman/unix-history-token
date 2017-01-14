@@ -18483,6 +18483,9 @@ name|cmap_pte2
 operator|=
 literal|0
 expr_stmt|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -18490,9 +18493,6 @@ name|pc
 operator|->
 name|pc_cmap_lock
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -18626,6 +18626,9 @@ name|cmap_pte2
 operator|=
 literal|0
 expr_stmt|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -18633,9 +18636,6 @@ name|pc
 operator|->
 name|pc_cmap_lock
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -18804,6 +18804,9 @@ name|cmap_pte2
 operator|=
 literal|0
 expr_stmt|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -18811,9 +18814,6 @@ name|pc
 operator|->
 name|pc_cmap_lock
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -19105,6 +19105,9 @@ name|cmap_pte2
 operator|=
 literal|0
 expr_stmt|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -19112,9 +19115,6 @@ name|pc
 operator|->
 name|pc_cmap_lock
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -23622,6 +23622,9 @@ name|cmap_pte2
 operator|=
 literal|0
 expr_stmt|;
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -23629,9 +23632,6 @@ name|pc
 operator|->
 name|pc_cmap_lock
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 block|}
 else|else
