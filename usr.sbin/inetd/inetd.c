@@ -1601,6 +1601,9 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|LIBWRAP
 name|struct
 name|request_info
 name|req
@@ -1614,6 +1617,8 @@ name|service
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sockaddr_storage
 name|peer
@@ -3697,6 +3702,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|LIBWRAP
 if|if
 condition|(
 name|ISWRAP
@@ -3886,6 +3894,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|sep
