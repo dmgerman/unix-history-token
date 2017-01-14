@@ -248,7 +248,7 @@ literal|0
 init|;
 name|ntries
 operator|<
-literal|50
+literal|100
 condition|;
 name|ntries
 operator|++

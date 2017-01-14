@@ -1839,7 +1839,7 @@ name|u_short
 name|last_win
 decl_stmt|;
 comment|/* cached window value */
-name|u_short
+name|short
 name|tw_so_options
 decl_stmt|;
 comment|/* copy of so_options */

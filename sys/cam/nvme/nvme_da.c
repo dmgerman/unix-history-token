@@ -3362,9 +3362,8 @@ name|disk
 operator|->
 name|d_rotation_rate
 operator|=
-literal|0
+name|DISK_RR_NON_ROTATING
 expr_stmt|;
-comment|/* Spinning rust need not apply */
 name|disk
 operator|->
 name|d_open

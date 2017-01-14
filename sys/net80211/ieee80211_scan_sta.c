@@ -154,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_vht.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -1608,6 +1614,94 @@ name|se_chan
 operator|=
 name|curchan
 expr_stmt|;
+comment|/* VHT demotion */
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_VHT
+argument_list|(
+name|ise
+operator|->
+name|se_chan
+argument_list|)
+operator|&&
+name|sp
+operator|->
+name|vhtcap
+operator|==
+name|NULL
+condition|)
+block|{
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+literal|"%s: demoting VHT->HT %d/0x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ise
+operator|->
+name|se_chan
+operator|->
+name|ic_freq
+argument_list|,
+name|ise
+operator|->
+name|se_chan
+operator|->
+name|ic_flags
+argument_list|)
+expr_stmt|;
+comment|/* Demote legacy networks to a non-VHT channel. */
+name|c
+operator|=
+name|ieee80211_find_channel
+argument_list|(
+name|ic
+argument_list|,
+name|ise
+operator|->
+name|se_chan
+operator|->
+name|ic_freq
+argument_list|,
+name|ise
+operator|->
+name|se_chan
+operator|->
+name|ic_flags
+operator|&
+operator|~
+name|IEEE80211_CHAN_VHT
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no non-VHT channel %u"
+operator|,
+name|ise
+operator|->
+name|se_chan
+operator|->
+name|ic_ieee
+operator|)
+argument_list|)
+expr_stmt|;
+name|ise
+operator|->
+name|se_chan
+operator|=
+name|c
+expr_stmt|;
+block|}
+comment|/* HT demotion */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_HT
@@ -1625,6 +1719,29 @@ name|NULL
 condition|)
 block|{
 comment|/* Demote legacy networks to a non-HT channel. */
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_11N
+argument_list|,
+literal|"%s: demoting HT->legacy %d/0x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ise
+operator|->
+name|se_chan
+operator|->
+name|ic_freq
+argument_list|,
+name|ise
+operator|->
+name|se_chan
+operator|->
+name|ic_flags
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|ieee80211_find_channel
@@ -2703,7 +2820,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 		 * Ignore dynamic turbo channels; we scan them 		 * in normal mode (i.e. not boosted).  Likewise 		 * for HT channels, they get scanned using 		 * legacy rates. 		 */
+comment|/* 		 * Ignore dynamic turbo channels; we scan them 		 * in normal mode (i.e. not boosted).  Likewise 		 * for HT/VHT channels, they get scanned using 		 * legacy rates. 		 */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_DTURBO
@@ -2712,6 +2829,11 @@ name|c
 argument_list|)
 operator|||
 name|IEEE80211_IS_CHAN_HT
+argument_list|(
+name|c
+argument_list|)
+operator|||
+name|IEEE80211_IS_CHAN_VHT
 argument_list|(
 name|c
 argument_list|)
@@ -4067,7 +4189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compare the capabilities of two entries and decide which is  * more desirable (return>0 if a is considered better).  Note  * that we assume compatibility/usability has already been checked  * so we don't need to (e.g. validate whether privacy is supported).  * Used to select the best scan candidate for association in a BSS.  */
+comment|/*  * Compare the capabilities of two entries and decide which is  * more desirable (return>0 if a is considered better).  Note  * that we assume compatibility/usability has already been checked  * so we don't need to (e.g. validate whether privacy is supported).  * Used to select the best scan candidate for association in a BSS.  *  * TODO: should we take 11n, 11ac into account when selecting the  * best?  Right now it just compares frequency band and RSSI.  */
 end_comment
 
 begin_function
@@ -7757,6 +7879,19 @@ operator|->
 name|iv_flags_ht
 argument_list|)
 expr_stmt|;
+name|chan
+operator|=
+name|ieee80211_vht_adjust_channel
+argument_list|(
+name|ic
+argument_list|,
+name|chan
+argument_list|,
+name|vap
+operator|->
+name|iv_flags_vht
+argument_list|)
+expr_stmt|;
 name|ieee80211_create_ibss
 argument_list|(
 name|vap
@@ -7858,6 +7993,19 @@ argument_list|,
 name|vap
 operator|->
 name|iv_flags_ht
+argument_list|)
+expr_stmt|;
+name|chan
+operator|=
+name|ieee80211_vht_adjust_channel
+argument_list|(
+name|ic
+argument_list|,
+name|chan
+argument_list|,
+name|vap
+operator|->
+name|iv_flags_vht
 argument_list|)
 expr_stmt|;
 if|if
@@ -8378,6 +8526,9 @@ name|struct
 name|ieee80211_channel
 modifier|*
 name|bestchan
+decl_stmt|,
+modifier|*
+name|chan
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -8495,10 +8646,8 @@ return|return
 literal|1
 return|;
 block|}
-name|ieee80211_create_ibss
-argument_list|(
-name|vap
-argument_list|,
+name|chan
+operator|=
 name|ieee80211_ht_adjust_channel
 argument_list|(
 name|ic
@@ -8509,6 +8658,25 @@ name|vap
 operator|->
 name|iv_flags_ht
 argument_list|)
+expr_stmt|;
+name|chan
+operator|=
+name|ieee80211_vht_adjust_channel
+argument_list|(
+name|ic
+argument_list|,
+name|chan
+argument_list|,
+name|vap
+operator|->
+name|iv_flags_vht
+argument_list|)
+expr_stmt|;
+name|ieee80211_create_ibss
+argument_list|(
+name|vap
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 return|return
@@ -8780,6 +8948,7 @@ name|vap
 operator|->
 name|iv_ic
 decl_stmt|;
+comment|/* XXX VHT */
 name|chan
 operator|=
 name|adhoc_pick_channel
@@ -8795,6 +8964,7 @@ name|chan
 operator|!=
 name|NULL
 condition|)
+block|{
 name|chan
 operator|=
 name|ieee80211_ht_adjust_channel
@@ -8808,6 +8978,20 @@ operator|->
 name|iv_flags_ht
 argument_list|)
 expr_stmt|;
+name|chan
+operator|=
+name|ieee80211_vht_adjust_channel
+argument_list|(
+name|ic
+argument_list|,
+name|chan
+argument_list|,
+name|vap
+operator|->
+name|iv_flags_vht
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 name|chan

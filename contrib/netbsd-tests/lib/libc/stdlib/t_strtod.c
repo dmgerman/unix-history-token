@@ -125,23 +125,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__HAVE_LONG_DOUBLE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|ATF_TC
 argument_list|(

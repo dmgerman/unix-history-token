@@ -82,7 +82,7 @@ name|size
 argument_list|,
 name|compar
 argument_list|)
-decl|register const
+decl|const
 name|void
 modifier|*
 name|key
@@ -104,14 +104,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|size_t
 name|size
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|register
 name|int
 function_decl|(
 modifier|*
@@ -131,7 +129,6 @@ end_function_decl
 
 begin_block
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -139,15 +136,12 @@ name|base
 init|=
 name|base0
 decl_stmt|;
-specifier|register
 name|size_t
 name|lim
 decl_stmt|;
-specifier|register
 name|int
 name|cmp
 decl_stmt|;
-specifier|register
 specifier|const
 name|void
 modifier|*

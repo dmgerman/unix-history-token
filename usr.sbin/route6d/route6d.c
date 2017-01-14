@@ -170,33 +170,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -387,15 +365,13 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|ifc
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|ifc_head
 operator|=
 name|TAILQ_HEAD_INITIALIZER
@@ -470,6 +446,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ifc
 modifier|*
@@ -479,6 +456,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|int
 name|nindex2ifc
@@ -486,6 +464,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ifc
 modifier|*
@@ -506,6 +485,7 @@ name|HAVE_POLL_H
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pollfd
 name|set
@@ -521,6 +501,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|fd_set
 modifier|*
 name|sockvecp
@@ -532,6 +513,7 @@ comment|/* vector to select() for receiving */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|fd_set
 modifier|*
 name|recvecp
@@ -539,12 +521,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fdmasks
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxfd
 decl_stmt|;
@@ -560,6 +544,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rtsock
 decl_stmt|;
@@ -570,6 +555,7 @@ comment|/* the routing socket */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ripsock
 decl_stmt|;
@@ -580,6 +566,7 @@ comment|/* socket to send/receive RIP datagram */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|rip6
 modifier|*
@@ -642,15 +629,13 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|riprt
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|riprt_head
 operator|=
 name|TAILQ_HEAD_INITIALIZER
@@ -661,6 +646,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dflag
 init|=
@@ -673,6 +659,7 @@ comment|/* debug flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|qflag
 init|=
@@ -685,6 +672,7 @@ comment|/* quiet flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nflag
 init|=
@@ -697,6 +685,7 @@ comment|/* don't update kernel routing table */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aflag
 init|=
@@ -709,6 +698,7 @@ comment|/* age out even the statically defined routes */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hflag
 init|=
@@ -721,6 +711,7 @@ comment|/* don't split horizon */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lflag
 init|=
@@ -733,6 +724,7 @@ comment|/* exchange site local routes */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Pflag
 init|=
@@ -745,6 +737,7 @@ comment|/* don't age out routes with RTF_PROTO[123] */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Qflag
 init|=
@@ -757,6 +750,7 @@ comment|/* set RTF_PROTO[123] flag to routes by RIPng */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 init|=
@@ -769,6 +763,7 @@ comment|/* announce static routes w/ split horizon */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Sflag
 init|=
@@ -781,6 +776,7 @@ comment|/* announce static routes to every interface */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|long
 name|routetag
@@ -794,6 +790,7 @@ comment|/* route tag attached on originating case */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|filter
@@ -804,6 +801,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|filtertype
 index|[
@@ -813,6 +811,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfilter
 init|=
@@ -821,12 +820,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|pid_t
 name|pid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_storage
 name|ripsin
@@ -834,6 +835,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|interval
 init|=
@@ -842,6 +844,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|nextalarm
 init|=
@@ -849,15 +852,20 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|time_t
-name|sup_trig_update
-init|=
+begin_if
+if|#
+directive|if
 literal|0
-decl_stmt|;
-end_decl_stmt
+end_if
+
+begin_endif
+unit|static time_t	sup_trig_update = 0;
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|rtlog
@@ -867,6 +875,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|logopened
 init|=
@@ -884,6 +893,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|seenalrm
@@ -891,6 +901,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|seenquit
@@ -898,6 +909,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|seenusr1
@@ -940,19 +952,7 @@ value|0x80000000
 end_define
 
 begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|sighandler
 parameter_list|(
@@ -962,6 +962,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ripalarm
 parameter_list|(
@@ -971,6 +972,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|riprecv
 parameter_list|(
@@ -980,6 +982,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ripsend
 parameter_list|(
@@ -997,6 +1000,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|out_filter
 parameter_list|(
@@ -1012,6 +1016,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|init
 parameter_list|(
@@ -1021,17 +1026,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|sockopt
-parameter_list|(
-name|struct
-name|ifc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|ifconfig
 parameter_list|(
@@ -1041,6 +1036,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ifconfig1
 parameter_list|(
@@ -1063,6 +1059,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rtrecv
 parameter_list|(
@@ -1072,6 +1069,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|rt_del
 parameter_list|(
@@ -1094,6 +1092,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|rt_deladdr
 parameter_list|(
@@ -1115,6 +1114,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|filterconfig
 parameter_list|(
@@ -1124,6 +1124,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|getifmtu
 parameter_list|(
@@ -1133,6 +1134,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1146,6 +1148,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1159,6 +1162,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1170,6 +1174,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ifrt
 parameter_list|(
@@ -1183,6 +1188,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ifrt_p2p
 parameter_list|(
@@ -1196,21 +1202,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|applymask
-parameter_list|(
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|applyplen
 parameter_list|(
@@ -1224,6 +1216,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ifrtdump
 parameter_list|(
@@ -1233,6 +1226,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ifdump
 parameter_list|(
@@ -1242,6 +1236,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ifdump0
 parameter_list|(
@@ -1257,6 +1252,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ifremove
 parameter_list|(
@@ -1266,6 +1262,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rtdump
 parameter_list|(
@@ -1275,6 +1272,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rt_entry
 parameter_list|(
@@ -1288,6 +1286,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rtdexit
 parameter_list|(
@@ -1297,6 +1296,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|riprequest
 parameter_list|(
@@ -1318,6 +1318,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ripflush
 parameter_list|(
@@ -1340,6 +1341,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sendrequest
 parameter_list|(
@@ -1351,6 +1353,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sin6mask2len
 parameter_list|(
@@ -1363,6 +1366,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|mask2len
 parameter_list|(
@@ -1377,6 +1381,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sendpacket
 parameter_list|(
@@ -1390,6 +1395,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|addroute
 parameter_list|(
@@ -1410,6 +1416,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|delroute
 parameter_list|(
@@ -1424,24 +1431,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|in6_addr
-modifier|*
-name|getroute
-parameter_list|(
-name|struct
-name|netinfo6
-modifier|*
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static struct in6_addr *getroute(struct netinfo6 *, struct in6_addr *);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
+specifier|static
 name|void
 name|krtread
 parameter_list|(
@@ -1451,6 +1454,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|tobeadv
 parameter_list|(
@@ -1466,6 +1470,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|allocopy
@@ -1477,6 +1482,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|hms
@@ -1487,6 +1493,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1501,6 +1508,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|ifac
 modifier|*
@@ -1522,6 +1530,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|in6_addr
 modifier|*
@@ -1533,6 +1542,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|riprt
 modifier|*
@@ -1546,6 +1556,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ripinterval
 parameter_list|(
@@ -1554,16 +1565,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|time_t
-name|ripsuptrig
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static time_t ripsuptrig(void);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
+specifier|static
 name|void
 name|fatal
 parameter_list|(
@@ -1590,6 +1605,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|trace
 parameter_list|(
@@ -1618,6 +1634,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|tracet
 parameter_list|(
@@ -1646,16 +1663,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|unsigned
-name|int
-name|if_maxindex
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|struct
 name|ifc
 modifier|*
@@ -1668,6 +1676,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|iff
 modifier|*
@@ -1683,6 +1692,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setindex2ifc
 parameter_list|(
@@ -2969,6 +2979,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sighandler
 parameter_list|(
@@ -3024,6 +3035,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rtdexit
 parameter_list|(
@@ -3110,6 +3122,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ripalarm
 parameter_list|(
@@ -3278,6 +3291,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|init
 parameter_list|(
@@ -3706,6 +3720,11 @@ comment|/*NOTREACHED*/
 block|}
 endif|#
 directive|endif
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -3797,6 +3816,11 @@ argument_list|,
 name|res
 operator|->
 name|ai_addrlen
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4033,6 +4057,7 @@ comment|/*  * ripflush flushes the rip datagram stored in the rip buffer  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ripflush
 parameter_list|(
@@ -4272,6 +4297,13 @@ name|EAFNOSUPPORT
 condition|)
 block|{
 comment|/* Protocol not supported */
+if|if
+condition|(
+name|ifcp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|tracet
 argument_list|(
 literal|1
@@ -4294,6 +4326,7 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* As if down for AF_INET6 */
 name|ifcp
 operator|->
 name|ifc_flags
@@ -4301,7 +4334,25 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
-comment|/* As if down for AF_INET6 */
+block|}
+else|else
+block|{
+name|tracet
+argument_list|(
+literal|1
+argument_list|,
+literal|"Could not send info to %s\n"
+argument_list|,
+name|inet6_n2p
+argument_list|(
+operator|&
+name|sin6
+operator|->
+name|sin6_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -4311,6 +4362,7 @@ comment|/*  * Generate RIP6_RESPONSE packets and send them.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ripsend
 parameter_list|(
@@ -5041,6 +5093,7 @@ comment|/*  * outbound filter logic, per-route/interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|out_filter
 parameter_list|(
@@ -5322,6 +5375,7 @@ comment|/*  * Determine if the route is to be advertised on the specified interf
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tobeadv
 parameter_list|(
@@ -5418,6 +5472,7 @@ comment|/*  * Send a rip packet actually.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sendpacket
 parameter_list|(
@@ -5446,16 +5501,16 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|struct
+name|in6_pktinfo
+modifier|*
+name|pi
+decl_stmt|;
 name|u_char
 name|cmsgbuf
 index|[
 literal|256
 index|]
-decl_stmt|;
-name|struct
-name|in6_pktinfo
-modifier|*
-name|pi
 decl_stmt|;
 name|int
 name|idx
@@ -5556,6 +5611,12 @@ name|msg_iovlen
 operator|=
 literal|1
 expr_stmt|;
+name|m
+operator|.
+name|msg_flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5594,6 +5655,10 @@ operator|=
 operator|(
 expr|struct
 name|cmsghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|cmsgbuf
@@ -5650,6 +5715,10 @@ operator|=
 operator|(
 expr|struct
 name|in6_pktinfo
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|CMSG_DATA
@@ -5725,6 +5794,7 @@ comment|/*  * Receive and process RIP packets.  Update the routes/kernel forward
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|riprecv
 parameter_list|(
@@ -5904,6 +5974,10 @@ expr|struct
 name|cmsghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|cmsgbuf
 expr_stmt|;
 name|m
@@ -5923,6 +5997,12 @@ sizeof|sizeof
 argument_list|(
 name|cmsgbuf
 argument_list|)
+expr_stmt|;
+name|m
+operator|.
+name|msg_flags
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -6039,11 +6119,13 @@ name|in6_pktinfo
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
 name|CMSG_DATA
 argument_list|(
 name|cm
 argument_list|)
-operator|)
 expr_stmt|;
 name|idx
 operator|=
@@ -6083,6 +6165,10 @@ name|hlimp
 operator|=
 operator|(
 name|int
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|CMSG_DATA
@@ -6172,6 +6258,10 @@ operator|=
 operator|(
 expr|struct
 name|rip6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|buf
@@ -7592,6 +7682,7 @@ comment|/*  * Send all routes request packet to the specified interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sendrequest
 parameter_list|(
@@ -7738,6 +7829,7 @@ comment|/*  * Process a RIP6_REQUEST packet.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|riprequest
 parameter_list|(
@@ -7892,6 +7984,7 @@ comment|/*  * Get information of each interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ifconfig
 parameter_list|(
@@ -8340,6 +8433,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ifconfig1
 parameter_list|(
@@ -8393,6 +8487,11 @@ operator|(
 specifier|const
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+specifier|const
+name|void
 operator|*
 operator|)
 name|sa
@@ -8866,6 +8965,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ifremove
 parameter_list|(
@@ -8982,6 +9082,7 @@ comment|/*  * Receive and process routing messages.  * Update interface informat
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rtrecv
 parameter_list|(
@@ -9198,6 +9299,10 @@ expr|struct
 name|rt_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 operator|)
 operator|->
@@ -9210,6 +9315,10 @@ operator|(
 operator|(
 expr|struct
 name|rt_msghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|p
@@ -9227,6 +9336,10 @@ operator|(
 operator|(
 expr|struct
 name|rt_msghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|p
@@ -9247,6 +9360,10 @@ operator|(
 operator|(
 expr|struct
 name|rt_msghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|p
@@ -9277,6 +9394,10 @@ expr|struct
 name|rt_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 operator|)
 operator|->
@@ -9294,6 +9415,10 @@ operator|=
 operator|(
 expr|struct
 name|ifa_msghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|p
@@ -9327,6 +9452,10 @@ expr|struct
 name|if_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 expr_stmt|;
 name|addrs
@@ -9356,6 +9485,10 @@ operator|=
 operator|(
 expr|struct
 name|if_announcemsghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|p
@@ -9396,6 +9529,10 @@ operator|=
 operator|(
 expr|struct
 name|rt_msghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|p
@@ -9510,6 +9647,10 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|q
 expr_stmt|;
 name|q
@@ -9539,6 +9680,10 @@ expr|struct
 name|rt_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 argument_list|)
 argument_list|,
@@ -9564,6 +9709,10 @@ operator|(
 operator|(
 expr|struct
 name|rt_msghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|p
@@ -9620,6 +9769,10 @@ operator|(
 operator|(
 expr|struct
 name|rt_msghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|p
@@ -9682,6 +9835,10 @@ operator|(
 operator|(
 expr|struct
 name|rt_msghdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|p
@@ -10088,6 +10245,7 @@ comment|/*  * remove specified route from the internal routing table.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|rt_del
 parameter_list|(
@@ -10615,6 +10773,7 @@ comment|/*  * remove specified address from internal interface/routing table.  *
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|rt_deladdr
 parameter_list|(
@@ -11246,6 +11405,7 @@ comment|/*  * Get each interface address and put those interface routes to the r
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ifrt
 parameter_list|(
@@ -11804,6 +11964,7 @@ comment|/*  * there are couple of p2p interface routing models.  "behavior" lets
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ifrt_p2p
 parameter_list|(
@@ -12503,6 +12664,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|getifmtu
 parameter_list|(
@@ -12663,6 +12825,10 @@ expr|struct
 name|if_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 name|mtu
@@ -12701,6 +12867,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -12857,6 +13024,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -13112,6 +13280,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -13277,6 +13446,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|krtread
 parameter_list|(
@@ -13561,6 +13731,10 @@ expr|struct
 name|rt_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 expr_stmt|;
 name|rt_entry
@@ -13580,6 +13754,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rt_entry
 parameter_list|(
@@ -13766,6 +13941,10 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|rtmp
 expr_stmt|;
 name|rtmp
@@ -13791,6 +13970,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|rtmp
@@ -13821,6 +14004,10 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|rtmp
 expr_stmt|;
 name|rtmp
@@ -13849,6 +14036,10 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|rtmp
 expr_stmt|;
 name|rtmp
@@ -13875,6 +14066,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|rtmp
@@ -14533,6 +14728,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|addroute
 parameter_list|(
@@ -14733,6 +14929,10 @@ expr|struct
 name|rt_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 name|rtm
@@ -14809,6 +15009,10 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|buf
 index|[
@@ -14849,6 +15053,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -14916,6 +15124,10 @@ name|sockaddr_in6
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 operator|(
 name|char
 operator|*
@@ -14966,6 +15178,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -15112,6 +15328,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|delroute
 parameter_list|(
@@ -15247,6 +15464,10 @@ expr|struct
 name|rt_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 name|rtm
@@ -15325,6 +15546,10 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|buf
 index|[
@@ -15365,6 +15590,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -15411,6 +15640,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -15464,6 +15697,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -15609,323 +15846,25 @@ return|;
 block|}
 end_function
 
-begin_function
-name|struct
-name|in6_addr
-modifier|*
-name|getroute
-parameter_list|(
-name|struct
-name|netinfo6
-modifier|*
-name|np
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-name|gw
-parameter_list|)
-block|{
-name|u_char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|int
-name|myseq
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|struct
-name|rt_msghdr
-modifier|*
-name|rtm
-decl_stmt|;
-name|struct
-name|sockaddr_in6
-modifier|*
-name|sin6
-decl_stmt|;
-name|rtm
-operator|=
-operator|(
-expr|struct
-name|rt_msghdr
-operator|*
-operator|)
-name|buf
-expr_stmt|;
-name|len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rt_msghdr
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in6
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|rtm
-argument_list|,
+begin_if
+if|#
+directive|if
 literal|0
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|rtm
-operator|->
-name|rtm_type
-operator|=
-name|RTM_GET
-expr_stmt|;
-name|rtm
-operator|->
-name|rtm_version
-operator|=
-name|RTM_VERSION
-expr_stmt|;
-name|myseq
-operator|=
-operator|++
-name|seq
-expr_stmt|;
-name|rtm
-operator|->
-name|rtm_seq
-operator|=
-name|myseq
-expr_stmt|;
-name|rtm
-operator|->
-name|rtm_addrs
-operator|=
-name|RTA_DST
-expr_stmt|;
-name|rtm
-operator|->
-name|rtm_msglen
-operator|=
-name|len
-expr_stmt|;
-name|sin6
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-operator|&
-name|buf
-index|[
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rt_msghdr
-argument_list|)
-index|]
-expr_stmt|;
-name|sin6
-operator|->
-name|sin6_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in6
-argument_list|)
-expr_stmt|;
-name|sin6
-operator|->
-name|sin6_family
-operator|=
-name|AF_INET6
-expr_stmt|;
-name|sin6
-operator|->
-name|sin6_addr
-operator|=
-name|np
-operator|->
-name|rip6_dest
-expr_stmt|;
-if|if
-condition|(
-name|write
-argument_list|(
-name|rtsock
-argument_list|,
-name|buf
-argument_list|,
-name|len
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|==
-name|ESRCH
-condition|)
+end_if
+
+begin_comment
+unit|static struct in6_addr * getroute(struct netinfo6 *np, struct in6_addr *gw) { 	u_char buf[BUFSIZ]; 	int myseq; 	int len; 	struct rt_msghdr *rtm; 	struct sockaddr_in6 *sin6;  	rtm = (struct rt_msghdr *)(void *)buf; 	len = sizeof(struct rt_msghdr) + sizeof(struct sockaddr_in6); 	memset(rtm, 0, len); 	rtm->rtm_type = RTM_GET; 	rtm->rtm_version = RTM_VERSION; 	myseq = ++seq; 	rtm->rtm_seq = myseq; 	rtm->rtm_addrs = RTA_DST; 	rtm->rtm_msglen = len; 	sin6 = (struct sockaddr_in6 *)(void *)&buf[sizeof(struct rt_msghdr)]; 	sin6->sin6_len = sizeof(struct sockaddr_in6); 	sin6->sin6_family = AF_INET6; 	sin6->sin6_addr = np->rip6_dest; 	if (write(rtsock, buf, len)< 0) { 		if (errno == ESRCH)
 comment|/* No such route found */
-return|return
-name|NULL
-return|;
-name|perror
-argument_list|(
-literal|"write to rtsock"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-do|do
-block|{
-if|if
-condition|(
-operator|(
-name|len
-operator|=
-name|read
-argument_list|(
-name|rtsock
-argument_list|,
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"read from rtsock"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|rtm
-operator|=
-operator|(
-expr|struct
-name|rt_msghdr
-operator|*
-operator|)
-name|buf
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|rtm
-operator|->
-name|rtm_seq
-operator|!=
-name|myseq
-operator|||
-name|rtm
-operator|->
-name|rtm_pid
-operator|!=
-name|pid
-condition|)
-do|;
-name|sin6
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-operator|&
-name|buf
-index|[
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rt_msghdr
-argument_list|)
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|rtm
-operator|->
-name|rtm_addrs
-operator|&
-name|RTA_DST
-condition|)
-block|{
-name|sin6
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|sin6
-operator|+
-name|ROUNDUP
-argument_list|(
-name|sin6
-operator|->
-name|sin6_len
-argument_list|)
-operator|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|rtm
-operator|->
-name|rtm_addrs
-operator|&
-name|RTA_GATEWAY
-condition|)
-block|{
-operator|*
-name|gw
-operator|=
-name|sin6
-operator|->
-name|sin6_addr
-expr_stmt|;
-return|return
-name|gw
-return|;
-block|}
-return|return
-name|NULL
-return|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|return NULL; 		perror("write to rtsock"); 		exit(1); 	} 	do { 		if ((len = read(rtsock, buf, sizeof(buf)))< 0) { 			perror("read from rtsock"); 			exit(1); 		} 		rtm = (struct rt_msghdr *)(void *)buf; 	} while (rtm->rtm_seq != myseq || rtm->rtm_pid != pid); 	sin6 = (struct sockaddr_in6 *)(void *)&buf[sizeof(struct rt_msghdr)]; 	if (rtm->rtm_addrs& RTA_DST) { 		sin6 = (struct sockaddr_in6 *)(void *) 			((char *)sin6 + ROUNDUP(sin6->sin6_len)); 	} 	if (rtm->rtm_addrs& RTA_GATEWAY) { 		*gw = sin6->sin6_addr; 		return gw; 	} 	return NULL; }
+endif|#
+directive|endif
+end_endif
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -15969,6 +15908,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ifrtdump
 parameter_list|(
@@ -15990,6 +15930,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ifdump
 parameter_list|(
@@ -16195,6 +16136,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ifdump0
 parameter_list|(
@@ -16508,6 +16450,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rtdump
 parameter_list|(
@@ -16774,6 +16717,7 @@ comment|/*  * Parse the -A (and -O) options and put corresponding filter object 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|filterconfig
 parameter_list|(
@@ -17407,6 +17351,7 @@ comment|/*  * Returns a pointer to ifac whose address and prefix length matches 
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ifac
 modifier|*
@@ -17475,6 +17420,7 @@ comment|/*  * Return a pointer to riprt structure whose address and prefix lengt
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|riprt
 modifier|*
@@ -17538,6 +17484,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sin6mask2len
 parameter_list|(
@@ -17573,6 +17520,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mask2len
 parameter_list|(
@@ -17724,71 +17672,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|applymask
-parameter_list|(
-name|struct
-name|in6_addr
-modifier|*
-name|addr
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-name|mask
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|u_long
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|q
-decl_stmt|;
-name|p
-operator|=
-operator|(
-name|u_long
-operator|*
-operator|)
-name|addr
-expr_stmt|;
-name|q
-operator|=
-operator|(
-name|u_long
-operator|*
-operator|)
-name|mask
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-operator|*
-name|p
-operator|++
-operator|&=
-operator|*
-name|q
-operator|++
-expr_stmt|;
-block|}
-end_function
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -17819,6 +17702,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|applyplen
 parameter_list|(
@@ -17927,6 +17811,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|struct
 name|in6_addr
 modifier|*
@@ -18024,6 +17909,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|allocopy
@@ -18085,6 +17971,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|hms
@@ -18178,6 +18065,7 @@ comment|/* 30 +- 15, max - min = 30 */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ripinterval
 parameter_list|(
@@ -18227,63 +18115,21 @@ return|;
 block|}
 end_function
 
-begin_function
-name|time_t
-name|ripsuptrig
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|time_t
-name|t
-decl_stmt|;
-name|double
-name|r
-init|=
-name|rand
-argument_list|()
-decl_stmt|;
-name|t
-operator|=
-call|(
-name|int
-call|)
-argument_list|(
-name|RIP_TRIG_INT6_MIN
-operator|+
-operator|(
-name|RIP_TRIG_INT6_MAX
-operator|-
-name|RIP_TRIG_INT6_MIN
-operator|)
-operator|*
-operator|(
-name|r
-operator|/
-name|RAND_MAX
-operator|)
-argument_list|)
-expr_stmt|;
-name|sup_trig_update
-operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|+
-name|t
-expr_stmt|;
-return|return
-name|t
-return|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static time_t ripsuptrig(void) { 	time_t t;  	double r = rand(); 	t  = (int)(RIP_TRIG_INT6_MIN + 		(RIP_TRIG_INT6_MAX - RIP_TRIG_INT6_MIN) * (r / RAND_MAX)); 	sup_trig_update = time(NULL) + t; 	return t; }
+endif|#
+directive|endif
+end_endif
 
 begin_function
+specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|fatal
 parameter_list|(
 specifier|const
@@ -18293,21 +18139,6 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|fatal
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|ap
@@ -18318,9 +18149,6 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -18328,15 +18156,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vsnprintf
 argument_list|(
 name|buf
@@ -18396,10 +18215,8 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|tracet
 parameter_list|(
 name|int
@@ -18412,26 +18229,6 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|tracet
-parameter_list|(
-name|level
-parameter_list|,
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|int
-name|level
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|ap
@@ -18443,9 +18240,6 @@ operator|<=
 name|dflag
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -18453,15 +18247,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -18492,9 +18277,6 @@ condition|(
 name|dflag
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -18502,15 +18284,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|level
@@ -18546,10 +18319,8 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|trace
 parameter_list|(
 name|int
@@ -18562,26 +18333,6 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|trace
-parameter_list|(
-name|level
-parameter_list|,
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|int
-name|level
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|ap
@@ -18593,9 +18344,6 @@ operator|<=
 name|dflag
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -18603,15 +18351,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vfprintf
 argument_list|(
 name|stderr
@@ -18632,9 +18371,6 @@ condition|(
 name|dflag
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -18642,15 +18378,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|level
@@ -18686,79 +18413,7 @@ block|}
 end_function
 
 begin_function
-name|unsigned
-name|int
-name|if_maxindex
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|if_nameindex
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|p0
-decl_stmt|;
-name|unsigned
-name|int
-name|max
-init|=
-literal|0
-decl_stmt|;
-name|p0
-operator|=
-name|if_nameindex
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|p0
-init|;
-name|p
-operator|&&
-name|p
-operator|->
-name|if_index
-operator|&&
-name|p
-operator|->
-name|if_name
-condition|;
-name|p
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|max
-operator|<
-name|p
-operator|->
-name|if_index
-condition|)
-name|max
-operator|=
-name|p
-operator|->
-name|if_index
-expr_stmt|;
-block|}
-name|if_freenameindex
-argument_list|(
-name|p0
-argument_list|)
-expr_stmt|;
-return|return
-name|max
-return|;
-block|}
-end_function
-
-begin_function
+specifier|static
 name|struct
 name|ifc
 modifier|*
@@ -18807,6 +18462,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|iff
 modifier|*
@@ -18858,6 +18514,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|setindex2ifc
 parameter_list|(

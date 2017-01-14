@@ -41,7 +41,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 specifier|const
 name|u_char
 modifier|*
@@ -60,13 +59,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 specifier|const
 name|u_char
 modifier|*
 name|end
 decl_stmt|;
-specifier|register
 name|u_char
 name|mask
 decl_stmt|;

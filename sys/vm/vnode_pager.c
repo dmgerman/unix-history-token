@@ -4425,7 +4425,7 @@ literal|1
 init|,
 name|prev
 init|=
-literal|1
+literal|0
 init|;
 name|j
 operator|<

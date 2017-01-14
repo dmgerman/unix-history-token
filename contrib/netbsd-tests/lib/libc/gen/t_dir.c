@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_dir.c,v 1.8 2017/01/11 07:26:17 christos Exp $ */
+comment|/* $NetBSD: t_dir.c,v 1.10 2017/01/11 18:15:02 christos Exp $ */
 end_comment
 
 begin_comment
@@ -207,11 +207,43 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+name|ATF_REQUIRE_MSG
+argument_list|(
+name|entry
+operator|!=
+name|NULL
+argument_list|,
+literal|"readdir[%s] failed: %s"
+argument_list|,
+literal|"."
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|entry
 operator|=
 name|readdir
 argument_list|(
 name|dp
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE_MSG
+argument_list|(
+name|entry
+operator|!=
+name|NULL
+argument_list|,
+literal|"readdir[%s] failed: %s"
+argument_list|,
+literal|".."
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* get first entry */
@@ -220,6 +252,22 @@ operator|=
 name|readdir
 argument_list|(
 name|dp
+argument_list|)
+expr_stmt|;
+name|ATF_REQUIRE_MSG
+argument_list|(
+name|entry
+operator|!=
+name|NULL
+argument_list|,
+literal|"readdir[%s] failed: %s"
+argument_list|,
+literal|"first"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|here
@@ -252,16 +300,15 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|ATF_REQUIRE_MSG
 argument_list|(
 name|entry
 operator|!=
 name|NULL
 argument_list|,
-literal|"readdir failed: %s"
+literal|"readdir[%s] failed: %s"
+argument_list|,
+literal|"second"
 argument_list|,
 name|strerror
 argument_list|(
@@ -269,8 +316,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|wasname
 operator|=
 name|strdup
@@ -299,6 +344,22 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+name|ATF_REQUIRE_MSG
+argument_list|(
+name|entry
+operator|!=
+name|NULL
+argument_list|,
+literal|"readdir[%s] failed: %s"
+argument_list|,
+literal|"third"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* try to return to the position after the first entry */
 name|seekdir
 argument_list|(
@@ -314,15 +375,20 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|entry
-operator|==
-name|NULL
-condition|)
-name|atf_tc_fail
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|"entry 1 not found"
+name|entry
+operator|!=
+name|NULL
+argument_list|,
+literal|"readdir[%s] failed: %s"
+argument_list|,
+literal|"first[1]"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -365,15 +431,20 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|entry
-operator|==
-name|NULL
-condition|)
-name|atf_tc_fail
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|"entry 2 not found"
+name|entry
+operator|!=
+name|NULL
+argument_list|,
+literal|"readdir[%s] failed: %s"
+argument_list|,
+literal|"second[1]"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -409,15 +480,20 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|entry
-operator|==
-name|NULL
-condition|)
-name|atf_tc_fail
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|"entry 3 not found"
+name|entry
+operator|!=
+name|NULL
+argument_list|,
+literal|"readdir[%s] failed: %s"
+argument_list|,
+literal|"third[1]"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

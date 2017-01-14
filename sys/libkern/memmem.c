@@ -51,7 +51,6 @@ name|size_t
 name|s_len
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cur

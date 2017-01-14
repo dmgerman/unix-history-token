@@ -121,6 +121,38 @@ parameter_list|)
 value|(sizeof(__x) / sizeof(__x[0]))
 end_define
 
+begin_comment
+comment|/* __BIT(n): nth bit, where __BIT(0) == 0x1. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__BIT
+parameter_list|(
+name|__n
+parameter_list|)
+define|\
+value|(((uintmax_t)(__n)>= NBBY * sizeof(uintmax_t)) ? 0 : \     ((uintmax_t)1<< (uintmax_t)((__n)& (NBBY * sizeof(uintmax_t) - 1))))
+end_define
+
+begin_comment
+comment|/* __BITS(m, n): bits m through n, m< n. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__BITS
+parameter_list|(
+name|__m
+parameter_list|,
+name|__n
+parameter_list|)
+define|\
+value|((__BIT(MAX((__m), (__n)) + 1) - 1) ^ (__BIT(MIN((__m), (__n))) - 1))
+end_define
+
 begin_endif
 endif|#
 directive|endif

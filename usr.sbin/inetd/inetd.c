@@ -242,11 +242,22 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBWRAP
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<tcpd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1463,6 +1474,12 @@ comment|/* success */
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBWRAP
+end_ifdef
+
 begin_function
 specifier|static
 name|sa_family_t
@@ -1536,6 +1553,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|main
@@ -1601,6 +1623,9 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|LIBWRAP
 name|struct
 name|request_info
 name|req
@@ -1614,6 +1639,8 @@ name|service
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sockaddr_storage
 name|peer
@@ -3697,6 +3724,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|LIBWRAP
 if|if
 condition|(
 name|ISWRAP
@@ -3886,6 +3916,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|sep

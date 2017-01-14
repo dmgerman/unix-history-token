@@ -1653,6 +1653,34 @@ name|subdisks
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|sectorsize
+operator|*
+literal|4
+operator|>
+name|MAXPHYS
+condition|)
+block|{
+name|G_RAID_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: Blocksize is too big."
+argument_list|,
+name|pp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|subdisks
+operator|)
+return|;
+block|}
 name|next
 label|:
 comment|/* Read metadata block. */

@@ -529,6 +529,13 @@ name|SFXGE_EV_BATCH
 value|16384
 end_define
 
+begin_define
+define|#
+directive|define
+name|SFXGE_STATS_UPDATE_PERIOD_MS
+value|1000
+end_define
+
 begin_struct
 struct|struct
 name|sfxge_evq
@@ -805,6 +812,9 @@ decl_stmt|;
 name|struct
 name|sfxge_hw_stats
 name|mac_stats
+decl_stmt|;
+name|uint16_t
+name|stats_update_period_ms
 decl_stmt|;
 name|efx_link_mode_t
 name|link_mode

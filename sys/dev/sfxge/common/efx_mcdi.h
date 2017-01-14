@@ -584,7 +584,7 @@ name|esmp
 parameter_list|,
 name|__in
 name|uint16_t
-name|period
+name|period_ms
 parameter_list|,
 name|__in
 name|boolean_t

@@ -155,7 +155,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ttyoutq_setsize
 parameter_list|(
 name|struct
@@ -219,6 +219,27 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tty_gone
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+block|{
+name|uma_zfree
+argument_list|(
+name|ttyoutq_zone
+argument_list|,
+name|tob
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|TTYOUTQ_INSERT_TAIL
 argument_list|(
 name|to
@@ -227,6 +248,11 @@ name|tob
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

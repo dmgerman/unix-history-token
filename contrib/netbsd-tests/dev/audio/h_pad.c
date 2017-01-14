@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: h_pad.c,v 1.1 2010/08/04 13:15:15 pooka Exp $	*/
+comment|/*	$NetBSD: h_pad.c,v 1.2 2016/10/15 07:08:06 nat Exp $	*/
 end_comment
 
 begin_comment
@@ -114,29 +114,6 @@ decl_stmt|;
 name|rump_init
 argument_list|()
 expr_stmt|;
-name|audiofd
-operator|=
-name|rump_sys_open
-argument_list|(
-literal|"/dev/audio0"
-argument_list|,
-name|O_RDWR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|audiofd
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"open audio"
-argument_list|)
-expr_stmt|;
 name|padfd
 operator|=
 name|rump_sys_open
@@ -158,6 +135,29 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"open pad"
+argument_list|)
+expr_stmt|;
+name|audiofd
+operator|=
+name|rump_sys_open
+argument_list|(
+literal|"/dev/audio0"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|audiofd
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"open audio"
 argument_list|)
 expr_stmt|;
 if|if

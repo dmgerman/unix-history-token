@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_print.c,v 1.1 2014/12/02 19:48:21 christos Exp $	*/
+comment|/*	$NetBSD: t_print.c,v 1.2 2016/08/27 11:30:49 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_print.c,v 1.1 2014/12/02 19:48:21 christos Exp $"
+literal|"$NetBSD: t_print.c,v 1.2 2016/08/27 11:30:49 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -639,6 +639,26 @@ operator|&
 name|sdl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|3
+condition|)
+name|e
+operator|=
+name|snprintf
+argument_list|(
+name|res
+argument_list|,
+name|l
+argument_list|,
+literal|"link#%zu"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+else|else
 name|e
 operator|=
 name|snprintf
@@ -740,6 +760,26 @@ operator|&
 name|sdl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|3
+condition|)
+name|e
+operator|=
+name|snprintf
+argument_list|(
+name|res
+argument_list|,
+name|l
+argument_list|,
+literal|"link#%zu"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+else|else
 name|e
 operator|=
 name|snprintf

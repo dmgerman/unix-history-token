@@ -134,6 +134,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|test_num
 decl_stmt|;
@@ -291,10 +292,11 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|size_t
+name|i
+decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|i
 decl_stmt|;
 for|for
 control|(
@@ -460,7 +462,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"not ok %d # bsde_parse_rule_string: '%s' (%d) "
+literal|"not ok %d # bsde_parse_rule_string: '%s' (%zu) "
 literal|"failed: %s\n"
 argument_list|,
 name|test_num
@@ -667,7 +669,7 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"1..%lu\n"
+literal|"1..%zu\n"
 argument_list|,
 name|nitems
 argument_list|(

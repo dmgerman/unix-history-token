@@ -702,6 +702,12 @@ name|d_descr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|d
+operator|->
+name|d_rotation_rate
+operator|=
+name|DISK_RR_NON_ROTATING
+expr_stmt|;
 comment|/* 	 * Display in most natural units.  There's no cards< 1MB.  The SD 	 * standard goes to 2GiB due to its reliance on FAT, but the data 	 * format supports up to 4GiB and some card makers push it up to this 	 * limit.  The SDHC standard only goes to 32GiB due to FAT32, but the 	 * data format supports up to 2TiB however. 2048GB isn't too ugly, so 	 * we note it in passing here and don't add the code to print 	 * TB). Since these cards are sold in terms of MB and GB not MiB and 	 * GiB, report them like that. We also round to the nearest unit, since 	 * many cards are a few percent short, even of the power of 10 size. 	 */
 name|mb
 operator|=

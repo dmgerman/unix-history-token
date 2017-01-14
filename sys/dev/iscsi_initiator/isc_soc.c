@@ -3736,13 +3736,6 @@ operator|->
 name|td
 argument_list|)
 expr_stmt|;
-name|fputsock
-argument_list|(
-name|sp
-operator|->
-name|soc
-argument_list|)
-expr_stmt|;
 name|sp
 operator|->
 name|soc

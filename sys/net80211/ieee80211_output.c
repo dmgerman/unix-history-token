@@ -177,6 +177,12 @@ directive|include
 file|<net80211/ieee80211_mesh.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_vht.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -2816,6 +2822,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * XXX TODO: this is what the TX lock is for. 	 * Here we're incrementing sequence numbers, and they 	 * need to be in lock-step with what the driver is doing 	 * both in TX ordering and crypto encap (IV increment.) 	 * 	 * If the driver does seqno itself, then we can skip 	 * assigning sequence numbers here, and we can avoid 	 * requiring the TX lock. 	 */
 name|tap
 operator|=
 operator|&
@@ -6386,6 +6393,7 @@ index|]
 operator||=
 name|IEEE80211_QOS_AMSDU
 expr_stmt|;
+comment|/* 		 * XXX TODO TX lock is needed for atomic updates of sequence 		 * numbers.  If the driver does it, then don't do it here; 		 * and we don't need the TX lock held. 		 */
 if|if
 condition|(
 operator|(
@@ -6437,6 +6445,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* 		 * XXX TODO TX lock is needed for atomic updates of sequence 		 * numbers.  If the driver does it, then don't do it here; 		 * and we don't need the TX lock held. 		 */
 name|seqno
 operator|=
 name|ni
@@ -8802,6 +8811,10 @@ begin_comment
 comment|/*  * Send a probe request frame with the specified ssid  * and any optional information element data.  */
 end_comment
 
+begin_comment
+comment|/* XXX VHT? */
+end_comment
+
 begin_function
 name|int
 name|ieee80211_send_probereq
@@ -8975,7 +8988,7 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-comment|/* 	 * prreq frame format 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[tlv] RSN (optional) 	 *	[tlv] extended supported rates 	 *	[tlv] HT cap (optional) 	 *	[tlv] WPA (optional) 	 *	[tlv] user-specified ie's 	 */
+comment|/* 	 * prreq frame format 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[tlv] RSN (optional) 	 *	[tlv] extended supported rates 	 *	[tlv] HT cap (optional) 	 *	[tlv] VHT cap (optional) 	 *	[tlv] WPA (optional) 	 *	[tlv] user-specified ie's 	 */
 name|m
 operator|=
 name|ieee80211_getmgtframe
@@ -9010,8 +9023,15 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
+name|ieee80211_ie_vhtcap
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
 name|ieee80211_ie_htinfo
 argument_list|)
+comment|/* XXX not needed? */
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -9180,6 +9200,13 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * XXX TODO: need to figure out what/how to update the 	 * VHT channel. 	 */
+if|#
+directive|if
+literal|0
+block|(vap->iv_flags_vht& IEEE80211_FVHT_VHT) { 		struct ieee80211_channel *c;  		c = ieee80211_ht_adjust_channel(ic, ic->ic_curchan, 		    vap->iv_flags_ht); 		c = ieee80211_vht_adjust_channel(ic, c, vap->iv_flags_vht); 		frm = ieee80211_add_vhtcap_ch(frm, vap, c); 	}
+endif|#
+directive|endif
 name|frm
 operator|=
 name|ieee80211_add_wpa
@@ -10228,7 +10255,8 @@ case|:
 case|case
 name|IEEE80211_FC0_SUBTYPE_REASSOC_REQ
 case|:
-comment|/* 		 * asreq frame format 		 *	[2] capability information 		 *	[2] listen interval 		 *	[6*] current AP address (reassoc only) 		 *	[tlv] ssid 		 *	[tlv] supported rates 		 *	[tlv] extended supported rates 		 *	[4] power capability (optional) 		 *	[28] supported channels (optional) 		 *	[tlv] HT capabilities 		 *	[tlv] WME (optional) 		 *	[tlv] Vendor OUI HT capabilities (optional) 		 *	[tlv] Atheros capabilities (if negotiated) 		 *	[tlv] AppIE's (optional) 		 */
+comment|/* XXX VHT? */
+comment|/* 		 * asreq frame format 		 *	[2] capability information 		 *	[2] listen interval 		 *	[6*] current AP address (reassoc only) 		 *	[tlv] ssid 		 *	[tlv] supported rates 		 *	[tlv] extended supported rates 		 *	[4] power capability (optional) 		 *	[28] supported channels (optional) 		 *	[tlv] HT capabilities 		 *	[tlv] VHT capabilities 		 *	[tlv] WME (optional) 		 *	[tlv] Vendor OUI HT capabilities (optional) 		 *	[tlv] Atheros capabilities (if negotiated) 		 *	[tlv] AppIE's (optional) 		 */
 name|m
 operator|=
 name|ieee80211_getmgtframe
@@ -10290,6 +10318,12 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|ieee80211_ie_htcap
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_ie_vhtcap
 argument_list|)
 operator|+
 literal|4
@@ -10654,6 +10688,53 @@ name|ni
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|vap
+operator|->
+name|iv_flags_vht
+operator|&
+name|IEEE80211_FVHT_VHT
+operator|)
+operator|&&
+name|IEEE80211_IS_CHAN_VHT
+argument_list|(
+name|ni
+operator|->
+name|ni_chan
+argument_list|)
+operator|&&
+name|ni
+operator|->
+name|ni_ies
+operator|.
+name|vhtcap_ie
+operator|!=
+name|NULL
+operator|&&
+name|ni
+operator|->
+name|ni_ies
+operator|.
+name|vhtcap_ie
+index|[
+literal|0
+index|]
+operator|==
+name|IEEE80211_ELEMID_VHT_CAP
+condition|)
+block|{
+name|frm
+operator|=
+name|ieee80211_add_vhtcap
+argument_list|(
+name|frm
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
+block|}
 name|frm
 operator|=
 name|ieee80211_add_wpa
@@ -10861,7 +10942,7 @@ case|:
 case|case
 name|IEEE80211_FC0_SUBTYPE_REASSOC_RESP
 case|:
-comment|/* 		 * asresp frame format 		 *	[2] capability information 		 *	[2] status 		 *	[2] association ID 		 *	[tlv] supported rates 		 *	[tlv] extended supported rates 		 *	[tlv] HT capabilities (standard, if STA enabled) 		 *	[tlv] HT information (standard, if STA enabled) 		 *	[tlv] WME (if configured and STA enabled) 		 *	[tlv] HT capabilities (vendor OUI, if STA enabled) 		 *	[tlv] HT information (vendor OUI, if STA enabled) 		 *	[tlv] Atheros capabilities (if STA enabled) 		 *	[tlv] AppIE's (optional) 		 */
+comment|/* 		 * asresp frame format 		 *	[2] capability information 		 *	[2] status 		 *	[2] association ID 		 *	[tlv] supported rates 		 *	[tlv] extended supported rates 		 *	[tlv] HT capabilities (standard, if STA enabled) 		 *	[tlv] HT information (standard, if STA enabled) 		 *	[tlv] VHT capabilities (standard, if STA enabled) 		 *	[tlv] VHT information (standard, if STA enabled) 		 *	[tlv] WME (if configured and STA enabled) 		 *	[tlv] HT capabilities (vendor OUI, if STA enabled) 		 *	[tlv] HT information (vendor OUI, if STA enabled) 		 *	[tlv] Atheros capabilities (if STA enabled) 		 *	[tlv] AppIE's (optional) 		 */
 name|m
 operator|=
 name|ieee80211_getmgtframe
@@ -10921,6 +11002,18 @@ name|ieee80211_ie_htinfo
 argument_list|)
 operator|+
 literal|4
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_ie_vhtcap
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_ie_vht_operation
+argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -11166,6 +11259,34 @@ expr_stmt|;
 name|frm
 operator|=
 name|ieee80211_add_htinfo_vendor
+argument_list|(
+name|frm
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_VHT
+condition|)
+block|{
+name|frm
+operator|=
+name|ieee80211_add_vhtcap
+argument_list|(
+name|frm
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
+name|frm
+operator|=
+name|ieee80211_add_vhtinfo
 argument_list|(
 name|frm
 argument_list|,
@@ -11465,6 +11586,10 @@ end_function
 
 begin_comment
 comment|/*  * Return an mbuf with a probe response frame in it.  * Space is left to prepend and 802.11 header at the  * front but it's left to the caller to fill in.  */
+end_comment
+
+begin_comment
+comment|/* XXX VHT? */
 end_comment
 
 begin_function
@@ -12996,6 +13121,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* XXX VHT? */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -13057,7 +13186,7 @@ decl_stmt|;
 name|uint16_t
 name|capinfo
 decl_stmt|;
-comment|/* 	 * beacon frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] cabability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[3] parameter set (DS) 	 *	[8] CF parameter set (optional) 	 *	[tlv] parameter set (IBSS/TIM) 	 *	[tlv] country (optional) 	 *	[3] power control (optional) 	 *	[5] channel switch announcement (CSA) (optional) 	 *	[tlv] extended rate phy (ERP) 	 *	[tlv] extended supported rates 	 *	[tlv] RSN parameters 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 * XXX Vendor-specific OIDs (e.g. Atheros) 	 *	[tlv] WPA parameters 	 *	[tlv] WME parameters 	 *	[tlv] Vendor OUI HT capabilities (optional) 	 *	[tlv] Vendor OUI HT information (optional) 	 *	[tlv] Atheros capabilities (optional) 	 *	[tlv] TDMA parameters (optional) 	 *	[tlv] Mesh ID (MBSS) 	 *	[tlv] Mesh Conf (MBSS) 	 *	[tlv] application data (optional) 	 */
+comment|/* 	 * beacon frame format 	 * 	 * TODO: update to 802.11-2012; a lot of stuff has changed; 	 * vendor extensions should be at the end, etc. 	 * 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] cabability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[3] parameter set (DS) 	 *	[8] CF parameter set (optional) 	 *	[tlv] parameter set (IBSS/TIM) 	 *	[tlv] country (optional) 	 *	[3] power control (optional) 	 *	[5] channel switch announcement (CSA) (optional) 	 * XXX TODO: Quiet 	 * XXX TODO: IBSS DFS 	 * XXX TODO: TPC report 	 *	[tlv] extended rate phy (ERP) 	 *	[tlv] extended supported rates 	 *	[tlv] RSN parameters 	 * XXX TODO: BSSLOAD 	 * (XXX EDCA parameter set, QoS capability?) 	 * XXX TODO: AP channel report 	 * 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	XXX TODO: 20/40 BSS coexistence 	 * Mesh: 	 * XXX TODO: Meshid 	 * XXX TODO: mesh config 	 * XXX TODO: mesh awake window 	 * XXX TODO: beacon timing (mesh, etc) 	 * XXX TODO: MCCAOP Advertisement Overview 	 * XXX TODO: MCCAOP Advertisement 	 * XXX TODO: Mesh channel switch parameters 	 * VHT: 	 * XXX TODO: VHT capabilities 	 * XXX TODO: VHT operation 	 * XXX TODO: VHT transmit power envelope 	 * XXX TODO: channel switch wrapper element 	 * XXX TODO: extended BSS load element 	 * 	 * XXX Vendor-specific OIDs (e.g. Atheros) 	 *	[tlv] WPA parameters 	 *	[tlv] WME parameters 	 *	[tlv] Vendor OUI HT capabilities (optional) 	 *	[tlv] Vendor OUI HT information (optional) 	 *	[tlv] Atheros capabilities (optional) 	 *	[tlv] TDMA parameters (optional) 	 *	[tlv] Mesh ID (MBSS) 	 *	[tlv] Mesh Conf (MBSS) 	 *	[tlv] application data (optional) 	 */
 name|memset
 argument_list|(
 name|bo
@@ -13629,6 +13758,44 @@ name|ni
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_VHT
+argument_list|(
+name|ni
+operator|->
+name|ni_chan
+argument_list|)
+condition|)
+block|{
+name|frm
+operator|=
+name|ieee80211_add_vhtcap
+argument_list|(
+name|frm
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
+name|bo
+operator|->
+name|bo_vhtinfo
+operator|=
+name|frm
+expr_stmt|;
+name|frm
+operator|=
+name|ieee80211_add_vhtinfo
+argument_list|(
+name|frm
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
+comment|/* Transmit power envelope */
+comment|/* Channel switch wrapper element */
+comment|/* Extended bss load element */
+block|}
 name|frm
 operator|=
 name|ieee80211_add_wpa
@@ -13800,6 +13967,7 @@ name|iv_appie_beacon
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX TODO: move meshid/meshconf up to before vendor extensions? */
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_MESH
@@ -13886,6 +14054,10 @@ begin_comment
 comment|/*  * Allocate a beacon frame and fillin the appropriate bits.  */
 end_comment
 
+begin_comment
+comment|/* XXX VHT? */
+end_comment
+
 begin_function
 name|struct
 name|mbuf
@@ -13942,7 +14114,8 @@ name|uint8_t
 modifier|*
 name|frm
 decl_stmt|;
-comment|/* 	 * beacon frame format 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] cabability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[3] parameter set (DS) 	 *	[8] CF parameter set (optional) 	 *	[tlv] parameter set (IBSS/TIM) 	 *	[tlv] country (optional) 	 *	[3] power control (optional) 	 *	[5] channel switch announcement (CSA) (optional) 	 *	[tlv] extended rate phy (ERP) 	 *	[tlv] extended supported rates 	 *	[tlv] RSN parameters 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	[tlv] Vendor OUI HT capabilities (optional) 	 *	[tlv] Vendor OUI HT information (optional) 	 * XXX Vendor-specific OIDs (e.g. Atheros) 	 *	[tlv] WPA parameters 	 *	[tlv] WME parameters 	 *	[tlv] TDMA parameters (optional) 	 *	[tlv] Mesh ID (MBSS) 	 *	[tlv] Mesh Conf (MBSS) 	 *	[tlv] application data (optional) 	 * NB: we allocate the max space required for the TIM bitmap. 	 * XXX how big is this? 	 */
+comment|/* 	 * beacon frame format 	 * 	 * Note: This needs updating for 802.11-2012. 	 * 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] cabability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[3] parameter set (DS) 	 *	[8] CF parameter set (optional) 	 *	[tlv] parameter set (IBSS/TIM) 	 *	[tlv] country (optional) 	 *	[3] power control (optional) 	 *	[5] channel switch announcement (CSA) (optional) 	 *	[tlv] extended rate phy (ERP) 	 *	[tlv] extended supported rates 	 *	[tlv] RSN parameters 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	[tlv] VHT capabilities 	 *	[tlv] VHT operation 	 *	[tlv] Vendor OUI HT capabilities (optional) 	 *	[tlv] Vendor OUI HT information (optional) 	 * XXX Vendor-specific OIDs (e.g. Atheros) 	 *	[tlv] WPA parameters 	 *	[tlv] WME parameters 	 *	[tlv] TDMA parameters (optional) 	 *	[tlv] Mesh ID (MBSS) 	 *	[tlv] Mesh Conf (MBSS) 	 *	[tlv] application data (optional) 	 * NB: we allocate the max space required for the TIM bitmap. 	 * XXX how big is this? 	 */
+comment|/* XXX VHT? */
 name|pktlen
 operator|=
 literal|8
@@ -14067,6 +14240,20 @@ expr|struct
 name|ieee80211_ie_htinfo
 argument_list|)
 comment|/* HT info */
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_ie_vhtcap
+argument_list|)
+comment|/* VHT caps */
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_ie_vht_operation
+argument_list|)
+comment|/* VHT info */
 operator|+
 operator|(
 name|vap
@@ -14472,6 +14659,7 @@ name|ieee80211_frame
 operator|*
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX TODO Strictly speaking this should be incremented with the TX 	 * lock held so as to serialise access to the non-qos TID sequence 	 * number space. 	 * 	 * If the driver identifies it does its own TX seqno management then 	 * we can skip this (and still not do the TX seqno.) 	 */
 name|seqno
 operator|=
 name|ni
@@ -14937,6 +15125,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* 			 * TODO: validate this! 			 */
 if|if
 condition|(
 name|timlen
@@ -14992,6 +15181,12 @@ expr_stmt|;
 name|bo
 operator|->
 name|bo_htinfo
+operator|+=
+name|adjust
+expr_stmt|;
+name|bo
+operator|->
+name|bo_vhtinfo
 operator|+=
 name|adjust
 expr_stmt|;
@@ -15238,6 +15433,16 @@ expr_stmt|;
 name|bo
 operator|->
 name|bo_htinfo
+operator|+=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|csa
+argument_list|)
+expr_stmt|;
+name|bo
+operator|->
+name|bo_vhtinfo
 operator|+=
 sizeof|sizeof
 argument_list|(

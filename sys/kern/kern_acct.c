@@ -1709,11 +1709,11 @@ decl_stmt|;
 name|int
 name|val
 decl_stmt|,
-name|exp
+name|exponent
 decl_stmt|;
 comment|/* Unnormalized value and exponent */
 name|int
-name|norm_exp
+name|norm_exponent
 decl_stmt|;
 comment|/* Normalized exponent */
 name|int
@@ -1742,7 +1742,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|exp
+name|exponent
 operator|=
 literal|0
 expr_stmt|;
@@ -1776,7 +1776,7 @@ operator|<
 name|CALC_BITS
 condition|)
 block|{
-name|exp
+name|exponent
 operator|=
 literal|0
 expr_stmt|;
@@ -1795,7 +1795,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|exp
+name|exponent
 operator|=
 name|log2_s
 operator|+
@@ -1825,13 +1825,13 @@ operator|.
 name|tv_usec
 operator|)
 operator|>>
-name|exp
+name|exponent
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 comment|/* Now normalize and pack the value into an IEEE-754 float. */
-name|norm_exp
+name|norm_exponent
 operator|=
 name|fls
 argument_list|(
@@ -1844,7 +1844,7 @@ name|shift
 operator|=
 name|FLT_MANT_DIG
 operator|-
-name|norm_exp
+name|norm_exponent
 operator|-
 literal|1
 expr_stmt|;
@@ -1857,11 +1857,11 @@ literal|"val=%d exp=%d shift=%d log2(val)=%d\n"
 argument_list|,
 name|val
 argument_list|,
-name|exp
+name|exponent
 argument_list|,
 name|shift
 argument_list|,
-name|norm_exp
+name|norm_exponent
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1872,9 +1872,9 @@ name|FLT_MAX_EXP
 operator|-
 literal|1
 operator|+
-name|exp
+name|exponent
 operator|+
-name|norm_exp
+name|norm_exponent
 argument_list|,
 operator|(
 operator|(
@@ -1910,9 +1910,9 @@ name|FLT_MAX_EXP
 operator|-
 literal|1
 operator|+
-name|exp
+name|exponent
 operator|+
-name|norm_exp
+name|norm_exponent
 operator|)
 operator|<<
 operator|(
@@ -1959,7 +1959,7 @@ name|val
 parameter_list|)
 block|{
 name|int
-name|norm_exp
+name|norm_exponent
 decl_stmt|;
 comment|/* Normalized exponent */
 name|int
@@ -1997,7 +1997,7 @@ operator|=
 name|LONG_MAX
 expr_stmt|;
 block|}
-name|norm_exp
+name|norm_exponent
 operator|=
 name|fls
 argument_list|(
@@ -2010,7 +2010,7 @@ name|shift
 operator|=
 name|FLT_MANT_DIG
 operator|-
-name|norm_exp
+name|norm_exponent
 operator|-
 literal|1
 expr_stmt|;
@@ -2025,7 +2025,7 @@ name|val
 argument_list|,
 name|shift
 argument_list|,
-name|norm_exp
+name|norm_exponent
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2038,7 +2038,7 @@ literal|1
 operator|+
 name|exp
 operator|+
-name|norm_exp
+name|norm_exponent
 argument_list|,
 operator|(
 operator|(
@@ -2074,7 +2074,7 @@ name|FLT_MAX_EXP
 operator|-
 literal|1
 operator|+
-name|norm_exp
+name|norm_exponent
 operator|)
 operator|<<
 operator|(

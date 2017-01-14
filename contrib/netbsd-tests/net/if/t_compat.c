@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_compat.c,v 1.1 2010/11/07 19:53:42 pooka Exp $	*/
+comment|/*	$NetBSD: t_compat.c,v 1.4 2016/11/12 15:12:59 kre Exp $	*/
 end_comment
 
 begin_include
@@ -256,6 +256,11 @@ argument_list|,
 literal|"1.7.64.10"
 argument_list|,
 literal|"255.255.0.0"
+argument_list|)
+expr_stmt|;
+name|atf_tc_expect_fail
+argument_list|(
+literal|"PR kern/51610: rump does not include COMPAT_43"
 argument_list|)
 expr_stmt|;
 comment|/* query kernel for iface bcast */
