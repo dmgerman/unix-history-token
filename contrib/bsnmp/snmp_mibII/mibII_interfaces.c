@@ -177,7 +177,7 @@ block|{
 case|case
 name|SNMP_DEPOP_COMMIT
 case|:
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
@@ -307,7 +307,7 @@ operator|&
 name|IFRB_FLAGS
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr1
 operator|.
@@ -457,7 +457,7 @@ operator|&
 name|IFRB_FLAGS
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.
