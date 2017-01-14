@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_msgsnd.c,v 1.2 2011/11/05 08:47:54 jruoho Exp $ */
+comment|/* $NetBSD: t_msgsnd.c,v 1.3 2017/01/13 20:44:45 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_msgsnd.c,v 1.2 2011/11/05 08:47:54 jruoho Exp $"
+literal|"$NetBSD: t_msgsnd.c,v 1.3 2017/01/13 20:44:45 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include

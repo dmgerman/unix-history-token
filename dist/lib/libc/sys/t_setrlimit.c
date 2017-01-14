@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_setrlimit.c,v 1.5 2016/07/13 09:53:16 njoly Exp $ */
+comment|/* $NetBSD: t_setrlimit.c,v 1.6 2017/01/13 21:16:38 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_setrlimit.c,v 1.5 2016/07/13 09:53:16 njoly Exp $"
+literal|"$NetBSD: t_setrlimit.c,v 1.6 2017/01/13 21:16:38 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -469,6 +469,11 @@ argument_list|(
 literal|"failed to set limit (%d)"
 argument_list|,
 name|lim
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 block|}

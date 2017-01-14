@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_write.c,v 1.2 2011/10/19 16:19:30 jruoho Exp $ */
+comment|/* $NetBSD: t_write.c,v 1.3 2017/01/13 19:27:23 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_write.c,v 1.2 2011/10/19 16:19:30 jruoho Exp $"
+literal|"$NetBSD: t_write.c,v 1.3 2017/01/13 19:27:23 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -33,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslimits.h>
 end_include
 
 begin_include
@@ -63,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -126,6 +126,7 @@ name|sighandler
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|fail

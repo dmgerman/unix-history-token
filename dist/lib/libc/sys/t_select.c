@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_select.c,v 1.3 2012/03/18 07:00:52 jruoho Exp $ */
+comment|/*	$NetBSD: t_select.c,v 1.4 2017/01/13 21:18:33 christos Exp $ */
 end_comment
 
 begin_comment
@@ -101,6 +101,7 @@ name|sig_handler
 parameter_list|(
 name|int
 name|signum
+name|__unused
 parameter_list|)
 block|{
 name|keep_going
@@ -117,6 +118,7 @@ name|sigchld
 parameter_list|(
 name|int
 name|signum
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -301,6 +303,7 @@ end_function
 
 begin_function
 specifier|static
+name|__dead
 name|void
 name|child
 parameter_list|(
@@ -605,6 +608,11 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -680,6 +688,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 case|case
 operator|-
 literal|1

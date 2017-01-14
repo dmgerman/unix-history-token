@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_pipe.c,v 1.3 2011/10/31 15:41:31 christos Exp $ */
+comment|/* $NetBSD: t_pipe.c,v 1.5 2017/01/13 21:30:41 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_pipe.c,v 1.3 2011/10/31 15:41:31 christos Exp $"
+literal|"$NetBSD: t_pipe.c,v 1.5 2017/01/13 21:30:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../../h_macros.h"
+file|"h_macros.h"
 end_include
 
 begin_decl_stmt
@@ -567,6 +567,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

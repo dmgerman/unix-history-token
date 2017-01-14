@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_sigqueue.c,v 1.6 2016/08/04 06:43:43 christos Exp $ */
+comment|/* $NetBSD: t_sigqueue.c,v 1.7 2017/01/13 20:44:10 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_sigqueue.c,v 1.6 2016/08/04 06:43:43 christos Exp $"
+literal|"$NetBSD: t_sigqueue.c,v 1.7 2017/01/13 20:44:10 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -94,6 +106,7 @@ name|handler
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|,
 name|siginfo_t
 modifier|*
@@ -102,6 +115,7 @@ parameter_list|,
 name|void
 modifier|*
 name|data
+name|__unused
 parameter_list|)
 block|{
 name|value
@@ -419,6 +433,7 @@ parameter_list|,
 name|void
 modifier|*
 name|context
+name|__unused
 parameter_list|)
 block|{
 name|delivered
@@ -428,6 +443,18 @@ operator|++
 index|]
 operator|=
 name|signo
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Signal #%zu: signo: %d\n"
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|count
+argument_list|,
+name|signo
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -798,6 +825,8 @@ condition|;
 name|i
 operator|++
 control|)
+if|if
+condition|(
 name|sigaddset
 argument_list|(
 operator|&
@@ -807,6 +836,14 @@ name|signals
 index|[
 name|i
 index|]
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warn
+argument_list|(
+literal|"sigaddset"
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
@@ -880,7 +917,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE_MSG
+name|ATF_CHECK_MSG
 argument_list|(
 operator|(
 name|size_t
@@ -935,6 +972,44 @@ name|i
 index|]
 argument_list|,
 name|delivered
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|count
+operator|>
+name|ndelivered
+condition|)
+for|for
+control|(
+name|size_t
+name|i
+init|=
+name|ndelivered
+init|;
+name|i
+operator|<
+operator|(
+name|size_t
+operator|)
+name|count
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"Undelivered signal #%zu: %d\n"
+argument_list|,
+name|i
+argument_list|,
+name|ordered
 index|[
 name|i
 index|]

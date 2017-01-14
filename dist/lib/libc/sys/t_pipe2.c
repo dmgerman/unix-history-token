@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_pipe2.c,v 1.8 2012/05/16 13:54:28 jruoho Exp $ */
+comment|/* $NetBSD: t_pipe2.c,v 1.9 2017/01/13 21:19:45 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_pipe2.c,v 1.8 2012/05/16 13:54:28 jruoho Exp $"
+literal|"$NetBSD: t_pipe2.c,v 1.9 2017/01/13 21:19:45 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -97,17 +97,22 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|ATF_REQUIRE_MSG
 argument_list|(
-name|fcntl
+name|closefrom
 argument_list|(
 literal|3
-argument_list|,
-name|F_CLOSEM
 argument_list|)
 operator|!=
 operator|-
 literal|1
+argument_list|,
+literal|"closefrom failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
@@ -523,20 +528,25 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|err
-operator|=
-name|fcntl
+name|int
+name|old
+decl_stmt|;
+name|ATF_REQUIRE_MSG
+argument_list|(
+name|closefrom
 argument_list|(
 literal|4
-argument_list|,
-name|F_CLOSEM
 argument_list|)
-expr_stmt|;
-name|ATF_REQUIRE
+operator|!=
+operator|-
+literal|1
+argument_list|,
+literal|"closefrom failed: %s"
+argument_list|,
+name|strerror
 argument_list|(
-name|err
-operator|==
-literal|0
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|err
@@ -557,6 +567,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The heart of this test is to run against the number of open 	 * file descriptor limit in the middle of a pipe2() call - i.e. 	 * before the call only a single descriptor may be openend. 	 */
+name|old
+operator|=
+name|rl
+operator|.
+name|rlim_cur
+expr_stmt|;
 name|rl
 operator|.
 name|rlim_cur
@@ -595,6 +611,22 @@ name|err
 operator|==
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|rl
+operator|.
+name|rlim_cur
+operator|=
+name|old
+expr_stmt|;
+name|err
+operator|=
+name|setrlimit
+argument_list|(
+name|RLIMIT_NOFILE
+argument_list|,
+operator|&
+name|rl
 argument_list|)
 expr_stmt|;
 block|}

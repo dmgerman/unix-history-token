@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_revoke.c,v 1.1 2011/07/07 06:57:54 jruoho Exp $ */
+comment|/* $NetBSD: t_revoke.c,v 1.2 2017/01/13 21:15:57 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_revoke.c,v 1.1 2011/07/07 06:57:54 jruoho Exp $"
+literal|"$NetBSD: t_revoke.c,v 1.2 2017/01/13 21:15:57 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -747,6 +747,14 @@ condition|)
 name|atf_tc_fail
 argument_list|(
 literal|"revoke(2) did not obey permissions"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE

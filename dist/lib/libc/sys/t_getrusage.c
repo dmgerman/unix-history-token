@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_getrusage.c,v 1.4 2016/08/05 15:01:39 scole Exp $ */
+comment|/* $NetBSD: t_getrusage.c,v 1.5 2017/01/13 20:31:06 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_getrusage.c,v 1.4 2016/08/05 15:01:39 scole Exp $"
+literal|"$NetBSD: t_getrusage.c,v 1.5 2017/01/13 20:31:06 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -106,6 +106,7 @@ name|sighandler
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 comment|/* Nothing. */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_exhaust.c,v 1.7 2011/11/16 18:37:31 christos Exp $	*/
+comment|/*	$NetBSD: t_exhaust.c,v 1.8 2017/01/14 00:50:56 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_exhaust.c,v 1.7 2011/11/16 18:37:31 christos Exp $"
+literal|"$NetBSD: t_exhaust.c,v 1.8 2017/01/14 00:50:56 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -24,25 +24,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/resource.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<regex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<atf-c.h>
 end_include
 
 begin_include
@@ -54,7 +42,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<atf-c.h>
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_ifndef
@@ -755,7 +761,7 @@ name|tc
 argument_list|,
 literal|"require.memory"
 argument_list|,
-literal|"120M"
+literal|"64M"
 argument_list|)
 expr_stmt|;
 block|}
@@ -775,9 +781,41 @@ block|{
 name|regex_t
 name|re
 decl_stmt|;
+name|struct
+name|rlimit
+name|limit
+decl_stmt|;
 name|int
 name|e
 decl_stmt|;
+name|limit
+operator|.
+name|rlim_cur
+operator|=
+name|limit
+operator|.
+name|rlim_max
+operator|=
+literal|64
+operator|*
+literal|1024
+operator|*
+literal|1024
+expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
+name|setrlimit
+argument_list|(
+name|RLIMIT_VMEM
+argument_list|,
+operator|&
+name|limit
+argument_list|)
+operator|!=
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|size_t

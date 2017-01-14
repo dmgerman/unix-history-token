@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_scalbn.c,v 1.11 2014/03/03 10:39:08 martin Exp $ */
+comment|/* $NetBSD: t_scalbn.c,v 1.14 2017/01/13 21:09:12 agc Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_scalbn.c,v 1.11 2014/03/03 10:39:08 martin Exp $"
+literal|"$NetBSD: t_scalbn.c,v 1.14 2017/01/13 21:09:12 agc Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -289,6 +289,10 @@ name|i
 operator|++
 control|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|rv
 operator|=
 name|scalbn
@@ -1117,6 +1121,10 @@ name|i
 operator|++
 control|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|rv
 operator|=
 name|scalbnf
@@ -1955,6 +1963,10 @@ name|i
 operator|++
 control|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|rv
 operator|=
 name|scalbnl

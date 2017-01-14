@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_nanosleep.c,v 1.3 2013/03/31 16:47:16 christos Exp $ */
+comment|/* $NetBSD: t_nanosleep.c,v 1.4 2017/01/13 21:15:14 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_nanosleep.c,v 1.3 2013/03/31 16:47:16 christos Exp $"
+literal|"$NetBSD: t_nanosleep.c,v 1.4 2017/01/13 21:15:14 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -94,6 +94,7 @@ name|handler
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 comment|/* Nothing. */
