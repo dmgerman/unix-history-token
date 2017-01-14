@@ -147,6 +147,14 @@ name|str
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|size_t
+name|len
+decl_stmt|;
+else|#
+directive|else
 name|size_t
 name|i
 decl_stmt|,
@@ -155,6 +163,8 @@ decl_stmt|;
 name|ssize_t
 name|tot
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|fd
 decl_stmt|,
