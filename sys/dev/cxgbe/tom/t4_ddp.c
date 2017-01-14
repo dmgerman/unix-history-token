@@ -2730,11 +2730,22 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* receive buffer autosize */
-name|CURVNET_SET
+name|MPASS
 argument_list|(
+name|toep
+operator|->
+name|vnet
+operator|==
 name|so
 operator|->
 name|so_vnet
+argument_list|)
+expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|toep
+operator|->
+name|vnet
 argument_list|)
 expr_stmt|;
 name|SOCKBUF_LOCK

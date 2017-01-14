@@ -518,6 +518,11 @@ name|inp
 decl_stmt|;
 comment|/* backpointer to host stack's PCB */
 name|struct
+name|vnet
+modifier|*
+name|vnet
+decl_stmt|;
+name|struct
 name|vi_info
 modifier|*
 name|vi
@@ -867,6 +872,11 @@ modifier|*
 name|inp
 decl_stmt|;
 comment|/* listening socket's inp */
+name|struct
+name|vnet
+modifier|*
+name|vnet
+decl_stmt|;
 name|struct
 name|sge_wrq
 modifier|*
@@ -1220,6 +1230,8 @@ name|int
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1261,6 +1273,8 @@ parameter_list|(
 name|struct
 name|adapter
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
