@@ -623,12 +623,12 @@ begin_struct
 struct|struct
 name|tmpfs_mount
 block|{
-comment|/* Maximum number of memory pages available for use by the file 	 * system, set during mount time.  This variable must never be 	 * used directly as it may be bigger than the current amount of 	 * free memory; in the extreme case, it will hold the SIZE_MAX 	 * value. */
-name|size_t
+comment|/* Maximum number of memory pages available for use by the file 	 * system, set during mount time.  This variable must never be 	 * used directly as it may be bigger than the current amount of 	 * free memory; in the extreme case, it will hold the ULONG_MAX 	 * value. */
+name|u_long
 name|tm_pages_max
 decl_stmt|;
 comment|/* Number of pages in use by the file system. */
-name|size_t
+name|u_long
 name|tm_pages_used
 decl_stmt|;
 comment|/* Pointer to the node representing the root directory of this 	 * file system. */
