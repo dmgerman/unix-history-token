@@ -10,14 +10,24 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_UTIL_H_
+name|_LIBNETBSD_UTIL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_UTIL_H_
+name|_LIBNETBSD_UTIL_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* for fparseln(3) */
+end_comment
 
 begin_include
 include|#
