@@ -239,9 +239,9 @@ index|]
 decl_stmt|;
 block|}
 struct|;
-comment|// Software CRC32 functions, to be used when SSE 4.2 support is not detected.
+comment|// Software CRC32 functions, to be used when hardware support is not detected.
 name|u32
-name|computeCRC32
+name|computeSoftwareCRC32
 parameter_list|(
 name|u32
 name|Crc

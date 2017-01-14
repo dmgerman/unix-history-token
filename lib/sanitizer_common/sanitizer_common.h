@@ -3600,6 +3600,9 @@ operator|&&
 literal|"Invalid module arch"
 argument_list|)
 expr_stmt|;
+return|return
+literal|""
+return|;
 block|}
 end_function
 
