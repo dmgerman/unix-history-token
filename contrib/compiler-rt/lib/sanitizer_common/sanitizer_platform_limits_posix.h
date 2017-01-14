@@ -2485,11 +2485,20 @@ literal|2
 operator|,
 literal|20
 argument_list|)
-comment|// On sparc glibc 2.19 and earlier sa_flags was unsigned long, and
-comment|// __glibc_reserved0 didn't exist.
+comment|// On sparc glibc 2.19 and earlier sa_flags was unsigned long.
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arch64__
+argument_list|)
+comment|// To maintain ABI compatibility on sparc64 when switching to an int,
+comment|// __glibc_reserved0 was added.
 name|int
 name|__glibc_reserved0
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|sa_flags
 decl_stmt|;

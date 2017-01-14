@@ -188,6 +188,25 @@ argument_list|,
 argument|uptr cache_size
 argument_list|)
 block|{
+comment|// Thread local quarantine size can be zero only when global quarantine size
+comment|// is zero (it allows us to perform just one atomic read per Put() call).
+name|CHECK
+argument_list|(
+operator|(
+name|size
+operator|==
+literal|0
+operator|&&
+name|cache_size
+operator|==
+literal|0
+operator|)
+operator|||
+name|cache_size
+operator|!=
+literal|0
+argument_list|)
+block|;
 name|atomic_store
 argument_list|(
 operator|&
@@ -195,7 +214,7 @@ name|max_size_
 argument_list|,
 name|size
 argument_list|,
-name|memory_order_release
+name|memory_order_relaxed
 argument_list|)
 block|;
 name|atomic_store
@@ -209,13 +228,19 @@ literal|10
 operator|*
 literal|9
 argument_list|,
-name|memory_order_release
+name|memory_order_relaxed
 argument_list|)
 block|;
 comment|// 90% of max size.
+name|atomic_store
+argument_list|(
+operator|&
 name|max_cache_size_
-operator|=
+argument_list|,
 name|cache_size
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
 block|;   }
 name|uptr
 name|GetSize
@@ -228,7 +253,7 @@ argument_list|(
 operator|&
 name|max_size_
 argument_list|,
-name|memory_order_acquire
+name|memory_order_relaxed
 argument_list|)
 return|;
 block|}
@@ -238,7 +263,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|atomic_load
+argument_list|(
+operator|&
 name|max_cache_size_
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
 return|;
 block|}
 name|void
@@ -259,6 +290,17 @@ name|uptr
 name|size
 parameter_list|)
 block|{
+name|uptr
+name|cache_size
+init|=
+name|GetCacheSize
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|cache_size
+condition|)
+block|{
 name|c
 operator|->
 name|Enqueue
@@ -270,6 +312,19 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|// cache_size == 0 only when size == 0 (see Init).
+name|cb
+operator|.
+name|Recycle
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+block|}
+comment|// Check cache size anyway to accommodate for runtime cache_size change.
 if|if
 condition|(
 name|c
@@ -277,7 +332,7 @@ operator|->
 name|Size
 argument_list|()
 operator|>
-name|max_cache_size_
+name|cache_size
 condition|)
 name|Drain
 argument_list|(
@@ -362,7 +417,7 @@ decl_stmt|;
 name|atomic_uintptr_t
 name|min_size_
 decl_stmt|;
-name|uptr
+name|atomic_uintptr_t
 name|max_cache_size_
 decl_stmt|;
 name|char
@@ -405,7 +460,7 @@ argument_list|(
 operator|&
 name|min_size_
 argument_list|,
-name|memory_order_acquire
+name|memory_order_relaxed
 argument_list|)
 decl_stmt|;
 block|{
@@ -1068,7 +1123,7 @@ block|}
 end_function
 
 begin_comment
-unit|}; }
+unit|};  }
 comment|// namespace __sanitizer
 end_comment
 

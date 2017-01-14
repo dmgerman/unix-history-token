@@ -46,11 +46,11 @@ name|ScopedInterceptor
 argument_list|()
 expr_stmt|;
 name|void
-name|UserCallbackStart
+name|DisableIgnores
 parameter_list|()
 function_decl|;
 name|void
-name|UserCallbackEnd
+name|EnableIgnores
 parameter_list|()
 function_decl|;
 name|private
@@ -66,6 +66,9 @@ name|pc_
 decl_stmt|;
 name|bool
 name|in_ignored_lib_
+decl_stmt|;
+name|bool
+name|ignoring_
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -118,7 +121,7 @@ directive|define
 name|SCOPED_TSAN_INTERCEPTOR_USER_CALLBACK_START
 parameter_list|()
 define|\
-value|si.UserCallbackStart();
+value|si.DisableIgnores();
 end_define
 
 begin_define
@@ -127,7 +130,7 @@ directive|define
 name|SCOPED_TSAN_INTERCEPTOR_USER_CALLBACK_END
 parameter_list|()
 define|\
-value|si.UserCallbackEnd();
+value|si.EnableIgnores();
 end_define
 
 begin_define
