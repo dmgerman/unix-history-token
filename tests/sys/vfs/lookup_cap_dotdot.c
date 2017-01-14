@@ -95,7 +95,7 @@ name|void
 name|touchat
 parameter_list|(
 name|int
-name|dirfd
+name|_dirfd
 parameter_list|,
 specifier|const
 name|char
@@ -113,7 +113,7 @@ name|fd
 operator|=
 name|openat
 argument_list|(
-name|dirfd
+name|_dirfd
 argument_list|,
 name|name
 argument_list|,
@@ -588,9 +588,6 @@ block|{
 name|cap_rights_t
 name|rights
 decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 name|check_capsicum
 argument_list|()
 expr_stmt|;
@@ -696,9 +693,6 @@ begin_block
 block|{
 name|cap_rights_t
 name|rights
-decl_stmt|;
-name|int
-name|fd
 decl_stmt|;
 name|check_capsicum
 argument_list|()
@@ -1103,9 +1097,6 @@ begin_block
 block|{
 name|cap_rights_t
 name|rights
-decl_stmt|;
-name|int
-name|fd
 decl_stmt|;
 name|check_capsicum
 argument_list|()
