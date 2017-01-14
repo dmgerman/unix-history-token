@@ -242,11 +242,22 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBWRAP
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<tcpd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1463,6 +1474,12 @@ comment|/* success */
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBWRAP
+end_ifdef
+
 begin_function
 specifier|static
 name|sa_family_t
@@ -1535,6 +1552,11 @@ name|sa_family
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
