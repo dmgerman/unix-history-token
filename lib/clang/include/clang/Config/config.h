@@ -164,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|BACKEND_PACKAGE_STRING
-value|"LLVM 4.0.0svn"
+value|"LLVM 4.0.0"
 end_define
 
 begin_comment

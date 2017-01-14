@@ -731,6 +731,7 @@ parameter_list|)
 function_decl|;
 comment|/// Return true if we can prove that the specified FP value is either a NaN or
 comment|/// never less than 0.0.
+comment|/// If \p IncludeNeg0 is false, -0.0 is considered less than 0.0.
 name|bool
 name|CannotBeOrderedLessThanZero
 parameter_list|(
@@ -743,11 +744,22 @@ specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
+parameter_list|)
+function_decl|;
+comment|/// \returns true if we can prove that the specified FP value has a 0 sign
+comment|/// bit.
+name|bool
+name|SignBitMustBeZero
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
 parameter_list|,
-name|unsigned
-name|Depth
-init|=
-literal|0
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 parameter_list|)
 function_decl|;
 comment|/// If the specified value can be set by repeating the same byte in memory,

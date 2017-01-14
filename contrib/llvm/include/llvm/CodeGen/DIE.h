@@ -209,6 +209,10 @@ operator|::
 name|Form
 name|Form
 expr_stmt|;
+comment|/// Dwarf attribute value for DW_FORM_implicit_const
+name|int64_t
+name|Value
+decl_stmt|;
 name|public
 label|:
 name|DIEAbbrevData
@@ -225,7 +229,36 @@ argument_list|)
 operator|,
 name|Form
 argument_list|(
-argument|F
+name|F
+argument_list|)
+operator|,
+name|Value
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|DIEAbbrevData
+argument_list|(
+argument|dwarf::Attribute A
+argument_list|,
+argument|int64_t V
+argument_list|)
+operator|:
+name|Attribute
+argument_list|(
+name|A
+argument_list|)
+operator|,
+name|Form
+argument_list|(
+name|dwarf
+operator|::
+name|DW_FORM_implicit_const
+argument_list|)
+operator|,
+name|Value
+argument_list|(
+argument|V
 argument_list|)
 block|{}
 comment|/// Accessors.
@@ -250,6 +283,15 @@ specifier|const
 block|{
 return|return
 name|Form
+return|;
+block|}
+name|int64_t
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
 return|;
 block|}
 comment|/// @}
@@ -403,6 +445,27 @@ argument_list|(
 name|Attribute
 argument_list|,
 name|Form
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// Adds attribute with DW_FORM_implicit_const value
+name|void
+name|AddImplicitConstAttribute
+argument_list|(
+argument|dwarf::Attribute Attribute
+argument_list|,
+argument|int64_t Value
+argument_list|)
+block|{
+name|Data
+operator|.
+name|push_back
+argument_list|(
+name|DIEAbbrevData
+argument_list|(
+name|Attribute
+argument_list|,
+name|Value
 argument_list|)
 argument_list|)
 block|;   }

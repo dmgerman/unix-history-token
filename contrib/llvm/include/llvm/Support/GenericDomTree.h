@@ -3239,15 +3239,39 @@ comment|// the CFG...
 end_comment
 
 begin_comment
-comment|/// addNewBlock - Add a new node to the dominator tree information.  This
+comment|/// Add a new node to the dominator tree information.
 end_comment
 
 begin_comment
-comment|/// creates a new node as a child of DomBB dominator node,linking it into
+comment|///
 end_comment
 
 begin_comment
-comment|/// the children list of the immediate dominator.
+comment|/// This creates a new node as a child of DomBB dominator node, linking it
+end_comment
+
+begin_comment
+comment|/// into the children list of the immediate dominator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param BB New node in CFG.
+end_comment
+
+begin_comment
+comment|/// \param DomBB CFG node that is dominator for BB.
+end_comment
+
+begin_comment
+comment|/// \returns New dominator tree node that represents new CFG node.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_expr_stmt
@@ -3332,6 +3356,183 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// Add a new node to the forward dominator tree and make it a new root.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param BB New node in CFG.
+end_comment
+
+begin_comment
+comment|/// \returns New dominator tree node that represents new CFG node.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_expr_stmt
+name|DomTreeNodeBase
+operator|<
+name|NodeT
+operator|>
+operator|*
+name|setNewRoot
+argument_list|(
+argument|NodeT *BB
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|getNode
+argument_list|(
+name|BB
+argument_list|)
+operator|==
+name|nullptr
+operator|&&
+literal|"Block already in dominator tree!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|this
+operator|->
+name|isPostDominator
+argument_list|()
+operator|&&
+literal|"Cannot change root of post-dominator tree"
+argument_list|)
+block|;
+name|DFSInfoValid
+operator|=
+name|false
+block|;
+name|auto
+operator|&
+name|Roots
+operator|=
+name|DominatorBase
+operator|<
+name|NodeT
+operator|>
+operator|::
+name|Roots
+block|;
+name|DomTreeNodeBase
+operator|<
+name|NodeT
+operator|>
+operator|*
+name|NewNode
+operator|=
+operator|(
+name|DomTreeNodes
+index|[
+name|BB
+index|]
+operator|=
+name|llvm
+operator|::
+name|make_unique
+operator|<
+name|DomTreeNodeBase
+operator|<
+name|NodeT
+operator|>>
+operator|(
+name|BB
+operator|,
+name|nullptr
+operator|)
+operator|)
+operator|.
+name|get
+argument_list|()
+block|;
+if|if
+condition|(
+name|Roots
+operator|.
+name|empty
+argument_list|()
+condition|)
+block|{
+name|addRoot
+argument_list|(
+name|BB
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_else
+else|else
+block|{
+name|assert
+argument_list|(
+name|Roots
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|1
+argument_list|)
+expr_stmt|;
+name|NodeT
+modifier|*
+name|OldRoot
+init|=
+name|Roots
+operator|.
+name|front
+argument_list|()
+decl_stmt|;
+name|DomTreeNodes
+index|[
+name|OldRoot
+index|]
+operator|=
+name|NewNode
+operator|->
+name|addChild
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|DomTreeNodes
+index|[
+name|OldRoot
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|Roots
+index|[
+literal|0
+index|]
+operator|=
+name|BB
+expr_stmt|;
+block|}
+end_else
+
+begin_return
+return|return
+name|RootNode
+operator|=
+name|NewNode
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// changeImmediateDominator - This method is used to update the dominator
 end_comment
 
@@ -3343,24 +3544,17 @@ begin_comment
 comment|///
 end_comment
 
-begin_decl_stmt
-name|void
+begin_macro
+unit|void
 name|changeImmediateDominator
 argument_list|(
-name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
-operator|*
-name|N
+argument|DomTreeNodeBase<NodeT> *N
 argument_list|,
-name|DomTreeNodeBase
-operator|<
-name|NodeT
-operator|>
-operator|*
-name|NewIDom
+argument|DomTreeNodeBase<NodeT> *NewIDom
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|assert
 argument_list|(
@@ -3383,7 +3577,7 @@ name|NewIDom
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_block
 
 begin_function
 name|void

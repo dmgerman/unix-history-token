@@ -975,10 +975,6 @@ name|MapOfOperandsMappings
 expr_stmt|;
 comment|/// Create a RegisterBankInfo that can accomodate up to \p NumRegBanks
 comment|/// RegisterBank instances.
-comment|///
-comment|/// \note For the verify method to succeed all the \p NumRegBanks
-comment|/// must be initialized by createRegisterBank and updated with
-comment|/// addRegBankCoverage RegisterBank.
 name|RegisterBankInfo
 argument_list|(
 argument|RegisterBank **RegBanks
@@ -1001,53 +997,6 @@ literal|"This constructor should not be executed"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Create a new register bank with the given parameter and add it
-comment|/// to RegBanks.
-comment|/// \pre \p ID must not already be used.
-comment|/// \pre \p ID< NumRegBanks.
-name|void
-name|createRegisterBank
-parameter_list|(
-name|unsigned
-name|ID
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|)
-function_decl|;
-comment|/// Add \p RCId to the set of register class that the register bank,
-comment|/// identified \p ID, covers.
-comment|/// This method transitively adds all the sub classes and the subreg-classes
-comment|/// of \p RCId to the set of covered register classes.
-comment|/// It also adjusts the size of the register bank to reflect the maximal
-comment|/// size of a value that can be hold into that register bank.
-comment|///
-comment|/// \note This method does *not* add the super classes of \p RCId.
-comment|/// The rationale is if \p ID covers the registers of \p RCId, that
-comment|/// does not necessarily mean that \p ID covers the set of registers
-comment|/// of RCId's superclasses.
-comment|/// This method does *not* add the superreg classes as well for consistents.
-comment|/// The expected use is to add the coverage top-down with respect to the
-comment|/// register hierarchy.
-comment|///
-comment|/// \todo TableGen should just generate the BitSet vector for us.
-name|void
-name|addRegBankCoverage
-parameter_list|(
-name|unsigned
-name|ID
-parameter_list|,
-name|unsigned
-name|RCId
-parameter_list|,
-specifier|const
-name|TargetRegisterInfo
-modifier|&
-name|TRI
-parameter_list|)
-function_decl|;
 comment|/// Get the register bank identified by \p ID.
 name|RegisterBank
 modifier|&

@@ -601,6 +601,87 @@ operator|&
 name|CodeGen
 argument_list|)
 decl_stmt|;
+comment|/// \brief Emits code for OpenMP 'if' clause using specified \a CodeGen
+comment|/// function. Here is the logic:
+comment|/// if (Cond) {
+comment|///   ThenGen();
+comment|/// } else {
+comment|///   ElseGen();
+comment|/// }
+name|void
+name|emitOMPIfClause
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|Cond
+parameter_list|,
+specifier|const
+name|RegionCodeGenTy
+modifier|&
+name|ThenGen
+parameter_list|,
+specifier|const
+name|RegionCodeGenTy
+modifier|&
+name|ElseGen
+parameter_list|)
+function_decl|;
+comment|/// \brief Emits object of ident_t type with info for source location.
+comment|/// \param Flags Flags for OpenMP location.
+comment|///
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitUpdateLocation
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|unsigned Flags =
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/// \brief Returns pointer to ident_t type.
+name|llvm
+operator|::
+name|Type
+operator|*
+name|getIdentTyPointerTy
+argument_list|()
+expr_stmt|;
+comment|/// \brief Gets thread id value for the current thread.
+comment|///
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getThreadID
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+expr_stmt|;
+comment|/// \brief Get the function name of an outlined region.
+comment|//  The name can be customized depending on the target.
+comment|//
+name|virtual
+name|StringRef
+name|getOutlinedHelperName
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|".omp_outlined."
+return|;
+block|}
 name|private
 label|:
 comment|/// \brief Default const ident_t object used for initialization of all other
@@ -1451,31 +1532,6 @@ name|QualType
 name|KmpInt32Ty
 parameter_list|)
 function_decl|;
-comment|/// \brief Emits object of ident_t type with info for source location.
-comment|/// \param Flags Flags for OpenMP location.
-comment|///
-name|llvm
-operator|::
-name|Value
-operator|*
-name|emitUpdateLocation
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|SourceLocation Loc
-argument_list|,
-argument|unsigned Flags =
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/// \brief Returns pointer to ident_t type.
-name|llvm
-operator|::
-name|Type
-operator|*
-name|getIdentTyPointerTy
-argument_list|()
-expr_stmt|;
 comment|/// \brief Returns pointer to kmpc_micro type.
 name|llvm
 operator|::
@@ -1579,19 +1635,6 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief Gets thread id value for the current thread.
-comment|///
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getThreadID
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-expr_stmt|;
 comment|/// \brief Gets (if variable with the given name already exist) or creates
 comment|/// internal global variable with the specified Name. The created variable has
 comment|/// linkage CommonLinkage by default and is initialized by null value.

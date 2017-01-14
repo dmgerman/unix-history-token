@@ -94,7 +94,7 @@ argument|dwarf::Attribute A
 argument_list|,
 argument|dwarf::Form F
 argument_list|,
-argument|Optional<uint8_t> S
+argument|Optional<int64_t> V
 argument_list|)
 block|:
 name|Attr
@@ -107,9 +107,9 @@ argument_list|(
 name|F
 argument_list|)
 operator|,
-name|ByteSize
+name|ByteSizeOrValue
 argument_list|(
-argument|S
+argument|V
 argument_list|)
 block|{}
 name|dwarf
@@ -122,24 +122,45 @@ operator|::
 name|Form
 name|Form
 expr_stmt|;
-comment|/// If ByteSize has a value, then it contains the fixed size in bytes for
-comment|/// the Form in this object. If ByteSize doesn't have a value, then the
-comment|/// byte size of Form either varies according to the DWARFUnit that it is
-comment|/// contained in or the value size varies and must be decoded from the
-comment|/// debug information in order to determine its size.
+comment|/// The following field is used for ByteSize for non-implicit_const
+comment|/// attributes and as value for implicit_const ones, indicated by
+comment|/// Form == DW_FORM_implicit_const.
+comment|/// The following cases are distinguished:
+comment|/// * Form != DW_FORM_implicit_const and ByteSizeOrValue has a value:
+comment|///     ByteSizeOrValue contains the fixed size in bytes
+comment|///     for the Form in this object.
+comment|/// * Form != DW_FORM_implicit_const and ByteSizeOrValue is None:
+comment|///     byte size of Form either varies according to the DWARFUnit
+comment|///     that it is contained in or the value size varies and must be
+comment|///     decoded from the debug information in order to determine its size.
+comment|/// * Form == DW_FORM_implicit_const:
+comment|///     ByteSizeOrValue contains value for the implicit_const attribute.
 name|Optional
 operator|<
-name|uint8_t
+name|int64_t
 operator|>
-name|ByteSize
+name|ByteSizeOrValue
 expr_stmt|;
+name|bool
+name|isImplicitConst
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Form
+operator|==
+name|dwarf
+operator|::
+name|DW_FORM_implicit_const
+return|;
+block|}
 comment|/// Get the fixed byte size of this Form if possible. This function might
 comment|/// use the DWARFUnit to calculate the size of the Form, like for
 comment|/// DW_AT_address and DW_AT_ref_addr, so this isn't just an accessor for
 comment|/// the ByteSize member.
 name|Optional
 operator|<
-name|uint8_t
+name|int64_t
 operator|>
 name|getByteSize
 argument_list|(

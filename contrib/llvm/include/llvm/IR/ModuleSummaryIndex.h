@@ -1177,11 +1177,11 @@ name|TheKind
 operator|=
 name|Unsat
 block|;
-comment|/// Range of the size expressed as a bit width. For example, if the size is in
-comment|/// range [0,256), this number will be 8. This helps generate the most compact
+comment|/// Range of size-1 expressed as a bit width. For example, if the size is in
+comment|/// range [1,256], this number will be 8. This helps generate the most compact
 comment|/// instruction sequences.
 name|unsigned
-name|SizeBitWidth
+name|SizeM1BitWidth
 operator|=
 literal|0
 block|; }

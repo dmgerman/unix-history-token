@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/LoopPass.h"
+file|"llvm/Analysis/LoopAnalysisManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/LoopPassManager.h"
+file|"llvm/Analysis/LoopPass.h"
 end_include
 
 begin_include
@@ -825,6 +825,10 @@ argument_list|,
 name|LoopAnalysisManager
 operator|&
 name|AM
+argument_list|,
+name|LoopStandardAnalysisResults
+operator|&
+name|AR
 argument_list|)
 decl_stmt|;
 block|}
@@ -833,54 +837,6 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|/// Printer pass for the \c IVUsers for a loop.
-end_comment
-
-begin_decl_stmt
-name|class
-name|IVUsersPrinterPass
-range|:
-name|public
-name|PassInfoMixin
-operator|<
-name|IVUsersPrinterPass
-operator|>
-block|{
-name|raw_ostream
-operator|&
-name|OS
-block|;
-name|public
-operator|:
-name|explicit
-name|IVUsersPrinterPass
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|)
-operator|:
-name|OS
-argument_list|(
-argument|OS
-argument_list|)
-block|{}
-name|PreservedAnalyses
-name|run
-argument_list|(
-name|Loop
-operator|&
-name|L
-argument_list|,
-name|LoopAnalysisManager
-operator|&
-name|AM
-argument_list|)
-block|; }
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 unit|}

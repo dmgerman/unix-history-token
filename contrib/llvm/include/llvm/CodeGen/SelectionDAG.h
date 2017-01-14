@@ -3200,40 +3200,6 @@ name|CondCode
 name|Cond
 argument_list|)
 decl_stmt|;
-comment|/// Returns the ConvertRndSat Note: Avoid using this node because it may
-comment|/// disappear in the future and most targets don't support it.
-name|SDValue
-name|getConvertRndSat
-argument_list|(
-name|EVT
-name|VT
-argument_list|,
-specifier|const
-name|SDLoc
-operator|&
-name|dl
-argument_list|,
-name|SDValue
-name|Val
-argument_list|,
-name|SDValue
-name|DTy
-argument_list|,
-name|SDValue
-name|STy
-argument_list|,
-name|SDValue
-name|Rnd
-argument_list|,
-name|SDValue
-name|Sat
-argument_list|,
-name|ISD
-operator|::
-name|CvtCode
-name|Code
-argument_list|)
-decl_stmt|;
 comment|/// Return an ISD::VECTOR_SHUFFLE node. The number of elements in VT,
 comment|/// which must be a vector type, must match the number of mask elements
 comment|/// NumElts. An integer mask element equal to -1 is treated as undefined.

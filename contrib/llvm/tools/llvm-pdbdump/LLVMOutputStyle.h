@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/TypeDumper.h"
+file|"llvm/DebugInfo/CodeView/TypeDatabase.h"
 end_include
 
 begin_include
@@ -180,8 +180,8 @@ name|P
 block|;
 name|codeview
 operator|::
-name|CVTypeDumper
-name|Dumper
+name|TypeDatabase
+name|TypeDB
 block|;
 name|std
 operator|::

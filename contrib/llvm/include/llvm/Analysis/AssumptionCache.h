@@ -153,6 +153,104 @@ literal|4
 operator|>
 name|AssumeHandles
 expr_stmt|;
+name|class
+name|AffectedValueCallbackVH
+name|final
+range|:
+name|public
+name|CallbackVH
+block|{
+name|AssumptionCache
+operator|*
+name|AC
+block|;
+name|void
+name|deleted
+argument_list|()
+name|override
+block|;
+name|void
+name|allUsesReplacedWith
+argument_list|(
+argument|Value *
+argument_list|)
+name|override
+block|;
+name|public
+operator|:
+name|using
+name|DMI
+operator|=
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
+operator|>
+block|;
+name|AffectedValueCallbackVH
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|AssumptionCache
+operator|*
+name|AC
+operator|=
+name|nullptr
+argument_list|)
+operator|:
+name|CallbackVH
+argument_list|(
+name|V
+argument_list|)
+block|,
+name|AC
+argument_list|(
+argument|AC
+argument_list|)
+block|{}
+block|}
+decl_stmt|;
+name|friend
+name|AffectedValueCallbackVH
+decl_stmt|;
+comment|/// \brief A map of values about which an assumption might be providing
+comment|/// information to the relevant set of assumptions.
+name|using
+name|AffectedValuesMap
+init|=
+name|DenseMap
+operator|<
+name|AffectedValueCallbackVH
+decl_stmt|,
+name|SmallVector
+decl|<
+name|WeakVH
+decl_stmt|, 1>,
+name|AffectedValueCallbackVH
+decl|::
+name|DMI
+decl|>
+decl_stmt|;
+name|AffectedValuesMap
+name|AffectedValues
+decl_stmt|;
+comment|/// Get the vector of assumptions which affect a value from the cache.
+name|SmallVector
+operator|<
+name|WeakVH
+operator|,
+literal|1
+operator|>
+operator|&
+name|getAffectedValues
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|)
+expr_stmt|;
 comment|/// \brief Flag tracking whether we have scanned the function yet.
 comment|///
 comment|/// We want to be as lazy about this as possible, and so we scan the function
@@ -198,6 +296,16 @@ operator|*
 name|CI
 argument_list|)
 expr_stmt|;
+comment|/// \brief Update the cache of values being affected by this assumption (i.e.
+comment|/// the values about which this assumption provides information).
+name|void
+name|updateAffectedValues
+parameter_list|(
+name|CallInst
+modifier|*
+name|CI
+parameter_list|)
+function_decl|;
 comment|/// \brief Clear the cache of @llvm.assume intrinsics for a function.
 comment|///
 comment|/// It will be re-scanned the next time it is requested.
@@ -206,6 +314,11 @@ name|clear
 parameter_list|()
 block|{
 name|AssumeHandles
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|AffectedValues
 operator|.
 name|clear
 argument_list|()
@@ -242,14 +355,68 @@ return|return
 name|AssumeHandles
 return|;
 block|}
+comment|/// \brief Access the list of assumptions which affect this value.
+name|MutableArrayRef
+operator|<
+name|WeakVH
+operator|>
+name|assumptionsFor
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Scanned
+condition|)
+name|scanFunction
+argument_list|()
+expr_stmt|;
+name|auto
+name|AVI
+operator|=
+name|AffectedValues
+operator|.
+name|find_as
+argument_list|(
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|AVI
+operator|==
+name|AffectedValues
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|MutableArrayRef
+operator|<
+name|WeakVH
+operator|>
+operator|(
+operator|)
+return|;
+return|return
+name|AVI
+operator|->
+name|second
+return|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// \brief A function analysis which provides an \c AssumptionCache.
 end_comment
 

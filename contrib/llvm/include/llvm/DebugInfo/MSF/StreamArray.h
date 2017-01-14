@@ -589,20 +589,9 @@ begin_expr_stmt
 name|IterType
 operator|&
 name|operator
-operator|+=
+operator|++
 operator|(
-name|std
-operator|::
-name|ptrdiff_t
-name|N
 operator|)
-block|{
-while|while
-condition|(
-name|N
-operator|>
-literal|0
-condition|)
 block|{
 comment|// We are done with the current record, discard it so that we are
 comment|// positioned at the next record.
@@ -614,7 +603,7 @@ name|drop_front
 argument_list|(
 name|ThisLen
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|IterRef
@@ -630,10 +619,6 @@ comment|// iterator.
 name|moveToEnd
 argument_list|()
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 end_expr_stmt
 
@@ -671,10 +656,6 @@ expr_stmt|;
 name|markError
 argument_list|()
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 elseif|else
 if|if
@@ -688,26 +669,16 @@ comment|// An empty record? Make this an end iterator.
 name|moveToEnd
 argument_list|()
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 block|}
 end_else
 
-begin_expr_stmt
-operator|--
-name|N
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}     return
+begin_return
+return|return
 operator|*
 name|this
-expr_stmt|;
-end_expr_stmt
+return|;
+end_return
 
 begin_function
 unit|}  private:

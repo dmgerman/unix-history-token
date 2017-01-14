@@ -250,12 +250,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/LoopPassManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/OptimizationDiagnosticInfo.h"
 end_include
 
@@ -281,6 +275,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Scalar/LoopPassManager.h"
 end_include
 
 begin_include

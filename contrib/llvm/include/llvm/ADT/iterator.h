@@ -82,6 +82,32 @@ comment|///
 comment|/// Another abstraction that this doesn't provide is implementing increment in
 comment|/// terms of addition of one. These aren't equivalent for all iterator
 comment|/// categories, and respecting that adds a lot of complexity for little gain.
+comment|///
+comment|/// Classes wishing to use `iterator_facade_base` should implement the following
+comment|/// methods:
+comment|///
+comment|/// Forward Iterators:
+comment|///   (All of the following methods)
+comment|///   - DerivedT&operator=(const DerivedT&R);
+comment|///   - bool operator==(const DerivedT&R) const;
+comment|///   - const T&operator*() const;
+comment|///   - T&operator*();
+comment|///   - DerivedT&operator++();
+comment|///
+comment|/// Bidirectional Iterators:
+comment|///   (All methods of forward iterators, plus the following)
+comment|///   - DerivedT&operator--();
+comment|///
+comment|/// Random-access Iterators:
+comment|///   (All methods of bidirectional iterators excluding the following)
+comment|///   - DerivedT&operator++();
+comment|///   - DerivedT&operator--();
+comment|///   (and plus the following)
+comment|///   - bool operator<(const DerivedT&RHS) const;
+comment|///   - DifferenceTypeT operator-(const DerivedT&R) const;
+comment|///   - DerivedT&operator+=(DifferenceTypeT N);
+comment|///   - DerivedT&operator-=(DifferenceTypeT N);
+comment|///
 name|template
 operator|<
 name|typename

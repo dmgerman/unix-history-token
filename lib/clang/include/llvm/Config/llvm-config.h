@@ -267,7 +267,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"4.0.0svn"
+value|"4.0.0"
 end_define
 
 begin_endif

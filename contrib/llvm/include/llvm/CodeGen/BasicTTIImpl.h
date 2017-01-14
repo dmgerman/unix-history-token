@@ -1496,6 +1496,23 @@ operator|=
 name|TTI
 operator|::
 name|OP_None
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Args
+operator|=
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
 argument_list|)
 block|{
 comment|// Check if any of the operands are vector operands.

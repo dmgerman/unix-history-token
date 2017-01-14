@@ -394,6 +394,7 @@ comment|/// Test whether the edge is null.
 comment|///
 comment|/// This happens when an edge has been deleted. We leave the edge objects
 comment|/// around but clear them.
+name|explicit
 name|operator
 name|bool
 argument_list|()

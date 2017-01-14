@@ -7519,8 +7519,6 @@ argument_list|,
 argument|TemplateParameterList *Params
 argument_list|,
 argument|NamedDecl *Decl
-argument_list|,
-argument|ClassTemplateDecl *PrevDecl
 argument_list|)
 block|;
 comment|/// \brief Create an empty class template node.

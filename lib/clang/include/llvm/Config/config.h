@@ -146,7 +146,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_DIA_SDK
+name|LLVM_ENABLE_DIA_SDK
 value|0
 end_define
 
@@ -1352,7 +1352,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"4.0.0svn"
+value|"4.0.0"
 end_define
 
 begin_comment
@@ -1396,7 +1396,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 4.0.0svn"
+value|"LLVM 4.0.0"
 end_define
 
 begin_comment
@@ -1417,7 +1417,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.0.0svn"
+value|"4.0.0"
 end_define
 
 begin_comment

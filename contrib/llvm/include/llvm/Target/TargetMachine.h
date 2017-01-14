@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -112,19 +106,13 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|InstrItineraryData
-decl_stmt|;
-name|class
 name|GlobalValue
-decl_stmt|;
-name|class
-name|Mangler
 decl_stmt|;
 name|class
 name|MachineFunctionInitializer
 decl_stmt|;
 name|class
-name|MachineModuleInfo
+name|Mangler
 decl_stmt|;
 name|class
 name|MCAsmInfo
@@ -145,46 +133,25 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|raw_pwrite_stream
+decl_stmt|;
+name|class
 name|Target
-decl_stmt|;
-name|class
-name|TargetLibraryInfo
-decl_stmt|;
-name|class
-name|TargetFrameLowering
-decl_stmt|;
-name|class
-name|TargetIRAnalysis
 decl_stmt|;
 name|class
 name|TargetIntrinsicInfo
 decl_stmt|;
 name|class
-name|TargetLowering
+name|TargetIRAnalysis
+decl_stmt|;
+name|class
+name|TargetLoweringObjectFile
 decl_stmt|;
 name|class
 name|TargetPassConfig
 decl_stmt|;
 name|class
-name|TargetRegisterInfo
-decl_stmt|;
-name|class
 name|TargetSubtargetInfo
-decl_stmt|;
-name|class
-name|TargetTransformInfo
-decl_stmt|;
-name|class
-name|formatted_raw_ostream
-decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
-name|raw_pwrite_stream
-decl_stmt|;
-name|class
-name|TargetLoweringObjectFile
 decl_stmt|;
 comment|// The old pass manager infrastructure is hidden in a legacy namespace now.
 name|namespace
@@ -208,26 +175,6 @@ comment|///
 name|class
 name|TargetMachine
 block|{
-name|TargetMachine
-argument_list|(
-specifier|const
-name|TargetMachine
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|TargetMachine
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|protected
 label|:
 comment|// Can only create subclasses.
@@ -337,9 +284,33 @@ literal|1
 decl_stmt|;
 name|public
 label|:
+specifier|const
+name|TargetOptions
+name|DefaultOptions
+decl_stmt|;
 name|mutable
 name|TargetOptions
 name|Options
+decl_stmt|;
+name|TargetMachine
+argument_list|(
+specifier|const
+name|TargetMachine
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|TargetMachine
+operator|&
+operator|)
+operator|=
+name|delete
 decl_stmt|;
 name|virtual
 operator|~
@@ -1027,13 +998,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETMACHINE_H
+end_comment
 
 end_unit
 

@@ -429,7 +429,7 @@ comment|/// 32-bit divisions and should be used when possible.
 name|bool
 name|HasSlowDivide32
 block|;
-comment|/// True if 16-bit divides are significantly faster than
+comment|/// True if 32-bit divides are significantly faster than
 comment|/// 64-bit divisions and should be used when possible.
 name|bool
 name|HasSlowDivide64

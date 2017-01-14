@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/FormatVariadic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdarg>
 end_include
 
@@ -1229,6 +1235,61 @@ begin_comment
 unit|};  }
 comment|// namespace lldb_private
 end_comment
+
+begin_macro
+unit|namespace
+name|llvm
+end_macro
+
+begin_block
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|format_provider
+operator|<
+name|lldb_private
+operator|::
+name|Error
+operator|>
+block|{
+specifier|static
+name|void
+name|format
+argument_list|(
+argument|const lldb_private::Error&error
+argument_list|,
+argument|llvm::raw_ostream&OS
+argument_list|,
+argument|llvm::StringRef Options
+argument_list|)
+block|{
+name|llvm
+operator|::
+name|format_provider
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|>
+operator|::
+name|format
+argument_list|(
+name|error
+operator|.
+name|AsCString
+argument_list|()
+argument_list|,
+name|OS
+argument_list|,
+name|Options
+argument_list|)
+block|;   }
+block|}
+expr_stmt|;
+block|}
+end_block
 
 begin_endif
 endif|#

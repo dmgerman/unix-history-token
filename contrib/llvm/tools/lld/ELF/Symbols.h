@@ -559,6 +559,14 @@ name|IsInIgot
 range|:
 literal|1
 decl_stmt|;
+comment|// True if this is a shared symbol in a read-only segment which requires a
+comment|// copy relocation. This causes space for the symbol to be allocated in the
+comment|// .bss.rel.ro section.
+name|unsigned
+name|CopyIsInBssRelRo
+range|:
+literal|1
+decl_stmt|;
 comment|// The following fields have the same meaning as the ELF symbol attributes.
 name|uint8_t
 name|Type
@@ -1253,12 +1261,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// OffsetInBss is significant only when needsCopy() is true.
+comment|// CopyOffset is significant only when needsCopy() is true.
 end_comment
 
 begin_decl_stmt
 name|uintX_t
-name|OffsetInBss
+name|CopyOffset
 init|=
 literal|0
 decl_stmt|;
@@ -1302,6 +1310,18 @@ name|isFunc
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|OutputSection
+operator|<
+name|ELFT
+operator|>
+operator|*
+name|getBssSectionForCopy
+argument_list|()
+specifier|const
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -1898,6 +1918,11 @@ literal|1
 decl_stmt|;
 name|bool
 name|includeInDynsym
+argument_list|()
+specifier|const
+expr_stmt|;
+name|uint8_t
+name|computeBinding
 argument_list|()
 specifier|const
 expr_stmt|;

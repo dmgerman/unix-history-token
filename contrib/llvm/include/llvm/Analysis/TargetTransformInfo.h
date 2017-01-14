@@ -223,6 +223,10 @@ decl_stmt|;
 name|int
 name|NumMemRefs
 decl_stmt|;
+comment|/// This is the pointer that the intrinsic is loading from or storing to.
+comment|/// If this is non-null, then analysis/optimization passes can assume that
+comment|/// this intrinsic is functionally equivalent to a load/store from this
+comment|/// pointer.
 name|Value
 modifier|*
 name|PtrVal
@@ -1273,6 +1277,9 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \return The expected cost of arithmetic ops, such as mul, xor, fsub, etc.
+comment|/// \p Args is an optional argument which holds the instruction operands
+comment|/// values so the TTI can analyize those values searching for special
+comment|/// cases\optimizations based on those values.
 name|int
 name|getArithmeticInstrCost
 argument_list|(
@@ -1302,6 +1309,23 @@ name|OperandValueProperties
 name|Opd2PropInfo
 operator|=
 name|OP_None
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Args
+operator|=
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2436,6 +2460,8 @@ argument_list|,
 argument|OperandValueProperties Opd1PropInfo
 argument_list|,
 argument|OperandValueProperties Opd2PropInfo
+argument_list|,
+argument|ArrayRef<const Value *> Args
 argument_list|)
 operator|=
 literal|0
@@ -3753,6 +3779,8 @@ argument_list|,
 argument|OperandValueProperties Opd1PropInfo
 argument_list|,
 argument|OperandValueProperties Opd2PropInfo
+argument_list|,
+argument|ArrayRef<const Value *> Args
 argument_list|)
 name|override
 block|{
@@ -3772,6 +3800,8 @@ argument_list|,
 name|Opd1PropInfo
 argument_list|,
 name|Opd2PropInfo
+argument_list|,
+name|Args
 argument_list|)
 return|;
 block|}
