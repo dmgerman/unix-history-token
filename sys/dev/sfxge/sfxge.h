@@ -526,8 +526,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SFXGE_CALLOUT_TICKS
-value|100
+name|SFXGE_STATS_UPDATE_PERIOD_MS
+value|1000
 end_define
 
 begin_struct
