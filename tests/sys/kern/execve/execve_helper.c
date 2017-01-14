@@ -95,6 +95,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
