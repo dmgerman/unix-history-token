@@ -293,6 +293,16 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|comment
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Test all the functions: fmaxf, fmax, fmaxl, fminf, fmin, and fminl,  * in all rounding modes and with the arguments in different orders.  * The input 'big' must be>= 'small'.  */
 end_comment
@@ -382,7 +392,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"%sok %d - big = %.20Lg, small = %.20Lg\n"
+literal|"%sok %d - big = %.20Lg, small = %.20Lg%s\n"
 argument_list|,
 operator|(
 name|i
@@ -399,10 +409,57 @@ argument_list|,
 name|big
 argument_list|,
 name|small
+argument_list|,
+name|comment
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|comment
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Clang 3.8.0+ fails the invariants for testcase 6, 7, 10, and 11. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|&&
+expr|\
+operator|(
+name|__clang_major__
+operator|>=
+literal|3
+operator|&&
+name|__clang_minor__
+operator|>=
+literal|8
+operator|&&
+name|__clang_patchlevel__
+operator|>=
+literal|0
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|affected_by_bug_208703
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -482,6 +539,15 @@ operator|-
 literal|4.0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|affected_by_bug_208703
+name|comment
+operator|=
+literal|"# TODO: testcase 6-7 fails invariant with clang 3.8+ (bug 208703)"
+expr_stmt|;
+endif|#
+directive|endif
 name|testall
 argument_list|(
 literal|6
@@ -499,6 +565,10 @@ name|INFINITY
 argument_list|,
 name|NAN
 argument_list|)
+expr_stmt|;
+name|comment
+operator|=
+name|NULL
 expr_stmt|;
 name|testall
 argument_list|(
@@ -530,6 +600,15 @@ operator|-
 name|INFINITY
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|affected_by_bug_208703
+name|comment
+operator|=
+literal|"# TODO: testcase 11-12 fails invariant with clang 3.8+ (bug 208703)"
+expr_stmt|;
+endif|#
+directive|endif
 name|testall
 argument_list|(
 literal|11
@@ -549,6 +628,10 @@ argument_list|,
 operator|-
 literal|0.0
 argument_list|)
+expr_stmt|;
+name|comment
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
