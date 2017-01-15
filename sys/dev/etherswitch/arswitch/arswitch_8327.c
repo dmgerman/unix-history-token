@@ -2843,6 +2843,11 @@ block|{
 name|uint32_t
 name|t
 decl_stmt|;
+name|ARSWITCH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* enable CPU port and disable mirror port */
 name|t
 operator|=
@@ -2985,6 +2990,11 @@ operator|.
 name|es_nports
 operator|=
 literal|7
+expr_stmt|;
+name|ARSWITCH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

@@ -415,6 +415,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|ARSWITCH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|arswitch_writereg
 argument_list|(
 name|sc
@@ -511,6 +516,11 @@ argument_list|,
 name|AR8X16_SERVICE_TAG_MASK
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|ARSWITCH_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
