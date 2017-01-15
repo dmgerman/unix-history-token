@@ -99,6 +99,18 @@ directive|include
 file|<sys/drvctlio.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DRVCTLDEV
+value|"/nonexistent"
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -127,24 +139,6 @@ include|#
 directive|include
 file|<sys/wait.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DRVCTLDEV
-value|"/nonexistent"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|ATF_TC
