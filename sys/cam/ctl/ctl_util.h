@@ -534,15 +534,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
-
 begin_function_decl
 name|void
 name|ctl_scsi_zero_io
@@ -554,6 +545,30 @@ name|io
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ctl_scsi_zero_io
+parameter_list|(
+name|io
+parameter_list|)
+value|ctl_zero_io(io)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_function_decl
 specifier|const
