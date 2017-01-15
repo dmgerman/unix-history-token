@@ -450,6 +450,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR71XX_UART_THR
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR71XX_UART_LSR
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR71XX_UART_LSR_THRE
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR71XX_UART_LSR_TEMT
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR71XX_USB_CTRL_FLADJ
 value|0x18030000
 end_define
