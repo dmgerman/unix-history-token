@@ -8069,6 +8069,12 @@ literal|8192
 expr_stmt|;
 name|conn
 operator|->
+name|conn_max_send_data_segment_length
+operator|=
+literal|8192
+expr_stmt|;
+name|conn
+operator|->
 name|conn_max_burst_length
 operator|=
 literal|262144

@@ -68,20 +68,6 @@ name|SOCKBUF_SIZE
 value|1048576
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_BURST_LENGTH
-value|(256 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIRST_BURST_LENGTH
-value|(128 * 1024)
-end_define
-
 begin_struct
 struct|struct
 name|connection

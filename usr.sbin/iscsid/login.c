@@ -1752,6 +1752,15 @@ name|conn_max_send_data_segment_length
 operator|=
 name|tmp
 expr_stmt|;
+comment|/* We received target's limit, that means it accepted our's. */
+name|conn
+operator|->
+name|conn_max_recv_data_segment_length
+operator|=
+name|isl
+operator|->
+name|isl_max_recv_data_segment_length
+expr_stmt|;
 block|}
 elseif|else
 if|if
