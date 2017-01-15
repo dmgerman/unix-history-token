@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_regex_att.c,v 1.2 2017/01/14 00:50:56 christos Exp $	*/
+comment|/*	$NetBSD: t_regex_att.c,v 1.3 2017/01/14 20:59:23 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_regex_att.c,v 1.2 2017/01/14 00:50:56 christos Exp $"
+literal|"$NetBSD: t_regex_att.c,v 1.3 2017/01/14 20:59:23 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -30,31 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<regex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vis.h>
+file|<atf-c.h>
 end_include
 
 begin_include
@@ -66,25 +42,38 @@ end_include
 begin_include
 include|#
 directive|include
-file|<atf-c.h>
+file|<regex.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<libutil.h>
+file|<stdio.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<util.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vis.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -2917,16 +2906,6 @@ comment|/* jmmv: I converted the original shell-based tests to C and they 	 * di
 name|atf_tc_expect_fail
 argument_list|(
 literal|"Reason for breakage unknown"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|atf_tc_expect_fail
-argument_list|(
-literal|"The expected and matched groups are mismatched on FreeBSD"
 argument_list|)
 expr_stmt|;
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_mkfifoat.c,v 1.3 2017/01/10 15:15:09 christos Exp $ */
+comment|/*	$NetBSD: t_mkfifoat.c,v 1.4 2017/01/14 20:55:26 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_mkfifoat.c,v 1.3 2017/01/10 15:15:09 christos Exp $"
+literal|"$NetBSD: t_mkfifoat.c,v 1.4 2017/01/14 20:55:26 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -154,9 +154,6 @@ block|{
 name|int
 name|dfd
 decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 name|mode_t
 name|mode
 init|=
@@ -195,9 +192,6 @@ argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
-operator|(
-name|fd
-operator|=
 name|mkfifoat
 argument_list|(
 name|dfd
@@ -206,20 +200,9 @@ name|BASEFIFO
 argument_list|,
 name|mode
 argument_list|)
-operator|)
 operator|!=
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-name|ATF_REQUIRE
-argument_list|(
-name|close
-argument_list|(
-name|fd
-argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
@@ -287,9 +270,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|fd
-decl_stmt|;
 name|mode_t
 name|mode
 init|=
@@ -309,9 +289,6 @@ argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
-operator|(
-name|fd
-operator|=
 name|mkfifoat
 argument_list|(
 name|AT_FDCWD
@@ -320,20 +297,9 @@ name|FIFO
 argument_list|,
 name|mode
 argument_list|)
-operator|)
 operator|!=
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-name|ATF_REQUIRE
-argument_list|(
-name|close
-argument_list|(
-name|fd
-argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
@@ -393,9 +359,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|fd
-decl_stmt|;
 name|mode_t
 name|mode
 init|=
@@ -403,9 +366,6 @@ literal|0600
 decl_stmt|;
 name|ATF_REQUIRE
 argument_list|(
-operator|(
-name|fd
-operator|=
 name|mkfifoat
 argument_list|(
 name|AT_FDCWD
@@ -414,7 +374,6 @@ name|FIFOERR
 argument_list|,
 name|mode
 argument_list|)
-operator|)
 operator|==
 operator|-
 literal|1
@@ -518,9 +477,6 @@ argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
-operator|(
-name|fd
-operator|=
 name|mkfifoat
 argument_list|(
 operator|-
@@ -530,7 +486,6 @@ name|FIFO
 argument_list|,
 name|mode
 argument_list|)
-operator|)
 operator|==
 operator|-
 literal|1

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_unlink.c,v 1.3 2017/01/13 19:33:03 christos Exp $ */
+comment|/* $NetBSD: t_unlink.c,v 1.4 2017/01/14 20:55:26 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_unlink.c,v 1.3 2017/01/13 19:33:03 christos Exp $"
+literal|"$NetBSD: t_unlink.c,v 1.4 2017/01/14 20:55:26 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -430,38 +430,16 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|fd
-decl_stmt|;
-name|ATF_REQUIRE_MSG
+name|ATF_REQUIRE
 argument_list|(
-operator|(
-name|fd
-operator|=
 name|mkfifo
 argument_list|(
 name|path
 argument_list|,
 literal|0666
 argument_list|)
-operator|)
 operator|==
 literal|0
-argument_list|,
-literal|"mkfifo failed: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE

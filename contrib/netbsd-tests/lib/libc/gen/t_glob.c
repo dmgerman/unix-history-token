@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_glob.c,v 1.4 2017/01/13 21:30:41 christos Exp $	*/
+comment|/*	$NetBSD: t_glob.c,v 1.5 2017/01/14 20:47:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_glob.c,v 1.4 2017/01/13 21:30:41 christos Exp $"
+literal|"$NetBSD: t_glob.c,v 1.5 2017/01/14 20:47:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -92,13 +92,6 @@ define|#
 directive|define
 name|__gl_stat_t
 value|struct stat
-end_define
-
-begin_define
-define|#
-directive|define
-name|_S_IFDIR
-value|S_IFDIR
 end_define
 
 begin_endif
@@ -736,7 +729,7 @@ name|st
 operator|->
 name|st_mode
 operator||=
-name|_S_IFDIR
+name|S_IFDIR
 expr_stmt|;
 return|return
 literal|0
