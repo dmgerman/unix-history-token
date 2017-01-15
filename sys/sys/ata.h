@@ -3945,7 +3945,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Seiral ATA */
+comment|/* Serial ATA */
 end_comment
 
 begin_define
