@@ -429,6 +429,12 @@ name|iflib_fl_t
 typedef|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|iflib_ctx
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -446,6 +452,11 @@ name|struct
 name|grouptask
 modifier|*
 name|ifi_task
+decl_stmt|;
+name|struct
+name|iflib_ctx
+modifier|*
+name|ifi_ctx
 decl_stmt|;
 block|}
 typedef|*
@@ -1020,6 +1031,13 @@ define|#
 directive|define
 name|IFC_SC_ALLOCATED
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFC_INIT_DONE
+value|0x20
 end_define
 
 begin_define
@@ -5696,6 +5714,10 @@ if|if
 condition|(
 operator|!
 name|smp_started
+operator|&&
+name|mp_ncpus
+operator|>
+literal|1
 condition|)
 return|return
 operator|(
@@ -19860,6 +19882,12 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+name|ctx
+operator|->
+name|ifc_flags
+operator||=
+name|IFC_INIT_DONE
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -23651,6 +23679,12 @@ name|ifi_task
 operator|=
 name|gtask
 expr_stmt|;
+name|info
+operator|->
+name|ifi_ctx
+operator|=
+name|ctx
+expr_stmt|;
 name|err
 operator|=
 name|_iflib_irq_alloc
@@ -24152,6 +24186,12 @@ operator|->
 name|ifi_task
 operator|=
 name|gtask
+expr_stmt|;
+name|info
+operator|->
+name|ifi_ctx
+operator|=
+name|ctx
 expr_stmt|;
 comment|/* We allocate a single interrupt resource */
 if|if
