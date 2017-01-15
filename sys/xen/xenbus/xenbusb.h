@@ -16,7 +16,7 @@ name|_XEN_XENBUS_XENBUSB_H
 end_define
 
 begin_comment
-comment|/**  * \file xenbusb.h  *  * Datastructures and function declarations for use in implementing  * bus attachements (e.g. frontend and backend device busses) for XenBus.  */
+comment|/**  * \file xenbusb.h  *  * Datastructures and function declarations for use in implementing  * bus attachements (e.g. frontend and backend device buses) for XenBus.  */
 end_comment
 
 begin_comment

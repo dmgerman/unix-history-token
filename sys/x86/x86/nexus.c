@@ -1160,7 +1160,7 @@ block|{
 name|int
 name|irq
 decl_stmt|;
-comment|/* 	 * XXX working notes: 	 * 	 * - IRQ resource creation should be moved to the PIC/APIC driver. 	 * - DRQ resource creation should be moved to the DMAC driver. 	 * - The above should be sorted to probe earlier than any child busses. 	 * 	 * - Leave I/O and memory creation here, as child probes may need them. 	 *   (especially eg. ACPI) 	 */
+comment|/* 	 * XXX working notes: 	 * 	 * - IRQ resource creation should be moved to the PIC/APIC driver. 	 * - DRQ resource creation should be moved to the DMAC driver. 	 * - The above should be sorted to probe earlier than any child buses. 	 * 	 * - Leave I/O and memory creation here, as child probes may need them. 	 *   (especially eg. ACPI) 	 */
 comment|/* 	 * IRQ's are on the mainboard on old systems, but on the ISA part 	 * of PCI->ISA bridges.  There would be multiple sets of IRQs on 	 * multi-ISA-bus systems.  PCI interrupts are routed to the ISA 	 * component, so in a way, PCI can be a partial child of an ISA bus(!). 	 * APIC interrupts are global though. 	 */
 name|irq_rman
 operator|.

@@ -164,7 +164,7 @@ break|break;
 case|case
 literal|0x84ca8086
 case|:
-comment|/* 		 * For the 450nx chipset, there is a whole bundle of 		 * things pretending to be host bridges. The MIOC will  		 * be seen first and isn't really a pci bridge (the 		 * actual busses are attached to the PXB's). We need to  		 * read the registers of the MIOC to figure out the 		 * bus numbers for the PXB channels. 		 * 		 * Since the MIOC doesn't have a pci bus attached, we 		 * pretend it wasn't there. 		 */
+comment|/* 		 * For the 450nx chipset, there is a whole bundle of 		 * things pretending to be host bridges. The MIOC will  		 * be seen first and isn't really a pci bridge (the 		 * actual buses are attached to the PXB's). We need to  		 * read the registers of the MIOC to figure out the 		 * bus numbers for the PXB channels. 		 * 		 * Since the MIOC doesn't have a pci bus attached, we 		 * pretend it wasn't there. 		 */
 return|return
 operator|(
 literal|0

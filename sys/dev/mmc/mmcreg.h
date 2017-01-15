@@ -16,7 +16,7 @@ name|DEV_MMC_MMCREG_H
 end_define
 
 begin_comment
-comment|/*  * This file contains the register definitions for the mmc and sd busses.  * They are taken from publicly available sources.  */
+comment|/*  * This file contains the register definitions for the mmc and sd buses.  * They are taken from publicly available sources.  */
 end_comment
 
 begin_struct_decl

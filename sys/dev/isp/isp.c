@@ -25035,7 +25035,7 @@ argument_list|,
 name|HBA_NOERROR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now see if we need to synchronize the ISP with respect to anything. 	 * We do dual duty here (cough) for synchronizing for busses other 	 * than which we got here to send a command to. 	 */
+comment|/* 	 * Now see if we need to synchronize the ISP with respect to anything. 	 * We do dual duty here (cough) for synchronizing for buses other 	 * than which we got here to send a command to. 	 */
 name|reqp
 operator|=
 operator|(

@@ -735,7 +735,7 @@ break|break;
 case|case
 literal|0x84ca8086
 case|:
-comment|/* 		 * For the 450nx chipset, there is a whole bundle of 		 * things pretending to be host bridges. The MIOC will 		 * be seen first and isn't really a pci bridge (the 		 * actual busses are attached to the PXB's). We need to 		 * read the registers of the MIOC to figure out the 		 * bus numbers for the PXB channels. 		 * 		 * Since the MIOC doesn't have a pci bus attached, we 		 * pretend it wasn't there. 		 */
+comment|/* 		 * For the 450nx chipset, there is a whole bundle of 		 * things pretending to be host bridges. The MIOC will 		 * be seen first and isn't really a pci bridge (the 		 * actual buses are attached to the PXB's). We need to 		 * read the registers of the MIOC to figure out the 		 * bus numbers for the PXB channels. 		 * 		 * Since the MIOC doesn't have a pci bus attached, we 		 * pretend it wasn't there. 		 */
 name|pxb
 index|[
 literal|0
@@ -2028,7 +2028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper routine for x86 Host-PCI bridge driver resource allocation.  * This is used to adjust the start address of wildcard allocation  * requests to avoid low addresses that are known to be problematic.  *  * If no memory preference is given, use upper 32MB slot most BIOSes  * use for their memory window.  This is typically only used on older  * laptops that don't have PCI busses behind a PCI bridge, so assuming  *> 32MB is likely OK.  *	  * However, this can cause problems for other chipsets, so we make  * this tunable by hw.pci.host_mem_start.  */
+comment|/*  * Helper routine for x86 Host-PCI bridge driver resource allocation.  * This is used to adjust the start address of wildcard allocation  * requests to avoid low addresses that are known to be problematic.  *  * If no memory preference is given, use upper 32MB slot most BIOSes  * use for their memory window.  This is typically only used on older  * laptops that don't have PCI buses behind a PCI bridge, so assuming  *> 32MB is likely OK.  *	  * However, this can cause problems for other chipsets, so we make  * this tunable by hw.pci.host_mem_start.  */
 end_comment
 
 begin_expr_stmt
@@ -2843,7 +2843,7 @@ name|__HAVE_PIR
 end_ifdef
 
 begin_comment
-comment|/*  * Provide a PCI-PCI bridge driver for PCI busses behind PCI-PCI bridges  * that appear in the PCIBIOS Interrupt Routing Table to use the routing  * table for interrupt routing when possible.  */
+comment|/*  * Provide a PCI-PCI bridge driver for PCI buses behind PCI-PCI bridges  * that appear in the PCIBIOS Interrupt Routing Table to use the routing  * table for interrupt routing when possible.  */
 end_comment
 
 begin_function_decl

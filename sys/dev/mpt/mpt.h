@@ -2938,7 +2938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Some operations (e.g. diagnostic register writes while the ARM proccessor  * is disabled), must be performed using "PCI pio" operations.  On non-PCI  * busses, these operations likely map to normal register accesses.  */
+comment|/*  * Some operations (e.g. diagnostic register writes while the ARM proccessor  * is disabled), must be performed using "PCI pio" operations.  On non-PCI  * buses, these operations likely map to normal register accesses.  */
 end_comment
 
 begin_function

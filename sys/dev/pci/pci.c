@@ -15571,7 +15571,7 @@ literal|", enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If base is 0, then we have problems if this architecture does 	 * not allow that.  It is best to ignore such entries for the 	 * moment.  These will be allocated later if the driver specifically 	 * requests them.  However, some removable busses look better when 	 * all resources are allocated, so allow '0' to be overriden. 	 * 	 * Similarly treat maps whose values is the same as the test value 	 * read back.  These maps have had all f's written to them by the 	 * BIOS in an attempt to disable the resources. 	 */
+comment|/* 	 * If base is 0, then we have problems if this architecture does 	 * not allow that.  It is best to ignore such entries for the 	 * moment.  These will be allocated later if the driver specifically 	 * requests them.  However, some removable buses look better when 	 * all resources are allocated, so allow '0' to be overriden. 	 * 	 * Similarly treat maps whose values is the same as the test value 	 * read back.  These maps have had all f's written to them by the 	 * BIOS in an attempt to disable the resources. 	 */
 if|if
 condition|(
 operator|!
@@ -20797,7 +20797,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Since there can be multiple independently numbered PCI 	 * busses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our domain and bus numbers are. 	 */
+comment|/* 	 * Since there can be multiple independently numbered PCI 	 * buses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our domain and bus numbers are. 	 */
 name|domain
 operator|=
 name|pcib_get_domain

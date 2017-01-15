@@ -16,7 +16,7 @@ name|_PCI_PRIVATE_H_
 end_define
 
 begin_comment
-comment|/*  * Export definitions of the pci bus so that we can more easily share  * it with "subclass" busses.  */
+comment|/*  * Export definitions of the pci bus so that we can more easily share  * it with "subclass" buses.  */
 end_comment
 
 begin_expr_stmt

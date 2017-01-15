@@ -242,7 +242,7 @@ block|{
 name|uint32_t
 name|reg
 decl_stmt|;
-comment|/* ahpbdma, aipstz 1& 2 busses */
+comment|/* ahpbdma, aipstz 1& 2 buses */
 name|reg
 operator|=
 name|CCGR0_AIPS_TZ1

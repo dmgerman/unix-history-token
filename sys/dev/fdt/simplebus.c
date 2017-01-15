@@ -547,7 +547,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * FDT data puts a "simple-bus" compatible string on many things that 	 * have children but aren't really busses in our world.  Without a 	 * ranges property we will fail to attach, so just fail to probe too. 	 */
+comment|/* 	 * FDT data puts a "simple-bus" compatible string on many things that 	 * have children but aren't really buses in our world.  Without a 	 * ranges property we will fail to attach, so just fail to probe too. 	 */
 if|if
 condition|(
 operator|!
