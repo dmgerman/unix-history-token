@@ -384,6 +384,16 @@ name|SDHCI_QUIRK_RESET_AFTER_REQUEST
 block|}
 block|,
 block|{
+literal|0x16bc14e4
+block|,
+literal|0xffff
+block|,
+literal|"Broadcom BCM577xx SDXC/MMC Card Reader"
+block|,
+name|SDHCI_QUIRK_BCM577XX_400KHZ_CLKSRC
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0xffff
@@ -1773,6 +1783,14 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|slot
+operator|->
+name|quirks
+operator|=
+name|sc
+operator|->
+name|quirks
+expr_stmt|;
 if|if
 condition|(
 name|sdhci_init_slot

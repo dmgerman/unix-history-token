@@ -210,6 +210,28 @@ value|(1<<15)
 end_define
 
 begin_comment
+comment|/* Alternate clock source is required when supplying a 400 KHz clock. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BCM577XX_400KHZ_CLKSRC
+value|(1<<16)
+end_define
+
+begin_comment
+comment|/* Card insert/remove interrupts don't work, polling required. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_POLL_CARD_PRESENT
+value|(1<<17)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
@@ -1377,14 +1399,22 @@ comment|/* Slot options */
 define|#
 directive|define
 name|SDHCI_HAVE_DMA
-value|1
+value|0x01
 define|#
 directive|define
 name|SDHCI_PLATFORM_TRANSFER
-value|2
+value|0x02
+define|#
+directive|define
+name|SDHCI_NON_REMOVABLE
+value|0x04
 name|u_char
 name|version
 decl_stmt|;
+name|int
+name|timeout
+decl_stmt|;
+comment|/* Transfer timeout */
 name|uint32_t
 name|max_clk
 decl_stmt|;
@@ -1413,10 +1443,15 @@ name|card_task
 decl_stmt|;
 comment|/* Card presence check task */
 name|struct
-name|callout
-name|card_callout
+name|timeout_task
+name|card_delayed_task
 decl_stmt|;
-comment|/* Card insert delay callout */
+comment|/* Card insert delayed task */
+name|struct
+name|callout
+name|card_poll_callout
+decl_stmt|;
+comment|/* Card present polling callout */
 name|struct
 name|callout
 name|timeout_callout
@@ -1716,6 +1751,36 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|sdhci_generic_get_card_present
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sdhci_handle_card_present
+parameter_list|(
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|,
+name|bool
+name|is_present
 parameter_list|)
 function_decl|;
 end_function_decl
