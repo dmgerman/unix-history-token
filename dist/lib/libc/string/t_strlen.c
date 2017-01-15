@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_strlen.c,v 1.5 2011/07/14 07:33:20 jruoho Exp $ */
+comment|/* $NetBSD: t_strlen.c,v 1.6 2017/01/14 20:49:24 christos Exp $ */
 end_comment
 
 begin_comment
@@ -184,6 +184,10 @@ end_macro
 
 begin_block
 block|{
+name|void
+modifier|*
+name|dl_handle
+decl_stmt|;
 comment|/* try to trick the compiler */
 name|size_t
 function_decl|(
@@ -451,16 +455,20 @@ block|}
 block|, 	}
 decl_stmt|;
 comment|/* 	 * During testing it is useful have the rest of the program 	 * use a known good version! 	 */
-name|strlen_fn
+name|dl_handle
 operator|=
-name|dlsym
-argument_list|(
 name|dlopen
 argument_list|(
 name|NULL
 argument_list|,
 name|RTLD_LAZY
 argument_list|)
+expr_stmt|;
+name|strlen_fn
+operator|=
+name|dlsym
+argument_list|(
+name|dl_handle
 argument_list|,
 literal|"test_strlen"
 argument_list|)
@@ -673,6 +681,14 @@ expr_stmt|;
 block|}
 block|}
 block|}
+operator|(
+name|void
+operator|)
+name|dlclose
+argument_list|(
+name|dl_handle
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
