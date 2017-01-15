@@ -84,24 +84,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__gl_stat_t
-value|struct stat
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|DEBUG
 end_ifdef
 
