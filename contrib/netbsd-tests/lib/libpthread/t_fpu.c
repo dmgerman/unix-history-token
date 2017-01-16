@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_fpu.c,v 1.2 2013/01/27 14:47:37 mbalmer Exp $ */
+comment|/* $NetBSD: t_fpu.c,v 1.3 2017/01/16 16:27:43 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_fpu.c,v 1.2 2013/01/27 14:47:37 mbalmer Exp $"
+literal|"$NetBSD: t_fpu.c,v 1.3 2017/01/16 16:27:43 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,6 +32,12 @@ end_expr_stmt
 begin_comment
 comment|/*  * This is adapted from part of csw/cstest of the MPD implementation by  * the University of Arizona CS department (http://www.cs.arizona.edu/sr/)  * which is in the public domain:  *  * "The MPD system is in the public domain and you may use and distribute it  *  as you wish.  We ask that you retain credits referencing the University  *  of Arizona and that you identify any changes you make.  *  *  We can't provide a warranty with MPD; it's up to you to determine its  *  suitability and reliability for your needs.  We would like to hear of  *  any problems you encounter but we cannot promise a timely correction."  *  * It was changed to use pthread_create() and sched_yield() instead of  * the internal MPD context switching primitives by Ignatios Souvatzis  *<is@netbsd.org>.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_include
 include|#
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -214,9 +226,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|ATF_REQUIRE_MSG
 argument_list|(
 name|sched_yield
@@ -232,16 +241,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|PTHREAD_REQUIRE
-argument_list|(
-name|sched_yield
-argument_list|()
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -261,9 +260,6 @@ name|double
 name|z
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|ATF_REQUIRE_MSG
 argument_list|(
 name|sched_yield
@@ -279,16 +275,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|PTHREAD_REQUIRE
-argument_list|(
-name|sched_yield
-argument_list|()
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|x
 operator|*
@@ -409,9 +395,6 @@ block|{
 name|pthread_t
 name|s2
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|PTHREAD_REQUIRE
 argument_list|(
 name|pthread_create
@@ -427,22 +410,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|pthread_create
-argument_list|(
-operator|&
-name|s2
-argument_list|,
-literal|0
-argument_list|,
-name|bar
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sleep
 argument_list|(
 literal|20
@@ -526,9 +493,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|PTHREAD_REQUIRE
 argument_list|(
 name|pthread_create
@@ -544,22 +508,6 @@ name|stirseed
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|pthread_create
-argument_list|(
-operator|&
-name|s5
-argument_list|,
-literal|0
-argument_list|,
-name|stir
-argument_list|,
-name|stirseed
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|recurse
 argument_list|()
 expr_stmt|;
