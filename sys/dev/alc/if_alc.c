@@ -544,6 +544,18 @@ literal|"Killer E2400 Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|VENDORID_ATHEROS
+block|,
+name|DEVICEID_ATHEROS_E2500
+block|,
+literal|9
+operator|*
+literal|1024
+block|,
+literal|"Killer E2500 Gigabit Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -6219,6 +6231,9 @@ case|case
 name|DEVICEID_ATHEROS_E2400
 case|:
 case|case
+name|DEVICEID_ATHEROS_E2500
+case|:
+case|case
 name|DEVICEID_ATHEROS_AR8162
 case|:
 case|case
@@ -7783,6 +7798,9 @@ case|:
 case|case
 name|DEVICEID_ATHEROS_E2400
 case|:
+case|case
+name|DEVICEID_ATHEROS_E2500
+case|:
 name|sc
 operator|->
 name|alc_flags
@@ -8147,7 +8165,7 @@ name|alc_dma_wr_burst
 operator|=
 literal|3
 expr_stmt|;
-comment|/* 		 * Force maximum payload size to 128 bytes for E2200/E2400. 		 * Otherwise it triggers DMA write error. 		 */
+comment|/* 		 * Force maximum payload size to 128 bytes for 		 * E2200/E2400/E2500. 		 * Otherwise it triggers DMA write error. 		 */
 if|if
 condition|(
 operator|(
