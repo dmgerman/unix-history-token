@@ -6867,9 +6867,8 @@ literal|0x0E
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid field in command information unit"
 argument_list|)
 block|}
