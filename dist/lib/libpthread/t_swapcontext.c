@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_swapcontext.c,v 1.2 2014/08/25 16:31:15 bouyer Exp $ */
+comment|/* $NetBSD: t_swapcontext.c,v 1.3 2017/01/16 16:27:06 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,13 +24,19 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ucontext.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
 end_include
 
 begin_include
@@ -43,6 +49,18 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ucontext.h>
 end_include
 
 begin_include
@@ -233,7 +251,7 @@ argument_list|,
 name|oself
 argument_list|)
 expr_stmt|;
-name|PTHREAD_REQUIRE
+name|ATF_REQUIRE_MSG
 argument_list|(
 name|swapcontext
 argument_list|(
@@ -242,6 +260,16 @@ name|octx
 argument_list|,
 operator|&
 name|nctx
+argument_list|)
+operator|!=
+operator|-
+literal|1
+argument_list|,
+literal|"swapcontext failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -321,12 +349,22 @@ argument_list|(
 literal|"Testing if swapcontext() alters pthread_self()\n"
 argument_list|)
 expr_stmt|;
-name|PTHREAD_REQUIRE
+name|ATF_REQUIRE_MSG
 argument_list|(
 name|getcontext
 argument_list|(
 operator|&
 name|nctx
+argument_list|)
+operator|!=
+operator|-
+literal|1
+argument_list|,
+literal|"getcontext failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;

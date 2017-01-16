@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_mmap.c,v 1.11 2017/01/13 20:43:11 christos Exp $ */
+comment|/* $NetBSD: t_mmap.c,v 1.12 2017/01/16 16:31:05 christos Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_mmap.c,v 1.11 2017/01/13 20:43:11 christos Exp $"
+literal|"$NetBSD: t_mmap.c,v 1.12 2017/01/16 16:31:05 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
 end_include
 
 begin_include
@@ -113,12 +119,6 @@ begin_include
 include|#
 directive|include
 file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/disklabel.h>
 end_include
 
 begin_decl_stmt

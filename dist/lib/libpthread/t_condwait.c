@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_condwait.c,v 1.4 2013/04/12 17:18:11 christos Exp $ */
+comment|/* $NetBSD: t_condwait.c,v 1.5 2017/01/16 16:29:19 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,10 +16,16 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_condwait.c,v 1.4 2013/04/12 17:18:11 christos Exp $"
+literal|"$NetBSD: t_condwait.c,v 1.5 2017/01/16 16:29:19 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_include
 include|#
@@ -73,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"isqemu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"h_common.h"
 end_include
 
 begin_define
@@ -143,12 +155,17 @@ operator|*
 operator|)
 name|param
 expr_stmt|;
+name|PTHREAD_REQUIRE
+argument_list|(
 name|pthread_condattr_init
 argument_list|(
 operator|&
 name|attr
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|PTHREAD_REQUIRE
+argument_list|(
 name|pthread_condattr_setclock
 argument_list|(
 operator|&
@@ -156,8 +173,8 @@ name|attr
 argument_list|,
 name|clck
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* MONOTONIC or MONOTONIC */
 name|pthread_cond_init
 argument_list|(
 operator|&

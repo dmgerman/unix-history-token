@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: h_memset.c,v 1.1 2010/12/27 02:04:19 pgoyette Exp $ */
+comment|/* $NetBSD: h_memset.c,v 1.2 2017/01/16 16:34:24 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: h_memset.c,v 1.1 2010/12/27 02:04:19 pgoyette Exp $"
+literal|"$NetBSD: h_memset.c,v 1.2 2017/01/16 16:34:24 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -90,8 +90,12 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+name|b
+index|[
 literal|0
+index|]
 return|;
+comment|/* keeps optimizer from zapping the call to memset() */
 block|}
 end_function
 

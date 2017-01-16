@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_fork.c,v 1.1 2010/07/16 15:42:53 jmmv Exp $ */
+comment|/* $NetBSD: t_fork.c,v 1.2 2017/01/16 16:28:27 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_fork.c,v 1.1 2010/07/16 15:42:53 jmmv Exp $"
+literal|"$NetBSD: t_fork.c,v 1.2 2017/01/16 16:28:27 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -143,7 +143,7 @@ name|getpid
 argument_list|()
 condition|)
 block|{
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -301,7 +301,7 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 name|thread_survived
 condition|?

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_mutex.c,v 1.14 2016/10/31 23:51:20 christos Exp $ */
+comment|/* $NetBSD: t_mutex.c,v 1.15 2017/01/16 16:23:41 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,10 +24,30 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_mutex.c,v 1.14 2016/10/31 23:51:20 christos Exp $"
+literal|"$NetBSD: t_mutex.c,v 1.15 2017/01/16 16:23:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* For timespecadd */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_comment
+comment|/* For UINT16_MAX */
+end_comment
 
 begin_include
 include|#
@@ -2700,6 +2720,30 @@ block|{
 name|int
 name|prioceiling
 decl_stmt|;
+name|int
+name|protocol
+decl_stmt|;
+name|PTHREAD_REQUIRE
+argument_list|(
+name|pthread_mutexattr_getprotocol
+argument_list|(
+operator|&
+name|mattr
+argument_list|,
+operator|&
+name|protocol
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"priority: %d\nprotocol: %d\n"
+argument_list|,
+name|i
+argument_list|,
+name|protocol
+argument_list|)
+expr_stmt|;
 name|PTHREAD_REQUIRE
 argument_list|(
 name|pthread_mutexattr_setprioceiling
@@ -2721,6 +2765,13 @@ argument_list|,
 operator|&
 name|prioceiling
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"prioceiling: %d\n"
+argument_list|,
+name|prioceiling
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_EQ

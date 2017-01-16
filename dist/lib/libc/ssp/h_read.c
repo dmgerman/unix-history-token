@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: h_read.c,v 1.1 2010/12/27 02:04:19 pgoyette Exp $ */
+comment|/* $NetBSD: h_read.c,v 1.2 2017/01/16 16:35:57 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: h_read.c,v 1.1 2010/12/27 02:04:19 pgoyette Exp $"
+literal|"$NetBSD: h_read.c,v 1.2 2017/01/16 16:35:57 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -33,6 +33,18 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -72,6 +84,11 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|,
+name|n
+decl_stmt|;
 name|size_t
 name|len
 init|=
@@ -83,17 +100,45 @@ literal|1
 index|]
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
 operator|(
-name|void
+name|fd
+operator|=
+name|open
+argument_list|(
+name|_PATH_DEVZERO
+argument_list|,
+name|O_RDONLY
+argument_list|)
 operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|n
+operator|=
 name|read
 argument_list|(
-literal|0
+name|fd
 argument_list|,
 name|b
 argument_list|,
 name|len
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|abort
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -106,7 +151,9 @@ name|b
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

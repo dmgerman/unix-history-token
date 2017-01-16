@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_detach.c,v 1.1 2011/03/24 13:52:04 jruoho Exp $ */
+comment|/* $NetBSD: t_detach.c,v 1.2 2017/01/16 16:29:54 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,10 +16,16 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_detach.c,v 1.1 2011/03/24 13:52:04 jruoho Exp $"
+literal|"$NetBSD: t_detach.c,v 1.2 2017/01/16 16:29:54 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_include
 include|#
@@ -30,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<time.h>
 end_include
 
 begin_include
@@ -68,6 +74,11 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -177,6 +188,11 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|rv
 operator|=
 name|pthread_join
@@ -193,12 +209,17 @@ operator|==
 name|EINVAL
 argument_list|)
 expr_stmt|;
+name|sleep
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
 comment|/* 	 * As usual, ESRCH should follow if 	 * we try to detach an invalid thread. 	 */
 name|rv
 operator|=
 name|pthread_cancel
 argument_list|(
-name|NULL
+name|t
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
