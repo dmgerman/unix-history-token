@@ -231,6 +231,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|ARSWITCH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Enable CPU port; disable mirror port */
 name|arswitch_writereg
 argument_list|(
@@ -459,6 +464,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ARSWITCH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -532,6 +542,11 @@ comment|/* Settle time */
 name|DELAY
 argument_list|(
 literal|1000
+argument_list|)
+expr_stmt|;
+name|ARSWITCH_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return

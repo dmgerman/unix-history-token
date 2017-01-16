@@ -119,7 +119,7 @@ operator|(
 name|res
 operator|)
 return|;
-comment|/* 	 * Nothing special to do for PCI busses right now. 	 * This may need to be handled per-platform when it does come up. 	 */
+comment|/* 	 * Nothing special to do for PCI buses right now. 	 * This may need to be handled per-platform when it does come up. 	 */
 ifdef|#
 directive|ifdef
 name|notyet

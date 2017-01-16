@@ -4680,7 +4680,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Call BUS_DRIVER_ADDED for any existing busses in this class. 	 */
+comment|/* 	 * Call BUS_DRIVER_ADDED for any existing buses in this class. 	 */
 for|for
 control|(
 name|i
@@ -11709,7 +11709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief Allocate a reserved resource  *  * This can be used by busses to force the allocation of resources  * that are always active in the system even if they are not allocated  * by a driver (e.g. PCI BARs).  This function is usually called when  * adding a new child to the bus.  The resource is allocated from the  * parent bus when it is reserved.  The resource list entry is marked  * with RLE_RESERVED to note that it is a reserved resource.  *  * Subsequent attempts to allocate the resource with  * resource_list_alloc() will succeed the first time and will set  * RLE_ALLOCATED to note that it has been allocated.  When a reserved  * resource that has been allocated is released with  * resource_list_release() the resource RLE_ALLOCATED is cleared, but  * the actual resource remains allocated.  The resource can be released to  * the parent bus by calling resource_list_unreserve().  *  * @param rl		the resource list to allocate from  * @param bus		the parent device of @p child  * @param child		the device for which the resource is being reserved  * @param type		the type of resource to allocate  * @param rid		a pointer to the resource identifier  * @param start		hint at the start of the resource range - pass  *			@c 0 for any start address  * @param end		hint at the end of the resource range - pass  *			@c ~0 for any end address  * @param count		hint at the size of range required - pass @c 1  *			for any size  * @param flags		any extra flags to control the resource  *			allocation - see @c RF_XXX flags in  *<sys/rman.h> for details  *  * @returns		the resource which was allocated or @c NULL if no  *			resource could be allocated  */
+comment|/**  * @brief Allocate a reserved resource  *  * This can be used by buses to force the allocation of resources  * that are always active in the system even if they are not allocated  * by a driver (e.g. PCI BARs).  This function is usually called when  * adding a new child to the bus.  The resource is allocated from the  * parent bus when it is reserved.  The resource list entry is marked  * with RLE_RESERVED to note that it is a reserved resource.  *  * Subsequent attempts to allocate the resource with  * resource_list_alloc() will succeed the first time and will set  * RLE_ALLOCATED to note that it has been allocated.  When a reserved  * resource that has been allocated is released with  * resource_list_release() the resource RLE_ALLOCATED is cleared, but  * the actual resource remains allocated.  The resource can be released to  * the parent bus by calling resource_list_unreserve().  *  * @param rl		the resource list to allocate from  * @param bus		the parent device of @p child  * @param child		the device for which the resource is being reserved  * @param type		the type of resource to allocate  * @param rid		a pointer to the resource identifier  * @param start		hint at the start of the resource range - pass  *			@c 0 for any start address  * @param end		hint at the end of the resource range - pass  *			@c ~0 for any end address  * @param count		hint at the size of range required - pass @c 1  *			for any size  * @param flags		any extra flags to control the resource  *			allocation - see @c RF_XXX flags in  *<sys/rman.h> for details  *  * @returns		the resource which was allocated or @c NULL if no  *			resource could be allocated  */
 end_comment
 
 begin_function
@@ -12960,7 +12960,7 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
-comment|/* 		 * If this driver's pass is too high, then ignore it. 		 * For most drivers in the default pass, this will 		 * never be true.  For early-pass drivers they will 		 * only call the identify routines of eligible drivers 		 * when this routine is called.  Drivers for later 		 * passes should have their identify routines called 		 * on early-pass busses during BUS_NEW_PASS(). 		 */
+comment|/* 		 * If this driver's pass is too high, then ignore it. 		 * For most drivers in the default pass, this will 		 * never be true.  For early-pass drivers they will 		 * only call the identify routines of eligible drivers 		 * when this routine is called.  Drivers for later 		 * passes should have their identify routines called 		 * on early-pass buses during BUS_NEW_PASS(). 		 */
 if|if
 condition|(
 name|dl

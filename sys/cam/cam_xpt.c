@@ -375,7 +375,7 @@ decl_stmt|;
 name|int
 name|buses_config_done
 decl_stmt|;
-comment|/* Registered busses */
+comment|/* 	 * Registered buses 	 * 	 * N.B., "busses" is an archaic spelling of "buses".  In new code 	 * "buses" is preferred. 	 */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -4105,7 +4105,7 @@ name|CAM_BOOT_DELAY
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * The xpt layer is, itself, the equivalent of a SIM. 	 * Allow 16 ccbs in the ccb pool for it.  This should 	 * give decent parallelism when we probe busses and 	 * perform other XPT functions. 	 */
+comment|/* 	 * The xpt layer is, itself, the equivalent of a SIM. 	 * Allow 16 ccbs in the ccb pool for it.  This should 	 * give decent parallelism when we probe buses and 	 * perform other XPT functions. 	 */
 name|devq
 operator|=
 name|cam_simq_alloc
@@ -7482,7 +7482,7 @@ name|DEV_IDLEN
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the user is only interested in busses, there's no 	 * reason to descend to the next level in the tree. 	 */
+comment|/* 	 * If the user is only interested in buses, there's no 	 * reason to descend to the next level in the tree. 	 */
 if|if
 condition|(
 operator|(
@@ -9738,7 +9738,7 @@ name|num_matches
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * At this point in the edt traversal function, we check the bus 	 * list generation to make sure that no busses have been added or 	 * removed since the user last sent a XPT_DEV_MATCH ccb through. 	 * For the peripheral driver list traversal function, however, we 	 * don't have to worry about new peripheral driver types coming or 	 * going; they're in a linker set, and therefore can't change 	 * without a recompile. 	 */
+comment|/* 	 * At this point in the edt traversal function, we check the bus 	 * list generation to make sure that no buses have been added or 	 * removed since the user last sent a XPT_DEV_MATCH ccb through. 	 * For the peripheral driver list traversal function, however, we 	 * don't have to worry about new peripheral driver types coming or 	 * going; they're in a linker set, and therefore can't change 	 * without a recompile. 	 */
 if|if
 condition|(
 operator|(
@@ -13068,7 +13068,7 @@ name|start_ccb
 operator|->
 name|cdm
 expr_stmt|;
-comment|/* 		 * There are two ways of getting at information in the EDT. 		 * The first way is via the primary EDT tree.  It starts 		 * with a list of busses, then a list of targets on a bus, 		 * then devices/luns on a target, and then peripherals on a 		 * device/lun.  The "other" way is by the peripheral driver 		 * lists.  The peripheral driver lists are organized by 		 * peripheral driver.  (obviously)  So it makes sense to 		 * use the peripheral driver list if the user is looking 		 * for something like "da1", or all "da" devices.  If the 		 * user is looking for something on a particular bus/target 		 * or lun, it's generally better to go through the EDT tree. 		 */
+comment|/* 		 * There are two ways of getting at information in the EDT. 		 * The first way is via the primary EDT tree.  It starts 		 * with a list of buses, then a list of targets on a bus, 		 * then devices/luns on a target, and then peripherals on a 		 * device/lun.  The "other" way is by the peripheral driver 		 * lists.  The peripheral driver lists are organized by 		 * peripheral driver.  (obviously)  So it makes sense to 		 * use the peripheral driver list if the user is looking 		 * for something like "da1", or all "da" devices.  If the 		 * user is looking for something on a particular bus/target 		 * or lun, it's generally better to go through the EDT tree. 		 */
 if|if
 condition|(
 name|cdm
@@ -15425,7 +15425,7 @@ argument_list|(
 name|work_ccb
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Device queues can be shared among multiple SIM instances 		 * that reside on different busses.  Use the SIM from the 		 * queued device, rather than the one from the calling bus. 		 */
+comment|/* 		 * Device queues can be shared among multiple SIM instances 		 * that reside on different buses.  Use the SIM from the 		 * queued device, rather than the one from the calling bus. 		 */
 name|sim
 operator|=
 name|device
@@ -17845,7 +17845,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * A sim structure, listing the SIM entry points and instance  * identification info is passed to xpt_bus_register to hook the SIM  * into the CAM framework.  xpt_bus_register creates a cam_eb entry  * for this new bus and places it in the array of busses and assigns  * it a path_id.  The path_id may be influenced by "hard wiring"  * information specified by the user.  Once interrupt services are  * available, the bus will be probed.  */
+comment|/*  * A sim structure, listing the SIM entry points and instance  * identification info is passed to xpt_bus_register to hook the SIM  * into the CAM framework.  xpt_bus_register creates a cam_eb entry  * for this new bus and places it in the array of buses and assigns  * it a path_id.  The path_id may be influenced by "hard wiring"  * information specified by the user.  Once interrupt services are  * available, the bus will be probed.  */
 end_comment
 
 begin_function
@@ -23826,7 +23826,7 @@ expr_stmt|;
 name|xpt_unlock_buses
 argument_list|()
 expr_stmt|;
-comment|/* Call manually because we don't have any busses */
+comment|/* Call manually because we don't have any buses */
 name|task
 operator|=
 name|malloc
@@ -24266,7 +24266,7 @@ name|AC_PATH_REGISTERED
 operator|)
 condition|)
 block|{
-comment|/* 		 * Get this peripheral up to date with all 		 * the currently existing busses. 		 */
+comment|/* 		 * Get this peripheral up to date with all 		 * the currently existing buses. 		 */
 name|xpt_for_all_busses
 argument_list|(
 name|xptsetasyncbusfunc

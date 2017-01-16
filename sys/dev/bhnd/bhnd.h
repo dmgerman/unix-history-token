@@ -168,7 +168,7 @@ name|BHND_PROBE_BUS
 init|=
 literal|1000
 block|,
-comment|/**< Busses and bridges */
+comment|/**< Buses and bridges */
 name|BHND_PROBE_CPU
 init|=
 literal|2000

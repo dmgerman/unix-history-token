@@ -2010,7 +2010,7 @@ name|bus_type
 operator|=
 name|NOBUS
 expr_stmt|;
-comment|/* Second, we run through adding I/O APIC's and busses. */
+comment|/* Second, we run through adding I/O APIC's and buses. */
 name|mptable_parse_apics_and_busses
 argument_list|()
 expr_stmt|;
@@ -2836,7 +2836,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enumerate I/O APIC's and busses.  */
+comment|/*  * Enumerate I/O APIC's and buses.  */
 end_comment
 
 begin_function
@@ -4356,7 +4356,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Find the first pci bus and call it 0.  Panic if pci0 is not 	 * bus zero and there are multiple PCI busses. 	 */
+comment|/* 	 * Find the first pci bus and call it 0.  Panic if pci0 is not 	 * bus zero and there are multiple PCI buses. 	 */
 for|for
 control|(
 name|i
@@ -4402,7 +4402,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"MPTable contains multiple PCI busses but no PCI bus 0"
+literal|"MPTable contains multiple PCI buses but no PCI bus 0"
 argument_list|)
 expr_stmt|;
 block|}

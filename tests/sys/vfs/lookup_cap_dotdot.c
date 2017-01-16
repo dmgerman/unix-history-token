@@ -617,6 +617,13 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
+name|atf_tc_expect_signal
+argument_list|(
+name|SIGABRT
+argument_list|,
+literal|"needs change done upstream in atf/kyua according to cem: bug 215690"
+argument_list|)
+expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
 name|cap_enter
@@ -699,6 +706,13 @@ argument_list|()
 expr_stmt|;
 name|prepare_dotdot_tests
 argument_list|()
+expr_stmt|;
+name|atf_tc_expect_signal
+argument_list|(
+name|SIGABRT
+argument_list|,
+literal|"needs change done upstream in atf/kyua according to cem: bug 215690"
+argument_list|)
 expr_stmt|;
 name|cap_rights_init
 argument_list|(
@@ -925,6 +939,13 @@ expr_stmt|;
 name|prepare_dotdot_tests
 argument_list|()
 expr_stmt|;
+name|atf_tc_expect_signal
+argument_list|(
+name|SIGABRT
+argument_list|,
+literal|"needs change done upstream in atf/kyua according to cem: bug 215690"
+argument_list|)
+expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
 name|cap_enter
@@ -1125,6 +1146,13 @@ name|rights
 argument_list|)
 operator|>=
 literal|0
+argument_list|)
+expr_stmt|;
+name|atf_tc_expect_signal
+argument_list|(
+name|SIGABRT
+argument_list|,
+literal|"needs change done upstream in atf/kyua according to cem: bug 215690"
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE

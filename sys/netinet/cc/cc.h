@@ -32,7 +32,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"no user-servicable parts inside"
+literal|"no user-serviceable parts inside"
 end_error
 
 begin_endif

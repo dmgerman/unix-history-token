@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/**  * \file xenbusb.c  *  * \brief Shared support functions for managing the NewBus busses that contain  *        Xen front and back end device instances.  *  * The NewBus implementation of XenBus attaches a xenbusb_front and xenbusb_back  * child bus to the xenstore device.  This strategy allows the small differences  * in the handling of XenBus operations for front and back devices to be handled  * as overrides in xenbusb_front/back.c.  Front and back specific device  * classes are also provided so device drivers can register for the devices they  * can handle without the need to filter within their probe routines.  The  * net result is a device hierarchy that might look like this:  *  * xenstore0/  *           xenbusb_front0/  *                         xn0  *                         xbd0  *                         xbd1  *           xenbusb_back0/  *                        xbbd0  *                        xnb0  *                        xnb1  */
+comment|/**  * \file xenbusb.c  *  * \brief Shared support functions for managing the NewBus buses that contain  *        Xen front and back end device instances.  *  * The NewBus implementation of XenBus attaches a xenbusb_front and xenbusb_back  * child bus to the xenstore device.  This strategy allows the small differences  * in the handling of XenBus operations for front and back devices to be handled  * as overrides in xenbusb_front/back.c.  Front and back specific device  * classes are also provided so device drivers can register for the devices they  * can handle without the need to filter within their probe routines.  The  * net result is a device hierarchy that might look like this:  *  * xenstore0/  *           xenbusb_front0/  *                         xn0  *                         xbd0  *                         xbd1  *           xenbusb_back0/  *                        xbbd0  *                        xnb0  *                        xnb1  */
 end_comment
 
 begin_include
@@ -2332,7 +2332,7 @@ name|xbs_dev
 operator|=
 name|dev
 expr_stmt|;
-comment|/* 	 * Since XenBus busses are attached to the XenStore, and 	 * the XenStore does not probe children until after interrupt 	 * services are available, this config hook is used solely 	 * to ensure that the remainder of the boot process (e.g. 	 * mount root) is deferred until child devices are adequately 	 * probed.  We unblock the boot process as soon as the 	 * connecting child count in our softc goes to 0. 	 */
+comment|/* 	 * Since XenBus buses are attached to the XenStore, and 	 * the XenStore does not probe children until after interrupt 	 * services are available, this config hook is used solely 	 * to ensure that the remainder of the boot process (e.g. 	 * mount root) is deferred until child devices are adequately 	 * probed.  We unblock the boot process as soon as the 	 * connecting child count in our softc goes to 0. 	 */
 name|xbs
 operator|->
 name|xbs_attach_ch
