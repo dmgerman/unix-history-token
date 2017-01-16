@@ -148,8 +148,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVFILT_EMPTY
+value|(-13)
+end_define
+
+begin_comment
+comment|/* empty send socket buf */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVFILT_SYSCOUNT
-value|12
+value|13
 end_define
 
 begin_define

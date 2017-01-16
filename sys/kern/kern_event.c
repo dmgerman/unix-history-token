@@ -1789,6 +1789,14 @@ name|null_filtops
 block|}
 block|,
 comment|/* EVFILT_SENDFILE */
+block|{
+operator|&
+name|file_filtops
+block|,
+literal|1
+block|}
+block|,
+comment|/* EVFILT_EMPTY */
 block|}
 struct|;
 end_struct
