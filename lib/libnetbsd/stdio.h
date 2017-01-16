@@ -19,12 +19,6 @@ begin_empty
 empty|#include_next<stdio.h>
 end_empty
 
-begin_include
-include|#
-directive|include
-file|"util.h"
-end_include
-
 begin_endif
 endif|#
 directive|endif
