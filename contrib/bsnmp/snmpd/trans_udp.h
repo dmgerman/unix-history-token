@@ -33,6 +33,11 @@ name|sockaddr_in
 name|ret
 decl_stmt|;
 comment|/* the return address */
+name|struct
+name|in_addr
+name|recv_addr
+decl_stmt|;
+comment|/* the address the request was sent to */
 block|}
 struct|;
 end_struct
