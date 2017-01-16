@@ -295,6 +295,10 @@ comment|/* routing domain for this socket */
 name|uint32_t
 name|so_user_cookie
 decl_stmt|;
+name|int
+name|so_ts_clock
+decl_stmt|;
+comment|/* type of the clock used for timestamps */
 name|void
 modifier|*
 name|so_pspare

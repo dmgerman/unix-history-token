@@ -783,6 +783,86 @@ begin_comment
 comment|/* alias for SO_PROTOCOL (SunOS name) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_TS_CLOCK
+value|0x1017
+end_define
+
+begin_comment
+comment|/* clock type used for SO_TIMESTAMP */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|SO_TS_REALTIME_MICRO
+value|0
+end_define
+
+begin_comment
+comment|/* microsecond resolution, realtime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_TS_BINTIME
+value|1
+end_define
+
+begin_comment
+comment|/* sub-nanosecond resolution, realtime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_TS_REALTIME
+value|2
+end_define
+
+begin_comment
+comment|/* nanosecond resolution, realtime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_TS_MONOTONIC
+value|3
+end_define
+
+begin_comment
+comment|/* nanosecond resolution, monotonic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_TS_DEFAULT
+value|SO_TS_REALTIME_MICRO
+end_define
+
+begin_define
+define|#
+directive|define
+name|SO_TS_CLOCK_MAX
+value|SO_TS_MONOTONIC
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2768,6 +2848,28 @@ end_define
 
 begin_comment
 comment|/* timestamp (struct bintime) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCM_REALTIME
+value|0x05
+end_define
+
+begin_comment
+comment|/* timestamp (struct timespec) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCM_MONOTONIC
+value|0x06
+end_define
+
+begin_comment
+comment|/* timestamp (struct timespec) */
 end_comment
 
 begin_endif

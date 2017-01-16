@@ -155,6 +155,18 @@ directive|include
 file|"t_cmsg_len.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"t_timespec_real.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"t_timespec_mono.h"
+end_include
+
 begin_comment
 comment|/*  * There are tables with tests descriptions and pointers to test  * functions.  Each t_*() function returns 0 if its test passed,  * -1 if its test failed, -2 if some system error occurred.  * If a test function returns -2, then a program exits.  *  * If a test function forks a client process, then it waits for its  * termination.  If a return code of a client process is not equal  * to zero, or if a client process was terminated by a signal, then  * a test function returns -1 or -2 depending on exit status of  * a client process.  *  * Each function which can block, is run under TIMEOUT.  If timeout  * occurs, then a test function returns -2 or a client process exits  * with a non-zero return code.  */
 end_comment
@@ -303,6 +315,46 @@ name|desc
 operator|=
 literal|"Check LOCAL_PEERCRED socket option"
 block|}
+block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCM_REALTIME
+argument_list|)
+block|{
+operator|.
+name|func
+operator|=
+name|t_timespec_real
+block|,
+operator|.
+name|desc
+operator|=
+literal|"Sending, receiving realtime"
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCM_MONOTONIC
+argument_list|)
+block|{
+operator|.
+name|func
+operator|=
+name|t_timespec_mono
+block|,
+operator|.
+name|desc
+operator|=
+literal|"Sending, receiving monotonic time (uptime)"
+block|}
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -409,6 +461,46 @@ operator|.
 name|desc
 operator|=
 literal|"Check cmsghdr.cmsg_len"
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCM_REALTIME
+argument_list|)
+block|{
+operator|.
+name|func
+operator|=
+name|t_timespec_real
+block|,
+operator|.
+name|desc
+operator|=
+literal|"Sending, receiving realtime"
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCM_MONOTONIC
+argument_list|)
+block|{
+operator|.
+name|func
+operator|=
+name|t_timespec_mono
+block|,
+operator|.
+name|desc
+operator|=
+literal|"Sending, receiving monotonic time (uptime)"
 block|}
 endif|#
 directive|endif
