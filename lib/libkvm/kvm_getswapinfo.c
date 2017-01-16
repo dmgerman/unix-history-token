@@ -432,7 +432,8 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|swblk_t
 name|ttl
 decl_stmt|;
 name|TAILQ_HEAD
@@ -706,7 +707,8 @@ parameter_list|)
 block|{
 name|int
 name|ti
-decl_stmt|,
+decl_stmt|;
+name|swblk_t
 name|ttl
 decl_stmt|;
 name|size_t
