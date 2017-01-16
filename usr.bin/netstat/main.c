@@ -2226,6 +2226,12 @@ argument_list|,
 literal|"-x and -T are incompatible, pick one."
 argument_list|)
 expr_stmt|;
+comment|/* Load all necessary kvm symbols */
+name|kresolve_list
+argument_list|(
+name|nl
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Bflag
@@ -2531,12 +2537,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Load all necessary kvm symbols */
-name|kresolve_list
-argument_list|(
-name|nl
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tp
