@@ -264,11 +264,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GLOB_STAR
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1082,11 +1082,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GLOB_STAR
+end_ifdef
 
 begin_expr_stmt
 name|ATF_TC
@@ -1232,9 +1232,9 @@ end_macro
 
 begin_block
 block|{
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
+ifdef|#
+directive|ifdef
+name|GLOB_STAR
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
