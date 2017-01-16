@@ -684,6 +684,10 @@ name|recv
 function_decl|)
 parameter_list|(
 name|struct
+name|tport
+modifier|*
+parameter_list|,
+name|struct
 name|port_input
 modifier|*
 parameter_list|)

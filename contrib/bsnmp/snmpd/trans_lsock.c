@@ -191,6 +191,10 @@ name|ssize_t
 name|lsock_recv
 parameter_list|(
 name|struct
+name|tport
+modifier|*
+parameter_list|,
+name|struct
 name|port_input
 modifier|*
 parameter_list|)
@@ -2257,6 +2261,12 @@ specifier|static
 name|ssize_t
 name|lsock_recv
 parameter_list|(
+name|struct
+name|tport
+modifier|*
+name|tp
+name|__unused
+parameter_list|,
 name|struct
 name|port_input
 modifier|*
