@@ -38,6 +38,16 @@ begin_comment
 comment|/* Return the address of the .dynamic section in the dynamic linker. */
 end_comment
 
+begin_function_decl
+name|Elf_Dyn
+modifier|*
+name|rtld_dynamic_addr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -45,8 +55,7 @@ name|rtld_dynamic
 parameter_list|(
 name|obj
 parameter_list|)
-define|\
-value|((const Elf_Dyn *)((obj)->relocbase + (Elf_Addr)&_DYNAMIC))
+value|rtld_dynamic_addr()
 end_define
 
 begin_comment

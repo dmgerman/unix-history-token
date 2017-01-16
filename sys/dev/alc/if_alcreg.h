@@ -141,6 +141,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_ATHEROS_E2500
+value|0xE0B1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATHEROS_AR8152_B_V10
 value|0xC0
 end_define

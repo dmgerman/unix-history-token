@@ -16,7 +16,7 @@ name|_CAM_CAM_IOSCHED_H
 end_define
 
 begin_comment
-comment|/* No user-servicable parts in here. */
+comment|/* No user-serviceable parts in here. */
 end_comment
 
 begin_ifdef

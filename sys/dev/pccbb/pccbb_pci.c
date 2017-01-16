@@ -1610,7 +1610,7 @@ argument_list|(
 name|PCI_RES_BUS
 argument_list|)
 operator|)
-comment|/* 	 * This is a gross hack.  We should be scanning the entire pci 	 * tree, assigning bus numbers in a way such that we (1) can 	 * reserve 1 extra bus just in case and (2) all sub busses 	 * are in an appropriate range. 	 */
+comment|/* 	 * This is a gross hack.  We should be scanning the entire pci 	 * tree, assigning bus numbers in a way such that we (1) can 	 * reserve 1 extra bus just in case and (2) all sub buses 	 * are in an appropriate range. 	 */
 name|DEVPRINTF
 argument_list|(
 operator|(

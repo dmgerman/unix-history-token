@@ -6142,7 +6142,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send the initialization request. This is where we specify how many  * SCSI busses and how many devices per bus we wish to emulate.  * This is also the command that specifies the max size of the reply  * frames from the IOC that we will be allocating.  */
+comment|/*  * Send the initialization request. This is where we specify how many  * SCSI buses and how many devices per bus we wish to emulate.  * This is also the command that specifies the max size of the reply  * frames from the IOC that we will be allocating.  */
 end_comment
 
 begin_function
@@ -6206,7 +6206,7 @@ name|MaxBuses
 operator|=
 literal|16
 expr_stmt|;
-comment|/* at least 16 busses */
+comment|/* at least 16 buses */
 name|init
 operator|.
 name|MsgVersion

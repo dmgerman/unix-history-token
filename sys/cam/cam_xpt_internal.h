@@ -308,7 +308,7 @@ value|DATA_SET(cam_xpt_proto_set, data)
 end_define
 
 begin_comment
-comment|/*  * The CAM EDT (Existing Device Table) contains the device information for  * all devices for all busses in the system.  The table contains a  * cam_ed structure for each device on the bus.  */
+comment|/*  * The CAM EDT (Existing Device Table) contains the device information for  * all devices for all buses in the system.  The table contains a  * cam_ed structure for each device on the bus.  */
 end_comment
 
 begin_struct

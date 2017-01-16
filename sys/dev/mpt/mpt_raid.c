@@ -3193,7 +3193,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* XXX Ignores that there may be multiple busses/IOCs involved. */
+comment|/* XXX Ignores that there may be multiple buses/IOCs involved. */
 end_comment
 
 begin_function
@@ -3295,7 +3295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX Ignores that there may be multiple busses/IOCs involved. */
+comment|/* XXX Ignores that there may be multiple buses/IOCs involved. */
 end_comment
 
 begin_function
@@ -3403,7 +3403,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX Ignores that there may be multiple busses/IOCs involved. */
+comment|/* XXX Ignores that there may be multiple buses/IOCs involved. */
 end_comment
 
 begin_function

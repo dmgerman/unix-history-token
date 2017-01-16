@@ -8759,7 +8759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_needs_explore_all  *  * This function is called whenever a new driver is loaded and will  * cause that all USB busses are re-explored.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_needs_explore_all  *  * This function is called whenever a new driver is loaded and will  * cause that all USB buses are re-explored.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8810,7 +8810,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Explore all USB busses in parallel. 	 */
+comment|/* 	 * Explore all USB buses in parallel. 	 */
 name|max
 operator|=
 name|devclass_get_maxunit

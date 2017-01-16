@@ -599,8 +599,6 @@ name|ext_offset
 decl_stmt|;
 name|int
 name|len_to_copy
-decl_stmt|,
-name|len_copied
 decl_stmt|;
 name|int
 name|kern_watermark
@@ -845,10 +843,6 @@ name|ext_watermark
 operator|=
 name|ext_offset
 expr_stmt|;
-name|len_copied
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -962,14 +956,6 @@ name|kern_ptr
 operator|+
 name|kern_watermark
 expr_stmt|;
-name|kern_watermark
-operator|+=
-name|len_to_copy
-expr_stmt|;
-name|ext_watermark
-operator|+=
-name|len_to_copy
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1055,7 +1041,19 @@ name|len_to_copy
 argument_list|)
 expr_stmt|;
 block|}
-name|len_copied
+name|ctsio
+operator|->
+name|ext_data_filled
+operator|+=
+name|len_to_copy
+expr_stmt|;
+name|ctsio
+operator|->
+name|kern_data_resid
+operator|-=
+name|len_to_copy
+expr_stmt|;
+name|ext_watermark
 operator|+=
 name|len_to_copy
 expr_stmt|;
@@ -1079,6 +1077,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|kern_watermark
+operator|+=
+name|len_to_copy
+expr_stmt|;
 if|if
 condition|(
 name|kern_sglist
@@ -1100,12 +1102,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|ctsio
-operator|->
-name|ext_data_filled
-operator|+=
-name|len_copied
-expr_stmt|;
 name|CTL_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1136,7 +1132,6 @@ name|kern_data_len
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX KDM set residual?? */
 name|bailout
 label|:
 name|io

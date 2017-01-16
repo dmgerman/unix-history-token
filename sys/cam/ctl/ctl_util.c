@@ -3549,15 +3549,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
-
 begin_function
 name|void
 name|ctl_scsi_zero_io
@@ -3610,6 +3601,15 @@ name|pool_ref
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_function
 specifier|const

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 2008-2009 Semihalf, Michal Hajduk  * Copyright (c) 
 end_comment
 
 begin_comment
-comment|/*  * I2C driver for Freescale i.MX hardware.  *  * Note that the hardware is capable of running as both a master and a slave.  * This driver currently implements only master-mode operations.  *  * This driver supports multi-master i2c busses, by detecting bus arbitration  * loss and returning IIC_EBUSBSY status.  Notably, it does not do any kind of  * retries if some other master jumps onto the bus and interrupts one of our  * transfer cycles resulting in arbitration loss in mid-transfer.  The caller  * must handle retries in a way that makes sense for the slave being addressed.  */
+comment|/*  * I2C driver for Freescale i.MX hardware.  *  * Note that the hardware is capable of running as both a master and a slave.  * This driver currently implements only master-mode operations.  *  * This driver supports multi-master i2c buses, by detecting bus arbitration  * loss and returning IIC_EBUSBSY status.  Notably, it does not do any kind of  * retries if some other master jumps onto the bus and interrupts one of our  * transfer cycles resulting in arbitration loss in mid-transfer.  The caller  * must handle retries in a way that makes sense for the slave being addressed.  */
 end_comment
 
 begin_include

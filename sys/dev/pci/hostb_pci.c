@@ -54,7 +54,7 @@ file|<dev/pci/pcireg.h>
 end_include
 
 begin_comment
-comment|/*  * Provide a device to "eat" the host->pci bridge devices that show up  * on PCI busses and stop them showing up twice on the probes.  This also  * stops them showing up as 'none' in pciconf -l.  If the host bridge  * provides an AGP capability then we create a child agp device for the  * agp GART driver to attach to.  */
+comment|/*  * Provide a device to "eat" the host->pci bridge devices that show up  * on PCI buses and stop them showing up twice on the probes.  This also  * stops them showing up as 'none' in pciconf -l.  If the host bridge  * provides an AGP capability then we create a child agp device for the  * agp GART driver to attach to.  */
 end_comment
 
 begin_function

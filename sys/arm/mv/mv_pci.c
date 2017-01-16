@@ -505,7 +505,7 @@ name|len
 operator|/
 name|tuple_size
 expr_stmt|;
-comment|/* 	 * Initialize the ranges so that we don't have to worry about 	 * having them all defined in the FDT. In particular, it is 	 * perfectly fine not to want I/O space on PCI busses. 	 */
+comment|/* 	 * Initialize the ranges so that we don't have to worry about 	 * having them all defined in the FDT. In particular, it is 	 * perfectly fine not to want I/O space on PCI buses. 	 */
 name|bzero
 argument_list|(
 name|io_space

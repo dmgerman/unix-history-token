@@ -15620,7 +15620,7 @@ goto|goto
 name|bailout
 goto|;
 block|}
-comment|/* 	 * The right way to handle this is to modify the xpt so that it can 	 * handle a wildcarded bus in a rescan or reset CCB.  At the moment 	 * that isn't implemented, so instead we enumerate the busses and 	 * send the rescan or reset to those busses in the case where the 	 * given bus is -1 (wildcard).  We don't send a rescan or reset 	 * to the xpt bus; sending a rescan to the xpt bus is effectively a 	 * no-op, sending a rescan to the xpt bus would result in a status of 	 * CAM_REQ_INVALID. 	 */
+comment|/* 	 * The right way to handle this is to modify the xpt so that it can 	 * handle a wildcarded bus in a rescan or reset CCB.  At the moment 	 * that isn't implemented, so instead we enumerate the buses and 	 * send the rescan or reset to those buses in the case where the 	 * given bus is -1 (wildcard).  We don't send a rescan or reset 	 * to the xpt bus; sending a rescan to the xpt bus is effectively a 	 * no-op, sending a rescan to the xpt bus would result in a status of 	 * CAM_REQ_INVALID. 	 */
 name|matchccb
 operator|=
 name|malloc
@@ -19911,6 +19911,8 @@ decl_stmt|,
 name|data_bytes
 init|=
 literal|0
+decl_stmt|,
+name|valid_bytes
 decl_stmt|;
 name|int
 name|cdb_len
@@ -21143,6 +21145,39 @@ block|}
 block|}
 if|if
 condition|(
+name|cdb_len
+condition|)
+name|valid_bytes
+operator|=
+name|ccb
+operator|->
+name|csio
+operator|.
+name|dxfer_len
+operator|-
+name|ccb
+operator|->
+name|csio
+operator|.
+name|resid
+expr_stmt|;
+else|else
+name|valid_bytes
+operator|=
+name|ccb
+operator|->
+name|ataio
+operator|.
+name|dxfer_len
+operator|-
+name|ccb
+operator|->
+name|ataio
+operator|.
+name|resid
+expr_stmt|;
+if|if
+condition|(
 operator|(
 operator|(
 name|ccb
@@ -21164,7 +21199,7 @@ name|CAM_ARG_CMD_IN
 operator|)
 operator|&&
 operator|(
-name|data_bytes
+name|valid_bytes
 operator|>
 literal|0
 operator|)
@@ -21181,7 +21216,7 @@ name|buff_decode_visit
 argument_list|(
 name|data_ptr
 argument_list|,
-name|data_bytes
+name|valid_bytes
 argument_list|,
 name|datastr
 argument_list|,
@@ -21206,7 +21241,7 @@ decl_stmt|;
 name|int
 name|amt_to_write
 init|=
-name|data_bytes
+name|valid_bytes
 decl_stmt|;
 name|u_int8_t
 modifier|*
@@ -21293,11 +21328,11 @@ name|warnx
 argument_list|(
 literal|"only wrote %u bytes out of %u"
 argument_list|,
-name|data_bytes
+name|valid_bytes
 operator|-
 name|amt_to_write
 argument_list|,
-name|data_bytes
+name|valid_bytes
 argument_list|)
 expr_stmt|;
 block|}
@@ -40912,8 +40947,8 @@ literal|"stop        send a Stop Unit command to the device\n"
 literal|"load        send a Start Unit command to the device with the load bit set\n"
 literal|"eject       send a Stop Unit command to the device with the eject bit set\n"
 literal|"reprobe     update capacity information of the given device\n"
-literal|"rescan      rescan all busses, the given bus, or bus:target:lun\n"
-literal|"reset       reset all busses, the given bus, or bus:target:lun\n"
+literal|"rescan      rescan all buses, the given bus, or bus:target:lun\n"
+literal|"reset       reset all buses, the given bus, or bus:target:lun\n"
 literal|"defects     read the defect list of the specified device\n"
 literal|"modepage    display or edit (-e) the given mode page\n"
 literal|"cmd         send the given SCSI command, may need -i or -o as well\n"
