@@ -336,7 +336,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|iov
+name|iovs
 expr_stmt|;
 comment|/* const cloudabi64_iovec_t * */
 name|uarg
@@ -346,7 +346,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|iovcnt
+name|iovs_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -398,7 +398,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|iov
+name|iovs
 expr_stmt|;
 comment|/* const cloudabi64_ciovec_t * */
 name|uarg
@@ -408,7 +408,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|iovcnt
+name|iovs_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -460,7 +460,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|iov
+name|iovs
 expr_stmt|;
 comment|/* const cloudabi64_iovec_t * */
 name|uarg
@@ -470,7 +470,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|iovcnt
+name|iovs_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -723,7 +723,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|iov
+name|iovs
 expr_stmt|;
 comment|/* const cloudabi64_ciovec_t * */
 name|uarg
@@ -733,7 +733,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|iovcnt
+name|iovs_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -893,7 +893,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|pathlen
+name|path_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -955,7 +955,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|path1len
+name|path1_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -988,7 +988,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|path2len
+name|path2_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -1040,7 +1040,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|pathlen
+name|path_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -1115,7 +1115,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|nbyte
+name|buf_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -1177,7 +1177,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|pathlen
+name|path_len
 expr_stmt|;
 comment|/* size_t */
 name|uarg
@@ -1200,7 +1200,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|bufsize
+name|buf_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -1229,7 +1229,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|oldfd
+name|fd1
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|uarg
@@ -1242,7 +1242,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|old
+name|path1
 expr_stmt|;
 comment|/* const char * */
 name|uarg
@@ -1252,7 +1252,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|oldlen
+name|path1_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -1262,7 +1262,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|newfd
+name|fd2
 expr_stmt|;
 comment|/* cloudabi_fd_t */
 name|uarg
@@ -1275,7 +1275,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|new
+name|path2
 expr_stmt|;
 comment|/* const char * */
 name|uarg
@@ -1285,7 +1285,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|newlen
+name|path2_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -1431,7 +1431,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|pathlen
+name|path_len
 expr_stmt|;
 comment|/* size_t */
 name|uarg
@@ -1496,7 +1496,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|pathlen
+name|path_len
 expr_stmt|;
 comment|/* size_t */
 name|uarg
@@ -1561,7 +1561,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|path1len
+name|path1_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -1594,7 +1594,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|path2len
+name|path2_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -1646,7 +1646,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|pathlen
+name|path_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -1730,7 +1730,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|addr
+name|mapping
 expr_stmt|;
 comment|/* void * */
 name|uarg
@@ -1740,7 +1740,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|len
+name|mapping_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -1782,7 +1782,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|addr
+name|mapping
 expr_stmt|;
 comment|/* const void * */
 name|uarg
@@ -1792,7 +1792,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|len
+name|mapping_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -1906,7 +1906,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|addr
+name|mapping
 expr_stmt|;
 comment|/* void * */
 name|uarg
@@ -1916,7 +1916,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|len
+name|mapping_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -1958,7 +1958,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|addr
+name|mapping
 expr_stmt|;
 comment|/* void * */
 name|uarg
@@ -1968,7 +1968,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|len
+name|mapping_len
 expr_stmt|;
 comment|/* size_t */
 name|iarg
@@ -2010,7 +2010,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|addr
+name|mapping
 expr_stmt|;
 comment|/* const void * */
 name|uarg
@@ -2020,7 +2020,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|len
+name|mapping_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -2052,7 +2052,7 @@ name|intptr_t
 operator|)
 name|p
 operator|->
-name|addr
+name|mapping
 expr_stmt|;
 comment|/* void * */
 name|uarg
@@ -2062,7 +2062,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|len
+name|mapping_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -2169,7 +2169,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|nin
+name|in_len
 expr_stmt|;
 comment|/* size_t */
 name|uarg
@@ -2192,7 +2192,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|nout
+name|out_len
 expr_stmt|;
 comment|/* size_t */
 name|uarg
@@ -2257,7 +2257,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|datalen
+name|data_len
 expr_stmt|;
 comment|/* size_t */
 name|uarg
@@ -2280,7 +2280,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|fdslen
+name|fds_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -2392,7 +2392,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|nbyte
+name|buf_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -2496,7 +2496,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|pathlen
+name|path_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
@@ -2558,7 +2558,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|pathlen
+name|path_len
 expr_stmt|;
 comment|/* size_t */
 operator|*
