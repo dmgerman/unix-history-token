@@ -4304,11 +4304,7 @@ operator|.
 name|flgs
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|PIO_KEYMAP
 case|:
