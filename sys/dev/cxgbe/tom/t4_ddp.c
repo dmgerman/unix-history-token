@@ -1982,11 +1982,6 @@ operator|->
 name|vnet
 argument_list|)
 expr_stmt|;
-name|SOCKBUF_LOCK
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sb
