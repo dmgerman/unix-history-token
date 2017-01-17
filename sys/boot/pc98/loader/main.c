@@ -254,16 +254,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
-name|bootprog_name
-index|[]
-decl_stmt|,
-name|bootprog_rev
-index|[]
-decl_stmt|,
-name|bootprog_date
-index|[]
-decl_stmt|,
-name|bootprog_maker
+name|bootprog_info
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -790,25 +781,9 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s, Revision %s\n"
+literal|"\n%s"
 argument_list|,
-name|bootprog_name
-argument_list|,
-name|bootprog_rev
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"(%s, %s)\n"
-argument_list|,
-name|bootprog_maker
-argument_list|,
-name|bootprog_date
+name|bootprog_info
 argument_list|)
 expr_stmt|;
 name|extract_currdev

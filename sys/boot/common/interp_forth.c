@@ -53,9 +53,8 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|unsigned
 name|bootprog_rev
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -822,25 +821,7 @@ name|bf_sys
 argument_list|,
 literal|"loader_version"
 argument_list|,
-operator|(
 name|bootprog_rev
-index|[
-literal|0
-index|]
-operator|-
-literal|'0'
-operator|)
-operator|*
-literal|10
-operator|+
-operator|(
-name|bootprog_rev
-index|[
-literal|2
-index|]
-operator|-
-literal|'0'
-operator|)
 argument_list|)
 expr_stmt|;
 name|pInterp
