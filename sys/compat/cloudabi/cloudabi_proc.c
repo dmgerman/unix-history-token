@@ -158,7 +158,7 @@ name|data
 argument_list|,
 name|uap
 operator|->
-name|datalen
+name|data_len
 argument_list|,
 name|uap
 operator|->
@@ -166,7 +166,7 @@ name|fds
 argument_list|,
 name|uap
 operator|->
-name|fdslen
+name|fds_len
 argument_list|)
 expr_stmt|;
 if|if

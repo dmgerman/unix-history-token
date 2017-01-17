@@ -73,7 +73,7 @@ name|iov_len
 operator|=
 name|uap
 operator|->
-name|nbyte
+name|buf_len
 block|}
 decl_stmt|;
 name|struct

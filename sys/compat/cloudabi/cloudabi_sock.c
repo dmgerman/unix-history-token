@@ -641,7 +641,7 @@ name|path
 argument_list|,
 name|uap
 operator|->
-name|pathlen
+name|path_len
 argument_list|,
 operator|&
 name|sun
@@ -717,7 +717,7 @@ name|path
 argument_list|,
 name|uap
 operator|->
-name|pathlen
+name|path_len
 argument_list|,
 operator|&
 name|sun

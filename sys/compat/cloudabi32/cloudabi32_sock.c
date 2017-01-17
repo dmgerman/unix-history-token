@@ -182,7 +182,7 @@ if|if
 condition|(
 name|ri
 operator|.
-name|ri_datalen
+name|ri_data_len
 operator|>
 name|UIO_MAXIOV
 condition|)
@@ -197,7 +197,7 @@ name|msg_iovlen
 operator|=
 name|ri
 operator|.
-name|ri_datalen
+name|ri_data_len
 expr_stmt|;
 name|msghdr
 operator|.
@@ -299,7 +299,7 @@ name|TO_PTR
 argument_list|(
 name|iovobj
 operator|.
-name|iov_base
+name|buf
 argument_list|)
 expr_stmt|;
 name|msghdr
@@ -313,7 +313,7 @@ name|iov_len
 operator|=
 name|iovobj
 operator|.
-name|iov_len
+name|buf_len
 expr_stmt|;
 block|}
 name|msghdr
@@ -547,7 +547,7 @@ if|if
 condition|(
 name|si
 operator|.
-name|si_datalen
+name|si_data_len
 operator|>
 name|UIO_MAXIOV
 condition|)
@@ -562,7 +562,7 @@ name|msg_iovlen
 operator|=
 name|si
 operator|.
-name|si_datalen
+name|si_data_len
 expr_stmt|;
 name|msghdr
 operator|.
@@ -664,7 +664,7 @@ name|TO_PTR
 argument_list|(
 name|iovobj
 operator|.
-name|iov_base
+name|buf
 argument_list|)
 expr_stmt|;
 name|msghdr
@@ -678,7 +678,7 @@ name|iov_len
 operator|=
 name|iovobj
 operator|.
-name|iov_len
+name|buf_len
 expr_stmt|;
 block|}
 name|flags
