@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzlib.c -- zlib functions common to reading and writing gzip files  * Copyright (C) 2004, 2010, 2011, 2012, 2013, 2016 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzlib.c -- zlib functions common to reading and writing gzip files  * Copyright (C) 2004-2017 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
