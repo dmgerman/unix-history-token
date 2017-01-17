@@ -614,7 +614,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Consistency check function.  *  * Checks the internal consistency as well as we can.  *   * Called at all boundaries of this API.  */
+comment|/*  * Consistency check function.  *  * Checks the internal consistency as well as we can.  *  * Called at all boundaries of this API.  */
 end_comment
 
 begin_function
@@ -1361,7 +1361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look for sequence of items which can be combined into a bitmap, if  * multiple are present, take the one which saves most memory.  *   * Return (1) if a sequence was found to indicate that another call  * might be able to do more.  Return (0) if we found no suitable sequence.  *  * NB: called from alloc_unr(), no new memory allocation allowed.  */
+comment|/*  * Look for sequence of items which can be combined into a bitmap, if  * multiple are present, take the one which saves most memory.  *  * Return (1) if a sequence was found to indicate that another call  * might be able to do more.  Return (0) if we found no suitable sequence.  *  * NB: called from alloc_unr(), no new memory allocation allowed.  */
 end_comment
 
 begin_function
@@ -2560,7 +2560,7 @@ name|x
 operator|)
 return|;
 block|}
-comment|/* 	 * We can always allocate from the first list element, so if we have  	 * nothing on the list, we must have run out of unit numbers. 	 */
+comment|/* 	 * We can always allocate from the first list element, so if we have 	 * nothing on the list, we must have run out of unit numbers. 	 */
 if|if
 condition|(
 name|up
