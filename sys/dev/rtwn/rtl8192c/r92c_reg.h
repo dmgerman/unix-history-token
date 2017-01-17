@@ -2563,6 +2563,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|R92C_TRXDMA_CTRL_RX_SHIFT_EN
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92C_TRXDMA_CTRL_RXDMA_AGG_EN
 value|0x0004
 end_define
@@ -3532,16 +3539,16 @@ begin_comment
 comment|/* Bits for R92C_RX_DRVINFO_SZ. */
 end_comment
 
+begin_comment
+comment|/* XXX other values will not work */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|R92C_RX_DRVINFO_SZ_DEF
-value|4
+value|((RTWN_PHY_STATUS_SIZE) / 8)
 end_define
-
-begin_comment
-comment|/* XXX other values will not work */
-end_comment
 
 begin_comment
 comment|/* Bits for R92C_WMAC_TRXPTCL_CTL. */

@@ -470,6 +470,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|r88e_get_rx_stats
+parameter_list|(
+name|struct
+name|rtwn_softc
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* r88e_tx.c */
 end_comment

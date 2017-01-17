@@ -754,6 +754,12 @@ name|r12a_rx_radiotap_flags
 expr_stmt|;
 name|sc
 operator|->
+name|sc_get_rx_stats
+operator|=
+name|r12a_get_rx_stats
+expr_stmt|;
+name|sc
+operator|->
 name|sc_get_rssi_cck
 operator|=
 name|r88e_get_rssi_cck
