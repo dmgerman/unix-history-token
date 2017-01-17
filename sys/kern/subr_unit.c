@@ -4647,8 +4647,6 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|,
-name|x
-decl_stmt|,
 name|j
 decl_stmt|;
 name|verbose
@@ -4840,10 +4838,6 @@ name|long
 operator|)
 name|NBITS
 argument_list|)
-expr_stmt|;
-name|x
-operator|=
-literal|1
 expr_stmt|;
 for|for
 control|(
