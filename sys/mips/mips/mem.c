@@ -549,7 +549,6 @@ modifier|*
 name|memattr
 parameter_list|)
 block|{
-comment|/* 	 * /dev/mem is the only one that makes sense through this 	 * interface.  For /dev/kmem any physaddr we return here 	 * could be transient and hence incorrect or invalid at 	 * a later time. 	 */
 if|if
 condition|(
 name|dev2unit
