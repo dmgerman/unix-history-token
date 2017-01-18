@@ -1421,8 +1421,7 @@ name|struct
 name|e1000_osdep
 name|osdep
 decl_stmt|;
-name|struct
-name|device
+name|device_t
 modifier|*
 name|dev
 decl_stmt|;
