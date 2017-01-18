@@ -794,6 +794,17 @@ begin_comment
 comment|/* clock type used for SO_TIMESTAMP */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_MAX_PACING_RATE
+value|0x1018
+end_define
+
+begin_comment
+comment|/* socket's max TX pacing rate (Linux name) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
