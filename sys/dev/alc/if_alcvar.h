@@ -745,8 +745,12 @@ name|ALC_FLAG_LINK_WAR
 value|0x4000
 define|#
 directive|define
-name|ALC_FLAG_LINK
+name|ALC_FLAG_E2X00
 value|0x8000
+define|#
+directive|define
+name|ALC_FLAG_LINK
+value|0x10000
 name|struct
 name|callout
 name|alc_tick_ch

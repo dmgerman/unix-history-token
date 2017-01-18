@@ -1440,7 +1440,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* 	 * Atheros AR8161/AR8162/E2200 Ethernet controllers have a bug that 	 * MSI interrupt does not assert if PCIM_CMD_INTxDIS bit of the 	 * command register is set. 	 */
+comment|/* 	 * Atheros AR8161/AR8162/E2200/E2400 Ethernet controllers have a 	 * bug that MSI interrupt does not assert if PCIM_CMD_INTxDIS bit 	 * of the command register is set. 	 */
 block|{
 literal|0x10911969
 block|,
@@ -1453,6 +1453,16 @@ block|}
 block|,
 block|{
 literal|0xE0911969
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xE0A11969
 block|,
 name|PCI_QUIRK_MSI_INTX_BUG
 block|,

@@ -106,13 +106,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEVICEID_ATHEROS_E2200
-value|0xE091
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEVICEID_ATHEROS_AR8162
 value|0x1090
 end_define
@@ -129,6 +122,20 @@ define|#
 directive|define
 name|DEVICEID_ATHEROS_AR8172
 value|0x10A0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ATHEROS_E2200
+value|0xE091
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ATHEROS_E2400
+value|0xE0A1
 end_define
 
 begin_define
