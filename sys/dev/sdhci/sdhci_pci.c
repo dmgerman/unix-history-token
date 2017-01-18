@@ -394,6 +394,56 @@ name|SDHCI_QUIRK_BCM577XX_400KHZ_CLKSRC
 block|}
 block|,
 block|{
+literal|0x0f148086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Bay Trail eMMC 4.5 Controller"
+block|,
+name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
+operator||
+name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+block|}
+block|,
+block|{
+literal|0x0f508086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Bay Trail eMMC 4.5 Controller"
+block|,
+name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
+operator||
+name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+block|}
+block|,
+block|{
+literal|0x22948086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Braswell eMMC 4.5.1 Controller"
+block|,
+name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
+operator||
+name|SDHCI_QUIRK_DATA_TIMEOUT_1MHZ
+operator||
+name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+block|}
+block|,
+block|{
+literal|0x5acc8086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Apollo Lake eMMC 5.0 Controller"
+block|,
+name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
+operator||
+name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0xffff
@@ -448,11 +498,11 @@ comment|/* Memory resource */
 name|uint8_t
 name|cfg_freq
 decl_stmt|;
-comment|/* Saved mode */
+comment|/* Saved frequency */
 name|uint8_t
 name|cfg_mode
 decl_stmt|;
-comment|/* Saved frequency */
+comment|/* Saved mode */
 block|}
 struct|;
 end_struct

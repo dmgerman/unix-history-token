@@ -232,6 +232,39 @@ value|(1<<17)
 end_define
 
 begin_comment
+comment|/* All controller slots are non-removable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
+value|(1<<18)
+end_define
+
+begin_comment
+comment|/* Issue custom Intel controller reset sequence after power-up. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+value|(1<<19)
+end_define
+
+begin_comment
+comment|/* Data timeout is invalid, use 1 MHz clock instead. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_DATA_TIMEOUT_1MHZ
+value|(1<<20)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
