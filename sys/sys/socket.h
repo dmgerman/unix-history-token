@@ -2549,7 +2549,7 @@ begin_define
 define|#
 directive|define
 name|MSG_MORETOCOME
-value|0x20000
+value|0x100000
 end_define
 
 begin_comment
