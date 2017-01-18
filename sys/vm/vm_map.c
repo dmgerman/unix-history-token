@@ -17644,12 +17644,10 @@ condition|)
 block|{
 name|p
 operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
+name|db_lookup_proc
+argument_list|(
 name|addr
+argument_list|)
 expr_stmt|;
 block|}
 else|else
