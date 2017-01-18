@@ -2343,7 +2343,7 @@ begin_define
 define|#
 directive|define
 name|MSG_OOB
-value|0x1
+value|0x00000001
 end_define
 
 begin_comment
@@ -2354,7 +2354,7 @@ begin_define
 define|#
 directive|define
 name|MSG_PEEK
-value|0x2
+value|0x00000002
 end_define
 
 begin_comment
@@ -2365,7 +2365,7 @@ begin_define
 define|#
 directive|define
 name|MSG_DONTROUTE
-value|0x4
+value|0x00000004
 end_define
 
 begin_comment
@@ -2376,7 +2376,7 @@ begin_define
 define|#
 directive|define
 name|MSG_EOR
-value|0x8
+value|0x00000008
 end_define
 
 begin_comment
@@ -2387,7 +2387,7 @@ begin_define
 define|#
 directive|define
 name|MSG_TRUNC
-value|0x10
+value|0x00000010
 end_define
 
 begin_comment
@@ -2398,7 +2398,7 @@ begin_define
 define|#
 directive|define
 name|MSG_CTRUNC
-value|0x20
+value|0x00000020
 end_define
 
 begin_comment
@@ -2409,12 +2409,116 @@ begin_define
 define|#
 directive|define
 name|MSG_WAITALL
-value|0x40
+value|0x00000040
 end_define
 
 begin_comment
 comment|/* wait for full request or error */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|MSG_DONTWAIT
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* this message should be nonblocking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_EOF
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* data completes connection */
+end_comment
+
+begin_comment
+comment|/*			 0x00000200	   unused */
+end_comment
+
+begin_comment
+comment|/*			 0x00000400	   unused */
+end_comment
+
+begin_comment
+comment|/*			 0x00000800	   unused */
+end_comment
+
+begin_comment
+comment|/*			 0x00001000	   unused */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_NOTIFICATION
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* SCTP notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_NBIO
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* FIONBIO mode, used by fifofs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_COMPAT
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* used in sendit() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MSG_SOCALLBCK
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* for use by socket callbacks - soreceive (TCP) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -2428,7 +2532,7 @@ begin_define
 define|#
 directive|define
 name|MSG_NOSIGNAL
-value|0x20000
+value|0x00020000
 end_define
 
 begin_comment
@@ -2449,63 +2553,8 @@ end_if
 begin_define
 define|#
 directive|define
-name|MSG_DONTWAIT
-value|0x80
-end_define
-
-begin_comment
-comment|/* this message should be nonblocking */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSG_EOF
-value|0x100
-end_define
-
-begin_comment
-comment|/* data completes connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSG_NOTIFICATION
-value|0x2000
-end_define
-
-begin_comment
-comment|/* SCTP notification */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSG_NBIO
-value|0x4000
-end_define
-
-begin_comment
-comment|/* FIONBIO mode, used by fifofs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSG_COMPAT
-value|0x8000
-end_define
-
-begin_comment
-comment|/* used in sendit() */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MSG_CMSG_CLOEXEC
-value|0x40000
+value|0x00040000
 end_define
 
 begin_comment
@@ -2516,7 +2565,7 @@ begin_define
 define|#
 directive|define
 name|MSG_WAITFORONE
-value|0x80000
+value|0x00080000
 end_define
 
 begin_comment
@@ -2537,19 +2586,8 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|MSG_SOCALLBCK
-value|0x10000
-end_define
-
-begin_comment
-comment|/* for use by socket callbacks - soreceive (TCP) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MSG_MORETOCOME
-value|0x100000
+value|0x00100000
 end_define
 
 begin_comment
