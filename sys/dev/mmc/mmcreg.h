@@ -127,12 +127,24 @@ name|MMC_RSP_R3
 value|(MMC_RSP_PRESENT)
 define|#
 directive|define
+name|MMC_RSP_R4
+value|(MMC_RSP_PRESENT)
+define|#
+directive|define
+name|MMC_RSP_R5
+value|(MMC_RSP_PRESENT | MMC_RSP_CRC | MMC_RSP_OPCODE)
+define|#
+directive|define
+name|MMC_RSP_R5B
+value|(MMC_RSP_PRESENT | MMC_RSP_CRC | MMC_RSP_OPCODE | MMC_RSP_BUSY)
+define|#
+directive|define
 name|MMC_RSP_R6
-value|(MMC_RSP_PRESENT | MMC_RSP_CRC)
+value|(MMC_RSP_PRESENT | MMC_RSP_CRC | MMC_RSP_OPCODE)
 define|#
 directive|define
 name|MMC_RSP_R7
-value|(MMC_RSP_PRESENT | MMC_RSP_CRC)
+value|(MMC_RSP_PRESENT | MMC_RSP_CRC | MMC_RSP_OPCODE)
 define|#
 directive|define
 name|MMC_RSP
@@ -1443,6 +1455,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MMC_OCR_MIN_VOLTAGE_SHIFT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
 name|MMC_OCR_200_210
 value|(1U<< 8)
 end_define
@@ -1450,13 +1469,6 @@ end_define
 begin_comment
 comment|/* Vdd voltage 2.00 ~ 2.10 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MMC_OCR_MIN_VOLTAGE_SHIFT
-value|8
-end_define
 
 begin_define
 define|#
