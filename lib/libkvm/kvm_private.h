@@ -197,6 +197,10 @@ name|rawdump
 decl_stmt|;
 comment|/* raw dump format */
 name|int
+name|writable
+decl_stmt|;
+comment|/* physical memory is writable */
+name|int
 name|vnet_initialized
 decl_stmt|;
 comment|/* vnet fields set up */
