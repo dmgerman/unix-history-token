@@ -1422,7 +1422,6 @@ name|e1000_osdep
 name|osdep
 decl_stmt|;
 name|device_t
-modifier|*
 name|dev
 decl_stmt|;
 name|struct
