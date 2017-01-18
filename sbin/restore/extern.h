@@ -672,10 +672,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_enum
+enum|enum
+name|set_extattr_mode
+block|{
+name|SXA_FILE
+block|,
+name|SXA_LINK
+block|,
+name|SXA_FD
+block|, }
+enum|;
+end_enum
+
 begin_function_decl
 name|void
-name|set_extattr_file
+name|set_extattr
 parameter_list|(
+name|int
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -683,6 +698,9 @@ name|void
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|enum
+name|set_extattr_mode
 parameter_list|)
 function_decl|;
 end_function_decl

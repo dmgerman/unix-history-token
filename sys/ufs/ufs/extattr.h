@@ -236,7 +236,7 @@ parameter_list|(
 name|eap
 parameter_list|)
 define|\
-value|((struct extattr *)(((void *)(eap)) + (eap)->ea_length))
+value|((struct extattr *)(((u_char *)(eap)) + (eap)->ea_length))
 end_define
 
 begin_define
@@ -246,7 +246,8 @@ name|EXTATTR_CONTENT
 parameter_list|(
 name|eap
 parameter_list|)
-value|(((void *)(eap)) + EXTATTR_BASE_LENGTH(eap))
+define|\
+value|(void *)(((u_char *)(eap)) + EXTATTR_BASE_LENGTH(eap))
 end_define
 
 begin_define
@@ -260,6 +261,10 @@ define|\
 value|((eap)->ea_length - EXTATTR_BASE_LENGTH(eap) - (eap)->ea_contentpadlen)
 end_define
 
+begin_comment
+comment|/* -1 below compensates for ea_name[1] */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -268,7 +273,7 @@ parameter_list|(
 name|eap
 parameter_list|)
 define|\
-value|((sizeof(struct extattr) + (eap)->ea_namelength + 7)& ~7)
+value|roundup2((sizeof(struct extattr) - 1 + (eap)->ea_namelength), 8)
 end_define
 
 begin_ifdef

@@ -76,6 +76,13 @@ name|EXTATTR_NAMESPACE_NAMES
 value|{ \ 	EXTATTR_NAMESPACE_EMPTY_STRING, \ 	EXTATTR_NAMESPACE_USER_STRING, \ 	EXTATTR_NAMESPACE_SYSTEM_STRING }
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXTATTR_MAXNAMELEN
+value|NAME_MAX
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -87,13 +94,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|EXTATTR_MAXNAMELEN
-value|NAME_MAX
-end_define
 
 begin_struct_decl
 struct_decl|struct
