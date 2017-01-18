@@ -1999,6 +1999,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC1150
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0900)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALCXXXX
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0xffff)
 end_define
