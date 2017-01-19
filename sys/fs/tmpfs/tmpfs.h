@@ -274,7 +274,7 @@ value|(TMPFS_DIRCOOKIE_DUP | TMPFS_DIRCOOKIE_MASK)
 end_define
 
 begin_comment
-comment|/*  * Internal representation of a tmpfs file system node.  *  * This structure is splitted in two parts: one holds attributes common  * to all file types and the other holds data that is only applicable to  * a particular type.  The code must be careful to only access those  * attributes that are actually allowed by the node's type.  *  * Below is the key of locks used to protected the fields in the following  * structures.  * (v)  vnode lock in exclusive mode  * (vi) vnode lock in exclusive mode, or vnode lock in shared vnode and  *	tn_interlock  * (i)  tn_interlock  * (m)  tmpfs_mount allnode_lock  * (c)  stable after creation  */
+comment|/*  * Internal representation of a tmpfs file system node.  *  * This structure is splitted in two parts: one holds attributes common  * to all file types and the other holds data that is only applicable to  * a particular type.  The code must be careful to only access those  * attributes that are actually allowed by the node's type.  *  * Below is the key of locks used to protected the fields in the following  * structures.  * (v)  vnode lock in exclusive mode  * (vi) vnode lock in exclusive mode, or vnode lock in shared vnode and  *	tn_interlock  * (i)  tn_interlock  * (m)  tmpfs_mount tm_allnode_lock  * (c)  stable after creation  */
 end_comment
 
 begin_struct
@@ -654,7 +654,7 @@ decl_stmt|;
 comment|/* All node lock to protect the node list and tmp_pages_used. */
 name|struct
 name|mtx
-name|allnode_lock
+name|tm_allnode_lock
 decl_stmt|;
 comment|/* Zones used to store file system meta data, per tmpfs mount. */
 name|uma_zone_t
@@ -678,7 +678,7 @@ name|TMPFS_LOCK
 parameter_list|(
 name|tm
 parameter_list|)
-value|mtx_lock(&(tm)->allnode_lock)
+value|mtx_lock(&(tm)->tm_allnode_lock)
 end_define
 
 begin_define
@@ -688,7 +688,17 @@ name|TMPFS_UNLOCK
 parameter_list|(
 name|tm
 parameter_list|)
-value|mtx_unlock(&(tm)->allnode_lock)
+value|mtx_unlock(&(tm)->tm_allnode_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMPFS_MP_ASSERT_LOCKED
+parameter_list|(
+name|tm
+parameter_list|)
+value|mtx_assert(&(tm)->tm_allnode_lock, MA_OWNED)
 end_define
 
 begin_comment
