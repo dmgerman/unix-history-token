@@ -550,7 +550,7 @@ name|TMPFS_ASSERT_LOCKED
 parameter_list|(
 name|node
 parameter_list|)
-value|do {					\ 		MPASS(node != NULL);					\ 		MPASS(node->tn_vnode != NULL);				\ 		ASSERT_VOP_LOCKED(node->tn_vnode, "tmpfs assert");	\ 	} while (0)
+value|do {					\ 		MPASS((node) != NULL);					\ 		MPASS((node)->tn_vnode != NULL);			\ 		ASSERT_VOP_LOCKED((node)->tn_vnode, "tmpfs assert");	\ 	} while (0)
 end_define
 
 begin_else
