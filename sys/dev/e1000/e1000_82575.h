@@ -2738,6 +2738,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|e1000_write_vfta_i350
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|offset
+parameter_list|,
+name|u32
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u16
 name|e1000_rxpbs_adjust_82580
 parameter_list|(
