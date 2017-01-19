@@ -53,6 +53,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|vop_vector
+name|tmpfs_vnodeop_nonc_entries
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vop_access_t
 name|tmpfs_access
 decl_stmt|;
