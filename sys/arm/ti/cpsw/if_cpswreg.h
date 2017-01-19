@@ -1165,6 +1165,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPDMA_BD_PASS_CRC
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPDMA_BD_PKT_ERR_MASK
 value|(3<< 4)
 end_define
