@@ -550,17 +550,7 @@ name|TMPFS_ASSERT_LOCKED
 parameter_list|(
 name|node
 parameter_list|)
-value|do {					\ 		MPASS(node != NULL);					\ 		MPASS(node->tn_vnode != NULL);				\ 		if (!VOP_ISLOCKED(node->tn_vnode)&&			\ 		    !mtx_owned(TMPFS_NODE_MTX(node)))			\ 			panic("tmpfs: node is not locked: %p", node);	\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMPFS_ASSERT_ELOCKED
-parameter_list|(
-name|node
-parameter_list|)
-value|do {					\ 		MPASS((node) != NULL);					\ 		MPASS((node)->tn_vnode != NULL);			\ 		mtx_assert(TMPFS_NODE_MTX(node), MA_OWNED);		\ 		ASSERT_VOP_LOCKED((node)->tn_vnode, "tmpfs");		\ 	} while (0)
+value|do {					\ 		MPASS(node != NULL);					\ 		MPASS(node->tn_vnode != NULL);				\ 		ASSERT_VOP_LOCKED(node->tn_vnode, "tmpfs assert");	\ 	} while (0)
 end_define
 
 begin_else
@@ -572,16 +562,6 @@ begin_define
 define|#
 directive|define
 name|TMPFS_ASSERT_LOCKED
-parameter_list|(
-name|node
-parameter_list|)
-value|(void)0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMPFS_ASSERT_ELOCKED
 parameter_list|(
 name|node
 parameter_list|)
