@@ -3000,9 +3000,9 @@ name|dp
 operator|->
 name|d_rotation_rate
 operator|==
-literal|0
+name|DISK_RR_UNKNOWN
 condition|)
-comment|/* Old drives don't */
+comment|/* Old drives */
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -3010,7 +3010,7 @@ argument_list|,
 literal|"unknown"
 argument_list|)
 expr_stmt|;
-comment|/* report RPM. */
+comment|/* don't report RPM. */
 elseif|else
 if|if
 condition|(
@@ -3018,9 +3018,8 @@ name|dp
 operator|->
 name|d_rotation_rate
 operator|==
-literal|1
+name|DISK_RR_NON_ROTATING
 condition|)
-comment|/* Since 0 is used */
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -3028,7 +3027,6 @@ argument_list|,
 literal|"0"
 argument_list|)
 expr_stmt|;
-comment|/* above, SSDs use 1. */
 elseif|else
 if|if
 condition|(
@@ -3037,7 +3035,7 @@ name|dp
 operator|->
 name|d_rotation_rate
 operator|>=
-literal|0x041
+name|DISK_RR_MIN
 operator|)
 operator|&&
 operator|(
@@ -3045,7 +3043,7 @@ name|dp
 operator|->
 name|d_rotation_rate
 operator|<=
-literal|0xfffe
+name|DISK_RR_MAX
 operator|)
 condition|)
 name|sbuf_printf
