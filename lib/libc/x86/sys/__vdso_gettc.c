@@ -110,7 +110,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__amd64__
+name|WANT_HYPERV
 end_ifdef
 
 begin_include
@@ -646,7 +646,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__amd64__
+name|WANT_HYPERV
 end_ifdef
 
 begin_define
@@ -846,7 +846,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __amd64__ */
+comment|/* WANT_HYPERV */
 end_comment
 
 begin_pragma
@@ -1019,7 +1019,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|__amd64__
+name|WANT_HYPERV
 case|case
 name|VDSO_TH_ALGO_X86_HVTSC
 case|:
