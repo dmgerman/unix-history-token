@@ -902,7 +902,9 @@ operator|<
 name|TMPFS_PAGES_MINRESERVED
 condition|)
 return|return
+operator|(
 name|ENOSPC
+operator|)
 return|;
 comment|/* Get the maximum number of memory pages this file system is 	 * allowed to use, based on the maximum size the user passed in 	 * the mount structure.  A value of zero is treated as if the 	 * maximum available space was requested. */
 if|if
@@ -1239,7 +1241,9 @@ name|M_TMPFSMNT
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|KASSERT
@@ -1686,8 +1690,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
 condition|)
 operator|(
 operator|*
@@ -1699,7 +1704,9 @@ operator||=
 name|VV_ROOT
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

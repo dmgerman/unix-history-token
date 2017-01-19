@@ -1073,13 +1073,15 @@ operator|=
 name|nnode
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Destroys the node pointed to by node from the file system 'tmp'.  * If the node does not belong to the given mount point, the results are  * unpredicted.  *  * If the node references a directory; no entries are allowed because  * their removal could need a recursive algorithm, something forbidden in  * kernel space.  Furthermore, there is not need to provide such  * functionality (recursive removal) because the only primitives offered  * to the user are the removal of empty directories and the deletion of  * individual files.  *  * Note that nodes are not really deleted; in fact, when a node has been  * allocated, it cannot be deleted during the whole life of the file  * system.  Instead, they are moved to the available list and remain there  * until reused.  */
+comment|/*  * Destroys the node pointed to by node from the file system 'tmp'.  * If the node references a directory, no entries are allowed.  */
 end_comment
 
 begin_function
@@ -2477,6 +2479,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 name|vp
 operator|=
@@ -2605,7 +2609,9 @@ block|}
 endif|#
 directive|endif
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -4991,13 +4997,11 @@ name|tn_parent
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
-block|}
 name|TMPFS_NODE_LOCK
 argument_list|(
 name|node
