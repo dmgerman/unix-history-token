@@ -632,11 +632,6 @@ name|tmpfs_node
 modifier|*
 name|tm_root
 decl_stmt|;
-name|struct
-name|mount
-modifier|*
-name|tm_mnt
-decl_stmt|;
 comment|/* 	 * Maximum number of possible nodes for this file system; set 	 * during mount time.  We need a hard limit on the maximum number 	 * of nodes to avoid allocating too much of them; their objects 	 * cannot be released until the file system is unmounted. 	 * Otherwise, we could easily run out of memory by creating lots 	 * of empty files and then simply removing them. 	 */
 name|ino_t
 name|tm_nodes_max
