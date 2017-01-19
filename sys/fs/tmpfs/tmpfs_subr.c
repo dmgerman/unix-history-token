@@ -163,24 +163,6 @@ directive|include
 file|<fs/tmpfs/tmpfs_vnops.h>
 end_include
 
-begin_struct
-struct|struct
-name|tmpfs_dir_cursor
-block|{
-name|struct
-name|tmpfs_dirent
-modifier|*
-name|tdc_current
-decl_stmt|;
-name|struct
-name|tmpfs_dirent
-modifier|*
-name|tdc_tree
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -3008,7 +2990,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|tmpfs_dirent
 modifier|*
@@ -3090,7 +3071,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|tmpfs_dirent
 modifier|*
