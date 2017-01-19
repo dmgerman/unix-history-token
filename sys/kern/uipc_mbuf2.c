@@ -362,8 +362,6 @@ operator|->
 name|m_len
 operator|-
 name|off
-operator|&&
-name|writable
 condition|)
 goto|goto
 name|ok
