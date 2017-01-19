@@ -2279,6 +2279,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|mpr_print_field
+parameter_list|(
+name|sc
+parameter_list|,
+name|msg
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+define|\
+value|printf("\t" msg, ##args)
+end_define
+
+begin_define
+define|#
+directive|define
 name|mpr_vprintf
 parameter_list|(
 name|sc
@@ -2311,24 +2327,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|mpr_dprint_field
-parameter_list|(
-name|sc
-parameter_list|,
-name|level
-parameter_list|,
-name|msg
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-define|\
-value|do {								\ 	if ((sc)->mpr_debug& (level))				\ 		printf("\t" msg, ##args);			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MPR_PRINTFIELD_START
 parameter_list|(
 name|sc
@@ -2337,7 +2335,7 @@ name|tag
 modifier|...
 parameter_list|)
 define|\
-value|mpr_dprint((sc), MPR_INFO, ##tag);	\ 	mpr_dprint_field((sc), MPR_INFO, ":\n")
+value|mpr_printf((sc), ##tag);		\ 	mpr_print_field((sc), ":\n")
 end_define
 
 begin_define
@@ -2350,7 +2348,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|mpr_dprint((sc), MPR_INFO, tag "\n")
+value|mpr_printf((sc), tag "\n")
 end_define
 
 begin_define
@@ -2367,38 +2365,7 @@ parameter_list|,
 name|fmt
 parameter_list|)
 define|\
-value|mpr_dprint_field((sc), MPR_INFO, #attr ": " #fmt "\n", (facts)->attr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPR_EVENTFIELD_START
-parameter_list|(
-name|sc
-parameter_list|,
-name|tag
-modifier|...
-parameter_list|)
-define|\
-value|mpr_dprint((sc), MPR_EVENT, ##tag);	\ 	mpr_dprint_field((sc), MPR_EVENT, ":\n")
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPR_EVENTFIELD
-parameter_list|(
-name|sc
-parameter_list|,
-name|facts
-parameter_list|,
-name|attr
-parameter_list|,
-name|fmt
-parameter_list|)
-define|\
-value|mpr_dprint_field((sc), MPR_EVENT, #attr ": " #fmt "\n", (facts)->attr)
+value|mpr_print_field((sc), #attr ": " #fmt "\n", (facts)->attr)
 end_define
 
 begin_function
