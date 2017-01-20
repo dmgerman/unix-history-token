@@ -11542,7 +11542,7 @@ operator|&
 literal|0x7f
 operator|)
 operator|<=
-literal|15
+literal|31
 return|;
 comment|/* XXX could search ht rate set */
 block|}
