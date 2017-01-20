@@ -2149,6 +2149,12 @@ name|sq_stats
 operator|->
 name|dropped
 expr_stmt|;
+if|if
+condition|(
+name|sq_br
+operator|!=
+name|NULL
+condition|)
 name|tx_queue_dropped
 operator|+=
 name|sq_br
@@ -5035,6 +5041,18 @@ name|tc
 operator|=
 name|tc
 expr_stmt|;
+comment|/* check if we should allocate a second packet buffer */
+if|if
+condition|(
+name|priv
+operator|->
+name|params_ethtool
+operator|.
+name|tx_bufring_disable
+operator|==
+literal|0
+condition|)
+block|{
 name|sq
 operator|->
 name|br
@@ -5227,6 +5245,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 name|snprintf
 argument_list|(
 name|buffer
@@ -5387,6 +5406,15 @@ operator|->
 name|uar
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sq
+operator|->
+name|sq_tq
+operator|!=
+name|NULL
+condition|)
+block|{
 name|taskqueue_drain
 argument_list|(
 name|sq
@@ -5406,6 +5434,15 @@ operator|->
 name|sq_tq
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|sq
+operator|->
+name|br
+operator|!=
+name|NULL
+condition|)
 name|buf_ring_free
 argument_list|(
 name|sq
@@ -7580,6 +7617,7 @@ argument_list|,
 literal|"mlx5tx"
 argument_list|,
 name|MTX_NETWORK_LOCK
+literal|" TX"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -7594,6 +7632,7 @@ argument_list|,
 literal|"mlx5comp"
 argument_list|,
 name|MTX_NETWORK_LOCK
+literal|" TX"
 argument_list|,
 name|MTX_DEF
 argument_list|)
