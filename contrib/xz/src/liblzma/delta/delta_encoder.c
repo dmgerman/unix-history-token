@@ -72,7 +72,7 @@ specifier|static
 name|void
 name|copy_and_encode
 parameter_list|(
-name|lzma_coder
+name|lzma_delta_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -179,7 +179,7 @@ specifier|static
 name|void
 name|encode_in_place
 parameter_list|(
-name|lzma_coder
+name|lzma_delta_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -266,9 +266,9 @@ specifier|static
 name|lzma_ret
 name|delta_encode
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -306,6 +306,12 @@ name|lzma_action
 name|action
 parameter_list|)
 block|{
+name|lzma_delta_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|lzma_ret
 name|ret
 decl_stmt|;
@@ -458,9 +464,9 @@ specifier|static
 name|lzma_ret
 name|delta_encoder_update
 argument_list|(
-name|lzma_coder
+name|void
 operator|*
-name|coder
+name|coder_ptr
 argument_list|,
 specifier|const
 name|lzma_allocator
@@ -484,6 +490,12 @@ operator|*
 name|reversed_filters
 argument_list|)
 block|{
+name|lzma_delta_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 comment|// Delta doesn't and will never support changing the options in
 comment|// the middle of encoding. If the app tries to change them, we
 comment|// simply ignore them.

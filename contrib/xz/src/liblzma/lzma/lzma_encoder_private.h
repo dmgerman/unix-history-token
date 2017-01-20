@@ -251,7 +251,7 @@ end_typedef
 
 begin_struct
 struct|struct
-name|lzma_coder_s
+name|lzma_lzma1_encoder_s
 block|{
 comment|/// Range encoder
 name|lzma_range_encoder
@@ -449,7 +449,7 @@ specifier|extern
 name|void
 name|lzma_lzma_optimum_fast
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|restrict
 name|coder
@@ -477,7 +477,7 @@ specifier|extern
 name|void
 name|lzma_lzma_optimum_normal
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|restrict
 name|coder

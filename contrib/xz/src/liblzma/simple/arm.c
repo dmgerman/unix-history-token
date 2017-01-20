@@ -58,7 +58,7 @@ specifier|static
 name|size_t
 name|arm_code
 argument_list|(
-name|lzma_simple
+name|void
 operator|*
 name|simple
 name|lzma_attribute

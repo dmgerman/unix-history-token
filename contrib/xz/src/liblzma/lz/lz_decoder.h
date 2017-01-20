@@ -129,7 +129,7 @@ typedef|typedef
 struct|struct
 block|{
 comment|/// Data specific to the LZ-based decoder
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 decl_stmt|;
@@ -140,9 +140,8 @@ modifier|*
 name|code
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-specifier|restrict
 name|coder
 parameter_list|,
 name|lzma_dict
@@ -171,7 +170,7 @@ modifier|*
 name|reset
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,
@@ -188,7 +187,7 @@ modifier|*
 name|set_uncompressed
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,
@@ -203,7 +202,7 @@ modifier|*
 name|end
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,
@@ -289,7 +288,7 @@ specifier|extern
 name|void
 name|lzma_lz_decoder_uncompressed
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,

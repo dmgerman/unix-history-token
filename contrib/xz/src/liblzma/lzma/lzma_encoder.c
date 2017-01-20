@@ -202,7 +202,7 @@ specifier|inline
 name|void
 name|literal
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|,
@@ -777,7 +777,7 @@ specifier|inline
 name|void
 name|match
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|,
@@ -1054,7 +1054,7 @@ specifier|inline
 name|void
 name|rep_match
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|,
@@ -1354,7 +1354,7 @@ specifier|static
 name|void
 name|encode_symbol
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|,
@@ -1558,7 +1558,7 @@ specifier|static
 name|bool
 name|encode_init
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|,
@@ -1703,7 +1703,7 @@ specifier|static
 name|void
 name|encode_eopm
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|,
@@ -1802,7 +1802,7 @@ specifier|extern
 name|lzma_ret
 name|lzma_lzma_encode
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|restrict
 name|coder
@@ -2122,9 +2122,8 @@ specifier|static
 name|lzma_ret
 name|lzma_encode
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-specifier|restrict
 name|coder
 parameter_list|,
 name|lzma_mf
@@ -2443,7 +2442,7 @@ specifier|extern
 name|lzma_ret
 name|lzma_lzma_encoder_reset
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|,
@@ -2806,7 +2805,7 @@ specifier|extern
 name|lzma_ret
 name|lzma_lzma_encoder_create
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 modifier|*
 name|coder_ptr
@@ -2826,7 +2825,7 @@ modifier|*
 name|lz_options
 parameter_list|)
 block|{
-comment|// Allocate lzma_coder if it wasn't already allocated.
+comment|// Allocate lzma_lzma1_encoder if it wasn't already allocated.
 if|if
 condition|(
 operator|*
@@ -2842,7 +2841,7 @@ name|lzma_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 argument_list|)
 argument_list|,
 name|allocator
@@ -2859,7 +2858,7 @@ return|return
 name|LZMA_MEM_ERROR
 return|;
 block|}
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 init|=
@@ -3154,7 +3153,7 @@ call|)
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 argument_list|)
 argument_list|)
 operator|+

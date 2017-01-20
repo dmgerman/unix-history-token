@@ -99,9 +99,9 @@ directive|include
 file|"memcmplen.h"
 end_include
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|lzma_coder_s
 block|{
 comment|/// LZ-based encoder e.g. LZMA
 name|lzma_lz_encoder
@@ -116,8 +116,9 @@ name|lzma_next_coder
 name|next
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|lzma_coder
+typedef|;
+end_typedef
 
 begin_comment
 comment|/// \brief      Moves the data in the input window to free space for new data
@@ -681,9 +682,9 @@ specifier|static
 name|lzma_ret
 name|lz_encode
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -721,6 +722,12 @@ name|lzma_action
 name|action
 parameter_list|)
 block|{
+name|lzma_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -1994,9 +2001,9 @@ specifier|static
 name|void
 name|lz_encoder_end
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -2004,6 +2011,12 @@ modifier|*
 name|allocator
 parameter_list|)
 block|{
+name|lzma_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|lzma_next_end
 argument_list|(
 operator|&
@@ -2100,9 +2113,9 @@ specifier|static
 name|lzma_ret
 name|lz_encoder_update
 argument_list|(
-name|lzma_coder
+name|void
 operator|*
-name|coder
+name|coder_ptr
 argument_list|,
 specifier|const
 name|lzma_allocator
@@ -2126,6 +2139,12 @@ operator|*
 name|reversed_filters
 argument_list|)
 block|{
+name|lzma_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 if|if
 condition|(
 name|coder
@@ -2230,17 +2249,21 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|// Allocate and initialize the base data structure.
-if|if
-condition|(
+name|lzma_coder
+modifier|*
+name|coder
+init|=
 name|next
 operator|->
+name|coder
+decl_stmt|;
+if|if
+condition|(
 name|coder
 operator|==
 name|NULL
 condition|)
 block|{
-name|next
-operator|->
 name|coder
 operator|=
 name|lzma_alloc
@@ -2255,8 +2278,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|==
 name|NULL
@@ -2264,6 +2285,12 @@ condition|)
 return|return
 name|LZMA_MEM_ERROR
 return|;
+name|next
+operator|->
+name|coder
+operator|=
+name|coder
+expr_stmt|;
 name|next
 operator|->
 name|code
@@ -2285,8 +2312,6 @@ operator|=
 operator|&
 name|lz_encoder_update
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|lz
@@ -2295,8 +2320,6 @@ name|coder
 operator|=
 name|NULL
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|lz
@@ -2305,8 +2328,6 @@ name|code
 operator|=
 name|NULL
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|lz
@@ -2315,8 +2336,9 @@ name|end
 operator|=
 name|NULL
 expr_stmt|;
-name|next
-operator|->
+comment|// mf.size is initialized to silence Valgrind
+comment|// when used on optimized binaries (GCC may reorder
+comment|// code in a way that Valgrind gets unhappy).
 name|coder
 operator|->
 name|mf
@@ -2325,8 +2347,14 @@ name|buffer
 operator|=
 name|NULL
 expr_stmt|;
-name|next
+name|coder
 operator|->
+name|mf
+operator|.
+name|size
+operator|=
+literal|0
+expr_stmt|;
 name|coder
 operator|->
 name|mf
@@ -2335,8 +2363,6 @@ name|hash
 operator|=
 name|NULL
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|mf
@@ -2345,8 +2371,6 @@ name|son
 operator|=
 name|NULL
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|mf
@@ -2355,8 +2379,6 @@ name|hash_count
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|mf
@@ -2365,8 +2387,6 @@ name|sons_count
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|next
@@ -2383,8 +2403,6 @@ argument_list|(
 name|lz_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|lz
@@ -2403,15 +2421,13 @@ name|lz_options
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Setup the size information into next->coder->mf and deallocate
+comment|// Setup the size information into coder->mf and deallocate
 comment|// old buffers if they have wrong size.
 if|if
 condition|(
 name|lz_encoder_prepare
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|mf
@@ -2432,8 +2448,6 @@ condition|(
 name|lz_encoder_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|mf
@@ -2452,8 +2466,6 @@ return|return
 name|lzma_next_filter_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|next

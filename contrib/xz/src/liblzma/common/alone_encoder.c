@@ -62,9 +62,9 @@ name|ALONE_HEADER_SIZE
 value|(1 + 4 + 8)
 end_define
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|lzma_coder_s
 block|{
 name|lzma_next_coder
 name|next
@@ -87,17 +87,18 @@ name|ALONE_HEADER_SIZE
 index|]
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|lzma_alone_coder
+typedef|;
+end_typedef
 
 begin_decl_stmt
 specifier|static
 name|lzma_ret
 name|alone_encode
 argument_list|(
-name|lzma_coder
+name|void
 operator|*
-name|coder
+name|coder_ptr
 argument_list|,
 specifier|const
 name|lzma_allocator
@@ -141,6 +142,12 @@ name|lzma_action
 name|action
 argument_list|)
 block|{
+name|lzma_alone_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -250,9 +257,9 @@ specifier|static
 name|void
 name|alone_encoder_end
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -260,6 +267,12 @@ modifier|*
 name|allocator
 parameter_list|)
 block|{
+name|lzma_alone_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|lzma_next_end
 argument_list|(
 operator|&
@@ -315,24 +328,28 @@ argument_list|,
 name|allocator
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|lzma_alone_coder
+modifier|*
+name|coder
+init|=
 name|next
 operator|->
+name|coder
+decl_stmt|;
+if|if
+condition|(
 name|coder
 operator|==
 name|NULL
 condition|)
 block|{
-name|next
-operator|->
 name|coder
 operator|=
 name|lzma_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_alone_coder
 argument_list|)
 argument_list|,
 name|allocator
@@ -340,8 +357,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|==
 name|NULL
@@ -349,6 +364,12 @@ condition|)
 return|return
 name|LZMA_MEM_ERROR
 return|;
+name|next
+operator|->
+name|coder
+operator|=
+name|coder
+expr_stmt|;
 name|next
 operator|->
 name|code
@@ -363,8 +384,6 @@ operator|=
 operator|&
 name|alone_encoder_end
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|next
@@ -373,16 +392,12 @@ name|LZMA_NEXT_CODER_INIT
 expr_stmt|;
 block|}
 comment|// Basic initializations
-name|next
-operator|->
 name|coder
 operator|->
 name|sequence
 operator|=
 name|SEQ_HEADER
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|header_pos
@@ -397,8 +412,6 @@ name|lzma_lzma_lclppb_encode
 argument_list|(
 name|options
 argument_list|,
-name|next
-operator|->
 name|coder
 operator|->
 name|header
@@ -473,8 +486,6 @@ name|d
 expr_stmt|;
 name|unaligned_write32le
 argument_list|(
-name|next
-operator|->
 name|coder
 operator|->
 name|header
@@ -487,8 +498,6 @@ expr_stmt|;
 comment|// - Uncompressed size (always unknown and using EOPM)
 name|memset
 argument_list|(
-name|next
-operator|->
 name|coder
 operator|->
 name|header
@@ -542,8 +551,6 @@ return|return
 name|lzma_next_filter_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|next

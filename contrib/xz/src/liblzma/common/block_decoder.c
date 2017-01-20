@@ -61,9 +61,9 @@ directive|include
 file|"check.h"
 end_include
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|lzma_coder_s
 block|{
 enum|enum
 block|{
@@ -112,8 +112,9 @@ name|bool
 name|ignore_check
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|lzma_block_coder
+typedef|;
+end_typedef
 
 begin_function
 specifier|static
@@ -200,9 +201,9 @@ specifier|static
 name|lzma_ret
 name|block_decode
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -240,6 +241,12 @@ name|lzma_action
 name|action
 parameter_list|)
 block|{
+name|lzma_block_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 switch|switch
 condition|(
 name|coder
@@ -653,9 +660,9 @@ specifier|static
 name|void
 name|block_decoder_end
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -663,6 +670,12 @@ modifier|*
 name|allocator
 parameter_list|)
 block|{
+name|lzma_block_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|lzma_next_end
 argument_list|(
 operator|&
@@ -736,25 +749,29 @@ condition|)
 return|return
 name|LZMA_PROG_ERROR
 return|;
-comment|// Allocate and initialize *next->coder if needed.
-if|if
-condition|(
+comment|// Allocate *next->coder if needed.
+name|lzma_block_coder
+modifier|*
+name|coder
+init|=
 name|next
 operator|->
+name|coder
+decl_stmt|;
+if|if
+condition|(
 name|coder
 operator|==
 name|NULL
 condition|)
 block|{
-name|next
-operator|->
 name|coder
 operator|=
 name|lzma_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_block_coder
 argument_list|)
 argument_list|,
 name|allocator
@@ -762,8 +779,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|==
 name|NULL
@@ -771,6 +786,12 @@ condition|)
 return|return
 name|LZMA_MEM_ERROR
 return|;
+name|next
+operator|->
+name|coder
+operator|=
+name|coder
+expr_stmt|;
 name|next
 operator|->
 name|code
@@ -785,8 +806,6 @@ operator|=
 operator|&
 name|block_decoder_end
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|next
@@ -795,32 +814,24 @@ name|LZMA_NEXT_CODER_INIT
 expr_stmt|;
 block|}
 comment|// Basic initializations
-name|next
-operator|->
 name|coder
 operator|->
 name|sequence
 operator|=
 name|SEQ_CODE
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|block
 operator|=
 name|block
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|compressed_size
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|uncompressed_size
@@ -830,8 +841,6 @@ expr_stmt|;
 comment|// If Compressed Size is not known, we calculate the maximum allowed
 comment|// value so that encoded size of the Block (including Block Padding)
 comment|// is still a valid VLI and a multiple of four.
-name|next
-operator|->
 name|coder
 operator|->
 name|compressed_limit
@@ -870,8 +879,6 @@ expr_stmt|;
 comment|// Initialize the check. It's caller's problem if the Check ID is not
 comment|// supported, and the Block decoder cannot verify the Check field.
 comment|// Caller can test lzma_check_is_supported(block->check).
-name|next
-operator|->
 name|coder
 operator|->
 name|check_pos
@@ -881,8 +888,6 @@ expr_stmt|;
 name|lzma_check_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|check
@@ -892,8 +897,6 @@ operator|->
 name|check
 argument_list|)
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|ignore_check
@@ -915,8 +918,6 @@ return|return
 name|lzma_raw_decoder_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|next

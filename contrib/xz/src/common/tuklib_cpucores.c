@@ -88,6 +88,25 @@ file|<windows.h>
 end_include
 
 begin_comment
+comment|// glibc>= 2.9
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|TUKLIB_CPUCORES_SCHED_GETAFFINITY
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sched.h>
+end_include
+
+begin_comment
 comment|// FreeBSD
 end_comment
 
@@ -227,6 +246,40 @@ operator|=
 name|sysinfo
 operator|.
 name|dwNumberOfProcessors
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|TUKLIB_CPUCORES_SCHED_GETAFFINITY
+argument_list|)
+name|cpu_set_t
+name|cpu_mask
+decl_stmt|;
+if|if
+condition|(
+name|sched_getaffinity
+argument_list|(
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cpu_mask
+argument_list|)
+argument_list|,
+operator|&
+name|cpu_mask
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ret
+operator|=
+name|CPU_COUNT
+argument_list|(
+operator|&
+name|cpu_mask
+argument_list|)
 expr_stmt|;
 elif|#
 directive|elif

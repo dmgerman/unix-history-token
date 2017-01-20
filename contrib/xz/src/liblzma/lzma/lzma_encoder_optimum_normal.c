@@ -75,7 +75,7 @@ name|uint32_t
 name|get_literal_price
 parameter_list|(
 specifier|const
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|const
 name|coder
@@ -296,7 +296,7 @@ name|uint32_t
 name|get_short_rep_price
 parameter_list|(
 specifier|const
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|const
 name|coder
@@ -344,7 +344,7 @@ name|uint32_t
 name|get_pure_rep_price
 parameter_list|(
 specifier|const
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|const
 name|coder
@@ -478,7 +478,7 @@ name|uint32_t
 name|get_rep_price
 parameter_list|(
 specifier|const
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|const
 name|coder
@@ -534,7 +534,7 @@ name|uint32_t
 name|get_dist_len_price
 parameter_list|(
 specifier|const
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|const
 name|coder
@@ -642,7 +642,7 @@ specifier|static
 name|void
 name|fill_dist_prices
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|)
@@ -914,7 +914,7 @@ specifier|static
 name|void
 name|fill_align_prices
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|)
@@ -1041,7 +1041,7 @@ specifier|static
 name|void
 name|backward
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|restrict
 name|coder
@@ -1322,7 +1322,7 @@ specifier|inline
 name|uint32_t
 name|helper1
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|restrict
 name|coder
@@ -2319,7 +2319,7 @@ specifier|inline
 name|uint32_t
 name|helper2
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 name|coder
 parameter_list|,
@@ -4475,7 +4475,7 @@ specifier|extern
 name|void
 name|lzma_lzma_optimum_normal
 parameter_list|(
-name|lzma_coder
+name|lzma_lzma1_encoder
 modifier|*
 specifier|restrict
 name|coder
