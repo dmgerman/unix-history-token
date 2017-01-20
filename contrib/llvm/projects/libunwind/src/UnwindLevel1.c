@@ -175,7 +175,7 @@ condition|(
 name|handlerNotFound
 condition|)
 block|{
-comment|// Ask libuwind to get next frame (skip over first which is
+comment|// Ask libunwind to get next frame (skip over first which is
 comment|// _Unwind_RaiseException).
 name|int
 name|stepResult
@@ -195,7 +195,7 @@ block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase1(ex_ojb=%p): unw_step() reached "
-literal|"bottom => _URC_END_OF_STACK\n"
+literal|"bottom => _URC_END_OF_STACK"
 argument_list|,
 operator|(
 name|void
@@ -219,7 +219,7 @@ block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase1(ex_ojb=%p): unw_step failed => "
-literal|"_URC_FATAL_PHASE1_ERROR\n"
+literal|"_URC_FATAL_PHASE1_ERROR"
 argument_list|,
 operator|(
 name|void
@@ -255,7 +255,7 @@ block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase1(ex_ojb=%p): unw_get_proc_info "
-literal|"failed => _URC_FATAL_PHASE1_ERROR\n"
+literal|"failed => _URC_FATAL_PHASE1_ERROR"
 argument_list|,
 operator|(
 name|void
@@ -350,7 +350,7 @@ literal|", func=%s, lsda=0x%"
 name|PRIx64
 literal|", personality=0x%"
 name|PRIx64
-literal|"\n"
+literal|""
 argument_list|,
 operator|(
 name|void
@@ -404,7 +404,7 @@ argument_list|)
 decl_stmt|;
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase1(ex_ojb=%p): calling personality function %p\n"
+literal|"unwind_phase1(ex_ojb=%p): calling personality function %p"
 argument_list|,
 operator|(
 name|void
@@ -485,7 +485,7 @@ name|sp
 expr_stmt|;
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase1(ex_ojb=%p): _URC_HANDLER_FOUND \n"
+literal|"unwind_phase1(ex_ojb=%p): _URC_HANDLER_FOUND"
 argument_list|,
 operator|(
 name|void
@@ -502,7 +502,7 @@ name|_URC_CONTINUE_UNWIND
 case|:
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase1(ex_ojb=%p): _URC_CONTINUE_UNWIND\n"
+literal|"unwind_phase1(ex_ojb=%p): _URC_CONTINUE_UNWIND"
 argument_list|,
 operator|(
 name|void
@@ -517,7 +517,7 @@ default|default:
 comment|// something went wrong
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase1(ex_ojb=%p): _URC_FATAL_PHASE1_ERROR\n"
+literal|"unwind_phase1(ex_ojb=%p): _URC_FATAL_PHASE1_ERROR"
 argument_list|,
 operator|(
 name|void
@@ -565,7 +565,7 @@ argument_list|)
 expr_stmt|;
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase2(ex_ojb=%p)\n"
+literal|"unwind_phase2(ex_ojb=%p)"
 argument_list|,
 operator|(
 name|void
@@ -580,7 +580,7 @@ condition|(
 name|true
 condition|)
 block|{
-comment|// Ask libuwind to get next frame (skip over first which is
+comment|// Ask libunwind to get next frame (skip over first which is
 comment|// _Unwind_RaiseException).
 name|int
 name|stepResult
@@ -600,7 +600,7 @@ block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase2(ex_ojb=%p): unw_step() reached "
-literal|"bottom => _URC_END_OF_STACK\n"
+literal|"bottom => _URC_END_OF_STACK"
 argument_list|,
 operator|(
 name|void
@@ -624,7 +624,7 @@ block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase2(ex_ojb=%p): unw_step failed => "
-literal|"_URC_FATAL_PHASE1_ERROR\n"
+literal|"_URC_FATAL_PHASE1_ERROR"
 argument_list|,
 operator|(
 name|void
@@ -670,7 +670,7 @@ block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase2(ex_ojb=%p): unw_get_proc_info "
-literal|"failed => _URC_FATAL_PHASE1_ERROR\n"
+literal|"failed => _URC_FATAL_PHASE1_ERROR"
 argument_list|,
 operator|(
 name|void
@@ -752,7 +752,6 @@ literal|", lsda=0x%"
 name|PRIx64
 literal|", personality=0x%"
 name|PRIx64
-literal|"\n"
 argument_list|,
 operator|(
 name|void
@@ -869,7 +868,7 @@ case|:
 comment|// Continue unwinding
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase2(ex_ojb=%p): _URC_CONTINUE_UNWIND\n"
+literal|"unwind_phase2(ex_ojb=%p): _URC_CONTINUE_UNWIND"
 argument_list|,
 operator|(
 name|void
@@ -901,7 +900,7 @@ name|_URC_INSTALL_CONTEXT
 case|:
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase2(ex_ojb=%p): _URC_INSTALL_CONTEXT\n"
+literal|"unwind_phase2(ex_ojb=%p): _URC_INSTALL_CONTEXT"
 argument_list|,
 operator|(
 name|void
@@ -947,7 +946,6 @@ literal|"user code with ip=0x%"
 name|PRIx64
 literal|", sp=0x%"
 name|PRIx64
-literal|"\n"
 argument_list|,
 operator|(
 name|void
@@ -1056,7 +1054,7 @@ block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase2_forced(ex_ojb=%p): unw_step "
-literal|"failed => _URC_END_OF_STACK\n"
+literal|"failed => _URC_END_OF_STACK"
 argument_list|,
 operator|(
 name|void
@@ -1136,7 +1134,6 @@ literal|", func=%s, lsda=0x%"
 name|PRIx64
 literal|", personality=0x%"
 name|PRIx64
-literal|"\n"
 argument_list|,
 operator|(
 name|void
@@ -1205,7 +1202,7 @@ argument_list|)
 decl_stmt|;
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase2_forced(ex_ojb=%p): stop function returned %d\n"
+literal|"unwind_phase2_forced(ex_ojb=%p): stop function returned %d"
 argument_list|,
 operator|(
 name|void
@@ -1225,7 +1222,7 @@ condition|)
 block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase2_forced(ex_ojb=%p): stopped by stop function\n"
+literal|"unwind_phase2_forced(ex_ojb=%p): stopped by stop function"
 argument_list|,
 operator|(
 name|void
@@ -1265,7 +1262,7 @@ argument_list|)
 decl_stmt|;
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|"unwind_phase2_forced(ex_ojb=%p): calling personality function %p\n"
+literal|"unwind_phase2_forced(ex_ojb=%p): calling personality function %p"
 argument_list|,
 operator|(
 name|void
@@ -1323,7 +1320,7 @@ name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase2_forced(ex_ojb=%p): "
 literal|"personality returned "
-literal|"_URC_CONTINUE_UNWIND\n"
+literal|"_URC_CONTINUE_UNWIND"
 argument_list|,
 operator|(
 name|void
@@ -1341,7 +1338,7 @@ name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase2_forced(ex_ojb=%p): "
 literal|"personality returned "
-literal|"_URC_INSTALL_CONTEXT\n"
+literal|"_URC_INSTALL_CONTEXT"
 argument_list|,
 operator|(
 name|void
@@ -1363,7 +1360,7 @@ name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase2_forced(ex_ojb=%p): "
 literal|"personality returned %d, "
-literal|"_URC_FATAL_PHASE2_ERROR\n"
+literal|"_URC_FATAL_PHASE2_ERROR"
 argument_list|,
 operator|(
 name|void
@@ -1385,7 +1382,7 @@ comment|// of the stack.
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|"unwind_phase2_forced(ex_ojb=%p): calling stop "
-literal|"function with _UA_END_OF_STACK\n"
+literal|"function with _UA_END_OF_STACK"
 argument_list|,
 operator|(
 name|void
@@ -1459,7 +1456,7 @@ parameter_list|)
 block|{
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_RaiseException(ex_obj=%p)\n"
+literal|"_Unwind_RaiseException(ex_obj=%p)"
 argument_list|,
 operator|(
 name|void
@@ -1590,7 +1587,7 @@ parameter_list|)
 block|{
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_Resume(ex_obj=%p)\n"
+literal|"_Unwind_Resume(ex_obj=%p)"
 argument_list|,
 operator|(
 name|void
@@ -1697,7 +1694,7 @@ parameter_list|)
 block|{
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_ForcedUnwind(ex_obj=%p, stop=%p)\n"
+literal|"_Unwind_ForcedUnwind(ex_obj=%p, stop=%p)"
 argument_list|,
 operator|(
 name|void
@@ -1825,7 +1822,6 @@ name|_LIBUNWIND_TRACE_API
 argument_list|(
 literal|"_Unwind_GetLanguageSpecificData(context=%p) => 0x%"
 name|PRIxPTR
-literal|"\n"
 argument_list|,
 operator|(
 name|void
@@ -1860,7 +1856,7 @@ name|_LIBUNWIND_DEBUG_LOG
 argument_list|(
 literal|"lsda at 0x%"
 name|PRIxPTR
-literal|" does not start with 0xFF\n"
+literal|" does not start with 0xFF"
 argument_list|,
 name|result
 argument_list|)
@@ -1934,7 +1930,6 @@ name|_LIBUNWIND_TRACE_API
 argument_list|(
 literal|"_Unwind_GetRegionStart(context=%p) => 0x%"
 name|PRIxPTR
-literal|"\n"
 argument_list|,
 operator|(
 name|void
@@ -1971,7 +1966,7 @@ parameter_list|)
 block|{
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_DeleteException(ex_obj=%p)\n"
+literal|"_Unwind_DeleteException(ex_obj=%p)"
 argument_list|,
 operator|(
 name|void
@@ -2048,7 +2043,6 @@ name|_LIBUNWIND_TRACE_API
 argument_list|(
 literal|"_Unwind_GetGR(context=%p, reg=%d) => 0x%"
 name|PRIx64
-literal|"\n"
 argument_list|,
 operator|(
 name|void
@@ -2098,7 +2092,7 @@ name|_LIBUNWIND_TRACE_API
 argument_list|(
 literal|"_Unwind_SetGR(context=%p, reg=%d, value=0x%0"
 name|PRIx64
-literal|")\n"
+literal|")"
 argument_list|,
 operator|(
 name|void
@@ -2178,7 +2172,6 @@ name|_LIBUNWIND_TRACE_API
 argument_list|(
 literal|"_Unwind_GetIP(context=%p) => 0x%"
 name|PRIx64
-literal|"\n"
 argument_list|,
 operator|(
 name|void
@@ -2231,7 +2224,7 @@ name|_LIBUNWIND_TRACE_API
 argument_list|(
 literal|"_Unwind_SetIP(context=%p, value=0x%0"
 name|PRIx64
-literal|")\n"
+literal|")"
 argument_list|,
 operator|(
 name|void

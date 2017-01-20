@@ -32,7 +32,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  Defines macros used within libuwind project.
+comment|//  Defines macros used within libunwind project.
 end_comment
 
 begin_comment
@@ -487,7 +487,7 @@ name|msg
 parameter_list|,
 modifier|...
 parameter_list|)
-value|fprintf(stderr, "libuwind: " msg, __VA_ARGS__)
+value|fprintf(stderr, "libunwind: " msg "\n", __VA_ARGS__)
 end_define
 
 begin_comment

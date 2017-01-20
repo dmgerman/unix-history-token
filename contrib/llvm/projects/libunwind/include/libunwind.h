@@ -32,7 +32,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Compatible with libuwind API documented at:
+comment|// Compatible with libunwind API documented at:
 end_comment
 
 begin_comment
@@ -592,7 +592,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* UNW_REMOTE */
-comment|/*  * traditional libuwind "remote" API  *   NOT IMPLEMENTED on Mac OS X  *  * extern int               unw_init_remote(unw_cursor_t*, unw_addr_space_t,  *                                          thread_t*);  * extern unw_accessors_t   unw_get_accessors(unw_addr_space_t);  * extern unw_addr_space_t  unw_create_addr_space(unw_accessors_t, int);  * extern void              unw_flush_cache(unw_addr_space_t, unw_word_t,  *                                          unw_word_t);  * extern int               unw_set_caching_policy(unw_addr_space_t,  *                                                 unw_caching_policy_t);  * extern void              _U_dyn_register(unw_dyn_info_t*);  * extern void              _U_dyn_cancel(unw_dyn_info_t*);  */
+comment|/*  * traditional libunwind "remote" API  *   NOT IMPLEMENTED on Mac OS X  *  * extern int               unw_init_remote(unw_cursor_t*, unw_addr_space_t,  *                                          thread_t*);  * extern unw_accessors_t   unw_get_accessors(unw_addr_space_t);  * extern unw_addr_space_t  unw_create_addr_space(unw_accessors_t, int);  * extern void              unw_flush_cache(unw_addr_space_t, unw_word_t,  *                                          unw_word_t);  * extern int               unw_set_caching_policy(unw_addr_space_t,  *                                                 unw_caching_policy_t);  * extern void              _U_dyn_register(unw_dyn_info_t*);  * extern void              _U_dyn_cancel(unw_dyn_info_t*);  */
 ifdef|#
 directive|ifdef
 name|__cplusplus
