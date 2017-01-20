@@ -7915,6 +7915,9 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|release_synqe
 argument_list|(
 name|synqe
