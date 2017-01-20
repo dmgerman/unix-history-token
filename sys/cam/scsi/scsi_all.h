@@ -10881,7 +10881,7 @@ decl_stmt|;
 name|uint8_t
 name|reserved2
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 block|}
