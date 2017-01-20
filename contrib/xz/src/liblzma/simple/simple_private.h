@@ -63,15 +63,7 @@ end_include
 
 begin_typedef
 typedef|typedef
-name|struct
-name|lzma_simple_s
-name|lzma_simple
-typedef|;
-end_typedef
-
-begin_struct
 struct|struct
-name|lzma_coder_s
 block|{
 comment|/// Next filter in the chain
 name|lzma_next_coder
@@ -96,7 +88,7 @@ modifier|*
 name|filter
 function_decl|)
 parameter_list|(
-name|lzma_simple
+name|void
 modifier|*
 name|simple
 parameter_list|,
@@ -116,7 +108,7 @@ parameter_list|)
 function_decl|;
 comment|/// Pointer to filter-specific data, or NULL if filter doesn't need
 comment|/// any extra data.
-name|lzma_simple
+name|void
 modifier|*
 name|simple
 decl_stmt|;
@@ -151,8 +143,9 @@ name|buffer
 index|[]
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|lzma_simple_coder
+typedef|;
+end_typedef
 
 begin_function_decl
 specifier|extern
@@ -179,7 +172,7 @@ modifier|*
 name|filter
 function_decl|)
 parameter_list|(
-name|lzma_simple
+name|void
 modifier|*
 name|simple
 parameter_list|,

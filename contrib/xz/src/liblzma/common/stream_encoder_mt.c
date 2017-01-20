@@ -123,6 +123,14 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
+name|lzma_stream_coder_s
+name|lzma_stream_coder
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
 name|worker_thread_s
 name|worker_thread
 typedef|;
@@ -156,7 +164,7 @@ name|outbuf
 decl_stmt|;
 comment|/// Pointer to the main structure is needed when putting this
 comment|/// thread back to the stack of free threads.
-name|lzma_coder
+name|lzma_stream_coder
 modifier|*
 name|coder
 decl_stmt|;
@@ -206,7 +214,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|lzma_coder_s
+name|lzma_stream_coder_s
 block|{
 enum|enum
 block|{
@@ -1294,7 +1302,7 @@ specifier|static
 name|void
 name|threads_stop
 parameter_list|(
-name|lzma_coder
+name|lzma_stream_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -1435,7 +1443,7 @@ specifier|static
 name|void
 name|threads_end
 parameter_list|(
-name|lzma_coder
+name|lzma_stream_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -1560,7 +1568,7 @@ specifier|static
 name|lzma_ret
 name|initialize_new_thread
 parameter_list|(
-name|lzma_coder
+name|lzma_stream_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -1744,7 +1752,7 @@ specifier|static
 name|lzma_ret
 name|get_thread
 parameter_list|(
-name|lzma_coder
+name|lzma_stream_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -1899,7 +1907,7 @@ specifier|static
 name|lzma_ret
 name|stream_encode_in
 parameter_list|(
-name|lzma_coder
+name|lzma_stream_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -2157,7 +2165,7 @@ specifier|static
 name|bool
 name|wait_for_work
 parameter_list|(
-name|lzma_coder
+name|lzma_stream_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -2326,9 +2334,9 @@ specifier|static
 name|lzma_ret
 name|stream_encode_mt
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -2366,6 +2374,12 @@ name|lzma_action
 name|action
 parameter_list|)
 block|{
+name|lzma_stream_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 switch|switch
 condition|(
 name|coder
@@ -2911,9 +2925,9 @@ specifier|static
 name|void
 name|stream_encoder_mt_end
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -2921,6 +2935,12 @@ modifier|*
 name|allocator
 parameter_list|)
 block|{
+name|lzma_stream_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 comment|// Threads must be killed before the output queue can be freed.
 name|threads_end
 argument_list|(
@@ -3226,9 +3246,9 @@ specifier|static
 name|void
 name|get_progress
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -3239,8 +3259,14 @@ modifier|*
 name|progress_out
 parameter_list|)
 block|{
+name|lzma_stream_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 comment|// Lock coder->mutex to prevent finishing threads from moving their
-comment|// progress info from the worker_thread structure to lzma_coder.
+comment|// progress info from the worker_thread structure to lzma_stream_coder.
 name|mythread_sync
 argument_list|(
 argument|coder->mutex
@@ -3442,24 +3468,28 @@ return|return
 name|LZMA_UNSUPPORTED_CHECK
 return|;
 comment|// Allocate and initialize the base structure if needed.
-if|if
-condition|(
+name|lzma_stream_coder
+modifier|*
+name|coder
+init|=
 name|next
 operator|->
+name|coder
+decl_stmt|;
+if|if
+condition|(
 name|coder
 operator|==
 name|NULL
 condition|)
 block|{
-name|next
-operator|->
 name|coder
 operator|=
 name|lzma_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_stream_coder
 argument_list|)
 argument_list|,
 name|allocator
@@ -3467,8 +3497,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|==
 name|NULL
@@ -3476,6 +3504,12 @@ condition|)
 return|return
 name|LZMA_MEM_ERROR
 return|;
+name|next
+operator|->
+name|coder
+operator|=
+name|coder
+expr_stmt|;
 comment|// For the mutex and condition variable initializations
 comment|// the error handling has to be done here because
 comment|// stream_encoder_mt_end() doesn't know if they have
@@ -3485,8 +3519,6 @@ condition|(
 name|mythread_mutex_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|mutex
@@ -3495,8 +3527,6 @@ condition|)
 block|{
 name|lzma_free
 argument_list|(
-name|next
-operator|->
 name|coder
 argument_list|,
 name|allocator
@@ -3517,8 +3547,6 @@ condition|(
 name|mythread_cond_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|cond
@@ -3528,8 +3556,6 @@ block|{
 name|mythread_mutex_destroy
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|mutex
@@ -3537,8 +3563,6 @@ argument_list|)
 expr_stmt|;
 name|lzma_free
 argument_list|(
-name|next
-operator|->
 name|coder
 argument_list|,
 name|allocator
@@ -3576,8 +3600,6 @@ operator|&
 name|get_progress
 expr_stmt|;
 comment|// 		next->update =&stream_encoder_mt_update;
-name|next
-operator|->
 name|coder
 operator|->
 name|filters
@@ -3589,16 +3611,12 @@ name|id
 operator|=
 name|LZMA_VLI_UNKNOWN
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|index_encoder
 operator|=
 name|LZMA_NEXT_CODER_INIT
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|index
@@ -3608,40 +3626,30 @@ expr_stmt|;
 name|memzero
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|outq
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|next
-operator|->
 name|coder
 operator|->
 name|outq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|threads
 operator|=
 name|NULL
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|threads_max
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|threads_initialized
@@ -3650,16 +3658,12 @@ literal|0
 expr_stmt|;
 block|}
 comment|// Basic initializations
-name|next
-operator|->
 name|coder
 operator|->
 name|sequence
 operator|=
 name|SEQ_STREAM_HEADER
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|block_size
@@ -3671,16 +3675,12 @@ argument_list|(
 name|block_size
 argument_list|)
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|thread_error
 operator|=
 name|LZMA_OK
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|thr
@@ -3699,8 +3699,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|->
 name|threads_max
@@ -3712,47 +3710,35 @@ condition|)
 block|{
 name|threads_end
 argument_list|(
-name|next
-operator|->
 name|coder
 argument_list|,
 name|allocator
 argument_list|)
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|threads
 operator|=
 name|NULL
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|threads_max
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|threads_initialized
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|threads_free
 operator|=
 name|NULL
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|threads
@@ -3773,8 +3759,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|->
 name|threads
@@ -3784,8 +3768,6 @@ condition|)
 return|return
 name|LZMA_MEM_ERROR
 return|;
-name|next
-operator|->
 name|coder
 operator|->
 name|threads_max
@@ -3801,8 +3783,6 @@ comment|// Reuse the old structures and threads. Tell the running
 comment|// threads to stop and wait until they have stopped.
 name|threads_stop
 argument_list|(
-name|next
-operator|->
 name|coder
 argument_list|,
 name|true
@@ -3815,8 +3795,6 @@ argument_list|(
 name|lzma_outq_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|outq
@@ -3832,8 +3810,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// Timeout
-name|next
-operator|->
 name|coder
 operator|->
 name|timeout
@@ -3850,8 +3826,6 @@ name|i
 init|=
 literal|0
 init|;
-name|next
-operator|->
 name|coder
 operator|->
 name|filters
@@ -3868,8 +3842,6 @@ name|i
 control|)
 name|lzma_free
 argument_list|(
-name|next
-operator|->
 name|coder
 operator|->
 name|filters
@@ -3888,8 +3860,6 @@ name|lzma_filters_copy
 argument_list|(
 name|filters
 argument_list|,
-name|next
-operator|->
 name|coder
 operator|->
 name|filters
@@ -3901,8 +3871,6 @@ expr_stmt|;
 comment|// Index
 name|lzma_index_end
 argument_list|(
-name|next
-operator|->
 name|coder
 operator|->
 name|index
@@ -3910,8 +3878,6 @@ argument_list|,
 name|allocator
 argument_list|)
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|index
@@ -3923,8 +3889,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|->
 name|index
@@ -3935,8 +3899,6 @@ return|return
 name|LZMA_MEM_ERROR
 return|;
 comment|// Stream Header
-name|next
-operator|->
 name|coder
 operator|->
 name|stream_flags
@@ -3945,8 +3907,6 @@ name|version
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|stream_flags
@@ -3962,22 +3922,16 @@ argument_list|(
 name|lzma_stream_header_encode
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|stream_flags
 argument_list|,
-name|next
-operator|->
 name|coder
 operator|->
 name|header
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|header_pos
@@ -3985,16 +3939,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|// Progress info
-name|next
-operator|->
 name|coder
 operator|->
 name|progress_in
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|progress_out
@@ -4213,7 +4163,7 @@ name|LZMA_MEMUSAGE_BASE
 operator|+
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_stream_coder
 argument_list|)
 operator|+
 name|options

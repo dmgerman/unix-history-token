@@ -351,22 +351,6 @@ name|LZMA_TIMED_OUT
 value|32
 end_define
 
-begin_comment
-comment|/// Type of encoder/decoder specific data; the actual structure is defined
-end_comment
-
-begin_comment
-comment|/// differently in different coders.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|lzma_coder_s
-name|lzma_coder
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -436,7 +420,7 @@ modifier|*
 name|lzma_code_function
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,
@@ -490,7 +474,7 @@ modifier|*
 name|lzma_end_function
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,
@@ -546,7 +530,7 @@ struct|struct
 name|lzma_next_coder_s
 block|{
 comment|/// Pointer to coder-specific data
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 decl_stmt|;
@@ -580,7 +564,7 @@ modifier|*
 name|get_progress
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,
@@ -602,7 +586,7 @@ name|get_check
 function_decl|)
 parameter_list|(
 specifier|const
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|)
@@ -615,7 +599,7 @@ modifier|*
 name|memconfig
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,
@@ -639,7 +623,7 @@ modifier|*
 name|update
 function_decl|)
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
 name|coder
 parameter_list|,

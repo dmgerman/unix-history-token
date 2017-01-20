@@ -60,9 +60,9 @@ specifier|static
 name|void
 name|delta_coder_end
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -70,6 +70,12 @@ modifier|*
 name|allocator
 parameter_list|)
 block|{
+name|lzma_delta_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|lzma_next_end
 argument_list|(
 operator|&
@@ -112,24 +118,28 @@ name|filters
 parameter_list|)
 block|{
 comment|// Allocate memory for the decoder if needed.
-if|if
-condition|(
+name|lzma_delta_coder
+modifier|*
+name|coder
+init|=
 name|next
 operator|->
+name|coder
+decl_stmt|;
+if|if
+condition|(
 name|coder
 operator|==
 name|NULL
 condition|)
 block|{
-name|next
-operator|->
 name|coder
 operator|=
 name|lzma_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_delta_coder
 argument_list|)
 argument_list|,
 name|allocator
@@ -137,8 +147,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|==
 name|NULL
@@ -146,6 +154,12 @@ condition|)
 return|return
 name|LZMA_MEM_ERROR
 return|;
+name|next
+operator|->
+name|coder
+operator|=
+name|coder
+expr_stmt|;
 comment|// End function is the same for encoder and decoder.
 name|next
 operator|->
@@ -154,8 +168,6 @@ operator|=
 operator|&
 name|delta_coder_end
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|next
@@ -194,8 +206,6 @@ index|]
 operator|.
 name|options
 decl_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|distance
@@ -205,8 +215,6 @@ operator|->
 name|dist
 expr_stmt|;
 comment|// Initialize the rest of the variables.
-name|next
-operator|->
 name|coder
 operator|->
 name|pos
@@ -215,8 +223,6 @@ literal|0
 expr_stmt|;
 name|memzero
 argument_list|(
-name|next
-operator|->
 name|coder
 operator|->
 name|history
@@ -229,8 +235,6 @@ return|return
 name|lzma_next_filter_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|next
@@ -293,7 +297,7 @@ return|;
 return|return
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_delta_coder
 argument_list|)
 return|;
 block|}

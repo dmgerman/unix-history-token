@@ -16,6 +16,10 @@ comment|/// \brief      Encoder presets
 end_comment
 
 begin_comment
+comment|/// \note       xz needs this even when only decoding is enabled.
+end_comment
+
+begin_comment
 comment|//
 end_comment
 

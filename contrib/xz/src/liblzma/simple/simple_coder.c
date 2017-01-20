@@ -70,7 +70,7 @@ specifier|static
 name|lzma_ret
 name|copy_or_code
 parameter_list|(
-name|lzma_coder
+name|lzma_simple_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -253,7 +253,7 @@ specifier|static
 name|size_t
 name|call_filter
 parameter_list|(
-name|lzma_coder
+name|lzma_simple_coder
 modifier|*
 name|coder
 parameter_list|,
@@ -307,9 +307,9 @@ specifier|static
 name|lzma_ret
 name|simple_code
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -347,6 +347,12 @@ name|lzma_action
 name|action
 parameter_list|)
 block|{
+name|lzma_simple_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 comment|// TODO: Add partial support for LZMA_SYNC_FLUSH. We can support it
 comment|// in cases when the filter is able to filter everything. With most
 comment|// simple filters it can be done at offset that is a multiple of 2,
@@ -870,9 +876,9 @@ specifier|static
 name|void
 name|simple_coder_end
 parameter_list|(
-name|lzma_coder
+name|void
 modifier|*
-name|coder
+name|coder_ptr
 parameter_list|,
 specifier|const
 name|lzma_allocator
@@ -880,6 +886,12 @@ modifier|*
 name|allocator
 parameter_list|)
 block|{
+name|lzma_simple_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 name|lzma_next_end
 argument_list|(
 operator|&
@@ -915,9 +927,9 @@ specifier|static
 name|lzma_ret
 name|simple_coder_update
 argument_list|(
-name|lzma_coder
+name|void
 operator|*
-name|coder
+name|coder_ptr
 argument_list|,
 specifier|const
 name|lzma_allocator
@@ -941,6 +953,12 @@ operator|*
 name|reversed_filters
 argument_list|)
 block|{
+name|lzma_simple_coder
+modifier|*
+name|coder
+init|=
+name|coder_ptr
+decl_stmt|;
 comment|// No update support, just call the next filter in the chain.
 return|return
 name|lzma_next_filter_update
@@ -985,7 +1003,7 @@ modifier|*
 name|filter
 function_decl|)
 parameter_list|(
-name|lzma_simple
+name|void
 modifier|*
 name|simple
 parameter_list|,
@@ -1016,11 +1034,17 @@ name|bool
 name|is_encoder
 parameter_list|)
 block|{
-comment|// Allocate memory for the lzma_coder structure if needed.
-if|if
-condition|(
+comment|// Allocate memory for the lzma_simple_coder structure if needed.
+name|lzma_simple_coder
+modifier|*
+name|coder
+init|=
 name|next
 operator|->
+name|coder
+decl_stmt|;
+if|if
+condition|(
 name|coder
 operator|==
 name|NULL
@@ -1030,15 +1054,13 @@ comment|// Here we allocate space also for the temporary buffer. We
 comment|// need twice the size of unfiltered_max, because then it
 comment|// is always possible to filter at least unfiltered_max bytes
 comment|// more data in coder->buffer[] if it can be filled completely.
-name|next
-operator|->
 name|coder
 operator|=
 name|lzma_alloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|lzma_coder
+name|lzma_simple_coder
 argument_list|)
 operator|+
 literal|2
@@ -1050,8 +1072,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|==
 name|NULL
@@ -1059,6 +1079,12 @@ condition|)
 return|return
 name|LZMA_MEM_ERROR
 return|;
+name|next
+operator|->
+name|coder
+operator|=
+name|coder
+expr_stmt|;
 name|next
 operator|->
 name|code
@@ -1080,24 +1106,18 @@ operator|=
 operator|&
 name|simple_coder_update
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|next
 operator|=
 name|LZMA_NEXT_CODER_INIT
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|filter
 operator|=
 name|filter
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|allocated
@@ -1114,8 +1134,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|next
-operator|->
 name|coder
 operator|->
 name|simple
@@ -1129,8 +1147,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|->
 name|simple
@@ -1143,8 +1159,6 @@ return|;
 block|}
 else|else
 block|{
-name|next
-operator|->
 name|coder
 operator|->
 name|simple
@@ -1177,8 +1191,6 @@ index|]
 operator|.
 name|options
 decl_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|now_pos
@@ -1189,8 +1201,6 @@ name|start_offset
 expr_stmt|;
 if|if
 condition|(
-name|next
-operator|->
 name|coder
 operator|->
 name|now_pos
@@ -1207,8 +1217,6 @@ return|;
 block|}
 else|else
 block|{
-name|next
-operator|->
 name|coder
 operator|->
 name|now_pos
@@ -1217,40 +1225,30 @@ literal|0
 expr_stmt|;
 block|}
 comment|// Reset variables.
-name|next
-operator|->
 name|coder
 operator|->
 name|is_encoder
 operator|=
 name|is_encoder
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|end_was_reached
 operator|=
 name|false
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|pos
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|filtered
 operator|=
 literal|0
 expr_stmt|;
-name|next
-operator|->
 name|coder
 operator|->
 name|size
@@ -1261,8 +1259,6 @@ return|return
 name|lzma_next_filter_init
 argument_list|(
 operator|&
-name|next
-operator|->
 name|coder
 operator|->
 name|next

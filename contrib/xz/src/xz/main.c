@@ -650,6 +650,61 @@ condition|)
 name|signals_init
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_SANDBOX
+comment|// Set a flag that sandboxing is allowed if all these are true:
+comment|//   - --files or --files0 wasn't used.
+comment|//   - There is exactly one input file or we are reading from stdin.
+comment|//   - We won't create any files: output goes to stdout or --test
+comment|//     or --list was used. Note that --test implies opt_stdout = true
+comment|//     but --list doesn't.
+comment|//
+comment|// This is obviously not ideal but it was easy to implement and
+comment|// it covers the most common use cases.
+comment|//
+comment|// TODO: Make sandboxing work for other situations too.
+if|if
+condition|(
+name|args
+operator|.
+name|files_name
+operator|==
+name|NULL
+operator|&&
+name|args
+operator|.
+name|arg_count
+operator|==
+literal|1
+operator|&&
+operator|(
+name|opt_stdout
+operator|||
+name|strcmp
+argument_list|(
+literal|"-"
+argument_list|,
+name|args
+operator|.
+name|arg_names
+index|[
+literal|0
+index|]
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|opt_mode
+operator|==
+name|MODE_LIST
+operator|)
+condition|)
+name|io_allow_sandbox
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|// coder_run() handles compression, decompression, and testing.
 comment|// list_file() is for --list.
 name|void
@@ -664,16 +719,25 @@ modifier|*
 name|filename
 parameter_list|)
 init|=
-name|opt_mode
-operator|==
-name|MODE_LIST
-condition|?
-operator|&
-name|list_file
-operator|:
 operator|&
 name|coder_run
 function_decl|;
+ifdef|#
+directive|ifdef
+name|HAVE_DECODERS
+if|if
+condition|(
+name|opt_mode
+operator|==
+name|MODE_LIST
+condition|)
+name|run
+operator|=
+operator|&
+name|list_file
+expr_stmt|;
+endif|#
+directive|endif
 comment|// Process the files given on the command line. Note that if no names
 comment|// were given, args_parse() gave us a fake "-" filename.
 for|for
@@ -868,6 +932,9 @@ name|files_file
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_DECODERS
 comment|// All files have now been handled. If in --list mode, display
 comment|// the totals before exiting. We don't have signal handlers
 comment|// enabled in --list mode, so we don't need to check user_abort.
@@ -888,6 +955,8 @@ name|list_totals
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|NDEBUG

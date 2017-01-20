@@ -75,6 +75,14 @@ comment|/* #undef HAVE_BYTESWAP_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if Capsicum is available. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CAPSICUM */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if the system has the type `CC_SHA256_CTX'. */
 end_comment
 
@@ -91,7 +99,7 @@ comment|/* #undef HAVE_CC_SHA256_INIT */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the MacOS X function CFLocaleCopyCurrent in the    CoreFoundation framework. */
+comment|/* Define to 1 if you have the Mac OS X function CFLocaleCopyCurrent in the    CoreFoundation framework. */
 end_comment
 
 begin_comment
@@ -99,7 +107,7 @@ comment|/* #undef HAVE_CFLOCALECOPYCURRENT */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the MacOS X function CFPreferencesCopyAppValue in    the CoreFoundation framework. */
+comment|/* Define to 1 if you have the Mac OS X function CFPreferencesCopyAppValue in    the CoreFoundation framework. */
 end_comment
 
 begin_comment
@@ -190,6 +198,17 @@ define|#
 directive|define
 name|HAVE_DECL_PROGRAM_INVOCATION_NAME
 value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if any of HAVE_DECODER_foo have been defined. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECODERS
+value|1
 end_define
 
 begin_comment
@@ -299,6 +318,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_DLFCN_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if any of HAVE_ENCODER_foo have been defined. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ENCODERS
 value|1
 end_define
 
@@ -620,14 +650,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<minix/sha2.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_MINIX_SHA2_H */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if getopt.h declares extern int optreset. */
 end_comment
 
@@ -849,6 +871,14 @@ comment|/* #undef HAVE_SYS_BYTEORDER_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/capsicum.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_CAPSICUM_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/endian.h> header file. */
 end_comment
 
@@ -975,6 +1005,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `_futime' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE__FUTIME */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if _mm_movemask_epi8 is available. */
 end_comment
 
@@ -1094,7 +1132,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"XZ Utils 5.2.2"
+value|"XZ Utils 5.2.3"
 end_define
 
 begin_comment
@@ -1127,7 +1165,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.2.2"
+value|"5.2.3"
 end_define
 
 begin_comment
@@ -1177,6 +1215,14 @@ end_comment
 
 begin_comment
 comment|/* #undef TUKLIB_CPUCORES_PSTAT_GETDYNAMIC */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if the number of available CPU cores can be detected with    sched_getaffinity() */
+end_comment
+
+begin_comment
+comment|/* #undef TUKLIB_CPUCORES_SCHED_GETAFFINITY */
 end_comment
 
 begin_comment
@@ -1384,7 +1430,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.2.2"
+value|"5.2.3"
 end_define
 
 begin_comment

@@ -244,6 +244,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_SANDBOX
+end_ifdef
+
+begin_comment
+comment|/// \brief      main() calls this if conditions for sandboxing have been met.
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|io_allow_sandbox
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/// \brief      Open the source file
 end_comment
