@@ -5516,8 +5516,8 @@ condition|)
 return|return;
 endif|#
 directive|endif
-comment|/* 		 * Otherwise, do per-cache line flush.  Use the mfence 		 * instruction to insure that previous stores are 		 * included in the write-back.  The processor 		 * propagates flush to other processors in the cache 		 * coherence domain. 		 */
-name|mfence
+comment|/* 		 * Otherwise, do per-cache line flush.  Use the sfence 		 * instruction to insure that previous stores are 		 * included in the write-back.  The processor 		 * propagates flush to other processors in the cache 		 * coherence domain. 		 */
+name|sfence
 argument_list|()
 expr_stmt|;
 for|for
@@ -5536,7 +5536,7 @@ argument_list|(
 name|sva
 argument_list|)
 expr_stmt|;
-name|mfence
+name|sfence
 argument_list|()
 expr_stmt|;
 block|}
@@ -23567,11 +23567,17 @@ name|sva
 operator|+
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 		 * Use mfence despite the ordering implied by 		 * mtx_{un,}lock() because clflush on non-Intel CPUs 		 * and clflushopt are not guaranteed to be ordered by 		 * any other instruction. 		 */
+comment|/* 		 * Use mfence or sfence despite the ordering implied by 		 * mtx_{un,}lock() because clflush on non-Intel CPUs 		 * and clflushopt are not guaranteed to be ordered by 		 * any other instruction. 		 */
 if|if
 condition|(
 name|useclflushopt
-operator|||
+condition|)
+name|sfence
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|cpu_vendor_id
 operator|!=
 name|CPU_VENDOR_INTEL
@@ -23610,7 +23616,13 @@ block|}
 if|if
 condition|(
 name|useclflushopt
-operator|||
+condition|)
+name|sfence
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|cpu_vendor_id
 operator|!=
 name|CPU_VENDOR_INTEL
