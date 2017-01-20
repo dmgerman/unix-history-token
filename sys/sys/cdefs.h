@@ -4012,6 +4012,43 @@ directive|define
 name|_Nullable
 end_define
 
+begin_define
+define|#
+directive|define
+name|_Null_unspecified
+end_define
+
+begin_define
+define|#
+directive|define
+name|__NULLABILITY_PRAGMA_PUSH
+end_define
+
+begin_define
+define|#
+directive|define
+name|__NULLABILITY_PRAGMA_POP
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__NULLABILITY_PRAGMA_PUSH
+value|_Pragma("clang diagnostic push")	\ 	_Pragma("clang diagnostic ignored \"-Wnullability-completeness\"")
+end_define
+
+begin_define
+define|#
+directive|define
+name|__NULLABILITY_PRAGMA_POP
+value|_Pragma("clang diagnostic pop")
+end_define
+
 begin_endif
 endif|#
 directive|endif
