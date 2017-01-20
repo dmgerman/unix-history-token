@@ -29103,7 +29103,7 @@ block|,
 comment|/* NB: tx+rx */
 name|DEF_CMD
 argument_list|(
-literal|"-ampdu"
+literal|"-stbc"
 argument_list|,
 operator|-
 literal|3
