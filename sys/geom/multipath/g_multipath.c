@@ -4974,6 +4974,9 @@ index|]
 init|=
 literal|"/dev/"
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
@@ -5230,15 +5233,28 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Now add.... 	 */
-operator|(
-name|void
-operator|)
+name|error
+operator|=
 name|g_multipath_add_disk
 argument_list|(
 name|gp
 argument_list|,
 name|pp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Provider addition error: %d"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
