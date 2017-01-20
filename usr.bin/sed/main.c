@@ -1699,12 +1699,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|S_ISREG
-argument_list|(
+operator|(
 name|sb
 operator|.
 name|st_mode
-argument_list|)
+operator|&
+name|S_IFREG
+operator|)
 condition|)
 name|errx
 argument_list|(
