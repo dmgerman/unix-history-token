@@ -1379,7 +1379,7 @@ name|u16
 name|cev_factor
 decl_stmt|;
 comment|/* completion event factor */
-name|u32
+name|u16
 name|cev_next_state
 decl_stmt|;
 comment|/* next completion event state */
@@ -1398,6 +1398,10 @@ directive|define
 name|MLX5E_CEV_STATE_HOLD_NOPS
 value|2
 comment|/* don't send NOPs yet */
+name|u16
+name|stopped
+decl_stmt|;
+comment|/* set if SQ is stopped */
 name|struct
 name|callout
 name|cev_callout
