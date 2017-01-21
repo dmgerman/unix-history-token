@@ -158,21 +158,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ctl_modepage_aps
-block|{
-name|struct
-name|ctl_modepage_header
-name|header
-decl_stmt|;
-name|uint8_t
-name|lock_active
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_union
 union|union
 name|ctl_modepage_info
@@ -180,10 +165,6 @@ block|{
 name|struct
 name|ctl_modepage_header
 name|header
-decl_stmt|;
-name|struct
-name|ctl_modepage_aps
-name|aps
 decl_stmt|;
 block|}
 union|;
