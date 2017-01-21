@@ -2030,7 +2030,7 @@ name|FALSE
 else|:
 name|TRUE
 argument_list|,
-comment|/* page_code */
+comment|/* pc */
 name|SMS_PAGE_CTRL_CURRENT
 argument_list|,
 comment|/* page */
@@ -6293,7 +6293,7 @@ argument_list|,
 comment|/* dbd */
 name|dbd
 argument_list|,
-comment|/* page_code */
+comment|/* pc */
 name|SMS_PAGE_CTRL_CURRENT
 argument_list|,
 comment|/* page */
@@ -6596,7 +6596,7 @@ argument_list|,
 comment|/* dbd */
 name|dbd
 argument_list|,
-comment|/* page_code */
+comment|/* pc */
 name|SMS_PAGE_CTRL_CURRENT
 argument_list|,
 comment|/* page */
