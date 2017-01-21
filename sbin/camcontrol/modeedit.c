@@ -970,13 +970,20 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|src
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * This happens if field does not fit into read page size. 		 * It also means that this field won't be written, so the 		 * returned value does not really matter. 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|src
