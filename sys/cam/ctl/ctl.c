@@ -31946,7 +31946,7 @@ name|ctl_lun
 modifier|*
 name|lun
 decl_stmt|;
-name|int
+name|uint16_t
 modifier|*
 name|len_left
 decl_stmt|,
