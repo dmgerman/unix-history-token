@@ -651,6 +651,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|__cxa_thread_atexit_hidden
+argument_list|(
+name|void
+argument_list|(
+operator|*
+name|dtor_func
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|,
+name|void
+operator|*
+name|obj
+argument_list|,
+name|void
+operator|*
+name|dso_symbol
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * These functions are used by the threading libraries in order to protect  * malloc across fork().  */
 end_comment
