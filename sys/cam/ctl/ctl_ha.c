@@ -5450,6 +5450,10 @@ operator|->
 name|ha_shutdown
 operator|<
 literal|2
+operator|&&
+operator|!
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 name|msleep
