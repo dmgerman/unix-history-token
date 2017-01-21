@@ -1199,9 +1199,9 @@ name|ni
 operator|->
 name|ni_vap
 operator|->
-name|iv_htcaps
+name|iv_flags_ht
 operator|&
-name|IEEE80211_HTCAP_LDPC
+name|IEEE80211_FHT_LDPC_TX
 operator|)
 operator|&&
 operator|(

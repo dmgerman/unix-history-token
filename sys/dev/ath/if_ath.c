@@ -4937,6 +4937,8 @@ operator|->
 name|ic_htcaps
 operator||=
 name|IEEE80211_HTCAP_LDPC
+operator||
+name|IEEE80211_HTC_TXLDPC
 expr_stmt|;
 block|}
 name|device_printf
