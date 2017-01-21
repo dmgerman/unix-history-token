@@ -297,17 +297,10 @@ index|[
 name|CPSW_INTR_COUNT
 index|]
 decl_stmt|;
-comment|/* An mbuf full of nulls for TX padding. */
-name|bus_dmamap_t
-name|null_mbuf_dmamap
-decl_stmt|;
-name|struct
-name|mbuf
+comment|/* A buffer full of nulls for TX padding. */
+name|void
 modifier|*
-name|null_mbuf
-decl_stmt|;
-name|bus_addr_t
-name|null_mbuf_paddr
+name|nullpad
 decl_stmt|;
 name|bus_dma_tag_t
 name|mbuf_dtag
