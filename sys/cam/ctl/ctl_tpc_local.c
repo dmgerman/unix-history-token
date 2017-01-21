@@ -1313,8 +1313,8 @@ name|lun
 operator|->
 name|lun
 argument_list|)
-operator|>=
-name|CTL_MAX_LUNS
+operator|==
+name|UINT32_MAX
 condition|)
 continue|continue;
 if|if
