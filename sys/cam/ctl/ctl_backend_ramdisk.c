@@ -321,6 +321,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|ctl_backend_ramdisk_init
 parameter_list|(
@@ -330,7 +331,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+specifier|static
+name|int
 name|ctl_backend_ramdisk_shutdown
 parameter_list|(
 name|void
@@ -547,6 +549,11 @@ operator|.
 name|init
 operator|=
 name|ctl_backend_ramdisk_init
+block|,
+operator|.
+name|shutdown
+operator|=
+name|ctl_backend_ramdisk_shutdown
 block|,
 operator|.
 name|data_submit
@@ -766,7 +773,8 @@ block|}
 end_function
 
 begin_function
-name|void
+specifier|static
+name|int
 name|ctl_backend_ramdisk_shutdown
 parameter_list|(
 name|void
@@ -909,24 +917,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|ctl_backend_deregister
+name|mtx_destroy
 argument_list|(
 operator|&
-name|ctl_be_ramdisk_driver
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ctl_backend_ramdisk_shutdown: "
-literal|"ctl_backend_deregister() failed!\n"
+name|softc
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
-block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
