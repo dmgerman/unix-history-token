@@ -6453,7 +6453,7 @@ name|hdr
 operator|.
 name|nexus
 operator|.
-name|targ_lun
+name|targ_mapped_lun
 operator|>=
 name|CTL_MAX_LUNS
 operator|||
@@ -6822,12 +6822,6 @@ literal|"%s: Received conflicting HA LUN %d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|msg
-operator|->
-name|hdr
-operator|.
-name|nexus
-operator|.
 name|targ_lun
 argument_list|)
 expr_stmt|;
@@ -7065,12 +7059,6 @@ literal|"%s: Known LUN %d, peer is %s\n"
 operator|,
 name|__func__
 operator|,
-name|msg
-operator|->
-name|hdr
-operator|.
-name|nexus
-operator|.
 name|targ_lun
 operator|,
 operator|(
