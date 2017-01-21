@@ -6740,6 +6740,12 @@ name|iv_ampdu_rxmax
 operator|=
 name|IEEE80211_HTCAP_MAXRXAMPDU_64K
 expr_stmt|;
+name|vap
+operator|->
+name|iv_ampdu_limit
+operator|=
+name|IEEE80211_HTCAP_MAXRXAMPDU_64K
+expr_stmt|;
 name|avp
 operator|->
 name|av_bslot
