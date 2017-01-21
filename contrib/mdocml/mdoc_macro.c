@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_macro.c,v 1.206 2015/10/20 02:01:32 schwarze Exp $ */
+comment|/*	$Id: mdoc_macro.c,v 1.210 2017/01/10 13:47:00 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008-2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008-2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2012-2016 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -1571,7 +1571,7 @@ name|last
 operator|->
 name|flags
 operator|&
-name|MDOC_VALID
+name|NODE_VALID
 condition|?
 name|mdoc
 operator|->
@@ -1815,7 +1815,7 @@ name|to
 operator|->
 name|flags
 operator|&
-name|MDOC_VALID
+name|NODE_VALID
 condition|)
 return|return;
 while|while
@@ -1842,9 +1842,9 @@ name|last
 operator|->
 name|flags
 operator||=
-name|MDOC_VALID
+name|NODE_VALID
 operator||
-name|MDOC_ENDED
+name|NODE_ENDED
 expr_stmt|;
 name|mdoc
 operator|->
@@ -1872,9 +1872,9 @@ name|last
 operator|->
 name|flags
 operator||=
-name|MDOC_VALID
+name|NODE_VALID
 operator||
-name|MDOC_ENDED
+name|NODE_ENDED
 expr_stmt|;
 name|mdoc
 operator|->
@@ -1955,7 +1955,7 @@ operator|->
 name|tok
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 case|case
 name|ROFFT_BLOCK
 case|:
@@ -1971,7 +1971,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_BROKEN
+name|NODE_BROKEN
 operator|)
 condition|)
 return|return;
@@ -2023,7 +2023,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_ENDED
+name|NODE_ENDED
 condition|)
 break|break;
 else|else
@@ -2293,7 +2293,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_ENDED
+name|NODE_ENDED
 condition|)
 block|{
 if|if
@@ -2304,14 +2304,14 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_VALID
+name|NODE_VALID
 operator|)
 condition|)
 name|n
 operator|->
 name|flags
 operator||=
-name|MDOC_BROKEN
+name|NODE_BROKEN
 expr_stmt|;
 continue|continue;
 block|}
@@ -2343,7 +2343,7 @@ name|n
 operator|->
 name|flags
 operator|=
-name|MDOC_BROKEN
+name|NODE_BROKEN
 expr_stmt|;
 if|if
 condition|(
@@ -2357,7 +2357,7 @@ name|target
 operator|->
 name|flags
 operator|=
-name|MDOC_ENDED
+name|NODE_ENDED
 expr_stmt|;
 elseif|else
 if|if
@@ -2368,7 +2368,7 @@ name|target
 operator|->
 name|flags
 operator|&
-name|MDOC_ENDED
+name|NODE_ENDED
 operator|)
 condition|)
 block|{
@@ -2545,7 +2545,7 @@ name|last
 operator|->
 name|flags
 operator||=
-name|MDOC_DELIMO
+name|NODE_DELIMO
 expr_stmt|;
 elseif|else
 if|if
@@ -2579,7 +2579,7 @@ name|last
 operator|->
 name|flags
 operator||=
-name|MDOC_DELIMC
+name|NODE_DELIMC
 expr_stmt|;
 name|mdoc
 operator|->
@@ -2697,7 +2697,7 @@ name|last
 operator|->
 name|flags
 operator||=
-name|MDOC_EOS
+name|NODE_EOS
 expr_stmt|;
 block|}
 block|}
@@ -2981,7 +2981,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Search backwards for beginnings of blocks, 	 * both of our own and of pending sub-blocks. 	 */
+comment|/* Search backwards for the beginning of our own body. */
 name|atok
 operator|=
 name|rew_alt
@@ -2991,6 +2991,59 @@ argument_list|)
 expr_stmt|;
 name|body
 operator|=
+name|NULL
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+name|mdoc
+operator|->
+name|last
+init|;
+name|n
+condition|;
+name|n
+operator|=
+name|n
+operator|->
+name|parent
+control|)
+block|{
+if|if
+condition|(
+name|n
+operator|->
+name|flags
+operator|&
+name|NODE_ENDED
+operator|||
+name|n
+operator|->
+name|tok
+operator|!=
+name|atok
+operator|||
+name|n
+operator|->
+name|type
+operator|!=
+name|ROFFT_BODY
+operator|||
+name|n
+operator|->
+name|end
+operator|!=
+name|ENDBODY_NOT
+condition|)
+continue|continue;
+name|body
+operator|=
+name|n
+expr_stmt|;
+break|break;
+block|}
+comment|/* 	 * Search backwards for beginnings of blocks, 	 * both of our own and of pending sub-blocks. 	 */
 name|endbody
 operator|=
 name|itblk
@@ -3022,7 +3075,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_ENDED
+name|NODE_ENDED
 condition|)
 block|{
 if|if
@@ -3033,60 +3086,35 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_VALID
+name|NODE_VALID
 operator|)
 condition|)
 name|n
 operator|->
 name|flags
 operator||=
-name|MDOC_BROKEN
+name|NODE_BROKEN
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Remember the start of our own body. */
+comment|/* 		 * Mismatching end macros can never break anything, 		 * SYNOPSIS name blocks can never be broken, 		 * and we only care about the breaking of BLOCKs. 		 */
 if|if
 condition|(
-name|n
-operator|->
-name|type
-operator|==
-name|ROFFT_BODY
-operator|&&
-name|atok
-operator|==
-name|n
-operator|->
-name|tok
-condition|)
-block|{
-if|if
-condition|(
-name|n
-operator|->
-name|end
-operator|==
-name|ENDBODY_NOT
-condition|)
 name|body
-operator|=
-name|n
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|n
-operator|->
-name|type
-operator|!=
-name|ROFFT_BLOCK
+operator|==
+name|NULL
 operator|||
 name|n
 operator|->
 name|tok
 operator|==
 name|MDOC_Nm
+operator|||
+name|n
+operator|->
+name|type
+operator|!=
+name|ROFFT_BLOCK
 condition|)
 continue|continue;
 if|if
@@ -3191,9 +3219,9 @@ name|itblk
 operator|->
 name|flags
 operator||=
-name|MDOC_ENDED
+name|NODE_ENDED
 operator||
-name|MDOC_BROKEN
+name|NODE_BROKEN
 expr_stmt|;
 comment|/* 			 * If a block closing macro taking arguments 			 * breaks another block, put the arguments 			 * into the end marker. 			 */
 if|if
@@ -3232,7 +3260,7 @@ name|n
 operator|->
 name|flags
 operator||=
-name|MDOC_BROKEN
+name|NODE_BROKEN
 expr_stmt|;
 if|if
 condition|(
@@ -3269,19 +3297,6 @@ index|[
 name|tok
 index|]
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|later
-operator|!=
-name|NULL
-condition|)
-name|later
-operator|->
-name|flags
-operator|&=
-operator|~
-name|MDOC_BROKEN
 expr_stmt|;
 if|if
 condition|(
@@ -3595,7 +3610,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_BROKEN
+name|NODE_BROKEN
 condition|)
 block|{
 name|target
@@ -3617,7 +3632,7 @@ name|target
 operator|->
 name|flags
 operator|&
-name|MDOC_ENDED
+name|NODE_ENDED
 operator|)
 condition|)
 do|;
@@ -3843,7 +3858,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|MDOC_DELIMO
+name|NODE_DELIMO
 expr_stmt|;
 break|break;
 block|}
@@ -4207,7 +4222,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|MDOC_DELIMC
+name|NODE_DELIMC
 expr_stmt|;
 name|firstarg
 operator|=
@@ -4474,7 +4489,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_ENDED
+name|NODE_ENDED
 condition|)
 block|{
 if|if
@@ -4485,14 +4500,14 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_VALID
+name|NODE_VALID
 operator|)
 condition|)
 name|n
 operator|->
 name|flags
 operator||=
-name|MDOC_BROKEN
+name|NODE_BROKEN
 expr_stmt|;
 continue|continue;
 block|}
@@ -5276,7 +5291,7 @@ name|blk
 operator|->
 name|flags
 operator|&
-name|MDOC_VALID
+name|NODE_VALID
 condition|)
 return|return;
 if|if
@@ -6942,7 +6957,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_ENDED
+name|NODE_ENDED
 condition|)
 continue|continue;
 if|if
@@ -6970,6 +6985,12 @@ operator|->
 name|tok
 operator|==
 name|MDOC_Bl
+operator|&&
+name|n
+operator|->
+name|end
+operator|==
+name|ENDBODY_NOT
 condition|)
 break|break;
 block|}

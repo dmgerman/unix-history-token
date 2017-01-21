@@ -16,17 +16,35 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MANDOC_CONFIG_H
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|||
+operator|(
+name|__GNUC__
+operator|<
+literal|4
+operator|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|MANDOC_CONFIG_H
+name|__attribute__
+parameter_list|(
+name|x
+parameter_list|)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -57,18 +75,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -79,8 +85,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|MANPATH_DEFAULT
+value|"/usr/share/man:/usr/local/man"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UTF8_LOCALE
+value|"en_US.UTF-8"
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_DIRENT_NAMLEN
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_ENDIAN
+value|0
 end_define
 
 begin_define
@@ -128,7 +155,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_MMAP
+name|HAVE_NTOHL
 value|1
 end_define
 
@@ -157,13 +184,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_REWB_BSD
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|HAVE_REWB_SYSV
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SANDBOX_INIT
 value|0
 end_define
 
@@ -219,6 +253,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_SYS_ENDIAN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_VASPRINTF
 value|1
 end_define
@@ -233,20 +274,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_SQLITE3
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_SQLITE3_ERRSTR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_OHASH
 value|1
 end_define
@@ -254,7 +281,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_MANPATH
+name|HAVE_FTS_COMPARE_CONST
 value|1
 end_define
 
@@ -292,45 +319,6 @@ directive|define
 name|BINM_WHATIS
 value|"whatis"
 end_define
-
-begin_function_decl
-specifier|extern
-name|ssize_t
-name|getline
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|size_t
-modifier|*
-parameter_list|,
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|sqlite3_errstr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MANDOC_CONFIG_H */
-end_comment
 
 end_unit
 

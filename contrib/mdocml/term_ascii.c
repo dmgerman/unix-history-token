@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ascii.c,v 1.53 2016/07/08 22:29:05 schwarze Exp $ */
+comment|/*	$Id: term_ascii.c,v 1.54 2016/07/31 09:29:13 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -507,7 +507,7 @@ name|setlocale
 argument_list|(
 name|LC_CTYPE
 argument_list|,
-literal|"en_US.UTF-8"
+name|UTF8_LOCALE
 argument_list|)
 expr_stmt|;
 if|if
