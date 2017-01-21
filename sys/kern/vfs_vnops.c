@@ -7398,7 +7398,8 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"LK_RETRY set with incompatible flags (0x%x) or an error occurred (%d)"
+literal|"LK_RETRY set with incompatible flags (0x%x) or "
+literal|" an error occurred (%d)"
 operator|,
 name|flags
 operator|,
