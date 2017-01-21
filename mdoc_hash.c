@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_hash.c,v 1.26 2015/10/06 18:32:19 schwarze Exp $ */
+comment|/*	$Id: mdoc_hash.c,v 1.27 2016/07/15 18:03:45 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"roff.h"
 end_include
 
@@ -65,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"mdoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libmandoc.h"
 end_include
 
 begin_include

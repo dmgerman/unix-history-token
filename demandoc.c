@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: demandoc.c,v 1.27 2016/07/09 15:24:19 schwarze Exp $ */
+comment|/*	$Id: demandoc.c,v 1.28 2017/01/10 13:47:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1113,7 +1113,7 @@ control|)
 block|{
 if|if
 condition|(
-name|MDOC_LINE
+name|NODE_LINE
 operator|&
 name|p
 operator|->
@@ -1215,7 +1215,7 @@ control|)
 block|{
 if|if
 condition|(
-name|MAN_LINE
+name|NODE_LINE
 operator|&
 name|p
 operator|->
