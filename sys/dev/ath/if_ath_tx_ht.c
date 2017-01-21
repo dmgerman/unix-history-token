@@ -2408,9 +2408,27 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
-literal|"%s: max frame len= %d\n"
+literal|"%s: aggr_limit=%d, iv_ampdu_limit=%d, "
+literal|"peer maxrxampdu=%d, max frame len=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|sc
+operator|->
+name|sc_aggr_limit
+argument_list|,
+name|vap
+operator|->
+name|iv_ampdu_limit
+argument_list|,
+name|MS
+argument_list|(
+name|ni
+operator|->
+name|ni_htparam
+argument_list|,
+name|IEEE80211_HTCAP_MAXRXAMPDU
+argument_list|)
 argument_list|,
 name|amin
 argument_list|)
