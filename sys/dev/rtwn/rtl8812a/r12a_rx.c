@@ -1153,7 +1153,19 @@ argument_list|,
 name|R12A_RXDW3_RATE
 argument_list|)
 expr_stmt|;
-comment|/* TODO: STBC, LDPC */
+comment|/* TODO: STBC */
+if|if
+condition|(
+name|rxdw4
+operator|&
+name|R12A_RXDW4_LDPC
+condition|)
+name|rxs
+operator|->
+name|c_pktflags
+operator||=
+name|IEEE80211_RX_F_LDPC
+expr_stmt|;
 if|if
 condition|(
 name|rxdw1

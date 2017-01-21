@@ -645,6 +645,12 @@ name|sc
 operator|->
 name|sc_priv
 decl_stmt|;
+name|ic
+operator|->
+name|ic_htcaps
+operator||=
+name|IEEE80211_HTC_TXLDPC
+expr_stmt|;
 if|if
 condition|(
 name|rs
@@ -659,7 +665,7 @@ name|ic_caps
 operator||=
 name|IEEE80211_C_DFS
 expr_stmt|;
-comment|/* TODO: LDPC etc */
+comment|/* TODO: VHT */
 block|}
 end_function
 

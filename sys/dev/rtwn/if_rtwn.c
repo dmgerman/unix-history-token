@@ -3598,6 +3598,9 @@ case|:
 case|case
 name|IEEE80211_IOC_HTPROTMODE
 case|:
+case|case
+name|IEEE80211_IOC_LDPC
+case|:
 name|error
 operator|=
 literal|0

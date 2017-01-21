@@ -666,7 +666,44 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* TODO: LDPC, STBC etc */
+name|struct
+name|r12a_softc
+modifier|*
+name|rs
+init|=
+name|sc
+operator|->
+name|sc_priv
+decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_ic
+decl_stmt|;
+if|if
+condition|(
+name|rs
+operator|->
+name|chip
+operator|&
+name|R12A_CHIP_C_CUT
+condition|)
+block|{
+name|ic
+operator|->
+name|ic_htcaps
+operator||=
+name|IEEE80211_HTCAP_LDPC
+operator||
+name|IEEE80211_HTC_TXLDPC
+expr_stmt|;
+block|}
+comment|/* TODO: STBC, VHT etc */
 block|}
 end_function
 
