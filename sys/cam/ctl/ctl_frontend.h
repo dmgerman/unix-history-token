@@ -246,6 +246,10 @@ name|lun_func_t
 name|lun_disable
 decl_stmt|;
 comment|/* passed to CTL */
+name|int
+name|lun_map_size
+decl_stmt|;
+comment|/* passed to CTL */
 name|uint32_t
 modifier|*
 name|lun_map
