@@ -244,13 +244,26 @@ operator|,
 literal|1
 operator|>
 operator|&
-name|getAffectedValues
+name|getOrInsertAffectedValues
 argument_list|(
 name|Value
 operator|*
 name|V
 argument_list|)
 expr_stmt|;
+comment|/// Copy affected values in the cache for OV to be affected values for NV.
+name|void
+name|copyAffectedValuesInCache
+parameter_list|(
+name|Value
+modifier|*
+name|OV
+parameter_list|,
+name|Value
+modifier|*
+name|NV
+parameter_list|)
+function_decl|;
 comment|/// \brief Flag tracking whether we have scanned the function yet.
 comment|///
 comment|/// We want to be as lazy about this as possible, and so we scan the function
