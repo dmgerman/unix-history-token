@@ -1601,23 +1601,6 @@ name|fe_done
 operator|=
 name|ctlfe_done
 expr_stmt|;
-comment|/* 		 * XXX KDM the path inquiry doesn't give us the maximum 		 * number of targets supported. 		 */
-name|port
-operator|->
-name|max_targets
-operator|=
-name|cpi
-operator|->
-name|max_target
-expr_stmt|;
-name|port
-operator|->
-name|max_target_id
-operator|=
-name|cpi
-operator|->
-name|max_target
-expr_stmt|;
 name|port
 operator|->
 name|targ_port
