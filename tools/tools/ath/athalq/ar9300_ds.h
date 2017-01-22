@@ -28,6 +28,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|ath_alq_print_edma_tx_fifo_push
+parameter_list|(
+name|struct
+name|if_ath_alq_payload
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
