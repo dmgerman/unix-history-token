@@ -117,6 +117,15 @@ parameter_list|)
 value|( !! ((_v)& (_f)))
 end_define
 
+begin_decl_stmt
+specifier|static
+name|uint32_t
+name|last_ts
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|ath_alq_print_edma_tx_fifo_push
@@ -258,7 +267,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u.%06u] [%llu] TXSTATUS TxTimestamp=%u, DescId=0x%04x, QCU=%d\n"
+literal|"[%u.%06u] [%llu] TXSTATUS TxTimestamp=%u (%u), DescId=0x%04x, QCU=%d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -304,6 +313,12 @@ name|txs
 operator|.
 name|status4
 argument_list|,
+name|txs
+operator|.
+name|status4
+operator|-
+name|last_ts
+argument_list|,
 operator|(
 name|unsigned
 name|int
@@ -339,6 +354,12 @@ name|txs
 operator|.
 name|status1
 argument_list|)
+expr_stmt|;
+name|last_ts
+operator|=
+name|txs
+operator|.
+name|status4
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1852,7 +1873,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u.%06u] [%llu] RXSTATUS\n"
+literal|"[%u.%06u] [%llu] RXSTATUS RxTimestamp: %u (%d)\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -1893,6 +1914,16 @@ name|hdr
 operator|.
 name|threadid
 argument_list|)
+argument_list|,
+name|rxs
+operator|.
+name|status3
+argument_list|,
+name|rxs
+operator|.
+name|status3
+operator|-
+name|last_ts
 argument_list|)
 expr_stmt|;
 comment|/* status1 */
@@ -2019,12 +2050,18 @@ expr_stmt|;
 comment|/* status3 */
 name|printf
 argument_list|(
-literal|"    RX timestamp: %d\n"
+literal|"    RX timestamp: %u\n"
 argument_list|,
 name|rxs
 operator|.
 name|status3
 argument_list|)
+expr_stmt|;
+name|last_ts
+operator|=
+name|rxs
+operator|.
+name|status3
 expr_stmt|;
 comment|/* status4 */
 name|printf
