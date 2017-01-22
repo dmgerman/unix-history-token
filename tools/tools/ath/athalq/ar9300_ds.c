@@ -258,7 +258,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u.%06u] [%llu] TXSTATUS TxTimestamp=%d, DescId=0x%04x, QCU=%d\n"
+literal|"[%u.%06u] [%llu] TXSTATUS TxTimestamp=%u, DescId=0x%04x, QCU=%d\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -380,7 +380,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    TxTimestamp: %d\n"
+literal|"    TxTimestamp: %u\n"
 argument_list|,
 name|txs
 operator|.
