@@ -2021,7 +2021,6 @@ parameter_list|)
 block|{
 name|struct
 name|edid_info
-modifier|*
 name|edid
 decl_stmt|;
 name|struct
@@ -2214,6 +2213,7 @@ name|edid_parse
 argument_list|(
 name|edid_cells
 argument_list|,
+operator|&
 name|edid
 argument_list|)
 operator|!=
