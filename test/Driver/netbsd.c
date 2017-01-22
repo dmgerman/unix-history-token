@@ -504,6 +504,14 @@ comment|// RUN: | FileCheck -check-prefix=S-POWERPC64 %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64--netbsd -pthread -dM -E %s \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=PTHREAD %s
+end_comment
+
+begin_comment
 comment|// STATIC: ld{{.*}}" "--eh-frame-hdr"
 end_comment
 
@@ -1545,6 +1553,18 @@ end_comment
 
 begin_comment
 comment|// S-POWERPC64: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// PTHREAD-NOT: _POSIX_THREADS
+end_comment
+
+begin_comment
+comment|// PTHREAD:     _REENTRANT
+end_comment
+
+begin_comment
+comment|// PTHREAD-NOT: _POSIX_THREADS
 end_comment
 
 end_unit

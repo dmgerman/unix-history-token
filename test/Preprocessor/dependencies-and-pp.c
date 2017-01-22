@@ -96,6 +96,26 @@ comment|// TEST5: foo $$(bar) b az qu\ ux \ space:
 end_comment
 
 begin_comment
+comment|// Test self dependency, PR31644
+end_comment
+
+begin_comment
+comment|// RUN: %clang -E -MD -MP -MF %t.d %s
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=TEST6 %s< %t.d
+end_comment
+
+begin_comment
+comment|// TEST6: dependencies-and-pp.c
+end_comment
+
+begin_comment
+comment|// TEST6-NOT: dependencies-and-pp.c:
+end_comment
+
+begin_comment
 comment|// TODO: Test default target without quoting
 end_comment
 
