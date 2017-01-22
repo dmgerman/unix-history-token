@@ -2345,28 +2345,6 @@ index|]
 operator|<
 literal|0
 condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|RACCT_IS_SLOPPY
-argument_list|(
-name|i
-argument_list|)
-operator|||
-name|RACCT_IS_DECAYING
-argument_list|(
-name|i
-argument_list|)
-argument_list|,
-operator|(
-literal|"%s: resource %d usage< 0"
-operator|,
-name|__func__
-operator|,
-name|i
-operator|)
-argument_list|)
-expr_stmt|;
 name|dest
 operator|->
 name|r_resources
@@ -2376,7 +2354,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
