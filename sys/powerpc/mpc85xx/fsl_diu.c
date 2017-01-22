@@ -2241,7 +2241,7 @@ block|}
 name|videomode
 operator|=
 name|edid
-operator|->
+operator|.
 name|edid_preferred_mode
 expr_stmt|;
 block|}
