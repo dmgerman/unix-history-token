@@ -5814,6 +5814,7 @@ name|IEEE80211_CHAN_HT20
 operator||
 name|IEEE80211_CHAN_VHT20
 expr_stmt|;
+block|}
 comment|/* 40MHz */
 if|if
 condition|(
@@ -5934,7 +5935,6 @@ name|IEEE80211_CHAN_HT40D
 operator||
 name|IEEE80211_CHAN_VHT80
 expr_stmt|;
-block|}
 block|}
 comment|/* XXX VHT80+80 */
 comment|/* XXX VHT160 */
