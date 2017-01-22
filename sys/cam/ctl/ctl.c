@@ -52931,6 +52931,25 @@ name|version3
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|port_type
+operator|==
+name|CTL_PORT_UMASS
+condition|)
+block|{
+comment|/* USB Mass Storage Class Bulk-Only Transport, Revision 1.0 */
+name|scsi_ulto2b
+argument_list|(
+literal|0x1730
+argument_list|,
+name|inq_ptr
+operator|->
+name|version3
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|lun
