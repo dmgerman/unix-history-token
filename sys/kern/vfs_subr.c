@@ -6022,7 +6022,9 @@ name|dead_vnodeops
 condition|)
 name|printf
 argument_list|(
-literal|"NULL mp in getnewvnode()\n"
+literal|"NULL mp in getnewvnode(9), tag %s\n"
+argument_list|,
+name|tag
 argument_list|)
 expr_stmt|;
 endif|#
