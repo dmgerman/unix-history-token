@@ -876,6 +876,10 @@ name|td_critnest
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * Interrupt handlers execute critical_exit() on 		 * leave, and td_owepreempt may be left set by an 		 * interrupt handler only when td_critnest> 0.  If we 		 * are decrementing td_critnest from 1 to 0, read 		 * td_owepreempt after decrementing, to not miss the 		 * preempt.  Disallow compiler to reorder operations. 		 */
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -886,6 +890,7 @@ operator|!
 name|kdb_active
 condition|)
 block|{
+comment|/* 			 * Microoptimization: we committed to switch, 			 * disable preemption in interrupt handlers 			 * while spinning for the thread lock. 			 */
 name|td
 operator|->
 name|td_critnest
