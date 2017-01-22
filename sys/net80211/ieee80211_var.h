@@ -3165,6 +3165,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FHT_LDPC_TX
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* CONF: LDPC tx enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_LDPC_RX
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* CONF: LDPC rx enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FHT_GF
 value|0x00040000
 end_define

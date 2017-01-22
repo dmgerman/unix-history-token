@@ -1199,9 +1199,9 @@ name|ni
 operator|->
 name|ni_vap
 operator|->
-name|iv_htcaps
+name|iv_flags_ht
 operator|&
-name|IEEE80211_HTCAP_LDPC
+name|IEEE80211_FHT_LDPC_TX
 operator|)
 operator|&&
 operator|(
@@ -1815,6 +1815,9 @@ name|first_bf
 parameter_list|,
 name|uint16_t
 name|pktlen
+parameter_list|,
+name|int
+name|is_first
 parameter_list|)
 block|{
 define|#
@@ -1948,7 +1951,7 @@ name|ndelim
 operator|+=
 name|ATH_AGGR_ENCRYPTDELIM
 expr_stmt|;
-comment|/* 	 * For AR9380, there's a minimum number of delimeters 	 * required when doing RTS. 	 * 	 * XXX TODO: this is only needed if (a) RTS/CTS is enabled, and 	 * XXX (b) this is the first sub-frame in the aggregate. 	 */
+comment|/* 	 * For AR9380, there's a minimum number of delimeters 	 * required when doing RTS. 	 * 	 * XXX TODO: this is only needed if (a) RTS/CTS is enabled for 	 * this exchange, and (b) (done) this is the first sub-frame 	 * in the aggregate. 	 */
 if|if
 condition|(
 name|sc
@@ -1966,6 +1969,8 @@ operator|&&
 name|ndelim
 operator|<
 name|AH_FIRST_DESC_NDELIMS
+operator|&&
+name|is_first
 condition|)
 name|ndelim
 operator|=
@@ -2408,9 +2413,27 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
-literal|"%s: max frame len= %d\n"
+literal|"%s: aggr_limit=%d, iv_ampdu_limit=%d, "
+literal|"peer maxrxampdu=%d, max frame len=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|sc
+operator|->
+name|sc_aggr_limit
+argument_list|,
+name|vap
+operator|->
+name|iv_ampdu_limit
+argument_list|,
+name|MS
+argument_list|(
+name|ni
+operator|->
+name|ni_htparam
+argument_list|,
+name|IEEE80211_HTCAP_MAXRXAMPDU
+argument_list|)
 argument_list|,
 name|amin
 argument_list|)
@@ -3632,6 +3655,12 @@ operator|->
 name|bf_state
 operator|.
 name|bfs_pktlen
+argument_list|,
+operator|(
+name|bf_first
+operator|==
+name|bf
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Calculate the padding needed from this set of delimiters, 		 * used when calculating if the next frame will fit in 		 * the aggregate. 		 */

@@ -634,7 +634,7 @@ name|stack
 operator|+
 name|attr
 operator|->
-name|stack_size
+name|stack_len
 operator|-
 sizeof|sizeof
 argument_list|(

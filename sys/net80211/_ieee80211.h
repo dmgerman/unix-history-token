@@ -2200,9 +2200,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_HTC_TXLDPC
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: TX using LDPC */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_C_HTCAP_BITS
 define|\
-value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\21AMPDU\22AMSDU\23HT\24SMPS\25RIFS"
+value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\21AMPDU\22AMSDU\23HT\24SMPS\25RIFS\32TXLDPC"
 end_define
 
 begin_endif

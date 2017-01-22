@@ -568,13 +568,20 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * If we come across a logical partition of subtype CDROM 		 * it doesn't refer to the CD filesystem itself, but rather 		 * to any usable El Torito boot image on it. In this case 		 * we try to find the parent device and add that instead as 		 * that will be the CD filesystem. 		 */
+if|if
+condition|(
+operator|(
 name|node
 operator|=
 name|efi_devpath_last_node
 argument_list|(
 name|devpath
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+continue|continue;
 if|if
 condition|(
 name|DevicePathType
@@ -599,6 +606,13 @@ argument_list|(
 name|devpath
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|devpathcpy
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|tmpdevpath
 operator|=
 name|devpathcpy

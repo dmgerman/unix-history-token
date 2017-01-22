@@ -1024,7 +1024,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|m(+1, u64 tx_queue_size_max, "tx_queue_size_max", "Max send queue size") \   m(+1, u64 rx_queue_size_max, "rx_queue_size_max", "Max receive queue size") \   m(+1, u64 tx_queue_size, "tx_queue_size", "Default send queue size")	\   m(+1, u64 rx_queue_size, "rx_queue_size", "Default receive queue size") \   m(+1, u64 channels, "channels", "Default number of channels")		\   m(+1, u64 coalesce_usecs_max, "coalesce_usecs_max", "Maximum usecs for joining packets") \   m(+1, u64 coalesce_pkts_max, "coalesce_pkts_max", "Maximum packets to join") \   m(+1, u64 rx_coalesce_usecs, "rx_coalesce_usecs", "Limit in usec for joining rx packets") \   m(+1, u64 rx_coalesce_pkts, "rx_coalesce_pkts", "Maximum number of rx packets to join") \   m(+1, u64 rx_coalesce_mode, "rx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_coalesce_usecs, "tx_coalesce_usecs", "Limit in usec for joining tx packets") \   m(+1, u64 tx_coalesce_pkts, "tx_coalesce_pkts", "Maximum number of tx packets to join") \   m(+1, u64 tx_coalesce_mode, "tx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_completion_fact, "tx_completion_fact", "1..MAX: Completion event ratio") \   m(+1, u64 tx_completion_fact_max, "tx_completion_fact_max", "Maximum completion event ratio") \   m(+1, u64 hw_lro, "hw_lro", "set to enable hw_lro") \   m(+1, u64 cqe_zipping, "cqe_zipping", "0 : CQE zipping disabled")
+value|m(+1, u64 tx_queue_size_max, "tx_queue_size_max", "Max send queue size") \   m(+1, u64 rx_queue_size_max, "rx_queue_size_max", "Max receive queue size") \   m(+1, u64 tx_queue_size, "tx_queue_size", "Default send queue size")	\   m(+1, u64 rx_queue_size, "rx_queue_size", "Default receive queue size") \   m(+1, u64 channels, "channels", "Default number of channels")		\   m(+1, u64 coalesce_usecs_max, "coalesce_usecs_max", "Maximum usecs for joining packets") \   m(+1, u64 coalesce_pkts_max, "coalesce_pkts_max", "Maximum packets to join") \   m(+1, u64 rx_coalesce_usecs, "rx_coalesce_usecs", "Limit in usec for joining rx packets") \   m(+1, u64 rx_coalesce_pkts, "rx_coalesce_pkts", "Maximum number of rx packets to join") \   m(+1, u64 rx_coalesce_mode, "rx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_coalesce_usecs, "tx_coalesce_usecs", "Limit in usec for joining tx packets") \   m(+1, u64 tx_coalesce_pkts, "tx_coalesce_pkts", "Maximum number of tx packets to join") \   m(+1, u64 tx_coalesce_mode, "tx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_bufring_disable, "tx_bufring_disable", "0: Enable bufring 1: Disable bufring") \   m(+1, u64 tx_completion_fact, "tx_completion_fact", "1..MAX: Completion event ratio") \   m(+1, u64 tx_completion_fact_max, "tx_completion_fact_max", "Maximum completion event ratio") \   m(+1, u64 hw_lro, "hw_lro", "set to enable hw_lro") \   m(+1, u64 cqe_zipping, "cqe_zipping", "0 : CQE zipping disabled")
 end_define
 
 begin_define
@@ -1379,7 +1379,7 @@ name|u16
 name|cev_factor
 decl_stmt|;
 comment|/* completion event factor */
-name|u32
+name|u16
 name|cev_next_state
 decl_stmt|;
 comment|/* next completion event state */
@@ -1398,6 +1398,10 @@ directive|define
 name|MLX5E_CEV_STATE_HOLD_NOPS
 value|2
 comment|/* don't send NOPs yet */
+name|u16
+name|stopped
+decl_stmt|;
+comment|/* set if SQ is stopped */
 name|struct
 name|callout
 name|cev_callout

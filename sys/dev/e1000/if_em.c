@@ -965,6 +965,42 @@ argument_list|,
 literal|"Intel(R) PRO/1000 Network Connection"
 argument_list|)
 block|,
+name|PVID
+argument_list|(
+literal|0x8086
+argument_list|,
+name|E1000_DEV_ID_PCH_SPT_I219_LM4
+argument_list|,
+literal|"Intel(R) PRO/1000 Network Connection"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+literal|0x8086
+argument_list|,
+name|E1000_DEV_ID_PCH_SPT_I219_V4
+argument_list|,
+literal|"Intel(R) PRO/1000 Network Connection"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+literal|0x8086
+argument_list|,
+name|E1000_DEV_ID_PCH_SPT_I219_LM5
+argument_list|,
+literal|"Intel(R) PRO/1000 Network Connection"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+literal|0x8086
+argument_list|,
+name|E1000_DEV_ID_PCH_SPT_I219_V5
+argument_list|,
+literal|"Intel(R) PRO/1000 Network Connection"
+argument_list|)
+block|,
 comment|/* required last entry */
 name|PVID_END
 block|}

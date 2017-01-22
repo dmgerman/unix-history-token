@@ -39,6 +39,13 @@ modifier|*
 name|fts_child
 decl_stmt|;
 comment|/* linked list of children */
+name|struct
+name|_ftsent
+modifier|*
+modifier|*
+name|fts_array
+decl_stmt|;
+comment|/* sort array */
 name|dev_t
 name|fts_dev
 decl_stmt|;
@@ -52,6 +59,18 @@ name|size_t
 name|fts_pathlen
 decl_stmt|;
 comment|/* sizeof(path) */
+name|int
+name|fts_nitems
+decl_stmt|;
+comment|/* elements in the sort array */
+name|int
+function_decl|(
+modifier|*
+name|fts_compar
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* compare function */
 define|#
 directive|define
 name|FTS_NOCHDIR
@@ -279,8 +298,21 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|void
+name|int
+function_decl|(
 modifier|*
+function_decl|)
+parameter_list|(
+specifier|const
+name|FTSENT
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|FTSENT
+modifier|*
+modifier|*
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl

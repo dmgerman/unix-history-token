@@ -2213,13 +2213,11 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-name|mpr_dprint_field
+name|mpr_print_field
 argument_list|(
 name|cm
 operator|->
 name|cm_sc
-argument_list|,
-name|level
 argument_list|,
 literal|"%s"
 argument_list|,

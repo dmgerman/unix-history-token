@@ -180,6 +180,16 @@ name|rw_recurse
 value|lock_object.lo_data
 end_define
 
+begin_define
+define|#
+directive|define
+name|RW_READ_VALUE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)->rw_lock)
+end_define
+
 begin_comment
 comment|/* Very simple operations on rw_lock. */
 end_comment

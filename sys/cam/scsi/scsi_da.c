@@ -2257,6 +2257,24 @@ name|DA_Q_4K
 block|}
 block|,
 block|{
+comment|/* Micron Advanced Format (4k) drives */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"Micron 5100 MTFDDAK*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
 comment|/* Samsung Advanced Format (4k) drives */
 block|{
 name|T_DIRECT
@@ -3257,6 +3275,24 @@ block|,
 literal|"ATA"
 block|,
 literal|"INTEL SSDSC2BW*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Intel S3610 Series SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"INTEL SSDSC2BX*"
 block|,
 literal|"*"
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man.c,v 1.166 2015/10/22 21:54:23 schwarze Exp $ */
+comment|/*	$Id: man.c,v 1.167 2017/01/10 13:47:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -707,7 +707,7 @@ name|last
 operator|->
 name|flags
 operator||=
-name|MAN_EOS
+name|NODE_EOS
 expr_stmt|;
 name|man_descope
 argument_list|(
@@ -1575,7 +1575,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MAN_VALID
+name|NODE_VALID
 operator|)
 condition|)
 name|mandoc_msg
@@ -1627,7 +1627,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MAN_VALID
+name|NODE_VALID
 operator|)
 condition|)
 name|mandoc_msg
@@ -1666,7 +1666,7 @@ name|last
 operator|->
 name|flags
 operator||=
-name|MAN_VALID
+name|NODE_VALID
 expr_stmt|;
 block|}
 end_function

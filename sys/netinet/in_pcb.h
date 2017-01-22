@@ -350,6 +350,12 @@ begin_comment
 comment|/*-  * struct inpcb captures the network layer state for TCP, UDP, and raw IPv4 and  * IPv6 sockets.  In the case of TCP and UDP, further per-connection state is  * hung off of inp_ppcb most of the time.  Almost all fields of struct inpcb  * are static after creation or protected by a per-inpcb rwlock, inp_lock.  A  * few fields are protected by multiple locks as indicated in the locking notes  * below.  For these fields, all of the listed locks must be write-locked for  * any modifications.  However, these fields can be safely read while any one of  * the listed locks are read-locked.  This model can permit greater concurrency  * for read operations.  For example, connections can be looked up while only  * holding a read lock on the global pcblist lock.  This is important for  * performance when attempting to find the connection for a packet given its IP  * and port tuple.  *  * One noteworthy exception is that the global pcbinfo lock follows a different  * set of rules in relation to the inp_list field.  Rather than being  * write-locked for modifications and read-locked for list iterations, it must  * be read-locked during modifications and write-locked during list iterations.  * This ensures that the relatively rare global list iterations safely walk a  * stable snapshot of connections while allowing more common list modifications  * to safely grab the pcblist lock just while adding or removing a connection  * from the global list.  *  * Key:  * (c) - Constant after initialization  * (g) - Protected by the pcbgroup lock  * (i) - Protected by the inpcb lock  * (p) - Protected by the pcbinfo lock for the inpcb  * (l) - Protected by the pcblist lock for the inpcb  * (h) - Protected by the pcbhash lock for the inpcb  * (s) - Protected by another subsystem's locks  * (x) - Undefined locking  *  * A few other notes:  *  * When a read lock is held, stability of the field is guaranteed; to write  * to a field, a write lock must generally be held.  *  * netinet/netinet6-layer code should not assume that the inp_socket pointer  * is safe to dereference without inp_lock being held, even for protocols  * other than TCP (where the inpcb persists during TIMEWAIT even after the  * socket has been freed), or there may be close(2)-related races.  *  * The inp_vflag field is overloaded, and would otherwise ideally be (c).  *  * TODO:  Currently only the TCP stack is leveraging the global pcbinfo lock  * read-lock usage during modification, this model can be applied to other  * protocols (especially SCTP).  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|m_snd_tag
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|inpcb
@@ -449,14 +455,20 @@ name|u_int
 name|inp_refcount
 decl_stmt|;
 comment|/* (i) refcount */
+name|struct
+name|m_snd_tag
+modifier|*
+name|inp_snd_tag
+decl_stmt|;
+comment|/* (i) send tag for outgoing mbufs */
 name|void
 modifier|*
 name|inp_pspare
 index|[
-literal|5
+literal|4
 index|]
 decl_stmt|;
-comment|/* (x) packet pacing / general use */
+comment|/* (x) general use */
 name|uint32_t
 name|inp_flowtype
 decl_stmt|;
@@ -471,7 +483,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* (x) packet pacing / user cookie / 					 *     general use */
+comment|/* (x) user cookie / general use */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
@@ -2356,6 +2368,17 @@ begin_comment
 comment|/* populate recv datagram with bucket id */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INP_RATE_LIMIT_CHANGED
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* rate limit needs attention */
+end_comment
+
 begin_comment
 comment|/*  * Flags passed to in_pcblookup*() functions.  */
 end_comment
@@ -3428,6 +3451,106 @@ name|so
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RATELIMIT
+end_ifdef
+
+begin_function_decl
+name|int
+name|in_pcbattach_txrtlmt
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcbdetach_txrtlmt
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_pcbmodify_txrtlmt
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_pcbquery_txrtlmt
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcboutput_txrtlmt
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcboutput_eagain
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

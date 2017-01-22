@@ -4937,6 +4937,8 @@ operator|->
 name|ic_htcaps
 operator||=
 name|IEEE80211_HTCAP_LDPC
+operator||
+name|IEEE80211_HTC_TXLDPC
 expr_stmt|;
 block|}
 name|device_printf
@@ -6737,6 +6739,12 @@ comment|/* 	 * All NICs can handle the maximum size, however 	 * AR5416 based MA
 name|vap
 operator|->
 name|iv_ampdu_rxmax
+operator|=
+name|IEEE80211_HTCAP_MAXRXAMPDU_64K
+expr_stmt|;
+name|vap
+operator|->
+name|iv_ampdu_limit
 operator|=
 name|IEEE80211_HTCAP_MAXRXAMPDU_64K
 expr_stmt|;

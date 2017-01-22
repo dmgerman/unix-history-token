@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: test-vasprintf.c,v 1.3 2015/10/06 18:32:20 schwarze Exp $	*/
+comment|/*	$Id: test-vasprintf.c,v 1.4 2016/07/18 18:35:05 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -54,7 +54,26 @@ directive|include
 file|<string.h>
 end_include
 
+begin_function_decl
+specifier|static
+name|int
+name|testfunc
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+specifier|static
 name|int
 name|testfunc
 parameter_list|(

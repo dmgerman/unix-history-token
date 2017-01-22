@@ -992,6 +992,9 @@ name|check_type_mask
 init|=
 literal|0
 decl_stmt|;
+name|uint32_t
+name|type_mask
+decl_stmt|;
 name|length
 operator|=
 name|scsi_2btoul
@@ -1008,6 +1011,15 @@ argument_list|(
 name|length
 argument_list|,
 name|valid_len
+argument_list|)
+expr_stmt|;
+name|type_mask
+operator|=
+name|scsi_2btoul
+argument_list|(
+name|cap
+operator|->
+name|type_mask
 argument_list|)
 expr_stmt|;
 if|if
@@ -1338,12 +1350,7 @@ literal|"    Write Exclusive - All Registrants "
 literal|"(WR_EX_AR): %d\n"
 argument_list|,
 operator|(
-name|cap
-operator|->
 name|type_mask
-index|[
-literal|0
-index|]
 operator|&
 name|SPRI_TM_WR_EX_AR
 operator|)
@@ -1361,12 +1368,7 @@ literal|"    Exclusive Access - Registrants Only "
 literal|"(EX_AC_RO): %d\n"
 argument_list|,
 operator|(
-name|cap
-operator|->
 name|type_mask
-index|[
-literal|0
-index|]
 operator|&
 name|SPRI_TM_EX_AC_RO
 operator|)
@@ -1384,12 +1386,7 @@ literal|"    Write Exclusive - Registrants Only "
 literal|"(WR_EX_RO): %d\n"
 argument_list|,
 operator|(
-name|cap
-operator|->
 name|type_mask
-index|[
-literal|0
-index|]
 operator|&
 name|SPRI_TM_WR_EX_RO
 operator|)
@@ -1406,12 +1403,7 @@ argument_list|,
 literal|"    Exclusive Access (EX_AC): %d\n"
 argument_list|,
 operator|(
-name|cap
-operator|->
 name|type_mask
-index|[
-literal|0
-index|]
 operator|&
 name|SPRI_TM_EX_AC
 operator|)
@@ -1428,12 +1420,7 @@ argument_list|,
 literal|"    Write Exclusive (WR_EX): %d\n"
 argument_list|,
 operator|(
-name|cap
-operator|->
 name|type_mask
-index|[
-literal|0
-index|]
 operator|&
 name|SPRI_TM_WR_EX
 operator|)
@@ -1451,12 +1438,7 @@ literal|"    Exclusive Access - All Registrants "
 literal|"(EX_AC_AR): %d\n"
 argument_list|,
 operator|(
-name|cap
-operator|->
 name|type_mask
-index|[
-literal|1
-index|]
 operator|&
 name|SPRI_TM_EX_AC_AR
 operator|)

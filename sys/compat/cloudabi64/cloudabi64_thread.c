@@ -193,7 +193,7 @@ name|args
 operator|.
 name|attr
 operator|.
-name|stack_size
+name|stack_len
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -210,7 +210,7 @@ name|args
 operator|.
 name|attr
 operator|.
-name|stack_size
+name|stack_len
 operator|=
 name|args
 operator|.

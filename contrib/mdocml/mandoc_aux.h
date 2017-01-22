@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc_aux.h,v 1.4 2015/11/07 14:01:16 schwarze Exp $ */
+comment|/*	$Id: mandoc_aux.h,v 1.5 2016/07/19 13:36:13 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -21,8 +21,21 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void

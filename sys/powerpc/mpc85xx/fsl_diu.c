@@ -2021,7 +2021,6 @@ parameter_list|)
 block|{
 name|struct
 name|edid_info
-modifier|*
 name|edid
 decl_stmt|;
 name|struct
@@ -2214,6 +2213,7 @@ name|edid_parse
 argument_list|(
 name|edid_cells
 argument_list|,
+operator|&
 name|edid
 argument_list|)
 operator|!=
@@ -2241,7 +2241,7 @@ block|}
 name|videomode
 operator|=
 name|edid
-operator|->
+operator|.
 name|edid_preferred_mode
 expr_stmt|;
 block|}

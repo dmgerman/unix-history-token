@@ -299,6 +299,10 @@ name|int
 name|so_ts_clock
 decl_stmt|;
 comment|/* type of the clock used for timestamps */
+name|uint32_t
+name|so_max_pacing_rate
+decl_stmt|;
+comment|/* (f) TX rate limit in bytes/s */
 name|void
 modifier|*
 name|so_pspare
@@ -306,14 +310,14 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* packet pacing / general use */
+comment|/* general use */
 name|int
 name|so_ispare
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* packet pacing / general use */
+comment|/* general use */
 block|}
 struct|;
 end_struct

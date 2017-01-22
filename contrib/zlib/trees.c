@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2016 Jean-loup Gailly  * detect_data_type() function provided freely by Cosmin Truta, 2006  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2017 Jean-loup Gailly  * detect_data_type() function provided freely by Cosmin Truta, 2006  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -5068,7 +5068,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ===========================================================================  * Determine the best encoding for the current block: dynamic trees, static  * trees or store, and output the encoded block to the zip file.  */
+comment|/* ===========================================================================  * Determine the best encoding for the current block: dynamic trees, static  * trees or store, and write out the encoded block.  */
 end_comment
 
 begin_function

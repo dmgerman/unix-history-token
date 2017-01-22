@@ -739,6 +739,24 @@ name|Elf32_Syminfo
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|Elf32_Word
+name|ch_type
+decl_stmt|;
+name|Elf32_Word
+name|ch_size
+decl_stmt|;
+name|Elf32_Word
+name|ch_addralign
+decl_stmt|;
+block|}
+name|Elf32_Chdr
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif

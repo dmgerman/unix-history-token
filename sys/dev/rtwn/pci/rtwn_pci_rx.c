@@ -434,13 +434,6 @@ decl_stmt|,
 modifier|*
 name|m1
 decl_stmt|;
-name|int8_t
-name|rssi
-init|=
-literal|0
-decl_stmt|,
-name|nf
-decl_stmt|;
 name|int
 name|infosz
 decl_stmt|,
@@ -837,10 +830,6 @@ name|infosz
 operator|+
 name|shift
 expr_stmt|;
-name|nf
-operator|=
-name|RTWN_NOISE_FLOOR
-expr_stmt|;
 name|ni
 operator|=
 name|rtwn_rx_common
@@ -850,9 +839,6 @@ argument_list|,
 name|m
 argument_list|,
 name|rx_desc
-argument_list|,
-operator|&
-name|rssi
 argument_list|)
 expr_stmt|;
 name|RTWN_DPRINTF
@@ -861,7 +847,7 @@ name|sc
 argument_list|,
 name|RTWN_DEBUG_RECV
 argument_list|,
-literal|"%s: Rx frame len %d, infosz %d, shift %d, rssi %d\n"
+literal|"%s: Rx frame len %d, infosz %d, shift %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -870,8 +856,6 @@ argument_list|,
 name|infosz
 argument_list|,
 name|shift
-argument_list|,
-name|rssi
 argument_list|)
 expr_stmt|;
 comment|/* Update RX descriptor. */
@@ -906,17 +890,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|ieee80211_input
+name|ieee80211_input_mimo
 argument_list|(
 name|ni
 argument_list|,
 name|m
-argument_list|,
-name|rssi
-operator|-
-name|nf
-argument_list|,
-name|nf
 argument_list|)
 expr_stmt|;
 comment|/* Node is no longer needed. */
@@ -930,17 +908,11 @@ else|else
 operator|(
 name|void
 operator|)
-name|ieee80211_input_all
+name|ieee80211_input_mimo_all
 argument_list|(
 name|ic
 argument_list|,
 name|m
-argument_list|,
-name|rssi
-operator|-
-name|nf
-argument_list|,
-name|nf
 argument_list|)
 expr_stmt|;
 name|RTWN_LOCK
