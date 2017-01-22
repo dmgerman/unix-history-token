@@ -436,6 +436,14 @@ name|StringRef
 name|Name
 parameter_list|)
 function_decl|;
+name|SymbolBody
+modifier|*
+name|findInCurrentDSO
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
 name|void
 name|trace
 parameter_list|(
