@@ -4403,12 +4403,19 @@ name|sc_txq_data_minfree
 operator|=
 literal|10
 expr_stmt|;
-comment|/* 	 * Leave this as default to maintain legacy behaviour. 	 * Shortening the cabq/mcastq may end up causing some 	 * undesirable behaviour. 	 */
+comment|/* 	 * Shorten this to 64 packets, or 1/4 ath_txbuf, whichever 	 * is smaller. 	 * 	 * Anything bigger can potentially see the cabq consume 	 * almost all buffers, starving everything else, only to 	 * see most fail to transmit in the given beacon interval. 	 */
 name|sc
 operator|->
 name|sc_txq_mcastq_maxdepth
 operator|=
+name|MIN
+argument_list|(
+literal|64
+argument_list|,
 name|ath_txbuf
+operator|/
+literal|4
+argument_list|)
 expr_stmt|;
 comment|/* 	 * How deep can the node software TX queue get whilst it's asleep. 	 */
 name|sc
@@ -4417,12 +4424,12 @@ name|sc_txq_node_psq_maxdepth
 operator|=
 literal|16
 expr_stmt|;
-comment|/* 	 * Default the maximum queue depth for a given node 	 * to 1/4'th the TX buffers, or 64, whichever 	 * is larger. 	 */
+comment|/* 	 * Default the maximum queue to to 1/4'th the TX buffers, or 	 * 64, whichever is smaller. 	 */
 name|sc
 operator|->
 name|sc_txq_node_maxdepth
 operator|=
-name|MAX
+name|MIN
 argument_list|(
 literal|64
 argument_list|,
