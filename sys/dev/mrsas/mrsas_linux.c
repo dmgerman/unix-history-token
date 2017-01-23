@@ -58,7 +58,7 @@ end_elif
 begin_include
 include|#
 directive|include
-file|<sys/capabilty.h>
+file|<sys/capability.h>
 end_include
 
 begin_endif
