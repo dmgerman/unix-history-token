@@ -119,6 +119,8 @@ name|firstline
 decl_stmt|;
 name|int
 name|c
+init|=
+literal|0
 decl_stmt|,
 name|length
 decl_stmt|,
