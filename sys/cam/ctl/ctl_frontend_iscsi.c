@@ -12400,7 +12400,7 @@ operator|->
 name|scsiio
 operator|.
 name|kern_rel_offset
-operator|>
+operator|>=
 name|expected_len
 condition|)
 block|{
