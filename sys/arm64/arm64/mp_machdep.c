@@ -419,18 +419,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|ipi_handler
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|mtx
