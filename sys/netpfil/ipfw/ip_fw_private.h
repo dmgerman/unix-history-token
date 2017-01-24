@@ -1587,7 +1587,7 @@ name|IPFW_LOCK_INIT
 parameter_list|(
 name|_chain
 parameter_list|)
-value|do {			\ 	rm_init(&(_chain)->rwmtx, "IPFW static rules");	\ 	rw_init(&(_chain)->uh_lock, "IPFW UH lock");	\ 	} while (0)
+value|do {			\ 	rm_init_flags(&(_chain)->rwmtx, "IPFW static rules", RM_RECURSE); \ 	rw_init(&(_chain)->uh_lock, "IPFW UH lock");	\ 	} while (0)
 end_define
 
 begin_define
