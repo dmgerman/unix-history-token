@@ -340,11 +340,22 @@ define|\
 value|extern struct taskqgroup *qgroup_##name
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|EARLY_AP_STARTUP
-end_ifdef
+argument_list|)
+operator|)
+end_if
 
 begin_define
 define|#
@@ -367,7 +378,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !EARLY_AP_STARTUP */
+comment|/* SMP&& !EARLY_AP_STARTUP */
 end_comment
 
 begin_define
@@ -382,11 +393,19 @@ parameter_list|,
 name|stride
 parameter_list|)
 define|\ 									\
-value|struct taskqgroup *qgroup_##name;					\ 									\ static void								\ taskqgroup_define_##name(void *arg)					\ {									\ 	qgroup_##name = taskqgroup_create(#name);			\ }									\ 									\ SYSINIT(taskqgroup_##name, SI_SUB_INIT_IF, SI_ORDER_FIRST,		\ 	taskqgroup_define_##name, NULL);				\ 									\ static void								\ taskqgroup_adjust_##name(void *arg)					\ {									\ 	taskqgroup_adjust(qgroup_##name, (cnt), (stride));		\ }									\ 									\ SYSINIT(taskqgroup_adj_##name, SI_SUB_SMP, SI_ORDER_ANY,		\ 	taskqgroup_adjust_##name, NULL);				\  #endif
+value|struct taskqgroup *qgroup_##name;					\ 									\ static void								\ taskqgroup_define_##name(void *arg)					\ {									\ 	qgroup_##name = taskqgroup_create(#name);			\
+comment|/* Adjustment will be null unless smp_cpus == 1. */
+value|\
+comment|/*								\ 	 * XXX this was intended to fix the smp_cpus == 1 case, but	\ 	 * doesn't actually work for that.  It gives thes same strange	\ 	 * panic as adjustment at SI_SUB_INIT_IF:SI_ORDER_ANY for a	\ 	 * device that works with a pure UP kernel.			\ 	 */
+value|\
+comment|/* XXX this code is common now, so should not be ifdefed. */
+value|\ 	taskqgroup_adjust(qgroup_##name, (cnt), (stride));		\ }									\ 									\ SYSINIT(taskqgroup_##name, SI_SUB_INIT_IF, SI_ORDER_FIRST,		\ 	taskqgroup_define_##name, NULL);				\ 									\ static void								\ taskqgroup_adjust_##name(void *arg)					\ {									\
+comment|/* 								\ 	 * Adjustment when smp_cpus> 1 only works accidentally		\ 	 * (when there is no device interrupt before adjustment).	\ 	 */
+value|\ 	taskqgroup_adjust(qgroup_##name, (cnt), (stride));		\ }									\ 									\ SYSINIT(taskqgroup_adj_##name, SI_SUB_SMP, SI_ORDER_ANY,		\ 	taskqgroup_adjust_##name, NULL);				\  #endif
 end_define
 
 begin_comment
-comment|/* EARLY_AP_STARTUP */
+comment|/* !SMP || EARLY_AP_STARTUP */
 end_comment
 
 begin_expr_stmt
