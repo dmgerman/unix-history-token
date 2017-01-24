@@ -968,21 +968,6 @@ name|ncneg_shrink_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|MTX_SYSINIT
-argument_list|(
-name|vfscache_shrink_neg
-argument_list|,
-operator|&
-name|ncneg_shrink_lock
-argument_list|,
-literal|"Name Cache shrink neg"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|neglist
@@ -1030,10 +1015,17 @@ name|shrink_list_turn
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|numneglists
+value|(ncneghash + 1)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|u_int
-name|numneglists
+name|ncneghash
 decl_stmt|;
 end_decl_stmt
 
@@ -1067,8 +1059,8 @@ argument_list|)
 operator|>>
 literal|8
 operator|)
-operator|%
-name|numneglists
+operator|&
+name|ncneghash
 operator|)
 index|]
 operator|)
@@ -1076,10 +1068,17 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|numbucketlocks
+value|(ncbuckethash + 1)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|u_int
-name|numbucketlocks
+name|ncbuckethash
 decl_stmt|;
 end_decl_stmt
 
@@ -1100,13 +1099,20 @@ parameter_list|(
 name|hash
 parameter_list|)
 define|\
-value|((struct rwlock *)(&bucketlocks[((hash) % numbucketlocks)]))
+value|((struct rwlock *)(&bucketlocks[((hash)& ncbuckethash)]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|numvnodelocks
+value|(ncvnodehash + 1)
 end_define
 
 begin_decl_stmt
 specifier|static
 name|u_int
-name|numvnodelocks
+name|ncvnodehash
 decl_stmt|;
 end_decl_stmt
 
@@ -1133,24 +1139,8 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
-name|struct
-name|mtx
-modifier|*
-name|vlp
-decl_stmt|;
-if|if
-condition|(
-name|vp
-operator|==
-name|NULL
-condition|)
 return|return
 operator|(
-name|NULL
-operator|)
-return|;
-name|vlp
-operator|=
 operator|&
 name|vnodelocks
 index|[
@@ -1165,14 +1155,10 @@ argument_list|)
 operator|>>
 literal|8
 operator|)
-operator|%
-name|numvnodelocks
+operator|&
+name|ncvnodehash
 operator|)
 index|]
-expr_stmt|;
-return|return
-operator|(
-name|vlp
 operator|)
 return|;
 block|}
@@ -5563,8 +5549,11 @@ name|ltype
 decl_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 operator|!
 name|doingcache
+argument_list|)
 condition|)
 block|{
 name|cnp
@@ -7082,18 +7071,18 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
+name|MPASS
+argument_list|(
+name|vp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|vlp
 operator|=
 name|VP2VNODELOCK
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|MPASS
-argument_list|(
-name|vlp
-operator|!=
-name|NULL
 argument_list|)
 expr_stmt|;
 name|ret
@@ -8016,18 +8005,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 operator|!
 name|doingcache
+argument_list|)
 condition|)
 return|return;
 comment|/* 	 * Avoid blowout in namecache entries. 	 */
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|numcache
 operator|>=
 name|desiredvnodes
 operator|*
 name|ncsizefactor
+argument_list|)
 condition|)
 return|return;
 name|cache_celockstate_init
@@ -9189,7 +9184,7 @@ operator|&
 name|nchash
 argument_list|)
 expr_stmt|;
-name|numbucketlocks
+name|ncbuckethash
 operator|=
 name|cache_roundup_2
 argument_list|(
@@ -9197,20 +9192,18 @@ name|mp_ncpus
 operator|*
 literal|64
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
-name|numbucketlocks
+name|ncbuckethash
 operator|>
 name|nchash
-operator|+
-literal|1
 condition|)
-name|numbucketlocks
+name|ncbuckethash
 operator|=
 name|nchash
-operator|+
-literal|1
 expr_stmt|;
 name|bucketlocks
 operator|=
@@ -9259,7 +9252,7 @@ operator||
 name|RW_RECURSE
 argument_list|)
 expr_stmt|;
-name|numvnodelocks
+name|ncvnodehash
 operator|=
 name|cache_roundup_2
 argument_list|(
@@ -9267,6 +9260,8 @@ name|mp_ncpus
 operator|*
 literal|64
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|vnodelocks
 operator|=
@@ -9321,9 +9316,9 @@ name|ncpurgeminvnodes
 operator|=
 name|numbucketlocks
 expr_stmt|;
-name|numneglists
+name|ncneghash
 operator|=
-literal|4
+literal|3
 expr_stmt|;
 name|neglists
 operator|=
@@ -9407,6 +9402,18 @@ operator|&
 name|ncneg_hot
 operator|.
 name|nl_list
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|ncneg_shrink_lock
+argument_list|,
+literal|"ncnegs"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|numcalls
@@ -10783,7 +10790,10 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|disablecwd
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -10792,9 +10802,12 @@ operator|)
 return|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|buflen
 operator|<
 literal|2
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -11048,7 +11061,10 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|disablefullpath
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -11057,9 +11073,12 @@ operator|)
 return|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|vn
 operator|==
 name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -11192,7 +11211,10 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|disablefullpath
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -11201,9 +11223,12 @@ operator|)
 return|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|vn
 operator|==
 name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -12502,7 +12527,10 @@ expr_stmt|;
 comment|/* Return ENODEV if sysctl debug.disablefullpath==1 */
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|disablefullpath
+argument_list|)
 condition|)
 return|return
 operator|(
