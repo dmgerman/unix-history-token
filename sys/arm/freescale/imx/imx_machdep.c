@@ -172,7 +172,7 @@ name|uint16_t
 modifier|*
 name|pcr
 decl_stmt|;
-comment|/* 	 * Trigger an immediate reset by clearing the SRS bit in the watchdog 	 * control register.  The reset happens on the next cycle of the wdog 	 * 32KHz clock, so hang out in a spin loop until the reset takes effect. 	 */
+comment|/* 	 * Trigger an immediate reset by clearing the SRS bit in the watchdog 	 * control register.  The reset happens on the next cycle of the wdog 	 * 32KHz clock, so hang out in a spin loop until the reset takes effect. 	 * 	 * Imx6 erratum ERR004346 says the SRS bit has to be cleared twice 	 * within the same cycle of the 32khz clock to reliably trigger the 	 * reset.  Writing it 3 times in a row ensures at least 2 of the writes 	 * happen in the same 32k clock cycle. 	 */
 if|if
 condition|(
 operator|(
@@ -201,6 +201,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|*
+name|pcr
+operator|&=
+operator|~
+name|WDOG_CR_SRS
+expr_stmt|;
+operator|*
+name|pcr
+operator|&=
+operator|~
+name|WDOG_CR_SRS
+expr_stmt|;
 operator|*
 name|pcr
 operator|&=
