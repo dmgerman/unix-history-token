@@ -132,6 +132,21 @@ begin_comment
 comment|/* !LOCORE */
 end_comment
 
+begin_comment
+comment|/* Definitions for syscalls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NARGREG
+value|8
+end_define
+
+begin_comment
+comment|/* 8 args in regs */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
