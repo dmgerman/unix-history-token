@@ -1183,6 +1183,17 @@ directive|endif
 name|int
 function_decl|(
 modifier|*
+name|sc_llt_init
+function_decl|)
+parameter_list|(
+name|struct
+name|rtwn_softc
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
 name|sc_set_page_size
 function_decl|)
 parameter_list|(
@@ -2528,6 +2539,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|rtwn_llt_init
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|(((_sc)->sc_llt_init)((_sc)))
+end_define
 
 begin_define
 define|#

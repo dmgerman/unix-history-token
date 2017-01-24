@@ -306,6 +306,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R92C_LDO_SWR_CTRL
+value|0x07c
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92C_MCUFWDL
 value|0x080
 end_define
@@ -647,6 +654,13 @@ define|#
 directive|define
 name|R92C_RQPN_NPQ
 value|0x214
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_AUTO_LLT
+value|0x224
 end_define
 
 begin_comment
@@ -1869,6 +1883,66 @@ value|0x00002000
 end_define
 
 begin_comment
+comment|/* Bits for R92C_RSV_CTRL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_RSV_CTRL_WLOCK_ALL
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_RSV_CTRL_WLOCK_00
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_RSV_CTRL_WLOCK_04
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_RSV_CTRL_WLOCK_08
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_RSV_CTRL_WLOCK_40
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_RSV_CTRL_R_DIS_PRST_0
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_RSV_CTRL_R_DIS_PRST_1
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_RSV_CTRL_LOCK_ALL_EN
+value|0x80
+end_define
+
+begin_comment
 comment|/* Bits for R92C_RF_CTRL. */
 end_comment
 
@@ -2070,6 +2144,17 @@ define|#
 directive|define
 name|R92C_LEDCFG0_DIS
 value|0x08
+end_define
+
+begin_comment
+comment|/* Bits for R92C_LEDCFG1. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_LEDCFG1_DIS
+value|0x80
 end_define
 
 begin_comment
@@ -2897,6 +2982,17 @@ define|#
 directive|define
 name|R92C_TXDMA_OFFSET_DROP_DATA_EN
 value|0x00000200
+end_define
+
+begin_comment
+comment|/* Bits for R92C_AUTO_LLT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_AUTO_LLT_INIT
+value|0x00010000
 end_define
 
 begin_comment
@@ -4118,6 +4214,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R92C_OFDM0_TXPSEUDONOISEWGT
+value|0xce4
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92C_OFDM1_LSTF
 value|0xd00
 end_define
@@ -4779,6 +4882,17 @@ define|#
 directive|define
 name|R92C_LSSI_READBACK_DATA_S
 value|0
+end_define
+
+begin_comment
+comment|/* Bits for R92C_CCK0_SYSTEM. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92C_CCK0_SYSTEM_CCK_SIDEBAND
+value|0x00000010
 end_define
 
 begin_comment
