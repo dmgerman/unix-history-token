@@ -1574,10 +1574,6 @@ operator|=
 name|true
 block|;
 name|void
-name|InitLibcallCallingConvs
-argument_list|()
-block|;
-name|void
 name|addTypeForNEON
 argument_list|(
 argument|MVT VT
