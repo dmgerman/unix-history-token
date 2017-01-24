@@ -222,7 +222,7 @@ comment|/// Return the given metadata, creating a replaceable forward reference 
 comment|/// necessary.
 name|Metadata
 modifier|*
-name|getMetadataFwdRef
+name|getMetadataFwdRefOrLoad
 parameter_list|(
 name|unsigned
 name|Idx
