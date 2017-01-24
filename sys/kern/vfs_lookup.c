@@ -530,6 +530,12 @@ name|crossmp_vnodeops
 init|=
 block|{
 operator|.
+name|vop_default
+operator|=
+operator|&
+name|default_vnodeops
+block|,
+operator|.
 name|vop_islocked
 operator|=
 name|crossmp_vop_islocked

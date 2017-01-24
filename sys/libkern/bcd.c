@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/libkern.h>
 end_include
 
@@ -341,6 +347,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|nitems
+argument_list|(
+name|bcd2bin_data
+argument_list|)
+operator|==
+name|LIBKERN_LEN_BCD2BIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|u_char
 specifier|const
@@ -551,6 +570,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|nitems
+argument_list|(
+name|bin2bcd_data
+argument_list|)
+operator|==
+name|LIBKERN_LEN_BIN2BCD
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* This is actually used with radix [2..36] */
 end_comment
@@ -564,6 +596,21 @@ init|=
 literal|"0123456789abcdefghijklmnopqrstuvwxyz"
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|nitems
+argument_list|(
+name|hex2ascii_data
+argument_list|)
+operator|==
+name|LIBKERN_LEN_HEX2ASCII
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

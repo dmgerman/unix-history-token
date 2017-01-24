@@ -245,9 +245,6 @@ decl_stmt|;
 name|int
 name|dualemac
 decl_stmt|;
-name|int
-name|rx_batch
-decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;

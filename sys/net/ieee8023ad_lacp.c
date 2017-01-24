@@ -3026,18 +3026,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|boolean_t
-name|active
-init|=
-name|TRUE
-decl_stmt|;
-comment|/* XXX should be configurable */
-name|boolean_t
-name|fast
-init|=
-name|FALSE
-decl_stmt|;
-comment|/* Configurable via ioctl */
 name|link_init_sdl
 argument_list|(
 name|ifp
@@ -3214,21 +3202,7 @@ name|lp
 operator|->
 name|lp_state
 operator|=
-operator|(
-name|active
-condition|?
 name|LACP_STATE_ACTIVITY
-else|:
-literal|0
-operator|)
-operator||
-operator|(
-name|fast
-condition|?
-name|LACP_STATE_TIMEOUT
-else|:
-literal|0
-operator|)
 expr_stmt|;
 name|lp
 operator|->

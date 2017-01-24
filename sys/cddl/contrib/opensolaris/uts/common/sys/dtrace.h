@@ -4021,11 +4021,6 @@ else|#
 directive|else
 define|#
 directive|define
-name|DTRACEHIOC_ADD
-value|_IOWR('z', 1, dof_hdr_t)
-comment|/* add helper */
-define|#
-directive|define
 name|DTRACEHIOC_REMOVE
 value|_IOW('z', 2, int)
 comment|/* remove helper */

@@ -319,7 +319,7 @@ name|nap
 decl_stmt|;
 name|nap
 operator|=
-literal|8
+name|NARGREG
 expr_stmt|;
 name|p
 operator|=
@@ -476,7 +476,9 @@ name|nap
 condition|)
 name|panic
 argument_list|(
-literal|"TODO: Could we have more then 8 args?"
+literal|"TODO: Could we have more then %d args?"
+argument_list|,
+name|NARGREG
 argument_list|)
 expr_stmt|;
 name|td

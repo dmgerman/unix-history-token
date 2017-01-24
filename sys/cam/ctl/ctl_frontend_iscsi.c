@@ -9896,20 +9896,6 @@ name|fe_done
 operator|=
 name|cfiscsi_done
 expr_stmt|;
-comment|/* XXX KDM what should we report here? */
-comment|/* XXX These should probably be fetched from CTL. */
-name|port
-operator|->
-name|max_targets
-operator|=
-literal|1
-expr_stmt|;
-name|port
-operator|->
-name|max_target_id
-operator|=
-literal|15
-expr_stmt|;
 name|port
 operator|->
 name|targ_port
@@ -12414,7 +12400,7 @@ operator|->
 name|scsiio
 operator|.
 name|kern_rel_offset
-operator|>
+operator|>=
 name|expected_len
 condition|)
 block|{

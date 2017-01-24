@@ -720,7 +720,7 @@ name|rtwn_setbits_1
 argument_list|(
 name|sc
 argument_list|,
-literal|0x07C
+name|R92C_LDO_SWR_CTRL
 argument_list|,
 literal|0
 argument_list|,

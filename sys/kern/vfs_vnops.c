@@ -7338,14 +7338,11 @@ argument_list|,
 name|vp
 argument_list|,
 operator|(
-literal|"vn_lock called with no locktype."
+literal|"vn_lock: no locktype"
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG_VFS_LOCKS
-name|KASSERT
+name|VNASSERT
 argument_list|(
 name|vp
 operator|->
@@ -7353,15 +7350,13 @@ name|v_holdcnt
 operator|!=
 literal|0
 argument_list|,
-operator|(
-literal|"vn_lock %p: zero hold count"
-operator|,
 name|vp
+argument_list|,
+operator|(
+literal|"vn_lock: zero hold count"
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|retry
 label|:
 name|error
@@ -7398,12 +7393,11 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"LK_RETRY set with incompatible flags (0x%x) or "
-literal|" an error occurred (%d)"
-operator|,
-name|flags
+literal|"vn_lock: error %d incompatible with flags %#x"
 operator|,
 name|error
+operator|,
+name|flags
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7424,11 +7418,15 @@ name|error
 operator|==
 literal|0
 operator|&&
+operator|(
 name|vp
 operator|->
 name|v_iflag
 operator|&
 name|VI_DOOMED
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -7444,8 +7442,7 @@ name|ENOENT
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|error
@@ -7455,7 +7452,6 @@ condition|)
 goto|goto
 name|retry
 goto|;
-block|}
 return|return
 operator|(
 name|error
@@ -7473,20 +7469,16 @@ specifier|static
 name|int
 name|vn_closefile
 parameter_list|(
-name|fp
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|file
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -7517,11 +7509,15 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
+operator|(
 name|fp
 operator|->
 name|f_flag
 operator|&
 name|FHASLOCK
+operator|)
+operator|!=
+literal|0
 argument_list|)
 operator|&&
 name|fp
@@ -7556,11 +7552,15 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
+operator|(
 name|fp
 operator|->
 name|f_flag
 operator|&
 name|FHASLOCK
+operator|)
+operator|!=
+literal|0
 argument_list|)
 operator|&&
 name|fp

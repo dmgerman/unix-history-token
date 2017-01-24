@@ -886,6 +886,12 @@ endif|#
 directive|endif
 name|sc
 operator|->
+name|sc_llt_init
+operator|=
+name|r92c_llt_init
+expr_stmt|;
+name|sc
+operator|->
 name|sc_set_page_size
 operator|=
 name|r12a_set_page_size

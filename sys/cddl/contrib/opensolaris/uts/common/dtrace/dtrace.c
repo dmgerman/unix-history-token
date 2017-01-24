@@ -67540,9 +67540,6 @@ return|;
 block|}
 specifier|static
 name|int
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|dtrace_helper_slurp
 parameter_list|(
 name|dof_hdr_t
@@ -67558,20 +67555,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-else|#
-directive|else
-function|dtrace_helper_slurp
-parameter_list|(
-name|dof_hdr_t
-modifier|*
-name|dof
-parameter_list|,
-name|dof_helper_t
-modifier|*
-name|dhp
-parameter_list|)
-endif|#
-directive|endif
 block|{
 name|dtrace_helpers_t
 modifier|*
@@ -67587,17 +67570,6 @@ name|enab
 init|=
 name|NULL
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-name|proc_t
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|i
 decl_stmt|,
@@ -67677,14 +67649,8 @@ operator|&
 name|enab
 argument_list|,
 name|dhp
-operator|!=
-name|NULL
-condition|?
-name|dhp
 operator|->
 name|dofhp_addr
-else|:
-literal|0
 argument_list|,
 name|B_FALSE
 argument_list|)
@@ -67705,13 +67671,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Look for helper providers and validate their descriptions. 	 */
-if|if
-condition|(
-name|dhp
-operator|!=
-name|NULL
-condition|)
-block|{
 for|for
 control|(
 name|i
@@ -67794,7 +67753,6 @@ block|}
 name|nprovs
 operator|++
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Now we need to walk through the ECB descriptions in the enabling. 	 */
 for|for
@@ -67956,10 +67914,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dhp
-operator|!=
-name|NULL
-operator|&&
 name|nprovs
 operator|>
 literal|0
