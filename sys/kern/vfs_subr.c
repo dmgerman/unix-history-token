@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dirent.h>
 end_include
 
@@ -556,13 +562,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|counter_u64_t
 name|vnodes_created
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_COUNTER_U64
 argument_list|(
 name|_vfs
 argument_list|,
@@ -574,8 +580,6 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|vnodes_created
-argument_list|,
-literal|0
 argument_list|,
 literal|"Number of vnodes created by getnewvnode"
 argument_list|)
@@ -739,13 +743,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|counter_u64_t
 name|recycles_count
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_COUNTER_U64
 argument_list|(
 name|_vfs
 argument_list|,
@@ -757,8 +761,6 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|recycles_count
-argument_list|,
-literal|0
 argument_list|,
 literal|"Number of vnodes recycled to meet vnode cache targets"
 argument_list|)
@@ -799,13 +801,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|counter_u64_t
 name|free_owe_inact
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_COUNTER_U64
 argument_list|(
 name|_vfs
 argument_list|,
@@ -817,8 +819,6 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|free_owe_inact
-argument_list|,
-literal|0
 argument_list|,
 literal|"Number of times free vnodes kept on active list due to VFS "
 literal|"owing inactivation"
@@ -2001,6 +2001,27 @@ argument_list|(
 name|buf_trie_zone
 argument_list|,
 name|nbuf
+argument_list|)
+expr_stmt|;
+name|vnodes_created
+operator|=
+name|counter_u64_alloc
+argument_list|(
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|recycles_count
+operator|=
+name|counter_u64_alloc
+argument_list|(
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|free_owe_inact
+operator|=
+name|counter_u64_alloc
+argument_list|(
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the filesystem syncer. 	 */
@@ -3816,9 +3837,8 @@ literal|"VI_DOOMED unexpectedly detected in vlrureclaim()"
 operator|)
 argument_list|)
 expr_stmt|;
-name|atomic_add_long
+name|counter_u64_add
 argument_list|(
-operator|&
 name|recycles_count
 argument_list|,
 literal|1
@@ -4927,9 +4947,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|atomic_add_long
+name|counter_u64_add
 argument_list|(
-operator|&
 name|recycles_count
 argument_list|,
 literal|1
@@ -5492,9 +5511,8 @@ argument_list|)
 expr_stmt|;
 name|alloc
 label|:
-name|atomic_add_long
+name|counter_u64_add
 argument_list|(
-operator|&
 name|vnodes_created
 argument_list|,
 literal|1
@@ -12093,9 +12111,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|atomic_add_long
+name|counter_u64_add
 argument_list|(
-operator|&
 name|free_owe_inact
 argument_list|,
 literal|1
