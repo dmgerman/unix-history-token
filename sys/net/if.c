@@ -174,6 +174,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -9940,6 +9946,15 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|ifnet_event
+argument_list|,
+name|ifp
+argument_list|,
+name|IFNET_EVENT_DOWN
+argument_list|)
+expr_stmt|;
 name|if_unroute
 argument_list|(
 name|ifp
@@ -9973,6 +9988,15 @@ argument_list|,
 name|IFF_UP
 argument_list|,
 name|AF_UNSPEC
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|ifnet_event
+argument_list|,
+name|ifp
+argument_list|,
+name|IFNET_EVENT_UP
 argument_list|)
 expr_stmt|;
 block|}
