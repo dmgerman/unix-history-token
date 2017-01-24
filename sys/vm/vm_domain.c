@@ -426,9 +426,6 @@ name|seq
 argument_list|)
 condition|)
 return|return;
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -536,9 +533,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -1145,9 +1139,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 block|}
 block|}
 end_function

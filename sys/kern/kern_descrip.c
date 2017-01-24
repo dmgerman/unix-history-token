@@ -11203,12 +11203,7 @@ argument_list|,
 name|seq
 argument_list|)
 condition|)
-block|{
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 continue|continue;
-block|}
 else|#
 directive|else
 name|fp
