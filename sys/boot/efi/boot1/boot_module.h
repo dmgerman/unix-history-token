@@ -158,7 +158,9 @@ function_decl|(
 modifier|*
 name|init
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* 	 * probe checks to see if the module can handle dev. 	 * 	 * Return codes: 	 * EFI_SUCCESS = The module can handle the device. 	 * EFI_NOT_FOUND = The module can not handle the device. 	 * Other = The module encountered an error. 	 */
 name|EFI_STATUS
@@ -204,7 +206,9 @@ function_decl|(
 modifier|*
 name|status
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* valid devices as found by probe. */
 name|dev_info_t
@@ -213,7 +217,9 @@ function_decl|(
 modifier|*
 name|devices
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 block|}
 name|boot_module_t
