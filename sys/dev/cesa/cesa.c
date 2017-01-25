@@ -5152,6 +5152,12 @@ case|:
 case|case
 name|MV_DEV_88F6828
 case|:
+case|case
+name|MV_DEV_88F6820
+case|:
+case|case
+name|MV_DEV_88F6810
+case|:
 name|sc
 operator|->
 name|sc_tperr
