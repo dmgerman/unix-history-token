@@ -10141,6 +10141,20 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 		 * Some Marvell controllers require additional time 		 * after soft reset to work properly. Setup delay 		 * to 50ms after soft reset. 		 */
+if|if
+condition|(
+name|ch
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_MRVL_SR_DEL
+condition|)
+name|DELAY
+argument_list|(
+literal|50000
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Marvell HBAs with non-RAID firmware do not wait for 		 * readiness after soft reset, so we have to wait here. 		 * Marvell RAIDs do not have this problem, but instead 		 * sometimes forget to update FIS receive area, breaking 		 * this wait. 		 */
 if|if
 condition|(
