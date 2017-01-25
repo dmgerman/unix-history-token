@@ -124,6 +124,10 @@ name|dhp
 operator|->
 name|dofhp_dof
 expr_stmt|;
+name|p
+operator|=
+name|curproc
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -135,10 +139,6 @@ operator|->
 name|dofhp_pid
 condition|)
 block|{
-name|p
-operator|=
-name|curproc
-expr_stmt|;
 name|dof
 operator|=
 name|dtrace_dof_copyin
