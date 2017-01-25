@@ -5732,7 +5732,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * If we have work, get it scheduled. Called with the periph lock held.  */
+comment|/*  * If we have work, get it scheduled. Called with the periph lock held.  */
 end_comment
 
 begin_function
