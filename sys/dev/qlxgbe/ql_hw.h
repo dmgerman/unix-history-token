@@ -5290,12 +5290,6 @@ decl_stmt|;
 name|uint16_t
 name|tx_cntxt_id
 decl_stmt|;
-name|uint8_t
-name|frame_hdr
-index|[
-name|QL_FRAME_HDR_SIZE
-index|]
-decl_stmt|;
 block|}
 name|qla_hw_tx_cntxt_t
 typedef|;
