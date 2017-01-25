@@ -3446,13 +3446,7 @@ operator|!=
 operator|-
 literal|1
 operator|&&
-operator|(
-name|smp_started
-operator|||
-name|mp_ncpus
-operator|==
-literal|1
-operator|)
+name|tqg_smp_started
 condition|)
 name|intr_setaffinity
 argument_list|(
@@ -4068,7 +4062,7 @@ block|{
 name|printf
 argument_list|(
 literal|"%s: failed cnt: %d stride: %d "
-literal|"mp_ncpus: %d smp_started: %d\n"
+literal|"mp_ncpus: %d tqg_smp_started: %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4078,7 +4072,7 @@ name|stride
 argument_list|,
 name|mp_ncpus
 argument_list|,
-name|smp_started
+name|tqg_smp_started
 argument_list|)
 expr_stmt|;
 return|return
