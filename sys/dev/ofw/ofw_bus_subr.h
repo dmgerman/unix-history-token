@@ -418,6 +418,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ofw_bus_node_status_okay
+parameter_list|(
+name|phandle_t
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Helper to get node's interrupt parent */
 end_comment
