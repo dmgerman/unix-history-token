@@ -835,77 +835,7 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-comment|/* 	 * The mbuf should be a cluster from our special pool, 	 * so we do not need to do an m_copyback but just copy 	 * (and eventually, just reference the netmap buffer) 	 */
-if|if
-condition|(
-name|GET_MBUF_REFCNT
-argument_list|(
-name|m
-argument_list|)
-operator|!=
-literal|1
-condition|)
-block|{
-name|D
-argument_list|(
-literal|"invalid refcnt %d for %p"
-argument_list|,
-name|GET_MBUF_REFCNT
-argument_list|(
-name|m
-argument_list|)
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"in generic_xmit_frame"
-argument_list|)
-expr_stmt|;
-block|}
-comment|// XXX the ext_size check is unnecessary if we link the netmap buf
-if|if
-condition|(
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_size
-operator|<
-name|len
-condition|)
-block|{
-name|RD
-argument_list|(
-literal|5
-argument_list|,
-literal|"size %d< len %d"
-argument_list|,
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_size
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|len
-operator|=
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_size
-expr_stmt|;
-block|}
-if|if
-condition|(
-literal|0
-condition|)
-block|{
-comment|/* XXX seems to have negligible benefits */
+comment|/* Link the external storage to the netmap buffer, so that 	 * no copy is necessary. */
 name|m
 operator|->
 name|m_ext
@@ -918,21 +848,14 @@ name|m_data
 operator|=
 name|addr
 expr_stmt|;
-block|}
-else|else
-block|{
-name|bcopy
-argument_list|(
-name|addr
-argument_list|,
 name|m
 operator|->
-name|m_data
-argument_list|,
+name|m_ext
+operator|.
+name|ext_size
+operator|=
 name|len
-argument_list|)
 expr_stmt|;
-block|}
 name|m
 operator|->
 name|m_len
@@ -945,15 +868,12 @@ name|len
 operator|=
 name|len
 expr_stmt|;
-comment|// inc refcount. All ours, we could skip the atomic
-name|atomic_fetchadd_int
-argument_list|(
-name|PNT_MBUF_REFCNT
+comment|/* mbuf refcnt is not contended, no need to use atomic 	 * (a memory barrier is enough). */
+name|SET_MBUF_REFCNT
 argument_list|(
 name|m
-argument_list|)
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|M_HASHTYPE_SET

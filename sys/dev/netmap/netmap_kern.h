@@ -433,11 +433,11 @@ end_if
 begin_define
 define|#
 directive|define
-name|GET_MBUF_REFCNT
+name|MBUF_REFCNT
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->m_ext.ext_cnt ? *((m)->m_ext.ext_cnt) : -1)
+value|((m)->m_ext.ext_count)
 end_define
 
 begin_define
@@ -449,17 +449,7 @@ name|m
 parameter_list|,
 name|x
 parameter_list|)
-value|*((m)->m_ext.ext_cnt) = x
-end_define
-
-begin_define
-define|#
-directive|define
-name|PNT_MBUF_REFCNT
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_ext.ext_cnt)
+value|(m)->m_ext.ext_count = x
 end_define
 
 begin_else
@@ -470,7 +460,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|GET_MBUF_REFCNT
+name|MBUF_REFCNT
 parameter_list|(
 name|m
 parameter_list|)
@@ -487,16 +477,6 @@ parameter_list|,
 name|x
 parameter_list|)
 value|*((m)->m_ext.ref_cnt) = x
-end_define
-
-begin_define
-define|#
-directive|define
-name|PNT_MBUF_REFCNT
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_ext.ref_cnt)
 end_define
 
 begin_endif
