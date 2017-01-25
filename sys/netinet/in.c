@@ -240,6 +240,8 @@ specifier|static
 name|int
 name|in_difaddr_ioctl
 parameter_list|(
+name|u_long
+parameter_list|,
 name|caddr_t
 parameter_list|,
 name|struct
@@ -1033,6 +1035,8 @@ name|error
 operator|=
 name|in_difaddr_ioctl
 argument_list|(
+name|cmd
+argument_list|,
 name|data
 argument_list|,
 name|ifp
@@ -1767,6 +1771,8 @@ name|void
 operator|)
 name|in_difaddr_ioctl
 argument_list|(
+name|cmd
+argument_list|,
 name|data
 argument_list|,
 name|ifp
@@ -2537,6 +2543,8 @@ operator|&
 name|ia
 operator|->
 name|ia_ifa
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|IF_ADDR_WLOCK
@@ -2618,6 +2626,9 @@ specifier|static
 name|int
 name|in_difaddr_ioctl
 parameter_list|(
+name|u_long
+name|cmd
+parameter_list|,
 name|caddr_t
 name|data
 parameter_list|,
@@ -2971,6 +2982,16 @@ operator|&
 name|ia
 operator|->
 name|ia_ifa
+argument_list|,
+operator|(
+name|cmd
+operator|==
+name|SIOCDIFADDR
+operator|)
+condition|?
+name|false
+else|:
+name|true
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this is the last IPv4 address configured on this 	 * interface, leave the all-hosts group. 	 * No state-change report need be transmitted. 	 */
