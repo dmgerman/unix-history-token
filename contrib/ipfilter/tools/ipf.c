@@ -2005,6 +2005,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+elseif|else
 if|if
 condition|(
 name|strchr
@@ -2025,6 +2026,7 @@ name|fl
 operator|=
 name|FR_INQUE
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|strchr
@@ -2045,6 +2047,7 @@ name|fl
 operator|=
 name|FR_OUTQUE
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|strchr
@@ -2067,6 +2070,21 @@ name|FR_OUTQUE
 operator||
 name|FR_INQUE
 expr_stmt|;
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Incorrect flush argument: %s\n"
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|opts
