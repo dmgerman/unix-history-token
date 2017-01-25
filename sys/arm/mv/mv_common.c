@@ -10123,6 +10123,17 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* Setup only for enabled devices */
+if|if
+condition|(
+name|ofw_bus_node_status_okay
+argument_list|(
+name|child
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
