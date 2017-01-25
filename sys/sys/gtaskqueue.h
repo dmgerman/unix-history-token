@@ -358,13 +358,8 @@ parameter_list|,
 name|stride
 parameter_list|)
 define|\ 									\
-value|struct taskqgroup *qgroup_##name;					\ 									\ static void								\ taskqgroup_define_##name(void *arg)					\ {									\ 	qgroup_##name = taskqgroup_create(#name);			\ 	taskqgroup_adjust(qgroup_##name, (cnt), (stride));		\ }									\ 									\ SYSINIT(taskqgroup_##name, SI_SUB_INIT_IF, SI_ORDER_FIRST,		\ 	taskqgroup_define_##name, NULL)
+value|struct taskqgroup *qgroup_##name;					\ 									\ static void								\ taskqgroup_define_##name(void *arg)					\ {									\ 	qgroup_##name = taskqgroup_create(#name);			\ 	taskqgroup_adjust(qgroup_##name, (cnt), (stride));		\ }									\ 									\ SYSINIT(taskqgroup_##name, SI_SUB_INIT_IF, SI_ORDER_FIRST,		\ 	taskqgroup_define_##name, NULL)					\  #else
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
 comment|/* !EARLY_AP_STARTUP */
@@ -382,7 +377,7 @@ parameter_list|,
 name|stride
 parameter_list|)
 define|\ 									\
-value|struct taskqgroup *qgroup_##name;					\ 									\ static void								\ taskqgroup_define_##name(void *arg)					\ {									\ 	qgroup_##name = taskqgroup_create(#name);			\ }									\ 									\ SYSINIT(taskqgroup_##name, SI_SUB_INIT_IF, SI_ORDER_FIRST,		\ 	taskqgroup_define_##name, NULL);				\ 									\ static void								\ taskqgroup_adjust_##name(void *arg)					\ {									\ 	taskqgroup_adjust(qgroup_##name, (cnt), (stride));		\ }									\ 									\ SYSINIT(taskqgroup_adj_##name, SI_SUB_SMP, SI_ORDER_ANY,		\ 	taskqgroup_adjust_##name, NULL);				\  #endif
+value|struct taskqgroup *qgroup_##name;					\ 									\ static void								\ taskqgroup_define_##name(void *arg)					\ {									\ 	qgroup_##name = taskqgroup_create(#name);			\ }									\ 									\ SYSINIT(taskqgroup_##name, SI_SUB_INIT_IF, SI_ORDER_FIRST,		\ 	taskqgroup_define_##name, NULL);				\ 									\ static void								\ taskqgroup_adjust_##name(void *arg)					\ {									\ 	taskqgroup_adjust(qgroup_##name, (cnt), (stride));		\ }									\ 									\ SYSINIT(taskqgroup_adj_##name, SI_SUB_SMP, SI_ORDER_ANY,		\ 	taskqgroup_adjust_##name, NULL)					\  #endif
 end_define
 
 begin_comment
