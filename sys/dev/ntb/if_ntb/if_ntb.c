@@ -1313,6 +1313,16 @@ name|command
 condition|)
 block|{
 case|case
+name|SIOCSIFFLAGS
+case|:
+case|case
+name|SIOCADDMULTI
+case|:
+case|case
+name|SIOCDELMULTI
+case|:
+break|break;
+case|case
 name|SIOCSIFMTU
 case|:
 block|{
