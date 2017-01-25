@@ -1656,6 +1656,19 @@ block|;
 comment|/// The typedef for ExprValueMap.
 comment|///
 typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|Value
+operator|*
+operator|,
+name|ConstantInt
+operator|*
+operator|>
+name|ValueOffsetPair
+expr_stmt|;
+typedef|typedef
 name|DenseMap
 operator|<
 specifier|const
@@ -1664,13 +1677,30 @@ operator|*
 operator|,
 name|SetVector
 operator|<
-name|Value
-operator|*
+name|ValueOffsetPair
 operator|>>
 name|ExprValueMapType
 expr_stmt|;
 comment|/// ExprValueMap -- This map records the original values from which
 comment|/// the SCEV expr is generated from.
+comment|///
+comment|/// We want to represent the mapping as SCEV -> ValueOffsetPair instead
+comment|/// of SCEV -> Value:
+comment|/// Suppose we know S1 expands to V1, and
+comment|///  S1 = S2 + C_a
+comment|///  S3 = S2 + C_b
+comment|/// where C_a and C_b are different SCEVConstants. Then we'd like to
+comment|/// expand S3 as V1 - C_a + C_b instead of expanding S2 literally.
+comment|/// It is helpful when S2 is a complex SCEV expr.
+comment|///
+comment|/// In order to do that, we represent ExprValueMap as a mapping from
+comment|/// SCEV to ValueOffsetPair. We will save both S1->{V1, 0} and
+comment|/// S2->{V1, C_a} into the map when we create SCEV for V1. When S3
+comment|/// is expanded, it will first expand S2 to V1 - C_a because of
+comment|/// S2->{V1, C_a} in the map, then expand S3 to V1 - C_a + C_b.
+comment|///
+comment|/// Note: S->{V, Offset} in the ExprValueMap means S can be expanded
+comment|/// to V - Offset.
 name|ExprValueMapType
 name|ExprValueMap
 block|;
@@ -2199,10 +2229,10 @@ operator|+
 literal|1
 else|:
 literal|1
-block|;
+expr_stmt|;
 operator|++
 name|Position
-block|;
+expr_stmt|;
 comment|// We've run out of elements.
 if|if
 condition|(
@@ -2225,6 +2255,9 @@ operator|*
 name|this
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|ExitNotTakenInfoIterator
 name|operator
 operator|++
@@ -2247,14 +2280,10 @@ return|return
 name|Tmp
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// Iterators
 end_comment
 
@@ -4868,8 +4897,7 @@ end_comment
 begin_expr_stmt
 name|SetVector
 operator|<
-name|Value
-operator|*
+name|ValueOffsetPair
 operator|>
 operator|*
 name|getSCEVValues
