@@ -1906,7 +1906,7 @@ name|tmp
 operator|->
 name|tm_pages_max
 operator|!=
-name|SIZE_MAX
+name|ULONG_MAX
 condition|)
 name|sbp
 operator|->
