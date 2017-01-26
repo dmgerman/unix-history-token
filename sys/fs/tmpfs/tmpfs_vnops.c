@@ -498,7 +498,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* The entry was not found in the directory. 			 * This is OK if we are creating or renaming an 			 * entry and are working on the last component of 			 * the path name. */
+comment|/* 			 * The entry was not found in the directory. 			 * This is OK if we are creating or renaming an 			 * entry and are working on the last component of 			 * the path name. 			 */
 if|if
 condition|(
 operator|(
@@ -571,7 +571,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Keep the component name in the buffer for 				 * future uses. */
+comment|/* 				 * Keep the component name in the buffer for 				 * future uses. 				 */
 name|cnp
 operator|->
 name|cn_flags
@@ -596,14 +596,14 @@ name|tmpfs_node
 modifier|*
 name|tnode
 decl_stmt|;
-comment|/* The entry was found, so get its associated 			 * tmpfs_node. */
+comment|/* 			 * The entry was found, so get its associated 			 * tmpfs_node. 			 */
 name|tnode
 operator|=
 name|de
 operator|->
 name|td_node
 expr_stmt|;
-comment|/* If we are not at the last path component and 			 * found a non-directory or non-link entry (which 			 * may itself be pointing to a directory), raise 			 * an error. */
+comment|/* 			 * If we are not at the last path component and 			 * found a non-directory or non-link entry (which 			 * may itself be pointing to a directory), raise 			 * an error. 			 */
 if|if
 condition|(
 operator|(
@@ -638,7 +638,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* If we are deleting or renaming the entry, keep 			 * track of its tmpfs_dirent so that it can be 			 * easily deleted later. */
+comment|/* 			 * If we are deleting or renaming the entry, keep 			 * track of its tmpfs_dirent so that it can be 			 * easily deleted later. 			 */
 if|if
 condition|(
 operator|(
@@ -816,7 +816,7 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* Store the result of this lookup in the cache.  Avoid this if the 	 * request was for creation, as it does not improve timings on 	 * emprical tests. */
+comment|/* 	 * Store the result of this lookup in the cache.  Avoid this if the 	 * request was for creation, as it does not improve timings on 	 * emprical tests. 	 */
 if|if
 condition|(
 operator|(
@@ -841,7 +841,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-comment|/* If there were no errors, *vpp cannot be null and it must be 	 * locked. */
+comment|/* 	 * If there were no errors, *vpp cannot be null and it must be 	 * locked. 	 */
 name|MPASS
 argument_list|(
 name|IFF
@@ -864,7 +864,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -6253,7 +6255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vnode operations vector used for files stored in a tmpfs file system.  */
+comment|/*  * Vnode operations vector used for files stored in a tmpfs file system.  */
 end_comment
 
 begin_decl_stmt
