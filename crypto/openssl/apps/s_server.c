@@ -1611,12 +1611,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -1626,11 +1620,6 @@ init|=
 name|NULL
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -2326,15 +2315,10 @@ name|hack
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
 name|engine_id
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -8685,9 +8669,6 @@ expr_stmt|;
 name|OpenSSL_add_ssl_algorithms
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -8699,8 +8680,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -11106,6 +11085,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|release_engine
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bio_s_out

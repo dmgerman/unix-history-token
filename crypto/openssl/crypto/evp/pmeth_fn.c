@@ -61,9 +61,11 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|if (ctx->pmeth->flags& EVP_PKEY_FLAG_AUTOARGLEN) \                 { \                 size_t pksize = (size_t)EVP_PKEY_size(ctx->pkey); \                 if (!arg) \                         { \                         *arglen = pksize; \                         return 1; \                         } \                 else if (*arglen< pksize) \                         { \                         EVPerr(err, EVP_R_BUFFER_TOO_SMALL);
+value|if (ctx->pmeth->flags& EVP_PKEY_FLAG_AUTOARGLEN) {           \         size_t pksize = (size_t)EVP_PKEY_size(ctx->pkey);         \                                                                   \         if (pksize == 0) {                                        \             EVPerr(err, EVP_R_INVALID_KEY);
 comment|/*ckerr_ignore*/
-value|\                         return 0; \                         } \                 }
+value|\             return 0;                                             \         }                                                         \         if (!arg) {                                               \             *arglen = pksize;                                     \             return 1;                                             \         }                                                         \         if (*arglen< pksize) {                                   \             EVPerr(err, EVP_R_BUFFER_TOO_SMALL);
+comment|/*ckerr_ignore*/
+value|\             return 0;                                             \         }                                                         \     }
 end_define
 
 begin_function

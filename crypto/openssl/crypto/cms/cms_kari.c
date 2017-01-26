@@ -1832,6 +1832,9 @@ literal|1
 return|;
 block|}
 comment|/*      * Pick a cipher based on content encryption cipher. If it is DES3 use      * DES3 wrap otherwise use AES wrap similar to key size.      */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DES
 if|if
 condition|(
 name|EVP_CIPHER_type
@@ -1847,6 +1850,8 @@ name|EVP_des_ede3_wrap
 argument_list|()
 expr_stmt|;
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|keylen

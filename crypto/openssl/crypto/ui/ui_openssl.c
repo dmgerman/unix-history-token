@@ -1733,8 +1733,9 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
 name|p
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|error
@@ -2060,6 +2061,23 @@ name|is_a_tty
 operator|=
 literal|0
 expr_stmt|;
+elseif|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ENODEV
+comment|/*              * MacOS X returns ENODEV (Operation not supported by device),              * which seems appropriate.              */
+if|if
+condition|(
+name|errno
+operator|==
+name|ENODEV
+condition|)
+name|is_a_tty
+operator|=
+literal|0
+expr_stmt|;
 else|else
 endif|#
 directive|endif
@@ -2087,6 +2105,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* if there isn't a TT device, something is very wrong */
 if|if
 condition|(
 name|status
@@ -2126,6 +2145,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* If IO$_SENSEMODE doesn't work, this is not a terminal device */
 if|if
 condition|(
 operator|(
@@ -2142,9 +2162,10 @@ operator|!=
 name|SS$_NORMAL
 operator|)
 condition|)
-return|return
+name|is_a_tty
+operator|=
 literal|0
-return|;
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -2233,6 +2254,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|OPENSSL_SYS_VMS
+if|if
+condition|(
+name|is_a_tty
+condition|)
+block|{
 name|tty_new
 index|[
 literal|0
@@ -2314,6 +2340,7 @@ condition|)
 return|return
 literal|0
 return|;
+block|}
 endif|#
 directive|endif
 return|return
@@ -2410,6 +2437,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|OPENSSL_SYS_VMS
+if|if
+condition|(
+name|is_a_tty
+condition|)
+block|{
 name|tty_new
 index|[
 literal|0
@@ -2492,6 +2524,7 @@ condition|)
 return|return
 literal|0
 return|;
+block|}
 endif|#
 directive|endif
 return|return
@@ -2542,6 +2575,15 @@ argument_list|(
 name|channel
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+name|SS$_NORMAL
+condition|)
+return|return
+literal|0
+return|;
 endif|#
 directive|endif
 name|CRYPTO_w_unlock

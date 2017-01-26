@@ -216,17 +216,12 @@ name|inrand
 init|=
 name|NULL
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 name|BIO
 modifier|*
 name|out
@@ -560,9 +555,6 @@ goto|goto
 name|end
 goto|;
 block|}
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
 name|setup_engine
 argument_list|(
 name|bio_err
@@ -572,8 +564,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|out
 operator|=
 name|BIO_new

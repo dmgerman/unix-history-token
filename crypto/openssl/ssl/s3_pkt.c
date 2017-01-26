@@ -184,6 +184,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Return values are as per SSL_read()  */
+end_comment
+
 begin_function
 name|int
 name|ssl3_read_n
@@ -4150,7 +4154,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* if s->s3->wbuf.left != 0, we need to call this */
+comment|/* if s->s3->wbuf.left != 0, we need to call this  *  * Return values are as per SSL_write(), i.e.  */
 end_comment
 
 begin_function
@@ -4388,9 +4392,7 @@ literal|0
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|i
-operator|)
 return|;
 block|}
 name|wb
@@ -6421,37 +6423,7 @@ name|type
 condition|)
 block|{
 default|default:
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_TLS
-comment|/*          * TLS up to v1.1 just ignores unknown message types: TLS v1.2 give          * an unexpected message alert.          */
-if|if
-condition|(
-name|s
-operator|->
-name|version
-operator|>=
-name|TLS1_VERSION
-operator|&&
-name|s
-operator|->
-name|version
-operator|<=
-name|TLS1_1_VERSION
-condition|)
-block|{
-name|rr
-operator|->
-name|length
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|start
-goto|;
-block|}
-endif|#
-directive|endif
+comment|/*          * TLS 1.0 and 1.1 say you SHOULD ignore unrecognised record types, but          * TLS 1.2 says you MUST send an unexpected message alert. We use the          * TLS 1.2 behaviour for all protocol versions to prevent issues where          * no progress is being made and the peer continually sends unrecognised          * record types, using up resources processing them.          */
 name|al
 operator|=
 name|SSL_AD_UNEXPECTED_MESSAGE

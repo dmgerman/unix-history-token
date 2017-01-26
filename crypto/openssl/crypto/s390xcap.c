@@ -29,6 +29,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|unsigned

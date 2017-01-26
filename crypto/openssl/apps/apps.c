@@ -5082,6 +5082,14 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|ENGINE_init
+argument_list|(
+name|e
+argument_list|)
+condition|)
+block|{
 name|pkey
 operator|=
 name|ENGINE_load_private_key
@@ -5096,6 +5104,12 @@ operator|&
 name|cb_data
 argument_list|)
 expr_stmt|;
+name|ENGINE_finish
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -8266,6 +8280,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|ENGINE
 modifier|*
@@ -8290,6 +8309,9 @@ name|e
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|engine
@@ -8446,23 +8468,43 @@ name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Free our "structural" reference. */
-name|ENGINE_free
-argument_list|(
-name|e
-argument_list|)
-expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 name|e
 return|;
 block|}
 end_function
 
-begin_endif
+begin_function
+name|void
+name|release_engine
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+if|if
+condition|(
+name|e
+operator|!=
+name|NULL
+condition|)
+comment|/* Free our "structural" reference. */
+name|ENGINE_free
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_function
 name|int

@@ -1012,8 +1012,7 @@ operator|==
 name|NID_delta_crl
 operator|)
 condition|)
-break|break;
-empty_stmt|;
+continue|continue;
 name|crl
 operator|->
 name|flags
