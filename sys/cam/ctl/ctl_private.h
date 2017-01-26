@@ -1491,16 +1491,8 @@ name|int
 name|prevent_count
 decl_stmt|;
 name|uint32_t
+modifier|*
 name|prevent
-index|[
-operator|(
-name|CTL_MAX_INITIATORS
-operator|+
-literal|31
-operator|)
-operator|/
-literal|32
-index|]
 decl_stmt|;
 name|uint8_t
 modifier|*
