@@ -5081,11 +5081,6 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|TMPFS_ASSERT_ELOCKED
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 name|node
 operator|->
 name|tn_links
@@ -5115,11 +5110,6 @@ name|node
 argument_list|)
 expr_stmt|;
 name|TMPFS_NODE_LOCK
-argument_list|(
-name|dnode
-argument_list|)
-expr_stmt|;
-name|TMPFS_ASSERT_ELOCKED
 argument_list|(
 name|dnode
 argument_list|)
@@ -5795,11 +5785,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 name|TMPFS_NODE_LOCK
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-name|TMPFS_ASSERT_ELOCKED
 argument_list|(
 name|node
 argument_list|)

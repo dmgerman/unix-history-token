@@ -2755,12 +2755,11 @@ name|tmpfs_node
 modifier|*
 name|parent
 decl_stmt|;
-name|MPASS
-argument_list|(
-name|VOP_ISLOCKED
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|dvp
-argument_list|)
+argument_list|,
+literal|"tmpfs_alloc_file"
 argument_list|)
 expr_stmt|;
 name|MPASS
