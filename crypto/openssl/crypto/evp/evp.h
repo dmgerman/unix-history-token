@@ -7809,6 +7809,10 @@ name|EVP_R_INVALID_FIPS_MODE
 value|168
 define|#
 directive|define
+name|EVP_R_INVALID_KEY
+value|171
+define|#
+directive|define
 name|EVP_R_INVALID_KEY_LENGTH
 value|130
 define|#

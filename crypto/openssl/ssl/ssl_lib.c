@@ -9474,18 +9474,9 @@ name|ret
 operator|->
 name|wbuf_freelist
 condition|)
-block|{
-name|OPENSSL_free
-argument_list|(
-name|ret
-operator|->
-name|rbuf_freelist
-argument_list|)
-expr_stmt|;
 goto|goto
 name|err
 goto|;
-block|}
 end_if
 
 begin_expr_stmt

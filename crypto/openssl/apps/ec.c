@@ -194,6 +194,12 @@ decl_stmt|,
 modifier|*
 name|engine
 decl_stmt|;
+name|ENGINE
+modifier|*
+name|e
+init|=
+name|NULL
+decl_stmt|;
 name|char
 modifier|*
 name|passargin
@@ -1026,9 +1032,8 @@ block|}
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
+name|e
+operator|=
 name|setup_engine
 argument_list|(
 name|bio_err
@@ -1038,8 +1043,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -1580,6 +1583,11 @@ condition|)
 name|EC_KEY_free
 argument_list|(
 name|eckey
+argument_list|)
+expr_stmt|;
+name|release_engine
+argument_list|(
+name|e
 argument_list|)
 expr_stmt|;
 if|if

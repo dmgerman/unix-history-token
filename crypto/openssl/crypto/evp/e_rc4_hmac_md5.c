@@ -1412,6 +1412,16 @@ operator|->
 name|encrypt
 condition|)
 block|{
+if|if
+condition|(
+name|len
+operator|<
+name|MD5_DIGEST_LENGTH
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|len
 operator|-=
 name|MD5_DIGEST_LENGTH
