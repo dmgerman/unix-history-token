@@ -153,11 +153,6 @@ operator|=
 name|NULL
 block|,
 operator|*
-name|kalg
-operator|=
-name|NULL
-block|,
-operator|*
 name|ret
 operator|=
 name|NULL
@@ -182,10 +177,6 @@ operator|*
 name|pbe2
 operator|=
 name|NULL
-block|;
-name|ASN1_OBJECT
-operator|*
-name|obj
 block|;
 name|alg_nid
 operator|=
@@ -212,13 +203,6 @@ goto|goto
 name|err
 goto|;
 block|}
-name|obj
-operator|=
-name|OBJ_nid2obj
-argument_list|(
-name|alg_nid
-argument_list|)
-expr_stmt|;
 end_expr_stmt
 
 begin_if
@@ -255,7 +239,10 @@ name|scheme
 operator|->
 name|algorithm
 operator|=
-name|obj
+name|OBJ_nid2obj
+argument_list|(
+name|alg_nid
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -667,14 +654,6 @@ end_expr_stmt
 begin_comment
 comment|/* Note 'scheme' is freed as part of pbe2 */
 end_comment
-
-begin_expr_stmt
-name|X509_ALGOR_free
-argument_list|(
-name|kalg
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|X509_ALGOR_free

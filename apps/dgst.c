@@ -2720,6 +2720,11 @@ argument_list|(
 name|bmd
 argument_list|)
 expr_stmt|;
+name|release_engine
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 name|apps_shutdown
 argument_list|()
 expr_stmt|;

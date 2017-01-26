@@ -644,7 +644,7 @@ return|;
 block|}
 name|dctx
 operator|->
-name|md
+name|pmd
 operator|=
 name|p2
 expr_stmt|;

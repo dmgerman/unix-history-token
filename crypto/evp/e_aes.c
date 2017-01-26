@@ -639,10 +639,12 @@ name|void
 name|AES_xts_encrypt
 parameter_list|(
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|inp
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|out
@@ -676,10 +678,12 @@ name|void
 name|AES_xts_decrypt
 parameter_list|(
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|inp
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|out

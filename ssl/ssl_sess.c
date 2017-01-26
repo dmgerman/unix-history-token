@@ -2605,6 +2605,32 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+operator|&&
+name|lh_SSL_SESSION_retrieve
+argument_list|(
+name|ctx
+operator|->
+name|sessions
+argument_list|,
+name|c
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* s == NULL can also mean OOM error in lh_SSL_SESSION_insert ... */
+comment|/*          * ... so take back the extra reference and also don't add          * the session to the SSL_SESSION_list at this time          */
+name|s
+operator|=
+name|c
+expr_stmt|;
+block|}
 comment|/* Put at the head of the queue unless it is already in the cache */
 if|if
 condition|(

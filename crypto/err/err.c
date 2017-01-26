@@ -3916,6 +3916,13 @@ name|f
 decl_stmt|,
 name|r
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+return|return;
 name|l
 operator|=
 name|ERR_GET_LIB

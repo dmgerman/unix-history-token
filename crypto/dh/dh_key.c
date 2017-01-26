@@ -921,6 +921,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
 name|dh
 operator|->
 name|priv_key
