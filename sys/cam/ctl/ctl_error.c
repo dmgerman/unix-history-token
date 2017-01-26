@@ -417,21 +417,10 @@ decl_stmt|;
 comment|/* 	 * The LUN can't go away until all of the commands have been 	 * completed.  Therefore we can safely access the LUN structure and 	 * flags without the lock. 	 */
 name|lun
 operator|=
-operator|(
-expr|struct
-name|ctl_lun
-operator|*
-operator|)
+name|CTL_LUN
+argument_list|(
 name|ctsio
-operator|->
-name|io_hdr
-operator|.
-name|ctl_private
-index|[
-name|CTL_PRIV_LUN
-index|]
-operator|.
-name|ptr
+argument_list|)
 expr_stmt|;
 name|va_start
 argument_list|(
