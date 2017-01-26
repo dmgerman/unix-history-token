@@ -779,7 +779,23 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|fdt_pm_mask_entry
+block|{
+name|char
+modifier|*
+name|compat
+decl_stmt|;
+name|uint32_t
+name|mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
+specifier|static
 name|struct
 name|fdt_pm_mask_entry
 name|fdt_pm_mask_table
