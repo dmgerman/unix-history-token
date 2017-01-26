@@ -4098,16 +4098,15 @@ name|ccb_h
 expr_stmt|;
 name|cmd
 operator|=
+name|scsiio_cdb_ptr
+argument_list|(
 name|csio
-operator|->
-name|cdb_io
-operator|.
-name|cdb_bytes
+argument_list|)
 index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* Max CDB length is 12 bytes */
+comment|/* Max CDB length is 12 bytes, can't be phys addr */
 if|if
 condition|(
 name|csio
@@ -4115,6 +4114,14 @@ operator|->
 name|cdb_len
 operator|>
 literal|12
+operator|||
+operator|(
+name|ccbh
+operator|->
+name|flags
+operator|&
+name|CAM_CDB_PHYS
+operator|)
 condition|)
 block|{
 name|ccbh
