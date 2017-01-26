@@ -424,21 +424,6 @@ decl_stmt|;
 block|}
 name|tn_reg
 struct|;
-comment|/* Valid when tn_type = VFIFO */
-struct|struct
-name|tn_fifo
-block|{
-name|fo_rdwr_t
-modifier|*
-name|tn_fo_read
-decl_stmt|;
-name|fo_rdwr_t
-modifier|*
-name|tn_fo_write
-decl_stmt|;
-block|}
-name|tn_fifo
-struct|;
 block|}
 name|tn_spec
 union|;
