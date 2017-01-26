@@ -491,7 +491,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|decode_win_sata_dump
+name|decode_win_ahci_dump
 parameter_list|(
 name|u_long
 name|base
@@ -727,7 +727,7 @@ operator|&
 name|decode_win_ahci_setup
 block|,
 operator|&
-name|decode_win_sata_dump
+name|decode_win_ahci_dump
 block|}
 block|,
 block|{
@@ -9309,6 +9309,16 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOC_MV_ARMADA38X
+end_ifdef
+
+begin_comment
+comment|/*  * Configure AHCI decoding windows  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -9507,7 +9517,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|decode_win_sata_dump
+name|decode_win_ahci_dump
 parameter_list|(
 name|u_long
 name|base
@@ -9559,6 +9569,42 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Provide dummy functions to satisfy the build  * for SoC's not equipped with AHCI controller  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|decode_win_ahci_setup
+parameter_list|(
+name|u_long
+name|base
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|decode_win_ahci_dump
+parameter_list|(
+name|u_long
+name|base
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
