@@ -17222,7 +17222,7 @@ decl_stmt|;
 name|char
 name|buffer
 index|[
-name|XPT_PRINT_MAXLEN
+name|XPT_PRINT_LEN
 index|]
 decl_stmt|;
 name|sbuf_new
@@ -17232,7 +17232,7 @@ name|sb
 argument_list|,
 name|buffer
 argument_list|,
-name|XPT_PRINT_MAXLEN
+name|XPT_PRINT_LEN
 argument_list|,
 name|SBUF_FIXEDLEN
 argument_list|)
