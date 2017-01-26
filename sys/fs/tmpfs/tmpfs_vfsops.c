@@ -1023,7 +1023,7 @@ argument_list|(
 operator|&
 name|tmp
 operator|->
-name|allnode_lock
+name|tm_allnode_lock
 argument_list|,
 literal|"tmpfs allnode lock"
 argument_list|,
@@ -1089,7 +1089,7 @@ argument_list|,
 operator|&
 name|tmp
 operator|->
-name|allnode_lock
+name|tm_allnode_lock
 argument_list|)
 expr_stmt|;
 name|tmp
@@ -1558,7 +1558,7 @@ argument_list|(
 operator|&
 name|tmp
 operator|->
-name|allnode_lock
+name|tm_allnode_lock
 argument_list|)
 expr_stmt|;
 name|MPASS
