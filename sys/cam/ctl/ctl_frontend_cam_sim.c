@@ -2705,11 +2705,10 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
+name|scsiio_cdb_ptr
+argument_list|(
 name|csio
-operator|->
-name|cdb_io
-operator|.
-name|cdb_bytes
+argument_list|)
 argument_list|,
 name|io
 operator|->
