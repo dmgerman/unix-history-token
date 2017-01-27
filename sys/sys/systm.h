@@ -463,6 +463,24 @@ value|__predict_false(curthread->td_stopsched)
 end_define
 
 begin_comment
+comment|/*  * Align variables.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__read_mostly
+value|__section(".data.read_mostly")
+end_define
+
+begin_define
+define|#
+directive|define
+name|__exclusive_cache_line
+value|__aligned(CACHE_LINE_SIZE) \ 				    __section(".data.exclusive_cache_line")
+end_define
+
+begin_comment
 comment|/*  * XXX the hints declarations are even more misplaced than most declarations  * in this file, since they are needed in one file (per arch) and only used  * in two files.  * XXX most of these variables should be const.  */
 end_comment
 
