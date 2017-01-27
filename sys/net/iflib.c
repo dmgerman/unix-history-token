@@ -19668,6 +19668,7 @@ name|isc_msix_bar
 operator|!=
 literal|0
 condition|)
+comment|/* 		* The simple fact that isc_msix_bar is not 0 does not mean we 		* we have a good value there that is known to work. 		*/
 name|msix
 operator|=
 name|iflib_msix_init
@@ -25082,10 +25083,6 @@ name|msix_ctrl
 decl_stmt|,
 name|rid
 decl_stmt|;
-name|rid
-operator|=
-literal|0
-expr_stmt|;
 name|pci_cmd_word
 operator|=
 name|pci_read_config
@@ -25112,6 +25109,12 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|rid
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|pci_find_cap
 argument_list|(
 name|dev
@@ -25121,7 +25124,14 @@ argument_list|,
 operator|&
 name|rid
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+operator|&&
+name|rid
+operator|!=
+literal|0
+condition|)
+block|{
 name|rid
 operator|+=
 name|PCIR_MSIX_CTRL
@@ -25152,6 +25162,23 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"PCIY_MSIX capability not found; "
+literal|"or rid %d == 0.\n"
+argument_list|,
+name|rid
+argument_list|)
+expr_stmt|;
+goto|goto
+name|msi
+goto|;
+block|}
 block|}
 comment|/* 	 * bar == -1 => "trust me I know what I'm doing" 	 * https://www.youtube.com/watch?v=nnwWKkNau4I 	 * Some drivers are for hardware that is so shoddily 	 * documented that no one knows which bars are which 	 * so the developer has to map all bars. This hack 	 * allows shoddy garbage to use msix in this framework. 	 */
 if|if

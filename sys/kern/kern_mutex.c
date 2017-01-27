@@ -570,6 +570,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|lock_delay_config
+name|__read_mostly
 name|mtx_delay
 init|=
 block|{
@@ -775,6 +776,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|lock_delay_config
+name|__read_mostly
 name|mtx_spin_delay
 init|=
 block|{

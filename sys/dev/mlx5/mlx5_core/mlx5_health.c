@@ -560,6 +560,15 @@ decl_stmt|;
 name|u32
 name|count
 decl_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|state
+operator|!=
+name|MLX5_DEVICE_STATE_UP
+condition|)
+return|return;
 name|count
 operator|=
 name|ioread32be

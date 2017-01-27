@@ -942,12 +942,6 @@ name|PIC
 name|thread_uw_init
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PIC */
-ifdef|#
-directive|ifdef
-name|PIC
 if|if
 condition|(
 name|uwl_forcedunwind

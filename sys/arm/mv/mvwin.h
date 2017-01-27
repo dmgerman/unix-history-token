@@ -1800,6 +1800,57 @@ name|MV_PCIE_ROOT_CMPLX
 value|(1<< 1)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADA38X
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_SATA_CTRL
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x10 * (n) + 0x60)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_SATA_BASE
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x10 * (n) + 0x64)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_SATA_SIZE
+parameter_list|(
+name|n
+parameter_list|)
+value|(0x10 * (n) + 0x68)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_SATA_MAX
+value|4
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1826,6 +1877,11 @@ directive|define
 name|MV_WIN_SATA_MAX
 value|4
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

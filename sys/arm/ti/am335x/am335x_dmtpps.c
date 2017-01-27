@@ -1679,6 +1679,24 @@ operator|->
 name|tmr_num
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Configure the timer pulse/capture pin to input/capture mode.  This is 	 * required in addition to configuring the pin as input with the pinmux 	 * controller (which was done via fdt data or tunable at probe time). 	 */
+name|sc
+operator|->
+name|tclr
+operator|=
+name|DMT_TCLR_GPO_CFG
+expr_stmt|;
+name|DMTIMER_WRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|DMT_TCLR
+argument_list|,
+name|sc
+operator|->
+name|tclr
+argument_list|)
+expr_stmt|;
 comment|/* Set up timecounter hardware, start it. */
 name|DMTIMER_WRITE4
 argument_list|(

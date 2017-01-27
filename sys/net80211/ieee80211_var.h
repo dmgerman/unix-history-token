@@ -391,7 +391,8 @@ name|IEEE80211_CONF_VHT
 parameter_list|(
 name|ic
 parameter_list|)
-value|((ic)->ic_vhtcaps != 0)
+define|\
+value|((ic)->ic_flags_ext& IEEE80211_FEXT_VHT)
 end_define
 
 begin_define
@@ -403,6 +404,17 @@ name|ic
 parameter_list|)
 define|\
 value|((ic)->ic_flags_ext& IEEE80211_FEXT_SEQNO_OFFLOAD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CONF_FRAG_OFFLOAD
+parameter_list|(
+name|ic
+parameter_list|)
+define|\
+value|((ic)->ic_flags_ext& IEEE80211_FEXT_FRAG_OFFLOAD)
 end_define
 
 begin_comment
@@ -3142,9 +3154,31 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FEXT_FRAG_OFFLOAD
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* CONF: hardware does 802.11 fragmentation + assignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_VHT
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* CONF: VHT support */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FEXT_BITS
 define|\
-value|"\20\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN\23UNIQMAC\24SCAN_OFFLOAD\25SEQNO_OFFLOAD"
+value|"\20\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN\23UNIQMAC\24SCAN_OFFLOAD\25SEQNO_OFFLOAD" \ 	"\26VHT"
 end_define
 
 begin_comment

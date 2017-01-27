@@ -1732,17 +1732,12 @@ name|randfile
 init|=
 name|NULL
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 modifier|*
 name|tofree
@@ -3565,9 +3560,6 @@ condition|)
 goto|goto
 name|err
 goto|;
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -3579,8 +3571,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Lets get the config section we are using */
 if|if
 condition|(
@@ -8182,6 +8172,11 @@ argument_list|(
 name|extconf
 argument_list|)
 expr_stmt|;
+name|release_engine
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 name|OBJ_cleanup
 argument_list|()
 expr_stmt|;
@@ -12147,11 +12142,6 @@ argument_list|,
 literal|"no name/value pairs found in %s\n"
 argument_list|,
 name|infile
-argument_list|)
-expr_stmt|;
-name|CONF_free
-argument_list|(
-name|parms
 argument_list|)
 expr_stmt|;
 goto|goto

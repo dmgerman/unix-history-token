@@ -557,6 +557,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|lock_delay_config
+name|__read_mostly
 name|sx_delay
 init|=
 block|{

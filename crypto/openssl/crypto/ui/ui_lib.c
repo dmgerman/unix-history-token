@@ -593,6 +593,8 @@ decl_stmt|;
 if|if
 condition|(
 name|s
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -770,6 +772,8 @@ name|ok_chars
 init|;
 operator|*
 name|p
+operator|!=
+literal|'\0'
 condition|;
 name|p
 operator|++
@@ -784,6 +788,8 @@ argument_list|,
 operator|*
 name|p
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|UIerr
@@ -815,6 +821,8 @@ expr_stmt|;
 if|if
 condition|(
 name|s
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -989,6 +997,8 @@ decl_stmt|;
 if|if
 condition|(
 name|prompt
+operator|!=
+name|NULL
 condition|)
 block|{
 name|prompt_copy
@@ -1140,6 +1150,8 @@ decl_stmt|;
 if|if
 condition|(
 name|prompt
+operator|!=
+name|NULL
 condition|)
 block|{
 name|prompt_copy
@@ -1318,6 +1330,8 @@ decl_stmt|;
 if|if
 condition|(
 name|prompt
+operator|!=
+name|NULL
 condition|)
 block|{
 name|prompt_copy
@@ -1349,6 +1363,8 @@ block|}
 if|if
 condition|(
 name|action_desc
+operator|!=
+name|NULL
 condition|)
 block|{
 name|action_desc_copy
@@ -1380,6 +1396,8 @@ block|}
 if|if
 condition|(
 name|ok_chars
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ok_chars_copy
@@ -1411,6 +1429,8 @@ block|}
 if|if
 condition|(
 name|cancel_chars
+operator|!=
+name|NULL
 condition|)
 block|{
 name|cancel_chars_copy
@@ -1568,6 +1588,8 @@ decl_stmt|;
 if|if
 condition|(
 name|text
+operator|!=
+name|NULL
 condition|)
 block|{
 name|text_copy
@@ -1684,6 +1706,8 @@ decl_stmt|;
 if|if
 condition|(
 name|text
+operator|!=
+name|NULL
 condition|)
 block|{
 name|text_copy
@@ -1771,6 +1795,8 @@ operator|->
 name|meth
 operator|->
 name|ui_construct_prompt
+operator|!=
+name|NULL
 condition|)
 name|prompt
 operator|=
@@ -1838,6 +1864,8 @@ expr_stmt|;
 if|if
 condition|(
 name|object_name
+operator|!=
+name|NULL
 condition|)
 name|len
 operator|+=
@@ -1909,6 +1937,8 @@ expr_stmt|;
 if|if
 condition|(
 name|object_name
+operator|!=
+name|NULL
 condition|)
 block|{
 name|BUF_strlcat
@@ -2128,8 +2158,9 @@ operator|->
 name|meth
 operator|->
 name|ui_write_string
+operator|!=
+name|NULL
 operator|&&
-operator|!
 name|ui
 operator|->
 name|meth
@@ -2141,6 +2172,8 @@ argument_list|,
 operator|&
 name|uis
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 operator|-
@@ -2175,8 +2208,9 @@ operator|->
 name|meth
 operator|->
 name|ui_open_session
+operator|!=
+name|NULL
 operator|&&
-operator|!
 name|ui
 operator|->
 name|meth
@@ -2185,11 +2219,19 @@ name|ui_open_session
 argument_list|(
 name|ui
 argument_list|)
+operator|<=
+literal|0
 condition|)
-return|return
+block|{
+name|ok
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 if|if
 condition|(
 name|ui
@@ -2251,8 +2293,10 @@ operator|->
 name|meth
 operator|->
 name|ui_write_string
+operator|!=
+name|NULL
 operator|&&
-operator|!
+operator|(
 name|ui
 operator|->
 name|meth
@@ -2270,6 +2314,9 @@ argument_list|,
 name|i
 argument_list|)
 argument_list|)
+operator|<=
+literal|0
+operator|)
 condition|)
 block|{
 name|ok
@@ -2289,6 +2336,8 @@ operator|->
 name|meth
 operator|->
 name|ui_flush
+operator|!=
+name|NULL
 condition|)
 switch|switch
 condition|(
@@ -2361,6 +2410,8 @@ operator|->
 name|meth
 operator|->
 name|ui_read_string
+operator|!=
+name|NULL
 condition|)
 block|{
 switch|switch
@@ -2428,8 +2479,9 @@ operator|->
 name|meth
 operator|->
 name|ui_close_session
+operator|!=
+name|NULL
 operator|&&
-operator|!
 name|ui
 operator|->
 name|meth
@@ -2438,6 +2490,8 @@ name|ui_close_session
 argument_list|(
 name|ui
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 operator|-
@@ -2888,6 +2942,8 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 block|{
 name|method
@@ -2900,7 +2956,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|-
 literal|1
@@ -2935,6 +2990,8 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 block|{
 name|method
@@ -2947,7 +3004,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|-
 literal|1
@@ -2978,6 +3034,8 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 block|{
 name|method
@@ -2990,7 +3048,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|-
 literal|1
@@ -3025,6 +3082,8 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 block|{
 name|method
@@ -3037,7 +3096,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|-
 literal|1
@@ -3068,6 +3126,8 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 block|{
 name|method
@@ -3080,7 +3140,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|-
 literal|1
@@ -3122,6 +3181,8 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 block|{
 name|method
@@ -3134,7 +3195,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|-
 literal|1
@@ -3158,27 +3218,33 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 return|return
 name|method
 operator|->
 name|ui_open_session
 return|;
-else|else
+end_expr_stmt
+
+begin_return
 return|return
 name|NULL
 return|;
-block|}
-end_expr_stmt
-
-begin_macro
-name|int
-argument_list|(
-argument|*UI_method_get_writer(UI_METHOD *method)
-argument_list|)
-end_macro
+end_return
 
 begin_expr_stmt
+unit|}  int
+operator|(
+operator|*
+name|UI_method_get_writer
+argument_list|(
+name|UI_METHOD
+operator|*
+name|method
+argument_list|)
+operator|)
 operator|(
 name|UI
 operator|*
@@ -3190,27 +3256,33 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 return|return
 name|method
 operator|->
 name|ui_write_string
 return|;
-else|else
+end_expr_stmt
+
+begin_return
 return|return
 name|NULL
 return|;
-block|}
-end_expr_stmt
-
-begin_macro
-name|int
-argument_list|(
-argument|*UI_method_get_flusher(UI_METHOD *method)
-argument_list|)
-end_macro
+end_return
 
 begin_expr_stmt
+unit|}  int
+operator|(
+operator|*
+name|UI_method_get_flusher
+argument_list|(
+name|UI_METHOD
+operator|*
+name|method
+argument_list|)
+operator|)
 operator|(
 name|UI
 operator|*
@@ -3219,27 +3291,33 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 return|return
 name|method
 operator|->
 name|ui_flush
 return|;
-else|else
+end_expr_stmt
+
+begin_return
 return|return
 name|NULL
 return|;
-block|}
-end_expr_stmt
-
-begin_macro
-name|int
-argument_list|(
-argument|*UI_method_get_reader(UI_METHOD *method)
-argument_list|)
-end_macro
+end_return
 
 begin_expr_stmt
+unit|}  int
+operator|(
+operator|*
+name|UI_method_get_reader
+argument_list|(
+name|UI_METHOD
+operator|*
+name|method
+argument_list|)
+operator|)
 operator|(
 name|UI
 operator|*
@@ -3251,27 +3329,33 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 return|return
 name|method
 operator|->
 name|ui_read_string
 return|;
-else|else
+end_expr_stmt
+
+begin_return
 return|return
 name|NULL
 return|;
-block|}
-end_expr_stmt
-
-begin_macro
-name|int
-argument_list|(
-argument|*UI_method_get_closer(UI_METHOD *method)
-argument_list|)
-end_macro
+end_return
 
 begin_expr_stmt
+unit|}  int
+operator|(
+operator|*
+name|UI_method_get_closer
+argument_list|(
+name|UI_METHOD
+operator|*
+name|method
+argument_list|)
+operator|)
 operator|(
 name|UI
 operator|*
@@ -3280,24 +3364,24 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 return|return
 name|method
 operator|->
 name|ui_close_session
 return|;
-else|else
+end_expr_stmt
+
+begin_return
 return|return
 name|NULL
 return|;
-block|}
-end_expr_stmt
-
-begin_macro
-name|char
-end_macro
+end_return
 
 begin_expr_stmt
+unit|}  char
 operator|*
 operator|(
 operator|*
@@ -3324,21 +3408,24 @@ block|{
 if|if
 condition|(
 name|method
+operator|!=
+name|NULL
 condition|)
 return|return
 name|method
 operator|->
 name|ui_construct_prompt
 return|;
-else|else
+end_expr_stmt
+
+begin_return
 return|return
 name|NULL
 return|;
-block|}
-end_expr_stmt
+end_return
 
 begin_function
-name|enum
+unit|}  enum
 name|UI_string_types
 name|UI_get_string_type
 parameter_list|(

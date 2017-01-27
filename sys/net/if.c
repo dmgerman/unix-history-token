@@ -799,6 +799,8 @@ parameter_list|(
 name|struct
 name|ifaddr
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl

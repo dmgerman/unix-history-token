@@ -6590,7 +6590,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get CCA setting.  */
+comment|/*  * Get CCA setting.  *  * XXX TODO: turn this and the above function into methods  * in case there are chipset differences in handling CCA.  */
 end_comment
 
 begin_function

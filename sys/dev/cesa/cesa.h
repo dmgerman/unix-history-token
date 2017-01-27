@@ -664,6 +664,9 @@ decl_stmt|;
 name|int32_t
 name|sc_cid
 decl_stmt|;
+name|uint32_t
+name|sc_soc_id
+decl_stmt|;
 name|struct
 name|resource
 modifier|*

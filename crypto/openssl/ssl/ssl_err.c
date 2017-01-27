@@ -4675,6 +4675,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_TOO_MANY_WARN_ALERTS
+argument_list|)
+block|,
+literal|"too many warn alerts"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_TLS_PEER_DID_NOT_RESPOND_WITH_CERTIFICATE_LIST
 argument_list|)
 block|,

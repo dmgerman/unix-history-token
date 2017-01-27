@@ -2808,6 +2808,26 @@ name|ath_debug
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Force the chip awake during setup, just to keep 	 * the HAL/driver power tracking happy. 	 * 	 * There are some methods (eg ath_hal_setmac()) 	 * that poke the hardware. 	 */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_setpower
+argument_list|(
+name|sc
+argument_list|,
+name|HAL_PM_AWAKE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Setup the DMA/EDMA functions based on the current 	 * hardware support. 	 * 	 * This is required before the descriptors are allocated. 	 */
 if|if
 condition|(
@@ -4331,6 +4351,14 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Some WB335 cards do not support antenna diversity. Since 	 * we use a hardcoded value for AR9565 instead of using the 	 * EEPROM/OTP data, remove the combining feature from 	 * the HW capabilities bitmap. 	 */
+comment|/* 	 * XXX TODO: check reference driver and ath9k for what to do 	 * here for WB335.  I think we have to actually disable the 	 * LNA div processing in the HAL and instead use the hard 	 * coded values; and then use BT diversity. 	 * 	 * .. but also need to setup MCI too for WB335.. 	 */
+if|#
+directive|if
+literal|0
+block|if (sc->sc_pci_devinfo& (ATH9K_PCI_AR9565_1ANT | ATH9K_PCI_AR9565_2ANT)) { 		device_printf(sc->sc_dev, "%s: WB335: disabling LNA mixer diversity\n", 		    __func__); 		sc->sc_dolnadiv = 0; 	}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ath_hal_hasfastframes
@@ -13349,6 +13377,7 @@ decl_stmt|;
 name|u_int32_t
 name|rfilt
 decl_stmt|;
+comment|/* XXX power state? */
 comment|/* configure rx filter */
 name|rfilt
 operator|=
@@ -21729,6 +21758,12 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX TODO: if nstate is _S_CAC, then we should disable 	 * ACK processing until CAC is completed. 	 */
+comment|/* 	 * XXX TODO: if we're on a passive channel, then we should 	 * not allow any ACKs or self-generated frames until we hear 	 * a beacon.  Unfortunately there isn't a notification from 	 * net80211 so perhaps we could slot that particular check 	 * into the mgmt receive path and just ensure that we clear 	 * it on RX of beacons in passive mode (and only clear it 	 * once, obviously.) 	 */
+comment|/* 	 * XXX TODO: net80211 should be tracking whether channels 	 * have heard beacons and are thus considered "OK" for 	 * transmitting - and then inform the driver about this 	 * state change.  That way if we hear an AP go quiet 	 * (and nothing else is beaconing on a channel) the 	 * channel can go back to being passive until another 	 * beacon is heard. 	 */
+comment|/* 	 * XXX TODO: if nstate is _S_CAC, then we should disable 	 * ACK processing until CAC is completed. 	 */
+comment|/* 	 * XXX TODO: if we're on a passive channel, then we should 	 * not allow any ACKs or self-generated frames until we hear 	 * a beacon.  Unfortunately there isn't a notification from 	 * net80211 so perhaps we could slot that particular check 	 * into the mgmt receive path and just ensure that we clear 	 * it on RX of beacons in passive mode (and only clear it 	 * once, obviously.) 	 */
+comment|/* 	 * XXX TODO: net80211 should be tracking whether channels 	 * have heard beacons and are thus considered "OK" for 	 * transmitting - and then inform the driver about this 	 * state change.  That way if we hear an AP go quiet 	 * (and nothing else is beaconing on a channel) the 	 * channel can go back to being passive until another 	 * beacon is heard. 	 */
 if|if
 condition|(
 name|nstate
@@ -21829,6 +21864,7 @@ case|:
 case|case
 name|IEEE80211_M_MBSS
 case|:
+comment|/* 			 * TODO: Enable ACK processing (ie, clear AR_DIAG_ACK_DIS.) 			 * For channels that are in CAC, we may have disabled 			 * this during CAC to ensure we don't ACK frames 			 * sent to us. 			 */
 comment|/* 			 * Allocate and setup the beacon frame. 			 * 			 * Stop any previous beacon DMA.  This may be 			 * necessary, for example, when an ibss merge 			 * causes reconfiguration; there will be a state 			 * transition from RUN->RUN that means we may 			 * be called with beacon transmission active. 			 */
 name|ath_hal_stoptxdma
 argument_list|(
@@ -24429,6 +24465,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* DFS event found, initiate channel change */
+comment|/* 		 * XXX TODO: immediately disable ACK processing 		 * on the current channel.  This would be done 		 * by setting AR_DIAG_ACK_DIS (AR5212; may be 		 * different for others) until we are out of 		 * CAC. 		 */
 comment|/* 		 * XXX doesn't currently tell us whether the event 		 * XXX was found in the primary or extension 		 * XXX channel! 		 */
 name|IEEE80211_LOCK
 argument_list|(

@@ -9699,6 +9699,9 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifa
+parameter_list|,
+name|bool
+name|keep_cif
 parameter_list|)
 block|{
 name|struct
@@ -9936,6 +9939,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|keep_cif
+operator|&&
 name|sc
 operator|->
 name|sc_naddrs
@@ -9959,6 +9965,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|keep_cif
+condition|)
 name|CIF_FREE
 argument_list|(
 name|cif
