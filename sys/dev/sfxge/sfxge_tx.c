@@ -8529,12 +8529,6 @@ name|evq_index
 expr_stmt|;
 name|txq
 operator|->
-name|txq_index
-operator|=
-name|txq_index
-expr_stmt|;
-name|txq
-operator|->
 name|init_state
 operator|=
 name|SFXGE_TXQ_INITIALIZED
