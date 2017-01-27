@@ -16,6 +16,12 @@ name|_CAM_CAM_XPT_H
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -27,6 +33,11 @@ include|#
 directive|include
 file|"opt_printf.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Forward Declarations */
