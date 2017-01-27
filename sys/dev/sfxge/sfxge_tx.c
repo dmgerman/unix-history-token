@@ -7391,6 +7391,12 @@ argument_list|,
 name|tso_fw_assisted
 argument_list|)
 expr_stmt|;
+name|txq
+operator|->
+name|hw_vlan_tci
+operator|=
+literal|0
+expr_stmt|;
 name|SFXGE_TXQ_UNLOCK
 argument_list|(
 name|txq
@@ -8532,12 +8538,6 @@ operator|->
 name|init_state
 operator|=
 name|SFXGE_TXQ_INITIALIZED
-expr_stmt|;
-name|txq
-operator|->
-name|hw_vlan_tci
-operator|=
-literal|0
 expr_stmt|;
 return|return
 operator|(
