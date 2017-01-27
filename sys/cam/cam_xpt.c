@@ -14089,17 +14089,14 @@ case|case
 name|XPT_ENG_INQ
 case|:
 comment|/* XXX Implement */
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|start_ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"%s: CCB type %#x %s not supported\n"
 argument_list|,
 name|__func__
@@ -18221,13 +18218,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"No transport found for %d\n"
 argument_list|,
 name|cpi
