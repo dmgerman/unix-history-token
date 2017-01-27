@@ -3585,8 +3585,7 @@ name|mlx5_core_dev
 modifier|*
 name|dev
 parameter_list|,
-name|unsigned
-name|long
+name|u32
 name|vector
 parameter_list|)
 function_decl|;
