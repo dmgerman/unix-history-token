@@ -863,7 +863,7 @@ parameter_list|,
 name|INFO
 parameter_list|)
 define|\
-value|do								\     {								\       char *macro, *p;						\ 								\       macro = concat ((PREFIX), "_", (INFO)->name, NULL);	\       for (p = macro; *p != 0; p++)				\ 	*p = TOUPPER (*p);					\ 								\       builtin_define (macro);					\       builtin_define_with_value ((PREFIX), (INFO)->name, 1);	\       free (macro);						\     }								\   while (0)
+value|do								\     {								\       char *macro, *p;						\ 								\       macro = concat ((PREFIX), "_", (INFO)->name, NULL);	\       for (p = macro; *p != 0; p++)				\ 	if (*p == '+')						\ 	  *p = 'P';						\ 	else							\ 	  *p = TOUPPER (*p);					\ 								\       builtin_define (macro);					\       builtin_define_with_value ((PREFIX), (INFO)->name, 1);	\       free (macro);						\     }								\   while (0)
 end_define
 
 begin_comment
