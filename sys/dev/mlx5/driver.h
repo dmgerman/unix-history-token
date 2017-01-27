@@ -1667,7 +1667,7 @@ name|struct
 name|rb_root
 name|page_root
 decl_stmt|;
-name|int
+name|s64
 name|fw_pages
 decl_stmt|;
 name|atomic_t
