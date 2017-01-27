@@ -52,7 +52,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|fw_page
+name|mlx5_fw_page
 block|{
 name|struct
 name|rb_node
@@ -217,12 +217,12 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|fw_page
+name|mlx5_fw_page
 modifier|*
 name|nfp
 decl_stmt|;
 name|struct
-name|fw_page
+name|mlx5_fw_page
 modifier|*
 name|tfp
 decl_stmt|;
@@ -247,7 +247,7 @@ argument_list|(
 name|parent
 argument_list|,
 expr|struct
-name|fw_page
+name|mlx5_fw_page
 argument_list|,
 name|rb_node
 argument_list|)
@@ -395,7 +395,7 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|fw_page
+name|mlx5_fw_page
 modifier|*
 name|find_fw_page
 parameter_list|(
@@ -430,14 +430,14 @@ operator|->
 name|rb_node
 decl_stmt|;
 name|struct
-name|fw_page
+name|mlx5_fw_page
 modifier|*
 name|result
 init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|fw_page
+name|mlx5_fw_page
 modifier|*
 name|tfp
 decl_stmt|;
@@ -453,7 +453,7 @@ argument_list|(
 name|tmp
 argument_list|,
 expr|struct
-name|fw_page
+name|mlx5_fw_page
 argument_list|,
 name|rb_node
 argument_list|)
@@ -673,7 +673,7 @@ name|addr
 parameter_list|)
 block|{
 name|struct
-name|fw_page
+name|mlx5_fw_page
 modifier|*
 name|fp
 decl_stmt|;
@@ -709,7 +709,7 @@ operator|.
 name|next
 argument_list|,
 expr|struct
-name|fw_page
+name|mlx5_fw_page
 argument_list|,
 name|list
 argument_list|)
@@ -814,7 +814,7 @@ name|addr
 parameter_list|)
 block|{
 name|struct
-name|fw_page
+name|mlx5_fw_page
 modifier|*
 name|fwp
 decl_stmt|;
@@ -2298,7 +2298,7 @@ name|MAX_RECLAIM_TIME_MSECS
 argument_list|)
 decl_stmt|;
 name|struct
-name|fw_page
+name|mlx5_fw_page
 modifier|*
 name|fwp
 decl_stmt|;
@@ -2341,7 +2341,7 @@ argument_list|(
 name|p
 argument_list|,
 expr|struct
-name|fw_page
+name|mlx5_fw_page
 argument_list|,
 name|rb_node
 argument_list|)
