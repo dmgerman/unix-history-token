@@ -308,10 +308,6 @@ decl_stmt|;
 name|efsys_mem_t
 name|mem
 decl_stmt|;
-name|unsigned
-name|int
-name|buf_base_id
-decl_stmt|;
 name|enum
 name|sfxge_rxq_state
 name|init_state
@@ -387,6 +383,10 @@ parameter_list|(
 name|CACHE_LINE_SIZE
 parameter_list|)
 function_decl|;
+name|unsigned
+name|int
+name|buf_base_id
+decl_stmt|;
 block|}
 struct|;
 end_struct
