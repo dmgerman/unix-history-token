@@ -11829,16 +11829,24 @@ name|HWPMC_HOOKS
 comment|/* Inform hwpmc(4) if an executable is being mapped. */
 if|if
 condition|(
-name|error
-operator|==
-literal|0
-operator|&&
+name|PMC_HOOK_INSTALLED
+argument_list|(
+name|PMC_FN_MMAP
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|prot
 operator|&
 name|VM_PROT_EXECUTE
 operator|)
 operator|!=
+literal|0
+operator|&&
+name|error
+operator|==
 literal|0
 condition|)
 block|{
@@ -11872,6 +11880,7 @@ operator|&
 name|pkm
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
