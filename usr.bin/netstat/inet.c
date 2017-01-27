@@ -3865,6 +3865,30 @@ literal|"\t{:connections-established/%ju} "
 literal|"{N:/connection%s established (including accepts)}\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|tcps_usedrtt
+argument_list|,
+literal|"\t\t{:connections-hostcache-rtt/%ju} "
+literal|"{N:/time%s used RTT from hostcache}\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_usedrttvar
+argument_list|,
+literal|"\t\t{:connections-hostcache-rttvar/%ju} "
+literal|"{N:/time%s used RTT variance from hostcache}\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_usedssthresh
+argument_list|,
+literal|"\t\t{:connections-hostcache-ssthresh/%ju} "
+literal|"{N:/time%s used slow-start threshold from hostcache}\n"
+argument_list|)
+expr_stmt|;
 name|p2
 argument_list|(
 name|tcps_closed
