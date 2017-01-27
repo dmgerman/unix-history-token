@@ -1467,11 +1467,6 @@ operator|->
 name|toep_list_lock
 argument_list|)
 expr_stmt|;
-name|free_toepcb
-argument_list|(
-name|toep
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
