@@ -814,9 +814,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|volatile
 name|int
+name|__read_mostly
 name|lock_prof_enable
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
