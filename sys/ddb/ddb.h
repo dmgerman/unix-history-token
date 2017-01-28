@@ -931,6 +931,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|db_trace_self_depth
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|db_trace_thread
 parameter_list|(

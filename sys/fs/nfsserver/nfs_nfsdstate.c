@@ -15178,7 +15178,7 @@ argument_list|)
 operator|&&
 operator|(
 name|nfsrv_writedelegifpos
-operator|||
+operator|&&
 operator|!
 name|readonly
 operator|)
@@ -15636,7 +15636,7 @@ argument_list|)
 operator|&&
 operator|(
 name|nfsrv_writedelegifpos
-operator|||
+operator|&&
 operator|!
 name|readonly
 operator|)

@@ -33,12 +33,6 @@ directive|include
 file|<dev/drm2/drm_core.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<linux/slab.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1510,11 +1504,13 @@ name|retval
 argument_list|)
 expr_stmt|;
 block|}
-name|kfree
+name|free
 argument_list|(
 name|dev
 operator|->
 name|agp
+argument_list|,
+name|DRM_MEM_AGPLISTS
 argument_list|)
 expr_stmt|;
 name|dev
@@ -2081,11 +2077,13 @@ operator|->
 name|agp
 condition|)
 block|{
-name|kfree
+name|free
 argument_list|(
 name|dev
 operator|->
 name|agp
+argument_list|,
+name|DRM_MEM_AGPLISTS
 argument_list|)
 expr_stmt|;
 name|dev

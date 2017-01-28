@@ -335,10 +335,8 @@ name|flags
 decl_stmt|;
 name|struct
 name|ctl_lun_io_port_stats
+modifier|*
 name|ports
-index|[
-name|CTL_MAX_PORTS
-index|]
 decl_stmt|;
 block|}
 struct|;

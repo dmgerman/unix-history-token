@@ -1360,6 +1360,13 @@ end_macro
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
+argument|ACPI_STATUS AcpiGetDataFull (     ACPI_HANDLE             Object,     ACPI_OBJECT_HANDLER     Handler,     void                    **Data,     void (*Callback)(void *))
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_EXTERNAL_RETURN_STATUS
+argument_list|(
 argument|ACPI_STATUS AcpiDebugTrace (     const char              *Name,     UINT32                  DebugLevel,     UINT32                  DebugLayer,     UINT32                  Flags)
 argument_list|)
 end_macro

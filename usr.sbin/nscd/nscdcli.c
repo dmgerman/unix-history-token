@@ -939,6 +939,8 @@ argument_list|(
 name|PF_LOCAL
 argument_list|,
 name|SOCK_STREAM
+operator||
+name|SOCK_NONBLOCK
 argument_list|,
 literal|0
 argument_list|)
@@ -1026,15 +1028,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|fcntl
-argument_list|(
-name|client_socket
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|O_NONBLOCK
-argument_list|)
-expr_stmt|;
 name|retval
 operator|=
 name|calloc
