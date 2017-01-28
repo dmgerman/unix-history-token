@@ -8576,9 +8576,6 @@ case|case
 name|IFT_L2VLAN
 case|:
 case|case
-name|IFT_IEEE80211
-case|:
-case|case
 name|IFT_BRIDGE
 case|:
 case|case
@@ -9601,9 +9598,6 @@ name|IFT_IEEE1394
 case|:
 case|case
 name|IFT_L2VLAN
-case|:
-case|case
-name|IFT_IEEE80211
 case|:
 case|case
 name|IFT_INFINIBAND

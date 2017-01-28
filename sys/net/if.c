@@ -15406,9 +15406,6 @@ case|:
 case|case
 name|IFT_IEEE8023ADLAG
 case|:
-case|case
-name|IFT_IEEE80211
-case|:
 name|bcopy
 argument_list|(
 name|lladdr

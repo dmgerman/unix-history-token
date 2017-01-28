@@ -8371,10 +8371,6 @@ name|IFT_L2VLAN
 case|:
 comment|/* ditto */
 case|case
-name|IFT_IEEE80211
-case|:
-comment|/* ditto */
-case|case
 name|IFT_BRIDGE
 case|:
 comment|/* bridge(4) only does Ethernet-like links */
