@@ -493,28 +493,6 @@ begin_comment
 comment|/* XXX this likely should live in a header file */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_comment
-comment|/* IRQs 3, 5, 7, 9, 10, 11, 12, 13 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_IRQ_OVERRIDE_MASK
-value|0x3e68
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* IRQs 3, 4, 5, 6, 7, 9, 10, 11, 12, 14, 15 */
 end_comment
@@ -525,11 +503,6 @@ directive|define
 name|PCI_IRQ_OVERRIDE_MASK
 value|0xdef8
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static

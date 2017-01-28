@@ -319,13 +319,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FBTYPE_PC98
-value|25
-end_define
-
-begin_define
-define|#
-directive|define
 name|FBTYPE_TGA
 value|26
 end_define
@@ -1534,11 +1527,6 @@ value|5
 comment|/* video graphics adapter */
 define|#
 directive|define
-name|KD_PC98
-value|6
-comment|/* PC-98 display */
-define|#
-directive|define
 name|KD_TGA
 value|7
 comment|/* TGA */
@@ -2336,61 +2324,6 @@ end_define
 
 begin_comment
 comment|/* ega color 80x43 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PC98_80x25
-value|98
-end_define
-
-begin_comment
-comment|/* PC98 text 80x25 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PC98_80x30
-value|99
-end_define
-
-begin_comment
-comment|/* PC98 text 80x30 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PC98_EGC640x400
-value|100
-end_define
-
-begin_comment
-comment|/* PC98 graphic 640x400 16 colors */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PC98_PEGC640x400
-value|101
-end_define
-
-begin_comment
-comment|/* PC98 graphic 640x400 256 colors */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PC98_PEGC640x480
-value|102
-end_define
-
-begin_comment
-comment|/* PC98 graphic 640x480 256 colors */
 end_comment
 
 begin_define

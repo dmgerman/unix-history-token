@@ -530,21 +530,6 @@ comment|/* Disable interrupts.	*/
 end_comment
 
 begin_comment
-comment|/*  * Registers on RE1000.  (*NOT* on RE1000 Plus.)  */
-end_comment
-
-begin_comment
-comment|/* IRQ configuration.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FE_RE1000_IRQCONF
-value|0x10
-end_define
-
-begin_comment
 comment|/*  * Fujitsu MB86965 JLI mode support routines.  */
 end_comment
 

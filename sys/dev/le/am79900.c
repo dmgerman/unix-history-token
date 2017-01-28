@@ -966,12 +966,6 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|PC98
-argument_list|)
 name|struct
 name|ether_header
 modifier|*
@@ -1310,12 +1304,6 @@ directive|if
 name|defined
 argument_list|(
 name|__i386__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|PC98
 argument_list|)
 comment|/* 			 * The VMware LANCE does not present IFF_SIMPLEX 			 * behavior on multicast packets. Thus drop the 			 * packet if it is from ourselves. 			 */
 name|eh

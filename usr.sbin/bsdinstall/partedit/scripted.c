@@ -352,15 +352,6 @@ name|strcmp
 argument_list|(
 name|scheme
 argument_list|,
-literal|"PC98"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|scheme
-argument_list|,
 literal|"MBR"
 argument_list|)
 operator|==

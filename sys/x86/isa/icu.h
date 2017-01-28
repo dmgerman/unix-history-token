@@ -19,24 +19,6 @@ directive|define
 name|_X86_ISA_ICU_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ICU_IMR_OFFSET
-value|2
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -44,32 +26,9 @@ name|ICU_IMR_OFFSET
 value|1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * PC-98 machines wire the slave 8259A to pin 7 on the master PIC, and  * PC-AT machines wire the slave PIC to pin 2 on the master PIC.  */
+comment|/*  * PC-AT machines wire the slave PIC to pin 2 on the master PIC.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ICU_SLAVEID
-value|7
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -78,44 +37,10 @@ name|ICU_SLAVEID
 value|2
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Determine the base master and slave modes not including auto EOI support.  * All machines that FreeBSD supports use 8086 mode.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_comment
-comment|/*  * PC-98 machines do not support auto EOI on the second PIC.  Also, it  * seems that PC-98 machine PICs use buffered mode, and the master PIC  * uses special fully nested mode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BASE_MASTER_MODE
-value|(ICW4_SFNM | ICW4_BUF | ICW4_MS | ICW4_8086)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BASE_SLAVE_MODE
-value|(ICW4_BUF | ICW4_8086)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -129,11 +54,6 @@ directive|define
 name|BASE_SLAVE_MODE
 value|ICW4_8086
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Enable automatic EOI if requested. */

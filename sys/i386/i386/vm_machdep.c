@@ -262,33 +262,11 @@ directive|include
 file|<vm/vm_param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/cbus/cbus.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<isa/isareg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2566,14 +2544,9 @@ name|struct
 name|region_descriptor
 name|null_idt
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 name|int
 name|b
 decl_stmt|;
-endif|#
-directive|endif
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -2617,51 +2590,6 @@ literal|0xf
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* 	 * Attempt to do a CPU reset via CPU reset port. 	 */
-if|if
-condition|(
-operator|(
-name|inb
-argument_list|(
-literal|0x35
-argument_list|)
-operator|&
-literal|0xa0
-operator|)
-operator|!=
-literal|0xa0
-condition|)
-block|{
-name|outb
-argument_list|(
-literal|0x37
-argument_list|,
-literal|0x0f
-argument_list|)
-expr_stmt|;
-comment|/* SHUT0 = 0. */
-name|outb
-argument_list|(
-literal|0x37
-argument_list|,
-literal|0x0b
-argument_list|)
-expr_stmt|;
-comment|/* SHUT1 = 0. */
-block|}
-name|outb
-argument_list|(
-literal|0xf0
-argument_list|,
-literal|0x00
-argument_list|)
-expr_stmt|;
-comment|/* Reset. */
-else|#
-directive|else
 if|#
 directive|if
 operator|!
@@ -2758,9 +2686,6 @@ argument_list|)
 expr_stmt|;
 comment|/* wait 0.5 sec to see if that did it */
 block|}
-endif|#
-directive|endif
-comment|/* PC98 */
 name|printf
 argument_list|(
 literal|"No known reset method worked, attempting CPU shutdown\n"
