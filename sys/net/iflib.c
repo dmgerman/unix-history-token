@@ -7619,9 +7619,9 @@ name|fail
 goto|;
 block|}
 block|}
-block|}
 endif|#
 directive|endif
+block|}
 return|return
 operator|(
 literal|0
