@@ -27,12 +27,6 @@ directive|include
 file|<dev/drm2/drmP.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<linux/slab.h>
-end_include
-
 begin_comment
 comment|/**  * Initialize the DMA data.  *  * \param dev DRM device.  * \return zero on success or a negative value on failure.  *  * Allocate and initialize a drm_device_dma structure.  */
 end_comment
@@ -270,7 +264,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|kfree
+name|free
 argument_list|(
 name|dma
 operator|->
@@ -280,6 +274,8 @@ name|i
 index|]
 operator|.
 name|seglist
+argument_list|,
+name|DRM_MEM_SEGS
 argument_list|)
 expr_stmt|;
 block|}
@@ -316,7 +312,7 @@ name|j
 operator|++
 control|)
 block|{
-name|kfree
+name|free
 argument_list|(
 name|dma
 operator|->
@@ -331,10 +327,12 @@ name|j
 index|]
 operator|.
 name|dev_private
+argument_list|,
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 block|}
-name|kfree
+name|free
 argument_list|(
 name|dma
 operator|->
@@ -344,15 +342,19 @@ name|i
 index|]
 operator|.
 name|buflist
+argument_list|,
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|kfree
+name|free
 argument_list|(
 name|dma
 operator|->
 name|buflist
+argument_list|,
+name|DRM_MEM_BUFS
 argument_list|)
 expr_stmt|;
 name|free

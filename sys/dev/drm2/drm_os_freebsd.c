@@ -124,6 +124,18 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
+name|DRM_MEM_BUFS
+argument_list|,
+literal|"drm_bufs"
+argument_list|,
+literal|"DRM BUFFER Data Structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
 name|DRM_MEM_SEGS
 argument_list|,
 literal|"drm_segs"
@@ -201,18 +213,6 @@ argument_list|,
 literal|"drm_buflists"
 argument_list|,
 literal|"DRM BUFLISTS Data Structures"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|DRM_MEM_AGPLISTS
-argument_list|,
-literal|"drm_agplists"
-argument_list|,
-literal|"DRM AGPLISTS Data Structures"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2390,6 +2390,22 @@ argument_list|(
 name|drmn
 argument_list|,
 name|mem
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|drmn
+argument_list|,
+name|linuxkpi
 argument_list|,
 literal|1
 argument_list|,

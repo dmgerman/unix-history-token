@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/imgact.h>
 end_include
 
@@ -81,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<machine/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
 end_include
 
 begin_include

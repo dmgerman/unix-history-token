@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/slab.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/drm2/drmP.h>
 end_include
 
@@ -1176,11 +1182,9 @@ operator|->
 name|pages
 argument_list|)
 expr_stmt|;
-name|free
+name|kfree
 argument_list|(
 name|entry
-argument_list|,
-name|DRM_MEM_AGPLISTS
 argument_list|)
 expr_stmt|;
 block|}

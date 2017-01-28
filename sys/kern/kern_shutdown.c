@@ -2907,14 +2907,6 @@ decl_stmt|;
 name|spinlock_enter
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/***** DEBUGGING DRM *****/
-block|doadump(0); 	EVENTHANDLER_INVOKE(shutdown_final, RB_NOSYNC);
-comment|/************************/
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|SMP

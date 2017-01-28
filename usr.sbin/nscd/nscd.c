@@ -720,8 +720,6 @@ argument_list|(
 name|PF_LOCAL
 argument_list|,
 name|SOCK_STREAM
-operator||
-name|SOCK_NONBLOCK
 argument_list|,
 literal|0
 argument_list|)
@@ -886,6 +884,17 @@ name|sockfd
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|fcntl
+argument_list|(
+name|retval
+operator|->
+name|sockfd
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
 name|retval
