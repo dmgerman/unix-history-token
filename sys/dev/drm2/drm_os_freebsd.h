@@ -3001,6 +3001,14 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
+name|DRM_MEM_AGPLISTS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
 name|DRM_MEM_CTXBITMAP
 argument_list|)
 expr_stmt|;
