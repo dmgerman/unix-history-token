@@ -1220,21 +1220,6 @@ argument_list|(
 name|control
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FPU_ERROR_BROKEN
-comment|/* 			 * FPU error signal doesn't work on some CPU 			 * accelerator board. 			 */
-name|hw_float
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 name|npx_traps_while_probing
 operator|=
 literal|0
