@@ -1682,10 +1682,9 @@ block|;
 name|bool
 name|handleObjCMethod
 argument_list|(
-specifier|const
-name|ObjCMethodDecl
-operator|*
-name|D
+argument|const ObjCMethodDecl *D
+argument_list|,
+argument|SourceLocation Loc
 argument_list|)
 block|;
 name|bool
