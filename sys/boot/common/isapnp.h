@@ -47,35 +47,6 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_comment
-comment|/* pnp.h is included from pnpinfo.c. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PNP_ADDRESS
-value|0x259
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PNP_WRITE_DATA
-value|0xa59
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -89,11 +60,6 @@ directive|define
 name|_PNP_WRITE_DATA
 value|0xa79
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -229,31 +229,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BIOS_BASE
-value|(0xe8000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIOS_SIZE
-value|(0x18000)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -267,11 +242,6 @@ directive|define
 name|BIOS_SIZE
 value|(0x10000)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -3068,9 +3038,6 @@ block|{
 case|case
 name|ISA
 case|:
-ifndef|#
-directive|ifndef
-name|PC98
 if|if
 condition|(
 name|elcr_found
@@ -3084,8 +3051,6 @@ argument_list|)
 operator|)
 return|;
 else|else
-endif|#
-directive|endif
 return|return
 operator|(
 name|INTR_TRIGGER_EDGE
@@ -3099,9 +3064,6 @@ operator|(
 name|INTR_TRIGGER_LEVEL
 operator|)
 return|;
-ifndef|#
-directive|ifndef
-name|PC98
 case|case
 name|EISA
 case|:
@@ -3135,8 +3097,6 @@ name|src_bus_irq
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 default|default:
 name|panic
 argument_list|(

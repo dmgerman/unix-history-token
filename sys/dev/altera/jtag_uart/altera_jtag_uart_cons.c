@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -100,6 +106,25 @@ name|devclass_t
 name|altera_jtag_uart_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|altera_jtag_uart
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Altera JTAG UART configuration knobs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * One-byte buffer as we can't check whether the UART is readable without  * actually reading from it, synchronised by a spinlock; this lock also  * synchronises access to the I/O ports for non-atomic sequences.  These  * symbols are public so that the TTY layer can use them when working on an  * instance of the UART that is also a low-level console.  */
@@ -199,6 +224,36 @@ directive|define
 name|ALTERA_JTAG_UART_AC_POLL_DELAY
 value|10000
 end_define
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|altera_jtag_uart_ac_poll_delay
+init|=
+name|ALTERA_JTAG_UART_AC_POLL_DELAY
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_altera_jtag_uart
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ac_poll_delay
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|altera_jtag_uart_ac_poll_delay
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum delay waiting for JTAG present flag when buffer is full"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * I/O routines lifted from Deimos.  This is not only MIPS-specific, but also  * BERI-specific, as we're hard coding the address at which we expect to  * find the Altera JTAG UART and using it unconditionally.  We use these  * low-level routines so that we can perform console I/O long before newbus  * has initialised and devices have attached.  The TTY layer of the driver  * knows about this, and uses the console-layer spinlock instead of the  * TTY-layer lock to avoid confusion between layers for the console UART.  *  * XXXRW: The only place this inter-layer behaviour breaks down is if the  * low-level console is used for polled read while the TTY driver is also  * looking for input.  Probably we should also share buffers between layers.  */
@@ -530,7 +585,7 @@ decl_stmt|;
 name|AJU_CONSOLE_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-comment|/* 	 * The flow control logic here is somewhat subtle: we want to wait for 	 * write buffer space only while JTAG is present.  However, we can't 	 * directly ask if JTAG is present -- just whether it's been seen 	 * since we last cleared the ALTERA_JTAG_UART_CONTROL_AC bit.  As 	 * such, implement a polling loop in which we both wait for space and 	 * try to decide whether JTAG has disappeared on us.  We will have to 	 * wait one complete polling delay to detect that JTAG has gone away, 	 * but otherwise shouldn't wait any further once it has gone.  And we 	 * had to wait for buffer space anyway, if it was there. 	 * 	 * If JTAG is spotted, reset the TTY-layer miss counter so console- 	 * layer clearing of the bit doesn't trigger a TTY-layer 	 * disconnection. 	 * 	 * XXXRW: The polling delay may require tuning. 	 * 	 * XXXRW: Notice the inherent race with hardware: in clearing the 	 * bit, we may race with hardware setting the same bit. 	 */
+comment|/* 	 * The flow control logic here is somewhat subtle: we want to wait for 	 * write buffer space only while JTAG is present.  However, we can't 	 * directly ask if JTAG is present -- just whether it's been seen 	 * since we last cleared the ALTERA_JTAG_UART_CONTROL_AC bit.  As 	 * such, implement a polling loop in which we both wait for space and 	 * try to decide whether JTAG has disappeared on us.  We will have to 	 * wait one complete polling delay to detect that JTAG has gone away, 	 * but otherwise shouldn't wait any further once it has gone.  And we 	 * had to wait for buffer space anyway, if it was there. 	 * 	 * If JTAG is spotted, reset the TTY-layer miss counter so console- 	 * layer clearing of the bit doesn't trigger a TTY-layer 	 * disconnection. 	 * 	 * XXXRW: Notice the inherent race with hardware: in clearing the 	 * bit, we may race with hardware setting the same bit.  This can 	 * cause real-world reliability problems due to lost output on the 	 * console. 	 */
 name|v
 operator|=
 name|aju_cons_control_read
@@ -581,7 +636,7 @@ condition|)
 return|return;
 name|DELAY
 argument_list|(
-name|ALTERA_JTAG_UART_AC_POLL_DELAY
+name|altera_jtag_uart_ac_poll_delay
 argument_list|)
 expr_stmt|;
 name|v

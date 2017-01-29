@@ -359,20 +359,6 @@ block|}
 block|,
 comment|/* SCM0469 */
 block|{
-name|EXCA_NEC_PC9801_102
-block|,
-name|NULL
-block|}
-block|,
-comment|/* NEC8091 */
-block|{
-name|EXCA_NEC_PC9821RA_E01
-block|,
-name|NULL
-block|}
-block|,
-comment|/* NEC8121 */
-block|{
 literal|0
 block|}
 block|}

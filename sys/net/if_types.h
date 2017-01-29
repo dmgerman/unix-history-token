@@ -357,7 +357,7 @@ name|IFT_IEEE80211
 init|=
 literal|0x47
 block|,
-comment|/* radio spread spectrum	*/
+comment|/* radio spread spectrum (unused) */
 name|IFT_IBM370PARCHAN
 init|=
 literal|0x48

@@ -1220,21 +1220,6 @@ argument_list|(
 name|control
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FPU_ERROR_BROKEN
-comment|/* 			 * FPU error signal doesn't work on some CPU 			 * accelerator board. 			 */
-name|hw_float
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 name|npx_traps_while_probing
 operator|=
 literal|0
@@ -4989,12 +4974,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -5012,11 +4991,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

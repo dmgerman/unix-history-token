@@ -156,33 +156,11 @@ directive|include
 file|<x86/isa/icu.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/cbus/cbus.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<isa/isareg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

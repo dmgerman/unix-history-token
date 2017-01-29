@@ -12046,14 +12046,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|PC98
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__sparc64__
 argument_list|)
-comment|/* 		 * In a PC-98 system, geometry translation depens on 		 * the "real" device geometry obtained from mode page 4. 		 * SCSI geometry translation is performed in the 		 * initialization routine of the SCSI BIOS and the result 		 * stored in host memory.  If the translation is available 		 * in host memory, use it.  If not, rely on the default 		 * translation the device driver performs. 		 * For sparc64, we may need adjust the geometry of large 		 * disks in order to fit the limitations of the 16-bit 		 * fields of the VTOC8 disk label. 		 */
+comment|/* 		 * For sparc64, we may need adjust the geometry of large 		 * disks in order to fit the limitations of the 16-bit 		 * fields of the VTOC8 disk label. 		 */
 if|if
 condition|(
 name|scsi_da_bios_params
@@ -14089,17 +14084,14 @@ case|case
 name|XPT_ENG_INQ
 case|:
 comment|/* XXX Implement */
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|start_ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"%s: CCB type %#x %s not supported\n"
 argument_list|,
 name|__func__
@@ -18221,13 +18213,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xpt_print_path
+name|xpt_print
 argument_list|(
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"No transport found for %d\n"
 argument_list|,
 name|cpi

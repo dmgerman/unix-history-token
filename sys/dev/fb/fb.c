@@ -1974,12 +1974,6 @@ literal|"VGA"
 block|}
 block|,
 block|{
-name|KD_PC98
-block|,
-literal|"PC-98x1"
-block|}
-block|,
-block|{
 name|KD_TGA
 block|,
 literal|"TGA"
@@ -2404,12 +2398,6 @@ block|{
 name|FBTYPE_VGA
 block|,
 name|KD_VGA
-block|}
-block|,
-block|{
-name|FBTYPE_PC98
-block|,
-name|KD_PC98
 block|}
 block|,
 block|{

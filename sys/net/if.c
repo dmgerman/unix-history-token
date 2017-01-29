@@ -174,12 +174,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -15411,9 +15405,6 @@ name|IFT_ARCNET
 case|:
 case|case
 name|IFT_IEEE8023ADLAG
-case|:
-case|case
-name|IFT_IEEE80211
 case|:
 name|bcopy
 argument_list|(

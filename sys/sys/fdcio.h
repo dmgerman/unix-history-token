@@ -405,24 +405,6 @@ name|FD_SOPTS
 value|_IOW('F', 65, int)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FD_DEBUG
-value|_IOW('F', 66, int)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -504,28 +486,6 @@ begin_comment
 comment|/* do not indicate errors, caller will use 				   FD_GSTAT in order to obtain status */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FDOPT_AUTOSEL
-value|0x8000
-end_define
-
-begin_comment
-comment|/* read/only option: device performs media 				 * autoselection */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Transfer rate definitions.  Used in the structures above.  They  * represent the hardware encoding of bits 0 and 1 of the FDC control  * register when writing to the register.  * Transfer rates for FM encoding are half the values listed here  * (but we currently don't support FM encoding).  */
 end_comment
@@ -576,98 +536,6 @@ end_comment
 
 begin_comment
 comment|/*  * Parameters for common formats  *  * See struct fd_type for layout.  * XXX: Field 'size' must be calculated.  * XXX: Fields 'f_inter' and 'offset_side2' are unused by kernel.  *  * XXX: These should really go in a /etc/floppycap colon separated file  * XXX: but the kernel needs some of them for proper defaults and it would  * XXX: should have been done 20 years ago to make sense.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FDF_3_1440
-value|18,2,0xFF,0x1B,80,0,2,2,0x54,1,0,FL_MFM
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_3_1200
-value|15,2,0xFF,0x1B,80,0,0,2,0x54,1,0,FL_MFM
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_3_720
-value|9,2,0xFF,0x20,80,0,1,2,0x50,1,0,FL_MFM
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_3_360
-value|9,2,0xFF,0x20,40,0,1,2,0x50,1,0,FL_MFM|FL_2STEP
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_3_640
-value|8,2,0xFF,0x2A,80,0,1,2,0x50,1,0,FL_MFM
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_3_1230
-value|8,3,0xFF,0x35,77,0,0,2,0x74,1,0,FL_MFM
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_5_1200
-value|15,2,0xFF,0x1B,80,0,0,2,0x54,1,0,FL_MFM
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_5_720
-value|9,2,0xFF,0x20,80,0,1,2,0x50,1,0,FL_MFM
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_5_360
-value|9,2,0xFF,0x20,40,0,1,2,0x50,1,0,FL_MFM|FL_2STEP
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_5_640
-value|8,2,0xFF,0x2A,80,0,1,2,0x50,1,0,FL_MFM
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDF_5_1230
-value|8,3,0xFF,0x35,77,0,0,2,0x74,1,0,FL_MFM
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* PC98 */
 end_comment
 
 begin_define
@@ -803,11 +671,6 @@ end_define
 begin_comment
 comment|/* XXX:                      0x2a ? */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

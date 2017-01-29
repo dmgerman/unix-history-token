@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012-2013 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by SRI International and the University of  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)  * ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2012-2013, 2016 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by SRI International and the University of  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)  * ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -215,6 +215,9 @@ modifier|*
 name|str_fileio
 decl_stmt|,
 modifier|*
+name|str_geomio
+decl_stmt|,
+modifier|*
 name|str_mmapio
 decl_stmt|;
 name|char
@@ -256,6 +259,10 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Query driver-specific OpenFirmware properties to determine how to 	 * expose the device via /dev. 	 */
 name|str_fileio
+operator|=
+name|NULL
+expr_stmt|;
+name|str_geomio
 operator|=
 name|NULL
 expr_stmt|;
@@ -331,6 +338,29 @@ operator|*
 operator|)
 operator|&
 name|str_fileio
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|OF_getprop_alloc
+argument_list|(
+name|node
+argument_list|,
+literal|"sri-cambridge,geomio"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|str_geomio
 argument_list|)
 expr_stmt|;
 operator|(
@@ -457,6 +487,8 @@ name|sc
 argument_list|,
 name|str_fileio
 argument_list|,
+name|str_geomio
+argument_list|,
 name|str_mmapio
 argument_list|,
 name|str_devname
@@ -494,6 +526,17 @@ condition|)
 name|OF_prop_free
 argument_list|(
 name|str_fileio
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|str_geomio
+operator|!=
+name|NULL
+condition|)
+name|OF_prop_free
+argument_list|(
+name|str_geomio
 argument_list|)
 expr_stmt|;
 if|if

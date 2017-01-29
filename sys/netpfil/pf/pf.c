@@ -557,6 +557,23 @@ name|V_pf_tcp_iss_off
 value|VNET(pf_tcp_iss_off)
 end_define
 
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|pf_vnet_active
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_pf_vnet_active
+value|VNET(pf_vnet_active)
+end_define
+
 begin_comment
 comment|/*  * Queue for pf_intr() sends.  */
 end_comment
@@ -8021,6 +8038,19 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Wait while V_pf_default_rule.timeout is initialized. */
+if|if
+condition|(
+name|V_pf_vnet_active
+operator|==
+literal|0
+condition|)
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+continue|continue;
 block|}
 comment|/* Process 1/interval fraction of the state table every run. */
 name|idx

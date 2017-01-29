@@ -1414,9 +1414,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 if|if
 condition|(
 name|i
@@ -1488,9 +1485,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* PC98 */
 name|scp
 operator|->
 name|status

@@ -55,43 +55,6 @@ define|\
 value|"Copyright (c) 1979, 1980, 1983, 1986, 1988, 1989, 1991, 1992, 1993, 1994\n\tThe Regents of the University of California. All rights reserved.\n"
 end_define
 
-begin_comment
-comment|/* a port of FreeBSD to the NEC PC98, Japan */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PC98
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|COPYRIGHT_PC98
-define|\
-value|"Copyright (c) 1994-2003 FreeBSD(98) porting team.\nCopyright (c) 1992  A.Kojima F.Ukai M.Ishii (KMC).\n"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|COPYRIGHT_PC98
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|char
 name|copyright
@@ -99,8 +62,6 @@ index|[]
 init|=
 name|COPYRIGHT_Vendor
 name|COPYRIGHT_FreeBSD
-name|COPYRIGHT_PC98
-expr|\
 name|COPYRIGHT_UCB
 decl_stmt|;
 end_decl_stmt

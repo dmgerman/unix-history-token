@@ -3781,6 +3781,14 @@ block|,
 literal|65
 block|}
 block|,
+block|{
+literal|"octeon+"
+block|,
+name|PROCESSOR_OCTEON
+block|,
+literal|65
+block|}
+block|,
 comment|/* End marker */
 block|{
 literal|0

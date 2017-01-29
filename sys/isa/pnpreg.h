@@ -30,31 +30,6 @@ begin_comment
 comment|/* Static ports to access PnP state machine */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_PNP_ADDRESS
-value|0x259
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PNP_WRITE_DATA
-value|0xa59
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -68,11 +43,6 @@ directive|define
 name|_PNP_WRITE_DATA
 value|0xa79
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* PnP Registers.  Write to ADDRESS and then use WRITE/READ_DATA */

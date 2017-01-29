@@ -91,35 +91,12 @@ directive|include
 file|"hostres_tree.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HR_FREEBSD_PART_TYPE
-value|0xc494
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|HR_FREEBSD_PART_TYPE
 value|165
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Maximum length for label and id including \0 */

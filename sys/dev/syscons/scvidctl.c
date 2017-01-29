@@ -3068,18 +3068,6 @@ case|:
 case|case
 name|SW_EGAMONO80x25
 case|:
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* PC98 TEXT MODES */
-case|case
-name|SW_PC98_80x25
-case|:
-case|case
-name|SW_PC98_80x30
-case|:
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -3148,21 +3136,6 @@ case|:
 case|case
 name|SW_VGA_MODEX
 case|:
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* PC98 GRAPHICS MODES */
-case|case
-name|SW_PC98_EGC640x400
-case|:
-case|case
-name|SW_PC98_PEGC640x400
-case|:
-case|case
-name|SW_PC98_PEGC640x480
-case|:
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -3328,9 +3301,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|PC98
 comment|/* move hardware cursor out of the way */
 name|vidd_set_hw_cursor
 argument_list|(
@@ -3343,8 +3313,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* FALLTHROUGH */
 case|case
 name|KD_TEXT1
@@ -3388,9 +3356,6 @@ return|return
 name|error
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|PC98
 name|scp
 operator|->
 name|status
@@ -3432,45 +3397,6 @@ operator|&=
 operator|~
 name|UNKNOWN_MODE
 expr_stmt|;
-else|#
-directive|else
-comment|/* PC98 */
-name|scp
-operator|->
-name|status
-operator|&=
-operator|~
-name|UNKNOWN_MODE
-expr_stmt|;
-comment|/* no restore fonts& palette */
-if|if
-condition|(
-name|scp
-operator|==
-name|scp
-operator|->
-name|sc
-operator|->
-name|cur_scp
-condition|)
-name|set_mode
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
-name|sc_clear_screen
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PC98 */
 return|return
 literal|0
 return|;
@@ -3690,26 +3616,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-if|if
-condition|(
-name|scp
-operator|==
-name|scp
-operator|->
-name|sc
-operator|->
-name|cur_scp
-condition|)
-name|set_mode
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;

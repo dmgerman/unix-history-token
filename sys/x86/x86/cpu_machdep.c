@@ -859,12 +859,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
 begin_function
 specifier|static
 name|void
@@ -927,15 +921,6 @@ name|STATE_RUNNING
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !PC98 */
-end_comment
 
 begin_function
 specifier|static
@@ -1199,39 +1184,6 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|PC98
-argument_list|)
-end_if
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|cpu_idle_fn
-function_decl|)
-parameter_list|(
-name|sbintime_t
-parameter_list|)
-init|=
-name|cpu_idle_hlt
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|void
 function_decl|(
@@ -1245,11 +1197,6 @@ init|=
 name|cpu_idle_acpi
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -1515,12 +1462,6 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|PC98
-argument_list|)
 block|{
 name|cpu_idle_acpi
 block|,
@@ -1622,12 +1563,6 @@ operator|!
 name|defined
 argument_list|(
 name|__i386__
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|PC98
 argument_list|)
 if|if
 condition|(
@@ -1895,12 +1830,6 @@ operator|!
 name|defined
 argument_list|(
 name|__i386__
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|PC98
 argument_list|)
 if|if
 condition|(
