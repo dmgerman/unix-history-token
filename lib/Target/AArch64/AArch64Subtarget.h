@@ -287,7 +287,7 @@ operator|=
 name|false
 block|;
 name|bool
-name|AvoidQuadLdStPairs
+name|Paired128IsSlow
 operator|=
 name|false
 block|;
@@ -748,12 +748,12 @@ name|Misaligned128StoreIsSlow
 return|;
 block|}
 name|bool
-name|avoidQuadLdStPairs
+name|isPaired128Slow
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AvoidQuadLdStPairs
+name|Paired128IsSlow
 return|;
 block|}
 name|bool
