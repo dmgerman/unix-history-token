@@ -663,7 +663,7 @@ asm|__asm __volatile(
 literal|"1:	mov	%[ret], #1				\n"
 literal|"   ldrexd	%Q[tmp], %R[tmp], [%[ptr]]		\n"
 literal|"   teq	%Q[tmp], %Q[_cmpval]			\n"
-literal|"   itee	eq					\n"
+literal|"   ite	eq					\n"
 literal|"   teqeq	%R[tmp], %R[_cmpval]			\n"
 literal|"   bne	2f					\n"
 literal|"   strexd	%[ret], %Q[newval], %R[newval], [%[ptr]]\n"
