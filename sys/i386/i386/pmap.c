@@ -2119,10 +2119,8 @@ expr_stmt|;
 comment|/* 	 * Initialize temporary map objects on the current CPU for use 	 * during early boot. 	 * CMAP1/CMAP2 are used for zeroing and copying pages. 	 * CMAP3 is used for the boot-time memory test. 	 */
 name|pc
 operator|=
-name|pcpu_find
-argument_list|(
-name|curcpu
-argument_list|)
+name|get_pcpu
+argument_list|()
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -18408,10 +18406,8 @@ argument_list|()
 expr_stmt|;
 name|pc
 operator|=
-name|pcpu_find
-argument_list|(
-name|curcpu
-argument_list|)
+name|get_pcpu
+argument_list|()
 expr_stmt|;
 name|cmap_pte2
 operator|=
@@ -18530,10 +18526,8 @@ argument_list|()
 expr_stmt|;
 name|pc
 operator|=
-name|pcpu_find
-argument_list|(
-name|curcpu
-argument_list|)
+name|get_pcpu
+argument_list|()
 expr_stmt|;
 name|cmap_pte2
 operator|=
@@ -18673,10 +18667,8 @@ argument_list|()
 expr_stmt|;
 name|pc
 operator|=
-name|pcpu_find
-argument_list|(
-name|curcpu
-argument_list|)
+name|get_pcpu
+argument_list|()
 expr_stmt|;
 name|cmap_pte1
 operator|=
@@ -18886,10 +18878,8 @@ argument_list|()
 expr_stmt|;
 name|pc
 operator|=
-name|pcpu_find
-argument_list|(
-name|curcpu
-argument_list|)
+name|get_pcpu
+argument_list|()
 expr_stmt|;
 name|cmap_pte1
 operator|=
@@ -23489,10 +23479,8 @@ argument_list|()
 expr_stmt|;
 name|pc
 operator|=
-name|pcpu_find
-argument_list|(
-name|curcpu
-argument_list|)
+name|get_pcpu
+argument_list|()
 expr_stmt|;
 name|cmap_pte2
 operator|=

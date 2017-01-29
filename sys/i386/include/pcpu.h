@@ -108,6 +108,14 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|get_pcpu
+parameter_list|()
+value|(pcpup)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCPU_GET
 parameter_list|(
 name|member
@@ -275,6 +283,14 @@ parameter_list|,
 name|val
 parameter_list|)
 value|do {					\ 	__pcpu_type(name) __val;					\ 	struct __s {							\ 		u_char	__b[MIN(sizeof(__val), 4)];			\ 	} __s;								\ 									\ 	__val = (val);							\ 	if (sizeof(__val) == 1 || sizeof(__val) == 2 ||			\ 	    sizeof(__val) == 4) {					\ 		__s = *(struct __s *)(void *)&__val;			\ 		__asm __volatile("mov %1,%%fs:%0"			\ 		    : "=m" (*(struct __s *)(__pcpu_offset(name)))	\ 		    : "r" (__s));					\ 	} else {							\ 		*__PCPU_PTR(name) = __val;				\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_pcpu
+parameter_list|()
+value|__extension__ ({					\ 	struct pcpu *__pc;						\ 									\ 	__asm __volatile("movl %%fs:%1,%0"				\ 	    : "=r" (__pc)						\ 	    : "m" (*(struct pcpu *)(__pcpu_offset(pc_prvspace))));	\ 	__pc;								\ })
 end_define
 
 begin_define
