@@ -237,6 +237,10 @@ block|;
 name|unsigned
 name|ScratchWaveOffsetReg
 block|;
+comment|// Input registers for non-HSA ABI
+name|unsigned
+name|PrivateMemoryPtrUserSGPR
+block|;
 comment|// Input registers setup for the HSA ABI.
 comment|// User SGPRs in allocation order.
 name|unsigned
@@ -478,6 +482,14 @@ name|WorkItemIDZ
 operator|:
 literal|1
 block|;
+comment|// Private memory buffer
+comment|// Compute directly in sgpr[0:1]
+comment|// Other shaders indirect 64-bits at sgpr[0:1]
+name|bool
+name|PrivateMemoryInputPtr
+operator|:
+literal|1
+block|;
 name|MCPhysReg
 name|getNextUserSGPR
 argument_list|()
@@ -685,6 +697,15 @@ argument_list|)
 block|;
 name|unsigned
 name|addFlatScratchInit
+argument_list|(
+specifier|const
+name|SIRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+block|;
+name|unsigned
+name|addPrivateMemoryPtr
 argument_list|(
 specifier|const
 name|SIRegisterInfo
@@ -941,6 +962,15 @@ return|return
 name|WorkItemIDZ
 return|;
 block|}
+name|bool
+name|hasPrivateMemoryInputPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrivateMemoryInputPtr
+return|;
+block|}
 name|unsigned
 name|getNumUserSGPRs
 argument_list|()
@@ -1039,6 +1069,15 @@ specifier|const
 block|{
 return|return
 name|QueuePtrUserSGPR
+return|;
+block|}
+name|unsigned
+name|getPrivateMemoryPtrUserSGPR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrivateMemoryPtrUserSGPR
 return|;
 block|}
 name|bool
