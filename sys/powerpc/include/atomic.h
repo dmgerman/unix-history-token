@@ -1118,9 +1118,6 @@ name|result
 decl_stmt|,
 name|temp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"\tsync\n"
 comment|/* drain writes */
@@ -1167,11 +1164,6 @@ block|)
 function|;
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_return
 return|return
 operator|(
@@ -1204,9 +1196,6 @@ name|result
 decl_stmt|,
 name|temp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"\tsync\n"
 comment|/* drain writes */
@@ -1252,11 +1241,6 @@ literal|"memory"
 block|)
 function|;
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_return
 return|return
@@ -1543,9 +1527,6 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
@@ -1607,11 +1588,6 @@ block|)
 function|;
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_return
 return|return
 operator|(
@@ -1641,9 +1617,6 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 ifdef|#
 directive|ifdef
@@ -1728,11 +1701,6 @@ literal|"memory"
 block|)
 function|;
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_return
 return|return
@@ -2026,9 +1994,6 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 literal|"1:\tlwarx %0, 0, %3\n\t"
 comment|/* load old value */
@@ -2103,11 +2068,6 @@ block|)
 function|;
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_return
 return|return
 operator|(
@@ -2138,9 +2098,6 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__GNUCLIKE_ASM
 asm|__asm __volatile (
 ifdef|#
 directive|ifdef
@@ -2239,11 +2196,6 @@ literal|"memory"
 block|)
 function|;
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_return
 return|return
