@@ -1939,8 +1939,7 @@ name|i
 operator|->
 name|trig
 operator|==
-operator|-
-literal|1
+name|INTR_TRIGGER_INVALID
 condition|)
 name|PIC_TRANSLATE_CODE
 argument_list|(
@@ -2223,8 +2222,7 @@ name|i
 operator|->
 name|trig
 operator|==
-operator|-
-literal|1
+name|INTR_TRIGGER_INVALID
 condition|)
 name|PIC_TRANSLATE_CODE
 argument_list|(
@@ -2454,8 +2452,7 @@ name|i
 operator|->
 name|trig
 operator|=
-operator|-
-literal|1
+name|INTR_TRIGGER_INVALID
 expr_stmt|;
 name|i
 operator|->
