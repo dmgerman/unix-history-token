@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: read.c,v 1.85 2016/02/24 17:20:01 christos Exp $	*/
+comment|/*	$NetBSD: read.c,v 1.86 2016/03/02 19:24:20 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: read.c,v 1.85 2016/02/24 17:20:01 christos Exp $"
+literal|"$NetBSD: read.c,v 1.86 2016/03/02 19:24:20 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2753,7 +2753,9 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"Executing %s\n"
+literal|"Executing "
+name|FSTR
+literal|"\n"
 argument_list|,
 name|b
 operator|->

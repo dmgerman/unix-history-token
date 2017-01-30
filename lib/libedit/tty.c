@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tty.c,v 1.58 2016/02/27 18:13:21 christos Exp $	*/
+comment|/*	$NetBSD: tty.c,v 1.59 2016/03/22 01:34:32 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: tty.c,v 1.58 2016/02/27 18:13:21 christos Exp $"
+literal|"$NetBSD: tty.c,v 1.59 2016/03/22 01:34:32 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2549,14 +2549,6 @@ name|rst
 init|=
 literal|1
 decl_stmt|;
-name|el
-operator|->
-name|el_tty
-operator|.
-name|t_initialized
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|el
@@ -2567,6 +2559,18 @@ name|EDIT_DISABLED
 condition|)
 return|return
 literal|0
+return|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_tty
+operator|.
+name|t_initialized
+condition|)
+return|return
+operator|-
+literal|1
 return|;
 if|if
 condition|(
@@ -3067,6 +3071,14 @@ name|t_vdisable
 operator|=
 name|_POSIX_VDISABLE
 expr_stmt|;
+name|el
+operator|->
+name|el_tty
+operator|.
+name|t_initialized
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3140,6 +3152,7 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|!
 name|el
 operator|->
 name|el_tty

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: common.c,v 1.39 2016/02/24 14:25:38 christos Exp $	*/
+comment|/*	$NetBSD: common.c,v 1.40 2016/03/02 19:24:20 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: common.c,v 1.39 2016/02/24 14:25:38 christos Exp $"
+literal|"$NetBSD: common.c,v 1.40 2016/03/02 19:24:20 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -593,9 +593,17 @@ name|fprintf
 argument_list|(
 name|el
 operator|->
-name|el_errlfile
+name|el_errfile
 argument_list|,
-literal|"\nD(b: %x(%s)  c: %x(%s) last: %x(%s) limit: %x(%s)\n"
+literal|"\nD(b: %p("
+name|FSTR
+literal|")  c: %p("
+name|FSTR
+literal|") last: %p("
+name|FSTR
+literal|") limit: %p("
+name|FSTR
+literal|")\n"
 argument_list|,
 name|EL
 operator|.

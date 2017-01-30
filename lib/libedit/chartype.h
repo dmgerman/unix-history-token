@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chartype.h,v 1.23 2016/02/24 17:20:01 christos Exp $	*/
+comment|/*	$NetBSD: chartype.h,v 1.25 2016/03/07 00:05:20 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -198,6 +198,13 @@ define|#
 directive|define
 name|FSTR
 value|"%ls"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSTARSTR
+value|"%.*ls"
 end_define
 
 begin_define
@@ -622,6 +629,13 @@ define|#
 directive|define
 name|FSTR
 value|"%s"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSTARSTR
+value|"%.*s"
 end_define
 
 begin_define

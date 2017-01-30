@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: vi.c,v 1.54 2016/02/17 19:47:49 christos Exp $	*/
+comment|/*	$NetBSD: vi.c,v 1.55 2016/03/02 19:24:20 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: vi.c,v 1.54 2016/02/17 19:47:49 christos Exp $"
+literal|"$NetBSD: vi.c,v 1.55 2016/03/02 19:24:20 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -436,7 +436,9 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"Paste: \"%.*s\"\n"
+literal|"Paste: \""
+name|FSTARSTR
+literal|"\"\n"
 argument_list|,
 operator|(
 name|int

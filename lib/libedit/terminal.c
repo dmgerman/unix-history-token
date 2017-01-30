@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: terminal.c,v 1.22 2016/02/17 19:47:49 christos Exp $	*/
+comment|/*	$NetBSD: terminal.c,v 1.24 2016/03/22 01:38:17 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: terminal.c,v 1.22 2016/02/17 19:47:49 christos Exp $"
+literal|"$NetBSD: terminal.c,v 1.24 2016/03/22 01:38:17 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1974,6 +1974,7 @@ operator|!=
 name|NULL
 operator|&&
 operator|*
+operator|*
 name|tmp
 operator|!=
 literal|'\0'
@@ -3504,7 +3505,7 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: n is ridiculous: %d\r\n"
+literal|"%s: n is ridiculous: %zu\r\n"
 argument_list|,
 name|__func__
 argument_list|,
