@@ -108,6 +108,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UTRACE_RTLD_ERROR
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
 name|RTLD_UTRACE_SIG_SZ
 value|4
 end_define

@@ -532,6 +532,21 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|UTRACE_RTLD_ERROR
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"RTLD: error: %s\n"
+argument_list|,
+name|ut
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 return|return
 operator|(
