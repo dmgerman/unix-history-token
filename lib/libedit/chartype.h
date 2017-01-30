@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chartype.h,v 1.15 2015/05/17 13:14:41 christos Exp $	*/
+comment|/*	$NetBSD: chartype.h,v 1.23 2016/02/24 17:20:01 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -122,15 +122,8 @@ end_endif
 begin_define
 define|#
 directive|define
-name|ct_mbtowc
-value|mbtowc
-end_define
-
-begin_define
-define|#
-directive|define
-name|ct_mbtowc_reset
-value|mbtowc(0,0,(size_t)0)
+name|ct_wctob
+value|wctob
 end_define
 
 begin_define
@@ -171,13 +164,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|Int
-value|wint_t
-end_define
-
-begin_define
-define|#
-directive|define
 name|FUN
 parameter_list|(
 name|prefix
@@ -205,13 +191,6 @@ parameter_list|(
 name|type
 parameter_list|)
 value|type ## W
-end_define
-
-begin_define
-define|#
-directive|define
-name|FCHAR
-value|"%lc"
 end_define
 
 begin_define
@@ -551,14 +530,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ct_mbtowc
-value|error
-end_define
-
-begin_define
-define|#
-directive|define
-name|ct_mbtowc_reset
+name|ct_wctob
+parameter_list|(
+name|w
+parameter_list|)
+value|((int)(w))
 end_define
 
 begin_define
@@ -612,13 +588,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|Int
-value|int
-end_define
-
-begin_define
-define|#
-directive|define
 name|FUN
 parameter_list|(
 name|prefix
@@ -646,13 +615,6 @@ parameter_list|(
 name|type
 parameter_list|)
 value|type
-end_define
-
-begin_define
-define|#
-directive|define
-name|FCHAR
-value|"%c"
 end_define
 
 begin_define
@@ -1259,7 +1221,7 @@ value|((size_t)8)
 end_define
 
 begin_comment
-comment|/* The terminal is thought of in terms of X columns by Y lines. In the cases  * where a wide character takes up more than one column, the adjacent   * occupied column entries will contain this faux character. */
+comment|/* The terminal is thought of in terms of X columns by Y lines. In the cases  * where a wide character takes up more than one column, the adjacent  * occupied column entries will contain this faux character. */
 end_comment
 
 begin_define
@@ -1394,6 +1356,22 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|size_t
+name|ct_mbrtowc
+parameter_list|(
+name|wchar_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: read.h,v 1.7 2009/12/30 22:37:40 christos Exp $	*/
+comment|/*	$NetBSD: read.h,v 1.9 2016/02/24 17:13:22 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|Char
+name|wchar_t
 modifier|*
 parameter_list|)
 function_decl|;
