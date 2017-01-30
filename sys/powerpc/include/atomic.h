@@ -2000,6 +2000,521 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Atomically compare the value stored at *p with *cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed and sets *cmpval to the read value from *p,  * nonzero otherwise.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|atomic_fcmpset_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+modifier|*
+name|cmpval
+parameter_list|,
+name|u_int
+name|newval
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+asm|__asm __volatile (
+literal|"1:\tlwarx %0, 0, %3\n\t"
+comment|/* load old value */
+literal|"cmplw %4, %0\n\t"
+comment|/* compare */
+literal|"bne 2f\n\t"
+comment|/* exit if not equal */
+literal|"stwcx. %5, 0, %3\n\t"
+comment|/* attempt to store */
+literal|"bne- 1b\n\t"
+comment|/* spin if failed */
+literal|"li %0, 1\n\t"
+comment|/* success - retval = 1 */
+literal|"b 3f\n\t"
+comment|/* we've succeeded */
+literal|"2:\n\t"
+literal|"stwcx. %0, 0, %3\n\t"
+comment|/* clear reservation (74xx) */
+literal|"stwx %0, 0, %7\n\t"
+literal|"li %0, 0\n\t"
+comment|/* failure - retval = 0 */
+literal|"3:\n\t"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|cmpval
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+operator|*
+name|cmpval
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|newval
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|cmpval
+operator|)
+operator|:
+literal|"cr0"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|} static
+name|__inline
+name|int
+name|atomic_fcmpset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+modifier|*
+name|cmpval
+parameter_list|,
+name|u_long
+name|newval
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+asm|__asm __volatile (
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+literal|"1:\tldarx %0, 0, %3\n\t"
+comment|/* load old value */
+literal|"cmpld %4, %0\n\t"
+comment|/* compare */
+literal|"bne 2f\n\t"
+comment|/* exit if not equal */
+literal|"stdcx. %5, 0, %3\n\t"
+comment|/* attempt to store */
+else|#
+directive|else
+literal|"1:\tlwarx %0, 0, %3\n\t"
+comment|/* load old value */
+literal|"cmplw %4, %0\n\t"
+comment|/* compare */
+literal|"bne 2f\n\t"
+comment|/* exit if not equal */
+literal|"stwcx. %5, 0, %3\n\t"
+comment|/* attempt to store */
+endif|#
+directive|endif
+literal|"bne- 1b\n\t"
+comment|/* spin if failed */
+literal|"li %0, 1\n\t"
+comment|/* success - retval = 1 */
+literal|"b 3f\n\t"
+comment|/* we've succeeded */
+literal|"2:\n\t"
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+literal|"stdcx. %0, 0, %3\n\t"
+comment|/* clear reservation (74xx) */
+literal|"stdx %0, 0, %7\n\t"
+else|#
+directive|else
+literal|"stwcx. %0, 0, %3\n\t"
+comment|/* clear reservation (74xx) */
+literal|"stwx %0, 0, %7\n\t"
+endif|#
+directive|endif
+literal|"li %0, 0\n\t"
+comment|/* failure - retval = 0 */
+literal|"3:\n\t"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|cmpval
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+operator|*
+name|cmpval
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|newval
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|cmpval
+operator|)
+operator|:
+literal|"cr0"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|int
+name|atomic_fcmpset_acq_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+modifier|*
+name|cmpval
+parameter_list|,
+name|u_int
+name|newval
+parameter_list|)
+block|{
+name|int
+name|retval
+decl_stmt|;
+name|retval
+operator|=
+name|atomic_fcmpset_int
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+expr_stmt|;
+name|__ATOMIC_ACQ
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|atomic_fcmpset_rel_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+modifier|*
+name|cmpval
+parameter_list|,
+name|u_int
+name|newval
+parameter_list|)
+block|{
+name|__ATOMIC_REL
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|atomic_fcmpset_int
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|atomic_fcmpset_acq_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+modifier|*
+name|cmpval
+parameter_list|,
+name|u_long
+name|newval
+parameter_list|)
+block|{
+name|u_long
+name|retval
+decl_stmt|;
+name|retval
+operator|=
+name|atomic_fcmpset_long
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+expr_stmt|;
+name|__ATOMIC_ACQ
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|atomic_fcmpset_rel_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_long
+modifier|*
+name|cmpval
+parameter_list|,
+name|u_long
+name|newval
+parameter_list|)
+block|{
+name|__ATOMIC_REL
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|atomic_fcmpset_long
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_32
+value|atomic_fcmpset_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_32
+value|atomic_fcmpset_acq_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_32
+value|atomic_fcmpset_rel_int
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_64
+value|atomic_fcmpset_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_64
+value|atomic_fcmpset_acq_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_64
+value|atomic_fcmpset_rel_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_ptr
+value|atomic_fcmpset_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_ptr
+value|atomic_fcmpset_acq_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_ptr
+value|atomic_fcmpset_rel_long
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_ptr
+value|atomic_fcmpset_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_ptr
+value|atomic_fcmpset_acq_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_ptr
+value|atomic_fcmpset_rel_int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|__inline
