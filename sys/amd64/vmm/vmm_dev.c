@@ -1133,10 +1133,9 @@ name|error
 operator|=
 name|copystr
 argument_list|(
-name|VM_MEMSEG_NAME
-argument_list|(
 name|mseg
-argument_list|)
+operator|->
+name|name
 argument_list|,
 name|name
 argument_list|,
