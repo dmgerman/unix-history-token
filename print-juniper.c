@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
 end_comment
 
+begin_comment
+comment|/* \summary: DLT_JUNIPER_* printers */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -31,12 +35,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -57,13 +55,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -422,7 +426,7 @@ begin_define
 define|#
 directive|define
 name|JUNIPER_EXT_TLV_OVERHEAD
-value|2
+value|2U
 end_define
 
 begin_decl_stmt
@@ -2890,6 +2894,7 @@ expr_stmt|;
 name|ih
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|juniper_ipsec_header
 operator|*
@@ -3216,6 +3221,7 @@ expr_stmt|;
 name|mh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|juniper_monitor_header
 operator|*
@@ -3378,6 +3384,7 @@ expr_stmt|;
 name|sh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|juniper_services_header
 operator|*
@@ -4010,6 +4017,10 @@ operator|.
 name|caplen
 operator|-
 name|ETHERTYPE_LEN
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 literal|0
@@ -4367,6 +4378,19 @@ name|struct
 name|juniper_l2info_t
 name|l2info
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|l2info
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|l2info
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|l2info
 operator|.
 name|pictype
@@ -4923,8 +4947,8 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|uint16_t
-name|extracted_ethertype
+name|int
+name|llc_hdrlen
 decl_stmt|;
 name|struct
 name|juniper_l2info_t
@@ -5014,8 +5038,8 @@ literal|0xaaaa03
 condition|)
 block|{
 comment|/* SNAP encaps ? */
-if|if
-condition|(
+name|llc_hdrlen
+operator|=
 name|llc_print
 argument_list|(
 name|ndo
@@ -5033,11 +5057,12 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-operator|&
-name|extracted_ethertype
 argument_list|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|llc_hdrlen
+operator|>
 literal|0
 condition|)
 return|return
@@ -5150,8 +5175,8 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|uint16_t
-name|extracted_ethertype
+name|int
+name|llc_hdrlen
 decl_stmt|;
 name|struct
 name|juniper_l2info_t
@@ -5241,8 +5266,8 @@ literal|0xaaaa03
 condition|)
 block|{
 comment|/* SNAP encaps ? */
-if|if
-condition|(
+name|llc_hdrlen
+operator|=
 name|llc_print
 argument_list|(
 name|ndo
@@ -5260,11 +5285,12 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-operator|&
-name|extracted_ethertype
 argument_list|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|llc_hdrlen
+operator|>
 literal|0
 condition|)
 return|return
@@ -5477,17 +5503,12 @@ case|:
 case|case
 name|PPP_ML
 case|:
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|PPP_IPV6
 case|:
 case|case
 name|PPP_IPV6CP
 case|:
-endif|#
-directive|endif
 name|ppp_print
 argument_list|(
 name|ndo
@@ -6117,7 +6138,7 @@ name|tlv_value
 operator|=
 literal|0
 expr_stmt|;
-comment|/* sanity check */
+comment|/* sanity checks */
 if|if
 condition|(
 name|tlv_type
@@ -6129,6 +6150,17 @@ operator|==
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|tlv_len
+operator|+
+name|JUNIPER_EXT_TLV_OVERHEAD
+operator|>
+name|jnx_ext_len
+condition|)
+goto|goto
+name|trunc
+goto|;
 if|if
 condition|(
 name|ndo

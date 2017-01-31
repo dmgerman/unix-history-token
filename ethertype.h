@@ -1021,6 +1021,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_MEDSA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_MEDSA
+value|0xdada
+end_define
+
+begin_comment
+comment|/* Marvel Distributed Switch Architecture */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 specifier|const

@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Sun Remote Procedure Call printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -39,7 +37,7 @@ end_undef
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_if
@@ -107,7 +105,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -128,22 +126,11 @@ directive|include
 file|"ip.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"ip6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -370,9 +357,6 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 specifier|register
 specifier|const
 name|struct
@@ -380,8 +364,6 @@ name|ip6_hdr
 modifier|*
 name|ip6
 decl_stmt|;
-endif|#
-directive|endif
 name|uint32_t
 name|x
 decl_stmt|;
@@ -400,6 +382,7 @@ comment|/*fits 32bit*/
 name|rp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sunrpc_msg
 operator|*
@@ -489,6 +472,7 @@ condition|(
 name|IP_V
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -503,6 +487,7 @@ case|:
 name|ip
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -545,15 +530,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 literal|6
 case|:
 name|ip6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
@@ -596,8 +579,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|ND_PRINT
 argument_list|(

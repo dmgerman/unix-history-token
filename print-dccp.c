@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (C) Arnaldo Carvalho de Melo 2004  * Copyright (C) Ian McDonald 2005  * Copyright (C) Yoshifumi Nishida 2005  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or the GNU GPL version 2  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Datagram Congestion Control Protocol (DCCP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -47,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -62,32 +60,17 @@ directive|include
 file|"extract.h"
 end_include
 
-begin_comment
-comment|/* must come after interface.h */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|"ip.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"ip6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -605,6 +588,7 @@ name|uint8_t
 operator|*
 operator|)
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -625,17 +609,15 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_function
 specifier|static
 name|int
 name|dccp6_cksum
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|ip6_hdr
@@ -655,6 +637,8 @@ block|{
 return|return
 name|nextproto6_cksum
 argument_list|(
+name|ndo
+argument_list|,
 name|ip6
 argument_list|,
 operator|(
@@ -663,6 +647,7 @@ name|uint8_t
 operator|*
 operator|)
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -682,11 +667,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -998,17 +978,12 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 specifier|const
 name|struct
 name|ip6_hdr
 modifier|*
 name|ip6
 decl_stmt|;
-endif|#
-directive|endif
 specifier|const
 name|u_char
 modifier|*
@@ -1041,15 +1016,13 @@ expr_stmt|;
 name|ip
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
 operator|)
 name|data2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|IP_V
@@ -1074,9 +1047,6 @@ name|ip6
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*INET6*/
 comment|/* make sure we have enough data to look at the X bit */
 name|cp
 operator|=
@@ -1210,9 +1180,6 @@ name|dccph_doff
 operator|*
 literal|4
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|ip6
@@ -1253,9 +1220,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/*INET6*/
 block|{
 name|ND_PRINT
 argument_list|(
@@ -1439,9 +1403,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 elseif|else
 if|if
 condition|(
@@ -1456,6 +1417,8 @@ name|sum
 operator|=
 name|dccp6_cksum
 argument_list|(
+name|ndo
+argument_list|,
 name|ip6
 argument_list|,
 name|dh
@@ -1463,8 +1426,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sum
@@ -1538,12 +1499,14 @@ case|case
 name|DCCP_PKT_REQUEST
 case|:
 block|{
+specifier|const
 name|struct
 name|dccp_hdr_request
 modifier|*
 name|dhr
 init|=
 operator|(
+specifier|const
 expr|struct
 name|dccp_hdr_request
 operator|*
@@ -1627,12 +1590,14 @@ case|case
 name|DCCP_PKT_RESPONSE
 case|:
 block|{
+specifier|const
 name|struct
 name|dccp_hdr_response
 modifier|*
 name|dhr
 init|=
 operator|(
+specifier|const
 expr|struct
 name|dccp_hdr_response
 operator|*
@@ -1970,12 +1935,14 @@ case|case
 name|DCCP_PKT_RESET
 case|:
 block|{
+specifier|const
 name|struct
 name|dccp_hdr_reset
 modifier|*
 name|dhr
 init|=
 operator|(
+specifier|const
 expr|struct
 name|dccp_hdr_reset
 operator|*
@@ -2248,11 +2215,6 @@ operator|>
 name|fixed_hdrlen
 condition|)
 block|{
-specifier|const
-name|u_char
-modifier|*
-name|cp
-decl_stmt|;
 name|u_int
 name|optlen
 decl_stmt|;

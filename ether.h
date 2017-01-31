@@ -22,7 +22,7 @@ value|6
 end_define
 
 begin_comment
-comment|/*  * Structure of a DEC/Intel/Xerox or 802.3 Ethernet header.  */
+comment|/*  * Structure of an Ethernet header.  */
 end_comment
 
 begin_struct
@@ -42,14 +42,14 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|uint16_t
-name|ether_type
+name|ether_length_type
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Length of a DEC/Intel/Xerox or 802.3 Ethernet header; note that some  * compilers may pad "struct ether_header" to a multiple of 4 bytes,  * for example, so "sizeof (struct ether_header)" may not give the right  * answer.  */
+comment|/*  * Length of an Ethernet header; note that some compilers may pad  * "struct ether_header" to a multiple of 4 bytes, for example, so  * "sizeof (struct ether_header)" may not give the right answer.  */
 end_comment
 
 begin_define

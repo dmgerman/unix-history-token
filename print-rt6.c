@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: IPv6 routing header printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -26,16 +24,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -53,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -121,17 +113,10 @@ name|in6_addr
 modifier|*
 name|addr
 decl_stmt|;
-specifier|const
-name|struct
-name|in6_addr
-modifier|*
-name|last_addr
-init|=
-name|NULL
-decl_stmt|;
 name|dp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_rthdr
 operator|*
@@ -205,24 +190,6 @@ operator|->
 name|ip6r_type
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|IPV6_RTHDR_TYPE_0
-define|#
-directive|define
-name|IPV6_RTHDR_TYPE_0
-value|0
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|IPV6_RTHDR_TYPE_2
-define|#
-directive|define
-name|IPV6_RTHDR_TYPE_2
-value|2
-endif|#
-directive|endif
 case|case
 name|IPV6_RTHDR_TYPE_0
 case|:
@@ -233,6 +200,7 @@ comment|/* Mobile IPv6 ID-20 */
 name|dp0
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_rthdr0
 operator|*
@@ -317,6 +285,7 @@ block|{
 if|if
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -349,49 +318,8 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|last_addr
-operator|=
-name|addr
-expr_stmt|;
 name|addr
 operator|++
-expr_stmt|;
-block|}
-comment|/* 		 * the destination address used in the pseudo-header is that of the final 		 * destination : the last address of the routing header 		 */
-if|if
-condition|(
-name|last_addr
-operator|!=
-name|NULL
-condition|)
-block|{
-name|struct
-name|ip6_hdr
-modifier|*
-name|ip6
-init|=
-operator|(
-expr|struct
-name|ip6_hdr
-operator|*
-operator|)
-name|bp2
-decl_stmt|;
-name|UNALIGNED_MEMCPY
-argument_list|(
-operator|&
-name|ip6
-operator|->
-name|ip6_dst
-argument_list|,
-name|last_addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|in6_addr
-argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
 comment|/*(*/
@@ -441,15 +369,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 end_unit
 

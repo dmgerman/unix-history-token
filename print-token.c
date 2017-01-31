@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Hacked version of print-ether.c  Larry Lile<lile@stdio.com>  *  * Further tweaked to more closely resemble print-fddi.c  *	Guy Harris<guy@alum.mit.edu>  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Token Ring printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -360,16 +358,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ndo
 operator|->
-name|ndo_vflag
+name|ndo_qflag
 condition|)
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"%02x %02x %s %s %d: "
+literal|"%02x %02x "
 operator|,
 name|trp
 operator|->
@@ -378,22 +377,15 @@ operator|,
 name|trp
 operator|->
 name|token_fc
-operator|,
-name|srcname
-operator|,
-name|dstname
-operator|,
-name|length
 operator|)
 argument_list|)
 expr_stmt|;
-else|else
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"%s %s %d: "
+literal|"%s> %s, length %u: "
 operator|,
 name|srcname
 operator|,
@@ -504,12 +496,18 @@ name|token_header
 modifier|*
 name|trp
 decl_stmt|;
-name|u_short
-name|extracted_ethertype
+name|int
+name|llc_hdrlen
 decl_stmt|;
 name|struct
 name|ether_header
 name|ehdr
+decl_stmt|;
+name|struct
+name|lladdr_info
+name|src
+decl_stmt|,
+name|dst
 decl_stmt|;
 name|u_int
 name|route_len
@@ -869,6 +867,38 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|src
+operator|.
+name|addr
+operator|=
+name|ESRC
+argument_list|(
+operator|&
+name|ehdr
+argument_list|)
+expr_stmt|;
+name|src
+operator|.
+name|addr_string
+operator|=
+name|etheraddr_string
+expr_stmt|;
+name|dst
+operator|.
+name|addr
+operator|=
+name|EDST
+argument_list|(
+operator|&
+name|ehdr
+argument_list|)
+expr_stmt|;
+name|dst
+operator|.
+name|addr_string
+operator|=
+name|etheraddr_string
+expr_stmt|;
 comment|/* Skip over token ring MAC header and routing information */
 name|length
 operator|-=
@@ -894,8 +924,8 @@ name|TOKEN_FC_LLC
 condition|)
 block|{
 comment|/* Try to print the LLC-layer header& higher layers */
-if|if
-condition|(
+name|llc_hdrlen
+operator|=
 name|llc_print
 argument_list|(
 name|ndo
@@ -906,81 +936,21 @@ name|length
 argument_list|,
 name|caplen
 argument_list|,
-name|ESRC
-argument_list|(
 operator|&
-name|ehdr
-argument_list|)
-argument_list|,
-name|EDST
-argument_list|(
-operator|&
-name|ehdr
-argument_list|)
+name|src
 argument_list|,
 operator|&
-name|extracted_ethertype
+name|dst
 argument_list|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|llc_hdrlen
+operator|<
 literal|0
 condition|)
 block|{
-comment|/* ether_type not known, print raw packet */
-if|if
-condition|(
-operator|!
-name|ndo
-operator|->
-name|ndo_eflag
-condition|)
-name|token_hdr_print
-argument_list|(
-name|ndo
-argument_list|,
-name|trp
-argument_list|,
-name|length
-operator|+
-name|TOKEN_HDRLEN
-operator|+
-name|route_len
-argument_list|,
-name|ESRC
-argument_list|(
-operator|&
-name|ehdr
-argument_list|)
-argument_list|,
-name|EDST
-argument_list|(
-operator|&
-name|ehdr
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|extracted_ethertype
-condition|)
-block|{
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"(LLC %s) "
-operator|,
-name|etherproto_string
-argument_list|(
-name|htons
-argument_list|(
-name|extracted_ethertype
-argument_list|)
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* packet type not known, print raw packet */
 if|if
 condition|(
 operator|!
@@ -995,7 +965,16 @@ argument_list|,
 name|caplen
 argument_list|)
 expr_stmt|;
+name|llc_hdrlen
+operator|=
+operator|-
+name|llc_hdrlen
+expr_stmt|;
 block|}
+name|hdr_len
+operator|+=
+name|llc_hdrlen
+expr_stmt|;
 block|}
 else|else
 block|{

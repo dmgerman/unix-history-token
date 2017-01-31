@@ -4,14 +4,12 @@ comment|/*  * Copyright: (c) 2000 United States Government as represented by the
 end_comment
 
 begin_comment
-comment|/*  * This code unmangles RX packets.  RX is the mutant form of RPC that AFS  * uses to communicate between clients and servers.  *  * In this code, I mainly concern myself with decoding the AFS calls, not  * with the guts of RX, per se.  *  * Bah.  If I never look at rx_packet.h again, it will be too soon.  *  * Ken Hornstein<kenh@cmf.nrl.navy.mil>  */
+comment|/* \summary: AFS RX printer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/*  * This code unmangles RX packets.  RX is the mutant form of RPC that AFS  * uses to communicate between clients and servers.  *  * In this code, I mainly concern myself with decoding the AFS calls, not  * with the guts of RX, per se.  *  * Bah.  If I never look at rx_packet.h again, it will be too soon.  *  * Ken Hornstein<kenh@cmf.nrl.navy.mil>  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -51,13 +49,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -2889,12 +2887,14 @@ parameter_list|,
 name|int
 name|dport
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|bp2
 parameter_list|)
 block|{
 specifier|register
+specifier|const
 name|struct
 name|rx_header
 modifier|*
@@ -2940,6 +2940,7 @@ block|}
 name|rxh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_header
 operator|*
@@ -3653,21 +3654,41 @@ name|rxh
 operator|->
 name|callNumber
 expr_stmt|;
+name|UNALIGNED_MEMCPY
+argument_list|(
+operator|&
 name|rxent
 operator|->
 name|client
-operator|=
+argument_list|,
+operator|&
 name|ip
 operator|->
 name|ip_src
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|UNALIGNED_MEMCPY
+argument_list|(
+operator|&
 name|rxent
 operator|->
 name|server
-operator|=
+argument_list|,
+operator|&
 name|ip
 operator|->
 name|ip_dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|rxent
 operator|->
@@ -3740,22 +3761,42 @@ name|rxent
 decl_stmt|;
 name|uint32_t
 name|clip
-init|=
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
 decl_stmt|;
 name|uint32_t
 name|sip
-init|=
+decl_stmt|;
+name|UNALIGNED_MEMCPY
+argument_list|(
+operator|&
+name|clip
+argument_list|,
+operator|&
+name|ip
+operator|->
+name|ip_dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|UNALIGNED_MEMCPY
+argument_list|(
+operator|&
+name|sip
+argument_list|,
+operator|&
 name|ip
 operator|->
 name|ip_src
-operator|.
-name|s_addr
-decl_stmt|;
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Start the search where we last left off */
 name|i
 operator|=
@@ -3877,7 +3918,7 @@ name|STROUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ unsigned int i; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			i = EXTRACT_32BITS(bp); \ 			if (i> (MAX)) \ 				goto trunc; \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " \"")); \ 			if (fn_printn(ndo, bp, i, ndo->ndo_snapend)) \ 				goto trunc; \ 			ND_PRINT((ndo, "\"")); \ 			bp += ((i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
+value|{ unsigned int _i; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			_i = EXTRACT_32BITS(bp); \ 			if (_i> (MAX)) \ 				goto trunc; \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " \"")); \ 			if (fn_printn(ndo, bp, _i, ndo->ndo_snapend)) \ 				goto trunc; \ 			ND_PRINT((ndo, "\"")); \ 			bp += ((_i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
 end_define
 
 begin_define
@@ -3885,7 +3926,7 @@ define|#
 directive|define
 name|INTOUT
 parameter_list|()
-value|{ int i; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			i = (int) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " %d", i)); \ 		}
+value|{ int _i; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			_i = (int) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " %d", _i)); \ 		}
 end_define
 
 begin_define
@@ -3893,7 +3934,7 @@ define|#
 directive|define
 name|UINTOUT
 parameter_list|()
-value|{ unsigned long i; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			i = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " %lu", i)); \ 		}
+value|{ unsigned long _i; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			_i = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " %lu", _i)); \ 		}
 end_define
 
 begin_define
@@ -3901,7 +3942,7 @@ define|#
 directive|define
 name|UINT64OUT
 parameter_list|()
-value|{ uint64_t i; \ 			ND_TCHECK2(bp[0], sizeof(uint64_t)); \ 			i = EXTRACT_64BITS(bp); \ 			bp += sizeof(uint64_t); \ 			ND_PRINT((ndo, " %" PRIu64, i)); \ 		}
+value|{ uint64_t _i; \ 			ND_TCHECK2(bp[0], sizeof(uint64_t)); \ 			_i = EXTRACT_64BITS(bp); \ 			bp += sizeof(uint64_t); \ 			ND_PRINT((ndo, " %" PRIu64, _i)); \ 		}
 end_define
 
 begin_define
@@ -3909,7 +3950,7 @@ define|#
 directive|define
 name|DATEOUT
 parameter_list|()
-value|{ time_t t; struct tm *tm; char str[256]; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			t = (time_t) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			tm = localtime(&t); \ 			strftime(str, 256, "%Y/%m/%d %T", tm); \ 			ND_PRINT((ndo, " %s", str)); \ 		}
+value|{ time_t _t; struct tm *tm; char str[256]; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			_t = (time_t) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			tm = localtime(&_t); \ 			strftime(str, 256, "%Y/%m/%d %H:%M:%S", tm); \ 			ND_PRINT((ndo, " %s", str)); \ 		}
 end_define
 
 begin_define
@@ -3917,7 +3958,7 @@ define|#
 directive|define
 name|STOREATTROUT
 parameter_list|()
-value|{ unsigned long mask, i; \ 			ND_TCHECK2(bp[0], (sizeof(int32_t)*6)); \ 			mask = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 			if (mask) ND_PRINT((ndo, " StoreStatus")); \ 		        if (mask& 1) { ND_PRINT((ndo, " date")); DATEOUT(); } \ 			else bp += sizeof(int32_t); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 2) ND_PRINT((ndo, " owner %lu", i));  \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 4) ND_PRINT((ndo, " group %lu", i)); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 8) ND_PRINT((ndo, " mode %lo", i& 07777)); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 16) ND_PRINT((ndo, " segsize %lu", i)); \
+value|{ unsigned long mask, _i; \ 			ND_TCHECK2(bp[0], (sizeof(int32_t)*6)); \ 			mask = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 			if (mask) ND_PRINT((ndo, " StoreStatus")); \ 		        if (mask& 1) { ND_PRINT((ndo, " date")); DATEOUT(); } \ 			else bp += sizeof(int32_t); \ 			_i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 2) ND_PRINT((ndo, " owner %lu", _i));  \ 			_i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 4) ND_PRINT((ndo, " group %lu", _i)); \ 			_i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 8) ND_PRINT((ndo, " mode %lo", _i& 07777)); \ 			_i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 16) ND_PRINT((ndo, " segsize %lu", _i)); \
 comment|/* undocumented in 3.3 docu */
 value|\ 		        if (mask& 1024) ND_PRINT((ndo, " fsync"));  \ 		}
 end_define
@@ -3935,7 +3976,7 @@ define|#
 directive|define
 name|AFSUUIDOUT
 parameter_list|()
-value|{uint32_t temp; int i; \ 			ND_TCHECK2(bp[0], 11*sizeof(uint32_t)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(uint32_t); \ 			ND_PRINT((ndo, " %08x", temp)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(uint32_t); \ 			ND_PRINT((ndo, "%04x", temp)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(uint32_t); \ 			ND_PRINT((ndo, "%04x", temp)); \ 			for (i = 0; i< 8; i++) { \ 				temp = EXTRACT_32BITS(bp); \ 				bp += sizeof(uint32_t); \ 				ND_PRINT((ndo, "%02x", (unsigned char) temp)); \ 			} \ 		}
+value|{uint32_t temp; int _i; \ 			ND_TCHECK2(bp[0], 11*sizeof(uint32_t)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(uint32_t); \ 			ND_PRINT((ndo, " %08x", temp)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(uint32_t); \ 			ND_PRINT((ndo, "%04x", temp)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(uint32_t); \ 			ND_PRINT((ndo, "%04x", temp)); \ 			for (_i = 0; _i< 8; _i++) { \ 				temp = EXTRACT_32BITS(bp); \ 				bp += sizeof(uint32_t); \ 				ND_PRINT((ndo, "%02x", (unsigned char) temp)); \ 			} \ 		}
 end_define
 
 begin_comment
@@ -4274,6 +4315,7 @@ argument_list|(
 name|a
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4724,6 +4766,7 @@ name|unsigned
 name|long
 name|i
 decl_stmt|;
+specifier|const
 name|struct
 name|rx_header
 modifier|*
@@ -4746,6 +4789,7 @@ return|return;
 name|rxh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_header
 operator|*
@@ -4855,6 +4899,7 @@ argument_list|(
 name|a
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4958,9 +5003,6 @@ operator|==
 name|RX_PACKET_TYPE_ABORT
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
 comment|/* 		 * Otherwise, just print out the return code 		 */
 name|ND_TCHECK2
 argument_list|(
@@ -5775,6 +5817,7 @@ name|int32_t
 name|opcode
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rx_header
 modifier|*
@@ -5797,6 +5840,7 @@ return|return;
 name|rxh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_header
 operator|*
@@ -6493,6 +6537,7 @@ name|int32_t
 name|opcode
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rx_header
 modifier|*
@@ -6519,6 +6564,7 @@ return|return;
 name|rxh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_header
 operator|*
@@ -7313,6 +7359,7 @@ name|int32_t
 name|opcode
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rx_header
 modifier|*
@@ -7339,6 +7386,7 @@ return|return;
 name|rxh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_header
 operator|*
@@ -7584,6 +7632,7 @@ name|intoa
 argument_list|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|in_addr
 operator|*
@@ -7930,6 +7979,7 @@ name|intoa
 argument_list|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|in_addr
 operator|*
@@ -8592,7 +8642,6 @@ case|case
 literal|1
 case|:
 comment|/* Authenticate old */
-empty_stmt|;
 case|case
 literal|21
 case|:
@@ -8851,6 +8900,7 @@ name|int32_t
 name|opcode
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rx_header
 modifier|*
@@ -8873,6 +8923,7 @@ return|return;
 name|rxh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_header
 operator|*
@@ -9970,6 +10021,7 @@ name|int32_t
 name|opcode
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rx_header
 modifier|*
@@ -9992,6 +10044,7 @@ return|return;
 name|rxh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_header
 operator|*
@@ -10903,6 +10956,7 @@ name|int32_t
 name|opcode
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rx_header
 modifier|*
@@ -10925,6 +10979,7 @@ return|return;
 name|rxh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_header
 operator|*
@@ -11554,6 +11609,7 @@ name|int32_t
 name|opcode
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rx_header
 modifier|*
@@ -11576,6 +11632,7 @@ return|return;
 name|rxh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_header
 operator|*
@@ -11733,6 +11790,7 @@ name|int
 name|length
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rx_ackPacket
 modifier|*
@@ -11790,6 +11848,7 @@ expr_stmt|;
 name|rxa
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rx_ackPacket
 operator|*

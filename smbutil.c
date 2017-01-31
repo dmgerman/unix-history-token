@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * Copyright (C) Andrew Tridgell 1995-1999  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or the GNU GPL version 2  * or later  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -29,7 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -53,7 +47,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -1283,7 +1277,7 @@ end_function
 
 begin_function
 name|void
-name|print_data
+name|smb_print_data
 parameter_list|(
 name|netdissect_options
 modifier|*
@@ -4233,7 +4227,7 @@ name|len
 operator|)
 argument_list|)
 expr_stmt|;
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,

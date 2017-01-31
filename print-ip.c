@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: IP printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -55,10 +53,6 @@ include|#
 directive|include
 file|"extract.h"
 end_include
-
-begin_comment
-comment|/* must come after interface.h */
-end_comment
 
 begin_include
 include|#
@@ -519,8 +513,6 @@ operator|&
 name|ip
 operator|->
 name|ip_dst
-operator|.
-name|s_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -631,8 +623,6 @@ operator|&
 name|ip
 operator|->
 name|ip_src
-operator|.
-name|s_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -660,8 +650,6 @@ operator|&
 name|ip
 operator|->
 name|ip_dst
-operator|.
-name|s_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1525,13 +1513,6 @@ name|protoent
 modifier|*
 name|proto
 decl_stmt|;
-name|struct
-name|cksum_vec
-name|vec
-index|[
-literal|1
-index|]
-decl_stmt|;
 name|again
 label|:
 switch|switch
@@ -1544,6 +1525,29 @@ block|{
 case|case
 name|IPPROTO_AH
 case|:
+if|if
+condition|(
+operator|!
+name|ND_TTEST
+argument_list|(
+operator|*
+name|ipds
+operator|->
+name|cp
+argument_list|)
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"[|AH]"
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|ipds
 operator|->
 name|nh
@@ -1678,13 +1682,6 @@ case|case
 name|IPPROTO_IPCOMP
 case|:
 block|{
-name|int
-name|enh
-decl_stmt|;
-name|ipds
-operator|->
-name|advance
-operator|=
 name|ipcomp_print
 argument_list|(
 name|ndo
@@ -1692,47 +1689,10 @@ argument_list|,
 name|ipds
 operator|->
 name|cp
-argument_list|,
-operator|&
-name|enh
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ipds
-operator|->
-name|advance
-operator|<=
-literal|0
-condition|)
+comment|/* 		 * Either this has decompressed the payload and 		 * printed it, in which case there's nothing more 		 * to do, or it hasn't, in which case there's 		 * nothing more to do. 		 */
 break|break;
-name|ipds
-operator|->
-name|cp
-operator|+=
-name|ipds
-operator|->
-name|advance
-expr_stmt|;
-name|ipds
-operator|->
-name|len
-operator|-=
-name|ipds
-operator|->
-name|advance
-expr_stmt|;
-name|ipds
-operator|->
-name|nh
-operator|=
-name|enh
-operator|&
-literal|0xff
-expr_stmt|;
-goto|goto
-name|again
-goto|;
 block|}
 case|case
 name|IPPROTO_SCTP
@@ -2119,28 +2079,6 @@ break|break;
 case|case
 name|IPPROTO_PIM
 case|:
-name|vec
-index|[
-literal|0
-index|]
-operator|.
-name|ptr
-operator|=
-name|ipds
-operator|->
-name|cp
-expr_stmt|;
-name|vec
-index|[
-literal|0
-index|]
-operator|.
-name|len
-operator|=
-name|ipds
-operator|->
-name|len
-expr_stmt|;
 name|pim_print
 argument_list|(
 name|ndo
@@ -2153,12 +2091,14 @@ name|ipds
 operator|->
 name|len
 argument_list|,
-name|in_cksum
-argument_list|(
-name|vec
-argument_list|,
-literal|1
-argument_list|)
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+name|ipds
+operator|->
+name|ip
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2570,7 +2510,7 @@ operator|!=
 literal|4
 condition|)
 block|{
-comment|/* print version if != 4 */
+comment|/* print version and fail if != 4 */
 if|if
 condition|(
 name|IP_V
@@ -2608,8 +2548,8 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-elseif|else
 if|if
 condition|(
 operator|!
@@ -2863,17 +2803,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* ECN bits */
-if|if
-condition|(
-name|ipds
-operator|->
-name|ip
-operator|->
-name|ip_tos
-operator|&
-literal|0x03
-condition|)
-block|{
 switch|switch
 condition|(
 name|ipds
@@ -2885,6 +2814,10 @@ operator|&
 literal|0x03
 condition|)
 block|{
+case|case
+literal|0
+case|:
+break|break;
 case|case
 literal|1
 case|:
@@ -2923,7 +2856,7 @@ literal|",CE"
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
 block|}
 if|if
 condition|(
@@ -3060,6 +2993,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3098,6 +3032,7 @@ operator|->
 name|ndo_Kflag
 operator|&&
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3125,6 +3060,7 @@ name|uint8_t
 operator|*
 operator|)
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -3309,7 +3245,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Ultra quiet now means that all this stuff should be suppressed */
+comment|/* 		 * Ultra quiet now means that all this stuff should be 		 * suppressed. 		 */
 if|if
 condition|(
 name|ndo
@@ -3319,16 +3255,7 @@ operator|>
 literal|1
 condition|)
 return|return;
-comment|/* 	     * if this isn't the first frag, we're missing the 	     * next level protocol header.  print the ip addr 	     * and the protocol. 	     */
-if|if
-condition|(
-name|ipds
-operator|->
-name|off
-operator|&
-literal|0x1fff
-condition|)
-block|{
+comment|/* 		 * This isn't the first frag, so we're missing the 		 * next level protocol header.  print the ip addr 		 * and the protocol. 		 */
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -3414,7 +3341,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 return|return;
 name|trunc
 label|:
@@ -3452,15 +3378,11 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|struct
-name|ip
-name|hdr
-decl_stmt|;
 if|if
 condition|(
 name|length
 operator|<
-literal|4
+literal|1
 condition|)
 block|{
 name|ND_PRINT
@@ -3476,27 +3398,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|memcpy
+name|ND_TCHECK
 argument_list|(
-operator|&
-name|hdr
-argument_list|,
+operator|*
 name|bp
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|IP_V
-argument_list|(
+operator|*
+name|bp
 operator|&
-name|hdr
-argument_list|)
+literal|0xF0
 condition|)
 block|{
 case|case
-literal|4
+literal|0x40
 case|:
 name|ip_print
 argument_list|(
@@ -3507,9 +3424,9 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 case|case
-literal|6
+literal|0x60
 case|:
 name|ip6_print
 argument_list|(
@@ -3520,7 +3437,7 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 default|default:
 name|ND_PRINT
 argument_list|(
@@ -3529,16 +3446,34 @@ name|ndo
 operator|,
 literal|"unknown ip %d"
 operator|,
-name|IP_V
-argument_list|(
+operator|(
+operator|*
+name|bp
 operator|&
-name|hdr
+literal|0xF0
+operator|)
+operator|>>
+literal|4
+operator|)
 argument_list|)
+expr_stmt|;
+break|break;
+block|}
+return|return;
+name|trunc
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 block|}
 end_function
 

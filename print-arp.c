@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Address Resolution Protocol (ARP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -67,10 +65,6 @@ include|#
 directive|include
 file|"extract.h"
 end_include
-
-begin_comment
-comment|/* must come after interface.h */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -715,15 +709,53 @@ parameter_list|)
 value|(aar_tpa(ap))
 end_define
 
-begin_decl_stmt
+begin_function
 specifier|static
+name|int
+name|isnonzero
+parameter_list|(
+specifier|const
 name|u_char
-name|ezero
-index|[
-literal|6
-index|]
-decl_stmt|;
-end_decl_stmt
+modifier|*
+name|a
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+while|while
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|a
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|a
+operator|++
+expr_stmt|;
+name|len
+operator|--
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -1704,18 +1736,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memcmp
+name|isnonzero
 argument_list|(
 operator|(
 specifier|const
-name|char
-operator|*
-operator|)
-name|ezero
-argument_list|,
-operator|(
-specifier|const
-name|char
+name|u_char
 operator|*
 operator|)
 name|THA
@@ -1728,8 +1753,6 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|)
-operator|!=
-literal|0
 condition|)
 name|ND_PRINT
 argument_list|(

@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Format and print AppleTalk packets.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: AppleTalk printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -47,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -67,10 +65,6 @@ include|#
 directive|include
 file|"extract.h"
 end_include
-
-begin_comment
-comment|/* must come after interface.h */
-end_comment
 
 begin_include
 include|#
@@ -377,8 +371,11 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-return|return
-operator|(
+name|u_int
+name|hdrlen
+decl_stmt|;
+name|hdrlen
+operator|=
 name|llap_print
 argument_list|(
 name|ndo
@@ -387,8 +384,28 @@ name|p
 argument_list|,
 name|h
 operator|->
-name|caplen
+name|len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hdrlen
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Cut short by the snapshot length. */
+return|return
+operator|(
+name|h
+operator|->
+name|caplen
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|hdrlen
 operator|)
 return|;
 block|}
@@ -471,6 +488,38 @@ name|length
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|ND_TTEST2
+argument_list|(
+operator|*
+name|bp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|lp
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" [|llap]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* cut short by the snapshot length */
+block|}
 name|lp
 operator|=
 operator|(
@@ -538,6 +587,34 @@ operator|(
 name|length
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|ND_TTEST2
+argument_list|(
+operator|*
+name|bp
+argument_list|,
+name|ddpSSize
+argument_list|)
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" [|sddp]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* cut short by the snapshot length */
 block|}
 name|sdp
 operator|=
@@ -669,6 +746,34 @@ operator|(
 name|length
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|ND_TTEST2
+argument_list|(
+operator|*
+name|bp
+argument_list|,
+name|ddpSize
+argument_list|)
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" [|ddp]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* cut short by the snapshot length */
 block|}
 name|dp
 operator|=
@@ -908,6 +1013,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+name|ND_TTEST2
+argument_list|(
+operator|*
+name|bp
+argument_list|,
+name|ddpSize
+argument_list|)
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" [|ddp]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|dp
 operator|=
 operator|(
@@ -1081,6 +1209,52 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ND_TTEST
+argument_list|(
+operator|*
+name|ap
+argument_list|)
+condition|)
+block|{
+comment|/* Just bail if we don't have the whole chunk. */
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" [|aarp]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|length
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ap
+argument_list|)
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" [|aarp %u]"
+operator|,
+name|length
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|EXTRACT_16BITS
@@ -2077,6 +2251,7 @@ operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3193,7 +3368,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -3202,6 +3379,26 @@ operator|=
 name|strdup
 argument_list|(
 name|nambuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"ataddr_string: strdup(nambuf)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3309,7 +3506,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -3341,6 +3540,26 @@ argument_list|(
 name|nambuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"ataddr_string: strdup(nambuf)"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tp
@@ -3366,7 +3585,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3418,6 +3639,26 @@ operator|=
 name|strdup
 argument_list|(
 name|nambuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"ataddr_string: strdup(nambuf)"
 argument_list|)
 expr_stmt|;
 return|return

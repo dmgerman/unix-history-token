@@ -91,7 +91,7 @@ name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|my_fsid
 modifier|*

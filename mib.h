@@ -12,6 +12,7 @@ comment|/* parse problem: no parent for 0.nullSpecific(0) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|obj
 name|_proteon_obj

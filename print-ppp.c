@@ -4,14 +4,12 @@ comment|/*  * Copyright (c) 1990, 1991, 1993, 1994, 1995, 1996, 1997  *	The Rege
 end_comment
 
 begin_comment
-comment|/*  * TODO:  * o resolve XXX as much as possible  * o MP support  * o BAP support  */
+comment|/* \summary: Point to Point Protocol (PPP) printer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/*  * TODO:  * o resolve XXX as much as possible  * o MP support  * o BAP support  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -33,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_ifdef
@@ -68,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -4784,6 +4782,16 @@ block|{
 case|case
 name|PAP_AREQ
 case|:
+comment|/* A valid Authenticate-Request is 6 or more octets long. */
+if|if
+condition|(
+name|len
+operator|<
+literal|6
+condition|)
+goto|goto
+name|trunc
+goto|;
 if|if
 condition|(
 name|length
@@ -4951,6 +4959,16 @@ case|:
 case|case
 name|PAP_ANAK
 case|:
+comment|/* Although some implementations ignore truncation at 		 * this point and at least one generates a truncated 		 * packet, RFC 1334 section 2.2.2 clearly states that 		 * both AACK and ANAK are at least 5 bytes long. 		 */
+if|if
+condition|(
+name|len
+operator|<
+literal|5
+condition|)
+goto|goto
+name|trunc
+goto|;
 if|if
 condition|(
 name|length
@@ -7884,6 +7902,28 @@ argument_list|)
 operator|)
 return|;
 default|default:
+if|if
+condition|(
+name|caplen
+operator|<
+literal|4
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"[|ppp]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|caplen
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|ndo
