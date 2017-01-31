@@ -2601,26 +2601,8 @@ begin_comment
 comment|/* STATUS: scanning */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_ASCAN
-value|0x00000100
-end_define
-
 begin_comment
-comment|/* STATUS: active scan */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_SIBSS
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* STATUS: start IBSS */
+comment|/* 0x00000300 reserved */
 end_comment
 
 begin_comment
@@ -2693,26 +2675,8 @@ begin_comment
 comment|/* CONF: sw tx retry enabled */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_TXPOW_FIXED
-value|0x00010000
-end_define
-
 begin_comment
-comment|/* TX Power: fixed rate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_IBSSON
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* CONF: IBSS creation enable */
+comment|/* 0x00030000 reserved */
 end_comment
 
 begin_define
@@ -2885,7 +2849,7 @@ define|#
 directive|define
 name|IEEE80211_F_BITS
 define|\
-value|"\20\1TURBOP\2COMP\3FF\4BURST\5PRIVACY\6PUREG\10SCAN\11ASCAN\12SIBSS" \ 	"\13SHSLOT\14PMGTON\15DESBSSID\16WME\17BGSCAN\20SWRETRY\21TXPOW_FIXED" \ 	"\22IBSSON\23SHPREAMBLE\24DATAPAD\25USEPROT\26USERBARKER\27CSAPENDING" \ 	"\30WPA1\31WPA2\32DROPUNENC\33COUNTERM\34HIDESSID\35NOBRIDG\36PCF" \ 	"\37DOTH\40DWDS"
+value|"\20\1TURBOP\2COMP\3FF\4BURST\5PRIVACY\6PUREG\10SCAN" \ 	"\13SHSLOT\14PMGTON\15DESBSSID\16WME\17BGSCAN\20SWRETRY" \ 	"\23SHPREAMBLE\24DATAPAD\25USEPROT\26USERBARKER\27CSAPENDING" \ 	"\30WPA1\31WPA2\32DROPUNENC\33COUNTERM\34HIDESSID\35NOBRIDG\36PCF" \ 	"\37DOTH\40DWDS"
 end_define
 
 begin_comment
