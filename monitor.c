@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.157 2016/02/15 23:32:37 djm Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.161 2016/07/22 03:39:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_ifdef
@@ -262,6 +268,12 @@ begin_include
 include|#
 directive|include
 file|"dh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth-pam.h"
 end_include
 
 begin_ifdef
@@ -3643,11 +3655,12 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|,
-name|keyid
-decl_stmt|,
 name|is_proof
 init|=
 literal|0
+decl_stmt|;
+name|u_int
+name|keyid
 decl_stmt|;
 specifier|const
 name|char
@@ -3723,6 +3736,19 @@ name|ssh_err
 argument_list|(
 name|r
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|keyid
+operator|>
+name|INT_MAX
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: invalid key ID"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Supported KEX types use SHA1 (20 bytes), SHA256 (32 bytes), 	 * SHA384 (48 bytes) and SHA512 (64 bytes). 	 * 	 * Otherwise, verify the signature request is for a hostkey 	 * proof. 	 * 	 * XXX perform similar check for KEX signature requests too? 	 * it's not trivial, since what is signed is the hash, rather 	 * than the full kex structure... 	 */
@@ -4754,6 +4780,19 @@ argument_list|,
 name|authenticated
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PAM
+name|buffer_put_int
+argument_list|(
+name|m
+argument_list|,
+name|sshpam_get_maxtries_reached
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|debug3
 argument_list|(
 literal|"%s: sending result %d"
@@ -5714,6 +5753,14 @@ name|buffer_put_int
 argument_list|(
 name|m
 argument_list|,
+name|sshpam_get_maxtries_reached
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|buffer_put_int
+argument_list|(
+name|m
+argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
@@ -6444,6 +6491,21 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|debug3
+argument_list|(
+literal|"%s: key %p is %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|key
+argument_list|,
+name|allowed
+condition|?
+literal|"allowed"
+else|:
+literal|"not allowed"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|key
@@ -6518,21 +6580,6 @@ name|chost
 argument_list|)
 expr_stmt|;
 block|}
-name|debug3
-argument_list|(
-literal|"%s: key %p is %s"
-argument_list|,
-name|__func__
-argument_list|,
-name|key
-argument_list|,
-name|allowed
-condition|?
-literal|"allowed"
-else|:
-literal|"not allowed"
-argument_list|)
-expr_stmt|;
 name|buffer_clear
 argument_list|(
 name|m
@@ -6602,12 +6649,16 @@ block|{
 name|Buffer
 name|b
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|userstyle
+decl_stmt|,
+modifier|*
+name|cp
 decl_stmt|;
 name|u_int
 name|len
@@ -6757,7 +6808,7 @@ condition|)
 name|fail
 operator|++
 expr_stmt|;
-name|p
+name|cp
 operator|=
 name|buffer_get_cstring
 argument_list|(
@@ -6803,7 +6854,7 @@ name|strcmp
 argument_list|(
 name|userstyle
 argument_list|,
-name|p
+name|cp
 argument_list|)
 operator|!=
 literal|0
@@ -6811,11 +6862,12 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"wrong user name passed to monitor: expected %s != %.100s"
+literal|"wrong user name passed to monitor: "
+literal|"expected %s != %.100s"
 argument_list|,
 name|userstyle
 argument_list|,
-name|p
+name|cp
 argument_list|)
 expr_stmt|;
 name|fail
@@ -6829,7 +6881,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|p
+name|cp
 argument_list|)
 expr_stmt|;
 name|buffer_skip_string
@@ -6860,7 +6912,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|p
+name|cp
 operator|=
 name|buffer_get_cstring
 argument_list|(
@@ -6876,7 +6928,7 @@ name|strcmp
 argument_list|(
 literal|"publickey"
 argument_list|,
-name|p
+name|cp
 argument_list|)
 operator|!=
 literal|0
@@ -6886,7 +6938,7 @@ operator|++
 expr_stmt|;
 name|free
 argument_list|(
-name|p
+name|cp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7610,6 +7662,14 @@ modifier|*
 name|pw
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 name|socklen_t
 name|fromlen
 decl_stmt|;
@@ -7709,8 +7769,10 @@ name|pw
 operator|->
 name|pw_uid
 argument_list|,
-name|get_remote_name_or_ip
+name|session_get_remote_name_or_ip
 argument_list|(
+name|ssh
+argument_list|,
 name|utmp_len
 argument_list|,
 name|options
@@ -9475,6 +9537,33 @@ operator|->
 name|kex
 index|[
 name|KEX_DH_GRP14_SHA1
+index|]
+operator|=
+name|kexdh_server
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP14_SHA256
+index|]
+operator|=
+name|kexdh_server
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP16_SHA512
+index|]
+operator|=
+name|kexdh_server
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP18_SHA512
 index|]
 operator|=
 name|kexdh_server

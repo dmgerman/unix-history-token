@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh1.h,v 1.6 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: ssh1.h,v 1.7 2016/05/04 14:22:33 markus Exp $ */
 end_comment
 
 begin_comment
@@ -39,17 +39,6 @@ end_comment
 
 begin_comment
 comment|/* arguments */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSH_MSG_NONE
-value|0
-end_define
-
-begin_comment
-comment|/* no message */
 end_comment
 
 begin_define

@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
 
@@ -274,9 +268,15 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|USE_SOLARIS_PROJECTS
-comment|/* if solaris projects were detected, set the default now */
+comment|/* 	 * If solaris projects were detected, set the default now, unless 	 * we are using PAM in which case it is the responsibility of the 	 * PAM stack. 	 */
 if|if
 condition|(
+operator|!
+name|options
+operator|.
+name|use_pam
+operator|&&
+operator|(
 name|getuid
 argument_list|()
 operator|==
@@ -286,6 +286,7 @@ name|geteuid
 argument_list|()
 operator|==
 literal|0
+operator|)
 condition|)
 name|solaris_set_default_project
 argument_list|(

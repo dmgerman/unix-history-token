@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.284 2016/02/08 10:57:07 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.286 2016/07/23 02:54:08 djm Exp $ */
 end_comment
 
 begin_comment
@@ -344,6 +344,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|no_shell_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Flag indicating that ssh should daemonise after authentication is complete */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fork_after_authentication_flag
 decl_stmt|;
 end_decl_stmt
 
@@ -6215,7 +6226,7 @@ if|if
 condition|(
 name|pledge
 argument_list|(
-literal|"stdio rpath wpath cpath unix inet dns proc exec id tty"
+literal|"stdio rpath wpath cpath unix inet dns recvfd proc exec id tty"
 argument_list|,
 name|NULL
 argument_list|)
@@ -6326,6 +6337,8 @@ name|options
 operator|.
 name|proxy_command
 argument_list|)
+operator|||
+name|fork_after_authentication_flag
 condition|)
 block|{
 name|debug

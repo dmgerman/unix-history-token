@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexdh.c,v 1.25 2015/01/19 20:16:15 markus Exp $ */
+comment|/* $OpenBSD: kexdh.c,v 1.26 2016/05/02 10:26:04 djm Exp $ */
 end_comment
 
 begin_comment
@@ -83,6 +83,9 @@ begin_function
 name|int
 name|kex_dh_hash
 parameter_list|(
+name|int
+name|hash_alg
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -156,7 +159,7 @@ name|hashlen
 operator|<
 name|ssh_digest_bytes
 argument_list|(
-name|SSH_DIGEST_SHA1
+name|hash_alg
 argument_list|)
 condition|)
 return|return
@@ -371,7 +374,7 @@ if|if
 condition|(
 name|ssh_digest_buffer
 argument_list|(
-name|SSH_DIGEST_SHA1
+name|hash_alg
 argument_list|,
 name|b
 argument_list|,
@@ -403,7 +406,7 @@ name|hashlen
 operator|=
 name|ssh_digest_bytes
 argument_list|(
-name|SSH_DIGEST_SHA1
+name|hash_alg
 argument_list|)
 expr_stmt|;
 ifdef|#

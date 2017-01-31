@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.121 2016/02/11 02:21:34 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.124 2016/05/25 23:48:45 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -202,6 +202,12 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"utf8.h"
 end_include
 
 begin_include
@@ -3179,8 +3185,7 @@ name|handle_len
 decl_stmt|;
 name|u_char
 name|type
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|handle
 decl_stmt|;
@@ -3770,7 +3775,7 @@ if|if
 condition|(
 name|print_flag
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -8793,7 +8798,7 @@ if|if
 condition|(
 name|print_flag
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Retrieving %s\n"
 argument_list|,
@@ -10682,7 +10687,7 @@ if|if
 condition|(
 name|print_flag
 condition|)
-name|printf
+name|mprintf
 argument_list|(
 literal|"Entering %s\n"
 argument_list|,

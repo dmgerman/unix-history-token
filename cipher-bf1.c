@@ -13,11 +13,20 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WITH_OPENSSL
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_NO_BF
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -462,7 +471,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WITH_OPENSSL */
+comment|/* defined(WITH_OPENSSL)&& !defined(OPENSSL_NO_BF) */
 end_comment
 
 end_unit
