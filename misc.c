@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.105 2016/07/15 00:24:30 djm Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.107 2016/11/30 00:28:31 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -6453,6 +6453,118 @@ return|return
 literal|0
 return|;
 comment|/* allocated_port and handle are not checked */
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* returns 1 if bind to specified port by specified user is permitted */
+end_comment
+
+begin_function
+name|int
+name|bind_permitted
+parameter_list|(
+name|int
+name|port
+parameter_list|,
+name|uid_t
+name|uid
+parameter_list|)
+block|{
+if|if
+condition|(
+name|port
+operator|<
+name|IPPORT_RESERVED
+operator|&&
+name|uid
+operator|!=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* returns 1 if process is already daemonized, 0 otherwise */
+end_comment
+
+begin_function
+name|int
+name|daemonized
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|_PATH_TTY
+argument_list|,
+name|O_RDONLY
+operator||
+name|O_NOCTTY
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* have controlling terminal */
+block|}
+if|if
+condition|(
+name|getppid
+argument_list|()
+operator|!=
+literal|1
+condition|)
+return|return
+literal|0
+return|;
+comment|/* parent is not init */
+if|if
+condition|(
+name|getsid
+argument_list|(
+literal|0
+argument_list|)
+operator|!=
+name|getpid
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+comment|/* not session leader */
+name|debug3
+argument_list|(
+literal|"already daemonized"
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;

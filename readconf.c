@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.c,v 1.259 2016/07/22 03:35:11 djm Exp $ */
+comment|/* $OpenBSD: readconf.c,v 1.262 2016/10/25 04:08:13 jsg Exp $ */
 end_comment
 
 begin_comment
@@ -1358,15 +1358,15 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|bind_permitted
+argument_list|(
 name|newfwd
 operator|->
 name|listen_port
-operator|<
-name|IPPORT_RESERVED
-operator|&&
+argument_list|,
 name|original_real_uid
-operator|!=
-literal|0
+argument_list|)
 operator|&&
 name|newfwd
 operator|->
@@ -4626,7 +4626,6 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* NOTREACHED */
 case|case
 name|oIgnoredUnknownOption
 case|:

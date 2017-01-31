@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.50 2016/02/09 05:30:04 djm Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.54 2016/09/28 16:33:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -219,7 +219,8 @@ begin_define
 define|#
 directive|define
 name|KEX_CURVE25519_METHODS
-value|"curve25519-sha256@libssh.org,"
+define|\
+value|"curve25519-sha256," \ 	"curve25519-sha256@libssh.org,"
 end_define
 
 begin_else
@@ -278,7 +279,7 @@ begin_define
 define|#
 directive|define
 name|KEX_CLIENT_ENCRYPT
-value|KEX_SERVER_ENCRYPT "," \ 	"aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc"
+value|KEX_SERVER_ENCRYPT "," \ 	"aes128-cbc,aes192-cbc,aes256-cbc"
 end_define
 
 begin_define
@@ -310,7 +311,7 @@ define|#
 directive|define
 name|KEX_SERVER_KEX
 define|\
-value|"curve25519-sha256@libssh.org"
+value|"curve25519-sha256," \ 	"curve25519-sha256@libssh.org"
 end_define
 
 begin_define
@@ -371,7 +372,7 @@ begin_define
 define|#
 directive|define
 name|KEX_DEFAULT_COMP
-value|"none,zlib@openssh.com,zlib"
+value|"none,zlib@openssh.com"
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.30 2015/01/20 23:14:00 deraadt Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.31 2016/09/12 01:22:38 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -22,16 +22,6 @@ ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* MAX */
-end_comment
 
 begin_include
 include|#
@@ -2579,7 +2569,7 @@ name|last_processed
 operator|=
 name|start_lineno
 operator|=
-name|MAX
+name|MAXIMUM
 argument_list|(
 name|last_processed
 argument_list|,

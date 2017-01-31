@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.247 2016/07/22 05:46:11 dtucker Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.251 2016/12/04 23:54:02 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1750,6 +1750,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|pubkey_reset
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|Key
 modifier|*
 name|load_identity_file
@@ -2208,6 +2219,18 @@ argument_list|,
 name|SSH2_MSG_USERAUTH_MAX
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|authctxt
+operator|.
+name|success
+condition|)
+name|fatal
+argument_list|(
+literal|"Authentication failed."
 argument_list|)
 expr_stmt|;
 name|debug
@@ -2938,12 +2961,7 @@ literal|"Authenticated with partial success."
 argument_list|)
 expr_stmt|;
 comment|/* reset state */
-name|pubkey_cleanup
-argument_list|(
-name|authctxt
-argument_list|)
-expr_stmt|;
-name|pubkey_prepare
+name|pubkey_reset
 argument_list|(
 name|authctxt
 argument_list|)
@@ -7326,6 +7344,37 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|pubkey_reset
+parameter_list|(
+name|Authctxt
+modifier|*
+name|authctxt
+parameter_list|)
+block|{
+name|Identity
+modifier|*
+name|id
+decl_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|id
+argument_list|,
+argument|&authctxt->keys
+argument_list|,
+argument|next
+argument_list|)
+name|id
+operator|->
+name|tried
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|try_identity
 parameter_list|(
@@ -7584,6 +7633,12 @@ operator|->
 name|key
 operator|=
 name|NULL
+expr_stmt|;
+name|id
+operator|->
+name|isprivate
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}

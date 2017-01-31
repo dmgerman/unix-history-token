@@ -13,6 +13,12 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSH1
+end_ifdef
+
 begin_if
 if|#
 directive|if
@@ -472,6 +478,15 @@ end_endif
 
 begin_comment
 comment|/* defined(WITH_OPENSSL)&& !defined(OPENSSL_NO_BF) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_SSH1 */
 end_comment
 
 end_unit

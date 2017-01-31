@@ -228,7 +228,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * NB: This assumes that argv has already been copied out of the 	 * way. This is true for sshd, but may not be true for other  	 * programs. Beware. 	 */
+comment|/* 	 * NB: This assumes that argv has already been copied out of the 	 * way. This is true for sshd, but may not be true for other 	 * programs. Beware. 	 */
 if|if
 condition|(
 name|argc
@@ -290,7 +290,7 @@ expr_stmt|;
 comment|/* put it back */
 return|return;
 block|}
-comment|/* 	 * Find the last argv string or environment variable within  	 * our process memory area. 	 */
+comment|/* 	 * Find the last argv string or environment variable within 	 * our process memory area. 	 */
 for|for
 control|(
 name|i
@@ -405,7 +405,7 @@ index|]
 operator|-
 literal|1
 expr_stmt|;
-comment|/*  	 * Copy environment  	 * XXX - will truncate env on strdup fail 	 */
+comment|/* 	 * Copy environment 	 * XXX - will truncate env on strdup fail 	 */
 for|for
 control|(
 name|i
@@ -673,7 +673,7 @@ directive|elif
 name|SPT_TYPE
 operator|==
 name|SPT_REUSEARGV
-comment|/*	debug("setproctitle: copy \"%s\" into len %d",  	    buf, argv_env_len); */
+comment|/*	debug("setproctitle: copy \"%s\" into len %d", 	    buf, argv_env_len); */
 name|len
 operator|=
 name|strlcpy

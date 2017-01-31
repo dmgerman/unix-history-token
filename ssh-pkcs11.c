@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11.c,v 1.22 2016/02/12 00:20:30 djm Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11.c,v 1.23 2016/10/28 03:33:52 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3196,9 +3196,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|error
+name|debug
 argument_list|(
-literal|"provider already registered: %s"
+literal|"%s: provider already registered: %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|provider_id
 argument_list|)
@@ -3315,7 +3317,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"C_GetFunctionList failed: %lu"
+literal|"C_GetFunctionList for provider %s failed: %lu"
+argument_list|,
+name|provider_id
 argument_list|,
 name|rv
 argument_list|)
@@ -3348,7 +3352,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"C_Initialize failed: %lu"
+literal|"C_Initialize for provider %s failed: %lu"
+argument_list|,
+name|provider_id
 argument_list|,
 name|rv
 argument_list|)
@@ -3382,7 +3388,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"C_GetInfo failed: %lu"
+literal|"C_GetInfo for provider %s failed: %lu"
+argument_list|,
+name|provider_id
 argument_list|,
 name|rv
 argument_list|)
@@ -3429,8 +3437,10 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"manufacturerID<%s> cryptokiVersion %d.%d"
+literal|"provider %s: manufacturerID<%s> cryptokiVersion %d.%d"
 literal|" libraryDescription<%s> libraryVersion %d.%d"
+argument_list|,
+name|provider_id
 argument_list|,
 name|p
 operator|->
@@ -3520,9 +3530,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|error
+name|debug
 argument_list|(
-literal|"no slots"
+literal|"%s: provider %s returned no slots"
+argument_list|,
+name|__func__
+argument_list|,
+name|provider_id
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3572,7 +3586,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"C_GetSlotList failed: %lu"
+literal|"C_GetSlotList for provider %s failed: %lu"
+argument_list|,
+name|provider_id
 argument_list|,
 name|rv
 argument_list|)
@@ -3661,7 +3677,16 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"C_GetTokenInfo failed: %lu"
+literal|"C_GetTokenInfo for provider %s slot %lu "
+literal|"failed: %lu"
+argument_list|,
+name|provider_id
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|i
 argument_list|,
 name|rv
 argument_list|)
@@ -3683,9 +3708,12 @@ condition|)
 block|{
 name|debug2
 argument_list|(
-literal|"%s: ignoring uninitialised token in slot %lu"
+literal|"%s: ignoring uninitialised token in "
+literal|"provider %s slot %lu"
 argument_list|,
 name|__func__
+argument_list|,
+name|provider_id
 argument_list|,
 operator|(
 name|unsigned
@@ -3754,8 +3782,16 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"label<%s> manufacturerID<%s> model<%s> serial<%s>"
-literal|" flags 0x%lx"
+literal|"provider %s slot %lu: label<%s> manufacturerID<%s> "
+literal|"model<%s> serial<%s> flags 0x%lx"
+argument_list|,
+name|provider_id
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|i
 argument_list|,
 name|token
 operator|->
@@ -3834,9 +3870,13 @@ name|nkeys
 operator|)
 return|;
 block|}
-name|error
+name|debug
 argument_list|(
-literal|"no keys"
+literal|"%s: provider %s returned no keys"
+argument_list|,
+name|__func__
+argument_list|,
+name|provider_id
 argument_list|)
 expr_stmt|;
 comment|/* don't add the provider, since it does not have any keys */
@@ -3861,7 +3901,9 @@ name|CKR_OK
 condition|)
 name|error
 argument_list|(
-literal|"C_Finalize failed: %lu"
+literal|"C_Finalize for provider %s failed: %lu"
+argument_list|,
+name|provider_id
 argument_list|,
 name|rv
 argument_list|)

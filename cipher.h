@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher.h,v 1.48 2015/07/08 19:09:25 markus Exp $ */
+comment|/* $OpenBSD: cipher.h,v 1.49 2016/08/03 05:41:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -183,38 +183,11 @@ name|sshcipher
 struct_decl|;
 end_struct_decl
 
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|sshcipher_ctx
-block|{
-name|int
-name|plaintext
-decl_stmt|;
-name|int
-name|encrypt
-decl_stmt|;
-name|EVP_CIPHER_CTX
-name|evp
-decl_stmt|;
-name|struct
-name|chachapoly_ctx
-name|cp_ctx
-decl_stmt|;
-comment|/* XXX union with evp? */
-name|struct
-name|aesctr_ctx
-name|ac_ctx
-decl_stmt|;
-comment|/* XXX union with evp? */
-specifier|const
-name|struct
-name|sshcipher
-modifier|*
-name|cipher
-decl_stmt|;
-block|}
-struct|;
-end_struct
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|u_int
@@ -316,6 +289,7 @@ parameter_list|(
 name|struct
 name|sshcipher_ctx
 modifier|*
+modifier|*
 parameter_list|,
 specifier|const
 name|struct
@@ -388,8 +362,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|cipher_cleanup
+name|void
+name|cipher_free
 parameter_list|(
 name|struct
 name|sshcipher_ctx
@@ -404,6 +378,7 @@ name|cipher_set_key_string
 parameter_list|(
 name|struct
 name|sshcipher_ctx
+modifier|*
 modifier|*
 parameter_list|,
 specifier|const
@@ -487,6 +462,28 @@ parameter_list|(
 specifier|const
 name|struct
 name|sshcipher
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|cipher_ctx_is_plaintext
+parameter_list|(
+name|struct
+name|sshcipher_ctx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|cipher_ctx_get_number
+parameter_list|(
+name|struct
+name|sshcipher_ctx
 modifier|*
 parameter_list|)
 function_decl|;

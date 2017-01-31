@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexgexs.c,v 1.29 2016/06/08 02:13:01 dtucker Exp $ */
+comment|/* $OpenBSD: kexgexs.c,v 1.30 2016/09/12 01:22:38 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -18,16 +18,6 @@ ifdef|#
 directive|ifdef
 name|WITH_OPENSSL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* MIN MAX */
-end_comment
 
 begin_include
 include|#
@@ -152,6 +142,12 @@ begin_include
 include|#
 directive|include
 file|"sshbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_function_decl
@@ -346,7 +342,7 @@ name|max
 expr_stmt|;
 name|min
 operator|=
-name|MAX
+name|MAXIMUM
 argument_list|(
 name|DH_GRP_MIN
 argument_list|,
@@ -355,7 +351,7 @@ argument_list|)
 expr_stmt|;
 name|max
 operator|=
-name|MIN
+name|MINIMUM
 argument_list|(
 name|DH_GRP_MAX
 argument_list|,
@@ -364,7 +360,7 @@ argument_list|)
 expr_stmt|;
 name|nbits
 operator|=
-name|MAX
+name|MAXIMUM
 argument_list|(
 name|DH_GRP_MIN
 argument_list|,
@@ -373,7 +369,7 @@ argument_list|)
 expr_stmt|;
 name|nbits
 operator|=
-name|MIN
+name|MINIMUM
 argument_list|(
 name|DH_GRP_MAX
 argument_list|,

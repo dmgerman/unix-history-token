@@ -112,5 +112,14 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
+begin_function_decl
+name|void
+name|msetlocale
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

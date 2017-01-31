@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: tests.c,v 1.2 2016/05/30 12:05:56 schwarze Exp $ */
+comment|/*	$OpenBSD: tests.c,v 1.3 2016/12/19 04:55:18 djm Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Regress test for the utf8.h *mprintf() API  *  * Written by Ingo Schwarze<schwarze@openbsd.org> in 2016  * and placed in the public domain.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"includes.h"
+end_include
 
 begin_include
 include|#
@@ -22,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"test_helper.h"
+file|"../test_helper/test_helper.h"
 end_include
 
 begin_include
@@ -322,21 +328,6 @@ argument_list|()
 expr_stmt|;
 name|badarg
 argument_list|()
-expr_stmt|;
-name|one
-argument_list|(
-literal|"null"
-argument_list|,
-name|NULL
-argument_list|,
-literal|8
-argument_list|,
-literal|6
-argument_list|,
-literal|6
-argument_list|,
-literal|"(null)"
-argument_list|)
 expr_stmt|;
 name|one
 argument_list|(

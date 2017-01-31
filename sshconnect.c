@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.271 2016/01/14 22:56:56 markus Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.272 2016/09/12 01:22:38 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -12,16 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* roundup */
-end_comment
 
 begin_include
 include|#
@@ -6488,7 +6478,7 @@ return|return;
 block|}
 name|size
 operator|=
-name|roundup
+name|ROUNDUP
 argument_list|(
 name|strlen
 argument_list|(

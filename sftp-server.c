@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server.c,v 1.109 2016/02/15 09:47:49 dtucker Exp $ */
+comment|/* $OpenBSD: sftp-server.c,v 1.110 2016/09/12 01:22:38 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -12,16 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* MIN */
-end_comment
 
 begin_include
 include|#
@@ -2564,7 +2554,7 @@ return|return
 operator|(
 name|status_messages
 index|[
-name|MIN
+name|MINIMUM
 argument_list|(
 name|status
 argument_list|,
