@@ -11004,9 +11004,13 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
 argument_list|,
-literal|"%s:  -> seqno=%d\n"
+literal|"%s:  -> subtype=0x%x, tid=%d, seqno=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|subtype
+argument_list|,
+name|tid
 argument_list|,
 name|seqno
 argument_list|)
