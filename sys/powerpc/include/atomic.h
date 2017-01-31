@@ -1995,27 +1995,27 @@ name|int
 name|ret
 decl_stmt|;
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %3\n\t"
+literal|"lwarx %0, 0, %3\n\t"
 comment|/* load old value */
 literal|"cmplw %4, %0\n\t"
 comment|/* compare */
-literal|"bne 2f\n\t"
+literal|"bne 1f\n\t"
 comment|/* exit if not equal */
 literal|"stwcx. %5, 0, %3\n\t"
 comment|/* attempt to store */
-literal|"bne- 1b\n\t"
-comment|/* spin if failed */
+literal|"bne- 1f\n\t"
+comment|/* exit if failed */
 literal|"li %0, 1\n\t"
 comment|/* success - retval = 1 */
-literal|"b 3f\n\t"
+literal|"b 2f\n\t"
 comment|/* we've succeeded */
-literal|"2:\n\t"
+literal|"1:\n\t"
 literal|"stwcx. %0, 0, %3\n\t"
 comment|/* clear reservation (74xx) */
 literal|"stwx %0, 0, %7\n\t"
 literal|"li %0, 0\n\t"
 comment|/* failure - retval = 0 */
-literal|"3:\n\t"
+literal|"2:\n\t"
 operator|:
 literal|"=&r"
 operator|(
@@ -2102,33 +2102,33 @@ asm|__asm __volatile (
 ifdef|#
 directive|ifdef
 name|__powerpc64__
-literal|"1:\tldarx %0, 0, %3\n\t"
+literal|"ldarx %0, 0, %3\n\t"
 comment|/* load old value */
 literal|"cmpld %4, %0\n\t"
 comment|/* compare */
-literal|"bne 2f\n\t"
+literal|"bne 1f\n\t"
 comment|/* exit if not equal */
 literal|"stdcx. %5, 0, %3\n\t"
 comment|/* attempt to store */
 else|#
 directive|else
-literal|"1:\tlwarx %0, 0, %3\n\t"
+literal|"lwarx %0, 0, %3\n\t"
 comment|/* load old value */
 literal|"cmplw %4, %0\n\t"
 comment|/* compare */
-literal|"bne 2f\n\t"
+literal|"bne 1f\n\t"
 comment|/* exit if not equal */
 literal|"stwcx. %5, 0, %3\n\t"
 comment|/* attempt to store */
 endif|#
 directive|endif
-literal|"bne- 1b\n\t"
-comment|/* spin if failed */
+literal|"bne- 1f\n\t"
+comment|/* exit if failed */
 literal|"li %0, 1\n\t"
 comment|/* success - retval = 1 */
-literal|"b 3f\n\t"
+literal|"b 2f\n\t"
 comment|/* we've succeeded */
-literal|"2:\n\t"
+literal|"1:\n\t"
 ifdef|#
 directive|ifdef
 name|__powerpc64__
@@ -2144,7 +2144,7 @@ endif|#
 directive|endif
 literal|"li %0, 0\n\t"
 comment|/* failure - retval = 0 */
-literal|"3:\n\t"
+literal|"2:\n\t"
 operator|:
 literal|"=&r"
 operator|(
