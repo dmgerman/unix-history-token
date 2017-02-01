@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993, 1994 Jeffrey C. Mogul, Digital Equipment Corpo
 end_comment
 
 begin_comment
-comment|/*  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  *	$FreeBSD$  *	$NetBSD: nfsfh.h,v 1.1.1.2 1997/10/03 17:25:13 christos Exp $  */
+comment|/*  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
 end_comment
 
 begin_comment
@@ -91,7 +91,7 @@ name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|my_fsid
 modifier|*

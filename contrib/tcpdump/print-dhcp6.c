@@ -4,14 +4,12 @@ comment|/*  * Copyright (C) 1998 and 1999 WIDE Project.  * All rights reserved. 
 end_comment
 
 begin_comment
-comment|/*  * RFC3315: DHCPv6  * supported DHCPv6 options:  *  RFC3319: Session Initiation Protocol (SIP) Servers options,  *  RFC3633: IPv6 Prefix options,  *  RFC3646: DNS Configuration options,  *  RFC3898: Network Information Service (NIS) Configuration options,  *  RFC4075: Simple Network Time Protocol (SNTP) Configuration option,  *  RFC4242: Information Refresh Time option,  *  RFC4280: Broadcast and Multicast Control Servers options,  *  RFC5908: Network Time Protocol (NTP) Server Option for DHCPv6  *  RFC6334: Dual-Stack Lite option,  */
+comment|/* \summary: IPv6 DHCP printer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/*  * RFC3315: DHCPv6  * supported DHCPv6 options:  *  RFC3319: Session Initiation Protocol (SIP) Servers options,  *  RFC3633: IPv6 Prefix options,  *  RFC3646: DNS Configuration options,  *  RFC3898: Network Information Service (NIS) Configuration options,  *  RFC4075: Simple Network Time Protocol (SNTP) Configuration option,  *  RFC4242: Information Refresh Time option,  *  RFC4280: Broadcast and Multicast Control Servers options,  *  RFC5908: Network Time Protocol (NTP) Server Option for DHCPv6  *  RFC6334: Dual-Stack Lite option,  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -33,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -51,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -343,10 +341,10 @@ name|dhcp6
 block|{
 union|union
 block|{
-name|uint8_t
+name|nd_uint8_t
 name|m
 decl_stmt|;
-name|uint32_t
+name|nd_uint32_t
 name|x
 decl_stmt|;
 block|}
@@ -386,20 +384,20 @@ begin_struct
 struct|struct
 name|dhcp6_relay
 block|{
-name|uint8_t
+name|nd_uint8_t
 name|dh6relay_msgtype
 decl_stmt|;
-name|uint8_t
+name|nd_uint8_t
 name|dh6relay_hcnt
 decl_stmt|;
-name|uint8_t
+name|nd_uint8_t
 name|dh6relay_linkaddr
 index|[
 literal|16
 index|]
 decl_stmt|;
 comment|/* XXX: badly aligned */
-name|uint8_t
+name|nd_uint8_t
 name|dh6relay_peeraddr
 index|[
 literal|16
@@ -901,6 +899,13 @@ name|DH6OPT_AFTR_NAME
 value|64
 end_define
 
+begin_define
+define|#
+directive|define
+name|DH6OPT_MUDURL
+value|112
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1199,6 +1204,12 @@ literal|"AFTR-Name"
 block|}
 block|,
 block|{
+name|DH6OPT_MUDURL
+block|,
+literal|"MUD-URL"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -1219,69 +1230,80 @@ block|{
 block|{
 name|DH6OPT_STCODE_SUCCESS
 block|,
-literal|"success"
+literal|"Success"
 block|}
 block|,
+comment|/* RFC3315 */
 block|{
 name|DH6OPT_STCODE_UNSPECFAIL
 block|,
-literal|"unspec failure"
+literal|"UnspecFail"
 block|}
 block|,
+comment|/* RFC3315 */
 block|{
 name|DH6OPT_STCODE_NOADDRAVAIL
 block|,
-literal|"no addresses"
+literal|"NoAddrsAvail"
 block|}
 block|,
+comment|/* RFC3315 */
 block|{
 name|DH6OPT_STCODE_NOBINDING
 block|,
-literal|"no binding"
+literal|"NoBinding"
 block|}
 block|,
+comment|/* RFC3315 */
 block|{
 name|DH6OPT_STCODE_NOTONLINK
 block|,
-literal|"not on-link"
+literal|"NotOnLink"
 block|}
 block|,
+comment|/* RFC3315 */
 block|{
 name|DH6OPT_STCODE_USEMULTICAST
 block|,
-literal|"use multicast"
+literal|"UseMulticast"
 block|}
 block|,
+comment|/* RFC3315 */
 block|{
 name|DH6OPT_STCODE_NOPREFIXAVAIL
 block|,
-literal|"no prefixes"
+literal|"NoPrefixAvail"
 block|}
 block|,
+comment|/* RFC3633 */
 block|{
 name|DH6OPT_STCODE_UNKNOWNQUERYTYPE
 block|,
-literal|"unknown query type"
+literal|"UnknownQueryType"
 block|}
 block|,
+comment|/* RFC5007 */
 block|{
 name|DH6OPT_STCODE_MALFORMEDQUERY
 block|,
-literal|"malformed query"
+literal|"MalformedQuery"
 block|}
 block|,
+comment|/* RFC5007 */
 block|{
 name|DH6OPT_STCODE_NOTCONFIGURED
 block|,
-literal|"not configured"
+literal|"NotConfigured"
 block|}
 block|,
+comment|/* RFC5007 */
 block|{
 name|DH6OPT_STCODE_NOTALLOWED
 block|,
-literal|"not allowed"
+literal|"NotAllowed"
 block|}
 block|,
+comment|/* RFC5007 */
 block|{
 literal|0
 block|,
@@ -1295,10 +1317,10 @@ begin_struct
 struct|struct
 name|dhcp6opt
 block|{
-name|uint16_t
+name|nd_uint16_t
 name|dh6opt_type
 decl_stmt|;
-name|uint16_t
+name|nd_uint16_t
 name|dh6opt_len
 decl_stmt|;
 comment|/* type-dependent data follows */
@@ -1431,6 +1453,7 @@ goto|;
 name|dh6o
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|dhcp6opt
 operator|*
@@ -1498,6 +1521,22 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK2
+argument_list|(
+operator|*
+operator|(
+name|cp
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dh6o
+argument_list|)
+operator|)
+argument_list|,
+name|optlen
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|opttype
@@ -1531,6 +1570,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1839,6 +1879,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1954,6 +1995,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2038,6 +2080,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2084,6 +2127,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2123,6 +2167,7 @@ expr_stmt|;
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2175,6 +2220,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2655,6 +2701,7 @@ comment|/* 			 * Since we cannot predict the encoding, print hex dump 			 * at m
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2720,6 +2767,7 @@ case|:
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2836,6 +2884,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2898,6 +2947,7 @@ case|:
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2994,6 +3044,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3052,6 +3103,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3153,6 +3205,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3232,6 +3285,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3352,6 +3406,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3400,6 +3455,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3489,6 +3545,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3606,6 +3663,7 @@ case|:
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3669,6 +3727,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3764,6 +3823,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3974,6 +4034,7 @@ block|}
 name|tp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4020,17 +4081,18 @@ operator|-
 literal|1
 condition|)
 block|{
-name|ND_PRINT
-argument_list|(
 operator|(
-name|ndo
-operator|,
-literal|"%.*s"
-operator|,
-name|label_len
-operator|,
-name|tp
+name|void
 operator|)
+name|fn_printn
+argument_list|(
+name|ndo
+argument_list|,
+name|tp
+argument_list|,
+name|label_len
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|tp
@@ -4074,6 +4136,85 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|")"
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DH6OPT_NEW_POSIX_TIMEZONE
+case|:
+comment|/* all three of these options */
+case|case
+name|DH6OPT_NEW_TZDB_TIMEZONE
+case|:
+comment|/* are encoded similarly */
+case|case
+name|DH6OPT_MUDURL
+case|:
+comment|/* although GMT might not work */
+if|if
+condition|(
+name|optlen
+operator|<
+literal|5
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" ?)"
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|tp
+operator|=
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+operator|(
+name|dh6o
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"="
+operator|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fn_printn
+argument_list|(
+name|ndo
+argument_list|,
+name|tp
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|optlen
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -4143,11 +4284,13 @@ name|u_int
 name|length
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|dhcp6
 modifier|*
 name|dh6
 decl_stmt|;
+specifier|const
 name|struct
 name|dhcp6_relay
 modifier|*
@@ -4158,6 +4301,7 @@ name|u_char
 modifier|*
 name|ep
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|extp
@@ -4179,6 +4323,7 @@ expr_stmt|;
 name|ep
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4203,6 +4348,7 @@ expr_stmt|;
 name|dh6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|dhcp6
 operator|*
@@ -4212,6 +4358,7 @@ expr_stmt|;
 name|dh6relay
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|dhcp6_relay
 operator|*
@@ -4309,6 +4456,7 @@ expr_stmt|;
 name|extp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4411,6 +4559,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)

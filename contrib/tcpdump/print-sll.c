@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Linux cooked sockets capture printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -476,8 +474,11 @@ decl_stmt|;
 name|u_short
 name|ether_type
 decl_stmt|;
-name|u_short
-name|extracted_ethertype
+name|int
+name|llc_hdrlen
+decl_stmt|;
+name|u_int
+name|hdrlen
 decl_stmt|;
 if|if
 condition|(
@@ -540,6 +541,10 @@ name|p
 operator|+=
 name|SLL_HDR_LEN
 expr_stmt|;
+name|hdrlen
+operator|=
+name|SLL_HDR_LEN
+expr_stmt|;
 name|ether_type
 operator|=
 name|EXTRACT_16BITS
@@ -584,8 +589,8 @@ case|case
 name|LINUX_SLL_P_802_2
 case|:
 comment|/* 			 * 802.2. 			 * Try to print the LLC-layer header& higher layers. 			 */
-if|if
-condition|(
+name|llc_hdrlen
+operator|=
 name|llc_print
 argument_list|(
 name|ndo
@@ -599,68 +604,28 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-operator|&
-name|extracted_ethertype
 argument_list|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|llc_hdrlen
+operator|<
 literal|0
 condition|)
 goto|goto
 name|unknown
 goto|;
 comment|/* unknown LLC type */
+name|hdrlen
+operator|+=
+name|llc_hdrlen
+expr_stmt|;
 break|break;
 default|default:
-name|extracted_ethertype
-operator|=
-literal|0
-expr_stmt|;
 comment|/*FALLTHROUGH*/
 name|unknown
 label|:
-comment|/* ether_type not known, print raw packet */
-if|if
-condition|(
-operator|!
-name|ndo
-operator|->
-name|ndo_eflag
-condition|)
-name|sll_print
-argument_list|(
-name|ndo
-argument_list|,
-name|sllp
-argument_list|,
-name|length
-operator|+
-name|SLL_HDR_LEN
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|extracted_ethertype
-condition|)
-block|{
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"(LLC %s) "
-operator|,
-name|etherproto_string
-argument_list|(
-name|htons
-argument_list|(
-name|extracted_ethertype
-argument_list|)
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* packet type not known, print raw packet */
 if|if
 condition|(
 operator|!
@@ -692,7 +657,27 @@ condition|(
 name|caplen
 operator|<
 literal|4
-operator|||
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"[|vlan]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|hdrlen
+operator|+
+name|caplen
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|length
 operator|<
 literal|4
@@ -709,7 +694,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|SLL_HDR_LEN
+name|hdrlen
+operator|+
+name|length
 operator|)
 return|;
 block|}
@@ -801,6 +788,10 @@ name|caplen
 operator|-=
 literal|4
 expr_stmt|;
+name|hdrlen
+operator|+=
+literal|4
+expr_stmt|;
 goto|goto
 name|recurse
 goto|;
@@ -820,6 +811,10 @@ argument_list|,
 name|length
 argument_list|,
 name|caplen
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 literal|0
@@ -862,7 +857,7 @@ block|}
 block|}
 return|return
 operator|(
-name|SLL_HDR_LEN
+name|hdrlen
 operator|)
 return|;
 block|}

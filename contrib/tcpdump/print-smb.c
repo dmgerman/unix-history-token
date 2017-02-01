@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (C) Andrew Tridgell 1995-1999  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or the GNU GPL version 2  * or later  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: SMB/CIFS printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -470,7 +468,7 @@ literal|"data:\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,
@@ -630,7 +628,7 @@ literal|"data:\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,
@@ -2312,7 +2310,7 @@ name|unicodestr
 argument_list|)
 expr_stmt|;
 else|else
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,
@@ -2402,7 +2400,7 @@ name|unicodestr
 argument_list|)
 expr_stmt|;
 else|else
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,
@@ -2593,7 +2591,7 @@ name|unicodestr
 argument_list|)
 expr_stmt|;
 else|else
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,
@@ -2683,7 +2681,7 @@ name|unicodestr
 argument_list|)
 expr_stmt|;
 else|else
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,
@@ -2937,7 +2935,7 @@ name|unicodestr
 argument_list|)
 expr_stmt|;
 else|else
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,
@@ -4433,29 +4431,6 @@ literal|0
 else|:
 literal|1
 expr_stmt|;
-name|flags2
-operator|=
-name|EXTRACT_LE_16BITS
-argument_list|(
-operator|&
-name|buf
-index|[
-literal|10
-index|]
-argument_list|)
-expr_stmt|;
-name|unicodestr
-operator|=
-name|flags2
-operator|&
-literal|0x8000
-expr_stmt|;
-name|nterrcodes
-operator|=
-name|flags2
-operator|&
-literal|0x4000
-expr_stmt|;
 name|startbuf
 operator|=
 name|buf
@@ -4521,6 +4496,38 @@ operator|<
 literal|2
 condition|)
 return|return;
+name|ND_TCHECK_16BITS
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|10
+index|]
+argument_list|)
+expr_stmt|;
+name|flags2
+operator|=
+name|EXTRACT_LE_16BITS
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|10
+index|]
+argument_list|)
+expr_stmt|;
+name|unicodestr
+operator|=
+name|flags2
+operator|&
+literal|0x8000
+expr_stmt|;
+name|nterrcodes
+operator|=
+name|flags2
+operator|&
+literal|0x4000
+expr_stmt|;
 comment|/* print out the header */
 name|smb_fdata
 argument_list|(
@@ -4926,7 +4933,7 @@ literal|"smb_buf[]=\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,
@@ -6292,6 +6299,11 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|ND_TCHECK_16BITS
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|restype
 operator|=
 name|EXTRACT_16BITS
@@ -6325,6 +6337,11 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|ND_TCHECK_16BITS
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|rdlen
 operator|=
 name|EXTRACT_16BITS
@@ -6638,7 +6655,7 @@ block|}
 block|}
 else|else
 block|{
-name|print_data
+name|smb_print_data
 argument_list|(
 name|ndo
 argument_list|,
@@ -7088,6 +7105,7 @@ comment|/*    print netbeui frames */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|nbf_strings
 block|{

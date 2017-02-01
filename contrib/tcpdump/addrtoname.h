@@ -4,6 +4,28 @@ comment|/*  * Copyright (c) 1990, 1992, 1993, 1994, 1995, 1996, 1997  *	The Rege
 end_comment
 
 begin_comment
+comment|/*  * Definitions to let us compile most of the IPv6 code even on systems  * without IPv6 support.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INET6_ADDRSTRLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INET6_ADDRSTRLEN
+value|46
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Name to address translation routines. */
 end_comment
 
@@ -77,6 +99,9 @@ name|char
 modifier|*
 name|le64addr_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -91,6 +116,9 @@ name|char
 modifier|*
 name|etherproto_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 name|u_short
 parameter_list|)
 function_decl|;
@@ -103,6 +131,9 @@ name|char
 modifier|*
 name|tcpport_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 name|u_short
 parameter_list|)
 function_decl|;
@@ -115,6 +146,9 @@ name|char
 modifier|*
 name|udpport_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 name|u_short
 parameter_list|)
 function_decl|;
@@ -127,6 +161,9 @@ name|char
 modifier|*
 name|isonsap_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -159,6 +196,9 @@ name|char
 modifier|*
 name|protoid_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -173,6 +213,9 @@ name|char
 modifier|*
 name|ipxsap_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 name|u_short
 parameter_list|)
 function_decl|;
@@ -195,12 +238,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_function_decl
 specifier|extern
 specifier|const
@@ -217,11 +254,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -257,16 +289,11 @@ name|hnamemem
 modifier|*
 name|newhnamemem
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -275,15 +302,11 @@ name|h6namemem
 modifier|*
 name|newh6namemem
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -310,12 +333,6 @@ parameter_list|)
 value|getname(ndo, (const u_char *)(p))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -327,11 +344,6 @@ name|p
 parameter_list|)
 value|getname6(ndo, (const u_char *)(p))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

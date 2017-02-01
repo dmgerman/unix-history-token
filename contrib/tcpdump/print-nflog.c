@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 2013, Petar Alilovic,  * Faculty of Electrical Engineering and Computing, University of Zagreb  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * * Redistributions of source code must retain the above copyright notice,  *	 this list of conditions and the following disclaimer.  * * Redistributions in binary form must reproduce the above copyright  *	 notice, this list of conditions and the following disclaimer in the  *	 documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH  * DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: DLT_NFLOG printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_if
@@ -75,7 +73,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|INET6
+name|AF_INET6
 block|{
 name|AF_INET6
 block|,
@@ -84,7 +82,7 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/*INET6*/
+comment|/*AF_INET6*/
 block|{
 literal|0
 block|,
@@ -303,13 +301,10 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
 name|hdr
 operator|->
 name|nflog_version
-operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{

@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Decode and print Zephyr packets.  *  *	http://web.mit.edu/zephyr/doc/protocol  *  * Copyright (c) 2001 Nickolai Zeldovich<kolya@MIT.EDU>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * The name of the author(s) may not be used to endorse or promote  * products derived from this software without specific prior written  * permission.  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Zephyr printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -53,13 +51,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_struct
 struct|struct
 name|z_packet
 block|{
+specifier|const
 name|char
 modifier|*
 name|version
@@ -70,6 +69,7 @@ decl_stmt|;
 name|int
 name|kind
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|uid
@@ -83,22 +83,27 @@ decl_stmt|;
 name|int
 name|authlen
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|authdata
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|class
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|inst
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|opcode
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sender
@@ -108,6 +113,7 @@ name|char
 modifier|*
 name|recipient
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|format
@@ -118,6 +124,7 @@ decl_stmt|;
 name|int
 name|multi
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|multi_uid
@@ -232,6 +239,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|parse_field
@@ -240,6 +248,7 @@ name|netdissect_options
 modifier|*
 name|ndo
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -250,6 +259,7 @@ modifier|*
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -277,6 +287,7 @@ operator|*
 name|pptr
 operator|>
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -298,6 +309,7 @@ operator|*
 name|pptr
 operator|<=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -351,6 +363,7 @@ operator|*
 name|pptr
 operator|>
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -374,10 +387,12 @@ name|char
 modifier|*
 name|z_triple
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|class
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|inst
@@ -441,11 +456,16 @@ name|char
 modifier|*
 name|str_to_lower
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|string
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|zb_string
+decl_stmt|;
 name|strncpy
 argument_list|(
 name|z_buf
@@ -470,18 +490,18 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|string
+name|zb_string
 operator|=
 name|z_buf
 expr_stmt|;
 while|while
 condition|(
 operator|*
-name|string
+name|zb_string
 condition|)
 block|{
 operator|*
-name|string
+name|zb_string
 operator|=
 name|tolower
 argument_list|(
@@ -491,11 +511,11 @@ name|char
 call|)
 argument_list|(
 operator|*
-name|string
+name|zb_string
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|string
+name|zb_string
 operator|++
 expr_stmt|;
 block|}
@@ -526,11 +546,13 @@ name|struct
 name|z_packet
 name|z
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|parse
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -541,6 +563,7 @@ name|parselen
 init|=
 name|length
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -836,6 +859,7 @@ name|Z_PACKET_SERVACK
 condition|)
 block|{
 comment|/* Initialization to silence warnings */
+specifier|const
 name|char
 modifier|*
 name|ackdata
@@ -1101,6 +1125,7 @@ name|Z_PACKET_SERVACK
 condition|)
 block|{
 comment|/* Initialization to silence warnings */
+specifier|const
 name|char
 modifier|*
 name|c

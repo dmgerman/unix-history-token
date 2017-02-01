@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 2014 VMware, Inc. All Rights Reserved.  *  * Jesse Gross<jesse@nicira.com>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Generic Network Virtualization Encapsulation (Geneve) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -51,7 +49,7 @@ file|"ethertype.h"
 end_include
 
 begin_comment
-comment|/*  * Geneve header, draft-gross-geneve-02  *  *    0                   1                   2                   3  *    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |        Virtual Network Identifier (VNI)       |    Reserved   |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |                    Variable Length Options                    |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  * Options:  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |          Option Class         |      Type     |R|R|R| Length  |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |                      Variable Option Data                     |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
+comment|/*  * Geneve header, draft-ietf-nvo3-geneve  *  *    0                   1                   2                   3  *    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |        Virtual Network Identifier (VNI)       |    Reserved   |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |                    Variable Length Options                    |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  * Options:  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |          Option Class         |      Type     |R|R|R| Length  |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |                      Variable Option Data                     |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
 end_comment
 
 begin_define
@@ -215,11 +213,47 @@ name|uint16_t
 name|opt_class
 parameter_list|)
 block|{
+switch|switch
+condition|(
+name|opt_class
+condition|)
+block|{
+case|case
+literal|0x0100
+case|:
+return|return
+literal|"Linux"
+return|;
+case|case
+literal|0x0101
+case|:
+return|return
+literal|"Open vSwitch"
+return|;
+case|case
+literal|0x0102
+case|:
+return|return
+literal|"Open Virtual Networking (OVN)"
+return|;
+case|case
+literal|0x0103
+case|:
+return|return
+literal|"In-band Network Telemetry (INT)"
+return|;
+case|case
+literal|0x0104
+case|:
+return|return
+literal|"VMware"
+return|;
+default|default:
 if|if
 condition|(
 name|opt_class
 operator|<=
-literal|0xff
+literal|0x00ff
 condition|)
 return|return
 literal|"Standard"
@@ -228,13 +262,13 @@ elseif|else
 if|if
 condition|(
 name|opt_class
-operator|==
-literal|0xffff
+operator|>=
+literal|0xfff0
 condition|)
 return|return
 literal|"Experimental"
 return|;
-else|else
+block|}
 return|return
 literal|"Unknown"
 return|;
@@ -391,11 +425,13 @@ operator|>
 literal|4
 condition|)
 block|{
+specifier|const
 name|uint32_t
 modifier|*
-name|print_data
+name|data
 init|=
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -441,12 +477,12 @@ literal|" %08x"
 operator|,
 name|EXTRACT_32BITS
 argument_list|(
-name|print_data
+name|data
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|print_data
+name|data
 operator|++
 expr_stmt|;
 block|}
@@ -483,7 +519,7 @@ block|{
 name|uint8_t
 name|ver_opt
 decl_stmt|;
-name|uint
+name|u_int
 name|version
 decl_stmt|;
 name|uint8_t
@@ -707,9 +743,9 @@ name|ndo
 operator|,
 literal|" truncated-geneve - %u bytes missing"
 operator|,
-name|len
-operator|-
 name|opts_len
+operator|-
+name|len
 operator|)
 argument_list|)
 expr_stmt|;
@@ -823,7 +859,15 @@ name|bp
 argument_list|,
 name|len
 argument_list|,
-name|len
+name|ndo
+operator|->
+name|ndo_snapend
+operator|-
+name|bp
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 literal|0
@@ -843,7 +887,11 @@ name|bp
 argument_list|,
 name|len
 argument_list|,
-name|len
+name|ndo
+operator|->
+name|ndo_snapend
+operator|-
+name|bp
 argument_list|,
 name|NULL
 argument_list|,

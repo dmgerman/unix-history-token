@@ -8,14 +8,12 @@ comment|/*  * Copyright (c) 1998 Michael Shalayeff  * All rights reserved.  *  *
 end_comment
 
 begin_comment
-comment|/*  * Cisco NetFlow protocol  *  * See  *  *    http://www.cisco.com/c/en/us/td/docs/net_mgmt/netflow_collection_engine/3-6/user/guide/format.html#wp1005892  */
+comment|/* \summary: Cisco NetFlow protocol printer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/*  * Cisco NetFlow protocol  *  * See  *  *    http://www.cisco.com/c/en/us/td/docs/net_mgmt/netflow_collection_engine/3-6/user/guide/format.html#wp1005892  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -37,7 +35,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -55,7 +53,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include

@@ -13,5 +13,15 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|tok
+name|mpls_pw_types_values
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

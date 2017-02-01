@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * VLAN TRUNKING PROTOCOL (VTP)  *  * Reference documentation:  *  http://www.cisco.com/en/US/tech/tk389/tk689/technologies_tech_note09186a0080094c52.shtml  *  http://www.cisco.com/warp/public/473/21.html  *  http://www.cisco.com/univercd/cc/td/doc/product/lan/trsrb/frames.htm  *  * Original code ode by Carles Kishimoto<carles.kishimoto@gmail.com>  */
+comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Reference documentation:  *  http://www.cisco.com/en/US/tech/tk389/tk689/technologies_tech_note09186a0080094c52.shtml  *  http://www.cisco.com/warp/public/473/21.html  *  http://www.cisco.com/univercd/cc/td/doc/product/lan/trsrb/frames.htm  *  * Original code ode by Carles Kishimoto<carles.kishimoto@gmail.com>  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Cisco VLAN Trunking Protocol (VTP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -517,6 +515,8 @@ decl_stmt|,
 name|tlv_len
 decl_stmt|,
 name|tlv_value
+decl_stmt|,
+name|mgmtd_len
 decl_stmt|;
 specifier|const
 name|u_char
@@ -578,12 +578,7 @@ argument_list|,
 name|type
 argument_list|)
 operator|,
-operator|*
-operator|(
-name|tptr
-operator|+
-literal|1
-operator|)
+name|type
 operator|,
 name|length
 operator|)
@@ -607,13 +602,62 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\tDomain name: %s, %s: %u"
-operator|,
+literal|"\n\tDomain name: "
+operator|)
+argument_list|)
+expr_stmt|;
+name|mgmtd_len
+operator|=
+operator|*
 operator|(
 name|tptr
 operator|+
-literal|4
+literal|3
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|mgmtd_len
+operator|<
+literal|1
+operator|||
+name|mgmtd_len
+operator|>
+literal|32
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" [invalid MgmtD Len %d]"
+operator|,
+name|mgmtd_len
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|fn_printzp
+argument_list|(
+name|ndo
+argument_list|,
+name|tptr
+operator|+
+literal|4
+argument_list|,
+name|mgmtd_len
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|", %s: %u"
 operator|,
 name|tok2str
 argument_list|(
@@ -621,12 +665,7 @@ name|vtp_header_values
 argument_list|,
 literal|"Unknown"
 argument_list|,
-operator|*
-operator|(
-name|tptr
-operator|+
-literal|1
-operator|)
+name|type
 argument_list|)
 operator|,
 operator|*
@@ -650,7 +689,15 @@ block|{
 case|case
 name|VTP_SUMMARY_ADV
 case|:
-comment|/* 	 *  SUMMARY ADVERTISEMENT 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |    Followers  |    MmgtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Management Domain Name                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Configuration revision number              | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                  Updater Identity IP address                  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Update Timestamp (12 bytes)                | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                        MD5 digest (16 bytes)                  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
+comment|/* 	 *  SUMMARY ADVERTISEMENT 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |    Followers  |    MgmtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |       Management Domain Name  (zero-padded to 32 bytes)       | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Configuration revision number              | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                  Updater Identity IP address                  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Update Timestamp (12 bytes)                | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                        MD5 digest (16 bytes)                  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -677,6 +724,14 @@ expr_stmt|;
 name|tptr
 operator|+=
 literal|8
+expr_stmt|;
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|VTP_UPDATE_TIMESTAMP_LEN
+argument_list|)
 expr_stmt|;
 name|ND_PRINT
 argument_list|(
@@ -709,6 +764,14 @@ expr_stmt|;
 name|tptr
 operator|+=
 name|VTP_UPDATE_TIMESTAMP_LEN
+expr_stmt|;
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|VTP_MD5_DIGEST_LEN
+argument_list|)
 expr_stmt|;
 name|ND_PRINT
 argument_list|(
@@ -753,7 +816,7 @@ break|break;
 case|case
 name|VTP_SUBSET_ADV
 case|:
-comment|/* 	 *  SUBSET ADVERTISEMENT 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |   Seq number  |    MmgtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Management Domain Name                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Configuration revision number              | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN info field 1                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         ................                      | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN info field N                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
+comment|/* 	 *  SUBSET ADVERTISEMENT 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |   Seq number  |    MgmtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |       Management Domain Name  (zero-padded to 32 bytes)       | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Configuration revision number              | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN info field 1                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         ................                      | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN info field N                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -807,18 +870,25 @@ expr_stmt|;
 name|vtp_vlan
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|vtp_vlan_
 operator|*
 operator|)
 name|tptr
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|vtp_vlan
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\tVLAN info status %s, type %s, VLAN-id %u, MTU %u, SAID 0x%08x, Name %s"
+literal|"\n\tVLAN info status %s, type %s, VLAN-id %u, MTU %u, SAID 0x%08x, Name "
 operator|,
 name|tok2str
 argument_list|(
@@ -865,13 +935,22 @@ name|vtp_vlan
 operator|->
 name|index
 argument_list|)
-operator|,
-operator|(
+operator|)
+argument_list|)
+expr_stmt|;
+name|fn_printzp
+argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 name|VTP_VLAN_INFO_OFFSET
-operator|)
-operator|)
+argument_list|,
+name|vtp_vlan
+operator|->
+name|name_len
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*              * Vlan names are aligned to 32-bit boundaries.              */
@@ -1158,7 +1237,15 @@ break|break;
 case|case
 name|VTP_ADV_REQUEST
 case|:
-comment|/* 	 *  ADVERTISEMENT REQUEST 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |   Reserved    |    MmgtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Management Domain Name                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                          Start value                          | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
+comment|/* 	 *  ADVERTISEMENT REQUEST 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |   Reserved    |    MgmtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |       Management Domain Name  (zero-padded to 32 bytes)       | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                          Start value                          | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(

@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990, 1991, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1989, 1990, 1991, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Compressed Serial Line Internet Protocol printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -43,10 +41,6 @@ include|#
 directive|include
 file|"extract.h"
 end_include
-
-begin_comment
-comment|/* must come after interface.h */
-end_comment
 
 begin_include
 include|#
@@ -262,6 +256,10 @@ name|caplen
 operator|)
 return|;
 block|}
+name|caplen
+operator|-=
+name|SLIP_HDRLEN
+expr_stmt|;
 name|length
 operator|-=
 name|SLIP_HDRLEN
@@ -269,6 +267,7 @@ expr_stmt|;
 name|ip
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -296,6 +295,36 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|caplen
+operator|<
+literal|1
+operator|||
+name|length
+operator|<
+literal|1
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|caplen
+operator|+
+name|SLIP_HDRLEN
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|IP_V
@@ -312,6 +341,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -329,6 +359,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -436,6 +467,7 @@ expr_stmt|;
 name|ip
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -473,6 +505,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -642,6 +675,7 @@ name|lastconn
 operator|=
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -667,6 +701,7 @@ operator|+=
 name|TH_OFF
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|tcphdr
 operator|*
@@ -674,6 +709,7 @@ operator|)
 operator|&
 operator|(
 operator|(
+specifier|const
 name|int
 operator|*
 operator|)
@@ -1161,6 +1197,7 @@ operator|+=
 name|TH_OFF
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|tcphdr
 operator|*
@@ -1168,6 +1205,7 @@ operator|)
 operator|&
 operator|(
 operator|(
+specifier|const
 name|int32_t
 operator|*
 operator|)

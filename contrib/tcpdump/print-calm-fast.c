@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 2013 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Ola Martin Lykkja (ola.lykkja@q-free.com)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Communication access for land mobiles (CALM) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -63,33 +61,55 @@ parameter_list|,
 specifier|const
 name|u_char
 modifier|*
-name|eth
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
 name|bp
 parameter_list|,
 name|u_int
 name|length
+parameter_list|,
+specifier|const
+name|struct
+name|lladdr_info
+modifier|*
+name|src
 parameter_list|)
 block|{
 name|int
 name|srcNwref
-init|=
+decl_stmt|;
+name|int
+name|dstNwref
+decl_stmt|;
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|bp
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|length
+operator|<
+literal|2
+condition|)
+goto|goto
+name|trunc
+goto|;
+name|srcNwref
+operator|=
 name|bp
 index|[
 literal|0
 index|]
-decl_stmt|;
-name|int
+expr_stmt|;
 name|dstNwref
-init|=
+operator|=
 name|bp
 index|[
 literal|1
 index|]
-decl_stmt|;
+expr_stmt|;
 name|length
 operator|-=
 literal|2
@@ -103,16 +123,44 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"CALM FAST src:%s; "
+literal|"CALM FAST"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|src
+operator|!=
+name|NULL
+condition|)
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
 operator|,
-name|etheraddr_string
+literal|" src:%s"
+operator|,
+call|(
+name|src
+operator|->
+name|addr_string
+call|)
 argument_list|(
 name|ndo
 argument_list|,
-name|eth
-operator|+
-literal|6
+name|src
+operator|->
+name|addr
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"; "
 operator|)
 argument_list|)
 expr_stmt|;
@@ -151,6 +199,19 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+return|return;
+name|trunc
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"[|calm fast]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 

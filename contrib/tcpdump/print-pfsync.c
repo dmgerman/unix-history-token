@@ -20,11 +20,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<tcpdump-stdinc.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_NET_PFVAR_H
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"No pf headers available"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -43,10 +54,6 @@ include|#
 directive|include
 file|<net/pfvar.h>
 end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_include
 include|#
@@ -69,7 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdissect-stdinc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -902,7 +921,9 @@ break|break;
 block|}
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 name|actions
 index|[
@@ -1199,7 +1220,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|2
 condition|)
@@ -1844,7 +1867,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
@@ -2524,7 +2549,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
@@ -2815,7 +2842,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)

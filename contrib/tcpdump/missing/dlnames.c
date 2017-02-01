@@ -23,7 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|"pcap-missing.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ascii_strcasecmp.h"
 end_include
 
 begin_struct
@@ -464,7 +470,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|ascii_strcasecmp
 argument_list|(
 name|dlt_choices
 index|[

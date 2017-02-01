@@ -1002,7 +1002,7 @@ name|p1
 parameter_list|,
 name|p2
 parameter_list|)
-value|((size_t)(((char *)(p1)) - (char *)(p2)))
+value|((size_t)(((const char *)(p1)) - (const char *)(p2)))
 end_define
 
 begin_comment

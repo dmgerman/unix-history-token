@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|tcpdump_pcap_missing_h
+name|netdissect_pcap_missing_h
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|tcpdump_pcap_missing_h
+name|netdissect_pcap_missing_h
 end_define
 
 begin_comment
@@ -133,6 +133,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* netdissect_pcap_missing_h */
+end_comment
 
 end_unit
 

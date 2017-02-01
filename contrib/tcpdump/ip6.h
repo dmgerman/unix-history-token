@@ -568,8 +568,26 @@ name|UNALIGNED
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IPV6_RTHDR_TYPE_0
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPV6_RTHDR_TYPE_2
+value|2
+end_define
+
 begin_comment
 comment|/* Type 0 Routing header */
+end_comment
+
+begin_comment
+comment|/* Also used for Type 2 */
 end_comment
 
 begin_struct
@@ -677,33 +695,6 @@ end_define
 begin_comment
 comment|/* more-fragments flag */
 end_comment
-
-begin_comment
-comment|/* in print-ip6.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|nextproto6_cksum
-parameter_list|(
-specifier|const
-name|struct
-name|ip6_hdr
-modifier|*
-parameter_list|,
-specifier|const
-name|uint8_t
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

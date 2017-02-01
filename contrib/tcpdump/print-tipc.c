@@ -3,11 +3,13 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Transparent Inter-Process Communication (TIPC) protocol printer */
+end_comment
+
+begin_comment
+comment|/*  * specification:  *	http://tipc.sourceforge.net/doc/draft-spec-tipc-07.html  *	http://tipc.sourceforge.net/doc/tipc_message_formats.html  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +31,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -56,10 +58,6 @@ directive|include
 file|"extract.h"
 end_include
 
-begin_comment
-comment|/* must come after interface.h */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -70,10 +68,6 @@ init|=
 literal|"[|TIPC]"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Transparent Inter-Process Communication (TIPC) protocol.  *  *	http://tipc.sourceforge.net/doc/draft-spec-tipc-07.html  *	http://tipc.sourceforge.net/doc/tipc_message_formats.html  */
-end_comment
 
 begin_define
 define|#
@@ -1815,6 +1809,7 @@ decl_stmt|;
 name|ap
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|tipc_pkthdr
 operator|*
@@ -1873,6 +1868,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|payload_tipc_pkthdr
 operator|*
@@ -1889,6 +1885,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|link_conf_tipc_pkthdr
 operator|*
@@ -1917,6 +1914,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|internal_tipc_pkthdr
 operator|*
