@@ -5899,6 +5899,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_DSRR0
+value|0x23e
+end_define
+
+begin_comment
+comment|/* ..8 574 Debug SRR0<E.ED> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DSRR1
+value|0x23f
+end_define
+
+begin_comment
+comment|/* ..8 575 Debug SRR1<E.ED> */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_MMUCR
 value|0x3b2
 end_define
