@@ -2248,7 +2248,18 @@ end_expr_stmt
 
 begin_function_decl
 name|void
-name|addSymbol
+name|addGlobal
+parameter_list|(
+name|SymbolBody
+modifier|*
+name|Body
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addLocal
 parameter_list|(
 name|SymbolBody
 modifier|*
@@ -2280,8 +2291,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NumLocals
-operator|+
 name|Symbols
 operator|.
 name|size
@@ -2291,6 +2300,17 @@ literal|1
 return|;
 block|}
 end_expr_stmt
+
+begin_function_decl
+name|size_t
+name|getSymbolIndex
+parameter_list|(
+name|SymbolBody
+modifier|*
+name|Body
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|ArrayRef
@@ -2320,24 +2340,6 @@ name|Sym
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|unsigned
-name|NumLocals
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|StringTableSection
-operator|<
-name|ELFT
-operator|>
-operator|&
-name|StrTabSec
-expr_stmt|;
-end_expr_stmt
 
 begin_label
 name|private
@@ -2381,6 +2383,24 @@ operator|>
 name|Symbols
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|StringTableSection
+operator|<
+name|ELFT
+operator|>
+operator|&
+name|StrTabSec
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|unsigned
+name|NumLocals
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};
