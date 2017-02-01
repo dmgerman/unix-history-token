@@ -594,7 +594,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{oh no}}
+comment|// expected-note{{from 'diagnose_if'}}
 end_comment
 
 begin_decl_stmt
@@ -608,10 +608,6 @@ argument_list|)
 name|_overloadable
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// expected-note{{candidate function}}
-end_comment
 
 begin_decl_stmt
 name|int
@@ -673,7 +669,7 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{call to unavailable function}}
+comment|// expected-error{{oh no}}
 name|ovl2
 argument_list|(
 operator|(
@@ -1336,6 +1332,16 @@ expr_stmt|;
 comment|// expected-warning{{alwaysWarn}}
 block|}
 end_function
+
+begin_comment
+comment|// Test that diagnose_if warnings generated in system headers are not ignored.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"Inputs/diagnose-if-warn-system-header.h"
+end_include
 
 end_unit
 
