@@ -1926,74 +1926,6 @@ comment|/// to be used while performing partial ordering of function templates.
 name|unsigned
 name|ExplicitCallArguments
 decl_stmt|;
-comment|/// The number of diagnose_if attributes that this overload triggered.
-comment|/// If any of the triggered attributes are errors, this won't count
-comment|/// diagnose_if warnings.
-name|unsigned
-name|NumTriggeredDiagnoseIfs
-init|=
-literal|0
-decl_stmt|;
-comment|/// Basically a TinyPtrVector<DiagnoseIfAttr *> that doesn't own the vector:
-comment|/// If NumTriggeredDiagnoseIfs is 0 or 1, this is a DiagnoseIfAttr *,
-comment|/// otherwise it's a pointer to an array of `NumTriggeredDiagnoseIfs`
-comment|/// DiagnoseIfAttr *s.
-name|llvm
-operator|::
-name|PointerUnion
-operator|<
-name|DiagnoseIfAttr
-operator|*
-operator|,
-name|DiagnoseIfAttr
-operator|*
-operator|*
-operator|>
-name|DiagnoseIfInfo
-expr_stmt|;
-comment|/// Gets an ArrayRef for the data at DiagnoseIfInfo. Note that this may give
-comment|/// you a pointer into DiagnoseIfInfo.
-name|ArrayRef
-operator|<
-name|DiagnoseIfAttr
-operator|*
-operator|>
-name|getDiagnoseIfInfo
-argument_list|()
-specifier|const
-block|{
-name|auto
-operator|*
-name|Ptr
-operator|=
-name|NumTriggeredDiagnoseIfs
-operator|<=
-literal|1
-operator|?
-name|DiagnoseIfInfo
-operator|.
-name|getAddrOfPtr1
-argument_list|()
-operator|:
-name|DiagnoseIfInfo
-operator|.
-name|get
-operator|<
-name|DiagnoseIfAttr
-operator|*
-operator|*
-operator|>
-operator|(
-operator|)
-block|;
-return|return
-block|{
-name|Ptr
-block|,
-name|NumTriggeredDiagnoseIfs
-block|}
-return|;
-block|}
 union|union
 block|{
 name|DeductionFailureInfo
@@ -2235,9 +2167,8 @@ literal|16
 operator|>
 name|Functions
 expr_stmt|;
-comment|// Allocator for ConversionSequenceLists and DiagnoseIfAttr* arrays.
-comment|// We store the first few of each of these inline to avoid allocation for
-comment|// small sets.
+comment|// Allocator for ConversionSequenceLists. We store the first few of these
+comment|// inline to avoid allocation for small sets.
 name|llvm
 operator|::
 name|BumpPtrAllocator
@@ -2282,6 +2213,8 @@ comment|/// If we have space, allocates from inline storage. Otherwise, allocate
 comment|/// from the slab allocator.
 comment|/// FIXME: It would probably be nice to have a SmallBumpPtrAllocator
 comment|/// instead.
+comment|/// FIXME: Now that this only allocates ImplicitConversionSequences, do we
+comment|/// want to un-generalize this?
 name|template
 operator|<
 name|typename
@@ -2503,34 +2436,6 @@ name|Kind
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// Make a DiagnoseIfAttr* array in a block of memory that will live for
-end_comment
-
-begin_comment
-comment|/// as long as this OverloadCandidateSet. Returns a pointer to the start
-end_comment
-
-begin_comment
-comment|/// of that array.
-end_comment
-
-begin_decl_stmt
-name|DiagnoseIfAttr
-modifier|*
-modifier|*
-name|addDiagnoseIfComplaints
-argument_list|(
-name|ArrayRef
-operator|<
-name|DiagnoseIfAttr
-operator|*
-operator|>
-name|CA
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/// \brief Determine when this overload candidate will be new to the

@@ -11518,10 +11518,6 @@ operator|::
 name|Classification
 name|ObjectClassification
 argument_list|,
-name|Expr
-operator|*
-name|ThisArg
-argument_list|,
 name|ArrayRef
 operator|<
 name|Expr
@@ -11563,10 +11559,6 @@ name|Expr
 operator|::
 name|Classification
 name|ObjectClassification
-argument_list|,
-name|Expr
-operator|*
-name|ThisArg
 argument_list|,
 name|ArrayRef
 operator|<
@@ -11623,10 +11615,6 @@ name|Expr
 operator|::
 name|Classification
 name|ObjectClassification
-argument_list|,
-name|Expr
-operator|*
-name|ThisArg
 argument_list|,
 name|ArrayRef
 operator|<
@@ -12062,15 +12050,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Check the diagnose_if attributes on the given function. Returns the
+comment|/// Emit diagnostics for the diagnose_if attributes on Function, ignoring any
 end_comment
 
 begin_comment
-comment|/// first succesful fatal attribute, or null if calling Function(Args) isn't
-end_comment
-
-begin_comment
-comment|/// an error.
+comment|/// non-ArgDependent DiagnoseIfAttrs.
 end_comment
 
 begin_comment
@@ -12078,7 +12062,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This only considers ArgDependent DiagnoseIfAttrs.
+comment|/// Argument-dependent diagnose_if attributes should be checked each time a
+end_comment
+
+begin_comment
+comment|/// function is used as a direct callee of a function call.
 end_comment
 
 begin_comment
@@ -12086,65 +12074,43 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This will populate Nonfatal with all non-error DiagnoseIfAttrs that
-end_comment
-
-begin_comment
-comment|/// succeed. If this function returns non-null, the contents of Nonfatal are
-end_comment
-
-begin_comment
-comment|/// unspecified.
+comment|/// Returns true if any errors were emitted.
 end_comment
 
 begin_decl_stmt
-name|DiagnoseIfAttr
-modifier|*
-name|checkArgDependentDiagnoseIf
+name|bool
+name|diagnoseArgDependentDiagnoseIfAttrs
 argument_list|(
+specifier|const
 name|FunctionDecl
 operator|*
 name|Function
 argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|ThisArg
+argument_list|,
 name|ArrayRef
 operator|<
+specifier|const
 name|Expr
 operator|*
 operator|>
 name|Args
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|DiagnoseIfAttr
-operator|*
-operator|>
-operator|&
-name|Nonfatal
-argument_list|,
-name|bool
-name|MissingImplicitThis
-operator|=
-name|false
-argument_list|,
-name|Expr
-operator|*
-name|ThisArg
-operator|=
-name|nullptr
+name|SourceLocation
+name|Loc
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Check the diagnose_if expressions on the given function. Returns the
+comment|/// Emit diagnostics for the diagnose_if attributes on Function, ignoring any
 end_comment
 
 begin_comment
-comment|/// first succesful fatal attribute, or null if using Function isn't
-end_comment
-
-begin_comment
-comment|/// an error.
+comment|/// ArgDependent DiagnoseIfAttrs.
 end_comment
 
 begin_comment
@@ -12152,7 +12118,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This ignores all ArgDependent DiagnoseIfAttrs.
+comment|/// Argument-independent diagnose_if attributes should be checked on every use
+end_comment
+
+begin_comment
+comment|/// of a function.
 end_comment
 
 begin_comment
@@ -12160,56 +12130,20 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This will populate Nonfatal with all non-error DiagnoseIfAttrs that
-end_comment
-
-begin_comment
-comment|/// succeed. If this function returns non-null, the contents of Nonfatal are
-end_comment
-
-begin_comment
-comment|/// unspecified.
-end_comment
-
-begin_decl_stmt
-name|DiagnoseIfAttr
-modifier|*
-name|checkArgIndependentDiagnoseIf
-argument_list|(
-name|FunctionDecl
-operator|*
-name|Function
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|DiagnoseIfAttr
-operator|*
-operator|>
-operator|&
-name|Nonfatal
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Emits the diagnostic contained in the given DiagnoseIfAttr at Loc. Also
-end_comment
-
-begin_comment
-comment|/// emits a note about the location of said attribute.
+comment|/// Returns true if any errors were emitted.
 end_comment
 
 begin_function_decl
-name|void
-name|emitDiagnoseIfDiagnostic
+name|bool
+name|diagnoseArgIndependentDiagnoseIfAttrs
 parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|Function
+parameter_list|,
 name|SourceLocation
 name|Loc
-parameter_list|,
-specifier|const
-name|DiagnoseIfAttr
-modifier|*
-name|DIA
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -47836,6 +47770,11 @@ specifier|const
 name|FunctionProtoType
 operator|*
 name|Proto
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|ThisArg
 argument_list|,
 name|ArrayRef
 operator|<

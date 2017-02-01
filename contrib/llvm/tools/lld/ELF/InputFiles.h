@@ -759,27 +759,6 @@ name|MipsGp0
 init|=
 literal|0
 decl_stmt|;
-comment|// The number is the offset in the string table. It will be used as the
-comment|// st_name of the symbol.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-operator|,
-name|unsigned
-operator|>>
-name|KeptLocalSyms
-expr_stmt|;
 comment|// Name of source file obtained from STT_FILE symbol value,
 comment|// or empty string if there is no such symbol in object file
 comment|// symbol table.

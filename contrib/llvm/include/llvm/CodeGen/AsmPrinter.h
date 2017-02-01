@@ -1465,6 +1465,24 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// Emit the directive and value for debug thread local expression
+comment|///
+comment|/// \p Value - The value to emit.
+comment|/// \p Size - The size of the integer (in bytes) to emit.
+name|virtual
+name|void
+name|EmitDebugValue
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+name|Value
+argument_list|,
+name|unsigned
+name|Size
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Lowering Routines
 comment|//===------------------------------------------------------------------===//
