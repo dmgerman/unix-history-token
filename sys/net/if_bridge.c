@@ -4625,6 +4625,11 @@ operator|->
 name|bif_savedcaps
 expr_stmt|;
 block|}
+name|BRIDGE_XLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|bif
@@ -4657,6 +4662,11 @@ name|enabled
 operator||=
 name|mask
 expr_stmt|;
+name|BRIDGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|bridge_set_ifcap
 argument_list|(
 name|sc
@@ -4666,7 +4676,17 @@ argument_list|,
 name|enabled
 argument_list|)
 expr_stmt|;
+name|BRIDGE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
+name|BRIDGE_XDROP
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4705,6 +4725,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|BRIDGE_UNLOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
