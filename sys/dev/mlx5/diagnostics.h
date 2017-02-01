@@ -64,7 +64,6 @@ block|{
 specifier|const
 name|char
 modifier|*
-specifier|const
 name|desc
 decl_stmt|;
 name|u16

@@ -1641,12 +1641,6 @@ operator|==
 name|IEEE80211_M_IBSS
 condition|)
 block|{
-name|vap
-operator|->
-name|iv_flags
-operator||=
-name|IEEE80211_F_SIBSS
-expr_stmt|;
 name|ni
 operator|->
 name|ni_capinfo

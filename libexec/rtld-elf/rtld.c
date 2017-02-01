@@ -4881,6 +4881,21 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+name|LD_UTRACE
+argument_list|(
+name|UTRACE_RTLD_ERROR
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|error_message
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

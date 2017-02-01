@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  Internet, ethernet, port, and protocol string to address  *  and address to string conversion routines  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  Internet, ethernet, port, and protocol string to address  *  and address to string conversion routines  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
 
 begin_ifdef
 ifdef|#
@@ -56,7 +50,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_ifdef
@@ -245,13 +239,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"addrtostr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ethertype.h"
 end_include
 
 begin_include
@@ -297,7 +303,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * hash tables for whatever-to-name translations  *  * XXX there has to be error checks against strdup(3) failure  */
+comment|/*  * hash tables for whatever-to-name translations  *  * ndo_error() called on strdup(3) failure  */
 end_comment
 
 begin_define
@@ -394,19 +400,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
 
 begin_comment
 comment|/*  * fake gethostbyaddr for Win2k/XP  * gethostbyaddr() returns incorrect value when AF_INET6 is passed  * to 3rd argument.  *  * h_name in struct hostent is only valid.  */
@@ -586,14 +584,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* INET6& WIN32 */
+comment|/* _WIN32 */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
 
 begin_struct
 struct|struct
@@ -626,15 +618,6 @@ name|HASHNAMESIZE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_struct
 struct|struct
@@ -921,7 +904,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Return a name for the IP address pointed to by ap.  This address  * is assumed to be in network byte order.  *  * NOTE: ap is *NOT* necessarily part of the packet data (not even if  * this is being called with the "ipaddr_string()" macro), so you  * *CANNOT* use the TCHECK{2}/TTEST{2} macros on it.  Furthermore,  * even in cases where it *is* part of the packet data, the caller  * would still have to check for a null return value, even if it's  * just printing the return value with "%s" - not all versions of  * printf print "(null)" with "%s" and a null pointer, some of them  * don't check for a null pointer and crash in that case.  *  * The callers of this routine should, before handing this routine  * a pointer to packet data, be sure that the data is present in  * the packet buffer.  They should probably do those checks anyway,  * as other data at that layer might not be IP addresses, and it  * also needs to check whether they're present in the packet buffer.  */
+comment|/*  * Return a name for the IP address pointed to by ap.  This address  * is assumed to be in network byte order.  *  * NOTE: ap is *NOT* necessarily part of the packet data (not even if  * this is being called with the "ipaddr_string()" macro), so you  * *CANNOT* use the ND_TCHECK{2}/ND_TTEST{2} macros on it.  Furthermore,  * even in cases where it *is* part of the packet data, the caller  * would still have to check for a null return value, even if it's  * just printing the return value with "%s" - not all versions of  * printf print "(null)" with "%s" and a null pointer, some of them  * don't check for a null pointer and crash in that case.  *  * The callers of this routine should, before handing this routine  * a pointer to packet data, be sure that the data is present in  * the packet buffer.  They should probably do those checks anyway,  * as other data at that layer might not be IP addresses, and it  * also needs to check whether they're present in the packet buffer.  */
 end_comment
 
 begin_function
@@ -949,13 +932,11 @@ decl_stmt|;
 name|uint32_t
 name|addr
 decl_stmt|;
-specifier|static
 name|struct
 name|hnamemem
 modifier|*
 name|p
 decl_stmt|;
-comment|/* static for longjmp() */
 name|memcpy
 argument_list|(
 operator|&
@@ -1024,7 +1005,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Print names unless: 	 *	(1) -n was given. 	 *      (2) Address is foreign and -f was given. (If -f was not 	 *	    given, f_netmask and f_localnet are 0 and the test 	 *	    evaluates to true) 	 */
 if|if
@@ -1113,6 +1096,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"getname: strdup(hp->h_name)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ndo
 operator|->
 name|ndo_Nflag
@@ -1161,6 +1164,26 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"getname: strdup(intoa(addr))"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|p
@@ -1170,12 +1193,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
 
 begin_comment
 comment|/*  * Return a name for the IP6 address pointed to by ap.  This address  * is assumed to be in network byte order.  */
@@ -1227,13 +1244,11 @@ struct|;
 block|}
 name|addr
 union|;
-specifier|static
 name|struct
 name|h6namemem
 modifier|*
 name|p
 decl_stmt|;
-comment|/* static for longjmp() */
 specifier|register
 specifier|const
 name|char
@@ -1332,7 +1347,9 @@ operator|->
 name|nxt
 operator|=
 name|newh6namemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Do not print names if -n was given. 	 */
 if|if
@@ -1419,6 +1436,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"getname6: strdup(hp->h_name)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ndo
 operator|->
 name|ndo_Nflag
@@ -1457,12 +1494,9 @@ block|}
 block|}
 name|cp
 operator|=
-name|inet_ntop
+name|addrtostr6
 argument_list|(
-name|AF_INET6
-argument_list|,
-operator|&
-name|addr
+name|ap
 argument_list|,
 name|ntop_buf
 argument_list|,
@@ -1481,6 +1515,26 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"getname6: strdup(cp)"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|p
@@ -1490,15 +1544,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1523,6 +1568,10 @@ name|enamemem
 modifier|*
 name|lookup_emem
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -1690,8 +1739,15 @@ name|e_nxt
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"lookup_emem: calloc"
 argument_list|)
 expr_stmt|;
@@ -1713,6 +1769,10 @@ name|enamemem
 modifier|*
 name|lookup_bytestring
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -1970,8 +2030,15 @@ name|e_bs
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"lookup_bytestring: calloc"
 argument_list|)
 expr_stmt|;
@@ -2014,8 +2081,15 @@ name|e_nxt
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"lookup_bytestring: calloc"
 argument_list|)
 expr_stmt|;
@@ -2037,11 +2111,19 @@ name|enamemem
 modifier|*
 name|lookup_nsap
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
 modifier|*
 name|nsap
+parameter_list|,
+specifier|register
+name|u_int
+name|nsap_length
 parameter_list|)
 block|{
 specifier|register
@@ -2052,13 +2134,6 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-name|unsigned
-name|int
-name|nlen
-init|=
-operator|*
-name|nsap
-decl_stmt|;
 name|struct
 name|enamemem
 modifier|*
@@ -2068,20 +2143,22 @@ specifier|const
 name|u_char
 modifier|*
 name|ensap
-init|=
-name|nsap
-operator|+
-name|nlen
-operator|-
-literal|6
 decl_stmt|;
 if|if
 condition|(
-name|nlen
+name|nsap_length
 operator|>
 literal|6
 condition|)
 block|{
+name|ensap
+operator|=
+name|nsap
+operator|+
+name|nsap_length
+operator|-
+literal|6
+expr_stmt|;
 name|k
 operator|=
 operator|(
@@ -2191,7 +2268,7 @@ index|[
 literal|0
 index|]
 operator|==
-name|nlen
+name|nsap_length
 operator|&&
 name|memcmp
 argument_list|(
@@ -2222,7 +2299,7 @@ literal|1
 index|]
 operator|)
 argument_list|,
-name|nlen
+name|nsap_length
 argument_list|)
 operator|==
 literal|0
@@ -2265,7 +2342,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-name|nlen
+name|nsap_length
 operator|+
 literal|1
 argument_list|)
@@ -2278,20 +2355,44 @@ name|e_nsap
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"lookup_nsap: malloc"
 argument_list|)
 expr_stmt|;
+name|tp
+operator|->
+name|e_nsap
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|u_char
+operator|)
+name|nsap_length
+expr_stmt|;
+comment|/* guaranteed< ISONSAP_MAX_LENGTH */
 name|memcpy
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
+operator|&
 name|tp
 operator|->
 name|e_nsap
+index|[
+literal|1
+index|]
 argument_list|,
 operator|(
 specifier|const
@@ -2300,9 +2401,7 @@ operator|*
 operator|)
 name|nsap
 argument_list|,
-name|nlen
-operator|+
-literal|1
+name|nsap_length
 argument_list|)
 expr_stmt|;
 name|tp
@@ -2333,8 +2432,15 @@ name|e_nxt
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"lookup_nsap: calloc"
 argument_list|)
 expr_stmt|;
@@ -2356,6 +2462,10 @@ name|protoidmem
 modifier|*
 name|lookup_protoid
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2506,8 +2616,15 @@ name|p_nxt
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"lookup_protoid: calloc"
 argument_list|)
 expr_stmt|;
@@ -2562,6 +2679,8 @@ name|tp
 operator|=
 name|lookup_emem
 argument_list|(
+name|ndo
+argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
@@ -2595,7 +2714,6 @@ index|[
 name|BUFSIZE
 index|]
 decl_stmt|;
-comment|/* 		 * We don't cast it to "const struct ether_addr *" 		 * because some systems fail to declare the second 		 * argument as a "const" pointer, even though they 		 * don't modify what it points to. 		 */
 if|if
 condition|(
 name|ether_ntohost
@@ -2603,6 +2721,7 @@ argument_list|(
 name|buf2
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|ether_addr
 operator|*
@@ -2620,6 +2739,26 @@ operator|=
 name|strdup
 argument_list|(
 name|buf2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|e_name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"etheraddr_string: strdup(buf2)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2764,6 +2903,26 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|e_name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"etheraddr_string: strdup(buf)"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tp
@@ -2780,6 +2939,10 @@ name|char
 modifier|*
 name|le64addr_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2818,6 +2981,8 @@ name|tp
 operator|=
 name|lookup_bytestring
 argument_list|(
+name|ndo
+argument_list|,
 name|ep
 argument_list|,
 name|len
@@ -2912,6 +3077,26 @@ operator|=
 name|strdup
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|e_name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"le64addr_string: strdup(buf)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3018,6 +3203,8 @@ name|tp
 operator|=
 name|lookup_bytestring
 argument_list|(
+name|ndo
+argument_list|,
 name|ep
 argument_list|,
 name|len
@@ -3061,8 +3248,15 @@ name|e_name
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"linkaddr_string: malloc"
 argument_list|)
 expr_stmt|;
@@ -3160,6 +3354,10 @@ name|char
 modifier|*
 name|etherproto_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|u_short
 name|port
 parameter_list|)
@@ -3242,7 +3440,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 name|cp
 operator|=
@@ -3318,6 +3518,26 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"etherproto_string: strdup(buf)"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tp
@@ -3334,6 +3554,10 @@ name|char
 modifier|*
 name|protoid_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -3371,6 +3595,8 @@ name|tp
 operator|=
 name|lookup_protoid
 argument_list|(
+name|ndo
+argument_list|,
 name|pi
 argument_list|)
 expr_stmt|;
@@ -3496,6 +3722,26 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|p_name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"protoid_string: strdup(buf)"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tp
@@ -3519,6 +3765,10 @@ name|char
 modifier|*
 name|isonsap_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -3563,7 +3813,11 @@ name|tp
 operator|=
 name|lookup_nsap
 argument_list|(
+name|ndo
+argument_list|,
 name|nsap
+argument_list|,
+name|nsap_length
 argument_list|)
 expr_stmt|;
 if|if
@@ -3601,8 +3855,15 @@ name|cp
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"isonsap_string: malloc"
 argument_list|)
 expr_stmt|;
@@ -3695,6 +3956,10 @@ name|char
 modifier|*
 name|tcpport_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|u_short
 name|port
 parameter_list|)
@@ -3772,7 +4037,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -3800,6 +4067,26 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"tcpport_string: strdup(buf)"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tp
@@ -3816,6 +4103,10 @@ name|char
 modifier|*
 name|udpport_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 name|u_short
 name|port
@@ -3894,7 +4185,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -3922,6 +4215,26 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"udpport_string: strdup(buf)"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tp
@@ -3938,6 +4251,10 @@ name|char
 modifier|*
 name|ipxsap_string
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|u_short
 name|port
 parameter_list|)
@@ -4020,7 +4337,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 name|cp
 operator|=
@@ -4094,6 +4413,26 @@ operator|=
 name|strdup
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"ipxsap_string: strdup(buf)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4275,6 +4614,26 @@ operator|->
 name|s_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|table
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"init_servarray: strdup"
+argument_list|)
+expr_stmt|;
 name|table
 operator|->
 name|addr
@@ -4286,7 +4645,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 block|}
 name|endservent
@@ -4295,39 +4656,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* in libpcap.a (nametoaddr.c) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|USE_STATIC_LIBPCAP
-argument_list|)
-end_if
-
-begin_extern
-extern|extern __declspec(dllimport
-end_extern
-
-begin_else
-unit|)
-else|#
-directive|else
-end_else
-
 begin_struct
-specifier|extern
-endif|#
-directive|endif
+specifier|static
 specifier|const
 struct|struct
 name|eproto
@@ -4343,6 +4673,138 @@ decl_stmt|;
 block|}
 name|eproto_db
 index|[]
+init|=
+block|{
+block|{
+literal|"pup"
+block|,
+name|ETHERTYPE_PUP
+block|}
+block|,
+block|{
+literal|"xns"
+block|,
+name|ETHERTYPE_NS
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+name|ETHERTYPE_IP
+block|}
+block|,
+block|{
+literal|"ip6"
+block|,
+name|ETHERTYPE_IPV6
+block|}
+block|,
+block|{
+literal|"arp"
+block|,
+name|ETHERTYPE_ARP
+block|}
+block|,
+block|{
+literal|"rarp"
+block|,
+name|ETHERTYPE_REVARP
+block|}
+block|,
+block|{
+literal|"sprite"
+block|,
+name|ETHERTYPE_SPRITE
+block|}
+block|,
+block|{
+literal|"mopdl"
+block|,
+name|ETHERTYPE_MOPDL
+block|}
+block|,
+block|{
+literal|"moprc"
+block|,
+name|ETHERTYPE_MOPRC
+block|}
+block|,
+block|{
+literal|"decnet"
+block|,
+name|ETHERTYPE_DN
+block|}
+block|,
+block|{
+literal|"lat"
+block|,
+name|ETHERTYPE_LAT
+block|}
+block|,
+block|{
+literal|"sca"
+block|,
+name|ETHERTYPE_SCA
+block|}
+block|,
+block|{
+literal|"lanbridge"
+block|,
+name|ETHERTYPE_LANBRIDGE
+block|}
+block|,
+block|{
+literal|"vexp"
+block|,
+name|ETHERTYPE_VEXP
+block|}
+block|,
+block|{
+literal|"vprod"
+block|,
+name|ETHERTYPE_VPROD
+block|}
+block|,
+block|{
+literal|"atalk"
+block|,
+name|ETHERTYPE_ATALK
+block|}
+block|,
+block|{
+literal|"atalkarp"
+block|,
+name|ETHERTYPE_AARP
+block|}
+block|,
+block|{
+literal|"loopback"
+block|,
+name|ETHERTYPE_LOOPBACK
+block|}
+block|,
+block|{
+literal|"decdts"
+block|,
+name|ETHERTYPE_DECDTS
+block|}
+block|,
+block|{
+literal|"decdns"
+block|,
+name|ETHERTYPE_DECDNS
+block|}
+block|,
+block|{
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+block|,
+literal|0
+block|}
+block|}
 struct|;
 end_struct
 
@@ -4351,7 +4813,9 @@ specifier|static
 name|void
 name|init_eprotoarray
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
+name|ndo
 parameter_list|)
 block|{
 specifier|register
@@ -4450,7 +4914,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -4587,7 +5053,9 @@ specifier|static
 name|void
 name|init_protoidarray
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
+name|ndo
 parameter_list|)
 block|{
 specifier|register
@@ -4689,6 +5157,8 @@ name|tp
 operator|=
 name|lookup_protoid
 argument_list|(
+name|ndo
+argument_list|,
 name|protoid
 argument_list|)
 expr_stmt|;
@@ -4704,6 +5174,26 @@ name|i
 index|]
 operator|.
 name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|p_name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"init_protoidarray: strdup(eproto_db[i].s)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4728,6 +5218,8 @@ name|tp
 operator|=
 name|lookup_protoid
 argument_list|(
+name|ndo
+argument_list|,
 name|pl
 operator|->
 name|protoid
@@ -4826,7 +5318,9 @@ specifier|static
 name|void
 name|init_etherarray
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
+name|ndo
 parameter_list|)
 block|{
 specifier|register
@@ -4899,6 +5393,8 @@ name|tp
 operator|=
 name|lookup_emem
 argument_list|(
+name|ndo
+argument_list|,
 name|ep
 operator|->
 name|addr
@@ -4913,6 +5409,26 @@ argument_list|(
 name|ep
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|e_name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"init_etherarray: strdup(ep->addr)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4948,6 +5464,8 @@ name|tp
 operator|=
 name|lookup_emem
 argument_list|(
+name|ndo
+argument_list|,
 name|el
 operator|->
 name|addr
@@ -4966,7 +5484,7 @@ continue|continue;
 ifdef|#
 directive|ifdef
 name|USE_ETHER_NTOHOST
-comment|/* 		 * Use YP/NIS version of name if available. 		 * 		 * We don't cast it to "const struct ether_addr *" 		 * because some systems don't modify the Ethernet 		 * address but fail to declare the second argument 		 * as a "const" pointer. 		 */
+comment|/* 		 * Use YP/NIS version of name if available. 		 */
 if|if
 condition|(
 name|ether_ntohost
@@ -4974,6 +5492,7 @@ argument_list|(
 name|name
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|ether_addr
 operator|*
@@ -4993,6 +5512,26 @@ operator|=
 name|strdup
 argument_list|(
 name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|e_name
+operator|==
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
+argument_list|(
+name|ndo
+argument_list|,
+literal|"init_etherarray: strdup(name)"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -6316,7 +6855,9 @@ specifier|static
 name|void
 name|init_ipxsaparray
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
+name|ndo
 parameter_list|)
 block|{
 specifier|register
@@ -6417,7 +6958,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -6467,7 +7010,9 @@ condition|)
 comment|/* 		 * Simplest way to suppress names. 		 */
 return|return;
 name|init_etherarray
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 name|init_servarray
 argument_list|(
@@ -6475,13 +7020,19 @@ name|ndo
 argument_list|)
 expr_stmt|;
 name|init_eprotoarray
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 name|init_protoidarray
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 name|init_ipxsaparray
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -6526,7 +7077,7 @@ name|tp
 operator|->
 name|nxt
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|tp
 operator|=
@@ -6560,7 +7111,9 @@ operator|->
 name|nxt
 operator|=
 name|newhnamemem
-argument_list|()
+argument_list|(
+name|ndo
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6574,6 +7127,8 @@ name|name
 operator|=
 name|dnnum_string
 argument_list|(
+name|ndo
+argument_list|,
 name|dnaddr
 argument_list|)
 expr_stmt|;
@@ -6584,6 +7139,8 @@ name|name
 operator|=
 name|dnname_string
 argument_list|(
+name|ndo
+argument_list|,
 name|dnaddr
 argument_list|)
 expr_stmt|;
@@ -6607,7 +7164,9 @@ name|hnamemem
 modifier|*
 name|newhnamemem
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
+name|ndo
 parameter_list|)
 block|{
 specifier|register
@@ -6665,8 +7224,15 @@ name|ptr
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"newhnamemem: calloc"
 argument_list|)
 expr_stmt|;
@@ -6687,12 +7253,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_comment
 comment|/* Return a zero'ed h6namemem struct and cuts down on calloc() overhead */
 end_comment
@@ -6703,7 +7263,9 @@ name|h6namemem
 modifier|*
 name|newh6namemem
 parameter_list|(
-name|void
+name|netdissect_options
+modifier|*
+name|ndo
 parameter_list|)
 block|{
 specifier|register
@@ -6761,8 +7323,15 @@ name|ptr
 operator|==
 name|NULL
 condition|)
-name|error
+call|(
+modifier|*
+name|ndo
+operator|->
+name|ndo_error
+call|)
 argument_list|(
+name|ndo
+argument_list|,
 literal|"newh6namemem: calloc"
 argument_list|)
 expr_stmt|;
@@ -6782,15 +7351,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_comment
 comment|/* Represent TCI part of the 802.1Q 4-octet tag as text. */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: el.h,v 1.25 2011/07/29 23:44:44 christos Exp $	*/
+comment|/*	$NetBSD: el.h,v 1.34 2016/02/24 17:13:22 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -57,18 +57,6 @@ directive|include
 file|"chartype.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -118,38 +106,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGNORE_EXTCHARS
-value|0x20
-end_define
-
-begin_comment
-comment|/* Ignore characters read> 0xff */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NARROW_HISTORY
 value|0x40
 end_define
-
-begin_define
-define|#
-directive|define
-name|NARROW_READ
-value|0x80
-end_define
-
-begin_typedef
-typedef|typedef
-name|int
-name|bool_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* True or not			*/
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -243,7 +202,7 @@ comment|/* Previous command		*/
 name|el_action_t
 name|thiscmd
 decl_stmt|;
-comment|/* this command 		*/
+comment|/* this command			*/
 name|Char
 name|thisch
 decl_stmt|;
@@ -328,12 +287,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"common.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"search.h"
 end_include
 
@@ -346,25 +299,23 @@ end_include
 begin_include
 include|#
 directive|include
+file|"fcns.h"
+end_include
+
+begin_comment
+comment|/* el_func_t is needed for map.h */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"parse.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sig.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"help.h"
 end_include
 
 begin_include

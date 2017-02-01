@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: search.h,v 1.9 2009/12/30 22:37:40 christos Exp $	*/
+comment|/*	$NetBSD: search.h,v 1.12 2016/02/16 15:53:48 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ define|#
 directive|define
 name|_h_el_search
 end_define
-
-begin_include
-include|#
-directive|include
-file|"histedit.h"
-end_include
 
 begin_typedef
 typedef|typedef
@@ -175,7 +169,7 @@ parameter_list|(
 name|EditLine
 modifier|*
 parameter_list|,
-name|Int
+name|wint_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -190,7 +184,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|Int
+name|wint_t
 parameter_list|,
 name|int
 parameter_list|,

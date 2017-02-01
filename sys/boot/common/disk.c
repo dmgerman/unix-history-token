@@ -109,7 +109,7 @@ name|ptable
 modifier|*
 name|table
 decl_stmt|;
-name|off_t
+name|uint64_t
 name|mediasize
 decl_stmt|;
 name|u_int
@@ -170,7 +170,7 @@ name|open_disk
 modifier|*
 name|od
 decl_stmt|;
-name|off_t
+name|uint64_t
 name|d_offset
 decl_stmt|;
 name|STAILQ_ENTRY
@@ -738,7 +738,7 @@ parameter_list|,
 name|size_t
 name|blocks
 parameter_list|,
-name|off_t
+name|uint64_t
 name|offset
 parameter_list|)
 block|{
@@ -1164,7 +1164,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|off_t
+name|uint64_t
 name|offset
 parameter_list|,
 name|u_int
@@ -1240,7 +1240,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|off_t
+name|uint64_t
 name|offset
 parameter_list|,
 name|u_int
@@ -1366,7 +1366,7 @@ name|disk_devdesc
 modifier|*
 name|dev
 parameter_list|,
-name|off_t
+name|uint64_t
 name|mediasize
 parameter_list|,
 name|u_int

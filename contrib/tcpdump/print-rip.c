@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1989, 1990, 1991, 1993, 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Routing Information Protocol (RIP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -55,10 +53,6 @@ include|#
 directive|include
 file|"extract.h"
 end_include
-
-begin_comment
-comment|/* must come after interface.h */
-end_comment
 
 begin_include
 include|#
@@ -331,6 +325,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -379,6 +374,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -523,11 +519,13 @@ literal|2
 condition|)
 block|{
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|p
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -611,6 +609,7 @@ operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -631,6 +630,7 @@ operator|,
 operator|*
 operator|(
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -651,6 +651,7 @@ operator|,
 operator|*
 operator|(
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -735,6 +736,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -777,6 +779,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -827,6 +830,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -1063,6 +1067,7 @@ expr_stmt|;
 name|rp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rip
 operator|*
@@ -1110,6 +1115,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -1204,6 +1210,7 @@ expr_stmt|;
 name|ni
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rip_netinfo
 operator|*
@@ -1325,6 +1332,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -1357,6 +1365,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)

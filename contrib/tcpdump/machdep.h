@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|tcpdump_machdep_h
+name|netdissect_machdep_h
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|tcpdump_machdep_h
+name|netdissect_machdep_h
 end_define
 
 begin_function_decl

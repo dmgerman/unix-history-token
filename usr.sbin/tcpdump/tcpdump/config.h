@@ -16,13 +16,13 @@ comment|/* config.h.in.  Generated from configure.in by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* define if you have the addrinfo function */
+comment|/* define if you want to build the possibly-buggy SMB printer */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_ADDRINFO
+name|ENABLE_SMB
 value|1
 end_define
 
@@ -49,7 +49,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* capsicum support available */
+comment|/* Casper library support available */
 end_comment
 
 begin_comment
@@ -132,6 +132,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `EVP_CIPHER_CTX_new' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_CIPHER_CTX_NEW
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
 end_comment
 
@@ -154,17 +165,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `getnameinfo' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETNAMEINFO
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `getopt_long' function. */
 end_comment
 
@@ -183,17 +183,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETRPCBYNUMBER
-value|1
-end_define
-
-begin_comment
-comment|/* define if you have the h_errno variable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_H_ERRNO
 value|1
 end_define
 
@@ -283,6 +272,18 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<net/if_pflog.h> header file. */
+end_comment
+
+begin_comment
+comment|/* See Makefile */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NET_IF_PFLOG_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<net/pfvar.h> header file. */
 end_comment
 
@@ -315,6 +316,18 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_OPENSSL_EVP_H 1 */
+end_comment
+
+begin_comment
+comment|/* define if the OS provides AF_INET6 and struct in6_addr */
+end_comment
+
+begin_comment
+comment|/* See Makefile */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OS_IPV6_SUPPORT */
 end_comment
 
 begin_comment
@@ -504,6 +517,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `pcap_set_optimizer_debug' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PCAP_SET_OPTIMIZER_DEBUG */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `pcap_set_parser_debug' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PCAP_SET_PARSER_DEBUG */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `pcap_set_tstamp_precision' function. */
 end_comment
 
@@ -642,17 +671,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDLIB_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strcasecmp' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRCASECMP
 value|1
 end_define
 
@@ -838,31 +856,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you enable IPv6 support */
-end_comment
-
-begin_comment
-comment|/* See Makefile */
-end_comment
-
-begin_comment
-comment|/* #undef INET6 */
-end_comment
-
-begin_comment
 comment|/* if unaligned access fails */
 end_comment
 
 begin_comment
 comment|/* #undef LBL_ALIGN */
-end_comment
-
-begin_comment
-comment|/* define if you need to include missing/addrinfo.h */
-end_comment
-
-begin_comment
-comment|/* #undef NEED_ADDRINFO_H */
 end_comment
 
 begin_comment
@@ -1018,17 +1016,6 @@ begin_define
 define|#
 directive|define
 name|STDC_HEADERS
-value|1
-end_define
-
-begin_comment
-comment|/* define if you want to build the possibly-buggy SMB printer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPDUMP_DO_SMB
 value|1
 end_define
 

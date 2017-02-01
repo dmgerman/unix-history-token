@@ -4409,6 +4409,19 @@ return|return
 name|PROCESS
 return|;
 block|}
+comment|/* 	 * 802.11-2012 9.3.2.10 - Duplicate detection and recovery. 	 * 	 * Multicast QoS data frames are checked against a different 	 * counter, not the per-TID counter. 	 */
+if|if
+condition|(
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|wh
+operator|->
+name|i_addr1
+argument_list|)
+condition|)
+return|return
+name|PROCESS
+return|;
 if|if
 condition|(
 name|IEEE80211_IS_DSTODS

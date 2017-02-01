@@ -3446,7 +3446,7 @@ name|void
 modifier|*
 name|dev
 parameter_list|,
-name|off_t
+name|uint64_t
 name|sectors
 parameter_list|,
 name|uint16_t

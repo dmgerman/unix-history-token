@@ -1977,7 +1977,7 @@ parameter_list|,
 name|size_t
 name|blocks
 parameter_list|,
-name|off_t
+name|uint64_t
 name|offset
 parameter_list|)
 block|{

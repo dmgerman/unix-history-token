@@ -2292,7 +2292,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|1
+literal|1U
 operator|<<
 literal|7
 expr_stmt|;

@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Initial contribution from Francis Dupont (francis.dupont@inria.fr)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Interior Gateway Routing Protocol (IGRP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -43,10 +41,6 @@ include|#
 directive|include
 file|"extract.h"
 end_include
-
-begin_comment
-comment|/* must come after interface.h */
-end_comment
 
 begin_comment
 comment|/* Cisco IGRP definitions */
@@ -193,6 +187,7 @@ modifier|*
 name|ndo
 parameter_list|,
 specifier|register
+specifier|const
 name|struct
 name|igrprte
 modifier|*
@@ -452,12 +447,14 @@ name|length
 parameter_list|)
 block|{
 specifier|register
+specifier|const
 name|struct
 name|igrphdr
 modifier|*
 name|hdr
 decl_stmt|;
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|cp
@@ -472,6 +469,7 @@ decl_stmt|;
 name|hdr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|igrphdr
 operator|*
@@ -481,6 +479,7 @@ expr_stmt|;
 name|cp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -619,6 +618,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|igrprte
 operator|*
@@ -655,6 +655,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|igrprte
 operator|*
@@ -691,6 +692,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|igrprte
 operator|*

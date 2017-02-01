@@ -8039,7 +8039,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Wait while V_pf_default_rule.timeout is initialized. */
+comment|/* Wait until V_pf_default_rule is initialized. */
 if|if
 condition|(
 name|V_pf_vnet_active
@@ -8052,7 +8052,7 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Process 1/interval fraction of the state table every run. */
+comment|/* 			 *  Process 1/interval fraction of the state 			 * table every run. 			 */
 name|idx
 operator|=
 name|pf_purge_expired_states
@@ -8073,7 +8073,7 @@ literal|10
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Purge other expired types every PFTM_INTERVAL seconds. */
+comment|/* 			 * Purge other expired types every 			 * PFTM_INTERVAL seconds. 			 */
 if|if
 condition|(
 name|idx
@@ -8081,7 +8081,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Order is important: 			 * - states and src nodes reference rules 			 * - states and rules reference kifs 			 */
+comment|/* 				 * Order is important: 				 * - states and src nodes reference rules 				 * - states and rules reference kifs 				 */
 name|pf_purge_expired_fragments
 argument_list|()
 expr_stmt|;

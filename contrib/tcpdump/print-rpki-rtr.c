@@ -1,13 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2011 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * support for the The RPKI/Router Protocol as RFC6810  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
+comment|/*  * Copyright (c) 1998-2011 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Resource Public Key Infrastructure (RPKI) to Router Protocol printer */
+end_comment
+
+begin_comment
+comment|/* specification: RFC 6810 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -55,6 +57,17 @@ include|#
 directive|include
 file|"addrtoname.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|"[|RPKI-RTR]"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * RPKI/Router PDU header  *  * Here's what the PDU header looks like.  * The length does include the version and length fields.  */
@@ -559,7 +572,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|rpki_rtr_pdu_print
 parameter_list|(
 name|netdissect_options
@@ -595,6 +608,7 @@ decl_stmt|;
 name|pdu_header
 operator|=
 operator|(
+specifier|const
 name|rpki_rtr_pdu
 operator|*
 operator|)
@@ -759,6 +773,7 @@ case|case
 name|RPKI_RTR_IPV4_PREFIX_PDU
 case|:
 block|{
+specifier|const
 name|rpki_rtr_pdu_ipv4_prefix
 modifier|*
 name|pdu
@@ -766,6 +781,7 @@ decl_stmt|;
 name|pdu
 operator|=
 operator|(
+specifier|const
 name|rpki_rtr_pdu_ipv4_prefix
 operator|*
 operator|)
@@ -817,13 +833,11 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|RPKI_RTR_IPV6_PREFIX_PDU
 case|:
 block|{
+specifier|const
 name|rpki_rtr_pdu_ipv6_prefix
 modifier|*
 name|pdu
@@ -831,6 +845,7 @@ decl_stmt|;
 name|pdu
 operator|=
 operator|(
+specifier|const
 name|rpki_rtr_pdu_ipv6_prefix
 operator|*
 operator|)
@@ -882,12 +897,11 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
 case|case
 name|RPKI_RTR_ERROR_REPORT_PDU
 case|:
 block|{
+specifier|const
 name|rpki_rtr_pdu_error_report
 modifier|*
 name|pdu
@@ -904,6 +918,7 @@ decl_stmt|;
 name|pdu
 operator|=
 operator|(
+specifier|const
 name|rpki_rtr_pdu_error_report
 operator|*
 operator|)
@@ -1016,6 +1031,8 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|rpki_rtr_pdu_print
 argument_list|(
 name|ndo
@@ -1026,7 +1043,10 @@ name|indent
 operator|+
 literal|2
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
 block|}
 name|tptr
 operator|+=
@@ -1099,6 +1119,8 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fn_printn
 argument_list|(
 name|ndo
@@ -1111,7 +1133,10 @@ name|ndo
 operator|->
 name|ndo_snapend
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
 block|}
 block|}
 break|break;
@@ -1152,19 +1177,14 @@ name|pdu_len
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+return|return
+literal|0
+return|;
 name|trunc
 label|:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"|trunc"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -1255,6 +1275,7 @@ expr_stmt|;
 name|pdu_header
 operator|=
 operator|(
+specifier|const
 name|rpki_rtr_pdu
 operator|*
 operator|)
@@ -1307,6 +1328,8 @@ name|trunc
 goto|;
 block|}
 comment|/* 	 * Print the PDU. 	 */
+if|if
+condition|(
 name|rpki_rtr_pdu_print
 argument_list|(
 name|ndo
@@ -1315,7 +1338,10 @@ name|tptr
 argument_list|,
 literal|8
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|tlen
 operator|-=
 name|pdu_len
@@ -1333,7 +1359,9 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\t[|RPKI-RTR]"
+literal|"\n\t%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;

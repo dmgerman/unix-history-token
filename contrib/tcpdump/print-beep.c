@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000, Richard Sharpe  *  * This software may be distributed either under the terms of the  * BSD-style licence that accompanies tcpdump or under the GNU GPL  * version 2 or later.  *  * print-beep.c  *  */
+comment|/*  * Copyright (C) 2000, Richard Sharpe  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or under the GNU GPL  * version 2 or later.  *  * print-beep.c  *  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Blocks Extensible Exchange Protocol (BEEP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_comment

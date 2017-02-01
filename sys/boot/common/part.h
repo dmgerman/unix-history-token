@@ -112,7 +112,7 @@ parameter_list|,
 name|size_t
 name|blocks
 parameter_list|,
-name|off_t
+name|uint64_t
 name|offset
 parameter_list|)
 function_decl|;
@@ -153,7 +153,7 @@ name|void
 modifier|*
 name|dev
 parameter_list|,
-name|off_t
+name|uint64_t
 name|sectors
 parameter_list|,
 name|uint16_t

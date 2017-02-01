@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Dynamic Trunk Protocol (DTP)  *  * Original code by Carles Kishimoto<carles.kishimoto@gmail.com>  */
+comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Carles Kishimoto<carles.kishimoto@gmail.com>  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Dynamic Trunking Protocol (DTP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -49,6 +47,17 @@ include|#
 directive|include
 file|"extract.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|" [|dtp]"
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -242,20 +251,14 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* infinite loop check */
+comment|/* XXX: should not be but sometimes it is, see the test captures */
 if|if
 condition|(
 name|type
 operator|==
 literal|0
-operator|||
-name|len
-operator|==
-literal|0
 condition|)
-block|{
 return|return;
-block|}
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -278,6 +281,24 @@ name|len
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* infinite loop check */
+if|if
+condition|(
+name|len
+operator|<
+literal|4
+condition|)
+goto|goto
+name|invalid
+goto|;
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -291,12 +312,25 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|", %s"
-operator|,
+literal|", "
+operator|)
+argument_list|)
+expr_stmt|;
+name|fn_printzp
+argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|4
-operator|)
+argument_list|,
+name|len
+operator|-
+literal|4
+argument_list|,
+name|pptr
+operator|+
+name|length
 argument_list|)
 expr_stmt|;
 break|break;
@@ -306,6 +340,15 @@ case|:
 case|case
 name|DTP_DTP_TYPE_TLV
 case|:
+if|if
+condition|(
+name|len
+operator|<
+literal|5
+condition|)
+goto|goto
+name|invalid
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -326,6 +369,15 @@ break|break;
 case|case
 name|DTP_NEIGHBOR_TLV
 case|:
+if|if
+condition|(
+name|len
+operator|<
+literal|10
+condition|)
+goto|goto
+name|invalid
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -354,6 +406,20 @@ name|len
 expr_stmt|;
 block|}
 return|return;
+name|invalid
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|istr
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
 name|trunc
 label|:
 name|ND_PRINT
@@ -361,7 +427,9 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|dtp]"
+literal|"%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;

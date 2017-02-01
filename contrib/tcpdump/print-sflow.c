@@ -1,13 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * The SFLOW protocol as per http://www.sflow.org/developers/specifications.php  *  * Original code by Carles Kishimoto<carles.kishimoto@gmail.com>  *  * Expansion and refactoring by Rick Jones<rick.jones2@hp.com>  */
+comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Carles Kishimoto<carles.kishimoto@gmail.com>  *  * Expansion and refactoring by Rick Jones<rick.jones2@hp.com>  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: sFlow protocol printer */
+end_comment
+
+begin_comment
+comment|/* specification: http://www.sflow.org/developers/specifications.php */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +31,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -1371,6 +1373,12 @@ operator|*
 operator|)
 name|pointer
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_gen_counter
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1611,6 +1619,11 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -1660,6 +1673,12 @@ name|sflow_ethernet_counter_t
 operator|*
 operator|)
 name|pointer
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_eth_counter
+argument_list|)
 expr_stmt|;
 name|ND_PRINT
 argument_list|(
@@ -1782,6 +1801,11 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -1858,6 +1882,12 @@ name|sflow_100basevg_counter_t
 operator|*
 operator|)
 name|pointer
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_100basevg_counter
+argument_list|)
 expr_stmt|;
 name|ND_PRINT
 argument_list|(
@@ -2014,6 +2044,11 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2063,6 +2098,12 @@ name|sflow_vlan_counter_t
 operator|*
 operator|)
 name|pointer
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_vlan_counter
+argument_list|)
 expr_stmt|;
 name|ND_PRINT
 argument_list|(
@@ -2119,6 +2160,11 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+name|trunc
+label|:
+return|return
+literal|1
 return|;
 block|}
 end_function
@@ -2208,6 +2254,12 @@ operator|*
 operator|)
 name|pointer
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_processor_counter
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -2257,6 +2309,11 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+name|trunc
+label|:
+return|return
+literal|1
 return|;
 block|}
 end_function
@@ -2350,6 +2407,12 @@ name|sflow_counter_record_t
 operator|*
 operator|)
 name|tptr
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_counter_record
+argument_list|)
 expr_stmt|;
 name|enterprise
 operator|=
@@ -2596,6 +2659,11 @@ block|}
 return|return
 literal|0
 return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2657,6 +2725,12 @@ name|sflow_counter_sample_t
 operator|*
 operator|)
 name|pointer
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_counter_sample
+argument_list|)
 expr_stmt|;
 name|typesource
 operator|=
@@ -2734,6 +2808,11 @@ argument_list|,
 name|nrecords
 argument_list|)
 return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2786,6 +2865,12 @@ name|sflow_expanded_counter_sample_t
 operator|*
 operator|)
 name|pointer
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_expanded_counter_sample
+argument_list|)
 expr_stmt|;
 name|nrecords
 operator|=
@@ -2852,6 +2937,11 @@ argument_list|,
 name|nrecords
 argument_list|)
 return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2901,6 +2991,12 @@ name|sflow_expanded_flow_raw_t
 operator|*
 operator|)
 name|pointer
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_flow_raw
+argument_list|)
 expr_stmt|;
 name|ND_PRINT
 argument_list|(
@@ -2957,6 +3053,11 @@ comment|/* QUESTION - should we attempt to print the raw header itself?        a
 return|return
 literal|0
 return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -3007,6 +3108,12 @@ operator|*
 operator|)
 name|pointer
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_ethernet_frame
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -3032,6 +3139,11 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+name|trunc
+label|:
+return|return
+literal|1
 return|;
 block|}
 end_function
@@ -3083,6 +3195,12 @@ operator|*
 operator|)
 name|pointer
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_extended_sw_data
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -3122,6 +3240,11 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+name|trunc
+label|:
+return|return
+literal|1
 return|;
 block|}
 end_function
@@ -3215,6 +3338,12 @@ name|sflow_flow_record_t
 operator|*
 operator|)
 name|tptr
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_flow_record
+argument_list|)
 expr_stmt|;
 comment|/* so, the funky encoding means we cannot blythly mask-off 	   bits, we must also check the enterprise. */
 name|enterprise
@@ -3449,6 +3578,11 @@ block|}
 return|return
 literal|0
 return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -3504,11 +3638,18 @@ return|;
 name|sflow_flow_sample
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sflow_flow_sample_t
 operator|*
 operator|)
 name|pointer
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_flow_sample
+argument_list|)
 expr_stmt|;
 name|typesource
 operator|=
@@ -3621,6 +3762,11 @@ argument_list|,
 name|nrecords
 argument_list|)
 return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -3673,6 +3819,12 @@ name|sflow_expanded_flow_sample_t
 operator|*
 operator|)
 name|pointer
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sflow_expanded_flow_sample
+argument_list|)
 expr_stmt|;
 name|nrecords
 operator|=
@@ -3764,6 +3916,11 @@ argument_list|)
 argument_list|,
 name|nrecords
 argument_list|)
+return|;
+name|trunc
+label|:
+return|return
+literal|1
 return|;
 block|}
 end_function

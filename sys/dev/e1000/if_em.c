@@ -12856,26 +12856,29 @@ literal|"em_setup_interface: begin"
 argument_list|)
 expr_stmt|;
 comment|/* TSO parameters */
+name|if_sethwtsomax
+argument_list|(
 name|ifp
-operator|->
-name|if_hw_tsomax
-operator|=
+argument_list|,
 name|IP_MAXPACKET
+argument_list|)
 expr_stmt|;
 comment|/* Take m_pullup(9)'s in em_xmit() w/ TSO into acount. */
+name|if_sethwtsomaxsegcount
+argument_list|(
 name|ifp
-operator|->
-name|if_hw_tsomaxsegcount
-operator|=
+argument_list|,
 name|EM_MAX_SCATTER
 operator|-
 literal|5
+argument_list|)
 expr_stmt|;
+name|if_sethwtsomaxsegsize
+argument_list|(
 name|ifp
-operator|->
-name|if_hw_tsomaxsegsize
-operator|=
+argument_list|,
 name|EM_TSO_SEG_SIZE
+argument_list|)
 expr_stmt|;
 comment|/* Single Queue */
 if|if

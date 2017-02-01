@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Asynchronous Transfer Mode (ATM) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -59,14 +57,479 @@ end_include
 begin_include
 include|#
 directive|include
-file|"atmuni31.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llc.h"
 end_include
+
+begin_comment
+comment|/* start of the original atmuni31.h */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1997 Yen Yen Lim and North Dakota State University  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Yen Yen Lim and         North Dakota State University  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/* Based on UNI3.1 standard by ATM Forum */
+end_comment
+
+begin_comment
+comment|/* ATM traffic types based on VPI=0 and (the following VCI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCI_PPC
+value|0x05
+end_define
+
+begin_comment
+comment|/* Point-to-point signal msg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCI_BCC
+value|0x02
+end_define
+
+begin_comment
+comment|/* Broadcast signal msg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCI_OAMF4SC
+value|0x03
+end_define
+
+begin_comment
+comment|/* Segment OAM F4 flow cell */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCI_OAMF4EC
+value|0x04
+end_define
+
+begin_comment
+comment|/* End-to-end OAM F4 flow cell */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCI_METAC
+value|0x01
+end_define
+
+begin_comment
+comment|/* Meta signal msg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCI_ILMIC
+value|0x10
+end_define
+
+begin_comment
+comment|/* ILMI msg */
+end_comment
+
+begin_comment
+comment|/* Q.2931 signalling messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALL_PROCEED
+value|0x02
+end_define
+
+begin_comment
+comment|/* call proceeding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONNECT
+value|0x07
+end_define
+
+begin_comment
+comment|/* connect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONNECT_ACK
+value|0x0f
+end_define
+
+begin_comment
+comment|/* connect_ack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SETUP
+value|0x05
+end_define
+
+begin_comment
+comment|/* setup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RELEASE
+value|0x4d
+end_define
+
+begin_comment
+comment|/* release */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RELEASE_DONE
+value|0x5a
+end_define
+
+begin_comment
+comment|/* release_done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESTART
+value|0x46
+end_define
+
+begin_comment
+comment|/* restart */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESTART_ACK
+value|0x4e
+end_define
+
+begin_comment
+comment|/* restart ack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STATUS
+value|0x7d
+end_define
+
+begin_comment
+comment|/* status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STATUS_ENQ
+value|0x75
+end_define
+
+begin_comment
+comment|/* status ack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADD_PARTY
+value|0x80
+end_define
+
+begin_comment
+comment|/* add party */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADD_PARTY_ACK
+value|0x81
+end_define
+
+begin_comment
+comment|/* add party ack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADD_PARTY_REJ
+value|0x82
+end_define
+
+begin_comment
+comment|/* add party rej */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DROP_PARTY
+value|0x83
+end_define
+
+begin_comment
+comment|/* drop party */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DROP_PARTY_ACK
+value|0x84
+end_define
+
+begin_comment
+comment|/* drop party ack */
+end_comment
+
+begin_comment
+comment|/* Information Element Parameters in the signalling messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAUSE
+value|0x08
+end_define
+
+begin_comment
+comment|/* cause */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENDPT_REF
+value|0x54
+end_define
+
+begin_comment
+comment|/* endpoint reference */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAL_PARA
+value|0x58
+end_define
+
+begin_comment
+comment|/* ATM adaptation layer parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRAFF_DESCRIP
+value|0x59
+end_define
+
+begin_comment
+comment|/* atm traffic descriptors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONNECT_ID
+value|0x5a
+end_define
+
+begin_comment
+comment|/* connection identifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QOS_PARA
+value|0x5c
+end_define
+
+begin_comment
+comment|/* quality of service parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_HIGHER
+value|0x5d
+end_define
+
+begin_comment
+comment|/* broadband higher layer information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_BEARER
+value|0x5e
+end_define
+
+begin_comment
+comment|/* broadband bearer capability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_LOWER
+value|0x5f
+end_define
+
+begin_comment
+comment|/* broadband lower information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLING_PARTY
+value|0x6c
+end_define
+
+begin_comment
+comment|/* calling party number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLED_PARTY
+value|0x70
+end_define
+
+begin_comment
+comment|/* called party nmber */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q2931
+value|0x09
+end_define
+
+begin_comment
+comment|/* Q.2931 signalling general messages format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROTO_POS
+value|0
+end_define
+
+begin_comment
+comment|/* offset of protocol discriminator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALL_REF_POS
+value|2
+end_define
+
+begin_comment
+comment|/* offset of call reference value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_TYPE_POS
+value|5
+end_define
+
+begin_comment
+comment|/* offset of message type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_LEN_POS
+value|7
+end_define
+
+begin_comment
+comment|/* offset of mesage length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IE_BEGIN_POS
+value|9
+end_define
+
+begin_comment
+comment|/* offset of first information element */
+end_comment
+
+begin_comment
+comment|/* format of signalling messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_POS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEN_POS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIELD_BEGIN_POS
+value|4
+end_define
+
+begin_comment
+comment|/* end of the original atmuni31.h */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -500,7 +963,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|u_int
 name|atm_llc_print
 parameter_list|(
 name|netdissect_options
@@ -519,12 +982,11 @@ name|int
 name|caplen
 parameter_list|)
 block|{
-name|u_short
-name|extracted_ethertype
+name|int
+name|llc_hdrlen
 decl_stmt|;
-if|if
-condition|(
-operator|!
+name|llc_hdrlen
+operator|=
 name|llc_print
 argument_list|(
 name|ndo
@@ -538,36 +1000,16 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-operator|&
-name|extracted_ethertype
-argument_list|)
-condition|)
-block|{
-comment|/* ether_type not known, print raw packet */
-if|if
-condition|(
-name|extracted_ethertype
-condition|)
-block|{
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"(LLC %s) "
-operator|,
-name|etherproto_string
-argument_list|(
-name|htons
-argument_list|(
-name|extracted_ethertype
-argument_list|)
-argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|llc_hdrlen
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* packet not known, print raw packet */
 if|if
 condition|(
 operator|!
@@ -582,7 +1024,17 @@ argument_list|,
 name|caplen
 argument_list|)
 expr_stmt|;
+name|llc_hdrlen
+operator|=
+operator|-
+name|llc_hdrlen
+expr_stmt|;
 block|}
+return|return
+operator|(
+name|llc_hdrlen
+operator|)
+return|;
 block|}
 end_function
 
@@ -867,6 +1319,8 @@ operator|+=
 literal|20
 expr_stmt|;
 block|}
+name|hdrlen
+operator|+=
 name|atm_llc_print
 argument_list|(
 name|ndo
@@ -1011,34 +1465,19 @@ specifier|const
 name|u_char
 modifier|*
 name|p
-parameter_list|,
-name|int
-name|caplen
 parameter_list|)
 block|{
 name|uint32_t
 name|call_ref
 decl_stmt|;
-if|if
-condition|(
-name|caplen
-operator|<
-name|PROTO_POS
-condition|)
-block|{
-name|ND_PRINT
+name|ND_TCHECK
 argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"%s"
-operator|,
-name|tstr
-operator|)
+name|p
+index|[
+name|PROTO_POS
+index|]
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|p
@@ -1059,26 +1498,14 @@ literal|"Q.2931"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|caplen
-operator|<
-name|MSG_TYPE_POS
-condition|)
-block|{
-name|ND_PRINT
+name|ND_TCHECK
 argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|" %s"
-operator|,
-name|tstr
-operator|)
+name|p
+index|[
+name|MSG_TYPE_POS
+index|]
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1142,6 +1569,20 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+name|trunc
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" %s"
+operator|,
+name|tstr
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1217,8 +1658,6 @@ argument_list|(
 name|ndo
 argument_list|,
 name|p
-argument_list|,
-name|caplen
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1391,7 +1830,7 @@ struct|;
 end_struct
 
 begin_function
-name|int
+name|void
 name|oam_print
 parameter_list|(
 name|netdissect_options
@@ -1450,6 +1889,18 @@ decl_stmt|;
 block|}
 name|oam_ptr
 union|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+operator|(
+name|p
+operator|+
+name|ATM_HDR_LEN_NOHEC
+operator|+
+name|hec
+operator|)
+argument_list|)
+expr_stmt|;
 name|cell_header
 operator|=
 name|EXTRACT_32BITS
@@ -1572,9 +2023,7 @@ operator|->
 name|ndo_vflag
 condition|)
 block|{
-return|return
-literal|1
-return|;
+return|return;
 block|}
 name|ND_PRINT
 argument_list|(
@@ -1679,6 +2128,14 @@ name|p
 operator|+
 name|OAM_CELLTYPE_FUNCTYPE_LEN
 operator|)
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|oam_ptr
+operator|.
+name|oam_fm_loopback
+argument_list|)
 expr_stmt|;
 name|ND_PRINT
 argument_list|(
@@ -1871,6 +2328,14 @@ operator|+
 name|OAM_CELLTYPE_FUNCTYPE_LEN
 operator|)
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|oam_ptr
+operator|.
+name|oam_fm_ais_rdi
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1963,6 +2428,20 @@ default|default:
 break|break;
 block|}
 comment|/* crc10 checksum verification */
+name|ND_TCHECK2
+argument_list|(
+operator|*
+operator|(
+name|p
+operator|+
+name|OAM_CELLTYPE_FUNCTYPE_LEN
+operator|+
+name|OAM_FUNCTION_SPECIFIC_LEN
+operator|)
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|cksum
 operator|=
 name|EXTRACT_16BITS
@@ -2006,9 +2485,19 @@ literal|"in"
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
+name|trunc
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"[|oam]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 

@@ -1,13 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * UNIDIRECTIONAL LINK DETECTION (UDLD) as per  * http://www.ietf.org/internet-drafts/draft-foschiano-udld-02.txt  *  * Original code by Carles Kishimoto<carles.kishimoto@gmail.com>  */
+comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Carles Kishimoto<carles.kishimoto@gmail.com>  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Cisco UniDirectional Link Detection (UDLD) protocol printer */
+end_comment
+
+begin_comment
+comment|/* specification: RFC 5171 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +31,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -43,6 +45,17 @@ include|#
 directive|include
 file|"extract.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|" [|udld]"
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -233,7 +246,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  * 0                   1                   2                   3  * 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * | Ver | Opcode  |     Flags     |           Checksum            |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |               List of TLVs (variable length list)             |  * |                              ...                              |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  */
+comment|/*  * UDLD's Protocol Data Unit format:  *  *  0                   1                   2                   3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * | Ver | Opcode  |     Flags     |           Checksum            |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |               List of TLVs (variable length list)             |  * |                              ...                              |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  * TLV format:  *  *  0                   1                   2                   3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |             TYPE              |            LENGTH             |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                             VALUE                             |  * |                              ...                              |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  * LENGTH: Length in bytes of the Type, Length, and Value fields.  */
 end_comment
 
 begin_define
@@ -430,28 +443,6 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-name|len
-operator|-=
-literal|4
-expr_stmt|;
-name|tptr
-operator|+=
-literal|4
-expr_stmt|;
-comment|/* infinite loop check */
-if|if
-condition|(
-name|type
-operator|==
-literal|0
-operator|||
-name|len
-operator|==
-literal|0
-condition|)
-block|{
-return|return;
-block|}
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -474,6 +465,41 @@ name|len
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+literal|0
+condition|)
+goto|goto
+name|invalid
+goto|;
+comment|/* infinite loop check */
+if|if
+condition|(
+name|len
+operator|<=
+literal|4
+condition|)
+goto|goto
+name|invalid
+goto|;
+name|len
+operator|-=
+literal|4
+expr_stmt|;
+name|tptr
+operator|+=
+literal|4
+expr_stmt|;
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -486,9 +512,6 @@ case|case
 name|UDLD_PORT_ID_TLV
 case|:
 case|case
-name|UDLD_ECHO_TLV
-case|:
-case|case
 name|UDLD_DEVICE_NAME_TLV
 case|:
 name|ND_PRINT
@@ -496,10 +519,46 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|", %s"
-operator|,
-name|tptr
+literal|", "
 operator|)
+argument_list|)
+expr_stmt|;
+name|fn_printzp
+argument_list|(
+name|ndo
+argument_list|,
+name|tptr
+argument_list|,
+name|len
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|UDLD_ECHO_TLV
+case|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|", "
+operator|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fn_printn
+argument_list|(
+name|ndo
+argument_list|,
+name|tptr
+argument_list|,
+name|len
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -509,6 +568,15 @@ case|:
 case|case
 name|UDLD_TIMEOUT_INTERVAL_TLV
 case|:
+if|if
+condition|(
+name|len
+operator|!=
+literal|1
+condition|)
+goto|goto
+name|invalid
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -527,6 +595,15 @@ break|break;
 case|case
 name|UDLD_SEQ_NUMBER_TLV
 case|:
+if|if
+condition|(
+name|len
+operator|!=
+literal|4
+condition|)
+goto|goto
+name|invalid
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -551,6 +628,20 @@ name|len
 expr_stmt|;
 block|}
 return|return;
+name|invalid
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|istr
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
 name|trunc
 label|:
 name|ND_PRINT
@@ -558,7 +649,9 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|udld]"
+literal|"%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;

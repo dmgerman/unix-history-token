@@ -610,10 +610,10 @@ name|cmd
 condition|)
 block|{
 case|case
-name|IOCTL_GET_BLOCK_SIZE
+name|DIOCGSECTORSIZE
 case|:
 case|case
-name|IOCTL_GET_BLOCKS
+name|DIOCGMEDIASIZE
 case|:
 if|if
 condition|(
@@ -643,11 +643,11 @@ if|if
 condition|(
 name|cmd
 operator|==
-name|IOCTL_GET_BLOCKS
+name|DIOCGMEDIASIZE
 condition|)
 operator|*
 operator|(
-name|uint32_t
+name|uint64_t
 operator|*
 operator|)
 name|buf

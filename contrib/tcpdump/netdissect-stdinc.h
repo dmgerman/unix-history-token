@@ -4,19 +4,19 @@ comment|/*  * Copyright (c) 2002 - 2003  * NetGroup, Politecnico di Torino (Ital
 end_comment
 
 begin_comment
-comment|/*  * Include the appropriate OS header files on Windows and various flavors  * of UNIX, include various non-OS header files on Windows, and define  * various items as needed, to isolate most of tcpdump's platform  * differences to this one file.  */
+comment|/*  * Include the appropriate OS header files on Windows and various flavors  * of UNIX, include various non-OS header files on Windows, and define  * various items as needed, to isolate most of netdissect's platform  * differences to this one file.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|tcpdump_stdinc_h
+name|netdissect_stdinc_h
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|tcpdump_stdinc_h
+name|netdissect_stdinc_h
 end_define
 
 begin_include
@@ -28,8 +28,12 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|_WIN32
 end_ifdef
+
+begin_comment
+comment|/*  * Includes and definitions for Windows.  */
+end_comment
 
 begin_include
 include|#
@@ -54,16 +58,6 @@ include|#
 directive|include
 file|<ws2tcpip.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"bittypes.h"
-end_include
-
-begin_comment
-comment|/* in wpcap's Win32/include */
-end_comment
 
 begin_include
 include|#
@@ -94,16 +88,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<net/netdb.h>
-end_include
-
-begin_comment
-comment|/* in wpcap's Win32/include */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -453,6 +437,34 @@ begin_comment
 comment|/* _MSC_EXTENSIONS */
 end_comment
 
+begin_comment
+comment|/*  * Suppress definition of intN_t in bittypes.h, as included by<pcap/pcap.h>  * on Windows.  * (Yes, HAVE_U_INTn_T, as the definition guards are UN*X-oriented, and  * we check for u_intN_t in the UN*X configure script.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT8_T
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT16_T
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT32_T
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_U_INT64_T
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -511,66 +523,6 @@ comment|/* _MSC_VER */
 end_comment
 
 begin_comment
-comment|/* Protos for missing/x.c functions (ideally<missing/addrinfo.h>  * should be used, but it clashes with<ws2tcpip.h>).  */
-end_comment
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|inet_ntop
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|inet_pton
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|inet_aton
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|cp
-parameter_list|,
-name|struct
-name|in_addr
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * With MSVC, for C, __inline is used to make a function an inline.  */
 end_comment
 
@@ -585,6 +537,23 @@ define|#
 directive|define
 name|inline
 value|__inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AF_INET6
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HAVE_OS_IPV6_SUPPORT
 end_define
 
 begin_endif
@@ -665,13 +634,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NI_MAXHOST
-value|1025
-end_define
-
-begin_define
-define|#
-directive|define
 name|snprintf
 value|_snprintf
 end_define
@@ -696,7 +658,11 @@ directive|else
 end_else
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
+end_comment
+
+begin_comment
+comment|/*  * Includes and definitions for various flavors of UN*X.  */
 end_comment
 
 begin_include
@@ -809,7 +775,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_ifndef
@@ -875,12 +841,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * fopen() read and write modes for text files and binary files.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|_WIN32
 argument_list|)
 operator|||
 name|defined
@@ -954,6 +924,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Inline x86 assembler-language versions of ntoh[ls]() and hton[ls](),  * defined if the OS doesn't provide them.  These assume no more than  * an 80386, so, for example, it avoids the bswap instruction added in  * the 80486.  *  * (We don't use them on OS X; Apple provides their own, which *doesn't*  * avoid the bswap instruction, as OS X only supports machines that  * have it.)  */
+end_comment
 
 begin_if
 if|#
@@ -1122,6 +1096,89 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * If the OS doesn't define AF_INET6 and struct in6_addr:  *  * define AF_INET6, so we can use it internally as a "this is an  * IPv6 address" indication;  *  * define struct in6_addr so that we can use it for IPv6 addresses.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_OS_IPV6_SUPPORT
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AF_INET6
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AF_INET6
+value|24
+end_define
+
+begin_struct
+struct|struct
+name|in6_addr
+block|{
+union|union
+block|{
+name|__uint8_t
+name|__u6_addr8
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|__uint16_t
+name|__u6_addr16
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|__uint32_t
+name|__u6_addr32
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|__u6_addr
+union|;
+comment|/* 128-bit IP6 address */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NI_MAXHOST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NI_MAXHOST
+value|1025
+end_define
 
 begin_endif
 endif|#
@@ -1500,7 +1557,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* tcpdump_stdinc_h */
+comment|/* netdissect_stdinc_h */
 end_comment
 
 end_unit
