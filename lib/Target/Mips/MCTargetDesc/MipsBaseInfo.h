@@ -250,6 +250,13 @@ init|=
 literal|1
 operator|<<
 literal|6
+block|,
+comment|/// HasFCCRegOperand - Instruction uses an $fcc<x> register.
+name|HasFCCRegOperand
+init|=
+literal|1
+operator|<<
+literal|7
 block|}
 enum|;
 block|}

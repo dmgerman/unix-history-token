@@ -156,6 +156,17 @@ argument|unsigned&Align
 argument_list|)
 specifier|const
 name|override
+block|;
+comment|/// Describe a TLS variable address within debug info.
+specifier|const
+name|MCExpr
+operator|*
+name|getDebugThreadLocalSymbol
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|)
+specifier|const
+name|override
 block|;   }
 decl_stmt|;
 block|}
