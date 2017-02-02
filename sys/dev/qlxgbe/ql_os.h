@@ -584,7 +584,7 @@ name|str
 parameter_list|,
 name|no_delay
 parameter_list|)
-value|qla_lock(ha, str, no_delay)
+value|mtx_lock(&ha->hw_lock)
 end_define
 
 begin_define
@@ -596,7 +596,7 @@ name|ha
 parameter_list|,
 name|str
 parameter_list|)
-value|qla_unlock(ha, str)
+value|mtx_unlock(&ha->hw_lock)
 end_define
 
 begin_define
