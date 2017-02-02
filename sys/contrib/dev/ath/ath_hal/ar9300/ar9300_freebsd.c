@@ -939,7 +939,7 @@ name|ah
 operator|->
 name|ah_getDfsDefaultThresh
 operator|=
-name|ar9300_freebsd_get_dfs_default_thresh
+name|ar9300_get_default_dfs_thresh
 expr_stmt|;
 comment|// procradarevent
 name|ah
@@ -2728,29 +2728,6 @@ modifier|*
 name|hs
 parameter_list|)
 block|{
-return|return
-operator|(
-name|AH_FALSE
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|HAL_BOOL
-name|ar9300_freebsd_get_dfs_default_thresh
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|HAL_PHYERR_PARAM
-modifier|*
-name|pe
-parameter_list|)
-block|{
-comment|/* XXX not yet */
 return|return
 operator|(
 name|AH_FALSE
