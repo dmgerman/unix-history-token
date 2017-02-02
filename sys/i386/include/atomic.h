@@ -616,7 +616,7 @@ literal|"	cmpxchgl %3,%1 ;	"
 literal|"       sete	%0 ;		"
 literal|"# atomic_cmpset_int"
 operator|:
-literal|"=r"
+literal|"=q"
 operator|(
 name|res
 operator|)
