@@ -4949,6 +4949,19 @@ operator|==
 literal|0
 condition|)
 return|return;
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|pcie_link_cap
+operator|&
+name|PCIEM_LINK_CAP_DL_ACTIVE
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* 	 * Some devices report that they have an MRL when they actually 	 * do not.  Since they always report that the MRL is open, child 	 * devices would be ignored.  Try to detect these devices and 	 * ignore their claim of HotPlug support. 	 * 	 * If there is an open MRL but the Data Link Layer is active, 	 * the MRL is not real. 	 */
 if|if
 condition|(
