@@ -4457,6 +4457,18 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+name|lha
+operator|->
+name|compsize
+operator|<
+literal|0
+condition|)
+goto|goto
+name|invalid
+goto|;
+comment|/* Invalid compressed file size */
+if|if
+condition|(
 name|sum_calculated
 operator|!=
 name|headersum

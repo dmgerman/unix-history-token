@@ -9482,8 +9482,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|assert
 argument_list|(
 operator|(
@@ -9495,6 +9493,12 @@ operator|)
 operator|!=
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|==
+name|NULL
 condition|)
 block|{
 name|archive_entry_free
@@ -9504,8 +9508,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
 name|assert
 argument_list|(
 operator|(
@@ -9517,6 +9519,12 @@ operator|)
 operator|!=
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
 condition|)
 block|{
 name|archive_entry_free
@@ -9880,6 +9888,25 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Reset name filter */
+name|assertEqualIntA
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_OK
+argument_list|,
+name|archive_read_disk_set_matching
+argument_list|(
+name|a
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Test2: Traversals with a metadata filter. 	 */
 name|assertUtimes
 argument_list|(
@@ -9999,7 +10026,7 @@ argument_list|)
 expr_stmt|;
 name|failure
 argument_list|(
-literal|"File 'cb/f1' should be exclueded"
+literal|"File 'cb/f1' should be excluded"
 argument_list|)
 expr_stmt|;
 name|assert

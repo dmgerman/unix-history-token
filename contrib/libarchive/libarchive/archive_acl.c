@@ -1889,6 +1889,30 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return a bitmask of stored ACL types in an ACL list  */
+end_comment
+
+begin_function
+name|int
+name|archive_acl_types
+parameter_list|(
+name|struct
+name|archive_acl
+modifier|*
+name|acl
+parameter_list|)
+block|{
+return|return
+operator|(
+name|acl
+operator|->
+name|acl_types
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Prepare for reading entries from the ACL data.  Returns a count  * of entries matching "want_type", or zero if there are no  * non-extended ACL entries of that type.  */
 end_comment
 
@@ -6175,6 +6199,8 @@ name|n
 decl_stmt|,
 name|r
 decl_stmt|,
+name|sol
+decl_stmt|,
 name|ret
 decl_stmt|;
 name|int
@@ -6380,6 +6406,10 @@ comment|/* Comment, skip entry */
 continue|continue;
 block|}
 name|n
+operator|=
+literal|0
+expr_stmt|;
+name|sol
 operator|=
 literal|0
 expr_stmt|;
@@ -6807,6 +6837,10 @@ argument_list|)
 condition|)
 block|{
 comment|/* This is Solaris-style "other:rwx" */
+name|sol
+operator|=
+literal|1
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -6912,7 +6946,7 @@ name|ARCHIVE_WARN
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Without "default:" we expect mode in field 2 */
+comment|/* 			 * Without "default:" we expect mode in field 2 			 * Exception: Solaris other and mask fields 			 */
 if|if
 condition|(
 name|permset
@@ -6927,6 +6961,8 @@ index|[
 name|n
 operator|+
 literal|2
+operator|-
+name|sol
 index|]
 operator|.
 name|start
@@ -6936,6 +6972,8 @@ index|[
 name|n
 operator|+
 literal|2
+operator|-
+name|sol
 index|]
 operator|.
 name|end
@@ -8321,6 +8359,8 @@ name|n
 decl_stmt|,
 name|r
 decl_stmt|,
+name|sol
+decl_stmt|,
 name|ret
 decl_stmt|;
 name|int
@@ -8523,6 +8563,10 @@ comment|/* Comment, skip entry */
 continue|continue;
 block|}
 name|n
+operator|=
+literal|0
+expr_stmt|;
+name|sol
 operator|=
 literal|0
 expr_stmt|;
@@ -8947,6 +8991,10 @@ argument_list|)
 condition|)
 block|{
 comment|/* This is Solaris-style "other:rwx" */
+name|sol
+operator|=
+literal|1
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -9052,7 +9100,7 @@ name|ARCHIVE_WARN
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Without "default:" we expect mode in field 2 */
+comment|/* 			 * Without "default:" we expect mode in field 3 			 * Exception: Solaris other and mask fields 			 */
 if|if
 condition|(
 name|permset
@@ -9067,6 +9115,8 @@ index|[
 name|n
 operator|+
 literal|2
+operator|-
+name|sol
 index|]
 operator|.
 name|start
@@ -9076,6 +9126,8 @@ index|[
 name|n
 operator|+
 literal|2
+operator|-
+name|sol
 index|]
 operator|.
 name|end
