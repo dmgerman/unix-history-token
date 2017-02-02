@@ -160,7 +160,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 end_ifdef
 
 begin_include
@@ -173,6 +173,24 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/nv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
 end_include
 
 begin_include
@@ -199,24 +217,6 @@ directive|include
 file|<casper/cap_dns.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/nv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpf.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -232,7 +232,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __FreeBSD__ */
+comment|/* HAVE_CAPSICUM */
 end_comment
 
 begin_include
@@ -1260,7 +1260,7 @@ name|p
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|int
 name|dirfd
 decl_stmt|;
@@ -3633,7 +3633,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 end_ifdef
 
 begin_comment
@@ -5315,16 +5315,16 @@ name|VFile
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|cap_rights_t
 name|rights
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* !__FreeBSD__ */
 name|int
 name|cansandbox
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_CAPSICUM */
 name|int
 name|Oflag
 init|=
@@ -7103,7 +7103,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|cap_rights_init
 argument_list|(
 operator|&
@@ -7947,7 +7947,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 if|if
 condition|(
 name|RFileName
@@ -8184,7 +8184,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|set_dumper_capsicum_rights
 argument_list|(
 name|p
@@ -8205,7 +8205,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|dumpinfo
 operator|.
 name|WFileName
@@ -8340,7 +8340,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* !__FreeBSD__ */
+comment|/* !HAVE_CAPSICUM */
 name|dumpinfo
 operator|.
 name|WFileName
@@ -8648,7 +8648,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|cansandbox
 operator|=
 operator|(
@@ -8715,7 +8715,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __FreeBSD __ */
+comment|/* HAVE_CAPSICUM */
 do|do
 block|{
 name|status
@@ -8879,7 +8879,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|cap_rights_init
 argument_list|(
 operator|&
@@ -9793,7 +9793,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|FILE
 modifier|*
 name|fp
@@ -9983,7 +9983,7 @@ directive|endif
 comment|/* HAVE_LIBCAP_NG */
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|fd
 operator|=
 name|openat
@@ -10063,7 +10063,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !__FreeBSD__ */
+comment|/* !HAVE_CAPSICUM */
 name|dump_info
 operator|->
 name|p
@@ -10121,7 +10121,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|set_dumper_capsicum_rights
 argument_list|(
 name|dump_info
@@ -10172,7 +10172,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|FILE
 modifier|*
 name|fp
@@ -10305,7 +10305,7 @@ directive|endif
 comment|/* HAVE_LIBCAP_NG */
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|fd
 operator|=
 name|openat
@@ -10385,7 +10385,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !__FreeBSD__ */
+comment|/* !HAVE_CAPSICUM */
 name|dump_info
 operator|->
 name|p
@@ -10443,7 +10443,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|HAVE_CAPSICUM
 name|set_dumper_capsicum_rights
 argument_list|(
 name|dump_info
