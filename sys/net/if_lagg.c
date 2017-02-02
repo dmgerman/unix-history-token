@@ -4528,6 +4528,10 @@ label|:
 if|if
 condition|(
 name|lp
+operator|!=
+name|NULL
+operator|&&
+name|lp
 operator|->
 name|lp_ioctl
 operator|!=
