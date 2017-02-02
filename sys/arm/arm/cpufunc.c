@@ -1092,12 +1092,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_CORTEXA8
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_CORTEXA_MP
+name|CPU_CORTEXA
 argument_list|)
 operator|||
 name|defined
@@ -1176,7 +1171,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_CORTEXA8 || CPU_CORTEXA_MP || CPU_KRAIT */
+comment|/* CPU_CORTEXA || CPU_KRAIT */
 end_comment
 
 begin_comment
@@ -1270,12 +1265,7 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|CPU_CORTEXA8
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_CORTEXA_MP
+name|CPU_CORTEXA
 argument_list|)
 operator|||
 name|defined
@@ -2175,12 +2165,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_CORTEXA8
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_CORTEXA_MP
+name|CPU_CORTEXA
 argument_list|)
 operator|||
 name|defined
@@ -2239,7 +2224,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* CPU_CORTEXA8 || CPU_CORTEXA_MP || CPU_KRAIT */
+comment|/* CPU_CORTEXA || CPU_KRAIT */
 if|#
 directive|if
 name|defined
@@ -2733,12 +2718,7 @@ expr|\
 operator|||
 name|defined
 argument_list|(
-name|CPU_CORTEXA8
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_CORTEXA_MP
+name|CPU_CORTEXA
 argument_list|)
 operator|||
 name|defined
@@ -2953,12 +2933,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_CORTEXA8
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_CORTEXA_MP
+name|CPU_CORTEXA
 argument_list|)
 operator|||
 name|defined
@@ -2986,7 +2961,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_CORTEXA8 || CPU_CORTEXA_MP || CPU_KRAIT */
+comment|/* CPU_CORTEXA || CPU_KRAIT */
 end_comment
 
 begin_if
