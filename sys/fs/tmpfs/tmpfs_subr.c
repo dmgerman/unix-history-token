@@ -1372,11 +1372,6 @@ name|tn_type
 condition|)
 block|{
 case|case
-name|VNON
-case|:
-comment|/* Do not do anything.  VNON is provided to let the 		 * allocation routine clean itself easily by avoiding 		 * duplicating code in it. */
-comment|/* FALLTHROUGH */
-case|case
 name|VBLK
 case|:
 comment|/* FALLTHROUGH */
