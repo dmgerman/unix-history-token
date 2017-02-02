@@ -262,6 +262,8 @@ literal|"export"
 block|,
 literal|"union"
 block|,
+literal|"nonc"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -554,6 +556,9 @@ name|curthread
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|bool
+name|nonc
 decl_stmt|;
 comment|/* Size counters. */
 name|u_quad_t
@@ -881,6 +886,23 @@ name|maxfilesize
 operator|=
 literal|0
 expr_stmt|;
+name|nonc
+operator|=
+name|vfs_getopt
+argument_list|(
+name|mp
+operator|->
+name|mnt_optnew
+argument_list|,
+literal|"nonc"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|0
+expr_stmt|;
 comment|/* Do not allow mounts if we do not have enough memory to preserve 	 * the minimum reserved pages. */
 if|if
 condition|(
@@ -1165,6 +1187,12 @@ name|MNT_RDONLY
 operator|)
 operator|!=
 literal|0
+expr_stmt|;
+name|tmp
+operator|->
+name|tm_nonc
+operator|=
+name|nonc
 expr_stmt|;
 comment|/* Allocate the root node. */
 name|error

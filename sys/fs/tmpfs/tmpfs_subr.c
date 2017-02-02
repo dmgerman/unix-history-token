@@ -2495,6 +2495,16 @@ literal|"tmpfs"
 argument_list|,
 name|mp
 argument_list|,
+name|VFS_TO_TMPFS
+argument_list|(
+name|mp
+argument_list|)
+operator|->
+name|tm_nonc
+condition|?
+operator|&
+name|tmpfs_vnodeop_nonc_entries
+else|:
 operator|&
 name|tmpfs_vnodeop_entries
 argument_list|,
