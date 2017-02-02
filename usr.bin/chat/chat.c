@@ -4501,10 +4501,6 @@ index|]
 decl_stmt|;
 name|int
 name|c
-decl_stmt|,
-name|printed
-init|=
-literal|0
 decl_stmt|;
 name|size_t
 name|len
@@ -5234,29 +5230,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|verbose
-operator|&&
-name|printed
-condition|)
-block|{
-if|if
-condition|(
-name|alarmed
-condition|)
-name|chat_logf
-argument_list|(
-literal|" -- read timed out"
-argument_list|)
-expr_stmt|;
-else|else
-name|chat_logf
-argument_list|(
-literal|" -- read failed: %m"
-argument_list|)
-expr_stmt|;
-block|}
 name|exit_code
 operator|=
 literal|3

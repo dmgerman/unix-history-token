@@ -8857,6 +8857,24 @@ name|cdb_len
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|KASSERT
+argument_list|(
+name|csio
+operator|->
+name|cdb_len
+operator|<=
+name|IOCDBLEN
+argument_list|,
+operator|(
+literal|"cdb_len %d is greater than IOCDBLEN but CAM_CDB_POINTER is not set"
+operator|,
+name|csio
+operator|->
+name|cdb_len
+operator|)
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|csio
@@ -8880,6 +8898,7 @@ operator|->
 name|cdb_len
 argument_list|)
 expr_stmt|;
+block|}
 name|req
 operator|->
 name|IoFlags
@@ -11385,6 +11404,14 @@ literal|0
 index|]
 operator|==
 name|INQUIRY
+operator|)
+operator|&&
+operator|(
+name|csio
+operator|->
+name|data_ptr
+operator|!=
+name|NULL
 operator|)
 operator|&&
 operator|(
