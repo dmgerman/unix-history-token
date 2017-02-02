@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.57 2016/12/02 18:44:44 tom Exp $ */
+comment|/* $Id: main.c,v 1.59 2017/02/02 00:44:38 tom Exp $ */
 end_comment
 
 begin_include
@@ -249,16 +249,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|empty_string
-index|[]
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
 name|default_file_prefix
 index|[]
 init|=
@@ -287,8 +277,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|input_file_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|input_file_name_len
 init|=
-name|empty_string
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1499,12 +1495,41 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-name|input_file_name
+name|input_file_name_len
 operator|=
+name|strlen
+argument_list|(
 name|argv
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|input_file_name
+operator|=
+name|TMALLOC
+argument_list|(
+name|char
+argument_list|,
+name|input_file_name_len
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|NO_SPACE
+argument_list|(
+name|input_file_name
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|input_file_name
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 end_function
