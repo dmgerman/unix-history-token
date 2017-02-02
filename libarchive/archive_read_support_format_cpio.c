@@ -2355,7 +2355,7 @@ name|namelength
 operator|==
 literal|11
 operator|&&
-name|strcmp
+name|memcmp
 argument_list|(
 operator|(
 specifier|const
@@ -2365,6 +2365,8 @@ operator|)
 name|h
 argument_list|,
 literal|"TRAILER!!!"
+argument_list|,
+literal|11
 argument_list|)
 operator|==
 literal|0

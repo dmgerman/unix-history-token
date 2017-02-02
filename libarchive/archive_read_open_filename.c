@@ -1192,6 +1192,9 @@ name|NULL
 decl_stmt|;
 name|int
 name|fd
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|int
 name|is_disk_like
@@ -1462,11 +1465,9 @@ argument_list|,
 literal|"Unexpedted operation in archive_read_open_filename"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ARCHIVE_FATAL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 endif|#
 directive|endif
 block|}
@@ -1514,11 +1515,9 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ARCHIVE_FATAL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* 	 * Determine whether the input looks like a disk device or a 	 * tape device.  The results are used below to select an I/O 	 * strategy: 	 *  = "disk-like" devices support arbitrary lseek() and will 	 *    support I/O requests of any size.  So we get easy skipping 	 *    and can cheat on block sizes to get better performance. 	 *  = "tape-like" devices require strict blocking and use 	 *    specialized ioctls for seeking. 	 *  = "socket-like" devices cannot seek at all but can improve 	 *    performance by using nonblocking I/O to read "whatever is 	 *    available right now". 	 * 	 * Right now, we only specially recognize disk-like devices, 	 * but it should be straightforward to add probes and strategy 	 * here for tape-like and socket-like devices. 	 */
 if|if
@@ -1823,10 +1822,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mine
-operator|==
-name|NULL
-operator|||
 name|buffer
 operator|==
 name|NULL
@@ -1841,21 +1836,9 @@ argument_list|,
 literal|"No memory"
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|mine
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ARCHIVE_FATAL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|mine
 operator|->
@@ -1892,6 +1875,30 @@ expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_OK
+operator|)
+return|;
+name|fail
+label|:
+comment|/* 	 * Don't close file descriptors not opened or ones pointing referring 	 * to `FNT_STDIN`. 	 */
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|fd
+operator|!=
+literal|0
+condition|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}

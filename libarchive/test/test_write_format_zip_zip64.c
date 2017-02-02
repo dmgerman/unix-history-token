@@ -161,6 +161,11 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|ae
+argument_list|)
+expr_stmt|;
 comment|/* Don't actually write 4GB! ;-) */
 name|assertEqualIntA
 argument_list|(

@@ -749,6 +749,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1210,6 +1215,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1605,6 +1615,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1869,6 +1884,11 @@ name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

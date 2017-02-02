@@ -1663,6 +1663,13 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+if|#
+directive|if
+name|HAVE_LIBLZO2
+operator|&&
+name|HAVE_LZO_LZO1X_H
+operator|&&
+name|HAVE_LZO_LZOCONF_H
 specifier|static
 specifier|const
 name|char
@@ -1676,6 +1683,8 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+endif|#
+directive|endif
 specifier|static
 specifier|const
 name|struct
@@ -1742,6 +1751,13 @@ block|,
 name|fileset8
 block|}
 block|,
+if|#
+directive|if
+name|HAVE_LIBLZO2
+operator|&&
+name|HAVE_LZO_LZO1X_H
+operator|&&
+name|HAVE_LZO_LZOCONF_H
 block|{
 literal|0
 block|,
@@ -1749,6 +1765,8 @@ name|fileset9
 block|}
 block|,
 comment|/* Exercise lzo decompressor. */
+endif|#
+directive|endif
 block|{
 literal|1
 block|,

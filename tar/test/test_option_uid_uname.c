@@ -104,7 +104,7 @@ literal|0
 argument_list|,
 name|systemf
 argument_list|(
-literal|"%s cf archive2 --uid=17 --uname=foofoofoo --format=ustar file>stdout2.txt 2>stderr2.txt"
+literal|"%s cf archive2 --uid=65123 --uname=foofoofoo --format=ustar file>stdout2.txt 2>stderr2.txt"
 argument_list|,
 name|testprog
 argument_list|)
@@ -137,7 +137,7 @@ name|data
 operator|+
 literal|108
 argument_list|,
-literal|"000021 \0"
+literal|"177143 \0"
 argument_list|,
 literal|8
 argument_list|)
@@ -172,7 +172,7 @@ literal|0
 argument_list|,
 name|systemf
 argument_list|(
-literal|"%s cf archive3 --uid=17 --format=ustar file>stdout3.txt 2>stderr3.txt"
+literal|"%s cf archive3 --uid=65123 --format=ustar file>stdout3.txt 2>stderr3.txt"
 argument_list|,
 name|testprog
 argument_list|)
@@ -204,7 +204,7 @@ name|data
 operator|+
 literal|108
 argument_list|,
-literal|"000021 \0"
+literal|"177143 \0"
 argument_list|,
 literal|8
 argument_list|)

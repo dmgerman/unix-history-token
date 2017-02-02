@@ -295,6 +295,9 @@ operator|&&
 name|GetLastError
 argument_list|()
 operator|==
+operator|(
+name|DWORD
+operator|)
 name|NTE_BAD_KEYSET
 condition|)
 block|{

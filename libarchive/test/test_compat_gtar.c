@@ -578,6 +578,26 @@ argument_list|,
 name|ARCHIVE_FORMAT_TAR_GNUTAR
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_OK
+argument_list|,
+name|archive_read_close
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_OK
+argument_list|,
+name|archive_read_free
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

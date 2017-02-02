@@ -2342,7 +2342,7 @@ expr_stmt|;
 comment|/* as a courtesy to our callers, and since this is a non-standard 	 * routine, we skip leading whitespace */
 while|while
 condition|(
-name|isspace
+name|isblank
 argument_list|(
 operator|(
 name|unsigned

@@ -9151,11 +9151,9 @@ argument_list|,
 literal|"No memory for file name"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|memcpy
 argument_list|(
@@ -9444,18 +9442,9 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-block|{
-name|free
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
+goto|goto
+name|fail
+goto|;
 comment|/* 			 * A file size of symbolic link files in ISO images 			 * made by makefs is not zero and its location is 			 * the same as those of next regular file. That is 			 * the same as hard like file and it causes unexpected 			 * error.  			 */
 if|if
 condition|(
@@ -9662,11 +9651,9 @@ argument_list|,
 literal|"Invalid Rockridge RE"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* 			 * Sanity check: file does not have "CL" extension. 			 */
 if|if
@@ -9688,11 +9675,9 @@ argument_list|,
 literal|"Invalid Rockridge RE and CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* 			 * Sanity check: The file type must be a directory. 			 */
 if|if
@@ -9718,11 +9703,9 @@ argument_list|,
 literal|"Invalid Rockridge RE"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 block|}
 elseif|else
@@ -9808,11 +9791,9 @@ argument_list|,
 literal|"Invalid Rockridge CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* 			 * Sanity check: The file type must be a regular file. 			 */
 if|if
@@ -9838,11 +9819,9 @@ argument_list|,
 literal|"Invalid Rockridge CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|parent
 operator|->
@@ -9903,11 +9882,9 @@ argument_list|,
 literal|"Invalid Rockridge CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 block|}
 if|if
@@ -9937,11 +9914,9 @@ argument_list|,
 literal|"Invalid Rockridge CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 block|}
 block|}
@@ -10137,6 +10112,26 @@ expr_stmt|;
 return|return
 operator|(
 name|file
+operator|)
+return|;
+name|fail
+label|:
+name|archive_string_free
+argument_list|(
+operator|&
+name|file
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
 block|}

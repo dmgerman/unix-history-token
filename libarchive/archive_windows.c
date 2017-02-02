@@ -4036,9 +4036,10 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
+call|(
 name|int
-operator|)
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|doserrors
@@ -4050,6 +4051,7 @@ name|doserrors
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|;
 name|i

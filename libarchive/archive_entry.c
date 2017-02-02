@@ -6933,14 +6933,13 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
+name|archive_acl_types
+argument_list|(
 operator|&
 name|entry
 operator|->
 name|acl
-operator|)
-operator|->
-name|acl_types
+argument_list|)
 operator|)
 return|;
 block|}

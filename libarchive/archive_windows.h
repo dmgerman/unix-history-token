@@ -1202,6 +1202,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_IRWXG
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1223,6 +1229,11 @@ name|S_IWGRP
 value|_S_IWGRP
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1240,6 +1251,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_IRWXO
+end_ifndef
 
 begin_define
 define|#
@@ -1268,6 +1285,11 @@ directive|define
 name|S_IROTH
 value|_S_IROTH
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
