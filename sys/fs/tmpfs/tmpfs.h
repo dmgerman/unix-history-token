@@ -281,13 +281,17 @@ begin_struct
 struct|struct
 name|tmpfs_node
 block|{
-comment|/* 	 * Doubly-linked list entry which links all existing nodes for 	 * a single file system.  This is provided to ease the removal 	 * of all nodes during the unmount operation, and to support 	 * the implementation of VOP_VNTOCNP(). 	 */
+comment|/* 	 * Doubly-linked list entry which links all existing nodes for 	 * a single file system.  This is provided to ease the removal 	 * of all nodes during the unmount operation, and to support 	 * the implementation of VOP_VNTOCNP().  tn_attached is false 	 * when the node is removed from list and unlocked. 	 */
 name|LIST_ENTRY
 argument_list|(
 argument|tmpfs_node
 argument_list|)
 name|tn_entries
 expr_stmt|;
+comment|/* (m) */
+name|bool
+name|tn_attached
+decl_stmt|;
 comment|/* (m) */
 comment|/* 	 * The node's type.  Any of 'VBLK', 'VCHR', 'VDIR', 'VFIFO', 	 * 'VLNK', 'VREG' and 'VSOCK' is allowed.  The usage of vnode 	 * types instead of a custom enumeration is to make things simpler 	 * and faster, as we do not need to convert between two types. 	 */
 name|enum
@@ -385,6 +389,11 @@ name|int
 name|tn_vpstate
 decl_stmt|;
 comment|/* (i) */
+comment|/* Transient refcounter on this node. */
+name|u_int
+name|tn_refcount
+decl_stmt|;
+comment|/* (m) + (i) */
 comment|/* misc data field for different tn_type node */
 union|union
 block|{
@@ -637,6 +646,10 @@ comment|/* Number of nodes currently that are in use. */
 name|ino_t
 name|tm_nodes_inuse
 decl_stmt|;
+comment|/* Refcounter on this struct tmpfs_mount. */
+name|uint64_t
+name|tm_refcount
+decl_stmt|;
 comment|/* maximum representable file size */
 name|u_int64_t
 name|tm_maxfilesize
@@ -750,6 +763,30 @@ comment|/*  * Prototypes for tmpfs_subr.c.  */
 end_comment
 
 begin_function_decl
+name|void
+name|tmpfs_ref_node
+parameter_list|(
+name|struct
+name|tmpfs_node
+modifier|*
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tmpfs_ref_node_locked
+parameter_list|(
+name|struct
+name|tmpfs_node
+modifier|*
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|tmpfs_alloc_node
 parameter_list|(
@@ -801,6 +838,34 @@ modifier|*
 parameter_list|,
 name|struct
 name|tmpfs_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|tmpfs_free_node_locked
+parameter_list|(
+name|struct
+name|tmpfs_mount
+modifier|*
+parameter_list|,
+name|struct
+name|tmpfs_node
+modifier|*
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tmpfs_free_tmp
+parameter_list|(
+name|struct
+name|tmpfs_mount
 modifier|*
 parameter_list|)
 function_decl|;
