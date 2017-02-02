@@ -47,6 +47,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|ql_rcv_isr
+parameter_list|(
+name|qla_host_t
+modifier|*
+name|ha
+parameter_list|,
+name|uint32_t
+name|sds_idx
+parameter_list|,
+name|uint32_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * from ql_os.c  */
 end_comment
@@ -298,11 +316,14 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|ql_hw_tx_done
+name|ql_hw_tx_done_locked
 parameter_list|(
 name|qla_host_t
 modifier|*
 name|ha
+parameter_list|,
+name|uint32_t
+name|txr_idx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -408,7 +429,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|qla_iscsi_pdu
+name|ql_iscsi_pdu
 parameter_list|(
 name|qla_host_t
 modifier|*
