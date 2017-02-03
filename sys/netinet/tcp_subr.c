@@ -3106,6 +3106,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_RFC7413
+name|tcp_fastopen_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Skip initialization of globals for non-default instances. */
 if|if
 condition|(
@@ -3291,14 +3299,6 @@ ifdef|#
 directive|ifdef
 name|TCPPCAP
 name|tcp_pcap_init
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|TCP_RFC7413
-name|tcp_fastopen_init
 argument_list|()
 expr_stmt|;
 endif|#
