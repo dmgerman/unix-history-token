@@ -1691,6 +1691,12 @@ name|ah_get11nExtBusy
 operator|=
 name|ar9300_get_11n_ext_busy
 expr_stmt|;
+name|ah
+operator|->
+name|ah_setDfsCacTxQuiet
+operator|=
+name|ar9300_cac_tx_quiet
+expr_stmt|;
 comment|/* Spectral Scan Functions */
 name|ah
 operator|->

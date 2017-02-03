@@ -2547,11 +2547,9 @@ name|TU_TO_USEC
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ATH_SUPPORT_DFS
-end_ifdef
+begin_comment
+comment|//#ifdef ATH_SUPPORT_DFS
+end_comment
 
 begin_function
 name|void
@@ -2566,7 +2564,7 @@ name|HAL_BOOL
 name|enable
 parameter_list|)
 block|{
-name|u32
+name|uint32_t
 name|reg1
 decl_stmt|,
 name|reg2
@@ -2674,13 +2672,8 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* ATH_SUPPORT_DFS */
+comment|//#endif /* ATH_SUPPORT_DFS */
 end_comment
 
 begin_function

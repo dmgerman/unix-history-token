@@ -16429,9 +16429,7 @@ name|ah_beacon_rssi_threshold
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ATH_SUPPORT_DFS
+comment|//#ifdef ATH_SUPPORT_DFS
 if|if
 condition|(
 name|ahp
@@ -16447,9 +16445,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* ATH_SUPPORT_DFS */
+comment|//#endif /* ATH_SUPPORT_DFS */
 block|}
 end_function
 
