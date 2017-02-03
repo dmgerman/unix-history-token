@@ -8409,6 +8409,9 @@ name|struct
 name|ieee80211vap
 modifier|*
 name|vap
+parameter_list|,
+name|int
+name|update
 parameter_list|)
 block|{
 name|struct
@@ -8435,6 +8438,12 @@ name|len
 operator|=
 literal|6
 expr_stmt|;
+comment|/* 	 * Only update every beacon interval - otherwise probe responses 	 * would update the quiet count value. 	 */
+if|if
+condition|(
+name|update
+condition|)
+block|{
 if|if
 condition|(
 name|vap
@@ -8465,6 +8474,7 @@ operator|->
 name|iv_quiet_count_value
 operator|--
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|vap
@@ -12252,6 +12262,8 @@ argument_list|(
 name|frm
 argument_list|,
 name|vap
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -13747,6 +13759,8 @@ argument_list|(
 name|frm
 argument_list|,
 name|vap
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -15700,6 +15714,8 @@ operator|->
 name|bo_quiet
 argument_list|,
 name|vap
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
