@@ -547,6 +547,11 @@ comment|/* Directory path of origin file */
 name|int
 name|refcount
 decl_stmt|;
+comment|/* DAG references */
+name|int
+name|holdcount
+decl_stmt|;
+comment|/* Count of transient references */
 name|int
 name|dl_refcount
 decl_stmt|;
@@ -1079,6 +1084,18 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* marker on the global obj list */
+name|bool
+name|unholdfree
+range|:
+literal|1
+decl_stmt|;
+comment|/* unmap upon last unhold */
+name|bool
+name|doomed
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object cannot be referenced */
 name|struct
 name|link_map
 name|linkmap
