@@ -2857,6 +2857,8 @@ name|other_cpus
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Ensure that the scheduler is stopped while panicking, even if panic 	 * has been entered from kdb. 	 */
 name|td
 operator|->
@@ -2864,8 +2866,6 @@ name|td_stopsched
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 name|bootopt
 operator|=
 name|RB_AUTOBOOT
