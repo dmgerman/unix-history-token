@@ -2358,7 +2358,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable IPv6 forwarding between interfaces"
+literal|"Enable forwarding of IPv6 packets between interfaces"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2384,7 +2384,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Send a redirect message when forwarding back to a source link"
+literal|"Send ICMPv6 redirects for unforwardable IPv6 packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2410,7 +2410,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Default hop limit"
+literal|"Default hop limit to use for outgoing IPv6 packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2455,7 +2455,9 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum allowed number of outstanding fragmented IPv6 packets"
+literal|"Default maximum number of outstanding fragmented IPv6 packets. "
+literal|"A value of 0 means no fragmented packets will be accepted, while a "
+literal|"a value of -1 means no limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2615,7 +2617,8 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum allowed number of nested protocol headers"
+literal|"Default maximum number of IPv6 extension headers permitted on "
+literal|"incoming IPv6 packets, 0 for no artificial limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2693,7 +2696,8 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Default hop limit for multicast packets"
+literal|"Default hop limit for IPv6 multicast packets originating from this "
+literal|"node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
