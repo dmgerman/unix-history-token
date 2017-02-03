@@ -303,32 +303,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CPU_DISABLE_SSE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPU_ENABLE_SSE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_assert
 assert|_Static_assert
 argument_list|(
@@ -596,16 +570,11 @@ name|void
 modifier|*
 name|res
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|struct
 name|savefpu_ymm
 modifier|*
 name|sf
 decl_stmt|;
-endif|#
-directive|endif
 name|res
 operator|=
 name|malloc
@@ -617,9 +586,6 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -664,8 +630,6 @@ operator|=
 name|xsave_mask
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|res
@@ -854,9 +818,6 @@ operator|=
 name|rgs
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -881,8 +842,6 @@ expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Point the pcb to the top of the stack */
 name|pcb2
 operator|=
@@ -1380,9 +1339,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -1401,8 +1357,6 @@ expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Disable any hardware breakpoints. */
 if|if
 condition|(
@@ -1531,16 +1485,11 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|struct
 name|xstate_hdr
 modifier|*
 name|xhdr
 decl_stmt|;
-endif|#
-directive|endif
 name|td
 operator|->
 name|td_pcb
@@ -1587,9 +1536,6 @@ argument_list|(
 name|pcb
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -1628,8 +1574,6 @@ operator|=
 name|xsave_mask
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 

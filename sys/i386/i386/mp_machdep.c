@@ -101,32 +101,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_DISABLE_CMPXCHG
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|COMPILING_LINT
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|SMP not supported with CPU_DISABLE_CMPXCHG
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif

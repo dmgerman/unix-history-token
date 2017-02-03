@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_npx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_stack.h"
 end_include
 
@@ -1200,9 +1194,6 @@ case|case
 name|T_ARITHTRAP
 case|:
 comment|/* arithmetic trap */
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 name|ucode
 operator|=
 name|npxtrap_x87
@@ -1218,14 +1209,6 @@ condition|)
 goto|goto
 name|userout
 goto|;
-else|#
-directive|else
-name|ucode
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|i
 operator|=
 name|SIGFPE
@@ -1639,9 +1622,6 @@ break|break;
 case|case
 name|T_DNA
 case|:
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 name|KASSERT
 argument_list|(
 name|PCB_USER_FPU
@@ -1665,8 +1645,6 @@ condition|)
 goto|goto
 name|userout
 goto|;
-endif|#
-directive|endif
 name|uprintf
 argument_list|(
 literal|"pid %d killed due to lack of floating point\n"
@@ -1702,23 +1680,6 @@ case|case
 name|T_XMMFLT
 case|:
 comment|/* SIMD floating-point exception */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEV_NPX
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|CPU_DISABLE_SSE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
 name|ucode
 operator|=
 name|npxtrap_sse
@@ -1734,14 +1695,6 @@ condition|)
 goto|goto
 name|userout
 goto|;
-else|#
-directive|else
-name|ucode
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|i
 operator|=
 name|SIGFPE
@@ -1831,9 +1784,6 @@ goto|;
 case|case
 name|T_DNA
 case|:
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 if|if
 condition|(
 name|PCB_USER_FPU
@@ -1856,8 +1806,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|T_ARITHTRAP
