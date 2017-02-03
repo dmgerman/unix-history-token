@@ -1074,6 +1074,19 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|sfence
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("sfence" : : : "memory");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|ia32_pause
 parameter_list|(
 name|void
