@@ -6434,7 +6434,7 @@ argument_list|(
 name|tp
 operator|->
 name|ftt_size
-operator|<
+operator|<=
 name|FASTTRAP_MAX_INSTR_SIZE
 argument_list|)
 expr_stmt|;
