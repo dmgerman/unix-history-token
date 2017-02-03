@@ -1271,6 +1271,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|t4_uninit_connect_cpl_handlers
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|t4_connect
 parameter_list|(
@@ -1315,6 +1324,15 @@ end_comment
 begin_function_decl
 name|void
 name|t4_init_listen_cpl_handlers
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_uninit_listen_cpl_handlers
 parameter_list|(
 name|void
 parameter_list|)
