@@ -12621,7 +12621,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|OBJPC_NOSYNC
+literal|0
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WUNLOCK
