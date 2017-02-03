@@ -357,7 +357,10 @@ name|printf
 argument_list|(
 literal|"Can't get the variable: error %#lx\n"
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -403,7 +406,10 @@ name|printf
 argument_list|(
 literal|"Can't get the variable: error %#lx\n"
 argument_list|,
+name|EFI_ERROR_CODE
+argument_list|(
 name|status
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
