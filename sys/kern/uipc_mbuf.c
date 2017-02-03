@@ -773,6 +773,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mbuf
+name|__used
 name|m_assertbuf
 decl_stmt|;
 end_decl_stmt
