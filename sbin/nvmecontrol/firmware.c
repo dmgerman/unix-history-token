@@ -410,9 +410,9 @@ name|chunk
 operator|=
 name|aligned_alloc
 argument_list|(
-name|NVME_MAX_XFER_SIZE
-argument_list|,
 name|PAGE_SIZE
+argument_list|,
+name|NVME_MAX_XFER_SIZE
 argument_list|)
 operator|)
 operator|==
