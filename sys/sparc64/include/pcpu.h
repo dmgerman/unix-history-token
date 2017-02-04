@@ -125,14 +125,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|get_pcpu
-parameter_list|()
-value|(pcpup)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCPU_GET
 parameter_list|(
 name|member
