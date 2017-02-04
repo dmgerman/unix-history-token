@@ -292,7 +292,7 @@ begin_define
 define|#
 directive|define
 name|WDC_PURGE_MONITOR_USAGE
-value|"\tnvmecontrol wdc purge-montor\n"
+value|"\tnvmecontrol wdc purge-monitor\n"
 end_define
 
 begin_decl_stmt
