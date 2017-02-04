@@ -6593,8 +6593,10 @@ condition|(
 operator|(
 name|buf
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|snmp_client
 operator|.
 name|txbuflen
@@ -6753,9 +6755,11 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|pdu
 operator|->
 name|request_id
+operator|)
 return|;
 block|}
 end_function
@@ -7112,8 +7116,10 @@ condition|(
 operator|(
 name|buf
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|snmp_client
 operator|.
 name|rxbuflen
