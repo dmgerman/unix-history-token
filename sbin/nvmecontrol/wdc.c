@@ -447,6 +447,7 @@ name|walker
 operator|--
 expr_stmt|;
 operator|*
+operator|++
 name|walker
 operator|=
 literal|'\0'
