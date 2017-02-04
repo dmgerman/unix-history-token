@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_pow.c,v 1.4 2015/09/08 05:24:27 dholland Exp $ */
+comment|/* $NetBSD: t_pow.c,v 1.5 2017/01/20 21:15:56 maya Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_pow.c,v 1.4 2015/09/08 05:24:27 dholland Exp $"
+literal|"$NetBSD: t_pow.c,v 1.5 2017/01/20 21:15:56 maya Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1628,7 +1628,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isinff
+name|isinf
 argument_list|(
 name|z
 argument_list|)
@@ -1658,7 +1658,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isinff
+name|isinf
 argument_list|(
 name|z
 argument_list|)
@@ -1816,7 +1816,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isinff
+name|isinf
 argument_list|(
 name|z
 argument_list|)
@@ -1964,7 +1964,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isinff
+name|isinf
 argument_list|(
 name|z
 argument_list|)
@@ -2081,7 +2081,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isinff
+name|isinf
 argument_list|(
 name|z
 argument_list|)
@@ -2165,7 +2165,7 @@ decl_stmt|;
 comment|/* 	 * If x is -1.0, and y is +-Inf, 1.0 shall be returned. 	 */
 name|ATF_REQUIRE
 argument_list|(
-name|isinff
+name|isinf
 argument_list|(
 name|infp
 argument_list|)
@@ -2175,7 +2175,7 @@ argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
-name|isinff
+name|isinf
 argument_list|(
 name|infn
 argument_list|)
