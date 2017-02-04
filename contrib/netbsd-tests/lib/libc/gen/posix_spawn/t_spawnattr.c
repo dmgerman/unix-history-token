@@ -147,7 +147,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nitems
+name|__arraycount
 argument_list|(
 name|schedulers
 argument_list|)
@@ -171,7 +171,7 @@ name|ATF_REQUIRE_MSG
 argument_list|(
 name|i
 operator|<
-name|nitems
+name|__arraycount
 argument_list|(
 name|schedulers
 argument_list|)
@@ -189,7 +189,7 @@ if|if
 condition|(
 name|i
 operator|>=
-name|nitems
+name|__arraycount
 argument_list|(
 name|schedulers
 argument_list|)

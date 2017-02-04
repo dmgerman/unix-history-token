@@ -1,10 +1,59 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_sleep.c,v 1.9 2016/08/11 21:34:11 kre Exp $ */
+comment|/* $NetBSD: t_sleep.c,v 1.11 2017/01/10 15:43:59 maya Exp $ */
 end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 2006 Frank Kardel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_comment
+comment|/* kqueue(2) on FreeBSD requires sys/types.h for uintptr_t; NetBSD doesn't. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/event.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* for TIMESPEC_TO_TIMEVAL on FreeBSD */
 end_comment
 
 begin_include
@@ -17,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
 end_include
 
 begin_include
@@ -53,24 +108,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/event.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
 end_include
 
 begin_include
@@ -144,29 +181,6 @@ end_define
 begin_comment
 comment|/* scheduling fuzz accepted - 40 ms */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Timer notes  *  * Most tests use FUZZ as their initial delay value, but 'sleep'  * starts at 1sec (since it cannot handle sub-second intervals).  * Subsequent passes double the previous interval, up to MAXSLEEP.  *  * The current values result in 5 passes for the 'sleep' test (at 1,  * 2, 4, 8, and 16 seconds) and 10 passes for the other tests (at  * 0.04, 0.08, 0.16, 0.32, 0.64, 1.28, 2.56, 5.12, 10.24, and 20.48  * seconds).  *  * The ALARM is only set if the current pass's delay is longer, and  * only if the ALARM has not already been triggered.  *  * The 'kevent' test needs the ALARM to be set on a different pass  * from when the KEVNT_TIMEOUT fires.  So set ALARM to fire on the  * penultimate pass, and the KEVNT_TIMEOUT on the final pass.  We  * set KEVNT_TIMEOUT just barely long enough to put it into the  * last test pass, and set MAXSLEEP a couple seconds longer than  * necessary, in order to avoid a QEMU bug which nearly doubles  * some timers.  */
