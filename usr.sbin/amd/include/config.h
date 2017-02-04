@@ -1731,12 +1731,9 @@ begin_comment
 comment|/* does libwrap exist? */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LIBWRAP
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LIBWRAP */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<limits.h> header file. */
@@ -3941,12 +3938,9 @@ begin_comment
 comment|/* Define to 1 if you have the<tcpd.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_TCPD_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_TCPD_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<time.h> header file. */
