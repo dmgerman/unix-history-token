@@ -18397,7 +18397,6 @@ name|ctx
 argument_list|)
 expr_stmt|;
 break|break;
-break|break;
 case|case
 name|SIOCADDMULTI
 case|:
