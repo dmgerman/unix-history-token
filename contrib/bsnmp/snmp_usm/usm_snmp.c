@@ -756,11 +756,16 @@ operator|(
 name|SNMP_ERR_NOSUCHNAME
 operator|)
 return|;
+comment|/* 		 * XXX (ngie): need to investigate the MIB to determine how 		 * this is possible given some of the transitions below. 		 */
 if|if
 condition|(
 name|community
 operator|!=
 name|COMM_INITIALIZE
+operator|&&
+name|uuser
+operator|!=
+name|NULL
 operator|&&
 name|uuser
 operator|->
