@@ -123,6 +123,14 @@ define|\
 value|"       nvmecontrol power [-l] [-p new-state [-w workload-hint]]<controller id>\n"
 end_define
 
+begin_define
+define|#
+directive|define
+name|WDC_USAGE
+define|\
+value|"       nvmecontrol wdc (cap-diag|drive-log|get-crash-dump|purge|purge-montior)\n"
+end_define
+
 begin_function_decl
 name|void
 name|devlist
@@ -216,6 +224,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|power
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wdc
 parameter_list|(
 name|int
 name|argc

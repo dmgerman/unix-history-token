@@ -172,6 +172,14 @@ name|POWER_USAGE
 block|}
 block|,
 block|{
+literal|"wdc"
+block|,
+name|wdc
+block|,
+name|WDC_USAGE
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
