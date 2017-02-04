@@ -35,23 +35,6 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CRYPTO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/sha.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -73,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sha256.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pjdlog.h>
 end_include
 
@@ -82,35 +71,12 @@ directive|include
 file|"hast_checksum.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CRYPTO
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|MAX_HASH_SIZE
 value|SHA256_DIGEST_LENGTH
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAX_HASH_SIZE
-value|4
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -173,12 +139,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CRYPTO
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -237,15 +197,6 @@ name|SHA256_DIGEST_LENGTH
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_CRYPTO */
-end_comment
 
 begin_function
 specifier|const
@@ -368,9 +319,6 @@ name|hsize
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|HAVE_CRYPTO
 case|case
 name|HAST_CHECKSUM_SHA256
 case|:
@@ -389,8 +337,6 @@ name|hsize
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|PJDLOG_ABORT
 argument_list|(
@@ -591,9 +537,6 @@ operator|&
 name|chsize
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_CRYPTO
 elseif|else
 if|if
 condition|(
@@ -620,8 +563,6 @@ operator|&
 name|chsize
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 else|else
 block|{
 name|pjdlog_error
