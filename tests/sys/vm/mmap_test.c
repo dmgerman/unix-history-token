@@ -896,11 +896,10 @@ decl_stmt|,
 modifier|*
 name|p3
 decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
 name|int
 name|fd
+decl_stmt|,
+name|i
 decl_stmt|,
 name|pagesize
 decl_stmt|;
@@ -1006,7 +1005,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|"byte at p1[%zu] is %x"
+literal|"byte at p1[%d] is %x"
 argument_list|,
 name|i
 argument_list|,
@@ -1158,11 +1157,10 @@ decl_stmt|,
 modifier|*
 name|p3
 decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
 name|int
 name|fd
+decl_stmt|,
+name|i
 decl_stmt|,
 name|pagesize
 decl_stmt|;
@@ -1268,7 +1266,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|"byte at p1[%zu] is %x"
+literal|"byte at p1[%d] is %x"
 argument_list|,
 name|i
 argument_list|,
