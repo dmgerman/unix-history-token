@@ -686,20 +686,6 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|__int64_t
-name|__vm_ooffset_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__uint64_t
-name|__vm_pindex_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|int
 name|___wchar_t
 typedef|;
