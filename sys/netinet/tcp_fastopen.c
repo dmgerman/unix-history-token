@@ -668,6 +668,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|V_tcp_fastopen_autokey_ctx
+operator|.
+name|v
+operator|=
+name|curvnet
+expr_stmt|;
 name|V_tcp_fastopen_keys
 operator|.
 name|newest

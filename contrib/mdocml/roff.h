@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD$	*/
+comment|/*	$Id: roff.h,v 1.39 2017/01/10 13:47:00 schwarze Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014, 2015, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_struct_decl
@@ -256,54 +256,52 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|MDOC_VALID
+name|NODE_VALID
 value|(1<< 0)
 comment|/* Has been validated. */
 define|#
 directive|define
-name|MDOC_ENDED
+name|NODE_ENDED
 value|(1<< 1)
 comment|/* Gone past body end mark. */
 define|#
 directive|define
-name|MDOC_EOS
+name|NODE_EOS
 value|(1<< 2)
 comment|/* At sentence boundary. */
 define|#
 directive|define
-name|MDOC_LINE
+name|NODE_LINE
 value|(1<< 3)
 comment|/* First macro/text on line. */
 define|#
 directive|define
-name|MDOC_SYNPRETTY
+name|NODE_SYNPRETTY
 value|(1<< 4)
 comment|/* SYNOPSIS-style formatting. */
 define|#
 directive|define
-name|MDOC_BROKEN
+name|NODE_BROKEN
 value|(1<< 5)
 comment|/* Must validate parent when ending. */
 define|#
 directive|define
-name|MDOC_DELIMO
+name|NODE_DELIMO
 value|(1<< 6)
 define|#
 directive|define
-name|MDOC_DELIMC
+name|NODE_DELIMC
 value|(1<< 7)
 define|#
 directive|define
-name|MAN_VALID
-value|MDOC_VALID
+name|NODE_NOSRC
+value|(1<< 8)
+comment|/* Generated node, not in input file. */
 define|#
 directive|define
-name|MAN_EOS
-value|MDOC_EOS
-define|#
-directive|define
-name|MAN_LINE
-value|MDOC_LINE
+name|NODE_NOPRT
+value|(1<< 9)
+comment|/* Shall not print anything. */
 name|int
 name|prev_font
 decl_stmt|;

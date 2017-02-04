@@ -1103,6 +1103,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return values are as per SSL_read()  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1508,9 +1512,7 @@ operator|+=
 name|newb
 expr_stmt|;
 return|return
-operator|(
 name|i
-operator|)
 return|;
 block|}
 name|newb
@@ -1842,6 +1844,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return values are as per SSL_write()  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2058,9 +2064,7 @@ operator|<=
 literal|0
 condition|)
 return|return
-operator|(
 name|i
-operator|)
 return|;
 name|s
 operator|->

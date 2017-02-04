@@ -237,17 +237,6 @@ comment|/* don't move this! */
 end_comment
 
 begin_comment
-comment|/* pc98 bus mouse types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSE_98BUSMOUSE
-value|0x1
-end_define
-
-begin_comment
 comment|/* isa bus mouse types */
 end_comment
 

@@ -19,10 +19,12 @@ begin_struct
 struct|struct
 name|cpack_state
 block|{
+specifier|const
 name|uint8_t
 modifier|*
 name|c_buf
 decl_stmt|;
+specifier|const
 name|uint8_t
 modifier|*
 name|c_next
@@ -42,6 +44,7 @@ name|struct
 name|cpack_state
 modifier|*
 parameter_list|,
+specifier|const
 name|uint8_t
 modifier|*
 parameter_list|,
@@ -107,14 +110,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|uint8_t
 modifier|*
 name|cpack_next_boundary
 parameter_list|(
+specifier|const
 name|uint8_t
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|uint8_t
 modifier|*
 name|p
@@ -126,6 +132,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|uint8_t
 modifier|*
 name|cpack_align_and_reserve

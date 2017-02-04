@@ -205,7 +205,7 @@ name|sc
 argument_list|,
 name|R92C_RSV_CTRL
 argument_list|,
-literal|0x02
+name|R92C_RSV_CTRL_WLOCK_00
 argument_list|,
 literal|0
 argument_list|)
@@ -243,7 +243,7 @@ name|sc
 argument_list|,
 name|R92C_RSV_CTRL
 argument_list|,
-literal|0x02
+name|R92C_RSV_CTRL_WLOCK_00
 argument_list|,
 literal|0
 argument_list|)

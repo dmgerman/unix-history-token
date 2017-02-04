@@ -14808,6 +14808,12 @@ name|res
 operator|->
 name|ai_family
 operator|!=
+name|AF_LOCAL
+operator|&&
+name|res
+operator|->
+name|ai_family
+operator|!=
 name|family
 condition|)
 continue|continue;

@@ -1805,6 +1805,11 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+name|release_engine
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 name|BIO_free
 argument_list|(
 name|in

@@ -411,14 +411,9 @@ name|vap
 operator|->
 name|iv_ifp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IEEE80211_SUPPORT_SUPERG
 name|int
 name|mcast
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -547,9 +542,6 @@ operator|*
 operator|)
 name|ni
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IEEE80211_SUPPORT_SUPERG
 name|mcast
 operator|=
 operator|(
@@ -568,8 +560,6 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|BPF_MTAP
 argument_list|(
 name|ifp
@@ -578,7 +568,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* 802.3 tx */
-comment|/* 	 * Check if A-MPDU tx aggregation is setup or if we 	 * should try to enable it.  The sta must be associated 	 * with HT and A-MPDU enabled for use.  When the policy 	 * routine decides we should enable A-MPDU we issue an 	 * ADDBA request and wait for a reply.  The frame being 	 * encapsulated will go out w/o using A-MPDU, or possibly 	 * it might be collected by the driver and held/retransmit. 	 * The default ic_ampdu_enable routine handles staggering 	 * ADDBA requests in case the receiver NAK's us or we are 	 * otherwise unable to establish a BA stream. 	 */
+comment|/* 	 * Check if A-MPDU tx aggregation is setup or if we 	 * should try to enable it.  The sta must be associated 	 * with HT and A-MPDU enabled for use.  When the policy 	 * routine decides we should enable A-MPDU we issue an 	 * ADDBA request and wait for a reply.  The frame being 	 * encapsulated will go out w/o using A-MPDU, or possibly 	 * it might be collected by the driver and held/retransmit. 	 * The default ic_ampdu_enable routine handles staggering 	 * ADDBA requests in case the receiver NAK's us or we are 	 * otherwise unable to establish a BA stream. 	 * 	 * Don't treat group-addressed frames as candidates for aggregation; 	 * net80211 doesn't support 802.11aa-2012 and so group addressed 	 * frames will always have sequence numbers allocated from the NON_QOS 	 * TID. 	 */
 if|if
 condition|(
 operator|(
@@ -609,6 +599,11 @@ name|M_EAPOL
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|(
+operator|!
+name|mcast
+operator|)
 condition|)
 block|{
 name|int
@@ -2844,12 +2839,14 @@ argument_list|(
 name|tap
 argument_list|)
 condition|)
+block|{
 name|m
 operator|->
 name|m_flags
 operator||=
 name|M_AMPDU_MPDU
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -2865,6 +2862,30 @@ operator|&
 name|IEEE80211_FC0_SUBTYPE_MASK
 argument_list|)
 condition|)
+comment|/* 			 * 802.11-2012 9.3.2.10 - QoS multicast frames 			 * come out of a different seqno space. 			 */
+if|if
+condition|(
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|wh
+operator|->
+name|i_addr1
+argument_list|)
+condition|)
+block|{
+name|seqno
+operator|=
+name|ni
+operator|->
+name|ni_txseqs
+index|[
+name|IEEE80211_NONQOS_TID
+index|]
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 name|seqno
 operator|=
 name|ni
@@ -2875,6 +2896,7 @@ name|tid
 index|]
 operator|++
 expr_stmt|;
+block|}
 else|else
 name|seqno
 operator|=
@@ -4834,6 +4856,8 @@ decl_stmt|,
 name|txfrag
 decl_stmt|,
 name|is4addr
+decl_stmt|,
+name|is_mcast
 decl_stmt|;
 name|ieee80211_seq
 name|seqno
@@ -4856,6 +4880,22 @@ name|IEEE80211_TX_LOCK_ASSERT
 argument_list|(
 name|ic
 argument_list|)
+expr_stmt|;
+name|is_mcast
+operator|=
+operator|!
+operator|!
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_MCAST
+operator||
+name|M_BCAST
+operator|)
+operator|)
 expr_stmt|;
 comment|/* 	 * Copy existing Ethernet header to a safe place.  The 	 * rest of the code assumes it's ok to strip it when 	 * reorganizing state for the final encapsulation. 	 */
 name|KASSERT
@@ -5001,10 +5041,17 @@ name|key
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * XXX Some ap's don't handle QoS-encapsulated EAPOL 	 * frames so suppress use.  This may be an issue if other 	 * ap's require all data frames to be QoS-encapsulated 	 * once negotiated in which case we'll need to make this 	 * configurable. 	 * NB: mesh data frames are QoS. 	 */
+comment|/* 	 * XXX Some ap's don't handle QoS-encapsulated EAPOL 	 * frames so suppress use.  This may be an issue if other 	 * ap's require all data frames to be QoS-encapsulated 	 * once negotiated in which case we'll need to make this 	 * configurable. 	 * 	 * Don't send multicast QoS frames. 	 * Technically multicast frames can be QoS if all stations in the 	 * BSS are also QoS. 	 * 	 * NB: mesh data frames are QoS, including multicast frames. 	 */
 name|addqos
 operator|=
 operator|(
+operator|(
+operator|(
+name|is_mcast
+operator|==
+literal|0
+operator|)
+operator|&&
 operator|(
 name|ni
 operator|->
@@ -5014,6 +5061,7 @@ operator|(
 name|IEEE80211_NODE_QOS
 operator||
 name|IEEE80211_NODE_HT
+operator|)
 operator|)
 operator|)
 operator|||
@@ -6407,6 +6455,37 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * 802.11-2012 9.3.2.10 - 			 * 			 * If this is a multicast frame then we need 			 * to ensure that the sequence number comes from 			 * a separate seqno space and not the TID space. 			 * 			 * Otherwise multicast frames may actually cause 			 * holes in the TX blockack window space and 			 * upset various things. 			 */
+if|if
+condition|(
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|wh
+operator|->
+name|i_addr1
+argument_list|)
+condition|)
+name|seqno
+operator|=
+name|ni
+operator|->
+name|ni_txseqs
+index|[
+name|IEEE80211_NONQOS_TID
+index|]
+operator|++
+expr_stmt|;
+else|else
+name|seqno
+operator|=
+name|ni
+operator|->
+name|ni_txseqs
+index|[
+name|tid
+index|]
+operator|++
+expr_stmt|;
 comment|/* 			 * NB: don't assign a sequence # to potential 			 * aggregates; we expect this happens at the 			 * point the frame comes off any aggregation q 			 * as otherwise we may introduce holes in the 			 * BA sequence space and/or make window accouting 			 * more difficult. 			 * 			 * XXX may want to control this with a driver 			 * capability; this may also change when we pull 			 * aggregation up into net80211 			 */
 name|seqno
 operator|=
@@ -8330,6 +8409,9 @@ name|struct
 name|ieee80211vap
 modifier|*
 name|vap
+parameter_list|,
+name|int
+name|update
 parameter_list|)
 block|{
 name|struct
@@ -8356,6 +8438,12 @@ name|len
 operator|=
 literal|6
 expr_stmt|;
+comment|/* 	 * Only update every beacon interval - otherwise probe responses 	 * would update the quiet count value. 	 */
+if|if
+condition|(
+name|update
+condition|)
+block|{
 if|if
 condition|(
 name|vap
@@ -8386,6 +8474,7 @@ operator|->
 name|iv_quiet_count_value
 operator|--
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|vap
@@ -12173,6 +12262,8 @@ argument_list|(
 name|frm
 argument_list|,
 name|vap
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -13668,6 +13759,8 @@ argument_list|(
 name|frm
 argument_list|,
 name|vap
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -15621,6 +15714,8 @@ operator|->
 name|bo_quiet
 argument_list|,
 name|vap
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -1639,6 +1639,24 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
+comment|/* 		 * Intel S3610 Series SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"INTEL SSDSC2BX*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
 comment|/* 		 * Intel X25-M Series SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT
@@ -1762,6 +1780,24 @@ block|}
 block|,
 comment|/*quirks*/
 name|ADA_Q_NCQ_TRIM_BROKEN
+block|}
+block|,
+block|{
+comment|/* 		 * Micron 5100 SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"Micron 5100 MTFDDAK*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
 block|}
 block|,
 block|{

@@ -1022,18 +1022,6 @@ name|val
 operator|+=
 name|relocbase
 expr_stmt|;
-name|store_ptr
-argument_list|(
-name|where
-argument_list|,
-name|val
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf_Sword
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|dbg
 argument_list|(
 literal|"REL32/L(%p) %p -> %p in<self>"

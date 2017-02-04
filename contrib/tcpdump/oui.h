@@ -48,6 +48,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OUI_IANA
+value|0x00005E
+end_define
+
+begin_comment
+comment|/* IANA */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OUI_NORTEL
 value|0x000081
 end_define

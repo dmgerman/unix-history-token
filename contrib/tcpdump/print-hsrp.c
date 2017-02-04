@@ -4,14 +4,12 @@ comment|/*  * Copyright (C) 2001 Julian Cowley  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/* Cisco Hot Standby Router Protocol (HSRP). */
+comment|/* \summary: Cisco Hot Standby Router Protocol (HSRP) printer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* Cisco Hot Standby Router Protocol (HSRP). */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -33,13 +31,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -204,12 +202,14 @@ name|u_int
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|hsrp
 modifier|*
 name|hp
 init|=
 operator|(
+specifier|const
 expr|struct
 name|hsrp
 operator|*
@@ -411,7 +411,7 @@ literal|" hellotime="
 operator|)
 argument_list|)
 expr_stmt|;
-name|relts_print
+name|unsigned_relts_print
 argument_list|(
 name|ndo
 argument_list|,
@@ -429,7 +429,7 @@ literal|" holdtime="
 operator|)
 argument_list|)
 expr_stmt|;
-name|relts_print
+name|unsigned_relts_print
 argument_list|(
 name|ndo
 argument_list|,

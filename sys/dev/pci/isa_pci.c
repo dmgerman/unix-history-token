@@ -473,18 +473,6 @@ literal|0xc7001045
 case|:
 comment|/* OPTi 82C700 (FireStar) */
 case|case
-literal|0x00011033
-case|:
-comment|/* NEC 0001 (C-bus) */
-case|case
-literal|0x002c1033
-case|:
-comment|/* NEC 002C (C-bus) */
-case|case
-literal|0x003b1033
-case|:
-comment|/* NEC 003B (C-bus) */
-case|case
 literal|0x886a1060
 case|:
 comment|/* UMC UM8886 ISA */

@@ -794,6 +794,15 @@ name|a
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ATH_ALQ_TX_FIFO_PUSH
+case|:
+name|ath_alq_print_edma_tx_fifo_push
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 if|if
 condition|(
@@ -862,9 +871,6 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
 elseif|else
 if|if
 condition|(
@@ -882,8 +888,6 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 else|else
 name|printf
 argument_list|(

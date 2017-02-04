@@ -71,29 +71,30 @@ condition|)
 block|{
 if|if
 condition|(
-name|r
-operator|==
-name|ARCHIVE_WARN
-operator|&&
 operator|!
 name|canLzop
 argument_list|()
 condition|)
 block|{
-name|assertEqualInt
-argument_list|(
-name|ARCHIVE_OK
-argument_list|,
-name|archive_read_free
-argument_list|(
-name|a
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|skipping
 argument_list|(
 literal|"lzop compression is not supported "
 literal|"on this platform"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|r
+operator|==
+name|ARCHIVE_WARN
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"lzop multiple parts decoding is not "
+literal|"supported via external program"
 argument_list|)
 expr_stmt|;
 block|}
@@ -105,6 +106,16 @@ argument_list|,
 name|ARCHIVE_OK
 argument_list|,
 name|r
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_OK
+argument_list|,
+name|archive_read_free
+argument_list|(
+name|a
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;

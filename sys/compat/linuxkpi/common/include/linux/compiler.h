@@ -268,13 +268,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|__read_mostly
-value|__attribute__((__section__(".data.read_mostly")))
-end_define
-
-begin_define
-define|#
-directive|define
 name|__always_unused
 value|__unused
 end_define

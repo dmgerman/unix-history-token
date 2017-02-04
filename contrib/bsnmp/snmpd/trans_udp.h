@@ -33,11 +33,15 @@ name|sockaddr_in
 name|ret
 decl_stmt|;
 comment|/* the return address */
+name|bool
+name|recvdstaddr
+decl_stmt|;
+comment|/* IP_RECVDSTADDR is on */
 name|struct
 name|in_addr
-name|recv_addr
+name|dstaddr
 decl_stmt|;
-comment|/* the address the request was sent to */
+comment|/* address the request was sent to */
 block|}
 struct|;
 end_struct

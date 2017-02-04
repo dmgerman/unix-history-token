@@ -6,20 +6,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TCPDUMP_IP_H
+name|netdissect_ip_h
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TCPDUMP_IP_H
+name|netdissect_ip_h
 end_define
-
-begin_include
-include|#
-directive|include
-file|"tcpdump-stdinc.h"
-end_include
 
 begin_comment
 comment|/*  * Definitions for internet protocol version 4.  * Per RFC 791, September 1981.  */
@@ -40,7 +34,7 @@ begin_struct
 struct|struct
 name|ip
 block|{
-name|uint8_t
+name|nd_uint8_t
 name|ip_vhl
 decl_stmt|;
 comment|/* header length, version */
@@ -58,19 +52,19 @@ parameter_list|(
 name|ip
 parameter_list|)
 value|((ip)->ip_vhl& 0x0f)
-name|uint8_t
+name|nd_uint8_t
 name|ip_tos
 decl_stmt|;
 comment|/* type of service */
-name|uint16_t
+name|nd_uint16_t
 name|ip_len
 decl_stmt|;
 comment|/* total length */
-name|uint16_t
+name|nd_uint16_t
 name|ip_id
 decl_stmt|;
 comment|/* identification */
-name|uint16_t
+name|nd_uint16_t
 name|ip_off
 decl_stmt|;
 comment|/* fragment offset field */
@@ -89,27 +83,25 @@ directive|define
 name|IP_OFFMASK
 value|0x1fff
 comment|/* mask for fragmenting bits */
-name|uint8_t
+name|nd_uint8_t
 name|ip_ttl
 decl_stmt|;
 comment|/* time to live */
-name|uint8_t
+name|nd_uint8_t
 name|ip_p
 decl_stmt|;
 comment|/* protocol */
-name|uint16_t
+name|nd_uint16_t
 name|ip_sum
 decl_stmt|;
 comment|/* checksum */
-name|struct
-name|in_addr
+name|nd_ipv4
 name|ip_src
 decl_stmt|,
 name|ip_dst
 decl_stmt|;
 comment|/* source and dest address */
 block|}
-name|UNALIGNED
 struct|;
 end_struct
 
@@ -437,19 +429,19 @@ begin_struct
 struct|struct
 name|ip_timestamp
 block|{
-name|uint8_t
+name|nd_uint8_t
 name|ipt_code
 decl_stmt|;
 comment|/* IPOPT_TS */
-name|uint8_t
+name|nd_uint8_t
 name|ipt_len
 decl_stmt|;
 comment|/* size of structure (variable) */
-name|uint8_t
+name|nd_uint8_t
 name|ipt_ptr
 decl_stmt|;
 comment|/* index of current entry */
-name|uint8_t
+name|nd_uint8_t
 name|ipt_oflwflg
 decl_stmt|;
 comment|/* flags, overflow counter */
@@ -470,7 +462,7 @@ value|((ipt)->ipt_oflwflg& 0x0f)
 union|union
 name|ipt_timestamp
 block|{
-name|uint32_t
+name|nd_uint32_t
 name|ipt_time
 index|[
 literal|1
@@ -479,11 +471,10 @@ decl_stmt|;
 struct|struct
 name|ipt_ta
 block|{
-name|struct
-name|in_addr
+name|nd_ipv4
 name|ipt_addr
 decl_stmt|;
-name|uint32_t
+name|nd_uint32_t
 name|ipt_time
 decl_stmt|;
 block|}
@@ -496,7 +487,6 @@ block|}
 name|ipt_timestamp
 union|;
 block|}
-name|UNALIGNED
 struct|;
 end_struct
 
@@ -655,7 +645,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TCPDUMP_IP_H */
+comment|/* netdissect_ip_h */
 end_comment
 
 end_unit

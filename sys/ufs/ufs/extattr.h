@@ -195,19 +195,19 @@ begin_struct
 struct|struct
 name|extattr
 block|{
-name|int32_t
+name|uint32_t
 name|ea_length
 decl_stmt|;
 comment|/* length of this attribute */
-name|int8_t
+name|uint8_t
 name|ea_namespace
 decl_stmt|;
 comment|/* name space of this attribute */
-name|int8_t
+name|uint8_t
 name|ea_contentpadlen
 decl_stmt|;
 comment|/* bytes of padding at end of attribute */
-name|int8_t
+name|uint8_t
 name|ea_namelength
 decl_stmt|;
 comment|/* length of attribute name */
@@ -217,14 +217,15 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* null-terminated attribute name */
+comment|/* attribute name (NOT nul-terminated) */
+comment|/* padding, if any, to align attribute content to 8 byte boundary */
 comment|/* extended attribute content follows */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * These macros are used to access and manipulate an extended attribute:  *  * EXTATTR_NEXT(eap) returns a pointer to the next extended attribute  *	following eap.  * EXTATTR_CONTENT(eap) returns a pointer to the extended attribute  *	content referenced by eap.  * EXTATTR_CONTENT_SIZE(eap) returns the size of the extended attribute  *	content referenced by eap.  * EXTATTR_SET_LENGTHS(eap, contentsize) called after initializing the  *	attribute name to calculate and set the ea_length, ea_namelength,  *	and ea_contentpadlen fields of the extended attribute structure.  */
+comment|/*  * These macros are used to access and manipulate an extended attribute:  *  * EXTATTR_NEXT(eap) returns a pointer to the next extended attribute  *	following eap.  * EXTATTR_CONTENT(eap) returns a pointer to the extended attribute  *	content referenced by eap.  * EXTATTR_CONTENT_SIZE(eap) returns the size of the extended attribute  *	content referenced by eap.  */
 end_comment
 
 begin_define
@@ -235,7 +236,7 @@ parameter_list|(
 name|eap
 parameter_list|)
 define|\
-value|((struct extattr *)(((void *)(eap)) + (eap)->ea_length))
+value|((struct extattr *)(((u_char *)(eap)) + (eap)->ea_length))
 end_define
 
 begin_define
@@ -245,7 +246,8 @@ name|EXTATTR_CONTENT
 parameter_list|(
 name|eap
 parameter_list|)
-value|(((void *)(eap)) + EXTATTR_BASE_LENGTH(eap))
+define|\
+value|(void *)(((u_char *)(eap)) + EXTATTR_BASE_LENGTH(eap))
 end_define
 
 begin_define
@@ -259,6 +261,10 @@ define|\
 value|((eap)->ea_length - EXTATTR_BASE_LENGTH(eap) - (eap)->ea_contentpadlen)
 end_define
 
+begin_comment
+comment|/* -1 below compensates for ea_name[1] */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -267,19 +273,7 @@ parameter_list|(
 name|eap
 parameter_list|)
 define|\
-value|((sizeof(struct extattr) + (eap)->ea_namelength + 7)& ~7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXTATTR_SET_LENGTHS
-parameter_list|(
-name|eap
-parameter_list|,
-name|contentsize
-parameter_list|)
-value|do { \ 	KASSERT(((eap)->ea_name[0] != 0), \ 		("Must initialize name before setting lengths")); \ 	(eap)->ea_namelength = strlen((eap)->ea_name); \ 	(eap)->ea_contentpadlen = ((contentsize) % 8) ? \ 		8 - ((contentsize) % 8) : 0; \ 	(eap)->ea_length = EXTATTR_BASE_LENGTH(eap) + \ 		(contentsize) + (eap)->ea_contentpadlen; \ } while (0)
+value|roundup2((sizeof(struct extattr) - 1 + (eap)->ea_namelength), 8)
 end_define
 
 begin_ifdef
@@ -545,27 +539,6 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* User-level definition of KASSERT for macros above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KASSERT
-parameter_list|(
-name|cond
-parameter_list|,
-name|str
-parameter_list|)
-value|do { \         if (!(cond)) { printf("panic: "); printf(str); printf("\n"); exit(1); }\ } while (0)
-end_define
 
 begin_endif
 endif|#

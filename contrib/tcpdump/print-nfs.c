@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Network File System (NFS) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -47,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -80,22 +78,11 @@ directive|include
 file|"ip.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"ip6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -227,6 +214,7 @@ comment|/*  * Mapping of old NFS Version 2 RPC numbers to generic numbers.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|uint32_t
 name|nfsv3_procid
 index|[
@@ -940,14 +928,13 @@ modifier|*
 name|d
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|ip
 modifier|*
 name|ip
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
+specifier|const
 name|struct
 name|ip6_hdr
 modifier|*
@@ -964,30 +951,6 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-else|#
-directive|else
-ifndef|#
-directive|ifndef
-name|INET_ADDRSTRLEN
-define|#
-directive|define
-name|INET_ADDRSTRLEN
-value|16
-endif|#
-directive|endif
-name|char
-name|srcaddr
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|,
-name|dstaddr
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|srcaddr
 index|[
 literal|0
@@ -1005,6 +968,7 @@ condition|(
 name|IP_V
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -1019,6 +983,7 @@ case|:
 name|ip
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -1066,15 +1031,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 literal|6
 case|:
 name|ip6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
@@ -1122,8 +1085,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|strlcpy
 argument_list|(
@@ -2260,6 +2221,7 @@ comment|/* 	 * find the start of the req data (if we captured it) 	 */
 name|dp
 operator|=
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -2573,6 +2535,7 @@ expr_stmt|;
 name|cp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3545,7 +3508,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -3560,7 +3523,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|ND_PRINT
@@ -3590,7 +3553,7 @@ name|sa3
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 if|if
@@ -3602,7 +3565,7 @@ argument_list|,
 name|dp
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 if|if
@@ -3646,7 +3609,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -3661,7 +3624,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|ND_TCHECK
@@ -3699,7 +3662,7 @@ name|sa3
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 name|ND_PRINT
@@ -4573,9 +4536,6 @@ name|int
 name|ipver
 decl_stmt|;
 comment|/* IP version (4 or 6) */
-ifdef|#
-directive|ifdef
-name|INET6
 name|struct
 name|in6_addr
 name|client
@@ -4586,20 +4546,6 @@ name|in6_addr
 name|server
 decl_stmt|;
 comment|/* server IP address (net order) */
-else|#
-directive|else
-name|struct
-name|in_addr
-name|client
-decl_stmt|;
-comment|/* client IP address (net order) */
-name|struct
-name|in_addr
-name|server
-decl_stmt|;
-comment|/* server IP address (net order) */
-endif|#
-directive|endif
 name|uint32_t
 name|proc
 decl_stmt|;
@@ -4624,6 +4570,7 @@ value|64
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|xid_map_entry
 name|xid_map
@@ -4634,6 +4581,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|xid_map_next
 init|=
@@ -4642,6 +4590,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|xid_map_hint
 init|=
@@ -4670,6 +4619,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|ip
 modifier|*
@@ -4677,9 +4627,7 @@ name|ip
 init|=
 name|NULL
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
+specifier|const
 name|struct
 name|ip6_hdr
 modifier|*
@@ -4687,8 +4635,6 @@ name|ip6
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|xid_map_entry
 modifier|*
@@ -4716,6 +4662,7 @@ condition|(
 name|IP_V
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -4730,6 +4677,7 @@ case|:
 name|ip
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -4737,15 +4685,13 @@ operator|)
 name|bp
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 literal|6
 case|:
 name|ip6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
@@ -4753,8 +4699,6 @@ operator|)
 name|bp
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 return|return
 operator|(
@@ -4853,9 +4797,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|INET6
 elseif|else
 if|if
 condition|(
@@ -4909,8 +4850,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|xmep
 operator|->
 name|proc
@@ -4986,43 +4925,56 @@ name|xmep
 decl_stmt|;
 name|uint32_t
 name|xid
-init|=
-name|rp
-operator|->
-name|rm_xid
 decl_stmt|;
+specifier|const
 name|struct
 name|ip
 modifier|*
 name|ip
 init|=
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
 operator|)
 name|bp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
+specifier|const
 name|struct
 name|ip6_hdr
 modifier|*
 name|ip6
 init|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
 operator|)
 name|bp
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|cmp
 decl_stmt|;
+name|UNALIGNED_MEMCPY
+argument_list|(
+operator|&
+name|xid
+argument_list|,
+operator|&
+name|rp
+operator|->
+name|rm_xid
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|xmep
+operator|->
+name|xid
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Start searching from where we last left off */
 name|i
 operator|=
@@ -5125,9 +5077,6 @@ literal|0
 expr_stmt|;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 literal|6
 case|:
@@ -5184,8 +5133,6 @@ literal|0
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
 default|default:
 name|cmp
 operator|=
@@ -5439,6 +5386,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -5450,6 +5398,7 @@ argument_list|)
 operator|+
 operator|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -5694,6 +5643,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -5802,6 +5752,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -5824,6 +5775,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -6071,6 +6023,7 @@ operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -6527,6 +6480,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -6539,6 +6493,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -6551,6 +6506,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -6585,6 +6541,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -6597,6 +6554,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -6609,6 +6567,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -7434,7 +7393,7 @@ argument_list|,
 name|verbose
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -7594,6 +7553,7 @@ modifier|*
 name|dp
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|nfsv3_fsinfo
 modifier|*
@@ -7674,6 +7634,7 @@ return|;
 name|sfp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nfsv3_fsinfo
 operator|*
@@ -7769,6 +7730,7 @@ operator|,
 name|EXTRACT_64BITS
 argument_list|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -7843,6 +7805,7 @@ block|{
 name|int
 name|er
 decl_stmt|;
+specifier|const
 name|struct
 name|nfsv3_pathconf
 modifier|*
@@ -7920,6 +7883,7 @@ return|;
 name|spp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nfsv3_pathconf
 operator|*
@@ -8859,7 +8823,7 @@ operator|->
 name|ndo_vflag
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -8917,7 +8881,7 @@ operator|->
 name|ndo_vflag
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -8935,7 +8899,7 @@ operator|&
 name|er
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -8973,7 +8937,7 @@ operator|->
 name|ndo_vflag
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -9034,7 +8998,7 @@ operator|&
 name|er
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -9162,7 +9126,7 @@ operator|&
 name|er
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -9290,7 +9254,7 @@ operator|&
 name|er
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}

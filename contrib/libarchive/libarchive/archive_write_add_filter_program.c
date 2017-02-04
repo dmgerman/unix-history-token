@@ -876,6 +876,13 @@ name|free
 argument_list|(
 name|data
 operator|->
+name|program_name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|data
+operator|->
 name|child_buf
 argument_list|)
 expr_stmt|;

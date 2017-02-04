@@ -129,33 +129,11 @@ directive|include
 file|<x86/isa/icu.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/cbus/cbus.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<isa/isareg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1325,9 +1303,6 @@ name|SLAVE
 index|]
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 if|if
 condition|(
 name|ap
@@ -1343,8 +1318,6 @@ condition|)
 name|elcr_resume
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1476,58 +1449,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|PC98
-if|if
-condition|(
-operator|(
-name|vector
-operator|==
-literal|0
-operator|||
-name|vector
-operator|==
-literal|1
-operator|||
-name|vector
-operator|==
-literal|7
-operator|||
-name|vector
-operator|==
-literal|8
-operator|)
-operator|&&
-name|trig
-operator|==
-name|INTR_TRIGGER_LEVEL
-condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"atpic: Ignoring invalid level/low configuration for IRQ%u\n"
-argument_list|,
-name|vector
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-else|#
-directive|else
 comment|/* 	 * Certain IRQs can never be level/lo, so don't try to set them 	 * that way if asked.  At least some ELCR registers ignore setting 	 * these bits as well. 	 */
 if|if
 condition|(
@@ -1648,9 +1569,6 @@ operator|(
 literal|0
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* PC98 */
 block|}
 end_function
 
@@ -1819,9 +1737,6 @@ operator||
 name|OCW3_RR
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 comment|/* OCW2_L1 sets priority order to 3-7, 0-2 (com2 first). */
 if|if
 condition|(
@@ -1841,8 +1756,6 @@ operator||
 name|OCW2_L1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|spinlock_exit
 argument_list|()
 expr_stmt|;
@@ -2023,67 +1936,9 @@ name|at_trigger
 operator|=
 name|INTR_TRIGGER_LEVEL
 expr_stmt|;
-else|else
+elseif|else
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|PC98
-for|for
-control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|ai
-operator|=
-name|atintrs
-init|;
-name|i
-operator|<
-name|NUM_ISA_IRQS
-condition|;
-name|i
-operator|++
-operator|,
-name|ai
-operator|++
-control|)
-switch|switch
-condition|(
-name|i
-condition|)
-block|{
-case|case
-literal|0
-case|:
-case|case
-literal|1
-case|:
-case|case
-literal|7
-case|:
-case|case
-literal|8
-case|:
-name|ai
-operator|->
-name|at_trigger
-operator|=
-name|INTR_TRIGGER_EDGE
-expr_stmt|;
-break|break;
-default|default:
-name|ai
-operator|->
-name|at_trigger
-operator|=
-name|INTR_TRIGGER_LEVEL
-expr_stmt|;
-break|break;
-block|}
-else|#
-directive|else
 comment|/* 	 * Look for an ELCR.  If we find one, update the trigger modes. 	 * If we don't find one, assume that IRQs 0, 1, 2, and 13 are 	 * edge triggered and that everything else is level triggered. 	 * We only use the trigger information to reprogram the ELCR if 	 * we have one and as an optimization to avoid masking edge 	 * triggered interrupts.  For the case that we don't have an ELCR, 	 * it doesn't hurt to mask an edge triggered interrupt, so we 	 * assume level trigger for any interrupt that we aren't sure is 	 * edge triggered. 	 */
 if|if
 condition|(
@@ -2179,9 +2034,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* PC98 */
 block|}
 end_function
 
@@ -2702,12 +2554,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -2725,11 +2571,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Return a bitmap of the current interrupt requests.  This is 8259-specific  * and is only suitable for use at probe time.  */

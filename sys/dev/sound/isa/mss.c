@@ -294,12 +294,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|int
@@ -315,11 +309,6 @@ name|mss
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -516,12 +505,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|u_char
@@ -537,11 +520,6 @@ name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -6975,18 +6953,6 @@ goto|goto
 name|no
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|PC98
-if|if
-condition|(
-name|irq
-operator|>
-literal|12
-condition|)
-block|{
-else|#
-directive|else
 if|if
 condition|(
 name|irq
@@ -6994,8 +6960,6 @@ operator|>
 literal|11
 condition|)
 block|{
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"MSS: Bad IRQ %d\n"
@@ -7117,6 +7081,9 @@ return|return
 name|result
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|mss_detect
@@ -7189,9 +7156,6 @@ operator|=
 name|MD_AD1848
 expr_stmt|;
 comment|/* AD1848 or CS4248 */
-ifndef|#
-directive|ifndef
-name|PC98
 if|if
 condition|(
 name|opti_detect
@@ -7248,8 +7212,6 @@ goto|goto
 name|gotit
 goto|;
 block|}
-endif|#
-directive|endif
 comment|/*      	* Check that the I/O address is in use.      	*      	* bit 7 of the base I/O port is known to be 0 after the chip has      	* performed its power on initialization. Just assume this has      	* happened before the OS is starting.      	*      	* If the I/O address is unused, it typically returns 0xff.      	*/
 for|for
 control|(
@@ -7973,9 +7935,9 @@ return|return
 name|ENXIO
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|PC98
+end_function
+
+begin_function
 specifier|static
 name|int
 name|opti_detect
@@ -8274,8 +8236,9 @@ return|return
 literal|0
 return|;
 block|}
-endif|#
-directive|endif
+end_function
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -8481,23 +8444,6 @@ operator|->
 name|conf_base
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* PC98 need this. I don't know reason why. */
-name|bus_delete_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IOPORT
-argument_list|,
-name|mss
-operator|->
-name|conf_rid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|mss
 operator|->
 name|conf_base
@@ -8528,6 +8474,9 @@ return|return
 name|NULL
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|mss_doattach
@@ -8639,56 +8588,6 @@ name|DV_F_TRUE_MSS
 condition|)
 block|{
 comment|/* has IRQ/DMA registers, set IRQ and DMA addr */
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* CS423[12] in PC98 can use IRQ3,5,10,12 */
-specifier|static
-name|char
-name|interrupt_bits
-index|[
-literal|13
-index|]
-init|=
-block|{
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-literal|0x08
-block|,
-operator|-
-literal|1
-block|,
-literal|0x10
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-literal|0x18
-block|,
-operator|-
-literal|1
-block|,
-literal|0x20
-block|}
-decl_stmt|;
-else|#
-directive|else
 specifier|static
 name|char
 name|interrupt_bits
@@ -8729,8 +8628,6 @@ block|,
 literal|0x20
 block|}
 decl_stmt|;
-endif|#
-directive|endif
 specifier|static
 name|char
 name|pdma_bits
@@ -8797,10 +8694,6 @@ condition|)
 goto|goto
 name|no
 goto|;
-ifndef|#
-directive|ifndef
-name|PC98
-comment|/* CS423[12] in PC98 don't support this. */
 name|io_wr
 argument_list|(
 name|mss
@@ -8835,8 +8728,6 @@ argument_list|,
 literal|"IRQ Conflict?\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Write IRQ+DMA setup */
 if|if
 condition|(
@@ -9196,6 +9087,9 @@ return|return
 name|ENXIO
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|mss_detach
@@ -9244,6 +9138,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|mss_attach
@@ -9393,7 +9290,13 @@ name|mss
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * mss_resume() is the code to allow a laptop to resume using the sound  * card.  *  * This routine re-sets the state of the board to the state before going  * to sleep.  According to the yamaha docs this is the right thing to do,  * but getting DMA restarted appears to be a bit of a trick, so the device  * has to be closed and re-opened to be re-used, but there is no skipping  * problem, and volume, bass/treble and most other things are restored  * properly.  *  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|mss_resume
@@ -9551,7 +9454,13 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * mss_suspend() is the code that gets called right before a laptop  * suspends.  *  * This code saves the state of the sound card right before shutdown  * so it can be restored above.  *  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|mss_suspend
@@ -9668,6 +9577,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|device_method_t
 name|mss_methods
@@ -9717,6 +9629,9 @@ literal|0
 block|}
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|driver_t
 name|mss_driver
@@ -9729,6 +9644,9 @@ block|,
 name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|snd_mss
@@ -9744,6 +9662,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
 name|snd_mss
@@ -9757,6 +9678,9 @@ argument_list|,
 name|SOUND_MAXVER
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|snd_mss
@@ -9764,6 +9688,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|static
 name|int
 name|azt2320_mss_mode
@@ -9950,6 +9877,9 @@ return|return
 name|ret
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|isa_pnp_id
@@ -10039,6 +9969,9 @@ literal|0
 block|}
 block|, }
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|int
 name|pnpmss_probe
@@ -10094,6 +10027,9 @@ name|pnpmss_ids
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|pnpmss_attach
@@ -10438,6 +10374,9 @@ name|mss
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|opti_init
@@ -10878,6 +10817,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|opti_write
@@ -11023,9 +10965,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-ifndef|#
-directive|ifndef
-name|PC98
+end_function
+
+begin_function
 name|u_char
 name|opti_read
 parameter_list|(
@@ -11171,8 +11113,9 @@ operator|-
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
+end_function
+
+begin_decl_stmt
 specifier|static
 name|device_method_t
 name|pnpmss_methods
@@ -11222,6 +11165,9 @@ literal|0
 block|}
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|driver_t
 name|pnpmss_driver
@@ -11234,6 +11180,9 @@ block|,
 name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|snd_pnpmss
@@ -11249,6 +11198,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|snd_pnpmss
@@ -11264,6 +11216,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
 name|snd_pnpmss
@@ -11277,6 +11232,9 @@ argument_list|,
 name|SOUND_MAXVER
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|snd_pnpmss
@@ -11284,6 +11242,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 specifier|static
 name|int
 name|guspcm_probe
@@ -11330,6 +11291,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|guspcm_attach
@@ -11600,6 +11564,9 @@ name|mss
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|device_method_t
 name|guspcm_methods
@@ -11634,6 +11601,9 @@ literal|0
 block|}
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|driver_t
 name|guspcm_driver
@@ -11646,6 +11616,9 @@ block|,
 name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|snd_guspcm
@@ -11661,6 +11634,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
 name|snd_guspcm
@@ -11674,6 +11650,9 @@ argument_list|,
 name|SOUND_MAXVER
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|snd_guspcm
@@ -11681,7 +11660,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-end_function
+end_expr_stmt
 
 end_unit
 

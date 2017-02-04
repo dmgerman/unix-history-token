@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (C) 2002 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: IPv6 mobility printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -26,16 +24,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -47,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -62,9 +54,16 @@ directive|include
 file|"extract.h"
 end_include
 
-begin_comment
-comment|/* must come after interface.h */
-end_comment
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|"[|MOBILITY]"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Mobility header */
@@ -244,6 +243,72 @@ end_define
 begin_decl_stmt
 specifier|static
 specifier|const
+name|struct
+name|tok
+name|ip6m_str
+index|[]
+init|=
+block|{
+block|{
+name|IP6M_BINDING_REQUEST
+block|,
+literal|"BRR"
+block|}
+block|,
+block|{
+name|IP6M_HOME_TEST_INIT
+block|,
+literal|"HoTI"
+block|}
+block|,
+block|{
+name|IP6M_CAREOF_TEST_INIT
+block|,
+literal|"CoTI"
+block|}
+block|,
+block|{
+name|IP6M_HOME_TEST
+block|,
+literal|"HoT"
+block|}
+block|,
+block|{
+name|IP6M_CAREOF_TEST
+block|,
+literal|"CoT"
+block|}
+block|,
+block|{
+name|IP6M_BINDING_UPDATE
+block|,
+literal|"BU"
+block|}
+block|,
+block|{
+name|IP6M_BINDING_ACK
+block|,
+literal|"BA"
+block|}
+block|,
+block|{
+name|IP6M_BINDING_ERROR
+block|,
+literal|"BE"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
 name|unsigned
 name|ip6m_hdrlen
 index|[
@@ -294,31 +359,6 @@ comment|/* IP6M_BINDING_ERROR    */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX: unused */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP6MOPT_BU_MINLEN
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP6MOPT_BA_MINLEN
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP6MOPT_BR_MINLEN
-value|2
-end_define
 
 begin_comment
 comment|/* Mobility Header Options */
@@ -427,7 +467,7 @@ end_define
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mobility_opt_print
 parameter_list|(
 name|netdissect_options
@@ -841,18 +881,14 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-return|return;
+return|return
+literal|0
+return|;
 name|trunc
 label|:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"[trunc] "
-operator|)
-argument_list|)
-expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -902,6 +938,7 @@ decl_stmt|;
 name|mh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_mobility
 operator|*
@@ -994,6 +1031,24 @@ goto|goto
 name|trunc
 goto|;
 block|}
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"mobility: %s"
+operator|,
+name|tok2str
+argument_list|(
+name|ip6m_str
+argument_list|,
+literal|"type-#%u"
+argument_list|,
+name|type
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1002,15 +1057,6 @@ block|{
 case|case
 name|IP6M_BINDING_REQUEST
 case|:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"mobility: BRR"
-operator|)
-argument_list|)
-expr_stmt|;
 name|hlen
 operator|=
 name|IP6M_MINLEN
@@ -1022,23 +1068,6 @@ case|:
 case|case
 name|IP6M_CAREOF_TEST_INIT
 case|:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"mobility: %soTI"
-operator|,
-name|type
-operator|==
-name|IP6M_HOME_TEST_INIT
-condition|?
-literal|"H"
-else|:
-literal|"C"
-operator|)
-argument_list|)
-expr_stmt|;
 name|hlen
 operator|=
 name|IP6M_MINLEN
@@ -1109,23 +1138,6 @@ case|:
 case|case
 name|IP6M_CAREOF_TEST
 case|:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"mobility: %soT"
-operator|,
-name|type
-operator|==
-name|IP6M_HOME_TEST
-condition|?
-literal|"H"
-else|:
-literal|"C"
-operator|)
-argument_list|)
-expr_stmt|;
 name|ND_TCHECK
 argument_list|(
 name|mh
@@ -1282,15 +1294,6 @@ break|break;
 case|case
 name|IP6M_BINDING_UPDATE
 case|:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"mobility: BU"
-operator|)
-argument_list|)
-expr_stmt|;
 name|ND_TCHECK
 argument_list|(
 name|mh
@@ -1474,15 +1477,6 @@ break|break;
 case|case
 name|IP6M_BINDING_ACK
 case|:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"mobility: BA"
-operator|)
-argument_list|)
-expr_stmt|;
 name|ND_TCHECK
 argument_list|(
 name|mh
@@ -1605,15 +1599,6 @@ break|break;
 case|case
 name|IP6M_BINDING_ERROR
 case|:
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"mobility: BE"
-operator|)
-argument_list|)
-expr_stmt|;
 name|ND_TCHECK
 argument_list|(
 name|mh
@@ -1686,9 +1671,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"mobility: type-#%u len=%u"
-operator|,
-name|type
+literal|" len=%u"
 operator|,
 name|mh
 operator|->
@@ -1709,6 +1692,8 @@ name|ndo
 operator|->
 name|ndo_vflag
 condition|)
+if|if
+condition|(
 name|mobility_opt_print
 argument_list|(
 name|ndo
@@ -1723,7 +1708,11 @@ name|mhlen
 operator|-
 name|hlen
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
+empty_stmt|;
 return|return
 operator|(
 name|mhlen
@@ -1736,7 +1725,9 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|MOBILITY]"
+literal|"%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1747,15 +1738,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 end_unit
 

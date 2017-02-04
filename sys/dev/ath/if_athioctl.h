@@ -1279,6 +1279,13 @@ name|SPECTRAL_PARAM_ACTIVE
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPECTRAL_PARAM_SS_SPECTRAL_PRI
+value|7
+end_define
+
 begin_comment
 comment|/*  * Spectral control parameters  */
 end_comment

@@ -19,6 +19,12 @@ directive|define
 name|_SYS_CAPABILITY_H_
 end_define
 
+begin_warning
+warning|#
+directive|warning
+warning|this file includes<sys/capability.h> which is deprecated
+end_warning
+
 begin_include
 include|#
 directive|include

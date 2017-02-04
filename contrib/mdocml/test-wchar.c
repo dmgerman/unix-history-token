@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: test-wchar.c,v 1.3 2015/10/06 18:32:20 schwarze Exp $	*/
+comment|/*	$Id: test-wchar.c,v 1.4 2016/07/31 09:29:13 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -102,17 +102,19 @@ name|setlocale
 argument_list|(
 name|LC_CTYPE
 argument_list|,
-literal|"en_US.UTF-8"
+name|UTF8_LOCALE
 argument_list|)
 operator|==
 name|NULL
 condition|)
 block|{
-name|fputs
+name|fprintf
 argument_list|(
-literal|"setlocale(LC_CTYPE, \"en_US.UTF-8\") failed\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"setlocale(LC_CTYPE, \"%s\") failed\n"
+argument_list|,
+name|UTF8_LOCALE
 argument_list|)
 expr_stmt|;
 return|return

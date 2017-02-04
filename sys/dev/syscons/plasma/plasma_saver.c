@@ -89,10 +89,6 @@ init|=
 block|{
 name|M_VGA_CG640
 block|,
-name|M_PC98_PEGC640x480
-block|,
-name|M_PC98_PEGC640x400
-block|,
 name|M_VGA_CG320
 block|,
 operator|-

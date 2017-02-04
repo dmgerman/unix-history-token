@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmandoc.h,v 1.63 2016/07/07 19:19:01 schwarze Exp $ */
+comment|/*	$Id: libmandoc.h,v 1.64 2016/07/19 13:36:13 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -105,32 +105,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|-
-literal|0
-operator|>=
-literal|4
-end_if
-
-begin_macro
-name|__attribute__
-argument_list|(
-argument|(__format__ (__printf__,
-literal|5
-argument|,
-literal|6
-argument|))
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|mandoc_vmsg
@@ -152,8 +126,21 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|5
+operator|,
+function_decl|6
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|char

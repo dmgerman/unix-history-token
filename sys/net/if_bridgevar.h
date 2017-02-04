@@ -1097,6 +1097,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|BRIDGE_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_mtx, MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BRIDGE_LOCK2REF
 parameter_list|(
 name|_sc

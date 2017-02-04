@@ -1720,6 +1720,13 @@ expr_stmt|;
 if|if
 condition|(
 name|cp
+operator|==
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+name|cp
 operator|->
 name|free
 condition|)

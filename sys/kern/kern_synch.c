@@ -527,28 +527,24 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|p
+name|ident
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"msleep1"
+literal|"_sleep: NULL ident"
 operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ident
-operator|!=
-name|NULL
-operator|&&
 name|TD_IS_RUNNING
 argument_list|(
 name|td
 argument_list|)
 argument_list|,
 operator|(
-literal|"msleep"
+literal|"_sleep: curthread not running"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1061,28 +1057,24 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|p
+name|ident
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"msleep1"
+literal|"msleep_spin_sbt: NULL ident"
 operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ident
-operator|!=
-name|NULL
-operator|&&
 name|TD_IS_RUNNING
 argument_list|(
 name|td
 argument_list|)
 argument_list|,
 operator|(
-literal|"msleep"
+literal|"msleep_spin_sbt: curthread not running"
 operator|)
 argument_list|)
 expr_stmt|;

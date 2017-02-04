@@ -1182,15 +1182,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_CORTEXA8
+name|CPU_CORTEXA
 argument_list|)
 operator|||
-name|defined
-argument_list|(
-name|CPU_CORTEXA_MP
-argument_list|)
-operator|||
-expr|\
 name|defined
 argument_list|(
 name|CPU_MV_PJ4B

@@ -1467,11 +1467,6 @@ operator|->
 name|toep_list_lock
 argument_list|)
 expr_stmt|;
-name|free_toepcb
-argument_list|(
-name|toep
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -6377,6 +6372,15 @@ argument_list|)
 expr_stmt|;
 block|}
 name|t4_ddp_mod_unload
+argument_list|()
+expr_stmt|;
+name|t4_uninit_connect_cpl_handlers
+argument_list|()
+expr_stmt|;
+name|t4_uninit_listen_cpl_handlers
+argument_list|()
+expr_stmt|;
+name|t4_uninit_cpl_io_handlers
 argument_list|()
 expr_stmt|;
 return|return

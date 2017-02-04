@@ -111,9 +111,11 @@ directive|ifdef
 name|KLD_MODULE
 end_ifdef
 
-begin_comment
-comment|/* XXX NETGRAPH_MPPC_COMPRESSION isn't functional yet */
-end_comment
+begin_define
+define|#
+directive|define
+name|NETGRAPH_MPPC_COMPRESSION
+end_define
 
 begin_define
 define|#
@@ -187,10 +189,6 @@ ifdef|#
 directive|ifdef
 name|NETGRAPH_MPPC_COMPRESSION
 end_ifdef
-
-begin_comment
-comment|/* XXX this file doesn't exist yet, but hopefully someday it will... */
-end_comment
 
 begin_include
 include|#
@@ -2440,19 +2438,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Check return value */
-name|KASSERT
-argument_list|(
-name|rtn
-operator|!=
-name|MPPC_INVALID
-argument_list|,
-operator|(
-literal|"%s: invalid"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* KASSERT(rtn != MPPC_INVALID, ("%s: invalid", __func__)); */
 if|if
 condition|(
 operator|(
@@ -3761,19 +3747,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 comment|/* Check return value */
-name|KASSERT
-argument_list|(
-name|rtn
-operator|!=
-name|MPPC_INVALID
-argument_list|,
-operator|(
-literal|"%s: invalid"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* KASSERT(rtn != MPPC_INVALID, ("%s: invalid", __func__)); */
 if|if
 condition|(
 operator|(

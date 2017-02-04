@@ -235,7 +235,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cfi_shutdown
 parameter_list|(
 name|void
@@ -325,6 +325,11 @@ name|ctl_port
 modifier|*
 name|port
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|memset
 argument_list|(
 name|isoftc
@@ -384,18 +389,6 @@ name|cfi_done
 expr_stmt|;
 name|port
 operator|->
-name|max_targets
-operator|=
-literal|1
-expr_stmt|;
-name|port
-operator|->
-name|max_target_id
-operator|=
-literal|0
-expr_stmt|;
-name|port
-operator|->
 name|targ_port
 operator|=
 operator|-
@@ -409,10 +402,14 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ctl_port_register
 argument_list|(
 name|port
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -426,7 +423,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -444,7 +441,8 @@ block|}
 end_function
 
 begin_function
-name|void
+specifier|static
+name|int
 name|cfi_shutdown
 parameter_list|(
 name|void
@@ -462,14 +460,17 @@ name|struct
 name|ctl_port
 modifier|*
 name|port
-decl_stmt|;
-name|port
-operator|=
+init|=
 operator|&
 name|isoftc
 operator|->
 name|port
-expr_stmt|;
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|ctl_port_offline
 argument_list|(
 name|port
@@ -477,23 +478,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ctl_port_deregister
 argument_list|(
-operator|&
-name|isoftc
-operator|->
 name|port
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%s: ctl_frontend_deregister() failed\n"
+literal|"%s: ioctl port deregistration failed\n"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 

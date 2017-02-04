@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mansearch.h,v 1.24 2015/11/07 14:01:16 schwarze Exp $ */
+comment|/*	$Id: mansearch.h,v 1.27 2016/08/01 12:31:00 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014, 2016 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_define
@@ -12,6 +12,41 @@ define|#
 directive|define
 name|MANDOC_DB
 value|"mandoc.db"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MANDOCDB_MAGIC
+value|0x3a7d0cdb
+end_define
+
+begin_define
+define|#
+directive|define
+name|MANDOCDB_VERSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MACRO_MAX
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEY_Nd
+value|39
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEY_MAX
+value|40
 end_define
 
 begin_define
@@ -336,38 +371,23 @@ name|NAME_MASK
 value|0x000000000000001fULL
 end_define
 
-begin_define
-define|#
-directive|define
-name|FORM_CAT
-value|0
-end_define
-
-begin_comment
-comment|/* manual page is preformatted */
-end_comment
-
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+name|form
+block|{
 name|FORM_SRC
-value|1
-end_define
-
-begin_comment
-comment|/* format is mdoc(7) or man(7) */
-end_comment
-
-begin_define
-define|#
-directive|define
+init|=
+literal|1
+block|,
+comment|/* Format is mdoc(7) or man(7). */
+name|FORM_CAT
+block|,
+comment|/* Manual page is preformatted. */
 name|FORM_NONE
-value|4
-end_define
-
-begin_comment
-comment|/* format is unknown */
-end_comment
+comment|/* Format is unknown. */
+block|}
+enum|;
+end_enum
 
 begin_enum
 enum|enum
@@ -417,10 +437,10 @@ name|int
 name|sec
 decl_stmt|;
 comment|/* section number, 10 means invalid */
-name|int
+name|enum
+name|form
 name|form
 decl_stmt|;
-comment|/* 0 == catpage */
 block|}
 struct|;
 end_struct
@@ -465,15 +485,6 @@ struct_decl|struct
 name|manpaths
 struct_decl|;
 end_struct_decl
-
-begin_function_decl
-name|int
-name|mansearch_setup
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int

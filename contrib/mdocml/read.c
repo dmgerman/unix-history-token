@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: read.c,v 1.149 2016/07/10 13:34:30 schwarze Exp $ */
+comment|/*	$Id: read.c,v 1.157 2017/01/09 01:37:03 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2016 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2010, 2012 Joerg Sonnenberger<joerg@netbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2017 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2010, 2012 Joerg Sonnenberger<joerg@netbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -19,12 +19,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|HAVE_MMAP
-end_if
-
 begin_include
 include|#
 directive|include
@@ -36,11 +30,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -436,13 +425,15 @@ literal|"content before first section header"
 block|,
 literal|"first section is not \"NAME\""
 block|,
-literal|"NAME section without name"
+literal|"NAME section without Nm before Nd"
 block|,
 literal|"NAME section without description"
 block|,
 literal|"description not at the end of NAME"
 block|,
 literal|"bad NAME section content"
+block|,
+literal|"missing comma before name"
 block|,
 literal|"missing description line, using \"\""
 block|,
@@ -496,7 +487,7 @@ literal|"missing display type, using -ragged"
 block|,
 literal|"list type is not the first argument"
 block|,
-literal|"missing -width in -tag list, using 8n"
+literal|"missing -width in -tag list, using 6n"
 block|,
 literal|"missing utility name, using \"\""
 block|,
@@ -513,6 +504,8 @@ block|,
 literal|"nothing follows prefix"
 block|,
 literal|"empty reference block"
+block|,
+literal|"missing section argument"
 block|,
 literal|"missing -std argument, adding it"
 block|,
@@ -897,61 +890,6 @@ block|}
 block|}
 if|if
 condition|(
-name|curp
-operator|->
-name|man
-operator|==
-name|NULL
-condition|)
-block|{
-name|curp
-operator|->
-name|man
-operator|=
-name|roff_man_alloc
-argument_list|(
-name|curp
-operator|->
-name|roff
-argument_list|,
-name|curp
-argument_list|,
-name|curp
-operator|->
-name|defos
-argument_list|,
-name|curp
-operator|->
-name|options
-operator|&
-name|MPARSE_QUICK
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|)
-expr_stmt|;
-name|curp
-operator|->
-name|man
-operator|->
-name|macroset
-operator|=
-name|MACROSET_MAN
-expr_stmt|;
-name|curp
-operator|->
-name|man
-operator|->
-name|first
-operator|->
-name|tok
-operator|=
-name|TOKEN_NONE
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|format
 operator|==
 name|MPARSE_MDOC
@@ -1054,6 +992,10 @@ name|size_t
 name|pos
 decl_stmt|;
 comment|/* byte number in the ln buffer */
+name|size_t
+name|j
+decl_stmt|;
+comment|/* auxiliary byte number in the blk buffer */
 name|enum
 name|rofferr
 name|rr
@@ -1536,6 +1478,10 @@ literal|1
 index|]
 condition|)
 block|{
+name|j
+operator|=
+name|i
+expr_stmt|;
 name|i
 operator|+=
 literal|2
@@ -1556,16 +1502,61 @@ control|)
 block|{
 if|if
 condition|(
-literal|'\n'
-operator|==
 name|blk
 operator|.
 name|buf
 index|[
 name|i
 index|]
+operator|!=
+literal|'\n'
 condition|)
-block|{
+continue|continue;
+if|if
+condition|(
+name|blk
+operator|.
+name|buf
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|==
+literal|' '
+operator|||
+name|blk
+operator|.
+name|buf
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\t'
+condition|)
+name|mandoc_msg
+argument_list|(
+name|MANDOCERR_SPACE_EOL
+argument_list|,
+name|curp
+argument_list|,
+name|curp
+operator|->
+name|line
+argument_list|,
+name|pos
+operator|+
+name|i
+operator|-
+literal|1
+operator|-
+name|j
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 operator|++
 name|i
 expr_stmt|;
@@ -1573,7 +1564,6 @@ operator|++
 name|lnn
 expr_stmt|;
 break|break;
-block|}
 block|}
 comment|/* Backout trailing whitespaces */
 for|for
@@ -2162,15 +2152,8 @@ continue|continue;
 default|default:
 break|break;
 block|}
-comment|/* 		 * If input parsers have not been allocated, do so now. 		 * We keep these instanced between parsers, but set them 		 * locally per parse routine since we can use different 		 * parsers with each one. 		 */
 if|if
 condition|(
-name|curp
-operator|->
-name|man
-operator|==
-name|NULL
-operator|||
 name|curp
 operator|->
 name|man
@@ -2356,9 +2339,6 @@ decl_stmt|;
 name|ssize_t
 name|ssz
 decl_stmt|;
-if|#
-directive|if
-name|HAVE_MMAP
 name|struct
 name|stat
 name|st
@@ -2480,8 +2460,6 @@ return|return
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|curp
@@ -2715,47 +2693,6 @@ modifier|*
 name|curp
 parameter_list|)
 block|{
-if|if
-condition|(
-name|curp
-operator|->
-name|man
-operator|==
-name|NULL
-operator|&&
-name|curp
-operator|->
-name|sodest
-operator|==
-name|NULL
-condition|)
-name|curp
-operator|->
-name|man
-operator|=
-name|roff_man_alloc
-argument_list|(
-name|curp
-operator|->
-name|roff
-argument_list|,
-name|curp
-argument_list|,
-name|curp
-operator|->
-name|defos
-argument_list|,
-name|curp
-operator|->
-name|options
-operator|&
-name|MPARSE_QUICK
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|curp
@@ -3157,9 +3094,6 @@ name|filenc
 operator|=
 name|save_filenc
 expr_stmt|;
-if|#
-directive|if
-name|HAVE_MMAP
 if|if
 condition|(
 name|with_mmap
@@ -3176,8 +3110,6 @@ name|sz
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|free
 argument_list|(
 name|blk
@@ -3525,14 +3457,6 @@ operator|->
 name|roff
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|curp
-operator|->
-name|man
-operator|!=
-name|NULL
-condition|)
 name|roff_man_reset
 argument_list|(
 name|curp
@@ -3697,6 +3621,40 @@ operator|=
 name|curp
 operator|->
 name|man
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|mparse_updaterc
+parameter_list|(
+name|struct
+name|mparse
+modifier|*
+name|curp
+parameter_list|,
+name|enum
+name|mandoclevel
+modifier|*
+name|rc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|curp
+operator|->
+name|file_status
+operator|>
+operator|*
+name|rc
+condition|)
+operator|*
+name|rc
+operator|=
+name|curp
+operator|->
+name|file_status
 expr_stmt|;
 block|}
 end_function

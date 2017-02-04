@@ -568,6 +568,7 @@ value|((io)->io_hdr.ctl_private[CTL_PRIV_FRONTEND].ptrs[1])
 end_define
 
 begin_function_decl
+specifier|static
 name|int
 name|ctlfeinitialize
 parameter_list|(
@@ -577,7 +578,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+specifier|static
+name|int
 name|ctlfeshutdown
 parameter_list|(
 name|void
@@ -860,17 +862,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|void
+specifier|static
+name|int
 name|ctlfeshutdown
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-return|return;
+comment|/* CAM does not support periph driver unregister now. */
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ctlfeinitialize
 parameter_list|(
@@ -910,6 +919,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ctlfeperiphinit
 parameter_list|(
@@ -1590,23 +1600,6 @@ operator|->
 name|fe_done
 operator|=
 name|ctlfe_done
-expr_stmt|;
-comment|/* 		 * XXX KDM the path inquiry doesn't give us the maximum 		 * number of targets supported. 		 */
-name|port
-operator|->
-name|max_targets
-operator|=
-name|cpi
-operator|->
-name|max_target
-expr_stmt|;
-name|port
-operator|->
-name|max_target_id
-operator|=
-name|cpi
-operator|->
-name|max_target
 expr_stmt|;
 name|port
 operator|->

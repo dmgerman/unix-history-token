@@ -2202,6 +2202,16 @@ name|panasonic
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|0x81
+case|:
+if|if
+condition|(
+operator|!
+name|bootverbose
+condition|)
+break|break;
+comment|/* FALLTHROUGH */
 default|default:
 name|device_printf
 argument_list|(

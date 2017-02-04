@@ -3448,40 +3448,10 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_TIMER1
 argument_list|,
-literal|"Num marked for retransmission was %d peer-rwd:%ld\n"
+literal|"Num marked for retransmission was %d peer-rwd:%u\n"
 argument_list|,
 name|num_mk
 argument_list|,
-operator|(
-name|u_long
-operator|)
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peers_rwnd
-argument_list|)
-expr_stmt|;
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_TIMER1
-argument_list|,
-literal|"LAST TSN marked was %x\n"
-argument_list|,
-name|tsnlast
-argument_list|)
-expr_stmt|;
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_TIMER1
-argument_list|,
-literal|"Num marked for retransmission was %d peer-rwd:%d\n"
-argument_list|,
-name|num_mk
-argument_list|,
-operator|(
-name|int
-operator|)
 name|stcb
 operator|->
 name|asoc

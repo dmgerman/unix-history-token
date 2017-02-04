@@ -80,9 +80,6 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|int8_t
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

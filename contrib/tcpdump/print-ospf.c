@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Open Shortest Path First (OSPF) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -1444,6 +1442,20 @@ name|tlv_length
 operator|-=
 literal|4
 expr_stmt|;
+comment|/* Infinite loop protection */
+if|if
+condition|(
+name|subtlv_type
+operator|==
+literal|0
+operator|||
+name|subtlv_length
+operator|==
+literal|0
+condition|)
+goto|goto
+name|invalid
+goto|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1482,6 +1494,26 @@ block|{
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_ADMIN_GROUP
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|!=
+literal|4
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" != 4"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1503,6 +1535,30 @@ case|:
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_LOCAL_REMOTE_ID
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|!=
+literal|4
+operator|&&
+name|subtlv_length
+operator|!=
+literal|8
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" != 4&& != 8"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1563,6 +1619,26 @@ case|:
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_REMOTE_IP
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|!=
+literal|4
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" != 4"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1586,6 +1662,26 @@ case|:
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_MAX_RES_BW
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|!=
+literal|4
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" != 4"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
 name|bw
 operator|.
 name|i
@@ -1616,6 +1712,26 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_UNRES_BW
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|!=
+literal|32
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" != 32"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
 for|for
 control|(
 name|te_class
@@ -1667,6 +1783,27 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_BW_CONSTRAINTS
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|<
+literal|4
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"< 4"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
+comment|/* BC Model Id (1 octet) + Reserved (3 octets) */
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1689,6 +1826,52 @@ name|tptr
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|subtlv_length
+operator|%
+literal|4
+operator|!=
+literal|0
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"\n\t\tlength %u != N x 4"
+operator|,
+name|subtlv_length
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
+if|if
+condition|(
+name|subtlv_length
+operator|>
+literal|36
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"\n\t\tlength %u> 36"
+operator|,
+name|subtlv_length
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
 comment|/* decode BCs until the subTLV ends */
 for|for
 control|(
@@ -1749,6 +1932,26 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_TE_METRIC
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|!=
+literal|4
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" != 4"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1767,12 +1970,33 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_PROTECTION_TYPE
 case|:
+comment|/* Protection Cap (1 octet) + Reserved ((3 octets) */
+if|if
+condition|(
+name|subtlv_length
+operator|!=
+literal|4
+condition|)
+block|{
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|", %s, Priority %u"
+literal|" != 4"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|", %s"
 operator|,
 name|bittok2str
 argument_list|(
@@ -1783,13 +2007,6 @@ argument_list|,
 operator|*
 name|tptr
 argument_list|)
-operator|,
-operator|*
-operator|(
-name|tptr
-operator|+
-literal|1
-operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1797,6 +2014,27 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_INTF_SW_CAP_DESCR
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|<
+literal|36
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"< 36"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
+comment|/* Switching Cap (1 octet) + Encoding (1) +  Reserved (2) */
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1896,6 +2134,26 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_TYPE
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|!=
+literal|1
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" != 1"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1922,6 +2180,28 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_SHARED_RISK_GROUP
 case|:
+if|if
+condition|(
+name|subtlv_length
+operator|%
+literal|4
+operator|!=
+literal|0
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|" != N x 4"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|invalid
+goto|;
+block|}
 name|count_srlg
 operator|=
 name|subtlv_length
@@ -2171,6 +2451,23 @@ literal|0
 return|;
 name|trunc
 label|:
+return|return
+operator|-
+literal|1
+return|;
+name|invalid
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|istr
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -2501,19 +2798,19 @@ block|{
 block|{
 literal|0
 block|,
-literal|"default "
+literal|"default"
 block|}
 block|,
 block|{
 literal|1
 block|,
-literal|"multicast "
+literal|"multicast"
 block|}
 block|,
 block|{
 literal|2
 block|,
-literal|"management "
+literal|"management"
 block|}
 block|,
 block|{
@@ -2531,7 +2828,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ospf_print_tos_metrics
 parameter_list|(
 name|netdissect_options
@@ -2569,20 +2866,28 @@ comment|/*      * All but the first metric contain a valid topology id.      */
 while|while
 condition|(
 name|toscount
+operator|>
+literal|0
 condition|)
 block|{
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|tos
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\t\ttopology %s(%u), metric %u"
+literal|"\n\t\ttopology %s (%u), metric %u"
 operator|,
 name|tok2str
 argument_list|(
 name|ospf_topology_values
 argument_list|,
-literal|""
+literal|"Unknown"
 argument_list|,
 name|metric_count
 condition|?
@@ -2627,6 +2932,14 @@ name|toscount
 operator|--
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
+name|trunc
+label|:
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2715,6 +3028,7 @@ decl_stmt|;
 name|tptr
 operator|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -2752,6 +3066,7 @@ return|;
 name|ls_end
 operator|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -3039,6 +3354,8 @@ name|ls_end
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|ospf_print_tos_metrics
 argument_list|(
 name|ndo
@@ -3048,16 +3365,21 @@ name|rlp
 operator|->
 name|un_tos
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|rlp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rlalink
 operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3138,6 +3460,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3234,6 +3557,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3274,13 +3598,13 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\t\ttopology %s(%u) metric %d"
+literal|"\n\t\ttopology %s (%u) metric %d"
 operator|,
 name|tok2str
 argument_list|(
 name|ospf_topology_values
 argument_list|,
-literal|""
+literal|"Unknown"
 argument_list|,
 name|topology
 argument_list|)
@@ -3325,6 +3649,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3365,13 +3690,13 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\t\ttopology %s(%u) metric %d"
+literal|"\n\t\ttopology %s (%u) metric %d"
 operator|,
 name|tok2str
 argument_list|(
 name|ospf_topology_values
 argument_list|,
-literal|""
+literal|"Unknown"
 argument_list|,
 name|topology
 argument_list|)
@@ -3454,6 +3779,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3500,13 +3826,13 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\t\ttopology %s(%u), type %d, metric"
+literal|"\n\t\ttopology %s (%u), type %d, metric"
 operator|,
 name|tok2str
 argument_list|(
 name|ospf_topology_values
 argument_list|,
-literal|""
+literal|"Unknown"
 argument_list|,
 name|topology
 argument_list|)
@@ -3652,6 +3978,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3782,6 +4109,7 @@ case|:
 name|tptr
 operator|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -4021,6 +4349,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -4059,6 +4388,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -4105,6 +4435,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -4145,6 +4476,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -4300,6 +4632,7 @@ expr_stmt|;
 name|dptr
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4310,6 +4643,7 @@ expr_stmt|;
 name|dataend
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4719,6 +5053,15 @@ break|break;
 case|case
 name|OSPF_TYPE_HELLO
 case|:
+name|ND_TCHECK
+argument_list|(
+name|op
+operator|->
+name|ospf_hello
+operator|.
+name|hello_options
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -4892,6 +5235,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4911,6 +5255,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -5091,6 +5436,7 @@ while|while
 condition|(
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -5127,6 +5473,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -5469,6 +5816,7 @@ decl_stmt|;
 name|op
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ospfhdr
 operator|*

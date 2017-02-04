@@ -570,6 +570,8 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
 name|BN_copy
 argument_list|(
 name|rsa
@@ -578,7 +580,12 @@ name|e
 argument_list|,
 name|e_value
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* generate p and q */
 for|for
 control|(

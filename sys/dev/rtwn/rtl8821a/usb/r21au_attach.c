@@ -645,6 +645,12 @@ name|sc
 operator|->
 name|sc_priv
 decl_stmt|;
+name|ic
+operator|->
+name|ic_htcaps
+operator||=
+name|IEEE80211_HTC_TXLDPC
+expr_stmt|;
 if|if
 condition|(
 name|rs
@@ -659,7 +665,7 @@ name|ic_caps
 operator||=
 name|IEEE80211_C_DFS
 expr_stmt|;
-comment|/* TODO: LDPC etc */
+comment|/* TODO: VHT */
 block|}
 end_function
 
@@ -744,6 +750,12 @@ operator|->
 name|sc_rx_radiotap_flags
 operator|=
 name|r12a_rx_radiotap_flags
+expr_stmt|;
+name|sc
+operator|->
+name|sc_get_rx_stats
+operator|=
+name|r12a_get_rx_stats
 expr_stmt|;
 name|sc
 operator|->
@@ -840,6 +852,12 @@ name|r12a_fw_download_enable
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|sc_llt_init
+operator|=
+name|r92c_llt_init
+expr_stmt|;
 name|sc
 operator|->
 name|sc_set_page_size

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_state.c,v 1.3 2015/10/30 18:53:54 schwarze Exp $ */
+comment|/*	$Id: mdoc_state.c,v 1.4 2017/01/10 13:47:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -849,7 +849,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MDOC_VALID
+name|NODE_VALID
 operator|)
 condition|)
 block|{

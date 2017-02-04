@@ -1020,6 +1020,32 @@ name|pReserved
 parameter_list|)
 block|{
 comment|/* nop */
+comment|// Silence unused-parameter compiler warnings.
+operator|(
+name|void
+operator|)
+name|expression
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|function
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|file
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|line
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|pReserved
+expr_stmt|;
 block|}
 end_function
 
@@ -8039,6 +8065,18 @@ operator|(
 name|void
 operator|)
 name|r
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|pathname
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|expected_mode
 expr_stmt|;
 comment|/* UNUSED */
 else|#

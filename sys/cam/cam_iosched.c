@@ -5732,7 +5732,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * If we have work, get it scheduled. Called with the periph lock held.  */
+comment|/*  * If we have work, get it scheduled. Called with the periph lock held.  */
 end_comment
 
 begin_function
@@ -6540,12 +6540,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CAM_IOSCHED_DYNAMIC
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -6619,11 +6613,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

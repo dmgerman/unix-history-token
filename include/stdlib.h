@@ -33,6 +33,10 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_macro
+name|__NULLABILITY_PRAGMA_PUSH
+end_macro
+
 begin_if
 if|#
 directive|if
@@ -240,6 +244,7 @@ parameter_list|(
 name|void
 function_decl|(
 modifier|*
+name|_Nonnull
 function_decl|)
 parameter_list|(
 name|void
@@ -306,6 +311,7 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|_Nonnull
 parameter_list|,
 specifier|const
 name|void
@@ -482,6 +488,7 @@ parameter_list|,
 name|int
 function_decl|(
 modifier|*
+name|_Nonnull
 function_decl|)
 parameter_list|(
 specifier|const
@@ -1593,6 +1600,7 @@ parameter_list|(
 name|void
 function_decl|(
 modifier|^
+name|_Nonnull
 function_decl|)
 parameter_list|(
 name|void
@@ -1621,6 +1629,7 @@ parameter_list|,
 name|int
 function_decl|(
 modifier|^
+name|_Nonnull
 function_decl|)
 parameter_list|(
 specifier|const
@@ -1914,6 +1923,7 @@ parameter_list|,
 name|int
 function_decl|(
 modifier|*
+name|_Nonnull
 function_decl|)
 parameter_list|(
 specifier|const
@@ -1948,6 +1958,7 @@ parameter_list|,
 name|int
 function_decl|(
 modifier|^
+name|_Nonnull
 function_decl|)
 parameter_list|(
 specifier|const
@@ -1976,6 +1987,7 @@ parameter_list|,
 name|int
 function_decl|(
 modifier|^
+name|_Nonnull
 function_decl|)
 parameter_list|(
 specifier|const
@@ -2346,9 +2358,10 @@ begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|__END_DECLS
-end_macro
+name|__NULLABILITY_PRAGMA_POP
+end_expr_stmt
 
 begin_endif
 endif|#

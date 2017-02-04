@@ -471,6 +471,11 @@ directive|define
 name|IEEE80211_NODE_VHT
 value|0x100000
 comment|/* VHT enabled */
+define|#
+directive|define
+name|IEEE80211_NODE_LDPC
+value|0x200000
+comment|/* LDPC enabled */
 name|uint16_t
 name|ni_associd
 decl_stmt|;

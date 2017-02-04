@@ -493,17 +493,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_PC98_CTLOFFSET
-value|0x10c
-end_define
-
-begin_comment
-comment|/* do for PC98 devices */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ATA_A_IDS
 value|0x02
 end_define
@@ -1066,22 +1055,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_PC98_BANK
-value|0x432
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATA_IOSIZE
 value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_PC98_IOSIZE
-value|0x10
 end_define
 
 begin_define
@@ -1096,13 +1071,6 @@ define|#
 directive|define
 name|ATA_BMIOSIZE
 value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_PC98_BANKIOSIZE
-value|0x01
 end_define
 
 begin_define
@@ -1124,20 +1092,6 @@ define|#
 directive|define
 name|ATA_BMADDR_RID
 value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_PC98_CTLADDR_RID
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_PC98_BANKADDR_RID
-value|9
 end_define
 
 begin_define

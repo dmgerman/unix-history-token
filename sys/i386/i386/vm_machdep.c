@@ -262,33 +262,11 @@ directive|include
 file|<vm/vm_param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/cbus/cbus.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<isa/isareg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -318,32 +296,6 @@ define|#
 directive|define
 name|NSFBUFS
 value|(512 + maxusers * 16)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CPU_DISABLE_SSE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPU_ENABLE_SSE
 end_define
 
 begin_endif
@@ -618,16 +570,11 @@ name|void
 modifier|*
 name|res
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|struct
 name|savefpu_ymm
 modifier|*
 name|sf
 decl_stmt|;
-endif|#
-directive|endif
 name|res
 operator|=
 name|malloc
@@ -639,9 +586,6 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -686,8 +630,6 @@ operator|=
 name|xsave_mask
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|res
@@ -704,34 +646,24 @@ begin_function
 name|void
 name|cpu_fork
 parameter_list|(
-name|td1
-parameter_list|,
-name|p2
-parameter_list|,
-name|td2
-parameter_list|,
-name|flags
-parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
 name|td1
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|struct
 name|proc
 modifier|*
 name|p2
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td2
-decl_stmt|;
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -886,9 +818,6 @@ operator|=
 name|rgs
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -913,8 +842,6 @@ expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Point the pcb to the top of the stack */
 name|pcb2
 operator|=
@@ -1412,9 +1339,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -1433,8 +1357,6 @@ expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Disable any hardware breakpoints. */
 if|if
 condition|(
@@ -1563,16 +1485,11 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|struct
 name|xstate_hdr
 modifier|*
 name|xhdr
 decl_stmt|;
-endif|#
-directive|endif
 name|td
 operator|->
 name|td_pcb
@@ -1619,9 +1536,6 @@ argument_list|(
 name|pcb
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -1660,8 +1574,6 @@ operator|=
 name|xsave_mask
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2566,14 +2478,9 @@ name|struct
 name|region_descriptor
 name|null_idt
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 name|int
 name|b
 decl_stmt|;
-endif|#
-directive|endif
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -2617,51 +2524,6 @@ literal|0xf
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* 	 * Attempt to do a CPU reset via CPU reset port. 	 */
-if|if
-condition|(
-operator|(
-name|inb
-argument_list|(
-literal|0x35
-argument_list|)
-operator|&
-literal|0xa0
-operator|)
-operator|!=
-literal|0xa0
-condition|)
-block|{
-name|outb
-argument_list|(
-literal|0x37
-argument_list|,
-literal|0x0f
-argument_list|)
-expr_stmt|;
-comment|/* SHUT0 = 0. */
-name|outb
-argument_list|(
-literal|0x37
-argument_list|,
-literal|0x0b
-argument_list|)
-expr_stmt|;
-comment|/* SHUT1 = 0. */
-block|}
-name|outb
-argument_list|(
-literal|0xf0
-argument_list|,
-literal|0x00
-argument_list|)
-expr_stmt|;
-comment|/* Reset. */
-else|#
-directive|else
 if|#
 directive|if
 operator|!
@@ -2758,9 +2620,6 @@ argument_list|)
 expr_stmt|;
 comment|/* wait 0.5 sec to see if that did it */
 block|}
-endif|#
-directive|endif
-comment|/* PC98 */
 name|printf
 argument_list|(
 literal|"No known reset method worked, attempting CPU shutdown\n"

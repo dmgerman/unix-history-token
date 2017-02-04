@@ -98,10 +98,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|r
-operator|==
-name|ARCHIVE_WARN
-operator|&&
 operator|!
 name|canLzop
 argument_list|()
@@ -123,8 +119,16 @@ literal|"lzop compression is not supported "
 literal|"on this platform"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|r
+operator|!=
+name|ARCHIVE_WARN
+condition|)
+block|{
 name|assertEqualIntA
 argument_list|(
 name|a
@@ -134,7 +138,18 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_OK
+argument_list|,
+name|archive_read_free
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 block|}
 name|assertEqualIntA
 argument_list|(

@@ -1568,7 +1568,7 @@ define|#
 directive|define
 name|PLATFORM_DATA_STARTED
 value|8
-comment|/* Data transfer is handled by platform */
+comment|/* Data xfer is handled by platform */
 name|struct
 name|mtx
 name|mtx

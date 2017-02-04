@@ -93,6 +93,16 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_OK
+argument_list|,
+name|archive_write_free
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|r
@@ -118,16 +128,6 @@ block|{
 name|skipping
 argument_list|(
 literal|"lzop writing not supported on this platform"
-argument_list|)
-expr_stmt|;
-name|assertEqualInt
-argument_list|(
-name|ARCHIVE_OK
-argument_list|,
-name|archive_write_free
-argument_list|(
-name|a
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -448,6 +448,9 @@ condition|(
 name|r
 operator|==
 name|ARCHIVE_WARN
+operator|&&
+operator|!
+name|use_prog
 condition|)
 block|{
 name|skipping
@@ -1307,6 +1310,9 @@ condition|(
 name|r
 operator|==
 name|ARCHIVE_WARN
+operator|&&
+operator|!
+name|use_prog
 condition|)
 block|{
 name|skipping

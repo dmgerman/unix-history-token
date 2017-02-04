@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_macro.c,v 1.114 2016/01/08 17:48:09 schwarze Exp $ */
+comment|/*	$Id: man_macro.c,v 1.115 2017/01/10 13:47:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -518,7 +518,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MAN_VALID
+name|NODE_VALID
 operator|)
 condition|)
 block|{
@@ -698,7 +698,7 @@ name|last
 operator|->
 name|flags
 operator||=
-name|MAN_VALID
+name|NODE_VALID
 expr_stmt|;
 block|}
 comment|/* 	 * If we ended up at the parent of the node we were 	 * supposed to rewind to, that means the target node 	 * got deleted, so add the next node we parse as a child 	 * of the parent instead of as a sibling of the target. 	 */
@@ -805,7 +805,7 @@ name|n
 operator|->
 name|flags
 operator|&
-name|MAN_VALID
+name|NODE_VALID
 condition|)
 block|{
 name|n
@@ -1779,7 +1779,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Append MAN_EOS in case the last snipped argument 	 * ends with a dot, e.g. `.IR syslog (3).' 	 */
+comment|/* 	 * Append NODE_EOS in case the last snipped argument 	 * ends with a dot, e.g. `.IR syslog (3).' 	 */
 if|if
 condition|(
 name|n
@@ -1812,7 +1812,7 @@ name|last
 operator|->
 name|flags
 operator||=
-name|MAN_EOS
+name|NODE_EOS
 expr_stmt|;
 comment|/* 	 * If no arguments are specified and this is MAN_SCOPED (i.e., 	 * next-line scoped), then set our mode to indicate that we're 	 * waiting for terms to load into our context. 	 */
 if|if

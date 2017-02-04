@@ -512,6 +512,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Quick check if preparatory work is necessary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_HOOK_INSTALLED
+parameter_list|(
+name|cmd
+parameter_list|)
+value|__predict_false(pmc_hook != NULL)
+end_define
+
+begin_comment
 comment|/* Hook invocation; for use within the kernel */
 end_comment
 

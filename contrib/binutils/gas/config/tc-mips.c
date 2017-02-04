@@ -63070,6 +63070,16 @@ block|,
 name|CPU_OCTEON
 block|}
 block|,
+block|{
+literal|"octeon+"
+block|,
+literal|0
+block|,
+name|ISA_MIPS64R2
+block|,
+name|CPU_OCTEON
+block|}
+block|,
 comment|/* End marker */
 block|{
 name|NULL

@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -333,9 +339,8 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
+name|__read_mostly
 name|lockstat_enabled
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

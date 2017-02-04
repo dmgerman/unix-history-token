@@ -237,7 +237,8 @@ name|d
 operator|-
 name|c
 operator|)
-operator|^
+operator|&
+operator|~
 name|d
 operator|)
 operator|>>

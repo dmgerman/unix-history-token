@@ -11004,9 +11004,13 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
 argument_list|,
-literal|"%s:  -> seqno=%d\n"
+literal|"%s:  -> subtype=0x%x, tid=%d, seqno=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|subtype
+argument_list|,
+name|tid
 argument_list|,
 name|seqno
 argument_list|)
@@ -11606,7 +11610,7 @@ name|tid
 argument_list|)
 condition|)
 block|{
-comment|/* AMPDU running, attempt direct dispatch if possible */
+comment|/* 		 * AMPDU running, queue single-frame if the hardware queue 		 * isn't busy. 		 * 		 * If the hardware queue is busy, sending an aggregate frame 		 * then just hold off so we can queue more aggregate frames. 		 * 		 * Otherwise we may end up with single frames leaking through 		 * because we are dispatching them too quickly. 		 * 		 * TODO: maybe we should treat this as two policies - minimise 		 * latency, or maximise throughput.  Then for BE/BK we can 		 * maximise throughput, and VO/VI (if AMPDU is enabled!) 		 * minimise latency. 		 */
 comment|/* 		 * Always queue the frame to the tail of the list. 		 */
 name|ATH_TID_INSERT_TAIL
 argument_list|(
@@ -11617,7 +11621,7 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the hardware queue isn't busy, direct dispatch 		 * the head frame in the list.  Don't schedule the 		 * TID - let it build some more frames first? 		 * 		 * When running A-MPDU, always just check the hardware 		 * queue depth against the aggregate frame limit. 		 * We don't want to burst a large number of single frames 		 * out to the hardware; we want to aggressively hold back. 		 * 		 * Otherwise, schedule the TID. 		 */
+comment|/* 		 * If the hardware queue isn't busy, direct dispatch 		 * the head frame in the list. 		 * 		 * Note: if we're say, configured to do ADDBA but not A-MPDU 		 * then maybe we want to still queue two non-aggregate frames 		 * to the hardware.  Again with the per-TID policy 		 * configuration..) 		 * 		 * Otherwise, schedule the TID. 		 */
 comment|/* XXX TXQ locking */
 if|if
 condition|(
@@ -11630,10 +11634,8 @@ operator|->
 name|fifo
 operator|.
 name|axq_depth
-operator|<
-name|sc
-operator|->
-name|sc_hwq_limit_aggr
+operator|==
+literal|0
 condition|)
 block|{
 name|bf
@@ -19842,19 +19844,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't schedule if the hardware queue is busy. 	 * This (hopefully) gives some more time to aggregate 	 * some packets in the aggregation queue. 	 * 	 * XXX It doesn't stop a parallel sender from sneaking 	 * in transmitting a frame! 	 */
-comment|/* XXX TXQ locking */
+comment|/* 	 * For non-EDMA chips, aggr frames that have been built are 	 * in axq_aggr_depth, whether they've been scheduled or not. 	 * There's no FIFO, so txq->axq_depth is what's been scheduled 	 * to the hardware. 	 * 	 * For EDMA chips, we do it in two stages.  The existing code 	 * builds a list of frames to go to the hardware and the EDMA 	 * code turns it into a single entry to push into the FIFO. 	 * That way we don't take up one packet per FIFO slot. 	 * We do push one aggregate per FIFO slot though, just to keep 	 * things simple. 	 * 	 * The FIFO depth is what's in the hardware; the txq->axq_depth 	 * is what's been scheduled to the FIFO. 	 * 	 * fifo.axq_depth is the number of frames (or aggregates) pushed 	 *  into the EDMA FIFO.  For multi-frame lists, this is the number 	 *  of frames pushed in. 	 * axq_fifo_depth is the number of FIFO slots currently busy. 	 */
+comment|/* For EDMA and non-EDMA, check built/scheduled against aggr limit */
 if|if
 condition|(
 name|txq
 operator|->
 name|axq_aggr_depth
-operator|+
-name|txq
-operator|->
-name|fifo
-operator|.
-name|axq_depth
 operator|>=
 name|sc
 operator|->
@@ -19870,10 +19866,17 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * For non-EDMA chips, axq_depth is the "what's scheduled to 	 * the hardware list".  For EDMA it's "What's built for the hardware" 	 * and fifo.axq_depth is how many frames have been dispatched 	 * already to the hardware. 	 */
 if|if
 condition|(
 name|txq
 operator|->
+name|axq_depth
+operator|+
+name|txq
+operator|->
+name|fifo
+operator|.
 name|axq_depth
 operator|>=
 name|sc

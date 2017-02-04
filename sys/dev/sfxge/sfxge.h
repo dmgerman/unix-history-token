@@ -978,9 +978,6 @@ name|unsigned
 name|int
 name|max_rss_channels
 decl_stmt|;
-name|uma_zone_t
-name|rxq_cache
-decl_stmt|;
 name|struct
 name|sfxge_rxq
 modifier|*

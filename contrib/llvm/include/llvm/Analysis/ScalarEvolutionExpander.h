@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/ScalarEvolutionExpressions.h"
 end_include
 
@@ -1023,17 +1029,10 @@ name|PN
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Try to find LLVM IR value for S available at the point At.
-comment|///
-comment|/// L is a hint which tells in which loop to look for the suitable value.
-comment|/// On success return value which is equivalent to the expanded S at point
-comment|/// At. Return nullptr if value was not found.
-comment|///
-comment|/// Note that this function does not perform an exhaustive search. I.e if it
-comment|/// didn't find any value it does not mean that there is no such value.
+comment|/// Try to find existing LLVM IR value for S available at the point At.
 name|Value
 modifier|*
-name|findExistingExpansion
+name|getExactExistingExpansion
 parameter_list|(
 specifier|const
 name|SCEV
@@ -1050,6 +1049,42 @@ modifier|*
 name|L
 parameter_list|)
 function_decl|;
+comment|/// Try to find the ValueOffsetPair for S. The function is mainly
+comment|/// used to check whether S can be expanded cheaply.
+comment|/// If this returns a non-None value, we know we can codegen the
+comment|/// `ValueOffsetPair` into a suitable expansion identical with S
+comment|/// so that S can be expanded cheaply.
+comment|///
+comment|/// L is a hint which tells in which loop to look for the suitable value.
+comment|/// On success return value which is equivalent to the expanded S at point
+comment|/// At. Return nullptr if value was not found.
+comment|///
+comment|/// Note that this function does not perform an exhaustive search. I.e if it
+comment|/// didn't find any value it does not mean that there is no such value.
+comment|///
+name|Optional
+operator|<
+name|ScalarEvolution
+operator|::
+name|ValueOffsetPair
+operator|>
+name|getRelatedExistingExpansion
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|S
+argument_list|,
+specifier|const
+name|Instruction
+operator|*
+name|At
+argument_list|,
+name|Loop
+operator|*
+name|L
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 name|LLVMContext
@@ -1189,21 +1224,22 @@ name|V
 parameter_list|)
 function_decl|;
 comment|/// \brief Find a previous Value in ExprValueMap for expand.
-name|Value
-modifier|*
+name|ScalarEvolution
+operator|::
+name|ValueOffsetPair
 name|FindValueInExprValueMap
-parameter_list|(
+argument_list|(
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|S
-parameter_list|,
+argument_list|,
 specifier|const
 name|Instruction
-modifier|*
+operator|*
 name|InsertPt
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 name|Value
 modifier|*
 name|expand

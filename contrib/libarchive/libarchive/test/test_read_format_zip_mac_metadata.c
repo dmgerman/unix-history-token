@@ -925,6 +925,11 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

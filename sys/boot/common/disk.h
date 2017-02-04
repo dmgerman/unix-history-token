@@ -32,7 +32,7 @@ decl_stmt|;
 name|int
 name|d_partition
 decl_stmt|;
-name|off_t
+name|uint64_t
 name|d_offset
 decl_stmt|;
 block|}
@@ -64,7 +64,7 @@ name|disk_devdesc
 modifier|*
 name|dev
 parameter_list|,
-name|off_t
+name|uint64_t
 name|mediasize
 parameter_list|,
 name|u_int
@@ -148,7 +148,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|off_t
+name|uint64_t
 name|offset
 parameter_list|,
 name|u_int
@@ -171,7 +171,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|off_t
+name|uint64_t
 name|offset
 parameter_list|,
 name|u_int
@@ -196,7 +196,7 @@ parameter_list|,
 name|size_t
 name|blocks
 parameter_list|,
-name|off_t
+name|uint64_t
 name|offset
 parameter_list|)
 function_decl|;

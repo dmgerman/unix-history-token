@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Lennert Buytenhek  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or the GNU General  * Public License  *  * Format and print IEEE 802.1d spanning tree protocol packets.  * Contributed by Lennert Buytenhek<buytenh@gnu.org>  */
+comment|/*  * Copyright (c) 2000 Lennert Buytenhek  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or the GNU General  * Public License  *  * Contributed by Lennert Buytenhek<buytenh@gnu.org>  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: IEEE 802.1d Spanning Tree Protocol (STP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -375,6 +373,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|ND_TCHECK_BRIDGE_ID
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TCHECK2(*(p), 8)
+end_define
+
 begin_function
 specifier|static
 name|char
@@ -457,7 +465,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|stp_print_config_bpdu
 parameter_list|(
 name|netdissect_options
@@ -474,6 +482,13 @@ name|u_int
 name|length
 parameter_list|)
 block|{
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -492,6 +507,13 @@ operator|->
 name|flags
 argument_list|)
 operator|)
+argument_list|)
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|port_id
 argument_list|)
 expr_stmt|;
 name|ND_PRINT
@@ -535,8 +557,17 @@ operator|->
 name|ndo_vflag
 condition|)
 block|{
-return|return;
+return|return
+literal|1
+return|;
 block|}
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|forward_delay
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -663,6 +694,14 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
+name|trunc
+label|:
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -862,7 +901,7 @@ end_define
 
 begin_function
 specifier|static
-name|void
+name|int
 name|stp_print_mstp_bpdu
 parameter_list|(
 name|netdissect_options
@@ -936,7 +975,9 @@ operator|->
 name|ndo_vflag
 condition|)
 block|{
-return|return;
+return|return
+literal|1
+return|;
 block|}
 name|ND_PRINT
 argument_list|(
@@ -961,12 +1002,19 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|root_path_cost
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"CIST root-id %s, CIST ext-pathcost %u "
+literal|"CIST root-id %s, CIST ext-pathcost %u"
 operator|,
 name|stp_print_bridge_id
 argument_list|(
@@ -991,6 +1039,13 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|bridge_id
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1013,12 +1068,19 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|port_id
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"CIST port-id %04x, "
+literal|"CIST port-id %04x,"
 operator|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -1028,6 +1090,13 @@ operator|->
 name|port_id
 argument_list|)
 operator|)
+argument_list|)
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|forward_delay
 argument_list|)
 expr_stmt|;
 name|ND_PRINT
@@ -1092,6 +1161,13 @@ name|STP_TIME_BASE
 operator|)
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK_16BITS
+argument_list|(
+name|ptr
+operator|+
+name|MST_BPDU_VER3_LEN_OFFSET
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1108,17 +1184,51 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK_32BITS
+argument_list|(
+name|ptr
+operator|+
+name|MST_BPDU_CONFIG_DIGEST_OFFSET
+operator|+
+literal|12
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"MCID Name %s, rev %u, "
-literal|"\n\t\tdigest %08x%08x%08x%08x, "
-operator|,
+literal|"MCID Name "
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fn_printzp
+argument_list|(
+name|ndo
+argument_list|,
 name|ptr
 operator|+
 name|MST_BPDU_CONFIG_NAME_OFFSET
+argument_list|,
+literal|32
+argument_list|,
+name|ndo
+operator|->
+name|ndo_snapend
+argument_list|)
+condition|)
+goto|goto
+name|trunc
+goto|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|", rev %u,"
+literal|"\n\t\tdigest %08x%08x%08x%08x, "
 operator|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -1165,12 +1275,19 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK_32BITS
+argument_list|(
+name|ptr
+operator|+
+name|MST_BPDU_CIST_INT_PATH_COST_OFFSET
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"CIST int-root-pathcost %u, "
+literal|"CIST int-root-pathcost %u,"
 operator|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -1179,6 +1296,13 @@ operator|+
 name|MST_BPDU_CIST_INT_PATH_COST_OFFSET
 argument_list|)
 operator|)
+argument_list|)
+expr_stmt|;
+name|ND_TCHECK_BRIDGE_ID
+argument_list|(
+name|ptr
+operator|+
+name|MST_BPDU_CIST_BRIDGE_ID_OFFSET
 argument_list|)
 expr_stmt|;
 name|ND_PRINT
@@ -1197,6 +1321,14 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+name|ptr
+index|[
+name|MST_BPDU_CIST_REMAIN_HOPS_OFFSET
+index|]
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1212,6 +1344,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Dump all MSTI's */
+name|ND_TCHECK_16BITS
+argument_list|(
+name|ptr
+operator|+
+name|MST_BPDU_VER3_LEN_OFFSET
+argument_list|)
+expr_stmt|;
 name|v3len
 operator|=
 name|EXTRACT_16BITS
@@ -1245,6 +1384,18 @@ operator|>=
 name|MST_BPDU_MSTI_LENGTH
 condition|)
 block|{
+name|ND_TCHECK2
+argument_list|(
+operator|*
+operator|(
+name|ptr
+operator|+
+name|offset
+operator|)
+argument_list|,
+name|MST_BPDU_MSTI_LENGTH
+argument_list|)
+expr_stmt|;
 name|msti
 operator|=
 name|EXTRACT_16BITS
@@ -1371,12 +1522,20 @@ name|MST_BPDU_MSTI_LENGTH
 expr_stmt|;
 block|}
 block|}
+return|return
+literal|1
+return|;
+name|trunc
+label|:
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|stp_print_spb_bpdu
 parameter_list|(
 name|netdissect_options
@@ -1407,7 +1566,9 @@ operator|->
 name|ndo_vflag
 condition|)
 block|{
-return|return;
+return|return
+literal|1
+return|;
 block|}
 name|ptr
 operator|=
@@ -1418,12 +1579,23 @@ operator|*
 operator|)
 name|stp_bpdu
 expr_stmt|;
+name|ND_TCHECK_32BITS
+argument_list|(
+name|ptr
+operator|+
+name|offset
+operator|+
+name|SPB_BPDU_AGREEMENT_DIGEST_OFFSET
+operator|+
+literal|16
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\tv4len %d AUXMCID Name %s, Rev %u, \n\t\tdigest %08x%08x%08x%08x"
+literal|"\n\tv4len %d, "
 operator|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -1431,12 +1603,46 @@ name|ptr
 operator|+
 name|offset
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
 operator|,
+literal|"AUXMCID Name "
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fn_printzp
+argument_list|(
+name|ndo
+argument_list|,
 name|ptr
 operator|+
 name|offset
 operator|+
 name|SPB_BPDU_CONFIG_NAME_OFFSET
+argument_list|,
+literal|32
+argument_list|,
+name|ndo
+operator|->
+name|ndo_snapend
+argument_list|)
+condition|)
+goto|goto
+name|trunc
+goto|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|", Rev %u,\n\t\tdigest %08x%08x%08x%08x"
 operator|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -1497,8 +1703,8 @@ operator|(
 name|ndo
 operator|,
 literal|"\n\tAgreement num %d, Discarded Agreement num %d, Agreement valid-"
-literal|"flag %d, \n\tRestricted role-flag: %d, Format id %d cap %d, "
-literal|"Convention id %d cap %d, \n\tEdge count %d, "
+literal|"flag %d,\n\tRestricted role-flag: %d, Format id %d cap %d, "
+literal|"Convention id %d cap %d,\n\tEdge count %d, "
 literal|"Agreement digest %08x%08x%08x%08x%08x\n"
 operator|,
 name|ptr
@@ -1604,9 +1810,9 @@ operator|+
 name|offset
 operator|+
 name|SPB_BPDU_AGREEMENT_DIGEST_OFFSET
-argument_list|)
 operator|+
 literal|4
+argument_list|)
 operator|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -1615,9 +1821,9 @@ operator|+
 name|offset
 operator|+
 name|SPB_BPDU_AGREEMENT_DIGEST_OFFSET
-argument_list|)
 operator|+
 literal|8
+argument_list|)
 operator|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -1626,9 +1832,9 @@ operator|+
 name|offset
 operator|+
 name|SPB_BPDU_AGREEMENT_DIGEST_OFFSET
-argument_list|)
 operator|+
 literal|12
+argument_list|)
 operator|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -1637,12 +1843,20 @@ operator|+
 name|offset
 operator|+
 name|SPB_BPDU_AGREEMENT_DIGEST_OFFSET
-argument_list|)
 operator|+
 literal|16
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+name|trunc
+label|:
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1682,6 +1896,7 @@ decl_stmt|;
 name|stp_bpdu
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|stp_bpdu_
 operator|*
@@ -1698,6 +1913,13 @@ condition|)
 goto|goto
 name|trunc
 goto|;
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|protocol_id
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|EXTRACT_16BITS
@@ -1722,6 +1944,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|protocol_version
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1765,6 +1994,13 @@ break|break;
 default|default:
 return|return;
 block|}
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|bpdu_type
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1812,6 +2048,9 @@ goto|goto
 name|trunc
 goto|;
 block|}
+if|if
+condition|(
+operator|!
 name|stp_print_config_bpdu
 argument_list|(
 name|ndo
@@ -1820,7 +2059,10 @@ name|stp_bpdu
 argument_list|,
 name|length
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
 break|break;
 case|case
 name|STP_BPDU_TYPE_RSTP
@@ -1849,6 +2091,9 @@ goto|goto
 name|trunc
 goto|;
 block|}
+if|if
+condition|(
+operator|!
 name|stp_print_config_bpdu
 argument_list|(
 name|ndo
@@ -1857,7 +2102,10 @@ name|stp_bpdu
 argument_list|,
 name|length
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
 block|}
 elseif|else
 if|if
@@ -1886,6 +2134,13 @@ goto|goto
 name|trunc
 goto|;
 block|}
+name|ND_TCHECK
+argument_list|(
+name|stp_bpdu
+operator|->
+name|v1_length
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stp_bpdu
@@ -1901,6 +2156,13 @@ name|trunc
 goto|;
 block|}
 comment|/* Validate v3 length */
+name|ND_TCHECK_16BITS
+argument_list|(
+name|p
+operator|+
+name|MST_BPDU_VER3_LEN_OFFSET
+argument_list|)
+expr_stmt|;
 name|mstp_len
 operator|=
 name|EXTRACT_16BITS
@@ -1934,6 +2196,9 @@ goto|goto
 name|trunc
 goto|;
 block|}
+if|if
+condition|(
+operator|!
 name|stp_print_mstp_bpdu
 argument_list|(
 name|ndo
@@ -1942,7 +2207,10 @@ name|stp_bpdu
 argument_list|,
 name|length
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
 if|if
 condition|(
 name|stp_bpdu
@@ -1993,6 +2261,9 @@ goto|goto
 name|trunc
 goto|;
 block|}
+if|if
+condition|(
+operator|!
 name|stp_print_spb_bpdu
 argument_list|(
 name|ndo
@@ -2009,7 +2280,10 @@ operator|+
 name|mstp_len
 operator|)
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|trunc
+goto|;
 block|}
 block|}
 break|break;

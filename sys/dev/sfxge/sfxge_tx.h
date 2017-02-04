@@ -393,10 +393,6 @@ name|type
 decl_stmt|;
 name|unsigned
 name|int
-name|txq_index
-decl_stmt|;
-name|unsigned
-name|int
 name|evq_index
 decl_stmt|;
 name|efsys_mem_t

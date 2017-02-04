@@ -173,7 +173,7 @@ operator|*
 operator|)
 name|frame
 operator|->
-name|tf_usr_sp
+name|tf_svc_sp
 expr_stmt|;
 name|DTRACE_CPUFLAG_CLEAR
 argument_list|(

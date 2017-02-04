@@ -1043,12 +1043,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
-end_ifndef
-
 begin_function_decl
 name|ENGINE
 modifier|*
@@ -1069,10 +1063,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|void
+name|release_engine
+parameter_list|(
+name|ENGINE
+modifier|*
+name|e
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#

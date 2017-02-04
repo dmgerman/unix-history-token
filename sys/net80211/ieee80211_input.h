@@ -470,7 +470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check the current frame sequence number against the current TID  * state and return whether it's in sequence or should be dropped.  *  * Since out of order packet and duplicate packet eliminations should  * be done by the AMPDU RX code, this routine blindly accepts all  * frames from a HT station w/ a TID that is currently doing AMPDU-RX.  * HT stations without WME or where the TID is not doing AMPDU-RX  * are checked like non-HT stations.  *  * The routine only eliminates packets whose sequence/fragment  * match or are less than the last seen sequence/fragment number  * AND are retransmits It doesn't try to eliminate out of order packets.  *  * Since all frames after sequence number 4095 will be less than 4095  * (as the seqnum wraps), handle that special case so packets aren't  * incorrectly dropped - ie, if the next packet is sequence number 0  * but a retransmit since the initial packet didn't make it.  */
+comment|/*  * Check the current frame sequence number against the current TID  * state and return whether it's in sequence or should be dropped.  *  * Since out of order packet and duplicate packet eliminations should  * be done by the AMPDU RX code, this routine blindly accepts all  * frames from a HT station w/ a TID that is currently doing AMPDU-RX.  * HT stations without WME or where the TID is not doing AMPDU-RX  * are checked like non-HT stations.  *  * The routine only eliminates packets whose sequence/fragment  * match or are less than the last seen sequence/fragment number  * AND are retransmits It doesn't try to eliminate out of order packets.  *  * Since all frames after sequence number 4095 will be less than 4095  * (as the seqnum wraps), handle that special case so packets aren't  * incorrectly dropped - ie, if the next packet is sequence number 0  * but a retransmit since the initial packet didn't make it.  *  * XXX TODO: handle sequence number space wrapping with dropped frames;  * especially in high interference conditions under high traffic load  * The RX AMPDU reorder code also needs it.  *  * XXX TODO: update for 802.11-2012 9.3.2.10 Duplicate Detection and Recovery.  */
 end_comment
 
 begin_function
@@ -596,6 +596,19 @@ argument_list|(
 name|type
 argument_list|,
 name|subtype
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+comment|/* 	 * Always allow multicast frames for now - QoS (any TID) 	 * or not. 	 */
+if|if
+condition|(
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|wh
+operator|->
+name|i_addr1
 argument_list|)
 condition|)
 return|return

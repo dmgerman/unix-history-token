@@ -3555,6 +3555,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|ATA_SF_EPC_SET_STATE
 case|:

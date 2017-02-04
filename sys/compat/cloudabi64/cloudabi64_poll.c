@@ -2441,11 +2441,11 @@ name|fd
 argument_list|,
 name|uap
 operator|->
-name|nin
+name|in_len
 argument_list|,
 name|uap
 operator|->
-name|nout
+name|out_len
 argument_list|,
 operator|&
 name|copyops
@@ -2471,11 +2471,11 @@ name|fd
 argument_list|,
 name|uap
 operator|->
-name|nin
+name|in_len
 argument_list|,
 name|uap
 operator|->
-name|nout
+name|out_len
 argument_list|,
 operator|&
 name|copyops

@@ -391,7 +391,8 @@ name|IEEE80211_CONF_VHT
 parameter_list|(
 name|ic
 parameter_list|)
-value|((ic)->ic_vhtcaps != 0)
+define|\
+value|((ic)->ic_flags_ext& IEEE80211_FEXT_VHT)
 end_define
 
 begin_define
@@ -403,6 +404,17 @@ name|ic
 parameter_list|)
 define|\
 value|((ic)->ic_flags_ext& IEEE80211_FEXT_SEQNO_OFFLOAD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CONF_FRAG_OFFLOAD
+parameter_list|(
+name|ic
+parameter_list|)
+define|\
+value|((ic)->ic_flags_ext& IEEE80211_FEXT_FRAG_OFFLOAD)
 end_define
 
 begin_comment
@@ -2589,26 +2601,8 @@ begin_comment
 comment|/* STATUS: scanning */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_ASCAN
-value|0x00000100
-end_define
-
 begin_comment
-comment|/* STATUS: active scan */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_SIBSS
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* STATUS: start IBSS */
+comment|/* 0x00000300 reserved */
 end_comment
 
 begin_comment
@@ -2681,26 +2675,8 @@ begin_comment
 comment|/* CONF: sw tx retry enabled */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_TXPOW_FIXED
-value|0x00010000
-end_define
-
 begin_comment
-comment|/* TX Power: fixed rate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_F_IBSSON
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* CONF: IBSS creation enable */
+comment|/* 0x00030000 reserved */
 end_comment
 
 begin_define
@@ -2873,7 +2849,7 @@ define|#
 directive|define
 name|IEEE80211_F_BITS
 define|\
-value|"\20\1TURBOP\2COMP\3FF\4BURST\5PRIVACY\6PUREG\10SCAN\11ASCAN\12SIBSS" \ 	"\13SHSLOT\14PMGTON\15DESBSSID\16WME\17BGSCAN\20SWRETRY\21TXPOW_FIXED" \ 	"\22IBSSON\23SHPREAMBLE\24DATAPAD\25USEPROT\26USERBARKER\27CSAPENDING" \ 	"\30WPA1\31WPA2\32DROPUNENC\33COUNTERM\34HIDESSID\35NOBRIDG\36PCF" \ 	"\37DOTH\40DWDS"
+value|"\20\1TURBOP\2COMP\3FF\4BURST\5PRIVACY\6PUREG\10SCAN" \ 	"\13SHSLOT\14PMGTON\15DESBSSID\16WME\17BGSCAN\20SWRETRY" \ 	"\23SHPREAMBLE\24DATAPAD\25USEPROT\26USERBARKER\27CSAPENDING" \ 	"\30WPA1\31WPA2\32DROPUNENC\33COUNTERM\34HIDESSID\35NOBRIDG\36PCF" \ 	"\37DOTH\40DWDS"
 end_define
 
 begin_comment
@@ -3142,9 +3118,31 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FEXT_FRAG_OFFLOAD
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* CONF: hardware does 802.11 fragmentation + assignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FEXT_VHT
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* CONF: VHT support */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FEXT_BITS
 define|\
-value|"\20\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN\23UNIQMAC\24SCAN_OFFLOAD\25SEQNO_OFFLOAD"
+value|"\20\2INACT\3SCANWAIT\4BGSCAN\5WPS\6TSN\7SCANREQ\10RESUME" \ 	"\0114ADDR\12NONEPR_PR\13SWBMISS\14DFS\15DOTD\16STATEWAIT\17REINIT" \ 	"\20BPF\21WDSLEGACY\22PROBECHAN\23UNIQMAC\24SCAN_OFFLOAD\25SEQNO_OFFLOAD" \ 	"\26VHT"
 end_define
 
 begin_comment
@@ -3160,6 +3158,28 @@ end_define
 
 begin_comment
 comment|/* STATUS: non-HT sta present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_LDPC_TX
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* CONF: LDPC tx enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FHT_LDPC_RX
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* CONF: LDPC rx enabled */
 end_comment
 
 begin_define

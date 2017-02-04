@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: cgi.c,v 1.135 2016/07/11 22:48:37 schwarze Exp $ */
+comment|/*	$Id: cgi.c,v 1.144 2017/01/21 01:20:31 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015, 2016 Ingo Schwarze<schwarze@usta.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2011, 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015, 2016, 2017 Ingo Schwarze<schwarze@usta.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -710,13 +710,9 @@ literal|"amd64"
 block|,
 literal|"alpha"
 block|,
-literal|"armish"
-block|,
 literal|"armv7"
 block|,
 literal|"hppa"
-block|,
-literal|"hppa64"
 block|,
 literal|"i386"
 block|,
@@ -736,15 +732,13 @@ literal|"sgi"
 block|,
 literal|"socppc"
 block|,
-literal|"sparc"
-block|,
 literal|"sparc64"
-block|,
-literal|"zaurus"
 block|,
 literal|"amiga"
 block|,
 literal|"arc"
+block|,
+literal|"armish"
 block|,
 literal|"arm32"
 block|,
@@ -755,6 +749,8 @@ block|,
 literal|"beagle"
 block|,
 literal|"cats"
+block|,
+literal|"hppa64"
 block|,
 literal|"hp300"
 block|,
@@ -780,6 +776,8 @@ literal|"powerpc"
 block|,
 literal|"solbourne"
 block|,
+literal|"sparc"
+block|,
 literal|"sun3"
 block|,
 literal|"vax"
@@ -787,6 +785,8 @@ block|,
 literal|"wgrisc"
 block|,
 literal|"x68k"
+block|,
+literal|"zaurus"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -835,7 +835,7 @@ operator|)
 case|:
 name|printf
 argument_list|(
-literal|"&quote;"
+literal|"&quot;"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1691,6 +1691,11 @@ argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1727,7 +1732,6 @@ literal|" type=\"text/css\" media=\"all\">\n"
 literal|"<title>%s</title>\n"
 literal|"</head>\n"
 literal|"<body>\n"
-literal|"<!-- Begin page content. //-->\n"
 argument_list|,
 name|CSS_DIR
 argument_list|,
@@ -1785,14 +1789,8 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|puts
-argument_list|(
-literal|"<!-- Begin search form. //-->"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"<div id=\"mancgi\">\n"
 literal|"<form action=\"/%s\" method=\"get\">\n"
 literal|"<fieldset>\n"
 literal|"<legend>Manual Page Search Parameters</legend>\n"
@@ -1852,7 +1850,8 @@ argument_list|(
 literal|"<button type=\"submit\" name=\"apropos\" value=\"0\">"
 literal|"man</button>\n"
 literal|"<button type=\"submit\" name=\"apropos\" value=\"1\">"
-literal|"apropos</button>\n<br/>\n"
+literal|"apropos</button>\n"
+literal|"<br/>\n"
 argument_list|)
 expr_stmt|;
 comment|/* Write section selector. */
@@ -2139,13 +2138,7 @@ block|}
 name|puts
 argument_list|(
 literal|"</fieldset>\n"
-literal|"</form>\n"
-literal|"</div>"
-argument_list|)
-expr_stmt|;
-name|puts
-argument_list|(
-literal|"<!-- End search form. //-->"
+literal|"</form>"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2379,9 +2372,9 @@ name|printf
 argument_list|(
 literal|"<p>\n"
 literal|"This web interface is documented in the\n"
-literal|"<a href=\"/%s%sman.cgi.8\">man.cgi(8)</a>\n"
+literal|"<a class=\"Xr\" href=\"/%s%sman.cgi.8\">man.cgi(8)</a>\n"
 literal|"manual, and the\n"
-literal|"<a href=\"/%s%sapropos.1\">apropos(1)</a>\n"
+literal|"<a class=\"Xr\" href=\"/%s%sapropos.1\">apropos(1)</a>\n"
 literal|"manual explains the query syntax.\n"
 literal|"</p>\n"
 argument_list|,
@@ -2725,12 +2718,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"<div class=\"results\">"
-argument_list|)
-expr_stmt|;
-name|puts
-argument_list|(
-literal|"<table>"
+literal|"<table class=\"results\">"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2750,8 +2738,8 @@ block|{
 name|printf
 argument_list|(
 literal|"<tr>\n"
-literal|"<td class=\"title\">\n"
-literal|"<a href=\"/%s%s%s/%s"
+literal|"<td>"
+literal|"<a class=\"Xr\" href=\"/%s%s%s/%s\">"
 argument_list|,
 name|scriptname
 argument_list|,
@@ -2778,11 +2766,6 @@ operator|.
 name|file
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\">"
-argument_list|)
-expr_stmt|;
 name|html_print
 argument_list|(
 name|r
@@ -2795,9 +2778,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"</a>\n"
-literal|"</td>\n"
-literal|"<td class=\"desc\">"
+literal|"</a></td>\n"
+literal|"<td><span class=\"Nd\">"
 argument_list|)
 expr_stmt|;
 name|html_print
@@ -2812,15 +2794,14 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"</td>\n"
+literal|"</span></td>\n"
 literal|"</tr>"
 argument_list|)
 expr_stmt|;
 block|}
 name|puts
 argument_list|(
-literal|"</table>\n"
-literal|"</div>"
+literal|"</table>"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3811,6 +3792,10 @@ operator|=
 name|mparse_alloc
 argument_list|(
 name|MPARSE_SO
+operator||
+name|MPARSE_UTF8
+operator||
+name|MPARSE_LATIN1
 argument_list|,
 name|MANDOCLEVEL_BADARG
 argument_list|,

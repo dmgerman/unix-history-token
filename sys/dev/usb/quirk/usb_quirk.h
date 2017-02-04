@@ -221,6 +221,9 @@ comment|/* at most one command per USB packet */
 name|UQ_MSC_DYMO_EJECT
 block|,
 comment|/* ejects Dymo MSC device */
+name|UQ_AU_SET_SPDIF_CM6206
+block|,
+comment|/* enable S/PDIF audio output */
 name|USB_QUIRK_MAX
 block|}
 enum|;

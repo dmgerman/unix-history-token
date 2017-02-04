@@ -149,6 +149,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|archive_acl_types
+parameter_list|(
+name|struct
+name|archive_acl
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|archive_acl_reset
 parameter_list|(
 name|struct

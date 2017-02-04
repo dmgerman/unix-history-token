@@ -231,32 +231,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CPU_DISABLE_SSE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPU_ENABLE_SSE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * 387 and 287 Numeric Coprocessor Extension (NPX) Driver.  */
 end_comment
@@ -349,12 +323,6 @@ name|addr
 parameter_list|)
 value|__asm __volatile("frstor %0" : : "m" (*(addr)))
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
 
 begin_define
 define|#
@@ -499,13 +467,8 @@ block|)
 function|;
 end_function
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_else
+unit|}
 else|#
 directive|else
 end_else
@@ -592,12 +555,6 @@ name|addr
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
 
 begin_function_decl
 name|void
@@ -687,11 +644,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* __GNUCLIKE_ASM&& !lint */
 end_comment
@@ -711,12 +663,6 @@ name|stop_emulating
 parameter_list|()
 value|clts()
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
 
 begin_define
 define|#
@@ -751,65 +697,6 @@ name|value
 parameter_list|)
 value|do { \ 	if (cpu_fxsr) \ 		(savefpu)->sv_xmm.sv_env.en_cw = (value); \ 	else \ 		(savefpu)->sv_87.sv_env.en_cw = (value); \ } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* CPU_ENABLE_SSE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GET_FPU_CW
-parameter_list|(
-name|thread
-parameter_list|)
-define|\
-value|(thread->td_pcb->pcb_save->sv_87.sv_env.en_cw)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GET_FPU_SW
-parameter_list|(
-name|thread
-parameter_list|)
-define|\
-value|(thread->td_pcb->pcb_save->sv_87.sv_env.en_sw)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_FPU_CW
-parameter_list|(
-name|savefpu
-parameter_list|,
-name|value
-parameter_list|)
-define|\
-value|(savefpu)->sv_87.sv_env.en_cw = (value)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_ENABLE_SSE */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
 
 begin_expr_stmt
 name|CTASSERT
@@ -916,11 +803,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -972,12 +854,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|use_xsave
@@ -989,11 +865,6 @@ name|uint64_t
 name|xsave_mask
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1010,12 +881,6 @@ modifier|*
 name|npx_initialstate
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
 
 begin_struct
 struct|struct
@@ -1039,11 +904,6 @@ name|int
 name|use_xsaveopt
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1220,21 +1080,6 @@ argument_list|(
 name|control
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FPU_ERROR_BROKEN
-comment|/* 			 * FPU error signal doesn't work on some CPU 			 * accelerator board. 			 */
-name|hw_float
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 name|npx_traps_while_probing
 operator|=
 literal|0
@@ -1310,14 +1155,8 @@ operator|)
 return|;
 end_return
 
-begin_ifdef
-unit|}
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
-
 begin_comment
+unit|}
 comment|/*  * Enable XSAVE if supported and allowed by user.  * Calculate the xsave_mask.  */
 end_comment
 
@@ -1508,11 +1347,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*   * Calculate the fpu save area size.  */
 end_comment
@@ -1525,9 +1359,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|u_int
 name|cp
 index|[
@@ -1572,8 +1403,6 @@ index|]
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 name|cpu_max_ext_state_size
 operator|=
 sizeof|sizeof
@@ -1605,14 +1434,9 @@ decl_stmt|;
 name|register_t
 name|saveintr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|u_int
 name|mxcsr
 decl_stmt|;
-endif|#
-directive|endif
 name|u_short
 name|control
 decl_stmt|;
@@ -1628,18 +1452,10 @@ name|npx_probe
 argument_list|()
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|npxinit_bsp1
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -1661,8 +1477,6 @@ name|xsave_mask
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * XCR0 shall be set up before CPU can report the save area size. 	 */
 if|if
 condition|(
@@ -1680,9 +1494,6 @@ expr_stmt|;
 name|stop_emulating
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|cpu_fxsr
@@ -1691,8 +1502,6 @@ name|fninit
 argument_list|()
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|fnsave
 argument_list|(
 operator|&
@@ -1708,9 +1517,6 @@ argument_list|(
 name|control
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|cpu_fxsr
@@ -1726,8 +1532,6 @@ name|mxcsr
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|start_emulating
 argument_list|()
 expr_stmt|;
@@ -1757,9 +1561,6 @@ block|{
 name|register_t
 name|saveintr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|int
 name|cp
 index|[
@@ -1770,8 +1571,6 @@ name|i
 decl_stmt|,
 name|max_ext_n
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -1804,9 +1603,6 @@ argument_list|(
 name|npx_initialstate
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|cpu_fxsr
@@ -1876,8 +1672,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 name|npx_initialstate
@@ -1896,9 +1690,6 @@ name|sv_ac
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 comment|/* 	 * Create a table describing the layout of the CPU Extended 	 * Save Area. 	 */
 if|if
 condition|(
@@ -2040,8 +1831,6 @@ index|]
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 name|fpu_save_area_zone
 operator|=
 name|uma_zcreate
@@ -2100,13 +1889,11 @@ begin_function
 name|void
 name|npxexit
 parameter_list|(
-name|td
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|critical_enter
 argument_list|()
@@ -2207,7 +1994,9 @@ end_function
 begin_function
 name|int
 name|npxformat
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2219,9 +2008,6 @@ operator|(
 name|_MC_FPFMT_NODEV
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|cpu_fxsr
@@ -2231,8 +2017,6 @@ operator|(
 name|_MC_FPFMT_XMM
 operator|)
 return|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|_MC_FPFMT_387
@@ -2752,12 +2536,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
-
 begin_function
 name|int
 name|npxtrap_sse
@@ -2851,11 +2629,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Implement device not available (DNA) exception  *  * It would be better to switch FP context here (if curthread != fpcurthread)  * and not necessarily for every context switch, but it is too hard to  * access foreign pcb's.  */
@@ -2974,9 +2747,6 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|cpu_fxsr
@@ -2984,8 +2754,6 @@ condition|)
 name|fpu_clean_state
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -3093,9 +2861,6 @@ block|{
 name|stop_emulating
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsaveopt
@@ -3112,8 +2877,6 @@ name|xsave_mask
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|fpusave
 argument_list|(
 name|addr
@@ -3245,7 +3008,9 @@ end_function
 begin_function
 name|void
 name|npxdrop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|thread
@@ -3253,16 +3018,11 @@ modifier|*
 name|td
 decl_stmt|;
 comment|/* 	 * Discard pending exceptions in the !cpu_fxsr case so that unmasked 	 * ones don't cause a panic on the next frstor. 	 */
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 operator|!
 name|cpu_fxsr
 condition|)
-endif|#
-directive|endif
 name|fnclex
 argument_list|()
 expr_stmt|;
@@ -3330,9 +3090,6 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|uint64_t
 modifier|*
 name|xstate_bv
@@ -3348,8 +3105,6 @@ name|max_ext_n
 decl_stmt|,
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|owned
 decl_stmt|;
@@ -3438,16 +3193,11 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 operator|!
 name|cpu_fxsr
 condition|)
-endif|#
-directive|endif
 comment|/* 			 * fnsave initializes the FPU and destroys whatever 			 * context it contains.  Make sure the FPU owner 			 * starts with a clean state next time. 			 */
 name|npxdrop
 argument_list|()
@@ -3467,9 +3217,6 @@ block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -3617,8 +3364,6 @@ name|bit
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|owned
@@ -3669,12 +3414,6 @@ name|PCB_NPXUSERINITDONE
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
 
 begin_function
 name|int
@@ -3858,11 +3597,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|npxsetregs
@@ -3890,14 +3624,9 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|int
 name|error
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -3932,9 +3661,6 @@ name|pcb
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|error
 operator|=
 name|npxsetxstate
@@ -3967,8 +3693,6 @@ condition|(
 operator|!
 name|cpu_fxsr
 condition|)
-endif|#
-directive|endif
 name|fnclex
 argument_list|()
 expr_stmt|;
@@ -4014,9 +3738,6 @@ block|{
 name|critical_exit
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|error
 operator|=
 name|npxsetxstate
@@ -4039,8 +3760,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
 name|bcopy
 argument_list|(
 name|addr
@@ -4084,9 +3803,6 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -4113,8 +3829,6 @@ name|addr
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|fnsave
 argument_list|(
 name|addr
@@ -4122,12 +3836,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
 
 begin_function
 specifier|static
@@ -4502,15 +4210,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_ENABLE_SSE */
-end_comment
-
 begin_function
 name|void
 name|npx_get_fsave
@@ -4546,9 +4245,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|cpu_fxsr
@@ -4564,8 +4260,6 @@ name|addr
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|bcopy
 argument_list|(
 name|sv
@@ -4618,9 +4312,6 @@ name|sv
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|cpu_fxsr
@@ -4636,8 +4327,6 @@ name|sv_xmm
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|bcopy
 argument_list|(
 name|addr
@@ -4683,12 +4372,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
-
 begin_comment
 comment|/*  * On AuthenticAMD processors, the fxrstor instruction does not restore  * the x87's stored last instruction pointer, last data pointer, and last  * opcode values, except in the rare case in which the exception summary  * (ES) bit in the x87 status word is set to 1.  *  * In order to avoid leaking this information across processes, we clean  * these values by performing a dummy load before executing fxrstor().  */
 end_comment
@@ -4731,31 +4414,17 @@ asm|__asm __volatile("ffree %%st(7); flds %0" : : "m" (dummy_variable));
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_ENABLE_SSE */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|fpurstor
 parameter_list|(
-name|addr
-parameter_list|)
 name|union
 name|savefpu
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -4782,8 +4451,6 @@ name|addr
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|frstor
 argument_list|(
 name|addr
@@ -4989,12 +4656,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -5012,11 +4673,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

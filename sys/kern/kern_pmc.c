@@ -170,6 +170,7 @@ end_comment
 
 begin_function_decl
 name|int
+name|__read_mostly
 function_decl|(
 modifier|*
 name|pmc_hook
@@ -198,6 +199,7 @@ end_comment
 
 begin_function_decl
 name|int
+name|__read_mostly
 function_decl|(
 modifier|*
 name|pmc_intr

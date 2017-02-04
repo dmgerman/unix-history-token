@@ -2723,27 +2723,21 @@ name|PPS_SYNC
 end_ifdef
 
 begin_comment
-comment|/*  * hardpps() - discipline CPU clock oscillator to external PPS signal  *  * This routine is called at each PPS interrupt in order to discipline  * the CPU clock oscillator to the PPS signal. There are two independent  * first-order feedback loops, one for the phase, the other for the  * frequency. The phase loop measures and grooms the PPS phase offset  * and leaves it in a handy spot for the seconds overflow routine. The  * frequency loop averages successive PPS phase differences and  * calculates the PPS frequency offset, which is also processed by the  * seconds overflow routine. The code requires the caller to capture the  * time and architecture-dependent hardware counter values in  * nanoseconds at the on-time PPS signal transition.  *  * Note that, on some Unix systems this routine runs at an interrupt  * priority level higher than the timer interrupt routine hardclock().  * Therefore, the variables used are distinct from the hardclock()  * variables, except for the actual time and frequency variables, which  * are determined by this routine and updated atomically.  */
+comment|/*  * hardpps() - discipline CPU clock oscillator to external PPS signal  *  * This routine is called at each PPS interrupt in order to discipline  * the CPU clock oscillator to the PPS signal. There are two independent  * first-order feedback loops, one for the phase, the other for the  * frequency. The phase loop measures and grooms the PPS phase offset  * and leaves it in a handy spot for the seconds overflow routine. The  * frequency loop averages successive PPS phase differences and  * calculates the PPS frequency offset, which is also processed by the  * seconds overflow routine. The code requires the caller to capture the  * time and architecture-dependent hardware counter values in  * nanoseconds at the on-time PPS signal transition.  *  * Note that, on some Unix systems this routine runs at an interrupt  * priority level higher than the timer interrupt routine hardclock().  * Therefore, the variables used are distinct from the hardclock()  * variables, except for the actual time and frequency variables, which  * are determined by this routine and updated atomically.  *  * tsp  - time at PPS  * nsec - hardware counter at PPS  */
 end_comment
 
 begin_function
 name|void
 name|hardpps
 parameter_list|(
-name|tsp
-parameter_list|,
-name|nsec
-parameter_list|)
 name|struct
 name|timespec
 modifier|*
 name|tsp
-decl_stmt|;
-comment|/* time at PPS */
+parameter_list|,
 name|long
 name|nsec
-decl_stmt|;
-comment|/* hardware counter at PPS */
+parameter_list|)
 block|{
 name|long
 name|u_sec

@@ -2018,56 +2018,8 @@ comment|/* SMC0469 */
 end_comment
 
 begin_comment
-comment|/* C-Bus PnP Definitions */
+comment|/*  *	Mask of allowable interrupts.  *  *	For IBM-AT machines, irqs 3, 4, 5, 7, 9, 10, 11, 12, 14, 15 are  *	allowed.  Nearly all IBM-AT machines with pcic cards or bridges  *	wire these interrupts (or a subset thereof) to the corresponding  *	pins on the ISA bus.  Some older laptops are reported to not route  *	all the interrupt pins to the bus because the designers knew that  *	some would conflict with builtin devices.  Older versions of Windows  *	NT had a special device that would probe for conflicts early in the  *	boot process and formulate a mapping table.  Maybe we should do  *	something similar.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|EXCA_NEC_PC9801_102
-value|0x9180a3b8
-end_define
-
-begin_comment
-comment|/* NEC8091 PC-9801-102 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXCA_NEC_PC9821RA_E01
-value|0x2181a3b8
-end_define
-
-begin_comment
-comment|/* NEC8121 PC-9821RA-E01 */
-end_comment
-
-begin_comment
-comment|/*  *	Mask of allowable interrupts.  *  *	For IBM-AT machines, irqs 3, 4, 5, 7, 9, 10, 11, 12, 14, 15 are  *	allowed.  Nearly all IBM-AT machines with pcic cards or bridges  *	wire these interrupts (or a subset thereof) to the corresponding  *	pins on the ISA bus.  Some older laptops are reported to not route  *	all the interrupt pins to the bus because the designers knew that  *	some would conflict with builtin devices.  Older versions of Windows  *	NT had a special device that would probe for conflicts early in the  *	boot process and formulate a mapping table.  Maybe we should do  *	something similar.  *  *	For NEC PC-98 machines, irq 3, 5, 6, 9, 10, 11, 12, 13 are allowed.  *	These correspond to the C-BUS signals INT 0, 1, 2, 3, 41, 42, 5, 6  *	respectively.  *  *	Hiroshi TSUKADA-san writes in FreeBSD98-testers that CBUS INT 2  *	(mapped to IRQ 6) is routed to the IRQ 7 pin of the pcic in pc98  *	cbus add-in cards.  He has confirmed this routing with a visual  *	inspection of his card or a VOM.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|EXCA_INT_MASK_ALLOWED
-value|0x3E68
-end_define
-
-begin_comment
-comment|/* PC98 */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -2079,11 +2031,6 @@ end_define
 begin_comment
 comment|/* AT */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

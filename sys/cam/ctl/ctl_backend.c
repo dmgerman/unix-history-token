@@ -172,6 +172,10 @@ name|ctl_backend_driver
 modifier|*
 name|be_tmp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+comment|/* Sanity check, make sure this isn't a duplicate registration. */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -180,7 +184,6 @@ operator|->
 name|ctl_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sanity check, make sure this isn't a duplicate registration. 	 */
 name|STAILQ_FOREACH
 argument_list|(
 argument|be_tmp
@@ -230,12 +233,65 @@ operator|->
 name|ctl_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Call the backend's initialization routine. 	 */
+ifdef|#
+directive|ifdef
+name|CS_BE_CONFIG_MOVE_DONE_IS_NOT_USED
+name|be
+operator|->
+name|config_move_done
+operator|=
+name|ctl_config_move_done
+expr_stmt|;
+endif|#
+directive|endif
+name|be
+operator|->
+name|num_luns
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Call the backend's initialization routine. */
+if|if
+condition|(
+name|be
+operator|->
+name|init
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|be
 operator|->
 name|init
 argument_list|()
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s backend init error: %d\n"
+argument_list|,
+name|be
+operator|->
+name|name
+argument_list|,
+name|error
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -261,38 +317,6 @@ operator|->
 name|num_backends
 operator|++
 expr_stmt|;
-comment|/* 	 * Don't want to increment the usage count for internal consumers, 	 * we won't be able to unload otherwise. 	 */
-comment|/* XXX KDM find a substitute for this? */
-if|#
-directive|if
-literal|0
-block|if ((be->flags& CTL_BE_FLAG_INTERNAL) == 0) 		MOD_INC_USE_COUNT;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|CS_BE_CONFIG_MOVE_DONE_IS_NOT_USED
-name|be
-operator|->
-name|config_move_done
-operator|=
-name|ctl_config_move_done
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX KDM fix this! */
-name|be
-operator|->
-name|num_luns
-operator|=
-literal|0
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|atomic_set(&be->num_luns, 0);
-endif|#
-directive|endif
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -326,6 +350,51 @@ name|softc
 init|=
 name|control_softc
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+comment|/* Call the backend's shutdown routine. */
+if|if
+condition|(
+name|be
+operator|->
+name|shutdown
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|be
+operator|->
+name|shutdown
+argument_list|()
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s backend shutdown error: %d\n"
+argument_list|,
+name|be
+operator|->
+name|name
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -334,37 +403,6 @@ operator|->
 name|ctl_lock
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (atomic_read(&be->num_luns) != 0) {
-endif|#
-directive|endif
-comment|/* XXX KDM fix this! */
-if|if
-condition|(
-name|be
-operator|->
-name|num_luns
-operator|!=
-literal|0
-condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|softc
-operator|->
-name|ctl_lock
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 name|STAILQ_REMOVE
 argument_list|(
 operator|&
@@ -384,13 +422,6 @@ operator|->
 name|num_backends
 operator|--
 expr_stmt|;
-comment|/* XXX KDM find a substitute for this? */
-if|#
-directive|if
-literal|0
-block|if ((be->flags& CTL_BE_FLAG_INTERNAL) == 0) 		MOD_DEC_USE_COUNT;
-endif|#
-directive|endif
 name|mtx_unlock
 argument_list|(
 operator|&

@@ -79,6 +79,10 @@ name|CTL_PORT_SAS
 init|=
 literal|0x20
 block|,
+name|CTL_PORT_UMASS
+init|=
+literal|0x40
+block|,
 name|CTL_PORT_ALL
 init|=
 literal|0xff

@@ -3,11 +3,13 @@ begin_comment
 comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Copyright (c) 2009 Mojatatu Networks, Inc  *  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Forwarding and Control Element Separation (ForCES) Protocol printer */
+end_comment
+
+begin_comment
+comment|/* specification: RFC 5810 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +31,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -54,10 +56,6 @@ init|=
 literal|"[|forces]"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * RFC5810: Forwarding and Control Element Separation (ForCES) Protocol  */
-end_comment
 
 begin_define
 define|#
@@ -627,7 +625,7 @@ begin_struct
 struct|struct
 name|forcesh
 block|{
-name|uint8_t
+name|nd_uint8_t
 name|fm_vrsvd
 decl_stmt|;
 comment|/* version and reserved */
@@ -638,11 +636,11 @@ parameter_list|(
 name|forcesh
 parameter_list|)
 value|((forcesh)->fm_vrsvd>> 4)
-name|uint8_t
+name|nd_uint8_t
 name|fm_tom
 decl_stmt|;
 comment|/* type of message */
-name|uint16_t
+name|nd_uint16_t
 name|fm_len
 decl_stmt|;
 comment|/* total length * 4 bytes */
@@ -653,7 +651,7 @@ parameter_list|(
 name|forcesh
 parameter_list|)
 value|((uint32_t)(EXTRACT_16BITS(&(forcesh)->fm_len)<< 2))
-name|uint32_t
+name|nd_uint32_t
 name|fm_sid
 decl_stmt|;
 comment|/* Source ID */
@@ -664,7 +662,7 @@ parameter_list|(
 name|forcesh
 parameter_list|)
 value|EXTRACT_32BITS(&(forcesh)->fm_sid)
-name|uint32_t
+name|nd_uint32_t
 name|fm_did
 decl_stmt|;
 comment|/* Destination ID */
@@ -675,14 +673,14 @@ parameter_list|(
 name|forcesh
 parameter_list|)
 value|EXTRACT_32BITS(&(forcesh)->fm_did)
-name|uint8_t
+name|nd_uint8_t
 name|fm_cor
 index|[
 literal|8
 index|]
 decl_stmt|;
 comment|/* correlator */
-name|uint32_t
+name|nd_uint32_t
 name|fm_flags
 decl_stmt|;
 comment|/* flags */
@@ -1033,7 +1031,7 @@ name|F_OP_RTRCOMP
 operator|-
 literal|1
 operator|)
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -1175,10 +1173,10 @@ begin_struct
 struct|struct
 name|pathdata_h
 block|{
-name|uint16_t
+name|nd_uint16_t
 name|pflags
 decl_stmt|;
-name|uint16_t
+name|nd_uint16_t
 name|pIDcnt
 decl_stmt|;
 block|}
@@ -1489,6 +1487,7 @@ value|0x0
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|ind_buf
 index|[
@@ -1915,10 +1914,10 @@ begin_struct
 struct|struct
 name|forces_ilv
 block|{
-name|uint32_t
+name|nd_uint32_t
 name|type
 decl_stmt|;
-name|uint32_t
+name|nd_uint32_t
 name|length
 decl_stmt|;
 block|}
@@ -1929,10 +1928,10 @@ begin_struct
 struct|struct
 name|forces_tlv
 block|{
-name|uint16_t
+name|nd_uint16_t
 name|type
 decl_stmt|;
-name|uint16_t
+name|nd_uint16_t
 name|length
 decl_stmt|;
 block|}
@@ -1956,7 +1955,7 @@ name|GET_TOP_TLV
 parameter_list|(
 name|fhdr
 parameter_list|)
-value|((struct forces_tlv *)((fhdr) + sizeof (struct forcesh)))
+value|((const struct forces_tlv *)((fhdr) + sizeof (struct forcesh)))
 end_define
 
 begin_define
@@ -1996,7 +1995,7 @@ name|TLV_DATA
 parameter_list|(
 name|tlvp
 parameter_list|)
-value|((void*)(((char*)(tlvp)) + TLV_SET_LEN(0)))
+value|((const void*)(((const char*)(tlvp)) + TLV_SET_LEN(0)))
 end_define
 
 begin_define
@@ -2008,7 +2007,7 @@ name|tlv
 parameter_list|,
 name|rlen
 parameter_list|)
-value|((rlen) -= F_ALN_LEN(EXTRACT_16BITS(&(tlv)->length)), \ 		              (struct forces_tlv*)(((char*)(tlv)) \ 				      + F_ALN_LEN(EXTRACT_16BITS(&(tlv)->length))))
+value|((rlen) -= F_ALN_LEN(EXTRACT_16BITS(&(tlv)->length)), \ 		              (const struct forces_tlv*)(((const char*)(tlv)) \ 				      + F_ALN_LEN(EXTRACT_16BITS(&(tlv)->length))))
 end_define
 
 begin_define
@@ -2048,7 +2047,7 @@ name|ILV_DATA
 parameter_list|(
 name|ilvp
 parameter_list|)
-value|((void*)(((char*)(ilvp)) + ILV_SET_LEN(0)))
+value|((const void*)(((const char*)(ilvp)) + ILV_SET_LEN(0)))
 end_define
 
 begin_define
@@ -2060,7 +2059,7 @@ name|ilv
 parameter_list|,
 name|rlen
 parameter_list|)
-value|((rlen) -= F_ALN_LEN(EXTRACT_32BITS(&(ilv)->length)), \ 		              (struct forces_ilv *)(((char*)(ilv)) \ 				      + F_ALN_LEN(EXTRACT_32BITS(&(ilv)->length))))
+value|((rlen) -= F_ALN_LEN(EXTRACT_32BITS(&(ilv)->length)), \ 		              (const struct forces_ilv *)(((const char*)(ilv)) \ 				      + F_ALN_LEN(EXTRACT_32BITS(&(ilv)->length))))
 end_define
 
 begin_define
@@ -2403,10 +2402,10 @@ begin_struct
 struct|struct
 name|forces_lfbsh
 block|{
-name|uint32_t
+name|nd_uint32_t
 name|class
 decl_stmt|;
-name|uint32_t
+name|nd_uint32_t
 name|instance
 decl_stmt|;
 block|}
@@ -2894,13 +2893,13 @@ begin_struct
 struct|struct
 name|res_val
 block|{
-name|uint8_t
+name|nd_uint8_t
 name|result
 decl_stmt|;
-name|uint8_t
+name|nd_uint8_t
 name|resv1
 decl_stmt|;
-name|uint16_t
+name|nd_uint16_t
 name|resv2
 decl_stmt|;
 block|}
@@ -3443,6 +3442,7 @@ modifier|*
 name|tlv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -3456,6 +3456,7 @@ modifier|*
 name|tdp
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3464,12 +3465,14 @@ argument_list|(
 name|tlv
 argument_list|)
 decl_stmt|;
+specifier|const
 name|struct
 name|res_val
 modifier|*
 name|r
 init|=
 operator|(
+specifier|const
 expr|struct
 name|res_val
 operator|*
@@ -3652,6 +3655,7 @@ modifier|*
 name|tlv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -3668,6 +3672,7 @@ modifier|*
 name|tdp
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3849,6 +3854,7 @@ modifier|*
 name|ilv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_ilv
 operator|*
@@ -3918,6 +3924,7 @@ modifier|*
 name|tdp
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4121,6 +4128,7 @@ modifier|*
 name|tlv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -4137,6 +4145,7 @@ modifier|*
 name|tdp
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4259,6 +4268,7 @@ modifier|*
 name|tlv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -4272,6 +4282,7 @@ modifier|*
 name|tdp
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4297,6 +4308,7 @@ modifier|*
 name|kdtlv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -4428,6 +4440,7 @@ expr_stmt|;
 name|dp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4751,6 +4764,7 @@ operator|&
 name|B_KEYIN
 condition|)
 block|{
+specifier|const
 name|struct
 name|forces_tlv
 modifier|*
@@ -4796,6 +4810,7 @@ expr_stmt|;
 name|keytlv
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -4902,6 +4917,7 @@ modifier|*
 name|pdtlv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -5345,6 +5361,7 @@ modifier|*
 name|pdh
 init|=
 operator|(
+specifier|const
 expr|struct
 name|pathdata_h
 operator|*
@@ -5711,6 +5728,7 @@ modifier|*
 name|pdtlv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -5816,6 +5834,7 @@ modifier|*
 name|dp
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -5992,6 +6011,7 @@ modifier|*
 name|pdtlv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -6069,6 +6089,7 @@ expr_stmt|;
 name|dp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -6358,6 +6379,7 @@ modifier|*
 name|dp
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -7152,6 +7174,7 @@ modifier|*
 name|ilv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_ilv
 operator|*
@@ -7313,6 +7336,7 @@ modifier|*
 name|ilv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_ilv
 operator|*
@@ -7381,6 +7405,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -7451,7 +7476,6 @@ name|_U_
 parameter_list|,
 name|int
 name|indent
-name|_U_
 parameter_list|)
 block|{
 name|u_int
@@ -7575,6 +7599,7 @@ modifier|*
 name|tlv
 init|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -7687,6 +7712,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -7730,6 +7756,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -8033,6 +8060,7 @@ block|}
 name|otlv
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|forces_tlv
 operator|*
@@ -8152,6 +8180,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -8522,6 +8551,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)

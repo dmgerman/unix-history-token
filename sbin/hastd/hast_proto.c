@@ -65,22 +65,11 @@ directive|include
 file|<proto.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CRYPTO
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"hast_checksum.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -204,9 +193,6 @@ block|,
 name|compression_recv
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|HAVE_CRYPTO
 block|{
 literal|"checksum"
 block|,
@@ -214,8 +200,6 @@ name|checksum_send
 block|,
 name|checksum_recv
 block|}
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt

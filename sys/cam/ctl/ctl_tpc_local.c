@@ -214,7 +214,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|tpcl_shutdown
 parameter_list|(
 name|void
@@ -310,6 +310,8 @@ modifier|*
 name|tid
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|len
 decl_stmt|;
 name|memset
@@ -371,18 +373,6 @@ name|tpcl_done
 expr_stmt|;
 name|port
 operator|->
-name|max_targets
-operator|=
-literal|1
-expr_stmt|;
-name|port
-operator|->
-name|max_target_id
-operator|=
-literal|0
-expr_stmt|;
-name|port
-operator|->
 name|targ_port
 operator|=
 operator|-
@@ -396,24 +386,28 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ctl_port_register
 argument_list|(
 name|port
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: ctl_port_register() failed with error\n"
+literal|"%s: tpc port registration failed\n"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -509,7 +503,8 @@ block|}
 end_function
 
 begin_function
-name|void
+specifier|static
+name|int
 name|tpcl_shutdown
 parameter_list|(
 name|void
@@ -527,14 +522,15 @@ name|struct
 name|ctl_port
 modifier|*
 name|port
-decl_stmt|;
-name|port
-operator|=
+init|=
 operator|&
 name|tsoftc
 operator|->
 name|port
-expr_stmt|;
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|ctl_port_offline
 argument_list|(
 name|port
@@ -542,23 +538,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|ctl_port_deregister
 argument_list|(
-operator|&
-name|tsoftc
-operator|->
 name|port
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%s: ctl_frontend_deregister() failed\n"
+literal|"%s: tpc port deregistration failed\n"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 

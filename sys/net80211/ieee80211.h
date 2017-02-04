@@ -2800,7 +2800,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* LDPC supported */
+comment|/* LDPC rx supported */
 end_comment
 
 begin_define

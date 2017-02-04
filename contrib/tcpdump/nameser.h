@@ -92,28 +92,6 @@ value|10
 end_define
 
 begin_comment
-comment|/*  * Internet nameserver port number  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NAMESERVER_PORT
-value|53
-end_define
-
-begin_comment
-comment|/*  * Port for multicast DNS; see  *  *	http://files.multicastdns.org/draft-cheshire-dnsext-multicastdns.txt  *  * for the current mDNS spec.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MULTICASTDNS_PORT
-value|5353
-end_define
-
-begin_comment
 comment|/*  * Currently defined opcodes  */
 end_comment
 

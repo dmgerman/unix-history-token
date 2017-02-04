@@ -225,7 +225,7 @@ name|SSL_NOT_DEFAULT
 operator||
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 block|,
 literal|0
 block|,

@@ -2218,6 +2218,28 @@ name|ia
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_carp
+condition|)
+call|(
+modifier|*
+name|carp_detach_p
+call|)
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
 name|ifa_free
 argument_list|(
 operator|&
@@ -2226,6 +2248,7 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2473,6 +2496,8 @@ operator|&
 name|ia
 operator|->
 name|ia_ifa
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5142,6 +5167,8 @@ name|carp_detach_p
 call|)
 argument_list|(
 name|ifa
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the loopback route to the interface address. 	 * The check for the current setting of "nd6_useloopback" 	 * is not needed. 	 */
@@ -8341,10 +8368,6 @@ case|:
 comment|/* XXX: no RFC. treat it as ether */
 case|case
 name|IFT_L2VLAN
-case|:
-comment|/* ditto */
-case|case
-name|IFT_IEEE80211
 case|:
 comment|/* ditto */
 case|case

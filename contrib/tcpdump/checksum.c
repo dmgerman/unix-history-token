@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2006 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * miscellaneous checksumming routines  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -29,7 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -59,7 +53,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_comment
@@ -829,7 +823,7 @@ name|uint16_t
 name|checksum
 decl_stmt|;
 name|int
-name|index
+name|idx
 decl_stmt|;
 name|c0
 operator|=
@@ -841,26 +835,26 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|index
+name|idx
 operator|=
 literal|0
 init|;
-name|index
+name|idx
 operator|<
 name|length
 condition|;
-name|index
+name|idx
 operator|++
 control|)
 block|{
 comment|/*          * Ignore the contents of the checksum field.          */
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 name|checksum_offset
 operator|||
-name|index
+name|idx
 operator|==
 name|checksum_offset
 operator|+

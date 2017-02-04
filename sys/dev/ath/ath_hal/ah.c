@@ -6590,7 +6590,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get CCA setting.  */
+comment|/*  * Get CCA setting.  *  * XXX TODO: turn this and the above function into methods  * in case there are chipset differences in handling CCA.  */
 end_comment
 
 begin_function
@@ -6636,6 +6636,44 @@ operator|==
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Set the current state of self-generated ACK and RTS/CTS frames.  *  * For correct DFS operation, the device should not even /ACK/ frames  * that are sent to it during CAC or CSA.  */
+end_comment
+
+begin_function
+name|void
+name|ath_hal_set_dfs_cac_tx_quiet
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_BOOL
+name|ena
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ah
+operator|->
+name|ah_setDfsCacTxQuiet
+operator|==
+name|NULL
+condition|)
+return|return;
+name|ah
+operator|->
+name|ah_setDfsCacTxQuiet
+argument_list|(
+name|ah
+argument_list|,
+name|ena
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

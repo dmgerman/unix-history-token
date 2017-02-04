@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 2013 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Ola Martin Lykkja (ola.lykkja@q-free.com)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: ISO CALM FAST and ETSI GeoNetworking printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -280,6 +278,23 @@ name|lat
 decl_stmt|,
 name|lon
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ND_TTEST2
+argument_list|(
+operator|*
+name|bp
+argument_list|,
+name|GEONET_ADDR_LEN
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -384,15 +399,16 @@ parameter_list|,
 specifier|const
 name|u_char
 modifier|*
-name|eth
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
 name|bp
 parameter_list|,
 name|u_int
 name|length
+parameter_list|,
+specifier|const
+name|struct
+name|lladdr_info
+modifier|*
+name|src
 parameter_list|)
 block|{
 name|int
@@ -438,16 +454,44 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"GeoNet src:%s; "
+literal|"GeoNet "
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|src
+operator|!=
+name|NULL
+condition|)
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
 operator|,
-name|etheraddr_string
+literal|"src:%s"
+operator|,
+call|(
+name|src
+operator|->
+name|addr_string
+call|)
 argument_list|(
 name|ndo
 argument_list|,
-name|eth
-operator|+
-literal|6
+name|src
+operator|->
+name|addr
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"; "
 operator|)
 argument_list|)
 expr_stmt|;
@@ -459,14 +503,14 @@ operator|<
 literal|36
 condition|)
 goto|goto
-name|malformed
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
 operator|*
 name|bp
 argument_list|,
-literal|7
+literal|8
 argument_list|)
 expr_stmt|;
 name|version
@@ -944,7 +988,7 @@ operator|)
 name|hdr_size
 condition|)
 goto|goto
-name|malformed
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
@@ -986,7 +1030,7 @@ operator|<
 literal|4
 condition|)
 goto|goto
-name|malformed
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
@@ -1058,7 +1102,7 @@ name|length
 argument_list|)
 expr_stmt|;
 return|return;
-name|malformed
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(

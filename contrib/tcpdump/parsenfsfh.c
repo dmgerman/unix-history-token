@@ -4,14 +4,8 @@ comment|/*  * Copyright (c) 1993, 1994 Jeffrey C. Mogul, Digital Equipment Corpo
 end_comment
 
 begin_comment
-comment|/*  * parsenfsfh.c - portable parser for NFS file handles  *			uses all sorts of heuristics  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  *  * $FreeBSD$  */
+comment|/*  * parsenfsfh.c - portable parser for NFS file handles  *			uses all sorts of heuristics  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
 
 begin_ifdef
 ifdef|#
@@ -33,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -51,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -315,6 +309,8 @@ specifier|const
 name|unsigned
 name|char
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -330,9 +326,8 @@ name|char
 modifier|*
 name|fh
 parameter_list|,
-name|int
+name|u_int
 name|len
-name|_U_
 parameter_list|,
 name|my_fsid
 modifier|*
@@ -378,9 +373,24 @@ name|fhtype
 init|=
 name|FHT_UNKNOWN
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
+comment|/* 	 * Require at least 16 bytes of file handle; it's variable-length 	 * in NFSv3.  "len" is in units of 32-bit words, not bytes. 	 */
+if|if
+condition|(
+name|len
+operator|<
+literal|16
+operator|/
+literal|4
+condition|)
+name|fhtype
+operator|=
+name|FHT_UNKNOWN
+expr_stmt|;
+else|else
+block|{
 if|if
 condition|(
 name|ourself
@@ -500,7 +510,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * This is basically a big decision tree 	 */
+comment|/* 		 * This is basically a big decision tree 		 */
 elseif|else
 if|if
 condition|(
@@ -555,7 +565,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * bytes[2,3] != (0,0); rules out Auspex, could be 		 * DECOSF, SUNOS4, or IRIX4 		 */
+comment|/* 			 * bytes[2,3] != (0,0); rules out Auspex, could be 			 * DECOSF, SUNOS4, or IRIX4 			 */
 if|if
 condition|(
 operator|(
@@ -663,7 +673,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * bytes[0,1] != (0,0); rules out Auspex, IRIX4, SUNOS4 	     * could be IRIX5, DECOSF, UCX, Ultrix, SUNOS5 	     * could be AIX, HP-UX 	     */
+comment|/* 		     * bytes[0,1] != (0,0); rules out Auspex, IRIX4, SUNOS4 		     * could be IRIX5, DECOSF, UCX, Ultrix, SUNOS5 		     * could be AIX, HP-UX 		     */
 if|if
 condition|(
 operator|(
@@ -685,7 +695,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * bytes[2,3] == (0,0); rules out OSF, probably not UCX 		 * (unless the exported device name is just one letter!), 		 * could be Ultrix, IRIX5, AIX, or SUNOS5 		 * might be HP-UX (depends on their values for minor devs) 		 */
+comment|/* 			 * bytes[2,3] == (0,0); rules out OSF, probably not UCX 			 * (unless the exported device name is just one letter!), 			 * could be Ultrix, IRIX5, AIX, or SUNOS5 			 * might be HP-UX (depends on their values for minor devs) 			 */
 if|if
 condition|(
 operator|(
@@ -716,6 +726,14 @@ comment|/*XXX we probably only need to test of these two bytes */
 elseif|else
 if|if
 condition|(
+operator|(
+name|len
+operator|>=
+literal|24
+operator|/
+literal|4
+operator|)
+operator|&&
 operator|(
 name|fhp
 index|[
@@ -762,7 +780,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * bytes[2,3] != (0,0); rules out Ultrix, could be 		 * DECOSF, SUNOS5, IRIX5, AIX, HP-UX, or UCX 		 */
+comment|/* 			 * bytes[2,3] != (0,0); rules out Ultrix, could be 			 * DECOSF, SUNOS5, IRIX5, AIX, HP-UX, or UCX 			 */
 if|if
 condition|(
 operator|(
@@ -877,7 +895,7 @@ comment|/* or maybe IRIX5 */
 block|}
 else|else
 block|{
-comment|/* 			 * XXX Could be SUNOS5/IRIX5 or AIX.  I don't 			 * XXX see any way to disambiguate these, so 			 * XXX I'm going with the more likely guess. 			 * XXX Sorry, Big Blue. 			 */
+comment|/* 				 * XXX Could be SUNOS5/IRIX5 or AIX.  I don't 				 * XXX see any way to disambiguate these, so 				 * XXX I'm going with the more likely guess. 				 * XXX Sorry, Big Blue. 				 */
 name|fhtype
 operator|=
 name|FHT_SUNOS5
@@ -892,6 +910,8 @@ condition|(
 name|is_UCX
 argument_list|(
 name|fhp
+argument_list|,
+name|len
 argument_list|)
 condition|)
 block|{
@@ -906,6 +926,7 @@ name|fhtype
 operator|=
 name|FHT_UNKNOWN
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1692,6 +1713,7 @@ operator|)
 name|fsidp
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1735,6 +1757,7 @@ operator|)
 name|tempa
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1827,6 +1850,7 @@ operator|*
 name|fsnamep
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2072,7 +2096,9 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|len
+operator|*
+literal|4
 condition|;
 name|i
 operator|++
@@ -2113,7 +2139,22 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|len
+operator|*
+literal|4
+operator|&&
+name|i
+operator|*
+literal|2
+operator|<
+sizeof|sizeof
+argument_list|(
+name|fsidp
+operator|->
+name|Opaque_Handle
+argument_list|)
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
@@ -2144,6 +2185,17 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+name|fsidp
+operator|->
+name|Opaque_Handle
+index|[
+name|i
+operator|*
+literal|2
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* XXX for now, give "bogus" values to aid debugging */
 name|fsidp
@@ -2211,10 +2263,13 @@ name|unsigned
 name|char
 modifier|*
 name|fhp
+parameter_list|,
+name|u_int
+name|len
 parameter_list|)
 block|{
 specifier|register
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|int
@@ -2222,6 +2277,20 @@ name|seen_null
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Require at least 28 bytes of file handle; it's variable-length 	 * in NFSv3.  "len" is in units of 32-bit words, not bytes. 	 */
+if|if
+condition|(
+name|len
+operator|<
+literal|28
+operator|/
+literal|4
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 for|for
 control|(
 name|i

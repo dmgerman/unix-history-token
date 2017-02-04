@@ -500,6 +500,12 @@ name|r92c_rx_radiotap_flags
 expr_stmt|;
 name|sc
 operator|->
+name|sc_get_rx_stats
+operator|=
+name|r88e_get_rx_stats
+expr_stmt|;
+name|sc
+operator|->
 name|sc_get_rssi_cck
 operator|=
 name|r88e_get_rssi_cck
@@ -599,6 +605,12 @@ name|r88e_fw_download_enable
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|sc_llt_init
+operator|=
+name|r92c_llt_init
+expr_stmt|;
 name|sc
 operator|->
 name|sc_set_page_size

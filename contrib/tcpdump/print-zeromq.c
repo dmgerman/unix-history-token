@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This file implements decoding of ZeroMQ network protocol(s).  *  *  * Copyright (c) 2013 The TCPDUMP project  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2013 The TCPDUMP project  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: ZeroMQ Message Transport Protocol (ZMTP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -142,49 +140,17 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|body_len_declared
-operator|==
-literal|0
-condition|)
-return|return
-name|cp
-operator|+
-name|header_len
-return|;
-comment|/* skip to next frame */
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|" frame flags+body  (8-bit) length %u"
+literal|" frame flags+body  (8-bit) length %"
+name|PRIu64
 operator|,
-name|cp
-index|[
-literal|0
-index|]
+name|body_len_declared
 operator|)
 argument_list|)
-expr_stmt|;
-name|ND_TCHECK2
-argument_list|(
-operator|*
-name|cp
-argument_list|,
-name|header_len
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* length, flags */
-name|flags
-operator|=
-name|cp
-index|[
-literal|1
-index|]
 expr_stmt|;
 block|}
 else|else
@@ -223,18 +189,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|body_len_declared
-operator|==
-literal|0
-condition|)
-return|return
-name|cp
-operator|+
-name|header_len
-return|;
-comment|/* skip to next frame */
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -247,6 +201,19 @@ name|body_len_declared
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|body_len_declared
+operator|==
+literal|0
+condition|)
+return|return
+name|cp
+operator|+
+name|header_len
+return|;
+comment|/* skip to the next frame */
 name|ND_TCHECK2
 argument_list|(
 operator|*
@@ -257,15 +224,14 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 0xFF, length, flags */
+comment|/* ..., flags */
 name|flags
 operator|=
 name|cp
 index|[
-literal|9
+name|header_len
 index|]
 expr_stmt|;
-block|}
 name|body_len_captured
 operator|=
 name|ep
@@ -463,21 +429,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Do not advance cp by the sum of header_len and body_len_declared 	 * before each offset has successfully passed ND_TCHECK2() as the 	 * sum can roll over (9 + 0xfffffffffffffff7 = 0) and cause an 	 * infinite loop. 	 */
+name|cp
+operator|+=
+name|header_len
+expr_stmt|;
 name|ND_TCHECK2
 argument_list|(
 operator|*
 name|cp
 argument_list|,
-name|header_len
-operator|+
 name|body_len_declared
 argument_list|)
 expr_stmt|;
 comment|/* Next frame within the buffer ? */
 return|return
 name|cp
-operator|+
-name|header_len
 operator|+
 name|body_len_declared
 return|;

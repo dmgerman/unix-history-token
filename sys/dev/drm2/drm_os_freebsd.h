@@ -467,12 +467,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|__read_mostly
-end_define
-
-begin_define
-define|#
-directive|define
 name|BUILD_BUG_ON
 parameter_list|(
 name|x

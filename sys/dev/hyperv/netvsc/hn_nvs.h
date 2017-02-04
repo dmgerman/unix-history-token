@@ -416,6 +416,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|hn_nvs_set_datapath
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint32_t
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct

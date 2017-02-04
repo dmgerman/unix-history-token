@@ -12098,11 +12098,22 @@ expr_stmt|;
 elif|#
 directive|elif
 name|HAVE__LOCALTIME64_S
+name|__time64_t
+name|tmp_t
+init|=
+operator|(
+name|__time64_t
+operator|)
+operator|*
+name|t
+decl_stmt|;
+comment|//time_t may be shorter than 64 bits
 name|_localtime64_s
 argument_list|(
 name|tm
 argument_list|,
-name|t
+operator|&
+name|tmp_t
 argument_list|)
 expr_stmt|;
 else|#
@@ -12292,6 +12303,9 @@ name|memset
 argument_list|(
 name|p
 argument_list|,
+operator|(
+name|int
+operator|)
 literal|'0'
 argument_list|,
 literal|16
@@ -19494,6 +19508,17 @@ name|defined
 argument_list|(
 name|HAVE__CTIME64_S
 argument_list|)
+name|__time64_t
+name|iso9660_birth_time_tmp
+init|=
+operator|(
+name|__time64_t
+operator|)
+name|iso9660
+operator|->
+name|birth_time
+decl_stmt|;
+comment|//time_t may be shorter than 64 bits
 name|_ctime64_s
 argument_list|(
 name|buf
@@ -19505,9 +19530,7 @@ argument_list|)
 argument_list|,
 operator|&
 operator|(
-name|iso9660
-operator|->
-name|birth_time
+name|iso9660_birth_time_tmp
 operator|)
 argument_list|)
 expr_stmt|;

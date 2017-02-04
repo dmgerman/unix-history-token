@@ -156,6 +156,12 @@ modifier|*
 name|hn_ifp
 decl_stmt|;
 name|struct
+name|ifnet
+modifier|*
+name|hn_vf
+decl_stmt|;
+comment|/* SR-IOV VF */
+name|struct
 name|hn_tx_ring
 modifier|*
 name|hn_txr
@@ -228,6 +234,11 @@ comment|/* TX/RX bufring */
 name|struct
 name|hyperv_dma
 name|hn_br_dma
+decl_stmt|;
+name|struct
+name|vmbus_channel
+modifier|*
+name|hn_chan
 decl_stmt|;
 block|}
 name|__aligned
@@ -702,6 +713,12 @@ name|struct
 name|ndis_rssprm_toeplitz
 name|hn_rss
 decl_stmt|;
+name|eventhandler_tag
+name|hn_ifaddr_evthand
+decl_stmt|;
+name|eventhandler_tag
+name|hn_ifnet_evthand
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -760,6 +777,13 @@ define|#
 directive|define
 name|HN_FLAG_CHIM_REF
 value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_FLAG_VF
+value|0x0100
 end_define
 
 begin_define

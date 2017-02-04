@@ -1330,7 +1330,7 @@ name|DIOCGMEDIASIZE
 case|:
 operator|*
 operator|(
-name|off_t
+name|uint64_t
 operator|*
 operator|)
 name|data

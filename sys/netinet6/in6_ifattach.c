@@ -1207,9 +1207,6 @@ case|:
 case|case
 name|IFT_IEEE1394
 case|:
-case|case
-name|IFT_IEEE80211
-case|:
 comment|/* IEEE802/EUI64 cases - what others? */
 comment|/* IEEE1394 uses 16byte length address starting with EUI64 */
 if|if

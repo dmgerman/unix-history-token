@@ -923,6 +923,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_TXRTLMT
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* hardware supports TX rate limiting */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM_IPV6
 value|(IFCAP_RXCSUM_IPV6 | IFCAP_TXCSUM_IPV6)
 end_define

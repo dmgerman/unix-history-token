@@ -16,6 +16,29 @@ name|_CAM_CAM_XPT_H
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_printf.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Forward Declarations */
 end_comment
@@ -44,6 +67,12 @@ name|cam_sim
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Definition of a CAM path.  Paths are created from bus, target, and lun ids  * via xpt_create_path and allow for reference to devices without recurring  * lookups in the edt.  */
 end_comment
@@ -63,6 +92,59 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/* Wild guess based on not wanting to grow the stack too much */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XPT_PRINT_MAXLEN
+value|512
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PRINTF_BUFR_SIZE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|XPT_PRINT_LEN
+value|PRINTF_BUFR_SIZE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|XPT_PRINT_LEN
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|XPT_PRINT_LEN
+operator|<=
+name|XPT_PRINT_MAXLEN
+argument_list|,
+literal|"XPT_PRINT_LEN is too large"
+argument_list|)
+assert|;
+end_assert
 
 begin_comment
 comment|/*  * Definition of an async handler callback block.  These are used to add  * SIMs and peripherals to the async callback lists.  */
@@ -465,6 +547,23 @@ name|str
 parameter_list|,
 name|size_t
 name|str_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xpt_path_sbuf
+parameter_list|(
+name|struct
+name|cam_path
+modifier|*
+name|path
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
 parameter_list|)
 function_decl|;
 end_function_decl

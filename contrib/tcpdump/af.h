@@ -205,7 +205,7 @@ value|24
 end_define
 
 begin_comment
-comment|/* OpenBSD (and probably NetBSD), BSD/OS */
+comment|/* NetBSD, OpenBSD, BSD/OS, Npcap */
 end_comment
 
 begin_define
@@ -215,12 +215,20 @@ name|BSD_AFNUM_INET6_FREEBSD
 value|28
 end_define
 
+begin_comment
+comment|/* FreeBSD */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BSD_AFNUM_INET6_DARWIN
 value|30
 end_define
+
+begin_comment
+comment|/* OS X, iOS, other Darwin-based OSes */
+end_comment
 
 end_unit
 

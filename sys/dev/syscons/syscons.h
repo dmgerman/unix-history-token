@@ -38,40 +38,6 @@ file|<sys/_mutex.h>
 end_include
 
 begin_comment
-comment|/* machine-dependent part of the header */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/cbus/sc_machdep.h>
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_elif
-
-begin_comment
-comment|/* nothing for the moment */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* default values for configuration options */
 end_comment
 

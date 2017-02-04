@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tty.c,v 1.49 2015/12/08 16:53:27 gson Exp $	*/
+comment|/*	$NetBSD: tty.c,v 1.59 2016/03/22 01:34:32 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: tty.c,v 1.49 2015/12/08 16:53:27 gson Exp $"
+literal|"$NetBSD: tty.c,v 1.59 2016/03/22 01:34:32 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -96,12 +96,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/* for isatty */
+comment|/* for abort */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -116,11 +122,11 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<unistd.h>
 end_include
 
 begin_comment
-comment|/* for abort */
+comment|/* for isatty */
 end_comment
 
 begin_include
@@ -132,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|"parse.h"
 end_include
 
 begin_typedef
@@ -162,7 +168,7 @@ typedef|typedef
 struct|struct
 name|ttymap_t
 block|{
-name|Int
+name|wint_t
 name|nch
 decl_stmt|,
 name|och
@@ -767,13 +773,13 @@ directive|endif
 comment|/* VLNEXT */
 block|{
 operator|(
-name|Int
+name|wint_t
 operator|)
 operator|-
 literal|1
 block|,
 operator|(
-name|Int
+name|wint_t
 operator|)
 operator|-
 literal|1
@@ -2556,6 +2562,18 @@ literal|0
 return|;
 if|if
 condition|(
+name|el
+operator|->
+name|el_tty
+operator|.
+name|t_initialized
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
 operator|!
 name|isatty
 argument_list|(
@@ -3013,6 +3031,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|el
+operator|->
+name|el_tty
+operator|.
+name|t_initialized
+operator|=
+literal|1
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3044,6 +3070,14 @@ operator|.
 name|t_vdisable
 operator|=
 name|_POSIX_VDISABLE
+expr_stmt|;
+name|el
+operator|->
+name|el_tty
+operator|.
+name|t_initialized
+operator|=
+literal|0
 expr_stmt|;
 operator|(
 name|void
@@ -3114,6 +3148,16 @@ operator|->
 name|el_flags
 operator|&
 name|EDIT_DISABLED
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|el
+operator|->
+name|el_tty
+operator|.
+name|t_initialized
 condition|)
 return|return;
 if|if
@@ -4599,7 +4643,7 @@ operator|->
 name|nch
 operator|!=
 operator|(
-name|Int
+name|wint_t
 operator|)
 operator|-
 literal|1
@@ -4613,6 +4657,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|Char
+operator|)
 name|t_n
 index|[
 name|tp
@@ -4625,6 +4672,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|Char
+operator|)
 name|t_o
 index|[
 name|tp
@@ -5164,7 +5214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* tty_rawmode():  * 	Set terminal into 1 character at a time mode.  */
+comment|/* tty_rawmode():  *	Set terminal into 1 character at a time mode.  */
 end_comment
 
 begin_function
@@ -6243,14 +6293,12 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: Unknown switch `"
-name|FCHAR
-literal|"'.\n"
+literal|"%s: Unknown switch `%lc'.\n"
 argument_list|,
 name|name
 argument_list|,
 operator|(
-name|Int
+name|wint_t
 operator|)
 name|argv
 index|[

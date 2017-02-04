@@ -482,6 +482,10 @@ begin_comment
 comment|/*  * Broadcom BCM577xx Controller Constants  */
 end_comment
 
+begin_comment
+comment|/* Maximum divider supported by the default clock source. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -490,7 +494,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* Maximum divider supported by the default clock source. */
+comment|/* Alternative clock's base frequency. */
 end_comment
 
 begin_define
@@ -499,10 +503,6 @@ directive|define
 name|BCM577XX_ALT_CLOCK_BASE
 value|63000000
 end_define
-
-begin_comment
-comment|/* Alternative clock's base frequency. */
-end_comment
 
 begin_define
 define|#
@@ -1324,7 +1324,7 @@ argument_list|)
 operator|&
 name|BCM577XX_CTRL_CLKSEL_MASK
 expr_stmt|;
-comment|/* Select clock source appropriate for the requested frequency. */
+comment|/* 		 * Select clock source appropriate for the requested frequency. 		 */
 if|if
 condition|(
 operator|(
@@ -3258,7 +3258,7 @@ name|opt
 operator||=
 name|SDHCI_NON_REMOVABLE
 expr_stmt|;
-comment|/*  	 * Use platform-provided transfer backend 	 * with PIO as a fallback mechanism 	 */
+comment|/* 	 * Use platform-provided transfer backend 	 * with PIO as a fallback mechanism 	 */
 if|if
 condition|(
 name|slot
@@ -4622,7 +4622,7 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Interrupt aggregation: To reduce total number of interrupts 	 * group response interrupt with data interrupt when possible. 	 * If there going to be data interrupt, mask response one. 	 */
+comment|/* 	 * Interrupt aggregation: To reduce total number of interrupts 	 * group response interrupt with data interrupt when possible. 	 * If there going to be data interrupt, mask response one. 	 */
 if|if
 condition|(
 name|slot
@@ -4727,6 +4727,12 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|uint32_t
+name|val
+decl_stmt|;
+name|uint8_t
+name|extra
+decl_stmt|;
 name|slot
 operator|->
 name|cmd_done
@@ -4802,11 +4808,10 @@ name|MMC_RSP_136
 condition|)
 block|{
 comment|/* CRC is stripped so we need one byte shift. */
-name|uint8_t
 name|extra
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4821,9 +4826,8 @@ name|i
 operator|++
 control|)
 block|{
-name|uint32_t
 name|val
-init|=
+operator|=
 name|RD4
 argument_list|(
 name|slot
@@ -4834,7 +4838,7 @@ name|i
 operator|*
 literal|4
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|slot
@@ -6119,6 +6123,14 @@ name|uint32_t
 name|intmask
 parameter_list|)
 block|{
+name|struct
+name|mmc_data
+modifier|*
+name|data
+decl_stmt|;
+name|size_t
+name|left
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -6344,20 +6356,14 @@ operator|&
 name|SDHCI_INT_DMA_END
 condition|)
 block|{
-name|struct
-name|mmc_data
-modifier|*
 name|data
-init|=
+operator|=
 name|slot
 operator|->
 name|curcmd
 operator|->
 name|data
-decl_stmt|;
-name|size_t
-name|left
-decl_stmt|;
+expr_stmt|;
 comment|/* Unload DMA buffer... */
 name|left
 operator|=
@@ -6654,7 +6660,6 @@ argument_list|(
 name|slot
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 block|}
 end_function

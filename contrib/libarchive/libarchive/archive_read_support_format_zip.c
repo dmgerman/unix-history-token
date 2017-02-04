@@ -3785,6 +3785,12 @@ operator|.
 name|s
 argument_list|)
 expr_stmt|;
+name|archive_wstring_free
+argument_list|(
+operator|&
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -3859,6 +3865,12 @@ name|entry
 argument_list|,
 name|s
 operator|.
+name|s
+argument_list|)
+expr_stmt|;
+name|archive_string_free
+argument_list|(
+operator|&
 name|s
 argument_list|)
 expr_stmt|;

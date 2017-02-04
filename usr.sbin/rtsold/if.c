@@ -1121,9 +1121,6 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
-case|case
-name|IFT_IEEE80211
-case|:
 return|return
 operator|(
 name|ROUNDUP8
@@ -1179,9 +1176,6 @@ condition|)
 block|{
 case|case
 name|IFT_ETHER
-case|:
-case|case
-name|IFT_IEEE80211
 case|:
 name|ndopt
 operator|->

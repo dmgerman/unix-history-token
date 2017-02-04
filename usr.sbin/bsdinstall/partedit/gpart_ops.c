@@ -257,22 +257,6 @@ operator|(
 literal|1
 operator|)
 return|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|scheme
-argument_list|,
-literal|"PC98"
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 return|return
 operator|(
 literal|0
@@ -1224,16 +1208,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|"PC98"
-block|,
-literal|"NEC PC9801 Partition Table"
-block|,
-literal|"Bootable on NEC PC9801 systems"
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|"VTOC8"
 block|,
 literal|"Sun VTOC8 Partition Table"
@@ -1745,15 +1719,6 @@ argument_list|(
 name|scheme
 argument_list|,
 literal|"EBR"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|scheme
-argument_list|,
-literal|"PC98"
 argument_list|)
 operator|==
 literal|0
@@ -5726,15 +5691,6 @@ argument_list|(
 name|scheme
 argument_list|,
 literal|"MBR"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|scheme
-argument_list|,
-literal|"PC98"
 argument_list|)
 operator|==
 literal|0

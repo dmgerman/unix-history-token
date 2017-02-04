@@ -3297,8 +3297,11 @@ operator|.
 name|extsize
 condition|)
 block|{
-name|set_extattr_file
+name|set_extattr
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|cp
 argument_list|,
 name|buf
@@ -3306,6 +3309,8 @@ argument_list|,
 name|node
 operator|.
 name|extsize
+argument_list|,
+name|SXA_FILE
 argument_list|)
 expr_stmt|;
 block|}

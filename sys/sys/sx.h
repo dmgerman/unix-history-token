@@ -175,6 +175,27 @@ name|sx_recurse
 value|lock_object.lo_data
 end_define
 
+begin_define
+define|#
+directive|define
+name|SX_READ_VALUE
+parameter_list|(
+name|sx
+parameter_list|)
+value|((sx)->sx_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lv_sx_owner
+parameter_list|(
+name|v
+parameter_list|)
+define|\
+value|((v& SX_LOCK_SHARED) ? NULL : (struct thread *)SX_OWNER(v))
+end_define
+
 begin_comment
 comment|/*  * Function prototipes.  Routines that start with an underscore are not part  * of the public interface and are wrappered with a macro.  */
 end_comment

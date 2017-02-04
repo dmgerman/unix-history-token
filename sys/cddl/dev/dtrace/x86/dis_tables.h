@@ -169,6 +169,10 @@ decl_stmt|;
 name|uint_t
 name|d86_got_modrm
 decl_stmt|;
+name|uint_t
+name|d86_vsib
+decl_stmt|;
+comment|/* Has a VSIB */
 name|struct
 name|d86opnd
 name|d86_opnd

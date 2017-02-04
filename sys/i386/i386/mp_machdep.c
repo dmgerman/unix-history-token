@@ -101,32 +101,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_DISABLE_CMPXCHG
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|COMPILING_LINT
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|SMP not supported with CPU_DISABLE_CMPXCHG
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
@@ -402,12 +376,6 @@ directive|if
 name|defined
 argument_list|(
 name|CHECK_POINTS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|PC98
 argument_list|)
 end_if
 
@@ -1322,14 +1290,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|PC98
 name|u_char
 name|mpbiosreason
 decl_stmt|;
-endif|#
-directive|endif
 name|u_int32_t
 name|mpbioswarmvec
 decl_stmt|;
@@ -1368,9 +1331,6 @@ operator|)
 name|WARMBOOT_OFF
 operator|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 name|outb
 argument_list|(
 name|CMOS_REG
@@ -1385,8 +1345,6 @@ argument_list|(
 name|CMOS_DATA
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* set up temporary P==V mapping for AP boot */
 comment|/* XXX this is a hack, we should boot the AP on its own stack/PTD */
 for|for
@@ -1508,9 +1466,6 @@ operator|>>
 literal|4
 operator|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 name|outb
 argument_list|(
 name|CMOS_REG
@@ -1526,8 +1481,6 @@ name|BIOS_WARM
 argument_list|)
 expr_stmt|;
 comment|/* 'warm-start' */
-endif|#
-directive|endif
 name|bootSTK
 operator|=
 operator|(
@@ -1625,9 +1578,6 @@ name|WARMBOOT_OFF
 operator|=
 name|mpbioswarmvec
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 name|outb
 argument_list|(
 name|CMOS_REG
@@ -1642,8 +1592,6 @@ argument_list|,
 name|mpbiosreason
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Undo V==P hack from above */
 for|for
 control|(

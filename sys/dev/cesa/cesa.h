@@ -664,6 +664,9 @@ decl_stmt|;
 name|int32_t
 name|sc_cid
 decl_stmt|;
+name|uint32_t
+name|sc_soc_id
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -1141,26 +1144,12 @@ name|CESA_TDMA_CR_ACTIVE
 value|(1<< 14)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_MV_ARMADA38X
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|CESA_TDMA_NUM_OUTSTAND
 value|(2<< 16)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1281,26 +1270,12 @@ name|CESA_SA_CMD_ACTVATE
 value|(1<< 0)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_MV_ARMADA38X
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|CESA_SA_CMD_SHA2
 value|(1<< 31)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -5396,6 +5396,20 @@ modifier|*
 name|ah
 parameter_list|)
 function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setDfsCacTxQuiet
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_BOOL
+parameter_list|)
+function_decl|;
 comment|/* Spectral Scan functions */
 name|void
 name|__ahdecl
@@ -6758,6 +6772,26 @@ name|struct
 name|ath_hal
 modifier|*
 name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Enable/disable and get self-gen frame (ACK, CTS) for CAC.  */
+end_comment
+
+begin_function_decl
+name|void
+name|__ahdecl
+name|ath_hal_set_dfs_cac_tx_quiet
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_BOOL
+name|ena
 parameter_list|)
 function_decl|;
 end_function_decl

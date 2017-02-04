@@ -121,6 +121,10 @@ directive|include
 file|<pthread.h>
 end_include
 
+begin_macro
+name|__NULLABILITY_PRAGMA_PUSH
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -3182,32 +3186,27 @@ name|_pthread_mutex_consistent
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
+name|_Nonnull
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+begin_function_decl
 name|int
 name|_pthread_mutexattr_getrobust
-argument_list|(
+parameter_list|(
 name|pthread_mutexattr_t
-operator|*
+modifier|*
+name|_Nonnull
 name|__restrict
-argument_list|,
+parameter_list|,
 name|int
-operator|*
+modifier|*
+name|_Nonnull
 name|__restrict
-argument_list|)
-name|__nonnull_all
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -3215,18 +3214,12 @@ name|_pthread_mutexattr_setrobust
 parameter_list|(
 name|pthread_mutexattr_t
 modifier|*
+name|_Nonnull
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/* #include<fcntl.h> */
@@ -4294,9 +4287,10 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|__END_DECLS
-end_macro
+name|__NULLABILITY_PRAGMA_POP
+end_expr_stmt
 
 begin_endif
 endif|#

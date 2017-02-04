@@ -23,7 +23,7 @@ name|char
 name|deflate_copyright
 index|[]
 init|=
-literal|" deflate 1.2.10 Copyright 1995-2017 Jean-loup Gailly and Mark Adler "
+literal|" deflate 1.2.11 Copyright 1995-2017 Jean-loup Gailly and Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -2977,6 +2977,10 @@ index|]
 operator|.
 name|func
 operator|)
+operator|&&
+name|s
+operator|->
+name|high_water
 condition|)
 block|{
 comment|/* Flush the last buffer: */
@@ -8707,17 +8711,6 @@ operator|=
 name|have
 expr_stmt|;
 comment|/* limit len to the output */
-if|if
-condition|(
-name|left
-operator|>
-name|len
-condition|)
-name|left
-operator|=
-name|len
-expr_stmt|;
-comment|/* limit window pull to len */
 comment|/* If the stored block would be less than min_block in length, or if          * unable to copy all of the available input when flushing, then try          * copying to the window and the pending buffer instead. Also don't          * write an empty block when flushing -- deflate() does that.          */
 if|if
 condition|(
@@ -8741,9 +8734,9 @@ operator|==
 name|Z_NO_FLUSH
 operator|||
 name|len
-operator|-
-name|left
 operator|!=
+name|left
+operator|+
 name|s
 operator|->
 name|strm
@@ -8760,9 +8753,9 @@ operator|==
 name|Z_FINISH
 operator|&&
 name|len
-operator|-
-name|left
 operator|==
+name|left
+operator|+
 name|s
 operator|->
 name|strm
@@ -8855,10 +8848,10 @@ operator|->
 name|strm
 argument_list|)
 expr_stmt|;
-comment|/* Update debugging counts for the data about to be copied. */
 ifdef|#
 directive|ifdef
 name|ZLIB_DEBUG
+comment|/* Update debugging counts for the data about to be copied. */
 name|s
 operator|->
 name|compressed_len
@@ -8883,6 +8876,16 @@ condition|(
 name|left
 condition|)
 block|{
+if|if
+condition|(
+name|left
+operator|>
+name|len
+condition|)
+name|left
+operator|=
+name|len
+expr_stmt|;
 name|zmemcpy
 argument_list|(
 name|s
@@ -9166,6 +9169,24 @@ name|insert
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|s
+operator|->
+name|high_water
+operator|<
+name|s
+operator|->
+name|strstart
+condition|)
+name|s
+operator|->
+name|high_water
+operator|=
+name|s
+operator|->
+name|strstart
+expr_stmt|;
 comment|/* If the last block was written to next_out, then done. */
 if|if
 condition|(
@@ -9347,6 +9368,24 @@ operator|+=
 name|have
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|s
+operator|->
+name|high_water
+operator|<
+name|s
+operator|->
+name|strstart
+condition|)
+name|s
+operator|->
+name|high_water
+operator|=
+name|s
+operator|->
+name|strstart
+expr_stmt|;
 comment|/* There was not enough avail_out to write a complete worthy or flushed      * stored block to next_out. Write a stored block to pending instead, if we      * have enough input for a worthy block, or if flushing and there is enough      * room for the remaining input as a stored block in the pending buffer.      */
 name|have
 operator|=

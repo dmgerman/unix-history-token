@@ -197,6 +197,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/mlx5/diagnostics.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/mlx5/mlx5_core/wq.h>
 end_include
 
@@ -1024,7 +1030,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|m(+1, u64 tx_queue_size_max, "tx_queue_size_max", "Max send queue size") \   m(+1, u64 rx_queue_size_max, "rx_queue_size_max", "Max receive queue size") \   m(+1, u64 tx_queue_size, "tx_queue_size", "Default send queue size")	\   m(+1, u64 rx_queue_size, "rx_queue_size", "Default receive queue size") \   m(+1, u64 channels, "channels", "Default number of channels")		\   m(+1, u64 coalesce_usecs_max, "coalesce_usecs_max", "Maximum usecs for joining packets") \   m(+1, u64 coalesce_pkts_max, "coalesce_pkts_max", "Maximum packets to join") \   m(+1, u64 rx_coalesce_usecs, "rx_coalesce_usecs", "Limit in usec for joining rx packets") \   m(+1, u64 rx_coalesce_pkts, "rx_coalesce_pkts", "Maximum number of rx packets to join") \   m(+1, u64 rx_coalesce_mode, "rx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_coalesce_usecs, "tx_coalesce_usecs", "Limit in usec for joining tx packets") \   m(+1, u64 tx_coalesce_pkts, "tx_coalesce_pkts", "Maximum number of tx packets to join") \   m(+1, u64 tx_coalesce_mode, "tx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_completion_fact, "tx_completion_fact", "1..MAX: Completion event ratio") \   m(+1, u64 tx_completion_fact_max, "tx_completion_fact_max", "Maximum completion event ratio") \   m(+1, u64 hw_lro, "hw_lro", "set to enable hw_lro") \   m(+1, u64 cqe_zipping, "cqe_zipping", "0 : CQE zipping disabled")
+value|m(+1, u64 tx_queue_size_max, "tx_queue_size_max", "Max send queue size") \   m(+1, u64 rx_queue_size_max, "rx_queue_size_max", "Max receive queue size") \   m(+1, u64 tx_queue_size, "tx_queue_size", "Default send queue size")	\   m(+1, u64 rx_queue_size, "rx_queue_size", "Default receive queue size") \   m(+1, u64 channels, "channels", "Default number of channels")		\   m(+1, u64 coalesce_usecs_max, "coalesce_usecs_max", "Maximum usecs for joining packets") \   m(+1, u64 coalesce_pkts_max, "coalesce_pkts_max", "Maximum packets to join") \   m(+1, u64 rx_coalesce_usecs, "rx_coalesce_usecs", "Limit in usec for joining rx packets") \   m(+1, u64 rx_coalesce_pkts, "rx_coalesce_pkts", "Maximum number of rx packets to join") \   m(+1, u64 rx_coalesce_mode, "rx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_coalesce_usecs, "tx_coalesce_usecs", "Limit in usec for joining tx packets") \   m(+1, u64 tx_coalesce_pkts, "tx_coalesce_pkts", "Maximum number of tx packets to join") \   m(+1, u64 tx_coalesce_mode, "tx_coalesce_mode", "0: EQE mode 1: CQE mode") \   m(+1, u64 tx_bufring_disable, "tx_bufring_disable", "0: Enable bufring 1: Disable bufring") \   m(+1, u64 tx_completion_fact, "tx_completion_fact", "1..MAX: Completion event ratio") \   m(+1, u64 tx_completion_fact_max, "tx_completion_fact_max", "Maximum completion event ratio") \   m(+1, u64 hw_lro, "hw_lro", "set to enable hw_lro") \   m(+1, u64 cqe_zipping, "cqe_zipping", "0 : CQE zipping disabled") \   m(+1, u64 diag_pci_enable, "diag_pci_enable", "0: Disabled 1: Enabled") \   m(+1, u64 diag_general_enable, "diag_general_enable", "0: Disabled 1: Enabled")
 end_define
 
 begin_define
@@ -1379,7 +1385,7 @@ name|u16
 name|cev_factor
 decl_stmt|;
 comment|/* completion event factor */
-name|u32
+name|u16
 name|cev_next_state
 decl_stmt|;
 comment|/* next completion event state */
@@ -1398,6 +1404,10 @@ directive|define
 name|MLX5E_CEV_STATE_HOLD_NOPS
 value|2
 comment|/* don't send NOPs yet */
+name|u16
+name|stopped
+decl_stmt|;
+comment|/* set if SQ is stopped */
 name|struct
 name|callout
 name|cev_callout
@@ -1507,6 +1517,20 @@ name|u16
 name|n
 parameter_list|)
 block|{
+name|u16
+name|cc
+init|=
+name|sq
+operator|->
+name|cc
+decl_stmt|;
+name|u16
+name|pc
+init|=
+name|sq
+operator|->
+name|pc
+decl_stmt|;
 return|return
 operator|(
 operator|(
@@ -1517,24 +1541,16 @@ operator|.
 name|sz_m1
 operator|&
 operator|(
-name|sq
-operator|->
 name|cc
 operator|-
-name|sq
-operator|->
 name|pc
 operator|)
 operator|)
 operator|>=
 name|n
 operator|||
-name|sq
-operator|->
 name|cc
 operator|==
-name|sq
-operator|->
 name|pc
 operator|)
 return|;
@@ -1897,6 +1913,14 @@ decl_stmt|;
 name|struct
 name|mlx5e_params_ethtool
 name|params_ethtool
+decl_stmt|;
+name|union
+name|mlx5_core_pci_diagnostics
+name|params_pci
+decl_stmt|;
+name|union
+name|mlx5_core_general_diagnostics
+name|params_general
 decl_stmt|;
 name|struct
 name|mtx

@@ -412,6 +412,24 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Static network interface owned tag.  * Allocated through ifp->if_snd_tag_alloc().  */
+end_comment
+
+begin_struct
+struct|struct
+name|m_snd_tag
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+comment|/* network interface tag belongs to */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Record/packet header in first mbuf of chain; valid only if M_PKTHDR is set.  * Size ILP32: 48  *	 LP64: 56  * Compile-time assertions in uipc_mbuf.c test these values to ensure that  * they are correct.  */
 end_comment
 
@@ -419,12 +437,22 @@ begin_struct
 struct|struct
 name|pkthdr
 block|{
+union|union
+block|{
+name|struct
+name|m_snd_tag
+modifier|*
+name|snd_tag
+decl_stmt|;
+comment|/* send tag, if any */
 name|struct
 name|ifnet
 modifier|*
 name|rcvif
 decl_stmt|;
 comment|/* rcv interface */
+block|}
+union|;
 name|SLIST_HEAD
 argument_list|(
 argument|packet_tags

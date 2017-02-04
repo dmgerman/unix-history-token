@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zlib.h -- interface of the 'zlib' general purpose compression library   version 1.2.10, January 2nd, 2017    Copyright (C) 1995-2017 Jean-loup Gailly and Mark Adler    This software is provided 'as-is', without any express or implied   warranty.  In no event will the authors be held liable for any damages   arising from the use of this software.    Permission is granted to anyone to use this software for any purpose,   including commercial applications, and to alter it and redistribute it   freely, subject to the following restrictions:    1. The origin of this software must not be misrepresented; you must not      claim that you wrote the original software. If you use this software      in a product, an acknowledgment in the product documentation would be      appreciated but is not required.   2. Altered source versions must be plainly marked as such, and must not be      misrepresented as being the original software.   3. This notice may not be removed or altered from any source distribution.    Jean-loup Gailly        Mark Adler   jloup@gzip.org          madler@alumni.caltech.edu     The data format used by the zlib library is described by RFCs (Request for   Comments) 1950 to 1952 in the files http://tools.ietf.org/html/rfc1950   (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format). */
+comment|/* zlib.h -- interface of the 'zlib' general purpose compression library   version 1.2.11, January 15th, 2017    Copyright (C) 1995-2017 Jean-loup Gailly and Mark Adler    This software is provided 'as-is', without any express or implied   warranty.  In no event will the authors be held liable for any damages   arising from the use of this software.    Permission is granted to anyone to use this software for any purpose,   including commercial applications, and to alter it and redistribute it   freely, subject to the following restrictions:    1. The origin of this software must not be misrepresented; you must not      claim that you wrote the original software. If you use this software      in a product, an acknowledgment in the product documentation would be      appreciated but is not required.   2. Altered source versions must be plainly marked as such, and must not be      misrepresented as being the original software.   3. This notice may not be removed or altered from any source distribution.    Jean-loup Gailly        Mark Adler   jloup@gzip.org          madler@alumni.caltech.edu     The data format used by the zlib library is described by RFCs (Request for   Comments) 1950 to 1952 in the files http://tools.ietf.org/html/rfc1950   (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format). */
 end_comment
 
 begin_ifndef
@@ -36,11 +36,11 @@ directive|endif
 define|#
 directive|define
 name|ZLIB_VERSION
-value|"1.2.10"
+value|"1.2.11"
 define|#
 directive|define
 name|ZLIB_VERNUM
-value|0x12a0
+value|0x12b0
 define|#
 directive|define
 name|ZLIB_VER_MAJOR
@@ -52,7 +52,7 @@ value|2
 define|#
 directive|define
 name|ZLIB_VER_REVISION
-value|10
+value|11
 define|#
 directive|define
 name|ZLIB_VER_SUBREVISION
@@ -548,7 +548,7 @@ name|strategy
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/*      Dynamically update the compression level and compression strategy.  The    interpretation of level and strategy is as in deflateInit2().  This can be    used to switch between compression and straight copy of the input data, or    to switch to a different kind of input data requiring a different strategy.    If the compression approach (which is a function of the level) or the    strategy is changed, then the input available so far is compressed with the    old level and strategy using deflate(strm, Z_BLOCK).  There are three    approaches for the compression levels 0, 1..3, and 4..9 respectively.  The    new level and strategy will take effect at the next call of deflate().       If a deflate(strm, Z_BLOCK) is performed by deflateParams(), and it does    not have enough output space to complete, then the parameter change will not    take effect.  In this case, deflateParams() can be called again with the    same parameters and more output space to try again.       In order to assure a change in the parameters on the first try, the    deflate stream should be flushed using deflate() with Z_BLOCK or other flush    request until strm.avail_out is not zero, before calling deflateParams().    Then no more input data should be provided before the deflateParams() call.    If this is done, the old level and strategy will be applied to the data    compressed before deflateParams(), and the new level and strategy will be    applied to the the data compressed after deflateParams().       deflateParams returns Z_OK on success, Z_STREAM_ERROR if the source stream    state was inconsistent or if a parameter was invalid, or Z_BUF_ERROR if    there was not enough output space to complete the compression of the    available input data before a change in the strategy or approach.  Note that    in the case of a Z_BUF_ERROR, the parameters are not changed.  A return    value of Z_BUF_ERROR is not fatal, in which case deflateParams() can be    retried with more output space. */
+comment|/*      Dynamically update the compression level and compression strategy.  The    interpretation of level and strategy is as in deflateInit2().  This can be    used to switch between compression and straight copy of the input data, or    to switch to a different kind of input data requiring a different strategy.    If the compression approach (which is a function of the level) or the    strategy is changed, and if any input has been consumed in a previous    deflate() call, then the input available so far is compressed with the old    level and strategy using deflate(strm, Z_BLOCK).  There are three approaches    for the compression levels 0, 1..3, and 4..9 respectively.  The new level    and strategy will take effect at the next call of deflate().       If a deflate(strm, Z_BLOCK) is performed by deflateParams(), and it does    not have enough output space to complete, then the parameter change will not    take effect.  In this case, deflateParams() can be called again with the    same parameters and more output space to try again.       In order to assure a change in the parameters on the first try, the    deflate stream should be flushed using deflate() with Z_BLOCK or other flush    request until strm.avail_out is not zero, before calling deflateParams().    Then no more input data should be provided before the deflateParams() call.    If this is done, the old level and strategy will be applied to the data    compressed before deflateParams(), and the new level and strategy will be    applied to the the data compressed after deflateParams().       deflateParams returns Z_OK on success, Z_STREAM_ERROR if the source stream    state was inconsistent or if a parameter was invalid, or Z_BUF_ERROR if    there was not enough output space to complete the compression of the    available input data before a change in the strategy or approach.  Note that    in the case of a Z_BUF_ERROR, the parameters are not changed.  A return    value of Z_BUF_ERROR is not fatal, in which case deflateParams() can be    retried with more output space. */
 name|ZEXTERN
 name|int
 name|ZEXPORT
