@@ -1469,6 +1469,11 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+decl_stmt|;
 name|uint32_t
 name|model
 decl_stmt|;
@@ -1748,11 +1753,8 @@ name|i
 operator|++
 control|)
 block|{
-name|struct
-name|sdhci_slot
-modifier|*
 name|slot
-init|=
+operator|=
 operator|&
 name|sc
 operator|->
@@ -1762,7 +1764,7 @@ name|sc
 operator|->
 name|num_slots
 index|]
-decl_stmt|;
+expr_stmt|;
 comment|/* Allocate memory. */
 name|rid
 operator|=
@@ -1913,12 +1915,8 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|struct
-name|sdhci_slot
-modifier|*
-name|slot
-init|=
+name|sdhci_start_slot
+argument_list|(
 operator|&
 name|sc
 operator|->
@@ -1926,13 +1924,8 @@ name|slots
 index|[
 name|i
 index|]
-decl_stmt|;
-name|sdhci_start_slot
-argument_list|(
-name|slot
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -2015,11 +2008,8 @@ name|i
 operator|++
 control|)
 block|{
-name|struct
-name|sdhci_slot
-modifier|*
-name|slot
-init|=
+name|sdhci_cleanup_slot
+argument_list|(
 operator|&
 name|sc
 operator|->
@@ -2027,10 +2017,6 @@ name|slots
 index|[
 name|i
 index|]
-decl_stmt|;
-name|sdhci_cleanup_slot
-argument_list|(
-name|slot
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -2320,12 +2306,8 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|struct
-name|sdhci_slot
-modifier|*
-name|slot
-init|=
+name|sdhci_generic_intr
+argument_list|(
 operator|&
 name|sc
 operator|->
@@ -2333,13 +2315,8 @@ name|slots
 index|[
 name|i
 index|]
-decl_stmt|;
-name|sdhci_generic_intr
-argument_list|(
-name|slot
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
