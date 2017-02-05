@@ -657,9 +657,10 @@ decl_stmt|;
 name|uint32_t
 name|len
 decl_stmt|,
-name|resid
-decl_stmt|,
 name|offset
+decl_stmt|;
+name|ssize_t
+name|resid
 decl_stmt|;
 name|wdc_append_serial_name
 argument_list|(
