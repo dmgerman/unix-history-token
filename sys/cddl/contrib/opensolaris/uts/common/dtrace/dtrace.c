@@ -57745,7 +57745,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*  * Apply the relocations from the specified 'sec' (a DOF_SECT_URELHDR) to the  * specified DOF.  At present, this amounts to simply adding 'ubase' to the  * site of any user SETX relocations to account for load object base address.  * In the future, if we need other relocations, this function can be extended.  */
+comment|/*  * Apply the relocations from the specified 'sec' (a DOF_SECT_URELHDR) to the  * specified DOF.  SETX relocations are computed using 'ubase', the base load  * address of the object containing the DOF, and DOFREL relocations are relative  * to the relocation offset within the DOF.  */
 specifier|static
 name|int
 name|dtrace_dof_relocate
@@ -57760,6 +57760,9 @@ name|sec
 parameter_list|,
 name|uint64_t
 name|ubase
+parameter_list|,
+name|uint64_t
+name|udaddr
 parameter_list|)
 block|{
 name|uintptr_t
@@ -58006,6 +58009,9 @@ break|break;
 case|case
 name|DOF_RELO_SETX
 case|:
+case|case
+name|DOF_RELO_DOFREL
+case|:
 if|if
 condition|(
 name|r
@@ -58072,6 +58078,14 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|r
+operator|->
+name|dofr_type
+operator|==
+name|DOF_RELO_SETX
+condition|)
 operator|*
 operator|(
 name|uint64_t
@@ -58080,6 +58094,24 @@ operator|)
 name|taddr
 operator|+=
 name|ubase
+expr_stmt|;
+else|else
+operator|*
+operator|(
+name|uint64_t
+operator|*
+operator|)
+name|taddr
+operator|+=
+name|udaddr
+operator|+
+name|ts
+operator|->
+name|dofs_offset
+operator|+
+name|r
+operator|->
+name|dofr_offset
 expr_stmt|;
 break|break;
 default|default:
@@ -58145,6 +58177,9 @@ name|enabp
 parameter_list|,
 name|uint64_t
 name|ubase
+parameter_list|,
+name|uint64_t
+name|udaddr
 parameter_list|,
 name|int
 name|noprobes
@@ -58949,6 +58984,8 @@ argument_list|,
 name|sec
 argument_list|,
 name|ubase
+argument_list|,
+name|udaddr
 argument_list|)
 operator|!=
 literal|0
@@ -64278,6 +64315,8 @@ name|dta_enabling
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|B_TRUE
 argument_list|)
 expr_stmt|;
@@ -67715,6 +67754,10 @@ argument_list|,
 name|dhp
 operator|->
 name|dofhp_addr
+argument_list|,
+name|dhp
+operator|->
+name|dofhp_dof
 argument_list|,
 name|B_FALSE
 argument_list|)
