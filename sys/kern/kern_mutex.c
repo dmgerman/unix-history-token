@@ -3806,6 +3806,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|v
+operator|=
+name|MTX_UNOWNED
+expr_stmt|;
 for|for
 control|(
 init|;
