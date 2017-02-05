@@ -292,7 +292,7 @@ begin_define
 define|#
 directive|define
 name|WDC_PURGE_MONITOR_USAGE
-value|"\tnvmecontrol wdc purge-montor\n"
+value|"\tnvmecontrol wdc purge-monitor\n"
 end_define
 
 begin_decl_stmt
@@ -447,6 +447,7 @@ name|walker
 operator|--
 expr_stmt|;
 operator|*
+operator|++
 name|walker
 operator|=
 literal|'\0'
@@ -656,9 +657,10 @@ decl_stmt|;
 name|uint32_t
 name|len
 decl_stmt|,
-name|resid
-decl_stmt|,
 name|offset
+decl_stmt|;
+name|ssize_t
+name|resid
 decl_stmt|;
 name|wdc_append_serial_name
 argument_list|(

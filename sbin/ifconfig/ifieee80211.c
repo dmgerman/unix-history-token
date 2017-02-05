@@ -28948,7 +28948,7 @@ argument_list|)
 block|,
 name|DEF_CMD_ARG
 argument_list|(
-literal|"quiet_dur"
+literal|"quiet_duration"
 argument_list|,
 name|set80211quietduration
 argument_list|)
