@@ -314,6 +314,9 @@ modifier|*
 name|c
 parameter_list|,
 name|uintptr_t
+name|v
+parameter_list|,
+name|uintptr_t
 name|tid
 parameter_list|,
 name|int
@@ -367,6 +370,9 @@ specifier|volatile
 name|uintptr_t
 modifier|*
 name|c
+parameter_list|,
+name|uintptr_t
+name|v
 parameter_list|,
 name|uintptr_t
 name|tid
@@ -658,6 +664,8 @@ name|_mtx_lock_sleep
 parameter_list|(
 name|m
 parameter_list|,
+name|v
+parameter_list|,
 name|t
 parameter_list|,
 name|o
@@ -667,7 +675,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__mtx_lock_sleep(&(m)->mtx_lock, t, o, f, l)
+value|__mtx_lock_sleep(&(m)->mtx_lock, v, t, o, f, l)
 end_define
 
 begin_define
@@ -700,6 +708,8 @@ name|_mtx_lock_spin
 parameter_list|(
 name|m
 parameter_list|,
+name|v
+parameter_list|,
 name|t
 parameter_list|,
 name|o
@@ -709,7 +719,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|_mtx_lock_spin_cookie(&(m)->mtx_lock, t, o, f, l)
+value|_mtx_lock_spin_cookie(&(m)->mtx_lock, v, t, o, f, l)
 end_define
 
 begin_endif
@@ -866,6 +876,20 @@ define|\
 value|atomic_cmpset_acq_ptr(&(mp)->mtx_lock, MTX_UNOWNED, (tid))
 end_define
 
+begin_define
+define|#
+directive|define
+name|_mtx_obtain_lock_fetch
+parameter_list|(
+name|mp
+parameter_list|,
+name|vp
+parameter_list|,
+name|tid
+parameter_list|)
+value|({				\ 	*vp = MTX_UNOWNED;						\ 	atomic_fcmpset_rel_ptr(&(mp)->mtx_lock, vp, (tid));		\ })
+end_define
+
 begin_comment
 comment|/* Try to release mtx_lock if it is unrecursed and uncontested. */
 end_comment
@@ -921,7 +945,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (((mp)->mtx_lock != MTX_UNOWNED || !_mtx_obtain_lock((mp), _tid)))\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	else								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(adaptive__acquire,	\ 		    mp, 0, 0, file, line);				\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v;							\ 									\ 	if (!_mtx_obtain_lock_fetch((mp),&_v, _tid))			\ 		_mtx_lock_sleep((mp), _v, _tid, (opts), (file), (line));\ 	else								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(adaptive__acquire,	\ 		    mp, 0, 0, file, line);				\ } while (0)
 end_define
 
 begin_comment
@@ -949,7 +973,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if (((mp)->mtx_lock != MTX_UNOWNED || !_mtx_obtain_lock((mp), _tid))) {\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	} else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(spin__acquire,	\ 		    mp, 0, 0, file, line);				\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v;							\ 									\ 	spinlock_enter();						\ 	if (!_mtx_obtain_lock_fetch((mp),&_v, _tid)) {			\ 		if (_v == _tid)						\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _v, _tid, (opts), (file), (line));\ 	} else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(spin__acquire,	\ 		    mp, 0, 0, file, line);				\ } while (0)
 end_define
 
 begin_define
@@ -1043,7 +1067,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((mp)->mtx_recurse == 0)					\ 		LOCKSTAT_PROFILE_RELEASE_LOCK(adaptive__release, mp);	\ 	if ((mp)->mtx_lock != _tid || !_mtx_release_lock((mp), _tid))	\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((mp)->mtx_recurse == 0)					\ 		LOCKSTAT_PROFILE_RELEASE_LOCK(adaptive__release, mp);	\ 	if (!_mtx_release_lock((mp), _tid))				\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
 end_define
 
 begin_comment
