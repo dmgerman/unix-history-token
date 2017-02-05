@@ -428,6 +428,9 @@ init|=
 name|false
 decl_stmt|;
 name|bool
+name|DefineCommon
+decl_stmt|;
+name|bool
 name|Demangle
 init|=
 name|true
