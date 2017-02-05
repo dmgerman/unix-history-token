@@ -1808,6 +1808,34 @@ name|SANITIZER_INTERCEPT_UTMPX
 value|SI_LINUX_NOT_ANDROID || SI_MAC || SI_FREEBSD
 end_define
 
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_MALLOPT_AND_MALLINFO
+value|(!SI_FREEBSD&& !SI_MAC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_MEMALIGN
+value|(!SI_FREEBSD&& !SI_MAC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_PVALLOC
+value|(!SI_FREEBSD&& !SI_MAC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_INTERCEPT_CFREE
+value|(!SI_FREEBSD&& !SI_MAC)
+end_define
+
 begin_endif
 endif|#
 directive|endif
