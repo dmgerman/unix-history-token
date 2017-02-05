@@ -54827,6 +54827,26 @@ name|eol
 operator|-
 name|data
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|%
+literal|2
+operator|!=
+literal|0
+condition|)
+block|{
+name|dtrace_dof_error
+argument_list|(
+name|NULL
+argument_list|,
+literal|"invalid DOF encoding length"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|doferr
+goto|;
+block|}
 name|bytes
 operator|=
 name|len
