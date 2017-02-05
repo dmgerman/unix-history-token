@@ -2682,24 +2682,6 @@ name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If pi_rname isn't set, the relocation will be against the 		 * function name. If it is, the relocation will be against 		 * pi_rname. This will be used if the function is scoped 		 * locally so an alternate symbol is added for the purpose 		 * of this relocation. 		 */
-if|if
-condition|(
-name|pip
-operator|->
-name|pi_rname
-operator|==
-name|NULL
-condition|)
-name|dofr
-operator|.
-name|dofr_name
-operator|=
-name|dofpr
-operator|.
-name|dofpr_func
-expr_stmt|;
-else|else
 name|dofr
 operator|.
 name|dofr_name
@@ -2717,7 +2699,7 @@ name|dofr
 operator|.
 name|dofr_type
 operator|=
-name|DOF_RELO_SETX
+name|DOF_RELO_DOFREL
 expr_stmt|;
 name|dofr
 operator|.

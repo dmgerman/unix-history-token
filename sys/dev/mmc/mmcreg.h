@@ -1804,11 +1804,11 @@ decl_stmt|;
 define|#
 directive|define
 name|SD_SCR_BUS_WIDTH_1
-value|(1<<0)
+value|(1<< 0)
 define|#
 directive|define
 name|SD_SCR_BUS_WIDTH_4
-value|(1<<2)
+value|(1<< 2)
 block|}
 struct|;
 end_struct

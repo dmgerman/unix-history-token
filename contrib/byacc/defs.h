@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: defs.h,v 1.54 2016/12/02 19:27:56 tom Exp $ */
+comment|/* $Id: defs.h,v 1.56 2017/02/02 00:44:38 tom Exp $ */
 end_comment
 
 begin_ifdef
@@ -1713,6 +1713,13 @@ specifier|extern
 name|char
 modifier|*
 name|input_file_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|input_file_name_len
 decl_stmt|;
 end_decl_stmt
 

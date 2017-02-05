@@ -2316,6 +2316,7 @@ name|arg
 parameter_list|,
 name|int
 name|pending
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2324,6 +2325,9 @@ modifier|*
 name|slot
 init|=
 name|arg
+decl_stmt|;
+name|device_t
+name|d
 decl_stmt|;
 name|SDHCI_LOCK
 argument_list|(
@@ -2435,13 +2439,12 @@ argument_list|,
 literal|"Card removed\n"
 argument_list|)
 expr_stmt|;
-name|device_t
 name|d
-init|=
+operator|=
 name|slot
 operator|->
 name|dev
-decl_stmt|;
+expr_stmt|;
 name|slot
 operator|->
 name|dev
@@ -5341,6 +5344,9 @@ name|curcmd
 operator|->
 name|data
 decl_stmt|;
+name|size_t
+name|left
+decl_stmt|;
 comment|/* Interrupt aggregation: Restore command interrupt. 	 * Auxiliary restore point for the case when data interrupt 	 * happened first. */
 if|if
 condition|(
@@ -5390,9 +5396,8 @@ operator|&
 name|MMC_DATA_READ
 condition|)
 block|{
-name|size_t
 name|left
-init|=
+operator|=
 name|data
 operator|->
 name|len
@@ -5400,7 +5405,7 @@ operator|-
 name|slot
 operator|->
 name|offset
-decl_stmt|;
+expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|slot
@@ -6939,7 +6944,7 @@ operator|&
 name|SDHCI_INT_DATA_MASK
 argument_list|)
 expr_stmt|;
-comment|/* Dont call data_irq in case of errored command */
+comment|/* Don't call data_irq in case of errored command. */
 if|if
 condition|(
 operator|(

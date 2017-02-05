@@ -401,6 +401,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* linux 2.6.11: */
+end_comment
+
 begin_expr_stmt
 name|DUMMY
 argument_list|(
@@ -424,6 +428,10 @@ name|keyctl
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* linux 2.6.13: */
+end_comment
 
 begin_expr_stmt
 name|DUMMY
@@ -465,6 +473,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* linux 2.6.16: */
+end_comment
+
 begin_expr_stmt
 name|DUMMY
 argument_list|(
@@ -480,6 +492,10 @@ name|unshare
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* linux 2.6.17: */
+end_comment
 
 begin_expr_stmt
 name|DUMMY
@@ -513,6 +529,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* linux 2.6.18: */
+end_comment
+
 begin_expr_stmt
 name|DUMMY
 argument_list|(
@@ -520,6 +540,10 @@ name|move_pages
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* linux 2.6.22: */
+end_comment
 
 begin_expr_stmt
 name|DUMMY
@@ -532,10 +556,14 @@ end_expr_stmt
 begin_expr_stmt
 name|DUMMY
 argument_list|(
-name|timerfd
+name|timerfd_create
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* linux 2.6.25: */
+end_comment
 
 begin_expr_stmt
 name|DUMMY
@@ -553,6 +581,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* linux 2.6.27: */
+end_comment
+
 begin_expr_stmt
 name|DUMMY
 argument_list|(
@@ -568,6 +600,10 @@ name|inotify_init1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* linux 2.6.30: */
+end_comment
 
 begin_expr_stmt
 name|DUMMY
@@ -585,10 +621,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* linux 2.6.31: */
+end_comment
+
 begin_expr_stmt
 name|DUMMY
 argument_list|(
-name|rt_tsigqueueinfo
+name|rt_tgsigqueueinfo
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -600,6 +640,10 @@ name|perf_event_open
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* linux 2.6.38: */
+end_comment
 
 begin_expr_stmt
 name|DUMMY
@@ -616,6 +660,10 @@ name|fanotify_mark
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* linux 2.6.39: */
+end_comment
 
 begin_expr_stmt
 name|DUMMY
@@ -641,6 +689,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* linux 3.0: */
+end_comment
+
 begin_expr_stmt
 name|DUMMY
 argument_list|(
@@ -648,6 +700,18 @@ name|setns
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|getcpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 3.2: */
+end_comment
 
 begin_expr_stmt
 name|DUMMY
@@ -665,6 +729,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* linux 3.5: */
+end_comment
+
 begin_expr_stmt
 name|DUMMY
 argument_list|(
@@ -673,10 +741,198 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* linux 3.8: */
+end_comment
+
 begin_expr_stmt
 name|DUMMY
 argument_list|(
 name|finit_module
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|sched_setattr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|sched_getattr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 3.14: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|renameat2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 3.15: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|seccomp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|getrandom
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|memfd_create
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|kexec_file_load
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 3.18: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|bpf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 3.19: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|execveat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 4.2: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|userfaultfd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 4.3: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|membarrier
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 4.4: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|mlock2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 4.5: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|copy_file_range
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 4.6: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|preadv2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|pwritev2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* linux 4.8: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|pkey_mprotect
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|pkey_alloc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|pkey_free
 argument_list|)
 expr_stmt|;
 end_expr_stmt

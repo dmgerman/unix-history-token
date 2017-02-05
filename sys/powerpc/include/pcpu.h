@@ -468,7 +468,7 @@ begin_define
 define|#
 directive|define
 name|pcpup
-value|(get_pcpu())
+value|((struct pcpu *) powerpc_get_pcpup())
 end_define
 
 begin_expr_stmt

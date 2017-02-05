@@ -1223,6 +1223,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_PHY_RADAR_0_ENA_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_PHY_RADAR_0_FFT_ENA
 value|0x80000000
 end_define

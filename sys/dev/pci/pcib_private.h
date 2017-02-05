@@ -437,9 +437,6 @@ name|uint16_t
 name|pcie_slot_sta
 decl_stmt|;
 name|uint32_t
-name|pcie_link_cap
-decl_stmt|;
-name|uint32_t
 name|pcie_slot_cap
 decl_stmt|;
 name|struct

@@ -71,38 +71,6 @@ directive|include
 file|<machine/pcb.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CPU_DISABLE_SSE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPU_ENABLE_SSE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -449,11 +417,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -475,9 +438,6 @@ name|int
 name|data
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|struct
 name|savexmm
 modifier|*
@@ -608,15 +568,6 @@ operator|(
 name|error
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 

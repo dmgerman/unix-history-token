@@ -4864,6 +4864,8 @@ name|size
 decl_stmt|;
 name|int
 name|err
+decl_stmt|,
+name|acl_type
 decl_stmt|;
 name|int64_t
 name|type
@@ -5085,27 +5087,20 @@ case|case
 literal|01000000
 case|:
 comment|/* POSIX.1e ACL */
+name|acl_type
+operator|=
+name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
+expr_stmt|;
 break|break;
 case|case
 literal|03000000
 case|:
-name|archive_set_error
-argument_list|(
-operator|&
-name|a
-operator|->
-name|archive
-argument_list|,
-name|ARCHIVE_ERRNO_MISC
-argument_list|,
-literal|"Solaris NFSv4 ACLs not supported"
-argument_list|)
+comment|/* NFSv4 ACL */
+name|acl_type
+operator|=
+name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
 expr_stmt|;
-return|return
-operator|(
-name|ARCHIVE_WARN
-operator|)
-return|;
+break|break;
 default|default:
 name|archive_set_error
 argument_list|(
@@ -5261,7 +5256,7 @@ name|localname
 operator|.
 name|s
 argument_list|,
-name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
+name|acl_type
 argument_list|,
 name|tar
 operator|->

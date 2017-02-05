@@ -2513,6 +2513,11 @@ directive|define
 name|DOF_RELO_SETX
 value|1
 comment|/* relocate setx value */
+define|#
+directive|define
+name|DOF_RELO_DOFREL
+value|2
+comment|/* relocate DOF-relative value */
 typedef|typedef
 struct|struct
 name|dof_optdesc

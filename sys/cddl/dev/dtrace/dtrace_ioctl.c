@@ -1930,6 +1930,8 @@ name|enab
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|B_TRUE
 argument_list|)
 operator|!=

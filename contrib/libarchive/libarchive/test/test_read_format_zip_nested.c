@@ -321,6 +321,11 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Inspect inner Zip. */
 name|assert
 argument_list|(

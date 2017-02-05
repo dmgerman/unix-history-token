@@ -161,6 +161,10 @@ name|HAL_DEBUG_BT_COEX
 init|=
 literal|0x20000000
 block|,
+name|HAL_DEBUG_SPECTRAL
+init|=
+literal|0x40000000
+block|,
 name|HAL_DEBUG_UNMASKABLE
 init|=
 literal|0x80000000

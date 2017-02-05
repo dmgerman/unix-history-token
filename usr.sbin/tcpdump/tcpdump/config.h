@@ -49,6 +49,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* capsicum support available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CAPSICUM
+value|1
+end_define
+
+begin_comment
 comment|/* Casper library support available */
 end_comment
 

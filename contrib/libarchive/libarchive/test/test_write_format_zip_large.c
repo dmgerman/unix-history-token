@@ -2570,6 +2570,11 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+name|buff
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|nulldata
 argument_list|)
 expr_stmt|;

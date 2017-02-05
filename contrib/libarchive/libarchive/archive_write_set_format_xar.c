@@ -9970,6 +9970,13 @@ name|script
 operator|)
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|file
+operator|->
+name|entry
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|file

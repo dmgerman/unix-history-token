@@ -541,7 +541,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->dev),	\ 	    "mmc", MTX_DEF)
+value|mtx_init(&(_sc)->sc_mtx, device_get_nameunit((_sc)->dev),	\ 	    "mmc", MTX_DEF)
 end_define
 
 begin_define
@@ -551,7 +551,7 @@ name|MMC_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_destroy(&_sc->sc_mtx);
+value|mtx_destroy(&(_sc)->sc_mtx);
 end_define
 
 begin_define
@@ -561,7 +561,7 @@ name|MMC_ASSERT_LOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_OWNED);
+value|mtx_assert(&(_sc)->sc_mtx, MA_OWNED);
 end_define
 
 begin_define
@@ -571,7 +571,7 @@ name|MMC_ASSERT_UNLOCKED
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&_sc->sc_mtx, MA_NOTOWNED);
+value|mtx_assert(&(_sc)->sc_mtx, MA_NOTOWNED);
 end_define
 
 begin_function_decl
@@ -4104,17 +4104,17 @@ name|int
 name|timing
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
-name|uint8_t
-name|value
-decl_stmt|;
 name|u_char
 name|switch_res
 index|[
 literal|64
 index|]
+decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+name|uint8_t
+name|value
 decl_stmt|;
 switch|switch
 condition|(
@@ -7559,9 +7559,6 @@ modifier|*
 name|rawextcsd
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
 name|struct
 name|mmc_command
 name|cmd
@@ -7569,6 +7566,9 @@ decl_stmt|;
 name|struct
 name|mmc_data
 name|data
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 name|memset
 argument_list|(
@@ -7688,11 +7688,6 @@ modifier|*
 name|rawsdstatus
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|,
-name|i
-decl_stmt|;
 name|struct
 name|mmc_command
 name|cmd
@@ -7700,6 +7695,11 @@ decl_stmt|;
 name|struct
 name|mmc_data
 name|data
+decl_stmt|;
+name|int
+name|err
+decl_stmt|,
+name|i
 decl_stmt|;
 name|memset
 argument_list|(
@@ -8955,7 +8955,7 @@ name|SD_MAX_HS
 expr_stmt|;
 block|}
 block|}
-comment|/* 			 * We deselect then reselect the card here.  Some cards 			 * become unselected and timeout with the above two 			 * commands, although the state tables / diagrams in the 			 * standard suggest they go back to the transfer state. 			 * Other cards don't become deselected, and if we 			 * atttempt to blindly re-select them, we get timeout 			 * errors from some controllers.  So we deselect then 			 * reselect to handle all situations.  The only thing we 			 * use from the sd_status is the erase sector size, but 			 * it is still nice to get that right. 			 */
+comment|/* 			 * We deselect then reselect the card here.  Some cards 			 * become unselected and timeout with the above two 			 * commands, although the state tables / diagrams in the 			 * standard suggest they go back to the transfer state. 			 * Other cards don't become deselected, and if we 			 * attempt to blindly re-select them, we get timeout 			 * errors from some controllers.  So we deselect then 			 * reselect to handle all situations.  The only thing we 			 * use from the sd_status is the erase sector size, but 			 * it is still nice to get that right. 			 */
 name|mmc_select_card
 argument_list|(
 name|sc
@@ -9651,8 +9651,6 @@ name|struct
 name|mmc_ivars
 modifier|*
 name|ivar
-init|=
-name|NULL
 decl_stmt|;
 name|device_t
 modifier|*
@@ -10344,20 +10342,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|max_dtr
-decl_stmt|,
-name|max_hs_dtr
-decl_stmt|,
-name|max_timing
-decl_stmt|;
-name|int
-name|nkid
-decl_stmt|,
-name|i
-decl_stmt|,
-name|f_max
-decl_stmt|;
 name|device_t
 modifier|*
 name|kids
@@ -10366,6 +10350,19 @@ name|struct
 name|mmc_ivars
 modifier|*
 name|ivar
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|f_max
+decl_stmt|,
+name|max_dtr
+decl_stmt|,
+name|max_hs_dtr
+decl_stmt|,
+name|max_timing
+decl_stmt|,
+name|nkid
 decl_stmt|;
 name|f_max
 operator|=
@@ -10384,7 +10381,6 @@ name|f_max
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|mmcbr_get_caps
 argument_list|(
 name|sc
@@ -10393,7 +10389,6 @@ name|dev
 argument_list|)
 operator|&
 name|MMC_CAP_HSPEED
-operator|)
 condition|)
 name|max_timing
 operator|=

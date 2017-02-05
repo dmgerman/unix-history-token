@@ -1250,6 +1250,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -1300,6 +1306,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_comment
 comment|/*  * Initialise a VM domain iterator.  *  * Check the thread policy, then the proc policy,  * then default to the system policy.  *  * Later on the various layers will have this logic  * plumbed into them and the phys code will be explicitly  * handed a VM domain policy to use.  */

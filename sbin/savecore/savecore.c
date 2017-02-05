@@ -2270,6 +2270,10 @@ operator|=
 name|getbounds
 argument_list|()
 expr_stmt|;
+name|dumpkey
+operator|=
+name|NULL
+expr_stmt|;
 name|mediasize
 operator|=
 literal|0
@@ -3993,6 +3997,11 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+name|dumpkey
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
@@ -4011,6 +4020,11 @@ argument_list|)
 expr_stmt|;
 name|closefd
 label|:
+name|free
+argument_list|(
+name|dumpkey
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|temp

@@ -33,11 +33,13 @@ directive|ifdef
 name|LOCORE
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_ARM_ARCH_6
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
 
 begin_define
 define|#

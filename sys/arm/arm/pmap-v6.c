@@ -1627,11 +1627,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+name|ARM_SMP_UP
+argument_list|(
 name|reg
 operator||=
 literal|1
 operator|<<
 literal|1
+argument_list|, 	)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1850,13 +1853,12 @@ comment|/* Add shareable bits for normal memory in SMP case. */
 ifdef|#
 directive|ifdef
 name|SMP
-if|if
-condition|(
-name|ARM_USE_MP_EXTENSIONS
-condition|)
+name|ARM_SMP_UP
+argument_list|(
 name|prrr
 operator||=
 name|PRRR_NS1
+argument_list|, 	)
 expr_stmt|;
 endif|#
 directive|endif

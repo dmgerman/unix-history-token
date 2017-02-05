@@ -7951,6 +7951,15 @@ literal|8
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* Indicate tx bits in sc_lsr can be used to determine busy vs idle. */
+name|ucom_use_lsr_txbits
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_ucom
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ucom_attach
@@ -8542,7 +8551,7 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Extract packet headers and payload bytes from the buffer. 		 * Feed payload bytes to ucom/tty layer; OR-accumulate header 		 * status bits which are transient and could toggle with each 		 * packet. After processing all packets in the buffer, process 		 * the accumulated transient MSR and LSR values along with the 		 * non-transient bits from the last packet header. 		 */
+comment|/* 		 * Extract packet headers and payload bytes from the buffer. 		 * Feed payload bytes to ucom/tty layer; OR-accumulate the 		 * receiver-related header status bits which are transient and 		 * could toggle with each packet, but for transmitter-related 		 * bits keep only the ones from the last packet. 		 * 		 * After processing all packets in the buffer, process the 		 * accumulated transient MSR and LSR values along with the 		 * non-transient bits from the last packet header. 		 */
 while|while
 condition|(
 name|buflen
@@ -8568,6 +8577,15 @@ expr_stmt|;
 name|buflen
 operator|-=
 name|UFTDI_IHDRSIZE
+expr_stmt|;
+name|lsr
+operator|&=
+operator|~
+operator|(
+name|ULSR_TXRDY
+operator||
+name|ULSR_TSRE
+operator|)
 expr_stmt|;
 name|lsr
 operator||=
@@ -8678,29 +8696,17 @@ name|SER_DCD
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|sc
 operator|->
 name|sc_msr
 operator|!=
 name|msr
-operator|)
 operator|||
-operator|(
-operator|(
 name|sc
 operator|->
 name|sc_lsr
-operator|&
-name|FTDI_LSR_MASK
-operator|)
 operator|!=
-operator|(
 name|lsr
-operator|&
-name|FTDI_LSR_MASK
-operator|)
-operator|)
 condition|)
 block|{
 name|DPRINTF
