@@ -4636,6 +4636,16 @@ name|DEFAULT_SIZE
 block|}
 block|,
 block|{
+name|HGST_INFO_LOG
+block|,
+literal|"wdc"
+block|,
+name|print_hgst_info_log
+block|,
+name|DEFAULT_SIZE
+block|}
+block|,
+block|{
 name|INTEL_LOG_TEMP_STATS
 block|,
 literal|"intel"
