@@ -759,6 +759,7 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX TODO: if we're doing QOS.. 	 * cmd->qos_flags |= cpu_to_le32(MAC_QOS_FLG_UPDATE_EDCA) 	 */
 comment|/* XXX TODO: set wme parameters; also handle getting updated wme parameters */
 for|for
 control|(
