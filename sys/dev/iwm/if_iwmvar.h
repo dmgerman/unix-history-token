@@ -1096,9 +1096,6 @@ decl_stmt|;
 name|int
 name|sc_fw_chunk_done
 decl_stmt|;
-name|int
-name|sc_init_complete
-decl_stmt|;
 name|struct
 name|iwm_ucode_status
 name|sc_uc
