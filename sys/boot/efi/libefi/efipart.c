@@ -98,8 +98,6 @@ name|daddr_t
 parameter_list|,
 name|size_t
 parameter_list|,
-name|size_t
-parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -120,8 +118,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|daddr_t
-parameter_list|,
-name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -1404,9 +1400,6 @@ name|daddr_t
 name|blk
 parameter_list|,
 name|size_t
-name|offset
-parameter_list|,
-name|size_t
 name|size
 parameter_list|,
 name|char
@@ -1470,8 +1463,6 @@ name|rw
 argument_list|,
 name|blk
 argument_list|,
-name|offset
-argument_list|,
 name|size
 argument_list|,
 name|buf
@@ -1497,9 +1488,6 @@ name|rw
 parameter_list|,
 name|daddr_t
 name|blk
-parameter_list|,
-name|size_t
-name|offset
 parameter_list|,
 name|size_t
 name|size

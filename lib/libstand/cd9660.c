@@ -782,8 +782,6 @@ name|location
 argument_list|)
 argument_list|)
 argument_list|,
-literal|0
-argument_list|,
 name|ISO_DEFAULT_BLOCK_SIZE
 argument_list|,
 name|susp_buffer
@@ -1556,8 +1554,6 @@ argument_list|(
 name|bno
 argument_list|)
 argument_list|,
-literal|0
-argument_list|,
 name|ISO_DEFAULT_BLOCK_SIZE
 argument_list|,
 name|buf
@@ -1767,8 +1763,6 @@ name|bno
 operator|+
 name|boff
 argument_list|)
-argument_list|,
-literal|0
 argument_list|,
 name|ISO_DEFAULT_BLOCK_SIZE
 argument_list|,
@@ -2065,8 +2059,6 @@ name|cdb2devb
 argument_list|(
 name|bno
 argument_list|)
-argument_list|,
-literal|0
 argument_list|,
 name|ISO_DEFAULT_BLOCK_SIZE
 argument_list|,
@@ -2365,8 +2357,6 @@ name|cdb2devb
 argument_list|(
 name|blkno
 argument_list|)
-argument_list|,
-literal|0
 argument_list|,
 name|ISO_DEFAULT_BLOCK_SIZE
 argument_list|,
