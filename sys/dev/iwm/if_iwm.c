@@ -21730,7 +21730,7 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|/* Send phy db control command and then phy db calibration*/
+comment|/* Send phy db control command and then phy db calibration */
 if|if
 condition|(
 operator|(
@@ -21739,25 +21739,16 @@ operator|=
 name|iwm_send_phy_db_data
 argument_list|(
 name|sc
+operator|->
+name|sc_phy_db
 argument_list|)
 operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"phy_db_data failed\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|error
 goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -24937,6 +24928,8 @@ expr_stmt|;
 name|iwm_phy_db_set_section
 argument_list|(
 name|sc
+operator|->
+name|sc_phy_db
 argument_list|,
 name|phy_db_notif
 argument_list|)
@@ -27337,6 +27330,35 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Init phy db */
+name|sc
+operator|->
+name|sc_phy_db
+operator|=
+name|iwm_phy_db_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_phy_db
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Cannot init phy_db\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* PCI attach */
 name|error
 operator|=
@@ -29391,7 +29413,15 @@ block|}
 name|iwm_phy_db_free
 argument_list|(
 name|sc
+operator|->
+name|sc_phy_db
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_phy_db
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Free descriptor rings */
 name|iwm_free_rx_ring
