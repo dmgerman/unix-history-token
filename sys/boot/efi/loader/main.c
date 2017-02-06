@@ -758,6 +758,9 @@ decl_stmt|;
 name|uint64_t
 name|extra
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|EFI_ZFS_BOOT
 comment|/* Did efi_zfs_probe() detect the boot pool? */
 if|if
 condition|(
@@ -851,6 +854,9 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* EFI_ZFS_BOOT */
 comment|/* We have device lists for hd, cd, fd, walk them all. */
 name|pdi_list
 operator|=
