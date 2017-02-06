@@ -360,7 +360,7 @@ begin_function_decl
 name|void
 name|bcache_init
 parameter_list|(
-name|u_int
+name|size_t
 name|nblks
 parameter_list|,
 name|size_t
