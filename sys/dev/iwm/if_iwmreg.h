@@ -881,6 +881,24 @@ parameter_list|)
 value|(((_val)& 0x000000C)>> 2)
 end_define
 
+begin_comment
+comment|/**  *  hw_rev values  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|IWM_SILICON_A_STEP
+init|=
+literal|0
+block|,
+name|IWM_SILICON_B_STEP
+block|,
+name|IWM_SILICON_C_STEP
+block|, }
+enum|;
+end_enum
+
 begin_define
 define|#
 directive|define
