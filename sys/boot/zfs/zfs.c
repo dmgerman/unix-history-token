@@ -2376,7 +2376,7 @@ name|struct
 name|zfs_probe_args
 name|pa
 decl_stmt|;
-name|off_t
+name|uint64_t
 name|mediasz
 decl_stmt|;
 name|int
