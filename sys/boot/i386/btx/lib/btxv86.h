@@ -31,6 +31,24 @@ directive|include
 file|<machine/psl.h>
 end_include
 
+begin_comment
+comment|/*  * Memory buffer space for real mode IO.  * Just one page is not much, but the space is rather limited.  * See ../btx/btx.S for details.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V86_IO_BUFFER
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|V86_IO_BUFFER_SIZE
+value|0x1000
+end_define
+
 begin_define
 define|#
 directive|define
