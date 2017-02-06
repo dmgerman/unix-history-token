@@ -284,16 +284,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|cpu_tlb_flushID_SE
-parameter_list|(
-name|e
-parameter_list|)
-value|arm64_tlb_flushID_SE(e)
-end_define
-
-begin_define
-define|#
-directive|define
 name|cpu_dcache_wbinv_range
 parameter_list|(
 name|a
