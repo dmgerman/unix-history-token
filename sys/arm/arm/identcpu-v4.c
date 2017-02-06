@@ -1193,8 +1193,7 @@ begin_block
 block|{
 name|u_int
 name|cpuid
-decl_stmt|;
-name|u_int8_t
+decl_stmt|,
 name|ctrl
 decl_stmt|;
 name|int
