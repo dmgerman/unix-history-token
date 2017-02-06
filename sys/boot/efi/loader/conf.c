@@ -67,7 +67,13 @@ index|[]
 init|=
 block|{
 operator|&
-name|efipart_dev
+name|efipart_fddev
+block|,
+operator|&
+name|efipart_cddev
+block|,
+operator|&
+name|efipart_hddev
 block|,
 operator|&
 name|efinet_dev
