@@ -76,9 +76,9 @@ modifier|*
 name|phy_db
 parameter_list|,
 name|struct
-name|iwm_calib_res_notif_phy_db
+name|iwm_rx_packet
 modifier|*
-name|phy_db_notif
+name|pkt
 parameter_list|)
 function_decl|;
 end_function_decl
