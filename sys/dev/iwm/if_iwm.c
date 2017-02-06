@@ -2959,7 +2959,7 @@ name|fws
 operator|->
 name|fw_count
 operator|>=
-name|IWM_UCODE_SECT_MAX
+name|IWM_UCODE_SECTION_MAX
 condition|)
 return|return
 name|EINVAL
@@ -3260,7 +3260,7 @@ name|IWM_FW_STATUS_DONE
 operator|&&
 name|ucode_type
 operator|!=
-name|IWM_UCODE_TYPE_INIT
+name|IWM_UCODE_INIT
 condition|)
 return|return
 literal|0
@@ -3955,7 +3955,7 @@ name|iwm_firmware_store_section
 argument_list|(
 name|sc
 argument_list|,
-name|IWM_UCODE_TYPE_REGULAR
+name|IWM_UCODE_REGULAR
 argument_list|,
 name|tlv_data
 argument_list|,
@@ -3972,7 +3972,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: IWM_UCODE_TYPE_REGULAR: iwm_firmware_store_section() failed; %d\n"
+literal|"%s: IWM_UCODE_REGULAR: iwm_firmware_store_section() failed; %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3996,7 +3996,7 @@ name|iwm_firmware_store_section
 argument_list|(
 name|sc
 argument_list|,
-name|IWM_UCODE_TYPE_INIT
+name|IWM_UCODE_INIT
 argument_list|,
 name|tlv_data
 argument_list|,
@@ -4013,7 +4013,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: IWM_UCODE_TYPE_INIT: iwm_firmware_store_section() failed; %d\n"
+literal|"%s: IWM_UCODE_INIT: iwm_firmware_store_section() failed; %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4037,7 +4037,7 @@ name|iwm_firmware_store_section
 argument_list|(
 name|sc
 argument_list|,
-name|IWM_UCODE_TYPE_WOW
+name|IWM_UCODE_WOWLAN
 argument_list|,
 name|tlv_data
 argument_list|,
@@ -4054,7 +4054,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: IWM_UCODE_TYPE_WOW: iwm_firmware_store_section() failed; %d\n"
+literal|"%s: IWM_UCODE_WOWLAN: iwm_firmware_store_section() failed; %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4479,7 +4479,7 @@ name|iwm_firmware_store_section
 argument_list|(
 name|sc
 argument_list|,
-name|IWM_UCODE_TYPE_REGULAR_USNIFFER
+name|IWM_UCODE_REGULAR_USNIFFER
 argument_list|,
 name|tlv_data
 argument_list|,
@@ -12113,7 +12113,7 @@ name|first_ucode_section
 init|;
 name|i
 operator|<
-name|IWM_UCODE_SECT_MAX
+name|IWM_UCODE_SECTION_MAX
 condition|;
 name|i
 operator|++
@@ -13338,7 +13338,7 @@ name|iwm_mvm_load_ucode_wait_alive
 argument_list|(
 name|sc
 argument_list|,
-name|IWM_UCODE_TYPE_INIT
+name|IWM_UCODE_INIT
 argument_list|)
 operator|)
 operator|!=
@@ -22122,7 +22122,7 @@ name|iwm_mvm_load_ucode_wait_alive
 argument_list|(
 name|sc
 argument_list|,
-name|IWM_UCODE_TYPE_REGULAR
+name|IWM_UCODE_REGULAR
 argument_list|)
 expr_stmt|;
 if|if

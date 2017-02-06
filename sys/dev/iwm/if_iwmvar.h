@@ -97,7 +97,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IWM_UCODE_SECT_MAX
+name|IWM_UCODE_SECTION_MAX
 value|16
 end_define
 
@@ -151,17 +151,21 @@ name|IWM_FW_STATUS_DONE
 value|2
 end_define
 
+begin_comment
+comment|/**  * enum iwm_ucode_type  *  * The type of ucode.  *  * @IWM_UCODE_REGULAR: Normal runtime ucode  * @IWM_UCODE_INIT: Initial ucode  * @IWM_UCODE_WOWLAN: Wake on Wireless enabled ucode  * @IWM_UCODE_REGULAR_USNIFFER: Normal runtime ucode when using usniffer image  */
+end_comment
+
 begin_enum
 enum|enum
 name|iwm_ucode_type
 block|{
-name|IWM_UCODE_TYPE_REGULAR
+name|IWM_UCODE_REGULAR
 block|,
-name|IWM_UCODE_TYPE_INIT
+name|IWM_UCODE_INIT
 block|,
-name|IWM_UCODE_TYPE_WOW
+name|IWM_UCODE_WOWLAN
 block|,
-name|IWM_UCODE_TYPE_REGULAR_USNIFFER
+name|IWM_UCODE_REGULAR_USNIFFER
 block|,
 name|IWM_UCODE_TYPE_MAX
 block|}
@@ -201,7 +205,7 @@ decl_stmt|;
 block|}
 name|fw_sect
 index|[
-name|IWM_UCODE_SECT_MAX
+name|IWM_UCODE_SECTION_MAX
 index|]
 struct|;
 name|int
