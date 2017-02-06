@@ -918,6 +918,9 @@ decl_stmt|;
 name|uint32_t
 name|sc_debug
 decl_stmt|;
+name|int
+name|sc_attached
+decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
