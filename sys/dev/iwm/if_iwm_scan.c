@@ -1421,8 +1421,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_nvm
-operator|.
+name|nvm_data
+operator|->
 name|sku_cap_band_52GHz_enable
 condition|)
 block|{
@@ -2804,8 +2804,8 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_nvm
-operator|.
+name|nvm_data
+operator|->
 name|sku_cap_band_52GHz_enable
 condition|)
 name|req
