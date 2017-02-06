@@ -1251,6 +1251,11 @@ decl_stmt|;
 name|int
 name|sc_max_rssi
 decl_stmt|;
+name|struct
+name|iwm_notif_wait_data
+modifier|*
+name|sc_notif_wait
+decl_stmt|;
 block|}
 struct|;
 end_struct
