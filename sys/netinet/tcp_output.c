@@ -4749,7 +4749,7 @@ condition|(
 name|isipv6
 condition|)
 block|{
-comment|/* 		 * ip6_plen is not need to be filled now, and will be filled 		 * in ip6_output. 		 */
+comment|/* 		 * There is no need to fill in ip6_plen right now. 		 * It will be filled later by ip6_output. 		 */
 name|m
 operator|->
 name|m_pkthdr
