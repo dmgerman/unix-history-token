@@ -211,6 +211,9 @@ struct|;
 name|int
 name|fw_count
 decl_stmt|;
+name|uint32_t
+name|paging_mem_size
+decl_stmt|;
 block|}
 name|fw_sects
 index|[

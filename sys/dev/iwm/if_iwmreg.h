@@ -2719,6 +2719,105 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Block paging calculations  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_PAGE_2_EXP_SIZE
+value|12
+end_define
+
+begin_comment
+comment|/* 4K == 2^12 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_FW_PAGING_SIZE
+value|(1<< IWM_PAGE_2_EXP_SIZE)
+end_define
+
+begin_comment
+comment|/* page size is 4KB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_PAGE_PER_GROUP_2_EXP_SIZE
+value|3
+end_define
+
+begin_comment
+comment|/* 8 pages per group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_NUM_OF_PAGE_PER_GROUP
+value|(1<< IWM_PAGE_PER_GROUP_2_EXP_SIZE)
+end_define
+
+begin_comment
+comment|/* don't change, support only 32KB size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_PAGING_BLOCK_SIZE
+value|(IWM_NUM_OF_PAGE_PER_GROUP * IWM_FW_PAGING_SIZE)
+end_define
+
+begin_comment
+comment|/* 32K == 2^15 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_BLOCK_2_EXP_SIZE
+value|(IWM_PAGE_2_EXP_SIZE + IWM_PAGE_PER_GROUP_2_EXP_SIZE)
+end_define
+
+begin_comment
+comment|/*  * Image paging calculations  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_BLOCK_PER_IMAGE_2_EXP_SIZE
+value|5
+end_define
+
+begin_comment
+comment|/* 2^5 == 32 blocks per image */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_NUM_OF_BLOCK_PER_IMAGE
+value|(1<< IWM_BLOCK_PER_IMAGE_2_EXP_SIZE)
+end_define
+
+begin_comment
+comment|/* maximum image size 1024KB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_MAX_PAGING_IMAGE_SIZE
+value|(IWM_NUM_OF_BLOCK_PER_IMAGE * IWM_PAGING_BLOCK_SIZE)
+end_define
+
+begin_comment
 comment|/**  * struct iwm_fw_cscheme_list - a cipher scheme list  * @size: a number of entries  * @cs: cipher scheme entries  */
 end_comment
 
