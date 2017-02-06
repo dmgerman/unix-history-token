@@ -750,7 +750,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_device_family
+name|cfg
+operator|->
+name|device_family
 operator|==
 name|IWM_DEVICE_FAMILY_8000
 condition|)
@@ -1333,7 +1335,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_device_family
+name|cfg
+operator|->
+name|device_family
 operator|!=
 name|IWM_DEVICE_FAMILY_8000
 condition|)
@@ -1440,6 +1444,8 @@ if|if
 condition|(
 name|sc
 operator|->
+name|cfg
+operator|->
 name|host_interrupt_operation_mode
 condition|)
 block|{
@@ -1487,7 +1493,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_device_family
+name|cfg
+operator|->
+name|device_family
 operator|==
 name|IWM_DEVICE_FAMILY_7000
 condition|)
