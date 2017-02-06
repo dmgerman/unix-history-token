@@ -213,6 +213,15 @@ index|[
 name|IWM_UCODE_TYPE_MAX
 index|]
 struct|;
+name|uint32_t
+name|phy_config
+decl_stmt|;
+name|uint8_t
+name|valid_tx_ant
+decl_stmt|;
+name|uint8_t
+name|valid_rx_ant
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1139,9 +1148,6 @@ decl_stmt|;
 name|struct
 name|iwm_fw_info
 name|sc_fw
-decl_stmt|;
-name|int
-name|sc_fw_phy_config
 decl_stmt|;
 name|struct
 name|iwm_tlv_calib_ctrl
