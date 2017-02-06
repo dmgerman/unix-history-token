@@ -29832,9 +29832,17 @@ operator|=
 name|inp
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IPSEC_SUPPORT
+argument_list|)
 comment|/*- 	 * I very much doubt any of the IPSEC stuff will work but I have no 	 * idea, so I will leave it in place. 	 */
 if|if
 condition|(
@@ -29858,8 +29866,18 @@ name|AF_INET
 case|:
 if|if
 condition|(
-name|ipsec4_in_reject
+name|IPSEC_ENABLED
 argument_list|(
+name|ipv4
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|IPSEC_CHECK_POLICY
+argument_list|(
+name|ipv4
+argument_list|,
 name|m
 argument_list|,
 operator|&
@@ -29869,6 +29887,8 @@ name|ip_inp
 operator|.
 name|inp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|SCTP_STAT_INCR
@@ -29879,6 +29899,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 break|break;
 endif|#
@@ -29891,8 +29912,18 @@ name|AF_INET6
 case|:
 if|if
 condition|(
-name|ipsec6_in_reject
+name|IPSEC_ENABLED
 argument_list|(
+name|ipv6
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|IPSEC_CHECK_POLICY
+argument_list|(
+name|ipv6
+argument_list|,
 name|m
 argument_list|,
 operator|&
@@ -29902,6 +29933,8 @@ name|ip_inp
 operator|.
 name|inp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|SCTP_STAT_INCR
@@ -29913,6 +29946,7 @@ goto|goto
 name|out
 goto|;
 block|}
+block|}
 break|break;
 endif|#
 directive|endif
@@ -29922,6 +29956,7 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* IPSEC */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_INPUT1

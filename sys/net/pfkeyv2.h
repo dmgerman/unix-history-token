@@ -1101,8 +1101,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SADB_X_EXT_NEW_ADDRESS_SRC
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|SADB_X_EXT_NEW_ADDRESS_DST
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
 name|SADB_EXT_MAX
-value|26
+value|28
 end_define
 
 begin_define

@@ -92,7 +92,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* draft-ietf-ipsec-udp-encaps-02+ */
+comment|/* RFC3948 */
 end_comment
 
 begin_comment
