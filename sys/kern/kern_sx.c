@@ -2550,6 +2550,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+name|x
+operator|==
+name|SX_LOCK_UNLOCKED
+argument_list|)
+condition|)
+name|x
+operator|=
+name|SX_READ_VALUE
+argument_list|(
+name|sx
+argument_list|)
+expr_stmt|;
 comment|/* If we already hold an exclusive lock, then recurse. */
 if|if
 condition|(
