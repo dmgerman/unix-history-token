@@ -489,6 +489,25 @@ argument_list|,
 name|UINT64_MAX
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|ptrdiff_t
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|uintmax_t
+argument_list|)
+condition|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"the %%t qualifier is broken on 32-bit "
+literal|"platforms where there's a mismatch between ptrdiff_t and "
+literal|"uintmax_t's type width; bug # 191674"
+argument_list|)
+expr_stmt|;
 name|testfmt
 argument_list|(
 literal|"-1"
