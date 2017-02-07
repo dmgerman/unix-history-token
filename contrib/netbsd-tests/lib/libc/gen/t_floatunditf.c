@@ -772,6 +772,25 @@ directive|else
 name|size_t
 name|i
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"the floating point error on FreeBSD/i386 doesn't "
+literal|"match the expected floating point error on NetBSD"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
