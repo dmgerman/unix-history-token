@@ -1468,6 +1468,16 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"behavior doesn't match docs; see bug # 216872"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|e
 operator|.
 name|key
