@@ -202,6 +202,21 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+ifdef|#
+directive|ifdef
+name|__i386__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"the __HAVE_LONG_DOUBLE checks fail on i386"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
