@@ -194,6 +194,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ptable_getsize
+parameter_list|(
+specifier|const
+name|struct
+name|ptable
+modifier|*
+name|table
+parameter_list|,
+name|uint64_t
+modifier|*
+name|sizep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ptable_getpart
 parameter_list|(
 specifier|const

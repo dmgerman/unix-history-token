@@ -1374,17 +1374,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Max number of sectors to bounce-buffer at a time. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CD_BOUNCEBUF
-value|8
-end_define
-
-begin_comment
 comment|/* return negative value for an error, otherwise blocks read */
 end_comment
 
@@ -1481,9 +1470,15 @@ block|{
 comment|/*  		 * The destination buffer is above first 1MB of 		 * physical memory so we have to arrange a suitable 		 * bounce buffer. 		 */
 name|x
 operator|=
+name|V86_IO_BUFFER_SIZE
+operator|/
+name|BIOSCD_SECSIZE
+expr_stmt|;
+name|x
+operator|=
 name|min
 argument_list|(
-name|CD_BOUNCEBUF
+name|x
 argument_list|,
 operator|(
 name|unsigned
@@ -1493,11 +1488,9 @@ argument_list|)
 expr_stmt|;
 name|bbuf
 operator|=
-name|alloca
+name|PTOV
 argument_list|(
-name|x
-operator|*
-name|BIOSCD_SECSIZE
+name|V86_IO_BUFFER
 argument_list|)
 expr_stmt|;
 name|maxfer

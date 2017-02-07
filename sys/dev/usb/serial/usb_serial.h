@@ -707,6 +707,11 @@ directive|define
 name|UCOM_FLAG_INWAKEUP
 value|0x0400
 comment|/* set if we are in the tsw_inwakeup callback */
+define|#
+directive|define
+name|UCOM_FLAG_LSRTXIDLE
+value|0x0800
+comment|/* set if sc_lsr bits ULSR_TSRE+TXRDY work */
 name|uint8_t
 name|sc_lsr
 decl_stmt|;
@@ -982,6 +987,27 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ucom_use_lsr_txbits
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|sc
+operator|->
+name|sc_flag
+operator||=
+name|UCOM_FLAG_LSRTXIDLE
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#

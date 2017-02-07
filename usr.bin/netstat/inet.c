@@ -4277,6 +4277,56 @@ literal|"\t{:congestion-reductions/%ju} "
 literal|"{N:/time%s ECN reduced the congestion window}\n"
 argument_list|)
 expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"ecn"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"tcp-signature"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_rcvgoodsig
+argument_list|,
+literal|"\t{:received-good-signature/%ju} "
+literal|"{N:/packet%s with matching signature received}\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_rcvbadsig
+argument_list|,
+literal|"\t{:received-bad-signature/%ju} "
+literal|"{N:/packet%s with bad signature received}\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_err_buildsig
+argument_list|,
+literal|"\t{:failed-make-signature/%ju} "
+literal|"{N:/time%s failed to make signature due to no SA}\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_err_sigopt
+argument_list|,
+literal|"\t{:no-signature-expected/%ju} "
+literal|"{N:/time%s unexpected signature received}\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_err_nosigopt
+argument_list|,
+literal|"\t{:no-signature-provided/%ju} "
+literal|"{N:/time%s no signature provided by segment}\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
@@ -4294,7 +4344,7 @@ directive|undef
 name|p3
 name|xo_close_container
 argument_list|(
-literal|"ecn"
+literal|"tcp-signature"
 argument_list|)
 expr_stmt|;
 name|xo_open_container

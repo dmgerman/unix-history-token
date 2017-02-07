@@ -211,6 +211,21 @@ define|\
 value|atomic_cmpset_acq_ptr(&(rw)->rw_lock, RW_UNLOCKED, (tid))
 end_define
 
+begin_define
+define|#
+directive|define
+name|_rw_write_lock_fetch
+parameter_list|(
+name|rw
+parameter_list|,
+name|vp
+parameter_list|,
+name|tid
+parameter_list|)
+define|\
+value|atomic_fcmpset_acq_ptr(&(rw)->rw_lock, vp, (tid))
+end_define
+
 begin_comment
 comment|/* Release a write lock quickly if there are no waiters. */
 end_comment
@@ -249,7 +264,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((rw)->rw_lock != RW_UNLOCKED || !_rw_write_lock((rw), _tid))\ 		_rw_wlock_hard((rw), _tid, (file), (line));		\ 	else 								\ 		LOCKSTAT_PROFILE_OBTAIN_RWLOCK_SUCCESS(rw__acquire, rw,	\ 		    0, 0, file, line, LOCKSTAT_WRITER);			\ } while (0)
+value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = RW_UNLOCKED;					\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__acquire) ||	\ 	    !_rw_write_lock_fetch((rw),&_v, _tid)))			\ 		_rw_wlock_hard((rw), _v, _tid, (file), (line));		\ } while (0)
 end_define
 
 begin_comment
@@ -269,7 +284,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((rw)->rw_recurse)						\ 		(rw)->rw_recurse--;					\ 	else {								\ 		LOCKSTAT_PROFILE_RELEASE_RWLOCK(rw__release, rw,	\ 		    LOCKSTAT_WRITER);					\ 		if ((rw)->rw_lock != _tid || !_rw_write_unlock((rw), _tid))\ 			_rw_wunlock_hard((rw), _tid, (file), (line));	\ 	}								\ } while (0)
+value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((rw)->rw_recurse)						\ 		(rw)->rw_recurse--;					\ 	else {								\ 		if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__release) ||\ 		    !_rw_write_unlock((rw), _tid)))			\ 			_rw_wunlock_hard((rw), _tid, (file), (line));	\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -471,6 +486,9 @@ specifier|volatile
 name|uintptr_t
 modifier|*
 name|c
+parameter_list|,
+name|uintptr_t
+name|v
 parameter_list|,
 name|uintptr_t
 name|tid
@@ -743,6 +761,8 @@ name|_rw_wlock_hard
 parameter_list|(
 name|rw
 parameter_list|,
+name|v
+parameter_list|,
 name|t
 parameter_list|,
 name|f
@@ -750,7 +770,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__rw_wlock_hard(&(rw)->rw_lock, t, f, l)
+value|__rw_wlock_hard(&(rw)->rw_lock, v, t, f, l)
 end_define
 
 begin_define

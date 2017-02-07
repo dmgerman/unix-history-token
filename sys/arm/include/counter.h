@@ -27,29 +27,12 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|counter_enter
 parameter_list|()
-value|critical_enter()
+value|do {} while (0)
 end_define
 
 begin_define
@@ -57,7 +40,7 @@ define|#
 directive|define
 name|counter_exit
 parameter_list|()
-value|critical_exit()
+value|do {} while (0)
 end_define
 
 begin_ifdef
@@ -130,19 +113,10 @@ name|r
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|mp_ncpus
-condition|;
-name|i
-operator|++
-control|)
+name|CPU_FOREACH
+argument_list|(
+argument|i
+argument_list|)
 name|r
 operator|+=
 name|counter_u64_read_one
@@ -243,7 +217,7 @@ name|c
 parameter_list|,
 name|inc
 parameter_list|)
-value|do {	\ 	CRITICAL_ASSERT(curthread);			\ 	atomic_add_64((uint64_t *)zpcpu_get(c), (inc));	\ } while (0)
+value|counter_u64_add(c, inc)
 end_define
 
 begin_function
@@ -259,18 +233,19 @@ name|int64_t
 name|inc
 parameter_list|)
 block|{
-name|counter_enter
-argument_list|()
-expr_stmt|;
-name|counter_u64_add_protected
+name|atomic_add_64
+argument_list|(
+operator|(
+name|uint64_t
+operator|*
+operator|)
+name|zpcpu_get
 argument_list|(
 name|c
+argument_list|)
 argument_list|,
 name|inc
 argument_list|)
-expr_stmt|;
-name|counter_exit
-argument_list|()
 expr_stmt|;
 block|}
 end_function

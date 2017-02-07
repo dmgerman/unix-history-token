@@ -15,11 +15,6 @@ directive|define
 name|_DTRACE_XOROSHIRO128_PLUS_H
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -27,7 +22,6 @@ file|<sys/types.h>
 end_include
 
 begin_function_decl
-specifier|extern
 name|void
 name|dtrace_xoroshiro128_plus_jump
 parameter_list|(
@@ -43,7 +37,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|uint64_t
 name|dtrace_xoroshiro128_plus_next
 parameter_list|(
@@ -53,6 +46,11 @@ specifier|const
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

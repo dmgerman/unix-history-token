@@ -364,6 +364,7 @@ comment|/* hardware identification */
 name|device_t
 name|pic_dev
 decl_stmt|;
+comment|/* Only one of FLAG_PIC or FLAG_MSI may be set */
 define|#
 directive|define
 name|FLAG_PIC
@@ -372,6 +373,10 @@ define|#
 directive|define
 name|FLAG_MSI
 value|(1<< 1)
+define|#
+directive|define
+name|FLAG_TYPE_MASK
+value|(FLAG_PIC | FLAG_MSI)
 name|u_int
 name|pic_flags
 decl_stmt|;
@@ -421,6 +426,9 @@ name|dev
 parameter_list|,
 name|intptr_t
 name|xref
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2776,6 +2784,9 @@ name|dev
 parameter_list|,
 name|intptr_t
 name|xref
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -2816,6 +2827,23 @@ argument_list|,
 argument|pic_next
 argument_list|)
 block|{
+if|if
+condition|(
+operator|(
+name|pic
+operator|->
+name|pic_flags
+operator|&
+name|FLAG_TYPE_MASK
+operator|)
+operator|!=
+operator|(
+name|flags
+operator|&
+name|FLAG_TYPE_MASK
+operator|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|dev
@@ -2904,6 +2932,9 @@ name|dev
 parameter_list|,
 name|intptr_t
 name|xref
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -2924,6 +2955,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|xref
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -2950,6 +2983,9 @@ name|dev
 parameter_list|,
 name|intptr_t
 name|xref
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -2970,6 +3006,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|xref
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -3039,6 +3077,12 @@ name|pic_dev
 operator|=
 name|dev
 expr_stmt|;
+name|pic
+operator|->
+name|pic_flags
+operator|=
+name|flags
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -3088,6 +3132,9 @@ name|dev
 parameter_list|,
 name|intptr_t
 name|xref
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -3108,6 +3155,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|xref
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -3189,6 +3238,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|xref
+argument_list|,
+name|FLAG_PIC
 argument_list|)
 expr_stmt|;
 if|if
@@ -3202,12 +3253,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|pic
-operator|->
-name|pic_flags
-operator||=
-name|FLAG_PIC
-expr_stmt|;
 name|debugf
 argument_list|(
 literal|"PIC %p registered for %s<dev %p, xref %x>\n"
@@ -3283,6 +3328,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|xref
+argument_list|,
+name|FLAG_PIC
 argument_list|)
 expr_stmt|;
 if|if
@@ -3312,10 +3359,10 @@ name|pic
 operator|->
 name|pic_flags
 operator|&
-name|FLAG_PIC
+name|FLAG_TYPE_MASK
 operator|)
-operator|!=
-literal|0
+operator|==
+name|FLAG_PIC
 argument_list|,
 operator|(
 literal|"%s: Found a non-PIC controller: %s"
@@ -3453,6 +3500,7 @@ name|child
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* Find the parent PIC */
 name|parent_pic
 operator|=
 name|pic_lookup
@@ -3460,6 +3508,8 @@ argument_list|(
 name|parent
 argument_list|,
 literal|0
+argument_list|,
+name|FLAG_PIC
 argument_list|)
 expr_stmt|;
 if|if
@@ -3634,6 +3684,18 @@ argument_list|(
 name|dev
 argument_list|,
 name|xref
+argument_list|,
+operator|(
+name|data
+operator|->
+name|type
+operator|==
+name|INTR_MAP_DATA_MSI
+operator|)
+condition|?
+name|FLAG_MSI
+else|:
+name|FLAG_PIC
 argument_list|)
 expr_stmt|;
 if|if
@@ -3664,10 +3726,10 @@ name|pic
 operator|->
 name|pic_flags
 operator|&
-name|FLAG_MSI
+name|FLAG_TYPE_MASK
 operator|)
-operator|!=
-literal|0
+operator|==
+name|FLAG_MSI
 argument_list|,
 operator|(
 literal|"%s: Found a non-MSI controller: %s"
@@ -3712,10 +3774,10 @@ name|pic
 operator|->
 name|pic_flags
 operator|&
-name|FLAG_PIC
+name|FLAG_TYPE_MASK
 operator|)
-operator|!=
-literal|0
+operator|==
+name|FLAG_PIC
 argument_list|,
 operator|(
 literal|"%s: Found a non-PIC controller: %s"
@@ -5269,6 +5331,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|xref
+argument_list|,
+name|FLAG_MSI
 argument_list|)
 expr_stmt|;
 if|if
@@ -5282,12 +5346,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|pic
-operator|->
-name|pic_flags
-operator||=
-name|FLAG_MSI
-expr_stmt|;
 name|debugf
 argument_list|(
 literal|"PIC %p registered for %s<dev %p, xref %jx>\n"
@@ -5367,6 +5425,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|xref
+argument_list|,
+name|FLAG_MSI
 argument_list|)
 expr_stmt|;
 if|if
@@ -5387,10 +5447,10 @@ name|pic
 operator|->
 name|pic_flags
 operator|&
-name|FLAG_MSI
+name|FLAG_TYPE_MASK
 operator|)
-operator|!=
-literal|0
+operator|==
+name|FLAG_MSI
 argument_list|,
 operator|(
 literal|"%s: Found a non-MSI controller: %s"
@@ -5591,6 +5651,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|xref
+argument_list|,
+name|FLAG_MSI
 argument_list|)
 expr_stmt|;
 if|if
@@ -5611,10 +5673,10 @@ name|pic
 operator|->
 name|pic_flags
 operator|&
-name|FLAG_MSI
+name|FLAG_TYPE_MASK
 operator|)
-operator|!=
-literal|0
+operator|==
+name|FLAG_MSI
 argument_list|,
 operator|(
 literal|"%s: Found a non-MSI controller: %s"
@@ -5813,6 +5875,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|xref
+argument_list|,
+name|FLAG_MSI
 argument_list|)
 expr_stmt|;
 if|if
@@ -5833,10 +5897,10 @@ name|pic
 operator|->
 name|pic_flags
 operator|&
-name|FLAG_MSI
+name|FLAG_TYPE_MASK
 operator|)
-operator|!=
-literal|0
+operator|==
+name|FLAG_MSI
 argument_list|,
 operator|(
 literal|"%s: Found a non-MSI controller: %s"
@@ -5974,6 +6038,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|xref
+argument_list|,
+name|FLAG_MSI
 argument_list|)
 expr_stmt|;
 if|if
@@ -5994,10 +6060,10 @@ name|pic
 operator|->
 name|pic_flags
 operator|&
-name|FLAG_MSI
+name|FLAG_TYPE_MASK
 operator|)
-operator|!=
-literal|0
+operator|==
+name|FLAG_MSI
 argument_list|,
 operator|(
 literal|"%s: Found a non-MSI controller: %s"
@@ -6136,6 +6202,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|xref
+argument_list|,
+name|FLAG_MSI
 argument_list|)
 expr_stmt|;
 if|if
@@ -6156,10 +6224,10 @@ name|pic
 operator|->
 name|pic_flags
 operator|&
-name|FLAG_MSI
+name|FLAG_TYPE_MASK
 operator|)
-operator|!=
-literal|0
+operator|==
+name|FLAG_MSI
 argument_list|,
 operator|(
 literal|"%s: Found a non-MSI controller: %s"

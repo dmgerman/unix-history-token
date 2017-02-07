@@ -881,6 +881,24 @@ parameter_list|)
 value|(((_val)& 0x000000C)>> 2)
 end_define
 
+begin_comment
+comment|/**  *  hw_rev values  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|IWM_SILICON_A_STEP
+init|=
+literal|0
+block|,
+name|IWM_SILICON_B_STEP
+block|,
+name|IWM_SILICON_C_STEP
+block|, }
+enum|;
+end_enum
+
 begin_define
 define|#
 directive|define
@@ -2699,6 +2717,105 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Block paging calculations  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_PAGE_2_EXP_SIZE
+value|12
+end_define
+
+begin_comment
+comment|/* 4K == 2^12 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_FW_PAGING_SIZE
+value|(1<< IWM_PAGE_2_EXP_SIZE)
+end_define
+
+begin_comment
+comment|/* page size is 4KB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_PAGE_PER_GROUP_2_EXP_SIZE
+value|3
+end_define
+
+begin_comment
+comment|/* 8 pages per group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_NUM_OF_PAGE_PER_GROUP
+value|(1<< IWM_PAGE_PER_GROUP_2_EXP_SIZE)
+end_define
+
+begin_comment
+comment|/* don't change, support only 32KB size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_PAGING_BLOCK_SIZE
+value|(IWM_NUM_OF_PAGE_PER_GROUP * IWM_FW_PAGING_SIZE)
+end_define
+
+begin_comment
+comment|/* 32K == 2^15 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_BLOCK_2_EXP_SIZE
+value|(IWM_PAGE_2_EXP_SIZE + IWM_PAGE_PER_GROUP_2_EXP_SIZE)
+end_define
+
+begin_comment
+comment|/*  * Image paging calculations  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_BLOCK_PER_IMAGE_2_EXP_SIZE
+value|5
+end_define
+
+begin_comment
+comment|/* 2^5 == 32 blocks per image */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_NUM_OF_BLOCK_PER_IMAGE
+value|(1<< IWM_BLOCK_PER_IMAGE_2_EXP_SIZE)
+end_define
+
+begin_comment
+comment|/* maximum image size 1024KB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_MAX_PAGING_IMAGE_SIZE
+value|(IWM_NUM_OF_BLOCK_PER_IMAGE * IWM_PAGING_BLOCK_SIZE)
+end_define
 
 begin_comment
 comment|/**  * struct iwm_fw_cscheme_list - a cipher scheme list  * @size: a number of entries  * @cs: cipher scheme entries  */
@@ -5758,107 +5875,6 @@ value|(1<< 14)
 end_define
 
 begin_comment
-comment|/*  * PHY db  */
-end_comment
-
-begin_enum
-enum|enum
-name|iwm_phy_db_section_type
-block|{
-name|IWM_PHY_DB_CFG
-init|=
-literal|1
-block|,
-name|IWM_PHY_DB_CALIB_NCH
-block|,
-name|IWM_PHY_DB_UNUSED
-block|,
-name|IWM_PHY_DB_CALIB_CHG_PAPD
-block|,
-name|IWM_PHY_DB_CALIB_CHG_TXP
-block|,
-name|IWM_PHY_DB_MAX
-block|}
-enum|;
-end_enum
-
-begin_define
-define|#
-directive|define
-name|IWM_PHY_DB_CMD
-value|0x6c
-end_define
-
-begin_comment
-comment|/* TEMP API - The actual is 0x8c */
-end_comment
-
-begin_comment
-comment|/*  * phy db - configure operational ucode  */
-end_comment
-
-begin_struct
-struct|struct
-name|iwm_phy_db_cmd
-block|{
-name|uint16_t
-name|type
-decl_stmt|;
-name|uint16_t
-name|length
-decl_stmt|;
-name|uint8_t
-name|data
-index|[]
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
-comment|/* for parsing of tx power channel group data that comes from the firmware */
-end_comment
-
-begin_struct
-struct|struct
-name|iwm_phy_db_chg_txp
-block|{
-name|uint32_t
-name|space
-decl_stmt|;
-name|uint16_t
-name|max_channel_idx
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * phy db - Receive phy db chunk after calibrations  */
-end_comment
-
-begin_struct
-struct|struct
-name|iwm_calib_res_notif_phy_db
-block|{
-name|uint16_t
-name|type
-decl_stmt|;
-name|uint16_t
-name|length
-decl_stmt|;
-name|uint8_t
-name|data
-index|[]
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
 comment|/* Target of the IWM_NVM_ACCESS_CMD */
 end_comment
 
@@ -5887,32 +5903,33 @@ end_comment
 begin_enum
 enum|enum
 block|{
-name|IWM_NVM_SECTION_TYPE_HW
-init|=
-literal|0
-block|,
 name|IWM_NVM_SECTION_TYPE_SW
-block|,
-name|IWM_NVM_SECTION_TYPE_PAPD
+init|=
+literal|1
 block|,
 name|IWM_NVM_SECTION_TYPE_REGULATORY
+init|=
+literal|3
 block|,
 name|IWM_NVM_SECTION_TYPE_CALIBRATION
+init|=
+literal|4
 block|,
 name|IWM_NVM_SECTION_TYPE_PRODUCTION
-block|,
-name|IWM_NVM_SECTION_TYPE_POST_FCS_CALIB
-block|,
-comment|/* 7, 8, 9 unknown */
-name|IWM_NVM_SECTION_TYPE_HW_8000
 init|=
-literal|10
+literal|5
 block|,
 name|IWM_NVM_SECTION_TYPE_MAC_OVERRIDE
+init|=
+literal|11
 block|,
 name|IWM_NVM_SECTION_TYPE_PHY_SKU
+init|=
+literal|12
 block|,
-name|IWM_NVM_NUM_OF_SECTIONS
+name|IWM_NVM_MAX_NUM_SECTIONS
+init|=
+literal|13
 block|, }
 enum|;
 end_enum
