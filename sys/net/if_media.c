@@ -286,6 +286,12 @@ name|M_IFADDR
 argument_list|)
 expr_stmt|;
 block|}
+name|ifm
+operator|->
+name|ifm_cur
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
