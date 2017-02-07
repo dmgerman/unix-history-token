@@ -1630,6 +1630,10 @@ name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
+name|struct
+name|ieee80211_quiet_ie
+name|quiet_ie
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -6219,6 +6223,25 @@ name|_rxchainmask
 parameter_list|)
 define|\
 value|((*(_ah)->ah_setChainMasks)((_ah), (_txchainmask), (_rxchainmask)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_set_quiet
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_p
+parameter_list|,
+name|_d
+parameter_list|,
+name|_o
+parameter_list|,
+name|_f
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setQuiet)((_ah), (_p), (_d), (_o), (_f)))
 end_define
 
 begin_define
