@@ -904,7 +904,7 @@ comment|/* Unused. */
 name|uint32_t
 name|residual
 decl_stmt|;
-comment|/* data residual length */
+comment|/* Unused */
 name|uint32_t
 name|tag_num
 decl_stmt|;
@@ -1054,7 +1054,7 @@ begin_define
 define|#
 directive|define
 name|CTL_HA_VERSION
-value|2
+value|3
 end_define
 
 begin_comment
@@ -1296,7 +1296,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Used for CTL_MSG_SERIALIZE, CTL_MSG_FINISH_IO, CTL_MSG_BAD_JUJU.  */
+comment|/*  * Used for CTL_MSG_SERIALIZE, CTL_MSG_FINISH_IO, CTL_MSG_BAD_JUJU,  * and CTL_MSG_DATAMOVE_DONE.  */
 end_comment
 
 begin_struct
@@ -1334,18 +1334,14 @@ name|uint8_t
 name|sense_len
 decl_stmt|;
 comment|/* Returned sense length */
-name|uint8_t
-name|sense_residual
-decl_stmt|;
-comment|/* sense residual length */
 name|uint32_t
-name|residual
-decl_stmt|;
-comment|/* data residual length */
-name|uint32_t
-name|fetd_status
+name|port_status
 decl_stmt|;
 comment|/* trans status, set by FETD, 						0 = good*/
+name|uint32_t
+name|kern_data_resid
+decl_stmt|;
+comment|/* for DATAMOVE_DONE */
 name|struct
 name|scsi_sense_data
 name|sense_data
