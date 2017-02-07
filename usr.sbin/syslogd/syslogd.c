@@ -1166,9 +1166,7 @@ specifier|const
 name|char
 modifier|*
 name|TypeNames
-index|[
-literal|8
-index|]
+index|[]
 init|=
 block|{
 literal|"UNUSED"
