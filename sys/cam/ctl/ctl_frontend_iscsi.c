@@ -9277,9 +9277,11 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"target \"%s\" already exists"
+literal|"target \"%s\" for portal group tag %u already exists"
 argument_list|,
 name|target
+argument_list|,
+name|tag
 argument_list|)
 expr_stmt|;
 name|cfiscsi_target_release
