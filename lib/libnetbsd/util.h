@@ -72,9 +72,5 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* _UTIL_H_ */
-end_comment
-
 end_unit
 
