@@ -60,7 +60,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 function_decl|(
 modifier|*
 name|fe_shutdown_t
@@ -164,7 +164,7 @@ parameter_list|,
 name|driver
 parameter_list|)
 define|\
-value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		switch (type) { \ 		case MOD_LOAD: \ 			ctl_frontend_register( \ 				(struct ctl_frontend *)data); \ 			break; \ 		case MOD_UNLOAD: \ 			printf(#name " module unload - not possible for this module type\n"); \ 			return EINVAL; \ 		default: \ 			return EOPNOTSUPP; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)&driver \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_CONFIGURE, SI_ORDER_FOURTH); \ 	MODULE_DEPEND(name, ctl, 1, 1, 1); \ 	MODULE_DEPEND(name, cam, 1, 1, 1)
+value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		switch (type) { \ 		case MOD_LOAD: \ 			return (ctl_frontend_register( \ 				(struct ctl_frontend *)data)); \ 			break; \ 		case MOD_UNLOAD: \ 			return (ctl_frontend_deregister( \ 				(struct ctl_frontend *)data)); \ 			break; \ 		default: \ 			return EOPNOTSUPP; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)&driver \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_CONFIGURE, SI_ORDER_FOURTH); \ 	MODULE_DEPEND(name, ctl, 1, 1, 1); \ 	MODULE_DEPEND(name, cam, 1, 1, 1)
 end_define
 
 begin_struct

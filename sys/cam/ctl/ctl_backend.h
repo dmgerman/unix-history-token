@@ -55,7 +55,7 @@ parameter_list|,
 name|driver
 parameter_list|)
 define|\
-value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		switch (type) { \ 		case MOD_LOAD: \ 			ctl_backend_register( \ 				(struct ctl_backend_driver *)data); \ 			break; \ 		case MOD_UNLOAD: \ 			printf(#name " module unload - not possible for this module type\n"); \ 			return EINVAL; \ 		default: \ 			return EOPNOTSUPP; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)&driver \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_CONFIGURE, SI_ORDER_FOURTH); \ 	MODULE_DEPEND(name, ctl, 1, 1, 1); \ 	MODULE_DEPEND(name, cam, 1, 1, 1)
+value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		switch (type) { \ 		case MOD_LOAD: \ 			return (ctl_backend_register( \ 				(struct ctl_backend_driver *)data)); \ 			break; \ 		case MOD_UNLOAD: \ 			return (ctl_backend_deregister( \ 				(struct ctl_backend_driver *)data)); \ 			break; \ 		default: \ 			return EOPNOTSUPP; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)&driver \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_CONFIGURE, SI_ORDER_FOURTH); \ 	MODULE_DEPEND(name, ctl, 1, 1, 1); \ 	MODULE_DEPEND(name, cam, 1, 1, 1)
 end_define
 
 begin_typedef
@@ -230,10 +230,6 @@ init|=
 literal|0x01
 block|,
 comment|/* can do config reads, writes */
-name|CTL_BE_FLAG_INTERNAL
-init|=
-literal|0x02
-comment|/* don't inc mod refcount */
 block|}
 name|ctl_backend_flags
 typedef|;
@@ -245,6 +241,19 @@ name|int
 function_decl|(
 modifier|*
 name|be_init_t
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|be_shutdown_t
 function_decl|)
 parameter_list|(
 name|void
@@ -371,6 +380,10 @@ decl_stmt|;
 comment|/* passed to CTL */
 name|be_init_t
 name|init
+decl_stmt|;
+comment|/* passed to CTL */
+name|be_shutdown_t
+name|shutdown
 decl_stmt|;
 comment|/* passed to CTL */
 name|be_func_t
