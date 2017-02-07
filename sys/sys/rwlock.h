@@ -97,9 +97,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|RW_LOCK_WRITER_RECURSED
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|RW_LOCK_FLAGMASK
 define|\
-value|(RW_LOCK_READ | RW_LOCK_READ_WAITERS | RW_LOCK_WRITE_WAITERS |	\ 	RW_LOCK_WRITE_SPINNER)
+value|(RW_LOCK_READ | RW_LOCK_READ_WAITERS | RW_LOCK_WRITE_WAITERS |	\ 	RW_LOCK_WRITE_SPINNER | RW_LOCK_WRITER_RECURSED)
 end_define
 
 begin_define
@@ -284,7 +291,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((rw)->rw_recurse)						\ 		(rw)->rw_recurse--;					\ 	else {								\ 		if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__release) ||\ 		    !_rw_write_unlock((rw), _tid)))			\ 			_rw_wunlock_hard((rw), _tid, (file), (line));	\ 	}								\ } while (0)
+value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (__predict_false(LOCKSTAT_PROFILE_ENABLED(rw__release) ||	\ 	    !_rw_write_unlock((rw), _tid)))				\ 		_rw_wunlock_hard((rw), _tid, (file), (line));		\ } while (0)
 end_define
 
 begin_comment

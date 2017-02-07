@@ -850,13 +850,7 @@ struct|struct
 name|lock_delay_config
 block|{
 name|u_int
-name|initial
-decl_stmt|;
-name|u_int
-name|step
-decl_stmt|;
-name|u_int
-name|min
+name|base
 decl_stmt|;
 name|u_int
 name|max
@@ -911,7 +905,9 @@ name|la
 operator|->
 name|delay
 operator|=
-literal|0
+name|lc
+operator|->
+name|base
 expr_stmt|;
 name|la
 operator|->
@@ -931,6 +927,17 @@ name|func
 parameter_list|)
 define|\
 value|SYSINIT(func##_ld, SI_SUB_LOCK, SI_ORDER_ANY, func, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_DELAY_SYSINIT_DEFAULT
+parameter_list|(
+name|lc
+parameter_list|)
+define|\
+value|SYSINIT(lock_delay_##lc##_ld, SI_SUB_LOCK, SI_ORDER_ANY, \ 	    lock_delay_default_init,&lc)
 end_define
 
 begin_function_decl
@@ -975,6 +982,17 @@ name|lock_delay
 parameter_list|(
 name|struct
 name|lock_delay_arg
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lock_delay_default_init
+parameter_list|(
+name|struct
+name|lock_delay_config
 modifier|*
 parameter_list|)
 function_decl|;
