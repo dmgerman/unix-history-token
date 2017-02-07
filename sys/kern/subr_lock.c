@@ -554,7 +554,7 @@ operator|>
 literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 name|cpu_spinwait
 argument_list|()
