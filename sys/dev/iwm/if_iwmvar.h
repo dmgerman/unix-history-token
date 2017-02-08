@@ -1003,6 +1003,10 @@ define|#
 directive|define
 name|IWM_FLAG_SCANNING
 value|(1<< 5)
+define|#
+directive|define
+name|IWM_FLAG_SCAN_RUNNING
+value|(1<< 6)
 name|struct
 name|intr_config_hook
 name|sc_preinit_hook
