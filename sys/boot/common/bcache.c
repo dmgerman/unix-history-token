@@ -895,24 +895,6 @@ name|uint32_t
 modifier|*
 name|marker
 decl_stmt|;
-name|marker
-operator|=
-operator|(
-name|uint32_t
-operator|*
-operator|)
-operator|(
-name|bc
-operator|->
-name|bcache_data
-operator|+
-name|bc
-operator|->
-name|bcache_nblks
-operator|*
-name|bcache_blksize
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|bc
@@ -931,6 +913,24 @@ literal|1
 operator|)
 return|;
 block|}
+name|marker
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|bc
+operator|->
+name|bcache_data
+operator|+
+name|bc
+operator|->
+name|bcache_nblks
+operator|*
+name|bcache_blksize
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|rsize
@@ -1140,7 +1140,7 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* read at least those blocks */
-comment|/*      * The read ahead size setup.      * While the read ahead can save us IO, it also can complicate things:      * 1. We do not want to read ahead by wrapping around the      * bcache end - this would complicate the cache management.      * 2. We are using bc->ra as dynamic hint for read ahead size,      * detected cache hits will increase the read-ahead block count, and      * misses will decrease, see the code above.      * 3. The bcache is sized by 512B blocks, however, the underlying device      * may have a larger sector size, and we should perform the IO by      * taking into account these larger sector sizes. We could solve this by      * passing the sector size to bcache_allocate(), or by using ioctl(), but      * in this version we are using the constant, 16 blocks, and are rounding      * read ahead block count down to multiple of 16.      * Using the constant has two reasons, we are not entirely sure if the      * BIOS disk interface is providing the correct value for sector size.      * And secondly, this way we get the most conservative setup for the ra.      *      * The selection of multiple of 16 blocks (8KB) is quite arbitrary, however,      * we want to have the CD (2K) and the 4K disks to be covered.      * Also, as we have 32 blocks to be allocated as the fallback value in the      * bcache_allocate(), the 16 ra blocks will allow the read ahead      * to be used even with bcache this small.      */
+comment|/*      * The read ahead size setup.      * While the read ahead can save us IO, it also can complicate things:      * 1. We do not want to read ahead by wrapping around the      * bcache end - this would complicate the cache management.      * 2. We are using bc->ra as dynamic hint for read ahead size,      * detected cache hits will increase the read-ahead block count, and      * misses will decrease, see the code above.      * 3. The bcache is sized by 512B blocks, however, the underlying device      * may have a larger sector size, and we should perform the IO by      * taking into account these larger sector sizes. We could solve this by      * passing the sector size to bcache_allocate(), or by using ioctl(), but      * in this version we are using the constant, 16 blocks, and are rounding      * read ahead block count down to multiple of 16.      * Using the constant has two reasons, we are not entirely sure if the      * BIOS disk interface is providing the correct value for sector size.      * And secondly, this way we get the most conservative setup for the ra.      *      * The selection of multiple of 16 blocks (8KB) is quite arbitrary, however,      * we want to cover CDs (2K) and 4K disks.      * bcache_allocate() will always fall back to a minimum of 32 blocks.      * Our choice of 16 read ahead blocks will always fit inside the bcache.      */
 name|ra
 operator|=
 name|bc
