@@ -15944,6 +15944,55 @@ enum|;
 end_enum
 
 begin_comment
+comment|/**  * struct iwm_dts_measurement_notif_v1 - measurements notification  *  * @temp: the measured temperature  * @voltage: the measured voltage  */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_dts_measurement_notif_v1
+block|{
+name|int32_t
+name|temp
+decl_stmt|;
+name|int32_t
+name|voltage
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* TEMPERATURE_MEASUREMENT_TRIGGER_NTFY_S_VER_1*/
+end_comment
+
+begin_comment
+comment|/**  * struct iwm_dts_measurement_notif_v2 - measurements notification  *  * @temp: the measured temperature  * @voltage: the measured voltage  * @threshold_idx: the trip index that was crossed  */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_dts_measurement_notif_v2
+block|{
+name|int32_t
+name|temp
+decl_stmt|;
+name|int32_t
+name|voltage
+decl_stmt|;
+name|int32_t
+name|threshold_idx
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* TEMPERATURE_MEASUREMENT_TRIGGER_NTFY_S_VER_2 */
+end_comment
+
+begin_comment
 comment|/*  * Some cherry-picked definitions  */
 end_comment
 

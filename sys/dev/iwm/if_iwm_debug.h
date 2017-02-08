@@ -124,6 +124,11 @@ init|=
 literal|0x00080000
 block|,
 comment|/* EEPROM/channel information */
+name|IWM_DEBUG_TEMP
+init|=
+literal|0x00100000
+block|,
+comment|/* Thermal Sensor handling */
 name|IWM_DEBUG_REGISTER
 init|=
 literal|0x20000000
