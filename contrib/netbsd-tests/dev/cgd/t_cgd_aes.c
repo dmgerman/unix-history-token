@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_cgd_aes.c,v 1.5 2016/12/11 00:23:44 alnsn Exp $	*/
+comment|/*	$NetBSD: t_cgd_aes.c,v 1.6 2017/01/13 21:30:39 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../h_macros.h"
+file|"h_macros.h"
 end_include
 
 begin_define

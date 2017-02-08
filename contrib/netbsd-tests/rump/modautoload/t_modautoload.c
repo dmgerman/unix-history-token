@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_modautoload.c,v 1.5 2016/09/14 03:19:11 ozaki-r Exp $	*/
+comment|/*	$NetBSD: t_modautoload.c,v 1.6 2017/01/13 21:30:42 christos Exp $	*/
 end_comment
 
 begin_include
@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../h_macros.h"
+file|"h_macros.h"
 end_include
 
 begin_expr_stmt

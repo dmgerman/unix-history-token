@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_mutex.c,v 1.14 2016/10/31 23:51:20 christos Exp $ */
+comment|/* $NetBSD: t_mutex.c,v 1.15 2017/01/16 16:23:41 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,16 +24,10 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_mutex.c,v 1.14 2016/10/31 23:51:20 christos Exp $"
+literal|"$NetBSD: t_mutex.c,v 1.15 2017/01/16 16:23:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
 
 begin_include
 include|#
@@ -54,11 +48,6 @@ end_include
 begin_comment
 comment|/* For UINT16_MAX */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2784,9 +2773,6 @@ block|{
 name|int
 name|prioceiling
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|int
 name|protocol
 decl_stmt|;
@@ -2811,8 +2797,6 @@ argument_list|,
 name|protocol
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|PTHREAD_REQUIRE
 argument_list|(
 name|pthread_mutexattr_setprioceiling
@@ -2836,9 +2820,6 @@ name|prioceiling
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|printf
 argument_list|(
 literal|"prioceiling: %d\n"
@@ -2846,8 +2827,6 @@ argument_list|,
 name|prioceiling
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ATF_REQUIRE_EQ
 argument_list|(
 name|i

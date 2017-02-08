@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_wait.c,v 1.7 2016/11/06 15:04:14 kamil Exp $ */
+comment|/* $NetBSD: t_wait.c,v 1.8 2017/01/13 19:28:55 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_wait.c,v 1.7 2016/11/06 15:04:14 kamil Exp $"
+literal|"$NetBSD: t_wait.c,v 1.8 2017/01/13 19:28:55 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<inttypes.h>
 end_include
 
 begin_include
@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -80,24 +86,6 @@ include|#
 directive|include
 file|<atf-c.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|wrusage
-value|__wrusage
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|ATF_TC

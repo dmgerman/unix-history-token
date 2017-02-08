@@ -30,8 +30,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
+
+begin_comment
+comment|/* NetBSD requires sys/param.h for sysctl(3), unlike FreeBSD */
+end_comment
 
 begin_endif
 endif|#

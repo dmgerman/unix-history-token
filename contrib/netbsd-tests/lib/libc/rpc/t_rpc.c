@@ -119,33 +119,6 @@ comment|/*CONSTCOND*/
 value|0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SKIPXI
-parameter_list|(
-name|ev
-parameter_list|,
-name|msg
-parameter_list|,
-modifier|...
-parameter_list|)
-value|do {			\ 	atf_tc_skip(msg, __VA_ARGS__);			\ 	return ev;					\ } while(
-comment|/*CONSTCOND*/
-value|0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_else
 else|#
 directive|else
@@ -1045,7 +1018,7 @@ name|transp
 argument_list|)
 condition|)
 block|{
-name|SKIPXI
+name|SKIPX
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,

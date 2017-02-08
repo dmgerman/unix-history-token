@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_select.c,v 1.3 2012/03/18 07:00:52 jruoho Exp $ */
+comment|/*	$NetBSD: t_select.c,v 1.4 2017/01/13 21:18:33 christos Exp $ */
 end_comment
 
 begin_comment
@@ -97,24 +97,12 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|sig_handler
 parameter_list|(
 name|int
 name|signum
 name|__unused
 parameter_list|)
-else|#
-directive|else
-function|sig_handler
-parameter_list|(
-name|int
-name|signum
-parameter_list|)
-endif|#
-directive|endif
 block|{
 name|keep_going
 operator|=
@@ -126,24 +114,12 @@ end_function
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|sigchld
 parameter_list|(
 name|int
 name|signum
 name|__unused
 parameter_list|)
-else|#
-directive|else
-function|sigchld
-parameter_list|(
-name|int
-name|signum
-parameter_list|)
-endif|#
-directive|endif
 block|{ }
 end_function
 
@@ -327,6 +303,7 @@ end_function
 
 begin_function
 specifier|static
+name|__dead
 name|void
 name|child
 parameter_list|(
@@ -631,16 +608,11 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -716,12 +688,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-break|break;
-endif|#
-directive|endif
+comment|/*NOTREACHED*/
 case|case
 operator|-
 literal|1

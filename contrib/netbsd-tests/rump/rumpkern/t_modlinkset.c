@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_modlinkset.c,v 1.2 2009/11/06 15:26:54 pooka Exp $	*/
+comment|/*	$NetBSD: t_modlinkset.c,v 1.3 2017/01/13 21:30:43 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../h_macros.h"
+file|"h_macros.h"
 end_include
 
 begin_expr_stmt

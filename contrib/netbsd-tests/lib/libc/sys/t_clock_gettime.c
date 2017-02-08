@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_clock_gettime.c,v 1.1 2011/10/15 06:42:16 jruoho Exp $ */
+comment|/* $NetBSD: t_clock_gettime.c,v 1.3 2017/01/13 21:30:41 christos Exp $ */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_clock_gettime.c,v 1.1 2011/10/15 06:42:16 jruoho Exp $"
+literal|"$NetBSD: t_clock_gettime.c,v 1.3 2017/01/13 21:30:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -45,23 +45,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/int_limits.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -77,7 +60,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -104,45 +99,11 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../../../h_macros.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|"h_macros.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
