@@ -7205,7 +7205,18 @@ name|qid
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Power-down device's busmaster DMA clocks 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|cfg
+operator|->
+name|device_family
+operator|==
+name|IWM_DEVICE_FAMILY_7000
+condition|)
+block|{
+comment|/* Power-down device's busmaster DMA clocks */
 name|iwm_write_prph
 argument_list|(
 name|sc
@@ -7220,6 +7231,7 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Make sure (redundant) we've released our request to stay awake */
 name|IWM_CLRBITS
 argument_list|(
