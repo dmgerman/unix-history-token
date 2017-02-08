@@ -68,6 +68,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|iwm_mvm_scan_stop_wait
+parameter_list|(
+name|struct
+name|iwm_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

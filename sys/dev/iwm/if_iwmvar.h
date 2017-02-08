@@ -918,7 +918,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/**  * struct iwm_cfg  * @fw_name: Firmware filename.  * @host_interrupt_operation_mode: device needs host interrupt operation  *      mode set  * @nvm_hw_section_num: the ID of the HW NVM section  */
+comment|/**  * struct iwm_cfg  * @fw_name: Firmware filename.  * @host_interrupt_operation_mode: device needs host interrupt operation  *      mode set  * @nvm_hw_section_num: the ID of the HW NVM section  * @apmg_wake_up_wa: should the MAC access REQ be asserted when a command  *      is in flight. This is due to a HW bug in 7260, 3160 and 7265.  */
 end_comment
 
 begin_struct
@@ -942,6 +942,9 @@ name|host_interrupt_operation_mode
 decl_stmt|;
 name|uint8_t
 name|nvm_hw_section_num
+decl_stmt|;
+name|int
+name|apmg_wake_up_wa
 decl_stmt|;
 block|}
 struct|;
@@ -1003,6 +1006,10 @@ define|#
 directive|define
 name|IWM_FLAG_SCANNING
 value|(1<< 5)
+define|#
+directive|define
+name|IWM_FLAG_SCAN_RUNNING
+value|(1<< 6)
 name|struct
 name|intr_config_hook
 name|sc_preinit_hook
@@ -1252,6 +1259,9 @@ name|struct
 name|iwm_notif_wait_data
 modifier|*
 name|sc_notif_wait
+decl_stmt|;
+name|int
+name|cmd_hold_nic_awake
 decl_stmt|;
 block|}
 struct|;
