@@ -1666,7 +1666,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|uap
 operator|->
-name|flags
+name|mode
 argument_list|)
 expr_stmt|;
 if|if
