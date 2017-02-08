@@ -25884,6 +25884,14 @@ block|}
 case|case
 name|IWM_DTS_MEASUREMENT_NOTIFICATION
 case|:
+case|case
+name|IWM_WIDE_ID
+argument_list|(
+name|IWM_PHY_OPS_GROUP
+argument_list|,
+name|IWM_DTS_MEASUREMENT_NOTIF_WIDE
+argument_list|)
+case|:
 block|{
 name|struct
 name|iwm_dts_measurement_notif_v1
