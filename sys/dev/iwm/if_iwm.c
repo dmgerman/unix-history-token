@@ -1163,18 +1163,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|iwm_disable_rx_dma
-parameter_list|(
-name|struct
-name|iwm_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|iwm_reset_rx_ring
 parameter_list|(
 name|struct
@@ -5817,45 +5805,6 @@ end_function
 begin_function
 specifier|static
 name|void
-name|iwm_disable_rx_dma
-parameter_list|(
-name|struct
-name|iwm_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-comment|/* XXX conditional nic locks are stupid */
-comment|/* XXX print out if we can't lock the NIC? */
-if|if
-condition|(
-name|iwm_nic_lock
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-block|{
-comment|/* XXX handle if RX stop doesn't finish? */
-operator|(
-name|void
-operator|)
-name|iwm_pcie_rx_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|iwm_nic_unlock
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|iwm_reset_rx_ring
 parameter_list|(
 name|struct
@@ -7191,7 +7140,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|iwm_disable_rx_dma
+name|iwm_pcie_rx_stop
 argument_list|(
 name|sc
 argument_list|)
@@ -7470,17 +7419,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|iwm_nic_lock
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-return|return
-name|EBUSY
-return|;
 comment|/* 	 * Initialize RX ring.  This is from the iwn driver. 	 */
 name|memset
 argument_list|(
@@ -7503,12 +7441,24 @@ name|stat
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* stop DMA */
-name|iwm_disable_rx_dma
+comment|/* Stop Rx DMA */
+name|iwm_pcie_rx_stop
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|iwm_nic_lock
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+name|EBUSY
+return|;
+comment|/* reset and flush pointers */
 name|IWM_WRITE
 argument_list|(
 name|sc
