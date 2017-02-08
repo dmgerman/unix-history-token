@@ -12977,24 +12977,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Give the firmware some time to initialize. 	 * Accessing it too early causes errors. 	 */
-name|msleep
-argument_list|(
-operator|&
-name|w
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-literal|0
-argument_list|,
-literal|"iwmfwinit"
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
