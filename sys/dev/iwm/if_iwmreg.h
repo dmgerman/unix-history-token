@@ -3105,6 +3105,10 @@ block|,
 name|IWM_UCODE_TLV_FW_GSCAN_CAPA
 init|=
 literal|50
+block|,
+name|IWM_UCODE_TLV_FW_MEM_SEG
+init|=
+literal|51
 block|, }
 enum|;
 end_enum

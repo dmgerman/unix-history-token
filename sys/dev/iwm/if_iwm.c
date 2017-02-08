@@ -4760,6 +4760,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IWM_UCODE_TLV_FW_MEM_SEG
+case|:
+break|break;
 default|default:
 name|device_printf
 argument_list|(
