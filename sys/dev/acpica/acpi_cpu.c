@@ -5498,6 +5498,16 @@ operator|/
 name|hz
 argument_list|)
 expr_stmt|;
+comment|/* acpi_cpu_c1() returns with interrupts enabled. */
+if|if
+condition|(
+name|cx_next
+operator|->
+name|do_mwait
+condition|)
+name|ACPI_ENABLE_IRQS
+argument_list|()
+expr_stmt|;
 name|sc
 operator|->
 name|cpu_prev_sleep
