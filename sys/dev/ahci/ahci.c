@@ -4827,6 +4827,16 @@ name|ch
 operator|->
 name|mtx
 argument_list|,
+operator|(
+name|ch
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_NOCCS
+operator|)
+condition|?
+literal|1
+else|:
 name|min
 argument_list|(
 literal|2
@@ -7910,6 +7920,43 @@ name|AHCI_P_IX_TFE
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|ch
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_NOCCS
+condition|)
+block|{
+comment|/* 			 * ASMedia chips sometimes report failed commands as 			 * completed.  Count all running commands as failed. 			 */
+name|cstatus
+operator||=
+name|ch
+operator|->
+name|rslots
+expr_stmt|;
+comment|/* They also report wrong CCS, so try to guess one. */
+name|ccs
+operator|=
+name|powerof2
+argument_list|(
+name|cstatus
+argument_list|)
+condition|?
+name|ffs
+argument_list|(
+name|cstatus
+argument_list|)
+operator|-
+literal|1
+else|:
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ccs
 operator|=
 operator|(
@@ -7927,6 +7974,7 @@ operator|)
 operator|>>
 name|AHCI_P_CMD_CCS_SHIFT
 expr_stmt|;
+block|}
 comment|//device_printf(dev, "%s ERROR is %08x cs %08x ss %08x rs %08x tfd %02x serr %08x fbs %08x ccs %d\n",
 comment|//    __func__, istatus, cstatus, sstatus, ch->rslots, ATA_INL(ch->r_mem, AHCI_P_TFD),
 comment|//    serr, ATA_INL(ch->r_mem, AHCI_P_FBS), ccs);

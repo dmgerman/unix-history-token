@@ -305,7 +305,7 @@ literal|0x00
 block|,
 literal|"ASMedia ASM1060"
 block|,
-literal|0
+name|AHCI_Q_NOCCS
 block|}
 block|,
 block|{
@@ -315,7 +315,7 @@ literal|0x00
 block|,
 literal|"ASMedia ASM1060"
 block|,
-literal|0
+name|AHCI_Q_NOCCS
 block|}
 block|,
 block|{
@@ -325,7 +325,7 @@ literal|0x00
 block|,
 literal|"ASMedia ASM1061"
 block|,
-literal|0
+name|AHCI_Q_NOCCS
 block|}
 block|,
 block|{
@@ -335,7 +335,7 @@ literal|0x00
 block|,
 literal|"ASMedia ASM1062"
 block|,
-literal|0
+name|AHCI_Q_NOCCS
 block|}
 block|,
 block|{
@@ -345,7 +345,7 @@ literal|0x00
 block|,
 literal|"ASMedia ASM106x"
 block|,
-literal|0
+name|AHCI_Q_NOCCS
 block|}
 block|,
 block|{
@@ -355,7 +355,7 @@ literal|0x00
 block|,
 literal|"ASMedia ASM106x"
 block|,
-literal|0
+name|AHCI_Q_NOCCS
 block|}
 block|,
 block|{
@@ -365,7 +365,7 @@ literal|0x00
 block|,
 literal|"ASMedia ASM106x"
 block|,
-literal|0
+name|AHCI_Q_NOCCS
 block|}
 block|,
 block|{
@@ -375,7 +375,7 @@ literal|0x00
 block|,
 literal|"ASMedia ASM106x"
 block|,
-literal|0
+name|AHCI_Q_NOCCS
 block|}
 block|,
 block|{
@@ -385,7 +385,7 @@ literal|0x00
 block|,
 literal|"ASMedia ASM106x"
 block|,
-literal|0
+name|AHCI_Q_NOCCS
 block|}
 block|,
 block|{
