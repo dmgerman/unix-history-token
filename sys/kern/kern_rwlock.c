@@ -3531,7 +3531,7 @@ operator|->
 name|lock_object
 argument_list|)
 expr_stmt|;
-name|x
+name|v
 operator|=
 name|RW_READ_VALUE
 argument_list|(
