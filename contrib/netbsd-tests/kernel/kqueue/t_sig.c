@@ -517,77 +517,35 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
 literal|"sig: kevent flags: 0x%x, data: %"
-name|PRId64
+argument|PRIdPTR
 literal|" (# "
+else|#
+directive|else
+argument|(void)printf(
+literal|"sig: kevent flags: 0x%x, data: %"
+argument|PRId64
+literal|" (# "
+endif|#
+directive|endif
 literal|"times signal posted)\n"
-argument_list|,
-name|event
-index|[
+argument|, event[
 literal|0
-index|]
-operator|.
-name|flags
-argument_list|,
-name|event
-index|[
+argument|].flags, event[
 literal|0
-index|]
-operator|.
-name|data
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|waitpid
-argument_list|(
-name|child
-argument_list|,
-operator|&
-name|status
-argument_list|,
+argument|].data); 	}  	(void)waitpid(child,&status,
 literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
+argument|); 	(void)printf(
 literal|"sig: finished successfully\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|ATF_TP_ADD_TCS
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|ATF_TP_ADD_TC
-argument_list|(
-name|tp
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-return|return
-name|atf_no_error
-argument_list|()
-return|;
-block|}
+argument|); }  ATF_TP_ADD_TCS(tp) { 	ATF_TP_ADD_TC(tp, sig);  	return atf_no_error(); }
 end_block
 
 end_unit

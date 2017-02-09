@@ -522,6 +522,24 @@ name|fflags
 operator|&
 name|NOTE_CHILD
 condition|)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|printf
+argument_list|(
+literal|" NOTE_CHILD, parent = %"
+name|PRIdPTR
+argument_list|,
+name|event
+index|[
+literal|0
+index|]
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|" NOTE_CHILD, parent = %"
@@ -535,6 +553,8 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\n"
