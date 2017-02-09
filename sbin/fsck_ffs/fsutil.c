@@ -4915,7 +4915,7 @@ operator|<
 operator|&
 name|namebuf
 index|[
-name|MAXNAMLEN
+name|UFS_MAXNAMLEN
 index|]
 condition|)
 break|break;

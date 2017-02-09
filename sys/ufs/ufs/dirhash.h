@@ -64,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|DH_NFSTATS
-value|(DIRECTSIZ(MAXNAMLEN + 1) / DIRALIGN)
+value|(DIRECTSIZ(UFS_MAXNAMLEN + 1) / DIRALIGN)
 end_define
 
 begin_comment

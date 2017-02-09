@@ -2444,7 +2444,7 @@ condition|(
 operator|++
 name|len
 operator|>
-name|MAXNAMLEN
+name|UFS_MAXNAMLEN
 condition|)
 block|{
 name|rc

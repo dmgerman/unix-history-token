@@ -2734,7 +2734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do consistency checking on a directory entry:  *	record length must be multiple of 4  *	entry must fit in rest of its DIRBLKSIZ block  *	record must be large enough to contain entry  *	name is not longer than MAXNAMLEN  *	name must be as long as advertised, and null terminated  */
+comment|/*  * Do consistency checking on a directory entry:  *	record length must be multiple of 4  *	entry must fit in rest of its DIRBLKSIZ block  *	record must be large enough to contain entry  *	name is not longer than UFS_MAXNAMLEN  *	name must be as long as advertised, and null terminated  */
 end_comment
 
 begin_function
@@ -2847,7 +2847,7 @@ argument_list|)
 operator|||
 name|namlen
 operator|>
-name|MAXNAMLEN
+name|UFS_MAXNAMLEN
 condition|)
 block|{
 comment|/*return (1); */
