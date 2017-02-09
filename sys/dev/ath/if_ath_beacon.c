@@ -2994,6 +2994,7 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX TODO: tie into net80211 for quiet time IE update and program 	 * local AP timer if we require it.  The process of updating the 	 * beacon will also update the IE with the relevant counters. 	 */
 comment|/* 	 * Enable the CAB queue before the beacon queue to 	 * insure cab frames are triggered by this beacon. 	 */
 if|if
 condition|(
@@ -3581,6 +3582,11 @@ operator|->
 name|sc_ah
 decl_stmt|;
 name|struct
+name|ath_vap
+modifier|*
+name|avp
+decl_stmt|;
+name|struct
 name|ieee80211com
 modifier|*
 name|ic
@@ -3650,6 +3656,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Now that we have a vap, we can do this bit */
+name|avp
+operator|=
+name|ATH_VAP
+argument_list|(
+name|vap
+argument_list|)
+expr_stmt|;
 name|ni
 operator|=
 name|ieee80211_ref_node
@@ -3674,6 +3688,37 @@ expr_stmt|;
 name|ATH_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Always clear the quiet IE timers; let the next update program them */
+name|ath_hal_set_quiet
+argument_list|(
+name|ah
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|HAL_QUIET_DISABLE
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|avp
+operator|->
+name|quiet_ie
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|avp
+operator|->
+name|quiet_ie
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* extract tstamp from last beacon and convert to TU */
