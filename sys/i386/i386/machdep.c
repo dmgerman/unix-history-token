@@ -14764,11 +14764,9 @@ directive|else
 name|register_t
 name|init386
 parameter_list|(
-name|first
-parameter_list|)
 name|int
 name|first
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|gate_descriptor
