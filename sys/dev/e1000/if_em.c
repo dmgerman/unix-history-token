@@ -474,6 +474,15 @@ name|PVID
 argument_list|(
 literal|0x8086
 argument_list|,
+name|E1000_DEV_ID_82572EI
+argument_list|,
+literal|"Intel(R) PRO/1000 Network Connection"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+literal|0x8086
+argument_list|,
 name|E1000_DEV_ID_82572EI_COPPER
 argument_list|,
 literal|"Intel(R) PRO/1000 Network Connection"
