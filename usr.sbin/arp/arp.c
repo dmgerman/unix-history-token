@@ -1512,7 +1512,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1520,8 +1520,6 @@ literal|0
 index|]
 argument_list|,
 literal|"temp"
-argument_list|,
-literal|4
 argument_list|)
 operator|==
 literal|0
@@ -1588,7 +1586,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1596,8 +1594,6 @@ literal|0
 index|]
 argument_list|,
 literal|"pub"
-argument_list|,
-literal|3
 argument_list|)
 operator|==
 literal|0
@@ -1615,7 +1611,7 @@ if|if
 condition|(
 name|argc
 operator|&&
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1623,8 +1619,6 @@ literal|1
 index|]
 argument_list|,
 literal|"only"
-argument_list|,
-literal|3
 argument_list|)
 operator|==
 literal|0
@@ -1642,7 +1636,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1650,8 +1644,6 @@ literal|0
 index|]
 argument_list|,
 literal|"blackhole"
-argument_list|,
-literal|9
 argument_list|)
 operator|==
 literal|0
@@ -1664,8 +1656,10 @@ operator|&
 name|RTF_REJECT
 condition|)
 block|{
-name|printf
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"Choose one of blackhole or reject, "
 literal|"not both."
 argument_list|)
@@ -1679,7 +1673,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1687,8 +1681,6 @@ literal|0
 index|]
 argument_list|,
 literal|"reject"
-argument_list|,
-literal|6
 argument_list|)
 operator|==
 literal|0
@@ -1701,8 +1693,10 @@ operator|&
 name|RTF_BLACKHOLE
 condition|)
 block|{
-name|printf
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"Choose one of blackhole or reject, "
 literal|"not both."
 argument_list|)
@@ -1713,31 +1707,20 @@ operator||=
 name|RTF_REJECT
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|strncmp
+else|else
+block|{
+name|warnx
 argument_list|(
+literal|"Invalid parameter '%s'"
+argument_list|,
 name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-literal|"trail"
-argument_list|,
-literal|5
 argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* XXX deprecated and undocumented feature */
-name|printf
-argument_list|(
-literal|"%s: Sending trailers is no longer supported\n"
-argument_list|,
-name|host
-argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|argv
@@ -1785,9 +1768,9 @@ name|ea
 argument_list|)
 condition|)
 block|{
-name|printf
+name|warnx
 argument_list|(
-literal|"no interface found for %s\n"
+literal|"no interface found for %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1951,9 +1934,9 @@ name|sdl_type
 argument_list|)
 condition|)
 block|{
-name|printf
+name|warnx
 argument_list|(
-literal|"cannot intuit interface index and type for %s\n"
+literal|"cannot intuit interface index and type for %s"
 argument_list|,
 name|host
 argument_list|)
@@ -2302,11 +2285,9 @@ operator|&
 name|RTF_ANNOUNCE
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"delete: cannot locate %s\n"
+literal|"delete: cannot locate %s"
 argument_list|,
 name|host
 argument_list|)
@@ -4240,16 +4221,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"using interface %s for proxy with address "
+literal|"using interface %s for proxy with address %s\n"
 argument_list|,
 name|ifp
 operator|->
 name|ifr_name
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s\n"
 argument_list|,
 name|ether_ntoa
 argument_list|(
