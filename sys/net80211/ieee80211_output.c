@@ -6571,7 +6571,19 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* check if xmit fragmentation is required */
+comment|/* 	 * Check if xmit fragmentation is required. 	 * 	 * If the hardware does fragmentation offload, then don't bother 	 * doing it here. 	 */
+if|if
+condition|(
+name|IEEE80211_CONF_FRAG_OFFLOAD
+argument_list|(
+name|ic
+argument_list|)
+condition|)
+name|txfrag
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|txfrag
 operator|=
 operator|(
