@@ -2342,6 +2342,16 @@ init|=
 literal|11
 block|,
 comment|/* Mesh Configuration */
+name|IEEE80211_BEACON_QUIET
+init|=
+literal|12
+block|,
+comment|/* Quiet time IE */
+name|IEEE80211_BEACON_VHTINFO
+init|=
+literal|13
+block|,
+comment|/* VHT information */
 block|}
 enum|;
 end_enum

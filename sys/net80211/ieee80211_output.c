@@ -8900,10 +8900,6 @@ begin_comment
 comment|/*  * Send a probe request frame with the specified ssid  * and any optional information element data.  */
 end_comment
 
-begin_comment
-comment|/* XXX VHT? */
-end_comment
-
 begin_function
 name|int
 name|ieee80211_send_probereq
@@ -10344,7 +10340,6 @@ case|:
 case|case
 name|IEEE80211_FC0_SUBTYPE_REASSOC_REQ
 case|:
-comment|/* XXX VHT? */
 comment|/* 		 * asreq frame format 		 *	[2] capability information 		 *	[2] listen interval 		 *	[6*] current AP address (reassoc only) 		 *	[tlv] ssid 		 *	[tlv] supported rates 		 *	[tlv] extended supported rates 		 *	[4] power capability (optional) 		 *	[28] supported channels (optional) 		 *	[tlv] HT capabilities 		 *	[tlv] VHT capabilities 		 *	[tlv] WME (optional) 		 *	[tlv] Vendor OUI HT capabilities (optional) 		 *	[tlv] Atheros capabilities (if negotiated) 		 *	[tlv] AppIE's (optional) 		 */
 name|m
 operator|=
@@ -11675,10 +11670,6 @@ end_function
 
 begin_comment
 comment|/*  * Return an mbuf with a probe response frame in it.  * Space is left to prepend and 802.11 header at the  * front but it's left to the caller to fill in.  */
-end_comment
-
-begin_comment
-comment|/* XXX VHT? */
 end_comment
 
 begin_function
@@ -13212,10 +13203,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* XXX VHT? */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -13713,6 +13700,12 @@ name|bo_csa
 operator|=
 name|frm
 expr_stmt|;
+name|bo
+operator|->
+name|bo_quiet
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -13722,12 +13715,6 @@ operator|&
 name|IEEE80211_F_DOTH
 condition|)
 block|{
-name|bo
-operator|->
-name|bo_quiet
-operator|=
-name|frm
-expr_stmt|;
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_DFS
@@ -13744,14 +13731,30 @@ name|iv_flags_ext
 operator|&
 name|IEEE80211_FEXT_DFS
 operator|)
+operator|&&
+operator|(
+name|vap
+operator|->
+name|iv_quiet
+operator|==
+literal|1
+operator|)
 condition|)
 block|{
+comment|/* 			 * We only insert the quiet IE offset if 			 * the quiet IE is enabled.  Otherwise don't 			 * put it here or we'll just overwrite 			 * some other beacon contents. 			 */
 if|if
 condition|(
 name|vap
 operator|->
 name|iv_quiet
 condition|)
+block|{
+name|bo
+operator|->
+name|bo_quiet
+operator|=
+name|frm
+expr_stmt|;
 name|frm
 operator|=
 name|ieee80211_add_quiet
@@ -13765,13 +13768,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-name|bo
-operator|->
-name|bo_quiet
-operator|=
-name|frm
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_ANYG
@@ -14147,10 +14144,6 @@ begin_comment
 comment|/*  * Allocate a beacon frame and fillin the appropriate bits.  */
 end_comment
 
-begin_comment
-comment|/* XXX VHT? */
-end_comment
-
 begin_function
 name|struct
 name|mbuf
@@ -14207,8 +14200,38 @@ name|uint8_t
 modifier|*
 name|frm
 decl_stmt|;
+comment|/* 	 * Update the "We're putting the quiet IE in the beacon" state. 	 */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_quiet
+operator|==
+literal|1
+condition|)
+name|vap
+operator|->
+name|iv_flags_ext
+operator||=
+name|IEEE80211_FEXT_QUIET_IE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_quiet
+operator|==
+literal|0
+condition|)
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&=
+operator|~
+name|IEEE80211_FEXT_QUIET_IE
+expr_stmt|;
 comment|/* 	 * beacon frame format 	 * 	 * Note: This needs updating for 802.11-2012. 	 * 	 *	[8] time stamp 	 *	[2] beacon interval 	 *	[2] cabability information 	 *	[tlv] ssid 	 *	[tlv] supported rates 	 *	[3] parameter set (DS) 	 *	[8] CF parameter set (optional) 	 *	[tlv] parameter set (IBSS/TIM) 	 *	[tlv] country (optional) 	 *	[3] power control (optional) 	 *	[5] channel switch announcement (CSA) (optional) 	 *	[tlv] extended rate phy (ERP) 	 *	[tlv] extended supported rates 	 *	[tlv] RSN parameters 	 *	[tlv] HT capabilities 	 *	[tlv] HT information 	 *	[tlv] VHT capabilities 	 *	[tlv] VHT operation 	 *	[tlv] Vendor OUI HT capabilities (optional) 	 *	[tlv] Vendor OUI HT information (optional) 	 * XXX Vendor-specific OIDs (e.g. Atheros) 	 *	[tlv] WPA parameters 	 *	[tlv] WME parameters 	 *	[tlv] TDMA parameters (optional) 	 *	[tlv] Mesh ID (MBSS) 	 *	[tlv] Mesh Conf (MBSS) 	 *	[tlv] application data (optional) 	 * NB: we allocate the max space required for the TIM bitmap. 	 * XXX how big is this? 	 */
-comment|/* XXX VHT? */
 name|pktlen
 operator|=
 literal|8
@@ -14709,6 +14732,128 @@ name|ic
 argument_list|)
 expr_stmt|;
 comment|/* 		 * NB: ieee80211_beacon_construct clears all pending 		 * updates in bo_flags so we don't need to explicitly 		 * clear IEEE80211_BEACON_CSA. 		 */
+name|ieee80211_beacon_construct
+argument_list|(
+name|m
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|uint8_t
+operator|*
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_frame
+argument_list|)
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
+comment|/* XXX do WME aggressive mode processing? */
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+comment|/* just assume length changed */
+block|}
+comment|/* 	 * Handle the quiet time element being added and removed. 	 * Again, for now we just cheat and reconstruct the whole 	 * beacon - that way the gap is provided as appropriate. 	 * 	 * So, track whether we have already added the IE versus 	 * whether we want to be adding the IE. 	 */
+if|if
+condition|(
+operator|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_QUIET_IE
+operator|)
+operator|&&
+operator|(
+name|vap
+operator|->
+name|iv_quiet
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* 		 * Quiet time beacon IE enabled, but it's disabled; 		 * recalc 		 */
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&=
+operator|~
+name|IEEE80211_FEXT_QUIET_IE
+expr_stmt|;
+name|ieee80211_beacon_construct
+argument_list|(
+name|m
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|uint8_t
+operator|*
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_frame
+argument_list|)
+argument_list|,
+name|ni
+argument_list|)
+expr_stmt|;
+comment|/* XXX do WME aggressive mode processing? */
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+comment|/* just assume length changed */
+block|}
+if|if
+condition|(
+operator|(
+operator|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_QUIET_IE
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|vap
+operator|->
+name|iv_quiet
+operator|==
+literal|1
+operator|)
+condition|)
+block|{
+comment|/* 		 * Quiet time beacon IE disabled, but it's now enabled; 		 * recalc 		 */
+name|vap
+operator|->
+name|iv_flags_ext
+operator||=
+name|IEEE80211_FEXT_QUIET_IE
+expr_stmt|;
 name|ieee80211_beacon_construct
 argument_list|(
 name|m
@@ -15683,6 +15828,7 @@ operator|++
 expr_stmt|;
 comment|/* NB: don't clear IEEE80211_BEACON_CSA */
 block|}
+comment|/* 		 * Only add the quiet time IE if we've enabled it 		 * as appropriate. 		 */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_DFS
@@ -15706,7 +15852,16 @@ condition|(
 name|vap
 operator|->
 name|iv_quiet
+operator|&&
+operator|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_QUIET_IE
+operator|)
 condition|)
+block|{
 name|ieee80211_add_quiet
 argument_list|(
 name|bo
@@ -15718,6 +15873,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

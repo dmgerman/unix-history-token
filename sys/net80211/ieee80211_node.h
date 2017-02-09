@@ -871,6 +871,16 @@ modifier|*
 name|ni_rctls
 decl_stmt|;
 comment|/* private ratectl state */
+comment|/* quiet time IE state for the given node */
+name|uint32_t
+name|ni_quiet_ie_set
+decl_stmt|;
+comment|/* Quiet time IE was seen */
+name|struct
+name|ieee80211_quiet_ie
+name|ni_quiet_ie
+decl_stmt|;
+comment|/* last seen quiet IE */
 name|uint64_t
 name|ni_spare
 index|[
