@@ -1936,6 +1936,26 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|HAL_STATUS
+name|ar5211SetQuiet
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|HAL_QUIET_FLAG
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|uint32_t
 name|ar5211GetCurRssi
 parameter_list|(
