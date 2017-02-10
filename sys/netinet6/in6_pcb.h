@@ -503,6 +503,10 @@ name|int
 name|in6_pcbsetport
 parameter_list|(
 name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
 name|in6_addr
 modifier|*
 parameter_list|,
