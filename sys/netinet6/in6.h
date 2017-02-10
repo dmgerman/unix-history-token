@@ -2063,7 +2063,7 @@ begin_define
 define|#
 directive|define
 name|IPV6_ORIGDSTADDR
-value|65
+value|72
 end_define
 
 begin_comment
