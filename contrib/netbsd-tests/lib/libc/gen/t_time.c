@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_time.c,v 1.2 2011/11/11 05:03:38 jruoho Exp $ */
+comment|/*	$NetBSD: t_time.c,v 1.3 2014/10/31 12:22:38 justin Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_time.c,v 1.2 2011/11/11 05:03:38 jruoho Exp $"
+literal|"$NetBSD: t_time.c,v 1.3 2014/10/31 12:22:38 justin Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -341,9 +341,11 @@ literal|0
 block|}
 decl_stmt|;
 name|time_t
-name|t
+name|t1
+decl_stmt|,
+name|t2
 decl_stmt|;
-name|t
+name|t1
 operator|=
 name|time
 argument_list|(
@@ -363,6 +365,13 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|t2
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -379,7 +388,7 @@ argument_list|,
 operator|(
 name|int64_t
 operator|)
-name|t
+name|t1
 argument_list|,
 operator|(
 name|int64_t
@@ -391,8 +400,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|t
-operator|!=
+name|t1
+operator|>
+name|tv
+operator|.
+name|tv_sec
+operator|||
+name|t2
+operator|<
 name|tv
 operator|.
 name|tv_sec

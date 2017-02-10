@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_socket.c,v 1.3 2013/10/19 17:45:00 christos Exp $	*/
+comment|/*	$NetBSD: t_socket.c,v 1.4 2015/02/27 08:30:30 martin Exp $	*/
 end_comment
 
 begin_include
@@ -366,7 +366,7 @@ name|tc
 argument_list|,
 literal|"timeout"
 argument_list|,
-literal|"2"
+literal|"10"
 argument_list|)
 expr_stmt|;
 block|}

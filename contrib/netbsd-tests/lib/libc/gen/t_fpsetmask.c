@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_fpsetmask.c,v 1.14 2014/11/04 00:20:19 justin Exp $ */
+comment|/*	$NetBSD: t_fpsetmask.c,v 1.16 2016/03/12 11:55:14 martin Exp $ */
 end_comment
 
 begin_comment
@@ -132,21 +132,54 @@ directive|include
 file|<ieeefp.h>
 end_include
 
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|skip_mesg
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+name|__arm__
+operator|&&
+operator|!
+name|__SOFTFP__
+end_if
 
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|skip_arch
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* 	 * Some NEON fpus do not implement IEEE exception handling, 	 * skip these tests if running on them and compiled for 	 * hard float. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPU_PREREQ
+parameter_list|()
+define|\
+value|if (0 == fpsetmask(fpsetmask(FP_X_INV)))			\ 		atf_tc_skip("FPU does not implement exception handling");
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FPU_PREREQ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FPU_PREREQ
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -1099,7 +1132,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|ATF_TC(m##_##t);						\ 									\ 	ATF_TC_HEAD(m##_##t, tc)					\ 	{								\ 									\ 		atf_tc_set_md_var(tc, "descr",				\ 		    "Test " ___STRING(m) " exceptions for "		\ 		    ___STRING(t) "values");				\ 	}								\ 									\ 	ATF_TC_BODY(m##_##t, tc)					\ 	{								\ 		if (strcmp(MACHINE, "macppc") == 0)			\ 			atf_tc_expect_fail("PR port-macppc/46319");	\ 									\ 		if (isQEMU())						\ 			atf_tc_expect_fail("PR misc/44767");		\ 									\ 		m(t##_ops);						\ 	}
+value|ATF_TC(m##_##t);						\ 									\ 	ATF_TC_HEAD(m##_##t, tc)					\ 	{								\ 									\ 		atf_tc_set_md_var(tc, "descr",				\ 		    "Test " ___STRING(m) " exceptions for "		\ 		    ___STRING(t) "values");				\ 	}								\ 									\ 	ATF_TC_BODY(m##_##t, tc)					\ 	{								\ 									\ 		FPU_PREREQ();						\ 									\ 		if (strcmp(MACHINE, "macppc") == 0)			\ 			atf_tc_expect_fail("PR port-macppc/46319");	\ 									\ 		if (isQEMU())						\ 			atf_tc_expect_fail("PR misc/44767");		\ 									\ 		m(t##_ops);						\ 	}
 end_define
 
 begin_macro
@@ -1217,6 +1250,9 @@ block|,
 name|FP_X_UFL
 block|}
 decl_stmt|;
+name|FPU_PREREQ
+argument_list|()
+expr_stmt|;
 name|msk
 operator|=
 name|fpgetmask
@@ -1268,6 +1304,7 @@ name|fpsetmask
 argument_list|(
 name|msk
 operator|&
+operator|~
 name|lst
 index|[
 name|i

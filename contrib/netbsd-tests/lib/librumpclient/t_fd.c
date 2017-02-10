@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_fd.c,v 1.4 2011/08/25 18:46:01 hannken Exp $	*/
+comment|/*	$NetBSD: t_fd.c,v 1.5 2016/08/10 21:10:18 kre Exp $	*/
 end_comment
 
 begin_comment
@@ -435,6 +435,7 @@ argument_list|(
 name|system
 argument_list|(
 literal|"rump_server -lrumpnet -lrumpnet_net -lrumpnet_netinet "
+literal|"-lrumpdev -lrumpvfs "
 name|RUMPSERV
 argument_list|)
 argument_list|)

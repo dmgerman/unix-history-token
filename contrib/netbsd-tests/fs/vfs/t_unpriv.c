@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_unpriv.c,v 1.11 2014/08/29 17:39:18 gson Exp $	*/
+comment|/*	$NetBSD: t_unpriv.c,v 1.12 2015/04/09 19:51:13 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -114,18 +114,6 @@ condition|)
 name|atf_tc_fail_errno
 argument_list|(
 literal|"setuid"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|FSTYPE_ZFS
-argument_list|(
-name|tc
-argument_list|)
-condition|)
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR kern/47656: Test known to be broken"
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_rwlock.c,v 1.1 2010/07/16 15:42:53 jmmv Exp $ */
+comment|/* $NetBSD: t_rwlock.c,v 1.2 2015/06/26 11:07:20 pooka Exp $ */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_rwlock.c,v 1.1 2010/07/16 15:42:53 jmmv Exp $"
+literal|"$NetBSD: t_rwlock.c,v 1.2 2015/06/26 11:07:20 pooka Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -79,6 +79,15 @@ begin_decl_stmt
 name|struct
 name|timespec
 name|to
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|pthread_rwlock_t
+name|static_rwlock
+init|=
+name|PTHREAD_RWLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -372,6 +381,78 @@ expr_stmt|;
 block|}
 end_block
 
+begin_expr_stmt
+name|ATF_TC
+argument_list|(
+name|rwlock_static
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|rwlock_static
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"descr"
+argument_list|,
+literal|"rwlock w/ static initializer"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|rwlock_static
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|PTHREAD_REQUIRE
+argument_list|(
+name|pthread_rwlock_rdlock
+argument_list|(
+operator|&
+name|static_rwlock
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PTHREAD_REQUIRE
+argument_list|(
+name|pthread_rwlock_unlock
+argument_list|(
+operator|&
+name|static_rwlock
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PTHREAD_REQUIRE
+argument_list|(
+name|pthread_rwlock_destroy
+argument_list|(
+operator|&
+name|static_rwlock
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_macro
 name|ATF_TP_ADD_TCS
 argument_list|(
@@ -386,6 +467,13 @@ argument_list|(
 name|tp
 argument_list|,
 name|rwlock1
+argument_list|)
+expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|rwlock_static
 argument_list|)
 expr_stmt|;
 return|return

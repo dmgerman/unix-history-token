@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_cdefs.c,v 1.3 2013/09/05 09:01:27 gsutre Exp $ */
+comment|/* $NetBSD: t_cdefs.c,v 1.4 2016/03/16 07:21:36 mrg Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_cdefs.c,v 1.3 2013/09/05 09:01:27 gsutre Exp $"
+literal|"$NetBSD: t_cdefs.c,v 1.4 2016/03/16 07:21:36 mrg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -747,7 +747,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|ATF_REQUIRE(!__type_fit(a, b) == c)
+value|ATF_REQUIRE(__type_fit(a, b) == c)
 name|CHECK
 argument_list|(
 argument|signed char
@@ -755,7 +755,7 @@ argument_list|,
 argument|-
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -764,7 +764,7 @@ argument|signed char
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -773,7 +773,7 @@ argument|signed char
 argument_list|,
 literal|0x7f
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -782,7 +782,7 @@ argument|signed char
 argument_list|,
 literal|0x80
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -791,7 +791,7 @@ argument|signed char
 argument_list|,
 literal|0xff
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -800,7 +800,7 @@ argument|signed char
 argument_list|,
 literal|0x1ff
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -810,7 +810,7 @@ argument_list|,
 argument|-
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -819,7 +819,7 @@ argument|signed short
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -828,7 +828,7 @@ argument|signed short
 argument_list|,
 literal|0x7fff
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -837,7 +837,7 @@ argument|signed short
 argument_list|,
 literal|0x8000
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -846,7 +846,7 @@ argument|signed short
 argument_list|,
 literal|0xffff
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -855,7 +855,7 @@ argument|signed short
 argument_list|,
 literal|0x1ffff
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -865,7 +865,7 @@ argument_list|,
 argument|-
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -874,7 +874,7 @@ argument|signed int
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -883,7 +883,7 @@ argument|signed int
 argument_list|,
 literal|0x7fffffff
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -892,7 +892,7 @@ argument|signed int
 argument_list|,
 literal|0x80000000
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -901,7 +901,7 @@ argument|signed int
 argument_list|,
 literal|0xffffffff
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -910,7 +910,7 @@ argument|signed int
 argument_list|,
 literal|0x1ffffffffLL
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -920,7 +920,7 @@ argument_list|,
 argument|-
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -929,7 +929,7 @@ argument|signed long long
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -938,7 +938,7 @@ argument|signed long long
 argument_list|,
 literal|0x7fffffffffffffffLL
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -947,7 +947,7 @@ argument|signed long long
 argument_list|,
 literal|0x8000000000000000LL
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -956,7 +956,7 @@ argument|signed long long
 argument_list|,
 literal|0xffffffffffffffffLL
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 undef|#
@@ -1017,7 +1017,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|ATF_REQUIRE(!__type_fit(a, b) == c)
+value|ATF_REQUIRE(__type_fit(a, b) == c)
 name|CHECK
 argument_list|(
 argument|unsigned char
@@ -1025,7 +1025,7 @@ argument_list|,
 argument|-
 literal|1
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1034,7 +1034,7 @@ argument|unsigned char
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1043,7 +1043,7 @@ argument|unsigned char
 argument_list|,
 literal|0x7f
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1052,7 +1052,7 @@ argument|unsigned char
 argument_list|,
 literal|0x80
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1061,7 +1061,7 @@ argument|unsigned char
 argument_list|,
 literal|0xff
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1070,7 +1070,7 @@ argument|unsigned char
 argument_list|,
 literal|0x1ff
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1080,7 +1080,7 @@ argument_list|,
 argument|-
 literal|1
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1089,7 +1089,7 @@ argument|unsigned short
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1098,7 +1098,7 @@ argument|unsigned short
 argument_list|,
 literal|0x7fff
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1107,7 +1107,7 @@ argument|unsigned short
 argument_list|,
 literal|0x8000
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1116,7 +1116,7 @@ argument|unsigned short
 argument_list|,
 literal|0xffff
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1125,7 +1125,7 @@ argument|unsigned short
 argument_list|,
 literal|0x1ffff
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1135,7 +1135,7 @@ argument_list|,
 argument|-
 literal|1
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1144,7 +1144,7 @@ argument|unsigned int
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1153,7 +1153,7 @@ argument|unsigned int
 argument_list|,
 literal|0x7fffffff
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1162,7 +1162,7 @@ argument|unsigned int
 argument_list|,
 literal|0x80000000
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1171,7 +1171,7 @@ argument|unsigned int
 argument_list|,
 literal|0xffffffff
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1180,7 +1180,7 @@ argument|unsigned int
 argument_list|,
 literal|0x1ffffffffLL
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1190,7 +1190,7 @@ argument_list|,
 argument|-
 literal|1
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1199,7 +1199,7 @@ argument|unsigned long long
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1208,7 +1208,7 @@ argument|unsigned long long
 argument_list|,
 literal|0x7fffffffffffffffULL
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1217,7 +1217,7 @@ argument|unsigned long long
 argument_list|,
 literal|0x8000000000000000ULL
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 name|CHECK
@@ -1226,7 +1226,7 @@ argument|unsigned long long
 argument_list|,
 literal|0xffffffffffffffffULL
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 empty_stmt|;
 undef|#

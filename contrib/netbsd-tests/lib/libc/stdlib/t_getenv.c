@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_getenv.c,v 1.2 2011/07/15 13:54:31 jruoho Exp $ */
+comment|/*	$NetBSD: t_getenv.c,v 1.3 2015/02/27 08:55:35 martin Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_getenv.c,v 1.2 2011/07/15 13:54:31 jruoho Exp $"
+literal|"$NetBSD: t_getenv.c,v 1.3 2015/02/27 08:55:35 martin Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -595,7 +595,7 @@ name|tc
 argument_list|,
 literal|"timeout"
 argument_list|,
-literal|"300"
+literal|"600"
 argument_list|)
 expr_stmt|;
 block|}

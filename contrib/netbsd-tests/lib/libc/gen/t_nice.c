@@ -396,7 +396,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|__NetBSD__
 name|pri
 operator|=
 name|getpriority

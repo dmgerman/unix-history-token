@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_kevent.c,v 1.6 2012/11/29 09:13:44 martin Exp $ */
+comment|/*	$NetBSD: t_kevent.c,v 1.7 2015/02/05 13:55:37 isaki Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_kevent.c,v 1.6 2012/11/29 09:13:44 martin Exp $"
+literal|"$NetBSD: t_kevent.c,v 1.7 2015/02/05 13:55:37 isaki Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -890,11 +890,19 @@ name|fd
 operator|==
 operator|-
 literal|1
-operator|&&
-name|errno
-operator|==
-name|ENOENT
 condition|)
+block|{
+switch|switch
+condition|(
+name|errno
+condition|)
+block|{
+case|case
+name|ENOENT
+case|:
+case|case
+name|ENXIO
+case|:
 name|atf_tc_skip
 argument_list|(
 literal|"no "
@@ -902,6 +910,9 @@ name|DRVCTLDEV
 literal|" available for testing"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+block|}
 name|ATF_REQUIRE
 argument_list|(
 name|fd

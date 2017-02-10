@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_tcp.c,v 1.3 2013/10/17 12:53:28 christos Exp $	*/
+comment|/*	$NetBSD: t_tcp.c,v 1.4 2016/03/04 18:52:01 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifdef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: t_tcp.c,v 1.3 2013/10/17 12:53:28 christos Exp $"
+literal|"$Id: t_tcp.c,v 1.4 2016/03/04 18:52:01 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -158,6 +158,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|paccept
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|)
+value|accept4((a), (b), (c), (e))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -201,7 +230,8 @@ name|int
 name|ok
 decl_stmt|,
 name|fl
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|n
 decl_stmt|;
 name|char
@@ -437,6 +467,22 @@ argument_list|,
 name|addrlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ok
+operator|!=
+operator|-
+literal|1
+operator|||
+name|errno
+operator|!=
+name|EINPROGRESS
+condition|)
+name|FAIL
+argument_list|(
+literal|"expected connect to fail"
+argument_list|)
+expr_stmt|;
 name|as
 operator|=
 name|paccept
@@ -486,7 +532,7 @@ name|EISCONN
 condition|)
 name|FAIL
 argument_list|(
-literal|"both connects failed"
+literal|"connect failed"
 argument_list|)
 expr_stmt|;
 if|#

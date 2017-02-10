@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_renamerace.c,v 1.32 2014/07/29 09:15:48 gson Exp $	*/
+comment|/*	$NetBSD: t_renamerace.c,v 1.33 2016/05/04 08:30:22 dholland Exp $	*/
 end_comment
 
 begin_comment
@@ -521,7 +521,7 @@ condition|)
 block|{
 name|atf_tc_expect_fail
 argument_list|(
-literal|"PR kern/44661"
+literal|"PR kern/43626"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX: race does not trigger every time at least 		 * on amd64/qemu. 		 */

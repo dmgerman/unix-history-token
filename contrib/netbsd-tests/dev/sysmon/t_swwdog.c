@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_swwdog.c,v 1.5 2011/06/26 12:14:59 christos Exp $	*/
+comment|/*	$NetBSD: t_swwdog.c,v 1.6 2015/04/23 04:49:37 pgoyette Exp $	*/
 end_comment
 
 begin_comment
@@ -425,6 +425,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* fail */
+name|printf
+argument_list|(
+literal|"no watchdog registered!\n"
+argument_list|)
+expr_stmt|;
 name|_exit
 argument_list|(
 literal|1

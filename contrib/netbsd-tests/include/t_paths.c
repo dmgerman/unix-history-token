@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_paths.c,v 1.14 2014/11/04 00:20:19 justin Exp $ */
+comment|/*	$NetBSD: t_paths.c,v 1.16 2015/05/07 06:23:23 pgoyette Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_paths.c,v 1.14 2014/11/04 00:20:19 justin Exp $"
+literal|"$NetBSD: t_paths.c,v 1.16 2015/05/07 06:23:23 pgoyette Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -117,6 +117,17 @@ end_define
 
 begin_comment
 comment|/* Access for root only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PATH_OPT
+value|__BIT(3)
+end_define
+
+begin_comment
+comment|/* Optional, ENODEV if not supported */
 end_comment
 
 begin_struct
@@ -339,6 +350,8 @@ block|,
 name|PATH_DEV
 operator||
 name|PATH_ROOT
+operator||
+name|PATH_OPT
 block|}
 block|,
 block|{
@@ -405,6 +418,8 @@ block|{
 name|_PATH_SYSMON
 block|,
 name|PATH_DEV
+operator||
+name|PATH_OPT
 block|}
 block|,
 block|{
@@ -437,6 +452,14 @@ block|{
 name|_PATH_VIDEO0
 block|,
 name|PATH_DEV
+block|}
+block|,
+block|{
+name|_PATH_WATCHDOG
+block|,
+name|PATH_DEV
+operator||
+name|PATH_OPT
 block|}
 block|,
 block|{
@@ -643,6 +666,40 @@ name|errno
 condition|)
 block|{
 case|case
+name|ENODEV
+case|:
+if|if
+condition|(
+operator|(
+name|paths
+index|[
+name|i
+index|]
+operator|.
+name|flags
+operator|&
+name|PATH_OPT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|atf_tc_fail
+argument_list|(
+literal|"Required path %s does "
+literal|"not exist"
+argument_list|,
+name|paths
+index|[
+name|i
+index|]
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|EPERM
 case|:
 comment|/* FALLTHROUGH */
@@ -668,7 +725,8 @@ condition|)
 block|{
 name|atf_tc_fail
 argument_list|(
-literal|"UID %u failed to open %s"
+literal|"UID %u failed to open %s, "
+literal|"error %d"
 argument_list|,
 operator|(
 name|uint32_t
@@ -681,6 +739,8 @@ name|i
 index|]
 operator|.
 name|path
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 block|}

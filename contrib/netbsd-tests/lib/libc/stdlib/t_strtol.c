@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_strtol.c,v 1.5 2011/06/14 02:45:58 jruoho Exp $ */
+comment|/*	$NetBSD: t_strtol.c,v 1.6 2016/06/01 01:12:02 pgoyette Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_strtol.c,v 1.5 2011/06/14 02:45:58 jruoho Exp $"
+literal|"$NetBSD: t_strtol.c,v 1.6 2016/06/01 01:12:02 pgoyette Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -181,6 +181,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|t
 operator|->
 name|end
@@ -197,6 +198,20 @@ name|end
 argument_list|)
 operator|!=
 literal|0
+operator|)
+operator|||
+operator|(
+name|t
+operator|->
+name|end
+operator|==
+name|NULL
+operator|&&
+operator|*
+name|end
+operator|!=
+literal|'\0'
+operator|)
 condition|)
 name|atf_tc_fail_nonfatal
 argument_list|(
@@ -426,7 +441,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"123456789"
+literal|"1234567"
 block|,
 literal|342391
 block|,
@@ -436,7 +451,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"0123456789"
+literal|"01234567"
 block|,
 literal|342391
 block|,
@@ -646,7 +661,7 @@ literal|0xabc0
 block|,
 literal|16
 block|,
-name|NULL
+literal|"x123"
 block|}
 block|,
 block|{

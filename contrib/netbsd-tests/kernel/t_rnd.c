@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_rnd.c,v 1.5 2012/03/18 09:46:50 jruoho Exp $	*/
+comment|/*	$NetBSD: t_rnd.c,v 1.9 2016/05/22 04:34:44 riastradh Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_rnd.c,v 1.5 2012/03/18 09:46:50 jruoho Exp $"
+literal|"$NetBSD: t_rnd.c,v 1.9 2016/05/22 04:34:44 riastradh Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rnd.h>
+file|<sys/rndio.h>
 end_include
 
 begin_include
@@ -291,6 +291,100 @@ expr_stmt|;
 block|}
 end_block
 
+begin_expr_stmt
+name|ATF_TC
+argument_list|(
+name|read_random
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|read_random
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"descr"
+argument_list|,
+literal|"does reading /dev/random return "
+literal|"within reasonable time"
+argument_list|)
+expr_stmt|;
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"timeout"
+argument_list|,
+literal|"10"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|read_random
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|rump_init
+argument_list|()
+expr_stmt|;
+name|RL
+argument_list|(
+name|fd
+operator|=
+name|rump_sys_open
+argument_list|(
+literal|"/dev/random"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RL
+argument_list|(
+name|rump_sys_read
+argument_list|(
+name|fd
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_macro
 name|ATF_TP_ADD_TCS
 argument_list|(
@@ -312,6 +406,13 @@ argument_list|(
 name|tp
 argument_list|,
 name|RNDADDDATA2
+argument_list|)
+expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|read_random
 argument_list|)
 expr_stmt|;
 return|return
