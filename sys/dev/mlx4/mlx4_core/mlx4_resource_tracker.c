@@ -8102,8 +8102,10 @@ argument_list|)
 operator|&
 literal|0xffffff
 expr_stmt|;
+comment|/* Turn off all unsupported QP allocation flags that the 		 * slave tries to set. 		 */
 name|flags
 operator|=
+operator|(
 name|get_param_l
 argument_list|(
 operator|&
@@ -8111,6 +8113,13 @@ name|in_param
 argument_list|)
 operator|>>
 literal|24
+operator|)
+operator|&
+name|dev
+operator|->
+name|caps
+operator|.
+name|alloc_res_qp_mask
 expr_stmt|;
 name|align
 operator|=
