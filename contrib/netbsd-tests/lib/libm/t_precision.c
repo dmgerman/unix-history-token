@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_precision.c,v 1.2 2014/11/04 00:20:19 justin Exp $ */
+comment|/* $NetBSD: t_precision.c,v 1.3 2016/08/27 10:07:05 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_precision.c,v 1.2 2014/11/04 00:20:19 justin Exp $"
+literal|"$NetBSD: t_precision.c,v 1.3 2016/08/27 10:07:05 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -79,6 +79,12 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|__HAVE_LONG_DOUBLE
+end_if
+
 begin_decl_stmt
 specifier|volatile
 name|long
@@ -88,6 +94,11 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|ATF_TC_BODY
@@ -139,17 +150,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
+name|__HAVE_LONG_DOUBLE
 name|y
 operator|+=
 name|LDBL_EPSILON

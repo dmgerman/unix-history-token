@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_o_search.c,v 1.4 2013/03/17 04:46:06 jmmv Exp $ */
+comment|/*	$NetBSD: t_o_search.c,v 1.5 2017/01/10 22:25:01 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_o_search.c,v 1.4 2013/03/17 04:46:06 jmmv Exp $"
+literal|"$NetBSD: t_o_search.c,v 1.5 2017/01/10 22:25:01 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -25,6 +25,18 @@ begin_include
 include|#
 directive|include
 file|<atf-c.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -73,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_comment

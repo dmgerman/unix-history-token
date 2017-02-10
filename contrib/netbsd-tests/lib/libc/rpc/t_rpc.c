@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_rpc.c,v 1.9 2015/11/27 13:59:40 christos Exp $	*/
+comment|/*	$NetBSD: t_rpc.c,v 1.10 2016/08/27 14:36:22 christos Exp $	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_rpc.c,v 1.9 2015/11/27 13:59:40 christos Exp $"
+literal|"$NetBSD: t_rpc.c,v 1.10 2016/08/27 14:36:22 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -114,7 +114,7 @@ name|msg
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {			\ 	atf_tc_skip(msg, __VA_ARGS__);			\ 	return;						\ } while(
+value|do {			\ 	atf_tc_skip(msg, __VA_ARGS__);			\ 	return ev;					\ } while(
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -162,7 +162,7 @@ name|msg
 parameter_list|,
 modifier|...
 parameter_list|)
-value|errx(ev, msg, __VA_ARGS__)
+value|errx(EXIT_FAILURE, msg, __VA_ARGS__)
 end_define
 
 begin_define
@@ -176,7 +176,7 @@ name|msg
 parameter_list|,
 modifier|...
 parameter_list|)
-value|errx(ev, msg, __VA_ARGS__)
+value|errx(EXIT_FAILURE, msg, __VA_ARGS__)
 end_define
 
 begin_endif
@@ -446,9 +446,7 @@ operator|==
 name|NULL
 condition|)
 name|SKIPX
-argument_list|(
-name|EXIT_FAILURE
-argument_list|,
+argument_list|(,
 literal|"clnt_create (%s)"
 argument_list|,
 name|clnt_spcreateerror
@@ -525,9 +523,7 @@ condition|)
 endif|#
 directive|endif
 name|ERRX
-argument_list|(
-name|EXIT_FAILURE
-argument_list|,
+argument_list|(,
 literal|"clnt_call (%s)"
 argument_list|,
 name|clnt_sperror
@@ -656,9 +652,7 @@ name|NULL
 argument_list|)
 condition|)
 name|ERRX
-argument_list|(
-name|EXIT_FAILURE
-argument_list|,
+argument_list|(,
 literal|"svc_sendreply failed %d"
 argument_list|,
 literal|0
@@ -688,9 +682,7 @@ name|NULL
 argument_list|)
 condition|)
 name|ERRX
-argument_list|(
-name|EXIT_FAILURE
-argument_list|,
+argument_list|(,
 literal|"svc_sendreply failed %d"
 argument_list|,
 literal|0
@@ -771,9 +763,7 @@ name|num
 argument_list|)
 condition|)
 name|ERRX
-argument_list|(
-name|EXIT_FAILURE
-argument_list|,
+argument_list|(,
 literal|"svc_sendreply failed %d"
 argument_list|,
 literal|1
@@ -1081,20 +1071,6 @@ argument_list|,
 name|transp
 argument_list|)
 condition|)
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-name|ERRX
-argument_list|(
-name|EXIT_FAILURE
-argument_list|,
-literal|"Cannot create server %d"
-argument_list|,
-name|num
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 block|{
 name|SKIPXI
 argument_list|(
@@ -1106,8 +1082,6 @@ name|num
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 switch|switch
 condition|(
 operator|(

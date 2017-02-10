@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_mkfifoat.c,v 1.2 2013/03/17 04:46:06 jmmv Exp $ */
+comment|/*	$NetBSD: t_mkfifoat.c,v 1.3 2017/01/10 15:15:09 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_mkfifoat.c,v 1.2 2013/03/17 04:46:06 jmmv Exp $"
+literal|"$NetBSD: t_mkfifoat.c,v 1.3 2017/01/10 15:15:09 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -234,9 +234,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 operator|(
 name|void
 operator|)
@@ -245,8 +242,6 @@ argument_list|(
 name|dfd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_assert.c,v 1.2 2011/06/14 05:28:00 jruoho Exp $ */
+comment|/* $NetBSD: t_assert.c,v 1.3 2017/01/10 15:17:57 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,10 +16,28 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_assert.c,v 1.2 2011/06/14 05:28:00 jruoho Exp $"
+literal|"$NetBSD: t_assert.c,v 1.3 2017/01/10 15:17:57 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_include
 include|#
@@ -63,30 +81,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
 begin_function
 specifier|static
 name|void
@@ -126,11 +120,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -226,14 +215,9 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|disable_corefile
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -412,14 +396,9 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|disable_corefile
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
