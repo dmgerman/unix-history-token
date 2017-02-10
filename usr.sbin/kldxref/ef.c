@@ -3111,7 +3111,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: too many sections"
+literal|"%s: too many segments"
 argument_list|,
 name|filename
 argument_list|)
