@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Code by Gert Doering, SpaceNet GmbH, gert@space.net  *  * Reference documentation:  *    http://www.cisco.com/univercd/cc/td/doc/product/lan/trsrb/frames.htm  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Cisco Discovery Protocol (CDP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +27,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -55,10 +53,6 @@ include|#
 directive|include
 file|"extract.h"
 end_include
-
-begin_comment
-comment|/* must come after interface.h */
-end_comment
 
 begin_include
 include|#
@@ -854,31 +848,28 @@ operator|+
 name|i
 operator|)
 expr_stmt|;
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"%c"
-operator|,
-name|j
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|j
 operator|==
-literal|0x0a
+literal|'\n'
 condition|)
-comment|/* lets rework the version string to get a nice indentation */
+comment|/* lets rework the version string to 					      get a nice indentation */
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\t  "
+literal|"\n\t  "
 operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|fn_print_char
+argument_list|(
+name|ndo
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 block|}
@@ -1427,9 +1418,6 @@ name|p
 operator|+
 name|l
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 specifier|static
 specifier|const
 name|u_char
@@ -1454,8 +1442,6 @@ block|,
 literal|0xdd
 block|}
 decl_stmt|;
-endif|#
-directive|endif
 name|ND_TCHECK2
 argument_list|(
 operator|*
@@ -1638,9 +1624,6 @@ operator|+=
 literal|4
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|INET6
 elseif|else
 if|if
 condition|(
@@ -1715,8 +1698,6 @@ operator|+=
 name|al
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 else|else
 block|{
 comment|/* 			 * Generic case: just print raw data 			 */

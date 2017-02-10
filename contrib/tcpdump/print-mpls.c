@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (C) 2001 WIDE Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Multi-Protocol Label Switching (MPLS) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -43,10 +41,6 @@ include|#
 directive|include
 file|"extract.h"
 end_include
-
-begin_comment
-comment|/* must come after interface.h */
-end_comment
 
 begin_include
 include|#
@@ -183,6 +177,29 @@ name|label_entry
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|length
+operator|<
+sizeof|sizeof
+argument_list|(
+name|label_entry
+argument_list|)
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"[|MPLS], length %u"
+operator|,
+name|length
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|label_entry
 operator|=
 name|EXTRACT_32BITS
@@ -311,6 +328,13 @@ argument_list|(
 name|label_entry
 argument_list|)
 expr_stmt|;
+name|length
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|label_entry
+argument_list|)
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -354,6 +378,22 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* 		 * Generally there's no indication of protocol in MPLS label 		 * encoding. 		 * 		 * However, draft-hsmit-isis-aal5mux-00.txt describes a 		 * technique for encapsulating IS-IS and IP traffic on the 		 * same ATM virtual circuit; you look at the first payload 		 * byte to determine the network layer protocol, based on 		 * the fact that 		 * 		 *	1) the first byte of an IP header is 0x45-0x4f 		 *	   for IPv4 and 0x60-0x6f for IPv6; 		 * 		 *	2) the first byte of an OSI CLNP packet is 0x81, 		 *	   the first byte of an OSI ES-IS packet is 0x82, 		 *	   and the first byte of an OSI IS-IS packet is 		 *	   0x83; 		 * 		 * so the network layer protocol can be inferred from the 		 * first byte of the packet, if the protocol is one of the 		 * ones listed above. 		 * 		 * Cisco sends control-plane traffic MPLS-encapsulated in 		 * this fashion. 		 */
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|length
+operator|<
+literal|1
+condition|)
+block|{
+comment|/* nothing to print */
+return|return;
+block|}
 switch|switch
 condition|(
 operator|*
@@ -490,12 +530,6 @@ argument_list|(
 name|p
 argument_list|,
 name|length
-operator|-
-operator|(
-name|p
-operator|-
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -530,12 +564,6 @@ argument_list|,
 name|p
 argument_list|,
 name|length
-operator|-
-operator|(
-name|p
-operator|-
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -549,12 +577,6 @@ argument_list|,
 name|p
 argument_list|,
 name|length
-operator|-
-operator|(
-name|p
-operator|-
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -568,20 +590,8 @@ argument_list|,
 name|p
 argument_list|,
 name|length
-operator|-
-operator|(
-name|p
-operator|-
-name|bp
-operator|)
 argument_list|,
 name|length
-operator|-
-operator|(
-name|p
-operator|-
-name|bp
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,13 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This module implements decoding of the ATA over Ethernet (AoE) protocol  * according to the following specification:  * http://support.coraid.com/documents/AoEr11.txt  *  * Copyright (c) 2014 The TCPDUMP project  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2014 The TCPDUMP project  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: ATA over Ethernet (AoE) protocol printer */
+end_comment
+
+begin_comment
+comment|/* specification: http://brantleycoilecompany.com/AoEr11.pdf */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +31,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -64,17 +66,6 @@ name|tstr
 index|[]
 init|=
 literal|" [|aoe]"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|cstr
-index|[]
-init|=
-literal|" (corrupt)"
 decl_stmt|;
 end_decl_stmt
 
@@ -649,7 +640,7 @@ operator|<
 name|AOEV1_ISSUE_ARG_LEN
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* AFlags */
 name|ND_TCHECK2
@@ -942,7 +933,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
@@ -951,7 +942,7 @@ name|ndo
 operator|,
 literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1020,7 +1011,7 @@ operator|<
 name|AOEV1_QUERY_ARG_LEN
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* Buffer Count */
 name|ND_TCHECK2
@@ -1177,7 +1168,7 @@ operator|>
 name|len
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* Config String */
 name|ND_TCHECK2
@@ -1224,7 +1215,7 @@ name|trunc
 goto|;
 block|}
 return|return;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
@@ -1233,7 +1224,7 @@ name|ndo
 operator|,
 literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1304,7 +1295,7 @@ operator|<
 name|AOEV1_MAC_ARG_LEN
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* Reserved */
 name|ND_TCHECK2
@@ -1423,7 +1414,7 @@ operator|>
 name|len
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* directives */
 for|for
@@ -1516,7 +1507,7 @@ name|ETHER_ADDR_LEN
 expr_stmt|;
 block|}
 return|return;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
@@ -1525,7 +1516,7 @@ name|ndo
 operator|,
 literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1604,7 +1595,7 @@ operator|%
 name|ETHER_ADDR_LEN
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* RCmd */
 name|ND_TCHECK2
@@ -1678,7 +1669,7 @@ operator|!=
 name|len
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* addresses */
 for|for
@@ -1719,7 +1710,7 @@ name|ETHER_ADDR_LEN
 expr_stmt|;
 block|}
 return|return;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
@@ -1728,7 +1719,7 @@ name|ndo
 operator|,
 literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1820,7 +1811,7 @@ operator|<
 name|AOEV1_COMMON_HDR_LEN
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* Flags */
 name|flags
@@ -2060,7 +2051,7 @@ name|AOEV1_COMMON_HDR_LEN
 argument_list|)
 expr_stmt|;
 return|return;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
@@ -2069,7 +2060,7 @@ name|ndo
 operator|,
 literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2148,7 +2139,7 @@ operator|<
 literal|1
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* Ver/Flags */
 name|ND_TCHECK2
@@ -2202,7 +2193,7 @@ expr_stmt|;
 break|break;
 block|}
 return|return;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
@@ -2211,7 +2202,7 @@ name|ndo
 operator|,
 literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;

@@ -3,11 +3,13 @@ begin_comment
 comment|/*  * Copyright (c) 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: IP over Fibre Channel printer */
+end_comment
+
+begin_comment
+comment|/* specification: RFC 2625 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -41,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -55,10 +57,6 @@ include|#
 directive|include
 file|"ether.h"
 end_include
-
-begin_comment
-comment|/*  * RFC 2625 IP-over-Fibre Channel.  */
-end_comment
 
 begin_struct
 struct|struct
@@ -221,13 +219,13 @@ argument_list|,
 name|ipfcdst
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX - show the upper 16 bits?  Do so only if "vflag" is set? 	 */
+comment|/* 	 * XXX - should we show the upper 16 bits of the addresses? 	 * Do so only if "vflag" is set? 	 * Section 3.3 "FC Port and Node Network Addresses" says that 	 * 	 *    In this specification, both the Source and Destination 	 *    4-bit NAA identifiers SHALL be set to binary '0001' 	 *    indicating that an IEEE 48-bit MAC address is contained 	 *    in the lower 48 bits of the network address fields. The 	 *    high order 12 bits in the network address fields SHALL 	 *    be set to 0x0000. 	 * 	 * so, for captures following this specification, the upper 16 	 * bits should be 0x1000, followed by a MAC address. 	 */
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"%s %s %d: "
+literal|"%s> %s, length %u: "
 operator|,
 name|srcname
 operator|,
@@ -242,7 +240,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|u_int
 name|ipfc_print
 parameter_list|(
 name|netdissect_options
@@ -279,8 +277,14 @@ name|struct
 name|ether_header
 name|ehdr
 decl_stmt|;
-name|u_short
-name|extracted_ethertype
+name|struct
+name|lladdr_info
+name|src
+decl_stmt|,
+name|dst
+decl_stmt|;
+name|int
+name|llc_hdrlen
 decl_stmt|;
 if|if
 condition|(
@@ -298,7 +302,11 @@ literal|"[|ipfc]"
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|caplen
+operator|)
+return|;
 block|}
 comment|/* 	 * Get the network addresses into a canonical form 	 */
 name|extract_ipfc_addrs
@@ -353,6 +361,38 @@ name|ehdr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|src
+operator|.
+name|addr
+operator|=
+name|ESRC
+argument_list|(
+operator|&
+name|ehdr
+argument_list|)
+expr_stmt|;
+name|src
+operator|.
+name|addr_string
+operator|=
+name|etheraddr_string
+expr_stmt|;
+name|dst
+operator|.
+name|addr
+operator|=
+name|EDST
+argument_list|(
+operator|&
+name|ehdr
+argument_list|)
+expr_stmt|;
+name|dst
+operator|.
+name|addr_string
+operator|=
+name|etheraddr_string
+expr_stmt|;
 comment|/* Skip over Network_Header */
 name|length
 operator|-=
@@ -367,8 +407,8 @@ operator|-=
 name|IPFC_HDRLEN
 expr_stmt|;
 comment|/* Try to print the LLC-layer header& higher layers */
-if|if
-condition|(
+name|llc_hdrlen
+operator|=
 name|llc_print
 argument_list|(
 name|ndo
@@ -379,79 +419,21 @@ name|length
 argument_list|,
 name|caplen
 argument_list|,
-name|ESRC
-argument_list|(
 operator|&
-name|ehdr
-argument_list|)
-argument_list|,
-name|EDST
-argument_list|(
-operator|&
-name|ehdr
-argument_list|)
+name|src
 argument_list|,
 operator|&
-name|extracted_ethertype
+name|dst
 argument_list|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|llc_hdrlen
+operator|<
 literal|0
 condition|)
 block|{
 comment|/* 		 * Some kinds of LLC packet we cannot 		 * handle intelligently 		 */
-if|if
-condition|(
-operator|!
-name|ndo
-operator|->
-name|ndo_eflag
-condition|)
-name|ipfc_hdr_print
-argument_list|(
-name|ndo
-argument_list|,
-name|ipfcp
-argument_list|,
-name|length
-operator|+
-name|IPFC_HDRLEN
-argument_list|,
-name|ESRC
-argument_list|(
-operator|&
-name|ehdr
-argument_list|)
-argument_list|,
-name|EDST
-argument_list|(
-operator|&
-name|ehdr
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|extracted_ethertype
-condition|)
-block|{
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"(LLC %s) "
-operator|,
-name|etherproto_string
-argument_list|(
-name|htons
-argument_list|(
-name|extracted_ethertype
-argument_list|)
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -466,7 +448,19 @@ argument_list|,
 name|caplen
 argument_list|)
 expr_stmt|;
+name|llc_hdrlen
+operator|=
+operator|-
+name|llc_hdrlen
+expr_stmt|;
 block|}
+return|return
+operator|(
+name|IPFC_HDRLEN
+operator|+
+name|llc_hdrlen
+operator|)
+return|;
 block|}
 end_function
 
@@ -495,6 +489,8 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+return|return
+operator|(
 name|ipfc_print
 argument_list|(
 name|ndo
@@ -509,10 +505,6 @@ name|h
 operator|->
 name|caplen
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|IPFC_HDRLEN
 operator|)
 return|;
 block|}

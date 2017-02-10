@@ -3,11 +3,13 @@ begin_comment
 comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Francesco Fondelli (francesco dot fondelli, gmail dot com)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Virtual eXtensible Local Area Network (VXLAN) printer */
+end_comment
+
+begin_comment
+comment|/* specification: RFC 7348 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +31,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -43,6 +45,24 @@ include|#
 directive|include
 file|"extract.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|" [|VXLAN]"
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VXLAN_HDR_LEN
+value|8
+end_define
 
 begin_comment
 comment|/*  * VXLAN header, RFC7348  *               Virtual eXtensible Local Area Network (VXLAN): A Framework  *               for Overlaying Virtualized Layer 2 Networks over Layer 3 Networks  *  *     0                   1                   2                   3  *     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |R|R|R|R|I|R|R|R|            Reserved                           |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *    |                VXLAN Network Identifier (VNI) |   Reserved    |  *    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
@@ -75,20 +95,19 @@ if|if
 condition|(
 name|len
 operator|<
-literal|8
+name|VXLAN_HDR_LEN
 condition|)
-block|{
-name|ND_PRINT
+goto|goto
+name|trunc
+goto|;
+name|ND_TCHECK2
 argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"[|VXLAN]"
-operator|)
+operator|*
+name|bp
+argument_list|,
+name|VXLAN_HDR_LEN
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|flags
 operator|=
 operator|*
@@ -156,15 +175,31 @@ name|bp
 argument_list|,
 name|len
 operator|-
-literal|8
+name|VXLAN_HDR_LEN
 argument_list|,
-name|len
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
-literal|8
+name|bp
 argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+return|return;
+name|trunc
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

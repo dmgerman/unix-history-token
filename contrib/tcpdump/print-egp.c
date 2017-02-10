@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Lawrence Berkeley Laboratory,  * Berkeley, CA.  The name of the University may not be used to  * endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Initial contribution from Jeff Honig (jch@MITCHELL.CIT.CORNELL.EDU).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Exterior Gateway Protocol (EGP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -384,6 +382,9 @@ name|struct
 name|egp_packet
 modifier|*
 name|egp
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 specifier|register
@@ -497,6 +498,7 @@ block|}
 name|cp
 operator|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -505,6 +507,14 @@ name|egp
 operator|+
 literal|1
 operator|)
+expr_stmt|;
+name|length
+operator|-=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|egp
+argument_list|)
 expr_stmt|;
 name|t_gateways
 operator|=
@@ -535,6 +545,17 @@ name|addr
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|length
+operator|<
+literal|4
+operator|-
+name|netlen
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_TCHECK2
 argument_list|(
 name|cp
@@ -598,6 +619,21 @@ name|addr
 operator||=
 name|net
 expr_stmt|;
+name|length
+operator|-=
+literal|4
+operator|-
+name|netlen
+expr_stmt|;
+if|if
+condition|(
+name|length
+operator|<
+literal|1
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_TCHECK2
 argument_list|(
 name|cp
@@ -613,6 +649,9 @@ operator|=
 operator|*
 name|cp
 operator|++
+expr_stmt|;
+name|length
+operator|--
 expr_stmt|;
 name|ND_PRINT
 argument_list|(
@@ -665,6 +704,15 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|length
+operator|<
+literal|2
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_TCHECK2
 argument_list|(
 name|cp
@@ -703,6 +751,10 @@ operator|*
 name|cp
 operator|++
 expr_stmt|;
+name|length
+operator|-=
+literal|2
+expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -712,6 +764,15 @@ literal|0
 condition|)
 block|{
 comment|/* Pickup network number */
+if|if
+condition|(
+name|length
+operator|<
+literal|1
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_TCHECK2
 argument_list|(
 name|cp
@@ -733,6 +794,9 @@ operator|++
 operator|<<
 literal|24
 expr_stmt|;
+name|length
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|IN_CLASSB
@@ -741,6 +805,15 @@ name|addr
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|length
+operator|<
+literal|1
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_TCHECK2
 argument_list|(
 name|cp
@@ -762,6 +835,9 @@ operator|++
 operator|<<
 literal|16
 expr_stmt|;
+name|length
+operator|--
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -773,6 +849,15 @@ name|addr
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|length
+operator|<
+literal|2
+condition|)
+goto|goto
+name|trunc
+goto|;
 name|ND_TCHECK2
 argument_list|(
 name|cp
@@ -804,6 +889,10 @@ name|cp
 operator|++
 operator|<<
 literal|8
+expr_stmt|;
+name|length
+operator|-=
+literal|2
 expr_stmt|;
 block|}
 name|ND_PRINT
@@ -891,6 +980,7 @@ decl_stmt|;
 name|egp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|egp_packet
 operator|*
@@ -899,13 +989,19 @@ name|bp
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ND_TTEST2
+name|length
+operator|<
+sizeof|sizeof
 argument_list|(
 operator|*
 name|egp
-argument_list|,
-name|length
+argument_list|)
+operator|||
+operator|!
+name|ND_TTEST
+argument_list|(
+operator|*
+name|egp
 argument_list|)
 condition|)
 block|{
@@ -1467,6 +1563,8 @@ argument_list|(
 name|ndo
 argument_list|,
 name|egp
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,13 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  * Copyright (c) 2009  Florian Forster  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Optimized Link State Protocl (OLSR) as per rfc3626  *  * Original code by Hannes Gredler<hannes@juniper.net>  * IPv6 additions by Florian Forster<octo at verplant.org>  */
+comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  * Copyright (c) 2009  Florian Forster  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Hannes Gredler<hannes@juniper.net>  * IPv6 additions by Florian Forster<octo at verplant.org>  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Optimized Link State Routing Protocol (OLSR) printer */
+end_comment
+
+begin_comment
+comment|/* specification: RFC 3626 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +31,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -396,6 +398,82 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/** gateway HNA flags */
+end_comment
+
+begin_enum
+enum|enum
+name|gateway_hna_flags
+block|{
+name|GW_HNA_FLAG_LINKSPEED
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+name|GW_HNA_FLAG_IPV4
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+name|GW_HNA_FLAG_IPV4_NAT
+init|=
+literal|1
+operator|<<
+literal|2
+block|,
+name|GW_HNA_FLAG_IPV6
+init|=
+literal|1
+operator|<<
+literal|3
+block|,
+name|GW_HNA_FLAG_IPV6PREFIX
+init|=
+literal|1
+operator|<<
+literal|4
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/** gateway HNA field byte offsets in the netmask field of the HNA */
+end_comment
+
+begin_enum
+enum|enum
+name|gateway_hna_fields
+block|{
+name|GW_HNA_PAD
+init|=
+literal|0
+block|,
+name|GW_HNA_FLAGS
+init|=
+literal|1
+block|,
+name|GW_HNA_UPLINK
+init|=
+literal|2
+block|,
+name|GW_HNA_DOWNLINK
+init|=
+literal|3
+block|,
+name|GW_HNA_V6PREFIXLEN
+init|=
+literal|4
+block|,
+name|GW_HNA_V6PREFIX
+init|=
+literal|5
+block|}
+enum|;
+end_enum
+
 begin_define
 define|#
 directive|define
@@ -546,6 +624,89 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|MAX_SMARTGW_SPEED
+value|320000000
+end_define
+
+begin_comment
+comment|/**  * Convert an encoded 1 byte transport value (5 bits mantissa, 3 bits exponent)  * to an uplink/downlink speed value  *  * @param value the encoded 1 byte transport value  * @return the uplink/downlink speed value (in kbit/s)  */
+end_comment
+
+begin_function
+specifier|static
+name|uint32_t
+name|deserialize_gw_speed
+parameter_list|(
+name|uint8_t
+name|value
+parameter_list|)
+block|{
+name|uint32_t
+name|speed
+decl_stmt|;
+name|uint32_t
+name|exp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|value
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|value
+operator|==
+name|UINT8_MAX
+condition|)
+block|{
+comment|/* maximum value: also return maximum value */
+return|return
+name|MAX_SMARTGW_SPEED
+return|;
+block|}
+name|speed
+operator|=
+operator|(
+name|value
+operator|>>
+literal|3
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+name|exp
+operator|=
+name|value
+operator|&
+literal|7
+expr_stmt|;
+while|while
+condition|(
+name|exp
+operator|--
+operator|>
+literal|0
+condition|)
+block|{
+name|speed
+operator|*=
+literal|10
+expr_stmt|;
+block|}
+return|return
+name|speed
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * macro to convert the 8-bit mantissa/exponent to a double float  * taken from olsr.org.  */
 end_comment
@@ -590,6 +751,7 @@ name|u_int
 name|hello_len
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|olsr_lq_neighbor4
 modifier|*
@@ -609,6 +771,7 @@ block|{
 name|lq_neighbor
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_lq_neighbor4
 operator|*
@@ -635,8 +798,8 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\t      neighbor %s, link-quality %.2lf%%"
-literal|", neighbor-link-quality %.2lf%%"
+literal|"\n\t      neighbor %s, link-quality %.2f%%"
+literal|", neighbor-link-quality %.2f%%"
 operator|,
 name|ipaddr_string
 argument_list|(
@@ -696,12 +859,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|INET6
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -720,6 +877,7 @@ name|u_int
 name|hello_len
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|olsr_lq_neighbor6
 modifier|*
@@ -739,6 +897,7 @@ block|{
 name|lq_neighbor
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_lq_neighbor6
 operator|*
@@ -765,8 +924,8 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\t      neighbor %s, link-quality %.2lf%%"
-literal|", neighbor-link-quality %.2lf%%"
+literal|"\n\t      neighbor %s, link-quality %.2f%%"
+literal|", neighbor-link-quality %.2f%%"
 operator|,
 name|ip6addr_string
 argument_list|(
@@ -825,15 +984,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_comment
 comment|/*  * print a neighbor list.  */
@@ -1090,6 +1240,7 @@ operator|.
 name|common
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_common
 operator|*
@@ -1175,11 +1326,13 @@ condition|)
 block|{
 union|union
 block|{
+specifier|const
 name|struct
 name|olsr_msg4
 modifier|*
 name|v4
 decl_stmt|;
+specifier|const
 name|struct
 name|olsr_msg6
 modifier|*
@@ -1205,9 +1358,6 @@ name|olsr_msg4
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|INET6
 if|if
 condition|(
 name|is_ipv6
@@ -1218,6 +1368,7 @@ operator|.
 name|v6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_msg6
 operator|*
@@ -1285,7 +1436,7 @@ operator|(
 name|ndo
 operator|,
 literal|"\n\t%s Message (%#04x), originator %s, ttl %u, hop %u"
-literal|"\n\t  vtime %.3lfs, msg-seq 0x%04x, length %u%s"
+literal|"\n\t  vtime %.3fs, msg-seq 0x%04x, length %u%s"
 operator|,
 name|tok2str
 argument_list|(
@@ -1384,15 +1535,13 @@ expr_stmt|;
 block|}
 else|else
 comment|/* (!is_ipv6) */
-endif|#
-directive|endif
-comment|/* INET6 */
 block|{
 name|msgptr
 operator|.
 name|v4
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_msg4
 operator|*
@@ -1460,7 +1609,7 @@ operator|(
 name|ndo
 operator|,
 literal|"\n\t%s Message (%#04x), originator %s, ttl %u, hop %u"
-literal|"\n\t  vtime %.3lfs, msg-seq 0x%04x, length %u%s"
+literal|"\n\t  vtime %.3fs, msg-seq 0x%04x, length %u%s"
 operator|,
 name|tok2str
 argument_list|(
@@ -1598,6 +1747,7 @@ operator|.
 name|hello
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_hello
 operator|*
@@ -1609,7 +1759,7 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"\n\t  hello-time %.3lfs, MPR willingness %u"
+literal|"\n\t  hello-time %.3fs, MPR willingness %u"
 operator|,
 name|ME_TO_DOUBLE
 argument_list|(
@@ -1678,6 +1828,7 @@ operator|.
 name|hello_link
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_hello_link
 operator|*
@@ -1844,9 +1995,6 @@ goto|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|INET6
 if|if
 condition|(
 name|is_ipv6
@@ -1871,8 +2019,6 @@ name|trunc
 goto|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 if|if
 condition|(
@@ -1939,6 +2085,7 @@ operator|.
 name|tc
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_tc
 operator|*
@@ -2006,9 +2153,6 @@ goto|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|INET6
 if|if
 condition|(
 name|is_ipv6
@@ -2033,8 +2177,6 @@ name|trunc
 goto|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 if|if
 condition|(
@@ -2069,9 +2211,6 @@ expr|struct
 name|in_addr
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|INET6
 if|if
 condition|(
 name|is_ipv6
@@ -2084,8 +2223,6 @@ expr|struct
 name|in6_addr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|msg_tlen
@@ -2101,9 +2238,6 @@ argument_list|,
 name|addr_size
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|INET6
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -2129,26 +2263,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"\n\t  interface address %s"
-operator|,
-name|ipaddr_string
-argument_list|(
-name|ndo
-argument_list|,
-name|msg_data
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|msg_data
 operator|+=
 name|addr_size
@@ -2163,6 +2277,16 @@ block|}
 case|case
 name|OLSR_HNA_MSG
 case|:
+if|if
+condition|(
+name|is_ipv6
+condition|)
+block|{
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -2186,19 +2310,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|INET6
-if|if
-condition|(
-name|is_ipv6
-condition|)
-block|{
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
 while|while
 condition|(
 name|msg_tlen
@@ -2210,6 +2321,7 @@ name|olsr_hna6
 argument_list|)
 condition|)
 block|{
+specifier|const
 name|struct
 name|olsr_hna6
 modifier|*
@@ -2230,6 +2342,7 @@ expr_stmt|;
 name|hna6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_hna6
 operator|*
@@ -2282,14 +2395,35 @@ expr_stmt|;
 block|}
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|int
 name|col
 init|=
 literal|0
 decl_stmt|;
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"\n\t  Advertised networks (total %u)"
+operator|,
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
+name|msg_tlen
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|olsr_hna4
+argument_list|)
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|msg_tlen
@@ -2318,6 +2452,7 @@ operator|.
 name|hna
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|olsr_hna4
 operator|*
@@ -2325,6 +2460,238 @@ operator|)
 name|msg_data
 expr_stmt|;
 comment|/* print 4 prefixes per line */
+if|if
+condition|(
+operator|!
+name|ptr
+operator|.
+name|hna
+operator|->
+name|network
+index|[
+literal|0
+index|]
+operator|&&
+operator|!
+name|ptr
+operator|.
+name|hna
+operator|->
+name|network
+index|[
+literal|1
+index|]
+operator|&&
+operator|!
+name|ptr
+operator|.
+name|hna
+operator|->
+name|network
+index|[
+literal|2
+index|]
+operator|&&
+operator|!
+name|ptr
+operator|.
+name|hna
+operator|->
+name|network
+index|[
+literal|3
+index|]
+operator|&&
+operator|!
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_PAD
+index|]
+operator|&&
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_FLAGS
+index|]
+condition|)
+block|{
+comment|/* smart gateway */
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%sSmart-Gateway:%s%s%s%s%s %u/%u"
+operator|,
+name|col
+operator|==
+literal|0
+condition|?
+literal|"\n\t    "
+else|:
+literal|", "
+operator|,
+comment|/* indent */
+comment|/* sgw */
+comment|/* LINKSPEED */
+operator|(
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_FLAGS
+index|]
+operator|&
+name|GW_HNA_FLAG_LINKSPEED
+operator|)
+condition|?
+literal|" LINKSPEED"
+else|:
+literal|""
+operator|,
+comment|/* IPV4 */
+operator|(
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_FLAGS
+index|]
+operator|&
+name|GW_HNA_FLAG_IPV4
+operator|)
+condition|?
+literal|" IPV4"
+else|:
+literal|""
+operator|,
+comment|/* IPV4-NAT */
+operator|(
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_FLAGS
+index|]
+operator|&
+name|GW_HNA_FLAG_IPV4_NAT
+operator|)
+condition|?
+literal|" IPV4-NAT"
+else|:
+literal|""
+operator|,
+comment|/* IPV6 */
+operator|(
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_FLAGS
+index|]
+operator|&
+name|GW_HNA_FLAG_IPV6
+operator|)
+condition|?
+literal|" IPV6"
+else|:
+literal|""
+operator|,
+comment|/* IPv6PREFIX */
+operator|(
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_FLAGS
+index|]
+operator|&
+name|GW_HNA_FLAG_IPV6PREFIX
+operator|)
+condition|?
+literal|" IPv6-PREFIX"
+else|:
+literal|""
+operator|,
+comment|/* uplink */
+operator|(
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_FLAGS
+index|]
+operator|&
+name|GW_HNA_FLAG_LINKSPEED
+operator|)
+condition|?
+name|deserialize_gw_speed
+argument_list|(
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_UPLINK
+index|]
+argument_list|)
+else|:
+literal|0
+operator|,
+comment|/* downlink */
+operator|(
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_FLAGS
+index|]
+operator|&
+name|GW_HNA_FLAG_LINKSPEED
+operator|)
+condition|?
+name|deserialize_gw_speed
+argument_list|(
+name|ptr
+operator|.
+name|hna
+operator|->
+name|mask
+index|[
+name|GW_HNA_DOWNLINK
+index|]
+argument_list|)
+else|:
+literal|0
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* normal route */
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -2365,6 +2732,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|msg_data
 operator|+=
 sizeof|sizeof
@@ -2677,9 +3045,6 @@ operator|+
 name|name_entry_padding
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|INET6
 if|if
 condition|(
 name|is_ipv6
@@ -2701,8 +3066,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|ND_PRINT
 argument_list|(
 operator|(

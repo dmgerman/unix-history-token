@@ -62,8 +62,8 @@ literal|0x83
 block|,
 name|ND_RPL_SEC_CONSIST
 init|=
-literal|0x84
-block|, }
+literal|0x8A
+block|}
 enum|;
 end_enum
 
@@ -94,7 +94,6 @@ block|,
 name|ND_RPL_DIO_PRF_MASK
 init|=
 literal|0x07
-block|,
 comment|/* 3-bit preference */
 block|}
 enum|;
@@ -291,7 +290,7 @@ block|,
 name|RPL_DIO_STORING_MULTICAST
 init|=
 literal|0x3
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -334,7 +333,7 @@ block|,
 name|RPL_DAO_RPLTARGET_DESC
 init|=
 literal|9
-block|, }
+block|}
 enum|;
 end_enum
 

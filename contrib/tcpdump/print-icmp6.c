@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: IPv6 Internet Control Message Protocol (ICMPv6) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -26,16 +24,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -53,13 +45,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"addrtostr.h"
 end_include
 
 begin_include
@@ -1370,35 +1368,26 @@ struct|struct
 name|nd_opt_prefix_info
 block|{
 comment|/* prefix information */
-name|uint8_t
+name|nd_uint8_t
 name|nd_opt_pi_type
 decl_stmt|;
-name|uint8_t
+name|nd_uint8_t
 name|nd_opt_pi_len
 decl_stmt|;
-name|uint8_t
+name|nd_uint8_t
 name|nd_opt_pi_prefix_len
 decl_stmt|;
-name|uint8_t
+name|nd_uint8_t
 name|nd_opt_pi_flags_reserved
 decl_stmt|;
-name|uint8_t
+name|nd_uint32_t
 name|nd_opt_pi_valid_time
-index|[
-literal|4
-index|]
 decl_stmt|;
-name|uint8_t
+name|nd_uint32_t
 name|nd_opt_pi_preferred_time
-index|[
-literal|4
-index|]
 decl_stmt|;
-name|uint8_t
+name|nd_uint32_t
 name|nd_opt_pi_reserved2
-index|[
-literal|4
-index|]
 decl_stmt|;
 name|struct
 name|in6_addr
@@ -3013,6 +3002,10 @@ specifier|static
 name|int
 name|icmp6_cksum
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|ip6_hdr
@@ -3032,6 +3025,8 @@ block|{
 return|return
 name|nextproto6_cksum
 argument_list|(
+name|ndo
+argument_list|,
 name|ip6
 argument_list|,
 operator|(
@@ -3040,6 +3035,7 @@ name|uint8_t
 operator|*
 operator|)
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -3056,6 +3052,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|tok
@@ -3097,6 +3094,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|tok
@@ -3170,99 +3168,6 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|rpl_format_dagid
-parameter_list|(
-name|char
-name|dagid_str
-index|[
-literal|65
-index|]
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-name|dagid
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|d
-init|=
-name|dagid_str
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|isprint
-argument_list|(
-name|dagid
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-block|{
-operator|*
-name|d
-operator|++
-operator|=
-name|dagid
-index|[
-name|i
-index|]
-expr_stmt|;
-block|}
-else|else
-block|{
-name|snprintf
-argument_list|(
-name|d
-argument_list|,
-literal|5
-argument_list|,
-literal|"0x%02x"
-argument_list|,
-name|dagid
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* 4 + null char */
-name|d
-operator|+=
-literal|4
-expr_stmt|;
-block|}
-block|}
-operator|*
-name|d
-operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|rpl_dio_printopt
 parameter_list|(
 name|netdissect_options
@@ -3307,6 +3212,7 @@ operator|==
 name|RPL_OPT_PAD0
 operator|&&
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3378,7 +3284,7 @@ name|tok2str
 argument_list|(
 name|rpl_subopt_values
 argument_list|,
-literal|"%subopt:%u"
+literal|"subopt:%u"
 argument_list|,
 name|opt
 operator|->
@@ -3424,6 +3330,7 @@ literal|" "
 argument_list|,
 operator|(
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -3441,6 +3348,7 @@ block|}
 name|opt
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rpl_dio_genoption
 operator|*
@@ -3448,6 +3356,7 @@ operator|)
 operator|(
 operator|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3503,17 +3412,17 @@ modifier|*
 name|dio
 init|=
 operator|(
+specifier|const
 expr|struct
 name|nd_rpl_dio
 operator|*
 operator|)
 name|bp
 decl_stmt|;
+specifier|const
 name|char
+modifier|*
 name|dagid_str
-index|[
-literal|65
-index|]
 decl_stmt|;
 name|ND_TCHECK
 argument_list|(
@@ -3521,9 +3430,11 @@ operator|*
 name|dio
 argument_list|)
 expr_stmt|;
-name|rpl_format_dagid
-argument_list|(
 name|dagid_str
+operator|=
+name|ip6addr_string
+argument_list|(
+name|ndo
 argument_list|,
 name|dio
 operator|->
@@ -3598,12 +3509,14 @@ operator|>
 literal|1
 condition|)
 block|{
+specifier|const
 name|struct
 name|rpl_dio_genoption
 modifier|*
 name|opt
 init|=
 operator|(
+specifier|const
 expr|struct
 name|rpl_dio_genoption
 operator|*
@@ -3665,17 +3578,19 @@ modifier|*
 name|dao
 init|=
 operator|(
+specifier|const
 expr|struct
 name|nd_rpl_dao
 operator|*
 operator|)
 name|bp
 decl_stmt|;
+specifier|const
 name|char
+modifier|*
 name|dagid_str
-index|[
-literal|65
-index|]
+init|=
+literal|"<elided>"
 decl_stmt|;
 name|ND_TCHECK
 argument_list|(
@@ -3692,13 +3607,6 @@ condition|)
 goto|goto
 name|tooshort
 goto|;
-name|strcpy
-argument_list|(
-name|dagid_str
-argument_list|,
-literal|"<elided>"
-argument_list|)
-expr_stmt|;
 name|bp
 operator|+=
 name|ND_RPL_DAO_MIN_LEN
@@ -3735,9 +3643,11 @@ condition|)
 goto|goto
 name|tooshort
 goto|;
-name|rpl_format_dagid
-argument_list|(
 name|dagid_str
+operator|=
+name|ip6addr_string
+argument_list|(
+name|ndo
 argument_list|,
 name|dao
 operator|->
@@ -3814,6 +3724,7 @@ modifier|*
 name|opt
 init|=
 operator|(
+specifier|const
 expr|struct
 name|rpl_dio_genoption
 operator|*
@@ -3883,17 +3794,19 @@ modifier|*
 name|daoack
 init|=
 operator|(
+specifier|const
 expr|struct
 name|nd_rpl_daoack
 operator|*
 operator|)
 name|bp
 decl_stmt|;
+specifier|const
 name|char
+modifier|*
 name|dagid_str
-index|[
-literal|65
-index|]
+init|=
+literal|"<elided>"
 decl_stmt|;
 name|ND_TCHECK2
 argument_list|(
@@ -3912,13 +3825,6 @@ condition|)
 goto|goto
 name|tooshort
 goto|;
-name|strcpy
-argument_list|(
-name|dagid_str
-argument_list|,
-literal|"<elided>"
-argument_list|)
-expr_stmt|;
 name|bp
 operator|+=
 name|ND_RPL_DAOACK_MIN_LEN
@@ -3943,7 +3849,7 @@ name|daoack
 operator|->
 name|rpl_dagid
 argument_list|,
-literal|16
+name|DAGID_LEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -3955,9 +3861,11 @@ condition|)
 goto|goto
 name|tooshort
 goto|;
-name|rpl_format_dagid
-argument_list|(
 name|dagid_str
+operator|=
+name|ip6addr_string
+argument_list|(
+name|ndo
 argument_list|,
 name|daoack
 operator|->
@@ -4013,6 +3921,7 @@ modifier|*
 name|opt
 init|=
 operator|(
+specifier|const
 expr|struct
 name|rpl_dio_genoption
 operator|*
@@ -4332,6 +4241,7 @@ decl_stmt|;
 name|dp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|icmp6_hdr
 operator|*
@@ -4341,6 +4251,7 @@ expr_stmt|;
 name|ip
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
@@ -4350,6 +4261,7 @@ expr_stmt|;
 name|oip
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
@@ -4416,6 +4328,8 @@ name|sum
 operator|=
 name|icmp6_cksum
 argument_list|(
+name|ndo
+argument_list|,
 name|ip
 argument_list|,
 name|dp
@@ -4661,6 +4575,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4713,6 +4628,8 @@ argument_list|)
 operator|,
 name|tcpport_string
 argument_list|(
+name|ndo
+argument_list|,
 name|dport
 argument_list|)
 operator|)
@@ -4741,6 +4658,8 @@ argument_list|)
 operator|,
 name|udpport_string
 argument_list|(
+name|ndo
+argument_list|,
 name|dport
 argument_list|)
 operator|)
@@ -5178,6 +5097,7 @@ operator|->
 name|ndo_vflag
 condition|)
 block|{
+specifier|const
 name|struct
 name|nd_router_advert
 modifier|*
@@ -5186,6 +5106,7 @@ decl_stmt|;
 name|p
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_router_advert
 operator|*
@@ -5285,6 +5206,7 @@ case|case
 name|ND_NEIGHBOR_SOLICIT
 case|:
 block|{
+specifier|const
 name|struct
 name|nd_neighbor_solicit
 modifier|*
@@ -5293,6 +5215,7 @@ decl_stmt|;
 name|p
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_neighbor_solicit
 operator|*
@@ -5361,6 +5284,7 @@ case|case
 name|ND_NEIGHBOR_ADVERT
 case|:
 block|{
+specifier|const
 name|struct
 name|nd_neighbor_advert
 modifier|*
@@ -5369,6 +5293,7 @@ decl_stmt|;
 name|p
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_neighbor_advert
 operator|*
@@ -5469,7 +5394,7 @@ name|RDR
 parameter_list|(
 name|i
 parameter_list|)
-value|((struct nd_redirect *)(i))
+value|((const struct nd_redirect *)(i))
 name|ND_TCHECK
 argument_list|(
 name|RDR
@@ -5487,15 +5412,10 @@ name|ndo
 operator|,
 literal|", %s"
 operator|,
-name|getname6
+name|ip6addr_string
 argument_list|(
 name|ndo
 argument_list|,
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
 operator|&
 name|RDR
 argument_list|(
@@ -5524,15 +5444,10 @@ name|ndo
 operator|,
 literal|" to %s"
 operator|,
-name|getname6
+name|ip6addr_string
 argument_list|(
 name|ndo
 argument_list|,
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
 operator|&
 name|RDR
 argument_list|(
@@ -5685,11 +5600,13 @@ operator|->
 name|ndo_vflag
 condition|)
 block|{
+specifier|const
 name|struct
 name|in6_addr
 modifier|*
 name|in6
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|cp
@@ -5727,6 +5644,7 @@ expr_stmt|;
 name|cp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -5737,6 +5655,7 @@ expr_stmt|;
 name|in6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|in6_addr
 operator|*
@@ -5751,6 +5670,7 @@ for|for
 control|(
 init|;
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -6041,6 +5961,7 @@ modifier|*
 name|ip6
 init|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
@@ -6136,6 +6057,7 @@ case|:
 name|uh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|udphdr
 operator|*
@@ -6182,6 +6104,7 @@ case|:
 name|hbh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hbh
 operator|*
@@ -6229,6 +6152,7 @@ comment|/* this should be odd, but try anyway */
 name|fragh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_frag
 operator|*
@@ -6293,6 +6217,7 @@ case|:
 name|ah
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ah
 operator|*
@@ -6437,7 +6362,10 @@ decl_stmt|;
 name|struct
 name|in6_addr
 name|in6
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|struct
+name|in6_addr
 modifier|*
 name|in6p
 decl_stmt|;
@@ -6453,7 +6381,7 @@ name|ECHECK
 parameter_list|(
 name|var
 parameter_list|)
-value|if ((u_char *)&(var)> ep - sizeof(var)) return
+value|if ((const u_char *)&(var)> ep - sizeof(var)) return
 name|cp
 operator|=
 name|bp
@@ -6475,6 +6403,7 @@ block|{
 name|op
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_opt_hdr
 operator|*
@@ -6624,6 +6553,7 @@ case|:
 name|opp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_opt_prefix_info
 operator|*
@@ -6741,6 +6671,7 @@ case|:
 name|opm
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_opt_mtu
 operator|*
@@ -6790,6 +6721,7 @@ case|:
 name|oprd
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_opt_rdnss
 operator|*
@@ -6879,6 +6811,7 @@ case|:
 name|opds
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_opt_dnssl
 operator|*
@@ -6966,6 +6899,7 @@ case|:
 name|opa
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_opt_advinterval
 operator|*
@@ -7003,6 +6937,7 @@ case|:
 name|oph
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_opt_homeagent_info
 operator|*
@@ -7048,6 +6983,7 @@ case|:
 name|opri
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nd_opt_route_info
 operator|*
@@ -7077,6 +7013,7 @@ expr_stmt|;
 name|in6p
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|in6_addr
 operator|*
@@ -7335,6 +7272,7 @@ modifier|*
 name|mp
 init|=
 operator|(
+specifier|const
 expr|struct
 name|mld6_hdr
 operator|*
@@ -7356,6 +7294,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -7427,12 +7366,14 @@ name|u_int
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|icmp6_hdr
 modifier|*
 name|icp
 init|=
 operator|(
+specifier|const
 expr|struct
 name|icmp6_hdr
 operator|*
@@ -7835,12 +7776,14 @@ name|u_int
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|icmp6_hdr
 modifier|*
 name|icp
 init|=
 operator|(
+specifier|const
 expr|struct
 name|icmp6_hdr
 operator|*
@@ -8547,6 +8490,7 @@ return|return;
 name|dp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|icmp6_hdr
 operator|*
@@ -8556,6 +8500,7 @@ expr_stmt|;
 name|ni6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|icmp6_nodeinfo
 operator|*
@@ -8627,6 +8572,7 @@ expr_stmt|;
 name|ni6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|icmp6_nodeinfo
 operator|*
@@ -8991,20 +8937,13 @@ name|ndo
 operator|,
 literal|", subject=%s"
 operator|,
-name|getname6
+name|ip6addr_string
 argument_list|(
 name|ndo
 argument_list|,
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
-operator|(
 name|ni6
 operator|+
 literal|1
-operator|)
 argument_list|)
 operator|)
 argument_list|)
@@ -9183,20 +9122,13 @@ name|ndo
 operator|,
 literal|", subject=%s"
 operator|,
-name|getname
+name|ipaddr_string
 argument_list|(
 name|ndo
 argument_list|,
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
-operator|(
 name|ni6
 operator|+
 literal|1
-operator|)
 argument_list|)
 operator|)
 argument_list|)
@@ -9253,6 +9185,7 @@ expr_stmt|;
 name|ni6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|icmp6_nodeinfo
 operator|*
@@ -9678,16 +9611,12 @@ name|ndo
 operator|,
 literal|" [TTL=%u]"
 operator|,
-operator|*
-operator|(
-name|uint32_t
-operator|*
-operator|)
-operator|(
+name|EXTRACT_32BITS
+argument_list|(
 name|ni6
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9757,7 +9686,7 @@ name|ndo
 operator|,
 literal|" %s"
 operator|,
-name|getname6
+name|ip6addr_string
 argument_list|(
 name|ndo
 argument_list|,
@@ -9978,11 +9907,13 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+specifier|const
 name|struct
 name|rr_pco_match
 modifier|*
 name|match
 decl_stmt|;
+specifier|const
 name|struct
 name|rr_pco_use
 modifier|*
@@ -10007,6 +9938,7 @@ return|return;
 name|rr6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|icmp6_router_renum
 operator|*
@@ -10269,6 +10201,7 @@ block|{
 name|match
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rr_pco_match
 operator|*
@@ -10443,10 +10376,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|inet_ntop
+name|addrtostr6
 argument_list|(
-name|AF_INET6
-argument_list|,
 operator|&
 name|match
 operator|->
@@ -10531,6 +10462,7 @@ block|{
 name|use
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rr_pco_use
 operator|*
@@ -10745,10 +10677,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|inet_ntop
+name|addrtostr6
 argument_list|(
-name|AF_INET6
-argument_list|,
 operator|&
 name|use
 operator|->
@@ -10825,15 +10755,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_comment
 comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */

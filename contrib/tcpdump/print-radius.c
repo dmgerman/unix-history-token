@@ -4,14 +4,12 @@ comment|/*  * Copyright (C) 2000 Alfredo Andres Omella.  All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*  * Radius printer routines as specified on:  *  * RFC 2865:  *      "Remote Authentication Dial In User Service (RADIUS)"  *  * RFC 2866:  *      "RADIUS Accounting"  *  * RFC 2867:  *      "RADIUS Accounting Modifications for Tunnel Protocol Support"  *  * RFC 2868:  *      "RADIUS Attributes for Tunnel Protocol Support"  *  * RFC 2869:  *      "RADIUS Extensions"  *  * RFC 4675:  *      "RADIUS Attributes for Virtual LAN and Priority Support"  *  * RFC 5176:  *      "Dynamic Authorization Extensions to RADIUS"  *  * Alfredo Andres Omella (aandres@s21sec.com) v0.1 2000/09/15  *  * TODO: Among other things to print ok MacIntosh and Vendor values  */
+comment|/* \summary: Radius protocol printer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/*  * Radius printer routines as specified on:  *  * RFC 2865:  *      "Remote Authentication Dial In User Service (RADIUS)"  *  * RFC 2866:  *      "RADIUS Accounting"  *  * RFC 2867:  *      "RADIUS Accounting Modifications for Tunnel Protocol Support"  *  * RFC 2868:  *      "RADIUS Attributes for Tunnel Protocol Support"  *  * RFC 2869:  *      "RADIUS Extensions"  *  * RFC 3580:  *      "IEEE 802.1X Remote Authentication Dial In User Service (RADIUS)"  *      "Usage Guidelines"  *  * RFC 4675:  *      "RADIUS Attributes for Virtual LAN and Priority Support"  *  * RFC 5176:  *      "Dynamic Authorization Extensions to RADIUS"  *  * Alfredo Andres Omella (aandres@s21sec.com) v0.1 2000/09/15  *  * TODO: Among other things to print ok MacIntosh and Vendor values  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -33,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -45,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -643,6 +641,7 @@ name|netdissect_options
 modifier|*
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -662,6 +661,7 @@ name|netdissect_options
 modifier|*
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -681,6 +681,7 @@ name|netdissect_options
 modifier|*
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -700,6 +701,7 @@ name|netdissect_options
 modifier|*
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -719,6 +721,7 @@ name|netdissect_options
 modifier|*
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -738,6 +741,7 @@ name|netdissect_options
 modifier|*
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -1212,6 +1216,8 @@ block|,
 literal|"DVS"
 block|,
 literal|"IP-in-IP Tunneling"
+block|,
+literal|"VLAN"
 block|,                                  }
 decl_stmt|;
 end_decl_stmt
@@ -1307,6 +1313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 name|attrtype
 block|{
@@ -1341,6 +1348,7 @@ name|netdissect_options
 modifier|*
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
@@ -2595,6 +2603,7 @@ modifier|*
 name|ndo
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -2860,7 +2869,7 @@ operator|||
 operator|*
 name|data
 operator|>
-literal|128
+literal|126
 operator|)
 condition|?
 literal|'.'
@@ -2901,6 +2910,7 @@ modifier|*
 name|ndo
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -3117,7 +3127,7 @@ operator|||
 operator|*
 name|data
 operator|>
-literal|128
+literal|126
 operator|)
 condition|?
 literal|'.'
@@ -3187,6 +3197,7 @@ modifier|*
 name|ndo
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -3759,6 +3770,7 @@ modifier|*
 name|ndo
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -3944,6 +3956,7 @@ modifier|*
 name|ndo
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -4092,6 +4105,7 @@ modifier|*
 name|ndo
 parameter_list|,
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -4470,6 +4484,7 @@ modifier|*
 name|rad_attr
 init|=
 operator|(
+specifier|const
 expr|struct
 name|radius_attr
 operator|*
@@ -4663,6 +4678,7 @@ name|ndo
 operator|,
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4700,6 +4716,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -4729,6 +4746,7 @@ expr_stmt|;
 name|rad_attr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|radius_attr
 operator|*
@@ -4736,6 +4754,7 @@ operator|)
 operator|(
 operator|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4807,6 +4826,7 @@ expr_stmt|;
 name|rad
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|radius_hdr
 operator|*

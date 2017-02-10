@@ -11,11 +11,9 @@ begin_comment
 comment|/*  *      @(#)Copyright (c) 1994, Simon J. Gerraty.  *  *      This is free software.  It comes with NO WARRANTY.  *      Permission to use, modify and distribute this source code  *      is granted subject to the following conditions.  *      1/ that the above copyright notice and this notice  *      are preserved in all copies.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Telnet option printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -37,7 +35,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -49,8 +47,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|" [|telnet]"
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -310,6 +319,7 @@ name|TELCMDS
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -884,6 +894,7 @@ name|TELOPTS
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2461,6 +2472,14 @@ name|sp
 argument_list|)
 condition|)
 block|{
+name|ND_TCHECK2
+argument_list|(
+operator|*
+name|p
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -2776,7 +2795,9 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|telnet]"
+literal|"%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2825,6 +2846,12 @@ decl_stmt|;
 name|osp
 operator|=
 name|sp
+expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sp
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2981,6 +3008,12 @@ name|length
 operator|-=
 name|l
 expr_stmt|;
+name|ND_TCHECK
+argument_list|(
+operator|*
+name|sp
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3020,6 +3053,20 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+name|trunc
+label|:
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

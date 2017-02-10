@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Marko Kiiskila carnil@cs.tut.fi  *  * Tampere University of Technology - Telecommunications Laboratory  *  * Permission to use, copy, modify and distribute this  * software and its documentation is hereby granted,  * provided that both the copyright notice and this  * permission notice appear in all copies of the software,  * derivative works or modified versions, and any portions  * thereof, that both notices appear in supporting  * documentation, and that the use of this software is  * acknowledged in any publications resulting from using  * the software.  *  * TUT ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION AND DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS  * SOFTWARE.  *  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: ATM LANE printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -266,6 +264,7 @@ name|u_int
 name|caplen
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|lane_controlhdr
 modifier|*
@@ -296,6 +295,7 @@ block|}
 name|lec
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|lane_controlhdr
 operator|*

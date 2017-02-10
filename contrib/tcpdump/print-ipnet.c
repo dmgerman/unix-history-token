@@ -1,9 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Solaris DLT_IPNET printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -25,13 +23,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_typedef
@@ -267,6 +265,7 @@ name|u_int
 name|caplen
 parameter_list|)
 block|{
+specifier|const
 name|ipnet_hdr_t
 modifier|*
 name|hdr
@@ -324,6 +323,7 @@ expr_stmt|;
 name|hdr
 operator|=
 operator|(
+specifier|const
 name|ipnet_hdr_t
 operator|*
 operator|)
@@ -382,6 +382,7 @@ argument_list|(
 name|ndo
 argument_list|,
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)

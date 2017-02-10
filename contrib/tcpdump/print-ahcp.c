@@ -1,13 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This module implements decoding of AHCP (Ad Hoc Configuration Protocol) based  * on draft-chroboczek-ahcp-00 and source code of ahcpd-0.53.  *  *  * Copyright (c) 2013 The TCPDUMP project  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2013 The TCPDUMP project  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Ad Hoc Configuration Protocol (AHCP) printer */
+end_comment
+
+begin_comment
+comment|/* Based on draft-chroboczek-ahcp-00 and source code of ahcpd-0.53 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +31,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -58,17 +60,6 @@ name|tstr
 index|[]
 init|=
 literal|" [|ahcp]"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|cstr
-index|[]
-init|=
-literal|"(corrupt)"
 decl_stmt|;
 end_decl_stmt
 
@@ -446,7 +437,7 @@ operator|!=
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
@@ -529,16 +520,16 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|": %s"
+literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -604,7 +595,7 @@ operator|!=
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
@@ -631,16 +622,16 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|": %s"
+literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -720,7 +711,7 @@ operator|>
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
@@ -730,9 +721,6 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -751,22 +739,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"%s(compiled w/o IPv6)"
-operator|,
-name|sep
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INET6 */
 name|cp
 operator|+=
 literal|16
@@ -779,16 +751,16 @@ block|}
 return|return
 literal|0
 return|;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|": %s"
+literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -868,7 +840,7 @@ operator|>
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
@@ -908,16 +880,16 @@ block|}
 return|return
 literal|0
 return|;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|": %s"
+literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -997,7 +969,7 @@ operator|>
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
@@ -1007,9 +979,6 @@ argument_list|,
 literal|17
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -1035,29 +1004,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ND_PRINT
-argument_list|(
-operator|(
-name|ndo
-operator|,
-literal|"%s(compiled w/o IPv6)/%u"
-operator|,
-name|sep
-operator|,
-operator|*
-operator|(
-name|cp
-operator|+
-literal|16
-operator|)
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INET6 */
 name|cp
 operator|+=
 literal|17
@@ -1070,16 +1016,16 @@ block|}
 return|return
 literal|0
 return|;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|": %s"
+literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1159,7 +1105,7 @@ operator|>
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
@@ -1206,16 +1152,16 @@ block|}
 return|return
 literal|0
 return|;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|": %s"
+literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1417,7 +1363,7 @@ operator|>
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 name|ND_TCHECK2
 argument_list|(
@@ -1445,7 +1391,7 @@ operator|>
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* Value */
 if|if
@@ -1511,16 +1457,16 @@ name|option_len
 expr_stmt|;
 block|}
 return|return;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|" %s"
+literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1588,7 +1534,7 @@ operator|>
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* Type */
 name|ND_TCHECK2
@@ -1709,7 +1655,7 @@ operator|>
 name|ep
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* Options */
 if|if
@@ -1742,16 +1688,16 @@ name|body_len
 argument_list|)
 expr_stmt|;
 return|return;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|" %s"
+literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1828,7 +1774,7 @@ operator|<
 literal|2
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 comment|/* Magic */
 name|ND_TCHECK2
@@ -1847,7 +1793,7 @@ operator|!=
 name|AHCP_MAGIC_NUMBER
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 name|cp
 operator|+=
@@ -1896,7 +1842,7 @@ operator|<
 name|AHCP1_HEADER_FIX_LEN
 condition|)
 goto|goto
-name|corrupt
+name|invalid
 goto|;
 if|if
 condition|(
@@ -2096,16 +2042,16 @@ expr_stmt|;
 break|break;
 block|}
 return|return;
-name|corrupt
+name|invalid
 label|:
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|" %s"
+literal|"%s"
 operator|,
-name|cstr
+name|istr
 operator|)
 argument_list|)
 expr_stmt|;

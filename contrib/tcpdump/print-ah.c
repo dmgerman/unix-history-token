@@ -7,11 +7,9 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: IPSEC Authentication Header printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -33,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
@@ -45,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -76,17 +74,8 @@ name|ah
 modifier|*
 name|ah
 decl_stmt|;
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|ep
-decl_stmt|;
 name|int
 name|sumlen
-decl_stmt|;
-name|uint32_t
-name|spi
 decl_stmt|;
 name|ah
 operator|=
@@ -98,13 +87,6 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
-name|ep
-operator|=
-name|ndo
-operator|->
-name|ndo_snapend
-expr_stmt|;
-comment|/* 'ep' points to the end of available data. */
 name|ND_TCHECK
 argument_list|(
 operator|*
@@ -119,16 +101,6 @@ name|ah_len
 operator|<<
 literal|2
 expr_stmt|;
-name|spi
-operator|=
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
-name|ah
-operator|->
-name|ah_spi
-argument_list|)
-expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -136,7 +108,13 @@ name|ndo
 operator|,
 literal|"AH(spi=0x%08x"
 operator|,
-name|spi
+name|EXTRACT_32BITS
+argument_list|(
+operator|&
+name|ah
+operator|->
+name|ah_spi
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -157,6 +135,13 @@ name|sumlen
 operator|)
 argument_list|)
 expr_stmt|;
+name|ND_TCHECK_32BITS
+argument_list|(
+name|ah
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -175,8 +160,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ND_TTEST2
+argument_list|(
+operator|*
 name|bp
-operator|+
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -184,18 +173,23 @@ name|ah
 argument_list|)
 operator|+
 name|sumlen
-operator|>
-name|ep
+argument_list|)
 condition|)
+block|{
 name|ND_PRINT
 argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[truncated]"
+literal|"[truncated]):"
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|ND_PRINT
 argument_list|(
 operator|(

@@ -208,7 +208,6 @@ operator|)
 operator|<<
 literal|32
 operator||
-expr|\
 operator|(
 operator|(
 name|uint64_t
@@ -417,7 +416,6 @@ operator|)
 operator|<<
 literal|32
 operator||
-expr|\
 operator|(
 operator|(
 name|uint64_t
@@ -556,6 +554,170 @@ name|p
 parameter_list|)
 define|\
 value|((uint64_t)(((uint64_t)(*((const uint8_t *)(p) + 7))<< 56) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 6))<< 48) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 5))<< 40) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 4))<< 32) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 3))<< 24) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 2))<< 16) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 1))<< 8) | \ 	            ((uint64_t)(*((const uint8_t *)(p) + 0))<< 0)))
+end_define
+
+begin_comment
+comment|/*  * Macros to check the presence of the values in question.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_TTEST_8BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TTEST2(*(p), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TCHECK_8BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TCHECK2(*(p), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TTEST_16BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TTEST2(*(p), 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TCHECK_16BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TCHECK2(*(p), 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TTEST_24BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TTEST2(*(p), 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TCHECK_24BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TCHECK2(*(p), 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TTEST_32BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TTEST2(*(p), 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TCHECK_32BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TCHECK2(*(p), 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TTEST_40BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TTEST2(*(p), 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TCHECK_40BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TCHECK2(*(p), 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TTEST_48BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TTEST2(*(p), 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TCHECK_48BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TCHECK2(*(p), 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TTEST_56BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TTEST2(*(p), 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TCHECK_56BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TCHECK2(*(p), 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TTEST_64BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TTEST2(*(p), 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_TCHECK_64BITS
+parameter_list|(
+name|p
+parameter_list|)
+value|ND_TCHECK2(*(p), 8)
 end_define
 
 end_unit

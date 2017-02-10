@@ -1,17 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Extensively modified by Motonori Shindo (mshindo@mshindo.net) for more  * complete PPP support.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1990, 1991, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Extensively modified by Motonori Shindo (mshindo@mshindo.net) for more  * complete PPP support.  */
+end_comment
+
+begin_comment
+comment|/* \summary: Point to Point Protocol (PPP) printer */
 end_comment
 
 begin_comment
 comment|/*  * TODO:  * o resolve XXX as much as possible  * o MP support  * o BAP support  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
 
 begin_ifdef
 ifdef|#
@@ -33,7 +31,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_ifdef
@@ -68,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -4784,6 +4782,16 @@ block|{
 case|case
 name|PAP_AREQ
 case|:
+comment|/* A valid Authenticate-Request is 6 or more octets long. */
+if|if
+condition|(
+name|len
+operator|<
+literal|6
+condition|)
+goto|goto
+name|trunc
+goto|;
 if|if
 condition|(
 name|length
@@ -4951,6 +4959,16 @@ case|:
 case|case
 name|PAP_ANAK
 case|:
+comment|/* Although some implementations ignore truncation at 		 * this point and at least one generates a truncated 		 * packet, RFC 1334 section 2.2.2 clearly states that 		 * both AACK and ANAK are at least 5 bytes long. 		 */
+if|if
+condition|(
+name|len
+operator|<
+literal|5
+condition|)
+goto|goto
+name|trunc
+goto|;
 if|if
 condition|(
 name|length
@@ -7884,6 +7902,28 @@ argument_list|)
 operator|)
 return|;
 default|default:
+if|if
+condition|(
+name|caplen
+operator|<
+literal|4
+condition|)
+block|{
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"[|ppp]"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|caplen
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|ndo

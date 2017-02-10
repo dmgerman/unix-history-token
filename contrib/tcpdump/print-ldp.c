@@ -3,11 +3,9 @@ begin_comment
 comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Hannes Gredler (hannes@juniper.net)  *  and Steinar Haug (sthaug@nethelp.no)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NETDISSECT_REWORKED
-end_define
+begin_comment
+comment|/* \summary: Label Distribution Protocol (LDP) printer */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<netdissect-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interface.h"
+file|"netdissect.h"
 end_include
 
 begin_include
@@ -1191,9 +1189,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|LDP_TLV_IPV6_TRANSPORT_ADDR
 case|:
@@ -1219,8 +1214,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|LDP_TLV_CONFIG_SEQ_NUMBER
 case|:
@@ -1350,9 +1343,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|AFNUM_INET6
 case|:
@@ -1413,8 +1403,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
 default|default:
 comment|/* unknown AF */
 break|break;
@@ -1634,9 +1622,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|INET6
 elseif|else
 if|if
 condition|(
@@ -1719,8 +1704,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 else|else
 name|ND_PRINT
 argument_list|(
@@ -1741,7 +1724,7 @@ break|break;
 case|case
 name|LDP_FEC_MARTINI_VC
 case|:
-comment|/* 	     * According to RFC 4908, the VC info Length field can be zero, 	     * in which case not only are there no interface parameters, 	     * there's no VC ID. 	     */
+comment|/*              * We assume the type was supposed to be one of the MPLS              * Pseudowire Types.              */
 name|TLV_TCHECK
 argument_list|(
 literal|7
@@ -1756,6 +1739,7 @@ operator|+
 literal|2
 operator|)
 expr_stmt|;
+comment|/* 	     * According to RFC 4908, the VC info Length field can be zero, 	     * in which case not only are there no interface parameters, 	     * there's no VC ID. 	     */
 if|if
 condition|(
 name|vc_info_len
@@ -1772,7 +1756,7 @@ literal|": %s, %scontrol word, group-ID %u, VC-info-length: %u"
 operator|,
 name|tok2str
 argument_list|(
-name|l2vpn_encaps_values
+name|mpls_pw_types_values
 argument_list|,
 literal|"Unknown"
 argument_list|,
@@ -1823,7 +1807,7 @@ literal|": %s, %scontrol word, group-ID %u, VC-ID %u, VC-info-length: %u"
 operator|,
 name|tok2str
 argument_list|(
-name|l2vpn_encaps_values
+name|mpls_pw_types_values
 argument_list|,
 literal|"Unknown"
 argument_list|,
