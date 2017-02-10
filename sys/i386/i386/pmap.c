@@ -5388,6 +5388,9 @@ operator|<
 name|PMAP_CLFLUSH_THRESHOLD
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_APIC
 if|if
 condition|(
 name|pmap_kextract
@@ -5398,6 +5401,8 @@ operator|==
 name|lapic_paddr
 condition|)
 return|return;
+endif|#
+directive|endif
 comment|/* 		 * Writes are ordered by CLFLUSH on Intel CPUs. 		 */
 if|if
 condition|(
