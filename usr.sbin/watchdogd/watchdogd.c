@@ -369,7 +369,7 @@ specifier|static
 name|u_int
 name|nap
 init|=
-literal|1
+literal|10
 decl_stmt|;
 end_decl_stmt
 
