@@ -440,11 +440,6 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_WANT_RTENTRY
-argument_list|)
 end_if
 
 begin_struct
@@ -545,7 +540,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL || _WANT_RTENTRY */
+comment|/* _KERNEL */
 end_comment
 
 begin_define
