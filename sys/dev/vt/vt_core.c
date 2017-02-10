@@ -11243,6 +11243,15 @@ operator|-
 literal|1
 condition|)
 block|{
+name|kbd
+operator|=
+name|kbd_get_keyboard
+argument_list|(
+name|vd
+operator|->
+name|vd_keyboard
+argument_list|)
+expr_stmt|;
 name|vt_save_kbd_state
 argument_list|(
 name|vd
