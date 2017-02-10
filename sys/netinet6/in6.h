@@ -2059,6 +2059,24 @@ begin_comment
 comment|/* bool; receive IP6 RSS bucket id w/ datagram */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPV6_ORIGDSTADDR
+value|65
+end_define
+
+begin_comment
+comment|/* bool: allow getting dstaddr /port info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVORIGDSTADDR
+value|IPV6_ORIGDSTADDR
+end_define
+
 begin_comment
 comment|/*  * The following option is private; do not use it from user applications.  * It is deliberately defined to the same value as IP_MSFILTER.  */
 end_comment
