@@ -2981,10 +2981,6 @@ name|inpcb
 modifier|*
 parameter_list|,
 name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
 name|in_addr
 modifier|*
 parameter_list|,

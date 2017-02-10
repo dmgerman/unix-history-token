@@ -3973,11 +3973,6 @@ name|int
 name|in6_pcbsetport
 parameter_list|(
 name|struct
-name|sockaddr
-modifier|*
-name|nam6
-parameter_list|,
-name|struct
 name|in6_addr
 modifier|*
 name|laddr
@@ -4100,8 +4095,6 @@ operator|=
 name|in_pcb_lport
 argument_list|(
 name|inp
-argument_list|,
-name|nam6
 argument_list|,
 name|NULL
 argument_list|,

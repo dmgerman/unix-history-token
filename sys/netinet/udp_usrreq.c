@@ -2960,7 +2960,7 @@ name|m
 argument_list|,
 name|iphlen
 argument_list|,
-name|udpin
+name|udp_in
 argument_list|)
 operator|==
 literal|0
