@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: h_quota2_tests.c,v 1.4 2012/09/30 21:26:57 bouyer Exp $	*/
+comment|/*	$NetBSD: h_quota2_tests.c,v 1.5 2017/01/13 21:30:39 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../h_macros.h"
+file|"h_macros.h"
 end_include
 
 begin_decl_stmt

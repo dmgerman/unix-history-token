@@ -203,6 +203,11 @@ init|=
 literal|0x4000000000ULL
 block|,
 comment|/* BT Coex */
+name|ATH_DEBUG_QUIETIE
+init|=
+literal|0x8000000000ULL
+block|,
+comment|/* Quiet time handling */
 name|ATH_DEBUG_ANY
 init|=
 literal|0xffffffffffffffffULL

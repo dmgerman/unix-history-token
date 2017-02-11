@@ -430,9 +430,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|KEYDEBUG
+name|KEYDBG
 argument_list|(
-name|KEYDEBUG_KEY_DUMP
+name|KEY_DUMP
 argument_list|,
 name|kdebug_mbuf
 argument_list|(
@@ -758,13 +758,13 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|KEYDEBUG
+name|KEYDBG
 argument_list|(
-argument|KEYDEBUG_KEY_DUMP
+argument|KEY_DUMP
 argument_list|,
 argument|printf(
 literal|"%s: \n"
-argument|, __func__); 		kdebug_sadb(msg)
+argument|, __func__); 	    kdebug_sadb(msg)
 argument_list|)
 empty_stmt|;
 comment|/* 	 * we increment statistics here, just in case we have ENOBUFS 	 * in this function. 	 */

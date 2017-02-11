@@ -43,6 +43,19 @@ directive|include
 file|<dev/pci/pci_iov.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|IXL_GLOBAL_VF_NUM
+parameter_list|(
+name|hw
+parameter_list|,
+name|vf
+parameter_list|)
+define|\
+value|(vf->vf_num + hw->func_caps.vf_base_id)
+end_define
+
 begin_comment
 comment|/* Public functions */
 end_comment

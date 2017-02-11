@@ -24,13 +24,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -1193,8 +1193,7 @@ begin_block
 block|{
 name|u_int
 name|cpuid
-decl_stmt|;
-name|u_int8_t
+decl_stmt|,
 name|ctrl
 decl_stmt|;
 name|int

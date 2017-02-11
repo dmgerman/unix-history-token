@@ -2167,6 +2167,13 @@ case|:
 case|case
 name|RT_CHIPID_MT7621
 case|:
+name|sc
+operator|->
+name|gdma1_base
+operator|=
+name|MT7620_GDMA1_BASE
+expr_stmt|;
+comment|/* fallthrough */
 case|case
 name|RT_CHIPID_RT5350
 case|:
@@ -2447,48 +2454,11 @@ operator|->
 name|mac_rev
 argument_list|)
 expr_stmt|;
-name|RT_WRITE
-argument_list|(
 name|sc
-argument_list|,
+operator|->
+name|gdma1_base
+operator|=
 name|GDMA1_BASE
-operator|+
-name|GDMA_FWD_CFG
-argument_list|,
-operator|(
-name|GDM_ICS_EN
-operator||
-comment|/* Enable IP Csum */
-name|GDM_TCS_EN
-operator||
-comment|/* Enable TCP Csum */
-name|GDM_UCS_EN
-operator||
-comment|/* Enable UDP Csum */
-name|GDM_STRPCRC
-operator||
-comment|/* Strip CRC from packet */
-name|GDM_DST_PORT_CPU
-operator|<<
-name|GDM_UFRC_P_SHIFT
-operator||
-comment|/* fwd UCast to CPU */
-name|GDM_DST_PORT_CPU
-operator|<<
-name|GDM_BFRC_P_SHIFT
-operator||
-comment|/* fwd BCast to CPU */
-name|GDM_DST_PORT_CPU
-operator|<<
-name|GDM_MFRC_P_SHIFT
-operator||
-comment|/* fwd MCast to CPU */
-name|GDM_DST_PORT_CPU
-operator|<<
-name|GDM_OFRC_P_SHIFT
-comment|/* fwd Other to CPU */
-operator|)
-argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -2672,6 +2642,59 @@ operator|=
 name|INT_TXQ0_DONE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|gdma1_base
+operator|!=
+literal|0
+condition|)
+name|RT_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|gdma1_base
+operator|+
+name|GDMA_FWD_CFG
+argument_list|,
+operator|(
+name|GDM_ICS_EN
+operator||
+comment|/* Enable IP Csum */
+name|GDM_TCS_EN
+operator||
+comment|/* Enable TCP Csum */
+name|GDM_UCS_EN
+operator||
+comment|/* Enable UDP Csum */
+name|GDM_STRPCRC
+operator||
+comment|/* Strip CRC from packet */
+name|GDM_DST_PORT_CPU
+operator|<<
+name|GDM_UFRC_P_SHIFT
+operator||
+comment|/* fwd UCast to CPU */
+name|GDM_DST_PORT_CPU
+operator|<<
+name|GDM_BFRC_P_SHIFT
+operator||
+comment|/* fwd BCast to CPU */
+name|GDM_DST_PORT_CPU
+operator|<<
+name|GDM_MFRC_P_SHIFT
+operator||
+comment|/* fwd MCast to CPU */
+name|GDM_DST_PORT_CPU
+operator|<<
+name|GDM_OFRC_P_SHIFT
+comment|/* fwd Other to CPU */
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* allocate Tx and Rx rings */
 for|for
 control|(
@@ -4202,15 +4225,17 @@ if|if
 condition|(
 name|sc
 operator|->
-name|rt_chipid
-operator|==
-name|RT_CHIPID_RT3050
+name|gdma1_base
+operator|!=
+literal|0
 condition|)
 name|RT_WRITE
 argument_list|(
 name|sc
 argument_list|,
-name|GDMA1_BASE
+name|sc
+operator|->
+name|gdma1_base
 operator|+
 name|GDMA_FWD_CFG
 argument_list|,
@@ -4231,21 +4256,21 @@ name|GDM_DST_PORT_CPU
 operator|<<
 name|GDM_UFRC_P_SHIFT
 operator||
-comment|/* Forward UCast to CPU */
+comment|/* fwd UCast to CPU */
 name|GDM_DST_PORT_CPU
 operator|<<
 name|GDM_BFRC_P_SHIFT
 operator||
-comment|/* Forward BCast to CPU */
+comment|/* fwd BCast to CPU */
 name|GDM_DST_PORT_CPU
 operator|<<
 name|GDM_MFRC_P_SHIFT
 operator||
-comment|/* Forward MCast to CPU */
+comment|/* fwd MCast to CPU */
 name|GDM_DST_PORT_CPU
 operator|<<
 name|GDM_OFRC_P_SHIFT
-comment|/* Forward Other to CPU */
+comment|/* fwd Other to CPU */
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4982,23 +5007,21 @@ condition|(
 name|sc
 operator|->
 name|rt_chipid
-operator|==
+operator|!=
 name|RT_CHIPID_RT5350
-operator|||
+operator|&&
 name|sc
 operator|->
 name|rt_chipid
-operator|==
+operator|!=
 name|RT_CHIPID_MT7620
-operator|||
+operator|&&
 name|sc
 operator|->
 name|rt_chipid
-operator|==
+operator|!=
 name|RT_CHIPID_MT7621
 condition|)
-block|{ 	}
-else|else
 block|{
 comment|/* reset adapter */
 name|RT_WRITE
@@ -5012,11 +5035,22 @@ argument_list|,
 name|PSE_RESET
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|gdma1_base
+operator|!=
+literal|0
+condition|)
 name|RT_WRITE
 argument_list|(
 name|sc
 argument_list|,
-name|GDMA1_BASE
+name|sc
+operator|->
+name|gdma1_base
 operator|+
 name|GDMA_FWD_CFG
 argument_list|,
@@ -5037,25 +5071,24 @@ name|GDM_DST_PORT_CPU
 operator|<<
 name|GDM_UFRC_P_SHIFT
 operator||
-comment|/* Forward UCast to CPU */
+comment|/* fwd UCast to CPU */
 name|GDM_DST_PORT_CPU
 operator|<<
 name|GDM_BFRC_P_SHIFT
 operator||
-comment|/* Forward BCast to CPU */
+comment|/* fwd BCast to CPU */
 name|GDM_DST_PORT_CPU
 operator|<<
 name|GDM_MFRC_P_SHIFT
 operator||
-comment|/* Forward MCast to CPU */
+comment|/* fwd MCast to CPU */
 name|GDM_DST_PORT_CPU
 operator|<<
 name|GDM_OFRC_P_SHIFT
-comment|/* Forward Other to CPU */
+comment|/* fwd Other to CPU */
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

@@ -2215,6 +2215,34 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_function
+name|HAL_STATUS
+name|ar5210SetQuiet
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint32_t
+name|period
+parameter_list|,
+name|uint32_t
+name|duration
+parameter_list|,
+name|uint32_t
+name|next_start
+parameter_list|,
+name|HAL_QUIET_FLAG
+name|flags
+parameter_list|)
+block|{
+return|return
+name|HAL_OK
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Control Adaptive Noise Immunity Parameters  */
 end_comment

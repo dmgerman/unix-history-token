@@ -79,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|MAXSEGS
-value|2
+value|3
 end_define
 
 begin_struct
@@ -3111,7 +3111,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: too many sections"
+literal|"%s: too many segments"
 argument_list|,
 name|filename
 argument_list|)

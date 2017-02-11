@@ -664,6 +664,10 @@ define|#
 directive|define
 name|DEVT_ZFS
 value|4
+define|#
+directive|define
+name|DEVT_FD
+value|5
 name|int
 name|d_unit
 decl_stmt|;

@@ -579,6 +579,11 @@ operator|=
 name|ar5211SetCoverageClass
 block|,
 operator|.
+name|ah_setQuiet
+operator|=
+name|ar5211SetQuiet
+block|,
+operator|.
 name|ah_get11nExtBusy
 operator|=
 name|ar5211Get11nExtBusy

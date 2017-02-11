@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_sem.c,v 1.2 2010/11/08 13:05:49 njoly Exp $ */
+comment|/* $NetBSD: t_sem.c,v 1.3 2017/01/14 20:58:20 christos Exp $ */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_sem.c,v 1.2 2010/11/08 13:05:49 njoly Exp $"
+literal|"$NetBSD: t_sem.c,v 1.3 2017/01/14 20:58:20 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -83,7 +83,7 @@ value|10
 end_define
 
 begin_expr_stmt
-name|ATF_TC
+name|ATF_TC_WITH_CLEANUP
 argument_list|(
 name|basic
 argument_list|)
@@ -147,16 +147,6 @@ argument_list|(
 literal|"POSIX semaphores not supported"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|sem_unlink
-argument_list|(
-literal|"/sem_b"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sem_b
 operator|=
 name|sem_open
@@ -330,8 +320,30 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|ATF_TC_CLEANUP
+argument_list|(
+argument|basic
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|sem_unlink
+argument_list|(
+literal|"/sem_b"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_expr_stmt
-name|ATF_TC
+name|ATF_TC_WITH_CLEANUP
 argument_list|(
 name|child
 argument_list|)
@@ -409,16 +421,6 @@ argument_list|(
 literal|"POSIX semaphores not supported"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|sem_unlink
-argument_list|(
-literal|"/sem_a"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sem_a
 operator|=
 name|sem_open
@@ -647,6 +649,28 @@ literal|"/sem_a"
 argument_list|)
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_CLEANUP
+argument_list|(
+argument|child
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|sem_unlink
+argument_list|(
+literal|"/sem_a"
 argument_list|)
 expr_stmt|;
 block|}

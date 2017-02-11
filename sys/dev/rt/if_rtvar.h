@@ -952,6 +952,9 @@ name|uint32_t
 name|pdma_rst_idx
 decl_stmt|;
 name|uint32_t
+name|gdma1_base
+decl_stmt|;
+name|uint32_t
 name|tx_base_ptr
 index|[
 name|RT_SOFTC_TX_RING_COUNT

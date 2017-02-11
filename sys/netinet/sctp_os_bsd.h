@@ -273,32 +273,11 @@ directive|include
 file|<netinet/icmp_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<netipsec/ipsec.h>
+file|<netipsec/ipsec_support.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<netipsec/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -311,23 +290,6 @@ include|#
 directive|include
 file|<sys/domain.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

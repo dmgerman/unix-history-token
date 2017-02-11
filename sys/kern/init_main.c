@@ -321,7 +321,7 @@ name|thread0_storage
 name|thread0_st
 name|__aligned
 argument_list|(
-literal|16
+literal|32
 argument_list|)
 decl_stmt|;
 end_decl_stmt

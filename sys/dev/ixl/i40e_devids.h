@@ -205,13 +205,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_DEV_ID_X722_VF_HV
-value|0x37D9
-end_define
-
-begin_define
-define|#
-directive|define
 name|i40e_is_40G_device
 parameter_list|(
 name|d

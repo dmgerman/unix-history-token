@@ -523,6 +523,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MT7620_GDMA1_BASE
+value|0x600
+end_define
+
+begin_define
+define|#
+directive|define
 name|GDMA_FWD_CFG
 value|0x00
 end_define

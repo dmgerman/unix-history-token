@@ -682,6 +682,8 @@ name|sc
 operator|->
 name|sc_geom
 argument_list|,
+literal|"%s"
+argument_list|,
 name|sc
 operator|->
 name|sc_geom

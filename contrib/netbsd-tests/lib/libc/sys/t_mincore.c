@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_mincore.c,v 1.9 2017/01/10 22:36:29 christos Exp $ */
+comment|/* $NetBSD: t_mincore.c,v 1.10 2017/01/14 20:51:13 christos Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_mincore.c,v 1.9 2017/01/10 22:36:29 christos Exp $"
+literal|"$NetBSD: t_mincore.c,v 1.10 2017/01/14 20:51:13 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -439,9 +439,6 @@ argument_list|,
 literal|"Test page residency with mincore(2)"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|atf_tc_set_md_var
 argument_list|(
 name|tc
@@ -451,8 +448,6 @@ argument_list|,
 literal|"root"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -513,9 +508,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 comment|/* 	 * Bump the mlock limit to unlimited so the rest of the testcase 	 * passes instead of failing on the mlock call. 	 */
 name|rlim
 operator|.
@@ -523,8 +515,6 @@ name|rlim_max
 operator|=
 name|RLIM_INFINITY
 expr_stmt|;
-endif|#
-directive|endif
 name|rlim
 operator|.
 name|rlim_cur
@@ -1255,16 +1245,11 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|free
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

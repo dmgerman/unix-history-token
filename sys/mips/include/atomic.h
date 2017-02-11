@@ -1801,7 +1801,7 @@ literal|"beqz	%0, 1b\n\t"
 comment|/* if it failed, spin */
 literal|"j	3f\n\t"
 literal|"2:\n\t"
-literal|"sw	%0, %2\n\t"
+literal|"sd	%0, %2\n\t"
 comment|/* save old value */
 literal|"li	%0, 0\n\t"
 literal|"3:\n"

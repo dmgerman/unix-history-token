@@ -540,35 +540,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_MDIO_STCODE
-value|I40E_MASK(0, \ 						  I40E_GLGEN_MSCA_STCODE_SHIFT)
+name|I40E_MDIO_CLAUSE22_STCODE_MASK
+value|I40E_MASK(1, \ 						  I40E_GLGEN_MSCA_STCODE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_MDIO_OPCODE_ADDRESS
-value|I40E_MASK(0, \ 						  I40E_GLGEN_MSCA_OPCODE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_MDIO_OPCODE_WRITE
+name|I40E_MDIO_CLAUSE22_OPCODE_WRITE_MASK
 value|I40E_MASK(1, \ 						  I40E_GLGEN_MSCA_OPCODE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_MDIO_OPCODE_READ_INC_ADDR
+name|I40E_MDIO_CLAUSE22_OPCODE_READ_MASK
 value|I40E_MASK(2, \ 						  I40E_GLGEN_MSCA_OPCODE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_MDIO_OPCODE_READ
+name|I40E_MDIO_CLAUSE45_STCODE_MASK
+value|I40E_MASK(0, \ 						  I40E_GLGEN_MSCA_STCODE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_MDIO_CLAUSE45_OPCODE_ADDRESS_MASK
+value|I40E_MASK(0, \ 						  I40E_GLGEN_MSCA_OPCODE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_MDIO_CLAUSE45_OPCODE_WRITE_MASK
+value|I40E_MASK(1, \ 						  I40E_GLGEN_MSCA_OPCODE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_MDIO_CLAUSE45_OPCODE_READ_INC_ADDR_MASK
+value|I40E_MASK(2, \ 						  I40E_GLGEN_MSCA_OPCODE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_MDIO_CLAUSE45_OPCODE_READ_MASK
 value|I40E_MASK(3, \ 						  I40E_GLGEN_MSCA_OPCODE_SHIFT)
 end_define
 
@@ -677,8 +698,6 @@ block|{
 name|I40E_MAC_UNKNOWN
 init|=
 literal|0
-block|,
-name|I40E_MAC_X710
 block|,
 name|I40E_MAC_XL710
 block|,
@@ -839,6 +858,9 @@ name|link_info
 decl_stmt|;
 name|u8
 name|an_info
+decl_stmt|;
+name|u8
+name|fec_info
 decl_stmt|;
 name|u8
 name|ext_info
@@ -1155,32 +1177,43 @@ name|I40E_CAP_PHY_TYPE_20GBASE_KR2
 value|BIT_ULL(I40E_PHY_TYPE_20GBASE_KR2)
 end_define
 
+begin_comment
+comment|/*  * Defining the macro I40E_TYPE_OFFSET to implement a bit shift for some  * PHY types. There is an unused bit (31) in the I40E_CAP_PHY_TYPE_* bit  * fields but no corresponding gap in the i40e_aq_phy_type enumeration. So,  * a shift is needed to adjust for this with values larger than 31. The  * only affected values are I40E_PHY_TYPE_25GBASE_*.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_PHY_TYPE_OFFSET
+value|1
+end_define
+
 begin_define
 define|#
 directive|define
 name|I40E_CAP_PHY_TYPE_25GBASE_KR
-value|BIT_ULL(I40E_AQ_PHY_TYPE_EXT_25G_KR + 32)
+value|BIT_ULL(I40E_PHY_TYPE_25GBASE_KR + \ 					     I40E_PHY_TYPE_OFFSET)
 end_define
 
 begin_define
 define|#
 directive|define
 name|I40E_CAP_PHY_TYPE_25GBASE_CR
-value|BIT_ULL(I40E_AQ_PHY_TYPE_EXT_25G_CR + 32)
+value|BIT_ULL(I40E_PHY_TYPE_25GBASE_CR + \ 					     I40E_PHY_TYPE_OFFSET)
 end_define
 
 begin_define
 define|#
 directive|define
 name|I40E_CAP_PHY_TYPE_25GBASE_SR
-value|BIT_ULL(I40E_AQ_PHY_TYPE_EXT_25G_SR + 32)
+value|BIT_ULL(I40E_PHY_TYPE_25GBASE_SR + \ 					     I40E_PHY_TYPE_OFFSET)
 end_define
 
 begin_define
 define|#
 directive|define
 name|I40E_CAP_PHY_TYPE_25GBASE_LR
-value|BIT_ULL(I40E_AQ_PHY_TYPE_EXT_25G_LR + 32)
+value|BIT_ULL(I40E_PHY_TYPE_25GBASE_LR + \ 					     I40E_PHY_TYPE_OFFSET)
 end_define
 
 begin_define
@@ -1223,21 +1256,21 @@ begin_define
 define|#
 directive|define
 name|I40E_WOL_SUPPORT_MASK
-value|1
+value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
 name|I40E_ACPI_PROGRAMMING_METHOD_MASK
-value|(1<< 1)
+value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
 name|I40E_PROXY_SUPPORT_MASK
-value|(1<< 2)
+value|0x4
 end_define
 
 begin_comment
@@ -1266,6 +1299,21 @@ value|0x3
 name|u32
 name|management_mode
 decl_stmt|;
+name|u32
+name|mng_protocols_over_mctp
+decl_stmt|;
+define|#
+directive|define
+name|I40E_MNG_PROTOCOL_PLDM
+value|0x2
+define|#
+directive|define
+name|I40E_MNG_PROTOCOL_OEM_COMMANDS
+value|0x4
+define|#
+directive|define
+name|I40E_MNG_PROTOCOL_NCSI
+value|0x8
 name|u32
 name|npar_enable
 decl_stmt|;
@@ -1607,7 +1655,9 @@ block|,
 name|I40E_NVMUPD_STATE_INIT_WAIT
 block|,
 name|I40E_NVMUPD_STATE_WRITE_WAIT
-block|, }
+block|,
+name|I40E_NVMUPD_STATE_ERROR
+block|}
 enum|;
 end_enum
 
@@ -1900,6 +1950,9 @@ name|device
 decl_stmt|;
 name|u16
 name|lan_id
+decl_stmt|;
+name|u16
+name|bus_id
 decl_stmt|;
 block|}
 struct|;
@@ -5202,6 +5255,13 @@ define|#
 directive|define
 name|I40E_SR_CORER_REGS_AUTO_LOAD_PTR
 value|0x3C
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_SR_PHY_ACTIVITY_LIST_PTR
+value|0x3D
 end_define
 
 begin_define

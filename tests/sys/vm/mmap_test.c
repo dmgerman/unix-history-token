@@ -750,6 +750,11 @@ argument_list|,
 literal|"simple /dev/devstat shared"
 argument_list|)
 expr_stmt|;
+name|atf_tc_expect_fail
+argument_list|(
+literal|"extra PROT flags check fails due to recent mmap(2) changes; bug # 216976"
+argument_list|)
+expr_stmt|;
 comment|/* Extra PROT flags. */
 name|checked_mmap
 argument_list|(

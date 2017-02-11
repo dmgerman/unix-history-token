@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_swapcontext.c,v 1.2 2014/08/25 16:31:15 bouyer Exp $ */
+comment|/* $NetBSD: t_swapcontext.c,v 1.3 2017/01/16 16:27:06 christos Exp $ */
 end_comment
 
 begin_comment
@@ -21,12 +21,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -42,24 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ucontext.h>
 end_include
 
 begin_include
@@ -72,6 +49,18 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ucontext.h>
 end_include
 
 begin_include
@@ -262,9 +251,6 @@ argument_list|,
 name|oself
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|ATF_REQUIRE_MSG
 argument_list|(
 name|swapcontext
@@ -287,22 +273,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|PTHREAD_REQUIRE
-argument_list|(
-name|swapcontext
-argument_list|(
-operator|&
-name|octx
-argument_list|,
-operator|&
-name|nctx
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* NOTREACHED */
 return|return
 name|NULL
@@ -398,9 +368,6 @@ argument_list|(
 literal|"Testing if swapcontext() alters pthread_self()\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|ATF_REQUIRE_MSG
 argument_list|(
 name|getcontext
@@ -420,19 +387,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|PTHREAD_REQUIRE
-argument_list|(
-name|getcontext
-argument_list|(
-operator|&
-name|nctx
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|PTHREAD_REQUIRE
 argument_list|(
 name|pthread_create

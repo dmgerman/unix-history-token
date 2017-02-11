@@ -1584,16 +1584,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* IPSEC */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1603,15 +1593,6 @@ end_define
 
 begin_comment
 comment|/* struct; get/set security policy */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
 end_comment
 
 begin_comment
@@ -2077,6 +2058,24 @@ end_define
 begin_comment
 comment|/* bool; receive IP6 RSS bucket id w/ datagram */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_ORIGDSTADDR
+value|72
+end_define
+
+begin_comment
+comment|/* bool: allow getting dstaddr /port info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RECVORIGDSTADDR
+value|IPV6_ORIGDSTADDR
+end_define
 
 begin_comment
 comment|/*  * The following option is private; do not use it from user applications.  * It is deliberately defined to the same value as IP_MSFILTER.  */

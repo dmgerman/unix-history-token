@@ -164,13 +164,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/resource.h>
 end_include
 
 begin_include
@@ -182,7 +182,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslimits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -200,19 +212,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslimits.h>
+file|<sys/wait.h>
 end_include
 
 begin_if
@@ -1166,9 +1166,7 @@ specifier|const
 name|char
 modifier|*
 name|TypeNames
-index|[
-literal|8
-index|]
+index|[]
 init|=
 block|{
 literal|"UNUSED"
@@ -11939,7 +11937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * fork off and become a daemon, but wait for the child to come online  * before returing to the parent, or we get disk thrashing at boot etc.  * Set a timer so we don't hang forever if it wedges.  */
+comment|/*  * fork off and become a daemon, but wait for the child to come online  * before returning to the parent, or we get disk thrashing at boot etc.  * Set a timer so we don't hang forever if it wedges.  */
 end_comment
 
 begin_function

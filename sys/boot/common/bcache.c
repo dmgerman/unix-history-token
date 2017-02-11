@@ -132,7 +132,7 @@ decl_stmt|;
 name|caddr_t
 name|bcache_data
 decl_stmt|;
-name|u_int
+name|size_t
 name|bcache_nblks
 decl_stmt|;
 name|size_t
@@ -282,6 +282,13 @@ name|BCACHE_MINREADAHEAD
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCACHE_MARKER
+value|0xdeadbeef
+end_define
+
 begin_function_decl
 specifier|static
 name|void
@@ -335,7 +342,7 @@ begin_function
 name|void
 name|bcache_init
 parameter_list|(
-name|u_int
+name|size_t
 name|nblks
 parameter_list|,
 name|size_t
@@ -402,6 +409,10 @@ name|int
 name|disks
 init|=
 name|bcache_numdev
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|marker
 decl_stmt|;
 if|if
 condition|(
@@ -481,6 +492,11 @@ operator|->
 name|bcache_nblks
 operator|*
 name|bcache_blksize
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -510,6 +526,11 @@ operator|->
 name|bcache_nblks
 operator|*
 name|bcache_blksize
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -564,6 +585,30 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* Insert cache end marker. */
+name|marker
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|bc
+operator|->
+name|bcache_data
+operator|+
+name|bc
+operator|->
+name|bcache_nblks
+operator|*
+name|bcache_blksize
+operator|)
+expr_stmt|;
+operator|*
+name|marker
+operator|=
+name|BCACHE_MARKER
+expr_stmt|;
 comment|/* Flush the cache */
 for|for
 control|(
@@ -846,6 +891,10 @@ decl_stmt|;
 name|caddr_t
 name|p_buf
 decl_stmt|;
+name|uint32_t
+modifier|*
+name|marker
+decl_stmt|;
 if|if
 condition|(
 name|bc
@@ -864,6 +913,24 @@ literal|1
 operator|)
 return|;
 block|}
+name|marker
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|bc
+operator|->
+name|bcache_data
+operator|+
+name|bc
+operator|->
+name|bcache_nblks
+operator|*
+name|bcache_blksize
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|rsize
@@ -1073,6 +1140,7 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* read at least those blocks */
+comment|/*      * The read ahead size setup.      * While the read ahead can save us IO, it also can complicate things:      * 1. We do not want to read ahead by wrapping around the      * bcache end - this would complicate the cache management.      * 2. We are using bc->ra as dynamic hint for read ahead size,      * detected cache hits will increase the read-ahead block count, and      * misses will decrease, see the code above.      * 3. The bcache is sized by 512B blocks, however, the underlying device      * may have a larger sector size, and we should perform the IO by      * taking into account these larger sector sizes. We could solve this by      * passing the sector size to bcache_allocate(), or by using ioctl(), but      * in this version we are using the constant, 16 blocks, and are rounding      * read ahead block count down to multiple of 16.      * Using the constant has two reasons, we are not entirely sure if the      * BIOS disk interface is providing the correct value for sector size.      * And secondly, this way we get the most conservative setup for the ra.      *      * The selection of multiple of 16 blocks (8KB) is quite arbitrary, however,      * we want to cover CDs (2K) and 4K disks.      * bcache_allocate() will always fall back to a minimum of 32 blocks.      * Our choice of 16 read ahead blocks will always fit inside the bcache.      */
 name|ra
 operator|=
 name|bc
@@ -1092,6 +1160,10 @@ if|if
 condition|(
 name|ra
 operator|!=
+literal|0
+operator|&&
+name|ra
+operator|!=
 name|bc
 operator|->
 name|bcache_nblks
@@ -1107,8 +1179,20 @@ operator|->
 name|ra
 argument_list|,
 name|ra
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
+name|ra
+operator|=
+name|rounddown
+argument_list|(
+name|ra
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+comment|/* multiple of 16 blocks */
 name|p_size
 operator|+=
 name|ra
@@ -1303,6 +1387,40 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|*
+name|marker
+operator|!=
+name|BCACHE_MARKER
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"BUG: bcache corruption detected: nblks: %zu p_blk: %lu, "
+literal|"p_size: %zu, ra: %zu\n"
+argument_list|,
+name|bc
+operator|->
+name|bcache_nblks
+argument_list|,
+operator|(
+name|long
+name|unsigned
+operator|)
+name|BHASH
+argument_list|(
+name|bc
+argument_list|,
+name|p_blk
+argument_list|)
+argument_list|,
+name|p_size
+argument_list|,
+name|ra
+argument_list|)
+expr_stmt|;
+block|}
 name|done
 label|:
 if|if
@@ -1439,7 +1557,7 @@ condition|)
 block|{
 name|DEBUG
 argument_list|(
-literal|"bypass %d from %d"
+literal|"bypass %zu from %qu"
 argument_list|,
 name|size
 operator|/

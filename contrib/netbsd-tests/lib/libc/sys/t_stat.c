@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_stat.c,v 1.4 2012/03/17 08:37:08 jruoho Exp $ */
+comment|/* $NetBSD: t_stat.c,v 1.5 2017/01/13 20:06:50 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_stat.c,v 1.4 2012/03/17 08:37:08 jruoho Exp $"
+literal|"$NetBSD: t_stat.c,v 1.5 2017/01/13 20:06:50 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -92,23 +98,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -2127,6 +2116,14 @@ argument_list|(
 literal|"inconsistencies between stat(2) and lstat(2)"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
 name|unlink
@@ -2147,19 +2144,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -373,33 +367,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*IPSEC*/
-end_comment
 
 begin_include
 include|#

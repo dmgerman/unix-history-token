@@ -7301,22 +7301,6 @@ case|case
 name|SADB_X_EXT_SA2
 case|:
 case|case
-name|SADB_X_EXT_SA_REPLAY
-case|:
-name|mhp
-index|[
-name|ext
-operator|->
-name|sadb_ext_type
-index|]
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|ext
-expr_stmt|;
-break|break;
-case|case
 name|SADB_X_EXT_NAT_T_TYPE
 case|:
 case|case
@@ -7325,7 +7309,6 @@ case|:
 case|case
 name|SADB_X_EXT_NAT_T_DPORT
 case|:
-comment|/* case SADB_X_EXT_NAT_T_OA: is OAI */
 case|case
 name|SADB_X_EXT_NAT_T_OAI
 case|:
@@ -7335,14 +7318,15 @@ case|:
 case|case
 name|SADB_X_EXT_NAT_T_FRAG
 case|:
-if|if
-condition|(
-name|feature_present
-argument_list|(
-literal|"ipsec_natt"
-argument_list|)
-condition|)
-block|{
+case|case
+name|SADB_X_EXT_SA_REPLAY
+case|:
+case|case
+name|SADB_X_EXT_NEW_ADDRESS_SRC
+case|:
+case|case
+name|SADB_X_EXT_NEW_ADDRESS_DST
+case|:
 name|mhp
 index|[
 name|ext
@@ -7356,8 +7340,6 @@ operator|)
 name|ext
 expr_stmt|;
 break|break;
-block|}
-comment|/* FALLTHROUGH */
 default|default:
 name|__ipsec_errcode
 operator|=

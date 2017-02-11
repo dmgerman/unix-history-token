@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: buf.h,v 1.2 2001/11/02 03:12:49 lukem Exp $	*/
+comment|/*	$NetBSD: buf.h,v 1.3 2001/11/02 03:12:49 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -30,6 +30,34 @@ include|#
 directive|include
 file|<sys/queue.h>
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|ucred
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|vnode
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|void
+modifier|*
+name|fs
+decl_stmt|;
+name|void
+modifier|*
+name|v_data
+decl_stmt|;
+name|int
+name|offset
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -82,15 +110,17 @@ begin_function_decl
 name|int
 name|bread
 parameter_list|(
-name|int
-parameter_list|,
 name|struct
-name|fs
+name|vnode
 modifier|*
 parameter_list|,
 name|daddr_t
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
 parameter_list|,
 name|struct
 name|buf
@@ -107,6 +137,8 @@ parameter_list|(
 name|struct
 name|buf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -128,13 +160,17 @@ name|buf
 modifier|*
 name|getblk
 parameter_list|(
-name|int
-parameter_list|,
 name|struct
-name|fs
+name|vnode
 modifier|*
 parameter_list|,
 name|daddr_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)

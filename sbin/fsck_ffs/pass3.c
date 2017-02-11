@@ -109,7 +109,7 @@ decl_stmt|;
 name|char
 name|namebuf
 index|[
-name|MAXNAMLEN
+name|UFS_MAXNAMLEN
 operator|+
 literal|1
 index|]

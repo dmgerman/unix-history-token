@@ -1512,7 +1512,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1520,8 +1520,6 @@ literal|0
 index|]
 argument_list|,
 literal|"temp"
-argument_list|,
-literal|4
 argument_list|)
 operator|==
 literal|0
@@ -1588,7 +1586,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1596,8 +1594,6 @@ literal|0
 index|]
 argument_list|,
 literal|"pub"
-argument_list|,
-literal|3
 argument_list|)
 operator|==
 literal|0
@@ -1615,7 +1611,7 @@ if|if
 condition|(
 name|argc
 operator|&&
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1623,8 +1619,6 @@ literal|1
 index|]
 argument_list|,
 literal|"only"
-argument_list|,
-literal|3
 argument_list|)
 operator|==
 literal|0
@@ -1642,7 +1636,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1650,8 +1644,6 @@ literal|0
 index|]
 argument_list|,
 literal|"blackhole"
-argument_list|,
-literal|9
 argument_list|)
 operator|==
 literal|0
@@ -1664,9 +1656,12 @@ operator|&
 name|RTF_REJECT
 condition|)
 block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Choose one of blackhole or reject, not both.\n"
+literal|1
+argument_list|,
+literal|"Choose one of blackhole or reject, "
+literal|"not both."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1678,7 +1673,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1686,8 +1681,6 @@ literal|0
 index|]
 argument_list|,
 literal|"reject"
-argument_list|,
-literal|6
 argument_list|)
 operator|==
 literal|0
@@ -1700,9 +1693,12 @@ operator|&
 name|RTF_BLACKHOLE
 condition|)
 block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Choose one of blackhole or reject, not both.\n"
+literal|1
+argument_list|,
+literal|"Choose one of blackhole or reject, "
+literal|"not both."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1711,31 +1707,20 @@ operator||=
 name|RTF_REJECT
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|strncmp
+else|else
+block|{
+name|warnx
 argument_list|(
+literal|"Invalid parameter '%s'"
+argument_list|,
 name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-literal|"trail"
-argument_list|,
-literal|5
 argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* XXX deprecated and undocumented feature */
-name|printf
-argument_list|(
-literal|"%s: Sending trailers is no longer supported\n"
-argument_list|,
-name|host
-argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|argv
@@ -1783,9 +1768,9 @@ name|ea
 argument_list|)
 condition|)
 block|{
-name|printf
+name|warnx
 argument_list|(
-literal|"no interface found for %s\n"
+literal|"no interface found for %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1856,7 +1841,7 @@ name|ETHER_ADDR_LEN
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * In the case a proxy-arp entry is being added for 	 * a remote end point, the RTF_ANNOUNCE flag in the  	 * RTM_GET command is an indication to the kernel 	 * routing code that the interface associated with 	 * the prefix route covering the local end of the 	 * PPP link should be returned, on which ARP applies. 	 */
+comment|/* 	 * In the case a proxy-arp entry is being added for 	 * a remote end point, the RTF_ANNOUNCE flag in the 	 * RTM_GET command is an indication to the kernel 	 * routing code that the interface associated with 	 * the prefix route covering the local end of the 	 * PPP link should be returned, on which ARP applies. 	 */
 name|rtm
 operator|=
 name|rtmsg
@@ -1949,9 +1934,9 @@ name|sdl_type
 argument_list|)
 condition|)
 block|{
-name|printf
+name|warnx
 argument_list|(
-literal|"cannot intuit interface index and type for %s\n"
+literal|"cannot intuit interface index and type for %s"
 argument_list|,
 name|host
 argument_list|)
@@ -2252,7 +2237,7 @@ operator|)
 name|addr
 operator|)
 expr_stmt|;
-comment|/* 		 * With the new L2/L3 restructure, the route  		 * returned is a prefix route. The important 		 * piece of information from the previous 		 * RTM_GET is the interface index. In the 		 * case of ECMP, the kernel will traverse 		 * the route group for the given entry. 		 */
+comment|/* 		 * With the new L2/L3 restructure, the route 		 * returned is a prefix route. The important 		 * piece of information from the previous 		 * RTM_GET is the interface index. In the 		 * case of ECMP, the kernel will traverse 		 * the route group for the given entry. 		 */
 if|if
 condition|(
 name|sdl
@@ -2300,11 +2285,9 @@ operator|&
 name|RTF_ANNOUNCE
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"delete: cannot locate %s\n"
+literal|"delete: cannot locate %s"
 argument_list|,
 name|host
 argument_list|)
@@ -3652,7 +3635,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do {						   \ 		if ((s) != NULL&& rtm->rtm_addrs& (w)) { \ 			bcopy((s), cp, sizeof(*(s)));	   \ 			cp += SA_SIZE(s);		   \ 		}					   \ 	} while (0)
+value|do {							\ 		if ((s) != NULL&& rtm->rtm_addrs& (w)) {	\ 			bcopy((s), cp, sizeof(*(s)));		\ 			cp += SA_SIZE(s);			\ 		}						\ 	} while (0)
 name|NEXTADDR
 argument_list|(
 name|RTA_DST
@@ -3955,7 +3938,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|((struct ifreq *)((char *)&(i)->ifr_addr			\ 	+ MAX((i)->ifr_addr.sa_len, sizeof((i)->ifr_addr))) )
+value|((struct ifreq *)((char *)&(i)->ifr_addr		\ 	+ MAX((i)->ifr_addr.sa_len, sizeof((i)->ifr_addr))) )
 comment|/* 	 * Scan through looking for an interface with an Internet 	 * address on the same subnet as `ipaddr'. 	 */
 name|ifend
 operator|=
@@ -4074,7 +4057,7 @@ name|IFF_BROADCAST
 operator|)
 condition|)
 continue|continue;
-comment|/* 		 * Get its netmask and check that it's on  		 * the right subnet. 		 */
+comment|/* Get its netmask and check that it's on the right subnet. */
 if|if
 condition|(
 name|ioctl
@@ -4238,16 +4221,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"using interface %s for proxy with address "
+literal|"using interface %s for proxy with address %s\n"
 argument_list|,
 name|ifp
 operator|->
 name|ifr_name
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s\n"
 argument_list|,
 name|ether_ntoa
 argument_list|(

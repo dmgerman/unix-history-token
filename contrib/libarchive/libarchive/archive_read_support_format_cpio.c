@@ -1971,6 +1971,9 @@ specifier|const
 name|void
 modifier|*
 name|h
+decl_stmt|,
+modifier|*
+name|hl
 decl_stmt|;
 name|struct
 name|archive_string_conv
@@ -2230,7 +2233,7 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-name|h
+name|hl
 operator|=
 name|__archive_read_ahead
 argument_list|(
@@ -2248,7 +2251,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|h
+name|hl
 operator|==
 name|NULL
 condition|)
@@ -2268,7 +2271,7 @@ specifier|const
 name|char
 operator|*
 operator|)
-name|h
+name|hl
 argument_list|,
 operator|(
 name|size_t
@@ -2355,7 +2358,7 @@ name|namelength
 operator|==
 literal|11
 operator|&&
-name|memcmp
+name|strncmp
 argument_list|(
 operator|(
 specifier|const
