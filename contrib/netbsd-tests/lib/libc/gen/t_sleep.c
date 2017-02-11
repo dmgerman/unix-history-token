@@ -13,6 +13,10 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
+begin_comment
+comment|/* kqueue(2) on FreeBSD requires sys/types.h for uintptr_t; NetBSD doesn't. */
+end_comment
+
 begin_include
 include|#
 directive|include
