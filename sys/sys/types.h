@@ -1144,7 +1144,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__vm_ooffset_t
+name|__int64_t
 name|vm_ooffset_t
 typedef|;
 end_typedef
@@ -1158,7 +1158,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__vm_pindex_t
+name|__uint64_t
 name|vm_pindex_t
 typedef|;
 end_typedef
