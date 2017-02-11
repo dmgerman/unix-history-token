@@ -180,7 +180,7 @@ file|"archive_write_private.h"
 end_include
 
 begin_comment
-comment|/*  * Differences to xar utility.  * - Subdocument is not supported yet.  * - ACL is not supported yet.  * - When writing an XML element<link type="<file-type>">,<file-type>  *   which is a file type a symbolic link is referencing is always marked  *   as "broken". Xar utility uses stat(2) to get the file type, but, in  *   libarcive format writer, we should not use it; if it is needed, we  *   should get about it at archive_read_disk.c.  * - It is possible to appear both<flags> and<ext2> elements.  *   Xar utility generates<flags> on BSD platform and<ext2> on Linux  *   platform.  *  */
+comment|/*  * Differences to xar utility.  * - Subdocument is not supported yet.  * - ACL is not supported yet.  * - When writing an XML element<link type="<file-type>">,<file-type>  *   which is a file type a symbolic link is referencing is always marked  *   as "broken". Xar utility uses stat(2) to get the file type, but, in  *   libarchive format writer, we should not use it; if it is needed, we  *   should get about it at archive_read_disk.c.  * - It is possible to appear both<flags> and<ext2> elements.  *   Xar utility generates<flags> on BSD platform and<ext2> on Linux  *   platform.  *  */
 end_comment
 
 begin_if
@@ -6277,7 +6277,7 @@ block|{
 case|case
 name|AE_IFLNK
 case|:
-comment|/* 		 * xar utility has checked a file type, which 		 * a symblic-link file has referenced. 		 * For example: 		 *<link type="directory">../ref/</link> 		 *   The symlink target file is "../ref/" and its 		 *   file type is a directory. 		 * 		 *<link type="file">../f</link> 		 *   The symlink target file is "../f" and its 		 *   file type is a regular file. 		 * 		 * But our implemention cannot do it, and then we 		 * always record that a attribute "type" is "borken", 		 * for example: 		 *<link type="broken">foo/bar</link> 		 *   It means "foo/bar" is not reachable. 		 */
+comment|/* 		 * xar utility has checked a file type, which 		 * a symbolic-link file has referenced. 		 * For example: 		 *<link type="directory">../ref/</link> 		 *   The symlink target file is "../ref/" and its 		 *   file type is a directory. 		 * 		 *<link type="file">../f</link> 		 *   The symlink target file is "../f" and its 		 *   file type is a regular file. 		 * 		 * But our implementation cannot do it, and then we 		 * always record that a attribute "type" is "broken", 		 * for example: 		 *<link type="broken">foo/bar</link> 		 *   It means "foo/bar" is not reachable. 		 */
 name|r
 operator|=
 name|xmlwrite_string_attr
@@ -7711,7 +7711,7 @@ goto|goto
 name|exit_toc
 goto|;
 block|}
-comment|/* 	 * Start recoding TOC 	 */
+comment|/* 	 * Start recording TOC 	 */
 name|r
 operator|=
 name|xmlTextWriterStartElement
@@ -9968,6 +9968,13 @@ name|file
 operator|->
 name|script
 operator|)
+argument_list|)
+expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|file
+operator|->
+name|entry
 argument_list|)
 expr_stmt|;
 name|free
@@ -12708,7 +12715,7 @@ name|nlink
 operator|>
 literal|1
 condition|)
-comment|/* It means this file is a hardlink 			 * targe itself. */
+comment|/* It means this file is a hardlink 			 * target itself. */
 name|target
 operator|->
 name|hardlink_target
@@ -15018,10 +15025,12 @@ operator|>
 literal|1
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|mt_options
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

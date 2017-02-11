@@ -8503,7 +8503,7 @@ value|(((uc)> 0x1D244)?0:\ 	ccc_val[ccc_val_index[ccc_index[(uc)>>8]][((uc)>>4)&
 end_define
 
 begin_comment
-comment|/* The table of the value of Canonical Cimbining Class */
+comment|/* The table of the value of Canonical Combining Class */
 end_comment
 
 begin_decl_stmt

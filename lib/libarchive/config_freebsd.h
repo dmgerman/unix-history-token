@@ -108,6 +108,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_ACL_TYPE_NFS4
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ARC4RANDOM_BUF
 value|1
 end_define

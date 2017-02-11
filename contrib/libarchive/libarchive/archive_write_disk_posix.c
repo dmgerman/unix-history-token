@@ -493,6 +493,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Macro to cast st_mtime and time_t to an int64 so that 2 numbers can reliably be compared.  *  * It assumes that the input is an integer type of no more than 64 bits.  * If the number is less than zero, t must be a signed type, so it fits in  * int64_t. Otherwise, it's a nonnegative value so we can cast it to uint64_t  * without loss. But it could be a large unsigned value, so we have to clip it  * to INT64_MAX.*  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|to_int64_time
+parameter_list|(
+name|t
+parameter_list|)
+define|\
+value|((t)< 0 ? (int64_t)(t) : (uint64_t)(t)> (uint64_t)INT64_MAX ? INT64_MAX : (int64_t)(t))
+end_define
+
 begin_if
 if|#
 directive|if
@@ -1161,7 +1176,7 @@ value|0775
 end_define
 
 begin_comment
-comment|/*  * Maxinum uncompressed size of a decmpfs block.  */
+comment|/*  * Maximum uncompressed size of a decmpfs block.  */
 end_comment
 
 begin_define
@@ -1235,7 +1250,7 @@ value|(64 * 1024)
 end_define
 
 begin_comment
-comment|/* decmpfs difinitions. */
+comment|/* decmpfs definitions. */
 end_comment
 
 begin_define
@@ -2978,7 +2993,7 @@ operator||
 name|TODO_HFS_COMPRESSION
 condition|)
 block|{
-comment|/* 		 * NOTE: UF_COMPRESSED is ignored even if the filesystem 		 * supports HFS+ Compression because the file should 		 * have at least an extended attriute "com.apple.decmpfs" 		 * before the flag is set to indicate that the file have 		 * been compressed. If hte filesystem does not support 		 * HFS+ Compression the system call will fail. 		 */
+comment|/* 		 * NOTE: UF_COMPRESSED is ignored even if the filesystem 		 * supports HFS+ Compression because the file should 		 * have at least an extended attribute "com.apple.decmpfs" 		 * before the flag is set to indicate that the file have 		 * been compressed. If the filesystem does not support 		 * HFS+ Compression the system call will fail. 		 */
 if|if
 condition|(
 name|a
@@ -5717,7 +5732,7 @@ name|a
 operator|->
 name|compressed_buffer_size
 expr_stmt|;
-comment|/* If the compressed size is not enouph smaller than 		 * the uncompressed size. cancel HFS+ compression. 		 * TODO: study a behavior of ditto utility and improve 		 * the condition to fall back into no HFS+ compression. */
+comment|/* If the compressed size is not enough smaller than 		 * the uncompressed size. cancel HFS+ compression. 		 * TODO: study a behavior of ditto utility and improve 		 * the condition to fall back into no HFS+ compression. */
 name|bk
 operator|=
 name|HFS_BLOCKS
@@ -6156,7 +6171,7 @@ argument_list|,
 name|block_count
 argument_list|)
 expr_stmt|;
-comment|/* Get the position where we are goint to set compressed 		 * data. */
+comment|/* Get the position where we are going to set compressed 		 * data. */
 name|a
 operator|->
 name|compressed_rsrc_position
@@ -6501,7 +6516,7 @@ operator|->
 name|fd_offset
 condition|)
 block|{
-comment|/* Can't support backword move. */
+comment|/* Can't support backward move. */
 name|archive_set_error
 argument_list|(
 operator|&
@@ -7749,7 +7764,46 @@ condition|)
 block|{
 name|int
 name|r2
-init|=
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DARWIN_ACL
+comment|/* 		 * On Mac OS, platform ACLs are stored also in mac_metadata by 		 * the operating system. If mac_metadata is present it takes 		 * precedence and we skip extracting libarchive NFSv4 ACLs 		 */
+specifier|const
+name|void
+modifier|*
+name|metadata
+decl_stmt|;
+name|size_t
+name|metadata_size
+decl_stmt|;
+name|metadata
+operator|=
+name|archive_entry_mac_metadata
+argument_list|(
+name|a
+operator|->
+name|entry
+argument_list|,
+operator|&
+name|metadata_size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|metadata
+operator|==
+name|NULL
+operator|||
+name|metadata_size
+operator|==
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
+name|r2
+operator|=
 name|archive_write_disk_set_acls
 argument_list|(
 operator|&
@@ -7775,7 +7829,7 @@ operator|->
 name|entry
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|r2
@@ -7786,6 +7840,12 @@ name|ret
 operator|=
 name|r2
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DARWIN_ACL
+block|}
+endif|#
+directive|endif
 block|}
 name|finish_metadata
 label|:
@@ -9492,6 +9552,12 @@ argument_list|(
 name|linkname_copy
 argument_list|)
 expr_stmt|;
+name|archive_string_free
+argument_list|(
+operator|&
+name|error_string
+argument_list|)
+expr_stmt|;
 comment|/* 			 * EPERM is more appropriate than error_number for our 			 * callers 			 */
 return|return
 operator|(
@@ -9544,6 +9610,12 @@ argument_list|(
 name|linkname_copy
 argument_list|)
 expr_stmt|;
+name|archive_string_free
+argument_list|(
+operator|&
+name|error_string
+argument_list|)
+expr_stmt|;
 comment|/* 			 * EPERM is more appropriate than error_number for our 			 * callers 			 */
 return|return
 operator|(
@@ -9554,6 +9626,12 @@ block|}
 name|free
 argument_list|(
 name|linkname_copy
+argument_list|)
+expr_stmt|;
+name|archive_string_free
+argument_list|(
+operator|&
+name|error_string
 argument_list|)
 expr_stmt|;
 name|r
@@ -10184,6 +10262,25 @@ name|fixup
 operator|&
 name|TODO_ACLS
 condition|)
+ifdef|#
+directive|ifdef
+name|HAVE_DARWIN_ACL
+if|if
+condition|(
+name|p
+operator|->
+name|mac_metadata
+operator|==
+name|NULL
+operator|||
+name|p
+operator|->
+name|mac_metadata_size
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
 name|archive_write_disk_set_acls
 argument_list|(
 operator|&
@@ -18124,13 +18221,19 @@ comment|/* First, test the seconds and return if we have a definite answer. */
 comment|/* Definitely older. */
 if|if
 condition|(
+name|to_int64_time
+argument_list|(
 name|st
 operator|->
 name|st_mtime
+argument_list|)
 operator|<
+name|to_int64_time
+argument_list|(
 name|archive_entry_mtime
 argument_list|(
 name|entry
+argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -18141,13 +18244,19 @@ return|;
 comment|/* Definitely younger. */
 if|if
 condition|(
+name|to_int64_time
+argument_list|(
 name|st
 operator|->
 name|st_mtime
+argument_list|)
 operator|>
+name|to_int64_time
+argument_list|(
 name|archive_entry_mtime
 argument_list|(
 name|entry
+argument_list|)
 argument_list|)
 condition|)
 return|return

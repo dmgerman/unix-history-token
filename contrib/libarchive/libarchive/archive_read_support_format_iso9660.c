@@ -1376,7 +1376,7 @@ comment|/* Set true if RR extensions are used. */
 name|char
 name|seenSUSP
 decl_stmt|;
-comment|/* Set true if SUSP is beging used. */
+comment|/* Set true if SUSP is being used. */
 name|char
 name|seenJoliet
 decl_stmt|;
@@ -1538,7 +1538,7 @@ decl_stmt|;
 name|size_t
 name|utf16be_previous_path_len
 decl_stmt|;
-comment|/* Null buufer used in bidder to improve its performance. */
+comment|/* Null buffer used in bidder to improve its performance. */
 name|unsigned
 name|char
 name|null
@@ -5777,7 +5777,7 @@ name|sconv_utf16be
 operator|==
 name|NULL
 condition|)
-comment|/* Coundn't allocate memory */
+comment|/* Couldn't allocate memory */
 return|return
 operator|(
 name|ARCHIVE_FATAL
@@ -9151,11 +9151,9 @@ argument_list|,
 literal|"No memory for file name"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|memcpy
 argument_list|(
@@ -9444,18 +9442,9 @@ name|r
 operator|!=
 name|ARCHIVE_OK
 condition|)
-block|{
-name|free
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
+goto|goto
+name|fail
+goto|;
 comment|/* 			 * A file size of symbolic link files in ISO images 			 * made by makefs is not zero and its location is 			 * the same as those of next regular file. That is 			 * the same as hard like file and it causes unexpected 			 * error.  			 */
 if|if
 condition|(
@@ -9662,11 +9651,9 @@ argument_list|,
 literal|"Invalid Rockridge RE"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* 			 * Sanity check: file does not have "CL" extension. 			 */
 if|if
@@ -9688,11 +9675,9 @@ argument_list|,
 literal|"Invalid Rockridge RE and CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* 			 * Sanity check: The file type must be a directory. 			 */
 if|if
@@ -9718,11 +9703,9 @@ argument_list|,
 literal|"Invalid Rockridge RE"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 block|}
 elseif|else
@@ -9808,11 +9791,9 @@ argument_list|,
 literal|"Invalid Rockridge CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* 			 * Sanity check: The file type must be a regular file. 			 */
 if|if
@@ -9838,11 +9819,9 @@ argument_list|,
 literal|"Invalid Rockridge CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|parent
 operator|->
@@ -9903,11 +9882,9 @@ argument_list|,
 literal|"Invalid Rockridge CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 block|}
 if|if
@@ -9937,11 +9914,9 @@ argument_list|,
 literal|"Invalid Rockridge CL"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 block|}
 block|}
@@ -10137,6 +10112,26 @@ expr_stmt|;
 return|return
 operator|(
 name|file
+operator|)
+return|;
+name|fail
+label|:
+name|archive_string_free
+argument_list|(
+operator|&
+name|file
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
 block|}
@@ -11709,7 +11704,7 @@ operator|->
 name|current_position
 condition|)
 do|;
-comment|/* NOTE: Do not move this consume's code to fron of 		 * do-while loop. Registration of nested CE extension 		 * might cause error because of current position. */
+comment|/* NOTE: Do not move this consume's code to front of 		 * do-while loop. Registration of nested CE extension 		 * might cause error because of current position. */
 name|__archive_read_consume
 argument_list|(
 name|a
@@ -13000,7 +12995,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * If directory entries all which are descendant of 			 * rr_moved are stil remaning, expose their.  			 */
+comment|/* 			 * If directory entries all which are descendant of 			 * rr_moved are still remaining, expose their. 			 */
 if|if
 condition|(
 name|iso9660
@@ -13451,7 +13446,7 @@ name|empty_files
 operator|.
 name|first
 expr_stmt|;
-comment|/* Collect files which has the same file serial number. 	 * Peek pending_files so that file which number is different 	 * is not put bak. */
+comment|/* Collect files which has the same file serial number. 	 * Peek pending_files so that file which number is different 	 * is not put back. */
 while|while
 condition|(
 name|iso9660
@@ -13502,7 +13497,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* This file has the same offset 			 * but it's wrong offset which empty files 			 * and symlink files have. 			 * NOTE: This wrong offse was recorded by 			 * old mkisofs utility. If ISO images is 			 * created by latest mkisofs, this does not 			 * happen. 			 */
+comment|/* This file has the same offset 			 * but it's wrong offset which empty files 			 * and symlink files have. 			 * NOTE: This wrong offset was recorded by 			 * old mkisofs utility. If ISO images is 			 * created by latest mkisofs, this does not 			 * happen. 			 */
 name|file
 operator|->
 name|next

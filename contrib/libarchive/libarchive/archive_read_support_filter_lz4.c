@@ -686,7 +686,7 @@ index|[
 literal|5
 index|]
 expr_stmt|;
-comment|/* A block maximum size shuld be more than 3. */
+comment|/* A block maximum size should be more than 3. */
 if|if
 condition|(
 operator|(
@@ -1806,7 +1806,7 @@ condition|)
 goto|goto
 name|malformed_error
 goto|;
-comment|/* Get a maxinum block size. */
+comment|/* Get a maximum block size. */
 switch|switch
 condition|(
 name|read_buf
@@ -2804,7 +2804,7 @@ name|stage
 operator|=
 name|READ_DEFAULT_STREAM
 expr_stmt|;
-comment|/* First, read a desciprtor. */
+comment|/* First, read a descriptor. */
 if|if
 condition|(
 operator|(
@@ -3198,6 +3198,35 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|read_buf
+operator|==
+name|NULL
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+operator|(
+name|self
+operator|->
+name|archive
+operator|->
+name|archive
+operator|)
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"truncated lz4 input"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 name|ret
 operator|=
 name|LZ4_decompress_safe

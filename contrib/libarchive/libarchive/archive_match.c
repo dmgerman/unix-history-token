@@ -2349,7 +2349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Utilty functions to get statistic information for inclusion patterns.  */
+comment|/*  * Utility functions to get statistic information for inclusion patterns.  */
 end_comment
 
 begin_function
@@ -6542,7 +6542,7 @@ comment|/* _WIN32&& !__CYGWIN__ */
 end_comment
 
 begin_comment
-comment|/*  * Call back funtions for archive_rb.  */
+comment|/*  * Call back functions for archive_rb.  */
 end_comment
 
 begin_function
@@ -7386,7 +7386,7 @@ argument_list|,
 name|pathname
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We always overwrite comparison condision. 		 * If you do not want to overwrite it, you should not 		 * call archive_match_exclude_entry(). We cannot know 		 * what behavior you really expect since overwriting 		 * condition might be different with the flag. 		 */
+comment|/* 		 * We always overwrite comparison condition. 		 * If you do not want to overwrite it, you should not 		 * call archive_match_exclude_entry(). We cannot know 		 * what behavior you really expect since overwriting 		 * condition might be different with the flag. 		 */
 if|if
 condition|(
 name|f2
@@ -7747,7 +7747,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* Eeual, skip it. */
+comment|/* Equal, skip it. */
 block|}
 block|}
 if|if
@@ -7918,7 +7918,7 @@ return|;
 comment|/* Equal, skip it. */
 block|}
 block|}
-comment|/* If there is no excluson list, include the file. */
+comment|/* If there is no exclusion list, include the file. */
 if|if
 condition|(
 name|a
@@ -8913,7 +8913,7 @@ name|id
 condition|)
 break|break;
 block|}
-comment|/* Add oowner id. */
+comment|/* Add owner id. */
 if|if
 condition|(
 name|i

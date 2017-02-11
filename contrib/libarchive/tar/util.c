@@ -513,6 +513,10 @@ block|}
 else|else
 block|{
 comment|/* Leave fmtbuff pointing to the truncated 			 * string in fmtbuff_stack. */
+name|fmtbuff
+operator|=
+name|fmtbuff_stack
+expr_stmt|;
 name|length
 operator|=
 sizeof|sizeof
