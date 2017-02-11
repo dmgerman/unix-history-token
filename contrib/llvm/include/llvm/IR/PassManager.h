@@ -1023,6 +1023,22 @@ name|StringRef
 name|name
 argument_list|()
 block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|is_base_of
+operator|<
+name|PassInfoMixin
+argument_list|,
+name|DerivedT
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"Must pass the derived type as the template argument!"
+argument_list|)
+block|;
 name|StringRef
 name|Name
 operator|=
@@ -1112,6 +1128,22 @@ operator|*
 name|ID
 argument_list|()
 block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|is_base_of
+operator|<
+name|AnalysisInfoMixin
+argument_list|,
+name|DerivedT
+operator|>
+operator|::
+name|value
+argument_list|,
+literal|"Must pass the derived type as the template argument!"
+argument_list|)
+block|;
 return|return
 operator|&
 name|DerivedT
@@ -4340,6 +4372,9 @@ operator|<
 name|AnalysisManagerT
 operator|,
 name|IRUnitT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>>
 block|{
 name|public
@@ -4604,6 +4639,9 @@ operator|<
 name|AnalysisManagerT
 operator|,
 name|IRUnitT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>>
 expr_stmt|;
 end_expr_stmt

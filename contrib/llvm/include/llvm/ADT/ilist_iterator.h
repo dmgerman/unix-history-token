@@ -704,7 +704,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Convert from an iterator to its reverse.
+comment|/// Explicit conversion between forward/reverse iterators.
 end_comment
 
 begin_comment
@@ -712,26 +712,68 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// TODO: Roll this into the implicit constructor once we're sure that no one
+comment|/// Translate between forward and reverse iterators without changing range
 end_comment
 
 begin_comment
-comment|/// is relying on the std::reverse_iterator off-by-one semantics.
+comment|/// boundaries.  The resulting iterator will dereference (and have a handle)
 end_comment
 
-begin_expr_stmt
+begin_comment
+comment|/// to the previous node, which is somewhat unexpected; but converting the
+end_comment
+
+begin_comment
+comment|/// two endpoints in a range will give the same range in reverse.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This matches std::reverse_iterator conversions.
+end_comment
+
+begin_decl_stmt
+name|explicit
+name|ilist_iterator
+argument_list|(
+specifier|const
 name|ilist_iterator
 operator|<
 name|OptionsT
-operator|,
+argument_list|,
 operator|!
 name|IsReverse
-operator|,
+argument_list|,
 name|IsConst
 operator|>
+operator|&
+name|RHS
+argument_list|)
+range|:
+name|ilist_iterator
+argument_list|(
+argument|++RHS.getReverse()
+argument_list|)
+block|{}
+comment|/// Get a reverse iterator to the same node.
+comment|///
+comment|/// Gives a reverse iterator that will dereference (and have a handle) to the
+comment|/// same node.  Converting the endpoint iterators in a range will give a
+comment|/// different range; for range operations, use the explicit conversions.
+name|ilist_iterator
+operator|<
+name|OptionsT
+decl_stmt|, !
+name|IsReverse
+decl_stmt|,
+name|IsConst
+decl|>
 name|getReverse
 argument_list|()
-specifier|const
+decl|const
 block|{
 if|if
 condition|(
@@ -752,9 +794,6 @@ operator|*
 name|NodePtr
 operator|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|ilist_iterator
 operator|<
@@ -768,15 +807,15 @@ operator|>
 operator|(
 operator|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// Const-cast.
 end_comment
 
 begin_expr_stmt
-unit|ilist_iterator
+name|ilist_iterator
 operator|<
 name|OptionsT
 operator|,

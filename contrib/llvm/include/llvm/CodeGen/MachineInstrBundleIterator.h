@@ -943,6 +943,34 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
+comment|/// Explicit conversion between forward/reverse iterators.
+comment|///
+comment|/// Translate between forward and reverse iterators without changing range
+comment|/// boundaries.  The resulting iterator will dereference (and have a handle)
+comment|/// to the previous node, which is somewhat unexpected; but converting the
+comment|/// two endpoints in a range will give the same range in reverse.
+comment|///
+comment|/// This matches std::reverse_iterator conversions.
+name|explicit
+name|MachineInstrBundleIterator
+argument_list|(
+specifier|const
+name|MachineInstrBundleIterator
+operator|<
+name|Ty
+argument_list|,
+operator|!
+name|IsReverse
+operator|>
+operator|&
+name|I
+argument_list|)
+operator|:
+name|MachineInstrBundleIterator
+argument_list|(
+argument|++I.getReverse()
+argument_list|)
+block|{}
 comment|/// Get the bundle iterator for the given instruction's bundle.
 specifier|static
 name|MachineInstrBundleIterator
@@ -1631,6 +1659,26 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Get a reverse iterator to the same node.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Gives a reverse iterator that will dereference (and have a handle) to the
+end_comment
+
+begin_comment
+comment|/// same node.  Converting the endpoint iterators in a range will give a
+end_comment
+
+begin_comment
+comment|/// different range; for range operations, use the explicit conversions.
+end_comment
 
 begin_expr_stmt
 name|reverse_iterator

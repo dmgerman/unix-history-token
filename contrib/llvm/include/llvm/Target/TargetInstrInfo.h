@@ -2406,52 +2406,6 @@ argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
-comment|/// Returns true if MI is an unconditional tail call.
-name|virtual
-name|bool
-name|isUnconditionalTailCall
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// Returns true if the tail call can be made conditional on BranchCond.
-name|virtual
-name|bool
-name|canMakeTailCallConditional
-argument_list|(
-argument|SmallVectorImpl<MachineOperand>&Cond
-argument_list|,
-argument|const MachineInstr&TailCall
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// Replace the conditional branch in MBB with a conditional tail call.
-name|virtual
-name|void
-name|replaceBranchWithTailCall
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|SmallVectorImpl<MachineOperand>&Cond
-argument_list|,
-argument|const MachineInstr&TailCall
-argument_list|)
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Target didn't implement replaceBranchWithTailCall!"
-argument_list|)
-block|;   }
 comment|/// Convert the instruction into a predicated instruction.
 comment|/// It returns true if the operation was successful.
 name|virtual
