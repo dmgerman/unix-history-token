@@ -647,7 +647,7 @@ parameter_list|,
 name|vm_size_t
 name|size
 parameter_list|,
-name|vm_prot_t
+name|int
 name|prot
 parameter_list|,
 name|int
