@@ -14467,11 +14467,21 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
 name|t_srtt
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_rxtshift
+operator|<=
+name|TCP_RTT_INVALIDATE
+operator|)
 condition|)
 block|{
 comment|/* 		 * srtt is stored as fixed point with 5 bits after the 		 * binary point (i.e., scaled by 8).  The following magic 		 * is equivalent to the smoothing algorithm in rfc793 with 		 * an alpha of .875 (srtt = rtt/8 + srtt*7/8 in fixed 		 * point).  Adjust rtt to origin 0. 		 */
