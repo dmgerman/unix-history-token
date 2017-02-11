@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2008 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003-2008 Tim Kientzle  * Copyright (c) 2016 Martin Matuska  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -420,6 +420,46 @@ begin_define
 define|#
 directive|define
 name|__LA_DECL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|3
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|1
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_DEPRECATED
+value|__attribute__((deprecated))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__LA_DEPRECATED
 end_define
 
 begin_endif
@@ -1989,6 +2029,10 @@ value|(ARCHIVE_ENTRY_ACL_EXECUTE			\ 	    | ARCHIVE_ENTRY_ACL_READ_DATA		\ 	    
 comment|/*  * Inheritance values (NFS4 ACLs only); included in permset.  */
 define|#
 directive|define
+name|ARCHIVE_ENTRY_ACL_ENTRY_INHERITED
+value|0x01000000
+define|#
+directive|define
 name|ARCHIVE_ENTRY_ACL_ENTRY_FILE_INHERIT
 value|0x02000000
 define|#
@@ -2015,37 +2059,37 @@ define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_INHERITANCE_NFS4
 define|\
-value|(ARCHIVE_ENTRY_ACL_ENTRY_FILE_INHERIT			\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_DIRECTORY_INHERIT		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_NO_PROPAGATE_INHERIT	\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_INHERIT_ONLY		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_SUCCESSFUL_ACCESS		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_FAILED_ACCESS)
+value|(ARCHIVE_ENTRY_ACL_ENTRY_FILE_INHERIT			\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_DIRECTORY_INHERIT		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_NO_PROPAGATE_INHERIT	\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_INHERIT_ONLY		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_SUCCESSFUL_ACCESS		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_FAILED_ACCESS		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_INHERITED)
 comment|/* We need to be able to specify combinations of these. */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
-value|256
+value|0x00000100
 comment|/* POSIX.1e only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
-value|512
+value|0x00000200
 comment|/* POSIX.1e only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_ALLOW
-value|1024
+value|0x00000400
 comment|/* NFS4 only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_DENY
-value|2048
+value|0x00000800
 comment|/* NFS4 only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_AUDIT
-value|4096
+value|0x00001000
 comment|/* NFS4 only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_ALARM
-value|8192
+value|0x00002000
 comment|/* NFS4 only */
 define|#
 directive|define
@@ -2234,43 +2278,131 @@ modifier|*
 comment|/* name */
 parameter_list|)
 function_decl|;
-comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include POSIX.1e "access" entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include POSIX.1e "default" entries.  * ARCHIVE_ENTRY_ACL_TYPE_NFS4 - Include NFS4 entries.  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  ('star' introduced this for POSIX.1e, this flag  *    also applies to NFS4.)  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry, as used in old Solaris ACLs.  */
+comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * Flags only for archive entries with POSIX.1e ACL:  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include POSIX.1e "access" entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include POSIX.1e "default" entries.  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry.  * ARCHIVE_ENTRY_ACL_STYLE_SOLARIS - Output only one colon after "other" and  *    "mask" entries.  *  * Flags for for archive entries with POSIX.1e ACL or NFSv4 ACL:  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  * ARCHIVE_ENTRY_ACL_STYLE_SEPARATOR_COMMA - Separate entries with comma  *    instead of newline.  */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
-value|1024
+value|0x00000001
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT
+value|0x00000002
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_STYLE_SOLARIS
+value|0x00000004
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_STYLE_SEPARATOR_COMMA
+value|0x00000008
+name|__LA_DECL
+name|wchar_t
+modifier|*
+name|archive_entry_acl_to_text_w
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|ssize_t
+modifier|*
+comment|/* len */
+parameter_list|,
+name|int
+comment|/* flags */
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|char
+modifier|*
+name|archive_entry_acl_to_text
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|ssize_t
+modifier|*
+comment|/* len */
+parameter_list|,
+name|int
+comment|/* flags */
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_acl_from_text_w
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+comment|/* wtext */
+parameter_list|,
+name|int
+comment|/* type */
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_acl_from_text
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/* text */
+parameter_list|,
+name|int
+comment|/* type */
+parameter_list|)
+function_decl|;
+comment|/* Deprecated constants */
+define|#
+directive|define
+name|OLD_ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
+value|1024
+define|#
+directive|define
+name|OLD_ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT
 value|2048
+comment|/* Deprecated functions */
 name|__LA_DECL
 specifier|const
 name|wchar_t
 modifier|*
 name|archive_entry_acl_text_w
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|archive_entry
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
 comment|/* flags */
-parameter_list|)
-function_decl|;
+argument_list|)
+name|__LA_DEPRECATED
+decl_stmt|;
 name|__LA_DECL
 specifier|const
 name|char
 modifier|*
 name|archive_entry_acl_text
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|archive_entry
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
 comment|/* flags */
-parameter_list|)
-function_decl|;
+argument_list|)
+name|__LA_DEPRECATED
+decl_stmt|;
 comment|/* Return bitmask of ACL types in an archive entry */
 name|__LA_DECL
 name|int

@@ -4888,7 +4888,7 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Trim lngname to 64 characters. */
+comment|/* Trim longname to 64 characters. */
 name|longname
 index|[
 literal|64

@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* ecute the following to rebuild the data for this program:    tail -n +33 test_read_format_cpio_afio.c | /bin/sh  # How to make a sample data. echo "0123456789abcdef"> file1 echo "0123456789abcdef"> file2 # make afio use a large ASCII header sudo chown 65536 file2 find . -name "file[12]" | afio -o sample od -c sample | sed -E -e "s/^0[0-9]+//;s/^  //;s/( +)([^ ]{1,2})/'\2',/g;s/'\\0'/0/g;/^[*]/d"> test_read_format_cpio_afio.sample.txt rm -f file1 file2 sample exit1 */
+comment|/* execute the following to rebuild the data for this program:    tail -n +33 test_read_format_cpio_afio.c | /bin/sh  # How to make a sample data. echo "0123456789abcdef"> file1 echo "0123456789abcdef"> file2 # make afio use a large ASCII header sudo chown 65536 file2 find . -name "file[12]" | afio -o sample od -c sample | sed -E -e "s/^0[0-9]+//;s/^  //;s/( +)([^ ]{1,2})/'\2',/g;s/'\\0'/0/g;/^[*]/d"> test_read_format_cpio_afio.sample.txt rm -f file1 file2 sample exit1 */
 end_comment
 
 begin_decl_stmt

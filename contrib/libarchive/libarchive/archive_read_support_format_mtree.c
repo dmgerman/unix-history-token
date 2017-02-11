@@ -3880,6 +3880,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|len
+operator|>
+literal|4
+operator|&&
 name|strncmp
 argument_list|(
 name|p
@@ -3934,6 +3938,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|len
+operator|>
+literal|6
+operator|&&
 name|strncmp
 argument_list|(
 name|p
@@ -5528,6 +5536,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|len
+operator|>
+literal|4
+operator|&&
 name|strncmp
 argument_list|(
 name|p
@@ -5573,6 +5585,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|len
+operator|>
+literal|6
+operator|&&
 name|strncmp
 argument_list|(
 name|p

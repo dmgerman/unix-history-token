@@ -4486,6 +4486,15 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|xar
+operator|->
+name|file_queue
+operator|.
+name|files
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|xar
@@ -16989,6 +16998,8 @@ name|outbytes
 decl_stmt|;
 name|size_t
 name|used
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|r
@@ -17646,6 +17657,21 @@ argument_list|,
 name|ENOMEM
 argument_list|,
 literal|"Out of memory"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|attr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|value
 argument_list|)
 expr_stmt|;
 return|return

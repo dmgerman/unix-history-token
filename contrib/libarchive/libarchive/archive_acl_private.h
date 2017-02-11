@@ -149,6 +149,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|archive_acl_types
+parameter_list|(
+name|struct
+name|archive_acl
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|archive_acl_reset
 parameter_list|(
 name|struct
@@ -268,41 +279,39 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|const
 name|wchar_t
 modifier|*
-name|archive_acl_text_w
+name|archive_acl_to_text_w
 parameter_list|(
-name|struct
-name|archive
-modifier|*
-parameter_list|,
 name|struct
 name|archive_acl
 modifier|*
 parameter_list|,
+name|ssize_t
+modifier|*
+parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|archive
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|archive_acl_text_l
+name|char
+modifier|*
+name|archive_acl_to_text_l
 parameter_list|(
 name|struct
 name|archive_acl
 modifier|*
 parameter_list|,
+name|ssize_t
+modifier|*
+parameter_list|,
 name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|size_t
-modifier|*
 parameter_list|,
 name|struct
 name|archive_string_conv
@@ -312,12 +321,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Private ACL parser.  This is private because it handles some  * very weird formats that clients should not be messing with.  * Clients should only deal with their platform-native formats.  * Because of the need to support many formats cleanly, new arguments  * are likely to get added on a regular basis.  Clients who try to use  * this interface are likely to be surprised when it changes.  */
+comment|/*  * ACL text parser.  */
 end_comment
 
 begin_function_decl
 name|int
-name|archive_acl_parse_w
+name|archive_acl_from_text_w
 parameter_list|(
 name|struct
 name|archive_acl
@@ -326,6 +335,7 @@ parameter_list|,
 specifier|const
 name|wchar_t
 modifier|*
+comment|/* wtext */
 parameter_list|,
 name|int
 comment|/* type */
@@ -335,7 +345,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|archive_acl_parse_l
+name|archive_acl_from_text_l
 parameter_list|(
 name|struct
 name|archive_acl
@@ -344,6 +354,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+comment|/* text */
 parameter_list|,
 name|int
 comment|/* type */

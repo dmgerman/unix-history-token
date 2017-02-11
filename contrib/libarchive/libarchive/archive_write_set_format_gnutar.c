@@ -3205,6 +3205,11 @@ argument_list|,
 literal|'K'
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -3234,11 +3239,6 @@ condition|)
 goto|goto
 name|exit_write_header
 goto|;
-name|archive_entry_free
-argument_list|(
-name|temp
-argument_list|)
-expr_stmt|;
 comment|/* Write name and trailing null byte. */
 name|ret
 operator|=
@@ -3373,6 +3373,11 @@ argument_list|,
 literal|'L'
 argument_list|)
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -3402,11 +3407,6 @@ condition|)
 goto|goto
 name|exit_write_header
 goto|;
-name|archive_entry_free
-argument_list|(
-name|temp
-argument_list|)
-expr_stmt|;
 comment|/* Write pathname + trailing null byte. */
 name|ret
 operator|=

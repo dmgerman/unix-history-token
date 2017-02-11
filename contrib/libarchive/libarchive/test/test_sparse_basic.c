@@ -165,7 +165,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * NOTE: On FreeBSD and Solaris, this test needs ZFS.  * You may should perfom this test as  * 'TMPDIR=<a directory on the ZFS> libarchive_test'.  */
+comment|/*  * NOTE: On FreeBSD and Solaris, this test needs ZFS.  * You may perform this test as  * 'TMPDIR=<a directory on the ZFS> libarchive_test'.  */
 end_comment
 
 begin_struct

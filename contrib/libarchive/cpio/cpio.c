@@ -3462,6 +3462,11 @@ operator|<=
 name|ARCHIVE_FAILED
 condition|)
 block|{
+name|archive_entry_free
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
 name|cpio
 operator|->
 name|return_value

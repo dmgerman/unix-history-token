@@ -7260,6 +7260,15 @@ if|if
 condition|(
 name|bytes_avail
 operator|<=
+literal|0
+condition|)
+goto|goto
+name|nomszip
+goto|;
+if|if
+condition|(
+name|bytes_avail
+operator|<=
 name|mszip
 condition|)
 block|{

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"archive_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -13,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"archive_platform.h"
 end_include
 
 begin_include
@@ -83,7 +83,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* XXH_ACCEPT_NULL_INPUT_POINTER : ** If the input pointer is a null pointer, xxHash default behavior is to trigger a memory access error, since it is a bad pointer. ** When this option is enabled, xxHash output for null input pointers will be the same as a null-length input. ** This option has a very small performance cost (only measurable on small inputs). ** By default, this option is disabled. To enable it, uncomment below define : ** #define XXH_ACCEPT_NULL_INPUT_POINTER 1  ** XXH_FORCE_NATIVE_FORMAT : ** By default, xxHash library provides endian-independent Hash values, based on little-endian convention. ** Results are therefore identical for little-endian and big-endian CPU. ** This comes at a performance cost for big-endian CPU, since some swapping is required to emulate little-endian format. ** Should endian-independance be of no importance for your application, you may set the #define below to 1. ** It will improve speed for Big-endian CPU. ** This option has no impact on Little_Endian CPU. */
+comment|/* XXH_ACCEPT_NULL_INPUT_POINTER : ** If the input pointer is a null pointer, xxHash default behavior is to trigger a memory access error, since it is a bad pointer. ** When this option is enabled, xxHash output for null input pointers will be the same as a null-length input. ** This option has a very small performance cost (only measurable on small inputs). ** By default, this option is disabled. To enable it, uncomment below define : ** #define XXH_ACCEPT_NULL_INPUT_POINTER 1  ** XXH_FORCE_NATIVE_FORMAT : ** By default, xxHash library provides endian-independent Hash values, based on little-endian convention. ** Results are therefore identical for little-endian and big-endian CPU. ** This comes at a performance cost for big-endian CPU, since some swapping is required to emulate little-endian format. ** Should endian-independence be of no importance for your application, you may set the #define below to 1. ** It will improve speed for Big-endian CPU. ** This option has no impact on Little_Endian CPU. */
 end_comment
 
 begin_define

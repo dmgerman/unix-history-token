@@ -191,7 +191,7 @@ block|,
 comment|/* conversion, unsupported */
 name|WT_CONV
 block|,
-comment|/* continutation, unsupported at the moment */
+comment|/* continuation, unsupported at the moment */
 name|WT_CONT
 block|,
 comment|/* invalid type */
@@ -2342,7 +2342,7 @@ expr_stmt|;
 comment|/* as a courtesy to our callers, and since this is a non-standard 	 * routine, we skip leading whitespace */
 while|while
 condition|(
-name|isspace
+name|isblank
 argument_list|(
 operator|(
 name|unsigned
@@ -2559,7 +2559,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* massage TM to fulfill some of POSIX' contraints */
+comment|/* massage TM to fulfill some of POSIX' constraints */
 name|tm
 operator|.
 name|tm_year

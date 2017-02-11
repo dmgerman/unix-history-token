@@ -1271,7 +1271,7 @@ name|father
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * If our greatgrandpa is black, we're done. 			 */
+comment|/* 			 * If our great-grandpa is black, we're done. 			 */
 return|return;
 block|}
 block|}

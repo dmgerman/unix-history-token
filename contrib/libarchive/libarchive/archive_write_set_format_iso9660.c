@@ -646,7 +646,7 @@ name|isofile
 modifier|*
 name|datanext
 decl_stmt|;
-comment|/* Used for managing a hardlined struct isofile list. */
+comment|/* Used for managing a hardlinked struct isofile list. */
 name|struct
 name|isofile
 modifier|*
@@ -1156,7 +1156,7 @@ directive|define
 name|OPT_GID_DEFAULT
 value|0
 comment|/* Not specified */
-comment|/* 	 * Usage  : iso-level=[1234] 	 * Type   : decimal 	 * Default: 1 	 * COMPAT : mkisofs -iso-level<value> 	 * 	 * Specifies ISO9600 Level. 	 * Level 1: [DEFAULT] 	 *   - limits each file size less than 4Gi bytes; 	 *   - a File Name shall not contain more than eight 	 *     d-characters or eight d1-characters; 	 *   - a File Name Extension shall not contain more than 	 *     three d-characters or three d1-characters; 	 *   - a Directory Identifier shall not contain more 	 *     than eight d-characters or eight d1-characters. 	 * Level 2: 	 *   - limits each file size less than 4Giga bytes; 	 *   - a File Name shall not contain more than thirty 	 *     d-characters or thirty d1-characters; 	 *   - a File Name Extension shall not contain more than 	 *     thirty d-characters or thirty d1-characters; 	 *   - a Directory Identifier shall not contain more 	 *     than thirty-one d-characters or thirty-one 	 *     d1-characters. 	 * Level 3: 	 *   - no limit of file size; use multi extent. 	 * Level 4: 	 *   - this level 4 simulates mkisofs option 	 *     '-iso-level 4'; 	 *   - crate a enhanced volume as mkisofs doing; 	 *   - allow a File Name to have leading dot; 	 *   - allow a File Name to have all ASCII letters; 	 *   - allow a File Name to have multiple dots; 	 *   - allow more then 8 depths of directory trees; 	 *   - disable a version number to a File Name; 	 *   - disable a forced period to the tail of a File Name; 	 *   - the maxinum length of files and directories is raised to 193. 	 *     if rockridge option is disabled, raised to 207. 	 */
+comment|/* 	 * Usage  : iso-level=[1234] 	 * Type   : decimal 	 * Default: 1 	 * COMPAT : mkisofs -iso-level<value> 	 * 	 * Specifies ISO9600 Level. 	 * Level 1: [DEFAULT] 	 *   - limits each file size less than 4Gi bytes; 	 *   - a File Name shall not contain more than eight 	 *     d-characters or eight d1-characters; 	 *   - a File Name Extension shall not contain more than 	 *     three d-characters or three d1-characters; 	 *   - a Directory Identifier shall not contain more 	 *     than eight d-characters or eight d1-characters. 	 * Level 2: 	 *   - limits each file size less than 4Giga bytes; 	 *   - a File Name shall not contain more than thirty 	 *     d-characters or thirty d1-characters; 	 *   - a File Name Extension shall not contain more than 	 *     thirty d-characters or thirty d1-characters; 	 *   - a Directory Identifier shall not contain more 	 *     than thirty-one d-characters or thirty-one 	 *     d1-characters. 	 * Level 3: 	 *   - no limit of file size; use multi extent. 	 * Level 4: 	 *   - this level 4 simulates mkisofs option 	 *     '-iso-level 4'; 	 *   - crate a enhanced volume as mkisofs doing; 	 *   - allow a File Name to have leading dot; 	 *   - allow a File Name to have all ASCII letters; 	 *   - allow a File Name to have multiple dots; 	 *   - allow more then 8 depths of directory trees; 	 *   - disable a version number to a File Name; 	 *   - disable a forced period to the tail of a File Name; 	 *   - the maximum length of files and directories is raised to 193. 	 *     if rockridge option is disabled, raised to 207. 	 */
 name|unsigned
 name|int
 name|iso_level
@@ -1246,7 +1246,7 @@ define|#
 directive|define
 name|PUBLISHER_IDENTIFIER_SIZE
 value|128
-comment|/* 	 * Usage  : rockridge 	 *        : !rockridge 	 *        :    disable to generate SUSP and RR records. 	 *        : rockridge 	 *        :    the same as 'rockridge=useful'. 	 *        : rockridge=strict 	 *        :    generate SUSP and RR records. 	 *        :    [COMPAT: mkisofs -R] 	 *        : rockridge=useful [DEFAULT] 	 *        :    generate SUSP and RR records. 	 *        :    [COMPAT: mkisofs -r] 	 *        :    NOTE  Our rockridge=useful option does not set a zero 	 *        :          to uid and gid, you should use application 	 *        :          option such as --gid,--gname,--uid and --uname 	 *        :          badtar options instead. 	 * Type   : boolean/string 	 * Default: Enabled as rockridge=useful 	 * COMPAT : mkisofs -r / -R 	 * 	 * Generates SUSP and RR records. 	 */
+comment|/* 	 * Usage  : rockridge 	 *        : !rockridge 	 *        :    disable to generate SUSP and RR records. 	 *        : rockridge 	 *        :    the same as 'rockridge=useful'. 	 *        : rockridge=strict 	 *        :    generate SUSP and RR records. 	 *        :    [COMPAT: mkisofs -R] 	 *        : rockridge=useful [DEFAULT] 	 *        :    generate SUSP and RR records. 	 *        :    [COMPAT: mkisofs -r] 	 *        :    NOTE  Our rockridge=useful option does not set a zero 	 *        :          to uid and gid, you should use application 	 *        :          option such as --gid,--gname,--uid and --uname 	 *        :          bsdtar options instead. 	 * Type   : boolean/string 	 * Default: Enabled as rockridge=useful 	 * COMPAT : mkisofs -r / -R 	 * 	 * Generates SUSP and RR records. 	 */
 name|unsigned
 name|int
 name|rr
@@ -1285,7 +1285,7 @@ define|#
 directive|define
 name|VOLUME_IDENTIFIER_SIZE
 value|32
-comment|/* 	 * Usage  : !zisofs [DEFAULT]  	 *        :    Disable to generate RRIP 'ZF' extension. 	 *        : zisofs 	 *        :    Make files zisofs file and generate RRIP 'ZF'  	 *        :    extension. So you do not need mkzftree utility 	 *        :    for making zisofs. 	 *        :    When the file size is less than one Logical Block 	 *        :    size, that file will not zisofs'ed since it does 	 *        :    reduece an ISO-image size. 	 *        : 	 *        :    When you specify option 'boot=<boot-image>', that 	 *        :    'boot-image' file won't be converted to zisofs file. 	 * Type   : boolean 	 * Default: Disabled 	 * 	 * Generates RRIP 'ZF' System Use Entry. 	 */
+comment|/* 	 * Usage  : !zisofs [DEFAULT]  	 *        :    Disable to generate RRIP 'ZF' extension. 	 *        : zisofs 	 *        :    Make files zisofs file and generate RRIP 'ZF'  	 *        :    extension. So you do not need mkzftree utility 	 *        :    for making zisofs. 	 *        :    When the file size is less than one Logical Block 	 *        :    size, that file will not zisofs'ed since it does 	 *        :    reduce an ISO-image size. 	 *        : 	 *        :    When you specify option 'boot=<boot-image>', that 	 *        :    'boot-image' file won't be converted to zisofs file. 	 * Type   : boolean 	 * Default: Disabled 	 * 	 * Generates RRIP 'ZF' System Use Entry. 	 */
 name|unsigned
 name|int
 name|zisofs
@@ -1376,7 +1376,7 @@ decl_stmt|;
 block|}
 name|all_file_list
 struct|;
-comment|/* A list of struct isofile entries which have its 	 * contents and are not a directory, a hardlined file 	 * and a symlink file. */
+comment|/* A list of struct isofile entries which have its 	 * contents and are not a directory, a hardlinked file 	 * and a symlink file. */
 struct|struct
 block|{
 name|struct
@@ -8311,7 +8311,7 @@ operator|(
 name|ret
 operator|)
 return|;
-comment|/* Make sure we have UTF-16BE convertors. 		 * if there is no file entry, convertors are still 		 * uninitilized. */
+comment|/* Make sure we have UTF-16BE converters. 		 * if there is no file entry, converters are still 		 * uninitialized. */
 if|if
 condition|(
 name|iso9660
@@ -12098,11 +12098,22 @@ expr_stmt|;
 elif|#
 directive|elif
 name|HAVE__LOCALTIME64_S
+name|__time64_t
+name|tmp_t
+init|=
+operator|(
+name|__time64_t
+operator|)
+operator|*
+name|t
+decl_stmt|;
+comment|//time_t may be shorter than 64 bits
 name|_localtime64_s
 argument_list|(
 name|tm
 argument_list|,
-name|t
+operator|&
+name|tmp_t
 argument_list|)
 expr_stmt|;
 else|#
@@ -12292,6 +12303,9 @@ name|memset
 argument_list|(
 name|p
 argument_list|,
+operator|(
+name|int
+operator|)
 literal|'0'
 argument_list|,
 literal|16
@@ -14235,7 +14249,7 @@ operator|==
 name|OPT_RR_USEFUL
 condition|)
 block|{
-comment|/* 				 * This action is simular mkisofs -r option 				 * but our rockridge=useful option does not 				 * set a zero to uid and gid. 				 */
+comment|/* 				 * This action is similar to mkisofs -r option 				 * but our rockridge=useful option does not 				 * set a zero to uid and gid. 				 */
 comment|/* set all read bit ON */
 name|mode
 operator||=
@@ -14863,7 +14877,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 					 *     flg  len 					 *    +----+----+ 					 *    | 02 | 00 | CURREENT component. 					 *    +----+----+ (".") 					 */
+comment|/* 					 *     flg  len 					 *    +----+----+ 					 *    | 02 | 00 | CURRENT component. 					 *    +----+----+ (".") 					 */
 if|if
 condition|(
 name|nc
@@ -18874,7 +18888,7 @@ operator|(
 name|r
 operator|)
 return|;
-comment|/* Bibliongraphic File Identifier */
+comment|/* Bibliographic File Identifier */
 name|r
 operator|=
 name|set_file_identifier
@@ -19494,6 +19508,17 @@ name|defined
 argument_list|(
 name|HAVE__CTIME64_S
 argument_list|)
+name|__time64_t
+name|iso9660_birth_time_tmp
+init|=
+operator|(
+name|__time64_t
+operator|)
+name|iso9660
+operator|->
+name|birth_time
+decl_stmt|;
+comment|//time_t may be shorter than 64 bits
 name|_ctime64_s
 argument_list|(
 name|buf
@@ -19505,9 +19530,7 @@ argument_list|)
 argument_list|,
 operator|&
 operator|(
-name|iso9660
-operator|->
-name|birth_time
+name|iso9660_birth_time_tmp
 operator|)
 argument_list|)
 expr_stmt|;
@@ -30895,7 +30918,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* A dot('.')  character 						 * does't place to the first 						 * byte of identifier. */
+comment|/* A dot('.')  character 						 * doesn't place to the first 						 * byte of identifier. */
 name|off
 operator|++
 expr_stmt|;
@@ -36504,7 +36527,7 @@ name|catalog
 operator|=
 name|isoent
 expr_stmt|;
-comment|/* 	 * Get a boot medai type. 	 */
+comment|/* 	 * Get a boot media type. 	 */
 switch|switch
 condition|(
 name|iso9660

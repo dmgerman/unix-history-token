@@ -2105,7 +2105,7 @@ name|uncompressed_size
 operator|)
 return|;
 block|}
-comment|/* 	 * Drive lzo uncompresison. 	 */
+comment|/* 	 * Drive lzo uncompression. 	 */
 name|out_size
 operator|=
 operator|(

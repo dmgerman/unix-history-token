@@ -359,12 +359,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|archive_entry_acl_count
+name|archive_entry_acl_types
 argument_list|(
 name|entry
-argument_list|,
-name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|bp
 index|[
