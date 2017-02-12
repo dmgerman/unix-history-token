@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_usbhid.c,v 1.11 2016/01/07 16:10:49 jakllsch Exp $	*/
+comment|/*	$NetBSD: t_usbhid.c,v 1.12 2016/08/17 12:10:42 jakllsch Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_usbhid.c,v 1.11 2016/01/07 16:10:49 jakllsch Exp $"
+literal|"$NetBSD: t_usbhid.c,v 1.12 2016/08/17 12:10:42 jakllsch Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1369,6 +1369,12 @@ decl_stmt|;
 name|uint32_t
 name|udat
 decl_stmt|;
+name|atf_tc_expect_fail
+argument_list|(
+literal|"only the 32-bit opcode works, "
+literal|"8 and 16-bit is broken"
+argument_list|)
+expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
 operator|(

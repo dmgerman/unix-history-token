@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_ldexp.c,v 1.14 2014/11/04 00:20:19 justin Exp $ */
+comment|/* $NetBSD: t_ldexp.c,v 1.16 2016/08/25 00:32:31 maya Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_ldexp.c,v 1.14 2014/11/04 00:20:19 justin Exp $"
+literal|"$NetBSD: t_ldexp.c,v 1.16 2016/08/25 00:32:31 maya Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -514,6 +514,16 @@ literal|"                    inf"
 block|}
 block|,
 block|{
+literal|2.0
+block|,
+name|INT_MAX
+block|,
+name|SKIP
+block|,
+literal|"                    inf"
+block|}
+block|,
+block|{
 operator|-
 literal|1.0
 block|,
@@ -552,6 +562,17 @@ operator|-
 literal|1.0
 block|,
 literal|1025
+block|,
+name|SKIP
+block|,
+literal|"                   -inf"
+block|}
+block|,
+block|{
+operator|-
+literal|2.0
+block|,
+name|INT_MAX
 block|,
 name|SKIP
 block|,
@@ -1188,10 +1209,9 @@ condition|(
 name|table
 operator|->
 name|exp2
-operator|==
+operator|!=
 name|SKIP
 condition|)
-continue|continue;
 name|v
 operator|=
 name|ldexp
