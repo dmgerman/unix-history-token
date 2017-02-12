@@ -2379,17 +2379,6 @@ begin_comment
 comment|/* rate limit needs attention */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INP_ORIGDSTADDR
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* receive IP dst address/port */
-end_comment
-
 begin_comment
 comment|/*  * Flags passed to in_pcblookup*() functions.  */
 end_comment

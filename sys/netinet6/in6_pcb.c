@@ -5574,9 +5574,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|int
-name|srcordst
 parameter_list|)
 block|{
 name|struct
@@ -5626,12 +5623,6 @@ name|sin6
 operator|->
 name|sin6_addr
 operator|=
-name|srcordst
-condition|?
-name|ip
-operator|->
-name|ip6_dst
-else|:
 name|ip
 operator|->
 name|ip6_src
