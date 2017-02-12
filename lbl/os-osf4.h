@@ -9,7 +9,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|snprintf
+name|pcap_snprintf
 parameter_list|(
 name|char
 modifier|*
@@ -27,7 +27,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vsnprintf
+name|pcap_vsnprintf
 parameter_list|(
 name|char
 modifier|*

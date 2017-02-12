@@ -141,6 +141,28 @@ begin_comment
 comment|/* 802.2 frames (not D/I/X Ethernet) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LINUX_SLL_P_CAN
+value|0x000C
+end_define
+
+begin_comment
+comment|/* CAN frames, with SocketCAN pseudo-headers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SLL_P_CANFD
+value|0x000D
+end_define
+
+begin_comment
+comment|/* CAN FD frames, with SocketCAN pseudo-headers */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

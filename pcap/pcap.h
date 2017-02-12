@@ -19,12 +19,18 @@ directive|define
 name|lib_pcap_pcap_h
 end_define
 
+begin_include
+include|#
+directive|include
+file|<pcap/export-defs.h>
+end_include
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|_WIN32
 argument_list|)
 end_if
 
@@ -86,7 +92,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32/MSDOS/UN*X */
+comment|/* _WIN32/MSDOS/UN*X */
 end_comment
 
 begin_ifndef
@@ -276,16 +282,32 @@ name|u_int
 name|ps_ifdrop
 decl_stmt|;
 comment|/* drops by interface -- only supported on some platforms */
-ifdef|#
-directive|ifdef
-name|WIN32
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_REMOTE
+argument_list|)
 name|u_int
-name|bs_capt
+name|ps_capt
 decl_stmt|;
 comment|/* number of packets that reach the application */
+name|u_int
+name|ps_sent
+decl_stmt|;
+comment|/* number of packets sent by the server on the network */
+name|u_int
+name|ps_netdrop
+decl_stmt|;
+comment|/* number of packets lost on the network */
 endif|#
 directive|endif
-comment|/* WIN32 */
+comment|/* _WIN32&& HAVE_REMOTE */
 block|}
 struct|;
 ifdef|#
@@ -560,6 +582,7 @@ define|#
 directive|define
 name|PCAP_NETMASK_UNKNOWN
 value|0xffffffff
+name|PCAP_API
 name|char
 modifier|*
 name|pcap_lookupdev
@@ -568,6 +591,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_lookupnet
 parameter_list|(
@@ -585,6 +609,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_create
@@ -597,6 +622,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_set_snaplen
 parameter_list|(
@@ -606,6 +632,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_set_promisc
 parameter_list|(
@@ -615,6 +642,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_can_set_rfmon
 parameter_list|(
@@ -622,6 +650,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_set_rfmon
 parameter_list|(
@@ -631,6 +660,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_set_timeout
 parameter_list|(
@@ -640,6 +670,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_set_tstamp_type
 parameter_list|(
@@ -649,6 +680,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_set_immediate_mode
 parameter_list|(
@@ -658,6 +690,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_set_buffer_size
 parameter_list|(
@@ -667,6 +700,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_set_tstamp_precision
 parameter_list|(
@@ -676,6 +710,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_get_tstamp_precision
 parameter_list|(
@@ -683,6 +718,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_activate
 parameter_list|(
@@ -690,6 +726,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_list_tstamp_types
 parameter_list|(
@@ -701,6 +738,7 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|pcap_free_tstamp_types
 parameter_list|(
@@ -708,6 +746,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_tstamp_type_name_to_val
 parameter_list|(
@@ -716,6 +755,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 specifier|const
 name|char
 modifier|*
@@ -724,6 +764,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 specifier|const
 name|char
 modifier|*
@@ -769,6 +810,7 @@ directive|define
 name|PCAP_TSTAMP_PRECISION_NANO
 value|1
 comment|/* use timestamps with nanosecond precision */
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_open_live
@@ -787,6 +829,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_open_dead
@@ -796,6 +839,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_open_dead_with_tstamp_precision
@@ -807,6 +851,7 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_open_offline_with_tstamp_precision
@@ -821,6 +866,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_open_offline
@@ -833,12 +879,10 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
+ifdef|#
+directive|ifdef
+name|_WIN32
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_hopen_offline_with_tstamp_precision
@@ -851,6 +895,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_hopen_offline
@@ -861,13 +906,10 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|LIBPCAP_EXPORTS
-argument_list|)
+comment|/*    * If we're building libpcap, these are internal routines in savefile.c,    * so we mustn't define them as macros.    */
+ifndef|#
+directive|ifndef
+name|BUILDING_PCAP
 define|#
 directive|define
 name|pcap_fopen_offline_with_tstamp_precision
@@ -890,10 +932,12 @@ name|b
 parameter_list|)
 define|\
 value|pcap_hopen_offline(_get_osfhandle(_fileno(f)), b)
+endif|#
+directive|endif
 else|#
 directive|else
-comment|/*LIBPCAP_EXPORTS*/
-specifier|static
+comment|/*_WIN32*/
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_fopen_offline_with_tstamp_precision
@@ -907,7 +951,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|static
+name|PCAP_API
 name|pcap_t
 modifier|*
 name|pcap_fopen_offline
@@ -921,36 +965,8 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-else|#
-directive|else
-comment|/*WIN32*/
-name|pcap_t
-modifier|*
-name|pcap_fopen_offline_with_tstamp_precision
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-name|pcap_t
-modifier|*
-name|pcap_fopen_offline
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
-comment|/*WIN32*/
+comment|/*_WIN32*/
+name|PCAP_API
 name|void
 name|pcap_close
 parameter_list|(
@@ -958,6 +974,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_loop
 parameter_list|(
@@ -972,6 +989,7 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_dispatch
 parameter_list|(
@@ -986,6 +1004,7 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 specifier|const
 name|u_char
 modifier|*
@@ -999,6 +1018,7 @@ name|pcap_pkthdr
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_next_ex
 parameter_list|(
@@ -1016,6 +1036,7 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|pcap_breakloop
 parameter_list|(
@@ -1023,6 +1044,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_stats
 parameter_list|(
@@ -1034,6 +1056,7 @@ name|pcap_stat
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_setfilter
 parameter_list|(
@@ -1045,6 +1068,7 @@ name|bpf_program
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_setdirection
 parameter_list|(
@@ -1054,6 +1078,7 @@ parameter_list|,
 name|pcap_direction_t
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_getnonblock
 parameter_list|(
@@ -1064,6 +1089,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_setnonblock
 parameter_list|(
@@ -1076,6 +1102,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_inject
 parameter_list|(
@@ -1089,6 +1116,7 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_sendpacket
 parameter_list|(
@@ -1102,6 +1130,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 specifier|const
 name|char
 modifier|*
@@ -1110,6 +1139,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 specifier|const
 name|char
 modifier|*
@@ -1118,6 +1148,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|char
 modifier|*
 name|pcap_geterr
@@ -1126,16 +1157,19 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|pcap_perror
 parameter_list|(
 name|pcap_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_compile
 parameter_list|(
@@ -1155,6 +1189,7 @@ parameter_list|,
 name|bpf_u_int32
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_compile_nopcap
 parameter_list|(
@@ -1175,6 +1210,7 @@ parameter_list|,
 name|bpf_u_int32
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|pcap_freecode
 parameter_list|(
@@ -1183,6 +1219,7 @@ name|bpf_program
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_offline_filter
 parameter_list|(
@@ -1201,6 +1238,7 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_datalink
 parameter_list|(
@@ -1208,6 +1246,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_datalink_ext
 parameter_list|(
@@ -1215,6 +1254,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_list_datalinks
 parameter_list|(
@@ -1226,6 +1266,7 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_set_datalink
 parameter_list|(
@@ -1235,6 +1276,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|pcap_free_datalinks
 parameter_list|(
@@ -1242,6 +1284,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_datalink_name_to_val
 parameter_list|(
@@ -1250,6 +1293,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 specifier|const
 name|char
 modifier|*
@@ -1258,6 +1302,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 specifier|const
 name|char
 modifier|*
@@ -1266,6 +1311,7 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_snapshot
 parameter_list|(
@@ -1273,6 +1319,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_is_swapped
 parameter_list|(
@@ -1280,6 +1327,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_major_version
 parameter_list|(
@@ -1287,6 +1335,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_minor_version
 parameter_list|(
@@ -1295,6 +1344,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* XXX */
+name|PCAP_API
 name|FILE
 modifier|*
 name|pcap_file
@@ -1303,6 +1353,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_fileno
 parameter_list|(
@@ -1310,6 +1361,19 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|_WIN32
+name|PCAP_API
+name|int
+name|pcap_wsockinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+name|PCAP_API
 name|pcap_dumper_t
 modifier|*
 name|pcap_dump_open
@@ -1322,6 +1386,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|pcap_dumper_t
 modifier|*
 name|pcap_dump_fopen
@@ -1334,6 +1399,20 @@ modifier|*
 name|fp
 parameter_list|)
 function_decl|;
+name|PCAP_API
+name|pcap_dumper_t
+modifier|*
+name|pcap_dump_open_append
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|PCAP_API
 name|FILE
 modifier|*
 name|pcap_dump_file
@@ -1342,6 +1421,7 @@ name|pcap_dumper_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|long
 name|pcap_dump_ftell
 parameter_list|(
@@ -1349,6 +1429,7 @@ name|pcap_dumper_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_dump_flush
 parameter_list|(
@@ -1356,6 +1437,7 @@ name|pcap_dumper_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|pcap_dump_close
 parameter_list|(
@@ -1363,6 +1445,7 @@ name|pcap_dumper_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|pcap_dump
 parameter_list|(
@@ -1379,6 +1462,7 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_findalldevs
 parameter_list|(
@@ -1390,6 +1474,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|pcap_freealldevs
 parameter_list|(
@@ -1397,6 +1482,7 @@ name|pcap_if_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 specifier|const
 name|char
 modifier|*
@@ -1405,10 +1491,21 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/*  * On at least some versions of NetBSD, we don't want to declare  * bpf_filter() here, as it's also be declared in<net/bpf.h>, with a  * different signature, but, on other BSD-flavored UN*Xes, it's not  * declared in<net/bpf.h>, so we *do* want to declare it here, so it's  * declared when we build pcap-bpf.c.  */
-ifndef|#
-directive|ifndef
+comment|/*  * On at least some versions of NetBSD and QNX, we don't want to declare  * bpf_filter() here, as it's also be declared in<net/bpf.h>, with a  * different signature, but, on other BSD-flavored UN*Xes, it's not  * declared in<net/bpf.h>, so we *do* want to declare it here, so it's  * declared when we build pcap-bpf.c.  */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__QNX__
+argument_list|)
+name|PCAP_API
 name|u_int
 name|bpf_filter
 parameter_list|(
@@ -1428,6 +1525,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+name|PCAP_API
 name|int
 name|bpf_validate
 parameter_list|(
@@ -1441,6 +1539,7 @@ name|int
 name|len
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|char
 modifier|*
 name|bpf_image
@@ -1453,6 +1552,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|bpf_dump
 parameter_list|(
@@ -1468,9 +1568,53 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|_WIN32
 argument_list|)
-comment|/*  * Win32 definitions  */
+comment|/*    * Win32 definitions    */
+comment|/*!     \brief A queue of raw packets that will be sent to the network with pcap_sendqueue_transmit().   */
+struct|struct
+name|pcap_send_queue
+block|{
+name|u_int
+name|maxlen
+decl_stmt|;
+comment|/* Maximum size of the the queue, in bytes. This 			   variable contains the size of the buffer field. */
+name|u_int
+name|len
+decl_stmt|;
+comment|/* Current size of the queue, in bytes. */
+name|char
+modifier|*
+name|buffer
+decl_stmt|;
+comment|/* Buffer containing the packets to be sent. */
+block|}
+struct|;
+typedef|typedef
+name|struct
+name|pcap_send_queue
+name|pcap_send_queue
+typedef|;
+comment|/*!     \brief This typedef is a support for the pcap_get_airpcap_handle() function   */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|AIRPCAP_HANDLE__EAE405F5_0171_9592_B3C2_C19EC426AD34__DEFINED_
+argument_list|)
+define|#
+directive|define
+name|AIRPCAP_HANDLE__EAE405F5_0171_9592_B3C2_C19EC426AD34__DEFINED_
+typedef|typedef
+name|struct
+name|_AirpcapHandle
+modifier|*
+name|PAirpcapHandle
+typedef|;
+endif|#
+directive|endif
+name|PCAP_API
 name|int
 name|pcap_setbuff
 parameter_list|(
@@ -1482,6 +1626,7 @@ name|int
 name|dim
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_setmode
 parameter_list|(
@@ -1493,6 +1638,7 @@ name|int
 name|mode
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_setmintocopy
 parameter_list|(
@@ -1504,25 +1650,181 @@ name|int
 name|size
 parameter_list|)
 function_decl|;
-name|Adapter
-modifier|*
-name|pcap_get_adapter
+name|PCAP_API
+name|HANDLE
+name|pcap_getevent
 parameter_list|(
 name|pcap_t
 modifier|*
 name|p
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
-name|WPCAP
-comment|/* Include file with the wpcap-specific extensions */
-include|#
-directive|include
-file|<Win32-Extensions.h>
-endif|#
-directive|endif
-comment|/* WPCAP */
+name|PCAP_API
+name|int
+name|pcap_oid_get_request
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|bpf_u_int32
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|int
+name|pcap_oid_set_request
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|bpf_u_int32
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|pcap_send_queue
+modifier|*
+name|pcap_sendqueue_alloc
+parameter_list|(
+name|u_int
+name|memsize
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|void
+name|pcap_sendqueue_destroy
+parameter_list|(
+name|pcap_send_queue
+modifier|*
+name|queue
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|int
+name|pcap_sendqueue_queue
+parameter_list|(
+name|pcap_send_queue
+modifier|*
+name|queue
+parameter_list|,
+specifier|const
+name|struct
+name|pcap_pkthdr
+modifier|*
+name|pkt_header
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+name|pkt_data
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|u_int
+name|pcap_sendqueue_transmit
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|pcap_send_queue
+modifier|*
+name|queue
+parameter_list|,
+name|int
+name|sync
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|struct
+name|pcap_stat
+modifier|*
+name|pcap_stats_ex
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|int
+modifier|*
+name|pcap_stat_size
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|int
+name|pcap_setuserbuffer
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|int
+name|pcap_live_dump
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|int
+name|maxsize
+parameter_list|,
+name|int
+name|maxpacks
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|int
+name|pcap_live_dump_ended
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|sync
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|int
+name|pcap_start_oem
+parameter_list|(
+name|char
+modifier|*
+name|err_str
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+name|PCAP_API
+name|PAirpcapHandle
+name|pcap_get_airpcap_handle
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|MODE_CAPT
@@ -1541,7 +1843,8 @@ name|defined
 argument_list|(
 name|MSDOS
 argument_list|)
-comment|/*  * MS-DOS definitions  */
+comment|/*    * MS-DOS definitions    */
+name|PCAP_API
 name|int
 name|pcap_stats_ex
 parameter_list|(
@@ -1553,6 +1856,7 @@ name|pcap_stat_ex
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|void
 name|pcap_set_wait
 parameter_list|(
@@ -1573,6 +1877,7 @@ name|int
 name|wait
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|u_long
 name|pcap_mac_packets
 parameter_list|(
@@ -1582,7 +1887,8 @@ function_decl|;
 else|#
 directive|else
 comment|/* UN*X */
-comment|/*  * UN*X definitions  */
+comment|/*    * UN*X definitions    */
+name|PCAP_API
 name|int
 name|pcap_get_selectable_fd
 parameter_list|(
@@ -1592,7 +1898,17 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* WIN32/MSDOS/UN*X */
+comment|/* _WIN32/MSDOS/UN*X */
+ifdef|#
+directive|ifdef
+name|HAVE_REMOTE
+comment|/* Includes most of the public stuff that is needed for the remote capture */
+include|#
+directive|include
+file|<remote-ext.h>
+endif|#
+directive|endif
+comment|/* HAVE_REMOTE */
 ifdef|#
 directive|ifdef
 name|__cplusplus

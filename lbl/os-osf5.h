@@ -4,12 +4,12 @@ comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the U
 end_comment
 
 begin_comment
-comment|/*  * Prototypes missing in Tru64 UNIX 5.x  * XXX - "snprintf()" and "vsnprintf()" aren't missing, but you have to  * #define the right value to get them defined by<stdio.h>.  */
+comment|/*  * Prototypes missing in Tru64 UNIX 5.x  * XXX - "pcap_snprintf()" and "pcap_vsnprintf()" aren't missing, but you have to  * #define the right value to get them defined by<stdio.h>.  */
 end_comment
 
 begin_function_decl
 name|int
-name|snprintf
+name|pcap_snprintf
 parameter_list|(
 name|char
 modifier|*
@@ -27,7 +27,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vsnprintf
+name|pcap_vsnprintf
 parameter_list|(
 name|char
 modifier|*

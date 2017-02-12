@@ -256,6 +256,17 @@ parameter_list|,
 name|char
 modifier|*
 name|errbuf
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|check_usable
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
 parameter_list|)
 block|{
 name|pcap_if_t
@@ -280,7 +291,7 @@ decl_stmt|,
 modifier|*
 name|ifnext
 decl_stmt|;
-name|int
+name|size_t
 name|n
 decl_stmt|;
 name|struct
@@ -371,7 +382,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -420,7 +431,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -496,7 +507,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -654,7 +665,7 @@ operator|+
 name|n
 operator|)
 expr_stmt|;
-comment|/* 		 * XXX - The 32-bit compatibility layer for Linux on IA-64 		 * is slightly broken. It correctly converts the structures 		 * to and from kernel land from 64 bit to 32 bit but  		 * doesn't update ifc.ifc_len, leaving it larger than the  		 * amount really used. This means we read off the end  		 * of the buffer and encounter an interface with an  		 * "empty" name. Since this is highly unlikely to ever  		 * occur in a valid case we can just finish looking for  		 * interfaces if we see an empty name. 		 */
+comment|/* 		 * XXX - The 32-bit compatibility layer for Linux on IA-64 		 * is slightly broken. It correctly converts the structures 		 * to and from kernel land from 64 bit to 32 bit but 		 * doesn't update ifc.ifc_len, leaving it larger than the 		 * amount really used. This means we read off the end 		 * of the buffer and encounter an interface with an 		 * "empty" name. Since this is highly unlikely to ever 		 * occur in a valid case we can just finish looking for 		 * interfaces if we see an empty name. 		 */
 if|if
 condition|(
 operator|!
@@ -683,6 +694,24 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/* 		 * Can we capture on this device? 		 */
+if|if
+condition|(
+operator|!
+call|(
+modifier|*
+name|check_usable
+call|)
+argument_list|(
+name|ifrp
+operator|->
+name|ifr_name
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * No. 			 */
+continue|continue;
+block|}
 comment|/* 		 * Get the flags for this interface. 		 */
 name|strncpy
 argument_list|(
@@ -731,7 +760,7 @@ continue|continue;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -846,7 +875,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -988,7 +1017,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1143,7 +1172,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1291,9 +1320,16 @@ name|ifrp
 operator|->
 name|ifr_name
 argument_list|,
+name|if_flags_to_pcap_flags
+argument_list|(
+name|ifrp
+operator|->
+name|ifr_name
+argument_list|,
 name|ifrflags
 operator|.
 name|ifr_flags
+argument_list|)
 argument_list|,
 operator|&
 name|ifrp

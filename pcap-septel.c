@@ -699,8 +699,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof
@@ -859,7 +857,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -923,6 +921,67 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SEPTEL_ONLY
+comment|/*  * This libpcap build supports only Septel cards, not regular network  * interfaces.  */
+comment|/*  * There are no regular interfaces, just Septel interfaces.  */
+name|int
+name|pcap_platform_finddevs
+argument_list|(
+name|pcap_if_t
+operator|*
+operator|*
+name|alldevsp
+argument_list|,
+name|char
+operator|*
+name|errbuf
+argument_list|)
+block|{
+operator|*
+name|alldevsp
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/*  * Attempts to open a regular interface fail.  */
+name|pcap_t
+modifier|*
+name|pcap_create_interface
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|device
+argument_list|,
+name|char
+operator|*
+name|errbuf
+argument_list|)
+block|{
+name|pcap_snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"This version of libpcap only supports Septel cards"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 end_struct
 
 end_unit

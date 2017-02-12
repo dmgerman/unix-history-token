@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pcap-dag.c: Packet capture interface for Endace DAG card.  *  * The functionality of this code attempts to mimic that of pcap-linux as much  * as possible.  This code is compiled in several different ways depending on  * whether DAG_ONLY and HAVE_DAG_API are defined.  If HAVE_DAG_API is not  * defined it should not get compiled in, otherwise if DAG_ONLY is defined then  * the 'dag_' function calls are renamed to 'pcap_' equivalents.  If DAG_ONLY  * is not defined then nothing is altered - the dag_ functions will be  * called as required from their pcap-linux/bpf equivalents.  *  * Authors: Richard Littin, Sean Irvine ({richard,sean}@reeltwo.com)  * Modifications: Jesper Peterson<support@endace.com>  *                Koryn Grant<support@endace.com>  *                Stephen Donnelly<support@endace.com>  */
+comment|/*  * pcap-dag.c: Packet capture interface for Emulex EndaceDAG cards.  *  * The functionality of this code attempts to mimic that of pcap-linux as much  * as possible.  This code is compiled in several different ways depending on  * whether DAG_ONLY and HAVE_DAG_API are defined.  If HAVE_DAG_API is not  * defined it should not get compiled in, otherwise if DAG_ONLY is defined then  * the 'dag_' function calls are renamed to 'pcap_' equivalents.  If DAG_ONLY  * is not defined then nothing is altered - the dag_ functions will be  * called as required from their pcap-linux/bpf equivalents.  *  * Authors: Richard Littin, Sean Irvine ({richard,sean}@reeltwo.com)  * Modifications: Jesper Peterson  *                Koryn Grant  *                Stephen Donnelly<stephen.donnelly@emulex.com>  */
 end_comment
 
 begin_ifdef
@@ -131,6 +131,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dagpci.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pcap-dag.h"
 end_include
 
@@ -149,6 +155,420 @@ define|#
 directive|define
 name|DAG_MAX_BOARDS
 value|32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_AAL5
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_AAL5
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_MC_HDLC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_MC_HDLC
+value|5
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_MC_RAW
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_MC_RAW
+value|6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_MC_ATM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_MC_ATM
+value|7
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_MC_RAW_CHANNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_MC_RAW_CHANNEL
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_MC_AAL5
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_MC_AAL5
+value|9
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_COLOR_HDLC_POS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_COLOR_HDLC_POS
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_COLOR_ETH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_COLOR_ETH
+value|11
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_MC_AAL2
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_MC_AAL2
+value|12
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_IP_COUNTER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_IP_COUNTER
+value|13
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_TCP_FLOW_COUNTER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_TCP_FLOW_COUNTER
+value|14
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_DSM_COLOR_HDLC_POS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_DSM_COLOR_HDLC_POS
+value|15
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_DSM_COLOR_ETH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_DSM_COLOR_ETH
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_COLOR_MC_HDLC_POS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_COLOR_MC_HDLC_POS
+value|17
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_AAL2
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_AAL2
+value|18
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_COLOR_HASH_POS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_COLOR_HASH_POS
+value|19
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_COLOR_HASH_ETH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_COLOR_HASH_ETH
+value|20
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_INFINIBAND
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_INFINIBAND
+value|21
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_IPV4
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_IPV4
+value|22
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_IPV6
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_IPV6
+value|23
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_RAW_LINK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_RAW_LINK
+value|24
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_INFINIBAND_LINK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_INFINIBAND_LINK
+value|25
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_PAD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_PAD
+value|48
 end_define
 
 begin_endif
@@ -602,20 +1022,11 @@ name|struct
 name|pcap_dag
 modifier|*
 name|pd
-decl_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-block|{
-name|pd
-operator|=
+init|=
 name|p
 operator|->
-name|priv
-expr_stmt|;
+name|pr
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_DAG_STREAMS_API
@@ -752,7 +1163,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Note: don't need to call close(p->fd) here as dag_close(p->fd) does this. */
 block|}
 end_function
@@ -782,6 +1192,14 @@ name|getpid
 argument_list|()
 condition|)
 block|{
+if|if
+condition|(
+name|pcap_dags
+operator|->
+name|p
+operator|!=
+name|NULL
+condition|)
 name|dag_platform_cleanup
 argument_list|(
 name|pcap_dags
@@ -1058,6 +1476,10 @@ name|int
 name|num_ext_hdr
 init|=
 literal|0
+decl_stmt|;
+name|unsigned
+name|int
+name|ticks_per_second
 decl_stmt|;
 comment|/* Get the next bufferful of packets (if necessary). */
 while|while
@@ -1466,7 +1888,7 @@ name|rlen
 argument_list|)
 expr_stmt|;
 comment|/* ERF encapsulation */
-comment|/* The Extensible Record Format is not dropped for this kind of encapsulation,  		 * and will be handled as a pseudo header by the decoding application. 		 * The information carried in the ERF header and in the optional subheader (if present) 		 * could be merged with the libpcap information, to offer a better decoding. 		 * The packet length is 		 * o the length of the packet on the link (header->wlen), 		 * o plus the length of the ERF header (dag_record_size), as the length of the  		 *   pseudo header will be adjusted during the decoding, 		 * o plus the length of the optional subheader (if present). 		 * 		 * The capture length is header.rlen and the byte stuffing for alignment will be dropped 		 * if the capture length is greater than the packet length. 		 */
+comment|/* The Extensible Record Format is not dropped for this kind of encapsulation, 		 * and will be handled as a pseudo header by the decoding application. 		 * The information carried in the ERF header and in the optional subheader (if present) 		 * could be merged with the libpcap information, to offer a better decoding. 		 * The packet length is 		 * o the length of the packet on the link (header->wlen), 		 * o plus the length of the ERF header (dag_record_size), as the length of the 		 *   pseudo header will be adjusted during the decoding, 		 * o plus the length of the optional subheader (if present). 		 * 		 * The capture length is header.rlen and the byte stuffing for alignment will be dropped 		 * if the capture length is greater than the packet length. 		 */
 if|if
 condition|(
 name|p
@@ -1685,6 +2107,15 @@ operator|+=
 literal|4
 expr_stmt|;
 block|}
+comment|/* Skip over extension headers */
+name|caplen
+operator|-=
+operator|(
+literal|8
+operator|*
+name|num_ext_hdr
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|header
@@ -1919,6 +2350,15 @@ name|dag_record_size
 operator|-
 literal|2
 expr_stmt|;
+comment|/* Skip over extension headers */
+name|caplen
+operator|-=
+operator|(
+literal|8
+operator|*
+name|num_ext_hdr
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|caplen
@@ -1973,6 +2413,15 @@ name|rlen
 operator|-
 name|dag_record_size
 expr_stmt|;
+comment|/* Skip over extension headers */
+name|caplen
+operator|-=
+operator|(
+literal|8
+operator|*
+name|num_ext_hdr
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|caplen
@@ -2018,6 +2467,15 @@ operator|-
 name|dag_record_size
 operator|-
 literal|4
+expr_stmt|;
+comment|/* Skip over extension headers */
+name|caplen
+operator|-=
+operator|(
+literal|8
+operator|*
+name|num_ext_hdr
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2159,6 +2617,15 @@ name|rlen
 operator|-
 name|dag_record_size
 expr_stmt|;
+comment|/* Skip over extension headers */
+name|caplen
+operator|-=
+operator|(
+literal|8
+operator|*
+name|num_ext_hdr
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|caplen
@@ -2199,15 +2666,6 @@ comment|/* Unhandled ERF type. 				 * Ignore rather than generating error 				 *
 continue|continue;
 block|}
 comment|/* switch type */
-comment|/* Skip over extension headers */
-name|caplen
-operator|-=
-operator|(
-literal|8
-operator|*
-name|num_ext_hdr
-operator|)
-expr_stmt|;
 block|}
 comment|/* ERF encapsulation */
 if|if
@@ -2285,6 +2743,33 @@ operator|->
 name|ts
 expr_stmt|;
 block|}
+switch|switch
+condition|(
+name|p
+operator|->
+name|opt
+operator|.
+name|tstamp_precision
+condition|)
+block|{
+case|case
+name|PCAP_TSTAMP_PRECISION_NANO
+case|:
+name|ticks_per_second
+operator|=
+literal|1000000000
+expr_stmt|;
+break|break;
+case|case
+name|PCAP_TSTAMP_PRECISION_MICRO
+case|:
+default|default:
+name|ticks_per_second
+operator|=
+literal|1000000
+expr_stmt|;
+break|break;
+block|}
 name|pcap_header
 operator|.
 name|ts
@@ -2303,7 +2788,7 @@ operator|&
 literal|0xffffffffULL
 operator|)
 operator|*
-literal|1000000
+name|ticks_per_second
 expr_stmt|;
 name|ts
 operator|+=
@@ -2328,7 +2813,7 @@ name|ts
 operator|.
 name|tv_usec
 operator|>=
-literal|1000000
+name|ticks_per_second
 condition|)
 block|{
 name|pcap_header
@@ -2337,7 +2822,7 @@ name|ts
 operator|.
 name|tv_usec
 operator|-=
-literal|1000000
+name|ticks_per_second
 expr_stmt|;
 name|pcap_header
 operator|.
@@ -2450,7 +2935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Get a handle for a live capture from the given DAG device.  Passing a NULL  *  device will result in a failure.  The promisc flag is ignored because DAG  *  cards are always promiscuous.  The to_ms parameter is used in setting the  *  API polling parameters.  *    *  snaplen is now also ignored, until we get per-stream slen support. Set  *  slen with approprite DAG tool BEFORE pcap_activate().  *  *  See also pcap(3).  */
+comment|/*  *  Get a handle for a live capture from the given DAG device.  Passing a NULL  *  device will result in a failure.  The promisc flag is ignored because DAG  *  cards are always promiscuous.  The to_ms parameter is used in setting the  *  API polling parameters.  *  *  snaplen is now also ignored, until we get per-stream slen support. Set  *  slen with approprite DAG tool BEFORE pcap_activate().  *  *  See also pcap(3).  */
 end_comment
 
 begin_function
@@ -2504,7 +2989,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2529,7 +3014,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2577,7 +3062,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2585,7 +3070,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't allocate string for device name: %s\n"
+literal|"Can't allocate string for device name: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -2622,7 +3107,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2630,7 +3115,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_parse_name: %s\n"
+literal|"dag_parse_name: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -2655,7 +3140,7 @@ operator|%
 literal|2
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2663,7 +3148,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_parse_name: tx (even numbered) streams not supported for capture\n"
+literal|"dag_parse_name: tx (even numbered) streams not supported for capture"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2709,7 +3194,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2717,7 +3202,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't allocate string for device name: %s\n"
+literal|"Can't allocate string for device name: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -2772,7 +3257,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2818,7 +3303,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2826,7 +3311,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_attach_stream: %s\n"
+literal|"dag_attach_stream: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -2864,7 +3349,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2872,7 +3357,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_get_stream_poll: %s\n"
+literal|"dag_get_stream_poll: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -2960,7 +3445,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2968,7 +3453,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_set_stream_poll: %s\n"
+literal|"dag_set_stream_poll: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -3000,7 +3485,7 @@ operator|==
 name|MAP_FAILED
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3008,7 +3493,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_mmap %s: %s\n"
+literal|"dag_mmap %s: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -3033,7 +3518,7 @@ comment|/* set the card snap length to the specified snaplen parameter */
 comment|/* This is a really bad idea, as different cards have different 	 * valid slen ranges. Should fix in Config API. */
 block|if (handle->snapshot == 0 || handle->snapshot> MAX_DAG_SNAPLEN) { 		handle->snapshot = MAX_DAG_SNAPLEN; 	} else if (snaplen< MIN_DAG_SNAPLEN) { 		handle->snapshot = MIN_DAG_SNAPLEN; 	}
 comment|/* snap len has to be a multiple of 4 */
-block|snprintf(conf, 30, "varlen slen=%d", (snaplen + 3)& ~3);   	if(dag_configure(handle->fd, conf)< 0) { 		snprintf(handle->errbuf, PCAP_ERRBUF_SIZE,"dag_configure %s: %s\n", device, pcap_strerror(errno)); 		goto faildetach; 	}
+block|pcap_snprintf(conf, 30, "varlen slen=%d", (snaplen + 3)& ~3);  	if(dag_configure(handle->fd, conf)< 0) { 		pcap_snprintf(handle->errbuf, PCAP_ERRBUF_SIZE,"dag_configure %s: %s", device, pcap_strerror(errno)); 		goto faildetach; 	}
 endif|#
 directive|endif
 ifdef|#
@@ -3055,7 +3540,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3063,7 +3548,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_start_stream %s: %s\n"
+literal|"dag_start_stream %s: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -3091,7 +3576,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3099,7 +3584,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_start %s: %s\n"
+literal|"dag_start %s: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -3231,7 +3716,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3239,7 +3724,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"pcap_activate %s: bad ERF_FCS_BITS value (%d) in environment\n"
+literal|"pcap_activate %s: bad ERF_FCS_BITS value (%d) in environment"
 argument_list|,
 name|device
 argument_list|,
@@ -3334,7 +3819,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3342,7 +3827,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"new_pcap_dag %s: %s\n"
+literal|"new_pcap_dag %s: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -3830,8 +4315,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof
@@ -3855,6 +4338,77 @@ operator|->
 name|activate_op
 operator|=
 name|dag_activate
+expr_stmt|;
+comment|/* 	 * We claim that we support microsecond and nanosecond time 	 * stamps. 	 * 	 * XXX Our native precision is 2^-32s, but libpcap doesn't support 	 * power of two precisions yet. We can convert to either MICRO or NANO. 	 */
+name|p
+operator|->
+name|tstamp_precision_count
+operator|=
+literal|2
+expr_stmt|;
+name|p
+operator|->
+name|tstamp_precision_list
+operator|=
+name|malloc
+argument_list|(
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|tstamp_precision_list
+operator|==
+name|NULL
+condition|)
+block|{
+name|pcap_snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"malloc: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pcap_close
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|p
+operator|->
+name|tstamp_precision_list
+index|[
+literal|0
+index|]
+operator|=
+name|PCAP_TSTAMP_PRECISION_MICRO
+expr_stmt|;
+name|p
+operator|->
+name|tstamp_precision_list
+index|[
+literal|1
+index|]
+operator|=
+name|PCAP_TSTAMP_PRECISION_NANO
 expr_stmt|;
 return|return
 name|p
@@ -3947,6 +4501,14 @@ decl_stmt|;
 name|int
 name|dagfd
 decl_stmt|;
+name|dag_card_inf_t
+modifier|*
+name|inf
+decl_stmt|;
+name|char
+modifier|*
+name|description
+decl_stmt|;
 comment|/* Try all the DAGs 0-DAG_MAX_BOARDS */
 for|for
 control|(
@@ -3962,7 +4524,7 @@ name|c
 operator|++
 control|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|name
 argument_list|,
@@ -3996,6 +4558,10 @@ operator|-
 literal|1
 return|;
 block|}
+name|description
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4012,6 +4578,28 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|inf
+operator|=
+name|dag_pciinfo
+argument_list|(
+name|dagfd
+argument_list|)
+operator|)
+condition|)
+name|description
+operator|=
+name|dag_device_name
+argument_list|(
+name|inf
+operator|->
+name|device_code
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|pcap_add_if
 argument_list|(
 name|devlistp
@@ -4020,7 +4608,7 @@ name|name
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|description
 argument_list|,
 name|errbuf
 argument_list|)
@@ -4090,7 +4678,7 @@ argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|name
 argument_list|,
@@ -4113,7 +4701,7 @@ name|name
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|description
 argument_list|,
 name|errbuf
 argument_list|)
@@ -4354,13 +4942,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_get_stream_poll: %s\n"
+literal|"dag_get_stream_poll: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -4411,13 +4999,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"dag_set_stream_poll: %s\n"
+literal|"dag_set_stream_poll: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -4542,7 +5130,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -4600,7 +5188,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -4657,7 +5245,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -5081,7 +5669,69 @@ operator|->
 name|linktype
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|DAG_ONLY
+comment|/*  * This libpcap build supports only DAG cards, not regular network  * interfaces.  */
+comment|/*  * There are no regular interfaces, just DAG interfaces.  */
+name|int
+name|pcap_platform_finddevs
+parameter_list|(
+name|pcap_if_t
+modifier|*
+modifier|*
+name|alldevsp
+parameter_list|,
+name|char
+modifier|*
+name|errbuf
+parameter_list|)
+block|{
+operator|*
+name|alldevsp
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/*  * Attempts to open a regular interface fail.  */
+name|pcap_t
+modifier|*
+name|pcap_create_interface
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|device
+parameter_list|,
+name|char
+modifier|*
+name|errbuf
+parameter_list|)
+block|{
+name|pcap_snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"This version of libpcap only supports DAG cards"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 Paolo Abeni (Italy)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   * products derived from this software without specific prior written   * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * USB sniffing API implementation for Linux platform  * By Paolo Abeni<paolo.abeni@email.it>  * Modifications: Kris Katterjohn<katterjohn@gmail.com>  *  */
+comment|/*  * Copyright (c) 2006 Paolo Abeni (Italy)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  * notice, this list of conditions and the following disclaimer in the  * documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  * products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * USB sniffing API implementation for Linux platform  * By Paolo Abeni<paolo.abeni@email.it>  * Modifications: Kris Katterjohn<katterjohn@gmail.com>  *  */
 end_comment
 
 begin_ifdef
@@ -646,7 +646,7 @@ index|[
 literal|30
 index|]
 decl_stmt|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|dev_name
 argument_list|,
@@ -658,7 +658,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|dev_descr
 argument_list|,
@@ -710,6 +710,9 @@ modifier|*
 name|err_str
 parameter_list|)
 block|{
+name|int
+name|fd
+decl_stmt|;
 name|struct
 name|dirent
 modifier|*
@@ -734,7 +737,127 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-comment|/* try scanning sysfs usb bus directory */
+comment|/* 	 * Do we have a "scan all buses" device? 	 * First, try the binary device. 	 */
+name|fd
+operator|=
+name|open
+argument_list|(
+name|LINUX_USB_MON_DEV
+literal|"0"
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* 		 * Yes. 		 */
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pcap_add_if
+argument_list|(
+name|alldevsp
+argument_list|,
+literal|"usbmon0"
+argument_list|,
+literal|0
+argument_list|,
+literal|"All USB buses"
+argument_list|,
+name|err_str
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|else
+block|{
+comment|/* 		 * No binary device; do we have the text device? 		 */
+name|fd
+operator|=
+name|open
+argument_list|(
+name|USB_TEXT_DIR
+literal|"/0t"
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* 			 * Not at the new location; try the old location. 			 */
+name|fd
+operator|=
+name|open
+argument_list|(
+name|USB_TEXT_DIR_OLD
+literal|"/0t"
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* 			 * We found it. 			 */
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pcap_add_if
+argument_list|(
+name|alldevsp
+argument_list|,
+literal|"usbmon0"
+argument_list|,
+literal|0
+argument_list|,
+literal|"All USB buses"
+argument_list|,
+name|err_str
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+comment|/* 	 * Now look for individual USB buses. 	 * 	 * First, try scanning sysfs USB bus directory. 	 */
 name|dir
 operator|=
 name|opendir
@@ -831,7 +954,7 @@ return|return
 name|ret
 return|;
 block|}
-comment|/* that didn't work; try scanning procfs usb bus directory */
+comment|/* That didn't work; try scanning procfs USB bus directory. */
 name|dir
 operator|=
 name|opendir
@@ -1143,7 +1266,7 @@ modifier|*
 name|dir
 decl_stmt|;
 comment|/* scan usb bus directories for device nodes */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -1213,7 +1336,7 @@ operator|==
 literal|'.'
 condition|)
 continue|continue;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -1533,8 +1656,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof
@@ -1662,7 +1783,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|USB_IFACE
 literal|"%d"
@@ -1676,7 +1797,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -1690,7 +1811,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|)
 expr_stmt|;
 return|return
@@ -1698,7 +1819,7 @@ name|PCAP_ERROR
 return|;
 block|}
 comment|/*now select the read method: try to open binary interface */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|full_path
 argument_list|,
@@ -1842,7 +1963,7 @@ block|}
 else|else
 block|{
 comment|/*Binary interface not available, try open text interface */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|full_path
 argument_list|,
@@ -1886,7 +2007,7 @@ name|ENOENT
 condition|)
 block|{
 comment|/* 				 * Not found at the new location; try 				 * the old location. 				 */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|full_path
 argument_list|,
@@ -1924,7 +2045,7 @@ literal|0
 condition|)
 block|{
 comment|/* no more fallback, give it up*/
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2010,7 +2131,7 @@ operator|->
 name|buffer
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2086,7 +2207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * see<linux-kernel-source>/Documentation/usb/usbmon.txt and   *<linux-kernel-source>/drivers/usb/mon/mon_text.c for urb string   * format description  */
+comment|/*  * see<linux-kernel-source>/Documentation/usb/usbmon.txt and  *<linux-kernel-source>/drivers/usb/mon/mon_text.c for urb string  * format description  */
 end_comment
 
 begin_function
@@ -2109,7 +2230,7 @@ modifier|*
 name|user
 parameter_list|)
 block|{
-comment|/* see: 	* /usr/src/linux/Documentation/usb/usbmon.txt  	* for message format 	*/
+comment|/* see: 	* /usr/src/linux/Documentation/usb/usbmon.txt 	* for message format 	*/
 name|struct
 name|pcap_usb_linux
 modifier|*
@@ -2268,7 +2389,7 @@ return|return
 literal|0
 return|;
 comment|/* no data there */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2293,7 +2414,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* read urb header; %n argument may increment return value, but it's  	* not mandatory, so does not count on it*/
+comment|/* read urb header; %n argument may increment return value, but it's 	* not mandatory, so does not count on it*/
 name|string
 index|[
 name|ret
@@ -2343,7 +2464,7 @@ operator|<
 literal|8
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2409,7 +2530,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2609,7 +2730,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-comment|/* this a setup packet, setup data can be filled with underscore if 		* usbmon has not been able to read them, so we must parse this fields as  		* strings */
+comment|/* this a setup packet, setup data can be filled with underscore if 		* usbmon has not been able to read them, so we must parse this fields as 		* strings */
 name|pcap_usb_setup
 modifier|*
 name|shdr
@@ -2669,7 +2790,7 @@ operator|<
 literal|5
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2812,7 +2933,7 @@ operator|<
 literal|1
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2834,7 +2955,7 @@ name|string
 operator|+=
 name|cnt
 expr_stmt|;
-comment|/* urb tag is not present if urb length is 0, so we can stop here  	 * text parsing */
+comment|/* urb tag is not present if urb length is 0, so we can stop here 	 * text parsing */
 name|pkth
 operator|.
 name|len
@@ -2888,7 +3009,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -2927,7 +3048,7 @@ name|data_flag
 operator|=
 literal|0
 expr_stmt|;
-comment|/* read all urb data; if urb length is greater then the usbmon internal  	 * buffer length used by the kernel to spool the URB, we get only 	 * a partial information. 	 * At least until linux 2.6.17 there is no way to set usbmon intenal buffer 	 * length and default value is 130. */
+comment|/* read all urb data; if urb length is greater then the usbmon internal 	 * buffer length used by the kernel to spool the URB, we get only 	 * a partial information. 	 * At least until linux 2.6.17 there is no way to set usbmon intenal buffer 	 * length and default value is 130. */
 while|while
 condition|(
 operator|(
@@ -2953,6 +3074,9 @@ name|pkth
 operator|.
 name|caplen
 operator|<
+operator|(
+name|bpf_u_int32
+operator|)
 name|handle
 operator|->
 name|snapshot
@@ -3024,6 +3148,9 @@ name|pkth
 operator|.
 name|caplen
 operator|>
+operator|(
+name|bpf_u_int32
+operator|)
 name|handle
 operator|->
 name|snapshot
@@ -3032,6 +3159,9 @@ name|pkth
 operator|.
 name|caplen
 operator|=
+operator|(
+name|bpf_u_int32
+operator|)
 name|handle
 operator|->
 name|snapshot
@@ -3114,7 +3244,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3189,7 +3319,7 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|string
 argument_list|,
@@ -3229,7 +3359,7 @@ name|ENOENT
 condition|)
 block|{
 comment|/* 			 * Not found at the new location; try the old 			 * location. 			 */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|string
 argument_list|,
@@ -3262,7 +3392,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3331,7 +3461,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3369,7 +3499,7 @@ name|ret
 condition|;
 control|)
 block|{
-comment|/* from the sscanf man page:   		 * The C standard says: "Execution of a %n directive does   		 * not increment the assignment count returned at the completion 		 * of  execution" but the Corrigendum seems to contradict this. 		 * Do not make any assumptions on the effect of %n conversions  		 * on the return value and explicitly check for cnt assignmet*/
+comment|/* from the sscanf man page:  		 * The C standard says: "Execution of a %n directive does  		 * not increment the assignment count returned at the completion 		 * of  execution" but the Corrigendum seems to contradict this. 		 * Do not make any assumptions on the effect of %n conversions 		 * on the return value and explicitly check for cnt assignmet*/
 name|int
 name|ntok
 decl_stmt|;
@@ -3566,7 +3696,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3624,7 +3754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * see<linux-kernel-source>/Documentation/usb/usbmon.txt and   *<linux-kernel-source>/drivers/usb/mon/mon_bin.c binary ABI  */
+comment|/*  * see<linux-kernel-source>/Documentation/usb/usbmon.txt and  *<linux-kernel-source>/drivers/usb/mon/mon_bin.c binary ABI  */
 end_comment
 
 begin_function
@@ -3667,7 +3797,7 @@ name|struct
 name|pcap_pkthdr
 name|pkth
 decl_stmt|;
-name|int
+name|u_int
 name|clen
 init|=
 name|handle
@@ -3696,6 +3826,10 @@ name|info
 operator|.
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|handle
 operator|->
 name|buffer
@@ -3780,7 +3914,7 @@ return|return
 literal|0
 return|;
 comment|/* no data there */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -3943,7 +4077,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * see<linux-kernel-source>/Documentation/usb/usbmon.txt and   *<linux-kernel-source>/drivers/usb/mon/mon_bin.c binary ABI  */
+comment|/*  * see<linux-kernel-source>/Documentation/usb/usbmon.txt and  *<linux-kernel-source>/drivers/usb/mon/mon_bin.c binary ABI  */
 end_comment
 
 begin_define
@@ -4010,7 +4144,7 @@ name|packets
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|u_int
 name|clen
 decl_stmt|,
 name|max_clen
@@ -4152,7 +4286,7 @@ return|return
 literal|0
 return|;
 comment|/* no data there */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -4366,6 +4500,8 @@ condition|)
 break|break;
 block|}
 comment|/* flush pending events*/
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|handle
@@ -4376,7 +4512,36 @@ name|MON_IOCH_MFLUSH
 argument_list|,
 name|nflush
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|pcap_snprintf
+argument_list|(
+name|handle
+operator|->
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"Can't mflush fd %d: %s"
+argument_list|,
+name|handle
+operator|->
+name|fd
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 return|return
 name|packets
 return|;
