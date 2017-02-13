@@ -2800,7 +2800,7 @@ name|new_len
 expr_stmt|;
 name|error
 operator|=
-name|kern_vm_munmap
+name|kern_munmap
 argument_list|(
 name|td
 argument_list|,
@@ -2874,7 +2874,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|kern_vm_msync
+name|kern_msync
 argument_list|(
 name|td
 argument_list|,
