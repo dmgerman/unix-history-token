@@ -4476,7 +4476,18 @@ name|hdr
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Wipe the first 2 sectors to clear the partitioning. Wipe the last 	 * sector only if it has valid secondary header. 	 */
+comment|/* 	 * Wipe the first 2 sectors and last one to clear the partitioning. 	 * Wipe sectors only if they have valid metadata. 	 */
+if|if
+condition|(
+name|table
+operator|->
+name|state
+index|[
+name|GPT_ELT_PRIHDR
+index|]
+operator|==
+name|GPT_STATE_OK
+condition|)
 name|basetable
 operator|->
 name|gpt_smhead
