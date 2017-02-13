@@ -10066,6 +10066,7 @@ operator|!=
 literal|'\0'
 operator|)
 condition|)
+block|{
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -10096,10 +10097,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
 end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|void
 name|g_md_fini
 parameter_list|(
