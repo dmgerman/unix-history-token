@@ -1959,7 +1959,7 @@ end_ifndef
 
 begin_function
 name|int
-name|snprintf
+name|pcap_snprintf
 parameter_list|(
 name|char
 modifier|*
@@ -1991,7 +1991,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|vsnprintf
+name|pcap_vsnprintf
 argument_list|(
 name|str
 argument_list|,
@@ -2031,7 +2031,7 @@ argument_list|()
 expr_stmt|;
 name|ret2
 operator|=
-name|vsprintf
+name|pcap_vsprintf
 argument_list|(
 name|tmp
 argument_list|,
@@ -2118,14 +2118,14 @@ name|HAVE_ASNPRINTF
 end_ifndef
 
 begin_ifdef
-unit|int asnprintf (char **ret, size_t max_sz, const char *format, ...) {   va_list args;   int val;    va_start(args, format);   val = vasnprintf (ret, max_sz, format, args);
+unit|int pcap_asnprintf (char **ret, size_t max_sz, const char *format, ...) {   va_list args;   int val;    va_start(args, format);   val = pcap_vasnprintf (ret, max_sz, format, args);
 ifdef|#
 directive|ifdef
 name|PARANOIA
 end_ifdef
 
 begin_endif
-unit|{     int ret2;     char *tmp;     tmp = malloc (val + 1);     if (tmp == NULL)       abort ();      ret2 = vsprintf (tmp, format, args);     if (val != ret2 || strcmp(*ret, tmp))       abort ();     free (tmp);   }
+unit|{     int ret2;     char *tmp;     tmp = malloc (val + 1);     if (tmp == NULL)       abort ();      ret2 = pcap_vsprintf (tmp, format, args);     if (val != ret2 || strcmp(*ret, tmp))       abort ();     free (tmp);   }
 endif|#
 directive|endif
 end_endif
@@ -2143,7 +2143,7 @@ name|HAVE_VASPRINTF
 end_ifndef
 
 begin_endif
-unit|int vasprintf (char **ret, const char *format, va_list args) {   return vasnprintf (ret, 0, format, args); }
+unit|int pcap_vasprintf (char **ret, const char *format, va_list args) {   return pcap_vasnprintf (ret, 0, format, args); }
 endif|#
 directive|endif
 end_endif
@@ -2155,7 +2155,7 @@ name|HAVE_VASNPRINTF
 end_ifndef
 
 begin_endif
-unit|int vasnprintf (char **ret, size_t max_sz, const char *format, va_list args) {   int st;   size_t len;   struct state state;    state.max_sz = max_sz;   state.sz     = 1;   state.str    = malloc(state.sz);   if (state.str == NULL) {     *ret = NULL;     return -1;   }   state.s = state.str;   state.theend = state.s + state.sz - 1;   state.append_char = as_append_char;   state.reserve     = as_reserve;    st = xyzprintf (&state, format, args);   if (st) {     free (state.str);     *ret = NULL;     return -1;   } else {     char *tmp;      *state.s = '\0';     len = state.s - state.str;     tmp = realloc (state.str, len+1);     if (tmp == NULL) {       free (state.str);       *ret = NULL;       return -1;     }     *ret = tmp;     return len;   } }
+unit|int pcap_vasnprintf (char **ret, size_t max_sz, const char *format, va_list args) {   int st;   size_t len;   struct state state;    state.max_sz = max_sz;   state.sz     = 1;   state.str    = malloc(state.sz);   if (state.str == NULL) {     *ret = NULL;     return -1;   }   state.s = state.str;   state.theend = state.s + state.sz - 1;   state.append_char = as_append_char;   state.reserve     = as_reserve;    st = xyzprintf (&state, format, args);   if (st) {     free (state.str);     *ret = NULL;     return -1;   } else {     char *tmp;      *state.s = '\0';     len = state.s - state.str;     tmp = realloc (state.str, len+1);     if (tmp == NULL) {       free (state.str);       *ret = NULL;       return -1;     }     *ret = tmp;     return len;   } }
 endif|#
 directive|endif
 end_endif
@@ -2173,7 +2173,7 @@ end_ifndef
 
 begin_function
 name|int
-name|vsnprintf
+name|pcap_vsnprintf
 parameter_list|(
 name|char
 modifier|*

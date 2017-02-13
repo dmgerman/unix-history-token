@@ -927,7 +927,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|NULL
 argument_list|,
@@ -962,7 +962,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -1015,7 +1015,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|d
 argument_list|,
@@ -1309,8 +1309,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof

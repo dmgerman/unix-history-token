@@ -12,7 +12,7 @@ comment|/* config.h.  Generated from config.h.in by configure.  */
 end_comment
 
 begin_comment
-comment|/* config.h.in.  Generated from configure.in by autoheader.  */
+comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
@@ -234,6 +234,14 @@ comment|/* #undef HAVE_LINUX_ETHTOOL_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<linux/if_bonding.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_IF_BONDING_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<linux/if_packet.h> header file. */
 end_comment
 
@@ -247,6 +255,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LINUX_NET_TSTAMP_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<linux/sockios.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_SOCKIOS_H */
 end_comment
 
 begin_comment
@@ -359,17 +375,6 @@ comment|/* #undef HAVE_OS_PROTO_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<paths.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PATHS_H
-value|1
-end_define
-
-begin_comment
 comment|/* define if net/pfvar.h defines PF_NAT through PF_NORDR */
 end_comment
 
@@ -381,7 +386,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if you have a Septel API */
+comment|/* define if you have the Septel API */
 end_comment
 
 begin_comment
@@ -389,7 +394,7 @@ comment|/* #undef HAVE_SEPTEL_API */
 end_comment
 
 begin_comment
-comment|/* define if you have Myricom SNF API */
+comment|/* define if you have the Myricom SNF API */
 end_comment
 
 begin_comment
@@ -515,6 +520,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strtok_r' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOK_R
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if the system has the type `struct BPF_TIMEVAL'. */
 end_comment
 
@@ -566,6 +582,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/select.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SELECT_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/sockio.h> header file. */
 end_comment
 
@@ -599,6 +626,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have the TurboCap API */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TC_API */
+end_comment
+
+begin_comment
 comment|/* if if_packet.h has tpacket_stats defined */
 end_comment
 
@@ -624,17 +659,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_USBDEVFS_CTRLTRANSFER_BREQUESTTYPE */
 end_comment
-
-begin_comment
-comment|/* define if version.h is generated in the build procedure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_VERSION_H
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `vsnprintf' function. */
@@ -696,17 +720,6 @@ end_comment
 begin_comment
 comment|/* #undef LINUX_USB_MON_DEV */
 end_comment
-
-begin_comment
-comment|/* if we need a pcap_parse wrapper around yyparse */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEED_YYPARSE_WRAPPER
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if netinet/ether.h declares `ether_hostton' */
@@ -829,22 +842,6 @@ comment|/* #undef PCAP_SUPPORT_BT_MONITOR */
 end_comment
 
 begin_comment
-comment|/* target host supports CAN sniffing */
-end_comment
-
-begin_comment
-comment|/* #undef PCAP_SUPPORT_CAN */
-end_comment
-
-begin_comment
-comment|/* target host supports canusb */
-end_comment
-
-begin_comment
-comment|/* #undef PCAP_SUPPORT_CANUSB */
-end_comment
-
-begin_comment
 comment|/* support D-Bus sniffing */
 end_comment
 
@@ -859,6 +856,17 @@ end_comment
 begin_comment
 comment|/* #undef PCAP_SUPPORT_NETFILTER */
 end_comment
+
+begin_comment
+comment|/* use Linux packet ring capture if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCAP_SUPPORT_PACKET_RING
+value|1
+end_define
 
 begin_comment
 comment|/* target host supports USB sniffing */
@@ -913,6 +921,17 @@ end_comment
 begin_comment
 comment|/* #undef YYDEBUG */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a    `char[]'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYTEXT_POINTER
+value|1
+end_define
 
 begin_comment
 comment|/* Enable large inode numbers on Mac OS X 10.5.  */

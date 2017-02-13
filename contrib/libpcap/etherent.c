@@ -23,7 +23,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|_WIN32
 end_ifdef
 
 begin_include
@@ -38,7 +38,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_if
@@ -99,7 +99,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_include

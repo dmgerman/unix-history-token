@@ -1316,9 +1316,11 @@ name|imsg
 condition|)
 block|{
 comment|/* then if an inbound message buffer exists */
-name|u
-operator|->
-name|imsg
+name|void
+modifier|*
+name|bigger_buffer
+decl_stmt|;
+name|bigger_buffer
 operator|=
 operator|(
 name|char
@@ -1336,9 +1338,7 @@ expr_stmt|;
 comment|/* and re-allocate the old large buffer into a new small one */
 if|if
 condition|(
-name|u
-operator|->
-name|imsg
+name|bigger_buffer
 operator|==
 name|NULL
 condition|)
@@ -1353,8 +1353,19 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+name|u
+operator|->
+name|imsg
+operator|=
+name|bigger_buffer
+expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|empty_unit_table
@@ -1448,6 +1459,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -1593,6 +1607,9 @@ literal|""
 return|;
 comment|/* ... but if there wasn't any entry... return an empty string instead */
 block|}
+end_function
+
+begin_function
 name|int
 name|acn_parse_hosts_file
 parameter_list|(
@@ -1651,7 +1668,7 @@ name|NULL
 condition|)
 block|{
 comment|/* try to open the hosts file and if it fails */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1819,7 +1836,7 @@ name|MAX_GEOSLOT
 condition|)
 block|{
 comment|/* if the chassis and/or slot numbers appear to be bad... */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1855,7 +1872,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1929,6 +1946,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|open_with_IOP
@@ -2152,6 +2172,9 @@ name|sockfd
 return|;
 comment|/* return the non-zero file descriptor as a 'success' indicator */
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|close_with_IOP
@@ -2225,6 +2248,9 @@ expr_stmt|;
 comment|/* and forget that the descriptor exists because we are not open */
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|pcap_cleanup_acn
@@ -2289,6 +2315,9 @@ name|handle
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|send_to_fd
@@ -2417,6 +2446,9 @@ name|nwritten
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|acn_freealldevs
@@ -2573,6 +2605,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|nonUnified_IOP_port_name
@@ -2594,7 +2629,7 @@ modifier|*
 name|u
 parameter_list|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2614,6 +2649,9 @@ name|geoslot
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|unified_IOP_port_name
@@ -2671,7 +2709,7 @@ name|IOPportnum
 operator|+
 literal|1
 expr_stmt|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2685,6 +2723,9 @@ name|portnum
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -3153,6 +3194,9 @@ operator|->
 name|name
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|if_sort
@@ -3368,6 +3412,9 @@ argument_list|)
 return|;
 comment|/* otherwise we return the result of comparing the 2nd half of the string */
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|sort_if_table
@@ -3534,6 +3581,9 @@ return|return;
 block|}
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|process_client_data
@@ -3589,6 +3639,10 @@ decl_stmt|;
 name|unsigned
 name|char
 name|flags
+decl_stmt|;
+name|void
+modifier|*
+name|bigger_buffer
 decl_stmt|;
 name|prev_iff
 operator|=
@@ -3678,7 +3732,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -3763,7 +3817,7 @@ name|NULL
 condition|)
 block|{
 comment|/* get that amount of space */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -3849,7 +3903,7 @@ name|NULL
 condition|)
 block|{
 comment|/* get that amount of space */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -3975,7 +4029,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -3994,7 +4048,6 @@ operator|-
 literal|1
 return|;
 block|}
-operator|+
 name|memset
 argument_list|(
 operator|(
@@ -4063,7 +4116,7 @@ name|NULL
 condition|)
 block|{
 comment|/* get that amount of space */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -4171,7 +4224,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -4276,7 +4329,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -4381,7 +4434,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -4484,12 +4537,7 @@ name|interfaceType
 argument_list|)
 expr_stmt|;
 comment|/* add a translation entry and get a point to the mangled name */
-if|if
-condition|(
-operator|(
-name|iff
-operator|->
-name|name
+name|bigger_buffer
 operator|=
 name|realloc
 argument_list|(
@@ -4504,13 +4552,17 @@ argument_list|)
 operator|+
 literal|1
 argument_list|)
-operator|)
+block|)
+empty_stmt|;
+if|if
+condition|(
+name|bigger_buffer
 operator|==
 name|NULL
 condition|)
 block|{
 comment|/* we now re-write the name stored in the interface list */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -4529,6 +4581,12 @@ operator|-
 literal|1
 return|;
 block|}
+name|iff
+operator|->
+name|name
+operator|=
+name|bigger_buffer
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|iff
@@ -4542,11 +4600,16 @@ comment|/* to this new name */
 block|}
 block|}
 block|}
+end_function
+
+begin_return
 return|return
 literal|0
 return|;
-block|}
-specifier|static
+end_return
+
+begin_function
+unit|}  static
 name|int
 name|read_client_data
 parameter_list|(
@@ -4670,6 +4733,9 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|wait_for_all_answers
@@ -4894,6 +4960,9 @@ block|}
 block|}
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -4988,6 +5057,9 @@ block|}
 block|}
 block|}
 block|}
+end_function
+
+begin_function
 name|int
 name|acn_findalldevs
 parameter_list|(
@@ -5184,6 +5256,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|pcap_stats_acn
@@ -5305,6 +5380,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|acn_open_live
@@ -5341,7 +5419,7 @@ name|pcap_if_t
 modifier|*
 name|alldevsp
 decl_stmt|;
-name|pcap_findalldevs_interfaces
+name|pcap_platform_finddevs
 argument_list|(
 operator|&
 name|alldevsp
@@ -5516,6 +5594,9 @@ literal|1
 return|;
 comment|/* if the interface wasn't found, return an error */
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|acn_start_monitor
@@ -5633,6 +5714,9 @@ expr_stmt|;
 block|}
 comment|//printf("acn_start_monitor() complete\n");				// fulko
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|pcap_inject_acn
@@ -5670,6 +5754,9 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|pcap_setfilter_acn
@@ -5865,6 +5952,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|pcap_setdirection_acn
@@ -5877,7 +5967,7 @@ name|pcap_direction_t
 name|d
 parameter_list|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -5898,6 +5988,9 @@ operator|-
 literal|1
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|acn_read_n_bytes_with_timeout
@@ -6092,6 +6185,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|pcap_read_acn
@@ -6262,6 +6358,10 @@ name|handle
 operator|->
 name|bp
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|handle
 operator|->
 name|buffer
@@ -6306,6 +6406,9 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|pcap_activate_sita
@@ -6396,7 +6499,7 @@ name|handle
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|handle
 operator|->
@@ -6456,7 +6559,7 @@ operator|->
 name|buffer
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|handle
 operator|->
@@ -6494,6 +6597,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 name|pcap_t
 modifier|*
 name|pcap_create_interface
@@ -6502,6 +6608,7 @@ specifier|const
 name|char
 modifier|*
 name|device
+name|_U_
 parameter_list|,
 name|char
 modifier|*
@@ -6516,8 +6623,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 literal|0
@@ -6544,6 +6649,82 @@ return|return
 operator|(
 name|p
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|pcap_platform_finddevs
+parameter_list|(
+name|pcap_if_t
+modifier|*
+modifier|*
+name|alldevsp
+parameter_list|,
+name|char
+modifier|*
+name|errbuf
+parameter_list|)
+block|{
+comment|//printf("pcap_findalldevs()\n");				// fulko
+operator|*
+name|alldevsp
+operator|=
+literal|0
+expr_stmt|;
+comment|/* initialize the returned variables before we do anything */
+name|strcpy
+argument_list|(
+name|errbuf
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|acn_parse_hosts_file
+argument_list|(
+name|errbuf
+argument_list|)
+condition|)
+comment|/* scan the hosts file for potential IOPs */
+block|{
+comment|//printf("pcap_findalldevs() returning BAD after parsehosts\n");				// fulko
+return|return
+operator|-
+literal|1
+return|;
+block|}
+comment|//printf("pcap_findalldevs() got hostlist now finding devs\n");				// fulko
+if|if
+condition|(
+name|acn_findalldevs
+argument_list|(
+name|errbuf
+argument_list|)
+condition|)
+comment|/* then ask the IOPs for their monitorable devices */
+block|{
+comment|//printf("pcap_findalldevs() returning BAD after findalldevs\n");				// fulko
+return|return
+operator|-
+literal|1
+return|;
+block|}
+operator|*
+name|alldevsp
+operator|=
+name|acn_if_list
+expr_stmt|;
+name|acn_if_list
+operator|=
+literal|0
+expr_stmt|;
+comment|/* then forget our list head, because someone will call pcap_freealldevs() to empty the malloc'ed stuff */
+comment|//printf("pcap_findalldevs() returning ZERO OK\n");				// fulko
+return|return
+literal|0
 return|;
 block|}
 end_function

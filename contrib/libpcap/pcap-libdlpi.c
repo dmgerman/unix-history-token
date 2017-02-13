@@ -400,7 +400,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 operator|&
 name|dh
@@ -463,7 +463,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|"dlpi_open"
 argument_list|,
@@ -535,7 +535,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|"dlpi_bind"
 argument_list|,
@@ -698,7 +698,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|"dlpi_info"
 argument_list|,
@@ -790,7 +790,7 @@ name|status
 operator|=
 name|PCAP_ERROR
 expr_stmt|;
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1002,7 +1002,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 literal|"dlpi_promiscon"
 name|STRINGIFY
@@ -1026,6 +1026,30 @@ block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Presumably everything returned by dlpi_walk() is a DLPI device,  * so there's no work to be done here to check whether name refers  * to a DLPI device.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|is_dlpi_interface
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+name|_U_
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}
@@ -1073,6 +1097,28 @@ decl_stmt|;
 name|int
 name|save_errno
 decl_stmt|;
+comment|/* 	 * Get the list of regular interfaces first. 	 */
+if|if
+condition|(
+name|pcap_findalldevs_interfaces
+argument_list|(
+name|alldevsp
+argument_list|,
+name|errbuf
+argument_list|,
+name|is_dlpi_interface
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* failure */
 comment|/* dlpi_walk() for loopback will be added here. */
 name|dlpi_walk
 argument_list|(
@@ -1093,7 +1139,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1311,6 +1357,10 @@ name|bufsize
 expr_stmt|;
 name|bufp
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|p
 operator|->
 name|buffer
@@ -1605,7 +1655,7 @@ modifier|*
 name|errbuf
 parameter_list|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1635,6 +1685,7 @@ specifier|const
 name|char
 modifier|*
 name|device
+name|_U_
 parameter_list|,
 name|char
 modifier|*
@@ -1649,8 +1700,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof
