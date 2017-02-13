@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -189,7 +195,7 @@ begin_struct
 struct|struct
 name|kevent
 block|{
-name|uintptr_t
+name|__uintptr_t
 name|ident
 decl_stmt|;
 comment|/* identifier for this event */
@@ -197,13 +203,15 @@ name|short
 name|filter
 decl_stmt|;
 comment|/* filter for event */
-name|u_short
+name|unsigned
+name|short
 name|flags
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|fflags
 decl_stmt|;
-name|intptr_t
+name|__intptr_t
 name|data
 decl_stmt|;
 name|void
