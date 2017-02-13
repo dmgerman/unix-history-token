@@ -2731,7 +2731,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Hmm what about the IPSEC stuff that is missing here but in 	 * sctp_attach()? 	 */
 name|SCTP_INP_WUNLOCK
 argument_list|(
 name|inp
