@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BHND_BHND_NEXUSVAR_H_
+name|_MIPS_BROADCOM_BHND_NEXUSVAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BHND_BHND_NEXUSVAR_H_
+name|_MIPS_BROADCOM_BHND_NEXUSVAR_H_
 end_define
 
 begin_include
@@ -24,25 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bhndvar.h"
+file|<sys/kobj.h>
 end_include
 
 begin_expr_stmt
@@ -53,28 +35,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|int
-name|bhnd_nexus_read_chipid
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|struct
-name|bhnd_chipid
-modifier|*
-name|chipid
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _BHND_BHND_NEXUSVAR_H_ */
+comment|/* _MIPS_BROADCOM_BHND_NEXUSVAR_H_ */
 end_comment
 
 end_unit
