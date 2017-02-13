@@ -359,32 +359,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|sys_sbrk
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sbrk_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Not yet implemented */
 return|return
@@ -417,32 +405,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|sys_sstk
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sstk_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Not yet implemented */
 return|return
@@ -488,22 +464,17 @@ begin_function
 name|int
 name|ogetpagesize
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|getpagesize_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* MP SAFE */
 name|td
 operator|->
 name|td_retval
@@ -574,10 +545,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -1787,10 +1754,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_msync
@@ -2035,10 +1998,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -2422,10 +2381,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_mprotect
@@ -2623,28 +2578,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_minherit
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|minherit_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_offset_t
 name|addr
@@ -2794,28 +2741,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_madvise
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|madvise_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -3047,28 +2986,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_mincore
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mincore_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_offset_t
 name|addr
@@ -3926,28 +3857,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_mlock
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mlock_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -4314,28 +4237,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_mlockall
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mlockall_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_map_t
 name|map
@@ -4665,28 +4580,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_munlockall
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|munlockall_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_map_t
 name|map
@@ -4839,10 +4746,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 name|int
@@ -5593,7 +5496,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_mmap_cdev()  *  * MPSAFE  *  * Helper function for vm_mmap.  Perform sanity check specific for mmap  * operations on cdevs.  */
+comment|/*  * vm_mmap_cdev()  *  * Helper function for vm_mmap.  Perform sanity check specific for mmap  * operations on cdevs.  */
 end_comment
 
 begin_function
