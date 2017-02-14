@@ -1730,6 +1730,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|IPSEC_SUPPORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|MAC
 argument_list|)
 name|out
