@@ -187,10 +187,20 @@ literal|"80860F14"
 block|,
 literal|1
 block|,
-literal|"Intel Bay Trail eMMC 4.5 Controller"
+literal|"Intel Bay Trail SD Host Controller"
 block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
+name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+block|}
+block|,
+block|{
+literal|"80860F14"
+block|,
+literal|3
+block|,
+literal|"Intel Bay Trail SD Host Controller"
+block|,
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
 block|}
 block|,
