@@ -2118,7 +2118,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"vm_fault: fault on nofault entry, addr: %lx"
+literal|"%s: fault on nofault entry, addr: %#lx"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|u_long
