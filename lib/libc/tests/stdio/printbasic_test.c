@@ -293,20 +293,17 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_CHECK_MSG
+argument_list|(
 name|strcmp
 argument_list|(
 name|result
 argument_list|,
 name|s
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-block|{
-name|atf_tc_fail
-argument_list|(
+argument_list|,
 literal|"printf(\"%s\", %s) ==> [%s], expected [%s]"
 argument_list|,
 name|fmt
@@ -318,7 +315,6 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
-block|}
 name|smash_stack
 argument_list|()
 expr_stmt|;
@@ -377,20 +373,17 @@ argument_list|,
 name|ap2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_CHECK_MSG
+argument_list|(
 name|wcscmp
 argument_list|(
 name|wresult
 argument_list|,
 name|ws
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-block|{
-name|atf_tc_fail
-argument_list|(
+argument_list|,
 literal|"wprintf(\"%ls\", %s) ==> [%ls], expected [%ls]"
 argument_list|,
 name|wfmt
@@ -402,7 +395,6 @@ argument_list|,
 name|wresult
 argument_list|)
 expr_stmt|;
-block|}
 name|va_end
 argument_list|(
 name|ap
@@ -495,6 +487,25 @@ argument_list|,
 literal|"%ju"
 argument_list|,
 name|UINT64_MAX
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|ptrdiff_t
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|uintmax_t
+argument_list|)
+condition|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"the %%t qualifier is broken on 32-bit "
+literal|"platforms where there's a mismatch between ptrdiff_t and "
+literal|"uintmax_t's type width; bug # 191674"
 argument_list|)
 expr_stmt|;
 name|testfmt
