@@ -2363,7 +2363,7 @@ argument_list|(
 name|bank
 argument_list|)
 argument_list|,
-name|limit
+name|ctl
 argument_list|)
 expr_stmt|;
 block|}
@@ -2475,7 +2475,7 @@ argument_list|(
 name|bank
 argument_list|)
 argument_list|,
-name|limit
+name|ctl
 argument_list|)
 expr_stmt|;
 block|}
