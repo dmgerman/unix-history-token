@@ -207,7 +207,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += SA_SIZE(&s);}
+value|if (rtm->rtm_addrs& (w)) {			\ 		bcopy((char *)&s, cp, sizeof(s));	\ 		cp += SA_SIZE(&s);			\ 	}
 end_define
 
 begin_decl_stmt
@@ -2496,7 +2496,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/*           * need to reinit the field because it has rt_key          * but we want the actual address          */
+comment|/* 	 * need to reinit the field because it has rt_key 	 * but we want the actual address 	 */
 name|NEXTADDR
 argument_list|(
 name|RTA_DST
@@ -4520,8 +4520,7 @@ name|s
 parameter_list|,
 name|f
 parameter_list|)
-define|\
-value|do {\ 		if (strcmp(cp, (s)) == 0) {\ 			if (clear)\ 				newflags&= ~(f);\ 			else\ 				newflags |= (f);\ 		}\ 	} while (0)
+value|do {			\ 	if (strcmp(cp, (s)) == 0) {		\ 		if (clear)			\ 			newflags&= ~(f);	\ 		else				\ 			newflags |= (f);	\ 	}					\ } while (0)
 comment|/*  * XXX: this macro is not 100% correct, in that it matches "nud" against  *      "nudbogus".  But we just let it go since this is minor.  */
 define|#
 directive|define
@@ -4531,10 +4530,9 @@ name|f
 parameter_list|,
 name|v
 parameter_list|)
-define|\
-value|do { \ 		char *valptr; \ 		unsigned long newval; \ 		v = 0;
+value|do {						\ 	char *valptr;							\ 	unsigned long newval;						\ 	v = 0;
 comment|/* unspecified */
-value|\ 		if (strncmp(cp, f, strlen(f)) == 0) { \ 			valptr = strchr(cp, '='); \ 			if (valptr == NULL) \ 				err(1, "syntax error in %s field", (f)); \ 			errno = 0; \ 			newval = strtoul(++valptr, NULL, 0); \ 			if (errno) \ 				err(1, "syntax error in %s's value", (f)); \ 			v = newval; \ 		} \ 	} while (0)
+value|\ 	if (strncmp(cp, f, strlen(f)) == 0) {				\ 		valptr = strchr(cp, '=');				\ 		if (valptr == NULL)					\ 			err(1, "syntax error in %s field", (f));	\ 		errno = 0;						\ 		newval = strtoul(++valptr, NULL, 0);			\ 		if (errno)						\ 			err(1, "syntax error in %s's value", (f));	\ 		v = newval;						\ 	}								\ } while (0)
 name|SETFLAG
 argument_list|(
 literal|"disabled"
@@ -4909,6 +4907,7 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* IPV6CTL_USETEMPADDR */
 if|if
 condition|(
 name|ND
@@ -6646,6 +6645,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SIOCSDEFIFACE_IN6 */
+end_comment
 
 begin_function
 specifier|static
