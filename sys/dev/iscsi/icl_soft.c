@@ -1901,7 +1901,17 @@ name|availablep
 operator|-=
 name|ISCSI_HEADER_DIGEST_SIZE
 expr_stmt|;
-comment|/* 	 * XXX: Handle AHS. 	 */
+comment|/* Temporary attach AHS to BHS to calculate header digest. */
+name|request
+operator|->
+name|ip_bhs_mbuf
+operator|->
+name|m_next
+operator|=
+name|request
+operator|->
+name|ip_ahs_mbuf
+expr_stmt|;
 name|valid_digest
 operator|=
 name|icl_mbuf_to_crc32c
@@ -1910,6 +1920,14 @@ name|request
 operator|->
 name|ip_bhs_mbuf
 argument_list|)
+expr_stmt|;
+name|request
+operator|->
+name|ip_bhs_mbuf
+operator|->
+name|m_next
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
