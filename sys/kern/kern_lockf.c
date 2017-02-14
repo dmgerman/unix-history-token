@@ -3047,7 +3047,7 @@ break|break;
 block|}
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 comment|/* 	 * Check for some can't happen stuff. In this case, the active 	 * lock list becoming disordered or containing mutually 	 * blocking locks. We also check the pending list for locks 	 * which should be active (i.e. have no out-going edges). 	 */
 name|LIST_FOREACH
 argument_list|(
@@ -3946,7 +3946,7 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 name|LIST_FOREACH
 argument_list|(
 argument|e
