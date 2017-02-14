@@ -12110,7 +12110,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * fork off and become a daemon, but wait for the child to come online  * before returing to the parent, or we get disk thrashing at boot etc.  * Set a timer so we don't hang forever if it wedges.  */
+comment|/*  * fork off and become a daemon, but wait for the child to come online  * before returning to the parent, or we get disk thrashing at boot etc.  * Set a timer so we don't hang forever if it wedges.  */
 end_comment
 
 begin_function
