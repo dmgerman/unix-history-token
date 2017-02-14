@@ -164,13 +164,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/resource.h>
 end_include
 
 begin_include
@@ -182,7 +182,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslimits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -200,19 +212,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslimits.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
