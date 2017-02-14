@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|VMMAPI_VERSION
-value|0102
+value|0103
 end_define
 
 begin_comment
@@ -260,6 +260,18 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_get_device_fd
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1140,6 +1152,19 @@ name|vcpu
 parameter_list|,
 name|uint64_t
 name|exit_intinfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|cap_ioctl_t
+modifier|*
+name|vm_get_ioctls
+parameter_list|(
+name|size_t
+modifier|*
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl
