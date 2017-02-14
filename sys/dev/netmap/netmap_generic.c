@@ -178,17 +178,40 @@ begin_comment
 comment|/* mbuf destructor, also need to change the type to EXT_EXTREF,  * add an M_NOFREE flag, and then clear the flag and  * chain into uma_zfree(zone_pack, mf)  * (or reinstall the buffer ?)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SET_MBUF_DESTRUCTOR
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|set_mbuf_destructor
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
 name|m
 parameter_list|,
+name|void
+modifier|*
 name|fn
 parameter_list|)
-value|do {		\ 	(m)->m_ext.ext_free = (void *)fn;	\ 	(m)->m_ext.ext_type = EXT_EXTREF;	\ } while (0)
-end_define
+block|{
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_free
+operator|=
+name|fn
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_type
+operator|=
+name|EXT_EXTREF
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -417,17 +440,44 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_define
-define|#
-directive|define
-name|SET_MBUF_DESTRUCTOR
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|set_mbuf_destructor
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
 name|m
 parameter_list|,
+name|void
+modifier|*
 name|fn
 parameter_list|)
-value|do {		\ 	(m)->m_ext.ext_free = fn ? (void *)fn : (void *)void_mbuf_dtor;	\ } while (0)
-end_define
+block|{
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_free
+operator|=
+operator|(
+name|fn
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|fn
+else|:
+operator|(
+name|void
+operator|*
+operator|)
+name|void_mbuf_dtor
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -1395,7 +1445,7 @@ operator|->
 name|tx_event
 condition|)
 block|{
-name|SET_MBUF_DESTRUCTOR
+name|set_mbuf_destructor
 argument_list|(
 name|kring
 operator|->
@@ -2892,7 +2942,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|SET_MBUF_DESTRUCTOR
+name|set_mbuf_destructor
 argument_list|(
 name|m
 argument_list|,
