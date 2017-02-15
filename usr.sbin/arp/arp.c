@@ -1666,7 +1666,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Choose one of blackhole or reject, not both.\n"
+literal|"Choose one of blackhole or reject, "
+literal|"not both."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1702,7 +1703,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Choose one of blackhole or reject, not both.\n"
+literal|"Choose one of blackhole or reject, "
+literal|"not both."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1856,7 +1858,7 @@ name|ETHER_ADDR_LEN
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * In the case a proxy-arp entry is being added for 	 * a remote end point, the RTF_ANNOUNCE flag in the  	 * RTM_GET command is an indication to the kernel 	 * routing code that the interface associated with 	 * the prefix route covering the local end of the 	 * PPP link should be returned, on which ARP applies. 	 */
+comment|/* 	 * In the case a proxy-arp entry is being added for 	 * a remote end point, the RTF_ANNOUNCE flag in the 	 * RTM_GET command is an indication to the kernel 	 * routing code that the interface associated with 	 * the prefix route covering the local end of the 	 * PPP link should be returned, on which ARP applies. 	 */
 name|rtm
 operator|=
 name|rtmsg
@@ -2252,7 +2254,7 @@ operator|)
 name|addr
 operator|)
 expr_stmt|;
-comment|/* 		 * With the new L2/L3 restructure, the route  		 * returned is a prefix route. The important 		 * piece of information from the previous 		 * RTM_GET is the interface index. In the 		 * case of ECMP, the kernel will traverse 		 * the route group for the given entry. 		 */
+comment|/* 		 * With the new L2/L3 restructure, the route 		 * returned is a prefix route. The important 		 * piece of information from the previous 		 * RTM_GET is the interface index. In the 		 * case of ECMP, the kernel will traverse 		 * the route group for the given entry. 		 */
 if|if
 condition|(
 name|sdl
@@ -3652,7 +3654,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do {						   \ 		if ((s) != NULL&& rtm->rtm_addrs& (w)) { \ 			bcopy((s), cp, sizeof(*(s)));	   \ 			cp += SA_SIZE(s);		   \ 		}					   \ 	} while (0)
+value|do {							\ 		if ((s) != NULL&& rtm->rtm_addrs& (w)) {	\ 			bcopy((s), cp, sizeof(*(s)));		\ 			cp += SA_SIZE(s);			\ 		}						\ 	} while (0)
 name|NEXTADDR
 argument_list|(
 name|RTA_DST
@@ -3955,7 +3957,7 @@ parameter_list|(
 name|i
 parameter_list|)
 define|\
-value|((struct ifreq *)((char *)&(i)->ifr_addr			\ 	+ MAX((i)->ifr_addr.sa_len, sizeof((i)->ifr_addr))) )
+value|((struct ifreq *)((char *)&(i)->ifr_addr		\ 	+ MAX((i)->ifr_addr.sa_len, sizeof((i)->ifr_addr))) )
 comment|/* 	 * Scan through looking for an interface with an Internet 	 * address on the same subnet as `ipaddr'. 	 */
 name|ifend
 operator|=
@@ -4074,7 +4076,7 @@ name|IFF_BROADCAST
 operator|)
 condition|)
 continue|continue;
-comment|/* 		 * Get its netmask and check that it's on  		 * the right subnet. 		 */
+comment|/* Get its netmask and check that it's on the right subnet. */
 if|if
 condition|(
 name|ioctl
