@@ -131,6 +131,23 @@ end_ifndef
 begin_function_decl
 specifier|static
 name|int
+name|vtbuf_htw
+parameter_list|(
+specifier|const
+name|struct
+name|vt_buf
+modifier|*
+name|vb
+parameter_list|,
+name|int
+name|row
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|vtbuf_wth
 parameter_list|(
 specifier|const
@@ -169,23 +186,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|static
-name|int
-name|vtbuf_htw
-parameter_list|(
-specifier|const
-name|struct
-name|vt_buf
-modifier|*
-name|vb
-parameter_list|,
-name|int
-name|row
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * line4  * line5<--- curroffset (terminal output to that line)  * line0  * line1<--- roffset (history display from that point)  * line2  * line3  */
@@ -647,6 +647,48 @@ comment|/* Only mouse support use it now. */
 end_comment
 
 begin_comment
+comment|/* Translate history row to current view row number. */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|vtbuf_htw
+parameter_list|(
+specifier|const
+name|struct
+name|vt_buf
+modifier|*
+name|vb
+parameter_list|,
+name|int
+name|row
+parameter_list|)
+block|{
+comment|/* 	 * total 1000 rows. 	 * History offset	roffset	winrow 	 *	205		200	((205 - 200 + 1000) % 1000) = 5 	 *	90		990	((90 - 990 + 1000) % 1000) = 100 	 */
+return|return
+operator|(
+operator|(
+name|row
+operator|-
+name|vb
+operator|->
+name|vb_roffset
+operator|+
+name|vb
+operator|->
+name|vb_history_size
+operator|)
+operator|%
+name|vb
+operator|->
+name|vb_history_size
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Translate current view row number to history row. */
 end_comment
 
@@ -750,48 +792,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Translate history row to current view row number. */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|vtbuf_htw
-parameter_list|(
-specifier|const
-name|struct
-name|vt_buf
-modifier|*
-name|vb
-parameter_list|,
-name|int
-name|row
-parameter_list|)
-block|{
-comment|/* 	 * total 1000 rows. 	 * History offset	roffset	winrow 	 *	205		200	((205 - 200 + 1000) % 1000) = 5 	 *	90		990	((90 - 990 + 1000) % 1000) = 100 	 */
-return|return
-operator|(
-operator|(
-name|row
-operator|-
-name|vb
-operator|->
-name|vb_roffset
-operator|+
-name|vb
-operator|->
-name|vb_history_size
-operator|)
-operator|%
-name|vb
-operator|->
-name|vb_history_size
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 name|int
