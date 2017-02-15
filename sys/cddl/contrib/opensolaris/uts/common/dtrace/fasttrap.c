@@ -4341,13 +4341,26 @@ operator|==
 name|NULL
 condition|)
 return|return;
-endif|#
-directive|endif
-comment|/* 	 * We have to enable the trap entry point before any user threads have 	 * the chance to execute the trap instruction we're about to place 	 * in their process's text. 	 */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* 	 * pfind() returns a locked process. 	 */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_WEXIT
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|_PHOLD
 argument_list|(
 name|p
@@ -4360,6 +4373,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * We have to enable the trap entry point before any user threads have 	 * the chance to execute the trap instruction we're about to place 	 * in their process's text. 	 */
 name|fasttrap_enable_callbacks
 argument_list|()
 expr_stmt|;
