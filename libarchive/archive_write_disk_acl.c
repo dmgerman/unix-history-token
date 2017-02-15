@@ -426,7 +426,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !HAVE_SUN_ACL */
-comment|/* Simultaeous POSIX.1e and NFSv4 is not supported */
+comment|/* Simultaneous POSIX.1e and NFSv4 is not supported */
 return|return
 operator|(
 name|ret
@@ -490,11 +490,14 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
+specifier|const
 name|int
 name|archive_perm
 decl_stmt|;
+specifier|const
 name|int
 name|platform_perm
 decl_stmt|;
@@ -854,11 +857,14 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
+specifier|const
 name|int
 name|archive_inherit
 decl_stmt|;
+specifier|const
 name|int
 name|platform_inherit
 decl_stmt|;

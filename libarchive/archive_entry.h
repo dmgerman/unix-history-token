@@ -2278,7 +2278,7 @@ modifier|*
 comment|/* name */
 parameter_list|)
 function_decl|;
-comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * Flags only for archive entries with POSIX.1e ACL:  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include POSIX.1e "access" entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include POSIX.1e "default" entries.  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry.  * ARCHIVE_ENTRY_ACL_STYLE_SOLARIS - Output only one colon after "other" and  *    "mask" entries.  *  * Flags for for archive entries with POSIX.1e ACL or NFSv4 ACL:  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  * ARCHIVE_ENTRY_ACL_STYLE_SEPARATOR_COMMA - Separate entries with comma  *    instead of newline.  */
+comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * Flags only for archive entries with POSIX.1e ACL:  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include POSIX.1e "access" entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include POSIX.1e "default" entries.  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry.  * ARCHIVE_ENTRY_ACL_STYLE_SOLARIS - Output only one colon after "other" and  *    "mask" entries.  *  * Flags only for archive entries with NFSv4 ACL:  * ARCHIVE_ENTRY_ACL_STYLE_COMPACT - Do not output the minus character for  *    unset permissions and flags in NFSv4 ACL permission and flag fields  *  * Flags for for archive entries with POSIX.1e ACL or NFSv4 ACL:  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  * ARCHIVE_ENTRY_ACL_STYLE_SEPARATOR_COMMA - Separate entries with comma  *    instead of newline.  */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
@@ -2295,6 +2295,10 @@ define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_SEPARATOR_COMMA
 value|0x00000008
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_STYLE_COMPACT
+value|0x00000010
 name|__LA_DECL
 name|wchar_t
 modifier|*
