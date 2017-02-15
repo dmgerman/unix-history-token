@@ -27,6 +27,18 @@ directive|include
 file|<machine/cpuconf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -62,7 +74,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct pmap *pc_curpmap;					\ 	vm_offset_t pc_qmap_addr;					\ 	void *pc_qmap_pte;						\ 	unsigned int pc_dbreg[32];					\ 	int pc_dbreg_cmd;						\ 	char __pad[1]
+value|unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct pmap *pc_curpmap;					\ 	struct mtx pc_cmap_lock;					\ 	void *pc_cmap1_pte2p;						\ 	void *pc_cmap2_pte2p;						\ 	caddr_t pc_cmap1_addr;						\ 	caddr_t pc_cmap2_addr;						\ 	vm_offset_t pc_qmap_addr;					\ 	void *pc_qmap_pte2p;						\ 	unsigned int pc_dbreg[32];					\ 	int pc_dbreg_cmd;						\ 	char __pad[19]
 end_define
 
 begin_else
@@ -75,7 +87,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|vm_offset_t qmap_addr;						\ 	void *pc_qmap_pte;						\ 	char __pad[149]
+value|char __pad[157]
 end_define
 
 begin_endif
