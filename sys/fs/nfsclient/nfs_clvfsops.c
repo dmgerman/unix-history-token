@@ -8981,7 +8981,7 @@ name|bad
 goto|;
 block|}
 block|}
-comment|/* 	 * A reference count is needed on the nfsnode representing the 	 * remote root.  If this object is not persistent, then backward 	 * traversals of the mount point (i.e. "..") will not work if 	 * the nfsnode gets flushed out of the cache. Ufs does not have 	 * this problem, because one can identify root inodes by their 	 * number == ROOTINO (2). 	 */
+comment|/* 	 * A reference count is needed on the nfsnode representing the 	 * remote root.  If this object is not persistent, then backward 	 * traversals of the mount point (i.e. "..") will not work if 	 * the nfsnode gets flushed out of the cache. Ufs does not have 	 * this problem, because one can identify root inodes by their 	 * number == UFS_ROOTINO (2). 	 */
 if|if
 condition|(
 name|nmp

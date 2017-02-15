@@ -244,7 +244,7 @@ if|if
 condition|(
 name|inumber
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 continue|continue;
 name|idesc

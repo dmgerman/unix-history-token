@@ -2202,7 +2202,7 @@ name|dp
 operator|->
 name|d_ino
 operator|==
-name|WINO
+name|UFS_WINO
 operator|)
 condition|)
 return|return;
@@ -2465,7 +2465,7 @@ name|dp
 operator|->
 name|d_ino
 operator|==
-name|WINO
+name|UFS_WINO
 operator|||
 name|strcmp
 argument_list|(
@@ -2981,7 +2981,7 @@ literal|0
 expr_stmt|;
 name|bigino
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 name|endlist
 operator|=
@@ -3369,7 +3369,7 @@ name|dp
 operator|->
 name|d_ino
 operator|==
-name|WINO
+name|UFS_WINO
 condition|)
 continue|continue;
 if|if
@@ -3502,7 +3502,7 @@ name|dp
 operator|->
 name|d_ino
 operator|==
-name|WINO
+name|UFS_WINO
 operator|)
 condition|)
 return|return

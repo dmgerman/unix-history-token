@@ -727,7 +727,7 @@ if|if
 condition|(
 name|inumber
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 block|{
 operator|(
@@ -1195,7 +1195,7 @@ name|ufs1_zino
 operator|.
 name|di_db
 argument_list|,
-name|NDADDR
+name|UFS_NDADDR
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1215,7 +1215,7 @@ name|ufs1_zino
 operator|.
 name|di_ib
 argument_list|,
-name|NIADDR
+name|UFS_NIADDR
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1257,7 +1257,7 @@ name|ufs2_zino
 operator|.
 name|di_db
 argument_list|,
-name|NDADDR
+name|UFS_NDADDR
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1277,7 +1277,7 @@ name|ufs2_zino
 operator|.
 name|di_ib
 argument_list|,
-name|NIADDR
+name|UFS_NIADDR
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1723,14 +1723,14 @@ if|if
 condition|(
 name|ndb
 operator|>
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|j
 operator|=
 name|ndb
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 for|for
 control|(
@@ -1755,7 +1755,7 @@ argument_list|)
 expr_stmt|;
 name|ndb
 operator|+=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 block|}
 block|}
@@ -1768,11 +1768,11 @@ name|ndb
 init|;
 name|ndb
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|j
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|j
 operator|++
@@ -1828,7 +1828,7 @@ literal|0
 operator|,
 name|ndb
 operator|-=
-name|NDADDR
+name|UFS_NDADDR
 init|;
 name|ndb
 operator|>
@@ -1850,7 +1850,7 @@ control|(
 init|;
 name|j
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|j
 operator|++
@@ -2129,7 +2129,7 @@ literal|0
 init|;
 name|j
 operator|<
-name|NXADDR
+name|UFS_NXADDR
 condition|;
 name|j
 operator|++

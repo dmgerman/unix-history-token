@@ -59,7 +59,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NDADDR
+name|EXT2_NDADDR
 value|12
 end_define
 
@@ -70,7 +70,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NIADDR
+name|EXT2_NIADDR
 value|3
 end_define
 
@@ -234,14 +234,14 @@ comment|/* Status flags (chflags). */
 name|uint32_t
 name|i_db
 index|[
-name|NDADDR
+name|EXT2_NDADDR
 index|]
 decl_stmt|;
 comment|/* Direct disk blocks. */
 name|uint32_t
 name|i_ib
 index|[
-name|NIADDR
+name|EXT2_NIADDR
 index|]
 decl_stmt|;
 comment|/* Indirect disk blocks. */

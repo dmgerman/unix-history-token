@@ -1030,7 +1030,7 @@ operator|->
 name|b_lblkno
 operator|<=
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 operator|(
 name|lbn_level
@@ -1421,7 +1421,7 @@ operator|->
 name|b_lblkno
 operator|>
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|still_dirty
@@ -1487,7 +1487,7 @@ operator|||
 operator|++
 name|passes
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 operator|+
 literal|2
 condition|)
@@ -4226,7 +4226,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|>
-name|NXADDR
+name|UFS_NXADDR
 operator|*
 name|fs
 operator|->
@@ -4959,7 +4959,7 @@ name|easize
 operator|+
 name|extra
 operator|>
-name|NXADDR
+name|UFS_NXADDR
 operator|*
 name|fs
 operator|->
@@ -5697,7 +5697,7 @@ operator|&&
 name|lbn
 operator|>=
 operator|-
-name|NXADDR
+name|UFS_NXADDR
 condition|)
 return|return
 operator|(
@@ -6981,7 +6981,7 @@ name|lblktosize
 argument_list|(
 name|fs
 argument_list|,
-name|NXADDR
+name|UFS_NXADDR
 argument_list|)
 condition|)
 return|return
@@ -7283,7 +7283,7 @@ name|lblktosize
 argument_list|(
 name|fs
 argument_list|,
-name|NXADDR
+name|UFS_NXADDR
 argument_list|)
 condition|)
 block|{

@@ -2097,7 +2097,7 @@ name|files
 operator|=
 name|maxino
 operator|-
-name|ROOTINO
+name|UFS_ROOTINO
 operator|-
 name|sblock
 operator|.

@@ -1806,7 +1806,7 @@ value|(((off_t)(blk))<< (fs)->fs_bshift)
 end_define
 
 begin_comment
-comment|/* Use this only when `blk' is known to be small, e.g.,< NDADDR. */
+comment|/* Use this only when `blk' is known to be small, e.g.,< UFS_NDADDR. */
 end_comment
 
 begin_define
@@ -1968,7 +1968,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(((lbn)>= NDADDR || (ip)->i_size>= smalllblktosize(fs, (lbn) + 1)) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (ip)->i_size))))
+value|(((lbn)>= UFS_NDADDR || (ip)->i_size>= smalllblktosize(fs, (lbn) + 1)) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (ip)->i_size))))
 end_define
 
 begin_define
@@ -1983,7 +1983,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(((lbn)>= NDADDR || (size)>= ((lbn) + 1)<< (fs)->fs_bshift) \ 	  ? (fs)->fs_bsize \ 	  : (fragroundup(fs, blkoff(fs, (size)))))
+value|(((lbn)>= UFS_NDADDR || (size)>= ((lbn) + 1)<< (fs)->fs_bshift) \ 	  ? (fs)->fs_bsize \ 	  : (fragroundup(fs, blkoff(fs, (size)))))
 end_define
 
 begin_comment
@@ -2001,7 +2001,7 @@ value|((fs)->fs_nindir)
 end_define
 
 begin_comment
-comment|/*  * Indirect lbns are aligned on NDADDR addresses where single indirects  * are the negated address of the lowest lbn reachable, double indirects  * are this lbn - 1 and triple indirects are this lbn - 2.  This yields  * an unusual bit order to determine level.  */
+comment|/*  * Indirect lbns are aligned on UFS_NDADDR addresses where single indirects  * are the negated address of the lowest lbn reachable, double indirects  * are this lbn - 1 and triple indirects are this lbn - 2.  This yields  * an unusual bit order to determine level.  */
 end_comment
 
 begin_function

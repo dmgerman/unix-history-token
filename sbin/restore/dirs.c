@@ -1373,7 +1373,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lookup a pathname which is always assumed to start from the ROOTINO.  */
+comment|/*  * Lookup a pathname which is always assumed to start from the UFS_ROOTINO.  */
 end_comment
 
 begin_function
@@ -1421,7 +1421,7 @@ name|buffer
 expr_stmt|;
 name|ino
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 while|while
 condition|(
@@ -3234,7 +3234,7 @@ name|node
 operator|.
 name|ino
 operator|==
-name|ROOTINO
+name|UFS_ROOTINO
 operator|&&
 name|reply
 argument_list|(

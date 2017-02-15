@@ -1289,7 +1289,7 @@ control|(
 init|;
 name|start
 operator|>
-name|ROOTINO
+name|UFS_ROOTINO
 condition|;
 name|start
 operator|--

@@ -4136,7 +4136,7 @@ name|ep
 operator|->
 name|d_ino
 operator|==
-name|WINO
+name|UFS_WINO
 operator|&&
 name|namlen
 operator|==
@@ -4685,7 +4685,7 @@ operator|&
 name|DOWHITEOUT
 condition|)
 block|{
-comment|/* 		 * Whiteout entry: set d_ino to WINO. 		 */
+comment|/* 		 * Whiteout entry: set d_ino to UFS_WINO. 		 */
 if|if
 condition|(
 operator|(
@@ -4726,7 +4726,7 @@ name|ep
 operator|->
 name|d_ino
 operator|=
-name|WINO
+name|UFS_WINO
 expr_stmt|;
 name|ep
 operator|->
@@ -5557,7 +5557,7 @@ name|dp
 operator|->
 name|d_ino
 operator|==
-name|WINO
+name|UFS_WINO
 condition|)
 continue|continue;
 comment|/* accept only "." and ".." */
@@ -6028,7 +6028,7 @@ name|target
 operator|->
 name|i_number
 operator|==
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 return|return
 operator|(
@@ -6080,7 +6080,7 @@ if|if
 condition|(
 name|dd_ino
 operator|==
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 break|break;
 if|if

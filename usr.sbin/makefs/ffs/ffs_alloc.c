@@ -480,7 +480,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|+
 name|NINDIR
 argument_list|(
@@ -766,7 +766,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|+
 name|NINDIR
 argument_list|(

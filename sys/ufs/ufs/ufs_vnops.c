@@ -5317,7 +5317,7 @@ name|newdir
 operator|.
 name|d_ino
 operator|=
-name|WINO
+name|UFS_WINO
 expr_stmt|;
 name|newdir
 operator|.
@@ -11842,7 +11842,7 @@ name|ip
 operator|->
 name|i_number
 operator|==
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 name|vp
 operator|->

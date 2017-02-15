@@ -7340,7 +7340,7 @@ name|fs
 operator|->
 name|fs_ipg
 operator|-
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 name|sbp
 operator|->
@@ -9155,7 +9155,7 @@ if|if
 condition|(
 name|ino
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 name|ino
 operator|>=

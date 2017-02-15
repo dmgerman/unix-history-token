@@ -1445,7 +1445,7 @@ if|if
 condition|(
 name|ino
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 name|ino
 operator|>
@@ -2281,7 +2281,7 @@ name|dp
 operator|=
 name|ginode
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 expr_stmt|;
 name|idesc
@@ -2309,7 +2309,7 @@ name|idesc
 operator|.
 name|id_number
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 if|if
 condition|(
@@ -2356,7 +2356,7 @@ name|lfdir
 operator|=
 name|allocdir
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 operator|(
 name|ino_t
@@ -2377,7 +2377,7 @@ if|if
 condition|(
 name|makeentry
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|lfdir
 argument_list|,
@@ -2406,7 +2406,7 @@ name|freedir
 argument_list|(
 name|lfdir
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 expr_stmt|;
 name|lfdir
@@ -2503,7 +2503,7 @@ name|lfdir
 operator|=
 name|allocdir
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 operator|(
 name|ino_t
@@ -2533,7 +2533,7 @@ condition|(
 operator|(
 name|changeino
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|lfname
 argument_list|,
@@ -2960,7 +2960,7 @@ if|if
 condition|(
 name|parent
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 name|parent
 operator|>=
@@ -2968,7 +2968,7 @@ name|maxino
 operator|||
 name|ino
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 name|ino
 operator|>=
@@ -3201,7 +3201,7 @@ if|if
 condition|(
 name|lastbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 operator|-
 literal|1
 operator|||
@@ -3853,7 +3853,7 @@ if|if
 condition|(
 name|ino
 operator|==
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 block|{
 name|inoinfo

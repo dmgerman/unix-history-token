@@ -306,7 +306,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NDADDR
+name|EXT2_NDADDR
 value|12
 end_define
 
@@ -317,7 +317,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NIADDR
+name|EXT2_NIADDR
 value|3
 end_define
 
@@ -475,7 +475,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(((lbn)>= NDADDR || (dip)->di_size>= smalllblktosize(fs, (lbn) + 1)) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (dip)->di_size))))
+value|(((lbn)>= EXT2_NDADDR || (dip)->di_size>= smalllblktosize(fs, (lbn) + 1)) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (dip)->di_size))))
 end_define
 
 begin_comment
@@ -888,14 +888,14 @@ comment|/* os dependent stuff */
 name|u_int32_t
 name|di_db
 index|[
-name|NDADDR
+name|EXT2_NDADDR
 index|]
 decl_stmt|;
 comment|/* direct blocks */
 name|u_int32_t
 name|di_ib
 index|[
-name|NIADDR
+name|EXT2_NIADDR
 index|]
 decl_stmt|;
 comment|/* indirect blocks */
@@ -1002,7 +1002,7 @@ comment|/* copy of on-disk inode */
 name|int
 name|f_nindir
 index|[
-name|NIADDR
+name|EXT2_NIADDR
 index|]
 decl_stmt|;
 comment|/* number of blocks mapped by 						   indirect block at level i */
@@ -1010,21 +1010,21 @@ name|char
 modifier|*
 name|f_blk
 index|[
-name|NIADDR
+name|EXT2_NIADDR
 index|]
 decl_stmt|;
 comment|/* buffer for indirect block 						   at level i */
 name|size_t
 name|f_blksize
 index|[
-name|NIADDR
+name|EXT2_NIADDR
 index|]
 decl_stmt|;
 comment|/* size of buffer */
 name|daddr_t
 name|f_blkno
 index|[
-name|NIADDR
+name|EXT2_NIADDR
 index|]
 decl_stmt|;
 comment|/* disk address of block in 						   buffer */
@@ -1611,7 +1611,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|EXT2_NIADDR
 condition|;
 name|i
 operator|++
@@ -2316,7 +2316,7 @@ literal|0
 init|;
 name|level
 operator|<
-name|NIADDR
+name|EXT2_NIADDR
 condition|;
 name|level
 operator|++
@@ -2419,12 +2419,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Index structure of an inode: 	 * 	 * di_db[0..NDADDR-1]	hold block numbers for blocks 	 *			0..NDADDR-1 	 * 	 * di_ib[0]		index block 0 is the single indirect block 	 *			holds block numbers for blocks 	 *			NDADDR .. NDADDR + NINDIR(fs)-1 	 * 	 * di_ib[1]		index block 1 is the double indirect block 	 *			holds block numbers for INDEX blocks for blocks 	 *			NDADDR + NINDIR(fs) .. 	 *			NDADDR + NINDIR(fs) + NINDIR(fs)**2 - 1 	 * 	 * di_ib[2]		index block 2 is the triple indirect block 	 *			holds block numbers for double-indirect 	 *			blocks for blocks 	 *			NDADDR + NINDIR(fs) + NINDIR(fs)**2 .. 	 *			NDADDR + NINDIR(fs) + NINDIR(fs)**2 	 *				+ NINDIR(fs)**3 - 1 	 */
+comment|/* 	 * Index structure of an inode: 	 * 	 * di_db[0..EXT2_NDADDR-1] hold block numbers for blocks 	 *			0..EXT2_NDADDR-1 	 * 	 * di_ib[0]		index block 0 is the single indirect block 	 *			holds block numbers for blocks 	 *			EXT2_NDADDR .. EXT2_NDADDR + NINDIR(fs)-1 	 * 	 * di_ib[1]		index block 1 is the double indirect block 	 *			holds block numbers for INDEX blocks for blocks 	 *			EXT2_NDADDR + NINDIR(fs) .. 	 *			EXT2_NDADDR + NINDIR(fs) + NINDIR(fs)**2 - 1 	 * 	 * di_ib[2]		index block 2 is the triple indirect block 	 *			holds block numbers for double-indirect 	 *			blocks for blocks 	 *			EXT2_NDADDR + NINDIR(fs) + NINDIR(fs)**2 .. 	 *			EXT2_NDADDR + NINDIR(fs) + NINDIR(fs)**2 	 *				+ NINDIR(fs)**3 - 1 	 */
 if|if
 condition|(
 name|file_block
 operator|<
-name|NDADDR
+name|EXT2_NDADDR
 condition|)
 block|{
 comment|/* Direct block. */
@@ -2448,7 +2448,7 @@ return|;
 block|}
 name|file_block
 operator|-=
-name|NDADDR
+name|EXT2_NDADDR
 expr_stmt|;
 comment|/* 	 * nindir[0] = NINDIR 	 * nindir[1] = NINDIR**2 	 * nindir[2] = NINDIR**3 	 *	etc 	 */
 for|for
@@ -2459,7 +2459,7 @@ literal|0
 init|;
 name|level
 operator|<
-name|NIADDR
+name|EXT2_NIADDR
 condition|;
 name|level
 operator|++
@@ -2491,7 +2491,7 @@ if|if
 condition|(
 name|level
 operator|==
-name|NIADDR
+name|EXT2_NIADDR
 condition|)
 block|{
 comment|/* Block number too high */
@@ -3320,7 +3320,7 @@ literal|0
 init|;
 name|level
 operator|<
-name|NIADDR
+name|EXT2_NIADDR
 condition|;
 name|level
 operator|++

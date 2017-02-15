@@ -1717,7 +1717,7 @@ for|for
 control|(
 name|blkno
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 init|;
 name|blkno
 operator|<
@@ -3170,7 +3170,7 @@ if|if
 condition|(
 name|loc
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|len
@@ -4553,7 +4553,7 @@ literal|0
 init|;
 name|blockno
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|blockno
 operator|++
@@ -5179,7 +5179,7 @@ if|if
 condition|(
 name|base
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 for|for
@@ -5187,7 +5187,7 @@ control|(
 init|;
 name|loc
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|loc
 operator|++
@@ -5326,7 +5326,7 @@ name|base
 operator|+
 name|loc
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|%
 name|NINDIR
@@ -5810,7 +5810,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|blkno
@@ -5899,7 +5899,7 @@ operator|=
 operator|(
 name|lbn
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|%
 name|NINDIR
@@ -6094,9 +6094,9 @@ literal|0
 index|]
 argument_list|,
 operator|(
-name|NDADDR
+name|UFS_NDADDR
 operator|+
-name|NIADDR
+name|UFS_NIADDR
 operator|)
 operator|*
 sizeof|sizeof
@@ -6153,7 +6153,7 @@ name|i_din1
 operator|->
 name|di_db
 index|[
-name|NDADDR
+name|UFS_NDADDR
 index|]
 argument_list|,
 name|fs
@@ -6198,7 +6198,7 @@ name|i_din1
 operator|->
 name|di_ib
 index|[
-name|NIADDR
+name|UFS_NIADDR
 index|]
 argument_list|,
 name|fs
@@ -6222,17 +6222,17 @@ expr_stmt|;
 name|lbn
 operator|=
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 name|len
 operator|=
 name|numblks
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 name|rlbn
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 for|for
 control|(
@@ -6246,7 +6246,7 @@ literal|0
 operator|&&
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -6468,7 +6468,7 @@ name|struct
 name|indir
 name|indirs
 index|[
-name|NIADDR
+name|UFS_NIADDR
 operator|+
 literal|2
 index|]
@@ -7080,7 +7080,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|blkp
@@ -7161,7 +7161,7 @@ index|[
 operator|(
 name|lbn
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|%
 name|NINDIR
@@ -7188,7 +7188,7 @@ if|if
 condition|(
 name|lbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|brelse
 argument_list|(
@@ -7219,7 +7219,7 @@ if|if
 condition|(
 name|lbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|bdwrite
 argument_list|(
@@ -7585,7 +7585,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|blkno
@@ -7674,7 +7674,7 @@ operator|=
 operator|(
 name|lbn
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|%
 name|NINDIR
@@ -7869,9 +7869,9 @@ literal|0
 index|]
 argument_list|,
 operator|(
-name|NDADDR
+name|UFS_NDADDR
 operator|+
-name|NIADDR
+name|UFS_NIADDR
 operator|)
 operator|*
 sizeof|sizeof
@@ -7928,7 +7928,7 @@ name|i_din2
 operator|->
 name|di_db
 index|[
-name|NDADDR
+name|UFS_NDADDR
 index|]
 argument_list|,
 name|fs
@@ -7973,7 +7973,7 @@ name|i_din2
 operator|->
 name|di_ib
 index|[
-name|NIADDR
+name|UFS_NIADDR
 index|]
 argument_list|,
 name|fs
@@ -7997,17 +7997,17 @@ expr_stmt|;
 name|lbn
 operator|=
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 name|len
 operator|=
 name|numblks
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 name|rlbn
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 for|for
 control|(
@@ -8021,7 +8021,7 @@ literal|0
 operator|&&
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -8243,7 +8243,7 @@ name|struct
 name|indir
 name|indirs
 index|[
-name|NIADDR
+name|UFS_NIADDR
 operator|+
 literal|2
 index|]
@@ -8855,7 +8855,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|blkp
@@ -8936,7 +8936,7 @@ index|[
 operator|(
 name|lbn
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|%
 name|NINDIR
@@ -8963,7 +8963,7 @@ if|if
 condition|(
 name|lbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|brelse
 argument_list|(
@@ -8994,7 +8994,7 @@ if|if
 condition|(
 name|lbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|bdwrite
 argument_list|(
@@ -9634,7 +9634,7 @@ literal|1
 init|;
 name|blkno
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|blkno
 operator|++
@@ -9774,7 +9774,7 @@ for|for
 control|(
 name|blkno
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 init|;
 name|blkno
 operator|<
@@ -10417,7 +10417,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|blkno
@@ -10486,7 +10486,7 @@ operator|=
 operator|(
 name|lbn
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|%
 name|NINDIR
@@ -10573,7 +10573,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|DIP_SET
@@ -10664,7 +10664,7 @@ if|if
 condition|(
 name|lbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|bqrelse
 argument_list|(
@@ -10728,7 +10728,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|softdep_inode_append
 argument_list|(
@@ -10754,7 +10754,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|DIP_SET
@@ -10875,7 +10875,7 @@ if|if
 condition|(
 name|lbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|bqrelse
 argument_list|(
@@ -13131,7 +13131,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|blkno
@@ -13202,7 +13202,7 @@ operator|=
 operator|(
 name|lbn
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|%
 name|NINDIR

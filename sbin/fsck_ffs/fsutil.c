@@ -4681,7 +4681,7 @@ name|ino
 operator|&&
 name|ino
 operator|==
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 block|{
 operator|(
@@ -4785,7 +4785,7 @@ while|while
 condition|(
 name|ino
 operator|!=
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 block|{
 name|idesc
@@ -4934,7 +4934,7 @@ if|if
 condition|(
 name|ino
 operator|!=
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 operator|*
 operator|--

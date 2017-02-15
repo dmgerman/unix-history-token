@@ -1652,7 +1652,7 @@ operator|.
 name|fs_bsize
 argument_list|)
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 if|if
 condition|(
@@ -2602,7 +2602,7 @@ operator|.
 name|fs_bsize
 argument_list|)
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 if|if
 condition|(

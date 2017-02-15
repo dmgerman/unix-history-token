@@ -466,7 +466,7 @@ name|dt
 decl_stmt|;
 name|ino
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 name|dt
 operator|=
@@ -1249,7 +1249,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|addr2
@@ -1268,7 +1268,7 @@ if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|+
 name|NINDIR
 argument_list|(
@@ -1303,7 +1303,7 @@ call|)
 argument_list|(
 name|lbn
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 argument_list|)
 operator|/
 name|n
@@ -1354,7 +1354,7 @@ operator|=
 operator|(
 name|lbn
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|&
 operator|(

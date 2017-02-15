@@ -238,7 +238,7 @@ name|struct
 name|nandfs_indir
 name|a
 index|[
-name|NIADDR
+name|NANDFS_NIADDR
 operator|+
 literal|1
 index|]
@@ -588,7 +588,7 @@ name|struct
 name|nandfs_indir
 name|a
 index|[
-name|NIADDR
+name|NANDFS_NIADDR
 operator|+
 literal|1
 index|]
@@ -826,7 +826,7 @@ name|struct
 name|nandfs_indir
 name|a
 index|[
-name|NIADDR
+name|NANDFS_NIADDR
 operator|+
 literal|1
 index|]
@@ -1362,7 +1362,7 @@ end_function
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
-name|NIADDR
+name|NANDFS_NIADDR
 operator|<=
 literal|3
 argument_list|)
@@ -2067,14 +2067,14 @@ name|struct
 name|nandfs_indir
 name|a
 index|[
-name|NIADDR
+name|NANDFS_NIADDR
 operator|+
 literal|1
 index|]
 decl_stmt|,
 name|f
 index|[
-name|NIADDR
+name|NANDFS_NIADDR
 index|]
 decl_stmt|,
 modifier|*
@@ -2083,7 +2083,7 @@ decl_stmt|;
 name|nandfs_daddr_t
 name|indir_lbn
 index|[
-name|NIADDR
+name|NANDFS_NIADDR
 index|]
 decl_stmt|;
 name|nandfs_daddr_t
@@ -2183,7 +2183,7 @@ name|SINGLE
 index|]
 operator|=
 operator|-
-name|NDADDR
+name|NANDFS_NDADDR
 expr_stmt|;
 name|indir_lbn
 index|[
@@ -2232,7 +2232,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|NANDFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -2506,7 +2506,7 @@ expr_stmt|;
 else|else
 name|i
 operator|=
-name|NDADDR
+name|NANDFS_NDADDR
 operator|-
 literal|1
 expr_stmt|;
@@ -2631,7 +2631,7 @@ name|struct
 name|nandfs_indir
 name|f
 index|[
-name|NIADDR
+name|NANDFS_NIADDR
 index|]
 decl_stmt|;
 name|nandfs_lbn_t
@@ -2642,7 +2642,7 @@ name|i
 decl_stmt|;
 name|max
 operator|=
-name|NDADDR
+name|NANDFS_NDADDR
 expr_stmt|;
 for|for
 control|(
@@ -2652,7 +2652,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|NANDFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -2803,19 +2803,19 @@ operator|=
 operator|-
 name|bn
 expr_stmt|;
-comment|/* The first NDADDR blocks are direct blocks. */
+comment|/* The first NANDFS_NDADDR blocks are direct blocks. */
 if|if
 condition|(
 name|bn
 operator|<
-name|NDADDR
+name|NANDFS_NDADDR
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Determine the number of levels of indirection.  After this loop 	 * is done, blockcnt indicates the number of data blocks possible 	 * at the previous level of indirection, and NIADDR - i is the number 	 * of levels of indirection needed to locate the requested block. 	 */
+comment|/* 	 * Determine the number of levels of indirection.  After this loop 	 * is done, blockcnt indicates the number of data blocks possible 	 * at the previous level of indirection, and NANDFS_NIADDR - i is the 	 * number of levels of indirection needed to locate the requested block. 	 */
 for|for
 control|(
 name|blockcnt
@@ -2824,11 +2824,11 @@ literal|1
 operator|,
 name|i
 operator|=
-name|NIADDR
+name|NANDFS_NIADDR
 operator|,
 name|bn
 operator|-=
-name|NDADDR
+name|NANDFS_NDADDR
 init|;
 condition|;
 name|i
@@ -2897,7 +2897,7 @@ name|realbn
 operator|-
 name|bn
 operator|+
-name|NIADDR
+name|NANDFS_NIADDR
 operator|-
 name|i
 operator|)
@@ -2912,7 +2912,7 @@ name|realbn
 operator|-
 name|bn
 operator|+
-name|NIADDR
+name|NANDFS_NIADDR
 operator|-
 name|i
 operator|)
@@ -2930,7 +2930,7 @@ name|in_off
 operator|=
 name|off
 operator|=
-name|NIADDR
+name|NANDFS_NIADDR
 operator|-
 name|i
 expr_stmt|;
@@ -2959,7 +2959,7 @@ name|numlevels
 init|;
 name|i
 operator|<=
-name|NIADDR
+name|NANDFS_NIADDR
 condition|;
 name|i
 operator|++

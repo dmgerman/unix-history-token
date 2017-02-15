@@ -1485,7 +1485,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NXADDR
+name|UFS_NXADDR
 condition|;
 name|i
 operator|++
@@ -1588,7 +1588,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++

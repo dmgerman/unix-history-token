@@ -14655,7 +14655,7 @@ name|VFS_VGET
 argument_list|(
 name|mp
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
@@ -20702,7 +20702,7 @@ operator|||
 name|lbn
 operator|>=
 operator|-
-name|NXADDR
+name|UFS_NXADDR
 operator|)
 condition|?
 literal|0
@@ -25771,7 +25771,7 @@ if|if
 condition|(
 name|off
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 if|if
@@ -26498,7 +26498,7 @@ name|newadp
 operator|->
 name|ad_offset
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|panic
 argument_list|(
@@ -27490,10 +27490,10 @@ name|KASSERT
 argument_list|(
 name|off
 operator|<
-name|NXADDR
+name|UFS_NXADDR
 argument_list|,
 operator|(
-literal|"softdep_setup_allocext: lbn %lld> NXADDR"
+literal|"softdep_setup_allocext: lbn %lld> UFS_NXADDR"
 operator|,
 operator|(
 name|long
@@ -31363,7 +31363,7 @@ if|if
 condition|(
 name|numblks
 operator|<=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|totblks
@@ -31392,7 +31392,7 @@ argument_list|)
 expr_stmt|;
 name|numblks
 operator|-=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 comment|/* 	 * Count all single, then double, then triple indirects required. 	 * Subtracting one indirects worth of blocks for each pass 	 * acknowledges one of each pointed to by the inode. 	 */
 for|for
@@ -31775,7 +31775,7 @@ literal|0
 operator|&&
 name|lastlbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|frags
@@ -31802,7 +31802,7 @@ literal|0
 condition|)
 name|iboff
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 if|if
 condition|(
@@ -31851,7 +31851,7 @@ literal|1
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -31882,11 +31882,11 @@ argument_list|)
 operator|,
 name|lbn
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -31933,7 +31933,7 @@ name|iboff
 operator|=
 name|i
 operator|+
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 comment|/* 			 * Traverse partially truncated indirect tree. 			 */
 if|if
@@ -32098,7 +32098,7 @@ literal|0
 operator|&&
 name|lastlbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|ip
@@ -32188,7 +32188,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NXADDR
+name|UFS_NXADDR
 condition|;
 name|i
 operator|++
@@ -33485,7 +33485,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -33516,11 +33516,11 @@ argument_list|)
 operator|,
 name|lbn
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -33598,7 +33598,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NXADDR
+name|UFS_NXADDR
 condition|;
 name|i
 operator|++
@@ -34232,7 +34232,7 @@ if|if
 condition|(
 name|lbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 comment|/* Calculate the virtual lbn of the triple indirect. */
@@ -34242,7 +34242,7 @@ operator|-
 name|lbn
 operator|-
 operator|(
-name|NIADDR
+name|UFS_NIADDR
 operator|-
 literal|1
 operator|)
@@ -37269,7 +37269,7 @@ operator|->
 name|fw_lbn
 operator|<=
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|indirblk_insert
 argument_list|(
@@ -38046,7 +38046,7 @@ operator|->
 name|fw_lbn
 operator|<=
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|handle_workitem_indirblk
 argument_list|(
@@ -40462,7 +40462,7 @@ if|if
 condition|(
 name|newinum
 operator|==
-name|WINO
+name|UFS_WINO
 condition|)
 block|{
 if|if
@@ -40577,7 +40577,7 @@ name|bp
 operator|->
 name|b_lblkno
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 name|newdirblk
 operator|=
@@ -44361,7 +44361,7 @@ if|if
 condition|(
 name|newinum
 operator|!=
-name|WINO
+name|UFS_WINO
 condition|)
 block|{
 name|dap
@@ -44465,7 +44465,7 @@ if|if
 condition|(
 name|newinum
 operator|==
-name|WINO
+name|UFS_WINO
 condition|)
 block|{
 if|if
@@ -48332,7 +48332,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|dp
 operator|->
@@ -48383,7 +48383,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|dp
 operator|->
@@ -48393,7 +48393,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 operator|!=
 name|adp
@@ -48413,7 +48413,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 argument_list|,
 name|dp
 operator|->
@@ -48423,7 +48423,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 argument_list|,
 operator|(
@@ -48519,7 +48519,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 break|break;
 name|dp
@@ -48581,7 +48581,7 @@ literal|1
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -48639,7 +48639,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -48666,7 +48666,7 @@ operator|(
 operator|(
 literal|1
 operator|<<
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|<<
 name|i
@@ -48784,7 +48784,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 operator|=
 literal|0
@@ -49390,7 +49390,7 @@ literal|1
 init|;
 name|i
 operator|<
-name|NXADDR
+name|UFS_NXADDR
 condition|;
 name|i
 operator|++
@@ -49594,7 +49594,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|dp
 operator|->
@@ -49648,7 +49648,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|dp
 operator|->
@@ -49658,7 +49658,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 operator|!=
 name|adp
@@ -49678,7 +49678,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 argument_list|,
 operator|(
 name|intmax_t
@@ -49691,7 +49691,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 argument_list|,
 operator|(
@@ -49787,7 +49787,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 break|break;
 name|dp
@@ -49849,7 +49849,7 @@ literal|1
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -49907,7 +49907,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -49934,7 +49934,7 @@ operator|(
 operator|(
 literal|1
 operator|<<
-name|NDADDR
+name|UFS_NDADDR
 operator|)
 operator|<<
 name|i
@@ -50052,7 +50052,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 operator|=
 literal|0
@@ -53944,7 +53944,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 if|if
@@ -54020,7 +54020,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 operator|!=
 literal|0
@@ -54040,7 +54040,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 argument_list|,
 name|dp1
 operator|->
@@ -54050,7 +54050,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 argument_list|)
 expr_stmt|;
@@ -54062,7 +54062,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 operator|=
 name|adp
@@ -54079,7 +54079,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 if|if
@@ -54160,7 +54160,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 operator|!=
 literal|0
@@ -54180,7 +54180,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 argument_list|,
 operator|(
 name|intmax_t
@@ -54193,7 +54193,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 argument_list|)
 expr_stmt|;
@@ -54205,7 +54205,7 @@ name|adp
 operator|->
 name|ad_offset
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 index|]
 operator|=
 name|adp

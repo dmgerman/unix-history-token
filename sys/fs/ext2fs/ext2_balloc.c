@@ -151,7 +151,7 @@ name|struct
 name|indir
 name|indirs
 index|[
-name|NIADDR
+name|EXT2_NIADDR
 operator|+
 literal|2
 index|]
@@ -229,12 +229,12 @@ name|i_next_alloc_goal
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * The first NDADDR blocks are direct blocks 	 */
+comment|/* 	 * The first EXT2_NDADDR blocks are direct blocks 	 */
 if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|EXT2_NDADDR
 condition|)
 block|{
 name|nb

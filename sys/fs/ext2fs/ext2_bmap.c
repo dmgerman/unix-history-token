@@ -617,7 +617,7 @@ name|struct
 name|indir
 name|a
 index|[
-name|NIADDR
+name|EXT2_NIADDR
 operator|+
 literal|1
 index|]
@@ -800,7 +800,7 @@ name|bn
 init|;
 name|bn
 operator|<
-name|NDADDR
+name|EXT2_NDADDR
 operator|&&
 operator|*
 name|runp
@@ -1465,19 +1465,19 @@ name|long
 operator|)
 name|bn
 expr_stmt|;
-comment|/* The first NDADDR blocks are direct blocks. */
+comment|/* The first EXT2_NDADDR blocks are direct blocks. */
 if|if
 condition|(
 name|bn
 operator|<
-name|NDADDR
+name|EXT2_NDADDR
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Determine the number of levels of indirection.  After this loop 	 * is done, blockcnt indicates the number of data blocks possible 	 * at the previous level of indirection, and NIADDR - i is the number 	 * of levels of indirection needed to locate the requested block. 	 */
+comment|/* 	 * Determine the number of levels of indirection.  After this loop 	 * is done, blockcnt indicates the number of data blocks possible 	 * at the previous level of indirection, and EXT2_NIADDR - i is the 	 * number of levels of indirection needed to locate the requested block. 	 */
 for|for
 control|(
 name|blockcnt
@@ -1486,11 +1486,11 @@ literal|1
 operator|,
 name|i
 operator|=
-name|NIADDR
+name|EXT2_NIADDR
 operator|,
 name|bn
 operator|-=
-name|NDADDR
+name|EXT2_NDADDR
 init|;
 condition|;
 name|i
@@ -1552,7 +1552,7 @@ name|realbn
 operator|-
 name|bn
 operator|+
-name|NIADDR
+name|EXT2_NIADDR
 operator|-
 name|i
 operator|)
@@ -1567,7 +1567,7 @@ name|realbn
 operator|-
 name|bn
 operator|+
-name|NIADDR
+name|EXT2_NIADDR
 operator|-
 name|i
 operator|)
@@ -1585,7 +1585,7 @@ name|in_off
 operator|=
 name|off
 operator|=
-name|NIADDR
+name|EXT2_NIADDR
 operator|-
 name|i
 expr_stmt|;
@@ -1599,7 +1599,7 @@ name|numlevels
 init|;
 name|i
 operator|<=
-name|NIADDR
+name|EXT2_NIADDR
 condition|;
 name|i
 operator|++

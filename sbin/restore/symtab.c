@@ -213,7 +213,7 @@ if|if
 condition|(
 name|inum
 operator|<
-name|WINO
+name|UFS_WINO
 operator|||
 name|inum
 operator|>=
@@ -294,7 +294,7 @@ if|if
 condition|(
 name|inum
 operator|<
-name|WINO
+name|UFS_WINO
 operator|||
 name|inum
 operator|>=
@@ -405,7 +405,7 @@ if|if
 condition|(
 name|inum
 operator|<
-name|WINO
+name|UFS_WINO
 operator|||
 name|inum
 operator|>=
@@ -537,7 +537,7 @@ name|ep
 operator|=
 name|lookupino
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 init|;
 name|ep
@@ -836,7 +836,7 @@ name|ep
 operator|==
 name|lookupino
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 condition|)
 return|return
@@ -1011,11 +1011,11 @@ if|if
 condition|(
 name|inum
 operator|!=
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 name|lookupino
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 operator|!=
 name|NULL
@@ -1053,7 +1053,7 @@ name|np
 expr_stmt|;
 name|addino
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|np
 argument_list|)
@@ -2051,7 +2051,7 @@ for|for
 control|(
 name|i
 operator|=
-name|WINO
+name|UFS_WINO
 init|;
 name|i
 operator|<=
@@ -2131,7 +2131,7 @@ for|for
 control|(
 name|i
 operator|=
-name|WINO
+name|UFS_WINO
 init|;
 name|i
 operator|<=
@@ -2600,7 +2600,7 @@ name|addentry
 argument_list|(
 literal|"."
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|NODE
 argument_list|)

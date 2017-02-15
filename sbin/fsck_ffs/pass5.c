@@ -242,7 +242,7 @@ name|cgbp
 decl_stmt|;
 name|inoinfo
 argument_list|(
-name|WINO
+name|UFS_WINO
 argument_list|)
 operator|->
 name|ino_state
@@ -1374,7 +1374,7 @@ operator|<
 operator|(
 name|int
 operator|)
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 break|break;
 name|errx
@@ -1412,7 +1412,7 @@ operator|<
 operator|(
 name|int
 operator|)
-name|ROOTINO
+name|UFS_ROOTINO
 condition|;
 name|i
 operator|++

@@ -3322,7 +3322,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search in the ROOTINO for the SUJ_FILE.  If it exists we can not enable  * journaling.  */
+comment|/*  * Search in the UFS_ROOTINO for the SUJ_FILE.  If it exists we can not enable  * journaling.  */
 end_comment
 
 begin_function
@@ -3366,7 +3366,7 @@ argument_list|,
 operator|&
 name|ip
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 operator|&
 name|mode
@@ -3418,13 +3418,13 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|,
-name|NDADDR
+name|UFS_NDADDR
 argument_list|)
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"ROOTINO extends beyond direct blocks."
+literal|"UFS_ROOTINO extends beyond direct blocks."
 argument_list|)
 expr_stmt|;
 return|return
@@ -3442,7 +3442,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -3516,13 +3516,13 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|,
-name|NDADDR
+name|UFS_NDADDR
 argument_list|)
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"ROOTINO extends beyond direct blocks."
+literal|"UFS_ROOTINO extends beyond direct blocks."
 argument_list|)
 expr_stmt|;
 return|return
@@ -3540,7 +3540,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -3995,7 +3995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert the journal file into the ROOTINO directory.  We always extend the  * last frag  */
+comment|/*  * Insert the journal file into the UFS_ROOTINO directory.  We always extend the  * last frag  */
 end_comment
 
 begin_function
@@ -4049,7 +4049,7 @@ argument_list|,
 operator|&
 name|ip
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 operator|&
 name|mode
@@ -4106,7 +4106,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	 * For simplicity sake we aways extend the ROOTINO into a new 	 * directory block rather than searching for space and inserting 	 * into an existing block.  However, if the rootino has frags 	 * have to free them and extend the block. 	 */
+comment|/* 	 * For simplicity sake we aways extend the UFS_ROOTINO into a new 	 * directory block rather than searching for space and inserting 	 * into an existing block.  However, if the rootino has frags 	 * have to free them and extend the block. 	 */
 if|if
 condition|(
 name|sblock
@@ -5283,7 +5283,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|resid
 condition|;
@@ -5358,7 +5358,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 operator|&&
 name|resid
 condition|;

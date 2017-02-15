@@ -190,13 +190,13 @@ name|assert
 argument_list|(
 name|bn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Determine the number of levels of indirection.  After this loop 	 * is done, blockcnt indicates the number of data blocks possible 	 * at the given level of indirection, and NIADDR - i is the number 	 * of levels of indirection needed to locate the requested block. 	 */
+comment|/*  	 * Determine the number of levels of indirection.  After this loop 	 * is done, blockcnt indicates the number of data blocks possible 	 * at the given level of indirection, and UFS_NIADDR - i is the number 	 * of levels of indirection needed to locate the requested block. 	 */
 name|bn
 operator|-=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 for|for
 control|(
@@ -206,7 +206,7 @@ literal|0
 operator|,
 name|i
 operator|=
-name|NIADDR
+name|UFS_NIADDR
 init|;
 condition|;
 name|i
@@ -264,7 +264,7 @@ name|realbn
 operator|-
 name|bn
 operator|+
-name|NIADDR
+name|UFS_NIADDR
 operator|-
 name|i
 operator|)
@@ -279,7 +279,7 @@ name|realbn
 operator|-
 name|bn
 operator|+
-name|NIADDR
+name|UFS_NIADDR
 operator|-
 name|i
 operator|)
@@ -297,7 +297,7 @@ name|in_off
 operator|=
 name|off
 operator|=
-name|NIADDR
+name|UFS_NIADDR
 operator|-
 name|i
 expr_stmt|;
@@ -311,7 +311,7 @@ name|numlevels
 init|;
 name|i
 operator|<=
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++

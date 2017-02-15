@@ -869,15 +869,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXSYMLINKLEN_UFS1
-value|((NDADDR + NIADDR) * sizeof(ufs1_daddr_t))
+name|UFS1_MAXSYMLINKLEN
+value|((UFS_NDADDR + UFS_NIADDR) * sizeof(ufs1_daddr_t))
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXSYMLINKLEN_UFS2
-value|((NDADDR + NIADDR) * sizeof(ufs2_daddr_t))
+name|UFS2_MAXSYMLINKLEN
+value|((UFS_NDADDR + UFS_NIADDR) * sizeof(ufs2_daddr_t))
 end_define
 
 begin_if
