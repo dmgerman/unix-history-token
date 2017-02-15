@@ -3632,7 +3632,7 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
-name|size_t
+name|long
 name|available
 decl_stmt|,
 name|size
@@ -3759,7 +3759,7 @@ literal|1
 name|ICL_DEBUG
 argument_list|(
 literal|"no space to send; "
-literal|"have %zd, need %zd"
+literal|"have %ld, need %ld"
 argument_list|,
 name|available
 argument_list|,
@@ -3975,7 +3975,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (coalesced> 1) { 				ICL_DEBUG("coalesced %d PDUs into %zd bytes", 				    coalesced, size); 			}
+block|if (coalesced> 1) { 				ICL_DEBUG("coalesced %d PDUs into %ld bytes", 				    coalesced, size); 			}
 endif|#
 directive|endif
 block|}
