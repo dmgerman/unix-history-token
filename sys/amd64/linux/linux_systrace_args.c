@@ -4758,7 +4758,7 @@ name|p
 operator|->
 name|addr
 expr_stmt|;
-comment|/* l_long */
+comment|/* l_ulong */
 name|iarg
 index|[
 literal|3
@@ -4768,7 +4768,7 @@ name|p
 operator|->
 name|data
 expr_stmt|;
-comment|/* l_long */
+comment|/* l_ulong */
 operator|*
 name|n_args
 operator|=
@@ -16152,7 +16152,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"l_long"
+literal|"l_ulong"
 expr_stmt|;
 break|break;
 case|case
@@ -16160,7 +16160,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"l_long"
+literal|"l_ulong"
 expr_stmt|;
 break|break;
 default|default:

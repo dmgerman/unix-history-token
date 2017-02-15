@@ -5732,11 +5732,11 @@ name|addr_l_
 index|[
 name|PADL_
 argument_list|(
-name|l_long
+name|l_ulong
 argument_list|)
 index|]
 decl_stmt|;
-name|l_long
+name|l_ulong
 name|addr
 decl_stmt|;
 name|char
@@ -5744,7 +5744,7 @@ name|addr_r_
 index|[
 name|PADR_
 argument_list|(
-name|l_long
+name|l_ulong
 argument_list|)
 index|]
 decl_stmt|;
@@ -5753,11 +5753,11 @@ name|data_l_
 index|[
 name|PADL_
 argument_list|(
-name|l_long
+name|l_ulong
 argument_list|)
 index|]
 decl_stmt|;
-name|l_long
+name|l_ulong
 name|data
 decl_stmt|;
 name|char
@@ -5765,7 +5765,7 @@ name|data_r_
 index|[
 name|PADR_
 argument_list|(
-name|l_long
+name|l_ulong
 argument_list|)
 index|]
 decl_stmt|;
