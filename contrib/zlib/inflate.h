@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inflate.h -- internal inflate state definition  * Copyright (C) 1995-2009 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inflate.h -- internal inflate state definition  * Copyright (C) 1995-2016 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -37,6 +37,8 @@ typedef|typedef
 enum|enum
 block|{
 name|HEAD
+init|=
+literal|16180
 block|,
 comment|/* i: waiting for magic header */
 name|FLAGS
@@ -141,13 +143,17 @@ comment|/*     State transitions between above modes -      (most modes can go t
 end_comment
 
 begin_comment
-comment|/* state maintained between inflate() calls.  Approximately 10K bytes. */
+comment|/* State maintained between inflate() calls -- approximately 7K bytes, not    including the allocated sliding window, which is up to 32K bytes. */
 end_comment
 
 begin_struct
 struct|struct
 name|inflate_state
 block|{
+name|z_streamp
+name|strm
+decl_stmt|;
+comment|/* pointer back to this zlib stream */
 name|inflate_mode
 name|mode
 decl_stmt|;
@@ -159,7 +165,7 @@ comment|/* true if processing last block */
 name|int
 name|wrap
 decl_stmt|;
-comment|/* bit 0 true for zlib, bit 1 true for gzip */
+comment|/* bit 0 true for zlib, bit 1 true for gzip,                                    bit 2 true to validate check value */
 name|int
 name|havedict
 decl_stmt|;

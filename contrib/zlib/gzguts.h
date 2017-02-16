@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzguts.h -- zlib internal header definitions for gz* operations  * Copyright (C) 2004, 2005, 2010, 2011, 2012, 2013 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzguts.h -- zlib internal header definitions for gz* operations  * Copyright (C) 2004, 2005, 2010, 2011, 2012, 2013, 2016 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_ifdef
@@ -119,6 +119,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_POSIX_SOURCE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -166,6 +183,31 @@ include|#
 directive|include
 file|<io.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|WIDECHAR
+end_define
 
 begin_endif
 endif|#
@@ -534,14 +576,21 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* unlike snprintf (which is required in C99, yet still not supported by    Microsoft more than a decade later!), _snprintf does not guarantee null    termination of the result -- however this is only used in gzlib.c where    the result is assured to fit in the space provided */
+comment|/* unlike snprintf (which is required in C99), _snprintf does not guarantee    null termination of the result -- however this is only used in gzlib.c where    the result is assured to fit in the space provided */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_MSC_VER
-end_ifdef
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|<
+literal|1900
+end_if
 
 begin_define
 define|#
@@ -574,7 +623,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* compile with -Dlocal if your debugger can't find static symbols */
+comment|/* since "static" is used to mean two completely different things in C, we    define "local" for the non-static meaning of "static", for readability    (compile with -Dlocal if your debugger can't find static symbols) */
 end_comment
 
 begin_comment
@@ -948,7 +997,7 @@ name|char
 modifier|*
 name|in
 decl_stmt|;
-comment|/* input buffer */
+comment|/* input buffer (double-sized when writing) */
 name|unsigned
 name|char
 modifier|*

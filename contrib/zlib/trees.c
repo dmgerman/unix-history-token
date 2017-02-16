@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2012 Jean-loup Gailly  * detect_data_type() function provided freely by Cosmin Truta, 2006  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2017 Jean-loup Gailly  * detect_data_type() function provided freely by Cosmin Truta, 2006  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 end_ifdef
 
 begin_include
@@ -526,6 +526,7 @@ end_struct
 
 begin_decl_stmt
 name|local
+specifier|const
 name|static_tree_desc
 name|static_l_desc
 init|=
@@ -547,6 +548,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|local
+specifier|const
 name|static_tree_desc
 name|static_d_desc
 init|=
@@ -566,6 +568,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|local
+specifier|const
 name|static_tree_desc
 name|static_bl_desc
 init|=
@@ -872,31 +875,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|local
-name|void
-name|copy_block
-name|OF
-argument_list|(
-operator|(
-name|deflate_state
-operator|*
-name|s
-operator|,
-name|charf
-operator|*
-name|buf
-operator|,
-name|unsigned
-name|len
-operator|,
-name|int
-name|header
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -924,7 +902,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DEBUG
+name|ZLIB_DEBUG
 end_ifndef
 
 begin_define
@@ -951,7 +929,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* DEBUG */
+comment|/* !ZLIB_DEBUG */
 end_comment
 
 begin_define
@@ -997,7 +975,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -1174,7 +1152,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !DEBUG */
+comment|/* !ZLIB_DEBUG */
 end_comment
 
 begin_define
@@ -1189,7 +1167,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|{ int len = length;\   if (s->bi_valid> (int)Buf_size - len) {\     int val = value;\     s->bi_buf |= (ush)val<< s->bi_valid;\     put_short(s, s->bi_buf);\     s->bi_buf = (ush)val>> (Buf_size - s->bi_valid);\     s->bi_valid += len - Buf_size;\   } else {\     s->bi_buf |= (ush)(value)<< s->bi_valid;\     s->bi_valid += len;\   }\ }
+value|{ int len = length;\   if (s->bi_valid> (int)Buf_size - len) {\     int val = (int)value;\     s->bi_buf |= (ush)val<< s->bi_valid;\     put_short(s, s->bi_buf);\     s->bi_buf = (ush)val>> (Buf_size - s->bi_valid);\     s->bi_valid += len - Buf_size;\   } else {\     s->bi_buf |= (ush)(value)<< s->bi_valid;\     s->bi_valid += len;\   }\ }
 end_define
 
 begin_endif
@@ -1198,7 +1176,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DEBUG */
+comment|/* ZLIB_DEBUG */
 end_comment
 
 begin_comment
@@ -1732,7 +1710,7 @@ end_ifdef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DEBUG
+name|ZLIB_DEBUG
 end_ifndef
 
 begin_include
@@ -2197,7 +2175,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -2821,11 +2799,14 @@ name|ulg
 operator|)
 name|f
 operator|*
-operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|bits
 operator|+
 name|xbits
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2840,7 +2821,10 @@ name|ulg
 operator|)
 name|f
 operator|*
-operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|stree
 index|[
 name|n
@@ -2849,7 +2833,7 @@ operator|.
 name|Len
 operator|+
 name|xbits
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -2859,7 +2843,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|Trace
+name|Tracev
 argument_list|(
 operator|(
 name|stderr
@@ -3000,7 +2984,7 @@ operator|)
 name|bits
 condition|)
 block|{
-name|Trace
+name|Tracev
 argument_list|(
 operator|(
 name|stderr
@@ -3026,13 +3010,10 @@ name|opt_len
 operator|+=
 operator|(
 operator|(
-name|long
+name|ulg
 operator|)
 name|bits
 operator|-
-operator|(
-name|long
-operator|)
 name|tree
 index|[
 name|m
@@ -3041,9 +3022,6 @@ operator|.
 name|Len
 operator|)
 operator|*
-operator|(
-name|long
-operator|)
 name|tree
 index|[
 name|m
@@ -3111,7 +3089,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* next code value for each bit length */
-name|ush
+name|unsigned
 name|code
 init|=
 literal|0
@@ -3140,11 +3118,6 @@ name|bits
 operator|++
 control|)
 block|{
-name|next_code
-index|[
-name|bits
-index|]
-operator|=
 name|code
 operator|=
 operator|(
@@ -3159,6 +3132,16 @@ index|]
 operator|)
 operator|<<
 literal|1
+expr_stmt|;
+name|next_code
+index|[
+name|bits
+index|]
+operator|=
+operator|(
+name|ush
+operator|)
+name|code
 expr_stmt|;
 block|}
 comment|/* Check that the bit counts in bl_count are consistent. The last code      * must be all ones.      */
@@ -3234,6 +3217,9 @@ index|]
 operator|.
 name|Code
 operator|=
+operator|(
+name|ush
+operator|)
 name|bi_reverse
 argument_list|(
 name|next_code
@@ -4567,6 +4553,9 @@ operator|+=
 literal|3
 operator|*
 operator|(
+operator|(
+name|ulg
+operator|)
 name|max_blindex
 operator|+
 literal|1
@@ -4890,9 +4879,61 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|/* send block type */
+name|bi_windup
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* align on byte boundary */
+name|put_short
+argument_list|(
+name|s
+argument_list|,
+operator|(
+name|ush
+operator|)
+name|stored_len
+argument_list|)
+expr_stmt|;
+name|put_short
+argument_list|(
+name|s
+argument_list|,
+operator|(
+name|ush
+operator|)
+operator|~
+name|stored_len
+argument_list|)
+expr_stmt|;
+name|zmemcpy
+argument_list|(
+name|s
+operator|->
+name|pending_buf
+operator|+
+name|s
+operator|->
+name|pending
+argument_list|,
+operator|(
+name|Bytef
+operator|*
+operator|)
+name|buf
+argument_list|,
+name|stored_len
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|pending
+operator|+=
+name|stored_len
+expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -4925,23 +4966,24 @@ operator|)
 operator|<<
 literal|3
 expr_stmt|;
+name|s
+operator|->
+name|bits_sent
+operator|+=
+literal|2
+operator|*
+literal|16
+expr_stmt|;
+name|s
+operator|->
+name|bits_sent
+operator|+=
+name|stored_len
+operator|<<
+literal|3
+expr_stmt|;
 endif|#
 directive|endif
-name|copy_block
-argument_list|(
-name|s
-argument_list|,
-name|buf
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|stored_len
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* with header */
 block|}
 end_function
 
@@ -5007,7 +5049,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -5026,7 +5068,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ===========================================================================  * Determine the best encoding for the current block: dynamic trees, static  * trees or store, and output the encoded block to the zip file.  */
+comment|/* ===========================================================================  * Determine the best encoding for the current block: dynamic trees, static  * trees or store, and write out the encoded block.  */
 end_comment
 
 begin_function
@@ -5393,7 +5435,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -5474,7 +5516,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -5519,7 +5561,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 name|s
 operator|->
 name|compressed_len
@@ -6093,6 +6135,9 @@ condition|)
 block|{
 name|dist
 operator|-=
+operator|(
+name|unsigned
+operator|)
 name|base_dist
 index|[
 name|code
@@ -6493,7 +6538,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 name|s
 operator|->
 name|bits_sent
@@ -6511,116 +6556,6 @@ literal|7
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-comment|/* ===========================================================================  * Copy a stored block, storing first the length and its  * one's complement if requested.  */
-name|local
-name|void
-name|copy_block
-parameter_list|(
-name|s
-parameter_list|,
-name|buf
-parameter_list|,
-name|len
-parameter_list|,
-name|header
-parameter_list|)
-name|deflate_state
-modifier|*
-name|s
-decl_stmt|;
-name|charf
-modifier|*
-name|buf
-decl_stmt|;
-comment|/* the input data */
-name|unsigned
-name|len
-decl_stmt|;
-comment|/* its length */
-name|int
-name|header
-decl_stmt|;
-comment|/* true if block header must be written */
-block|{
-name|bi_windup
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-comment|/* align on byte boundary */
-if|if
-condition|(
-name|header
-condition|)
-block|{
-name|put_short
-argument_list|(
-name|s
-argument_list|,
-operator|(
-name|ush
-operator|)
-name|len
-argument_list|)
-expr_stmt|;
-name|put_short
-argument_list|(
-name|s
-argument_list|,
-operator|(
-name|ush
-operator|)
-operator|~
-name|len
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|s
-operator|->
-name|bits_sent
-operator|+=
-literal|2
-operator|*
-literal|16
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|s
-operator|->
-name|bits_sent
-operator|+=
-operator|(
-name|ulg
-operator|)
-name|len
-operator|<<
-literal|3
-expr_stmt|;
-endif|#
-directive|endif
-while|while
-condition|(
-name|len
-operator|--
-condition|)
-block|{
-name|put_byte
-argument_list|(
-name|s
-argument_list|,
-operator|*
-name|buf
-operator|++
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 

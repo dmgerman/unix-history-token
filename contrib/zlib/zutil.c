@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-2005, 2010, 2011, 2012 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-2017 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -30,32 +30,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_DUMMY_DECL
-end_ifndef
-
-begin_struct
-struct|struct
-name|internal_state
-block|{
-name|int
-name|dummy
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* for buggy compilers */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|z_const
 name|char
@@ -67,33 +41,83 @@ literal|10
 index|]
 init|=
 block|{
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|"need dictionary"
 block|,
 comment|/* Z_NEED_DICT       2  */
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|"stream end"
 block|,
 comment|/* Z_STREAM_END      1  */
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|""
 block|,
 comment|/* Z_OK              0  */
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|"file error"
 block|,
 comment|/* Z_ERRNO         (-1) */
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|"stream error"
 block|,
 comment|/* Z_STREAM_ERROR  (-2) */
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|"data error"
 block|,
 comment|/* Z_DATA_ERROR    (-3) */
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|"insufficient memory"
 block|,
 comment|/* Z_MEM_ERROR     (-4) */
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|"buffer error"
 block|,
 comment|/* Z_BUF_ERROR     (-5) */
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|"incompatible version"
 block|,
 comment|/* Z_VERSION_ERROR (-6) */
+operator|(
+name|z_const
+name|char
+operator|*
+operator|)
 literal|""
 block|}
 decl_stmt|;
@@ -302,7 +326,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 name|flags
 operator|+=
 literal|1
@@ -507,8 +531,14 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -910,10 +940,7 @@ parameter_list|)
 block|{
 name|voidpf
 name|buf
-init|=
-name|opaque
 decl_stmt|;
-comment|/* just to make some compilers happy */
 name|ulg
 name|bsize
 init|=
@@ -924,6 +951,11 @@ name|items
 operator|*
 name|size
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|opaque
+expr_stmt|;
 comment|/* If we allocate less than 65520 bytes, we assume that farmalloc      * will return a usable pointer which doesn't have to be normalized.      */
 if|if
 condition|(
@@ -1062,6 +1094,11 @@ block|{
 name|int
 name|n
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|opaque
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1146,11 +1183,6 @@ operator|--
 expr_stmt|;
 return|return;
 block|}
-name|ptr
-operator|=
-name|opaque
-expr_stmt|;
-comment|/* just to make some compilers happy */
 name|Assert
 argument_list|(
 literal|0
@@ -1238,15 +1270,11 @@ name|uInt
 name|size
 parameter_list|)
 block|{
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|opaque
-condition|)
-name|opaque
-operator|=
-literal|0
 expr_stmt|;
-comment|/* to make compiler happy */
 return|return
 name|_halloc
 argument_list|(
@@ -1273,15 +1301,11 @@ name|voidpf
 name|ptr
 parameter_list|)
 block|{
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|opaque
-condition|)
-name|opaque
-operator|=
-literal|0
 expr_stmt|;
-comment|/* to make compiler happy */
 name|_hfree
 argument_list|(
 name|ptr
@@ -1395,17 +1419,11 @@ name|unsigned
 name|size
 decl_stmt|;
 block|{
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|opaque
-condition|)
-name|items
-operator|+=
-name|size
-operator|-
-name|size
 expr_stmt|;
-comment|/* make compiler happy */
 return|return
 sizeof|sizeof
 argument_list|(
@@ -1453,17 +1471,16 @@ name|voidpf
 name|ptr
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
+name|opaque
+expr_stmt|;
 name|free
 argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|opaque
-condition|)
-return|return;
-comment|/* make compiler happy */
 block|}
 end_function
 
