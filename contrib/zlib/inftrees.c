@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2013 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2017 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.2.8 Copyright 1995-2013 Mark Adler "
+literal|" inflate 1.2.11 Copyright 1995-2017 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -168,10 +168,10 @@ modifier|*
 name|extra
 decl_stmt|;
 comment|/* extra bits table to use */
-name|int
-name|end
+name|unsigned
+name|match
 decl_stmt|;
-comment|/* use base and extra for symbol> end */
+comment|/* use base and extra for symbol>= match */
 name|unsigned
 name|short
 name|count
@@ -335,9 +335,9 @@ literal|21
 block|,
 literal|16
 block|,
-literal|72
+literal|77
 block|,
-literal|78
+literal|202
 block|}
 decl_stmt|;
 specifier|static
@@ -835,9 +835,9 @@ operator|=
 name|work
 expr_stmt|;
 comment|/* dummy value--not used */
-name|end
+name|match
 operator|=
-literal|19
+literal|20
 expr_stmt|;
 break|break;
 case|case
@@ -847,21 +847,13 @@ name|base
 operator|=
 name|lbase
 expr_stmt|;
-name|base
-operator|-=
-literal|257
-expr_stmt|;
 name|extra
 operator|=
 name|lext
 expr_stmt|;
-name|extra
-operator|-=
-literal|257
-expr_stmt|;
-name|end
+name|match
 operator|=
-literal|256
+literal|257
 expr_stmt|;
 break|break;
 default|default:
@@ -874,10 +866,9 @@ name|extra
 operator|=
 name|dext
 expr_stmt|;
-name|end
+name|match
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 block|}
 comment|/* initialize state for loop */
@@ -987,17 +978,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-call|(
-name|int
-call|)
-argument_list|(
 name|work
 index|[
 name|sym
 index|]
-argument_list|)
+operator|+
+literal|1U
 operator|<
-name|end
+name|match
 condition|)
 block|{
 name|here
@@ -1023,17 +1011,12 @@ block|}
 elseif|else
 if|if
 condition|(
-call|(
-name|int
-call|)
-argument_list|(
 name|work
 index|[
 name|sym
 index|]
-argument_list|)
-operator|>
-name|end
+operator|>=
+name|match
 condition|)
 block|{
 name|here
@@ -1051,6 +1034,8 @@ name|work
 index|[
 name|sym
 index|]
+operator|-
+name|match
 index|]
 argument_list|)
 expr_stmt|;
@@ -1064,6 +1049,8 @@ name|work
 index|[
 name|sym
 index|]
+operator|-
+name|match
 index|]
 expr_stmt|;
 block|}

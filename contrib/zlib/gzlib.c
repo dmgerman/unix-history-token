@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzlib.c -- zlib functions common to reading and writing gzip files  * Copyright (C) 2004, 2010, 2011, 2012, 2013 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzlib.c -- zlib functions common to reading and writing gzip files  * Copyright (C) 2004-2017 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ operator|!
 name|defined
 argument_list|(
 name|__BORLANDC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MINGW32__
 argument_list|)
 end_if
 
@@ -442,7 +448,7 @@ block|{
 name|gz_statep
 name|state
 decl_stmt|;
-name|size_t
+name|z_size_t
 name|len
 decl_stmt|;
 name|int
@@ -773,7 +779,7 @@ block|}
 comment|/* save the path name for error messages */
 ifdef|#
 directive|ifdef
-name|_WIN32
+name|WIDECHAR
 if|if
 condition|(
 name|fd
@@ -798,7 +804,7 @@ condition|(
 name|len
 operator|==
 operator|(
-name|size_t
+name|z_size_t
 operator|)
 operator|-
 literal|1
@@ -858,7 +864,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|_WIN32
+name|WIDECHAR
 if|if
 condition|(
 name|fd
@@ -909,6 +915,9 @@ name|defined
 argument_list|(
 name|NO_vsnprintf
 argument_list|)
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|state
@@ -1028,7 +1037,7 @@ else|:
 operator|(
 ifdef|#
 directive|ifdef
-name|_WIN32
+name|WIDECHAR
 name|fd
 operator|==
 operator|-
@@ -1094,6 +1103,19 @@ name|mode
 operator|==
 name|GZ_APPEND
 condition|)
+block|{
+name|LSEEK
+argument_list|(
+name|state
+operator|->
+name|fd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_END
+argument_list|)
+expr_stmt|;
+comment|/* so gzoffset() is correct */
 name|state
 operator|->
 name|mode
@@ -1101,6 +1123,7 @@ operator|=
 name|GZ_WRITE
 expr_stmt|;
 comment|/* simplify later checks */
+block|}
 comment|/* save the current position for rewinding (only if reading) */
 if|if
 condition|(
@@ -1309,6 +1332,9 @@ name|defined
 argument_list|(
 name|NO_vsnprintf
 argument_list|)
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|path
@@ -1327,7 +1353,6 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* for debugging */
 else|#
 directive|else
 name|sprintf
@@ -1371,7 +1396,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_WIN32
+name|WIDECHAR
 end_ifdef
 
 begin_function
@@ -1486,6 +1511,21 @@ operator|-
 literal|1
 return|;
 comment|/* check and set requested size */
+if|if
+condition|(
+operator|(
+name|size
+operator|<<
+literal|1
+operator|)
+operator|<
+name|size
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+comment|/* need to be able to double it */
 if|if
 condition|(
 name|size
@@ -2756,6 +2796,9 @@ name|defined
 argument_list|(
 name|NO_vsnprintf
 argument_list|)
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|state
@@ -2820,7 +2863,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 

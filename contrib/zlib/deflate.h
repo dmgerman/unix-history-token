@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2012 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2016 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -149,12 +149,42 @@ name|INIT_STATE
 value|42
 end_define
 
+begin_comment
+comment|/* zlib header -> BUSY_STATE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GZIP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GZIP_STATE
+value|57
+end_define
+
+begin_comment
+comment|/* gzip header -> BUSY_STATE | EXTRA_STATE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|EXTRA_STATE
 value|69
 end_define
+
+begin_comment
+comment|/* gzip extra block -> NAME_STATE */
+end_comment
 
 begin_define
 define|#
@@ -163,12 +193,20 @@ name|NAME_STATE
 value|73
 end_define
 
+begin_comment
+comment|/* gzip file name -> COMMENT_STATE */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|COMMENT_STATE
 value|91
 end_define
+
+begin_comment
+comment|/* gzip comment -> HCRC_STATE */
+end_comment
 
 begin_define
 define|#
@@ -177,6 +215,10 @@ name|HCRC_STATE
 value|103
 end_define
 
+begin_comment
+comment|/* gzip header CRC -> BUSY_STATE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -184,12 +226,20 @@ name|BUSY_STATE
 value|113
 end_define
 
+begin_comment
+comment|/* deflate -> FINISH_STATE */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|FINISH_STATE
 value|666
 end_define
+
+begin_comment
+comment|/* stream complete */
+end_comment
 
 begin_comment
 comment|/* Stream status */
@@ -286,6 +336,7 @@ name|int
 name|max_code
 decl_stmt|;
 comment|/* largest code with non zero frequency */
+specifier|const
 name|static_tree_desc
 modifier|*
 name|stat_desc
@@ -350,7 +401,7 @@ modifier|*
 name|pending_out
 decl_stmt|;
 comment|/* next pending byte to output to the stream */
-name|uInt
+name|ulg
 name|pending
 decl_stmt|;
 comment|/* nb of bytes in the pending buffer */
@@ -362,7 +413,7 @@ name|gz_headerp
 name|gzhead
 decl_stmt|;
 comment|/* gzip header information to write */
-name|uInt
+name|ulg
 name|gzindex
 decl_stmt|;
 comment|/* where in extra, name, or comment */
@@ -612,7 +663,7 @@ decl_stmt|;
 comment|/* bytes at end of window left to insert */
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|ZLIB_DEBUG
 name|ulg
 name|compressed_len
 decl_stmt|;
@@ -654,7 +705,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|{s->pending_buf[s->pending++] = (c);}
+value|{s->pending_buf[s->pending++] = (Bytef)(c);}
 end_define
 
 begin_define
@@ -831,7 +882,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DEBUG
+name|ZLIB_DEBUG
 end_ifndef
 
 begin_comment
@@ -930,7 +981,7 @@ parameter_list|,
 name|flush
 parameter_list|)
 define|\
-value|{ uch len = (length); \     ush dist = (distance); \     s->d_buf[s->last_lit] = dist; \     s->l_buf[s->last_lit++] = len; \     dist--; \     s->dyn_ltree[_length_code[len]+LITERALS+1].Freq++; \     s->dyn_dtree[d_code(dist)].Freq++; \     flush = (s->last_lit == s->lit_bufsize-1); \   }
+value|{ uch len = (uch)(length); \     ush dist = (ush)(distance); \     s->d_buf[s->last_lit] = dist; \     s->l_buf[s->last_lit++] = len; \     dist--; \     s->dyn_ltree[_length_code[len]+LITERALS+1].Freq++; \     s->dyn_dtree[d_code(dist)].Freq++; \     flush = (s->last_lit == s->lit_bufsize-1); \   }
 end_define
 
 begin_else
