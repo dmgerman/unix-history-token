@@ -267,20 +267,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ADDR_CFG_EISA
-value|0x1f
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADDR_CFG_MASK
-value|0x1f
-end_define
-
-begin_define
-define|#
-directive|define
 name|EEPROM_RESOURCE_CFG
 value|0x9
 end_define
@@ -336,20 +322,6 @@ define|#
 directive|define
 name|EEPROM_CAP
 value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_ISA
-value|0x2083
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_PCMCIA
-value|0x2082
 end_define
 
 begin_define
@@ -491,7 +463,7 @@ value|(1<<5)
 end_define
 
 begin_comment
-comment|/**************************************************************************  * These are the registers for the 3Com 3c509 and their bit patterns when *  * applicable.  They have been taken out the "EtherLink III Parallel  *  * Tasking EISA and ISA Technical Reference" "Beta Draft 10/30/92" manual *  * from 3com.								  *  **************************************************************************/
+comment|/**************************************************************************  * These are the registers for the 3Com 3c509 and their bit patterns when *  * applicable.  They have been taken out the "EtherLink III Parallel      *  * Tasking EISA and ISA Technical Reference" "Beta Draft 10/30/92" manual *  * from 3com.								  *  **************************************************************************/
 end_comment
 
 begin_define
