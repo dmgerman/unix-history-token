@@ -292,6 +292,7 @@ specifier|inline
 name|int
 name|atomic_read
 parameter_list|(
+specifier|const
 name|atomic_t
 modifier|*
 name|v
@@ -301,7 +302,13 @@ return|return
 name|atomic_load_acq_int
 argument_list|(
 operator|&
+name|__DECONST
+argument_list|(
+name|atomic_t
+operator|*
+argument_list|,
 name|v
+argument_list|)
 operator|->
 name|counter
 argument_list|)
