@@ -817,41 +817,44 @@ name|V_ipforwarding
 condition|)
 block|{
 name|char
-name|buf
+name|srcbuf
 index|[
-literal|16
+name|INET_ADDRSTRLEN
 index|]
 decl_stmt|;
-comment|/* aaa.bbb.ccc.ddd\0 */
+name|char
+name|dstbuf
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* 					 * Acting as a router, so generate 					 * ICMP 					 */
 name|nosourcerouting
 label|:
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"attempted source route from %s to %s\n"
+literal|"attempted source route from %s "
+literal|"to %s\n"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|ip
 operator|->
 name|ip_src
+argument_list|,
+name|srcbuf
 argument_list|)
 argument_list|,
-name|buf
+name|inet_ntoa_r
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+argument_list|,
+name|dstbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|type
