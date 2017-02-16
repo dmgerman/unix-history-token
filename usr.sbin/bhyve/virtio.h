@@ -271,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|VIRTIO_DEV_RANDOM
-value|0x1002
+value|0x1005
 end_define
 
 begin_comment
