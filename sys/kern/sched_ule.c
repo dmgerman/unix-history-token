@@ -4854,7 +4854,7 @@ condition|)
 return|return;
 name|cpu
 operator|=
-name|TD_ID
+name|TDQ_ID
 argument_list|(
 name|tdq
 argument_list|)
