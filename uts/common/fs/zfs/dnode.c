@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -795,12 +795,6 @@ name|dn_dbufs_count
 operator|=
 literal|0
 expr_stmt|;
-name|dn
-operator|->
-name|dn_unlisted_l0_blkid
-operator|=
-literal|0
-expr_stmt|;
 name|avl_create
 argument_list|(
 operator|&
@@ -1172,13 +1166,6 @@ argument_list|(
 name|dn
 operator|->
 name|dn_dbufs_count
-argument_list|)
-expr_stmt|;
-name|ASSERT0
-argument_list|(
-name|dn
-operator|->
-name|dn_unlisted_l0_blkid
 argument_list|)
 expr_stmt|;
 name|avl_destroy
@@ -2980,12 +2967,6 @@ name|dn_id_flags
 operator|=
 literal|0
 expr_stmt|;
-name|dn
-operator|->
-name|dn_unlisted_l0_blkid
-operator|=
-literal|0
-expr_stmt|;
 name|dmu_zfetch_fini
 argument_list|(
 operator|&
@@ -4698,14 +4679,6 @@ name|dn_dbufs_count
 expr_stmt|;
 name|ndn
 operator|->
-name|dn_unlisted_l0_blkid
-operator|=
-name|odn
-operator|->
-name|dn_unlisted_l0_blkid
-expr_stmt|;
-name|ndn
-operator|->
 name|dn_bonus
 operator|=
 name|odn
@@ -4901,12 +4874,6 @@ expr_stmt|;
 name|odn
 operator|->
 name|dn_dbufs_count
-operator|=
-literal|0
-expr_stmt|;
-name|odn
-operator|->
-name|dn_unlisted_l0_blkid
 operator|=
 literal|0
 expr_stmt|;
