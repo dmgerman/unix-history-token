@@ -580,7 +580,7 @@ name|AHC_EISA
 init|=
 literal|0x0200
 block|,
-comment|/* Bus type EISA */
+comment|/* Bus type EISA/ISA */
 name|AHC_PCI
 init|=
 literal|0x0400
@@ -2916,7 +2916,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/***************************** VL/EISA Declarations ***************************/
+comment|/*************************** VL/EISA/ISA Declarations *************************/
 end_comment
 
 begin_struct
@@ -3078,7 +3078,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*************************** EISA/VL Front End ********************************/
+comment|/*************************** ISA/EISA/VL Front End ****************************/
 end_comment
 
 begin_function_decl
