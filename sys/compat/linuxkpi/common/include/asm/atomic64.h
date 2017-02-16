@@ -46,6 +46,16 @@ name|atomic64_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ATOMIC64_INIT
+parameter_list|(
+name|x
+parameter_list|)
+value|{ .counter = (x) }
+end_define
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	64-bit atomic operations  *------------------------------------------------------------------------*/
 end_comment
