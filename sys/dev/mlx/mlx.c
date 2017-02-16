@@ -2235,7 +2235,7 @@ name|meo
 operator|->
 name|me_fwmajor
 expr_stmt|;
-comment|/* XXX require 2.42 or better (PCI) or 2.14 or better (EISA) */
+comment|/* XXX require 2.42 or better (PCI) */
 if|if
 condition|(
 name|meo
