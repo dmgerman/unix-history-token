@@ -3779,21 +3779,6 @@ end_comment
 begin_function_decl
 name|char
 modifier|*
-name|inet_ntoa
-parameter_list|(
-name|struct
-name|in_addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* in libkern */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
 name|inet_ntoa_r
 parameter_list|(
 name|struct
