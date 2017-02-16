@@ -2183,6 +2183,17 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|type
+operator|==
+name|PDQ_DEFPA
+argument_list|,
+operator|(
+literal|"We only support PCI attachment."
+operator|)
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 name|PDQ_IFNET

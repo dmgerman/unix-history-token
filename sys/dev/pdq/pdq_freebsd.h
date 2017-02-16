@@ -292,17 +292,6 @@ block|{
 name|PDQ_DEFPA
 block|,
 comment|/* PCI-bus */
-name|PDQ_DEFEA
-block|,
-comment|/* EISA-bus */
-name|PDQ_DEFTA
-block|,
-comment|/* TurboChannel */
-name|PDQ_DEFAA
-block|,
-comment|/* FutureBus+ */
-name|PDQ_DEFQA
-comment|/* Q-bus */
 block|}
 enum|;
 end_enum
