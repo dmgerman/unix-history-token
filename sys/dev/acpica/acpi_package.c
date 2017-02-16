@@ -110,10 +110,6 @@ expr_stmt|;
 if|if
 condition|(
 name|obj
-operator|==
-name|NULL
-operator|||
-name|obj
 operator|->
 name|Type
 operator|!=
