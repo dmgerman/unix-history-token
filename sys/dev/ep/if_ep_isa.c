@@ -736,7 +736,7 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Construct an 'isa_id' in 'EISA' 		 * format. 		 */
+comment|/* 		 * Construct an 'isa_id' in 'EISA' format. 		 */
 name|data
 operator|=
 name|get_eeprom_data
@@ -863,7 +863,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"<%s> at port 0x%03x in EISA mode!\n"
+literal|"<%s> at port 0x%03x in EISA mode, ignoring!\n"
 argument_list|,
 name|desc
 argument_list|,
