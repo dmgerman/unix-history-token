@@ -80,7 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
 end_include
 
 begin_include
