@@ -1442,7 +1442,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update running CPU(s) MTRRs to match the ranges in the descriptor  * list.  *  * XXX Must be called with interrupts enabled.  */
+comment|/*  * Update running CPU(s) MTRRs to match the ranges in the descriptor  * list.  *  * Must be called with interrupts enabled.  */
 end_comment
 
 begin_function
@@ -1456,9 +1456,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SMP
 name|smp_rendezvous
 argument_list|(
 name|NULL
@@ -1470,22 +1467,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|disable_intr
-argument_list|()
-expr_stmt|;
-comment|/* disable interrupts */
-name|x86_mrstoreone
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|enable_intr
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3212,7 +3193,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Re-initialise running CPU(s) MTRRs to match the ranges in the descriptor  * list.  *  * XXX Must be called with interrupts enabled.  */
+comment|/*  * Re-initialise running CPU(s) MTRRs to match the ranges in the descriptor  * list.  *  * Must be called with interrupts enabled.  */
 end_comment
 
 begin_function
@@ -3226,16 +3207,19 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SMP
 name|smp_rendezvous
 argument_list|(
 name|NULL
 argument_list|,
 operator|(
 name|void
+argument_list|(
 operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
 operator|)
 name|x86_mrAPinit
 argument_list|,
@@ -3244,22 +3228,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|disable_intr
-argument_list|()
-expr_stmt|;
-comment|/* disable interrupts */
-name|x86_mrAPinit
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|enable_intr
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
