@@ -530,11 +530,6 @@ value|0x41
 comment|/* aha-1540/1542 w/64-h bios */
 define|#
 directive|define
-name|BOARD_1740
-value|0x43
-comment|/* aha-1740A/1742A/1744 */
-define|#
-directive|define
 name|BOARD_1542C
 value|0x44
 comment|/* aha-1542C */
