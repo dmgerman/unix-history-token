@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1999 Michael Smith<msmith@freebsd.org>  * Copyright (c) 2017 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Konstantin Belousov  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -96,7 +96,7 @@ file|<machine/specialreg.h>
 end_include
 
 begin_comment
-comment|/*  * amd64 memory range operations  *  * This code will probably be impenetrable without reference to the  * Intel Pentium Pro documentation or x86-64 programmers manual vol 2.  */
+comment|/*  * Pentium Pro+ memory range operations  *  * This code will probably be impenetrable without reference to the  * Intel Pentium Pro documentation or x86-64 programmers manual vol 2.  */
 end_comment
 
 begin_decl_stmt
@@ -201,7 +201,7 @@ name|mtrrs_disabled
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disable amd64 MTRRs."
+literal|"Disable MTRRs."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -209,7 +209,7 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|void
-name|amd64_mrinit
+name|x86_mrinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -222,7 +222,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|amd64_mrset
+name|x86_mrset
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -244,7 +244,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|amd64_mrAPinit
+name|x86_mrAPinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -257,7 +257,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|amd64_mrreinit
+name|x86_mrreinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -271,16 +271,16 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mem_range_ops
-name|amd64_mrops
+name|x86_mrops
 init|=
 block|{
-name|amd64_mrinit
+name|x86_mrinit
 block|,
-name|amd64_mrset
+name|x86_mrset
 block|,
-name|amd64_mrAPinit
+name|x86_mrAPinit
 block|,
-name|amd64_mrreinit
+name|x86_mrreinit
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -332,7 +332,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|amd64_mrfetch
+name|x86_mrfetch
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -345,7 +345,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|amd64_mtrrtype
+name|x86_mtrrtype
 parameter_list|(
 name|int
 name|flags
@@ -356,7 +356,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|amd64_mrt2mtrr
+name|x86_mrt2mtrr
 parameter_list|(
 name|int
 name|flags
@@ -370,7 +370,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|amd64_mtrrconflict
+name|x86_mtrrconflict
 parameter_list|(
 name|int
 name|flag1
@@ -384,7 +384,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|amd64_mrstore
+name|x86_mrstore
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -397,7 +397,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|amd64_mrstoreone
+name|x86_mrstoreone
 parameter_list|(
 name|void
 modifier|*
@@ -411,7 +411,7 @@ specifier|static
 name|struct
 name|mem_range_desc
 modifier|*
-name|amd64_mtrrfixsearch
+name|x86_mtrrfixsearch
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -427,7 +427,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|amd64_mrsetlow
+name|x86_mrsetlow
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -449,7 +449,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|amd64_mrsetvariable
+name|x86_mrsetvariable
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -469,13 +469,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* amd64 MTRR type to memory range type conversion */
+comment|/* ia32 MTRR type to memory range type conversion */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|amd64_mtrrtomrt
+name|x86_mtrrtomrt
 index|[]
 init|=
 block|{
@@ -500,13 +500,13 @@ begin_define
 define|#
 directive|define
 name|MTRRTOMRTLEN
-value|nitems(amd64_mtrrtomrt)
+value|nitems(x86_mtrrtomrt)
 end_define
 
 begin_function
 specifier|static
 name|int
-name|amd64_mtrr2mrt
+name|x86_mtrr2mrt
 parameter_list|(
 name|int
 name|val
@@ -529,7 +529,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|amd64_mtrrtomrt
+name|x86_mtrrtomrt
 index|[
 name|val
 index|]
@@ -539,13 +539,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * amd64 MTRR conflicts. Writeback and uncachable may overlap.  */
+comment|/*  * x86 MTRR conflicts. Writeback and uncachable may overlap.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|amd64_mtrrconflict
+name|x86_mtrrconflict
 parameter_list|(
 name|int
 name|flag1
@@ -710,13 +710,117 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Ensure that the direct map region does not contain any mappings  * that span MTRRs of different types.  However, the fixed MTRRs can  * be ignored, because a large page mapping the first 1 MB of physical  * memory is a special case that the processor handles.  Invalidate  * any old TLB entries that might hold inconsistent memory type  * information.   */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|x86_mr_split_dmap
+parameter_list|(
+name|struct
+name|mem_range_softc
+modifier|*
+name|sc
+name|__unused
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__amd64__
+name|struct
+name|mem_range_desc
+modifier|*
+name|mrd
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+operator|(
+name|sc
+operator|->
+name|mr_cap
+operator|&
+name|MR686_FIXMTRR
+operator|)
+condition|?
+name|MTRR_N64K
+operator|+
+name|MTRR_N16K
+operator|+
+name|MTRR_N4K
+else|:
+literal|0
+expr_stmt|;
+name|mrd
+operator|=
+name|sc
+operator|->
+name|mr_desc
+operator|+
+name|i
+expr_stmt|;
+for|for
+control|(
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|mr_ndesc
+condition|;
+name|i
+operator|++
+operator|,
+name|mrd
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|mrd
+operator|->
+name|mr_flags
+operator|&
+operator|(
+name|MDF_ACTIVE
+operator||
+name|MDF_BOGUS
+operator|)
+operator|)
+operator|==
+name|MDF_ACTIVE
+condition|)
+name|pmap_demote_DMAP
+argument_list|(
+name|mrd
+operator|->
+name|mr_base
+argument_list|,
+name|mrd
+operator|->
+name|mr_len
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
 comment|/*  * Fetch the current mtrr settings from the current CPU (assumed to  * all be in sync in the SMP case).  Note that if we are here, we  * assume that MTRRs are enabled, and we may or may not have fixed  * MTRRs.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|amd64_mrfetch
+name|x86_mrfetch
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -817,7 +921,7 @@ operator|~
 name|MDF_ATTRMASK
 operator|)
 operator||
-name|amd64_mtrr2mrt
+name|x86_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
@@ -866,11 +970,9 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
 name|MTRR_N16K
 operator|/
 literal|8
-operator|)
 condition|;
 name|i
 operator|++
@@ -916,7 +1018,7 @@ operator|~
 name|MDF_ATTRMASK
 operator|)
 operator||
-name|amd64_mtrr2mrt
+name|x86_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
@@ -965,11 +1067,9 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
 name|MTRR_N4K
 operator|/
 literal|8
-operator|)
 condition|;
 name|i
 operator|++
@@ -1015,7 +1115,7 @@ operator|~
 name|MDF_ATTRMASK
 operator|)
 operator||
-name|amd64_mtrr2mrt
+name|x86_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
@@ -1061,13 +1161,11 @@ expr_stmt|;
 for|for
 control|(
 init|;
-operator|(
 name|mrd
 operator|-
 name|sc
 operator|->
 name|mr_desc
-operator|)
 operator|<
 name|sc
 operator|->
@@ -1101,7 +1199,7 @@ operator|~
 name|MDF_ATTRMASK
 operator|)
 operator||
-name|amd64_mtrr2mrt
+name|x86_mtrr2mrt
 argument_list|(
 name|msrv
 operator|&
@@ -1236,7 +1334,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|amd64_mtrrtype
+name|x86_mtrrtype
 parameter_list|(
 name|int
 name|flags
@@ -1265,7 +1363,7 @@ control|)
 block|{
 if|if
 condition|(
-name|amd64_mtrrtomrt
+name|x86_mtrrtomrt
 index|[
 name|i
 index|]
@@ -1277,7 +1375,7 @@ if|if
 condition|(
 name|flags
 operator|==
-name|amd64_mtrrtomrt
+name|x86_mtrrtomrt
 index|[
 name|i
 index|]
@@ -1300,7 +1398,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|amd64_mrt2mtrr
+name|x86_mrt2mtrr
 parameter_list|(
 name|int
 name|flags
@@ -1317,7 +1415,7 @@ condition|(
 operator|(
 name|val
 operator|=
-name|amd64_mtrrtype
+name|x86_mtrrtype
 argument_list|(
 name|flags
 argument_list|)
@@ -1350,7 +1448,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|amd64_mrstore
+name|x86_mrstore
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -1361,12 +1459,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* 	 * We should use ipi_all_but_self() to call other CPUs into a 	 * locking gate, then call a target function to do this work. 	 * The "proper" solution involves a generalised locking gate 	 * implementation, not ready yet. 	 */
 name|smp_rendezvous
 argument_list|(
 name|NULL
 argument_list|,
-name|amd64_mrstoreone
+name|x86_mrstoreone
 argument_list|,
 name|NULL
 argument_list|,
@@ -1379,7 +1476,7 @@ name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* disable interrupts */
-name|amd64_mrstoreone
+name|x86_mrstoreone
 argument_list|(
 name|sc
 argument_list|)
@@ -1399,7 +1496,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|amd64_mrstoreone
+name|x86_mrstoreone
 parameter_list|(
 name|void
 modifier|*
@@ -1519,11 +1616,9 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
 name|MTRR_N64K
 operator|/
 literal|8
-operator|)
 condition|;
 name|i
 operator|++
@@ -1565,7 +1660,7 @@ literal|8
 expr_stmt|;
 name|msrv
 operator||=
-name|amd64_mrt2mtrr
+name|x86_mrt2mtrr
 argument_list|(
 operator|(
 name|mrd
@@ -1609,11 +1704,9 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
 name|MTRR_N16K
 operator|/
 literal|8
-operator|)
 condition|;
 name|i
 operator|++
@@ -1655,7 +1748,7 @@ literal|8
 expr_stmt|;
 name|msrv
 operator||=
-name|amd64_mrt2mtrr
+name|x86_mrt2mtrr
 argument_list|(
 operator|(
 name|mrd
@@ -1699,11 +1792,9 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
 name|MTRR_N4K
 operator|/
 literal|8
-operator|)
 condition|;
 name|i
 operator|++
@@ -1745,7 +1836,7 @@ literal|8
 expr_stmt|;
 name|msrv
 operator||=
-name|amd64_mrt2mtrr
+name|x86_mrt2mtrr
 argument_list|(
 operator|(
 name|mrd
@@ -1786,13 +1877,11 @@ expr_stmt|;
 for|for
 control|(
 init|;
-operator|(
 name|mrd
 operator|-
 name|sc
 operator|->
 name|mr_desc
-operator|)
 operator|<
 name|sc
 operator|->
@@ -1833,7 +1922,7 @@ name|mtrr_physmask
 expr_stmt|;
 name|msrv
 operator||=
-name|amd64_mrt2mtrr
+name|x86_mrt2mtrr
 argument_list|(
 name|mrd
 operator|->
@@ -1944,7 +2033,7 @@ specifier|static
 name|struct
 name|mem_range_desc
 modifier|*
-name|amd64_mtrrfixsearch
+name|x86_mtrrfixsearch
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -1977,13 +2066,11 @@ name|mr_desc
 init|;
 name|i
 operator|<
-operator|(
 name|MTRR_N64K
 operator|+
 name|MTRR_N16K
 operator|+
 name|MTRR_N4K
-operator|)
 condition|;
 name|i
 operator|++
@@ -1993,18 +2080,14 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
 name|addr
 operator|>=
 name|mrd
 operator|->
 name|mr_base
-operator|)
 operator|&&
-operator|(
 name|addr
 operator|<
-operator|(
 name|mrd
 operator|->
 name|mr_base
@@ -2012,8 +2095,6 @@ operator|+
 name|mrd
 operator|->
 name|mr_len
-operator|)
-operator|)
 condition|)
 return|return
 operator|(
@@ -2035,7 +2116,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|amd64_mrsetlow
+name|x86_mrsetlow
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -2067,10 +2148,9 @@ comment|/* Range check. */
 if|if
 condition|(
 operator|(
-operator|(
 name|first_md
 operator|=
-name|amd64_mtrrfixsearch
+name|x86_mtrrfixsearch
 argument_list|(
 name|sc
 argument_list|,
@@ -2081,13 +2161,11 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 operator|(
 name|last_md
 operator|=
-name|amd64_mtrrfixsearch
+name|x86_mtrrfixsearch
 argument_list|(
 name|sc
 argument_list|,
@@ -2104,7 +2182,6 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|)
 condition|)
 return|return
 operator|(
@@ -2114,7 +2191,6 @@ return|;
 comment|/* Check that we aren't doing something risky. */
 if|if
 condition|(
-operator|!
 operator|(
 name|mrd
 operator|->
@@ -2122,7 +2198,10 @@ name|mr_flags
 operator|&
 name|MDF_FORCE
 operator|)
+operator|==
+literal|0
 condition|)
+block|{
 for|for
 control|(
 name|curr_md
@@ -2154,6 +2233,7 @@ operator|(
 name|EACCES
 operator|)
 return|;
+block|}
 block|}
 comment|/* Set flags, clear set-by-firmware flag. */
 for|for
@@ -2222,7 +2302,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|amd64_mrsetvariable
+name|x86_mrsetvariable
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -2309,7 +2389,6 @@ block|{
 comment|/* Exact match? */
 if|if
 condition|(
-operator|(
 name|curr_md
 operator|->
 name|mr_base
@@ -2317,9 +2396,7 @@ operator|==
 name|mrd
 operator|->
 name|mr_base
-operator|)
 operator|&&
-operator|(
 name|curr_md
 operator|->
 name|mr_len
@@ -2327,7 +2404,6 @@ operator|==
 name|mrd
 operator|->
 name|mr_len
-operator|)
 condition|)
 block|{
 comment|/* Whoops, owned by someone. */
@@ -2357,7 +2433,6 @@ name|MDF_FORCE
 operator|)
 operator|&&
 operator|(
-operator|(
 name|curr_md
 operator|->
 name|mr_flags
@@ -2366,7 +2441,6 @@ name|MDF_ATTRMASK
 operator|)
 operator|==
 name|MDF_UNKNOWN
-operator|)
 condition|)
 return|return
 operator|(
@@ -2394,7 +2468,7 @@ block|{
 comment|/* Between conflicting region types? */
 if|if
 condition|(
-name|amd64_mtrrconflict
+name|x86_mtrrconflict
 argument_list|(
 name|curr_md
 operator|->
@@ -2501,7 +2575,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|amd64_mrset
+name|x86_mrset
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -2525,8 +2599,6 @@ name|targ
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|i
 decl_stmt|;
 switch|switch
 condition|(
@@ -2552,7 +2624,7 @@ operator|->
 name|mr_len
 argument_list|)
 operator|||
-name|amd64_mtrrtype
+name|x86_mtrrtype
 argument_list|(
 name|mrd
 operator|->
@@ -2570,6 +2642,7 @@ return|;
 define|#
 directive|define
 name|FIXTOP
+define|\
 value|((MTRR_N64K * 0x10000) + (MTRR_N16K * 0x4000) + (MTRR_N4K * 0x1000))
 comment|/* Are the "low memory" conditions applicable? */
 if|if
@@ -2581,9 +2654,9 @@ name|mr_cap
 operator|&
 name|MR686_FIXMTRR
 operator|)
+operator|!=
+literal|0
 operator|&&
-operator|(
-operator|(
 name|mrd
 operator|->
 name|mr_base
@@ -2591,10 +2664,8 @@ operator|+
 name|mrd
 operator|->
 name|mr_len
-operator|)
 operator|<=
 name|FIXTOP
-operator|)
 condition|)
 block|{
 if|if
@@ -2602,7 +2673,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|amd64_mrsetlow
+name|x86_mrsetlow
 argument_list|(
 name|sc
 argument_list|,
@@ -2628,7 +2699,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|amd64_mrsetvariable
+name|x86_mrsetvariable
 argument_list|(
 name|sc
 argument_list|,
@@ -2720,87 +2791,19 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-comment|/* 	 * Ensure that the direct map region does not contain any mappings 	 * that span MTRRs of different types.  However, the fixed MTRRs can 	 * be ignored, because a large page mapping the first 1 MB of physical 	 * memory is a special case that the processor handles.  The entire 	 * TLB will be invalidated by amd64_mrstore(), so pmap_demote_DMAP() 	 * needn't do it. 	 */
-name|i
-operator|=
-operator|(
-name|sc
-operator|->
-name|mr_cap
-operator|&
-name|MR686_FIXMTRR
-operator|)
-condition|?
-name|MTRR_N64K
-operator|+
-name|MTRR_N16K
-operator|+
-name|MTRR_N4K
-else|:
-literal|0
-expr_stmt|;
-name|mrd
-operator|=
-name|sc
-operator|->
-name|mr_desc
-operator|+
-name|i
-expr_stmt|;
-for|for
-control|(
-init|;
-name|i
-operator|<
-name|sc
-operator|->
-name|mr_ndesc
-condition|;
-name|i
-operator|++
-operator|,
-name|mrd
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|mrd
-operator|->
-name|mr_flags
-operator|&
-operator|(
-name|MDF_ACTIVE
-operator||
-name|MDF_BOGUS
-operator|)
-operator|)
-operator|==
-name|MDF_ACTIVE
-condition|)
-name|pmap_demote_DMAP
+name|x86_mr_split_dmap
 argument_list|(
-name|mrd
-operator|->
-name|mr_base
-argument_list|,
-name|mrd
-operator|->
-name|mr_len
-argument_list|,
-name|FALSE
+name|sc
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Update the hardware. */
-name|amd64_mrstore
+name|x86_mrstore
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Refetch to see where we're at. */
-name|amd64_mrfetch
+name|x86_mrfetch
 argument_list|(
 name|sc
 argument_list|)
@@ -2820,7 +2823,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|amd64_mrinit
+name|x86_mrinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -2833,20 +2836,10 @@ name|mem_range_desc
 modifier|*
 name|mrd
 decl_stmt|;
-name|u_int
-name|regs
-index|[
-literal|4
-index|]
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|nmdesc
-init|=
-literal|0
-decl_stmt|,
-name|pabits
 decl_stmt|;
 if|if
 condition|(
@@ -2858,6 +2851,10 @@ name|NULL
 condition|)
 comment|/* Already initialized. */
 return|return;
+name|nmdesc
+operator|=
+literal|0
+expr_stmt|;
 name|mtrrcap
 operator|=
 name|rdmsr
@@ -2900,43 +2897,23 @@ name|mtrrcap
 operator|&
 name|MTRR_CAP_VCNT
 expr_stmt|;
-comment|/* 	 * Determine the size of the PhysMask and PhysBase fields in 	 * the variable range MTRRs.  If the extended CPUID 0x80000008 	 * is present, use that to figure out how many physical 	 * address bits the CPU supports.  Otherwise, default to 36 	 * address bits. 	 */
 if|if
 condition|(
-name|cpu_exthigh
-operator|>=
-literal|0x80000008
+name|bootverbose
 condition|)
-block|{
-name|do_cpuid
+name|printf
 argument_list|(
-literal|0x80000008
-argument_list|,
-name|regs
+literal|"Pentium Pro MTRR support enabled\n"
 argument_list|)
 expr_stmt|;
-name|pabits
-operator|=
-name|regs
-index|[
-literal|0
-index|]
-operator|&
-literal|0xff
-expr_stmt|;
-block|}
-else|else
-name|pabits
-operator|=
-literal|36
-expr_stmt|;
+comment|/* 	 * Determine the size of the PhysMask and PhysBase fields in 	 * the variable range MTRRs. 	 */
 name|mtrr_physmask
 operator|=
 operator|(
 operator|(
 literal|1UL
 operator|<<
-name|pabits
+name|cpu_maxphyaddr
 operator|)
 operator|-
 literal|1
@@ -3151,7 +3128,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Get current settings, anything set now is considered to 	 * have been set by the firmware. (XXX has something already 	 * played here?) 	 */
-name|amd64_mrfetch
+name|x86_mrfetch
 argument_list|(
 name|sc
 argument_list|)
@@ -3196,79 +3173,11 @@ operator||=
 name|MDF_FIRMWARE
 expr_stmt|;
 block|}
-comment|/* 	 * Ensure that the direct map region does not contain any mappings 	 * that span MTRRs of different types.  However, the fixed MTRRs can 	 * be ignored, because a large page mapping the first 1 MB of physical 	 * memory is a special case that the processor handles.  Invalidate 	 * any old TLB entries that might hold inconsistent memory type 	 * information.  	 */
-name|i
-operator|=
-operator|(
-name|sc
-operator|->
-name|mr_cap
-operator|&
-name|MR686_FIXMTRR
-operator|)
-condition|?
-name|MTRR_N64K
-operator|+
-name|MTRR_N16K
-operator|+
-name|MTRR_N4K
-else|:
-literal|0
-expr_stmt|;
-name|mrd
-operator|=
-name|sc
-operator|->
-name|mr_desc
-operator|+
-name|i
-expr_stmt|;
-for|for
-control|(
-init|;
-name|i
-operator|<
-name|sc
-operator|->
-name|mr_ndesc
-condition|;
-name|i
-operator|++
-operator|,
-name|mrd
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|mrd
-operator|->
-name|mr_flags
-operator|&
-operator|(
-name|MDF_ACTIVE
-operator||
-name|MDF_BOGUS
-operator|)
-operator|)
-operator|==
-name|MDF_ACTIVE
-condition|)
-name|pmap_demote_DMAP
+name|x86_mr_split_dmap
 argument_list|(
-name|mrd
-operator|->
-name|mr_base
-argument_list|,
-name|mrd
-operator|->
-name|mr_len
-argument_list|,
-name|TRUE
+name|sc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3279,7 +3188,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|amd64_mrAPinit
+name|x86_mrAPinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -3287,7 +3196,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|amd64_mrstoreone
+name|x86_mrstoreone
 argument_list|(
 name|sc
 argument_list|)
@@ -3309,7 +3218,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|amd64_mrreinit
+name|x86_mrreinit
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -3320,7 +3229,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* 	 * We should use ipi_all_but_self() to call other CPUs into a 	 * locking gate, then call a target function to do this work. 	 * The "proper" solution involves a generalised locking gate 	 * implementation, not ready yet. 	 */
 name|smp_rendezvous
 argument_list|(
 name|NULL
@@ -3329,7 +3237,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|amd64_mrAPinit
+name|x86_mrAPinit
 argument_list|,
 name|NULL
 argument_list|,
@@ -3342,7 +3250,7 @@ name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* disable interrupts */
-name|amd64_mrAPinit
+name|x86_mrAPinit
 argument_list|(
 name|sc
 argument_list|)
@@ -3358,7 +3266,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|amd64_mem_drvinit
+name|x86_mem_drvinit
 parameter_list|(
 name|void
 modifier|*
@@ -3422,9 +3330,9 @@ operator|.
 name|mr_op
 operator|=
 operator|&
-name|amd64_mrops
+name|x86_mrops
 expr_stmt|;
-name|amd64_mrinit
+name|x86_mrinit
 argument_list|(
 operator|&
 name|mem_range_softc
@@ -3436,13 +3344,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|amd64memdev
+name|x86memdev
 argument_list|,
 name|SI_SUB_CPU
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,
-name|amd64_mem_drvinit
+name|x86_mem_drvinit
 argument_list|,
 name|NULL
 argument_list|)
