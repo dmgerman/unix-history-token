@@ -128,7 +128,91 @@ decl_stmt|;
 name|class
 name|TargetMachine
 decl_stmt|;
+comment|/// Wrapper around MemoryBufferRef, owning the identifier
+name|class
+name|ThinLTOBuffer
+block|{
+name|std
+operator|::
+name|string
+name|OwnedIdentifier
+expr_stmt|;
+name|StringRef
+name|Buffer
+decl_stmt|;
+name|public
+label|:
+name|ThinLTOBuffer
+argument_list|(
+argument|StringRef Buffer
+argument_list|,
+argument|StringRef Identifier
+argument_list|)
+block|:
+name|OwnedIdentifier
+argument_list|(
+name|Identifier
+argument_list|)
+operator|,
+name|Buffer
+argument_list|(
+argument|Buffer
+argument_list|)
+block|{}
+name|MemoryBufferRef
+name|getMemBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MemoryBufferRef
+argument_list|(
+name|Buffer
+argument_list|,
+block|{
+name|OwnedIdentifier
+operator|.
+name|c_str
+argument_list|()
+operator|,
+name|OwnedIdentifier
+operator|.
+name|size
+argument_list|()
+block|}
+block|)
+expr_stmt|;
+block|}
+name|StringRef
+name|getBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+return|;
+block|}
+name|StringRef
+name|getBufferIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwnedIdentifier
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// Helper to gather options relevant to the target machine creation
+end_comment
+
+begin_struct
 struct|struct
 name|TargetMachineBuilder
 block|{
@@ -177,12 +261,33 @@ specifier|const
 expr_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/// This class define an interface similar to the LTOCodeGenerator, but adapted
+end_comment
+
+begin_comment
 comment|/// for ThinLTO processing.
+end_comment
+
+begin_comment
 comment|/// The ThinLTOCodeGenerator is not intended to be reuse for multiple
+end_comment
+
+begin_comment
 comment|/// compilation: the model is that the client adds modules to the generator and
+end_comment
+
+begin_comment
 comment|/// ask to perform the ThinLTO optimizations / codegen, and finally destroys the
+end_comment
+
+begin_comment
 comment|/// codegenerator.
+end_comment
+
+begin_decl_stmt
 name|class
 name|ThinLTOCodeGenerator
 block|{
@@ -722,7 +827,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MemoryBufferRef
+name|ThinLTOBuffer
 operator|>
 name|Modules
 expr_stmt|;
@@ -776,11 +881,14 @@ init|=
 literal|3
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
