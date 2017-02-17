@@ -13673,12 +13673,6 @@ operator|!
 name|arc_reclaim_thread_exit
 condition|)
 block|{
-name|int64_t
-name|free_memory
-init|=
-name|arc_available_memory
-argument_list|()
-decl_stmt|;
 name|uint64_t
 name|evicted
 init|=
@@ -13706,6 +13700,18 @@ operator|&
 name|arc_reclaim_lock
 argument_list|)
 expr_stmt|;
+comment|/* 		 * We call arc_adjust() before (possibly) calling 		 * arc_kmem_reap_now(), so that we can wake up 		 * arc_get_data_buf() sooner. 		 */
+name|evicted
+operator|=
+name|arc_adjust
+argument_list|()
+expr_stmt|;
+name|int64_t
+name|free_memory
+init|=
+name|arc_available_memory
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|free_memory
@@ -13812,11 +13818,6 @@ operator|=
 name|B_FALSE
 expr_stmt|;
 block|}
-name|evicted
-operator|=
-name|arc_adjust
-argument_list|()
-expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
