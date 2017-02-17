@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic register and struct definitions for the Adaptech 154x/164x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *      aha 1542A/1542B/1542C/1542CF/1542CP	aha_isa.c  *      aha 1640			aha_mca.c  */
+comment|/*  * Generic register and struct definitions for the Adaptech 154x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *      aha 1542A/1542B/1542C/1542CF/1542CP	aha_isa.c  */
 end_comment
 
 begin_comment
@@ -1324,26 +1324,6 @@ name|model
 argument_list|)
 argument_list|,
 literal|"1540/1542 64 head BIOS"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|BOARD_1640
-case|:
-name|snprintf
-argument_list|(
-name|aha
-operator|->
-name|model
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|aha
-operator|->
-name|model
-argument_list|)
-argument_list|,
-literal|"1640"
 argument_list|)
 expr_stmt|;
 break|break;
