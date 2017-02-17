@@ -163,6 +163,9 @@ name|int
 name|set_flag
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -184,6 +187,9 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|ts
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -213,6 +219,9 @@ modifier|*
 name|timestamp_string
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -237,6 +246,9 @@ name|flags
 parameter_list|,
 name|int
 name|set_flag
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -356,7 +368,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*dbd*/
 literal|0
@@ -604,7 +616,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*scsi_page_fmt*/
 literal|1
@@ -753,6 +765,9 @@ modifier|*
 name|ts
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -843,7 +858,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*pdf*/
 literal|0
@@ -1025,6 +1040,9 @@ modifier|*
 name|timestamp_string
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1080,6 +1098,8 @@ name|flags
 argument_list|,
 comment|/*set_flag*/
 literal|1
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -1222,7 +1242,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*buf*/
 operator|&
@@ -1358,6 +1378,8 @@ argument_list|,
 comment|/*set_flag*/
 literal|0
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -1400,6 +1422,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -1914,6 +1939,8 @@ argument_list|,
 operator|&
 name|ts
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -2082,6 +2109,8 @@ argument_list|,
 name|format_string
 argument_list|,
 name|timestamp_string
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,

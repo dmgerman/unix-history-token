@@ -376,6 +376,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1251,7 +1254,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*service_action*/
 name|read_service_action
