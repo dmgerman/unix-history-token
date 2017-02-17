@@ -5896,6 +5896,10 @@ name|EM_MASTER_SLAVE
 expr_stmt|;
 block|}
 comment|/* 	 * Set the frame limits assuming 	 * standard ethernet sized frames. 	 */
+name|scctx
+operator|->
+name|isc_max_frame_size
+operator|=
 name|adapter
 operator|->
 name|hw
@@ -6547,6 +6551,14 @@ argument_list|(
 name|ctx
 argument_list|)
 decl_stmt|;
+name|if_softc_ctx_t
+name|scctx
+init|=
+name|iflib_get_softc_ctx
+argument_list|(
+name|ctx
+argument_list|)
+decl_stmt|;
 name|IOCTL_DEBUGOUT
 argument_list|(
 literal|"ioctl rcv'd: SIOCSIFMTU (Set Interface MTU)"
@@ -6639,6 +6651,10 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|scctx
+operator|->
+name|isc_max_frame_size
+operator|=
 name|adapter
 operator|->
 name|hw
