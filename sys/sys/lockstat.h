@@ -267,6 +267,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|int
 name|lockstat_enabled
 decl_stmt|;

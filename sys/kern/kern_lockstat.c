@@ -338,6 +338,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|volatile
 name|int
 name|__read_mostly
 name|lockstat_enabled
