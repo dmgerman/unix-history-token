@@ -2674,10 +2674,6 @@ name|MAP_NOCORE
 operator||
 name|MAP_NOSYNC
 expr_stmt|;
-name|addr
-operator|=
-name|MAP_FAILED
-expr_stmt|;
 name|fd
 operator|=
 name|open
