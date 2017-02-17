@@ -1830,9 +1830,11 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOCK_PROFILING
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
 name|_sx_xunlock_hard
 argument_list|(
 name|sx
