@@ -19132,6 +19132,17 @@ name|jsf
 decl_stmt|;
 ifdef|#
 directive|ifdef
+name|INET
+name|char
+name|ip4buf
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|INET6
 name|char
 name|ip6buf
@@ -19592,7 +19603,7 @@ literal|"ip4.addr        ="
 else|:
 literal|"                 "
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|pr
 operator|->
@@ -19600,6 +19611,8 @@ name|pr_ip4
 index|[
 name|ii
 index|]
+argument_list|,
+name|ip4buf
 argument_list|)
 argument_list|)
 expr_stmt|;

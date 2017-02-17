@@ -2738,6 +2738,16 @@ literal|0
 decl_stmt|,
 name|pabits
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mr_desc
+operator|!=
+name|NULL
+condition|)
+comment|/* Already initialized. */
+return|return;
 name|mtrrcap
 operator|=
 name|rdmsr
@@ -3240,6 +3250,12 @@ operator|=
 operator|&
 name|i686_mrops
 expr_stmt|;
+name|i686_mrinit
+argument_list|(
+operator|&
+name|mem_range_softc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3248,9 +3264,9 @@ name|SYSINIT
 argument_list|(
 name|i686memdev
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_CPU
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_ANY
 argument_list|,
 name|i686_mem_drvinit
 argument_list|,

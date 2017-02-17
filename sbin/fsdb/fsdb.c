@@ -1516,12 +1516,12 @@ name|curinode
 operator|=
 name|ginode
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 expr_stmt|;
 name|curinum
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 name|printactive
 argument_list|(
@@ -1942,7 +1942,7 @@ name|ac
 parameter_list|,
 name|inum
 parameter_list|)
-value|inum = strtoul(argv[ac],&cp, 0); \     if (inum< ROOTINO || inum> maxino || cp == argv[ac] || *cp != '\0' ) { \ 	printf("inode %ju out of range; range is [%ju,%ju]\n",		\ 	    (uintmax_t)inum, (uintmax_t)ROOTINO, (uintmax_t)maxino);	\ 	return 1; \     }
+value|inum = strtoul(argv[ac],&cp, 0); \ if (inum< UFS_ROOTINO || inum> maxino || cp == argv[ac] || *cp != '\0' ) { \ 	printf("inode %ju out of range; range is [%ju,%ju]\n",		\ 	    (uintmax_t)inum, (uintmax_t)UFS_ROOTINO, (uintmax_t)maxino);\ 	return 1; \ }
 end_define
 
 begin_comment
@@ -2741,12 +2741,12 @@ name|inosused
 operator|--
 control|)
 block|{
-comment|/* Skip magic inodes: 0, WINO, ROOTINO. */
+comment|/* Skip magic inodes: 0, UFS_WINO, UFS_ROOTINO. */
 if|if
 condition|(
 name|inum
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 continue|continue;
 comment|/* 	     * Check if the block we are looking for is just an inode block. 	     * 	     * ino_to_fsba() - get block containing inode from its number. 	     * INOPB() - get a number of inodes in one disk block. 	     */
@@ -2957,7 +2957,7 @@ name|dp2
 operator|.
 name|di_db
 argument_list|,
-name|NDADDR
+name|UFS_NDADDR
 argument_list|,
 name|wantedblk64
 argument_list|)
@@ -2970,7 +2970,7 @@ name|dp1
 operator|.
 name|di_db
 argument_list|,
-name|NDADDR
+name|UFS_NDADDR
 argument_list|,
 name|wantedblk32
 argument_list|)
@@ -2986,7 +2986,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -4005,13 +4005,13 @@ condition|)
 block|{
 name|curinum
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 name|curinode
 operator|=
 name|ginode
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 expr_stmt|;
 block|}

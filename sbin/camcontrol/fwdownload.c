@@ -735,6 +735,9 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1127,6 +1130,9 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1227,6 +1233,9 @@ literal|0
 argument_list|,
 comment|/*timeout_desc*/
 literal|1
+argument_list|,
+comment|/*task_attr*/
+name|task_attr
 argument_list|,
 comment|/*retry_count*/
 name|retry_count
@@ -3712,6 +3721,9 @@ name|int
 name|printerrors
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -4019,6 +4031,8 @@ name|device
 argument_list|,
 name|vp
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -4109,6 +4123,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|combinedopt
+argument_list|,
+name|MSG_SIMPLE_Q_TAG
 argument_list|,
 literal|0
 argument_list|,

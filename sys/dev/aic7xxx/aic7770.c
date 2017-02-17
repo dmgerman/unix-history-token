@@ -193,6 +193,10 @@ name|ahc_aic7770_EISA_setup
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Really just ISA */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|ahc_device_setup_t

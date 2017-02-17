@@ -515,14 +515,6 @@ index|[]
 init|=
 block|{
 literal|"DEFPA PCI"
-block|,
-literal|"DEFEA EISA"
-block|,
-literal|"DEFTA TC"
-block|,
-literal|"DEFAA Futurebus"
-block|,
-literal|"DEFQA Q-bus"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5658,20 +5650,6 @@ name|csrs
 argument_list|,
 name|csr_port_data_a
 argument_list|,
-operator|(
-name|state
-operator|==
-name|PDQS_HALTED
-operator|&&
-name|pdq
-operator|->
-name|pdq_type
-operator|!=
-name|PDQ_DEFTA
-operator|)
-condition|?
-literal|0
-else|:
 name|PDQ_PRESET_SKIP_SELFTEST
 argument_list|)
 expr_stmt|;
@@ -5923,16 +5901,7 @@ operator|->
 name|pdq_csrs
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFPA
-condition|)
-block|{
-comment|/* 	 * Disable interrupts and DMA. 	 */
+comment|/*      * Disable interrupts and DMA.      */
 name|PDQ_CSR_WRITE
 argument_list|(
 operator|&
@@ -5957,7 +5926,6 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-block|}
 comment|/*      * Flush all the databuf queues.      */
 name|pdq_flush_databuf_queue
 argument_list|(
@@ -6323,15 +6291,6 @@ name|pdqdb_transmits
 argument_list|)
 expr_stmt|;
 comment|/*      * Allow the DEFPA to do DMA.  Then program the physical       * addresses of the consumer and descriptor blocks.      */
-if|if
-condition|(
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFPA
-condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|PDQTEST
@@ -6366,45 +6325,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 comment|/*      * Make sure the unsolicited queue has events ...      */
 name|pdq_process_unsolicited_events
 argument_list|(
 name|pdq
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFEA
-operator|&&
-name|pdq
-operator|->
-name|pdq_chip_rev
-operator|==
-name|PDQ_CHIP_REV_E
-operator|)
-operator|||
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFTA
-condition|)
-name|PDQ_CSR_WRITE
-argument_list|(
-name|csrs
-argument_list|,
-name|csr_port_data_b
-argument_list|,
-name|PDQ_DMA_BURST_16LW
-argument_list|)
-expr_stmt|;
-else|else
 name|PDQ_CSR_WRITE
 argument_list|(
 name|csrs
@@ -7189,14 +7115,6 @@ name|progress
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFPA
-condition|)
 name|PDQ_CSR_WRITE
 argument_list|(
 operator|&
@@ -7518,12 +7436,6 @@ condition|(
 name|halt_code
 operator|==
 name|PDQH_DMA_ERROR
-operator|&&
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFPA
 condition|)
 block|{
 name|PDQ_PRINTF
@@ -7779,14 +7691,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFPA
-condition|)
 name|PDQ_CSR_WRITE
 argument_list|(
 operator|&
@@ -8520,25 +8424,9 @@ name|bus
 argument_list|,
 name|csr_base
 argument_list|,
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFAA
-condition|?
-literal|2
-else|:
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFPA
-condition|)
 name|pdq_init_pci_csrs
 argument_list|(
 operator|&
@@ -9688,12 +9576,6 @@ condition|(
 name|halt_code
 operator|==
 name|PDQH_DMA_ERROR
-operator|&&
-name|pdq
-operator|->
-name|pdq_type
-operator|==
-name|PDQ_DEFPA
 condition|)
 name|PDQ_PRINTF
 argument_list|(

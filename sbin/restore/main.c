@@ -841,7 +841,7 @@ name|treescan
 argument_list|(
 literal|"."
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|nodeupdates
 argument_list|)
@@ -888,7 +888,7 @@ name|treescan
 argument_list|(
 literal|"."
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|nodeupdates
 argument_list|)
@@ -926,7 +926,7 @@ name|treescan
 argument_list|(
 literal|"."
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|verifyfile
 argument_list|)

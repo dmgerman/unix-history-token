@@ -270,7 +270,7 @@ name|struct
 name|indir
 name|indirs
 index|[
-name|NIADDR
+name|UFS_NIADDR
 operator|+
 literal|2
 index|]
@@ -301,7 +301,7 @@ name|allocblk
 decl_stmt|,
 name|allociblk
 index|[
-name|NIADDR
+name|UFS_NIADDR
 operator|+
 literal|1
 index|]
@@ -406,7 +406,7 @@ if|if
 condition|(
 name|lastlbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|lastlbn
 operator|<
@@ -451,12 +451,12 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * The first NDADDR blocks are direct blocks 	 */
+comment|/* 	 * The first UFS_NDADDR blocks are direct blocks 	 */
 if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|nb
@@ -1557,7 +1557,7 @@ name|struct
 name|indir
 name|indirs
 index|[
-name|NIADDR
+name|UFS_NIADDR
 operator|+
 literal|2
 index|]
@@ -1590,7 +1590,7 @@ name|allocblk
 decl_stmt|,
 name|allociblk
 index|[
-name|NIADDR
+name|UFS_NIADDR
 operator|+
 literal|1
 index|]
@@ -1695,7 +1695,7 @@ if|if
 condition|(
 name|lastlbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|lastlbn
 operator|<
@@ -1740,12 +1740,12 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * The first NDADDR blocks are direct blocks 	 */
+comment|/* 	 * The first UFS_NDADDR blocks are direct blocks 	 */
 if|if
 condition|(
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|nb

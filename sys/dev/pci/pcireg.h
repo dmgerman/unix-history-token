@@ -6869,5 +6869,140 @@ parameter_list|)
 value|(PCIR_SRIOV_BARS + (x) * 4)
 end_define
 
+begin_comment
+comment|/*  * PCI Express Firmware Interface definitions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_OSC_STATUS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_OSC_SUPPORT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_SUPPORT_EXT_PCI_CONF
+value|0x01
+end_define
+
+begin_comment
+comment|/* Extended PCI Config Space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_SUPPORT_ASPM
+value|0x02
+end_define
+
+begin_comment
+comment|/* Active State Power Management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_SUPPORT_CPMC
+value|0x04
+end_define
+
+begin_comment
+comment|/* Clock Power Management Cap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_SUPPORT_SEG_GROUP
+value|0x08
+end_define
+
+begin_comment
+comment|/* PCI Segment Groups supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_SUPPORT_MSI
+value|0x10
+end_define
+
+begin_comment
+comment|/* MSI signalling supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_OSC_CTL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_CTL_PCIE_HP
+value|0x01
+end_define
+
+begin_comment
+comment|/* PCIe Native Hot Plug */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_CTL_SHPC_HP
+value|0x02
+end_define
+
+begin_comment
+comment|/* SHPC Native Hot Plug */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_CTL_PCIE_PME
+value|0x04
+end_define
+
+begin_comment
+comment|/* PCIe Native Power Mgt Events */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_CTL_PCIE_AER
+value|0x08
+end_define
+
+begin_comment
+comment|/* PCIe Advanced Error Reporting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_OSC_CTL_PCIE_CAP_STRUCT
+value|0x10
+end_define
+
+begin_comment
+comment|/* Various Capability Structures */
+end_comment
+
 end_unit
 

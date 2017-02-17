@@ -2439,6 +2439,12 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
+name|char
+name|ip4buf
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -2554,11 +2560,13 @@ name|ip4
 operator|.
 name|s_addr
 condition|?
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|hc_entry
 operator|->
 name|ip4
+argument_list|,
+name|ip4buf
 argument_list|)
 else|:
 ifdef|#

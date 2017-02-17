@@ -136,8 +136,12 @@ begin_define
 define|#
 directive|define
 name|__GFP_DMA32
-value|0
+value|(1U<< 24)
 end_define
+
+begin_comment
+comment|/* LinuxKPI only */
+end_comment
 
 begin_define
 define|#
@@ -199,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|GFP_DMA32
-value|0
+value|__GFP_DMA32
 end_define
 
 begin_define
@@ -207,6 +211,13 @@ define|#
 directive|define
 name|GFP_TEMPORARY
 value|M_NOWAIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|GFP_NATIVE_MASK
+value|(M_NOWAIT | M_WAITOK | M_USE_RESERVE | M_ZERO)
 end_define
 
 begin_function

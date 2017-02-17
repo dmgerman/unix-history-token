@@ -1914,7 +1914,7 @@ literal|0
 init|;
 name|ino
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 condition|;
 name|ino
 operator|++

@@ -513,7 +513,7 @@ argument_list|(
 name|port_index
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Ensure this port has not already been claimed already 		 * by a PCI, EISA or ISA adapter. 		 */
+comment|/* 		 * Ensure this port has not already been claimed already 		 * by a PCI, ISA adapter. 		 */
 if|if
 condition|(
 name|bt_check_probed_iop

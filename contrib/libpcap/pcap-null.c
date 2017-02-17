@@ -78,6 +78,7 @@ specifier|const
 name|char
 modifier|*
 name|device
+name|_U_
 parameter_list|,
 name|char
 modifier|*
@@ -118,6 +119,12 @@ modifier|*
 name|errbuf
 parameter_list|)
 block|{
+comment|/* 	 * There are no interfaces on which we can capture. 	 */
+operator|*
+name|alldevsp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 literal|0

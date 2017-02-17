@@ -22,18 +22,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ROOTINO
+name|UFS_ROOTINO
 value|((ino_t)2)
 end_define
 
 begin_comment
-comment|/*  * The Whiteout inode# is a dummy non-zero inode number which will  * never be allocated to a real file.  It is used as a place holder  * in the directory entry which has been tagged as a DT_WHT entry.  * See the comments about ROOTINO above.  */
+comment|/*  * The Whiteout inode# is a dummy non-zero inode number which will  * never be allocated to a real file.  It is used as a place holder  * in the directory entry which has been tagged as a DT_WHT entry.  * See the comments about UFS_ROOTINO above.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WINO
+name|UFS_WINO
 value|((ino_t)1)
 end_define
 
@@ -249,7 +249,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NXADDR
+name|UFS_NXADDR
 value|2
 end_define
 
@@ -260,7 +260,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NDADDR
+name|UFS_NDADDR
 value|12
 end_define
 
@@ -271,7 +271,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NIADDR
+name|UFS_NIADDR
 value|3
 end_define
 
@@ -362,21 +362,21 @@ comment|/*  92: External attributes size. */
 name|ufs2_daddr_t
 name|di_extb
 index|[
-name|NXADDR
+name|UFS_NXADDR
 index|]
 decl_stmt|;
-comment|/*  96: External attributes block. */
+comment|/* 96: External attributes block. */
 name|ufs2_daddr_t
 name|di_db
 index|[
-name|NDADDR
+name|UFS_NDADDR
 index|]
 decl_stmt|;
 comment|/* 112: Direct disk blocks. */
 name|ufs2_daddr_t
 name|di_ib
 index|[
-name|NIADDR
+name|UFS_NIADDR
 index|]
 decl_stmt|;
 comment|/* 208: Indirect disk blocks. */
@@ -461,14 +461,14 @@ comment|/*  36: Last inode change time. */
 name|ufs1_daddr_t
 name|di_db
 index|[
-name|NDADDR
+name|UFS_NDADDR
 index|]
 decl_stmt|;
 comment|/*  40: Direct disk blocks. */
 name|ufs1_daddr_t
 name|di_ib
 index|[
-name|NIADDR
+name|UFS_NIADDR
 index|]
 decl_stmt|;
 comment|/*  88: Indirect disk blocks. */

@@ -986,7 +986,7 @@ argument_list|,
 name|sz
 argument_list|)
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|nblk
@@ -1028,7 +1028,7 @@ argument_list|,
 name|sz
 argument_list|)
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|nblk
@@ -1054,7 +1054,7 @@ operator|=
 operator|(
 name|sz
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|+
 name|NINDIR
 argument_list|(

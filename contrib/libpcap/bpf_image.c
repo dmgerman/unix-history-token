@@ -23,7 +23,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|_WIN32
 end_ifdef
 
 begin_include
@@ -38,7 +38,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_if
@@ -99,7 +99,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WIN32 */
+comment|/* _WIN32 */
 end_comment
 
 begin_include
@@ -963,7 +963,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|operand
 argument_list|,
@@ -999,7 +999,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|image
 argument_list|,
@@ -1037,7 +1037,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|image
 argument_list|,

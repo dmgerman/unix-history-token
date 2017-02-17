@@ -2629,6 +2629,15 @@ literal|"vnode"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|type
+argument_list|,
+literal|"preload"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|file

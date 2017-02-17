@@ -214,6 +214,17 @@ begin_comment
 comment|/* 100ms timeout */
 end_comment
 
+begin_comment
+comment|/*  * If we exceed this number of retransmits for a single segment, we'll consider  * the current srtt measurement no longer valid and will recalculate from  * scratch starting with the next ACK.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_RTT_INVALIDATE
+value|(TCP_MAXRXTSHIFT / 4)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

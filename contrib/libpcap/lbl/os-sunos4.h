@@ -503,15 +503,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|endservent
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1382,15 +1373,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|setservent
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|setsockopt
 parameter_list|(
@@ -1505,7 +1487,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|snprintf
+name|pcap_snprintf
 parameter_list|(
 name|char
 modifier|*

@@ -1885,7 +1885,7 @@ block|}
 if|#
 directive|if
 name|HAVE_SUN_ACL
-comment|/* Check if Solars filesystem supports POSIX.1e ACLs */
+comment|/* Check if Solaris filesystem supports POSIX.1e ACLs */
 name|n
 operator|=
 name|facl_get

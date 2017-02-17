@@ -118,10 +118,6 @@ name|F_PROMISC
 value|0x008
 define|#
 directive|define
-name|F_ACCESS_32_BITS
-value|0x100
-define|#
-directive|define
 name|F_HAS_TX_PLL
 value|0x200
 name|int

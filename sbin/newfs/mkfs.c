@@ -1398,9 +1398,9 @@ name|fs_maxsymlinklen
 operator|=
 operator|(
 operator|(
-name|NDADDR
+name|UFS_NDADDR
 operator|+
-name|NIADDR
+name|UFS_NIADDR
 operator|)
 operator|*
 sizeof|sizeof
@@ -1535,9 +1535,9 @@ name|fs_maxsymlinklen
 operator|=
 operator|(
 operator|(
-name|NDADDR
+name|UFS_NDADDR
 operator|+
-name|NIADDR
+name|UFS_NIADDR
 operator|)
 operator|*
 sizeof|sizeof
@@ -1615,7 +1615,7 @@ name|sblock
 operator|.
 name|fs_bsize
 operator|*
-name|NDADDR
+name|UFS_NDADDR
 operator|-
 literal|1
 expr_stmt|;
@@ -1633,7 +1633,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -2752,7 +2752,7 @@ name|sblock
 operator|.
 name|fs_ipg
 operator|-
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 name|sblock
 operator|.
@@ -4170,7 +4170,7 @@ operator|<
 operator|(
 name|long
 operator|)
-name|ROOTINO
+name|UFS_ROOTINO
 condition|;
 name|i
 operator|++
@@ -4913,7 +4913,7 @@ index|[]
 init|=
 block|{
 block|{
-name|ROOTINO
+name|UFS_ROOTINO
 block|,
 sizeof|sizeof
 argument_list|(
@@ -4929,7 +4929,7 @@ literal|"."
 block|}
 block|,
 block|{
-name|ROOTINO
+name|UFS_ROOTINO
 block|,
 sizeof|sizeof
 argument_list|(
@@ -4945,7 +4945,7 @@ literal|".."
 block|}
 block|,
 block|{
-name|ROOTINO
+name|UFS_ROOTINO
 operator|+
 literal|1
 block|,
@@ -4981,7 +4981,7 @@ index|[]
 init|=
 block|{
 block|{
-name|ROOTINO
+name|UFS_ROOTINO
 operator|+
 literal|1
 block|,
@@ -4999,7 +4999,7 @@ literal|"."
 block|}
 block|,
 block|{
-name|ROOTINO
+name|UFS_ROOTINO
 block|,
 sizeof|sizeof
 argument_list|(
@@ -5234,7 +5234,7 @@ argument_list|(
 operator|&
 name|node
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 expr_stmt|;
 if|if
@@ -5353,7 +5353,7 @@ argument_list|(
 operator|&
 name|node
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 operator|+
 literal|1
 argument_list|)
@@ -5499,7 +5499,7 @@ argument_list|(
 operator|&
 name|node
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 expr_stmt|;
 if|if
@@ -5618,7 +5618,7 @@ argument_list|(
 operator|&
 name|node
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 operator|+
 literal|1
 argument_list|)

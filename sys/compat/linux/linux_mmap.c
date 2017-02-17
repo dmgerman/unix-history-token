@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscallsubr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -564,7 +570,7 @@ block|}
 block|}
 name|error
 operator|=
-name|kern_vm_mmap
+name|kern_mmap
 argument_list|(
 name|td
 argument_list|,
@@ -642,7 +648,7 @@ endif|#
 directive|endif
 return|return
 operator|(
-name|kern_vm_mprotect
+name|kern_mprotect
 argument_list|(
 name|td
 argument_list|,

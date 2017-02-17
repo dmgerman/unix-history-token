@@ -317,7 +317,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -557,7 +557,7 @@ name|sblock
 operator|.
 name|fs_bsize
 operator|*
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 name|sizepb
 operator|=
@@ -573,7 +573,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -1601,7 +1601,7 @@ if|if
 condition|(
 name|inumber
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 name|inumber
 operator|>
@@ -1972,7 +1972,7 @@ name|ufs2_zino
 operator|.
 name|di_db
 argument_list|,
-name|NDADDR
+name|UFS_NDADDR
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1992,7 +1992,7 @@ name|ufs2_zino
 operator|.
 name|di_ib
 argument_list|,
-name|NIADDR
+name|UFS_NIADDR
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -2120,14 +2120,14 @@ if|if
 condition|(
 name|ndb
 operator|>
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|j
 operator|=
 name|ndb
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 for|for
 control|(
@@ -2152,7 +2152,7 @@ argument_list|)
 expr_stmt|;
 name|ndb
 operator|+=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 block|}
 block|}
@@ -2165,11 +2165,11 @@ name|ndb
 init|;
 name|ndb
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|j
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|j
 operator|++
@@ -2201,7 +2201,7 @@ literal|0
 operator|,
 name|ndb
 operator|-=
-name|NDADDR
+name|UFS_NDADDR
 init|;
 name|ndb
 operator|>
@@ -2223,7 +2223,7 @@ control|(
 init|;
 name|j
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|j
 operator|++
@@ -2576,13 +2576,13 @@ operator|.
 name|fs_bsize
 argument_list|)
 operator|>
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 name|blks
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 operator|+
-name|NIADDR
+name|UFS_NIADDR
 expr_stmt|;
 else|else
 name|blks
@@ -2669,9 +2669,9 @@ name|i_parent
 operator|=
 name|inumber
 operator|==
-name|ROOTINO
+name|UFS_ROOTINO
 condition|?
-name|ROOTINO
+name|UFS_ROOTINO
 else|:
 operator|(
 name|ino_t
@@ -2722,7 +2722,7 @@ name|MIN
 argument_list|(
 name|blks
 argument_list|,
-name|NDADDR
+name|UFS_NDADDR
 argument_list|)
 condition|;
 name|i
@@ -2749,7 +2749,7 @@ if|if
 condition|(
 name|blks
 operator|>
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 for|for
 control|(
@@ -2759,7 +2759,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -2768,7 +2768,7 @@ name|inp
 operator|->
 name|i_blks
 index|[
-name|NDADDR
+name|UFS_NDADDR
 operator|+
 name|i
 index|]
@@ -3366,7 +3366,7 @@ name|dirp
 operator|->
 name|d_ino
 operator|>=
-name|ROOTINO
+name|UFS_ROOTINO
 operator|&&
 name|dirp
 operator|->
@@ -3503,7 +3503,7 @@ if|if
 condition|(
 name|ino
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 name|ino
 operator|>
@@ -3794,7 +3794,7 @@ literal|0
 condition|)
 name|request
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 elseif|else
 if|if

@@ -659,21 +659,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASMC_MBP11_TEMPS
-value|{ "TB0T", "TB1T", "TB2T", "TBXT", "TC0E", \ 				  "TC0F", "TC0P", "TC1C", "TC2C", "TC3C", \ 				  "TC4C", "TCFC", "TCGC", "TCSA", "TCTD", \ 				  "TCXC", "TG0D", "TG0P", "TG1D", "TG1F", \ 				  "TG1d", "TH0A", "TH0B", "TH0F", "TH0R", \ 				  "TH0V", "TH0a", "TH0b", "TH0c", "TM0P", \ 				  "TM0S", "TP0P", "TPCD", "TW0P", "Ta0P", \ 				  "TaSP", "Th1H", "Th2H", "Ts0P", "Ts0S", \ 				  "Ts1S", NULL }
+name|ASMC_MBP112_TEMPS
+value|{ "TB0T", "TB1T", "TB2T", "TBXT", "TC0E", \ 				  "TC0F", "TC0P", "TC1C", "TC2C", "TC3C", \ 				  "TC4C", "TCFC", "TCGC", "TCSA", "TCTD", \ 				  "TCXC", "TH0A", "TH0B", "TH0F", "TH0R", \ 				  "TH0V", "TH0a", "TH0b", "TH0c", "TM0P", \ 				  "TM0S", "TP0P", "TPCD", "TW0P", "Ta0P", \ 				  "TaSP", "Th1H", "Th2H", "Ts0P", "Ts0S", \ 				  "Ts1S", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASMC_MBP11_TEMPNAMES
+name|ASMC_MBP112_TEMPNAMES
+value|{ "TB0T", "TB1T", "TB2T", "TBXT", "TC0E", \ 				  "TC0F", "TC0P", "TC1C", "TC2C", "TC3C", \ 				  "TC4C", "TCFC", "TCGC", "TCSA", "TCTD", \ 				  "TCXC", "TH0A", "TH0B", "TH0F", "TH0R", \ 				  "TH0V", "TH0a", "TH0b", "TH0c", "TM0P", \ 				  "TM0S", "TP0P", "TPCD", "TW0P", "Ta0P", \ 				  "TaSP", "Th1H", "Th2H", "Ts0P", "Ts0S", \ 				  "Ts1S" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MBP112_TEMPDESCS
+value|{ "TB0T", "TB1T", "TB2T", "TBXT", "TC0E", \ 				  "TC0F", "TC0P", "TC1C", "TC2C", "TC3C", \ 				  "TC4C", "TCFC", "TCGC", "TCSA", "TCTD", \ 				  "TCXC", "TH0A", "TH0B", "TH0F", "TH0R", \ 				  "TH0V", "TH0a", "TH0b", "TH0c", "TM0P", \ 				  "TM0S", "TP0P", "TPCD", "TW0P", "Ta0P", \ 				  "TaSP", "Th1H", "Th2H", "Ts0P", "Ts0S", \ 				  "Ts1S" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MBP113_TEMPS
+value|{ "TB0T", "TB1T", "TB2T", "TBXT", "TC0E",	\ 				  "TC0F", "TC0P", "TC1C", "TC2C", "TC3C", \ 				  "TC4C", "TCFC", "TCGC", "TCSA", "TCTD", \ 				  "TCXC", "TG0D", "TG0P", "TG1D", "TG1F", \ 				  "TG1d", "TH0A", "TH0B", "TH0F", "TH0R", \ 				  "TH0V", "TH0a", "TH0b", "TH0c", "TM0P", \ 				  "TM0S", "TP0P", "TPCD", "TW0P", "Ta0P", \ 				  "TaSP", "Th1H", "Th2H", "Ts0P", "Ts0S", \ 				  "Ts1S", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MBP113_TEMPNAMES
 value|{ "TB0T", "TB1T", "TB2T", "TBXT", "TC0E", \ 				  "TC0F", "TC0P", "TC1C", "TC2C", "TC3C", \ 				  "TC4C", "TCFC", "TCGC", "TCSA", "TCTD", \ 				  "TCXC", "TG0D", "TG0P", "TG1D", "TG1F", \ 				  "TG1d", "TH0A", "TH0B", "TH0F", "TH0R", \ 				  "TH0V", "TH0a", "TH0b", "TH0c", "TM0P", \ 				  "TM0S", "TP0P", "TPCD", "TW0P", "Ta0P", \ 				  "TaSP", "Th1H", "Th2H", "Ts0P", "Ts0S", \ 				  "Ts1S" }
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASMC_MBP11_TEMPDESCS
+name|ASMC_MBP113_TEMPDESCS
 value|{ "TB0T", "TB1T", "TB2T", "TBXT", "TC0E", \ 				  "TC0F", "TC0P", "TC1C", "TC2C", "TC3C", \ 				  "TC4C", "TCFC", "TCGC", "TCSA", "TCTD", \ 				  "TCXC", "TG0D", "TG0P", "TG1D", "TG1F", \ 				  "TG1d", "TH0A", "TH0B", "TH0F", "TH0R", \ 				  "TH0V", "TH0a", "TH0b", "TH0c", "TM0P", \ 				  "TM0S", "TP0P", "TPCD", "TW0P", "Ta0P", \ 				  "TaSP", "Th1H", "Th2H", "Ts0P", "Ts0S", \ 				  "Ts1S" }
 end_define
 

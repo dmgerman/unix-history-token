@@ -1404,14 +1404,6 @@ name|empty_field
 decl_stmt|,
 name|empty_key
 decl_stmt|;
-name|pos_end
-operator|=
-literal|0
-expr_stmt|;
-name|next_field_start
-operator|=
-literal|0
-expr_stmt|;
 name|empty_field
 operator|=
 name|false
@@ -3793,10 +3785,6 @@ expr_stmt|;
 name|frac1
 operator|=
 name|frac2
-operator|=
-literal|0
-expr_stmt|;
-name|cmp_res
 operator|=
 literal|0
 expr_stmt|;

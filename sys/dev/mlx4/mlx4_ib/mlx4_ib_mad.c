@@ -3377,11 +3377,13 @@ block|{
 if|if
 condition|(
 operator|!
+operator|(
 name|wc
 operator|->
 name|wc_flags
 operator|&
 name|IB_WC_GRH
+operator|)
 condition|)
 block|{
 name|mlx4_ib_warn

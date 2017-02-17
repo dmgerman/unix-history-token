@@ -194,7 +194,7 @@ argument_list|,
 operator|(
 name|ino_t
 operator|)
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|flags
 argument_list|,

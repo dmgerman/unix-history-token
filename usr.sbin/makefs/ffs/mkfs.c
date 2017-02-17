@@ -669,9 +669,9 @@ name|Oflag
 operator|==
 literal|1
 condition|?
-name|MAXSYMLINKLEN_UFS1
+name|UFS1_MAXSYMLINKLEN
 else|:
-name|MAXSYMLINKLEN_UFS2
+name|UFS2_MAXSYMLINKLEN
 operator|)
 expr_stmt|;
 name|sblock
@@ -1355,9 +1355,9 @@ name|fs_maxsymlinklen
 operator|=
 operator|(
 operator|(
-name|NDADDR
+name|UFS_NDADDR
 operator|+
-name|NIADDR
+name|UFS_NIADDR
 operator|)
 operator|*
 sizeof|sizeof
@@ -1498,9 +1498,9 @@ name|fs_maxsymlinklen
 operator|=
 operator|(
 operator|(
-name|NDADDR
+name|UFS_NDADDR
 operator|+
-name|NIADDR
+name|UFS_NIADDR
 operator|)
 operator|*
 sizeof|sizeof
@@ -1583,7 +1583,7 @@ name|sblock
 operator|.
 name|fs_bsize
 operator|*
-name|NDADDR
+name|UFS_NDADDR
 operator|-
 literal|1
 expr_stmt|;
@@ -1601,7 +1601,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -2654,7 +2654,7 @@ name|sblock
 operator|.
 name|fs_ipg
 operator|-
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 name|sblock
 operator|.
@@ -3995,7 +3995,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 condition|;
 name|i
 operator|++

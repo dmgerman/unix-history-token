@@ -262,7 +262,7 @@ decl_stmt|;
 name|int
 name|nf_nindir
 index|[
-name|NIADDR
+name|NANDFS_NIADDR
 index|]
 decl_stmt|;
 block|}
@@ -1595,7 +1595,7 @@ literal|0
 init|;
 name|level
 operator|<
-name|NIADDR
+name|NANDFS_NIADDR
 condition|;
 name|level
 operator|++
@@ -2037,7 +2037,7 @@ literal|0
 init|;
 name|level
 operator|<
-name|NIADDR
+name|NANDFS_NIADDR
 condition|;
 name|level
 operator|++
@@ -4582,7 +4582,7 @@ if|if
 condition|(
 name|lblknr
 operator|<
-name|NDADDR
+name|NANDFS_NDADDR
 condition|)
 block|{
 operator|*
@@ -4603,7 +4603,7 @@ return|;
 block|}
 name|lblknr
 operator|-=
-name|NDADDR
+name|NANDFS_NDADDR
 expr_stmt|;
 comment|/* 	 * nindir[0] = NINDIR 	 * nindir[1] = NINDIR**2 	 * nindir[2] = NINDIR**3 	 *	etc 	 */
 for|for
@@ -4614,7 +4614,7 @@ literal|0
 init|;
 name|level
 operator|<
-name|NIADDR
+name|NANDFS_NIADDR
 condition|;
 name|level
 operator|++
@@ -4662,7 +4662,7 @@ if|if
 condition|(
 name|level
 operator|==
-name|NIADDR
+name|NANDFS_NIADDR
 condition|)
 block|{
 comment|/* Block number too high */

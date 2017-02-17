@@ -1650,7 +1650,7 @@ expr_stmt|;
 comment|/* 	 * If there may be whiteout entries on the tape, pretend that the 	 * whiteout inode exists, so that the whiteout entries can be 	 * extracted. 	 */
 name|SETINO
 argument_list|(
-name|WINO
+name|UFS_WINO
 argument_list|,
 name|dumpmap
 argument_list|)

@@ -1268,7 +1268,7 @@ name|fsopts
 operator|->
 name|curinode
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 if|if
 condition|(
@@ -1815,7 +1815,7 @@ name|fsopts
 operator|->
 name|inodes
 operator|+=
-name|ROOTINO
+name|UFS_ROOTINO
 expr_stmt|;
 comment|/* include first two inodes */
 if|if
@@ -2868,7 +2868,7 @@ name|fs_cstotal
 operator|.
 name|cs_nifree
 operator|+
-name|ROOTINO
+name|UFS_ROOTINO
 operator|<
 name|fsopts
 operator|->
@@ -2892,7 +2892,7 @@ name|fs_cstotal
 operator|.
 name|cs_nifree
 operator|+
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 argument_list|,
 operator|(
@@ -3179,9 +3179,9 @@ name|version
 operator|==
 literal|1
 condition|?
-name|MAXSYMLINKLEN_UFS1
+name|UFS1_MAXSYMLINKLEN
 else|:
-name|MAXSYMLINKLEN_UFS2
+name|UFS2_MAXSYMLINKLEN
 operator|)
 condition|)
 name|ADDSIZE
@@ -3546,7 +3546,7 @@ if|if
 condition|(
 name|slen
 operator|<
-name|MAXSYMLINKLEN_UFS1
+name|UFS1_MAXSYMLINKLEN
 condition|)
 block|{
 comment|/* short link */
@@ -3907,7 +3907,7 @@ if|if
 condition|(
 name|slen
 operator|<
-name|MAXSYMLINKLEN_UFS2
+name|UFS2_MAXSYMLINKLEN
 condition|)
 block|{
 comment|/* short link */

@@ -27,7 +27,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * As returned by the pcap_next_etherent()  * XXX this stuff doesn't belong in this interface, but this  * library already must do name to address translation, so  * on systems that don't have support for /etc/ethers, we  * export these hooks since they'll  */
+comment|/*  * As returned by the pcap_next_etherent()  * XXX this stuff doesn't belong in this interface, but this  * library already must do name to address translation, so  * on systems that don't have support for /etc/ethers, we  * export these hooks since they're already being used by  * some applications (such as tcpdump) and already being  * marked as exported in some OSes offering libpcap (such  * as Debian).  */
 struct|struct
 name|pcap_etherent
 block|{
@@ -54,6 +54,7 @@ name|PCAP_ETHERS_FILE
 value|"/etc/ethers"
 endif|#
 directive|endif
+name|PCAP_API
 name|struct
 name|pcap_etherent
 modifier|*
@@ -63,6 +64,7 @@ name|FILE
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|u_char
 modifier|*
 name|pcap_ether_hostton
@@ -72,6 +74,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|u_char
 modifier|*
 name|pcap_ether_aton
@@ -81,6 +84,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|bpf_u_int32
 modifier|*
 modifier|*
@@ -94,6 +98,7 @@ function_decl|;
 ifdef|#
 directive|ifdef
 name|INET6
+name|PCAP_API
 name|struct
 name|addrinfo
 modifier|*
@@ -106,6 +111,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+name|PCAP_API
 name|bpf_u_int32
 name|pcap_nametonetaddr
 parameter_list|(
@@ -114,6 +120,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_nametoport
 parameter_list|(
@@ -128,6 +135,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_nametoportrange
 parameter_list|(
@@ -145,6 +153,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_nametoproto
 parameter_list|(
@@ -153,6 +162,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_nametoeproto
 parameter_list|(
@@ -161,6 +171,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|PCAP_API
 name|int
 name|pcap_nametollc
 parameter_list|(
@@ -174,37 +185,6 @@ define|#
 directive|define
 name|PROTO_UNDEF
 value|-1
-comment|/* XXX move these to pcap-int.h? */
-name|int
-name|__pcap_atodn
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|bpf_u_int32
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-name|__pcap_atoin
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|bpf_u_int32
-modifier|*
-parameter_list|)
-function_decl|;
-name|u_short
-name|__pcap_nametodnaddr
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

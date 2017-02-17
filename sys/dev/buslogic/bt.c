@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * sys/dev/buslogic/bt_isa.c	BT-54X, BT-445 cards  * sys/dev/buslogic/bt_mca.c	BT-64X, SDC3211B, SDC3211F  * sys/dev/buslogic/bt_eisa.c	BT-74X, BT-75x cards, SDC3222F  * sys/dev/buslogic/bt_pci.c	BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * sys/dev/buslogic/bt_isa.c	BT-54X, BT-445 cards  * sys/dev/buslogic/bt_mca.c	BT-64X, SDC3211B, SDC3211F  * sys/dev/buslogic/bt_pci.c	BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -755,7 +755,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * XXX  * Do our own re-probe protection until a configuration  * manager can do it for us.  This ensures that we don't  * reprobe a card already found by the EISA or PCI probes.  */
+comment|/*  * XXX  * Do our own re-probe protection until a configuration  * manager can do it for us.  This ensures that we don't  * reprobe a card already found by the PCI probes.  */
 end_comment
 
 begin_decl_stmt
@@ -1383,7 +1383,6 @@ block|}
 block|}
 else|else
 block|{
-comment|/* VL/EISA/PCI DMA */
 name|info
 operator|->
 name|drq
@@ -2079,7 +2078,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/* 	 * Some boards do not handle the "recently documented" 	 * Inquire Board Model Number command correctly or do not give 	 * exact information.  Use the Firmware and Extended Setup 	 * information in these cases to come up with the right answer. 	 * The major firmware revision number indicates: 	 * 	 * 	5.xx	BusLogic "W" Series Host Adapters: 	 *		BT-948/958/958D 	 *	4.xx	BusLogic "C" Series Host Adapters: 	 *		BT-946C/956C/956CD/747C/757C/757CD/445C/545C/540CF 	 *	3.xx	BusLogic "S" Series Host Adapters: 	 *		BT-747S/747D/757S/757D/445S/545S/542D 	 *		BT-542B/742A (revision H) 	 *	2.xx	BusLogic "A" Series Host Adapters: 	 *		BT-542B/742A (revision G and below) 	 *	0.xx	AMI FastDisk VLB/EISA BusLogic Clone Host Adapter 	 */
+comment|/* 	 * Some boards do not handle the "recently documented" 	 * Inquire Board Model Number command correctly or do not give 	 * exact information.  Use the Firmware and Extended Setup 	 * information in these cases to come up with the right answer. 	 * The major firmware revision number indicates: 	 * 	 * 	5.xx	BusLogic "W" Series Host Adapters: 	 *		BT-948/958/958D 	 *	4.xx	BusLogic "C" Series Host Adapters: 	 *		BT-946C/956C/956CD/747C/757C/757CD/445C/545C/540CF 	 *	3.xx	BusLogic "S" Series Host Adapters: 	 *		BT-747S/747D/757S/757D/445S/545S/542D 	 *		BT-542B/742A (revision H) 	 *	2.xx	BusLogic "A" Series Host Adapters: 	 *		BT-542B/742A (revision G and below) 	 */
 name|length_param
 operator|=
 sizeof|sizeof
@@ -2185,86 +2184,6 @@ name|model
 argument_list|)
 argument_list|,
 literal|"542B"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|esetup_info
-operator|.
-name|bus_type
-operator|==
-literal|'E'
-operator|&&
-name|bt
-operator|->
-name|firmware_ver
-index|[
-literal|0
-index|]
-operator|==
-literal|'2'
-condition|)
-block|{
-comment|/* 		 * The 742A seems to object if its mailboxes are 		 * allocated above the 16MB mark. 		 */
-name|bt
-operator|->
-name|mailbox_addrlimit
-operator|=
-name|BUS_SPACE_MAXADDR_24BIT
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|bt
-operator|->
-name|model
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bt
-operator|->
-name|model
-argument_list|)
-argument_list|,
-literal|"742A"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|esetup_info
-operator|.
-name|bus_type
-operator|==
-literal|'E'
-operator|&&
-name|bt
-operator|->
-name|firmware_ver
-index|[
-literal|0
-index|]
-operator|==
-literal|'0'
-condition|)
-block|{
-comment|/* AMI FastDisk EISA Series 441 0.x */
-name|snprintf
-argument_list|(
-name|bt
-operator|->
-name|model
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bt
-operator|->
-name|model
-argument_list|)
-argument_list|,
-literal|"747A"
 argument_list|)
 expr_stmt|;
 block|}

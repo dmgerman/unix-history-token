@@ -970,7 +970,7 @@ parameter_list|,
 name|member
 parameter_list|)
 define|\
-value|({								\ 	__typeof(((type *)0)->member) *_p = (ptr);		\ 	(type *)((char *)_p - offsetof(type, member));		\ })
+value|({								\ 	const __typeof(((type *)0)->member) *__p = (ptr);	\ 	(type *)((uintptr_t)__p - offsetof(type, member));	\ })
 end_define
 
 begin_define

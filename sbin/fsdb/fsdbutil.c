@@ -1592,7 +1592,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|i
 operator|<
@@ -1640,7 +1640,7 @@ if|if
 condition|(
 name|ndb
 operator|<=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|offset
@@ -1707,7 +1707,7 @@ if|if
 condition|(
 name|ndb
 operator|<=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 return|return;
 name|bufp
@@ -1749,7 +1749,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++

@@ -2097,7 +2097,7 @@ name|files
 operator|=
 name|maxino
 operator|-
-name|ROOTINO
+name|UFS_ROOTINO
 operator|-
 name|sblock
 operator|.
@@ -3129,7 +3129,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-BEFfnpry] [-b block] [-c level] [-m mode] filesystem ...\n"
+literal|"usage: %s [-BCdEFfnpRrSyZ] [-b block] [-c level] [-m mode] filesystem ...\n"
 argument_list|,
 name|getprogname
 argument_list|()

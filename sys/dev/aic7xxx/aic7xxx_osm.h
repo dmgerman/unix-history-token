@@ -907,7 +907,7 @@ comment|/*AIC_PCI_CONFIG*/
 end_comment
 
 begin_comment
-comment|/******************************** VL/EISA *************************************/
+comment|/******************************** VL/EISA/ISA *********************************/
 end_comment
 
 begin_function_decl
@@ -955,7 +955,7 @@ name|int
 name|irq
 parameter_list|)
 block|{
-comment|/* 	 * The IRQ is unused in the FreeBSD 	 * implementation since the EISA and 	 * ISA attachments register the IRQ 	 * with newbus before the core is called. 	 */
+comment|/* 	 * The IRQ is unused in the FreeBSD 	 * implementation since the ISA attachment 	 * registers the IRQ with newbus before 	 * the core is called. 	 */
 return|return
 name|ahc_map_int
 argument_list|(

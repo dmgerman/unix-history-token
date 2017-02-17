@@ -3235,8 +3235,6 @@ operator|(
 name|ADV_ISA
 operator||
 name|ADV_VL
-operator||
-name|ADV_EISA
 operator|)
 operator|)
 operator|!=

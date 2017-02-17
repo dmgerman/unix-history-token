@@ -130,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|RW_READERS_SHIFT
-value|4
+value|5
 end_define
 
 begin_define

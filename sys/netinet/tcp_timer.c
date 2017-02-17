@@ -3779,16 +3779,14 @@ operator||
 name|TF_SACK_PERMIT
 operator|)
 expr_stmt|;
-comment|/* 	 * If we backed off this far, our srtt estimate is probably bogus. 	 * Clobber it so we'll take the next rtt measurement as our srtt; 	 * move the current srtt into rttvar to keep the current 	 * retransmit times until then. 	 */
+comment|/* 	 * If we backed off this far, notify the L3 protocol that we're having 	 * connection problems. 	 */
 if|if
 condition|(
 name|tp
 operator|->
 name|t_rxtshift
 operator|>
-name|TCP_MAXRXTSHIFT
-operator|/
-literal|4
+name|TCP_RTT_INVALIDATE
 condition|)
 block|{
 ifdef|#
@@ -3824,24 +3822,6 @@ name|tp
 operator|->
 name|t_inpcb
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_rttvar
-operator|+=
-operator|(
-name|tp
-operator|->
-name|t_srtt
-operator|>>
-name|TCP_RTT_SHIFT
-operator|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_srtt
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|tp

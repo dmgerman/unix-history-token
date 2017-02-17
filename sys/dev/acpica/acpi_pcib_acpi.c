@@ -1584,18 +1584,28 @@ block|,
 literal|0x66
 block|}
 decl_stmt|;
+comment|/* Status Field */
+name|cap_set
+index|[
+name|PCI_OSC_STATUS
+index|]
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Support Field: Extended PCI Config Space, MSI */
 name|cap_set
 index|[
-literal|1
+name|PCI_OSC_SUPPORT
 index|]
 operator|=
-literal|0x11
+name|PCIM_OSC_SUPPORT_EXT_PCI_CONF
+operator||
+name|PCIM_OSC_SUPPORT_MSI
 expr_stmt|;
 comment|/* Control Field */
 name|cap_set
 index|[
-literal|2
+name|PCI_OSC_CTL
 index|]
 operator|=
 literal|0
@@ -1606,10 +1616,10 @@ name|PCI_HP
 comment|/* Control Field: PCI Express Native Hot Plug */
 name|cap_set
 index|[
-literal|2
+name|PCI_OSC_CTL
 index|]
 operator||=
-literal|0x1
+name|PCIM_OSC_CTL_PCIE_HP
 expr_stmt|;
 endif|#
 directive|endif
@@ -1672,7 +1682,7 @@ if|if
 condition|(
 name|cap_set
 index|[
-literal|0
+name|PCI_OSC_STATUS
 index|]
 operator|!=
 literal|0
@@ -1693,6 +1703,37 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|PCI_HP
+if|if
+condition|(
+operator|(
+name|cap_set
+index|[
+name|PCI_OSC_CTL
+index|]
+operator|&
+name|PCIM_OSC_CTL_PCIE_HP
+operator|)
+operator|==
+literal|0
+operator|&&
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|ap_dev
+argument_list|,
+literal|"_OSC didn't allow HP control\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 

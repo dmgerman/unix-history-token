@@ -402,6 +402,18 @@ block|,
 block|{
 name|BRCM_VENDORID
 block|,
+name|CHIP_NUM_57840_2_20
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|"QLogic NetXtreme II BCM57840 2x20GbE"
+block|}
+block|,
+block|{
+name|BRCM_VENDORID
+block|,
 name|CHIP_NUM_57840_MF
 block|,
 name|PCI_ANY_ID

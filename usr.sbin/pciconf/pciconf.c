@@ -4922,12 +4922,18 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 operator|*
 name|cp
-operator|==
+operator|!=
 literal|'\0'
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Invalid device name"
 argument_list|)
 expr_stmt|;
 name|patterns

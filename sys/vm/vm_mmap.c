@@ -359,32 +359,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|sys_sbrk
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sbrk_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Not yet implemented */
 return|return
@@ -417,32 +405,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|sys_sstk
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sstk_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Not yet implemented */
 return|return
@@ -488,22 +464,17 @@ begin_function
 name|int
 name|ogetpagesize
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|getpagesize_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* MP SAFE */
 name|td
 operator|->
 name|td_retval
@@ -575,10 +546,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_mmap
@@ -596,12 +563,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|kern_vm_mmap
+name|kern_mmap
 argument_list|(
 name|td
 argument_list|,
 operator|(
-name|vm_offset_t
+name|uintptr_t
 operator|)
 name|uap
 operator|->
@@ -634,20 +601,20 @@ end_function
 
 begin_function
 name|int
-name|kern_vm_mmap
+name|kern_mmap
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
 parameter_list|,
-name|vm_offset_t
-name|addr
+name|uintptr_t
+name|addr0
 parameter_list|,
-name|vm_size_t
+name|size_t
 name|size
 parameter_list|,
-name|vm_prot_t
+name|int
 name|prot
 parameter_list|,
 name|int
@@ -661,9 +628,17 @@ name|pos
 parameter_list|)
 block|{
 name|struct
+name|vmspace
+modifier|*
+name|vms
+decl_stmt|;
+name|struct
 name|file
 modifier|*
 name|fp
+decl_stmt|;
+name|vm_offset_t
+name|addr
 decl_stmt|;
 name|vm_size_t
 name|pageoff
@@ -676,20 +651,17 @@ name|align
 decl_stmt|,
 name|error
 decl_stmt|;
-name|struct
-name|vmspace
-modifier|*
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|vms
-init|=
+operator|=
 name|td
 operator|->
 name|td_proc
 operator|->
 name|p_vmspace
-decl_stmt|;
-name|cap_rights_t
-name|rights
-decl_stmt|;
+expr_stmt|;
 name|fp
 operator|=
 name|NULL
@@ -698,6 +670,10 @@ name|AUDIT_ARG_FD
 argument_list|(
 name|fd
 argument_list|)
+expr_stmt|;
+name|addr
+operator|=
+name|addr0
 expr_stmt|;
 comment|/* 	 * Ignore old flags that used to be defined but did not do anything. 	 */
 name|flags
@@ -1457,12 +1433,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|kern_vm_mmap
+name|kern_mmap
 argument_list|(
 name|td
 argument_list|,
 operator|(
-name|vm_offset_t
+name|uintptr_t
 operator|)
 name|uap
 operator|->
@@ -1717,12 +1693,12 @@ name|MAP_FIXED
 expr_stmt|;
 return|return
 operator|(
-name|kern_vm_mmap
+name|kern_mmap
 argument_list|(
 name|td
 argument_list|,
 operator|(
-name|vm_offset_t
+name|uintptr_t
 operator|)
 name|uap
 operator|->
@@ -1787,10 +1763,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_msync
@@ -1808,12 +1780,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|kern_vm_msync
+name|kern_msync
 argument_list|(
 name|td
 argument_list|,
 operator|(
-name|vm_offset_t
+name|uintptr_t
 operator|)
 name|uap
 operator|->
@@ -1834,23 +1806,26 @@ end_function
 
 begin_function
 name|int
-name|kern_vm_msync
+name|kern_msync
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
 parameter_list|,
-name|vm_offset_t
-name|addr
+name|uintptr_t
+name|addr0
 parameter_list|,
-name|vm_size_t
+name|size_t
 name|size
 parameter_list|,
 name|int
 name|flags
 parameter_list|)
 block|{
+name|vm_offset_t
+name|addr
+decl_stmt|;
 name|vm_size_t
 name|pageoff
 decl_stmt|;
@@ -1860,6 +1835,10 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
+name|addr
+operator|=
+name|addr0
+expr_stmt|;
 name|pageoff
 operator|=
 operator|(
@@ -2036,10 +2015,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_munmap
@@ -2057,12 +2032,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|kern_vm_munmap
+name|kern_munmap
 argument_list|(
 name|td
 argument_list|,
 operator|(
-name|vm_offset_t
+name|uintptr_t
 operator|)
 name|uap
 operator|->
@@ -2079,17 +2054,17 @@ end_function
 
 begin_function
 name|int
-name|kern_vm_munmap
+name|kern_munmap
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
 parameter_list|,
-name|vm_offset_t
-name|addr
+name|uintptr_t
+name|addr0
 parameter_list|,
-name|vm_size_t
+name|size_t
 name|size
 parameter_list|)
 block|{
@@ -2108,6 +2083,9 @@ name|pmc_handled
 decl_stmt|;
 endif|#
 directive|endif
+name|vm_offset_t
+name|addr
+decl_stmt|;
 name|vm_size_t
 name|pageoff
 decl_stmt|;
@@ -2125,6 +2103,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|addr
+operator|=
+name|addr0
+expr_stmt|;
 name|pageoff
 operator|=
 operator|(
@@ -2422,10 +2404,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_mprotect
@@ -2443,12 +2421,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|kern_vm_mprotect
+name|kern_mprotect
 argument_list|(
 name|td
 argument_list|,
 operator|(
-name|vm_offset_t
+name|uintptr_t
 operator|)
 name|uap
 operator|->
@@ -2469,26 +2447,33 @@ end_function
 
 begin_function
 name|int
-name|kern_vm_mprotect
+name|kern_mprotect
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
 parameter_list|,
-name|vm_offset_t
-name|addr
+name|uintptr_t
+name|addr0
 parameter_list|,
-name|vm_size_t
+name|size_t
 name|size
 parameter_list|,
-name|vm_prot_t
+name|int
 name|prot
 parameter_list|)
 block|{
+name|vm_offset_t
+name|addr
+decl_stmt|;
 name|vm_size_t
 name|pageoff
 decl_stmt|;
+name|addr
+operator|=
+name|addr0
+expr_stmt|;
 name|prot
 operator|=
 operator|(
@@ -2623,28 +2608,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_minherit
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|minherit_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_offset_t
 name|addr
@@ -2794,37 +2771,29 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_madvise
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|madvise_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
-name|kern_vm_madvise
+name|kern_madvise
 argument_list|(
 name|td
 argument_list|,
 operator|(
-name|vm_offset_t
+name|uintptr_t
 operator|)
 name|uap
 operator|->
@@ -2845,30 +2814,32 @@ end_function
 
 begin_function
 name|int
-name|kern_vm_madvise
+name|kern_madvise
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
 parameter_list|,
-name|vm_offset_t
-name|addr
+name|uintptr_t
+name|addr0
 parameter_list|,
-name|vm_size_t
+name|size_t
 name|len
 parameter_list|,
 name|int
 name|behav
 parameter_list|)
 block|{
-name|vm_offset_t
-name|start
-decl_stmt|,
-name|end
-decl_stmt|;
 name|vm_map_t
 name|map
+decl_stmt|;
+name|vm_offset_t
+name|addr
+decl_stmt|,
+name|end
+decl_stmt|,
+name|start
 decl_stmt|;
 name|int
 name|flags
@@ -2934,6 +2905,10 @@ operator|->
 name|p_vmspace
 operator|->
 name|vm_map
+expr_stmt|;
+name|addr
+operator|=
+name|addr0
 expr_stmt|;
 if|if
 condition|(
@@ -3047,28 +3022,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_mincore
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mincore_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_offset_t
 name|addr
@@ -3926,32 +3893,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_mlock
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mlock_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
-name|vm_mlock
+name|kern_mlock
 argument_list|(
 name|td
 operator|->
@@ -3961,9 +3920,14 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
+name|__DECONST
+argument_list|(
+name|uintptr_t
+argument_list|,
 name|uap
 operator|->
 name|addr
+argument_list|)
 argument_list|,
 name|uap
 operator|->
@@ -3976,7 +3940,7 @@ end_function
 
 begin_function
 name|int
-name|vm_mlock
+name|kern_mlock
 parameter_list|(
 name|struct
 name|proc
@@ -3988,9 +3952,7 @@ name|ucred
 modifier|*
 name|cred
 parameter_list|,
-specifier|const
-name|void
-modifier|*
+name|uintptr_t
 name|addr0
 parameter_list|,
 name|size_t
@@ -4043,9 +4005,6 @@ operator|)
 return|;
 name|addr
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 name|addr0
 expr_stmt|;
 name|size
@@ -4314,28 +4273,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_mlockall
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mlockall_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_map_t
 name|map
@@ -4665,28 +4616,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_munlockall
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|munlockall_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_map_t
 name|map
@@ -4840,10 +4783,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|sys_munlock
@@ -4861,12 +4800,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|kern_vm_munlock
+name|kern_munlock
 argument_list|(
 name|td
 argument_list|,
 operator|(
-name|vm_offset_t
+name|uintptr_t
 operator|)
 name|uap
 operator|->
@@ -4883,21 +4822,23 @@ end_function
 
 begin_function
 name|int
-name|kern_vm_munlock
+name|kern_munlock
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
 parameter_list|,
-name|vm_offset_t
-name|addr
+name|uintptr_t
+name|addr0
 parameter_list|,
-name|vm_size_t
+name|size_t
 name|size
 parameter_list|)
 block|{
 name|vm_offset_t
+name|addr
+decl_stmt|,
 name|end
 decl_stmt|,
 name|last
@@ -4933,6 +4874,10 @@ operator|(
 name|error
 operator|)
 return|;
+name|addr
+operator|=
+name|addr0
+expr_stmt|;
 name|last
 operator|=
 name|addr
@@ -5593,7 +5538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_mmap_cdev()  *  * MPSAFE  *  * Helper function for vm_mmap.  Perform sanity check specific for mmap  * operations on cdevs.  */
+comment|/*  * vm_mmap_cdev()  *  * Helper function for vm_mmap.  Perform sanity check specific for mmap  * operations on cdevs.  */
 end_comment
 
 begin_function

@@ -593,6 +593,8 @@ operator|.
 name|pr_flags
 operator|=
 name|PR_WANTRCVD
+operator||
+name|PR_LASTHDR
 block|,
 operator|.
 name|pr_input
@@ -655,6 +657,8 @@ operator|=
 name|PR_CONNREQUIRED
 operator||
 name|PR_WANTRCVD
+operator||
+name|PR_LASTHDR
 block|,
 operator|.
 name|pr_input

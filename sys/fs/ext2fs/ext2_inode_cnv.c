@@ -716,7 +716,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|EXT2_NDADDR
 condition|;
 name|i
 operator|++
@@ -743,7 +743,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|EXT2_NIADDR
 condition|;
 name|i
 operator|++
@@ -1073,7 +1073,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|EXT2_NDADDR
 condition|;
 name|i
 operator|++
@@ -1100,7 +1100,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NIADDR
+name|EXT2_NIADDR
 condition|;
 name|i
 operator|++

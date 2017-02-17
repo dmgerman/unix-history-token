@@ -3745,7 +3745,7 @@ operator|&&
 name|lbn
 operator|>=
 operator|-
-name|NXADDR
+name|UFS_NXADDR
 condition|)
 block|{
 name|lbn
@@ -3847,7 +3847,7 @@ literal|0
 operator|&&
 name|lbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 operator|*
@@ -3908,11 +3908,11 @@ argument_list|)
 operator|,
 name|cur
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -5232,7 +5232,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NXADDR
+name|UFS_NXADDR
 condition|;
 name|i
 operator|++
@@ -5339,7 +5339,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -5424,11 +5424,11 @@ argument_list|)
 operator|,
 name|lbn
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -5638,7 +5638,7 @@ if|if
 condition|(
 name|visitlbn
 operator|>=
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 name|isize
@@ -5827,7 +5827,7 @@ condition|(
 name|lbn
 operator|<=
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|follow
 operator|&&
@@ -6220,7 +6220,7 @@ name|dp
 operator|->
 name|d_ino
 operator|==
-name|WINO
+name|UFS_WINO
 condition|)
 continue|continue;
 if|if
@@ -6357,11 +6357,11 @@ if|if
 condition|(
 name|ino
 operator|==
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 name|err_suj
 argument_list|(
-literal|"Attempting to free ROOTINO\n"
+literal|"Attempting to free UFS_ROOTINO\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -7648,7 +7648,7 @@ name|lastlbn
 init|;
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -7735,11 +7735,11 @@ argument_list|)
 operator|,
 name|lbn
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 init|;
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -7899,7 +7899,7 @@ if|if
 condition|(
 name|visitlbn
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 operator|&&
 name|totalfrags
 condition|)
@@ -12864,7 +12864,7 @@ literal|0
 condition|)
 name|err_suj
 argument_list|(
-literal|"Failed to read ROOTINO directory block %jd\n"
+literal|"Failed to read UFS_ROOTINO directory block %jd\n"
 argument_list|,
 name|blk
 argument_list|)
@@ -13094,7 +13094,7 @@ name|ip
 operator|=
 name|ino_read
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 expr_stmt|;
 name|sujino
@@ -13105,7 +13105,7 @@ name|ino_visit
 argument_list|(
 name|ip
 argument_list|,
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|suj_find
 argument_list|,

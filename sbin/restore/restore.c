@@ -254,7 +254,7 @@ if|if
 condition|(
 name|ino
 operator|==
-name|WINO
+name|UFS_WINO
 operator|&&
 name|command
 operator|==
@@ -552,7 +552,7 @@ name|ep
 operator|=
 name|lookupino
 argument_list|(
-name|WINO
+name|UFS_WINO
 argument_list|)
 operator|)
 condition|)
@@ -625,7 +625,7 @@ for|for
 control|(
 name|i
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 operator|+
 literal|1
 init|;
@@ -1884,7 +1884,7 @@ for|for
 control|(
 name|i
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 init|;
 name|i
 operator|<
@@ -2253,7 +2253,7 @@ name|first
 operator|=
 name|lowerbnd
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 expr_stmt|;
 name|curvol
@@ -2554,7 +2554,7 @@ name|first
 operator|=
 name|lowerbnd
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|)
 expr_stmt|;
 name|last
@@ -2908,7 +2908,7 @@ name|ep
 operator|=
 name|lookupino
 argument_list|(
-name|WINO
+name|UFS_WINO
 argument_list|)
 operator|)
 condition|)
@@ -2978,7 +2978,7 @@ for|for
 control|(
 name|i
 operator|=
-name|ROOTINO
+name|UFS_ROOTINO
 init|;
 name|i
 operator|<
@@ -3132,7 +3132,7 @@ for|for
 control|(
 name|i
 operator|=
-name|WINO
+name|UFS_WINO
 init|;
 name|i
 operator|<

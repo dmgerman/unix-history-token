@@ -993,6 +993,12 @@ case|case
 name|O_FORWARD_IP
 case|:
 block|{
+name|char
+name|buf
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|ipfw_insn_sa
 modifier|*
 name|sa
@@ -1057,9 +1063,11 @@ argument_list|)
 argument_list|,
 literal|"Forward to %s"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|dummyaddr
+argument_list|,
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;

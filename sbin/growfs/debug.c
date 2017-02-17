@@ -3712,7 +3712,7 @@ name|ictr
 operator|<
 name|MIN
 argument_list|(
-name|NDADDR
+name|UFS_NDADDR
 argument_list|,
 name|remaining_blocks
 argument_list|)
@@ -3740,7 +3740,7 @@ expr_stmt|;
 block|}
 name|remaining_blocks
 operator|-=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 if|if
 condition|(
@@ -4250,7 +4250,7 @@ operator|->
 name|di_extsize
 argument_list|)
 expr_stmt|;
-comment|/* XXX: What do we do with di_extb[NXADDR]? */
+comment|/* XXX: What do we do with di_extb[UFS_NXADDR]? */
 name|remaining_blocks
 operator|=
 name|howmany
@@ -4275,7 +4275,7 @@ name|ictr
 operator|<
 name|MIN
 argument_list|(
-name|NDADDR
+name|UFS_NDADDR
 argument_list|,
 name|remaining_blocks
 argument_list|)
@@ -4303,7 +4303,7 @@ expr_stmt|;
 block|}
 name|remaining_blocks
 operator|-=
-name|NDADDR
+name|UFS_NDADDR
 expr_stmt|;
 if|if
 condition|(

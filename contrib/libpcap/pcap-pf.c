@@ -351,7 +351,7 @@ decl_stmt|;
 endif|#
 directive|endif
 specifier|register
-name|int
+name|u_int
 name|pad
 decl_stmt|;
 name|again
@@ -455,7 +455,7 @@ goto|goto
 name|again
 goto|;
 block|}
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|pc
 operator|->
@@ -485,6 +485,10 @@ return|;
 block|}
 name|bp
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|pc
 operator|->
 name|buffer
@@ -579,7 +583,7 @@ name|sp
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|pc
 operator|->
@@ -669,7 +673,7 @@ name|sp
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|pc
 operator|->
@@ -950,7 +954,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1101,7 +1105,7 @@ name|struct
 name|endevp
 name|devparams
 decl_stmt|;
-comment|/* 	 * Initially try a read/write open (to allow the inject 	 * method to work).  If that fails due to permission 	 * issues, fall back to read-only.  This allows a 	 * non-root user to be granted specific access to pcap 	 * capabilities via file permissions. 	 * 	 * XXX - we should have an API that has a flag that 	 * controls whether to open read-only or read-write, 	 * so that denial of permission to send (or inability 	 * to send, if sending packets isn't supported on 	 * the device in question) can be indicated at open 	 * time. 	 * 	 * XXX - we assume here that "pfopen()" does not, in fact, modify 	 * its argument, even though it takes a "char *" rather than a 	 * "const char *" as its first argument.  That appears to be 	 * the case, at least on Digital UNIX 4.0. 	 */
+comment|/* 	 * Initially try a read/write open (to allow the inject 	 * method to work).  If that fails due to permission 	 * issues, fall back to read-only.  This allows a 	 * non-root user to be granted specific access to pcap 	 * capabilities via file permissions. 	 * 	 * XXX - we should have an API that has a flag that 	 * controls whether to open read-only or read-write, 	 * so that denial of permission to send (or inability 	 * to send, if sending packets isn't supported on 	 * the device in question) can be indicated at open 	 * time. 	 * 	 * XXX - we assume here that "pfopen()" does not, in fact, modify 	 * its argument, even though it takes a "char *" rather than a 	 * "const char *" as its first argument.  That appears to be 	 * the case, at least on Digital UNIX 4.0. 	 * 	 * XXX - is there an error that means "no such device"?  Is 	 * there one that means "that device doesn't support pf"? 	 */
 name|p
 operator|->
 name|fd
@@ -1112,7 +1116,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -1140,7 +1144,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -1154,7 +1158,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1168,7 +1172,7 @@ name|p
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -1238,7 +1242,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1308,7 +1312,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1349,7 +1353,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1535,7 +1539,7 @@ endif|#
 directive|endif
 default|default:
 comment|/* 		 * XXX - what about ENDT_IEEE802?  The pfilt.h header 		 * file calls this "IEEE 802 networks (non-Ethernet)", 		 * but that doesn't specify a specific link layer type; 		 * it could be 802.4, or 802.5 (except that 802.5 is 		 * ENDT_TRN), or 802.6, or 802.11, or....  That's why 		 * DLT_IEEE802 was hijacked to mean Token Ring in various 		 * BSDs, and why we went along with that hijacking. 		 * 		 * XXX - what about ENDT_HDLC and ENDT_NULL? 		 * Presumably, as ENDT_OTHER is just "Miscellaneous 		 * framing", there's not much we can do, as that 		 * doesn't specify a particular type of header. 		 */
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1607,7 +1611,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1675,7 +1679,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1758,7 +1762,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->
@@ -1789,10 +1793,6 @@ name|p
 operator|->
 name|buffer
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|p
@@ -1919,6 +1919,7 @@ specifier|const
 name|char
 modifier|*
 name|device
+name|_U_
 parameter_list|,
 name|char
 modifier|*
@@ -1933,8 +1934,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof
@@ -1969,6 +1968,30 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX - is there an error from pfopen() that means "no such device"?  * Is there one that means "that device doesn't support pf"?  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|can_be_bound
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+name|_U_
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|int
 name|pcap_platform_finddevs
@@ -1985,7 +2008,14 @@ parameter_list|)
 block|{
 return|return
 operator|(
-literal|0
+name|pcap_findalldevs_interfaces
+argument_list|(
+name|alldevsp
+argument_list|,
+name|errbuf
+argument_list|,
+name|can_be_bound
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2076,7 +2106,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|p
 operator|->

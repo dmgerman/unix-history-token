@@ -19,7 +19,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|snprintf
+name|pcap_snprintf
 parameter_list|(
 name|char
 modifier|*

@@ -2126,13 +2126,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|char
+name|addrbuf
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"arpresolve: can't allocate llinfo for %s on %s\n"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|SIN
 argument_list|(
@@ -2140,6 +2146,8 @@ name|dst
 argument_list|)
 operator|->
 name|sin_addr
+argument_list|,
+name|addrbuf
 argument_list|)
 argument_list|,
 name|if_name
@@ -3627,6 +3635,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|char
+name|addrbuf
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|sin
 operator|.
 name|sin_len
@@ -4263,9 +4277,11 @@ argument_list|,
 literal|"link address is broadcast for IP address "
 literal|"%s!\n"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|isaddr
+argument_list|,
+name|addrbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4364,9 +4380,11 @@ argument_list|)
 argument_list|,
 literal|":"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|isaddr
+argument_list|,
+name|addrbuf
 argument_list|)
 argument_list|,
 name|ifp
@@ -4980,9 +4998,11 @@ argument_list|,
 literal|"proxy: ignoring request"
 literal|" from %s via %s\n"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|isaddr
+argument_list|,
+name|addrbuf
 argument_list|)
 argument_list|,
 name|ifp
@@ -5001,9 +5021,11 @@ name|printf
 argument_list|(
 literal|"arp: proxying for %s\n"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|itaddr
+argument_list|,
+name|addrbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5040,9 +5062,11 @@ name|printf
 argument_list|(
 literal|"arp: sending reply for link-local addr %s\n"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|itaddr
+argument_list|,
+name|addrbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5372,6 +5396,12 @@ decl_stmt|;
 name|int
 name|lladdr_off
 decl_stmt|;
+name|char
+name|addrbuf
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
 name|LLE_WLOCK_ASSERT
 argument_list|(
 name|la
@@ -5403,9 +5433,11 @@ argument_list|,
 literal|"%s is on %s "
 literal|"but got reply from %*D on %s\n"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|isaddr
+argument_list|,
+name|addrbuf
 argument_list|)
 argument_list|,
 name|la
@@ -5510,9 +5542,11 @@ argument_list|)
 argument_list|,
 literal|":"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|isaddr
+argument_list|,
+name|addrbuf
 argument_list|)
 argument_list|,
 name|ifp
@@ -5534,9 +5568,11 @@ argument_list|,
 literal|"%s moved from %*D "
 literal|"to %*D on %s\n"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|isaddr
+argument_list|,
+name|addrbuf
 argument_list|)
 argument_list|,
 name|ifp

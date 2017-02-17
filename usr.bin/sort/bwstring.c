@@ -1300,8 +1300,6 @@ name|chars
 decl_stmt|,
 name|cptr
 decl_stmt|;
-name|charlen
-operator|=
 name|chars
 operator|=
 literal|0
@@ -2865,10 +2863,6 @@ name|res
 init|=
 literal|0
 decl_stmt|;
-name|cmp_len
-operator|=
-literal|0
-expr_stmt|;
 name|len1
 operator|=
 name|bws1

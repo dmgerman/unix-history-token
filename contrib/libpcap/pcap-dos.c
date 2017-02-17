@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  This file is part of DOS-libpcap  *  Ported to DOS/DOSX by G. Vanem<gvanem@broadpark.no>  *  *  pcap-dos.c: Interface to PKTDRVR, NDIS2 and 32-bit pmode  *              network drivers.  */
+comment|/*  *  This file is part of DOS-libpcap  *  Ported to DOS/DOSX by G. Vanem<gvanem@yahoo.no>  *  *  pcap-dos.c: Interface to PKTDRVR, NDIS2 and 32-bit pmode  *              network drivers.  */
 end_comment
 
 begin_include
@@ -902,7 +902,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/*          call proc while waiting */
+comment|/* call proc while waiting */
 name|struct
 name|pcap_stat
 name|stat
@@ -920,6 +920,7 @@ specifier|const
 name|char
 modifier|*
 name|device
+name|_U_
 parameter_list|,
 name|char
 modifier|*
@@ -934,8 +935,6 @@ name|p
 operator|=
 name|pcap_create_common
 argument_list|(
-name|device
-argument_list|,
 name|ebuf
 argument_list|,
 sizeof|sizeof
@@ -984,15 +983,6 @@ modifier|*
 name|pcap
 parameter_list|)
 block|{
-name|struct
-name|pcap_dos
-modifier|*
-name|pcapd
-init|=
-name|pcap
-operator|->
-name|priv
-decl_stmt|;
 if|if
 condition|(
 name|pcap
@@ -1093,6 +1083,28 @@ operator|=
 operator|++
 name|ref_count
 expr_stmt|;
+name|pcap
+operator|->
+name|bufsize
+operator|=
+name|ETH_MAX
+operator|+
+literal|100
+expr_stmt|;
+comment|/* add some margin */
+name|pcap
+operator|->
+name|buffer
+operator|=
+name|calloc
+argument_list|(
+name|pcap
+operator|->
+name|bufsize
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pcap
@@ -1114,7 +1126,7 @@ name|pcap
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|pcap
 operator|->
@@ -1128,7 +1140,7 @@ name|pcap
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|,
 name|pcap
 operator|->
@@ -1167,11 +1179,11 @@ name|pcap
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|)
 condition|)
 block|{
-name|snprintf
+name|pcap_snprintf
 argument_list|(
 name|pcap
 operator|->
@@ -1190,7 +1202,7 @@ name|pcap
 operator|->
 name|opt
 operator|.
-name|source
+name|device
 argument_list|)
 expr_stmt|;
 return|return
@@ -1263,10 +1275,6 @@ literal|0
 block|,
 literal|0
 block|}
-decl_stmt|;
-name|BYTE
-modifier|*
-name|rx_buf
 decl_stmt|;
 name|int
 name|rx_len
@@ -1405,21 +1413,14 @@ name|peek_rx_buf
 call|)
 argument_list|(
 operator|&
-name|rx_buf
+name|p
+operator|->
+name|buffer
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|BYTE
-name|buf
-index|[
-name|ETH_MAX
-operator|+
-literal|100
-index|]
-decl_stmt|;
-comment|/* add some margin */
 name|rx_len
 operator|=
 call|(
@@ -1429,16 +1430,14 @@ operator|->
 name|copy_rx_buf
 call|)
 argument_list|(
-name|buf
+name|p
+operator|->
+name|buffer
 argument_list|,
 name|p
 operator|->
 name|snapshot
 argument_list|)
-expr_stmt|;
-name|rx_buf
-operator|=
-name|buf
 expr_stmt|;
 block|}
 if|if
@@ -1494,7 +1493,9 @@ name|fcode
 operator|.
 name|bf_insns
 argument_list|,
-name|rx_buf
+name|p
+operator|->
+name|buffer
 argument_list|,
 name|pcap
 operator|.
@@ -1531,7 +1532,9 @@ argument_list|,
 operator|&
 name|pcap
 argument_list|,
-name|rx_buf
+name|p
+operator|->
+name|buffer
 argument_list|)
 expr_stmt|;
 block|}
@@ -1548,7 +1551,9 @@ operator|->
 name|release_rx_buf
 call|)
 argument_list|(
-name|rx_buf
+name|p
+operator|->
+name|buffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1582,6 +1587,28 @@ expr_stmt|;
 return|return
 operator|(
 literal|1
+operator|)
+return|;
+block|}
+comment|/* Has "pcap_breakloop()" been called?      */
+if|if
+condition|(
+name|p
+operator|->
+name|break_loop
+condition|)
+block|{
+comment|/*        * Yes - clear the flag that indicates that it        * has, and return -2 to indicate that we were        * told to break out of the loop.        */
+name|p
+operator|->
+name|break_loop
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|2
 operator|)
 return|;
 block|}
@@ -1640,13 +1667,13 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|p
+name|pd
 operator|->
 name|wait_proc
 condition|)
 call|(
 modifier|*
-name|p
+name|pd
 operator|->
 name|wait_proc
 call|)
@@ -1724,15 +1751,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|struct
-name|pcap_dos
-modifier|*
-name|pd
-init|=
-name|p
-operator|->
-name|priv
-decl_stmt|;
 name|int
 name|rc
 decl_stmt|,
@@ -2206,8 +2224,6 @@ name|pd
 decl_stmt|;
 if|if
 condition|(
-name|p
-operator|&&
 operator|!
 name|exc_occured
 condition|)
@@ -2424,6 +2440,11 @@ modifier|*
 name|errbuf
 parameter_list|)
 block|{
+name|DWORD
+name|mask
+decl_stmt|,
+name|net
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2445,23 +2466,19 @@ literal|1
 operator|)
 return|;
 block|}
-operator|*
-name|netmask
+name|mask
 operator|=
 name|_w32_sin_mask
 expr_stmt|;
-operator|*
-name|localnet
+name|net
 operator|=
 name|my_ip_addr
 operator|&
-operator|*
-name|netmask
+name|mask
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|localnet
+name|net
 operator|==
 literal|0
 condition|)
@@ -2474,8 +2491,7 @@ operator|*
 name|netmask
 argument_list|)
 condition|)
-operator|*
-name|localnet
+name|net
 operator|=
 name|IN_CLASSA_NET
 expr_stmt|;
@@ -2488,8 +2504,7 @@ operator|*
 name|netmask
 argument_list|)
 condition|)
-operator|*
-name|localnet
+name|net
 operator|=
 name|IN_CLASSB_NET
 expr_stmt|;
@@ -2502,21 +2517,21 @@ operator|*
 name|netmask
 argument_list|)
 condition|)
-operator|*
-name|localnet
+name|net
 operator|=
 name|IN_CLASSC_NET
 expr_stmt|;
 else|else
 block|{
-name|sprintf
+name|pcap_snprintf
 argument_list|(
 name|errbuf
 argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
 literal|"inet class for 0x%lx unknown"
 argument_list|,
-operator|*
-name|netmask
+name|mask
 argument_list|)
 expr_stmt|;
 return|return
@@ -2527,6 +2542,22 @@ operator|)
 return|;
 block|}
 block|}
+operator|*
+name|localnet
+operator|=
+name|htonl
+argument_list|(
+name|net
+argument_list|)
+expr_stmt|;
+operator|*
+name|netmask
+operator|=
+name|htonl
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
 name|ARGSUSED
 argument_list|(
 name|device
@@ -2541,12 +2572,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a list of all interfaces that are present and that we probe okay.  * Returns -1 on error, 0 otherwise.  * The list, as returned through "alldevsp", may be null if no interfaces  * were up and could be opened.  */
+comment|/*  * Get a list of all interfaces that are present and that we probe okay.  * Returns -1 on error, 0 otherwise.  * The list, as returned through "alldevsp", may be NULL if no interfaces  * were up and could be opened.  */
 end_comment
 
 begin_function
 name|int
-name|pcap_findalldevs
+name|pcap_platform_finddevs
 parameter_list|(
 name|pcap_if_t
 modifier|*
@@ -2564,7 +2595,7 @@ modifier|*
 name|dev
 decl_stmt|;
 name|struct
-name|sockaddr_ll
+name|sockaddr_in
 name|sa_ll_1
 decl_stmt|,
 name|sa_ll_2
@@ -2599,8 +2630,8 @@ name|addr_size
 init|=
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|sockaddr_ll
+operator|*
+name|addr
 argument_list|)
 decl_stmt|;
 for|for
@@ -2693,15 +2724,15 @@ argument_list|)
 expr_stmt|;
 name|sa_ll_1
 operator|.
-name|sll_family
+name|sin_family
 operator|=
-name|AF_PACKET
+name|AF_INET
 expr_stmt|;
 name|sa_ll_2
 operator|.
-name|sll_family
+name|sin_family
 operator|=
-name|AF_PACKET
+name|AF_INET
 expr_stmt|;
 name|addr
 operator|=
@@ -2748,7 +2779,7 @@ argument_list|(
 operator|&
 name|sa_ll_2
 operator|.
-name|sll_addr
+name|sin_addr
 argument_list|,
 literal|0xFF
 argument_list|,
@@ -2756,7 +2787,7 @@ sizeof|sizeof
 argument_list|(
 name|sa_ll_2
 operator|.
-name|sll_addr
+name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2792,50 +2823,13 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|add_addr_to_iflist
-argument_list|(
-operator|&
-name|devlist
-argument_list|,
-name|dev
-operator|->
-name|name
-argument_list|,
-name|dev
-operator|->
-name|flags
-argument_list|,
-name|addr
-argument_list|,
-name|addr_size
-argument_list|,
-name|netmask
-argument_list|,
-name|addr_size
-argument_list|,
-name|broadaddr
-argument_list|,
-name|addr_size
-argument_list|,
-name|dstaddr
-argument_list|,
-name|addr_size
-argument_list|,
-name|errbuf
-argument_list|)
-operator|<
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-block|}
+comment|/* Pkt drivers should have no addresses */
+block|if (add_addr_to_iflist(&devlist, dev->name, dev->flags, addr, addr_size,                            netmask, addr_size, broadaddr, addr_size,                            dstaddr, addr_size, errbuf)< 0)     {       ret = -1;       break;     }
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -2957,22 +2951,20 @@ name|int
 name|wait
 parameter_list|)
 block|{
-name|struct
-name|pcap_dos
-modifier|*
-name|pd
-decl_stmt|;
 if|if
 condition|(
 name|p
 condition|)
 block|{
+name|struct
+name|pcap_dos
+modifier|*
 name|pd
-operator|=
+init|=
 name|p
 operator|->
 name|priv
-expr_stmt|;
+decl_stmt|;
 name|pd
 operator|->
 name|wait_proc
@@ -3088,9 +3080,11 @@ argument_list|)
 condition|)
 comment|/* call the xx_probe() function */
 block|{
-name|sprintf
+name|pcap_snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"failed to detect device `%s'"
 argument_list|,
@@ -3172,9 +3166,11 @@ name|dev
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|pcap_snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"failed to activate device `%s'"
 argument_list|,
@@ -3256,9 +3252,11 @@ operator|!
 name|dev
 condition|)
 block|{
-name|sprintf
+name|pcap_snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"device `%s' not supported"
 argument_list|,
@@ -3279,9 +3277,11 @@ operator|!
 name|probed_dev
 condition|)
 block|{
-name|sprintf
+name|pcap_snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"device `%s' not probed"
 argument_list|,
@@ -3523,10 +3523,8 @@ name|exc_occured
 operator|=
 literal|1
 expr_stmt|;
-name|pcap_cleanup_dos
-argument_list|(
-name|NULL
-argument_list|)
+name|close_driver
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4220,7 +4218,7 @@ name|env
 operator|=
 name|getenv
 argument_list|(
-literal|"PCAP_DEBUG"
+literal|"PCAP_TRACE"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4362,9 +4360,11 @@ operator|&&
 name|using_pktdrv
 condition|)
 block|{
-name|sprintf
+name|pcap_snprintf
 argument_list|(
 name|err_buf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"sock_init() failed, code %d"
 argument_list|,
@@ -4789,7 +4789,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
+name|keyword
 parameter_list|,
 specifier|const
 name|char
@@ -4804,7 +4804,7 @@ name|debug_tab
 argument_list|,
 name|NULL
 argument_list|,
-name|name
+name|keyword
 argument_list|,
 name|value
 argument_list|)

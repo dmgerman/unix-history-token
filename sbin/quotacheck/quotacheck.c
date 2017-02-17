@@ -1959,7 +1959,7 @@ name|NULL
 operator|||
 name|ino
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 operator|(
 name|mode

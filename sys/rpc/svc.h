@@ -2607,6 +2607,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Close a service pool.  Similar to svcpool_destroy(), but it does not  * free the data structures.  As such, the pool can be used again.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|svcpool_close
+parameter_list|(
+name|SVCPOOL
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Transport independent svc_create routine.  */
 end_comment
 

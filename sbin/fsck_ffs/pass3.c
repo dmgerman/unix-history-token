@@ -238,7 +238,7 @@ name|inp
 operator|->
 name|i_number
 operator|==
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 operator|(
 name|inp
@@ -287,7 +287,7 @@ name|inp
 operator|->
 name|i_dotdot
 operator|>=
-name|ROOTINO
+name|UFS_ROOTINO
 condition|)
 name|inoinfo
 argument_list|(

@@ -1964,7 +1964,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _PTHREAD_H_ */
+comment|/* !_PTHREAD_H_ */
 end_comment
 
 end_unit

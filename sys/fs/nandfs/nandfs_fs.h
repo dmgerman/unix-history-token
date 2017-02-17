@@ -170,7 +170,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NDADDR
+name|NANDFS_NDADDR
 value|12
 end_define
 
@@ -181,7 +181,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NIADDR
+name|NANDFS_NIADDR
 value|3
 end_define
 
@@ -258,17 +258,17 @@ comment|/* 56: special				*/
 name|nandfs_daddr_t
 name|i_db
 index|[
-name|NDADDR
+name|NANDFS_NDADDR
 index|]
 decl_stmt|;
 comment|/* 64: Direct disk blocks.		*/
 name|nandfs_daddr_t
 name|i_ib
 index|[
-name|NIADDR
+name|NANDFS_NIADDR
 index|]
 decl_stmt|;
-comment|/* 160: Indirect disk blocks.		*/
+comment|/* 160: Indirect disk blocks.	*/
 name|uint64_t
 name|i_xattr
 decl_stmt|;

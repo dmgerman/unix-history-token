@@ -1457,7 +1457,7 @@ if|if
 condition|(
 name|blk
 operator|>=
-name|NDADDR
+name|NANDFS_NDADDR
 condition|)
 block|{
 name|printf
@@ -1466,7 +1466,7 @@ literal|"nandfs: file too big (%jd> %d)\n"
 argument_list|,
 name|blk
 argument_list|,
-name|NDADDR
+name|NANDFS_NDADDR
 argument_list|)
 expr_stmt|;
 name|exit

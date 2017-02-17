@@ -485,10 +485,6 @@ name|uint32_t
 name|dn_dbufs_count
 decl_stmt|;
 comment|/* count of dn_dbufs */
-comment|/* There are no level-0 blocks of this blkid or higher in dn_dbufs */
-name|uint64_t
-name|dn_unlisted_l0_blkid
-decl_stmt|;
 comment|/* protected by os_lock: */
 name|list_node_t
 name|dn_dirty_link

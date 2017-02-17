@@ -7548,149 +7548,76 @@ begin_comment
 comment|/* Argument list sizes for linux_socketcall */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LINUX_AL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) * sizeof(l_ulong))
-end_define
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|unsigned
 name|char
-name|lxs_args
+name|lxs_args_cnt
 index|[]
 init|=
 block|{
-name|LINUX_AL
-argument_list|(
 literal|0
-argument_list|)
 comment|/* unused*/
 block|,
-name|LINUX_AL
-argument_list|(
 literal|3
-argument_list|)
 comment|/* socket */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|3
-argument_list|)
 comment|/* bind */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|3
-argument_list|)
 comment|/* connect */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|2
-argument_list|)
 comment|/* listen */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|3
-argument_list|)
 comment|/* accept */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|3
-argument_list|)
 comment|/* getsockname */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|3
-argument_list|)
 comment|/* getpeername */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|4
-argument_list|)
 comment|/* socketpair */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|4
-argument_list|)
 comment|/* send */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|4
-argument_list|)
 comment|/* recv */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|6
-argument_list|)
 comment|/* sendto */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|6
-argument_list|)
 comment|/* recvfrom */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|2
-argument_list|)
 comment|/* shutdown */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|5
-argument_list|)
 comment|/* setsockopt */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|5
-argument_list|)
 comment|/* getsockopt */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|3
-argument_list|)
 comment|/* sendmsg */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|3
-argument_list|)
 comment|/* recvmsg */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|4
-argument_list|)
 comment|/* accept4 */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|5
-argument_list|)
 comment|/* recvmmsg */
 block|,
-name|LINUX_AL
-argument_list|(
 literal|4
-argument_list|)
 comment|/* sendmmsg */
 block|}
 decl_stmt|;
@@ -7699,8 +7626,18 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|LINUX_AL_SIZE
-value|(nitems(lxs_args) - 1)
+name|LINUX_ARGS_CNT
+value|(nitems(lxs_args_cnt) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_ARG_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|(lxs_args_cnt[x] * sizeof(l_ulong))
 end_define
 
 begin_function
@@ -7724,6 +7661,25 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+name|register_t
+name|l_args
+index|[
+literal|6
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|void
 modifier|*
 name|arg
@@ -7743,7 +7699,7 @@ name|args
 operator|->
 name|what
 operator|>
-name|LINUX_AL_SIZE
+name|LINUX_ARGS_CNT
 condition|)
 return|return
 operator|(
@@ -7763,27 +7719,77 @@ argument_list|)
 argument_list|,
 name|a
 argument_list|,
-name|lxs_args
-index|[
+name|LINUX_ARG_SIZE
+argument_list|(
 name|args
 operator|->
 name|what
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|lxs_args_cnt
+index|[
+name|args
+operator|->
+name|what
+index|]
+condition|;
+operator|++
+name|i
+control|)
+name|l_args
+index|[
+name|i
+index|]
+operator|=
+name|a
+index|[
+name|i
+index|]
+expr_stmt|;
+name|arg
+operator|=
+name|l_args
+expr_stmt|;
+else|#
+directive|else
 name|arg
 operator|=
 name|a
 expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|args

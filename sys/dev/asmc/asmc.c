@@ -1040,6 +1040,24 @@ name|ASMC_MBP8_TEMPDESCS
 block|}
 block|,
 block|{
+literal|"MacBookPro11,2"
+block|,
+literal|"Apple SMC MacBook Pro Retina Core i7 (2013/2014)"
+block|,
+name|ASMC_SMS_FUNCS_DISABLED
+block|,
+name|ASMC_FAN_FUNCS2
+block|,
+name|ASMC_LIGHT_FUNCS
+block|,
+name|ASMC_MBP112_TEMPS
+block|,
+name|ASMC_MBP112_TEMPNAMES
+block|,
+name|ASMC_MBP112_TEMPDESCS
+block|}
+block|,
+block|{
 literal|"MacBookPro11,3"
 block|,
 literal|"Apple SMC MacBook Pro Retina Core i7 (2013/2014)"
@@ -1050,11 +1068,11 @@ name|ASMC_FAN_FUNCS
 block|,
 name|ASMC_LIGHT_FUNCS
 block|,
-name|ASMC_MBP11_TEMPS
+name|ASMC_MBP113_TEMPS
 block|,
-name|ASMC_MBP11_TEMPNAMES
+name|ASMC_MBP113_TEMPNAMES
 block|,
-name|ASMC_MBP11_TEMPDESCS
+name|ASMC_MBP113_TEMPDESCS
 block|}
 block|,
 comment|/* The Mac Mini has no SMS */
@@ -2987,7 +3005,7 @@ argument_list|(
 literal|50
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Initiate the polling intervals. 	 */
+comment|/* 	 * Initiate the polling intervals. 	 */
 name|buf
 index|[
 literal|0

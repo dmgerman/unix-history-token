@@ -531,13 +531,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXEISA
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAXPCI
 value|16
 end_define
@@ -566,22 +559,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IS_EISA
-value|'E'
-end_define
-
-begin_define
-define|#
-directive|define
 name|IS_PCI
 value|'P'
-end_define
-
-begin_define
-define|#
-directive|define
-name|BROKEN_INQUIRY
-value|1
 end_define
 
 begin_define
@@ -800,48 +779,6 @@ define|#
 directive|define
 name|PCI_REG_ConfigParam2
 value|0x54
-end_define
-
-begin_define
-define|#
-directive|define
-name|EATA_CMD_PIO_SETUPTEST
-value|0xc6
-end_define
-
-begin_define
-define|#
-directive|define
-name|EATA_CMD_PIO_READ_CONFIG
-value|0xf0
-end_define
-
-begin_define
-define|#
-directive|define
-name|EATA_CMD_PIO_SET_CONFIG
-value|0xf1
-end_define
-
-begin_define
-define|#
-directive|define
-name|EATA_CMD_PIO_SEND_CP
-value|0xf2
-end_define
-
-begin_define
-define|#
-directive|define
-name|EATA_CMD_PIO_RECEIVE_SP
-value|0xf3
-end_define
-
-begin_define
-define|#
-directive|define
-name|EATA_CMD_PIO_TRUNC
-value|0xf4
 end_define
 
 begin_define
@@ -2241,20 +2178,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SI_MCA_BUS
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_EISA_BUS
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
 name|SI_PCI_BUS
 value|0x04
 end_define
@@ -2264,13 +2187,6 @@ define|#
 directive|define
 name|HBA_BUS_ISA
 value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|HBA_BUS_EISA
-value|0x01
 end_define
 
 begin_define
@@ -3699,34 +3615,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ADF_PLUS_EISA
-value|0x0008
-end_define
-
-begin_comment
-comment|/* PM2012B,PM2022 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ADF_SC3_ISA
 value|0x0010
 end_define
 
 begin_comment
 comment|/* PM2021 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADF_SC3_EISA
-value|0x0020
-end_define
-
-begin_comment
-comment|/* PM2022,PM2122, etc */
 end_comment
 
 begin_define
@@ -3749,17 +3643,6 @@ end_define
 
 begin_comment
 comment|/* SmartCache IV ISA */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADF_SC4_EISA
-value|0x0100
-end_define
-
-begin_comment
-comment|/* SmartCache IV EISA */
 end_comment
 
 begin_define
@@ -4962,14 +4845,9 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* HBA supports IMMEDIATE */
-name|broken_INQUIRY
-range|:
-literal|1
-decl_stmt|,
-comment|/* EISA HBA w/broken INQUIRY */
 name|spare2
 range|:
-literal|5
+literal|6
 decl_stmt|;
 name|u_int8_t
 name|resetlevel
@@ -5163,13 +5041,9 @@ name|immediate_support
 range|:
 literal|1
 decl_stmt|,
-name|broken_INQUIRY
-range|:
-literal|1
-decl_stmt|,
 name|spare2
 range|:
-literal|5
+literal|6
 decl_stmt|;
 name|u_int8_t
 name|resetlevel
@@ -5488,27 +5362,6 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_EISA
-end_ifdef
-
-begin_function_decl
-name|dpt_conf_t
-modifier|*
-name|dpt_pio_get_conf
-parameter_list|(
-name|u_int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

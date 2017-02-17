@@ -465,7 +465,7 @@ name|sblock
 operator|->
 name|fs_bsize
 operator|*
-name|NDADDR
+name|UFS_NDADDR
 condition|)
 block|{
 comment|/* calculate the number of indirect blocks on the dump tape */
@@ -475,7 +475,7 @@ name|howmany
 argument_list|(
 name|sizeest
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|*
 name|sblock
 operator|->
@@ -821,7 +821,7 @@ if|if
 condition|(
 name|ino
 operator|<
-name|ROOTINO
+name|UFS_ROOTINO
 operator|||
 operator|(
 name|dp
@@ -976,7 +976,7 @@ block|}
 comment|/* 	 * Restore gets very upset if the root is not dumped, 	 * so ensure that it always is dumped. 	 */
 name|SETINO
 argument_list|(
-name|ROOTINO
+name|UFS_ROOTINO
 argument_list|,
 name|dumpinomap
 argument_list|)
@@ -1189,7 +1189,7 @@ literal|0
 operator|&&
 name|i
 operator|<
-name|NDADDR
+name|UFS_NDADDR
 condition|;
 name|i
 operator|++
@@ -1284,7 +1284,7 @@ literal|0
 operator|&&
 name|i
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|i
 operator|++
@@ -2732,7 +2732,7 @@ argument_list|,
 name|di_size
 argument_list|)
 operator|>
-name|NDADDR
+name|UFS_NDADDR
 operator|*
 name|sblock
 operator|->
@@ -2741,7 +2741,7 @@ condition|)
 block|{
 name|cnt
 operator|=
-name|NDADDR
+name|UFS_NDADDR
 operator|*
 name|sblock
 operator|->
@@ -2834,7 +2834,7 @@ argument_list|,
 name|di_size
 argument_list|)
 operator|-
-name|NDADDR
+name|UFS_NDADDR
 operator|*
 name|sblock
 operator|->
@@ -2852,7 +2852,7 @@ literal|0
 init|;
 name|ind_level
 operator|<
-name|NIADDR
+name|UFS_NIADDR
 condition|;
 name|ind_level
 operator|++
@@ -3823,7 +3823,7 @@ name|spcl
 operator|.
 name|c_extsize
 operator|>
-name|NXADDR
+name|UFS_NXADDR
 operator|*
 name|sblock
 operator|->
@@ -3833,7 +3833,7 @@ name|blks
 operator|=
 name|howmany
 argument_list|(
-name|NXADDR
+name|UFS_NXADDR
 operator|*
 name|sblock
 operator|->
@@ -4011,7 +4011,7 @@ name|spcl
 operator|.
 name|c_extsize
 operator|>
-name|NXADDR
+name|UFS_NXADDR
 operator|*
 name|sblock
 operator|->
@@ -4020,7 +4020,7 @@ condition|)
 block|{
 name|frags
 operator|=
-name|NXADDR
+name|UFS_NXADDR
 operator|*
 name|sblock
 operator|->
@@ -4081,7 +4081,7 @@ name|spcl
 operator|.
 name|c_extsize
 operator|>
-name|NXADDR
+name|UFS_NXADDR
 operator|*
 name|sblock
 operator|->
@@ -4091,7 +4091,7 @@ name|blks
 operator|=
 name|howmany
 argument_list|(
-name|NXADDR
+name|UFS_NXADDR
 operator|*
 name|sblock
 operator|->
@@ -4211,7 +4211,7 @@ name|spcl
 operator|.
 name|c_extsize
 operator|-
-name|NXADDR
+name|UFS_NXADDR
 operator|*
 name|sblock
 operator|->

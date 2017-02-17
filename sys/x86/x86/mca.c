@@ -2294,7 +2294,7 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|ticks
+name|time_uptime
 operator|-
 name|cc
 operator|->
@@ -2363,7 +2363,7 @@ argument_list|(
 name|bank
 argument_list|)
 argument_list|,
-name|limit
+name|ctl
 argument_list|)
 expr_stmt|;
 block|}
@@ -2371,7 +2371,7 @@ name|cc
 operator|->
 name|last_intr
 operator|=
-name|ticks
+name|time_uptime
 expr_stmt|;
 return|return;
 block|}
@@ -2475,7 +2475,7 @@ argument_list|(
 name|bank
 argument_list|)
 argument_list|,
-name|limit
+name|ctl
 argument_list|)
 expr_stmt|;
 block|}
@@ -3696,8 +3696,7 @@ name|cc
 operator|->
 name|last_intr
 operator|=
-operator|-
-name|ticks
+literal|0
 expr_stmt|;
 name|ctl
 operator|=

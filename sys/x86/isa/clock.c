@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mca.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -187,23 +181,6 @@ begin_include
 include|#
 directive|include
 file|<isa/isavar.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_MCA
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<i386/bios/mca_machdep.h>
 end_include
 
 begin_endif
@@ -614,28 +591,6 @@ operator|.
 name|et_arg
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_MCA
-comment|/* Reset clock interrupt by asserting bit 7 of port 0x61 */
-if|if
-condition|(
-name|MCA_system
-condition|)
-name|outb
-argument_list|(
-literal|0x61
-argument_list|,
-name|inb
-argument_list|(
-literal|0x61
-argument_list|)
-operator||
-literal|0x80
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|FILTER_HANDLED

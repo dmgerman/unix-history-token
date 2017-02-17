@@ -16473,6 +16473,12 @@ name|if_capenable
 operator|&
 name|IFCAP_VLAN_HWFILTER
 operator|&&
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|&&
 name|vtnet_exec_vlan_filter
 argument_list|(
 name|sc

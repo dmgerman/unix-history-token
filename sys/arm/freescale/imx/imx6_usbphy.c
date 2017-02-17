@@ -412,6 +412,20 @@ operator||
 name|CTRL_CLKGATE
 argument_list|)
 expr_stmt|;
+comment|/* Set UTMI+ level 2+3 bits to enable low and full speed devices. */
+name|bus_write_4
+argument_list|(
+name|sc
+operator|->
+name|mem_res
+argument_list|,
+name|CTRL_SET_REG
+argument_list|,
+name|CTRL_ENUTMILEVEL2
+operator||
+name|CTRL_ENUTMILEVEL3
+argument_list|)
+expr_stmt|;
 comment|/* Power up: clear all bits in the powerdown register. */
 name|bus_write_4
 argument_list|(

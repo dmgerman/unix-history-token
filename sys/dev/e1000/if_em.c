@@ -8679,6 +8679,16 @@ name|trigger
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|qid
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* XXX all this stuff is per-adapter */
+return|return;
+block|}
 name|em_if_update_admin_status
 argument_list|(
 name|ctx

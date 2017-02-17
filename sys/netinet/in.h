@@ -2568,24 +2568,6 @@ begin_comment
 comment|/* int; set RSS listen bucket */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_ORIGDSTADDR
-value|27
-end_define
-
-begin_comment
-comment|/* bool: receive IP dst addr/port w/dgram */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_RECVORIGDSTADDR
-value|IP_ORIGDSTADDR
-end_define
-
 begin_comment
 comment|/*  * Options for controlling the firewall and dummynet.  * Historical options (from 40 to 64) will eventually be  * replaced by only two options, IP_FW3 and IP_DUMMYNET3.  */
 end_comment
@@ -3786,21 +3768,6 @@ parameter_list|,
 name|struct
 name|in_addr
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* in libkern */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|(
-name|struct
-name|in_addr
 parameter_list|)
 function_decl|;
 end_function_decl

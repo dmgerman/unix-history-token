@@ -1022,6 +1022,12 @@ name|tcphdr
 modifier|*
 name|tc
 decl_stmt|;
+name|char
+name|addrbuf
+index|[
+name|INET_ADDRSTRLEN
+index|]
+decl_stmt|;
 comment|/* Compute pointer to tcp header */
 name|tc
 operator|=
@@ -1058,11 +1064,16 @@ literal|2
 argument_list|,
 literal|"[DEST %s %d]"
 argument_list|,
-name|inet_ntoa
+name|inet_ntoa_r
 argument_list|(
 name|GetProxyAddress
 argument_list|(
 name|lnk
+argument_list|)
+argument_list|,
+name|INET_NTOA_BUF
+argument_list|(
+name|addrbuf
 argument_list|)
 argument_list|)
 argument_list|,
