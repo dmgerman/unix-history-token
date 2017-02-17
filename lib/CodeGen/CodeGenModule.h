@@ -585,7 +585,7 @@ name|Constant
 operator|*
 name|objc_release
 expr_stmt|;
-comment|/// id objc_storeStrong(id*, id);
+comment|/// void objc_storeStrong(id*, id);
 name|llvm
 operator|::
 name|Constant
