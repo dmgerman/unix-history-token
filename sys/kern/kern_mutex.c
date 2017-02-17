@@ -3061,7 +3061,7 @@ argument_list|,
 name|sleep_time
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Only record the loops spinning and not sleeping.  	 */
+comment|/* 	 * Only record the loops spinning and not sleeping. 	 */
 if|if
 condition|(
 name|lda
