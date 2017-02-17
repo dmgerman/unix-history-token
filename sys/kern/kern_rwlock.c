@@ -1208,12 +1208,6 @@ name|tid
 decl_stmt|,
 name|v
 decl_stmt|;
-if|if
-condition|(
-name|SCHEDULER_STOPPED
-argument_list|()
-condition|)
-return|return;
 name|rw
 operator|=
 name|rwlock2rw
@@ -1630,12 +1624,6 @@ name|rwlock
 modifier|*
 name|rw
 decl_stmt|;
-if|if
-condition|(
-name|SCHEDULER_STOPPED
-argument_list|()
-condition|)
-return|return;
 name|rw
 operator|=
 name|rwlock2rw
