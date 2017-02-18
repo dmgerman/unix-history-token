@@ -3390,8 +3390,13 @@ name|td
 argument_list|,
 name|s
 argument_list|,
+name|cap_rights_init
+argument_list|(
 operator|&
 name|rights
+argument_list|,
+name|CAP_ACCEPT
+argument_list|)
 argument_list|,
 operator|&
 name|fp
