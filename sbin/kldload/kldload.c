@@ -747,9 +747,14 @@ case|:
 name|warnx
 argument_list|(
 literal|"an error occurred while "
-literal|"loading the module. "
+literal|"loading module %s. "
 literal|"Please check dmesg(8) for "
 literal|"more details."
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
