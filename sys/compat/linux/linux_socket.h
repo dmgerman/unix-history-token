@@ -472,13 +472,13 @@ begin_struct
 struct|struct
 name|linux_accept_args
 block|{
-name|int
+name|register_t
 name|s
 decl_stmt|;
-name|l_uintptr_t
+name|register_t
 name|addr
 decl_stmt|;
-name|l_uintptr_t
+name|register_t
 name|namelen
 decl_stmt|;
 block|}
