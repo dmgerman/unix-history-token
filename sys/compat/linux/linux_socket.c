@@ -1834,6 +1834,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2277,6 +2279,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2391,6 +2395,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2920,6 +2926,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3043,6 +3051,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3274,7 +3284,6 @@ name|s
 operator|=
 name|s
 expr_stmt|;
-comment|/* XXX: */
 name|bsd_args
 operator|.
 name|name
@@ -3299,7 +3308,6 @@ argument_list|(
 name|namelen
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|bsd_args
 operator|.
 name|flags
@@ -3354,6 +3362,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -3476,6 +3486,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(
@@ -3624,7 +3636,6 @@ name|args
 operator|->
 name|s
 expr_stmt|;
-comment|/* XXX: */
 name|bsd_args
 operator|.
 name|asa
@@ -3653,7 +3664,6 @@ operator|->
 name|namelen
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|error
 operator|=
 name|sys_getsockname
@@ -3679,6 +3689,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3788,6 +3800,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -6231,6 +6245,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|bad
@@ -6253,6 +6269,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|bad
@@ -6823,6 +6841,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -7162,6 +7182,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -7261,6 +7283,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -7351,6 +7375,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
