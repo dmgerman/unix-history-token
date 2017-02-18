@@ -1122,6 +1122,18 @@ operator|&
 name|cksum
 argument_list|)
 expr_stmt|;
+comment|/* Do not adjust UDP checksum if it is zero. */
+if|if
+condition|(
+name|proto
+operator|==
+name|IPPROTO_UDP
+operator|&&
+name|cksum
+operator|==
+literal|0
+condition|)
+return|return;
 name|cksum
 operator|=
 name|in_addword
