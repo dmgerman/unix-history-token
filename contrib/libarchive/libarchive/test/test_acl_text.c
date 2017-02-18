@@ -441,6 +441,13 @@ literal|"group:group78:r-----a-R-c---:------I:allow:78\n"
 literal|"owner@:rwxp--aARWcCo-:-------:allow\n"
 literal|"group@:rw-p--a-R-c---:-------:allow\n"
 literal|"everyone@:r-----a-R-c--s:-------:allow"
+block|,
+literal|"user:user77:rwpaRco::allow:77\n"
+literal|"user:user101:wpdD:fdin:deny:101\n"
+literal|"group:group78:raRc:I:allow:78\n"
+literal|"owner@:rwxpaARWcCo::allow\n"
+literal|"group@:rwpaRc::allow\n"
+literal|"everyone@:raRcs::allow"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1680,6 +1687,21 @@ argument_list|,
 name|acltext
 index|[
 literal|10
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* NFSv4 ACLs like "getfacl -i" on FreeBSD with stripped minus chars */
+name|compare_acl_text
+argument_list|(
+name|ae
+argument_list|,
+name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
+operator||
+name|ARCHIVE_ENTRY_ACL_STYLE_COMPACT
+argument_list|,
+name|acltext
+index|[
+literal|11
 index|]
 argument_list|)
 expr_stmt|;

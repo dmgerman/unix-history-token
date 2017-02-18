@@ -2956,11 +2956,14 @@ end_comment
 
 begin_struct
 unit|static
+specifier|const
 struct|struct
 block|{
+specifier|const
 name|int
 name|archive_perm
 decl_stmt|;
+specifier|const
 name|int
 name|platform_perm
 decl_stmt|;
@@ -3320,11 +3323,14 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
+specifier|const
 name|int
 name|archive_inherit
 decl_stmt|;
+specifier|const
 name|int
 name|platform_inherit
 decl_stmt|;
@@ -4386,7 +4392,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * POSIX.1e ACLs marked with ACL_IS_TRIVIAL are compatible with 	 * FreeBSD acl_is_trivial_np(). On Solaris they have 4 entries, 	 * incuding mask. 	 */
+comment|/* 	 * POSIX.1e ACLs marked with ACL_IS_TRIVIAL are compatible with 	 * FreeBSD acl_is_trivial_np(). On Solaris they have 4 entries, 	 * including mask. 	 */
 if|if
 condition|(
 name|acl

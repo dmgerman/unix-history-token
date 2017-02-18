@@ -5373,6 +5373,8 @@ argument_list|,
 name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
 operator||
 name|ARCHIVE_ENTRY_ACL_STYLE_SEPARATOR_COMMA
+operator||
+name|ARCHIVE_ENTRY_ACL_STYLE_COMPACT
 argument_list|)
 expr_stmt|;
 if|if
