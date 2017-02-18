@@ -383,9 +383,6 @@ name|v
 parameter_list|,
 name|uintptr_t
 name|tid
-parameter_list|,
-name|int
-name|opts
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -398,9 +395,6 @@ specifier|volatile
 name|uintptr_t
 modifier|*
 name|c
-parameter_list|,
-name|int
-name|opts
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -780,7 +774,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__mtx_lock_sleep(&(m)->mtx_lock, v, t, o)
+value|__mtx_lock_sleep(&(m)->mtx_lock, v, t)
 end_define
 
 begin_define
@@ -797,7 +791,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__mtx_unlock_sleep(&(m)->mtx_lock, o)
+value|__mtx_unlock_sleep(&(m)->mtx_lock)
 end_define
 
 begin_endif
