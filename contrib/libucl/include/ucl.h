@@ -356,7 +356,16 @@ literal|1
 operator|<<
 literal|5
 operator|)
+block|,
 comment|/** Treat macros as comments */
+name|UCL_PARSER_NO_FILEVARS
+init|=
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+comment|/** Do not set file vars */
 block|}
 name|ucl_parser_flags_t
 typedef|;
@@ -562,7 +571,10 @@ name|UCL_PARSE_MSGPACK
 block|,
 comment|/**< Message pack input format */
 name|UCL_PARSE_CSEXP
+block|,
 comment|/**< Canonical S-expressions */
+name|UCL_PARSE_AUTO
+comment|/**< Try to detect parse type */
 block|}
 enum|;
 comment|/**  * UCL object structure. Please mention that the most of fields should not be touched by  * UCL users. In future, this structure may be converted to private one.  */
@@ -626,7 +638,7 @@ comment|/**< Array handle			*/
 name|uint32_t
 name|keylen
 decl_stmt|;
-comment|/**< Lenght of a key		*/
+comment|/**< Length of a key		*/
 name|uint32_t
 name|len
 decl_stmt|;
@@ -1708,7 +1720,7 @@ modifier|*
 name|obj
 parameter_list|)
 function_decl|;
-comment|/**  * Get the next object from the `obj`. This fucntion iterates over arrays, objects  * and implicit arrays  * @param iter safe iterator  * @return the next object in sequence  */
+comment|/**  * Get the next object from the `obj`. This fucntion iterates over arrays, objects  * and implicit arrays  * @param iter safe iterator  * @param expand_values expand explicit arrays and objects  * @return the next object in sequence  */
 name|UCL_EXTERN
 specifier|const
 name|ucl_object_t
@@ -1720,6 +1732,56 @@ name|iter
 parameter_list|,
 name|bool
 name|expand_values
+parameter_list|)
+function_decl|;
+comment|/**  * Iteration type enumerator  */
+enum|enum
+name|ucl_iterate_type
+block|{
+name|UCL_ITERATE_EXPLICIT
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+comment|/**< Iterate just explicit arrays and objects */
+name|UCL_ITERATE_IMPLICIT
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+comment|/**< Iterate just implicit arrays */
+name|UCL_ITERATE_BOTH
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+comment|/**< Iterate both explicit and implicit arrays*/
+block|}
+enum|;
+comment|/**  * Get the next object from the `obj`. This fucntion iterates over arrays, objects  * and implicit arrays if needed  * @param iter safe iterator  * @param  * @return the next object in sequence  */
+name|UCL_EXTERN
+specifier|const
+name|ucl_object_t
+modifier|*
+name|ucl_object_iterate_full
+parameter_list|(
+name|ucl_object_iter_t
+name|iter
+parameter_list|,
+name|enum
+name|ucl_iterate_type
+name|type
 parameter_list|)
 function_decl|;
 comment|/**  * Free memory associated with the safe iterator  * @param it safe iterator object  */
@@ -2057,7 +2119,7 @@ name|unsigned
 name|priority
 parameter_list|)
 function_decl|;
-comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @return true if chunk has been added and false in case of error  */
+comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @return true if chunk has been added and false in case of error  */
 name|UCL_EXTERN
 name|bool
 name|ucl_parser_add_file
@@ -2073,7 +2135,7 @@ modifier|*
 name|filename
 parameter_list|)
 function_decl|;
-comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @return true if chunk has been added and false in case of error  */
+comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @return true if chunk has been added and false in case of error  */
 name|UCL_EXTERN
 name|bool
 name|ucl_parser_add_file_priority
@@ -2148,6 +2210,31 @@ name|fd
 parameter_list|,
 name|unsigned
 name|priority
+parameter_list|)
+function_decl|;
+comment|/**  * Load and add data from a file descriptor  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @param strat Merge strategy to use while parsing this file  * @param parse_type Parser type to use while parsing this file  * @return true if chunk has been added and false in case of error  */
+name|UCL_EXTERN
+name|bool
+name|ucl_parser_add_fd_full
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|unsigned
+name|priority
+parameter_list|,
+name|enum
+name|ucl_duplicate_strategy
+name|strat
+parameter_list|,
+name|enum
+name|ucl_parse_type
+name|parse_type
 parameter_list|)
 function_decl|;
 comment|/**  * Provide a UCL_ARRAY of paths to search for include files. The object is  * copied so caller must unref the object.  * @param parser parser structure  * @param paths UCL_ARRAY of paths to search  * @return true if the path search array was replaced in the parser  */
