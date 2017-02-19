@@ -3136,7 +3136,7 @@ name|syslog
 argument_list|(
 name|LOG_ALERT
 argument_list|,
-literal|"reboot after panic: %*s"
+literal|"reboot after panic: %.*s"
 argument_list|,
 operator|(
 name|int
