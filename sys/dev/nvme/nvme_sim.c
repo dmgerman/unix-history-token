@@ -577,7 +577,6 @@ case|case
 name|XPT_ABORT
 case|:
 comment|/* Abort the specified CCB */
-comment|/* 		 * Only target mode generates these, and only for SCSI. They are 		 * all invalid/unsupported for NVMe. 		 */
 name|ccb
 operator|->
 name|ccb_h
