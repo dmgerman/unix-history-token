@@ -802,6 +802,9 @@ name|path
 operator|=
 name|path
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -810,6 +813,8 @@ operator|->
 name|waitq
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -930,6 +935,9 @@ argument_list|,
 name|fc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -938,6 +946,8 @@ operator|->
 name|waitq
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|isp_loop_changed
 argument_list|(
 name|isp
