@@ -495,7 +495,7 @@ name|__inline
 expr|struct
 name|pcpu
 operator|*
-name|powerpc_get_pcpup
+name|get_pcpu
 argument_list|(
 argument|void
 argument_list|)

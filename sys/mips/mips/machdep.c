@@ -1832,6 +1832,12 @@ name|pc_asid_generation
 operator|=
 literal|1
 expr_stmt|;
+name|pcpu
+operator|->
+name|pc_self
+operator|=
+name|pcpu
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP

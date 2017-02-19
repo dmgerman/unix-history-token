@@ -41,10 +41,12 @@ comment|/* next ASID to alloc */
 value|\ 	u_int32_t	pc_asid_generation;
 comment|/* current ASID generation */
 value|\ 	u_int		pc_pending_ipis;
+comment|/* IPIs pending to this CPU */
+value|\ 	struct	pcpu	*pc_self;
 end_define
 
 begin_comment
-comment|/* IPIs pending to this CPU */
+comment|/* globally-uniqe self pointer */
 end_comment
 
 begin_ifdef
@@ -58,7 +60,7 @@ define|#
 directive|define
 name|PCPU_MD_MIPS64_FIELDS
 define|\
-value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[61]
+value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[53]
 end_define
 
 begin_else
@@ -71,7 +73,7 @@ define|#
 directive|define
 name|PCPU_MD_MIPS32_FIELDS
 define|\
-value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[193]
+value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[189]
 end_define
 
 begin_endif
@@ -154,6 +156,18 @@ define|#
 directive|define
 name|PCPUP
 value|pcpup
+end_define
+
+begin_comment
+comment|/*  * Since we use a wired TLB entry to map the same VA to a different  * physical page for each CPU, get_pcpu() must use the pc_self  * field to obtain a globally-unique pointer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|get_pcpu
+parameter_list|()
+value|(PCPUP->pc_self)
 end_define
 
 begin_define
