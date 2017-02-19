@@ -2469,28 +2469,6 @@ operator|.
 name|func_code
 condition|)
 block|{
-case|case
-name|XPT_NOOP
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_NOOP \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
 comment|/* 		 * Execute the requested I/O operation  	 	 */
 case|case
 name|XPT_SCSI_IO
@@ -2851,50 +2829,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-case|case
-name|XPT_GDEV_TYPE
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_GDEV_TYPE \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|XPT_GDEVLIST
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_GDEVLIST \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
 comment|/* 		 * Path routing inquiry  	       	 * Path Inquiry CCB  		 */
 case|case
 name|XPT_PATH_INQ
@@ -3069,124 +3003,9 @@ argument_list|(
 name|pccb
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-break|break;
-comment|/* 		 * Release a frozen SIM queue  		 * Release SIM Queue  		 */
-case|case
-name|XPT_REL_SIMQ
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_REL_SIMQ \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * Set Asynchronous Callback Parameters  		 * Set Asynchronous Callback CCB  		 */
-case|case
-name|XPT_SASYNC_CB
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_SASYNC_CB \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * Set device type information  		 * Set Device Type CCB   		 */
-case|case
-name|XPT_SDEV_TYPE
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_SDEV_TYPE \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * Get EDT entries matching the given pattern   		 */
-case|case
-name|XPT_DEV_MATCH
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_DEV_MATCH \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * Turn on debugging for a bus, target or lun        		 */
-case|case
-name|XPT_DEBUG
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_DEBUG \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 			 * XPT_ABORT = 0x10, Abort the specified CCB  			 * Abort XPT request CCB  			 */
+comment|/* 		 * XPT_ABORT = 0x10, Abort the specified CCB 		 * Abort XPT request CCB 		 */
 case|case
 name|XPT_ABORT
 case|:
@@ -3209,7 +3028,7 @@ name|pccb
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 		 * Reset the specified SCSI bus  		 * Reset SCSI Bus CCB   		 */
+comment|/* 		 * Reset the specified SCSI bus 		 * Reset SCSI Bus CCB 		 */
 case|case
 name|XPT_RESET_BUS
 case|:
@@ -3264,8 +3083,8 @@ argument_list|(
 name|pccb
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 comment|/* 		 * Bus Device Reset the specified SCSI device  		 * Reset SCSI Device CCB   		 */
 case|case
 name|XPT_RESET_DEV
@@ -4140,211 +3959,6 @@ argument_list|,
 comment|/*extended*/
 literal|1
 argument_list|)
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|XPT_ENG_INQ
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_ENG_INQ \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * HBA execute engine request  		 * This structure must match SCSIIO size  		 */
-case|case
-name|XPT_ENG_EXEC
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_ENG_EXEC \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * XPT_EN_LUN = 0x30, Enable LUN as a target  		 * Target mode structures.  	 	 */
-case|case
-name|XPT_EN_LUN
-case|:
-comment|/* 		 * Don't (yet?) support vendor 		 * specific commands. 		 */
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_EN_LUN \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		* Execute target I/O request  		*/
-case|case
-name|XPT_TARGET_IO
-case|:
-comment|/* 		 * Don't (yet?) support vendor 		 * specific commands. 		 */
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_TARGET_IO \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * Accept Host Target Mode CDB         		 */
-case|case
-name|XPT_ACCEPT_TARGET_IO
-case|:
-comment|/* 		 * Don't (yet?) support vendor 		 * specific commands. 		 */
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_ACCEPT_TARGET_IO \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * Continue Host Target I/O Connection   		 */
-case|case
-name|XPT_CONT_TARGET_IO
-case|:
-comment|/* 		 * Don't (yet?) support vendor 		 * specific commands. 		 */
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_CONT_TARGET_IO \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * Notify Host Target driver of event   		 */
-case|case
-name|XPT_IMMED_NOTIFY
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_IMMED_NOTIFY \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * Acknowledgement of event        		 */
-case|case
-name|XPT_NOTIFY_ACK
-case|:
-name|TRM_DPRINTF
-argument_list|(
-literal|" XPT_NOTIFY_ACK \n"
-argument_list|)
-expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|pccb
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * XPT_VUNIQUE = 0x80 		 */
-case|case
-name|XPT_VUNIQUE
-case|:
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
 expr_stmt|;
 name|xpt_done
 argument_list|(
