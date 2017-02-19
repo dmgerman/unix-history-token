@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmandoc.h,v 1.64 2016/07/19 13:36:13 schwarze Exp $ */
+comment|/*	$Id: libmandoc.h,v 1.66 2017/02/18 13:43:52 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -130,7 +130,7 @@ function_decl|__attribute__
 parameter_list|(
 function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|5
 operator|,
@@ -317,6 +317,7 @@ begin_function_decl
 name|int
 name|preconv_encode
 parameter_list|(
+specifier|const
 name|struct
 name|buf
 modifier|*

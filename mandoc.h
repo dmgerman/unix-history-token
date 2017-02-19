@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.h,v 1.213 2017/01/09 01:37:03 schwarze Exp $ */
+comment|/*	$Id: mandoc.h,v 1.214 2017/01/28 23:30:08 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -324,6 +324,9 @@ comment|/* tab in filled text */
 name|MANDOCERR_SPACE_EOL
 block|,
 comment|/* whitespace at end of input line */
+name|MANDOCERR_EOS
+block|,
+comment|/* new sentence, new line */
 name|MANDOCERR_COMMENT_BAD
 block|,
 comment|/* bad comment style */

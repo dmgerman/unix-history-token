@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tag.c,v 1.17 2017/01/09 17:49:58 schwarze Exp $ */
+comment|/*	$Id: tag.c,v 1.18 2017/02/17 14:31:52 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -113,7 +113,7 @@ name|int
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(noreturn
+function_decl|(__noreturn__
 end_function_decl
 
 begin_empty_stmt

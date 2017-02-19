@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: dba.c,v 1.9 2017/01/15 15:28:55 schwarze Exp $ */
+comment|/*	$Id: dba.c,v 1.10 2017/02/17 14:43:54 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -1513,8 +1513,10 @@ name|cp1
 operator|=
 operator|*
 operator|(
+specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|vp1
@@ -1523,8 +1525,10 @@ name|cp2
 operator|=
 operator|*
 operator|(
+specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|vp2
@@ -1584,8 +1588,10 @@ name|cp1
 operator|=
 operator|*
 operator|(
+specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|vp1
@@ -1594,8 +1600,10 @@ name|cp2
 operator|=
 operator|*
 operator|(
+specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|vp2
@@ -2400,9 +2408,11 @@ name|ep1
 operator|=
 operator|*
 operator|(
+specifier|const
 expr|struct
 name|macro_entry
 operator|*
+specifier|const
 operator|*
 operator|)
 name|vp1
@@ -2411,9 +2421,11 @@ name|ep2
 operator|=
 operator|*
 operator|(
+specifier|const
 expr|struct
 name|macro_entry
 operator|*
+specifier|const
 operator|*
 operator|)
 name|vp2

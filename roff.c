@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: roff.c,v 1.288 2017/01/12 18:02:20 schwarze Exp $ */
+comment|/*	$Id: roff.c,v 1.289 2017/02/17 03:03:03 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -7967,6 +7967,13 @@ index|]
 operator|==
 literal|'\\'
 operator|&&
+name|cp
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
+operator|&&
 name|strchr
 argument_list|(
 literal|" %&0^|~"
@@ -7998,15 +8005,31 @@ argument_list|)
 condition|)
 break|break;
 block|}
-comment|/* Skip trailing whitespace. */
-for|for
-control|(
+comment|/* Skip trailing backslash. */
 name|sz
 operator|=
 name|strlen
 argument_list|(
 name|cp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+index|[
+name|sz
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\\'
+condition|)
+name|sz
+operator|--
+expr_stmt|;
+comment|/* Skip trailing whitespace. */
+for|for
+control|(
 init|;
 name|sz
 condition|;
@@ -17560,6 +17583,18 @@ operator|*
 name|p
 condition|)
 block|{
+name|assert
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
+operator|*
+name|p
+operator|<
+literal|128
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 literal|'\\'
@@ -17576,6 +17611,7 @@ operator|->
 name|xtab
 index|[
 operator|(
+name|unsigned
 name|int
 operator|)
 operator|*
