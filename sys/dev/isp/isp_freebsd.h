@@ -670,16 +670,6 @@ name|isp_tna_t
 typedef|;
 end_typedef
 
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|isp_ccbq
-argument_list|,
-name|ccb_hdr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -699,11 +689,6 @@ name|cam_path
 modifier|*
 name|owner
 decl_stmt|;
-name|struct
-name|isp_ccbq
-name|waitq
-decl_stmt|;
-comment|/* waiting CCBs */
 name|struct
 name|ccb_hdr_slist
 name|atios
@@ -922,6 +907,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|isp_ccbq
+argument_list|,
+name|ccb_hdr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|isp_fc
@@ -1031,6 +1026,11 @@ index|[
 name|LUN_HASH_SIZE
 index|]
 decl_stmt|;
+name|struct
+name|isp_ccbq
+name|waitq
+decl_stmt|;
+comment|/* waiting CCBs */
 if|#
 directive|if
 name|defined
@@ -1085,6 +1085,11 @@ index|[
 name|LUN_HASH_SIZE
 index|]
 decl_stmt|;
+name|struct
+name|isp_ccbq
+name|waitq
+decl_stmt|;
+comment|/* waiting CCBs */
 endif|#
 directive|endif
 name|int
