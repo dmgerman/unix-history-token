@@ -2093,7 +2093,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Deprecated interfaces, to be removed in FreeBSD 6.0. */
+comment|/* Deprecated interfaces, to be removed. */
 end_comment
 
 begin_function_decl
