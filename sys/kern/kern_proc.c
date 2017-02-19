@@ -1182,6 +1182,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|p
 operator|=
 operator|(
@@ -1233,6 +1238,29 @@ argument_list|,
 argument|flags
 argument_list|)
 empty_stmt|;
+name|td
+operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Make sure all thread constructors are executed */
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|thread_ctor
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1351,6 +1379,14 @@ directive|endif
 comment|/* Free all OSD associated to this thread. */
 name|osd_thread_exit
 argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+comment|/* Make sure all thread destructors are executed */
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|thread_dtor
+argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
