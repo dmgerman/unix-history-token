@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: preconv.c,v 1.15 2015/10/06 18:32:19 schwarze Exp $ */
+comment|/*	$Id: preconv.c,v 1.16 2017/02/18 13:43:52 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -53,6 +53,7 @@ begin_function
 name|int
 name|preconv_encode
 parameter_list|(
+specifier|const
 name|struct
 name|buf
 modifier|*
@@ -76,6 +77,7 @@ modifier|*
 name|filenc
 parameter_list|)
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -91,6 +93,7 @@ decl_stmt|;
 name|cu
 operator|=
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -380,6 +383,7 @@ operator|*
 name|ii
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

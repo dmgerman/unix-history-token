@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ps.c,v 1.82 2016/08/10 11:03:43 schwarze Exp $ */
+comment|/*	$Id: term_ps.c,v 1.83 2017/02/17 14:31:52 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -508,7 +508,7 @@ function_decl|__attribute__
 parameter_list|(
 function_decl|(__format__
 parameter_list|(
-name|printf
+name|__printf__
 parameter_list|,
 function_decl|2
 operator|,

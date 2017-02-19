@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tree.c,v 1.72 2017/01/12 17:29:33 schwarze Exp $ */
+comment|/*	$Id: tree.c,v 1.73 2017/02/10 15:45:28 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -916,6 +916,19 @@ condition|)
 name|putchar
 argument_list|(
 literal|'.'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NODE_BROKEN
+operator|&
+name|n
+operator|->
+name|flags
+condition|)
+name|printf
+argument_list|(
+literal|" BROKEN"
 argument_list|)
 expr_stmt|;
 if|if

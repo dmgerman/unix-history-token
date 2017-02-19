@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: dbm_map.c,v 1.7 2016/10/22 10:09:27 schwarze Exp $ */
+comment|/*	$Id: dbm_map.c,v 1.8 2017/02/17 14:43:54 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -706,6 +706,7 @@ return|return
 name|htobe32
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_term.c,v 1.188 2017/01/10 13:47:00 schwarze Exp $ */
+comment|/*	$Id: man_term.c,v 1.191 2017/02/15 14:10:08 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008-2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008-2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2015, 2017 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -906,6 +906,9 @@ name|struct
 name|mtermp
 name|mt
 decl_stmt|;
+name|size_t
+name|save_defindent
+decl_stmt|;
 name|p
 operator|=
 operator|(
@@ -1100,6 +1103,12 @@ block|}
 block|}
 else|else
 block|{
+name|save_defindent
+operator|=
+name|p
+operator|->
+name|defindent
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1159,6 +1168,12 @@ name|term_end
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|defindent
+operator|=
+name|save_defindent
 expr_stmt|;
 block|}
 block|}
@@ -3904,6 +3919,12 @@ condition|(
 name|n
 operator|!=
 name|NULL
+operator|&&
+name|n
+operator|->
+name|tok
+operator|!=
+name|TOKEN_NONE
 operator|&&
 name|termacts
 index|[
