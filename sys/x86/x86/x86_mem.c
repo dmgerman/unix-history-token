@@ -2892,7 +2892,10 @@ name|mtrr_physmask
 operator|=
 operator|(
 operator|(
-literal|1UL
+operator|(
+name|uint64_t
+operator|)
+literal|1
 operator|<<
 name|cpu_maxphyaddr
 operator|)
