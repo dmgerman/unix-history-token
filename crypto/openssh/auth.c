@@ -1295,13 +1295,13 @@ literal|"Accepted"
 else|:
 literal|"Failed"
 expr_stmt|;
+if|if
+condition|(
+name|authenticated
+condition|)
 name|BLACKLIST_NOTIFY
 argument_list|(
-name|authenticated
-condition|?
 name|BLACKLIST_AUTH_OK
-else|:
-name|BLACKLIST_AUTH_FAIL
 argument_list|)
 expr_stmt|;
 block|}
