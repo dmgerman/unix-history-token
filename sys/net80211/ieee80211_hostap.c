@@ -8997,7 +8997,47 @@ argument_list|)
 empty_stmt|;
 comment|/* XXX just NULL out? */
 block|}
-comment|/* XXX validate VHT IEs */
+comment|/* Validate VHT IEs */
+if|if
+condition|(
+name|vhtcap
+operator|!=
+name|NULL
+condition|)
+block|{
+name|IEEE80211_VERIFY_LENGTH
+argument_list|(
+argument|vhtcap[
+literal|1
+argument|]
+argument_list|,
+argument|sizeof(struct ieee80211_ie_vhtcap) -
+literal|2
+argument_list|,
+argument|return
+argument_list|)
+empty_stmt|;
+block|}
+if|if
+condition|(
+name|vhtinfo
+operator|!=
+name|NULL
+condition|)
+block|{
+name|IEEE80211_VERIFY_LENGTH
+argument_list|(
+argument|vhtinfo[
+literal|1
+argument|]
+argument_list|,
+argument|sizeof(struct ieee80211_ie_vht_operation) -
+literal|2
+argument_list|,
+argument|return
+argument_list|)
+empty_stmt|;
+block|}
 if|if
 condition|(
 operator|(
