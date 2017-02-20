@@ -1078,7 +1078,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = MTX_UNOWNED;					\ 									\ 	spinlock_enter();						\ 	if (!_mtx_obtain_lock_fetch((mp),&_v, _tid)) {			\ 		if (_v == _tid)						\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _v, _tid, (opts), (file), (line));\ 	} else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(spin__acquire,	\ 		    mp, 0, 0, file, line);				\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = MTX_UNOWNED;					\ 									\ 	spinlock_enter();						\ 	if (!_mtx_obtain_lock_fetch((mp),&_v, _tid)) 			\ 		_mtx_lock_spin((mp), _v, _tid, (opts), (file), (line)); \ 	else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(spin__acquire,	\ 		    mp, 0, 0, file, line);				\ } while (0)
 end_define
 
 begin_define
