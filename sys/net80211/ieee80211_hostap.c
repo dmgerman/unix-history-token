@@ -8997,6 +8997,7 @@ argument_list|)
 empty_stmt|;
 comment|/* XXX just NULL out? */
 block|}
+comment|/* XXX validate VHT IEs */
 if|if
 condition|(
 operator|(
@@ -9237,7 +9238,7 @@ operator|->
 name|ni_chan
 argument_list|)
 operator|&&
-name|htcap
+name|vhtcap
 operator|!=
 name|NULL
 operator|&&
