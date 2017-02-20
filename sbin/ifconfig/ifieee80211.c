@@ -5796,6 +5796,11 @@ operator|&
 name|chanlist
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
