@@ -911,6 +911,11 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
+name|pad
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|inbuf
 argument_list|)
 expr_stmt|;
