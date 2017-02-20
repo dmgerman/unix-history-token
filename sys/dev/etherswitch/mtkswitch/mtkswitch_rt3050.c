@@ -1966,6 +1966,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_switchtype
+operator|==
+name|MTK_SWITCH_RT3050
+operator|||
 operator|(
 name|val
 operator|&
@@ -1973,18 +1979,14 @@ name|POC2_UNTAG_VLAN
 operator|)
 operator|==
 literal|0
-operator|||
-name|sc
-operator|->
-name|sc_switchtype
-operator|==
-name|MTK_SWITCH_RT3050
 condition|)
 block|{
+comment|/* 		 * There are 2 things we can't support in per-port untagging 		 * mode: 		 * 1. Adding a port as an untagged member if the port is not 		 *    set up to do untagging. 		 * 2. Adding a port as a tagged member if the port is set up 		 *    to do untagging. 		 */
 name|val
 operator|&=
 name|VUB_MASK
 expr_stmt|;
+comment|/* get all untagged members from the member list */
 name|tmp
 operator|=
 name|v
@@ -1995,11 +1997,72 @@ name|v
 operator|->
 name|es_member_ports
 expr_stmt|;
+comment|/* fail if untagged members are not a subset of all members */
 if|if
 condition|(
+name|tmp
+operator|!=
+name|v
+operator|->
+name|es_untagged_ports
+condition|)
+block|{
+comment|/* Cannot accomodate request */
+name|MTKSWITCH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOTSUP
+operator|)
+return|;
+block|}
+comment|/* fail if any untagged member is set up to do tagging */
+if|if
+condition|(
+operator|(
+name|tmp
+operator|&
 name|val
+operator|)
 operator|!=
 name|tmp
+condition|)
+block|{
+comment|/* Cannot accomodate request */
+name|MTKSWITCH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOTSUP
+operator|)
+return|;
+block|}
+comment|/* now, get the list of all tagged members */
+name|tmp
+operator|=
+name|v
+operator|->
+name|es_member_ports
+operator|&
+operator|~
+name|tmp
+expr_stmt|;
+comment|/* fail if any tagged member is set up to do untagging */
+if|if
+condition|(
+operator|(
+name|tmp
+operator|&
+name|val
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* Cannot accomodate request */
