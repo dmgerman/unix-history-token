@@ -9236,6 +9236,14 @@ name|ni
 operator|->
 name|ni_chan
 argument_list|)
+operator|&&
+name|htcap
+operator|!=
+name|NULL
+operator|&&
+name|vhtinfo
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* XXX TODO; see below */
