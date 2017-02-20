@@ -1304,7 +1304,7 @@ name|bit8
 modifier|*
 name|loc
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|TI_DBG3
 argument_list|(

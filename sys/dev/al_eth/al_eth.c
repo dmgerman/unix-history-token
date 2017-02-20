@@ -9789,7 +9789,7 @@ name|adapter
 operator|->
 name|msix_entries
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|device_printf_dbg
@@ -17070,7 +17070,7 @@ name|adapter
 operator|->
 name|mii
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 if|if

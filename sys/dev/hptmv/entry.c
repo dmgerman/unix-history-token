@@ -843,7 +843,7 @@ name|IAL_ADAPTER_T
 modifier|*
 name|gIal_Adapter
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -852,7 +852,7 @@ name|IAL_ADAPTER_T
 modifier|*
 name|pCurAdapter
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -6247,7 +6247,7 @@ if|if
 condition|(
 name|gIal_Adapter
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|gIal_Adapter
@@ -11910,7 +11910,7 @@ while|while
 condition|(
 name|pAdapter
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|mtx_lock

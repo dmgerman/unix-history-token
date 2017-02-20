@@ -15244,7 +15244,7 @@ literal|0
 expr_stmt|;
 name|script_base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|script_name
 operator|=
@@ -17089,7 +17089,7 @@ expr_stmt|;
 comment|/* 	 *  try to find the interrupted script command, 	 *  and the address at which to continue. 	 */
 name|vdsp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|nxtdsp
 operator|=
@@ -25876,7 +25876,7 @@ name|lp
 operator|->
 name|itlq_tbl
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return;
 block|}

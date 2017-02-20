@@ -25423,7 +25423,7 @@ if|if
 condition|(
 name|res
 operator|==
-literal|0
+name|NULL
 operator|||
 name|bus_setup_intr
 argument_list|(

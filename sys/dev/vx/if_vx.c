@@ -1399,7 +1399,7 @@ literal|"default"
 expr_stmt|;
 name|warning
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -3103,7 +3103,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|if_inc_counter

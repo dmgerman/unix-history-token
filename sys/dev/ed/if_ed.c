@@ -2912,7 +2912,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* 		 * We are using the !OACTIVE flag to indicate to the outside 		 * world that we can accept an additional packet rather than 		 * that the transmitter is _actually_ active. Indeed, the 		 * transmitter may be active, but if we haven't filled all the 		 * buffers with data then we still want to accept more. 		 */

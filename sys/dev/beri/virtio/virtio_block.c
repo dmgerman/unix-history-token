@@ -2137,7 +2137,7 @@ name|sc
 operator|->
 name|vnode
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* File not opened */

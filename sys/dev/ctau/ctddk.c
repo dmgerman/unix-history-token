@@ -508,7 +508,7 @@ literal|0
 expr_stmt|;
 name|ft
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 break|break;
 ifndef|#
