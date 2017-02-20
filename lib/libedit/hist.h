@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: hist.h,v 1.15 2016/01/30 15:05:27 christos Exp $	*/
+comment|/*	$NetBSD: hist.h,v 1.18 2016/02/17 19:47:49 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ define|#
 directive|define
 name|_h_el_hist
 end_define
-
-begin_include
-include|#
-directive|include
-file|"histedit.h"
-end_include
 
 begin_typedef
 typedef|typedef

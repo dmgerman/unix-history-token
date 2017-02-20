@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: search.c,v 1.31 2016/01/30 04:02:51 christos Exp $	*/
+comment|/*	$NetBSD: search.c,v 1.39 2016/02/24 14:25:38 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: search.c,v 1.31 2016/01/30 04:02:51 christos Exp $"
+literal|"$NetBSD: search.c,v 1.39 2016/02/24 14:25:38 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -87,6 +87,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -126,6 +132,12 @@ begin_include
 include|#
 directive|include
 file|"el.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"common.h"
 end_include
 
 begin_comment
@@ -928,8 +940,6 @@ literal|'\0'
 block|}
 decl_stmt|;
 name|Char
-name|ch
-decl_stmt|,
 modifier|*
 name|ocursor
 init|=
@@ -942,11 +952,16 @@ decl_stmt|,
 name|oldpchar
 init|=
 name|pchar
+decl_stmt|,
+name|ch
 decl_stmt|;
 specifier|const
 name|Char
 modifier|*
 name|cp
+decl_stmt|;
+name|wchar_t
+name|wch
 decl_stmt|;
 name|el_action_t
 name|ret
@@ -1206,17 +1221,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|FUN
-argument_list|(
-name|el
-argument_list|,
-name|getc
-argument_list|)
+name|el_wgetc
 argument_list|(
 name|el
 argument_list|,
 operator|&
-name|ch
+name|wch
 argument_list|)
 operator|!=
 literal|1
@@ -1229,6 +1239,13 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+name|ch
+operator|=
+operator|(
+name|Char
+operator|)
+name|wch
+expr_stmt|;
 switch|switch
 condition|(
 name|el
@@ -1685,7 +1702,8 @@ index|]
 operator|,
 name|ch
 operator|=
-literal|']'
+literal|L'
+expr|]'
 init|;
 name|cp
 operator|>=
@@ -1734,7 +1752,8 @@ name|LEN
 operator|&&
 name|ch
 operator|!=
-literal|'['
+literal|L'
+expr|['
 condition|)
 block|{
 if|if
@@ -2872,7 +2891,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
-name|Int
+name|wint_t
 name|c
 parameter_list|)
 block|{
@@ -2985,7 +3004,7 @@ parameter_list|,
 name|int
 name|direction
 parameter_list|,
-name|Int
+name|wint_t
 name|ch
 parameter_list|,
 name|int
@@ -3013,28 +3032,20 @@ condition|(
 name|ch
 operator|==
 operator|(
-name|Int
+name|wint_t
 operator|)
 operator|-
 literal|1
 condition|)
 block|{
-name|Char
-name|c
-decl_stmt|;
 if|if
 condition|(
-name|FUN
-argument_list|(
-name|el
-argument_list|,
-name|getc
-argument_list|)
+name|el_wgetc
 argument_list|(
 name|el
 argument_list|,
 operator|&
-name|c
+name|ch
 argument_list|)
 operator|!=
 literal|1
@@ -3047,10 +3058,6 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-name|ch
-operator|=
-name|c
-expr_stmt|;
 block|}
 comment|/* Save for ';' and ',' commands */
 name|el
@@ -3059,6 +3066,9 @@ name|el_search
 operator|.
 name|chacha
 operator|=
+operator|(
+name|Char
+operator|)
 name|ch
 expr_stmt|;
 name|el
@@ -3097,7 +3107,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|Int
+name|wint_t
 operator|)
 operator|*
 name|cp
@@ -3146,7 +3156,7 @@ return|;
 if|if
 condition|(
 operator|(
-name|Int
+name|wint_t
 operator|)
 operator|*
 name|cp

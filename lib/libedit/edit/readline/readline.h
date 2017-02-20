@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: readline.h,v 1.37 2015/06/02 15:36:45 christos Exp $	*/
+comment|/*	$NetBSD: readline.h,v 1.39 2016/02/17 19:47:49 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -1151,6 +1151,12 @@ name|void
 name|rl_free_line_state
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+name|int
+name|rl_set_keyboard_input_timeout
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 ifdef|#
