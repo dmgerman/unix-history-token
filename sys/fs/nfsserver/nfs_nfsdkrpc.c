@@ -2268,19 +2268,17 @@ expr_stmt|;
 name|nfsrv_freeallbackchannel_xprts
 argument_list|()
 expr_stmt|;
-name|svcpool_destroy
+name|svcpool_close
 argument_list|(
 name|nfsrvd_pool
 argument_list|)
-expr_stmt|;
-name|nfsrvd_pool
-operator|=
-name|NULL
 expr_stmt|;
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
 block|}
+else|else
+block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -2317,6 +2315,7 @@ expr_stmt|;
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
