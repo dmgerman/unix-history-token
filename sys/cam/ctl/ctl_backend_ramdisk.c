@@ -6423,6 +6423,13 @@ name|cap_bytes
 operator|==
 literal|0
 condition|)
+block|{
+name|be_lun
+operator|->
+name|indir
+operator|=
+literal|0
+expr_stmt|;
 name|be_lun
 operator|->
 name|pages
@@ -6438,6 +6445,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+block|}
 name|be_lun
 operator|->
 name|zero_page
