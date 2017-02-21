@@ -248,6 +248,10 @@ parameter_list|)
 value|((bo)->bo_ops->bop_bdflush((bo), (bp)))
 end_define
 
+begin_comment
+comment|/*  * Locking notes:  * 'S' is sync_mtx  * 'v' is the vnode lock which embeds the bufobj.  * '-' Constant and unchanging after initialization.  */
+end_comment
+
 begin_struct
 struct|struct
 name|bufobj
