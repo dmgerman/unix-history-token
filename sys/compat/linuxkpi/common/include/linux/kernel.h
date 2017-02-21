@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/kthread.h>
+file|<linux/sched.h>
 end_include
 
 begin_include

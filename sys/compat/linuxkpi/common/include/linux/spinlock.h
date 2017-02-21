@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/compiler.h>
+file|<sys/libkern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<linux/kernel.h>
+file|<linux/compiler.h>
 end_include
 
 begin_include

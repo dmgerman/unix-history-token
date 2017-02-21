@@ -182,6 +182,18 @@ define|\
 value|unsigned long n[howmany(bits, sizeof(long) * 8)]
 end_define
 
+begin_typedef
+typedef|typedef
+name|int
+name|linux_task_fn_t
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif

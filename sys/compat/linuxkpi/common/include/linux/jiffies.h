@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/time.h>
 end_include
 

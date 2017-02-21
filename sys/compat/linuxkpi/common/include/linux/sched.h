@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013-2016 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013-2017 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -43,6 +43,30 @@ begin_include
 include|#
 directive|include
 file|<sys/sleepqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/completion.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/slab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/atomic.h>
 end_include
 
 begin_define
@@ -94,24 +118,6 @@ name|TASK_WAKING
 value|256
 end_define
 
-begin_define
-define|#
-directive|define
-name|TASK_SHOULD_STOP
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TASK_STOPPED
-value|2
-end_define
-
-begin_comment
-comment|/*  * A task_struct is only provided for threads created by kthread() and  * file operation callbacks.  *  * Using these routines outside the above mentioned contexts will  * cause panics because no task_struct is assigned and td_retval[1] is  * overwritten by syscalls.  */
-end_comment
-
 begin_struct
 struct|struct
 name|task_struct
@@ -121,17 +127,10 @@ name|thread
 modifier|*
 name|task_thread
 decl_stmt|;
-name|int
-function_decl|(
+name|linux_task_fn_t
 modifier|*
 name|task_fn
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
+decl_stmt|;
 name|void
 modifier|*
 name|task_data
@@ -142,8 +141,8 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
-name|int
-name|should_stop
+name|atomic_t
+name|kthread_flags
 decl_stmt|;
 name|pid_t
 name|pid
@@ -160,6 +159,14 @@ decl_stmt|;
 name|unsigned
 name|bsd_ioctl_len
 decl_stmt|;
+name|struct
+name|completion
+name|parked
+decl_stmt|;
+name|struct
+name|completion
+name|exited
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -168,74 +175,8 @@ begin_define
 define|#
 directive|define
 name|current
-value|task_struct_get(curthread)
+value|((struct task_struct *)curthread->td_lkpi_task)
 end_define
-
-begin_define
-define|#
-directive|define
-name|task_struct_get
-parameter_list|(
-name|x
-parameter_list|)
-value|((struct task_struct *)(uintptr_t)(x)->td_retval[1])
-end_define
-
-begin_define
-define|#
-directive|define
-name|task_struct_fill
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|do {		\   	(y)->task_thread = (x);			\ 	(y)->comm = (x)->td_name;		\ 	(y)->pid = (x)->td_tid;			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|task_struct_set
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(x)->td_retval[1] = (uintptr_t)(y)
-end_define
-
-begin_comment
-comment|/* ensure the task_struct pointer fits into the td_retval[1] field */
-end_comment
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|(
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
-name|td_retval
-index|[
-literal|1
-index|]
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|uintptr_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_define
 define|#
