@@ -28,13 +28,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|SHA1_CTX
-value|SHA_CTX
-end_define
-
-begin_define
-define|#
-directive|define
 name|SHA1End
 value|SHA1_End
 end_define
@@ -44,13 +37,6 @@ define|#
 directive|define
 name|SHA1File
 value|SHA1_File
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHA1Final
-value|SHA1_Final
 end_define
 
 begin_define

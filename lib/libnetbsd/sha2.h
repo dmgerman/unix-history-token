@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sha384.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sha512.h>
 end_include
 
