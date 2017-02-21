@@ -203,6 +203,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|hyperv_tc64_t
+name|hyperv_tc64
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|timecounter
@@ -277,6 +283,25 @@ name|rdmsr
 argument_list|(
 name|MSR_HV_TIME_REF_COUNT
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|uint64_t
+name|hyperv_tc64_rdmsr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|rdmsr
+argument_list|(
+name|MSR_HV_TIME_REF_COUNT
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -868,6 +893,11 @@ argument_list|(
 operator|&
 name|hyperv_timecounter
 argument_list|)
+expr_stmt|;
+comment|/* 		 * Install 64 bits timecounter method for other modules 		 * to use. 		 */
+name|hyperv_tc64
+operator|=
+name|hyperv_tc64_rdmsr
 expr_stmt|;
 block|}
 block|}
