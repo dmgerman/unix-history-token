@@ -10262,6 +10262,10 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|do_ifup
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|new_flags
@@ -10806,10 +10810,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|if_up
-argument_list|(
-name|ifp
-argument_list|)
+name|do_ifup
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* See if permanently promiscuous mode bit is about to flip */
@@ -10926,6 +10929,15 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_ifup
+condition|)
+name|if_up
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|getmicrotime
 argument_list|(
 operator|&
