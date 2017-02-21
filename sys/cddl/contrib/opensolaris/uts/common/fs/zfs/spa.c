@@ -4142,7 +4142,7 @@ name|pri
 init|=
 name|maxclsyspri
 decl_stmt|;
-comment|/* 			 * The write issue taskq can be extremely CPU 			 * intensive.  Run it at slightly lower priority 			 * than the other taskqs. 			 */
+comment|/* 			 * The write issue taskq can be extremely CPU 			 * intensive.  Run it at slightly lower priority 			 * than the other taskqs. 			 * FreeBSD notes: 			 * - numerically higher priorities are lower priorities; 			 * - if priorities divided by four (RQ_PPQ) are equal 			 *   then a difference between them is insignificant. 			 */
 if|if
 condition|(
 name|t
@@ -4153,9 +4153,20 @@ name|q
 operator|==
 name|ZIO_TASKQ_ISSUE
 condition|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|pri
-operator|++
+operator|--
 expr_stmt|;
+else|#
+directive|else
+name|pri
+operator|+=
+literal|4
+expr_stmt|;
+endif|#
+directive|endif
 name|tq
 operator|=
 name|taskq_create_proc
