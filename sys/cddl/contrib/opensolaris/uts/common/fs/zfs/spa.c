@@ -744,11 +744,6 @@ begin_comment
 comment|/* use SDC scheduling class */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|uint_t
 name|zio_taskq_basedc
@@ -760,6 +755,11 @@ end_decl_stmt
 begin_comment
 comment|/* base duty cycle */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|boolean_t
