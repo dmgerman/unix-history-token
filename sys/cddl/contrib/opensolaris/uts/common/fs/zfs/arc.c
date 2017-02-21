@@ -1231,9 +1231,6 @@ name|kstat_named_t
 name|arcstat_l2_hdr_size
 decl_stmt|;
 name|kstat_named_t
-name|arcstat_l2_padding_needed
-decl_stmt|;
-name|kstat_named_t
 name|arcstat_l2_write_trylock_fail
 decl_stmt|;
 name|kstat_named_t
@@ -1747,12 +1744,6 @@ block|}
 block|,
 block|{
 literal|"l2_hdr_size"
-block|,
-name|KSTAT_DATA_UINT64
-block|}
-block|,
-block|{
-literal|"l2_padding_needed"
 block|,
 name|KSTAT_DATA_UINT64
 block|}
