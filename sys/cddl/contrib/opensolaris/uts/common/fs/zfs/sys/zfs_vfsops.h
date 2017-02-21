@@ -186,7 +186,8 @@ name|kmutex_t
 name|z_znodes_lock
 decl_stmt|;
 comment|/* lock for z_all_znodes */
-name|vnode_t
+name|struct
+name|zfsctl_root
 modifier|*
 name|z_ctldir
 decl_stmt|;
