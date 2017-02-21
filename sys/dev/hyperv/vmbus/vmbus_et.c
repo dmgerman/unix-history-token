@@ -105,14 +105,14 @@ value|((((uint64_t)VMBUS_SINT_TIMER)<< MSR_HV_STIMER_CFG_SINT_SHIFT)& \ 	 MSR_HV
 end_define
 
 begin_comment
-comment|/*  * Two additionally required features:  * - SynIC is needed for interrupt generation.  * - Time reference counter is needed to set ABS reference count to  *   STIMER0_COUNT.  */
+comment|/*  * Additionally required feature:  * - SynIC is needed for interrupt generation.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CPUID_HV_ET_MASK
-value|(CPUID_HV_MSR_TIME_REFCNT |	\ 					 CPUID_HV_MSR_SYNIC |		\ 					 CPUID_HV_MSR_SYNTIMER)
+value|(CPUID_HV_MSR_SYNIC |		\ 					 CPUID_HV_MSR_SYNTIMER)
 end_define
 
 begin_function_decl
@@ -337,10 +337,8 @@ name|current
 decl_stmt|;
 name|current
 operator|=
-name|rdmsr
-argument_list|(
-name|MSR_HV_TIME_REF_COUNT
-argument_list|)
+name|hyperv_tc64
+argument_list|()
 expr_stmt|;
 name|current
 operator|+=
@@ -480,6 +478,10 @@ name|CPUID_HV_ET_MASK
 operator|)
 operator|!=
 name|CPUID_HV_ET_MASK
+operator|||
+name|hyperv_tc64
+operator|==
+name|NULL
 condition|)
 return|return;
 name|device_add_child
@@ -662,7 +664,7 @@ name|et_start
 operator|=
 name|vmbus_et_start
 expr_stmt|;
-comment|/* 	 * Delay a bit to make sure that MSR_HV_TIME_REF_COUNT will 	 * not return 0, since writing 0 to STIMER0_COUNT will disable 	 * STIMER0. 	 */
+comment|/* 	 * Delay a bit to make sure that hyperv_tc64 will not return 0, 	 * since writing 0 to STIMER0_COUNT will disable STIMER0. 	 */
 name|DELAY
 argument_list|(
 literal|100

@@ -460,13 +460,13 @@ parameter_list|(
 name|fence
 parameter_list|)
 define|\
-value|static u_int								\ hyperv_tsc_timecount_##fence(struct timecounter *tc)			\ {									\ 	struct hyperv_reftsc *tsc_ref = hyperv_ref_tsc.tsc_ref;		\ 	uint32_t seq;							\ 									\ 	while ((seq = atomic_load_acq_int(&tsc_ref->tsc_seq)) != 0) {	\ 		uint64_t disc, ret, tsc;				\ 		uint64_t scale = tsc_ref->tsc_scale;			\ 		int64_t ofs = tsc_ref->tsc_ofs;				\ 									\ 		fence();						\ 		tsc = rdtsc();						\ 									\
+value|static uint64_t								\ hyperv_tc64_tsc_##fence(void)						\ {									\ 	struct hyperv_reftsc *tsc_ref = hyperv_ref_tsc.tsc_ref;		\ 	uint32_t seq;							\ 									\ 	while ((seq = atomic_load_acq_int(&tsc_ref->tsc_seq)) != 0) {	\ 		uint64_t disc, ret, tsc;				\ 		uint64_t scale = tsc_ref->tsc_scale;			\ 		int64_t ofs = tsc_ref->tsc_ofs;				\ 									\ 		fence();						\ 		tsc = rdtsc();						\ 									\
 comment|/* ret = ((tsc * scale)>> 64) + ofs */
 value|\ 		__asm__ __volatile__ ("mulq %3" :			\ 		    "=d" (ret), "=a" (disc) :				\ 		    "a" (tsc), "r" (scale));				\ 		ret += ofs;						\ 									\ 		atomic_thread_fence_acq();				\ 		if (tsc_ref->tsc_seq == seq)				\ 			return (ret);					\ 									\
 comment|/* Sequence changed; re-sync. */
 value|\ 	}								\
 comment|/* Fallback to the generic timecounter, i.e. rdmsr. */
-value|\ 	return (rdmsr(MSR_HV_TIME_REF_COUNT));				\ }									\ struct __hack
+value|\ 	return (rdmsr(MSR_HV_TIME_REF_COUNT));				\ }									\ 									\ static u_int								\ hyperv_tsc_timecount_##fence(struct timecounter *tc __unused)		\ {									\ 									\ 	return (hyperv_tc64_tsc_##fence());				\ }									\ struct __hack
 end_define
 
 begin_expr_stmt
@@ -496,6 +496,11 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
+name|hyperv_tc64_t
+name|tc64
+init|=
+name|NULL
+decl_stmt|;
 name|uint64_t
 name|val
 decl_stmt|,
@@ -543,6 +548,10 @@ name|tc_get_timecount
 operator|=
 name|hyperv_tsc_timecount_mfence
 expr_stmt|;
+name|tc64
+operator|=
+name|hyperv_tc64_tsc_mfence
+expr_stmt|;
 break|break;
 case|case
 name|CPU_VENDOR_INTEL
@@ -552,6 +561,10 @@ operator|.
 name|tc_get_timecount
 operator|=
 name|hyperv_tsc_timecount_lfence
+expr_stmt|;
+name|tc64
+operator|=
+name|hyperv_tc64_tsc_lfence
 expr_stmt|;
 break|break;
 default|default:
@@ -646,6 +659,22 @@ argument_list|(
 operator|&
 name|hyperv_tsc_timecounter
 argument_list|)
+expr_stmt|;
+comment|/* Install 64 bits timecounter method for other modules to use. */
+name|KASSERT
+argument_list|(
+name|tc64
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"tc64 is not set"
+operator|)
+argument_list|)
+expr_stmt|;
+name|hyperv_tc64
+operator|=
+name|tc64
 expr_stmt|;
 comment|/* Add device for mmap(2). */
 name|make_dev
