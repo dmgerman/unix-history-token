@@ -393,13 +393,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sx
-name|linux_global_rcu_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|long
 name|linux_timer_hz_mask
@@ -7120,14 +7113,6 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sx_init
-argument_list|(
-operator|&
-name|linux_global_rcu_lock
-argument_list|,
-literal|"LinuxGlobalRCU"
-argument_list|)
-expr_stmt|;
 name|rootoid
 operator|=
 name|SYSCTL_ADD_ROOT_NODE
@@ -7360,12 +7345,6 @@ argument_list|)
 expr_stmt|;
 name|synchronize_rcu
 argument_list|()
-expr_stmt|;
-name|sx_destroy
-argument_list|(
-operator|&
-name|linux_global_rcu_lock
-argument_list|)
 expr_stmt|;
 block|}
 end_function
