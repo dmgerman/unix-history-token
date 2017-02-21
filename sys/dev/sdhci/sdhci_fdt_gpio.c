@@ -606,14 +606,14 @@ name|device_get_nameunit
 argument_list|(
 name|gpio
 operator|->
-name|cd_pin
+name|wp_pin
 operator|->
 name|dev
 argument_list|)
 argument_list|,
 name|gpio
 operator|->
-name|cd_pin
+name|wp_pin
 operator|->
 name|pin
 argument_list|)
