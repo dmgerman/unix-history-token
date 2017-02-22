@@ -172,6 +172,32 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* one for each uCode image (inst/data, init/runtime/wowlan) */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_fw_desc
+block|{
+specifier|const
+name|void
+modifier|*
+name|data
+decl_stmt|;
+comment|/* vmalloc'ed data */
+name|uint32_t
+name|len
+decl_stmt|;
+comment|/* size in bytes */
+name|uint32_t
+name|offset
+decl_stmt|;
+comment|/* offset in the device */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|iwm_fw_info
@@ -188,28 +214,18 @@ decl_stmt|;
 struct|struct
 name|iwm_fw_sects
 block|{
-struct|struct
-name|iwm_fw_onesect
-block|{
-specifier|const
-name|void
-modifier|*
-name|fws_data
-decl_stmt|;
-name|uint32_t
-name|fws_len
-decl_stmt|;
-name|uint32_t
-name|fws_devoff
-decl_stmt|;
-block|}
+name|struct
+name|iwm_fw_desc
 name|fw_sect
 index|[
 name|IWM_UCODE_SECTION_MAX
 index|]
-struct|;
+decl_stmt|;
 name|int
 name|fw_count
+decl_stmt|;
+name|int
+name|is_dual_cpus
 decl_stmt|;
 name|uint32_t
 name|paging_mem_size
