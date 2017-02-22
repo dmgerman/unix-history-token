@@ -227,6 +227,9 @@ decl_stmt|;
 name|boolean_t
 name|force_card_present
 decl_stmt|;
+name|boolean_t
+name|disable_readonly
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1540,6 +1543,17 @@ argument_list|(
 name|brdev
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|disable_readonly
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|sdhci_fdt_gpio_get_readonly
@@ -2219,6 +2233,7 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* 	 * Set up handling of card-detect and write-protect gpio lines. 	 * 	 * If there is no write protect info in the fdt data, fall back to the 	 * historical practice of assuming that the card is writable.  This 	 * works around bad fdt data from the upstream source.  The alternative 	 * would be to trust the sdhci controller's PRESENT_STATE register WP 	 * bit, but it may say write protect is in effect when it's not if the 	 * pinmux setup doesn't route the WP signal into the sdchi block. 	 */
 name|sc
 operator|->
 name|gpio
@@ -2234,6 +2249,30 @@ name|sc
 operator|->
 name|slot
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|OF_hasprop
+argument_list|(
+name|node
+argument_list|,
+literal|"wp-gpios"
+argument_list|)
+operator|&&
+operator|!
+name|OF_hasprop
+argument_list|(
+name|node
+argument_list|,
+literal|"wp-disable"
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|disable_readonly
+operator|=
+name|true
 expr_stmt|;
 comment|/* Initialise the MMCHS hardware. */
 name|ti_sdhci_hw_init
