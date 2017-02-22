@@ -16801,7 +16801,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Well, we're in interrupt context, but then again 			 * I guess net80211 does all sorts of stunts in 			 * interrupt context, so maybe this is no biggie. 			 */
 name|iwm_start
 argument_list|(
 name|sc
@@ -28060,6 +28059,17 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* PCI registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CFG_RETRY_TIMEOUT
+value|0x041
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -28091,36 +28101,16 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Clear device-specific "PCI retry timeout" register (41h). */
-name|reg
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x40
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|reg
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* We disable the RETRY_TIMEOUT register (0x41) to keep 	 * PCI Tx retries from interfering with C3 CPU state */
 name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-literal|0x40
+name|PCI_CFG_RETRY_TIMEOUT
 argument_list|,
-name|reg
-operator|&
-operator|~
-literal|0xff00
+literal|0x00
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|reg
-argument_list|)
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Enable bus-mastering and hardware bug workaround. */
@@ -30541,39 +30531,16 @@ name|do_reinit
 init|=
 literal|0
 decl_stmt|;
-name|uint16_t
-name|reg
-decl_stmt|;
-comment|/* Clear device-specific "PCI retry timeout" register (41h). */
-name|reg
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x40
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|reg
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* 	 * We disable the RETRY_TIMEOUT register (0x41) to keep 	 * PCI Tx retries from interfering with C3 CPU state. 	 */
 name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-literal|0x40
+name|PCI_CFG_RETRY_TIMEOUT
 argument_list|,
-name|reg
-operator|&
-operator|~
-literal|0xff00
+literal|0x00
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|reg
-argument_list|)
+literal|1
 argument_list|)
 expr_stmt|;
 name|iwm_init_task
