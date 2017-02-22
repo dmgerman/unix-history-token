@@ -4604,7 +4604,7 @@ if|if
 condition|(
 name|slot
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 for|for
@@ -4734,7 +4734,7 @@ if|if
 condition|(
 name|slot
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|map

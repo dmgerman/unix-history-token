@@ -135,7 +135,7 @@ name|dnode_phys_t
 modifier|*
 name|dnode_cache_obj
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -7200,7 +7200,7 @@ condition|)
 block|{
 name|zc
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 break|break;
 block|}
@@ -11329,7 +11329,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|rc

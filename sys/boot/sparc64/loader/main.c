@@ -4099,7 +4099,7 @@ init|;
 operator|*
 name|dp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|dp
 operator|++

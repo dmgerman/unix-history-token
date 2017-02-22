@@ -1252,7 +1252,7 @@ name|pt_entry_t
 modifier|*
 name|CMAP1
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 

@@ -635,7 +635,7 @@ do|do
 block|{
 name|buf
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* XXX Is this needed? */
 name|status
@@ -662,7 +662,7 @@ name|EFI_SUCCESS
 operator|&&
 name|buf
 operator|==
-literal|0
+name|NULL
 condition|)
 do|;
 comment|/* XXX How do we deal with status != EFI_SUCCESS now? */

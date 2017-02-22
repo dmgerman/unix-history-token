@@ -535,7 +535,7 @@ name|f_fsdata
 decl_stmt|;
 name|dnode_cache_obj
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|f
 operator|->
