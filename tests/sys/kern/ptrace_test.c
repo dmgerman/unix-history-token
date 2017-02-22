@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
 end_include
 
@@ -9593,7 +9599,7 @@ block|{
 name|trace_me
 argument_list|()
 expr_stmt|;
-name|__builtin_debugtrap
+name|breakpoint
 argument_list|()
 expr_stmt|;
 name|exit
