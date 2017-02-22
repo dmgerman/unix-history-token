@@ -216,9 +216,6 @@ name|uint32_t
 name|baseclk_hz
 decl_stmt|;
 name|uint32_t
-name|wp_gpio_pin
-decl_stmt|;
-name|uint32_t
 name|cmd_and_mode
 decl_stmt|;
 name|uint32_t
