@@ -24365,9 +24365,7 @@ name|hw
 argument_list|,
 name|EM_EIAC
 argument_list|,
-name|adapter
-operator|->
-name|ims
+name|EM_MSIX_MASK
 argument_list|)
 expr_stmt|;
 name|ims_mask
