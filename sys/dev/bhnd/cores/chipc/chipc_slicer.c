@@ -146,6 +146,10 @@ case|:
 name|flash_register_slicer
 argument_list|(
 name|chipc_slicer_spi
+argument_list|,
+name|FLASH_SLICES_TYPE_SPI
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -155,6 +159,10 @@ case|:
 name|flash_register_slicer
 argument_list|(
 name|chipc_slicer_cfi
+argument_list|,
+name|FLASH_SLICES_TYPE_CFI
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -171,6 +179,12 @@ name|chipc_slicer_cfi
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|provider
+name|__unused
 parameter_list|,
 name|struct
 name|flash_slice
@@ -294,6 +308,12 @@ name|chipc_slicer_spi
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|provider
+name|__unused
 parameter_list|,
 name|struct
 name|flash_slice
