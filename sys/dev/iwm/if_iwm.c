@@ -12577,12 +12577,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 			 * The firmware won't load correctly without this delay. 			 */
-name|DELAY
-argument_list|(
-literal|8000
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 operator|*
