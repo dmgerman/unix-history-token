@@ -138,11 +138,10 @@ name|name
 operator|=
 literal|"Intel(R) Dual Band Wireless AC 3165"
 block|,
-comment|/* XXX IWM7265D_FW doesn't seem to work properly yet */
 operator|.
 name|fw_name
 operator|=
-name|IWM7265_FW
+name|IWM7265D_FW
 block|,
 name|IWM_DEVICE_7000_COMMON
 block|,
@@ -193,11 +192,10 @@ name|name
 operator|=
 literal|"Intel(R) Dual Band Wireless AC 7265"
 block|,
-comment|/* XXX IWM7265D_FW doesn't seem to work properly yet */
 operator|.
 name|fw_name
 operator|=
-name|IWM7265_FW
+name|IWM7265D_FW
 block|,
 name|IWM_DEVICE_7000_COMMON
 block|,
