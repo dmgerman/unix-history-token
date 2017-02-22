@@ -25124,7 +25124,7 @@ name|base
 operator|=
 name|sc
 operator|->
-name|umac_error_event_table
+name|error_event_table
 expr_stmt|;
 if|if
 condition|(
