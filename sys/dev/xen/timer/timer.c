@@ -1473,14 +1473,7 @@ name|tc_quality
 operator|=
 name|XENTIMER_QUALITY
 expr_stmt|;
-name|sc
-operator|->
-name|tc
-operator|.
-name|tc_flags
-operator|=
-name|TC_FLAGS_SUSPEND_SAFE
-expr_stmt|;
+comment|/* 	 * FIXME: due to the lack of ordering during resume, FreeBSD cannot 	 * guarantee that the Xen PV timer is resumed before any other device 	 * attempts to make use of it, so mark it as not safe for suspension 	 * (ie: remove the TC_FLAGS_SUSPEND_SAFE flag). 	 * 	 * NB: This was not a problem in previous FreeBSD versions because the 	 * timer was directly attached to the nexus, but it is an issue now 	 * that the timer is attached to the xenpv bus, and thus resumed 	 * later. 	 * 	 * sc->tc.tc_flags = TC_FLAGS_SUSPEND_SAFE; 	 */
 comment|/* 	 * The underlying resolution is in nanoseconds, since the timer info 	 * scales TSC frequencies using a fraction that represents time in 	 * terms of nanoseconds. 	 */
 name|sc
 operator|->
