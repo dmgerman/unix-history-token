@@ -317,20 +317,8 @@ comment|/* 	 * Cache NLS data, for strerror, for err(3), before entering capabil
 name|caph_cache_catpages
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
 name|caph_limit_stdio
 argument_list|()
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"unable to limit stdio"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
