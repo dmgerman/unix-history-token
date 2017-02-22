@@ -6194,7 +6194,7 @@ end_define
 
 begin_struct
 struct|struct
-name|iwm_mvm_alive_resp_v1
+name|iwm_mvm_alive_resp_ver1
 block|{
 name|uint16_t
 name|status
@@ -6267,7 +6267,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|iwm_mvm_alive_resp_v2
+name|iwm_mvm_alive_resp_ver2
 block|{
 name|uint16_t
 name|status
@@ -6366,7 +6366,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|iwm_mvm_alive_resp_v3
+name|iwm_mvm_alive_resp
 block|{
 name|uint16_t
 name|status

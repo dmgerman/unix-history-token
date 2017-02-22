@@ -618,29 +618,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|iwm_ucode_status
-block|{
-name|uint32_t
-name|uc_error_event_table
-decl_stmt|;
-name|uint32_t
-name|uc_umac_error_event_table
-decl_stmt|;
-name|uint32_t
-name|uc_log_event_table
-decl_stmt|;
-name|int
-name|uc_ok
-decl_stmt|;
-name|int
-name|uc_intr
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -1074,7 +1051,7 @@ name|iwm_dma_info
 name|sched_dma
 decl_stmt|;
 name|uint32_t
-name|sched_base
+name|scd_base_addr
 decl_stmt|;
 comment|/* TX/RX rings. */
 name|struct
@@ -1119,13 +1096,12 @@ decl_stmt|;
 name|int
 name|sc_fw_chunk_done
 decl_stmt|;
-name|struct
-name|iwm_ucode_status
-name|sc_uc
-decl_stmt|;
 name|enum
 name|iwm_ucode_type
-name|sc_uc_current
+name|cur_ucode
+decl_stmt|;
+name|int
+name|ucode_loaded
 decl_stmt|;
 name|char
 name|sc_fwver
@@ -1278,6 +1254,19 @@ name|sc_notif_wait
 decl_stmt|;
 name|int
 name|cmd_hold_nic_awake
+decl_stmt|;
+comment|/* Firmware status */
+name|uint32_t
+name|error_event_table
+decl_stmt|;
+name|uint32_t
+name|log_event_table
+decl_stmt|;
+name|uint32_t
+name|umac_error_event_table
+decl_stmt|;
+name|int
+name|support_umac_log
 decl_stmt|;
 block|}
 struct|;
