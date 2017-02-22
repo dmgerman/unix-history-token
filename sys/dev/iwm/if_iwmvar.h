@@ -101,31 +101,6 @@ name|IWM_UCODE_SECTION_MAX
 value|16
 end_define
 
-begin_define
-define|#
-directive|define
-name|IWM_FWDMASEGSZ
-value|(192*1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM_FWDMASEGSZ_8000
-value|(320*1024)
-end_define
-
-begin_comment
-comment|/* sanity check value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_FWMAXSIZE
-value|(2*1024*1024)
-end_define
-
 begin_comment
 comment|/*  * fw_status is used to determine if we've already parsed the firmware file  *  * In addition to the following, status< 0 ==> -error  */
 end_comment
@@ -1144,9 +1119,6 @@ decl_stmt|;
 comment|/* 	 * So why do we need a separate stopped flag and a generation? 	 * the former protects the device from issuing commands when it's 	 * stopped (duh).  The latter protects against race from a very 	 * fast stop/unstop cycle where threads waiting for responses do 	 * not have a chance to run in between.  Notably: we want to stop 	 * the device from interrupt context when it craps out, so we 	 * don't have the luxury of waiting for quiescense. 	 */
 name|int
 name|sc_generation
-decl_stmt|;
-name|bus_size_t
-name|sc_fwdmasegsz
 decl_stmt|;
 name|struct
 name|iwm_fw_info
