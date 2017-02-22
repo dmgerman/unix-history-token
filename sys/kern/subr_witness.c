@@ -8151,7 +8151,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|witness_voutput
+name|vprintf
 argument_list|(
 name|fmt
 argument_list|,
@@ -8163,7 +8163,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|witness_output
+name|printf
 argument_list|(
 literal|" with the following %slocks held:\n"
 argument_list|,
@@ -8188,7 +8188,7 @@ name|witness_list_lock
 argument_list|(
 name|lock1
 argument_list|,
-name|witness_output
+name|printf
 argument_list|)
 expr_stmt|;
 block|}
@@ -8270,7 +8270,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|witness_voutput
+name|vprintf
 argument_list|(
 name|fmt
 argument_list|,
@@ -8282,7 +8282,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|witness_output
+name|printf
 argument_list|(
 literal|" with the following %slocks held:\n"
 argument_list|,
@@ -8306,7 +8306,7 @@ argument_list|(
 operator|&
 name|lock_list
 argument_list|,
-name|witness_output
+name|printf
 argument_list|)
 expr_stmt|;
 block|}
