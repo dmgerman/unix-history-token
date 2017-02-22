@@ -872,51 +872,11 @@ name|IWM_ICT_PADDR_SHIFT
 value|12
 end_define
 
-begin_enum
-enum|enum
-name|iwm_device_family
-block|{
-name|IWM_DEVICE_FAMILY_UNDEFINED
-block|,
-name|IWM_DEVICE_FAMILY_7000
-block|,
-name|IWM_DEVICE_FAMILY_8000
-block|, }
-enum|;
-end_enum
-
-begin_comment
-comment|/**  * struct iwm_cfg  * @fw_name: Firmware filename.  * @host_interrupt_operation_mode: device needs host interrupt operation  *      mode set  * @nvm_hw_section_num: the ID of the HW NVM section  * @apmg_wake_up_wa: should the MAC access REQ be asserted when a command  *      is in flight. This is due to a HW bug in 7260, 3160 and 7265.  */
-end_comment
-
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|iwm_cfg
-block|{
-specifier|const
-name|char
-modifier|*
-name|fw_name
-decl_stmt|;
-name|uint16_t
-name|eeprom_size
-decl_stmt|;
-name|enum
-name|iwm_device_family
-name|device_family
-decl_stmt|;
-name|int
-name|host_interrupt_operation_mode
-decl_stmt|;
-name|uint8_t
-name|nvm_hw_section_num
-decl_stmt|;
-name|int
-name|apmg_wake_up_wa
-decl_stmt|;
-block|}
-struct|;
-end_struct
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct

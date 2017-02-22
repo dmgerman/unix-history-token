@@ -266,6 +266,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/iwm/if_iwm_config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/iwm/if_iwm_debug.h>
 end_include
 
@@ -334,231 +340,6 @@ include|#
 directive|include
 file|<dev/iwm/if_iwm_led.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|IWM_NVM_HW_SECTION_NUM_FAMILY_7000
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM_NVM_HW_SECTION_NUM_FAMILY_8000
-value|10
-end_define
-
-begin_comment
-comment|/* lower blocks contain EEPROM image and calibration data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_OTP_LOW_IMAGE_SIZE_FAMILY_7000
-value|(16 * 512 * sizeof(uint16_t))
-end_define
-
-begin_comment
-comment|/* 16 KB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_OTP_LOW_IMAGE_SIZE_FAMILY_8000
-value|(32 * 512 * sizeof(uint16_t))
-end_define
-
-begin_comment
-comment|/* 32 KB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM7260_FW
-value|"iwm7260fw"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM3160_FW
-value|"iwm3160fw"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM7265_FW
-value|"iwm7265fw"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM7265D_FW
-value|"iwm7265Dfw"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM8000_FW
-value|"iwm8000Cfw"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM_DEVICE_7000_COMMON
-define|\
-value|.device_family = IWM_DEVICE_FAMILY_7000,			\ 	.eeprom_size = IWM_OTP_LOW_IMAGE_SIZE_FAMILY_7000,		\ 	.nvm_hw_section_num = IWM_NVM_HW_SECTION_NUM_FAMILY_7000,	\ 	.apmg_wake_up_wa = 1
-end_define
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|iwm_cfg
-name|iwm7260_cfg
-init|=
-block|{
-operator|.
-name|fw_name
-operator|=
-name|IWM7260_FW
-block|,
-name|IWM_DEVICE_7000_COMMON
-block|,
-operator|.
-name|host_interrupt_operation_mode
-operator|=
-literal|1
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|iwm_cfg
-name|iwm3160_cfg
-init|=
-block|{
-operator|.
-name|fw_name
-operator|=
-name|IWM3160_FW
-block|,
-name|IWM_DEVICE_7000_COMMON
-block|,
-operator|.
-name|host_interrupt_operation_mode
-operator|=
-literal|1
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|iwm_cfg
-name|iwm3165_cfg
-init|=
-block|{
-comment|/* XXX IWM7265D_FW doesn't seem to work properly yet */
-operator|.
-name|fw_name
-operator|=
-name|IWM7265_FW
-block|,
-name|IWM_DEVICE_7000_COMMON
-block|,
-operator|.
-name|host_interrupt_operation_mode
-operator|=
-literal|0
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|iwm_cfg
-name|iwm7265_cfg
-init|=
-block|{
-operator|.
-name|fw_name
-operator|=
-name|IWM7265_FW
-block|,
-name|IWM_DEVICE_7000_COMMON
-block|,
-operator|.
-name|host_interrupt_operation_mode
-operator|=
-literal|0
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|iwm_cfg
-name|iwm7265d_cfg
-init|=
-block|{
-comment|/* XXX IWM7265D_FW doesn't seem to work properly yet */
-operator|.
-name|fw_name
-operator|=
-name|IWM7265_FW
-block|,
-name|IWM_DEVICE_7000_COMMON
-block|,
-operator|.
-name|host_interrupt_operation_mode
-operator|=
-literal|0
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IWM_DEVICE_8000_COMMON
-define|\
-value|.device_family = IWM_DEVICE_FAMILY_8000,			\ 	.eeprom_size = IWM_OTP_LOW_IMAGE_SIZE_FAMILY_8000,		\ 	.nvm_hw_section_num = IWM_NVM_HW_SECTION_NUM_FAMILY_8000
-end_define
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|iwm_cfg
-name|iwm8260_cfg
-init|=
-block|{
-operator|.
-name|fw_name
-operator|=
-name|IWM8000_FW
-block|,
-name|IWM_DEVICE_8000_COMMON
-block|,
-operator|.
-name|host_interrupt_operation_mode
-operator|=
-literal|0
-block|, }
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -27775,11 +27556,6 @@ name|uint16_t
 name|device
 decl_stmt|;
 specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-specifier|const
 name|struct
 name|iwm_cfg
 modifier|*
@@ -27793,16 +27569,12 @@ block|{
 block|{
 name|PCI_PRODUCT_INTEL_WL_3160_1
 block|,
-literal|"Intel Dual Band Wireless AC 3160"
-block|,
 operator|&
 name|iwm3160_cfg
 block|}
 block|,
 block|{
 name|PCI_PRODUCT_INTEL_WL_3160_2
-block|,
-literal|"Intel Dual Band Wireless AC 3160"
 block|,
 operator|&
 name|iwm3160_cfg
@@ -27811,16 +27583,12 @@ block|,
 block|{
 name|PCI_PRODUCT_INTEL_WL_3165_1
 block|,
-literal|"Intel Dual Band Wireless AC 3165"
-block|,
 operator|&
 name|iwm3165_cfg
 block|}
 block|,
 block|{
 name|PCI_PRODUCT_INTEL_WL_3165_2
-block|,
-literal|"Intel Dual Band Wireless AC 3165"
 block|,
 operator|&
 name|iwm3165_cfg
@@ -27829,16 +27597,12 @@ block|,
 block|{
 name|PCI_PRODUCT_INTEL_WL_7260_1
 block|,
-literal|"Intel Dual Band Wireless AC 7260"
-block|,
 operator|&
 name|iwm7260_cfg
 block|}
 block|,
 block|{
 name|PCI_PRODUCT_INTEL_WL_7260_2
-block|,
-literal|"Intel Dual Band Wireless AC 7260"
 block|,
 operator|&
 name|iwm7260_cfg
@@ -27847,16 +27611,12 @@ block|,
 block|{
 name|PCI_PRODUCT_INTEL_WL_7265_1
 block|,
-literal|"Intel Dual Band Wireless AC 7265"
-block|,
 operator|&
 name|iwm7265_cfg
 block|}
 block|,
 block|{
 name|PCI_PRODUCT_INTEL_WL_7265_2
-block|,
-literal|"Intel Dual Band Wireless AC 7265"
 block|,
 operator|&
 name|iwm7265_cfg
@@ -27865,16 +27625,12 @@ block|,
 block|{
 name|PCI_PRODUCT_INTEL_WL_8260_1
 block|,
-literal|"Intel Dual Band Wireless AC 8260"
-block|,
 operator|&
 name|iwm8260_cfg
 block|}
 block|,
 block|{
 name|PCI_PRODUCT_INTEL_WL_8260_2
-block|,
-literal|"Intel Dual Band Wireless AC 8260"
 block|,
 operator|&
 name|iwm8260_cfg
@@ -27943,6 +27699,8 @@ index|[
 name|i
 index|]
 operator|.
+name|cfg
+operator|->
 name|name
 argument_list|)
 expr_stmt|;
