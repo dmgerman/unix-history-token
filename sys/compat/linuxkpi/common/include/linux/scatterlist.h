@@ -41,6 +41,18 @@ name|unsigned
 name|long
 name|page_link
 decl_stmt|;
+define|#
+directive|define
+name|SG_PAGE_LINK_CHAIN
+value|0x1UL
+define|#
+directive|define
+name|SG_PAGE_LINK_LAST
+value|0x2UL
+define|#
+directive|define
+name|SG_PAGE_LINK_MASK
+value|0x3UL
 name|unsigned
 name|int
 name|offset
@@ -66,7 +78,7 @@ expr|struct
 name|scatterlist
 argument_list|)
 operator|&
-literal|0x3
+name|SG_PAGE_LINK_MASK
 operator|)
 operator|==
 literal|0
@@ -149,7 +161,7 @@ name|sg_is_chain
 parameter_list|(
 name|sg
 parameter_list|)
-value|((sg)->page_link& 0x01)
+value|((sg)->page_link& SG_PAGE_LINK_CHAIN)
 end_define
 
 begin_define
@@ -159,7 +171,7 @@ name|sg_is_last
 parameter_list|(
 name|sg
 parameter_list|)
-value|((sg)->page_link& 0x02)
+value|((sg)->page_link& SG_PAGE_LINK_LAST)
 end_define
 
 begin_define
@@ -170,7 +182,7 @@ parameter_list|(
 name|sg
 parameter_list|)
 define|\
-value|((struct scatterlist *) ((sg)->page_link& ~0x03))
+value|((struct scatterlist *) ((sg)->page_link& ~SG_PAGE_LINK_MASK))
 end_define
 
 begin_define
@@ -286,7 +298,7 @@ name|sg
 operator|->
 name|page_link
 operator|&
-literal|0x3
+name|SG_PAGE_LINK_MASK
 decl_stmt|;
 name|sg
 operator|->
@@ -379,7 +391,7 @@ operator|->
 name|page_link
 operator|&
 operator|~
-literal|0x3
+name|SG_PAGE_LINK_MASK
 operator|)
 operator|)
 return|;
@@ -573,11 +585,11 @@ name|long
 operator|)
 name|sgl
 operator||
-literal|0x01
+name|SG_PAGE_LINK_CHAIN
 operator|)
 operator|&
 operator|~
-literal|0x02
+name|SG_PAGE_LINK_LAST
 expr_stmt|;
 block|}
 end_function
@@ -598,14 +610,14 @@ name|sg
 operator|->
 name|page_link
 operator||=
-literal|0x02
+name|SG_PAGE_LINK_LAST
 expr_stmt|;
 name|sg
 operator|->
 name|page_link
 operator|&=
 operator|~
-literal|0x01
+name|SG_PAGE_LINK_CHAIN
 expr_stmt|;
 block|}
 end_function
