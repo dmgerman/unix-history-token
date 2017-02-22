@@ -229,6 +229,11 @@ name|struct
 name|hyperv_dma
 name|hn_br_dma
 decl_stmt|;
+name|struct
+name|vmbus_channel
+modifier|*
+name|hn_chan
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(

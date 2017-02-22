@@ -21025,6 +21025,12 @@ name|hn_rx_flags
 operator||=
 name|HN_RX_FLAG_ATTACHED
 expr_stmt|;
+name|rxr
+operator|->
+name|hn_chan
+operator|=
+name|chan
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
