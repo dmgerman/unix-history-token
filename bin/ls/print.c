@@ -1255,7 +1255,7 @@ condition|)
 block|{
 name|xo_emit
 argument_list|(
-literal|"{t:mode/%s}{e:mode_octal/%03o} {t:links/%*u} {td:user/%-*s}{e:user/%ju}  {td:group/%-*s}{e:group/%ju}  "
+literal|"{t:mode/%s}{e:mode_octal/%03o} {t:links/%*ju} {td:user/%-*s}{e:user/%ju}  {td:group/%-*s}{e:group/%ju}  "
 argument_list|,
 name|buf
 argument_list|,
@@ -1272,6 +1272,9 @@ name|dp
 operator|->
 name|s_nlink
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sp
 operator|->
 name|st_nlink
@@ -1312,7 +1315,7 @@ else|else
 block|{
 name|xo_emit
 argument_list|(
-literal|"{t:mode/%s}{e:mode_octal/%03o} {t:links/%*u} {t:user/%-*s}  {t:group/%-*s}  "
+literal|"{t:mode/%s}{e:mode_octal/%03o} {t:links/%*ju} {t:user/%-*s}  {t:group/%-*s}  "
 argument_list|,
 name|buf
 argument_list|,
@@ -1329,6 +1332,9 @@ name|dp
 operator|->
 name|s_nlink
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sp
 operator|->
 name|st_nlink
