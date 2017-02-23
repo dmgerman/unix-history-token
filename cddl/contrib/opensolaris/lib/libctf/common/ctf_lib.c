@@ -1745,6 +1745,11 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sp32
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ctf_set_open_errno

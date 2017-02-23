@@ -4059,6 +4059,9 @@ argument_list|(
 name|ap_hotplug
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|xs_printf
 argument_list|(
 name|XST_NIL
@@ -4093,6 +4096,9 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|xs_printf
 argument_list|(
 name|XST_NIL

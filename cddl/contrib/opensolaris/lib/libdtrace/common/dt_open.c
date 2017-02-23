@@ -6690,8 +6690,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|p_providers
+argument_list|)
+expr_stmt|;
 comment|/* How do we report errors here? */
 return|return;
+block|}
 name|p_providers
 operator|=
 name|p
@@ -7669,6 +7676,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|dt_provmod_destroy
+argument_list|(
+operator|&
+name|provmod
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|set_open_errno
@@ -7681,6 +7695,7 @@ name|EDT_NOMEM
 argument_list|)
 operator|)
 return|;
+block|}
 name|bzero
 argument_list|(
 name|dtp

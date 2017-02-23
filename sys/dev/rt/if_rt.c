@@ -2494,14 +2494,6 @@ name|PDMA_GLO_CFG
 expr_stmt|;
 name|sc
 operator|->
-name|pdma_glo_cfg
-operator|=
-name|PDMA_BASE
-operator|+
-name|PDMA_GLO_CFG
-expr_stmt|;
-name|sc
-operator|->
 name|pdma_rst_idx
 operator|=
 name|PDMA_BASE
