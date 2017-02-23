@@ -75,7 +75,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|int
 function_decl|(
 modifier|*
@@ -86,7 +86,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|void
 modifier|*
 name|ypresp_data

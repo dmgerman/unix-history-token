@@ -2097,6 +2097,10 @@ operator|*
 operator|)
 name|bio
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|argp
 argument_list|,
 operator|(
@@ -2152,6 +2156,10 @@ operator|*
 operator|)
 name|bio
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|argp
 argument_list|,
 operator|(

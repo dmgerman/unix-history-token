@@ -43,6 +43,10 @@ directive|include
 file|<openssl/buffer.h>
 end_include
 
+begin_comment
+comment|/*  * Return values are as per SSL_write()  */
+end_comment
+
 begin_function
 name|int
 name|ssl23_write_bytes
@@ -134,9 +138,7 @@ operator|=
 name|num
 expr_stmt|;
 return|return
-operator|(
 name|i
-operator|)
 return|;
 block|}
 name|s
@@ -171,7 +173,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* return regularly only when we have read (at least) 'n' bytes */
+comment|/* return regularly only when we have read (at least) 'n' bytes  *  * Return values are as per SSL_read()  */
 end_comment
 
 begin_function
@@ -261,9 +263,7 @@ operator|<=
 literal|0
 condition|)
 return|return
-operator|(
 name|j
-operator|)
 return|;
 name|s
 operator|->
