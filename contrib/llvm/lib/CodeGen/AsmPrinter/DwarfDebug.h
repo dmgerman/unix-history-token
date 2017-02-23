@@ -224,7 +224,7 @@ comment|/// This class is used to track local variable information.
 comment|///
 comment|/// Variables can be created from allocas, in which case they're generated from
 comment|/// the MMI table.  Such variables can have multiple expressions and frame
-comment|/// indices.  The \a Expr and \a FrameIndices array must match.
+comment|/// indices.
 comment|///
 comment|/// Variables can be created from \c DBG_VALUE instructions.  Those whose
 comment|/// location changes over time use \a DebugLocListIndex, while those with a
@@ -246,17 +246,6 @@ modifier|*
 name|IA
 decl_stmt|;
 comment|/// Inlined at location.
-name|SmallVector
-operator|<
-specifier|const
-name|DIExpression
-operator|*
-operator|,
-literal|1
-operator|>
-name|Expr
-expr_stmt|;
-comment|/// Complex address.
 name|DIE
 modifier|*
 name|TheDIE
@@ -279,15 +268,29 @@ init|=
 name|nullptr
 decl_stmt|;
 comment|/// DBG_VALUE instruction.
+struct|struct
+name|FrameIndexExpr
+block|{
+name|int
+name|FI
+decl_stmt|;
+specifier|const
+name|DIExpression
+modifier|*
+name|Expr
+decl_stmt|;
+block|}
+struct|;
+name|mutable
 name|SmallVector
 operator|<
-name|int
+name|FrameIndexExpr
 operator|,
 literal|1
 operator|>
-name|FrameIndex
+name|FrameIndexExprs
 expr_stmt|;
-comment|/// Frame index.
+comment|/// Frame index + expression.
 name|public
 label|:
 comment|/// Construct a DbgVariable.
@@ -328,17 +331,7 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|Expr
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"Already initialized?"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
@@ -377,18 +370,15 @@ operator|&&
 literal|"Expected valid index"
 argument_list|)
 block|;
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|push_back
 argument_list|(
-name|E
-argument_list|)
-block|;
-name|FrameIndex
-operator|.
-name|push_back
-argument_list|(
+block|{
 name|FI
+block|,
+name|E
+block|}
 argument_list|)
 block|;   }
 comment|/// Initialize from a DBG_VALUE instruction.
@@ -400,17 +390,7 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|Expr
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"Already initialized?"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
@@ -475,11 +455,15 @@ operator|->
 name|getNumElements
 argument_list|()
 condition|)
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|push_back
 argument_list|(
+block|{
+literal|0
+block|,
 name|E
+block|}
 argument_list|)
 expr_stmt|;
 block|}
@@ -506,20 +490,6 @@ return|return
 name|IA
 return|;
 block|}
-name|ArrayRef
-operator|<
-specifier|const
-name|DIExpression
-operator|*
-operator|>
-name|getExpression
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Expr
-return|;
-block|}
 specifier|const
 name|DIExpression
 operator|*
@@ -531,7 +501,7 @@ name|assert
 argument_list|(
 name|MInsn
 operator|&&
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|size
 argument_list|()
@@ -540,15 +510,17 @@ literal|1
 argument_list|)
 block|;
 return|return
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|size
 argument_list|()
 condition|?
-name|Expr
+name|FrameIndexExprs
 index|[
 literal|0
 index|]
+operator|.
+name|Expr
 else|:
 name|nullptr
 return|;
@@ -621,16 +593,26 @@ return|return
 name|MInsn
 return|;
 block|}
+comment|/// Get the FI entries, sorted by fragment offset.
 name|ArrayRef
 operator|<
-name|int
+name|FrameIndexExpr
 operator|>
-name|getFrameIndex
+name|getFrameIndexExprs
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|hasFrameIndexExprs
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FrameIndex
+operator|!
+name|FrameIndexExprs
+operator|.
+name|empty
+argument_list|()
 return|;
 block|}
 name|void
@@ -697,7 +679,7 @@ expr_stmt|;
 name|assert
 argument_list|(
 operator|!
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
@@ -710,7 +692,7 @@ argument_list|(
 operator|!
 name|V
 operator|.
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
@@ -718,73 +700,20 @@ operator|&&
 literal|"Expected an MMI entry"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|Expr
-operator|.
-name|size
-argument_list|()
-operator|==
-name|FrameIndex
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Mismatched expressions"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|V
-operator|.
-name|Expr
-operator|.
-name|size
-argument_list|()
-operator|==
-name|V
-operator|.
-name|FrameIndex
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Mismatched expressions"
-argument_list|)
-expr_stmt|;
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|append
 argument_list|(
 name|V
 operator|.
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|begin
 argument_list|()
 argument_list|,
 name|V
 operator|.
-name|Expr
-operator|.
-name|end
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|FrameIndex
-operator|.
-name|append
-argument_list|(
-name|V
-operator|.
-name|FrameIndex
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|V
-operator|.
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|end
 argument_list|()
@@ -794,27 +723,30 @@ name|assert
 argument_list|(
 name|all_of
 argument_list|(
-name|Expr
+name|FrameIndexExprs
 argument_list|,
 index|[]
 operator|(
-specifier|const
-name|DIExpression
-operator|*
-name|E
+name|FrameIndexExpr
+operator|&
+name|FIE
 operator|)
 block|{
 return|return
-name|E
+name|FIE
+operator|.
+name|Expr
 operator|&&
-name|E
+name|FIE
+operator|.
+name|Expr
 operator|->
 name|isFragment
 argument_list|()
 return|;
 block|}
 block|)
-function|&& "conflicting locations for variable"
+function|&&            "conflicting locations for variable"
 block|)
 decl_stmt|;
 block|}
@@ -960,34 +892,26 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
-name|FrameIndex
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"Expected DBG_VALUE, not MMI variable"
-argument_list|)
-block|;
-name|assert
-argument_list|(
 operator|(
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
 operator|||
 operator|(
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|size
 argument_list|()
 operator|==
 literal|1
 operator|&&
-name|Expr
+name|FrameIndexExprs
+index|[
+literal|0
+index|]
 operator|.
-name|back
-argument_list|()
+name|Expr
 operator|->
 name|getNumElements
 argument_list|()
@@ -999,7 +923,7 @@ argument_list|)
 block|;
 return|return
 operator|!
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
