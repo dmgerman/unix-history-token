@@ -2739,7 +2739,7 @@ name|u16
 name|inc
 parameter_list|,
 name|u8
-name|t5
+name|t4
 parameter_list|,
 name|u8
 name|len16
@@ -2755,7 +2755,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|t5
+operator|!
+name|t4
 condition|)
 block|{
 if|if
@@ -3007,7 +3008,7 @@ name|u16
 name|inc
 parameter_list|,
 name|u8
-name|t5
+name|t4
 parameter_list|,
 name|u8
 name|len16
@@ -3023,7 +3024,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|t5
+operator|!
+name|t4
 condition|)
 block|{
 if|if

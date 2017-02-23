@@ -2574,7 +2574,7 @@ name|wq
 argument_list|,
 name|idx
 argument_list|,
-name|dev_is_t5
+name|dev_is_t4
 argument_list|(
 name|qhp
 operator|->
@@ -2994,7 +2994,7 @@ name|wq
 argument_list|,
 name|idx
 argument_list|,
-name|dev_is_t5
+name|dev_is_t4
 argument_list|(
 name|qhp
 operator|->
