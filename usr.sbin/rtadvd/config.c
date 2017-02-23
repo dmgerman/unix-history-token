@@ -6797,13 +6797,6 @@ operator|->
 name|rai_hoplimit
 argument_list|)
 expr_stmt|;
-name|ra
-operator|->
-name|nd_ra_flags_reserved
-operator|=
-literal|0
-expr_stmt|;
-comment|/* just in case */
 comment|/* 	 * XXX: the router preference field, which is a 2-bit field, should be 	 * initialized before other fields. 	 */
 name|ra
 operator|->
