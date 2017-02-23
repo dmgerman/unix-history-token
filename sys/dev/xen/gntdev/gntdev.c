@@ -3850,14 +3850,14 @@ name|file_index
 expr_stmt|;
 name|pidx
 operator|=
-name|OFF_TO_IDX
+name|UOFF_TO_IDX
 argument_list|(
 name|offset
 argument_list|)
 expr_stmt|;
 name|ridx
 operator|=
-name|OFF_TO_IDX
+name|UOFF_TO_IDX
 argument_list|(
 name|relative_offset
 argument_list|)
@@ -5194,7 +5194,7 @@ name|page
 argument_list|,
 name|mem_obj
 argument_list|,
-name|OFF_TO_IDX
+name|UOFF_TO_IDX
 argument_list|(
 name|gref
 operator|->
@@ -5818,7 +5818,7 @@ operator|)
 return|;
 name|count
 operator|=
-name|OFF_TO_IDX
+name|UOFF_TO_IDX
 argument_list|(
 name|size
 argument_list|)
