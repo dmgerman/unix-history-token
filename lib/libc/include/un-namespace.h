@@ -1032,6 +1032,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|sem_clockwait_np
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|sem_trywait
 end_undef
 
