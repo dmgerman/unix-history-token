@@ -2867,7 +2867,7 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-comment|/* XXXRIK: This function should be for comleteness, but for now I 	 * don't use it. So I just start to write and didn't finished it yet. 	 * It and it is VERY BUGGY!!! Do not use it. If you really 	 * need it ask me to fix it or rewrite it by your self. 	 * Note: most buggy part of it in ce_on_config_stop! 	 */
+comment|/* XXXRIK: This function should be for completeness, but for now I 	 * don't use it. I just started to write and haven't finished it yet. 	 * It is VERY BUGGY!!! Do not use it. If you really need 	 * it ask me to fix it or rewrite it by yourself. 	 * Note: most buggy part of it in ce_on_config_stop! 	 */
 if|if
 condition|(
 operator|!
@@ -2892,16 +2892,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|req
-operator|->
-name|Command
-operator|=
-name|TAU32_Configure_Commit
-operator||
-name|TAU32_Tx_Stop
-operator||
-name|TAU32_Rx_Stop
-expr_stmt|;
+comment|//	req->Command = TAU32_Configure_Commit |
+comment|//		       TAU32_Tx_Stop | TAU32_Rx_Stop;
 name|req
 operator|->
 name|Command
