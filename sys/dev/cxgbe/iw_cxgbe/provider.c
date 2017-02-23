@@ -904,7 +904,8 @@ directive|ifdef
 name|DOT5
 if|if
 condition|(
-name|is_t5
+operator|!
+name|is_t4
 argument_list|(
 name|rdev
 operator|->
