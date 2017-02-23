@@ -132,6 +132,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DTYPE_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* not yet initialized */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DTYPE_VNODE
 value|1
 end_define
