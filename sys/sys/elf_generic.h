@@ -348,6 +348,13 @@ name|ELF_ST_INFO
 value|__ELFN(ST_INFO)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ELF_ST_VISIBILITY
+value|__ELFN(ST_VISIBILITY)
+end_define
+
 begin_endif
 endif|#
 directive|endif
