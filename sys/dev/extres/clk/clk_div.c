@@ -903,6 +903,18 @@ operator|>
 name|sc
 operator|->
 name|i_mask
+operator|&&
+operator|(
+operator|(
+name|sc
+operator|->
+name|div_flags
+operator|&
+name|CLK_DIV_WITH_TABLE
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* XXX Or only return error? */
