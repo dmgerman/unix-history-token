@@ -2294,6 +2294,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WEAK_REFS
+end_ifdef
+
+begin_comment
+comment|/* When building libmd, provide weak references. Note: this is not    activated in the context of compiling these sources for internal    use in libcrypt.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -2357,6 +2367,11 @@ name|MD4Final
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
