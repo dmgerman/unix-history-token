@@ -14166,7 +14166,7 @@ literal|4
 index|]
 argument_list|)
 operator|==
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
