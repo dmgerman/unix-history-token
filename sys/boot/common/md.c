@@ -364,7 +364,7 @@ if|if
 condition|(
 name|rsize
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|*
 name|rsize

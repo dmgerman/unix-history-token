@@ -4161,13 +4161,10 @@ struct|struct
 name|hmac_ctx
 block|{
 name|SHA512_CTX
-name|shactx
+name|innerctx
 decl_stmt|;
-name|u_char
-name|k_opad
-index|[
-literal|128
-index|]
+name|SHA512_CTX
+name|outerctx
 decl_stmt|;
 block|}
 struct|;

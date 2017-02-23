@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: cgi.c,v 1.144 2017/01/21 01:20:31 schwarze Exp $ */
+comment|/*	$Id: cgi.c,v 1.147 2017/02/08 13:34:27 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -31,11 +31,22 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|HAVE_ERR
+end_if
+
 begin_include
 include|#
 directive|include
 file|<err.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -711,6 +722,8 @@ block|,
 literal|"alpha"
 block|,
 literal|"armv7"
+block|,
+literal|"arm64"
 block|,
 literal|"hppa"
 block|,
@@ -3841,6 +3854,16 @@ name|fragment
 operator|=
 literal|1
 expr_stmt|;
+name|conf
+operator|.
+name|style
+operator|=
+name|mandoc_strdup
+argument_list|(
+name|CSS_DIR
+literal|"/mandoc.css"
+argument_list|)
+expr_stmt|;
 name|usepath
 operator|=
 name|strcmp
@@ -3991,6 +4014,13 @@ argument_list|(
 name|conf
 operator|.
 name|man
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|conf
+operator|.
+name|style
 argument_list|)
 expr_stmt|;
 block|}

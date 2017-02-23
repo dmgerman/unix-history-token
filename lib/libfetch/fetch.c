@@ -1324,6 +1324,13 @@ name|port
 operator|=
 name|port
 expr_stmt|;
+name|u
+operator|->
+name|netrcfd
+operator|=
+operator|-
+literal|2
+expr_stmt|;
 return|return
 operator|(
 name|u

@@ -101,31 +101,6 @@ name|IWM_UCODE_SECTION_MAX
 value|16
 end_define
 
-begin_define
-define|#
-directive|define
-name|IWM_FWDMASEGSZ
-value|(192*1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM_FWDMASEGSZ_8000
-value|(320*1024)
-end_define
-
-begin_comment
-comment|/* sanity check value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_FWMAXSIZE
-value|(2*1024*1024)
-end_define
-
 begin_comment
 comment|/*  * fw_status is used to determine if we've already parsed the firmware file  *  * In addition to the following, status< 0 ==> -error  */
 end_comment
@@ -172,6 +147,32 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* one for each uCode image (inst/data, init/runtime/wowlan) */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_fw_desc
+block|{
+specifier|const
+name|void
+modifier|*
+name|data
+decl_stmt|;
+comment|/* vmalloc'ed data */
+name|uint32_t
+name|len
+decl_stmt|;
+comment|/* size in bytes */
+name|uint32_t
+name|offset
+decl_stmt|;
+comment|/* offset in the device */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|iwm_fw_info
@@ -188,28 +189,18 @@ decl_stmt|;
 struct|struct
 name|iwm_fw_sects
 block|{
-struct|struct
-name|iwm_fw_onesect
-block|{
-specifier|const
-name|void
-modifier|*
-name|fws_data
-decl_stmt|;
-name|uint32_t
-name|fws_len
-decl_stmt|;
-name|uint32_t
-name|fws_devoff
-decl_stmt|;
-block|}
+name|struct
+name|iwm_fw_desc
 name|fw_sect
 index|[
 name|IWM_UCODE_SECTION_MAX
 index|]
-struct|;
+decl_stmt|;
 name|int
 name|fw_count
+decl_stmt|;
+name|int
+name|is_dual_cpus
 decl_stmt|;
 name|uint32_t
 name|paging_mem_size
@@ -602,29 +593,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|iwm_ucode_status
-block|{
-name|uint32_t
-name|uc_error_event_table
-decl_stmt|;
-name|uint32_t
-name|uc_umac_error_event_table
-decl_stmt|;
-name|uint32_t
-name|uc_log_event_table
-decl_stmt|;
-name|int
-name|uc_ok
-decl_stmt|;
-name|int
-name|uc_intr
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -904,51 +872,11 @@ name|IWM_ICT_PADDR_SHIFT
 value|12
 end_define
 
-begin_enum
-enum|enum
-name|iwm_device_family
-block|{
-name|IWM_DEVICE_FAMILY_UNDEFINED
-block|,
-name|IWM_DEVICE_FAMILY_7000
-block|,
-name|IWM_DEVICE_FAMILY_8000
-block|, }
-enum|;
-end_enum
-
-begin_comment
-comment|/**  * struct iwm_cfg  * @fw_name: Firmware filename.  * @host_interrupt_operation_mode: device needs host interrupt operation  *      mode set  * @nvm_hw_section_num: the ID of the HW NVM section  * @apmg_wake_up_wa: should the MAC access REQ be asserted when a command  *      is in flight. This is due to a HW bug in 7260, 3160 and 7265.  */
-end_comment
-
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|iwm_cfg
-block|{
-specifier|const
-name|char
-modifier|*
-name|fw_name
-decl_stmt|;
-name|uint16_t
-name|eeprom_size
-decl_stmt|;
-name|enum
-name|iwm_device_family
-name|device_family
-decl_stmt|;
-name|int
-name|host_interrupt_operation_mode
-decl_stmt|;
-name|uint8_t
-name|nvm_hw_section_num
-decl_stmt|;
-name|int
-name|apmg_wake_up_wa
-decl_stmt|;
-block|}
-struct|;
-end_struct
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -1058,7 +986,7 @@ name|iwm_dma_info
 name|sched_dma
 decl_stmt|;
 name|uint32_t
-name|sched_base
+name|scd_base_addr
 decl_stmt|;
 comment|/* TX/RX rings. */
 name|struct
@@ -1103,13 +1031,12 @@ decl_stmt|;
 name|int
 name|sc_fw_chunk_done
 decl_stmt|;
-name|struct
-name|iwm_ucode_status
-name|sc_uc
-decl_stmt|;
 name|enum
 name|iwm_ucode_type
-name|sc_uc_current
+name|cur_ucode
+decl_stmt|;
+name|int
+name|ucode_loaded
 decl_stmt|;
 name|char
 name|sc_fwver
@@ -1152,9 +1079,6 @@ decl_stmt|;
 comment|/* 	 * So why do we need a separate stopped flag and a generation? 	 * the former protects the device from issuing commands when it's 	 * stopped (duh).  The latter protects against race from a very 	 * fast stop/unstop cycle where threads waiting for responses do 	 * not have a chance to run in between.  Notably: we want to stop 	 * the device from interrupt context when it craps out, so we 	 * don't have the luxury of waiting for quiescense. 	 */
 name|int
 name|sc_generation
-decl_stmt|;
-name|bus_size_t
-name|sc_fwdmasegsz
 decl_stmt|;
 name|struct
 name|iwm_fw_info
@@ -1262,6 +1186,19 @@ name|sc_notif_wait
 decl_stmt|;
 name|int
 name|cmd_hold_nic_awake
+decl_stmt|;
+comment|/* Firmware status */
+name|uint32_t
+name|error_event_table
+decl_stmt|;
+name|uint32_t
+name|log_event_table
+decl_stmt|;
+name|uint32_t
+name|umac_error_event_table
+decl_stmt|;
+name|int
+name|support_umac_log
 decl_stmt|;
 block|}
 struct|;

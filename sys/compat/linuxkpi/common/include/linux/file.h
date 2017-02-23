@@ -57,6 +57,12 @@ directive|include
 file|<linux/fs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<linux/slab.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|linux_file

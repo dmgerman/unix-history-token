@@ -53,7 +53,7 @@ name|void
 modifier|*
 name|heap_base
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 

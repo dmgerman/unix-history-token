@@ -2621,6 +2621,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|type
+operator|!=
+name|NULL
+operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|type
@@ -2638,6 +2643,7 @@ literal|"preload"
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|file

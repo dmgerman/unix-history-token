@@ -266,6 +266,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/iwm/if_iwm_config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/iwm/if_iwm_debug.h>
 end_include
 

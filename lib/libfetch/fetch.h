@@ -95,6 +95,9 @@ decl_stmt|;
 name|time_t
 name|ims_time
 decl_stmt|;
+name|int
+name|netrcfd
+decl_stmt|;
 block|}
 struct|;
 end_struct

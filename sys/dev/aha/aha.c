@@ -3649,22 +3649,6 @@ block|}
 break|break;
 block|}
 case|case
-name|XPT_EN_LUN
-case|:
-comment|/* Enable LUN as a target */
-case|case
-name|XPT_TARGET_IO
-case|:
-comment|/* Execute target I/O request */
-case|case
-name|XPT_ACCEPT_TARGET_IO
-case|:
-comment|/* Accept Host Target Mode CDB */
-case|case
-name|XPT_CONT_TARGET_IO
-case|:
-comment|/* Continue Host Target I/O Connection*/
-case|case
 name|XPT_ABORT
 case|:
 comment|/* Abort the specified CCB */

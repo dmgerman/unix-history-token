@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_html.c,v 1.19 2017/01/17 01:47:51 schwarze Exp $ */
+comment|/*	$Id: tbl_html.c,v 1.20 2017/02/05 18:15:39 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -166,6 +166,11 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
+name|struct
+name|tag
+modifier|*
+name|t
+decl_stmt|;
 name|int
 name|ic
 decl_stmt|;
@@ -233,6 +238,17 @@ argument_list|,
 literal|"tbl"
 argument_list|)
 expr_stmt|;
+name|t
+operator|=
+name|print_otag
+argument_list|(
+name|h
+argument_list|,
+name|TAG_COLGROUP
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ic
@@ -270,13 +286,11 @@ operator|.
 name|width
 argument_list|)
 expr_stmt|;
-name|print_otag
+name|print_tagq
 argument_list|(
 name|h
 argument_list|,
-name|TAG_TBODY
-argument_list|,
-literal|""
+name|t
 argument_list|)
 expr_stmt|;
 block|}

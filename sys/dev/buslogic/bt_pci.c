@@ -153,14 +153,14 @@ name|resource
 modifier|*
 name|regs
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|irq
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|#
 directive|if

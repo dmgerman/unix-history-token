@@ -1370,7 +1370,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 comment|/* 	 * Compute the frame length and set pad to give an overall even 	 * number of bytes.  Below we assume that the packet length is even. 	 */
@@ -1712,7 +1712,7 @@ name|m
 init|;
 name|m
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|m
 operator|=
@@ -2005,7 +2005,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|if_printf
@@ -2298,7 +2298,7 @@ name|m
 init|;
 name|m
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|m
 operator|=

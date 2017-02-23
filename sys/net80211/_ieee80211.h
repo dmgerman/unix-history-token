@@ -1729,41 +1729,83 @@ begin_comment
 comment|/*  * MIMO antenna/radio state.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MAX_CHAINS
+value|4
+end_define
+
 begin_comment
-comment|/*  * XXX This doesn't yet export both ctl/ext chain details  * XXX TODO: IEEE80211_MAX_CHAINS is defined in _freebsd.h, not here;  * figure out how to pull it in!  */
+comment|/*  * This is the number of sub-channels for a channel.  * 0 - pri20  * 1 - sec20 (HT40, VHT40)  * 2 - sec40 (VHT80)  * 3 - sec80 (VHT80+80, VHT160)  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MAX_CHAIN_PRISEC
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MAX_EVM_DWORDS
+value|16
+end_define
+
+begin_comment
+comment|/* 16 pilots, 4 chains */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MAX_EVM_PILOTS
+value|16
+end_define
+
+begin_comment
+comment|/* 468 subcarriers, 16 pilots */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_mimo_chan_info
+block|{
+name|int8_t
+name|rssi
+index|[
+name|IEEE80211_MAX_CHAIN_PRISEC
+index|]
+decl_stmt|;
+name|int8_t
+name|noise
+index|[
+name|IEEE80211_MAX_CHAIN_PRISEC
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
 name|ieee80211_mimo_info
 block|{
-name|int8_t
-name|rssi
+name|struct
+name|ieee80211_mimo_chan_info
+name|ch
 index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* per-antenna rssi */
-name|int8_t
-name|noise
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* per-antenna noise floor */
-name|uint8_t
-name|pad
-index|[
-literal|2
+name|IEEE80211_MAX_CHAINS
 index|]
 decl_stmt|;
 name|uint32_t
 name|evm
 index|[
-literal|3
+name|IEEE80211_MAX_EVM_DWORDS
 index|]
 decl_stmt|;
-comment|/* EVM data */
 block|}
 struct|;
 end_struct
@@ -2215,6 +2257,512 @@ name|IEEE80211_C_HTCAP_BITS
 define|\
 value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\21AMPDU\22AMSDU\23HT\24SMPS\25RIFS\32TXLDPC"
 end_define
+
+begin_comment
+comment|/*  * RX status notification - which fields are valid.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_NF
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* global NF value valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_RSSI
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* global RSSI value valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_C_CHAIN
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* RX chain count valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_C_NF
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* per-chain NF value valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_C_RSSI
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* per-chain RSSI value valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_C_EVM
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* per-chain EVM valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_C_HT40
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* RX'ed packet is 40mhz, pilots 4,5 valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_FREQ
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Freq value populated, MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_IEEE
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* IEEE value populated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_BAND
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Frequency band populated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_TSF32
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* 32 bit TSF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_TSF64
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* 64 bit TSF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_TSF_START
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* TSF is sampled at start of frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_TSF_END
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* TSF is sampled at end of frame */
+end_comment
+
+begin_comment
+comment|/*  * RX status notification - describe the packet.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_STBC
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_LDPC
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_AMSDU
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* This is the start of an decap AMSDU list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_AMSDU_MORE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* This is another decap AMSDU frame in the batch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_AMPDU
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* This is the start of an decap AMPDU list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_AMPDU_MORE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* This is another decap AMPDU frame in the batch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_FAIL_FCSCRC
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Failed CRC/FCS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_FAIL_MIC
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Failed MIC check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_DECRYPTED
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Hardware decrypted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_IV_STRIP
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Decrypted; IV stripped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_MMIC_STRIP
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Decrypted; MMIC stripped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_SHORTGI
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* This is a short-GI frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_CCK
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_OFDM
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_HT
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_VHT
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Channel width */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FW_20MHZ
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FW_40MHZ
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FW_80MHZ
+value|3
+end_define
+
+begin_comment
+comment|/* PHY type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11B
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11G
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11A
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11NA
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11NG
+value|5
+end_define
+
+begin_struct
+struct|struct
+name|ieee80211_rx_stats
+block|{
+name|uint32_t
+name|r_flags
+decl_stmt|;
+comment|/* IEEE80211_R_* flags */
+name|uint32_t
+name|c_pktflags
+decl_stmt|;
+comment|/* IEEE80211_RX_F_* flags */
+name|uint64_t
+name|c_rx_tsf
+decl_stmt|;
+comment|/* 32 or 64 bit TSF */
+comment|/* All DWORD aligned */
+name|int16_t
+name|c_nf_ctl
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+comment|/* per-chain NF */
+name|int16_t
+name|c_nf_ext
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+comment|/* per-chain NF */
+name|int16_t
+name|c_rssi_ctl
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+comment|/* per-chain RSSI */
+name|int16_t
+name|c_rssi_ext
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+comment|/* per-chain RSSI */
+comment|/* 32 bits */
+name|uint8_t
+name|c_nf
+decl_stmt|;
+comment|/* global NF */
+name|uint8_t
+name|c_rssi
+decl_stmt|;
+comment|/* global RSSI */
+name|uint8_t
+name|c_chain
+decl_stmt|;
+comment|/* number of RX chains involved */
+name|uint8_t
+name|c_rate
+decl_stmt|;
+comment|/* legacy; 11n rate code; VHT MCS */
+comment|/* 32 bits */
+name|uint16_t
+name|c_freq
+decl_stmt|;
+comment|/* Frequency, MHz */
+name|uint8_t
+name|c_ieee
+decl_stmt|;
+comment|/* Channel */
+name|uint8_t
+name|c_width
+decl_stmt|;
+comment|/* channel width, FW flags above */
+comment|/* Force alignment to DWORD */
+union|union
+block|{
+name|uint8_t
+name|evm
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+index|[
+name|IEEE80211_MAX_EVM_PILOTS
+index|]
+decl_stmt|;
+comment|/* per-chain, per-pilot EVM values */
+name|uint32_t
+name|__aln
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+name|evm
+union|;
+comment|/* 32 bits */
+name|uint8_t
+name|c_phytype
+decl_stmt|;
+comment|/* PHY type, FW flags above */
+name|uint8_t
+name|c_vhtnss
+decl_stmt|;
+comment|/* VHT - number of spatial streams */
+name|uint8_t
+name|c_pad2
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_rx_params
+block|{
+name|struct
+name|ieee80211_rx_stats
+name|params
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

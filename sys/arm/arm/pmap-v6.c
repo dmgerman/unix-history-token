@@ -19464,6 +19464,11 @@ name|pte1_is_managed
 argument_list|(
 name|opte1
 argument_list|)
+operator|&&
+name|pte1_is_dirty
+argument_list|(
+name|opte1
+argument_list|)
 condition|)
 block|{
 name|eva
@@ -19499,13 +19504,6 @@ operator|,
 name|m
 operator|++
 control|)
-if|if
-condition|(
-name|pte1_is_dirty
-argument_list|(
-name|opte1
-argument_list|)
-condition|)
 name|vm_page_dirty
 argument_list|(
 name|m

@@ -5954,7 +5954,7 @@ if|if
 condition|(
 name|link_fault
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if

@@ -2580,7 +2580,7 @@ name|resource
 modifier|*
 name|r
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|pccard_ce_iospace
@@ -6053,7 +6053,7 @@ name|resource_list_entry
 modifier|*
 name|rle
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|passthrough
@@ -6373,7 +6373,7 @@ name|resource_list_entry
 modifier|*
 name|rle
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(

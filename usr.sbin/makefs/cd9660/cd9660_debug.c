@@ -231,6 +231,10 @@ begin_function
 name|void
 name|debug_print_tree
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -404,7 +408,7 @@ block|}
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_enabled
 condition|)
 name|debug_print_susp_attrs
@@ -426,6 +430,8 @@ argument|cn_next_child
 argument_list|)
 name|debug_print_tree
 argument_list|(
+name|diskStructure
+argument_list|,
 name|cn
 argument_list|,
 name|level
@@ -529,7 +535,9 @@ begin_function
 name|void
 name|debug_print_volume_descriptor_information
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
+name|diskStructure
 parameter_list|)
 block|{
 name|volume_descriptor
@@ -537,7 +545,7 @@ modifier|*
 name|tmp
 init|=
 name|diskStructure
-operator|.
+operator|->
 name|firstVolumeDescriptor
 decl_stmt|;
 name|char

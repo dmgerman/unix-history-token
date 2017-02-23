@@ -1504,7 +1504,7 @@ if|if
 condition|(
 name|rv
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|BHND_ERROR_DEV
@@ -1600,7 +1600,7 @@ if|if
 condition|(
 name|rv
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|BHND_ERROR_DEV

@@ -33,6 +33,12 @@ directive|include
 file|<sys/sema.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/libkern.h>
+end_include
+
 begin_comment
 comment|/*  * XXX BSD semaphores are disused and slow.  They also do not provide a  * sema_wait_sig method.  This must be resolved eventually.  */
 end_comment

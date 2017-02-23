@@ -913,12 +913,9 @@ name|vfstype
 operator|==
 name|NULL
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Could not determine filesystem type"
-argument_list|)
+name|vfstype
+operator|=
+literal|"ufs"
 expr_stmt|;
 name|type
 operator|=

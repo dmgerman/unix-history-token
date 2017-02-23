@@ -2771,10 +2771,10 @@ name|bp
 operator|->
 name|b_error
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
-continue|continue;
+break|break;
 if|if
 condition|(
 name|error

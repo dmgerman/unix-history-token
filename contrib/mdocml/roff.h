@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: roff.h,v 1.39 2017/01/10 13:47:00 schwarze Exp $	*/
+comment|/*	$Id: roff.h,v 1.40 2017/02/16 03:00:23 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -143,10 +143,7 @@ init|=
 literal|0
 block|,
 name|ENDBODY_SPACE
-block|,
 comment|/* Is broken: append a space. */
-name|ENDBODY_NOSPACE
-comment|/* Is broken: don't append a space. */
 block|}
 enum|;
 end_enum

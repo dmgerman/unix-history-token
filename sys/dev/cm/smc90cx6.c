@@ -1353,7 +1353,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 ifdef|#
@@ -1450,7 +1450,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 comment|/* write the addresses to RAM and throw them away */
@@ -1880,7 +1880,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* 		 * in case s.th. goes wrong with mem, drop it 		 * to make sure the receiver can be started again 		 * count it as input error (we dont have any other 		 * detectable) 		 */
@@ -1995,7 +1995,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|if_inc_counter

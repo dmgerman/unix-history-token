@@ -14968,11 +14968,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -14989,6 +14984,11 @@ argument_list|,
 name|IFCOUNTER_OERRORS
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
 argument_list|)
 expr_stmt|;
 break|break;

@@ -33,6 +33,12 @@ directive|include
 file|<sys/sx.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/libkern.h>
+end_include
+
 begin_struct
 struct|struct
 name|rw_semaphore

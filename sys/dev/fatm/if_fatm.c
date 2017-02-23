@@ -7695,7 +7695,7 @@ name|m0
 operator|=
 name|last
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(

@@ -572,14 +572,6 @@ end_comment
 begin_expr_stmt
 name|DUMMY
 argument_list|(
-name|rt_tgsigqueueinfo
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
 name|perf_event_open
 argument_list|)
 expr_stmt|;

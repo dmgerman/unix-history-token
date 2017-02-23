@@ -2407,9 +2407,6 @@ operator|!
 name|opt_c
 condition|)
 continue|continue;
-if|if
-condition|(
-operator|(
 name|laddr
 operator|=
 name|calloc
@@ -2422,7 +2419,10 @@ expr|struct
 name|addr
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|laddr
 operator|==
 name|NULL
 condition|)
@@ -2655,9 +2655,6 @@ operator|!
 name|opt_c
 condition|)
 continue|continue;
-if|if
-condition|(
-operator|(
 name|faddr
 operator|=
 name|calloc
@@ -2670,7 +2667,10 @@ expr|struct
 name|addr
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|faddr
 operator|==
 name|NULL
 condition|)

@@ -423,7 +423,7 @@ name|vxtxq_sc
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|VMXNET3_TX_LEGACY
+name|VMXNET3_LEGACY_TX
 name|struct
 name|buf_ring
 modifier|*
@@ -464,7 +464,7 @@ name|vxtxq_sysctl
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|VMXNET3_TX_LEGACY
+name|VMXNET3_LEGACY_TX
 name|struct
 name|task
 name|vxtxq_defrtask

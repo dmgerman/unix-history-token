@@ -24,18 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/spinlock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<linux/sched.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/list.h>
 end_include
 

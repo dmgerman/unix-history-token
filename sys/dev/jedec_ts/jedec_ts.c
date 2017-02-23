@@ -327,7 +327,7 @@ condition|(
 operator|(
 name|addr
 operator|&
-literal|0x30
+literal|0xf0
 operator|)
 operator|!=
 literal|0x30

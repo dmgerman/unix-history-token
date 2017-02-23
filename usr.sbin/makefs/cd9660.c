@@ -83,22 +83,13 @@ directive|include
 file|"cd9660/cd9660_archimedes.h"
 end_include
 
-begin_comment
-comment|/*  * Global variables  */
-end_comment
-
-begin_decl_stmt
-name|iso9660_disk
-name|diskStructure
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
 name|cd9660_finalize_PVD
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -119,7 +110,8 @@ specifier|static
 name|void
 name|cd9660_set_defaults
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -174,7 +166,8 @@ specifier|static
 name|void
 name|cd9660_setup_root_node
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -184,7 +177,8 @@ specifier|static
 name|int
 name|cd9660_setup_volume_descriptors
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -217,6 +211,9 @@ specifier|static
 name|int
 name|cd9660_translate_node_common
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -228,6 +225,9 @@ specifier|static
 name|int
 name|cd9660_translate_node
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|fsnode
 modifier|*
 parameter_list|,
@@ -272,6 +272,9 @@ specifier|static
 name|int
 name|cd9660_handle_collisions
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|,
@@ -286,6 +289,9 @@ name|cd9660node
 modifier|*
 name|cd9660_rename_filename
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|,
@@ -301,6 +307,9 @@ specifier|static
 name|void
 name|cd9660_copy_filenames
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -335,6 +344,9 @@ name|cd9660node
 modifier|*
 name|cd9660_rrip_move_directory
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -346,6 +358,9 @@ specifier|static
 name|int
 name|cd9660_add_dot_records
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -357,6 +372,9 @@ specifier|static
 name|void
 name|cd9660_convert_structure
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|fsnode
 modifier|*
 parameter_list|,
@@ -390,7 +408,8 @@ specifier|static
 name|int
 name|cd9660_generate_path_table
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -400,6 +419,9 @@ specifier|static
 name|int
 name|cd9660_level1_convert_filename
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -417,6 +439,9 @@ specifier|static
 name|int
 name|cd9660_level2_convert_filename
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -436,7 +461,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int cd9660_joliet_convert_filename(const char *, char *, int);
+unit|static int cd9660_joliet_convert_filename(iso9660_disk *, const char *, char *,     int);
 endif|#
 directive|endif
 end_endif
@@ -446,6 +471,9 @@ specifier|static
 name|int
 name|cd9660_convert_filename
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -463,6 +491,9 @@ specifier|static
 name|void
 name|cd9660_populate_dot_records
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -474,6 +505,9 @@ specifier|static
 name|int64_t
 name|cd9660_compute_offsets
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|,
@@ -500,6 +534,9 @@ name|cd9660node
 modifier|*
 name|cd9660_create_virtual_entry
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -520,6 +557,9 @@ name|cd9660node
 modifier|*
 name|cd9660_create_file
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -539,6 +579,9 @@ name|cd9660node
 modifier|*
 name|cd9660_create_directory
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -558,6 +601,9 @@ name|cd9660node
 modifier|*
 name|cd9660_create_special_directory
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|u_char
 parameter_list|,
 name|cd9660node
@@ -703,110 +749,112 @@ specifier|static
 name|void
 name|cd9660_set_defaults
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
+name|diskStructure
 parameter_list|)
 block|{
 comment|/*Fix the sector size for now, though the spec allows for other sizes*/
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 operator|=
 literal|2048
 expr_stmt|;
 comment|/* Set up defaults in our own structure */
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|keep_bad_images
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|follow_sym_links
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|=
 literal|2
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_enabled
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_renamed_dir_name
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_move_count
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|rr_moved_dir
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|archimedes_enabled
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|chrp_boot
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|include_padding_areas
 operator|=
 literal|1
 expr_stmt|;
 comment|/* Spec breaking functionality */
 name|diskStructure
-operator|.
+operator|->
 name|allow_deep_trees
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|allow_start_dot
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|allow_max_name
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|allow_illegal_chars
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|allow_lowercase
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|allow_multidot
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|omit_trailing_period
 operator|=
 literal|0
@@ -816,7 +864,7 @@ name|memset
 argument_list|(
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 argument_list|,
 literal|0
@@ -827,7 +875,7 @@ expr_stmt|;
 name|memset
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|publisher_id
@@ -840,7 +888,7 @@ expr_stmt|;
 name|memset
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|preparer_id
@@ -853,7 +901,7 @@ expr_stmt|;
 name|memset
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|application_id
@@ -866,7 +914,7 @@ expr_stmt|;
 name|memset
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|copyright_file_id
@@ -879,7 +927,7 @@ expr_stmt|;
 name|memset
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|abstract_file_id
@@ -892,7 +940,7 @@ expr_stmt|;
 name|memset
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|bibliographic_file_id
@@ -905,7 +953,7 @@ expr_stmt|;
 name|strcpy
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|system_id
@@ -919,26 +967,26 @@ literal|1
 expr_stmt|;
 comment|/* Boot support: Initially disabled */
 name|diskStructure
-operator|.
+operator|->
 name|has_generic_bootimage
 operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|generic_bootimage
 operator|=
 name|NULL
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|boot_image_directory
 operator|=
 literal|0
 expr_stmt|;
-comment|/*memset(diskStructure.boot_descriptor, 0, 2048);*/
+comment|/*memset(diskStructure->boot_descriptor, 0, 2048);*/
 name|diskStructure
-operator|.
+operator|->
 name|is_bootable
 operator|=
 literal|0
@@ -947,7 +995,7 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|boot_images
 argument_list|)
 expr_stmt|;
@@ -955,7 +1003,7 @@ name|LIST_INIT
 argument_list|(
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|boot_entries
 argument_list|)
 expr_stmt|;
@@ -969,11 +1017,50 @@ parameter_list|(
 name|fsinfo_t
 modifier|*
 name|fsopts
-name|__unused
 parameter_list|)
 block|{
+name|iso9660_disk
+modifier|*
+name|diskStructure
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|diskStructure
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|diskStructure
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"%s: calloc"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|fsopts
+operator|->
+name|fs_specific
+operator|=
+name|diskStructure
+expr_stmt|;
 name|cd9660_set_defaults
-argument_list|()
+argument_list|(
+name|diskStructure
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -985,9 +1072,16 @@ parameter_list|(
 name|fsinfo_t
 modifier|*
 name|fsopts
-name|__unused
 parameter_list|)
-block|{  }
+block|{
+name|free
+argument_list|(
+name|fsopts
+operator|->
+name|fs_specific
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -1155,6 +1249,14 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
+name|iso9660_disk
+modifier|*
+name|diskStructure
+init|=
+name|fsopts
+operator|->
+name|fs_specific
+decl_stmt|;
 comment|/* Set up allowed options - integer options ONLY */
 name|option_t
 name|cd9660_options
@@ -1166,7 +1268,7 @@ literal|"l"
 block|,
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 block|,
 literal|1
@@ -1181,7 +1283,7 @@ literal|"isolevel"
 block|,
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 block|,
 literal|1
@@ -1196,7 +1298,7 @@ literal|"verbose"
 block|,
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 block|,
 literal|0
@@ -1211,7 +1313,7 @@ literal|"v"
 block|,
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 block|,
 literal|0
@@ -1229,15 +1331,6 @@ name|NULL
 block|}
 block|}
 decl_stmt|;
-if|if
-condition|(
-name|cd9660_defaults_set
-operator|==
-literal|0
-condition|)
-name|cd9660_set_defaults
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Todo : finish implementing this, and make a function that 	 * parses them 	 */
 comment|/* 	string_option_t cd9660_string_options[] = { 		{ "L", "Label",&diskStructure.primaryDescriptor.volume_id, 1, 32, "Disk Label", ISO_STRING_FILTER_DCHARS }, 		{ NULL } 	} 	*/
 name|assert
@@ -1319,7 +1412,7 @@ literal|0
 condition|)
 block|{
 name|diskStructure
-operator|.
+operator|->
 name|displayHelp
 operator|=
 literal|1
@@ -1344,7 +1437,7 @@ condition|)
 block|{
 comment|/* this is not handled yet */
 name|diskStructure
-operator|.
+operator|->
 name|follow_sym_links
 operator|=
 literal|1
@@ -1380,7 +1473,7 @@ argument_list|,
 literal|'d'
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|volume_id
@@ -1413,7 +1506,7 @@ argument_list|,
 literal|'a'
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|application_id
@@ -1446,7 +1539,7 @@ argument_list|,
 literal|'a'
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|publisher_id
@@ -1479,7 +1572,7 @@ argument_list|,
 literal|'a'
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|preparer_id
@@ -1512,7 +1605,7 @@ argument_list|,
 literal|'a'
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|volume_set_id
@@ -1549,6 +1642,8 @@ name|rv
 operator|=
 name|cd9660_add_boot_disk
 argument_list|(
+name|diskStructure
+argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
@@ -1585,7 +1680,7 @@ if|if
 condition|(
 operator|(
 name|diskStructure
-operator|.
+operator|->
 name|boot_image_directory
 operator|=
 name|malloc
@@ -1625,7 +1720,7 @@ argument_list|,
 literal|'d'
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|boot_image_directory
 argument_list|)
 expr_stmt|;
@@ -1660,6 +1755,8 @@ name|rv
 operator|=
 name|cd9660_add_generic_bootimage
 argument_list|(
+name|diskStructure
+argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
@@ -1675,7 +1772,7 @@ literal|"no-trailing-padding"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|include_padding_areas
 operator|=
 literal|0
@@ -1694,7 +1791,7 @@ literal|"rockridge"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_enabled
 operator|=
 literal|1
@@ -1712,7 +1809,7 @@ literal|"archimedes"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|archimedes_enabled
 operator|=
 literal|1
@@ -1728,7 +1825,7 @@ literal|"chrp-boot"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|chrp_boot
 operator|=
 literal|1
@@ -1746,7 +1843,7 @@ literal|"keep-bad-images"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|keep_bad_images
 operator|=
 literal|1
@@ -1762,7 +1859,7 @@ literal|"allow-deep-trees"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|allow_deep_trees
 operator|=
 literal|1
@@ -1778,7 +1875,7 @@ literal|"allow-max-name"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|allow_max_name
 operator|=
 literal|1
@@ -1794,7 +1891,7 @@ literal|"allow-illegal-chars"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|allow_illegal_chars
 operator|=
 literal|1
@@ -1810,7 +1907,7 @@ literal|"allow-lowercase"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|allow_lowercase
 operator|=
 literal|1
@@ -1826,7 +1923,7 @@ literal|"allow-multidot"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|allow_multidot
 operator|=
 literal|1
@@ -1842,7 +1939,7 @@ literal|"omit-trailing-period"
 argument_list|)
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|omit_trailing_period
 operator|=
 literal|1
@@ -1874,6 +1971,8 @@ condition|)
 block|{
 name|cd9660_eltorito_add_boot_option
 argument_list|(
+name|diskStructure
+argument_list|,
 name|var
 argument_list|,
 literal|0
@@ -1915,6 +2014,8 @@ else|else
 block|{
 name|cd9660_eltorito_add_boot_option
 argument_list|(
+name|diskStructure
+argument_list|,
 name|var
 argument_list|,
 name|val
@@ -2018,10 +2119,18 @@ name|cd9660node
 modifier|*
 name|real_root
 decl_stmt|;
+name|iso9660_disk
+modifier|*
+name|diskStructure
+init|=
+name|fsopts
+operator|->
+name|fs_specific
+decl_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2031,20 +2140,20 @@ argument_list|(
 literal|"cd9660_makefs: ISO level is %i\n"
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|<
 literal|2
 operator|&&
 name|diskStructure
-operator|.
+operator|->
 name|allow_multidot
 condition|)
 name|errx
@@ -2078,7 +2187,7 @@ expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|displayHelp
 condition|)
 block|{
@@ -2088,7 +2197,7 @@ block|}
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2168,7 +2277,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 operator|=
 name|real_root
@@ -2191,6 +2300,8 @@ name|root
 expr_stmt|;
 name|cd9660_convert_structure
 argument_list|(
+name|diskStructure
+argument_list|,
 name|root
 argument_list|,
 name|real_root
@@ -2245,7 +2356,7 @@ block|{
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2259,16 +2370,20 @@ block|}
 comment|/* Add the dot and dot dot records */
 name|cd9660_add_dot_records
 argument_list|(
+name|diskStructure
+argument_list|,
 name|real_root
 argument_list|)
 expr_stmt|;
 name|cd9660_setup_root_node
-argument_list|()
+argument_list|(
+name|diskStructure
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2282,13 +2397,13 @@ comment|/* non-SUSP extensions */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|archimedes_enabled
 condition|)
 name|archimedes_convert_tree
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 argument_list|)
 expr_stmt|;
@@ -2296,18 +2411,20 @@ comment|/* Rock ridge / SUSP init pass */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_enabled
 condition|)
 block|{
 name|cd9660_susp_initialize
 argument_list|(
 name|diskStructure
-operator|.
+argument_list|,
+name|diskStructure
+operator|->
 name|rootNode
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 argument_list|,
 name|NULL
@@ -2316,34 +2433,38 @@ expr_stmt|;
 block|}
 comment|/* Build path table structure */
 name|diskStructure
-operator|.
+operator|->
 name|pathTableLength
 operator|=
 name|cd9660_generate_path_table
-argument_list|()
+argument_list|(
+name|diskStructure
+argument_list|)
 expr_stmt|;
 name|pathTableSectors
 operator|=
 name|CD9660_BLOCKS
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|pathTableLength
 argument_list|)
 expr_stmt|;
 name|firstAvailableSector
 operator|=
 name|cd9660_setup_volume_descriptors
-argument_list|()
+argument_list|(
+name|diskStructure
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|is_bootable
 condition|)
 block|{
@@ -2351,6 +2472,8 @@ name|firstAvailableSector
 operator|=
 name|cd9660_setup_boot
 argument_list|(
+name|diskStructure
+argument_list|,
 name|firstAvailableSector
 argument_list|)
 expr_stmt|;
@@ -2370,42 +2493,42 @@ expr_stmt|;
 block|}
 comment|/* LE first, then BE */
 name|diskStructure
-operator|.
+operator|->
 name|primaryLittleEndianTableSector
 operator|=
 name|firstAvailableSector
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|primaryBigEndianTableSector
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|primaryLittleEndianTableSector
 operator|+
 name|pathTableSectors
 expr_stmt|;
 comment|/* Set the secondary ones to -1, not going to use them for now */
 name|diskStructure
-operator|.
+operator|->
 name|secondaryBigEndianTableSector
 operator|=
 operator|-
 literal|1
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|secondaryLittleEndianTableSector
 operator|=
 operator|-
 literal|1
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|dataFirstSector
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|primaryBigEndianTableSector
 operator|+
 name|pathTableSectors
@@ -2413,7 +2536,7 @@ expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2426,7 +2549,7 @@ name|PRIu64
 literal|" sectors.\n"
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|pathTableLength
 argument_list|,
 name|pathTableSectors
@@ -2435,34 +2558,36 @@ expr_stmt|;
 name|startoffset
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 operator|*
 name|diskStructure
-operator|.
+operator|->
 name|dataFirstSector
 expr_stmt|;
 name|totalSpace
 operator|=
 name|cd9660_compute_offsets
 argument_list|(
+name|diskStructure
+argument_list|,
 name|real_root
 argument_list|,
 name|startoffset
 argument_list|)
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|totalSectors
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|dataFirstSector
 operator|+
 name|CD9660_BLOCKS
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 name|totalSpace
@@ -2472,51 +2597,55 @@ comment|/* Disabled until pass 1 is done */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_enabled
 condition|)
 block|{
 name|diskStructure
-operator|.
+operator|->
 name|susp_continuation_area_start_sector
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|totalSectors
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|totalSectors
 operator|+=
 name|CD9660_BLOCKS
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|susp_continuation_area_size
 argument_list|)
 expr_stmt|;
 name|cd9660_susp_finalize
 argument_list|(
 name|diskStructure
-operator|.
+argument_list|,
+name|diskStructure
+operator|->
 name|rootNode
 argument_list|)
 expr_stmt|;
 block|}
 name|cd9660_finalize_PVD
-argument_list|()
+argument_list|(
+name|diskStructure
+argument_list|)
 expr_stmt|;
 comment|/* Add padding sectors, just for testing purposes right now */
-comment|/* diskStructure.totalSectors+=150; */
+comment|/* diskStructure->totalSectors+=150; */
 comment|/* Debugging output */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2534,7 +2663,7 @@ name|PRId64
 literal|"\n"
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|primaryLittleEndianTableSector
 argument_list|)
 expr_stmt|;
@@ -2545,7 +2674,7 @@ name|PRId64
 literal|"\n"
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|dataFirstSector
 argument_list|)
 expr_stmt|;
@@ -2556,7 +2685,7 @@ name|PRId64
 literal|"\n"
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|totalSectors
 argument_list|)
 expr_stmt|;
@@ -2565,34 +2694,40 @@ comment|/* 	 * Add padding sectors at the end 	 * TODO: Clean this up and separa
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|include_padding_areas
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|totalSectors
 operator|+=
 literal|150
 expr_stmt|;
 name|cd9660_write_image
 argument_list|(
+name|diskStructure
+argument_list|,
 name|image
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|1
 condition|)
 block|{
 name|debug_print_volume_descriptor_information
-argument_list|()
+argument_list|(
+name|diskStructure
+argument_list|)
 expr_stmt|;
 name|debug_print_tree
 argument_list|(
+name|diskStructure
+argument_list|,
 name|real_root
 argument_list|,
 literal|0
@@ -2613,7 +2748,7 @@ expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2649,7 +2784,9 @@ specifier|static
 name|void
 name|cd9660_finalize_PVD
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
+name|diskStructure
 parameter_list|)
 block|{
 name|time_t
@@ -2672,13 +2809,13 @@ comment|/* root should be a fixed size of 34 bytes since it has no name */
 name|memcpy
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|root_directory_record
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 operator|->
 name|dot_record
@@ -2690,7 +2827,7 @@ argument_list|)
 expr_stmt|;
 comment|/* In RRIP, this might be longer than 34 */
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|root_directory_record
@@ -2704,7 +2841,7 @@ comment|/* Set up all the important numbers in the PVD */
 name|cd9660_bothendian_dword
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|totalSectors
 argument_list|,
 operator|(
@@ -2713,7 +2850,7 @@ name|char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|volume_space_size
@@ -2729,7 +2866,7 @@ name|char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|volume_set_size
@@ -2745,7 +2882,7 @@ name|char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|volume_sequence_number
@@ -2754,7 +2891,7 @@ expr_stmt|;
 name|cd9660_bothendian_word
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 operator|(
@@ -2763,7 +2900,7 @@ name|char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|logical_block_size
@@ -2772,7 +2909,7 @@ expr_stmt|;
 name|cd9660_bothendian_dword
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|pathTableLength
 argument_list|,
 operator|(
@@ -2781,7 +2918,7 @@ name|char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|path_table_size
@@ -2790,7 +2927,7 @@ expr_stmt|;
 name|cd9660_731
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryLittleEndianTableSector
 argument_list|,
 operator|(
@@ -2798,7 +2935,7 @@ name|u_char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|type_l_path_table
@@ -2807,7 +2944,7 @@ expr_stmt|;
 name|cd9660_732
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryBigEndianTableSector
 argument_list|,
 operator|(
@@ -2815,14 +2952,14 @@ name|u_char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|type_m_path_table
 argument_list|)
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|file_structure_version
@@ -2836,7 +2973,7 @@ comment|/* Pad all strings with spaces instead of nulls */
 name|cd9660_pad_string_spaces
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|volume_id
@@ -2847,7 +2984,7 @@ expr_stmt|;
 name|cd9660_pad_string_spaces
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|system_id
@@ -2858,7 +2995,7 @@ expr_stmt|;
 name|cd9660_pad_string_spaces
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|volume_set_id
@@ -2869,7 +3006,7 @@ expr_stmt|;
 name|cd9660_pad_string_spaces
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|publisher_id
@@ -2880,7 +3017,7 @@ expr_stmt|;
 name|cd9660_pad_string_spaces
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|preparer_id
@@ -2891,7 +3028,7 @@ expr_stmt|;
 name|cd9660_pad_string_spaces
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|application_id
@@ -2902,7 +3039,7 @@ expr_stmt|;
 name|cd9660_pad_string_spaces
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|copyright_file_id
@@ -2913,7 +3050,7 @@ expr_stmt|;
 name|cd9660_pad_string_spaces
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|abstract_file_id
@@ -2924,7 +3061,7 @@ expr_stmt|;
 name|cd9660_pad_string_spaces
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|bibliographic_file_id
@@ -2941,7 +3078,7 @@ name|char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|creation_date
@@ -2957,7 +3094,7 @@ name|char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|modification_date
@@ -2968,13 +3105,13 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|cd9660_set_date(diskStructure.primaryDescriptor.expiration_date, 	    tstamp);
+block|cd9660_set_date(diskStructure->primaryDescriptor.expiration_date, 	    tstamp);
 endif|#
 directive|endif
 name|memset
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|expiration_date
@@ -2985,7 +3122,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|expiration_date
@@ -3003,7 +3140,7 @@ name|char
 operator|*
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 operator|.
 name|effective_date
@@ -3015,7 +3152,7 @@ comment|/* make this sane */
 name|cd9660_time_915
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 operator|->
 name|dot_record
@@ -3180,13 +3317,15 @@ specifier|static
 name|void
 name|cd9660_setup_root_node
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
+name|diskStructure
 parameter_list|)
 block|{
 name|cd9660_populate_iso_dir_record
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 operator|->
 name|isoDirRecord
@@ -3212,7 +3351,9 @@ specifier|static
 name|int
 name|cd9660_setup_volume_descriptors
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
+name|diskStructure
 parameter_list|)
 block|{
 comment|/* Boot volume descriptor should come second */
@@ -3269,7 +3410,7 @@ operator|*
 operator|)
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|primaryDescriptor
 expr_stmt|;
 name|temp
@@ -3310,7 +3451,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|firstVolumeDescriptor
 operator|=
 name|temp
@@ -3322,7 +3463,7 @@ comment|/* Set up boot support if enabled. BVD must reside in sector 17 */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|is_bootable
 condition|)
 block|{
@@ -3411,7 +3552,7 @@ expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -3423,6 +3564,8 @@ argument_list|)
 expr_stmt|;
 name|cd9660_setup_boot_volume_descriptor
 argument_list|(
+name|diskStructure
+argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
@@ -3576,6 +3719,10 @@ specifier|static
 name|int
 name|cd9660_translate_node_common
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|newnode
@@ -3623,6 +3770,8 @@ name|test
 operator|=
 name|cd9660_convert_filename
 argument_list|(
+name|diskStructure
+argument_list|,
 name|newnode
 operator|->
 name|node
@@ -3740,6 +3889,10 @@ specifier|static
 name|int
 name|cd9660_translate_node
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|fsnode
 modifier|*
 name|node
@@ -3759,7 +3912,7 @@ block|{
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -3838,6 +3991,8 @@ if|if
 condition|(
 name|cd9660_translate_node_common
 argument_list|(
+name|diskStructure
+argument_list|,
 name|newnode
 argument_list|)
 operator|==
@@ -4296,6 +4451,10 @@ specifier|static
 name|int
 name|cd9660_handle_collisions
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|colliding
@@ -4506,6 +4665,8 @@ name|iter
 operator|=
 name|cd9660_rename_filename
 argument_list|(
+name|diskStructure
+argument_list|,
 name|iter
 argument_list|,
 name|skip
@@ -4526,6 +4687,10 @@ name|cd9660node
 modifier|*
 name|cd9660_rename_filename
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|iter
@@ -4569,7 +4734,7 @@ decl_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -4584,11 +4749,11 @@ argument_list|(
 literal|1
 operator|<=
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|&&
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|<=
 literal|2
@@ -4598,7 +4763,7 @@ comment|/* TODO : A LOT of chanes regarding 8.3 filenames */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|==
 literal|1
@@ -4611,7 +4776,7 @@ elseif|else
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|==
 literal|2
@@ -4737,7 +4902,7 @@ name|delete_chars
 expr_stmt|;
 comment|/* 8.3 rules - keep the extension, add before the dot */
 comment|/* 		 * This code makes a bunch of assumptions. 		 * See if you can spot them all :) 		 */
-comment|/* 		if (diskStructure.isoLevel == 1) { 			numbts = 8 - digits - delete_chars; 			if (dot< 0) {  			} else { 				if (dot< 8) { 					memmove(&tmp[numbts],&tmp[dot],4); 				} 			} 		} 		*/
+comment|/* 		if (diskStructure->isoLevel == 1) { 			numbts = 8 - digits - delete_chars; 			if (dot< 0) {  			} else { 				if (dot< 8) { 					memmove(&tmp[numbts],&tmp[dot],4); 				} 			} 		} 		*/
 comment|/* (copying just the filename before the '.' */
 name|memcpy
 argument_list|(
@@ -4918,6 +5083,10 @@ specifier|static
 name|void
 name|cd9660_copy_filenames
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -4956,7 +5125,9 @@ block|{
 name|debug_print_tree
 argument_list|(
 name|diskStructure
-operator|.
+argument_list|,
+name|diskStructure
+operator|->
 name|rootNode
 argument_list|,
 literal|0
@@ -4979,6 +5150,8 @@ argument_list|)
 block|{
 name|cd9660_copy_filenames
 argument_list|(
+name|diskStructure
+argument_list|,
 name|cn
 argument_list|)
 expr_stmt|;
@@ -5230,6 +5403,10 @@ name|cd9660node
 modifier|*
 name|cd9660_rrip_move_directory
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|dir
@@ -5245,27 +5422,29 @@ name|cd9660node
 modifier|*
 name|tfile
 decl_stmt|;
-comment|/* 	 * This function needs to: 	 * 1) Create an empty virtual file in place of the old directory 	 * 2) Point the virtual file to the new directory 	 * 3) Point the relocated directory to its old parent 	 * 4) Move the directory specified by dir into rr_moved_dir, 	 * and rename it to "diskStructure.rock_ridge_move_count" (as a string) 	 */
+comment|/* 	 * This function needs to: 	 * 1) Create an empty virtual file in place of the old directory 	 * 2) Point the virtual file to the new directory 	 * 3) Point the relocated directory to its old parent 	 * 4) Move the directory specified by dir into rr_moved_dir, 	 * and rename it to "diskStructure->rock_ridge_move_count" (as a string) 	 */
 comment|/* First see if the moved directory even exists */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|rr_moved_dir
 operator|==
 name|NULL
 condition|)
 block|{
 name|diskStructure
-operator|.
+operator|->
 name|rr_moved_dir
 operator|=
 name|cd9660_create_directory
 argument_list|(
+name|diskStructure
+argument_list|,
 name|ISO_RRIP_DEFAULT_MOVE_DIR_NAME
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 argument_list|,
 name|dir
@@ -5274,7 +5453,7 @@ expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|rr_moved_dir
 operator|==
 name|NULL
@@ -5285,7 +5464,7 @@ return|;
 name|cd9660_time_915
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|rr_moved_dir
 operator|->
 name|isoDirRecord
@@ -5311,6 +5490,8 @@ name|tfile
 operator|=
 name|cd9660_create_file
 argument_list|(
+name|diskStructure
+argument_list|,
 name|dir
 operator|->
 name|node
@@ -5334,7 +5515,7 @@ return|return
 name|NULL
 return|;
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_move_count
 operator|++
 expr_stmt|;
@@ -5350,7 +5531,7 @@ argument_list|,
 literal|"%08i"
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_move_count
 argument_list|)
 expr_stmt|;
@@ -5410,7 +5591,7 @@ operator|->
 name|parent
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|rr_moved_dir
 expr_stmt|;
 comment|/* Point the file to the moved directory */
@@ -5424,7 +5605,7 @@ comment|/* Actually move the directory */
 name|cd9660_sorted_child_insert
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|rr_moved_dir
 argument_list|,
 name|dir
@@ -5493,6 +5674,10 @@ specifier|static
 name|int
 name|cd9660_add_dot_records
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|root
@@ -5537,12 +5722,16 @@ continue|continue;
 comment|/* Recursion first */
 name|cd9660_add_dot_records
 argument_list|(
+name|diskStructure
+argument_list|,
 name|cn
 argument_list|)
 expr_stmt|;
 block|}
 name|cd9660_create_special_directory
 argument_list|(
+name|diskStructure
+argument_list|,
 name|CD9660_TYPE_DOT
 argument_list|,
 name|root
@@ -5550,6 +5739,8 @@ argument_list|)
 expr_stmt|;
 name|cd9660_create_special_directory
 argument_list|(
+name|diskStructure
+argument_list|,
 name|CD9660_TYPE_DOTDOT
 argument_list|,
 name|root
@@ -5570,6 +5761,10 @@ specifier|static
 name|void
 name|cd9660_convert_structure
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|fsnode
 modifier|*
 name|root
@@ -5744,6 +5939,8 @@ name|parent_node
 expr_stmt|;
 name|cd9660_translate_node
 argument_list|(
+name|diskStructure
+argument_list|,
 name|iterator
 argument_list|,
 name|this_node
@@ -5796,14 +5993,14 @@ condition|(
 operator|(
 operator|!
 name|diskStructure
-operator|.
+operator|->
 name|allow_deep_trees
 operator|)
 operator|&&
 operator|(
 operator|!
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_enabled
 operator|)
 condition|)
@@ -5828,7 +6025,7 @@ elseif|else
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_enabled
 condition|)
 block|{
@@ -5849,6 +6046,8 @@ if|if
 condition|(
 name|cd9660_rrip_move_directory
 argument_list|(
+name|diskStructure
+argument_list|,
 name|this_node
 argument_list|)
 operator|==
@@ -5889,6 +6088,8 @@ condition|)
 block|{
 name|cd9660_convert_structure
 argument_list|(
+name|diskStructure
+argument_list|,
 name|iterator
 operator|->
 name|child
@@ -5996,6 +6197,8 @@ comment|/* cd9660_handle_collisions(first_node); */
 comment|/* TODO: need cleanup */
 name|cd9660_copy_filenames
 argument_list|(
+name|diskStructure
+argument_list|,
 name|parent_node
 argument_list|)
 expr_stmt|;
@@ -6005,6 +6208,8 @@ name|flag
 operator|=
 name|cd9660_handle_collisions
 argument_list|(
+name|diskStructure
+argument_list|,
 name|parent_node
 argument_list|,
 name|counter
@@ -6147,7 +6352,9 @@ specifier|static
 name|int
 name|cd9660_generate_path_table
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
+name|diskStructure
 parameter_list|)
 block|{
 name|cd9660node
@@ -6158,7 +6365,7 @@ modifier|*
 name|dirNode
 init|=
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 decl_stmt|;
 name|cd9660node
@@ -6203,7 +6410,7 @@ operator|-
 literal|1
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 argument_list|)
 expr_stmt|;
@@ -6477,6 +6684,9 @@ modifier|*
 name|cd9660_filename_conversion_functor
 function_decl|)
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -6498,6 +6708,10 @@ specifier|static
 name|int
 name|cd9660_level1_convert_filename
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -6583,7 +6797,7 @@ comment|/* cut RISC OS file type off ISO name */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|archimedes_enabled
 operator|&&
 operator|*
@@ -6701,7 +6915,7 @@ name|found_ext
 operator|&&
 operator|!
 name|diskStructure
-operator|.
+operator|->
 name|omit_trailing_period
 condition|)
 operator|*
@@ -6740,6 +6954,10 @@ specifier|static
 name|int
 name|cd9660_level2_convert_filename
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -6800,7 +7018,7 @@ block|{
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|allow_multidot
 condition|)
 block|{
@@ -6844,7 +7062,7 @@ comment|/* cut RISC OS file type off ISO name */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|archimedes_enabled
 operator|&&
 operator|*
@@ -6920,7 +7138,7 @@ elseif|else
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|allow_multidot
 operator|&&
 operator|*
@@ -6973,7 +7191,7 @@ name|found_ext
 operator|&&
 operator|!
 name|diskStructure
-operator|.
+operator|->
 name|omit_trailing_period
 condition|)
 operator|*
@@ -7010,7 +7228,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static int cd9660_joliet_convert_filename(const char *oldname, char *newname, int is_file) {
+unit|static int cd9660_joliet_convert_filename(iso9660_disk *diskStructure, const char *oldname,     char *newname, int is_file) {
 comment|/* TODO: implement later, move to cd9660_joliet.c ?? */
 end_comment
 
@@ -7029,6 +7247,10 @@ specifier|static
 name|int
 name|cd9660_convert_filename
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -7047,11 +7269,11 @@ argument_list|(
 literal|1
 operator|<=
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|&&
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|<=
 literal|2
@@ -7066,7 +7288,7 @@ decl_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|==
 literal|1
@@ -7080,7 +7302,7 @@ elseif|else
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|isoLevel
 operator|==
 literal|2
@@ -7096,6 +7318,8 @@ modifier|*
 name|conversion_function
 call|)
 argument_list|(
+name|diskStructure
+argument_list|,
 name|oldname
 argument_list|,
 name|newname
@@ -7110,6 +7334,10 @@ begin_function
 name|int
 name|cd9660_compute_record_size
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -7130,7 +7358,7 @@ decl_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|rock_ridge_enabled
 condition|)
 name|size
@@ -7170,6 +7398,10 @@ specifier|static
 name|void
 name|cd9660_populate_dot_records
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -7260,6 +7492,8 @@ name|fileRecordSize
 operator|=
 name|cd9660_compute_record_size
 argument_list|(
+name|diskStructure
+argument_list|,
 name|node
 operator|->
 name|dot_record
@@ -7270,7 +7504,7 @@ condition|(
 name|node
 operator|==
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 condition|)
 block|{
@@ -7392,6 +7626,8 @@ name|fileRecordSize
 operator|=
 name|cd9660_compute_record_size
 argument_list|(
+name|diskStructure
+argument_list|,
 name|node
 operator|->
 name|dot_dot_record
@@ -7409,6 +7645,10 @@ specifier|static
 name|int64_t
 name|cd9660_compute_offsets
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -7469,6 +7709,8 @@ name|fileRecordSize
 operator|=
 name|cd9660_compute_record_size
 argument_list|(
+name|diskStructure
+argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
@@ -7480,7 +7722,7 @@ operator|=
 name|CD9660_BLOCKS
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 name|startOffset
@@ -7521,6 +7763,8 @@ name|fileDataLength
 operator|+=
 name|cd9660_compute_record_size
 argument_list|(
+name|diskStructure
+argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
@@ -7529,6 +7773,8 @@ condition|(
 operator|(
 name|cd9660_compute_record_size
 argument_list|(
+name|diskStructure
+argument_list|,
 name|child
 argument_list|)
 operator|+
@@ -7536,7 +7782,7 @@ name|current_sector_usage
 operator|)
 operator|>=
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 condition|)
 block|{
@@ -7554,6 +7800,8 @@ name|current_sector_usage
 operator|+=
 name|cd9660_compute_record_size
 argument_list|(
+name|diskStructure
+argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
@@ -7565,7 +7813,7 @@ operator|->
 name|fileSectorsUsed
 operator|*
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 name|node
@@ -7583,7 +7831,7 @@ operator|->
 name|fileSectorsUsed
 operator|*
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 expr_stmt|;
 for|for
@@ -7630,6 +7878,8 @@ name|r
 operator|=
 name|cd9660_compute_offsets
 argument_list|(
+name|diskStructure
+argument_list|,
 name|child
 argument_list|,
 name|used_bytes
@@ -7658,6 +7908,8 @@ block|}
 comment|/* Explicitly set the . and .. records */
 name|cd9660_populate_dot_records
 argument_list|(
+name|diskStructure
+argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
@@ -7708,6 +7960,8 @@ name|fileRecordSize
 operator|=
 name|cd9660_compute_record_size
 argument_list|(
+name|diskStructure
+argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
@@ -7718,7 +7972,7 @@ operator|=
 name|CD9660_BLOCKS
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 name|child
@@ -7754,7 +8008,7 @@ operator|=
 name|CD9660_BLOCKS
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 name|used_bytes
@@ -7775,7 +8029,7 @@ operator|->
 name|fileSectorsUsed
 operator|*
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 expr_stmt|;
 block|}
@@ -7862,6 +8116,10 @@ name|cd9660node
 modifier|*
 name|cd9660_create_virtual_entry
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -8003,6 +8261,8 @@ argument_list|)
 expr_stmt|;
 name|cd9660_convert_filename
 argument_list|(
+name|diskStructure
+argument_list|,
 name|tfsnode
 operator|->
 name|name
@@ -8168,6 +8428,10 @@ name|cd9660node
 modifier|*
 name|cd9660_create_file
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -8190,6 +8454,8 @@ name|temp
 operator|=
 name|cd9660_create_virtual_entry
 argument_list|(
+name|diskStructure
+argument_list|,
 name|name
 argument_list|,
 name|parent
@@ -8265,6 +8531,8 @@ if|if
 condition|(
 name|cd9660_translate_node_common
 argument_list|(
+name|diskStructure
+argument_list|,
 name|temp
 argument_list|)
 operator|==
@@ -8289,6 +8557,10 @@ name|cd9660node
 modifier|*
 name|cd9660_create_directory
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -8311,6 +8583,8 @@ name|temp
 operator|=
 name|cd9660_create_virtual_entry
 argument_list|(
+name|diskStructure
+argument_list|,
 name|name
 argument_list|,
 name|parent
@@ -8388,6 +8662,8 @@ if|if
 condition|(
 name|cd9660_translate_node_common
 argument_list|(
+name|diskStructure
+argument_list|,
 name|temp
 argument_list|)
 operator|==
@@ -8408,6 +8684,10 @@ name|cd9660node
 modifier|*
 name|cd9660_create_special_directory
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|u_char
 name|type
 parameter_list|,
@@ -8481,6 +8761,8 @@ name|temp
 operator|=
 name|cd9660_create_virtual_entry
 argument_list|(
+name|diskStructure
+argument_list|,
 name|na
 argument_list|,
 name|parent
@@ -8630,6 +8912,10 @@ begin_function
 name|int
 name|cd9660_add_generic_bootimage
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -8668,7 +8954,7 @@ if|if
 condition|(
 operator|(
 name|diskStructure
-operator|.
+operator|->
 name|generic_bootimage
 operator|=
 name|strdup
@@ -8697,7 +8983,7 @@ condition|(
 name|lstat
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|generic_bootimage
 argument_list|,
 operator|&
@@ -8716,7 +9002,7 @@ argument_list|,
 name|__func__
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|generic_bootimage
 argument_list|)
 expr_stmt|;
@@ -8741,7 +9027,7 @@ block|}
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -8762,7 +9048,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|diskStructure
-operator|.
+operator|->
 name|has_generic_bootimage
 operator|=
 literal|1

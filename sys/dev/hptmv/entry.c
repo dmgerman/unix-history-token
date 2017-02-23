@@ -843,7 +843,7 @@ name|IAL_ADAPTER_T
 modifier|*
 name|gIal_Adapter
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -852,7 +852,7 @@ name|IAL_ADAPTER_T
 modifier|*
 name|pCurAdapter
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -6247,7 +6247,7 @@ if|if
 condition|(
 name|gIal_Adapter
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|gIal_Adapter
@@ -11277,22 +11277,6 @@ name|XPT_RESET_DEV
 case|:
 comment|/* Bus Device Reset the specified SCSI device */
 case|case
-name|XPT_EN_LUN
-case|:
-comment|/* Enable LUN as a target */
-case|case
-name|XPT_TARGET_IO
-case|:
-comment|/* Execute target I/O request */
-case|case
-name|XPT_ACCEPT_TARGET_IO
-case|:
-comment|/* Accept Host Target Mode CDB */
-case|case
-name|XPT_CONT_TARGET_IO
-case|:
-comment|/* Continue Host Target I/O Connection*/
-case|case
 name|XPT_ABORT
 case|:
 comment|/* Abort the specified CCB */
@@ -11926,7 +11910,7 @@ while|while
 condition|(
 name|pAdapter
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|mtx_lock

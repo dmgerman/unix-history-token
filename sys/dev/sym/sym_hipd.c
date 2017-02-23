@@ -15244,7 +15244,7 @@ literal|0
 expr_stmt|;
 name|script_base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|script_name
 operator|=
@@ -17089,7 +17089,7 @@ expr_stmt|;
 comment|/* 	 *  try to find the interrupted script command, 	 *  and the address at which to continue. 	 */
 name|vdsp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|nxtdsp
 operator|=
@@ -25876,7 +25876,7 @@ name|lp
 operator|->
 name|itlq_tbl
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return;
 block|}
@@ -31386,21 +31386,6 @@ name|CAM_REQ_CMP
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|XPT_ACCEPT_TARGET_IO
-case|:
-case|case
-name|XPT_CONT_TARGET_IO
-case|:
-case|case
-name|XPT_EN_LUN
-case|:
-case|case
-name|XPT_NOTIFY_ACK
-case|:
-case|case
-name|XPT_IMMED_NOTIFY
-case|:
 case|case
 name|XPT_TERM_IO
 case|:

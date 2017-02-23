@@ -2709,7 +2709,7 @@ name|char
 modifier|*
 name|buf
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|port_t
 name|cnt_port

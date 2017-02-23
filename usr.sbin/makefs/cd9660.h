@@ -1078,17 +1078,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/******** GLOBAL VARIABLES ***********/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|iso9660_disk
-name|diskStructure
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/************ FUNCTIONS **************/
 end_comment
 
@@ -1266,6 +1255,9 @@ begin_function_decl
 name|int
 name|cd9660_add_generic_bootimage
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1277,6 +1269,9 @@ begin_function_decl
 name|int
 name|cd9660_write_boot
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|FILE
 modifier|*
 parameter_list|)
@@ -1287,6 +1282,9 @@ begin_function_decl
 name|int
 name|cd9660_add_boot_disk
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1298,6 +1296,9 @@ begin_function_decl
 name|int
 name|cd9660_eltorito_add_boot_option
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1313,6 +1314,9 @@ begin_function_decl
 name|int
 name|cd9660_setup_boot
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -1322,6 +1326,9 @@ begin_function_decl
 name|int
 name|cd9660_setup_boot_volume_descriptor
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|volume_descriptor
 modifier|*
 parameter_list|)
@@ -1336,6 +1343,9 @@ begin_function_decl
 name|int
 name|cd9660_write_image
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1348,6 +1358,9 @@ begin_function_decl
 name|int
 name|cd9660_copy_file
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|FILE
 modifier|*
 parameter_list|,
@@ -1377,6 +1390,9 @@ begin_function_decl
 name|int
 name|cd9660_compute_record_size
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -1391,6 +1407,9 @@ begin_function_decl
 name|void
 name|debug_print_tree
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|,
@@ -1413,7 +1432,8 @@ begin_function_decl
 name|void
 name|debug_print_volume_descriptor_information
 parameter_list|(
-name|void
+name|iso9660_disk
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

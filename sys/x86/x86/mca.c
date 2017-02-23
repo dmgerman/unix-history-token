@@ -203,7 +203,7 @@ block|{
 name|int
 name|max_threshold
 decl_stmt|;
-name|int
+name|time_t
 name|last_intr
 decl_stmt|;
 block|}

@@ -13907,7 +13907,7 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

@@ -2472,7 +2472,7 @@ expr_stmt|;
 block|}
 name|sptr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|snprintf
 argument_list|(
@@ -2518,7 +2518,7 @@ literal|0
 operator|&&
 name|sptr
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2739,7 +2739,7 @@ block|}
 comment|/* 	 * Because the resource_*_value functions can neither return 	 * 64 bit integer values, nor can they be directly coerced 	 * to interpret the right hand side of the assignment as 	 * you want them to interpret it, we have to force WWN 	 * hint replacement to specify WWN strings with a leading 	 * 'w' (e..g w50000000aaaa0001). Sigh. 	 */
 name|sptr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|snprintf
 argument_list|(
@@ -2789,7 +2789,7 @@ literal|0
 operator|&&
 name|sptr
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|*
 name|sptr
@@ -2802,7 +2802,7 @@ name|char
 modifier|*
 name|eptr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|ISP_FC_PC
 argument_list|(
@@ -2868,7 +2868,7 @@ block|}
 block|}
 name|sptr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|snprintf
 argument_list|(
@@ -2918,7 +2918,7 @@ literal|0
 operator|&&
 name|sptr
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|*
 name|sptr
@@ -2931,7 +2931,7 @@ name|char
 modifier|*
 name|eptr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|ISP_FC_PC
 argument_list|(

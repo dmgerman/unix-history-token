@@ -13357,14 +13357,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pte_vatopa
-argument_list|(
-name|mmu
-argument_list|,
-name|kernel_pmap
-argument_list|,
-name|va
-argument_list|)
+literal|0
 operator|)
 return|;
 block|}

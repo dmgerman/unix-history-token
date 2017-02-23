@@ -66,6 +66,9 @@ decl_stmt|;
 name|int
 name|synopsisonly
 decl_stmt|;
+name|int
+name|noval
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -108,7 +111,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|manconf_output
 parameter_list|(
 name|struct
@@ -118,6 +121,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

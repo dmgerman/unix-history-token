@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pam_putenv.c 648 2013-03-05 17:54:27Z des $  */
+comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pam_putenv.c 914 2017-01-21 15:15:29Z des $  */
 end_comment
 
 begin_ifdef
@@ -19,6 +19,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_include
 include|#
@@ -70,30 +76,18 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+name|size_t
+name|env_size
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 name|ENTER
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|pamh
-operator|==
-name|NULL
-condition|)
-name|RETURNC
-argument_list|(
-name|PAM_SYSTEM_ERR
-argument_list|)
-expr_stmt|;
 comment|/* sanity checks */
 if|if
 condition|(
-name|namevalue
-operator|==
-name|NULL
-operator|||
 operator|(
 name|p
 operator|=
@@ -107,11 +101,17 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 name|RETURNC
 argument_list|(
 name|PAM_SYSTEM_ERR
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* see if the variable is already in the environment */
 if|if
 condition|(
@@ -188,6 +188,16 @@ operator|->
 name|env_size
 condition|)
 block|{
+name|env_size
+operator|=
+name|pamh
+operator|->
+name|env_size
+operator|*
+literal|2
+operator|+
+literal|1
+expr_stmt|;
 name|env
 operator|=
 name|realloc
@@ -202,15 +212,7 @@ name|char
 operator|*
 argument_list|)
 operator|*
-operator|(
-name|pamh
-operator|->
 name|env_size
-operator|*
-literal|2
-operator|+
-literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -234,13 +236,7 @@ name|pamh
 operator|->
 name|env_size
 operator|=
-name|pamh
-operator|->
 name|env_size
-operator|*
-literal|2
-operator|+
-literal|1
 expr_stmt|;
 block|}
 comment|/* add the variable at the end */

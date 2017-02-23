@@ -1082,6 +1082,11 @@ name|int
 name|td_oncpu
 decl_stmt|;
 comment|/* (t) Which cpu we are on. */
+name|void
+modifier|*
+name|td_lkpi_task
+decl_stmt|;
+comment|/* LinuxKPI task struct pointer */
 block|}
 struct|;
 end_struct

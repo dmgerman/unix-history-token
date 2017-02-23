@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: read.c,v 1.157 2017/01/09 01:37:03 schwarze Exp $ */
+comment|/*	$Id: read.c,v 1.161 2017/02/18 17:29:28 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -76,12 +76,6 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
 end_include
 
 begin_include
@@ -168,17 +162,17 @@ struct|struct
 name|mparse
 block|{
 name|struct
-name|roff_man
-modifier|*
-name|man
-decl_stmt|;
-comment|/* man parser */
-name|struct
 name|roff
 modifier|*
 name|roff
 decl_stmt|;
 comment|/* roff parser (!NULL) */
+name|struct
+name|roff_man
+modifier|*
+name|man
+decl_stmt|;
+comment|/* man parser */
 name|char
 modifier|*
 name|sodest
@@ -550,6 +544,8 @@ block|,
 literal|"tab in filled text"
 block|,
 literal|"whitespace at end of input line"
+block|,
+literal|"new sentence, new line"
 block|,
 literal|"bad comment style"
 block|,
@@ -2330,6 +2326,10 @@ modifier|*
 name|with_mmap
 parameter_list|)
 block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
 name|gzFile
 name|gz
 decl_stmt|;
@@ -2338,10 +2338,6 @@ name|off
 decl_stmt|;
 name|ssize_t
 name|ssz
-decl_stmt|;
-name|struct
-name|stat
-name|st
 decl_stmt|;
 if|if
 condition|(
@@ -3464,6 +3460,19 @@ operator|->
 name|man
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|curp
+operator|->
+name|sodest
+argument_list|)
+expr_stmt|;
+name|curp
+operator|->
+name|sodest
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|curp
@@ -3484,18 +3493,11 @@ name|file_status
 operator|=
 name|MANDOCLEVEL_OK
 expr_stmt|;
-name|free
-argument_list|(
 name|curp
 operator|->
-name|sodest
-argument_list|)
-expr_stmt|;
-name|curp
-operator|->
-name|sodest
+name|gzip
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -3517,12 +3519,6 @@ operator|->
 name|man
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|curp
-operator|->
-name|roff
-condition|)
 name|roff_free
 argument_list|(
 name|curp

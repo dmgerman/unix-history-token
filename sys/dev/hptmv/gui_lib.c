@@ -287,7 +287,7 @@ while|while
 condition|(
 name|pAdapter
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 for|for
@@ -338,7 +338,7 @@ while|while
 condition|(
 name|pAdapter
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|_vbus_p
@@ -2182,7 +2182,7 @@ while|while
 condition|(
 name|pAdapTemp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|iControllerCount
@@ -2374,7 +2374,7 @@ while|while
 condition|(
 name|pAdapTemp
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if

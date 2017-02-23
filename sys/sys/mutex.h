@@ -383,9 +383,6 @@ name|v
 parameter_list|,
 name|uintptr_t
 name|tid
-parameter_list|,
-name|int
-name|opts
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -398,9 +395,6 @@ specifier|volatile
 name|uintptr_t
 modifier|*
 name|c
-parameter_list|,
-name|int
-name|opts
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -780,7 +774,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__mtx_lock_sleep(&(m)->mtx_lock, v, t, o)
+value|__mtx_lock_sleep(&(m)->mtx_lock, v, t)
 end_define
 
 begin_define
@@ -797,7 +791,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__mtx_unlock_sleep(&(m)->mtx_lock, o)
+value|__mtx_unlock_sleep(&(m)->mtx_lock)
 end_define
 
 begin_endif
@@ -1084,7 +1078,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = MTX_UNOWNED;					\ 									\ 	spinlock_enter();						\ 	if (!_mtx_obtain_lock_fetch((mp),&_v, _tid)) {			\ 		if (_v == _tid)						\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _v, _tid, (opts), (file), (line));\ 	} else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(spin__acquire,	\ 		    mp, 0, 0, file, line);				\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	uintptr_t _v = MTX_UNOWNED;					\ 									\ 	spinlock_enter();						\ 	if (!_mtx_obtain_lock_fetch((mp),&_v, _tid)) 			\ 		_mtx_lock_spin((mp), _v, _tid, (opts), (file), (line)); \ 	else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(spin__acquire,	\ 		    mp, 0, 0, file, line);				\ } while (0)
 end_define
 
 begin_define

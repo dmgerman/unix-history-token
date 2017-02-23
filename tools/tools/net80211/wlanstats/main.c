@@ -243,7 +243,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"wlanstats: [-ah] [-i ifname] [-l] [-o fmt] [interval]\n"
+literal|"wlanstats: [-ah] [-i ifname] [-l] [-m station MAC address] [-o fmt] [interval]\n"
 argument_list|)
 expr_stmt|;
 block|}

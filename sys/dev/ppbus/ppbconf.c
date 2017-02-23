@@ -698,7 +698,7 @@ decl_stmt|,
 modifier|*
 name|class
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|i
