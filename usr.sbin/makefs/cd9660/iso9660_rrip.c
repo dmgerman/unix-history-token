@@ -77,6 +77,9 @@ specifier|static
 name|int
 name|cd9660_susp_handle_continuation
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -88,6 +91,9 @@ specifier|static
 name|int
 name|cd9660_susp_handle_continuation_common
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|,
@@ -100,6 +106,10 @@ begin_function
 name|int
 name|cd9660_susp_initialize
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -206,6 +216,8 @@ name|r
 operator|=
 name|cd9660_susp_initialize_node
 argument_list|(
+name|diskStructure
+argument_list|,
 name|node
 argument_list|)
 operator|)
@@ -220,6 +232,8 @@ name|r
 operator|=
 name|cd9660_rrip_initialize_node
 argument_list|(
+name|diskStructure
+argument_list|,
 name|node
 argument_list|,
 name|parent
@@ -244,6 +258,8 @@ name|r
 operator|=
 name|cd9660_susp_handle_continuation
 argument_list|(
+name|diskStructure
+argument_list|,
 name|node
 argument_list|)
 operator|)
@@ -270,6 +286,8 @@ name|r
 operator|=
 name|cd9660_susp_initialize
 argument_list|(
+name|diskStructure
+argument_list|,
 name|cn
 argument_list|,
 name|node
@@ -294,6 +312,10 @@ begin_function
 name|int
 name|cd9660_susp_finalize
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -318,11 +340,11 @@ condition|(
 name|node
 operator|==
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 condition|)
 name|diskStructure
-operator|.
+operator|->
 name|susp_continuation_area_current_free
 operator|=
 literal|0
@@ -334,6 +356,8 @@ name|r
 operator|=
 name|cd9660_susp_finalize_node
 argument_list|(
+name|diskStructure
+argument_list|,
 name|node
 argument_list|)
 operator|)
@@ -375,6 +399,8 @@ name|r
 operator|=
 name|cd9660_susp_finalize
 argument_list|(
+name|diskStructure
+argument_list|,
 name|temp
 argument_list|)
 operator|)
@@ -403,6 +429,10 @@ begin_function
 name|int
 name|cd9660_susp_finalize_node
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -428,11 +458,11 @@ operator|->
 name|susp_entry_ce_start
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|susp_continuation_area_current_free
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|susp_continuation_area_current_free
 operator|+=
 name|node
@@ -467,7 +497,7 @@ continue|continue;
 name|cd9660_bothendian_dword
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|susp_continuation_area_start_sector
 argument_list|,
 name|t
@@ -484,7 +514,7 @@ expr_stmt|;
 name|cd9660_bothendian_dword
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|susp_continuation_area_start_sector
 argument_list|,
 name|t
@@ -683,6 +713,10 @@ specifier|static
 name|int
 name|cd9660_susp_handle_continuation_common
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -1022,7 +1056,7 @@ operator|=
 name|ca_used
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|susp_continuation_area_size
 operator|+=
 name|ca_used
@@ -1042,6 +1076,10 @@ specifier|static
 name|int
 name|cd9660_susp_handle_continuation
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -1059,6 +1097,8 @@ if|if
 condition|(
 name|cd9660_susp_handle_continuation_common
 argument_list|(
+name|diskStructure
+argument_list|,
 name|node
 argument_list|,
 call|(
@@ -1091,6 +1131,10 @@ begin_function
 name|int
 name|cd9660_susp_initialize_node
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -1119,7 +1163,7 @@ operator|->
 name|parent
 operator|==
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 condition|)
 block|{
@@ -1394,6 +1438,10 @@ begin_function
 name|int
 name|cd9660_rrip_initialize_node
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|cd9660node
 modifier|*
 name|node
@@ -1438,7 +1486,7 @@ operator|->
 name|parent
 operator|==
 name|diskStructure
-operator|.
+operator|->
 name|rootNode
 condition|)
 block|{
@@ -1642,7 +1690,7 @@ condition|(
 name|node
 operator|==
 name|diskStructure
-operator|.
+operator|->
 name|rr_moved_dir
 condition|)
 block|{

@@ -917,6 +917,9 @@ begin_function_decl
 name|int
 name|cd9660_susp_finalize
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -931,6 +934,9 @@ begin_function_decl
 name|int
 name|cd9660_susp_finalize_node
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -1219,6 +1225,9 @@ begin_function_decl
 name|int
 name|cd9660_susp_initialize
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|,
@@ -1235,6 +1244,9 @@ begin_function_decl
 name|int
 name|cd9660_susp_initialize_node
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|)
@@ -1290,6 +1302,9 @@ begin_function_decl
 name|int
 name|cd9660_rrip_initialize_node
 parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
 name|cd9660node
 modifier|*
 parameter_list|,

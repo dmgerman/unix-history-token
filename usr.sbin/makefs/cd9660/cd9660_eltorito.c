@@ -146,6 +146,10 @@ begin_function
 name|int
 name|cd9660_add_boot_disk
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -276,7 +280,7 @@ expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -576,7 +580,7 @@ block|}
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -607,14 +611,14 @@ operator|->
 name|size
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|)
 operator|*
 name|howmany
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 literal|512
@@ -623,7 +627,7 @@ expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -663,7 +667,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|tmp_image
 argument_list|,
-argument|&diskStructure.boot_images
+argument|&diskStructure->boot_images
 argument_list|,
 argument|image_list
 argument_list|)
@@ -691,7 +695,7 @@ name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|boot_images
 argument_list|,
 name|new_image
@@ -715,13 +719,13 @@ operator|->
 name|serialno
 operator|=
 name|diskStructure
-operator|.
+operator|->
 name|image_serialno
 operator|++
 expr_stmt|;
 comment|/* TODO : Need to do anything about the boot image in the tree? */
 name|diskStructure
-operator|.
+operator|->
 name|is_bootable
 operator|=
 literal|1
@@ -736,6 +740,10 @@ begin_function
 name|int
 name|cd9660_eltorito_add_boot_option
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -768,7 +776,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|image
 argument_list|,
-argument|&diskStructure.boot_images
+argument|&diskStructure->boot_images
 argument_list|,
 argument|image_list
 argument_list|)
@@ -782,7 +790,7 @@ operator|+
 literal|1
 operator|==
 name|diskStructure
-operator|.
+operator|->
 name|image_serialno
 condition|)
 break|break;
@@ -1571,6 +1579,10 @@ begin_function
 name|int
 name|cd9660_setup_boot
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|int
 name|first_sector
 parameter_list|)
@@ -1643,7 +1655,7 @@ name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|boot_images
 argument_list|)
 condition|)
@@ -1661,7 +1673,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|boot_catalog_sector
 operator|=
 name|first_sector
@@ -1671,7 +1683,7 @@ argument_list|(
 name|first_sector
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|boot_descriptor
 operator|->
 name|boot_catalog_pointer
@@ -1709,7 +1721,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|tmp_disk
 argument_list|,
-argument|&diskStructure.boot_images
+argument|&diskStructure->boot_images
 argument_list|,
 argument|image_list
 argument_list|)
@@ -1734,7 +1746,7 @@ operator|*
 literal|0x20
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|)
 expr_stmt|;
@@ -1745,7 +1757,7 @@ expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -1777,7 +1789,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|tmp_disk
 argument_list|,
-argument|&diskStructure.boot_images
+argument|&diskStructure->boot_images
 argument_list|,
 argument|image_list
 argument_list|)
@@ -1799,7 +1811,7 @@ name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|boot_entries
 argument_list|,
 name|valid_entry
@@ -1815,7 +1827,7 @@ name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|diskStructure
-operator|.
+operator|->
 name|boot_images
 argument_list|)
 expr_stmt|;
@@ -2074,6 +2086,10 @@ begin_function
 name|int
 name|cd9660_setup_boot_volume_descriptor
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|volume_descriptor
 modifier|*
 name|bvd
@@ -2143,7 +2159,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 name|diskStructure
-operator|.
+operator|->
 name|boot_descriptor
 operator|=
 operator|(
@@ -2743,6 +2759,10 @@ begin_function
 name|int
 name|cd9660_write_boot
 parameter_list|(
+name|iso9660_disk
+modifier|*
+name|diskStructure
+parameter_list|,
 name|FILE
 modifier|*
 name|fd
@@ -2779,11 +2799,11 @@ operator|(
 name|off_t
 operator|)
 name|diskStructure
-operator|.
+operator|->
 name|boot_catalog_sector
 operator|*
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 argument_list|,
 name|SEEK_SET
@@ -2802,7 +2822,7 @@ expr_stmt|;
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2815,7 +2835,7 @@ name|PRId64
 literal|"\n"
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|boot_catalog_sector
 argument_list|)
 expr_stmt|;
@@ -2824,7 +2844,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|e
 argument_list|,
-argument|&diskStructure.boot_entries
+argument|&diskStructure->boot_entries
 argument_list|,
 argument|ll_struct
 argument_list|)
@@ -2832,7 +2852,7 @@ block|{
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2871,7 +2891,7 @@ block|}
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2886,7 +2906,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|t
 argument_list|,
-argument|&diskStructure.boot_images
+argument|&diskStructure->boot_images
 argument_list|,
 argument|image_list
 argument_list|)
@@ -2894,7 +2914,7 @@ block|{
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|verbose_level
 operator|>
 literal|0
@@ -2916,6 +2936,8 @@ expr_stmt|;
 block|}
 name|cd9660_copy_file
 argument_list|(
+name|diskStructure
+argument_list|,
 name|fd
 argument_list|,
 name|t
@@ -2958,7 +2980,7 @@ operator|>
 literal|0
 operator|||
 name|diskStructure
-operator|.
+operator|->
 name|chrp_boot
 condition|)
 block|{
@@ -3004,7 +3026,7 @@ comment|/* Write ISO9660 descriptor, enclosing the whole disk */
 if|if
 condition|(
 name|diskStructure
-operator|.
+operator|->
 name|chrp_boot
 condition|)
 name|cd9660_write_mbr_partition_entry
@@ -3017,12 +3039,12 @@ argument_list|,
 literal|0
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|totalSectors
 operator|*
 operator|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 operator|/
 literal|512
@@ -3036,7 +3058,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|t
 argument_list|,
-argument|&diskStructure.boot_images
+argument|&diskStructure->boot_images
 argument_list|,
 argument|image_list
 argument_list|)
@@ -3063,7 +3085,7 @@ name|sector
 operator|*
 operator|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 operator|/
 literal|512
@@ -3075,7 +3097,7 @@ name|num_sectors
 operator|*
 operator|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 operator|/
 literal|512
@@ -3164,12 +3186,12 @@ operator|=
 name|htobe32
 argument_list|(
 name|diskStructure
-operator|.
+operator|->
 name|totalSectors
 operator|*
 operator|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 operator|/
 literal|512
@@ -3266,7 +3288,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|t
 argument_list|,
-argument|&diskStructure.boot_images
+argument|&diskStructure->boot_images
 argument_list|,
 argument|image_list
 argument_list|)
@@ -3297,7 +3319,7 @@ name|sector
 operator|*
 operator|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 operator|/
 literal|512
@@ -3309,7 +3331,7 @@ name|num_sectors
 operator|*
 operator|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 operator|/
 literal|512
@@ -3337,12 +3359,12 @@ argument_list|,
 literal|0
 argument_list|,
 name|diskStructure
-operator|.
+operator|->
 name|totalSectors
 operator|*
 operator|(
 name|diskStructure
-operator|.
+operator|->
 name|sectorSize
 operator|/
 literal|512
