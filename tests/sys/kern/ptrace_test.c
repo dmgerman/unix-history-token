@@ -9546,6 +9546,29 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * XXX: There's nothing inherently platform specific about this test, however a  * userspace visible breakpoint() is a prerequisite.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
+
+begin_comment
 comment|/*  * Verify that no more events are reported after PT_KILL except for the  * process exit when stopped due to a breakpoint trap.  */
 end_comment
 
@@ -9784,6 +9807,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__amd64__) || defined(__i386__) || defined(__sparc64__) */
+end_comment
 
 begin_comment
 comment|/*  * Verify that no more events are reported after PT_KILL except for the  * process exit when stopped inside of a system call.  */
@@ -15554,6 +15586,22 @@ argument_list|,
 name|ptrace__ptrace_vfork_follow
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -15561,6 +15609,8 @@ argument_list|,
 name|ptrace__PT_KILL_breakpoint
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
