@@ -574,6 +574,26 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* linux 2.6.30: */
+end_comment
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|preadv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|pwritev
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* linux 2.6.31: */
 end_comment
 
