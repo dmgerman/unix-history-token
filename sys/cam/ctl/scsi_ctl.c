@@ -4644,6 +4644,11 @@ name|ctlfe_lun_softc
 modifier|*
 name|softc
 decl_stmt|;
+name|struct
+name|mtx
+modifier|*
+name|mtx
+decl_stmt|;
 if|if
 condition|(
 name|periph
@@ -4653,6 +4658,13 @@ operator|&
 name|CAM_PERIPH_INVALID
 condition|)
 block|{
+name|mtx
+operator|=
+name|cam_periph_mtx
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 name|ctlfe_free_ccb
 argument_list|(
 name|periph
@@ -4664,9 +4676,9 @@ if|if
 condition|(
 name|unlock
 condition|)
-name|cam_periph_unlock
+name|mtx_unlock
 argument_list|(
-name|periph
+name|mtx
 argument_list|)
 expr_stmt|;
 return|return;
