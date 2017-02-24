@@ -1715,7 +1715,7 @@ name|transform
 condition|)
 name|count
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|vd
 operator|->
