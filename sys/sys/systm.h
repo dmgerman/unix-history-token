@@ -2460,13 +2460,6 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|int
-name|cpu_deepest_sleep
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|cpu_disable_c2_sleep
 decl_stmt|;
 end_decl_stmt

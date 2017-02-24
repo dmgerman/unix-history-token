@@ -2282,10 +2282,6 @@ block|}
 comment|/* 	 * Intel CPUs without a C-state invariant TSC can stop the TSC 	 * in either C2 or C3.  Disable use of C2 and C3 while using 	 * the TSC as the timecounter.  The timecounter can be changed 	 * to enable C2 and C3. 	 * 	 * Note that the TSC is used as the cputicker for computing 	 * thread runtime regardless of the timecounter setting, so 	 * using an alternate timecounter and enabling C2 or C3 can 	 * result incorrect runtimes for kernel idle threads (but not 	 * for any non-idle threads). 	 */
 if|if
 condition|(
-name|cpu_deepest_sleep
-operator|>=
-literal|2
-operator|&&
 name|cpu_vendor_id
 operator|==
 name|CPU_VENDOR_INTEL
