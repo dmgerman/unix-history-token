@@ -2637,7 +2637,10 @@ literal|1
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|KDTRACE_HOOKS
+argument_list|)
 name|doing_lockprof
 operator|=
 name|lockstat_enabled
@@ -3473,7 +3476,10 @@ literal|1
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|KDTRACE_HOOKS
+argument_list|)
 name|doing_lockprof
 operator|=
 name|lockstat_enabled
@@ -3841,7 +3847,10 @@ literal|1
 expr_stmt|;
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|KDTRACE_HOOKS
+argument_list|)
 name|doing_lockprof
 operator|=
 name|lockstat_enabled
