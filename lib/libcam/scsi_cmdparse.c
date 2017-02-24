@@ -1730,7 +1730,9 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 operator|*
@@ -2255,11 +2257,15 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|encoded
+operator|)
 return|;
 block|}
 end_function
