@@ -49,6 +49,16 @@ parameter_list|)
 value|(1UL<< (nr))
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIT_ULL
+parameter_list|(
+name|nr
+parameter_list|)
+value|(1ULL<< (nr))
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
