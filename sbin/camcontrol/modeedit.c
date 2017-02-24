@@ -524,6 +524,9 @@ name|int
 name|subpage
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retries
 parameter_list|,
 name|int
@@ -553,6 +556,9 @@ name|page
 parameter_list|,
 name|int
 name|subpage
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retries
@@ -674,6 +680,9 @@ name|page
 parameter_list|,
 name|int
 name|subpage
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retries
@@ -2416,6 +2425,9 @@ name|int
 name|subpage
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retries
 parameter_list|,
 name|int
@@ -2471,6 +2483,8 @@ argument_list|,
 name|page
 argument_list|,
 name|subpage
+argument_list|,
+name|task_attr
 argument_list|,
 name|retries
 argument_list|,
@@ -2610,6 +2624,8 @@ name|page
 argument_list|,
 name|subpage
 argument_list|,
+name|task_attr
+argument_list|,
 name|retries
 argument_list|,
 name|timeout
@@ -2659,6 +2675,9 @@ name|page
 parameter_list|,
 name|int
 name|subpage
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retries
@@ -2719,6 +2738,8 @@ argument_list|,
 name|page
 argument_list|,
 name|subpage
+argument_list|,
+name|task_attr
 argument_list|,
 name|retries
 argument_list|,
@@ -2925,6 +2946,8 @@ name|PAGE_CTRL_SHIFT
 operator|==
 name|SMS_PAGE_CTRL_SAVED
 operator|)
+argument_list|,
+name|task_attr
 argument_list|,
 name|retries
 argument_list|,
@@ -3679,6 +3702,9 @@ name|int
 name|subpage
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retries
 parameter_list|,
 name|int
@@ -3729,6 +3755,8 @@ argument_list|,
 name|page
 argument_list|,
 name|subpage
+argument_list|,
+name|task_attr
 argument_list|,
 name|retries
 argument_list|,
@@ -3966,6 +3994,9 @@ name|int
 name|binary
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -4108,6 +4139,8 @@ name|page
 argument_list|,
 name|subpage
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -4156,6 +4189,8 @@ name|page
 argument_list|,
 name|subpage
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -4186,6 +4221,8 @@ argument_list|,
 name|page
 argument_list|,
 name|subpage
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -4224,6 +4261,9 @@ name|pc
 parameter_list|,
 name|int
 name|subpages
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -4334,6 +4374,8 @@ condition|?
 name|SMS_SUBPAGE_ALL
 else|:
 literal|0
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
