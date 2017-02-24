@@ -128,24 +128,6 @@ directive|error
 literal|"Please redefine MAX_PARTITIONS_PER_DISK!!!"
 endif|#
 directive|endif
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)>(b))?(a):(b))
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)<(b))?(a):(b))
 typedef|typedef
 name|char
 name|check_HPT_TIME_is_unsigned
