@@ -366,7 +366,7 @@ if|if
 condition|(
 operator|*
 name|fmt
-operator|==
+operator|!=
 literal|'\0'
 condition|)
 name|fmt
