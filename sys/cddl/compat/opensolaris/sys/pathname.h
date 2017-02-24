@@ -33,54 +33,6 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|pathname
-block|{
-name|char
-modifier|*
-name|pn_buf
-decl_stmt|;
-comment|/* underlying storage */
-name|char
-modifier|*
-name|pn_path
-decl_stmt|;
-comment|/* remaining pathname */
-name|size_t
-name|pn_pathlen
-decl_stmt|;
-comment|/* remaining length */
-name|size_t
-name|pn_bufsize
-decl_stmt|;
-comment|/* total size of pn_buf */
-block|}
-name|pathname_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|pn_alloc
-parameter_list|(
-name|pnp
-parameter_list|)
-value|panic("pn_alloc() called")
-end_define
-
-begin_define
-define|#
-directive|define
-name|pn_free
-parameter_list|(
-name|pnp
-parameter_list|)
-value|panic("pn_free() called")
-end_define
-
 begin_function_decl
 name|int
 name|lookupname
@@ -128,19 +80,6 @@ modifier|*
 parameter_list|,
 name|vnode_t
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|traverse
-parameter_list|(
-name|vnode_t
-modifier|*
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
