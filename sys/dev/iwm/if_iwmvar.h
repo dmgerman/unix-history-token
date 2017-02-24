@@ -403,6 +403,25 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * struct iwm_fw_paging  * @fw_paging_block: dma memory info  * @fw_paging_size: page size  */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_fw_paging
+block|{
+name|struct
+name|iwm_dma_info
+name|fw_paging_block
+decl_stmt|;
+name|uint32_t
+name|fw_paging_size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1199,6 +1218,20 @@ name|umac_error_event_table
 decl_stmt|;
 name|int
 name|support_umac_log
+decl_stmt|;
+comment|/* 	 * Paging parameters - All of the parameters should be set by the 	 * opmode when paging is enabled 	 */
+name|struct
+name|iwm_fw_paging
+name|fw_paging_db
+index|[
+name|IWM_NUM_OF_FW_PAGING_BLOCKS
+index|]
+decl_stmt|;
+name|uint16_t
+name|num_of_paging_blk
+decl_stmt|;
+name|uint16_t
+name|num_of_pages_in_last_blk
 decl_stmt|;
 block|}
 struct|;

@@ -341,6 +341,12 @@ directive|include
 file|<dev/iwm/if_iwm_led.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/iwm/if_iwm_fw.h>
+end_include
+
 begin_decl_stmt
 specifier|const
 name|uint8_t
@@ -13641,18 +13647,69 @@ operator|->
 name|paging_mem_size
 condition|)
 block|{
-comment|/* XXX implement FW paging */
+name|error
+operator|=
+name|iwm_save_fw_paging
+argument_list|(
+name|sc
+argument_list|,
+name|fw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: XXX FW paging not implemented yet\n"
+literal|"%s: failed to save the FW paging image\n"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+name|error
+return|;
+block|}
+name|error
+operator|=
+name|iwm_send_paging_cmd
+argument_list|(
+name|sc
+argument_list|,
+name|fw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: failed to send the paging cmd\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|iwm_free_fw_paging
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+name|error
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -25858,6 +25915,9 @@ case|case
 name|IWM_LQ_CMD
 case|:
 case|case
+name|IWM_FW_PAGING_BLOCK_CMD
+case|:
+case|case
 name|IWM_BT_CONFIG
 case|:
 case|case
@@ -30225,6 +30285,11 @@ operator|&
 name|sc
 operator|->
 name|fw_dma
+argument_list|)
+expr_stmt|;
+name|iwm_free_fw_paging
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Finished with the hardware - detach things */
