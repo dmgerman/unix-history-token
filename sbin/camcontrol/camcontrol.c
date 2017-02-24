@@ -595,6 +595,47 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|scsi_nv
+name|task_attrs
+index|[]
+init|=
+block|{
+block|{
+literal|"simple"
+block|,
+name|MSG_SIMPLE_Q_TAG
+block|}
+block|,
+block|{
+literal|"head"
+block|,
+name|MSG_HEAD_OF_Q_TAG
+block|}
+block|,
+block|{
+literal|"ordered"
+block|,
+name|MSG_ORDERED_Q_TAG
+block|}
+block|,
+block|{
+literal|"iwr"
+block|,
+name|MSG_IGN_WIDE_RESIDUE
+block|}
+block|,
+block|{
+literal|"aca"
+block|,
+name|MSG_ACA_TASK
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 name|scsicmd_opts
@@ -1343,6 +1384,9 @@ modifier|*
 name|device
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1371,6 +1415,9 @@ name|int
 name|loadeject
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1390,6 +1437,9 @@ modifier|*
 name|device
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1407,6 +1457,9 @@ name|struct
 name|cam_device
 modifier|*
 name|device
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -1536,6 +1589,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1567,6 +1623,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1596,6 +1655,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -1945,6 +2007,9 @@ modifier|*
 name|device
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -1988,6 +2053,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -2017,6 +2085,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -2050,6 +2121,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -2079,6 +2153,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -2255,6 +2332,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -3799,6 +3879,9 @@ modifier|*
 name|device
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -3839,7 +3922,7 @@ comment|/* cbfcnp */
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* sense_len */
 name|SSD_FULL_SIZE
@@ -4030,6 +4113,9 @@ name|int
 name|loadeject
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -4053,7 +4139,25 @@ argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're stopping, send an ordered tag so the drive in question 	 * will finish any previously queued writes before stopping.  If 	 * the device isn't capable of tagged queueing, or if tagged 	 * queueing is turned off, the tag action is a no-op. 	 */
+comment|/* 	 * If we're stopping, send an ordered tag so the drive in question 	 * will finish any previously queued writes before stopping.  If 	 * the device isn't capable of tagged queueing, or if tagged 	 * queueing is turned off, the tag action is a no-op.  We override 	 * the default simple tag, although this also has the effect of 	 * overriding the user's wishes if he wanted to specify a simple 	 * tag. 	 */
+if|if
+condition|(
+operator|(
+name|startstop
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|task_attr
+operator|==
+name|MSG_SIMPLE_Q_TAG
+operator|)
+condition|)
+name|task_attr
+operator|=
+name|MSG_ORDERED_Q_TAG
+expr_stmt|;
 name|scsi_start_stop
 argument_list|(
 operator|&
@@ -4068,11 +4172,7 @@ comment|/* cbfcnp */
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|startstop
-condition|?
-name|MSG_SIMPLE_Q_TAG
-else|:
-name|MSG_ORDERED_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* start/stop */
 name|startstop
@@ -4323,6 +4423,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -4416,6 +4519,8 @@ name|scsiinquiry
 argument_list|(
 name|device
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -4441,6 +4546,8 @@ condition|)
 name|scsiserial
 argument_list|(
 name|device
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -4477,6 +4584,9 @@ name|struct
 name|cam_device
 modifier|*
 name|device
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -4599,7 +4709,7 @@ comment|/* cbfcnp */
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* inq_buf */
 operator|(
@@ -4808,6 +4918,9 @@ modifier|*
 name|device
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -4924,7 +5037,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* inq_buf */
 operator|(
@@ -16725,6 +16838,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -17246,7 +17362,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*list_format*/
 name|list_format
@@ -19066,6 +19182,9 @@ name|int
 name|subpage
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -19129,7 +19248,7 @@ comment|/* cbfcnp */
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* dbd */
 name|dbd
@@ -19294,6 +19413,9 @@ name|int
 name|save_pages
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -19357,7 +19479,7 @@ comment|/* cbfcnp */
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* scsi_page_fmt */
 literal|1
@@ -19518,6 +19640,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -19775,6 +19900,8 @@ name|list
 operator|>
 literal|1
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -19798,6 +19925,8 @@ argument_list|,
 name|edit
 argument_list|,
 name|binary
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -19829,6 +19958,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -20755,7 +20887,7 @@ comment|/*flags*/
 name|flags
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*data_ptr*/
 name|data_ptr
@@ -25358,6 +25490,9 @@ modifier|*
 name|device
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -26915,6 +27050,8 @@ name|testunitready
 argument_list|(
 name|device
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -27045,6 +27182,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -27243,6 +27383,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|combinedopt
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -27499,7 +27641,7 @@ comment|/* cbfcnp */
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* byte2 */
 name|byte2
@@ -27693,7 +27835,7 @@ comment|/* cbfcnp */
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* sense_len */
 name|SSD_FULL_SIZE
@@ -28175,6 +28317,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -28916,6 +29061,8 @@ name|argv
 argument_list|,
 name|combinedopt
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -29127,7 +29274,7 @@ comment|/* cbfcnp */
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* byte2 */
 name|byte2
@@ -29400,7 +29547,7 @@ comment|/* cbfcnp */
 name|NULL
 argument_list|,
 comment|/* tag_action */
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/* sense_len */
 name|SSD_FULL_SIZE
@@ -29906,6 +30053,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -30200,7 +30350,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*select_report*/
 name|report_type
@@ -31023,6 +31173,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -31341,7 +31494,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 operator|&
 name|rcap
@@ -31501,7 +31654,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*lba*/
 literal|0
@@ -37991,6 +38144,9 @@ name|int
 name|timeout_desc
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -38271,7 +38427,7 @@ comment|/*cbfcnp*/
 name|NULL
 argument_list|,
 comment|/*tag_action*/
-name|MSG_SIMPLE_Q_TAG
+name|task_attr
 argument_list|,
 comment|/*options*/
 name|options
@@ -39537,6 +39693,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -39816,6 +39975,8 @@ argument_list|,
 name|service_action
 argument_list|,
 name|td_set
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -40210,6 +40371,7 @@ literal|"-n dev_name       specify device name, e.g. \"da\", \"cd\"\n"
 literal|"-u unit           specify unit number, e.g. \"0\", \"5\"\n"
 literal|"-E                have the kernel attempt to perform SCSI error recovery\n"
 literal|"-C count          specify the SCSI command retry count (needs -E to work)\n"
+literal|"-Q task_attr      specify ordered, simple or head tag type for SCSI cmds\n"
 literal|"modepage arguments:\n"
 literal|"-l                list all available mode pages\n"
 literal|"-m page           specify the mode page to view or edit\n"
@@ -40431,7 +40593,7 @@ name|char
 modifier|*
 name|mainopt
 init|=
-literal|"C:En:t:u:v"
+literal|"C:En:Q:t:u:v"
 decl_stmt|;
 specifier|const
 name|char
@@ -40454,6 +40616,11 @@ decl_stmt|,
 name|optstart
 init|=
 literal|2
+decl_stmt|;
+name|int
+name|task_attr
+init|=
+name|MSG_SIMPLE_Q_TAG
 decl_stmt|;
 name|int
 name|devopen
@@ -40926,6 +41093,161 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'Q'
+case|:
+block|{
+name|char
+modifier|*
+name|endptr
+decl_stmt|;
+name|int
+name|table_entry
+init|=
+literal|0
+decl_stmt|;
+name|tstr
+operator|=
+name|optarg
+expr_stmt|;
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|tstr
+argument_list|)
+operator|&&
+operator|(
+operator|*
+name|tstr
+operator|!=
+literal|'\0'
+operator|)
+condition|)
+name|tstr
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|isdigit
+argument_list|(
+operator|*
+name|tstr
+argument_list|)
+condition|)
+block|{
+name|task_attr
+operator|=
+name|strtol
+argument_list|(
+name|tstr
+argument_list|,
+operator|&
+name|endptr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|endptr
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Invalid queue option "
+literal|"%s"
+argument_list|,
+name|tstr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|size_t
+name|table_size
+decl_stmt|;
+name|scsi_nv_status
+name|status
+decl_stmt|;
+name|table_size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|task_attrs
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|task_attrs
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|scsi_get_nv
+argument_list|(
+name|task_attrs
+argument_list|,
+name|table_size
+argument_list|,
+name|tstr
+argument_list|,
+operator|&
+name|table_entry
+argument_list|,
+name|SCSI_NV_FLAG_IG_CASE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|SCSI_NV_FOUND
+condition|)
+name|task_attr
+operator|=
+name|task_attrs
+index|[
+name|table_entry
+index|]
+operator|.
+name|value
+expr_stmt|;
+else|else
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s option %s"
+argument_list|,
+operator|(
+name|status
+operator|==
+name|SCSI_NV_AMBIGUOUS
+operator|)
+condition|?
+literal|"ambiguous"
+else|:
+literal|"invalid"
+argument_list|,
+name|tstr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+break|break;
+block|}
+case|case
 literal|'t'
 case|:
 name|timeout
@@ -41195,6 +41517,8 @@ name|testunitready
 argument_list|(
 name|cam_dev
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -41217,6 +41541,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|combinedopt
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -41255,6 +41581,8 @@ argument_list|,
 name|arglist
 operator|&
 name|CAM_ARG_EJECT
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -41313,6 +41641,8 @@ name|argv
 argument_list|,
 name|combinedopt
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -41331,6 +41661,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|combinedopt
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -41352,6 +41684,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|combinedopt
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -41505,6 +41839,8 @@ name|ratecontrol
 argument_list|(
 name|cam_dev
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -41532,6 +41868,8 @@ name|argv
 argument_list|,
 name|combinedopt
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -41553,6 +41891,8 @@ name|argv
 argument_list|,
 name|combinedopt
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -41573,6 +41913,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|combinedopt
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -41671,6 +42013,8 @@ name|arglist
 operator|&
 name|CAM_ARG_VERBOSE
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -41692,6 +42036,8 @@ name|argv
 argument_list|,
 name|combinedopt
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -41712,6 +42058,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|combinedopt
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,
@@ -41742,6 +42090,8 @@ name|argv
 argument_list|,
 name|combinedopt
 argument_list|,
+name|task_attr
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
@@ -41770,6 +42120,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|combinedopt
+argument_list|,
+name|task_attr
 argument_list|,
 name|retry_count
 argument_list|,

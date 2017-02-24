@@ -250,6 +250,9 @@ name|int
 name|printerrors
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -280,6 +283,9 @@ name|int
 name|subpage
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -306,6 +312,9 @@ name|device
 parameter_list|,
 name|int
 name|save_pages
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -351,6 +360,9 @@ name|int
 name|binary
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -376,6 +388,9 @@ name|pc
 parameter_list|,
 name|int
 name|subpages
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -406,6 +421,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -442,6 +460,9 @@ name|service_action
 parameter_list|,
 name|int
 name|timeout_desc
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
@@ -486,6 +507,9 @@ modifier|*
 name|combinedopt
 parameter_list|,
 name|int
+name|task_attr
+parameter_list|,
+name|int
 name|retry_count
 parameter_list|,
 name|int
@@ -520,6 +544,9 @@ parameter_list|,
 name|char
 modifier|*
 name|combinedopt
+parameter_list|,
+name|int
+name|task_attr
 parameter_list|,
 name|int
 name|retry_count
