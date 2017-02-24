@@ -98,12 +98,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"opt_npx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_apic.h"
 end_include
 

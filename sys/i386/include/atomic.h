@@ -412,94 +412,8 @@ begin_comment
 comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == expect) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_DISABLE_CMPXCHG
-end_ifdef
-
 begin_function
 specifier|static
-name|__inline
-name|int
-name|atomic_cmpset_int
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-name|dst
-parameter_list|,
-name|u_int
-name|expect
-parameter_list|,
-name|u_int
-name|src
-parameter_list|)
-block|{
-name|u_char
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"	pushfl ;		"
-literal|"	cli ;			"
-literal|"	cmpl	%3,%1 ;		"
-literal|"	jne	1f ;		"
-literal|"	movl	%2,%1 ;		"
-literal|"1:				"
-literal|"       sete	%0 ;		"
-literal|"	popfl ;			"
-literal|"# atomic_cmpset_int"
-operator|:
-literal|"=q"
-operator|(
-name|res
-operator|)
-operator|,
-comment|/* 0 */
-literal|"+m"
-operator|(
-operator|*
-name|dst
-operator|)
-comment|/* 1 */
-operator|:
-literal|"r"
-operator|(
-name|src
-operator|)
-operator|,
-comment|/* 2 */
-literal|"r"
-operator|(
-name|expect
-operator|)
-comment|/* 3 */
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
-
-begin_else
-unit|}
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !CPU_DISABLE_CMPXCHG */
-end_comment
-
-begin_function
-unit|static
 name|__inline
 name|int
 name|atomic_cmpset_int
@@ -567,17 +481,8 @@ operator|)
 return|;
 end_return
 
-begin_endif
+begin_comment
 unit|}
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_DISABLE_CMPXCHG */
-end_comment
-
-begin_comment
 comment|/*  * Atomically add the value of v to the integer pointed to by p and return  * the previous value of *p.  */
 end_comment
 

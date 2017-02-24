@@ -101,32 +101,6 @@ directive|include
 file|<compat/linux/linux_signal.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CPU_DISABLE_SSE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPU_ENABLE_SSE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  *   Linux ptrace requests numbers. Mostly identical to FreeBSD,  *   except for MD ones and PT_ATTACH/PT_DETACH.  */
 end_comment
@@ -1008,12 +982,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -1163,11 +1131,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -1726,9 +1689,6 @@ break|break;
 case|case
 name|PTRACE_SETFPXREGS
 case|:
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|error
 operator|=
 name|copyin
@@ -1759,16 +1719,11 @@ condition|(
 name|error
 condition|)
 break|break;
-endif|#
-directive|endif
 comment|/* FALL THROUGH */
 case|case
 name|PTRACE_GETFPXREGS
 case|:
 block|{
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 name|struct
 name|proc
 modifier|*
@@ -2105,14 +2060,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
 case|case

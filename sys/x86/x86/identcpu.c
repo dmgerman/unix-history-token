@@ -149,32 +149,6 @@ directive|ifdef
 name|__i386__
 end_ifdef
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CPU_DISABLE_SSE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPU_ENABLE_SSE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -472,20 +446,6 @@ begin_comment
 comment|/* CPU vendor ID */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_ENABLE_SSE
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|u_int
 name|cpu_fxsr
@@ -505,11 +465,6 @@ end_decl_stmt
 begin_comment
 comment|/* Valid bits in mxcsr */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|u_int
