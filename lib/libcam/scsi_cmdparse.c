@@ -215,7 +215,7 @@ parameter_list|(
 name|ARG
 parameter_list|)
 define|\
-value|do { \ 		if (!suppress) { \ 			if (arg_put) \ 				(*arg_put)(puthook, (letter == 't' ? 'b' : \ 				    letter), (void *)((long)(ARG)), width, \ 				    field_name); \ 			else \ 				*(va_arg(*ap, int *)) = (ARG); \ 			assigned++; \ 		} \ 		field_name[0] = 0; \ 		suppress = 0; \ 	} while (0)
+value|do { \ 		if (!suppress) { \ 			if (arg_put) \ 				(*arg_put)(puthook, (letter == 't' ? 'b' : \ 				    letter), (void *)((long)(ARG)), width, \ 				    field_name); \ 			else \ 				*(va_arg(*ap, int *)) = (ARG); \ 			assigned++; \ 		} \ 		field_name[0] = '\0'; \ 		suppress = 0; \ 	} while (0)
 name|u_char
 name|bits
 init|=
@@ -237,7 +237,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 while|while
 condition|(
@@ -364,7 +364,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|*
 name|fmt
+operator|==
+literal|'\0'
 condition|)
 name|fmt
 operator|++
@@ -375,7 +378,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 break|break;
 block|}
@@ -712,6 +715,8 @@ block|{
 if|if
 condition|(
 name|arg_put
+operator|!=
+name|NULL
 condition|)
 call|(
 modifier|*
@@ -807,7 +812,7 @@ control|)
 operator|*
 name|p
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 block|}
@@ -1075,11 +1080,13 @@ comment|/* 1 byte wide */
 if|if
 condition|(
 name|name
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|name
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|state
 operator|=
@@ -1105,7 +1112,7 @@ condition|(
 operator|*
 name|p
 operator|==
-literal|0
+literal|'\0'
 condition|)
 name|state
 operator|=
@@ -1147,7 +1154,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|p
+operator|!=
+literal|'\0'
 condition|)
 name|p
 operator|++
@@ -1219,7 +1229,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -1905,6 +1915,8 @@ else|else
 name|value
 operator|=
 name|arg_get
+operator|!=
+name|NULL
 condition|?
 call|(
 modifier|*
@@ -2297,9 +2309,9 @@ name|csio
 operator|->
 name|dxfer_len
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|fmt
 argument_list|,
@@ -2440,9 +2452,9 @@ name|buff
 argument_list|,
 name|len
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|fmt
 argument_list|,
@@ -2923,11 +2935,11 @@ name|csio
 operator|->
 name|dxfer_len
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|fmt
 argument_list|,
@@ -3005,7 +3017,7 @@ name|buff
 argument_list|,
 name|len
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|arg_get
 argument_list|,
@@ -3079,7 +3091,7 @@ name|csio
 operator|->
 name|dxfer_len
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|arg_get
 argument_list|,
