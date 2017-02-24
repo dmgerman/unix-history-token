@@ -124,6 +124,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -5006,6 +5012,10 @@ operator|&
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We don't broadcast TLB invalidations to other CPUs when they are 	 * stopped. Hence, we clear the TLB before resuming. 	 */
+name|invltlb_glob
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -5702,6 +5712,16 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
+comment|/* It is not necessary to signal other CPUs while in the debugger. */
+if|if
+condition|(
+name|kdb_active
+operator|||
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return;
 comment|/* 	 * Check for other cpus.  Return if none. 	 */
 if|if
 condition|(
