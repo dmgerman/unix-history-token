@@ -4117,12 +4117,6 @@ operator|*
 operator|)
 name|newidxblock
 expr_stmt|;
-name|dst_entries
-operator|=
-name|dst_node
-operator|->
-name|h_entries
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
