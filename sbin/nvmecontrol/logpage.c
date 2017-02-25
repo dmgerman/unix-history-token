@@ -3893,7 +3893,7 @@ name|printf
 argument_list|(
 literal|"  %-30s: %d:%02d:00\n"
 argument_list|,
-literal|"Max Temperture Time"
+literal|"Max Temperature Time"
 argument_list|,
 name|min
 operator|/
@@ -3919,7 +3919,7 @@ name|printf
 argument_list|(
 literal|"  %-30s: %d:%02d:00\n"
 argument_list|,
-literal|"Over Temperture Duration"
+literal|"Over Temperature Duration"
 argument_list|,
 name|min
 operator|/
@@ -3945,7 +3945,7 @@ name|printf
 argument_list|(
 literal|"  %-30s: %d:%02d:00\n"
 argument_list|,
-literal|"Min Temperture Time"
+literal|"Min Temperature Time"
 argument_list|,
 name|min
 operator|/
