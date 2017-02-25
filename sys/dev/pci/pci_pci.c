@@ -5719,7 +5719,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pcib_pcie_intr
+name|pcib_pcie_intr_hotplug
 parameter_list|(
 name|void
 modifier|*
@@ -6294,7 +6294,7 @@ argument_list|,
 literal|"Missed HotPlug interrupt waiting for Command Completion\n"
 argument_list|)
 expr_stmt|;
-name|pcib_pcie_intr
+name|pcib_pcie_intr_hotplug
 argument_list|(
 name|sc
 argument_list|)
@@ -6405,7 +6405,7 @@ argument_list|,
 literal|"Missed HotPlug interrupt waiting for DLL Active\n"
 argument_list|)
 expr_stmt|;
-name|pcib_pcie_intr
+name|pcib_pcie_intr_hotplug
 argument_list|(
 name|sc
 argument_list|)
@@ -6594,7 +6594,7 @@ name|INTR_TYPE_MISC
 argument_list|,
 name|NULL
 argument_list|,
-name|pcib_pcie_intr
+name|pcib_pcie_intr_hotplug
 argument_list|,
 name|sc
 argument_list|,
