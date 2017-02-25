@@ -3550,19 +3550,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|softdep_ast_cleanup
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|counted_warning
 parameter_list|(
