@@ -1870,6 +1870,13 @@ argument_list|,
 name|zbpci_route_interrupt
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_request_feature
+argument_list|,
+name|pcib_request_feature_allow
+argument_list|)
+block|,
 block|{
 literal|0
 block|,

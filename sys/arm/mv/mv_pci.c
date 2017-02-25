@@ -1747,6 +1747,13 @@ argument_list|,
 name|mv_pcib_route_interrupt
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_request_feature
+argument_list|,
+name|pcib_request_feature_allow
+argument_list|)
+block|,
 if|#
 directive|if
 name|defined
