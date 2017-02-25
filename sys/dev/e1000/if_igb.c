@@ -14777,11 +14777,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|adapter
-operator|->
-name|num_tx_desc
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 name|IFQ_SET_READY
 argument_list|(
