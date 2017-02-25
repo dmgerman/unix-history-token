@@ -3717,6 +3717,11 @@ name|table
 index|[
 name|idx
 index|]
+operator|&&
+name|MUTEX_TRY_UPGRADE
+argument_list|(
+name|lock
+argument_list|)
 condition|)
 block|{
 name|ipfr_t
@@ -3792,6 +3797,11 @@ name|idx
 index|]
 operator|=
 name|f
+expr_stmt|;
+name|MUTEX_DOWNGRADE
+argument_list|(
+name|lock
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * If we've follwed the fragments, and this is the 			 * last (in order), shrink expiration time. 			 */
