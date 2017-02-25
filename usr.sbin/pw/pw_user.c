@@ -8178,8 +8178,6 @@ decl_stmt|,
 name|nis
 decl_stmt|,
 name|edited
-decl_stmt|,
-name|docreatehome
 decl_stmt|;
 name|bool
 name|precrypted
@@ -8244,8 +8242,6 @@ operator|=
 name|false
 expr_stmt|;
 name|edited
-operator|=
-name|docreatehome
 operator|=
 name|false
 expr_stmt|;
@@ -9256,11 +9252,6 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
-else|else
-name|docreatehome
-operator|=
-name|true
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -9821,7 +9812,7 @@ argument_list|()
 operator|!=
 name|PWF_ALT
 operator|&&
-name|docreatehome
+name|createhome
 operator|&&
 name|pwd
 operator|->
