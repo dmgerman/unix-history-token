@@ -2846,6 +2846,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|pcib_request_feature
+argument_list|,
+name|pcib_request_feature_allow
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|pcib_alloc_msi
 argument_list|,
 name|xlr_alloc_msi

@@ -1023,11 +1023,7 @@ comment|/* PCIe Capabilities. */
 comment|/* Tasks used by the driver */
 name|struct
 name|task
-name|sc_radioon_task
-decl_stmt|;
-name|struct
-name|task
-name|sc_radiooff_task
+name|sc_rftoggle_task
 decl_stmt|;
 name|struct
 name|task

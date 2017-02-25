@@ -13835,6 +13835,26 @@ operator|==
 name|CT_HBA_RESET
 condition|)
 block|{
+name|sentstatus
+operator|=
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|&
+name|CAM_SEND_STATUS
+operator|)
+operator|&&
+operator|(
+name|atp
+operator|->
+name|sendst
+operator|==
+literal|0
+operator|)
+expr_stmt|;
 name|failure
 operator|=
 name|CAM_UNREC_HBA_ERROR
@@ -14008,6 +14028,26 @@ operator|==
 name|CT_HBA_RESET
 condition|)
 block|{
+name|sentstatus
+operator|=
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|&
+name|CAM_SEND_STATUS
+operator|)
+operator|&&
+operator|(
+name|atp
+operator|->
+name|sendst
+operator|==
+literal|0
+operator|)
+expr_stmt|;
 name|failure
 operator|=
 name|CAM_UNREC_HBA_ERROR
@@ -14304,13 +14344,12 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* 	 * If we sent status or error happened, we are done with this ATIO. 	 */
+comment|/* 	 * We are done with this ATIO if we successfully sent status. 	 * In all other cases expect either another CTIO or XPT_ABORT. 	 */
 if|if
 condition|(
-name|sentstatus
-operator|||
-operator|!
 name|ok
+operator|&&
+name|sentstatus
 condition|)
 name|isp_put_atpd
 argument_list|(
@@ -19985,7 +20024,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"%s: [0x%x] no state pointer found for %s\n"
+literal|"%s: no state pointer found for %s\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -19999,6 +20038,11 @@ operator|.
 name|status
 operator|=
 name|CAM_DEV_NOT_THERE
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

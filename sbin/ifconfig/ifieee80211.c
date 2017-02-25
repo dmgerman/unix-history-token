@@ -15601,6 +15601,28 @@ operator|+
 literal|2
 argument_list|)
 decl_stmt|;
+comment|/* some devices broadcast invalid WPS frames */
+if|if
+condition|(
+name|tlv_len
+operator|>
+name|len
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bad frame length tlv_type=0x%02x "
+literal|"tlv_len=%d len=%d"
+argument_list|,
+name|tlv_type
+argument_list|,
+name|tlv_len
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|ie
 operator|+=
 literal|4

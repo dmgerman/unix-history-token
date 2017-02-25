@@ -646,7 +646,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-specifier|static
 name|int
 name|linux32_copyinuio
 parameter_list|(

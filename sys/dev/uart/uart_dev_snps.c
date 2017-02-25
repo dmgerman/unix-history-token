@@ -358,7 +358,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|UART_FDT_CLASS
+name|UART_FDT_CLASS_AND_DEVICE
 argument_list|(
 name|compat_data
 argument_list|)

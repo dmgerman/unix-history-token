@@ -3617,6 +3617,13 @@ argument_list|,
 name|mtk_pci_route_interrupt
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_request_feature
+argument_list|,
+name|pcib_request_feature_allow
+argument_list|)
+block|,
 comment|/* OFW bus interface */
 name|DEVMETHOD
 argument_list|(

@@ -34,6 +34,18 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|srcu_dereference
+parameter_list|(
+name|ptr
+parameter_list|,
+name|srcu
+parameter_list|)
+value|((__typeof(*(ptr)) *)(ptr))
+end_define
+
 begin_comment
 comment|/* prototypes */
 end_comment

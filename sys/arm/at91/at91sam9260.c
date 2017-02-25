@@ -701,13 +701,6 @@ name|clk
 operator|->
 name|pll_max_in
 operator|=
-name|SAM9260_PLL_B_MAX_IN_FREQ
-expr_stmt|;
-comment|/*   5 MHz */
-name|clk
-operator|->
-name|pll_max_in
-operator|=
 literal|2999999
 expr_stmt|;
 comment|/*  ~3 MHz */

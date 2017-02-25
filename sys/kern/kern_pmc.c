@@ -916,6 +916,9 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
+operator|(
+name|int
+operator|)
 name|ps
 operator|->
 name|ps_ev
@@ -924,6 +927,9 @@ name|pm_ev_code
 operator|>=
 name|PMC_EV_SOFT_FIRST
 operator|&&
+operator|(
+name|int
+operator|)
 name|ps
 operator|->
 name|ps_ev
@@ -995,10 +1001,16 @@ name|NULL
 return|;
 name|KASSERT
 argument_list|(
+operator|(
+name|int
+operator|)
 name|ev
 operator|>=
 name|PMC_EV_SOFT_FIRST
 operator|&&
+operator|(
+name|int
+operator|)
 name|ev
 operator|<=
 name|PMC_EV_SOFT_LAST

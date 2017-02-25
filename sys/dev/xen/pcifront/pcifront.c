@@ -3002,6 +3002,13 @@ argument_list|,
 name|xpcib_route_interrupt
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_request_feature
+argument_list|,
+name|pcib_request_feature_allow
+argument_list|)
+block|,
 name|DEVMETHOD_END
 block|}
 decl_stmt|;

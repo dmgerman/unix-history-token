@@ -1228,6 +1228,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|sem_clockwait_np
+value|_sem_clockwait_np
+end_define
+
+begin_define
+define|#
+directive|define
 name|sem_trywait
 value|_sem_trywait
 end_define

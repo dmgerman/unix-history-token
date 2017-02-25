@@ -1266,7 +1266,7 @@ operator|&
 operator|(
 name|mtrr_physmask
 operator||
-literal|0xfffLL
+literal|0xfff
 operator|)
 operator|)
 operator|+
@@ -2904,7 +2904,10 @@ literal|1
 operator|)
 operator|&
 operator|~
-literal|0xfffULL
+operator|(
+name|uint64_t
+operator|)
+literal|0xfff
 expr_stmt|;
 comment|/* If fixed MTRRs supported and enabled. */
 if|if

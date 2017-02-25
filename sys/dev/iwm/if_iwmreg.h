@@ -2719,105 +2719,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Block paging calculations  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_PAGE_2_EXP_SIZE
-value|12
-end_define
-
-begin_comment
-comment|/* 4K == 2^12 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_FW_PAGING_SIZE
-value|(1<< IWM_PAGE_2_EXP_SIZE)
-end_define
-
-begin_comment
-comment|/* page size is 4KB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_PAGE_PER_GROUP_2_EXP_SIZE
-value|3
-end_define
-
-begin_comment
-comment|/* 8 pages per group */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_NUM_OF_PAGE_PER_GROUP
-value|(1<< IWM_PAGE_PER_GROUP_2_EXP_SIZE)
-end_define
-
-begin_comment
-comment|/* don't change, support only 32KB size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_PAGING_BLOCK_SIZE
-value|(IWM_NUM_OF_PAGE_PER_GROUP * IWM_FW_PAGING_SIZE)
-end_define
-
-begin_comment
-comment|/* 32K == 2^15 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_BLOCK_2_EXP_SIZE
-value|(IWM_PAGE_2_EXP_SIZE + IWM_PAGE_PER_GROUP_2_EXP_SIZE)
-end_define
-
-begin_comment
-comment|/*  * Image paging calculations  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_BLOCK_PER_IMAGE_2_EXP_SIZE
-value|5
-end_define
-
-begin_comment
-comment|/* 2^5 == 32 blocks per image */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_NUM_OF_BLOCK_PER_IMAGE
-value|(1<< IWM_BLOCK_PER_IMAGE_2_EXP_SIZE)
-end_define
-
-begin_comment
-comment|/* maximum image size 1024KB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_MAX_PAGING_IMAGE_SIZE
-value|(IWM_NUM_OF_BLOCK_PER_IMAGE * IWM_PAGING_BLOCK_SIZE)
-end_define
-
-begin_comment
 comment|/**  * struct iwm_fw_cscheme_list - a cipher scheme list  * @size: a number of entries  * @cs: cipher scheme entries  */
 end_comment
 
@@ -5262,26 +5163,10 @@ name|IWM_LQ_CMD
 init|=
 literal|0x4e
 block|,
-comment|/* Calibration */
-name|IWM_TEMPERATURE_NOTIFICATION
+comment|/* paging block to FW cpu2 */
+name|IWM_FW_PAGING_BLOCK_CMD
 init|=
-literal|0x62
-block|,
-name|IWM_CALIBRATION_CFG_CMD
-init|=
-literal|0x65
-block|,
-name|IWM_CALIBRATION_RES_NOTIFICATION
-init|=
-literal|0x66
-block|,
-name|IWM_CALIBRATION_COMPLETE_NOTIFICATION
-init|=
-literal|0x67
-block|,
-name|IWM_RADIO_VERSION_NOTIFICATION
-init|=
-literal|0x68
+literal|0x4f
 block|,
 comment|/* Scan offload */
 name|IWM_SCAN_OFFLOAD_REQUEST_CMD
@@ -6037,6 +5922,84 @@ end_struct
 
 begin_comment
 comment|/* IWM_NVM_ACCESS_CMD_API_S_VER_2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWM_NUM_OF_FW_PAGING_BLOCKS
+value|33
+end_define
+
+begin_comment
+comment|/* 32 for data and 1 block for CSS */
+end_comment
+
+begin_comment
+comment|/*  * struct iwm_fw_paging_cmd - paging layout  *  * (IWM_FW_PAGING_BLOCK_CMD = 0x4f)  *  * Send to FW the paging layout in the driver.  *  * @flags: various flags for the command  * @block_size: the block size in powers of 2  * @block_num: number of blocks specified in the command.  * @device_phy_addr: virtual addresses from device side */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_fw_paging_cmd
+block|{
+name|uint32_t
+name|flags
+decl_stmt|;
+name|uint32_t
+name|block_size
+decl_stmt|;
+name|uint32_t
+name|block_num
+decl_stmt|;
+name|uint32_t
+name|device_phy_addr
+index|[
+name|IWM_NUM_OF_FW_PAGING_BLOCKS
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* IWM_FW_PAGING_BLOCK_CMD_API_S_VER_1 */
+end_comment
+
+begin_comment
+comment|/*  * Fw items ID's  *  * @IWM_FW_ITEM_ID_PAGING: Address of the pages that the FW will upload  *      download  */
+end_comment
+
+begin_enum
+enum|enum
+name|iwm_fw_item_id
+block|{
+name|IWM_FW_ITEM_ID_PAGING
+init|=
+literal|3
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * struct iwm_fw_get_item_cmd - get an item from the fw  */
+end_comment
+
+begin_struct
+struct|struct
+name|iwm_fw_get_item_cmd
+block|{
+name|uint32_t
+name|item_id
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* IWM_FW_GET_ITEM_CMD_API_S_VER_1 */
 end_comment
 
 begin_comment

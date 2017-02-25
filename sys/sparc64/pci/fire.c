@@ -719,6 +719,13 @@ argument_list|,
 name|fire_map_msi
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_request_feature
+argument_list|,
+name|pcib_request_feature_allow
+argument_list|)
+block|,
 comment|/* ofw_bus interface */
 name|DEVMETHOD
 argument_list|(
