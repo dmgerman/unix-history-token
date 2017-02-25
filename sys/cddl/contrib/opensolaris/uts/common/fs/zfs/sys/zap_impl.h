@@ -491,7 +491,7 @@ name|tag
 parameter_list|)
 function_decl|;
 name|void
-name|zap_evict
+name|zap_evict_sync
 parameter_list|(
 name|void
 modifier|*

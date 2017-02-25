@@ -5765,7 +5765,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|dnode_buf_pageout
+name|dnode_buf_evict_async
 parameter_list|(
 name|void
 modifier|*
@@ -6420,7 +6420,9 @@ name|children_dnodes
 operator|->
 name|dnc_dbu
 argument_list|,
-name|dnode_buf_pageout
+name|NULL
+argument_list|,
+name|dnode_buf_evict_async
 argument_list|,
 name|NULL
 argument_list|)
