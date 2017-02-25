@@ -360,6 +360,8 @@ operator|*
 name|p
 argument_list|,
 name|UCL_CHARACTER_JSON_UNSAFE
+operator||
+name|UCL_CHARACTER_DENIED
 argument_list|)
 condition|)
 block|{
@@ -502,6 +504,22 @@ argument_list|(
 literal|"\\\""
 argument_list|,
 literal|2
+argument_list|,
+name|func
+operator|->
+name|ud
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Emit unicode unknown character */
+name|func
+operator|->
+name|ucl_emitter_append_len
+argument_list|(
+literal|"\\uFFFD"
+argument_list|,
+literal|5
 argument_list|,
 name|func
 operator|->
