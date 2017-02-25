@@ -957,6 +957,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|MUTEX_TRY_UPGRADE
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_try_upgrade(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RWLOCK_INIT
 parameter_list|(
 name|x
@@ -2522,6 +2532,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|eMrwlock_downgrade(&(x)->ipf_emu, \ 							   __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_TRY_UPGRADE
+parameter_list|(
+name|x
+parameter_list|)
+value|eMrwlock_try_upgrade(&(x)->ipf_emu, \ 							   __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -4223,6 +4243,16 @@ begin_define
 define|#
 directive|define
 name|MUTEX_DOWNGRADE
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_TRY_UPGRADE
 parameter_list|(
 name|x
 parameter_list|)
