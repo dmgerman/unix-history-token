@@ -112,7 +112,7 @@ define|#
 directive|define
 name|LOGPAGE_USAGE
 define|\
-value|"       nvmecontrol logpage<-p page_id> [-x]<controller id|namespace id>\n"  \  #define FIRMWARE_USAGE							       \ "       nvmecontrol firmware [-s slot] [-f path_to_firmware] [-a]<controller id>\n"
+value|"       nvmecontrol logpage<-p page_id> [-b] [-v vendor] [-x]<controller id|namespace id>\n"  \  #define FIRMWARE_USAGE							       \ "       nvmecontrol firmware [-s slot] [-f path_to_firmware] [-a]<controller id>\n"
 end_define
 
 begin_define

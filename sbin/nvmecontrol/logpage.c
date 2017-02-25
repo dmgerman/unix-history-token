@@ -1914,7 +1914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Table 19. 5.4 SMART Attributes  */
+comment|/*  * Table 19. 5.4 SMART Attributes. Samsung also implements this and some extra data not documented.  */
 end_comment
 
 begin_function
@@ -4585,7 +4585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Table of log page printer / sizing.  *  * This includes Intel specific pages that are widely implemented. Not  * sure how best to switch between different vendors.  */
+comment|/*  * Table of log page printer / sizing.  *  * This includes Intel specific pages that are widely implemented.  * Make sure you keep all the pages of one vendor together so -v help  * lists all the vendors pages.  */
 end_comment
 
 begin_struct
@@ -4600,6 +4600,11 @@ specifier|const
 name|char
 modifier|*
 name|vendor
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
 decl_stmt|;
 name|print_fn_t
 name|print_fn
@@ -4617,6 +4622,8 @@ name|NVME_LOG_ERROR
 block|,
 name|NULL
 block|,
+literal|"Drive Error Log"
+block|,
 name|print_log_error
 block|,
 literal|0
@@ -4626,6 +4633,8 @@ block|{
 name|NVME_LOG_HEALTH_INFORMATION
 block|,
 name|NULL
+block|,
+literal|"Health/SMART Data"
 block|,
 name|print_log_health
 block|,
@@ -4641,6 +4650,8 @@ name|NVME_LOG_FIRMWARE_SLOT
 block|,
 name|NULL
 block|,
+literal|"Firmware Information"
+block|,
 name|print_log_firmware
 block|,
 expr|sizeof
@@ -4655,6 +4666,8 @@ name|HGST_INFO_LOG
 block|,
 literal|"hgst"
 block|,
+literal|"Detailed Health/SMART"
+block|,
 name|print_hgst_info_log
 block|,
 name|DEFAULT_SIZE
@@ -4663,7 +4676,9 @@ block|,
 block|{
 name|HGST_INFO_LOG
 block|,
-literal|"wdc"
+literal|"wds"
+block|,
+literal|"Detailed Health/SMART"
 block|,
 name|print_hgst_info_log
 block|,
@@ -4674,6 +4689,8 @@ block|{
 name|INTEL_LOG_TEMP_STATS
 block|,
 literal|"intel"
+block|,
+literal|"Temperature Stats"
 block|,
 name|print_intel_temp_stats
 block|,
@@ -4689,6 +4706,8 @@ name|INTEL_LOG_READ_LAT_LOG
 block|,
 literal|"intel"
 block|,
+literal|"Read Latencies"
+block|,
 name|print_intel_read_lat_log
 block|,
 name|DEFAULT_SIZE
@@ -4698,6 +4717,8 @@ block|{
 name|INTEL_LOG_WRITE_LAT_LOG
 block|,
 literal|"intel"
+block|,
+literal|"Write Latencies"
 block|,
 name|print_intel_write_lat_log
 block|,
@@ -4709,6 +4730,20 @@ name|INTEL_LOG_ADD_SMART
 block|,
 literal|"intel"
 block|,
+literal|"Extra Health/SMART Data"
+block|,
+name|print_intel_add_smart
+block|,
+name|DEFAULT_SIZE
+block|}
+block|,
+block|{
+name|INTEL_LOG_ADD_SMART
+block|,
+literal|"samsung"
+block|,
+literal|"Extra Health/SMART Data"
+block|,
 name|print_intel_add_smart
 block|,
 name|DEFAULT_SIZE
@@ -4716,6 +4751,8 @@ block|}
 block|,
 block|{
 literal|0
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -4749,6 +4786,107 @@ argument_list|,
 name|LOGPAGE_USAGE
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|logpage_help
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|logpage_function
+modifier|*
+name|f
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|v
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%-8s %-10s %s\n"
+argument_list|,
+literal|"Page"
+argument_list|,
+literal|"Vendor"
+argument_list|,
+literal|"Page Name"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-------- ---------- ----------\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|f
+operator|=
+name|logfuncs
+init|;
+name|f
+operator|->
+name|log_page
+operator|>
+literal|0
+condition|;
+name|f
+operator|++
+control|)
+block|{
+name|v
+operator|=
+name|f
+operator|->
+name|vendor
+operator|==
+name|NULL
+condition|?
+literal|"-"
+else|:
+name|f
+operator|->
+name|vendor
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"0x%02x     %-10s %s\n"
+argument_list|,
+name|f
+operator|->
+name|log_page
+argument_list|,
+name|v
+argument_list|,
+name|f
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|1
@@ -4868,6 +5006,20 @@ break|break;
 case|case
 literal|'p'
 case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"help"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|logpage_help
+argument_list|()
+expr_stmt|;
 comment|/* TODO: Add human-readable ASCII page IDs */
 name|log_page
 operator|=
@@ -4922,6 +5074,20 @@ break|break;
 case|case
 literal|'v'
 case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"help"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|logpage_help
+argument_list|()
+expr_stmt|;
 name|vendor
 operator|=
 name|optarg
