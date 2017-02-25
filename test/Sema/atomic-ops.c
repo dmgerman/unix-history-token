@@ -123,6 +123,29 @@ argument_list|)
 assert|;
 end_assert
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|__GCC_ATOMIC_LLONG_LOCK_FREE
+operator|==
+literal|1
+argument_list|,
+literal|""
+argument_list|)
+assert|;
+end_assert
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_assert
 assert|_Static_assert
 argument_list|(
@@ -134,6 +157,11 @@ literal|""
 argument_list|)
 assert|;
 end_assert
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_assert
 assert|_Static_assert
