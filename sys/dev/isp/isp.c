@@ -24643,7 +24643,7 @@ name|XS_SETERR
 argument_list|(
 name|xs
 argument_list|,
-name|HBA_BOTCH
+name|HBA_REQINVAL
 argument_list|)
 expr_stmt|;
 return|return
@@ -25509,7 +25509,7 @@ name|XS_SETERR
 argument_list|(
 name|xs
 argument_list|,
-name|HBA_BOTCH
+name|HBA_REQINVAL
 argument_list|)
 expr_stmt|;
 return|return
@@ -25601,7 +25601,7 @@ name|XS_SETERR
 argument_list|(
 name|xs
 argument_list|,
-name|HBA_BOTCH
+name|HBA_REQINVAL
 argument_list|)
 expr_stmt|;
 return|return
@@ -25847,7 +25847,7 @@ name|XS_SETERR
 argument_list|(
 name|xs
 argument_list|,
-name|HBA_BOTCH
+name|HBA_REQINVAL
 argument_list|)
 expr_stmt|;
 return|return
@@ -36558,6 +36558,14 @@ name|xs
 argument_list|)
 condition|)
 block|{
+operator|*
+name|XS_STSP
+argument_list|(
+name|xs
+argument_list|)
+operator|=
+name|SCSI_BUSY
+expr_stmt|;
 name|XS_SETERR
 argument_list|(
 name|xs
