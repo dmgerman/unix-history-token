@@ -6904,6 +6904,16 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* If we haven't heard from our peer, skip this step. */
+if|if
+condition|(
+name|lp
+operator|->
+name|lp_state
+operator|&
+name|LACP_STATE_DEFAULTED
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 operator|!
@@ -8373,7 +8383,23 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* XXX nothing? */
+comment|/* 		 * XXX Maintain legacy behavior of leaving the 		 * LACP_STATE_SYNC bit unchanged from the partner's 		 * advertisement if lsc_strict_mode is false. 		 * TODO: We should re-examine the concept of the "strict mode" 		 * to ensure it makes sense to maintain a non-strict mode. 		 */
+if|if
+condition|(
+name|lp
+operator|->
+name|lp_lsc
+operator|->
+name|lsc_strict_mode
+condition|)
+name|lp
+operator|->
+name|lp_partner
+operator|.
+name|lip_state
+operator||=
+name|LACP_STATE_SYNC
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -8452,23 +8478,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX Hack, still need to implement 5.4.9 para 2,3,4 */
-if|if
-condition|(
-name|lp
-operator|->
-name|lp_lsc
-operator|->
-name|lsc_strict_mode
-condition|)
-name|lp
-operator|->
-name|lp_partner
-operator|.
-name|lip_state
-operator||=
-name|LACP_STATE_SYNC
-expr_stmt|;
 name|lacp_sm_ptx_update_timeout
 argument_list|(
 name|lp
