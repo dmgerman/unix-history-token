@@ -542,10 +542,6 @@ operator|!=
 name|NULL
 condition|)
 return|return;
-name|mode
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|cap_getmode
@@ -719,10 +715,6 @@ name|unsigned
 name|int
 name|mode
 decl_stmt|;
-name|mode
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|cap_getmode
