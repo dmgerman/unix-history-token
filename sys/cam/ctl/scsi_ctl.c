@@ -5958,6 +5958,10 @@ operator|-=
 name|csio
 operator|->
 name|dxfer_len
+operator|-
+name|csio
+operator|->
+name|resid
 expr_stmt|;
 name|io
 operator|->
@@ -6000,7 +6004,6 @@ operator|&
 name|CTLFE_CMD_PIECEWISE
 operator|)
 operator|&&
-operator|(
 name|io
 operator|->
 name|io_hdr
@@ -6008,7 +6011,12 @@ operator|.
 name|port_status
 operator|==
 literal|0
-operator|)
+operator|&&
+name|csio
+operator|->
+name|resid
+operator|==
+literal|0
 condition|)
 block|{
 name|ccb_flags
