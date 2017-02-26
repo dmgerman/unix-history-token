@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcib_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pic_if.h"
 end_include
 
