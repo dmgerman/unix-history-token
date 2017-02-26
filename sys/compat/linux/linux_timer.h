@@ -349,7 +349,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|void
+name|int
 name|native_to_linux_timespec
 parameter_list|(
 name|struct
