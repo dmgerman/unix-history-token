@@ -624,6 +624,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_int
+name|auto_resize
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_geom_part
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|auto_resize
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|auto_resize
+argument_list|,
+literal|1
+argument_list|,
+literal|"Enable auto resize"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * The GEOM partitioning class.  */
 end_comment
@@ -11211,6 +11241,13 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|auto_resize
+operator|==
+literal|0
+condition|)
+return|return;
 name|table
 operator|=
 name|cp
