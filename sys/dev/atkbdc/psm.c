@@ -15335,7 +15335,7 @@ else|:
 name|start_y
 operator|>
 name|max_y
-operator|-
+operator|+
 name|sc
 operator|->
 name|syninfo
