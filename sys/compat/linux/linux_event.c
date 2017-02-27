@@ -3511,7 +3511,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EBADF
+name|EINVAL
 operator|)
 return|;
 name|seldrain
@@ -3622,7 +3622,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EBADF
+name|EINVAL
 operator|)
 return|;
 if|if
@@ -3896,7 +3896,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EBADF
+name|EINVAL
 operator|)
 return|;
 if|if
