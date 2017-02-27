@@ -977,7 +977,7 @@ name|CCU_GATE
 argument_list|(
 argument|H3_CLK_BUS_I2S0
 argument_list|,
-literal|"bus-i2c0"
+literal|"bus-i2s0"
 argument_list|,
 literal|"apb1"
 argument_list|,
@@ -989,7 +989,7 @@ name|CCU_GATE
 argument_list|(
 argument|H3_CLK_BUS_I2S1
 argument_list|,
-literal|"bus-i2c1"
+literal|"bus-i2s1"
 argument_list|,
 literal|"apb1"
 argument_list|,
@@ -1001,7 +1001,7 @@ name|CCU_GATE
 argument_list|(
 argument|H3_CLK_BUS_I2S2
 argument_list|,
-literal|"bus-i2c2"
+literal|"bus-i2s2"
 argument_list|,
 literal|"apb1"
 argument_list|,
