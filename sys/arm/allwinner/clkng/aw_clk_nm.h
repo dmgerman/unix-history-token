@@ -40,6 +40,10 @@ name|struct
 name|aw_clk_factor
 name|n
 decl_stmt|;
+name|struct
+name|aw_clk_frac
+name|frac
+decl_stmt|;
 name|uint32_t
 name|mux_shift
 decl_stmt|;
@@ -48,6 +52,12 @@ name|mux_width
 decl_stmt|;
 name|uint32_t
 name|gate_shift
+decl_stmt|;
+name|uint32_t
+name|lock_shift
+decl_stmt|;
+name|uint32_t
+name|lock_retries
 decl_stmt|;
 name|uint32_t
 name|flags

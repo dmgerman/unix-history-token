@@ -81,6 +81,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AW_CLK_HAS_FRAC
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
 name|AW_CLK_FACTOR_POWER_OF_TWO
 value|0x0001
 end_define
@@ -142,6 +149,26 @@ name|uint32_t
 name|flags
 decl_stmt|;
 comment|/* Flags */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aw_clk_frac
+block|{
+name|uint64_t
+name|freq0
+decl_stmt|;
+name|uint64_t
+name|freq1
+decl_stmt|;
+name|uint32_t
+name|mode_sel
+decl_stmt|;
+name|uint32_t
+name|freq_sel
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -619,6 +646,55 @@ name|_flags
 parameter_list|)
 define|\
 value|{						\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _nshift,			\ 		.n.width = _nwidth,			\ 		.n.value = _nvalue,			\ 		.n.flags = _nflags,			\ 		.mux_shift = _mux_shift,		\ 		.m.shift = _mshift,			\ 		.m.width = _mwidth,			\ 		.m.value = _mvalue,			\ 		.m.flags = _mflags,			\ 		.mux_width = _mux_width,		\ 		.flags = _flags,			\ 	},
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_CLK_WITH_FRAC
+parameter_list|(
+name|_id
+parameter_list|,
+name|_name
+parameter_list|,
+name|_pnames
+parameter_list|,		\
+name|_offset
+parameter_list|,						\
+name|_nshift
+parameter_list|,
+name|_nwidth
+parameter_list|,
+name|_nvalue
+parameter_list|,
+name|_nflags
+parameter_list|,		\
+name|_mshift
+parameter_list|,
+name|_mwidth
+parameter_list|,
+name|_mvalue
+parameter_list|,
+name|_mflags
+parameter_list|,		\
+name|_gate_shift
+parameter_list|,
+name|_lock_shift
+parameter_list|,
+name|_lock_retries
+parameter_list|,		\
+name|_flags
+parameter_list|,
+name|_freq0
+parameter_list|,
+name|_freq1
+parameter_list|,
+name|_mode_sel
+parameter_list|,
+name|_freq_sel
+parameter_list|)
+define|\
+value|{						\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _nshift,			\ 		.n.width = _nwidth,			\ 		.n.value = _nvalue,			\ 		.n.flags = _nflags,			\ 		.m.shift = _mshift,			\ 		.m.width = _mwidth,			\ 		.m.value = _mvalue,			\ 		.m.flags = _mflags,			\ 		.gate_shift = _gate_shift,		\ 		.lock_shift = _lock_shift,		\ 		.lock_retries = _lock_retries,		\ 		.flags = _flags | AW_CLK_HAS_FRAC,	\ 		.frac.freq0 = _freq0,			\ 		.frac.freq1 = _freq1,			\ 		.frac.mode_sel = _mode_sel,		\ 		.frac.freq_sel = _freq_sel,		\ 	},
 end_define
 
 begin_define

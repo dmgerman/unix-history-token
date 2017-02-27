@@ -1320,14 +1320,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Need fractional mode on nkmp or a NM fract static const char *pll_video_parents[] = {"osc24M"};  */
-end_comment
-
-begin_comment
-comment|/*  * Need fractional mode on nkmp or a NM fract static const char *pll_ve_parents[] = {"osc24M"};  */
-end_comment
-
-begin_comment
 comment|/*  * Needs a update bit on nkmp or special clk static const char *pll_ddr_parents[] = {"osc24M"};  */
 end_comment
 
@@ -1359,10 +1351,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Need fractional mode on nkmp or a NM fract static const char *pll_gpu_parents[] = {"osc24M"};  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1376,10 +1364,6 @@ literal|"osc24M"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Need fractional mode on nkmp or a NM fract static const char *pll_de_parents[] = {"osc24M"};  */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1772,6 +1756,62 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+name|pll_video_parents
+index|[]
+init|=
+block|{
+literal|"osc24M"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|pll_ve_parents
+index|[]
+init|=
+block|{
+literal|"osc24M"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|pll_gpu_parents
+index|[]
+init|=
+block|{
+literal|"osc24M"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|pll_de_parents
+index|[]
+init|=
+block|{
+literal|"osc24M"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
 name|apb2_parents
 index|[]
 init|=
@@ -1863,6 +1903,210 @@ name|nm_clks
 index|[]
 init|=
 block|{
+name|NM_CLK_WITH_FRAC
+argument_list|(
+argument|H3_CLK_PLL_VIDEO
+argument_list|,
+comment|/* id */
+literal|"pll_video"
+argument_list|,
+argument|pll_video_parents
+argument_list|,
+comment|/* name, parents */
+literal|0x10
+argument_list|,
+comment|/* offset */
+literal|8
+argument_list|,
+literal|7
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* n factor */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|31
+argument_list|,
+literal|28
+argument_list|,
+literal|1000
+argument_list|,
+comment|/* gate, lock, lock retries */
+argument|AW_CLK_HAS_LOCK
+argument_list|,
+comment|/* flags */
+literal|270000000
+argument_list|,
+literal|297000000
+argument_list|,
+comment|/* freq0, freq1 */
+literal|24
+argument_list|,
+literal|25
+argument_list|)
+comment|/* mode sel, freq sel */
+name|NM_CLK_WITH_FRAC
+argument_list|(
+argument|H3_CLK_PLL_VE
+argument_list|,
+comment|/* id */
+literal|"pll_ve"
+argument_list|,
+argument|pll_ve_parents
+argument_list|,
+comment|/* name, parents */
+literal|0x18
+argument_list|,
+comment|/* offset */
+literal|8
+argument_list|,
+literal|7
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* n factor */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|31
+argument_list|,
+literal|28
+argument_list|,
+literal|1000
+argument_list|,
+comment|/* gate, lock, lock retries */
+argument|AW_CLK_HAS_LOCK
+argument_list|,
+comment|/* flags */
+literal|270000000
+argument_list|,
+literal|297000000
+argument_list|,
+comment|/* freq0, freq1 */
+literal|24
+argument_list|,
+literal|25
+argument_list|)
+comment|/* mode sel, freq sel */
+name|NM_CLK_WITH_FRAC
+argument_list|(
+argument|H3_CLK_PLL_GPU
+argument_list|,
+comment|/* id */
+literal|"pll_gpu"
+argument_list|,
+argument|pll_gpu_parents
+argument_list|,
+comment|/* name, parents */
+literal|0x38
+argument_list|,
+comment|/* offset */
+literal|8
+argument_list|,
+literal|7
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* n factor */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|31
+argument_list|,
+literal|28
+argument_list|,
+literal|1000
+argument_list|,
+comment|/* gate, lock, lock retries */
+argument|AW_CLK_HAS_LOCK
+argument_list|,
+comment|/* flags */
+literal|270000000
+argument_list|,
+literal|297000000
+argument_list|,
+comment|/* freq0, freq1 */
+literal|24
+argument_list|,
+literal|25
+argument_list|)
+comment|/* mode sel, freq sel */
+name|NM_CLK_WITH_FRAC
+argument_list|(
+argument|H3_CLK_PLL_DE
+argument_list|,
+comment|/* id */
+literal|"pll_de"
+argument_list|,
+argument|pll_de_parents
+argument_list|,
+comment|/* name, parents */
+literal|0x48
+argument_list|,
+comment|/* offset */
+literal|8
+argument_list|,
+literal|7
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* n factor */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|31
+argument_list|,
+literal|28
+argument_list|,
+literal|1000
+argument_list|,
+comment|/* gate, lock, lock retries */
+argument|AW_CLK_HAS_LOCK
+argument_list|,
+comment|/* flags */
+literal|270000000
+argument_list|,
+literal|297000000
+argument_list|,
+comment|/* freq0, freq1 */
+literal|24
+argument_list|,
+literal|25
+argument_list|)
+comment|/* mode sel, freq sel */
 name|NM_CLK
 argument_list|(
 argument|H3_CLK_APB2
