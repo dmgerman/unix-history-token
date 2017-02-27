@@ -203,7 +203,7 @@ block|{
 name|int
 name|max_threshold
 decl_stmt|;
-name|int
+name|time_t
 name|last_intr
 decl_stmt|;
 block|}
@@ -2324,7 +2324,7 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|ticks
+name|time_uptime
 operator|-
 name|cc
 operator|->
@@ -2401,7 +2401,7 @@ name|cc
 operator|->
 name|last_intr
 operator|=
-name|ticks
+name|time_uptime
 expr_stmt|;
 return|return;
 block|}
@@ -3690,8 +3690,7 @@ name|cc
 operator|->
 name|last_intr
 operator|=
-operator|-
-name|ticks
+literal|0
 expr_stmt|;
 name|ctl
 operator|=
