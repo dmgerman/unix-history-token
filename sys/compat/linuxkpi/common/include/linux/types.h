@@ -164,6 +164,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|uint16_t
+name|__bitwise__
+name|__sum16
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|u64
 name|phys_addr_t
 typedef|;
