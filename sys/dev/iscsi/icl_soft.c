@@ -4280,7 +4280,7 @@ name|flags
 argument_list|,
 name|MT_DATA
 argument_list|,
-name|M_PKTHDR
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
