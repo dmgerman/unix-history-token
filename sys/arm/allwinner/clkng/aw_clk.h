@@ -555,12 +555,14 @@ define|#
 directive|define
 name|NKMP_CLK
 parameter_list|(
+name|_clkname
+parameter_list|,
 name|_id
 parameter_list|,
 name|_name
 parameter_list|,
 name|_pnames
-parameter_list|,			\
+parameter_list|,		\
 name|_offset
 parameter_list|,						\
 name|_n_shift
@@ -604,7 +606,7 @@ parameter_list|,					\
 name|_flags
 parameter_list|)
 define|\
-value|{						\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _n_shift,			\ 		.n.width = _n_width,			\ 		.n.value = _n_value,			\ 		.n.flags = _n_flags,			\ 		.k.shift = _k_shift,			\ 		.k.width = _k_width,			\ 		.k.value = _k_value,			\ 		.k.flags = _k_flags,			\ 		.m.shift = _m_shift,			\ 		.m.width = _m_width,			\ 		.m.value = _m_value,			\ 		.m.flags = _m_flags,			\ 		.p.shift = _p_shift,			\ 		.p.width = _p_width,			\ 		.p.value = _p_value,			\ 		.p.flags = _p_flags,			\ 		.gate_shift = _gate,			\ 		.lock_shift = _lock,			\ 		.lock_retries = _lock_retries,		\ 		.flags = _flags,			\ 	},
+value|static struct aw_clk_nkmp_def _clkname = {	\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _n_shift,			\ 		.n.width = _n_width,			\ 		.n.value = _n_value,			\ 		.n.flags = _n_flags,			\ 		.k.shift = _k_shift,			\ 		.k.width = _k_width,			\ 		.k.value = _k_value,			\ 		.k.flags = _k_flags,			\ 		.m.shift = _m_shift,			\ 		.m.width = _m_width,			\ 		.m.value = _m_value,			\ 		.m.flags = _m_flags,			\ 		.p.shift = _p_shift,			\ 		.p.width = _p_width,			\ 		.p.value = _p_value,			\ 		.p.flags = _p_flags,			\ 		.gate_shift = _gate,			\ 		.lock_shift = _lock,			\ 		.lock_retries = _lock_retries,		\ 		.flags = _flags,			\ 	}
 end_define
 
 begin_define
@@ -612,12 +614,14 @@ define|#
 directive|define
 name|NM_CLK
 parameter_list|(
+name|_clkname
+parameter_list|,
 name|_id
 parameter_list|,
 name|_name
 parameter_list|,
 name|_pnames
-parameter_list|,			\
+parameter_list|,		\
 name|_offset
 parameter_list|,						\
 name|_nshift
@@ -645,7 +649,7 @@ parameter_list|,					\
 name|_flags
 parameter_list|)
 define|\
-value|{						\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _nshift,			\ 		.n.width = _nwidth,			\ 		.n.value = _nvalue,			\ 		.n.flags = _nflags,			\ 		.mux_shift = _mux_shift,		\ 		.m.shift = _mshift,			\ 		.m.width = _mwidth,			\ 		.m.value = _mvalue,			\ 		.m.flags = _mflags,			\ 		.mux_width = _mux_width,		\ 		.flags = _flags,			\ 	},
+value|static struct aw_clk_nm_def _clkname = 	{	\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _nshift,			\ 		.n.width = _nwidth,			\ 		.n.value = _nvalue,			\ 		.n.flags = _nflags,			\ 		.mux_shift = _mux_shift,		\ 		.m.shift = _mshift,			\ 		.m.width = _mwidth,			\ 		.m.value = _mvalue,			\ 		.m.flags = _mflags,			\ 		.mux_width = _mux_width,		\ 		.flags = _flags,			\ 	}
 end_define
 
 begin_define
@@ -653,12 +657,14 @@ define|#
 directive|define
 name|NM_CLK_WITH_FRAC
 parameter_list|(
+name|_clkname
+parameter_list|,
 name|_id
 parameter_list|,
 name|_name
 parameter_list|,
 name|_pnames
-parameter_list|,		\
+parameter_list|,	\
 name|_offset
 parameter_list|,						\
 name|_nshift
@@ -694,7 +700,7 @@ parameter_list|,
 name|_freq_sel
 parameter_list|)
 define|\
-value|{						\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _nshift,			\ 		.n.width = _nwidth,			\ 		.n.value = _nvalue,			\ 		.n.flags = _nflags,			\ 		.m.shift = _mshift,			\ 		.m.width = _mwidth,			\ 		.m.value = _mvalue,			\ 		.m.flags = _mflags,			\ 		.gate_shift = _gate_shift,		\ 		.lock_shift = _lock_shift,		\ 		.lock_retries = _lock_retries,		\ 		.flags = _flags | AW_CLK_HAS_FRAC,	\ 		.frac.freq0 = _freq0,			\ 		.frac.freq1 = _freq1,			\ 		.frac.mode_sel = _mode_sel,		\ 		.frac.freq_sel = _freq_sel,		\ 	},
+value|static struct aw_clk_nm_def _clkname =	{	\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _nshift,			\ 		.n.width = _nwidth,			\ 		.n.value = _nvalue,			\ 		.n.flags = _nflags,			\ 		.m.shift = _mshift,			\ 		.m.width = _mwidth,			\ 		.m.value = _mvalue,			\ 		.m.flags = _mflags,			\ 		.gate_shift = _gate_shift,		\ 		.lock_shift = _lock_shift,		\ 		.lock_retries = _lock_retries,		\ 		.flags = _flags | AW_CLK_HAS_FRAC,	\ 		.frac.freq0 = _freq0,			\ 		.frac.freq1 = _freq1,			\ 		.frac.mode_sel = _mode_sel,		\ 		.frac.freq_sel = _freq_sel,		\ 	}
 end_define
 
 begin_define
@@ -702,12 +708,14 @@ define|#
 directive|define
 name|PREDIV_CLK
 parameter_list|(
+name|_clkname
+parameter_list|,
 name|_id
 parameter_list|,
 name|_name
 parameter_list|,
 name|_pnames
-parameter_list|,		\
+parameter_list|,	\
 name|_offset
 parameter_list|,	\
 name|_mux_shift
@@ -737,7 +745,7 @@ parameter_list|,
 name|_prediv_cond_value
 parameter_list|)
 define|\
-value|{							\ 		.clkdef = {					\ 			.id = _id,				\ 			.name = _name,				\ 			.parent_names = _pnames,		\ 			.parent_cnt = nitems(_pnames),		\ 		},						\ 		.offset = _offset,				\ 		.mux_shift = _mux_shift,			\ 		.mux_width = _mux_width,			\ 		.div.shift = _div_shift,			\ 		.div.width = _div_width,			\ 		.div.value = _div_value,			\ 		.div.flags = _div_flags,			\ 		.prediv.shift = _prediv_shift,			\ 		.prediv.width = _prediv_width,			\ 		.prediv.value = _prediv_value,			\ 		.prediv.flags = _prediv_flags,			\ 		.prediv.cond_shift = _prediv_cond_shift,	\ 		.prediv.cond_width = _prediv_cond_width,	\ 		.prediv.cond_value = _prediv_cond_value,	\ 	},
+value|static struct aw_clk_prediv_mux_def _clkname = {	\ 		.clkdef = {					\ 			.id = _id,				\ 			.name = _name,				\ 			.parent_names = _pnames,		\ 			.parent_cnt = nitems(_pnames),		\ 		},						\ 		.offset = _offset,				\ 		.mux_shift = _mux_shift,			\ 		.mux_width = _mux_width,			\ 		.div.shift = _div_shift,			\ 		.div.width = _div_width,			\ 		.div.value = _div_value,			\ 		.div.flags = _div_flags,			\ 		.prediv.shift = _prediv_shift,			\ 		.prediv.width = _prediv_width,			\ 		.prediv.value = _prediv_value,			\ 		.prediv.flags = _prediv_flags,			\ 		.prediv.cond_shift = _prediv_cond_shift,	\ 		.prediv.cond_width = _prediv_cond_width,	\ 		.prediv.cond_value = _prediv_cond_value,	\ 	}
 end_define
 
 begin_define
@@ -745,12 +753,14 @@ define|#
 directive|define
 name|MUX_CLK
 parameter_list|(
+name|_clkname
+parameter_list|,
 name|_id
 parameter_list|,
 name|_name
 parameter_list|,
 name|_pnames
-parameter_list|,			\
+parameter_list|,		\
 name|_offset
 parameter_list|,
 name|_shift
@@ -758,7 +768,7 @@ parameter_list|,
 name|_width
 parameter_list|)
 define|\
-value|{						\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames)	\ 		},					\ 		.offset = _offset,			\ 		.shift = _shift,			\ 		.width = _width,			\ 	},
+value|static struct clk_mux_def _clkname = {	\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames)	\ 		},					\ 		.offset = _offset,			\ 		.shift = _shift,			\ 		.width = _width,			\ 	}
 end_define
 
 begin_define
@@ -766,12 +776,14 @@ define|#
 directive|define
 name|DIV_CLK
 parameter_list|(
+name|_clkname
+parameter_list|,
 name|_id
 parameter_list|,
 name|_name
 parameter_list|,
 name|_pnames
-parameter_list|,			\
+parameter_list|,		\
 name|_offset
 parameter_list|,						\
 name|_i_shift
@@ -783,7 +795,7 @@ parameter_list|,
 name|_div_table
 parameter_list|)
 define|\
-value|{						\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames)	\ 		},					\ 		.offset = _offset,			\ 		.i_shift = _i_shift,			\ 		.i_width = _i_width,			\ 		.div_flags = _div_flags,		\ 		.div_table = _div_table,		\ 	},
+value|static struct clk_div_def _clkname = {		\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames)	\ 		},					\ 		.offset = _offset,			\ 		.i_shift = _i_shift,			\ 		.i_width = _i_width,			\ 		.div_flags = _div_flags,		\ 		.div_table = _div_table,		\ 	}
 end_define
 
 begin_define
@@ -791,12 +803,14 @@ define|#
 directive|define
 name|FIXED_CLK
 parameter_list|(
+name|_clkname
+parameter_list|,
 name|_id
 parameter_list|,
 name|_name
 parameter_list|,
 name|_pnames
-parameter_list|,			\
+parameter_list|,	\
 name|_freq
 parameter_list|,
 name|_mult
@@ -806,7 +820,7 @@ parameter_list|,
 name|_flags
 parameter_list|)
 define|\
-value|{						\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = 1,		\ 		},					\ 		.freq = _freq,				\ 		.mult = _mult,				\ 		.div = _div,				\ 		.fixed_flags = _flags,			\ 	},
+value|static struct clk_fixed_def _clkname = {	\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = 1,		\ 		},					\ 		.freq = _freq,				\ 		.mult = _mult,				\ 		.div = _div,				\ 		.fixed_flags = _flags,			\ 	}
 end_define
 
 begin_endif
