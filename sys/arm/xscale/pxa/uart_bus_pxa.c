@@ -293,6 +293,8 @@ name|dev
 argument_list|,
 literal|2
 argument_list|,
+literal|0
+argument_list|,
 name|PXA2X0_COM_FREQ
 argument_list|,
 literal|0

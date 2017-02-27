@@ -244,6 +244,8 @@ decl_stmt|;
 name|u_int
 name|shift
 decl_stmt|,
+name|iowidth
+decl_stmt|,
 name|rclk
 decl_stmt|;
 name|int
@@ -310,6 +312,9 @@ name|rclk
 argument_list|,
 operator|&
 name|shift
+argument_list|,
+operator|&
+name|iowidth
 argument_list|)
 expr_stmt|;
 if|if
@@ -339,6 +344,14 @@ operator|.
 name|regshft
 operator|=
 name|shift
+expr_stmt|;
+name|di
+operator|->
+name|bas
+operator|.
+name|regiowidth
+operator|=
+name|iowidth
 expr_stmt|;
 name|di
 operator|->

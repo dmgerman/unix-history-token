@@ -331,6 +331,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int
+name|uart_getregiowidth
+parameter_list|(
+name|struct
+name|uart_class
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|uart_add_sysdev
 parameter_list|(

@@ -168,6 +168,10 @@ name|u_int
 name|uc_rshift
 decl_stmt|;
 comment|/* Default regshift for this device. */
+name|u_int
+name|uc_riowidth
+decl_stmt|;
+comment|/* Default reg io width for this device. */
 block|}
 struct|;
 end_struct
@@ -457,6 +461,9 @@ name|dev
 parameter_list|,
 name|int
 name|regshft
+parameter_list|,
+name|int
+name|regiowidth
 parameter_list|,
 name|int
 name|rclk

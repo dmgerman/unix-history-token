@@ -962,6 +962,8 @@ name|dev
 argument_list|,
 name|shift
 argument_list|,
+literal|0
+argument_list|,
 operator|(
 name|int
 operator|)
