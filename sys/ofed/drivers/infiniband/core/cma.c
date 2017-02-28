@@ -5408,19 +5408,6 @@ operator|&
 name|lock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|id_priv
-operator|->
-name|sock
-condition|)
-name|sock_release
-argument_list|(
-name|id_priv
-operator|->
-name|sock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
