@@ -2299,7 +2299,6 @@ block|{
 case|case
 name|LINUX_EPOLL_CTL_MOD
 case|:
-comment|/* 		 * We don't memorize which events were set for this FD 		 * on this level, so just delete all we could have set: 		 * EVFILT_READ and EVFILT_WRITE, ignoring any errors 		 */
 name|error
 operator|=
 name|epoll_delete_all_events
@@ -3036,9 +3035,6 @@ block|,
 name|epoll_kev_copyin
 block|}
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|ciargs
 operator|.
 name|changelist
@@ -3066,8 +3062,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|kern_kevent_fp
 argument_list|(
 name|td
@@ -3083,21 +3079,6 @@ name|k_ops
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-comment|/* 	 * here we ignore ENONT, because we don't keep track of events here 	 */
-if|if
-condition|(
-name|error
-operator|==
-name|ENOENT
-condition|)
-name|error
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -3153,16 +3134,16 @@ argument_list|,
 name|EVFILT_WRITE
 argument_list|)
 expr_stmt|;
-comment|/* report any errors we got */
+comment|/* return 0 if at least one result positive */
 return|return
 operator|(
 name|error1
 operator|==
 literal|0
 condition|?
-name|error2
+literal|0
 else|:
-name|error1
+name|error2
 operator|)
 return|;
 block|}
