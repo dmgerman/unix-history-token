@@ -469,7 +469,7 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-name|AML_MULTI_NAME_PREFIX_OP
+name|AML_MULTI_NAME_PREFIX
 case|:
 name|SegCount
 operator|=

@@ -1316,7 +1316,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_POWER_RES_OP
+name|AML_POWER_RESOURCE_OP
 case|:
 name|Status
 operator|=

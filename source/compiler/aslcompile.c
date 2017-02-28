@@ -659,6 +659,27 @@ argument_list|,
 literal|"\nResolve Externals\n\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_DoExternalsInPlace
+condition|)
+block|{
+name|TrWalkParseTree
+argument_list|(
+name|Gbl_ParseTreeRoot
+argument_list|,
+name|ASL_WALK_VISIT_DOWNWARD
+argument_list|,
+name|ExAmlExternalWalkBegin
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|TrWalkParseTree
 argument_list|(
 name|Gbl_ParseTreeRoot
@@ -672,6 +693,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|UtEndEvent
 argument_list|(
 name|Event
@@ -853,6 +875,29 @@ argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
+comment|/*      * ASL-/ASL+ converter: Gbl_ParseTreeRoot->CommentList contains the      * very last comment of a given ASL file because it's the last constructed      * node during compilation. We take the very last comment and save it in a      * global for it to be used by the disassembler.      */
+if|if
+condition|(
+name|Gbl_CaptureComments
+condition|)
+block|{
+name|AcpiGbl_LastListHead
+operator|=
+name|Gbl_ParseTreeRoot
+operator|->
+name|Asl
+operator|.
+name|CommentList
+expr_stmt|;
+name|Gbl_ParseTreeRoot
+operator|->
+name|Asl
+operator|.
+name|CommentList
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* Calculate all AML package lengths */
 name|Event
 operator|=
@@ -1840,9 +1885,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Final cleanup after compiling one file */
+if|if
+condition|(
+operator|!
+name|Gbl_DoAslConversion
+condition|)
+block|{
 name|CmDeleteCaches
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 

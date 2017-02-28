@@ -558,7 +558,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_BUFFER_OP
 operator|)
 operator|||
 operator|(
@@ -572,7 +572,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_BUFFER_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 operator|||
 operator|(
@@ -1282,7 +1282,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_COND_REF_OF_OP
+name|AML_CONDITIONAL_REF_OF_OP
 condition|)
 block|{
 comment|/*                      * For the Conditional Reference op, it's OK if                      * the name is not found;  We just need a way to                      * indicate this to the interpreter, set the                      * object to the root                      */
@@ -1993,7 +1993,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 operator|||
 operator|(

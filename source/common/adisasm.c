@@ -734,6 +734,29 @@ decl_stmt|;
 name|ACPI_OWNER_ID
 name|OwnerId
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+comment|/*      * For ASL-/ASL+ converter: replace the temporary "XXXX"      * table signature with the original. This "XXXX" makes      * it harder for the AML interpreter to run the badaml      * (.xxx) file produced from the converter in case if      * it fails to get deleted.      */
+if|if
+condition|(
+name|Gbl_CaptureComments
+condition|)
+block|{
+name|strncpy
+argument_list|(
+name|Table
+operator|->
+name|Signature
+argument_list|,
+name|AcpiGbl_TableSig
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* ForceAmlDisassembly means to assume the table contains valid AML */
 if|if
 condition|(
@@ -1068,6 +1091,10 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_COMMENT_ADDR_NODE
+modifier|*
+name|AddrListHead
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1171,6 +1198,28 @@ comment|/* New namespace, add the external definitions first */
 name|AcpiDmAddExternalsToNamespace
 argument_list|()
 expr_stmt|;
+comment|/* For -ca option: clear the list of comment addresses. */
+while|while
+condition|(
+name|AcpiGbl_CommentAddrListHead
+condition|)
+block|{
+name|AddrListHead
+operator|=
+name|AcpiGbl_CommentAddrListHead
+expr_stmt|;
+name|AcpiGbl_CommentAddrListHead
+operator|=
+name|AcpiGbl_CommentAddrListHead
+operator|->
+name|Next
+expr_stmt|;
+name|AcpiOsFree
+argument_list|(
+name|AddrListHead
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parse the table again. No need to reload it, however */
 name|Status
 operator|=

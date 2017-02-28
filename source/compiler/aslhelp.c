@@ -84,6 +84,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-ca<file>"
+argument_list|,
+literal|"convert a given ASL file to ASL+ (retains comments)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-v"
 argument_list|,
 literal|"Display compiler version"
@@ -548,6 +555,13 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\nDebug Options:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-bc"
+argument_list|,
+literal|"Create converter debug file (*.cdb)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION

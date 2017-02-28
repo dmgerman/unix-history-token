@@ -836,9 +836,13 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|NewBitOffset
 operator|==
 name|CurrentBitOffset
+operator|)
+operator|&&
+name|Gbl_OptimizeTrivialParseNodes
 condition|)
 block|{
 comment|/*                  * Offset is redundant; we don't need to output an                  * offset opcode. Just set these nodes to default                  */
@@ -929,6 +933,8 @@ name|ParseOpcode
 operator|==
 name|PARSEOP_RESERVED_BYTES
 operator|)
+operator|&&
+name|Gbl_OptimizeTrivialParseNodes
 condition|)
 block|{
 comment|/*                  * Unnamed field with a bit length of zero. We can                  * safely just ignore this. However, we will not ignore                  * a named field of zero length, we don't want to just                  * toss out a name.                  */
@@ -2701,7 +2707,7 @@ case|case
 name|AML_REGION_OP
 case|:
 case|case
-name|AML_POWER_RES_OP
+name|AML_POWER_RESOURCE_OP
 case|:
 case|case
 name|AML_PROCESSOR_OP

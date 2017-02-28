@@ -170,7 +170,7 @@ case|case
 name|AML_PACKAGE_OP
 case|:
 case|case
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 case|:
 name|Status
 operator|=
@@ -493,7 +493,7 @@ case|case
 name|AML_PACKAGE_OP
 case|:
 case|case
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 case|:
 switch|switch
 condition|(
@@ -532,7 +532,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 case|:
 case|case
 name|AML_BUFFER_OP

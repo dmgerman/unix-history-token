@@ -627,7 +627,7 @@ block|,
 comment|/* BREAKPOINT */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BREAK_POINT_OP
+name|AML_BREAKPOINT_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -747,7 +747,7 @@ block|,
 comment|/* CONCATENATE */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_CONCAT_OP
+name|AML_CONCATENATE_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -759,7 +759,7 @@ block|,
 comment|/* CONCATENATERESTEMPLATE */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_CONCAT_RES_OP
+name|AML_CONCATENATE_TEMPLATE_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -771,7 +771,7 @@ block|,
 comment|/* CONDREFOF */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_COND_REF_OF_OP
+name|AML_CONDITIONAL_REF_OF_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -804,10 +804,10 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* COPY */
+comment|/* COPYOBJECT */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_COPY_OP
+name|AML_COPY_OBJECT_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -1769,7 +1769,7 @@ block|,
 comment|/* LAND */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_LAND_OP
+name|AML_LOGICAL_AND_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -1781,7 +1781,7 @@ block|,
 comment|/* LEQUAL */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -1793,7 +1793,7 @@ block|,
 comment|/* LGREATER */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -1805,7 +1805,7 @@ block|,
 comment|/* LGREATEREQUAL */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_LGREATEREQUAL_OP
+name|AML_LOGICAL_GREATER_EQUAL_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -1817,7 +1817,7 @@ block|,
 comment|/* LLESS */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -1829,7 +1829,7 @@ block|,
 comment|/* LLESSEQUAL */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_LLESSEQUAL_OP
+name|AML_LOGICAL_LESS_EQUAL_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -1841,7 +1841,7 @@ block|,
 comment|/* LNOT */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_LNOT_OP
+name|AML_LOGICAL_NOT_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -1853,7 +1853,7 @@ block|,
 comment|/* LNOTEQUAL */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_LNOTEQUAL_OP
+name|AML_LOGICAL_NOT_EQUAL_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -2009,7 +2009,7 @@ block|,
 comment|/* LOR */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_LOR_OP
+name|AML_LOGICAL_OR_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -2803,7 +2803,7 @@ block|,
 comment|/* POWERRESOURCE */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_POWER_RES_OP
+name|AML_POWER_RESOURCE_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -3583,7 +3583,7 @@ block|,
 comment|/* TODECIMALSTRING */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_TO_DECSTRING_OP
+name|AML_TO_DECIMAL_STRING_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -3595,7 +3595,7 @@ block|,
 comment|/* TOHEXSTRING */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_TO_HEXSTRING_OP
+name|AML_TO_HEX_STRING_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -3772,10 +3772,10 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* VAR_PACKAGE */
+comment|/* VARIABLE_PACKAGE */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 argument_list|,
 literal|0
 argument_list|,

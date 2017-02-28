@@ -1014,7 +1014,6 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/* Take care with reference counts */
 if|if
 condition|(
 name|OriginalElement
@@ -1023,7 +1022,7 @@ operator|*
 name|ElementPtr
 condition|)
 block|{
-comment|/* Element was replaced */
+comment|/* Update reference count of new object */
 operator|(
 operator|*
 name|ElementPtr
@@ -1034,11 +1033,6 @@ operator|.
 name|ReferenceCount
 operator|=
 name|OriginalRefCount
-expr_stmt|;
-name|AcpiUtRemoveReference
-argument_list|(
-name|OriginalElement
-argument_list|)
 expr_stmt|;
 block|}
 name|ElementPtr

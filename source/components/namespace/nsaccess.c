@@ -1123,7 +1123,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_MULTI_NAME_PREFIX_OP
+name|AML_MULTI_NAME_PREFIX
 case|:
 comment|/* More than one NameSeg, search rules do not apply */
 name|SearchParentFlag

@@ -50,7 +50,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Summary of opcode types/flags  *   Opcodes that have associated namespace objects (AML_NSOBJECT flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_INT_NAMEDFIELD_OP     AML_INT_METHODCALL_OP     AML_INT_NAMEPATH_OP    Opcodes that are "namespace" opcodes (AML_NSOPCODE flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_INT_NAMEDFIELD_OP    Opcodes that have an associated namespace node (AML_NSNODE flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_INT_NAMEDFIELD_OP     AML_INT_METHODCALL_OP     AML_INT_NAMEPATH_OP    Opcodes that define named ACPI objects (AML_NAMED flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_INT_NAMEDFIELD_OP    Opcodes that contain executable AML as part of the definition that   must be deferred until needed      AML_METHOD_OP     AML_VAR_PACKAGE_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_REGION_OP     AML_BUFFER_OP    Field opcodes      AML_CREATE_FIELD_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP    Field "Create" opcodes      AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP   ******************************************************************************/
+comment|/*  * Summary of opcode types/flags  *   Opcodes that have associated namespace objects (AML_NSOBJECT flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RESOURCE_OP     AML_PROCESSOR_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_INT_NAMEDFIELD_OP     AML_INT_METHODCALL_OP     AML_INT_NAMEPATH_OP    Opcodes that are "namespace" opcodes (AML_NSOPCODE flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RESOURCE_OP     AML_PROCESSOR_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_INT_NAMEDFIELD_OP    Opcodes that have an associated namespace node (AML_NSNODE flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RESOURCE_OP     AML_PROCESSOR_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_INT_NAMEDFIELD_OP     AML_INT_METHODCALL_OP     AML_INT_NAMEPATH_OP    Opcodes that define named ACPI objects (AML_NAMED flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RESOURCE_OP     AML_PROCESSOR_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_INT_NAMEDFIELD_OP    Opcodes that contain executable AML as part of the definition that   must be deferred until needed      AML_METHOD_OP     AML_VARIABLE_PACKAGE_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_REGION_OP     AML_BUFFER_OP    Field opcodes      AML_CREATE_FIELD_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP    Field "Create" opcodes      AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP   ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2710,18 +2710,36 @@ name|ACPI_OP
 argument_list|(
 literal|"External"
 argument_list|,
-argument|ARGP_EXTERNAL_OP
+name|ARGP_EXTERNAL_OP
 argument_list|,
-argument|ARGI_EXTERNAL_OP
+name|ARGI_EXTERNAL_OP
 argument_list|,
-argument|ACPI_TYPE_ANY
+name|ACPI_TYPE_ANY
 argument_list|,
-argument|AML_CLASS_EXECUTE
+name|AML_CLASS_EXECUTE
 argument_list|,
 comment|/* ? */
-argument|AML_TYPE_EXEC_3A_0T_0R
+name|AML_TYPE_EXEC_3A_0T_0R
 argument_list|,
-argument|AML_FLAGS_EXEC_3A_0T_0R
+name|AML_FLAGS_EXEC_3A_0T_0R
+argument_list|)
+block|,
+comment|/* 82 */
+name|ACPI_OP
+argument_list|(
+literal|"Comment"
+argument_list|,
+argument|ARGP_COMMENT_OP
+argument_list|,
+argument|ARGI_COMMENT_OP
+argument_list|,
+argument|ACPI_TYPE_STRING
+argument_list|,
+argument|AML_CLASS_ARGUMENT
+argument_list|,
+argument|AML_TYPE_LITERAL
+argument_list|,
+argument|AML_CONSTANT
 argument_list|)
 comment|/*! [End] no source code translation !*/
 block|}

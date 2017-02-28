@@ -604,6 +604,24 @@ define|\
 value|" %08X %04X %04X %01X     %04X  %04X %05X  %05X   "\     "%08X %08X %08X %08X %08X %08X %04X  %02d  %5d %5d %5d %5d\n"
 end_define
 
+begin_comment
+comment|/*  * Macros for ASL/ASL+ converter  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMMENT_CAPTURE_ON
+value|Gbl_CommentState.CaptureComments = TRUE;
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMMENT_CAPTURE_OFF
+value|Gbl_CommentState.CaptureComments = FALSE;
+end_define
+
 begin_endif
 endif|#
 directive|endif

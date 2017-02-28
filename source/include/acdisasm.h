@@ -3089,6 +3089,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiDmEmitExternal
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|NameOp
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|TypeOp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiDmUnresolvedWarning
 parameter_list|(
 name|UINT8
@@ -3891,6 +3906,21 @@ name|ACPI_STATUS
 name|AdDisplayStatistics
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * dmwalk  */
+end_comment
+
+begin_function_decl
+name|UINT32
+name|AcpiDmBlockType
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|)
 function_decl|;
 end_function_decl

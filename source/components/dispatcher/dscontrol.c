@@ -771,7 +771,7 @@ case|:
 comment|/* Just do nothing! */
 break|break;
 case|case
-name|AML_BREAK_POINT_OP
+name|AML_BREAKPOINT_OP
 case|:
 name|AcpiDbSignalBreakPoint
 argument_list|(

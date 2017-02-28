@@ -1383,6 +1383,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|CgLocalWriteAmlData
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|void
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * aslfile  */
 end_comment
@@ -3443,6 +3461,23 @@ name|char
 modifier|*
 modifier|*
 name|argv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * ASL/ASL+ converter debug  */
+end_comment
+
+begin_function_decl
+name|void
+name|CvDbgPrint
+parameter_list|(
+name|char
+modifier|*
+name|Fmt
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

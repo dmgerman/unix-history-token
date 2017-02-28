@@ -586,7 +586,7 @@ case|case
 name|AML_TO_BCD_OP
 case|:
 case|case
-name|AML_COND_REF_OF_OP
+name|AML_CONDITIONAL_REF_OF_OP
 case|:
 comment|/* Create a return object of type Integer for these opcodes */
 name|ReturnDesc
@@ -1010,7 +1010,7 @@ goto|;
 block|}
 break|break;
 case|case
-name|AML_COND_REF_OF_OP
+name|AML_CONDITIONAL_REF_OF_OP
 case|:
 comment|/* CondRefOf (SourceObject, Result)  */
 comment|/*              * This op is a little strange because the internal return value is              * different than the return value stored in the result descriptor              * (There are really two return values)              */
@@ -1178,9 +1178,9 @@ argument_list|)
 expr_stmt|;
 comment|/*      * ACPI 2.0 Opcodes      */
 case|case
-name|AML_COPY_OP
+name|AML_COPY_OBJECT_OP
 case|:
-comment|/* Copy (Source, Target) */
+comment|/* CopyObject (Source, Target) */
 name|Status
 operator|=
 name|AcpiUtCopyIobjectToIobject
@@ -1198,7 +1198,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_TO_DECSTRING_OP
+name|AML_TO_DECIMAL_STRING_OP
 case|:
 comment|/* ToDecimalString (Data, Result) */
 name|Status
@@ -1235,7 +1235,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_TO_HEXSTRING_OP
+name|AML_TO_HEX_STRING_OP
 case|:
 comment|/* ToHexString (Data, Result) */
 name|Status
@@ -1533,7 +1533,7 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_LNOT_OP
+name|AML_LOGICAL_NOT_OP
 case|:
 comment|/* LNot (Operand) */
 name|ReturnDesc
@@ -1644,7 +1644,7 @@ name|Status
 operator|=
 name|AcpiExResolveOperands
 argument_list|(
-name|AML_LNOT_OP
+name|AML_LOGICAL_NOT_OP
 argument_list|,
 operator|&
 name|TempDesc

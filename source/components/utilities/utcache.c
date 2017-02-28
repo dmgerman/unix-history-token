@@ -78,11 +78,8 @@ operator|||
 operator|!
 name|ReturnCache
 operator|||
-operator|(
+operator|!
 name|ObjectSize
-operator|<
-literal|16
-operator|)
 condition|)
 block|{
 return|return

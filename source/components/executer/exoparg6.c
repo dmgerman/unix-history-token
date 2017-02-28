@@ -126,7 +126,7 @@ name|Status
 operator|=
 name|AcpiExDoLogicalOp
 argument_list|(
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 argument_list|,
 name|MatchObj
 argument_list|,
@@ -159,7 +159,7 @@ name|Status
 operator|=
 name|AcpiExDoLogicalOp
 argument_list|(
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 argument_list|,
 name|MatchObj
 argument_list|,
@@ -200,7 +200,7 @@ name|Status
 operator|=
 name|AcpiExDoLogicalOp
 argument_list|(
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 argument_list|,
 name|MatchObj
 argument_list|,
@@ -233,7 +233,7 @@ name|Status
 operator|=
 name|AcpiExDoLogicalOp
 argument_list|(
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 argument_list|,
 name|MatchObj
 argument_list|,
@@ -274,7 +274,7 @@ name|Status
 operator|=
 name|AcpiExDoLogicalOp
 argument_list|(
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 argument_list|,
 name|MatchObj
 argument_list|,

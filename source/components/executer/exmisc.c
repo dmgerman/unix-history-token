@@ -488,7 +488,7 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_LAND_OP
+name|AML_LOGICAL_AND_OP
 case|:
 comment|/* LAnd (Integer0, Integer1) */
 if|if
@@ -505,7 +505,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_LOR_OP
+name|AML_LOGICAL_OR_OP
 case|:
 comment|/* LOr (Integer0, Integer1) */
 if|if
@@ -712,7 +712,7 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 case|:
 comment|/* LEqual (Operand0, Operand1) */
 if|if
@@ -729,7 +729,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 case|:
 comment|/* LGreater (Operand0, Operand1) */
 if|if
@@ -746,7 +746,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 case|:
 comment|/* LLess (Operand0, Operand1) */
 if|if
@@ -823,7 +823,7 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 case|:
 comment|/* LEqual (Operand0, Operand1) */
 comment|/* Length and all bytes must be equal */
@@ -850,7 +850,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 case|:
 comment|/* LGreater (Operand0, Operand1) */
 if|if
@@ -896,7 +896,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 case|:
 comment|/* LLess (Operand0, Operand1) */
 if|if

@@ -313,6 +313,17 @@ begin_comment
 comment|/* Watchdog Resource Table */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_XXXX
+value|"XXXX"
+end_define
+
+begin_comment
+comment|/* Intermediate AML header for ASL/ASL+ converter */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2336,6 +2347,32 @@ directive|define
 name|ACPI_IORT_SMMU_COHERENT_WALK
 value|(1<<1)
 end_define
+
+begin_comment
+comment|/* Global interrupt format */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_iort_smmu_gsi
+block|{
+name|UINT32
+name|NSgIrpt
+decl_stmt|;
+name|UINT32
+name|NSgIrptFlags
+decl_stmt|;
+name|UINT32
+name|NSgCfgIrpt
+decl_stmt|;
+name|UINT32
+name|NSgCfgIrptFlags
+decl_stmt|;
+block|}
+name|ACPI_IORT_SMMU_GSI
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef

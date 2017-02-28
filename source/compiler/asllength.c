@@ -25,6 +25,12 @@ directive|include
 file|"amlcode.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acconvert.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -213,6 +219,11 @@ operator|->
 name|Asl
 operator|.
 name|AmlSubtreeLength
+operator|+
+name|CvCalculateCommentLengths
+argument_list|(
+name|Op
+argument_list|)
 operator|)
 expr_stmt|;
 block|}

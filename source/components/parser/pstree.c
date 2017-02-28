@@ -31,6 +31,12 @@ directive|include
 file|"amlcode.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acconvert.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -448,6 +454,11 @@ condition|(
 name|Next
 condition|)
 block|{
+name|ASL_CV_LABEL_FILENODE
+argument_list|(
+name|Next
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Next
@@ -468,6 +479,11 @@ condition|(
 name|Next
 condition|)
 block|{
+name|ASL_CV_LABEL_FILENODE
+argument_list|(
+name|Next
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Next
@@ -514,6 +530,11 @@ name|Op
 operator|)
 condition|)
 block|{
+name|ASL_CV_LABEL_FILENODE
+argument_list|(
+name|Arg
+argument_list|)
+expr_stmt|;
 name|Arg
 operator|=
 name|Arg
@@ -547,6 +568,15 @@ name|Next
 condition|)
 block|{
 comment|/* Found sibling of parent */
+name|ASL_CV_LABEL_FILENODE
+argument_list|(
+name|Parent
+operator|->
+name|Common
+operator|.
+name|Next
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Parent
@@ -570,6 +600,11 @@ operator|.
 name|Parent
 expr_stmt|;
 block|}
+name|ASL_CV_LABEL_FILENODE
+argument_list|(
+name|Next
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Next
@@ -670,7 +705,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_POWER_RES_OP
+name|AML_POWER_RESOURCE_OP
 case|:
 case|case
 name|AML_INDEX_FIELD_OP

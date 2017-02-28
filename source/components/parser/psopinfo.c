@@ -772,7 +772,7 @@ block|,
 comment|/* 0xA8 */
 literal|0x62
 block|,
-name|_UNK
+literal|0x82
 block|,
 name|_UNK
 block|,

@@ -1720,7 +1720,7 @@ case|case
 name|AML_PACKAGE_OP
 case|:
 case|case
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 case|:
 name|Status
 operator|=
@@ -1790,7 +1790,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|!=
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 operator|&&
 operator|(

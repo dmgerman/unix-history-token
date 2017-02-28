@@ -571,7 +571,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|AML_MULTI_NAME_PREFIX_OP
+name|AML_MULTI_NAME_PREFIX
 expr_stmt|;
 name|InternalName
 index|[
@@ -684,7 +684,7 @@ index|[
 name|i
 index|]
 operator|=
-name|AML_MULTI_NAME_PREFIX_OP
+name|AML_MULTI_NAME_PREFIX
 expr_stmt|;
 name|InternalName
 index|[
@@ -1183,7 +1183,7 @@ index|]
 condition|)
 block|{
 case|case
-name|AML_MULTI_NAME_PREFIX_OP
+name|AML_MULTI_NAME_PREFIX
 case|:
 comment|/*<count> 4-byte names */
 name|NamesIndex
@@ -1542,15 +1542,6 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|NsTerminate
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_EXEC_APP
-block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|Prev
@@ -1559,6 +1550,11 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|Next
 decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|NsTerminate
+argument_list|)
+expr_stmt|;
 comment|/* Delete any module-level code blocks */
 name|Next
 operator|=
@@ -1596,9 +1592,6 @@ name|Prev
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-endif|#
-directive|endif
 comment|/*      * Free the entire namespace -- all nodes and all objects      * attached to the nodes      */
 name|AcpiNsDeleteNamespaceSubtree
 argument_list|(

@@ -1375,7 +1375,7 @@ name|Asl
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 operator|)
 condition|)

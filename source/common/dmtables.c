@@ -43,6 +43,18 @@ directive|include
 file|"acapps.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acmacros.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acconvert.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -430,6 +442,24 @@ argument_list|(
 literal|" */\n"
 argument_list|)
 expr_stmt|;
+comment|/*      * Print comments that come before this definition block.      */
+if|if
+condition|(
+name|Gbl_CaptureComments
+condition|)
+block|{
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|AcpiGbl_ParseOpRoot
+argument_list|,
+name|AML_COMMENT_STANDARD
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Open the ASL definition block.      *      * Note: the AMLFilename string is left zero-length in order to just let      * the compiler create it when the disassembled file is compiled. This      * makes it easier to rename the disassembled ASL file if needed.      */
 name|AcpiOsPrintf
 argument_list|(
@@ -876,6 +906,15 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 operator|)
 expr_stmt|;
+name|ASL_CV_INIT_FILETREE
+argument_list|(
+name|Table
+argument_list|,
+name|AmlStart
+argument_list|,
+name|AmlLength
+argument_list|)
+expr_stmt|;
 comment|/* Create the root object */
 name|AcpiGbl_ParseOpRoot
 operator|=
@@ -896,6 +935,38 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+if|if
+condition|(
+name|Gbl_CaptureComments
+condition|)
+block|{
+name|AcpiGbl_ParseOpRoot
+operator|->
+name|Common
+operator|.
+name|CvFilename
+operator|=
+name|AcpiGbl_FileTreeRoot
+operator|->
+name|Filename
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiGbl_ParseOpRoot
+operator|->
+name|Common
+operator|.
+name|CvFilename
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Create and initialize a new walk state */
 name|WalkState
 operator|=

@@ -122,7 +122,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiException  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              Status              - Status to be formatted  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print "ACPI Exception" message with module/line/version info  *              and decoded ACPI_STATUS.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiException  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              Status              - Status value to be decoded/formatted  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print "ACPI Exception" message with module/line/version info  *              and decoded ACPI_STATUS.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -217,7 +217,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiWarning  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print "ACPI Warning" message with module/line/version info  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiWarning  *  * PARAMETERS:  ModuleName          - Caller's module name (for warning output)  *              LineNumber          - Caller's line number (for warning output)  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print "ACPI Warning" message with module/line/version info  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -285,7 +285,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiInfo  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print generic "ACPI:" information message. There is no  *              module/line/version info in order to keep the message simple.  *  * TBD: ModuleName and LineNumber args are not needed, should be removed.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInfo  *  * PARAMETERS:  Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print generic "ACPI:" information message. There is no  *              module/line/version info in order to keep the message simple.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -416,7 +416,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiBiosWarning  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print "ACPI Firmware Warning" message with module/line/version  *              info  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiBiosWarning  *  * PARAMETERS:  ModuleName          - Caller's module name (for warning output)  *              LineNumber          - Caller's line number (for warning output)  *              Format              - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: Print "ACPI Firmware Warning" message with module/line/version  *              info  *  ******************************************************************************/
 end_comment
 
 begin_function

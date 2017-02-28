@@ -2488,6 +2488,61 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmEmitExternal  *  * PARAMETERS:  Op                  External Parse Object  *  * RETURN:      None  *  * DESCRIPTION: Emit an External() ASL statement for the current External  *              parse object  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDmEmitExternal
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|NameOp
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|TypeOp
+parameter_list|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"External ("
+argument_list|)
+expr_stmt|;
+name|AcpiDmNamestring
+argument_list|(
+name|NameOp
+operator|->
+name|Common
+operator|.
+name|Value
+operator|.
+name|Name
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s)\n"
+argument_list|,
+name|AcpiDmGetObjectTypeName
+argument_list|(
+operator|(
+name|ACPI_OBJECT_TYPE
+operator|)
+name|TypeOp
+operator|->
+name|Common
+operator|.
+name|Value
+operator|.
+name|Integer
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmUnresolvedWarning  *  * PARAMETERS:  Type                - Where to output the warning.  *                                    0 means write to stderr  *                                    1 means write to AcpiOsPrintf  *  * RETURN:      None  *  * DESCRIPTION: Issue warning message if there are unresolved external control  *              methods within the disassembly.  *  ******************************************************************************/
 end_comment
 

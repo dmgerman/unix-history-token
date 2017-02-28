@@ -250,6 +250,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_COMMENT_OP
+value|ARGP_LIST2 (ARGP_BYTEDATA,   ARGP_COMMENT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_CONCAT_OP
 value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
 end_define
@@ -1123,6 +1130,13 @@ begin_define
 define|#
 directive|define
 name|ARGI_BYTELIST_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_COMMENT_OP
 value|ARGI_INVALID_OPCODE
 end_define
 

@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|AML_NUM_OPCODES
-value|0x82
+value|0x83
 end_define
 
 begin_comment
@@ -2469,6 +2469,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_ASL_COMPILER
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_CONVERTER_ONLY_MEMBERS
+parameter_list|(
+name|a
+parameter_list|)
+value|a;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_CONVERTER_ONLY_MEMBERS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2492,18 +2530,70 @@ value|\     ACPI_PARSE_VALUE                Value;
 comment|/* Value or args associated with the opcode */
 value|\     UINT8                           ArgListLength;
 comment|/* Number of elements in the arg list */
-value|\     ACPI_DISASM_ONLY_MEMBERS (\     UINT16                          DisasmFlags;
+value|\      ACPI_DISASM_ONLY_MEMBERS (\     UINT16                          DisasmFlags;
 comment|/* Used during AML disassembly */
 value|\     UINT8                           DisasmOpcode;
 comment|/* Subtype used for disassembly */
 value|\     char                            *OperatorSymbol;
 comment|/* Used for C-style operator name strings */
 value|\     char                            AmlOpName[16])
+comment|/* Op name (debug only) */
+value|\      ACPI_CONVERTER_ONLY_MEMBERS (\     char                            *InlineComment;
+comment|/* Inline comment */
+value|\     char                            *EndNodeComment;
+comment|/* End of node comment */
+value|\     char                            *NameComment;
+comment|/* Comment associated with the first parameter of the name node */
+value|\     char                            *CloseBraceComment;
+comment|/* Comments that come after } on the same as } */
+value|\     ACPI_COMMENT_NODE               *CommentList;
+comment|/* comments that appears before this node */
+value|\     ACPI_COMMENT_NODE               *EndBlkComment;
+comment|/* comments that at the end of a block but before ) or } */
+value|\     char                            *CvFilename;
+comment|/* Filename associated with this node. Used for ASL/ASL+ converter */
+value|\     char                            *CvParentFilename)
 end_define
 
 begin_comment
-comment|/* Op name (debug only) */
+comment|/* Parent filename associated with this node. Used for ASL/ASL+ converter */
 end_comment
+
+begin_comment
+comment|/* categories of comments */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|STANDARD_COMMENT
+init|=
+literal|1
+block|,
+name|INLINE_COMMENT
+block|,
+name|ENDNODE_COMMENT
+block|,
+name|OPENBRACE_COMMENT
+block|,
+name|CLOSE_BRACE_COMMENT
+block|,
+name|STD_DEFBLK_COMMENT
+block|,
+name|END_DEFBLK_COMMENT
+block|,
+name|FILENAME_COMMENT
+block|,
+name|PARENTFILENAME_COMMENT
+block|,
+name|ENDBLK_COMMENT
+block|,
+name|INCLUDE_COMMENT
+block|}
+name|ASL_COMMENT_TYPES
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Internal opcodes for DisasmOpcode field above */
@@ -2644,8 +2734,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_DASM_SWITCH_PREDICATE
+name|ACPI_DASM_SWITCH
 value|0x0C
+end_define
+
+begin_comment
+comment|/* While is a Switch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_SWITCH_PREDICATE
+value|0x0D
 end_define
 
 begin_comment
@@ -2656,7 +2757,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_CASE
-value|0x0D
+value|0x0E
 end_define
 
 begin_comment
@@ -2667,12 +2768,103 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_DEFAULT
-value|0x0E
+value|0x0F
 end_define
 
 begin_comment
 comment|/* Else is a Default in a Switch/Case block */
 end_comment
+
+begin_comment
+comment|/*  * List struct used in the -ca option  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_comment_node
+block|{
+name|char
+modifier|*
+name|Comment
+decl_stmt|;
+name|struct
+name|acpi_comment_node
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_COMMENT_NODE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_comment_addr_node
+block|{
+name|UINT8
+modifier|*
+name|Addr
+decl_stmt|;
+name|struct
+name|acpi_comment_addr_node
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_COMMENT_ADDR_NODE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * File node - used for "Include" operator file stack and  * depdendency tree for the -ca option  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_file_node
+block|{
+name|FILE
+modifier|*
+name|File
+decl_stmt|;
+name|char
+modifier|*
+name|Filename
+decl_stmt|;
+name|char
+modifier|*
+name|FileStart
+decl_stmt|;
+comment|/* Points to AML and indicates when the AML for this particular file starts. */
+name|char
+modifier|*
+name|FileEnd
+decl_stmt|;
+comment|/* Points to AML and indicates when the AML for this particular file ends. */
+name|struct
+name|acpi_file_node
+modifier|*
+name|Next
+decl_stmt|;
+name|struct
+name|acpi_file_node
+modifier|*
+name|Parent
+decl_stmt|;
+name|BOOLEAN
+name|IncludeWritten
+decl_stmt|;
+name|ACPI_COMMENT_NODE
+modifier|*
+name|IncludeComment
+decl_stmt|;
+block|}
+name|ACPI_FILE_NODE
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Generic operation (for example:  If, While, Store)  */
@@ -2751,6 +2943,13 @@ decl_stmt|;
 name|char
 modifier|*
 name|Filename
+decl_stmt|;
+name|BOOLEAN
+name|FileChanged
+decl_stmt|;
+name|char
+modifier|*
+name|ParentFilename
 decl_stmt|;
 name|char
 modifier|*
@@ -2844,6 +3043,33 @@ name|Asl
 decl_stmt|;
 block|}
 name|ACPI_PARSE_OBJECT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_comment_state
+block|{
+name|UINT8
+name|CommentType
+decl_stmt|;
+name|UINT32
+name|SpacesBefore
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Latest_Parse_Node
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ParsingParenBraceNode
+decl_stmt|;
+name|BOOLEAN
+name|CaptureComments
+decl_stmt|;
+block|}
+name|ASL_COMMENT_STATE
 typedef|;
 end_typedef
 

@@ -97,6 +97,17 @@ begin_comment
 comment|/* Namespace objects */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_COMMENT_CACHE_DEPTH
+value|96
+end_define
+
+begin_comment
+comment|/* Comments for the -ca option */
+end_comment
+
 begin_comment
 comment|/*  * Should the subsystem abort the loading of an ACPI table if the  * table checksum is incorrect?  */
 end_comment

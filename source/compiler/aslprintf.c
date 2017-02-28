@@ -876,7 +876,7 @@ name|Asl
 operator|.
 name|AmlOpcode
 operator|=
-name|AML_CONCAT_OP
+name|AML_CONCATENATE_OP
 expr_stmt|;
 name|NewConcatOp
 operator|->

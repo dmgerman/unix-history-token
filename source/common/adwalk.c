@@ -2556,7 +2556,7 @@ name|Asl
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_COND_REF_OF_OP
+name|AML_CONDITIONAL_REF_OF_OP
 operator|)
 operator|)
 condition|)

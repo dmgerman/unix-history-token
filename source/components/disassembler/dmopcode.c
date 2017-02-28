@@ -49,6 +49,12 @@ directive|include
 file|"acdebug.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acconvert.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -111,6 +117,10 @@ parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
+parameter_list|,
+name|char
+modifier|*
+name|Temp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -974,6 +984,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_FREE
+argument_list|(
+name|Tag
+argument_list|)
+expr_stmt|;
+comment|/* Tag was allocated in AcpiGetTagPathname */
 endif|#
 directive|endif
 return|return;
@@ -1550,7 +1566,7 @@ name|AmlOpcode
 condition|)
 block|{
 case|case
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1559,7 +1575,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1568,7 +1584,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1622,7 +1638,7 @@ name|AmlOpcode
 condition|)
 block|{
 case|case
-name|AML_LNOT_OP
+name|AML_LOGICAL_NOT_OP
 case|:
 name|Child
 operator|=
@@ -1643,7 +1659,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 operator|)
 operator|||
 operator|(
@@ -1653,7 +1669,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 operator|)
 operator|||
 operator|(
@@ -1663,7 +1679,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 operator|)
 condition|)
 block|{
@@ -2091,7 +2107,23 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|",%*.s  %u"
+literal|","
+argument_list|)
+expr_stmt|;
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AML_NAMECOMMENT
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"%*.s  %u"
 argument_list|,
 call|(
 name|unsigned
@@ -2293,6 +2325,17 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AML_COMMENT_END_NODE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|AML_INT_CONNECTION_OP
@@ -2423,6 +2466,28 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AML_COMMENT_END_NODE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AMLCOMMENT_INLINE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -2494,10 +2559,13 @@ name|AML_WHILE_OP
 case|:
 if|if
 condition|(
-name|AcpiDmIsSwitchBlock
-argument_list|(
 name|Op
-argument_list|)
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|==
+name|ACPI_DASM_SWITCH
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -2569,17 +2637,26 @@ condition|(
 name|AcpiGbl_DmEmitExternalOpcodes
 condition|)
 block|{
-name|AcpiOsPrintf
+name|AcpiDmEmitExternal
 argument_list|(
-literal|"/* Opcode 0x15 */ "
+name|AcpiPsGetArg
+argument_list|(
+name|Op
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|AcpiPsGetArg
+argument_list|(
+name|Op
+argument_list|,
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Fallthrough */
-block|}
-else|else
-block|{
 break|break;
 block|}
+break|break;
 default|default:
 comment|/* Just get the opcode name and print it */
 name|AcpiOsPrintf
@@ -3070,7 +3147,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsTempName  *  * PARAMETERS:  Op              - Object to be examined  *  * RETURN:      TRUE if object is a temporary (_T_x) name  *  * DESCRIPTION: Determine if an object is a temporary name and ignore it.  *              Temporary names are only used for Switch statements. This  *              function depends on this restriced usage.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsTempName  *  * PARAMETERS:  Op              - Object to be examined  *  * RETURN:      TRUE if object is a temporary (_T_x) name for a matching While  *              loop that can be converted to a Switch.  *  * DESCRIPTION: _T_X objects are only used for Switch statements. If a temporary  *              name exists, search the siblings for a matching While (One) loop  *              that can be converted to a Switch. Return TRUE if a match was  *              found, FALSE otherwise.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3082,6 +3159,10 @@ modifier|*
 name|Op
 parameter_list|)
 block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|CurrentOp
+decl_stmt|;
 name|char
 modifier|*
 name|Temp
@@ -3138,7 +3219,37 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* Ignore Op */
+name|CurrentOp
+operator|=
+name|Op
+operator|->
+name|Common
+operator|.
+name|Next
+expr_stmt|;
+while|while
+condition|(
+name|CurrentOp
+condition|)
+block|{
+if|if
+condition|(
+name|CurrentOp
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_WHILE_OP
+operator|&&
+name|AcpiDmIsSwitchBlock
+argument_list|(
+name|CurrentOp
+argument_list|,
+name|Temp
+argument_list|)
+condition|)
+block|{
 name|Op
 operator|->
 name|Common
@@ -3147,9 +3258,32 @@ name|DisasmFlags
 operator||=
 name|ACPI_PARSEOP_IGNORE
 expr_stmt|;
+name|CurrentOp
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|=
+name|ACPI_DASM_SWITCH
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
+operator|)
+return|;
+block|}
+name|CurrentOp
+operator|=
+name|CurrentOp
+operator|->
+name|Common
+operator|.
+name|Next
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|FALSE
 operator|)
 return|;
 block|}
@@ -3167,6 +3301,10 @@ parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
+parameter_list|,
+name|char
+modifier|*
+name|Temp
 parameter_list|)
 block|{
 name|ACPI_PARSE_OBJECT
@@ -3304,9 +3442,9 @@ operator|.
 name|Aml
 operator|)
 argument_list|,
-literal|"_T_"
+name|Temp
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 condition|)
 block|{
@@ -3448,7 +3586,7 @@ condition|)
 block|{
 case|case
 operator|(
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 operator|)
 case|:
 comment|/* Ignore just the LEqual Op */
@@ -3506,7 +3644,7 @@ expr_stmt|;
 break|break;
 case|case
 operator|(
-name|AML_LNOT_OP
+name|AML_LOGICAL_NOT_OP
 operator|)
 case|:
 comment|/*                  * The Package will be the predicate of the Case statement.                  * It's under:                  *            LNOT                  *                LEQUAL                  *                    MATCH                  *                        PACKAGE                  */
@@ -3797,7 +3935,7 @@ condition|)
 block|{
 case|case
 operator|(
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 operator|)
 case|:
 comment|/* Next child must be NamePath with string _T_ */
@@ -3849,7 +3987,7 @@ block|}
 break|break;
 case|case
 operator|(
-name|AML_LNOT_OP
+name|AML_LOGICAL_NOT_OP
 operator|)
 case|:
 comment|/* Child of LNot must be LEqual op */
@@ -3874,7 +4012,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|!=
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 operator|)
 condition|)
 block|{

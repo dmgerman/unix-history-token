@@ -687,7 +687,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_CONCAT_OP
+name|AML_CONCATENATE_OP
 case|:
 comment|/* Concatenate (Data1, Data2, Result) */
 name|Status
@@ -809,7 +809,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_CONCAT_RES_OP
+name|AML_CONCATENATE_TEMPLATE_OP
 case|:
 comment|/* ConcatenateResTemplate (Buffer, Buffer, Result) (ACPI 2.0) */
 name|Status

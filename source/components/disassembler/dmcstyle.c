@@ -37,6 +37,12 @@ directive|include
 file|"acdebug.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acconvert.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -305,7 +311,7 @@ expr_stmt|;
 break|break;
 comment|/* Logical operators, no target */
 case|case
-name|AML_LAND_OP
+name|AML_LOGICAL_AND_OP
 case|:
 name|OperatorSymbol
 operator|=
@@ -313,7 +319,7 @@ literal|"&& "
 expr_stmt|;
 break|break;
 case|case
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 case|:
 name|OperatorSymbol
 operator|=
@@ -321,7 +327,7 @@ literal|" == "
 expr_stmt|;
 break|break;
 case|case
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 case|:
 name|OperatorSymbol
 operator|=
@@ -329,7 +335,7 @@ literal|"> "
 expr_stmt|;
 break|break;
 case|case
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 case|:
 name|OperatorSymbol
 operator|=
@@ -337,7 +343,7 @@ literal|"< "
 expr_stmt|;
 break|break;
 case|case
-name|AML_LOR_OP
+name|AML_LOGICAL_OR_OP
 case|:
 name|OperatorSymbol
 operator|=
@@ -345,7 +351,7 @@ literal|" || "
 expr_stmt|;
 break|break;
 case|case
-name|AML_LNOT_OP
+name|AML_LOGICAL_NOT_OP
 case|:
 comment|/*          * Check for the LNOT sub-opcodes. These correspond to          * LNotEqual, LLessEqual, and LGreaterEqual. There are          * no actual AML opcodes for these operators.          */
 switch|switch
@@ -358,7 +364,7 @@ name|AmlOpcode
 condition|)
 block|{
 case|case
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 case|:
 name|OperatorSymbol
 operator|=
@@ -366,7 +372,7 @@ literal|" != "
 expr_stmt|;
 break|break;
 case|case
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 case|:
 name|OperatorSymbol
 operator|=
@@ -374,7 +380,7 @@ literal|"<= "
 expr_stmt|;
 break|break;
 case|case
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 case|:
 name|OperatorSymbol
 operator|=
@@ -488,7 +494,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 condition|)
 block|{
@@ -1047,19 +1053,19 @@ case|case
 name|AML_BIT_XOR_OP
 case|:
 case|case
-name|AML_LAND_OP
+name|AML_LOGICAL_AND_OP
 case|:
 case|case
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 case|:
 case|case
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 case|:
 case|case
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 case|:
 case|case
-name|AML_LOR_OP
+name|AML_LOGICAL_OR_OP
 case|:
 name|Op
 operator|->
@@ -1587,6 +1593,17 @@ argument_list|(
 literal|")"
 argument_list|)
 expr_stmt|;
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AML_COMMENT_END_NODE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -1603,6 +1620,17 @@ block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|")"
+argument_list|)
+expr_stmt|;
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AML_COMMENT_END_NODE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1648,19 +1676,19 @@ case|case
 name|AML_BIT_XOR_OP
 case|:
 case|case
-name|AML_LAND_OP
+name|AML_LOGICAL_AND_OP
 case|:
 case|case
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 case|:
 case|case
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 case|:
 case|case
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 case|:
 case|case
-name|AML_LOR_OP
+name|AML_LOGICAL_OR_OP
 case|:
 comment|/* Emit paren only if this is not a compound assignment */
 if|if
@@ -1674,6 +1702,17 @@ operator|&
 name|ACPI_PARSEOP_COMPOUND_ASSIGNMENT
 condition|)
 block|{
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AML_COMMENT_END_NODE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* Emit extra close paren for assignment within an expression */
@@ -1716,6 +1755,17 @@ literal|")"
 argument_list|)
 expr_stmt|;
 block|}
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AML_COMMENT_END_NODE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return;
 comment|/* No need for parens for these */
 case|case
@@ -1725,7 +1775,7 @@ case|case
 name|AML_INCREMENT_OP
 case|:
 case|case
-name|AML_LNOT_OP
+name|AML_LOGICAL_NOT_OP
 case|:
 case|case
 name|AML_BIT_NOT_OP
@@ -1733,6 +1783,17 @@ case|:
 case|case
 name|AML_STORE_OP
 case|:
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AML_COMMENT_END_NODE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return;
 default|default:
 comment|/* Always emit paren for non-ASL+ operators */
@@ -1743,6 +1804,18 @@ argument_list|(
 literal|")"
 argument_list|)
 expr_stmt|;
+name|ASL_CV_PRINT_ONE_COMMENT
+argument_list|(
+name|Op
+argument_list|,
+name|AML_COMMENT_END_NODE
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 

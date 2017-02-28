@@ -455,7 +455,7 @@ case|case
 name|AML_PACKAGE_OP
 case|:
 case|case
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 case|:
 comment|/* Get the package element count */
 name|NextOp

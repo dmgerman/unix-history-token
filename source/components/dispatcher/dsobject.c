@@ -247,7 +247,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 operator|)
 condition|)
@@ -331,7 +331,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 condition|)
 block|{
@@ -956,7 +956,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 condition|)
 block|{
@@ -1984,7 +1984,7 @@ block|{
 case|case
 name|AML_TYPE_LOCAL_VARIABLE
 case|:
-comment|/* Local ID (0-7) is (AML opcode - base AML_LOCAL_OP) */
+comment|/* Local ID (0-7) is (AML opcode - base AML_FIRST_LOCAL_OP) */
 name|ObjDesc
 operator|->
 name|Reference
@@ -1998,7 +1998,7 @@ operator|)
 name|Opcode
 operator|)
 operator|-
-name|AML_LOCAL_OP
+name|AML_FIRST_LOCAL_OP
 expr_stmt|;
 name|ObjDesc
 operator|->
@@ -2044,7 +2044,7 @@ break|break;
 case|case
 name|AML_TYPE_METHOD_ARGUMENT
 case|:
-comment|/* Arg ID (0-6) is (AML opcode - base AML_ARG_OP) */
+comment|/* Arg ID (0-6) is (AML opcode - base AML_FIRST_ARG_OP) */
 name|ObjDesc
 operator|->
 name|Reference
@@ -2058,7 +2058,7 @@ operator|)
 name|Opcode
 operator|)
 operator|-
-name|AML_ARG_OP
+name|AML_FIRST_ARG_OP
 expr_stmt|;
 name|ObjDesc
 operator|->

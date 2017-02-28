@@ -427,7 +427,7 @@ name|WalkState
 operator|->
 name|Opcode
 operator|==
-name|AML_COPY_OP
+name|AML_COPY_OBJECT_OP
 operator|)
 condition|)
 block|{

@@ -615,7 +615,7 @@ operator|!=
 name|ACPI_NOT_PACKAGE_ELEMENT
 condition|)
 block|{
-comment|/*          * The original object is a package element. We need to          * decrement the reference count of the original object,          * for removing it from the package.          *          * However, if the original object was just wrapped with a          * package object as part of the repair, we don't need to          * change the reference count.          */
+comment|/* Update reference count of new object */
 if|if
 condition|(
 operator|!
@@ -640,25 +640,6 @@ name|Common
 operator|.
 name|ReferenceCount
 expr_stmt|;
-if|if
-condition|(
-name|ReturnObject
-operator|->
-name|Common
-operator|.
-name|ReferenceCount
-operator|>
-literal|1
-condition|)
-block|{
-name|ReturnObject
-operator|->
-name|Common
-operator|.
-name|ReferenceCount
-operator|--
-expr_stmt|;
-block|}
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(

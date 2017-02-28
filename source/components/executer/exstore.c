@@ -869,7 +869,7 @@ name|WalkState
 operator|->
 name|Opcode
 operator|!=
-name|AML_COPY_OP
+name|AML_COPY_OBJECT_OP
 condition|)
 block|{
 comment|/*          * Only CopyObject allows all object types to be overwritten. For          * TargetRef(s), there are restrictions on the object types that          * are allowed.          *          * Allowable operations/typing for Store:          *          * 1) Simple Store          *      Integer     --> Integer (Named/Local/Arg)          *      String      --> String  (Named/Local/Arg)          *      Buffer      --> Buffer  (Named/Local/Arg)          *      Package     --> Package (Named/Local/Arg)          *          * 2) Store with implicit conversion          *      Integer     --> String or Buffer  (Named)          *      String      --> Integer or Buffer (Named)          *      Buffer      --> Integer or String (Named)          */
@@ -1029,7 +1029,7 @@ name|WalkState
 operator|->
 name|Opcode
 operator|==
-name|AML_COPY_OP
+name|AML_COPY_OBJECT_OP
 operator|)
 operator|||
 operator|!

@@ -31,6 +31,12 @@ directive|include
 file|"acdebug.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acinterp.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -210,7 +216,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSignalBreakPoint  *  * PARAMETERS:  WalkState       - Current walk  *  * RETURN:      Status  *  * DESCRIPTION: Called for AML_BREAK_POINT_OP  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSignalBreakPoint  *  * PARAMETERS:  WalkState       - Current walk  *  * RETURN:      Status  *  * DESCRIPTION: Called for AML_BREAKPOINT_OP  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -885,6 +891,9 @@ literal|1
 expr_stmt|;
 comment|/* Must be non-zero! */
 block|}
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiDbStartCommand
@@ -893,6 +902,9 @@ name|WalkState
 argument_list|,
 name|Op
 argument_list|)
+expr_stmt|;
+name|AcpiExEnterInterpreter
+argument_list|()
 expr_stmt|;
 comment|/* User commands complete, continue execution of the interrupted method */
 return|return

@@ -3111,6 +3111,12 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
+literal|"ACPI_IORT_SMMU_GSI"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_IORT_SMMU_V3"
 block|,
 name|SRC_TYPE_STRUCT
@@ -3813,6 +3819,14 @@ block|{
 literal|"\"acgcc.h\""
 block|,
 literal|"<acpi/platform/acgcc.h>"
+block|,
+name|REPLACE_WHOLE_WORD
+block|}
+block|,
+block|{
+literal|"\"acintel.h\""
+block|,
+literal|"<acpi/platform/acintel.h>"
 block|,
 name|REPLACE_WHOLE_WORD
 block|}

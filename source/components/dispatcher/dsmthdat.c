@@ -1498,7 +1498,7 @@ name|ACPI_OBSOLETE_FUNCTIONS
 end_ifdef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetType  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which Local or Arg whose type to get  *              WalkState           - Current walk state object  *  * RETURN:      Data type of current value of the selected Arg or Local  *  * DESCRIPTION: Get the type of the object stored in the Local or Arg  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetType  *  * PARAMETERS:  Opcode              - Either AML_FIRST LOCAL_OP or  *                                    AML_FIRST_ARG_OP  *              Index               - Which Local or Arg whose type to get  *              WalkState           - Current walk state object  *  * RETURN:      Data type of current value of the selected Arg or Local  *  * DESCRIPTION: Get the type of the object stored in the Local or Arg  *  ******************************************************************************/
 end_comment
 
 begin_function

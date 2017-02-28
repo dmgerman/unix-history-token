@@ -26,13 +26,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AML_NULL_CHAR
-value|(UINT16) 0x00
-end_define
-
-begin_define
-define|#
-directive|define
 name|AML_ZERO_OP
 value|(UINT16) 0x00
 end_define
@@ -42,13 +35,6 @@ define|#
 directive|define
 name|AML_ONE_OP
 value|(UINT16) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_UNASSIGNED
-value|(UINT16) 0x02
 end_define
 
 begin_define
@@ -128,7 +114,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 value|(UINT16) 0x13
 end_define
 
@@ -164,28 +150,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_MULTI_NAME_PREFIX_OP
+name|AML_MULTI_NAME_PREFIX
 value|(UINT16) 0x2f
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_NAME_CHAR_SUBSEQ
-value|(UINT16) 0x30
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_NAME_CHAR_FIRST
-value|(UINT16) 0x41
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_EXTENDED_OP_PREFIX
+name|AML_EXTENDED_PREFIX
 value|(UINT16) 0x5b
 end_define
 
@@ -206,9 +178,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_LOCAL_OP
+name|AML_FIRST_LOCAL_OP
 value|(UINT16) 0x60
 end_define
+
+begin_comment
+comment|/* Used for Local op # calculations */
+end_comment
 
 begin_define
 define|#
@@ -269,9 +245,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_ARG_OP
+name|AML_FIRST_ARG_OP
 value|(UINT16) 0x68
 end_define
+
+begin_comment
+comment|/* Used for Arg op # calculations */
+end_comment
 
 begin_define
 define|#
@@ -346,7 +326,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_CONCAT_OP
+name|AML_CONCATENATE_OP
 value|(UINT16) 0x73
 end_define
 
@@ -465,7 +445,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_CONCAT_RES_OP
+name|AML_CONCATENATE_TEMPLATE_OP
 value|(UINT16) 0x84
 end_define
 
@@ -561,42 +541,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AML_LAND_OP
+name|AML_LOGICAL_AND_OP
 value|(UINT16) 0x90
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_LOR_OP
+name|AML_LOGICAL_OR_OP
 value|(UINT16) 0x91
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_LNOT_OP
+name|AML_LOGICAL_NOT_OP
 value|(UINT16) 0x92
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_LEQUAL_OP
+name|AML_LOGICAL_EQUAL_OP
 value|(UINT16) 0x93
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_LGREATER_OP
+name|AML_LOGICAL_GREATER_OP
 value|(UINT16) 0x94
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_LLESS_OP
+name|AML_LOGICAL_LESS_OP
 value|(UINT16) 0x95
 end_define
 
@@ -614,7 +594,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AML_TO_DECSTRING_OP
+name|AML_TO_DECIMAL_STRING_OP
 value|(UINT16) 0x97
 end_define
 
@@ -625,7 +605,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AML_TO_HEXSTRING_OP
+name|AML_TO_HEX_STRING_OP
 value|(UINT16) 0x98
 end_define
 
@@ -658,7 +638,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AML_COPY_OP
+name|AML_COPY_OBJECT_OP
 value|(UINT16) 0x9d
 end_define
 
@@ -733,7 +713,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_BREAK_POINT_OP
+name|AML_COMMENT_OP
+value|(UINT16) 0xa9
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_BREAKPOINT_OP
 value|(UINT16) 0xcc
 end_define
 
@@ -745,7 +732,44 @@ value|(UINT16) 0xff
 end_define
 
 begin_comment
-comment|/* prefixed opcodes */
+comment|/*  * Combination opcodes (actually two one-byte opcodes)  * Used by the disassembler and iASL compiler  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_LOGICAL_GREATER_EQUAL_OP
+value|(UINT16) 0x9295
+end_define
+
+begin_comment
+comment|/* LNot (LLess) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_LOGICAL_LESS_EQUAL_OP
+value|(UINT16) 0x9294
+end_define
+
+begin_comment
+comment|/* LNot (LGreater) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_LOGICAL_NOT_EQUAL_OP
+value|(UINT16) 0x9293
+end_define
+
+begin_comment
+comment|/* LNot (LEqual) */
+end_comment
+
+begin_comment
+comment|/* Prefixed (2-byte) opcodes (with AML_EXTENDED_PREFIX) */
 end_comment
 
 begin_define
@@ -756,7 +780,7 @@ value|(UINT16) 0x5b00
 end_define
 
 begin_comment
-comment|/* prefix for 2-byte opcodes */
+comment|/* Prefix for 2-byte opcodes */
 end_comment
 
 begin_define
@@ -780,6 +804,10 @@ name|AML_SHIFT_RIGHT_BIT_OP
 value|(UINT16) 0x5b10
 end_define
 
+begin_comment
+comment|/* Obsolete, not in ACPI spec */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -787,10 +815,14 @@ name|AML_SHIFT_LEFT_BIT_OP
 value|(UINT16) 0x5b11
 end_define
 
+begin_comment
+comment|/* Obsolete, not in ACPI spec */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|AML_COND_REF_OF_OP
+name|AML_CONDITIONAL_REF_OF_OP
 value|(UINT16) 0x5b12
 end_define
 
@@ -952,7 +984,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_POWER_RES_OP
+name|AML_POWER_RESOURCE_OP
 value|(UINT16) 0x5b84
 end_define
 
@@ -987,31 +1019,6 @@ end_define
 begin_comment
 comment|/* ACPI 2.0 */
 end_comment
-
-begin_comment
-comment|/*  * Combination opcodes (actually two one-byte opcodes)  * Used by the disassembler and iASL compiler  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AML_LGREATEREQUAL_OP
-value|(UINT16) 0x9295
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_LLESSEQUAL_OP
-value|(UINT16) 0x9294
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_LNOTEQUAL_OP
-value|(UINT16) 0x9293
-end_define
 
 begin_comment
 comment|/*  * Opcodes for "Field" operators  */
@@ -1286,6 +1293,13 @@ name|ARGP_MAX
 value|0x13
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARGP_COMMENT
+value|0x14
+end_define
+
 begin_comment
 comment|/*  * Resolved argument types for the AML Interpreter  * Each field in the ArgTypes UINT32 is 5 bits, allowing for a maximum of 6 arguments.  * There can be up to 31 unique argument types (0 is end-of-arg-list indicator)  *  * Note1: These values are completely independent from the ACPI_TYPEs  *        i.e., ARGI_INTEGER != ACPI_TYPE_INTEGER  *  * Note2: If and when 5 bits becomes insufficient, it would probably be best  * to convert to a 6-byte array of argument types, allowing 8 bits per argument.  */
 end_comment
@@ -1516,54 +1530,11 @@ value|0xFFFFFFFF
 end_define
 
 begin_comment
-comment|/*  * hash offsets  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AML_EXTOP_HASH_OFFSET
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_LNOT_HASH_OFFSET
-value|19
-end_define
-
-begin_comment
-comment|/*  * opcode groups and types  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPGRP_NAMED
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPGRP_FIELD
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPGRP_BYTELIST
-value|0x04
-end_define
-
-begin_comment
-comment|/*  * Opcode information  */
+comment|/*  * Some of the flags and types below are of the form:  *  * AML_FLAGS_EXEC_#A_#T,#R, or  * AML_TYPE_EXEC_#A_#T,#R where:  *  *      #A is the number of required arguments  *      #T is the number of target operands  *      #R indicates whether there is a return value  */
 end_comment
 
 begin_comment
-comment|/* Opcode flags */
+comment|/*  * Opcode information flags  */
 end_comment
 
 begin_define
@@ -1672,7 +1643,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* Convenient flag groupings */
+comment|/* Convenient flag groupings of the flags above */
 end_comment
 
 begin_define
@@ -1784,7 +1755,7 @@ value|AML_HAS_ARGS |                  AML_HAS_RETVAL
 end_define
 
 begin_comment
-comment|/*  * The opcode Type is used in a dispatch table, do not change  * without updating the table.  */
+comment|/*  * The opcode Type is used in a dispatch table, do not change  * or add anything new without updating the table.  */
 end_comment
 
 begin_define
@@ -1946,7 +1917,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Misc */
+comment|/* Miscellaneous types */
 end_comment
 
 begin_define

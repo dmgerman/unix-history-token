@@ -4366,6 +4366,19 @@ name|MappingCount
 operator|=
 name|IdMappingNumber
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IdMappingNumber
+condition|)
+block|{
+name|IortNode
+operator|->
+name|MappingOffset
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/*          * Node length can be determined by DT_LENGTH option          * IortNode->Length = NodeLength;          */
 name|DtPopSubtable
 argument_list|()

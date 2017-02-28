@@ -43,6 +43,12 @@ directive|include
 file|"acdispat.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acconvert.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -354,7 +360,7 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_MULTI_NAME_PREFIX_OP
+name|AML_MULTI_NAME_PREFIX
 case|:
 comment|/* Multiple name segments, 4 chars each, count in next byte */
 name|End
@@ -764,7 +770,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_COND_REF_OF_OP
+name|AML_CONDITIONAL_REF_OF_OP
 condition|)
 block|{
 name|Status
@@ -810,7 +816,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 operator|)
 condition|)
@@ -1199,6 +1205,11 @@ argument_list|(
 name|PsGetNextField
 argument_list|)
 expr_stmt|;
+name|ASL_CV_CAPTURE_COMMENTS_ONLY
+argument_list|(
+name|ParserState
+argument_list|)
+expr_stmt|;
 name|Aml
 operator|=
 name|ParserState
@@ -1298,6 +1309,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Decode the field type */
+name|ASL_CV_CAPTURE_COMMENTS_ONLY
+argument_list|(
+name|ParserState
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|Opcode
@@ -1330,6 +1346,51 @@ name|Aml
 operator|+=
 name|ACPI_NAME_SIZE
 expr_stmt|;
+name|ASL_CV_CAPTURE_COMMENTS_ONLY
+argument_list|(
+name|ParserState
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+comment|/*          * Because the package length isn't represented as a parse tree object,          * take comments surrounding this and add to the previously created          * parse node.          */
+if|if
+condition|(
+name|Field
+operator|->
+name|Common
+operator|.
+name|InlineComment
+condition|)
+block|{
+name|Field
+operator|->
+name|Common
+operator|.
+name|NameComment
+operator|=
+name|Field
+operator|->
+name|Common
+operator|.
+name|InlineComment
+expr_stmt|;
+block|}
+name|Field
+operator|->
+name|Common
+operator|.
+name|InlineComment
+operator|=
+name|AcpiGbl_CurrentInlineComment
+expr_stmt|;
+name|AcpiGbl_CurrentInlineComment
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Get the length which is encoded as a package length */
 name|Field
 operator|->
@@ -1497,6 +1558,11 @@ operator|->
 name|Aml
 operator|++
 expr_stmt|;
+name|ASL_CV_CAPTURE_COMMENTS_ONLY
+argument_list|(
+name|ParserState
+argument_list|)
+expr_stmt|;
 name|PkgEnd
 operator|=
 name|ParserState
@@ -1513,6 +1579,11 @@ expr_stmt|;
 name|PkgEnd
 operator|+=
 name|PkgLength
+expr_stmt|;
+name|ASL_CV_CAPTURE_COMMENTS_ONLY
+argument_list|(
+name|ParserState
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1564,6 +1635,11 @@ name|ParserState
 operator|->
 name|Aml
 operator|++
+expr_stmt|;
+name|ASL_CV_CAPTURE_COMMENTS_ONLY
+argument_list|(
+name|ParserState
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -1638,6 +1714,11 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Fill in bytelist data */
+name|ASL_CV_CAPTURE_COMMENTS_ONLY
+argument_list|(
+name|ParserState
+argument_list|)
+expr_stmt|;
 name|Arg
 operator|->
 name|Named

@@ -273,7 +273,7 @@ name|ACPI_PORT_INFO
 modifier|*
 name|PortInfo
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
+name|ACPI_FUNCTION_NAME
 argument_list|(
 name|HwValidateIoRequest
 argument_list|)
@@ -381,11 +381,11 @@ name|ByteWidth
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_LIMIT
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Exit if requested address is not within the protected port table */
 if|if
@@ -402,11 +402,11 @@ operator|.
 name|End
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_OK
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Check request against the list of protected I/O ports */
 for|for
@@ -426,7 +426,7 @@ name|PortInfo
 operator|++
 control|)
 block|{
-comment|/*          * Check if the requested address range will write to a reserved          * port. Four cases to consider:          *          * 1) Address range is contained completely in the port address range          * 2) Address range overlaps port range at the port range start          * 3) Address range overlaps port range at the port range end          * 4) Address range completely encompasses the port range          */
+comment|/*          * Check if the requested address range will write to a reserved          * port. There are four cases to consider:          *          * 1) Address range is contained completely in the port address range          * 2) Address range overlaps port range at the port range start          * 3) Address range overlaps port range at the port range end          * 4) Address range completely encompasses the port range          */
 if|if
 condition|(
 operator|(
@@ -504,16 +504,16 @@ block|{
 break|break;
 block|}
 block|}
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|AE_OK
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwReadPort  *  * PARAMETERS:  Address             Address of I/O port/register to read  *              Value               Where value is placed  *              Width               Number of bits  *  * RETURN:      Status and value read from port  *  * DESCRIPTION: Read data from an I/O port or register. This is a front-end  *              to AcpiOsReadPort that performs validation on both the port  *              address and the length.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwReadPort  *  * PARAMETERS:  Address             Address of I/O port/register to read  *              Value               Where value (data) is returned  *              Width               Number of bits  *  * RETURN:      Status and value read from port  *  * DESCRIPTION: Read data from an I/O port or register. This is a front-end  *              to AcpiOsReadPort that performs validation on both the port  *              address and the length.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -599,7 +599,7 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/*      * There has been a protection violation within the request. Fall      * back to byte granularity port I/O and ignore the failing bytes.      * This provides Windows compatibility.      */
+comment|/*      * There has been a protection violation within the request. Fall      * back to byte granularity port I/O and ignore the failing bytes.      * This provides compatibility with other ACPI implementations.      */
 for|for
 control|(
 name|i
@@ -764,7 +764,7 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/*      * There has been a protection violation within the request. Fall      * back to byte granularity port I/O and ignore the failing bytes.      * This provides Windows compatibility.      */
+comment|/*      * There has been a protection violation within the request. Fall      * back to byte granularity port I/O and ignore the failing bytes.      * This provides compatibility with other ACPI implementations.      */
 for|for
 control|(
 name|i

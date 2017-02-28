@@ -354,7 +354,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * File types. Note: Any changes to this table must also be reflected  * in the Gbl_Files array.  *  * Corresponding filename suffixes are in comments  *  * NOTE: Don't move the first 4 file types  */
+comment|/*  * File types. Note: Any changes to this table must also be reflected  * in the Gbl_Files array.  *  * Corresponding filename suffixes are in comments  *  * NOTE: Don't move the first 4 file types  *  * .xxx file extension: this is used as a temporary .aml file for  * the ASL/ASL+ converter and is deleted after conversion. This file  * should never be used in the interpreter.  */
 end_comment
 
 begin_typedef
@@ -413,7 +413,13 @@ name|ASL_FILE_MAP_OUTPUT
 block|,
 comment|/* .map */
 name|ASL_FILE_XREF_OUTPUT
+block|,
 comment|/* .xrf */
+name|ASL_FILE_CONV_DEBUG_OUTPUT
+block|,
+comment|/* .cdb */
+name|ASL_FILE_CONV_OUTPUT
+comment|/* .xxx */
 block|}
 name|ASL_FILE_TYPES
 typedef|;
@@ -423,7 +429,7 @@ begin_define
 define|#
 directive|define
 name|ASL_MAX_FILE_TYPE
-value|17
+value|18
 end_define
 
 begin_define
@@ -547,6 +553,20 @@ define|#
 directive|define
 name|FILE_SUFFIX_XREF
 value|"xrf"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_CONVERT_AML
+value|"xxx"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_CONVERT_DEBUG
+value|"cdb"
 end_define
 
 begin_comment
@@ -925,6 +945,44 @@ name|CurrentMethodOp
 decl_stmt|;
 block|}
 name|ASL_XREF_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|yy_buffer_state
+modifier|*
+name|YY_BUFFER_STATE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_file_node
+block|{
+name|FILE
+modifier|*
+name|File
+decl_stmt|;
+name|UINT32
+name|CurrentLineNumber
+decl_stmt|;
+name|YY_BUFFER_STATE
+name|State
+decl_stmt|;
+name|char
+modifier|*
+name|Filename
+decl_stmt|;
+name|struct
+name|asl_file_node
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ASL_FILE_NODE
 typedef|;
 end_typedef
 

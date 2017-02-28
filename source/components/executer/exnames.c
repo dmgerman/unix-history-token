@@ -234,7 +234,7 @@ operator|*
 name|TempPtr
 operator|++
 operator|=
-name|AML_MULTI_NAME_PREFIX_OP
+name|AML_MULTI_NAME_PREFIX
 expr_stmt|;
 operator|*
 name|TempPtr
@@ -823,7 +823,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AML_MULTI_NAME_PREFIX_OP
+name|AML_MULTI_NAME_PREFIX
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(

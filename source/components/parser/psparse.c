@@ -136,7 +136,7 @@ if|if
 condition|(
 name|Opcode
 operator|==
-name|AML_EXTENDED_OP_PREFIX
+name|AML_EXTENDED_PREFIX
 condition|)
 block|{
 comment|/* Extended opcode, get the second opcode byte */
@@ -449,7 +449,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 condition|)
 block|{
@@ -533,7 +533,7 @@ name|Common
 operator|.
 name|AmlOpcode
 operator|==
-name|AML_VAR_PACKAGE_OP
+name|AML_VARIABLE_PACKAGE_OP
 operator|)
 condition|)
 block|{

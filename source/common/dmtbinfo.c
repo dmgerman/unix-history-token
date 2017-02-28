@@ -958,6 +958,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_IORT3A_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_IORT_SMMU_GSI,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_IORT4_OFFSET
 parameter_list|(
 name|f
@@ -1801,6 +1811,18 @@ parameter_list|,
 name|o
 parameter_list|)
 value|ACPI_FLAG_OFFSET (ACPI_IORT_SMMU,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT3a_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_IORT_SMMU_GSI,f,o)
 end_define
 
 begin_define
@@ -10040,21 +10062,83 @@ index|[]
 init|=
 block|{
 block|{
-name|ACPI_DMT_UINT64
+name|ACPI_DMT_UINT32
 block|,
-literal|0
+name|ACPI_IORT3A_OFFSET
+argument_list|(
+name|NSgIrpt
+argument_list|)
 block|,
-literal|"SMMU_NSgIrpt Interrupt"
+literal|"NSgIrpt"
 block|,
 literal|0
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT64
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT3A_OFFSET
+argument_list|(
+name|NSgIrptFlags
+argument_list|)
+block|,
+literal|"NSgIrpt Flags (decoded below)"
 block|,
 literal|0
+block|}
 block|,
-literal|"SMMU_NSgCfgIrpt Interrupt"
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_IORT3a_FLAG_OFFSET
+argument_list|(
+name|NSgIrptFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Edge Triggered"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT3A_OFFSET
+argument_list|(
+name|NSgCfgIrpt
+argument_list|)
+block|,
+literal|"NSgCfgIrpt"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_IORT3A_OFFSET
+argument_list|(
+name|NSgCfgIrptFlags
+argument_list|)
+block|,
+literal|"NSgCfgIrpt Flags (decoded below)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_IORT3a_FLAG_OFFSET
+argument_list|(
+name|NSgCfgIrptFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Edge Triggered"
 block|,
 literal|0
 block|}
