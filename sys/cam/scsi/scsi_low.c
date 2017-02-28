@@ -2551,37 +2551,6 @@ directive|endif
 comment|/* SCSI_LOW_DEBUG */
 break|break;
 case|case
-name|XPT_EN_LUN
-case|:
-comment|/* Enable LUN as a target */
-case|case
-name|XPT_TARGET_IO
-case|:
-comment|/* Execute target I/O request */
-case|case
-name|XPT_ACCEPT_TARGET_IO
-case|:
-comment|/* Accept Host Target Mode CDB */
-case|case
-name|XPT_CONT_TARGET_IO
-case|:
-comment|/* Continue Host Target I/O Connection*/
-comment|/* XXX Implement */
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-name|xpt_done
-argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|XPT_ABORT
 case|:
 comment|/* Abort the specified CCB */
