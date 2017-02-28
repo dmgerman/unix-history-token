@@ -555,6 +555,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sbuf_putbuf
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
