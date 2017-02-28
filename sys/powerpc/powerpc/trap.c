@@ -428,6 +428,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDB
+end_ifdef
+
+begin_function_decl
+name|int
+name|db_trap_glue
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Called from trap_subr.S */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|powerpc_exception
@@ -1440,12 +1466,15 @@ condition|(
 name|type
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
 case|case
 name|EXC_PGM
 case|:
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+ifdef|#
+directive|ifdef
+name|AIM
 if|if
 condition|(
 name|frame
@@ -1455,6 +1484,23 @@ operator|&
 name|EXC_PGM_TRAP
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|frame
+operator|->
+name|cpu
+operator|.
+name|booke
+operator|.
+name|esr
+operator|&
+name|ESR_PTR
+condition|)
+block|{
+endif|#
+directive|endif
 if|if
 condition|(
 operator|*
@@ -1485,9 +1531,22 @@ return|return;
 block|}
 block|}
 block|}
-break|break;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|db_trap_glue
+argument_list|(
+name|frame
+argument_list|)
+condition|)
+return|return;
+endif|#
+directive|endif
+break|break;
 if|#
 directive|if
 name|defined
@@ -1655,9 +1714,6 @@ name|frame
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|trap_fatal
@@ -1725,9 +1781,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|printtrap
@@ -2045,13 +2098,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Handles a fatal fault when we have onfault state to recover.  Returns  * non-zero if there was onfault recovery state available.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|handle_onfault
@@ -2211,9 +2258,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|cpu_fetch_syscall_args
 parameter_list|(
@@ -2717,15 +2761,9 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_include
 include|#
 directive|include
 file|"../../kern/subr_syscall.c"
-end_include
-
-begin_function
 name|void
 name|syscall
 parameter_list|(
@@ -2789,14 +2827,8 @@ name|USER_SLB_SLBE
 operator|)
 block|)
 function|;
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|error
 operator|=
 name|syscallenter
@@ -2807,9 +2839,6 @@ operator|&
 name|sa
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|syscallret
 argument_list|(
 name|td
@@ -2820,10 +2849,10 @@ operator|&
 name|sa
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_if
-unit|}
 if|#
 directive|if
 name|defined
@@ -2841,19 +2870,19 @@ begin_comment
 comment|/* Handle kernel SLB faults -- runs in real mode, all seat belts off */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|handle_kernel_slb_spill
-argument_list|(
-argument|int type
-argument_list|,
-argument|register_t dar
-argument_list|,
-argument|register_t srr0
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|register_t
+name|dar
+parameter_list|,
+name|register_t
+name|srr0
+parameter_list|)
 block|{
 name|struct
 name|slb
@@ -3071,7 +3100,7 @@ name|i
 expr_stmt|;
 comment|/* Trap handler will restore from cache on exit */
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -3961,15 +3990,6 @@ directive|ifdef
 name|KDB
 name|int
 name|db_trap_glue
-argument_list|(
-expr|struct
-name|trapframe
-operator|*
-argument_list|)
-decl_stmt|;
-comment|/* Called from trap_subr.S */
-name|int
-name|db_trap_glue
 parameter_list|(
 name|struct
 name|trapframe
@@ -4028,6 +4048,18 @@ operator|->
 name|exc
 operator|==
 name|EXC_DEBUG
+operator|)
+operator|||
+operator|(
+name|frame
+operator|->
+name|cpu
+operator|.
+name|booke
+operator|.
+name|esr
+operator|&
+name|ESR_PTR
 operator|)
 endif|#
 directive|endif
@@ -4094,6 +4126,11 @@ else|#
 directive|else
 if|if
 condition|(
+name|type
+operator|==
+name|EXC_DEBUG
+operator|||
+operator|(
 name|frame
 operator|->
 name|cpu
@@ -4103,6 +4140,7 @@ operator|.
 name|esr
 operator|&
 name|ESR_PTR
+operator|)
 condition|)
 block|{
 endif|#
