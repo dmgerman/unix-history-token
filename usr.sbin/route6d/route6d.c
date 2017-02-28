@@ -5562,6 +5562,12 @@ name|msg_iovlen
 operator|=
 literal|1
 expr_stmt|;
+name|m
+operator|.
+name|msg_flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5929,6 +5935,12 @@ sizeof|sizeof
 argument_list|(
 name|cmsgbuf
 argument_list|)
+expr_stmt|;
+name|m
+operator|.
+name|msg_flags
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(

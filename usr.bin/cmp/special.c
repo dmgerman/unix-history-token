@@ -402,6 +402,16 @@ argument_list|(
 name|file2
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|fp2
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dfound
