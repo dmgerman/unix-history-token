@@ -642,7 +642,7 @@ name|OID_AUTO
 argument_list|,
 name|auto_resize
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|auto_resize
