@@ -61,6 +61,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPUMODRST_CPU1
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RSTMGR_PERMODRST
 value|0x14
 end_define
@@ -123,11 +130,34 @@ begin_comment
 comment|/* Miscellaneous Module Reset */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RSTMGR_A10_CTRL
+value|0xC
+end_define
+
+begin_comment
+comment|/* Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSTMGR_A10_MPUMODRST
+value|0x20
+end_define
+
+begin_comment
+comment|/* MPU Module Reset */
+end_comment
+
 begin_function_decl
 name|int
 name|rstmgr_warmreset
 parameter_list|(
-name|void
+name|uint32_t
+name|reg
 parameter_list|)
 function_decl|;
 end_function_decl
