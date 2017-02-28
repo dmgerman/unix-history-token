@@ -113,6 +113,15 @@ directive|include
 file|"platform_if.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_ALTERA_CYCLONE5
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -170,6 +179,20 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_ALTERA_ARRIA10
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -219,15 +242,17 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
 name|_socfpga_cpu_reset
 parameter_list|(
-name|platform_t
-name|plat
-parameter_list|,
-name|uint32_t
+name|bus_size_t
 name|reg
 parameter_list|)
 block|{
@@ -333,6 +358,15 @@ empty_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_ALTERA_CYCLONE5
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -344,13 +378,25 @@ parameter_list|)
 block|{
 name|_socfpga_cpu_reset
 argument_list|(
-name|plat
-argument_list|,
 name|RSTMGR_CTRL
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_ALTERA_ARRIA10
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -363,13 +409,25 @@ parameter_list|)
 block|{
 name|_socfpga_cpu_reset
 argument_list|(
-name|plat
-argument_list|,
 name|RSTMGR_A10_CTRL
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_ALTERA_CYCLONE5
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -432,6 +490,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_ALTERA_ARRIA10
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|platform_method_t
@@ -492,6 +564,11 @@ literal|200
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
