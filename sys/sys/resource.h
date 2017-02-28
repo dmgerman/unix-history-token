@@ -382,9 +382,19 @@ name|RLIM_INFINITY
 value|((rlim_t)(((uint64_t)1<< 63) - 1))
 end_define
 
-begin_comment
-comment|/* XXX Missing: RLIM_SAVED_MAX, RLIM_SAVED_CUR */
-end_comment
+begin_define
+define|#
+directive|define
+name|RLIM_SAVED_MAX
+value|RLIM_INFINITY
+end_define
+
+begin_define
+define|#
+directive|define
+name|RLIM_SAVED_CUR
+value|RLIM_INFINITY
+end_define
 
 begin_comment
 comment|/*  * Resource limit string identifiers  */
