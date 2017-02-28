@@ -3100,10 +3100,6 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
-name|struct
-name|mutex
-name|so_mutex
-decl_stmt|;
 block|}
 struct|;
 end_struct

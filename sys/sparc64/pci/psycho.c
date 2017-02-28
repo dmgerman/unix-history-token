@@ -186,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcib_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sparc64/pci/ofw_pci.h>
 end_include
 

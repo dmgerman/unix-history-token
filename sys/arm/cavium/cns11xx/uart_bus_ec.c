@@ -202,6 +202,8 @@ name|dev
 argument_list|,
 name|EC_UART_REGSHIFT
 argument_list|,
+literal|0
+argument_list|,
 name|EC_UART_CLOCK
 argument_list|,
 literal|0

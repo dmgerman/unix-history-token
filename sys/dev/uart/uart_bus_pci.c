@@ -1405,6 +1405,8 @@ name|id
 operator|->
 name|regshft
 argument_list|,
+literal|0
+argument_list|,
 name|id
 operator|->
 name|rclk

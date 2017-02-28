@@ -385,7 +385,7 @@ name|uint32_t
 name|sid
 decl_stmt|;
 name|uint32_t
-name|portid
+name|did
 decl_stmt|;
 name|uint16_t
 name|rxid
@@ -2013,6 +2013,13 @@ define|#
 directive|define
 name|HBA_TGTBSY
 value|CAM_SCSI_STATUS_ERROR
+end_define
+
+begin_define
+define|#
+directive|define
+name|HBA_REQINVAL
+value|CAM_REQ_INVALID
 end_define
 
 begin_define

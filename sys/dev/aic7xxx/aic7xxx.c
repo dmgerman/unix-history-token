@@ -32423,6 +32423,14 @@ operator|.
 name|target_id
 operator|!=
 name|our_id
+operator|&&
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|target_id
+operator|!=
+name|CAM_TARGET_WILDCARD
 condition|)
 block|{
 comment|/* 		 * our_id represents our initiator ID, or 		 * the ID of the first target to have an 		 * enabled lun in target mode.  There are 		 * two cases that may preclude enabling a 		 * target id other than our_id. 		 * 		 *   o our_id is for an active initiator role. 		 *     Since the hardware does not support 		 *     reselections to the initiator role at 		 *     anything other than our_id, and our_id 		 *     is used by the hardware to indicate the 		 *     ID to use for both select-out and 		 *     reselect-out operations, the only target 		 *     ID we can support in this mode is our_id. 		 * 		 *   o The MULTARGID feature is not available and 		 *     a previous target mode ID has been enabled. 		 */

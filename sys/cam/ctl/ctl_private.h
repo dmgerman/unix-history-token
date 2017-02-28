@@ -2384,6 +2384,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ctl_tpc_lun_clear
+parameter_list|(
+name|struct
+name|ctl_lun
+modifier|*
+name|lun
+parameter_list|,
+name|uint32_t
+name|initidx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ctl_tpc_lun_shutdown
 parameter_list|(
 name|struct

@@ -783,6 +783,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|T_DNAME
+value|ns_t_dname
+end_define
+
+begin_define
+define|#
+directive|define
 name|T_OPT
 value|ns_t_opt
 end_define

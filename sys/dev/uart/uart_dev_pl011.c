@@ -214,6 +214,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FR_RXFE
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Receive FIFO/reg empty */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FR_TXFF
 value|(1<< 5)
 end_define
@@ -836,12 +847,11 @@ operator|&=
 operator|~
 name|LCR_H_PEN
 expr_stmt|;
-comment|/* Configure the rest */
 name|line
-operator|&=
-operator|~
+operator||=
 name|LCR_H_FEN
 expr_stmt|;
+comment|/* Configure the rest */
 name|ctrl
 operator||=
 operator|(
@@ -1071,6 +1081,7 @@ name|bas
 parameter_list|)
 block|{
 return|return
+operator|!
 operator|(
 name|__uart_getreg
 argument_list|(
@@ -1079,7 +1090,7 @@ argument_list|,
 name|UART_FR
 argument_list|)
 operator|&
-name|FR_RXFF
+name|FR_RXFE
 operator|)
 return|;
 block|}
@@ -2024,13 +2035,13 @@ name|sc
 operator|->
 name|sc_rxfifosz
 operator|=
-literal|1
+literal|16
 expr_stmt|;
 name|sc
 operator|->
 name|sc_txfifosz
 operator|=
-literal|1
+literal|16
 expr_stmt|;
 return|return
 operator|(
@@ -2119,19 +2130,6 @@ name|UART_STAT_OVERRUN
 expr_stmt|;
 break|break;
 block|}
-name|__uart_setreg
-argument_list|(
-name|bas
-argument_list|,
-name|UART_ICR
-argument_list|,
-operator|(
-name|UART_RXREADY
-operator||
-name|RIS_RTIM
-operator|)
-argument_list|)
-expr_stmt|;
 name|xc
 operator|=
 name|__uart_getreg
@@ -2304,30 +2302,13 @@ name|bas
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If not empty wait until it is */
-if|if
-condition|(
-operator|(
-name|__uart_getreg
-argument_list|(
-name|bas
-argument_list|,
-name|UART_FR
-argument_list|)
-operator|&
-name|FR_TXFE
-operator|)
-operator|!=
-name|FR_TXFE
-condition|)
-block|{
+comment|/* Mark busy and enable TX interrupt */
 name|sc
 operator|->
 name|sc_txbusy
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Enable TX interrupt */
 name|__uart_setreg
 argument_list|(
 name|bas
@@ -2339,27 +2320,11 @@ operator|->
 name|imsc
 argument_list|)
 expr_stmt|;
-block|}
 name|uart_unlock
 argument_list|(
 name|sc
 operator|->
 name|sc_hwmtx
-argument_list|)
-expr_stmt|;
-comment|/* No interrupt expected, schedule the next fifo write */
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|sc_txbusy
-condition|)
-name|uart_sched_softih
-argument_list|(
-name|sc
-argument_list|,
-name|SER_INT_TXIDLE
 argument_list|)
 expr_stmt|;
 return|return

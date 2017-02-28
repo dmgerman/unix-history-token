@@ -167,6 +167,12 @@ directive|include
 file|"pcib_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcib_private.h>
+end_include
+
 begin_define
 define|#
 directive|define

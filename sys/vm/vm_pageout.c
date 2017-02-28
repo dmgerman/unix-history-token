@@ -5088,7 +5088,7 @@ name|EVENTHANDLER_INVOKE
 argument_list|(
 name|vm_lowmem
 argument_list|,
-literal|0
+name|VM_LOW_PAGES
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We do this explicitly after the caches have been 		 * drained above. 		 */

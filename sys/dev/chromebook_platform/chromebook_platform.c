@@ -159,7 +159,7 @@ argument_list|(
 name|controller
 argument_list|)
 argument_list|,
-literal|"ig4iic"
+literal|"ig4iic_pci"
 argument_list|)
 operator|!=
 literal|0

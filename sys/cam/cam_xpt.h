@@ -28,12 +28,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_printf.h"
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -92,59 +86,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_comment
-comment|/* Wild guess based on not wanting to grow the stack too much */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XPT_PRINT_MAXLEN
-value|512
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PRINTF_BUFR_SIZE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|XPT_PRINT_LEN
-value|PRINTF_BUFR_SIZE
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XPT_PRINT_LEN
-value|128
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_assert
-assert|_Static_assert
-argument_list|(
-name|XPT_PRINT_LEN
-operator|<=
-name|XPT_PRINT_MAXLEN
-argument_list|,
-literal|"XPT_PRINT_LEN is too large"
-argument_list|)
-assert|;
-end_assert
 
 begin_comment
 comment|/*  * Definition of an async handler callback block.  These are used to add  * SIMs and peripherals to the async callback lists.  */

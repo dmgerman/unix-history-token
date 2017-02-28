@@ -1767,7 +1767,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"altr,fpga-mgr"
+literal|"altr,socfpga-fpga-mgr"
 argument_list|)
 condition|)
 return|return

@@ -7162,7 +7162,10 @@ block|}
 block|,
 comment|/* 282 = linux_signalfd */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_timerfd_create_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -7237,7 +7240,10 @@ block|}
 block|,
 comment|/* 285 = linux_fallocate */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_timerfd_settime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -7260,7 +7266,10 @@ block|}
 block|,
 comment|/* 286 = linux_timerfd_settime */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_timerfd_gettime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t

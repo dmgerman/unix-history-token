@@ -448,6 +448,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -481,6 +483,8 @@ argument_list|(
 name|dev
 argument_list|,
 literal|2
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

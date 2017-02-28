@@ -14430,6 +14430,10 @@ name|struct
 name|ieee80211_txparam
 modifier|*
 name|tp
+init|=
+name|ni
+operator|->
+name|ni_txparms
 decl_stmt|;
 name|uint8_t
 name|rate
@@ -14537,21 +14541,6 @@ operator|+
 name|IEEE80211_CRC_LEN
 expr_stmt|;
 comment|/* 	 * Find TX rate 	 */
-name|tp
-operator|=
-operator|&
-name|vap
-operator|->
-name|iv_txparms
-index|[
-name|ieee80211_chan2mode
-argument_list|(
-name|ic
-operator|->
-name|ic_curchan
-argument_list|)
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|type

@@ -888,6 +888,10 @@ name|callout
 name|spa_deadman_cycid
 decl_stmt|;
 comment|/* callout id */
+name|struct
+name|task
+name|spa_deadman_task
+decl_stmt|;
 endif|#
 directive|endif
 endif|#

@@ -10345,6 +10345,27 @@ block|}
 elseif|else
 if|if
 condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EAPOL
+condition|)
+block|{
+comment|/* Get lowest rate */
+name|rate
+operator|=
+name|otus_rate_to_hw_rate
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|IEEE80211_IS_MULTICAST
 argument_list|(
 name|wh
@@ -10364,27 +10385,6 @@ name|IEEE80211_FC0_TYPE_MASK
 operator|)
 operator|!=
 name|IEEE80211_FC0_TYPE_DATA
-condition|)
-block|{
-comment|/* Get lowest rate */
-name|rate
-operator|=
-name|otus_rate_to_hw_rate
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EAPOL
 condition|)
 block|{
 comment|/* Get lowest rate */

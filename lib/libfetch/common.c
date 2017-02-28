@@ -1556,7 +1556,7 @@ name|verbose
 condition|)
 name|fetch_info
 argument_list|(
-literal|"failed to connect to %s:%s"
+literal|"failed to connect to %s:%d"
 argument_list|,
 name|host
 argument_list|,

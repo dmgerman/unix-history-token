@@ -3013,6 +3013,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|SBBC_PCI_BAR
 argument_list|,
 literal|0

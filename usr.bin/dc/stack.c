@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: stack.c,v 1.11 2009/10/27 23:59:37 deraadt Exp $	*/
+comment|/*	$OpenBSD: stack.c,v 1.12 2014/11/26 15:05:51 otto Exp $	*/
 end_comment
 
 begin_comment
@@ -286,15 +286,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|v
-operator|->
-name|array
-operator|!=
-name|NULL
-condition|)
-block|{
 name|array_free
 argument_list|(
 name|v
@@ -308,7 +299,6 @@ name|array
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1082,22 +1072,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-if|if
-condition|(
-name|stack
-operator|->
-name|stack
-index|[
-name|stack
-operator|->
-name|sp
-index|]
-operator|.
-name|array
-operator|!=
-name|NULL
-condition|)
-block|{
 name|array_free
 argument_list|(
 name|stack
@@ -1125,7 +1099,6 @@ name|array
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|stack
@@ -1195,22 +1168,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-if|if
-condition|(
-name|stack
-operator|->
-name|stack
-index|[
-name|stack
-operator|->
-name|sp
-index|]
-operator|.
-name|array
-operator|!=
-name|NULL
-condition|)
-block|{
 name|array_free
 argument_list|(
 name|stack
@@ -1238,7 +1195,6 @@ name|array
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|stack
@@ -1303,7 +1259,6 @@ name|sp
 operator|>=
 literal|0
 condition|)
-block|{
 name|stack_free_value
 argument_list|(
 operator|&
@@ -1318,7 +1273,6 @@ operator|--
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|stack
