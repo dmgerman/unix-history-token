@@ -767,11 +767,6 @@ name|ck_stack_entry_t
 modifier|*
 name|cursor
 decl_stmt|;
-operator|*
-name|af
-operator|=
-name|false
-expr_stmt|;
 if|if
 condition|(
 name|cr
@@ -789,6 +784,11 @@ operator|->
 name|records
 argument_list|)
 expr_stmt|;
+operator|*
+name|af
+operator|=
+name|false
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -798,6 +798,11 @@ operator|&
 name|cr
 operator|->
 name|record_next
+expr_stmt|;
+operator|*
+name|af
+operator|=
+name|true
 expr_stmt|;
 block|}
 while|while

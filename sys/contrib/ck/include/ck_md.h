@@ -160,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|CK_VERSION
-value|"0.5.2"
+value|"0.6.0"
 end_define
 
 begin_define
