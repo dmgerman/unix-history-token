@@ -1273,10 +1273,54 @@ literal|0xB8
 argument_list|,
 literal|31
 argument_list|)
-comment|/* CCU_GATE(H3_CLK_DRAM_VE, "dram-ve", "dram", 0x100, 0) */
-comment|/* CCU_GATE(H3_CLK_DRAM_VE, "dram-csi", "dram", 0x100, 1) */
-comment|/* CCU_GATE(H3_CLK_DRAM_VE, "dram-deinterlace", "dram", 0x100, 2) */
-comment|/* CCU_GATE(H3_CLK_DRAM_VE, "dram-ts", "dram", 0x100, 3) */
+name|CCU_GATE
+argument_list|(
+argument|H3_CLK_DRAM_VE
+argument_list|,
+literal|"dram-ve"
+argument_list|,
+literal|"dram"
+argument_list|,
+literal|0x100
+argument_list|,
+literal|0
+argument_list|)
+name|CCU_GATE
+argument_list|(
+argument|H3_CLK_DRAM_CSI
+argument_list|,
+literal|"dram-csi"
+argument_list|,
+literal|"dram"
+argument_list|,
+literal|0x100
+argument_list|,
+literal|1
+argument_list|)
+name|CCU_GATE
+argument_list|(
+argument|H3_CLK_DRAM_DEINTERLACE
+argument_list|,
+literal|"dram-deinterlace"
+argument_list|,
+literal|"dram"
+argument_list|,
+literal|0x100
+argument_list|,
+literal|2
+argument_list|)
+name|CCU_GATE
+argument_list|(
+argument|H3_CLK_DRAM_TS
+argument_list|,
+literal|"dram-ts"
+argument_list|,
+literal|"dram"
+argument_list|,
+literal|0x100
+argument_list|,
+literal|3
+argument_list|)
 name|CCU_GATE
 argument_list|(
 argument|H3_CLK_AC_DIG
@@ -1298,6 +1342,18 @@ argument_list|,
 literal|"osc24M"
 argument_list|,
 literal|0x144
+argument_list|,
+literal|31
+argument_list|)
+name|CCU_GATE
+argument_list|(
+argument|H3_CLK_CSI_MISC
+argument_list|,
+literal|"csi-misc"
+argument_list|,
+literal|"osc24M"
+argument_list|,
+literal|0x130
 argument_list|,
 literal|31
 argument_list|)
@@ -1747,8 +1803,92 @@ begin_comment
 comment|/* mode sel, freq sel */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|pll_ddr_parents
+index|[]
+init|=
+block|{
+literal|"osc24M"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NKMP_CLK_WITH_UPDATE
+argument_list|(
+name|pll_ddr_clk
+argument_list|,
+name|H3_CLK_PLL_DDR
+argument_list|,
+comment|/* id */
+literal|"pll_ddr"
+argument_list|,
+name|pll_ddr_parents
+argument_list|,
+comment|/* name, parents */
+literal|0x20
+argument_list|,
+comment|/* offset */
+literal|8
+argument_list|,
+literal|5
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* n factor */
+literal|4
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* k factor */
+literal|0
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* p factor (fake) */
+literal|31
+argument_list|,
+comment|/* gate */
+literal|28
+argument_list|,
+literal|1000
+argument_list|,
+comment|/* lock */
+literal|20
+argument_list|,
+comment|/* update */
+name|AW_CLK_HAS_GATE
+operator||
+name|AW_CLK_HAS_LOCK
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * Needs a update bit on nkmp or special clk static const char *pll_ddr_parents[] = {"osc24M"};  */
+comment|/* flags */
 end_comment
 
 begin_decl_stmt
@@ -1842,6 +1982,38 @@ comment|/* lock */
 name|AW_CLK_HAS_GATE
 operator||
 name|AW_CLK_HAS_LOCK
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* flags */
+end_comment
+
+begin_expr_stmt
+name|FIXED_CLK
+argument_list|(
+name|pll_periph0_2x_clk
+argument_list|,
+name|H3_CLK_PLL_PERIPH0_2X
+argument_list|,
+comment|/* id */
+literal|"pll_periph0-2x"
+argument_list|,
+comment|/* name */
+name|pll_periph0_2x_parents
+argument_list|,
+comment|/* parent */
+literal|0
+argument_list|,
+comment|/* freq */
+literal|2
+argument_list|,
+comment|/* mult */
+literal|1
+argument_list|,
+comment|/* div */
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3219,30 +3391,64 @@ begin_comment
 comment|/* flags */
 end_comment
 
-begin_expr_stmt
-name|FIXED_CLK
-argument_list|(
-name|pll_periph0_2x_clk
-argument_list|,
-name|H3_CLK_PLL_PERIPH0_2X
-argument_list|,
-comment|/* id */
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|dram_parents
+index|[]
+init|=
+block|{
+literal|"pll_ddr"
+block|,
 literal|"pll_periph0-2x"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|dram_clk
 argument_list|,
-comment|/* name */
-name|pll_periph0_2x_parents
+name|H3_CLK_DRAM
 argument_list|,
-comment|/* parent */
+literal|"dram"
+argument_list|,
+name|dram_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0xF4
+argument_list|,
+comment|/* offset */
 literal|0
 argument_list|,
-comment|/* freq */
-literal|2
+literal|0
 argument_list|,
-comment|/* mult */
 literal|1
 argument_list|,
-comment|/* div */
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* n factor (fake) */
 literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|20
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|0
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_MUX
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3251,48 +3457,676 @@ begin_comment
 comment|/* flags */
 end_comment
 
-begin_comment
-comment|/* DRAM clock 0xF4 */
-end_comment
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|de_parents
+index|[]
+init|=
+block|{
+literal|"pll_periph0-2x"
+block|,
+literal|"pll_de"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|de_clk
+argument_list|,
+name|H3_CLK_DE
+argument_list|,
+literal|"de"
+argument_list|,
+name|de_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x104
+argument_list|,
+comment|/* offset */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* n factor (fake) */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|24
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|31
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_MUX
+operator||
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* DE gating 0x104 */
+comment|/* flags */
 end_comment
 
-begin_comment
-comment|/* TCON0 0x118 */
-end_comment
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|tcon0_parents
+index|[]
+init|=
+block|{
+literal|"pll_video"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|tcon0_clk
+argument_list|,
+name|H3_CLK_TCON0
+argument_list|,
+literal|"tcon0"
+argument_list|,
+name|tcon0_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x118
+argument_list|,
+comment|/* offset */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* n factor (fake) */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|24
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|31
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_MUX
+operator||
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* TVE 0x120 */
+comment|/* flags */
 end_comment
 
-begin_comment
-comment|/* Deinterlace 0x124 */
-end_comment
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|tve_parents
+index|[]
+init|=
+block|{
+literal|"pll_de"
+block|,
+literal|"pll_periph1"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|tve_clk
+argument_list|,
+name|H3_CLK_TVE
+argument_list|,
+literal|"tve"
+argument_list|,
+name|tve_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x120
+argument_list|,
+comment|/* offset */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* n factor (fake) */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|24
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|31
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_MUX
+operator||
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* CSI_MISC 0x130 */
+comment|/* flags */
 end_comment
 
-begin_comment
-comment|/* CSI 0x134 */
-end_comment
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|deinterlace_parents
+index|[]
+init|=
+block|{
+literal|"pll_periph0"
+block|,
+literal|"pll_periph1"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|deinterlace_clk
+argument_list|,
+name|H3_CLK_DEINTERLACE
+argument_list|,
+literal|"deinterlace"
+argument_list|,
+name|deinterlace_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x124
+argument_list|,
+comment|/* offset */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* n factor (fake) */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|24
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|31
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_MUX
+operator||
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* VE 0x13C */
+comment|/* flags */
 end_comment
 
-begin_comment
-comment|/* HDMI 0x150 */
-end_comment
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|csi_sclk_parents
+index|[]
+init|=
+block|{
+literal|"pll_periph0"
+block|,
+literal|"pll_periph1"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|csi_sclk_clk
+argument_list|,
+name|H3_CLK_CSI_SCLK
+argument_list|,
+literal|"csi-sclk"
+argument_list|,
+name|csi_sclk_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x134
+argument_list|,
+comment|/* offset */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* n factor (fake) */
+literal|16
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|24
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|31
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_MUX
+operator||
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* MBUS 0x15C */
+comment|/* flags */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|csi_mclk_parents
+index|[]
+init|=
+block|{
+literal|"osc24M"
+block|,
+literal|"pll_video"
+block|,
+literal|"pll_periph1"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|csi_mclk_clk
+argument_list|,
+name|H3_CLK_CSI_MCLK
+argument_list|,
+literal|"csi-mclk"
+argument_list|,
+name|csi_mclk_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x134
+argument_list|,
+comment|/* offset */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* n factor (fake) */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|8
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|15
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_MUX
+operator||
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/* GPU 0x1A0 */
+comment|/* flags */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ve_parents
+index|[]
+init|=
+block|{
+literal|"pll_ve"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|ve_clk
+argument_list|,
+name|H3_CLK_VE
+argument_list|,
+literal|"ve"
+argument_list|,
+name|ve_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x13C
+argument_list|,
+comment|/* offset */
+literal|16
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* n factor */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* m factor (fake) */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* mux */
+literal|31
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* flags */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|hdmi_parents
+index|[]
+init|=
+block|{
+literal|"pll_video"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|hdmi_clk
+argument_list|,
+name|H3_CLK_HDMI
+argument_list|,
+literal|"hdmi"
+argument_list|,
+name|hdmi_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x150
+argument_list|,
+comment|/* offset */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* n factor (fake) */
+literal|0
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|24
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|31
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_MUX
+operator||
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* flags */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mbus_parents
+index|[]
+init|=
+block|{
+literal|"osc24M"
+block|,
+literal|"pll_periph0-2x"
+block|,
+literal|"pll_ddr"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|mbus_clk
+argument_list|,
+name|H3_CLK_MBUS
+argument_list|,
+literal|"mbus"
+argument_list|,
+name|mbus_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x15C
+argument_list|,
+comment|/* offset */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* n factor (fake) */
+literal|0
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* m factor */
+literal|24
+argument_list|,
+literal|2
+argument_list|,
+comment|/* mux */
+literal|31
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_MUX
+operator||
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* flags */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|gpu_parents
+index|[]
+init|=
+block|{
+literal|"pll_gpu"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NM_CLK
+argument_list|(
+name|gpu_clk
+argument_list|,
+name|H3_CLK_GPU
+argument_list|,
+literal|"gpu"
+argument_list|,
+name|gpu_parents
+argument_list|,
+comment|/* id, name, parents */
+literal|0x1A0
+argument_list|,
+comment|/* offset */
+literal|0
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* n factor */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|AW_CLK_FACTOR_FIXED
+argument_list|,
+comment|/* m factor (fake) */
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+comment|/* mux */
+literal|31
+argument_list|,
+comment|/* gate */
+name|AW_CLK_HAS_GATE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* flags */
 end_comment
 
 begin_decl_stmt
@@ -3315,6 +4149,9 @@ name|pll_periph0_clk
 block|,
 operator|&
 name|pll_periph1_clk
+block|,
+operator|&
+name|pll_ddr_clk
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -3369,6 +4206,39 @@ name|spi1_clk
 block|,
 operator|&
 name|spdif_clk
+block|,
+operator|&
+name|dram_clk
+block|,
+operator|&
+name|de_clk
+block|,
+operator|&
+name|tcon0_clk
+block|,
+operator|&
+name|tve_clk
+block|,
+operator|&
+name|deinterlace_clk
+block|,
+operator|&
+name|csi_sclk_clk
+block|,
+operator|&
+name|csi_mclk_clk
+block|,
+operator|&
+name|ve_clk
+block|,
+operator|&
+name|hdmi_clk
+block|,
+operator|&
+name|mbus_clk
+block|,
+operator|&
+name|gpu_clk
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -3482,6 +4352,16 @@ block|{
 literal|"ahb2"
 block|,
 literal|"pll_periph0"
+block|,
+literal|0
+block|,
+name|false
+block|}
+block|,
+block|{
+literal|"dram"
+block|,
+literal|"pll_ddr"
 block|,
 literal|0
 block|,

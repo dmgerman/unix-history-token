@@ -1068,6 +1068,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|H3_CLK_DRAM
+value|96
+end_define
+
+begin_define
+define|#
+directive|define
 name|H3_CLK_DRAM_VE
 value|97
 end_define
@@ -1175,6 +1182,13 @@ define|#
 directive|define
 name|H3_CLK_HDMI_DDC
 value|112
+end_define
+
+begin_define
+define|#
+directive|define
+name|H3_CLK_MBUS
+value|113
 end_define
 
 begin_define

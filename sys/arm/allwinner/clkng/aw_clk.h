@@ -88,6 +88,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AW_CLK_HAS_UPDATE
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|AW_CLK_FACTOR_POWER_OF_TWO
 value|0x0001
 end_define
@@ -607,6 +614,67 @@ name|_flags
 parameter_list|)
 define|\
 value|static struct aw_clk_nkmp_def _clkname = {	\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _n_shift,			\ 		.n.width = _n_width,			\ 		.n.value = _n_value,			\ 		.n.flags = _n_flags,			\ 		.k.shift = _k_shift,			\ 		.k.width = _k_width,			\ 		.k.value = _k_value,			\ 		.k.flags = _k_flags,			\ 		.m.shift = _m_shift,			\ 		.m.width = _m_width,			\ 		.m.value = _m_value,			\ 		.m.flags = _m_flags,			\ 		.p.shift = _p_shift,			\ 		.p.width = _p_width,			\ 		.p.value = _p_value,			\ 		.p.flags = _p_flags,			\ 		.gate_shift = _gate,			\ 		.lock_shift = _lock,			\ 		.lock_retries = _lock_retries,		\ 		.flags = _flags,			\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|NKMP_CLK_WITH_UPDATE
+parameter_list|(
+name|_clkname
+parameter_list|,			\
+name|_id
+parameter_list|,
+name|_name
+parameter_list|,
+name|_pnames
+parameter_list|,					\
+name|_offset
+parameter_list|,						\
+name|_n_shift
+parameter_list|,
+name|_n_width
+parameter_list|,
+name|_n_value
+parameter_list|,
+name|_n_flags
+parameter_list|,		\
+name|_k_shift
+parameter_list|,
+name|_k_width
+parameter_list|,
+name|_k_value
+parameter_list|,
+name|_k_flags
+parameter_list|,		\
+name|_m_shift
+parameter_list|,
+name|_m_width
+parameter_list|,
+name|_m_value
+parameter_list|,
+name|_m_flags
+parameter_list|,		\
+name|_p_shift
+parameter_list|,
+name|_p_width
+parameter_list|,
+name|_p_value
+parameter_list|,
+name|_p_flags
+parameter_list|,		\
+name|_gate
+parameter_list|,						\
+name|_lock
+parameter_list|,
+name|_lock_retries
+parameter_list|,					\
+name|_update
+parameter_list|,						\
+name|_flags
+parameter_list|)
+define|\
+value|static struct aw_clk_nkmp_def _clkname = {	\ 		.clkdef = {				\ 			.id = _id,			\ 			.name = _name,			\ 			.parent_names = _pnames,	\ 			.parent_cnt = nitems(_pnames),	\ 		},					\ 		.offset = _offset,			\ 		.n.shift = _n_shift,			\ 		.n.width = _n_width,			\ 		.n.value = _n_value,			\ 		.n.flags = _n_flags,			\ 		.k.shift = _k_shift,			\ 		.k.width = _k_width,			\ 		.k.value = _k_value,			\ 		.k.flags = _k_flags,			\ 		.m.shift = _m_shift,			\ 		.m.width = _m_width,			\ 		.m.value = _m_value,			\ 		.m.flags = _m_flags,			\ 		.p.shift = _p_shift,			\ 		.p.width = _p_width,			\ 		.p.value = _p_value,			\ 		.p.flags = _p_flags,			\ 		.gate_shift = _gate,			\ 		.lock_shift = _lock,			\ 		.lock_retries = _lock_retries,		\ 		.update_shift = _update,		\ 		.flags = _flags | AW_CLK_HAS_UPDATE,	\ 	}
 end_define
 
 begin_define

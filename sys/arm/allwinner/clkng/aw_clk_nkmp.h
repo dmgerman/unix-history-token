@@ -58,6 +58,9 @@ name|uint32_t
 name|lock_retries
 decl_stmt|;
 name|uint32_t
+name|update_shift
+decl_stmt|;
+name|uint32_t
 name|flags
 decl_stmt|;
 block|}
