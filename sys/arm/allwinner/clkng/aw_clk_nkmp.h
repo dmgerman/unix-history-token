@@ -49,6 +49,12 @@ name|aw_clk_factor
 name|p
 decl_stmt|;
 name|uint32_t
+name|mux_shift
+decl_stmt|;
+name|uint32_t
+name|mux_width
+decl_stmt|;
+name|uint32_t
 name|gate_shift
 decl_stmt|;
 name|uint32_t
