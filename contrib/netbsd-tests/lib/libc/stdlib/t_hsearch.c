@@ -1187,6 +1187,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+literal|1100027
+operator|<=
+name|__FreeBSD_version
+end_if
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -1841,6 +1854,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|ATF_TP_ADD_TCS

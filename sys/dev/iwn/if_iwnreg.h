@@ -3264,6 +3264,27 @@ end_struct
 begin_define
 define|#
 directive|define
+name|IWN_RFLAG_RATE
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFLAG_RATE_MCS
+value|0x1f
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_RFLAG_HT40_DUP
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWN_RFLAG_MCS
 value|(1<< 8)
 end_define

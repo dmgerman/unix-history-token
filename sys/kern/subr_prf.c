@@ -213,6 +213,21 @@ directive|include
 file|<stdarg.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * This is needed for sbuf_putbuf() when compiled into userland.  Due to the  * shared nature of this file, it's the only place to put it.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include

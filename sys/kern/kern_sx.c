@@ -1996,7 +1996,7 @@ name|SX_LOCK_EXCLUSIVE_WAITERS
 expr_stmt|;
 name|success
 operator|=
-name|atomic_cmpset_ptr
+name|atomic_cmpset_acq_ptr
 argument_list|(
 operator|&
 name|sx

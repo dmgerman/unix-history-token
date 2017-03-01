@@ -13576,7 +13576,7 @@ name|pci_feature
 name|feature
 parameter_list|)
 block|{
-comment|/* 	 * No host firmwrae we have to negotiate with, so we allow 	 * every valid feature requested. 	 */
+comment|/* 	 * No host firmware we have to negotiate with, so we allow 	 * every valid feature requested. 	 */
 switch|switch
 condition|(
 name|feature

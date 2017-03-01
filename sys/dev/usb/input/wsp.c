@@ -293,6 +293,9 @@ decl_stmt|;
 name|int
 name|scr_hor_threshold
 decl_stmt|;
+name|int
+name|enable_single_tap_clicks
+decl_stmt|;
 block|}
 name|wsp_tuning
 init|=
@@ -326,6 +329,11 @@ operator|.
 name|scr_hor_threshold
 operator|=
 literal|20
+block|,
+operator|.
+name|enable_single_tap_clicks
+operator|=
+literal|1
 block|, }
 struct|;
 end_struct
@@ -405,6 +413,17 @@ argument_list|,
 literal|1
 argument_list|,
 literal|255
+argument_list|)
+expr_stmt|;
+name|WSP_CLAMP
+argument_list|(
+name|ptun
+operator|->
+name|enable_single_tap_clicks
+argument_list|,
+literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -544,6 +563,29 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"horizontal scrolling threshold"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_wsp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_single_tap_clicks
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|wsp_tuning
+operator|.
+name|enable_single_tap_clicks
+argument_list|,
+literal|0
+argument_list|,
+literal|"enable single tap clicks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4718,6 +4760,10 @@ name|caps
 operator|&
 name|HAS_INTEGRATED_BUTTON
 operator|)
+operator|||
+name|tun
+operator|.
+name|enable_single_tap_clicks
 condition|)
 block|{
 name|wsp_add_to_queue

@@ -533,6 +533,7 @@ argument_list|(
 name|INVARIANTS
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|INVARIANT_SUPPORT
@@ -543,18 +544,10 @@ argument_list|(
 name|LOCK_PROFILING
 argument_list|)
 operator|||
-operator|(
 name|defined
 argument_list|(
 name|KTR
 argument_list|)
-operator|&&
-operator|(
-name|KTR_COMPILE
-operator|&
-name|KTR_LOCK
-operator|)
-operator|)
 end_if
 
 begin_define
