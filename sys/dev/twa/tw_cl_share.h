@@ -182,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|TW_CL_MAX_NUM_LUNS
-value|16
+value|255
 end_define
 
 begin_comment
