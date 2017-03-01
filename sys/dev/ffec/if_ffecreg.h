@@ -924,6 +924,115 @@ value|(1<<  0)
 end_define
 
 begin_comment
+comment|/*  * IEEE-1588 timer registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCR_REG
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCR_SLAVE
+value|(1u<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCR_CAPTURE
+value|(1u<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCR_RESTART
+value|(1u<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCR_PINPER
+value|(1u<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCR_PEREN
+value|(1u<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCR_OFFRST
+value|(1u<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCR_OFFEN
+value|(1u<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCR_EN
+value|(1u<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATVR_REG
+value|0x0404
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATOFF_REG
+value|0x0408
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATPER_REG
+value|0x040c
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATCOR_REG
+value|0x0410
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATINC_REG
+value|0x0414
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEC_ATSTMP_REG
+value|0x0418
+end_define
+
+begin_comment
 comment|/*  * Statistics registers  */
 end_comment
 
