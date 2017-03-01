@@ -185,7 +185,9 @@ end_function
 begin_function
 name|int
 name|src_reset_ipu
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|uint32_t
 name|reg

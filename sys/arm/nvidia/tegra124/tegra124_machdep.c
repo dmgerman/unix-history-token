@@ -3,12 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 2016 Michal Meloun<mmel@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_ARM32_BUS_DMA_PRIVATE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -174,54 +168,6 @@ directive|define
 name|PMC_SCRATCH0_MODE_MASK
 value|(PMC_SCRATCH0_MODE_RECOVERY | \ 					PMC_SCRATCH0_MODE_BOOTLOADER | \ 					PMC_SCRATCH0_MODE_RCM)
 end_define
-
-begin_decl_stmt
-name|struct
-name|fdt_fixup_entry
-name|fdt_fixup_table
-index|[]
-init|=
-block|{
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|struct
-name|arm32_dma_range
-modifier|*
-name|bus_dma_get_range
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|bus_dma_get_range_nb
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static

@@ -43,11 +43,18 @@ parameter_list|)
 value|((t) != (bus_dma_tag_t)0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_ARM32_BUS_DMA_PRIVATE
-end_ifdef
+argument_list|)
+operator|&&
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
 
 begin_comment
 comment|/*  *	arm32_dma_range  *  *	This structure describes a valid DMA range.  */

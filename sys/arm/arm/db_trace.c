@@ -487,7 +487,9 @@ end_function
 begin_function
 name|void
 name|db_md_list_watchpoints
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|dbg_show_watchpoint
 argument_list|()

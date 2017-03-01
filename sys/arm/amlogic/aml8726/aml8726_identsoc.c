@@ -230,7 +230,9 @@ end_struct
 begin_function
 name|void
 name|aml8726_identify_soc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|err

@@ -1566,7 +1566,9 @@ end_function
 begin_function
 name|int
 name|pxa_gpio_get_next_irq
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|pxa_gpio_softc

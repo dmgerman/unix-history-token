@@ -650,7 +650,9 @@ end_function
 begin_function
 name|uint32_t
 name|pxa_icu_get_icip
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -704,7 +706,9 @@ end_function
 begin_function
 name|uint32_t
 name|pxa_icu_get_icfp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -758,7 +762,9 @@ end_function
 begin_function
 name|uint32_t
 name|pxa_icu_get_icmr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -808,7 +814,9 @@ end_function
 begin_function
 name|uint32_t
 name|pxa_icu_get_iclr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -858,7 +866,9 @@ end_function
 begin_function
 name|uint32_t
 name|pxa_icu_get_icpr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -882,7 +892,9 @@ end_function
 begin_function
 name|void
 name|pxa_icu_idle_enable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|bus_space_write_4
 argument_list|(
@@ -905,7 +917,9 @@ end_function
 begin_function
 name|void
 name|pxa_icu_idle_disable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|bus_space_write_4
 argument_list|(

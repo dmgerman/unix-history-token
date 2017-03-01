@@ -21,12 +21,6 @@ begin_comment
 comment|/*  * Dispatch platform calls to the appropriate platform implementation  * through a previously registered kernel object.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_ARM32_BUS_DMA_PRIVATE
-end_define
-
 begin_include
 include|#
 directive|include

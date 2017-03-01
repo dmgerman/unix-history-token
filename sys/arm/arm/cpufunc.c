@@ -1467,7 +1467,9 @@ begin_function
 specifier|static
 name|void
 name|get_cachetype_cp15
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int
 name|ctype
@@ -2054,7 +2056,9 @@ end_comment
 begin_macro
 unit|int
 name|set_cpufuncs
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block

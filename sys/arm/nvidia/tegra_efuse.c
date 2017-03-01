@@ -972,7 +972,9 @@ begin_function
 specifier|static
 name|void
 name|tegra_efuse_dump_sku
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(

@@ -23,12 +23,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|_ARM32_BUS_DMA_PRIVATE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -160,38 +154,6 @@ literal|"Last reset reason"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function
-name|struct
-name|arm32_dma_range
-modifier|*
-name|bus_dma_get_range
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|bus_dma_get_range_nb
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * This code which manipulates the watchdog hardware is here to implement  * cpu_reset() because the watchdog is the only way for software to reset the  * chip.  Why here and not in imx_wdog.c?  Because there's no requirement that  * the watchdog driver be compiled in, but it's nice to be able to reboot even  * if it's not.  */

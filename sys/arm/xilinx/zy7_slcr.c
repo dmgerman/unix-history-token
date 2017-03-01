@@ -1722,7 +1722,9 @@ end_function
 begin_function
 name|int
 name|zy7_pl_level_shifters_enabled
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|zy7_slcr_softc
@@ -1777,7 +1779,9 @@ end_function
 begin_function
 name|void
 name|zy7_pl_level_shifters_enable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|zy7_slcr_softc
@@ -1827,7 +1831,9 @@ end_function
 begin_function
 name|void
 name|zy7_pl_level_shifters_disable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|zy7_slcr_softc

@@ -544,7 +544,9 @@ begin_function
 specifier|static
 name|int
 name|dmtpps_find_tmr_num_by_tunable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|padinfo
@@ -729,7 +731,9 @@ begin_function
 specifier|static
 name|int
 name|dmtpps_find_tmr_num_by_padconf
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|err
@@ -849,7 +853,9 @@ begin_function
 specifier|static
 name|int
 name|dmtpps_find_tmr_num
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|tmr_num

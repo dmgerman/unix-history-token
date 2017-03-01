@@ -478,7 +478,9 @@ end_comment
 begin_function
 name|void
 name|arm_physmem_print_tables
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|physmem_dump_tables
 argument_list|(

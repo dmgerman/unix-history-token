@@ -786,7 +786,9 @@ end_function
 begin_function
 name|void
 name|bcmwd_watchdog_reset
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
