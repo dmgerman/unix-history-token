@@ -7609,6 +7609,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|p_tm
+operator|=
 name|localsub
 argument_list|(
 name|timep
@@ -7624,11 +7626,6 @@ operator|&
 name|lcl_rwlock
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|p_tm
-operator|)
-return|;
 block|}
 else|else
 block|{
@@ -7637,6 +7634,8 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|p_tm
+operator|=
 name|localsub
 argument_list|(
 name|timep
@@ -7647,13 +7646,12 @@ operator|&
 name|tm
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
-operator|&
-name|tm
+name|p_tm
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -7694,6 +7692,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|tmp
+operator|=
 name|localsub
 argument_list|(
 name|timep
