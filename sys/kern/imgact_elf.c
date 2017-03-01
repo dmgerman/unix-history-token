@@ -2356,9 +2356,14 @@ name|PAGE_MASK
 condition|)
 block|{
 comment|/* 			 * The mapping is not page aligned. This means we have 			 * to copy the data. Sigh. 			 */
+name|vm_map_lock
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 name|rv
 operator|=
-name|vm_map_find
+name|vm_map_insert
 argument_list|(
 name|map
 argument_list|,
@@ -2366,16 +2371,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|start
 argument_list|,
 name|end
-operator|-
-name|start
-argument_list|,
-literal|0
-argument_list|,
-name|VMFS_NO_SPACE
 argument_list|,
 name|prot
 operator||
@@ -2384,6 +2382,11 @@ argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vm_map_unlock
+argument_list|(
+name|map
 argument_list|)
 expr_stmt|;
 if|if
