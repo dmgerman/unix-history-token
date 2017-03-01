@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -2022,7 +2016,7 @@ comment|/* 	 * See if we've got a GPIO-based write detect pin.  This is not the 
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2051,10 +2045,7 @@ name|sc
 operator|->
 name|wp_gpio_pin
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|prop
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -2009,7 +2003,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2023,12 +2017,9 @@ argument_list|)
 expr_stmt|;
 name|edma_src_transmit
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|dts_value
-argument_list|)
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2042,12 +2033,9 @@ argument_list|)
 expr_stmt|;
 name|edma_mux_group
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|dts_value
-argument_list|)
 expr_stmt|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2063,10 +2051,7 @@ name|edma_node
 operator|=
 name|OF_node_from_xref
 argument_list|(
-name|fdt32_to_cpu
-argument_list|(
 name|dts_value
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2091,7 +2076,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|edma_node
 argument_list|,
@@ -2105,10 +2090,7 @@ argument_list|)
 expr_stmt|;
 name|edma_device_id
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|dts_value
-argument_list|)
 expr_stmt|;
 name|edma_sc
 operator|=
