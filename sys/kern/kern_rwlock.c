@@ -5357,7 +5357,7 @@ condition|)
 block|{
 name|success
 operator|=
-name|atomic_cmpset_ptr
+name|atomic_cmpset_acq_ptr
 argument_list|(
 operator|&
 name|rw

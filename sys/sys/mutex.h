@@ -992,7 +992,7 @@ parameter_list|,
 name|tid
 parameter_list|)
 define|\
-value|atomic_fcmpset_rel_ptr(&(mp)->mtx_lock, vp, (tid))
+value|atomic_fcmpset_acq_ptr(&(mp)->mtx_lock, vp, (tid))
 end_define
 
 begin_comment
