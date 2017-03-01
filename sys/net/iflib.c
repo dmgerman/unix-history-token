@@ -1738,18 +1738,6 @@ end_expr_stmt
 begin_expr_stmt
 name|TASKQGROUP_DEFINE
 argument_list|(
-name|if_io_tqg
-argument_list|,
-name|mp_ncpus
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TASKQGROUP_DEFINE
-argument_list|(
 name|if_config_tqg
 argument_list|,
 literal|1
@@ -20932,7 +20920,7 @@ expr_stmt|;
 comment|/* XXX drain any dependent tasks */
 name|tqg
 operator|=
-name|qgroup_if_io_tqg
+name|qgroup_softirq
 expr_stmt|;
 for|for
 control|(
@@ -24324,7 +24312,7 @@ name|ift_task
 expr_stmt|;
 name|tqg
 operator|=
-name|qgroup_if_io_tqg
+name|qgroup_softirq
 expr_stmt|;
 name|fn
 operator|=
@@ -24381,7 +24369,7 @@ name|ifr_task
 expr_stmt|;
 name|tqg
 operator|=
-name|qgroup_if_io_tqg
+name|qgroup_softirq
 expr_stmt|;
 name|fn
 operator|=
@@ -24656,7 +24644,7 @@ name|ift_task
 expr_stmt|;
 name|tqg
 operator|=
-name|qgroup_if_io_tqg
+name|qgroup_softirq
 expr_stmt|;
 name|fn
 operator|=
@@ -24690,7 +24678,7 @@ name|ifr_task
 expr_stmt|;
 name|tqg
 operator|=
-name|qgroup_if_io_tqg
+name|qgroup_softirq
 expr_stmt|;
 name|fn
 operator|=
@@ -24922,7 +24910,7 @@ name|ifr_task
 expr_stmt|;
 name|tqg
 operator|=
-name|qgroup_if_io_tqg
+name|qgroup_softirq
 expr_stmt|;
 name|tqrid
 operator|=
@@ -25038,7 +25026,7 @@ argument_list|)
 expr_stmt|;
 name|taskqgroup_attach
 argument_list|(
-name|qgroup_if_io_tqg
+name|qgroup_softirq
 argument_list|,
 operator|&
 name|txq
@@ -25230,7 +25218,7 @@ parameter_list|)
 block|{
 name|taskqgroup_attach_cpu
 argument_list|(
-name|qgroup_if_io_tqg
+name|qgroup_softirq
 argument_list|,
 name|gt
 argument_list|,

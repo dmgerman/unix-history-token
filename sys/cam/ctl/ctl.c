@@ -49901,6 +49901,8 @@ elseif|else
 if|if
 condition|(
 name|port
+operator|&&
+name|port
 operator|->
 name|port_type
 operator|==

@@ -2163,17 +2163,6 @@ operator|&
 name|PAGE_MASK
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|*
-name|total_size
-operator|>
-literal|0xFFFFFFFFULL
-condition|)
-return|return
-operator|-
-name|ENOMEM
-return|;
 comment|/* Find largest page shift we can use to cover buffers */
 for|for
 control|(

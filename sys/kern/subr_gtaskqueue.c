@@ -161,6 +161,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|TASKQGROUP_DEFINE
+argument_list|(
+name|softirq
+argument_list|,
+name|mp_ncpus
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|gtaskqueue_busy
