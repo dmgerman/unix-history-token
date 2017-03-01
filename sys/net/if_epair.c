@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
 
@@ -3071,16 +3065,6 @@ literal|0
 index|]
 operator|=
 literal|0x02
-expr_stmt|;
-name|eaddr
-index|[
-literal|1
-index|]
-operator|=
-name|arc4random
-argument_list|()
-operator|&
-literal|0xff
 expr_stmt|;
 name|eaddr
 index|[
