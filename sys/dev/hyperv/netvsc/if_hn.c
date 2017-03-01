@@ -9045,13 +9045,6 @@ name|rm_pktinfooffset
 operator|=
 name|RNDIS_PKTINFO_OFFSET
 expr_stmt|;
-comment|/* Update RNDIS packet msg length */
-name|pkt
-operator|->
-name|rm_len
-operator|+=
-name|pi_size
-expr_stmt|;
 return|return
 operator|(
 name|pi
@@ -9657,12 +9650,6 @@ name|pkt
 operator|->
 name|rm_len
 operator|=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|pkt
-argument_list|)
-operator|+
 name|m_head
 operator|->
 name|m_pkthdr
@@ -10043,6 +10030,13 @@ operator|+
 name|pkt
 operator|->
 name|rm_pktinfolen
+expr_stmt|;
+comment|/* Fixup RNDIS packet message total length */
+name|pkt
+operator|->
+name|rm_len
+operator|+=
+name|pkt_hlen
 expr_stmt|;
 comment|/* Convert RNDIS packet message offsets */
 name|pkt
