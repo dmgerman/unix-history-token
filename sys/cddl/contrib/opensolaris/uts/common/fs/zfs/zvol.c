@@ -1198,6 +1198,24 @@ return|return;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
+comment|/* 		 * Do not invoke resize event when initial size was zero. 		 * ZVOL initializes the size on first open, this is not 		 * real resizing. 		 */
+if|if
+condition|(
+name|pp
+operator|->
+name|mediasize
+operator|==
+literal|0
+condition|)
+name|pp
+operator|->
+name|mediasize
+operator|=
+name|zv
+operator|->
+name|zv_volsize
+expr_stmt|;
+else|else
 name|g_resize_provider
 argument_list|(
 name|pp
