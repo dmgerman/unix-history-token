@@ -1687,7 +1687,7 @@ operator|(
 operator|!
 name|defined
 argument_list|(
-name|__STDC_VERSION
+name|__STDC_VERSION__
 argument_list|)
 operator|||
 operator|(
