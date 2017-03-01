@@ -441,6 +441,33 @@ name|cp15_id_isar5_get
 argument_list|()
 expr_stmt|;
 comment|/* Not yet - CBAR only exist on ARM SMP Cortex A CPUs 	cpuinfo.cbar = cp15_cbar_get(); */
+if|if
+condition|(
+name|CPU_CT_FORMAT
+argument_list|(
+name|cpuinfo
+operator|.
+name|ctr
+argument_list|)
+operator|==
+name|CPU_CT_ARMV7
+condition|)
+block|{
+name|cpuinfo
+operator|.
+name|ccsidr
+operator|=
+name|cp15_ccsidr_get
+argument_list|()
+expr_stmt|;
+name|cpuinfo
+operator|.
+name|clidr
+operator|=
+name|cp15_clidr_get
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* Test if revidr is implemented */
 if|if
 condition|(
@@ -762,6 +789,9 @@ operator|.
 name|part_number
 condition|)
 block|{
+case|case
+name|CPU_ARCH_CORTEX_A73
+case|:
 case|case
 name|CPU_ARCH_CORTEX_A72
 case|:

@@ -123,6 +123,13 @@ name|CPU_ARCH_CORTEX_A72
 value|0xD08
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_ARCH_CORTEX_A73
+value|0xD09
+end_define
+
 begin_comment
 comment|/* QCOM */
 end_comment
@@ -141,7 +148,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_ARCH_SHEEVA_851
+name|CPU_ARCH_SHEEVA_581
 value|0x581
 end_define
 
@@ -227,6 +234,12 @@ name|id_isar5
 decl_stmt|;
 name|uint32_t
 name|cbar
+decl_stmt|;
+name|uint32_t
+name|ccsidr
+decl_stmt|;
+name|uint32_t
+name|clidr
 decl_stmt|;
 comment|/* Parsed bits of above registers... */
 comment|/* midr */
