@@ -1736,6 +1736,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* try next rule if not matched */
+name|ret
+operator|=
+name|IP_FW_DENY
+expr_stmt|;
 name|icmd
 operator|=
 name|cmd
@@ -1777,7 +1781,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|ret
 operator|)
 return|;
 comment|/* 	 * We need act as router, so when forwarding is disabled - 	 * do nothing. 	 */
@@ -1797,14 +1801,10 @@ literal|6
 condition|)
 return|return
 operator|(
-literal|0
+name|ret
 operator|)
 return|;
 comment|/* 	 * NOTE: we expect ipfw_chk() did m_pullup() up to upper level 	 * protocol's headers. Also we skip some checks, that ip6_input(), 	 * ip6_forward(), ip6_fastfwd() and ipfw_chk() already did. 	 */
-name|ret
-operator|=
-name|IP_FW_DENY
-expr_stmt|;
 name|ip6
 operator|=
 name|mtod
@@ -1913,7 +1913,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|ret
 operator|)
 return|;
 name|ret
@@ -1969,10 +1969,10 @@ expr_stmt|;
 else|else
 return|return
 operator|(
-literal|0
+name|ret
 operator|)
 return|;
-comment|/* 	 * If address wasn't rewrited - free mbuf. 	 */
+comment|/* 	 * If address wasn't rewrited - free mbuf and terminate the search. 	 */
 if|if
 condition|(
 name|ret
@@ -2011,7 +2011,14 @@ argument_list|,
 name|dropped
 argument_list|)
 expr_stmt|;
+operator|*
+name|done
+operator|=
+literal|1
+expr_stmt|;
 block|}
+else|else
+block|{
 comment|/* Terminate the search if one_pass is set */
 operator|*
 name|done
@@ -2023,10 +2030,6 @@ if|if
 condition|(
 operator|*
 name|done
-operator|==
-literal|0
-operator|&&
-name|ret
 operator|==
 literal|0
 condition|)
@@ -2064,6 +2067,7 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(

@@ -10888,6 +10888,24 @@ operator|&
 name|done
 argument_list|)
 expr_stmt|;
+comment|/* 				 * If both @retval and @done are zero, 				 * consider this as rule matching and 				 * update counters. 				 */
+if|if
+condition|(
+name|retval
+operator|==
+literal|0
+operator|&&
+name|done
+operator|==
+literal|0
+condition|)
+name|IPFW_INC_RULE_COUNTER
+argument_list|(
+name|f
+argument_list|,
+name|pktlen
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|panic
