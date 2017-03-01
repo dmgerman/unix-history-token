@@ -3360,9 +3360,11 @@ name|gp_name
 argument_list|,
 name|GPIOMAXNAME
 argument_list|,
-literal|"imx_gpio%d.%d"
+literal|"GPIO%d_IO%02d"
 argument_list|,
 name|unit
+operator|+
+literal|1
 argument_list|,
 name|i
 argument_list|)
