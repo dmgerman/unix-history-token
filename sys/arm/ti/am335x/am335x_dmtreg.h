@@ -367,7 +367,7 @@ value|(1<< 14)
 end_define
 
 begin_comment
-comment|/* (no descr in datasheet) */
+comment|/* Tmr pin conf, 0=out, 1=in */
 end_comment
 
 begin_define
