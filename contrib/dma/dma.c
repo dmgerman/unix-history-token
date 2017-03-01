@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libgen.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -1847,10 +1853,13 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
+name|basename
+argument_list|(
 name|argv
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|,
 literal|"mailq"
 argument_list|)
