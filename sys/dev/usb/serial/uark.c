@@ -1972,6 +1972,7 @@ name|ucom
 operator|->
 name|sc_parent
 decl_stmt|;
+comment|/* XXX Note: sc_lsr is always zero */
 operator|*
 name|lsr
 operator|=
