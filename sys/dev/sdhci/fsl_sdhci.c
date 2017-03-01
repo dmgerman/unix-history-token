@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * SDHCI driver glue for Freescale i.MX SoC family.  *  * This supports both eSDHC (earlier SoCs) and uSDHC (more recent SoCs).  */
+comment|/*  * SDHCI driver glue for Freescale i.MX SoC and QorIQ families.  *  * This supports both eSDHC (earlier SoCs) and uSDHC (more recent SoCs).  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -129,6 +135,12 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__arm__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -140,6 +152,11 @@ include|#
 directive|include
 file|<arm/freescale/imx/imx_ccmvar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -185,7 +202,7 @@ end_include
 
 begin_struct
 struct|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 block|{
 name|device_t
 name|dev
@@ -292,7 +309,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* imx5x and earlier. */
+comment|/* fsl5x and earlier. */
 end_comment
 
 begin_define
@@ -303,7 +320,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* imx6. */
+comment|/* fsl6. */
 end_comment
 
 begin_comment
@@ -644,13 +661,6 @@ name|SDHC_SYS_CTRL
 value|0x2c
 end_define
 
-begin_define
-define|#
-directive|define
-name|SDHC_INT_STATUS
-value|0x30
-end_define
-
 begin_comment
 comment|/*  * The clock enable bits exist in different registers for ESDHC vs USDHC, but  * they are the same bits in both cases.  The divisor values go into the  * standard sdhci clock register, but in different bit positions and meanings    than the sdhci spec values.  */
 end_comment
@@ -751,6 +761,12 @@ name|HWTYPE_ESDHC
 block|}
 block|,
 block|{
+literal|"fsl,esdhc"
+block|,
+name|HWTYPE_ESDHC
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|HWTYPE_NONE
@@ -762,10 +778,10 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|uint16_t
-name|imx_sdhc_get_clock
+name|fsl_sdhc_get_clock
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -775,10 +791,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|imx_sdhc_set_clock
+name|fsl_sdhc_set_clock
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -791,7 +807,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|imx_sdhci_r1bfix_func
+name|fsl_sdhci_r1bfix_func
 parameter_list|(
 name|void
 modifier|*
@@ -807,7 +823,7 @@ name|uint32_t
 name|RD4
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -837,7 +853,7 @@ name|void
 name|WR4
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -865,7 +881,7 @@ end_function
 begin_function
 specifier|static
 name|uint8_t
-name|imx_sdhci_read_1
+name|fsl_sdhci_read_1
 parameter_list|(
 name|device_t
 name|dev
@@ -880,7 +896,7 @@ name|off
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1037,7 +1053,7 @@ end_function
 begin_function
 specifier|static
 name|uint16_t
-name|imx_sdhci_read_2
+name|fsl_sdhci_read_2
 parameter_list|(
 name|device_t
 name|dev
@@ -1052,7 +1068,7 @@ name|off
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1202,7 +1218,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|imx_sdhc_get_clock
+name|fsl_sdhc_get_clock
 argument_list|(
 name|sc
 argument_list|)
@@ -1240,7 +1256,7 @@ end_function
 begin_function
 specifier|static
 name|uint32_t
-name|imx_sdhci_read_4
+name|fsl_sdhci_read_4
 parameter_list|(
 name|device_t
 name|dev
@@ -1255,7 +1271,7 @@ name|off
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1358,7 +1374,7 @@ name|val32
 operator|)
 return|;
 block|}
-comment|/* 	 * imx_sdhci_intr() can synthesize a DATA_END interrupt following a 	 * command with an R1B response, mix it into the hardware status. 	 */
+comment|/* 	 * fsl_sdhci_intr() can synthesize a DATA_END interrupt following a 	 * command with an R1B response, mix it into the hardware status. 	 */
 if|if
 condition|(
 name|off
@@ -1385,7 +1401,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_read_multi_4
+name|fsl_sdhci_read_multi_4
 parameter_list|(
 name|device_t
 name|dev
@@ -1407,7 +1423,7 @@ name|count
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1435,7 +1451,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_write_1
+name|fsl_sdhci_write_1
 parameter_list|(
 name|device_t
 name|dev
@@ -1453,7 +1469,7 @@ name|val
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1571,6 +1587,19 @@ condition|)
 block|{
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|__powerpc__
+comment|/* XXX Reset doesn't seem to work as expected.  Do nothing for now. */
+if|if
+condition|(
+name|off
+operator|==
+name|SDHCI_SOFTWARE_RESET
+condition|)
+return|return;
+endif|#
+directive|endif
 name|val32
 operator|=
 name|RD4
@@ -1630,7 +1659,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_write_2
+name|fsl_sdhci_write_2
 parameter_list|(
 name|device_t
 name|dev
@@ -1648,7 +1677,7 @@ name|val
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1668,7 +1697,7 @@ operator|==
 name|SDHCI_CLOCK_CONTROL
 condition|)
 block|{
-name|imx_sdhc_set_clock
+name|fsl_sdhc_set_clock
 argument_list|(
 name|sc
 argument_list|,
@@ -1677,7 +1706,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Figure out whether we need to check the DAT0 line for busy status at 	 * interrupt time.  The controller should be doing this, but for some 	 * reason it doesn't.  There are two cases: 	 *  - R1B response with no data transfer should generate a DATA_END (aka 	 *    TRANSFER_COMPLETE) interrupt after waiting for busy, but if 	 *    there's no data transfer there's no DATA_END interrupt.  This is 	 *    documented; they seem to think it's a feature. 	 *  - R1B response after Auto-CMD12 appears to not work, even though 	 *    there's a control bit for it (bit 3) in the vendor register. 	 * When we're starting a command that needs a manual DAT0 line check at 	 * interrupt time, we leave ourselves a note in r1bfix_type so that we 	 * can do the extra work in imx_sdhci_intr(). 	 */
+comment|/* 	 * Figure out whether we need to check the DAT0 line for busy status at 	 * interrupt time.  The controller should be doing this, but for some 	 * reason it doesn't.  There are two cases: 	 *  - R1B response with no data transfer should generate a DATA_END (aka 	 *    TRANSFER_COMPLETE) interrupt after waiting for busy, but if 	 *    there's no data transfer there's no DATA_END interrupt.  This is 	 *    documented; they seem to think it's a feature. 	 *  - R1B response after Auto-CMD12 appears to not work, even though 	 *    there's a control bit for it (bit 3) in the vendor register. 	 * When we're starting a command that needs a manual DAT0 line check at 	 * interrupt time, we leave ourselves a note in r1bfix_type so that we 	 * can do the extra work in fsl_sdhci_intr(). 	 */
 if|if
 condition|(
 name|off
@@ -1960,7 +1989,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_write_4
+name|fsl_sdhci_write_4
 parameter_list|(
 name|device_t
 name|dev
@@ -1978,7 +2007,7 @@ name|val
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2018,7 +2047,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_write_multi_4
+name|fsl_sdhci_write_multi_4
 parameter_list|(
 name|device_t
 name|dev
@@ -2040,7 +2069,7 @@ name|count
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2068,10 +2097,10 @@ end_function
 begin_function
 specifier|static
 name|uint16_t
-name|imx_sdhc_get_clock
+name|fsl_sdhc_get_clock
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -2106,7 +2135,7 @@ name|val
 operator||=
 name|SDHCI_CLOCK_INT_STABLE
 expr_stmt|;
-comment|/* 	 * On ESDHC hardware the card bus clock enable is in the usual sdhci 	 * register but it's a different bit, so transcribe it (note the 	 * difference between standard SDHCI_ and Freescale SDHC_ prefixes 	 * here). On USDHC hardware there is a force-on bit, but no force-off 	 * for the card bus clock (the hardware runs the clock when transfers 	 * are active no matter what), so we always say the clock is on. 	 * XXX Maybe we should say it's in whatever state the sdhci driver last 	 * set it to. 	 */
+comment|/* 	 * On i.MX ESDHC hardware the card bus clock enable is in the usual 	 * sdhci register but it's a different bit, so transcribe it (note the 	 * difference between standard SDHCI_ and Freescale SDHC_ prefixes 	 * here). On USDHC and QorIQ ESDHC hardware there is a force-on bit, but 	 * no force-off for the card bus clock (the hardware runs the clock when 	 * transfers are active no matter what), so we always say the clock is 	 * on. 	 * XXX Maybe we should say it's in whatever state the sdhci driver last 	 * set it to. 	 */
 if|if
 condition|(
 name|sc
@@ -2116,6 +2145,9 @@ operator|==
 name|HWTYPE_ESDHC
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__arm__
 if|if
 condition|(
 name|RD4
@@ -2127,6 +2159,8 @@ argument_list|)
 operator|&
 name|SDHC_CLK_SDCLKEN
 condition|)
+endif|#
+directive|endif
 name|val
 operator||=
 name|SDHCI_CLOCK_CARD_EN
@@ -2150,10 +2184,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhc_set_clock
+name|fsl_sdhc_set_clock
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -2197,7 +2231,7 @@ operator|==
 name|HWTYPE_ESDHC
 condition|)
 block|{
-comment|/* 		 * The ESDHC hardware requires the driver to manually start and 		 * stop the sd bus clock.  If the enable bit is not set, turn 		 * off the clock in hardware and we're done, otherwise decode 		 * the requested frequency.  ESDHC hardware is sdhci 2.0; the 		 * sdhci driver will use the original 8-bit divisor field and 		 * the "base / 2^N" divisor scheme. 		 */
+comment|/* 		 * The i.MX5 ESDHC hardware requires the driver to manually 		 * start and stop the sd bus clock.  If the enable bit is not 		 * set, turn off the clock in hardware and we're done, otherwise 		 * decode the requested frequency.  ESDHC hardware is sdhci 2.0; 		 * the sdhci driver will use the original 8-bit divisor field 		 * and the "base / 2^N" divisor scheme. 		 */
 if|if
 condition|(
 operator|(
@@ -2209,6 +2243,10 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__arm__
+comment|/* On QorIQ, this is a reserved bit. */
 name|WR4
 argument_list|(
 name|sc
@@ -2221,6 +2259,8 @@ operator|~
 name|SDHC_CLK_SDCLKEN
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 name|divisor
@@ -2419,6 +2459,10 @@ name|prescale
 operator|<<
 name|SDHC_CLK_PRESCALE_SHIFT
 expr_stmt|;
+name|val32
+operator||=
+name|SDHC_CLK_IPGEN
+expr_stmt|;
 name|WR4
 argument_list|(
 name|sc
@@ -2434,10 +2478,10 @@ end_function
 begin_function
 specifier|static
 name|boolean_t
-name|imx_sdhci_r1bfix_is_wait_done
+name|fsl_sdhci_r1bfix_is_wait_done
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -2496,7 +2540,7 @@ name|SBT_1MS
 argument_list|,
 literal|0
 argument_list|,
-name|imx_sdhci_r1bfix_func
+name|fsl_sdhci_r1bfix_func
 argument_list|,
 name|sc
 argument_list|,
@@ -2560,7 +2604,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_r1bfix_func
+name|fsl_sdhci_r1bfix_func
 parameter_list|(
 name|void
 modifier|*
@@ -2568,7 +2612,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2589,7 +2633,7 @@ argument_list|)
 expr_stmt|;
 name|r1bwait_done
 operator|=
-name|imx_sdhci_r1bfix_is_wait_done
+name|fsl_sdhci_r1bfix_is_wait_done
 argument_list|(
 name|sc
 argument_list|)
@@ -2622,7 +2666,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_intr
+name|fsl_sdhci_intr
 parameter_list|(
 name|void
 modifier|*
@@ -2630,7 +2674,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2666,7 +2710,7 @@ name|RD4
 argument_list|(
 name|sc
 argument_list|,
-name|SDHC_INT_STATUS
+name|SDHCI_INT_STATUS
 argument_list|)
 operator|&
 name|SDHCI_INT_RESPONSE
@@ -2681,7 +2725,7 @@ name|RD4
 argument_list|(
 name|sc
 argument_list|,
-name|SDHC_INT_STATUS
+name|SDHCI_INT_STATUS
 argument_list|)
 operator|&
 name|SDHCI_INT_DATA_END
@@ -2713,7 +2757,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|imx_sdhci_r1bfix_is_wait_done
+name|fsl_sdhci_r1bfix_is_wait_done
 argument_list|(
 name|sc
 argument_list|)
@@ -2723,7 +2767,7 @@ name|WR4
 argument_list|(
 name|sc
 argument_list|,
-name|SDHC_INT_STATUS
+name|SDHCI_INT_STATUS
 argument_list|,
 name|intmask
 argument_list|)
@@ -2734,7 +2778,7 @@ name|sc
 operator|->
 name|mem_res
 argument_list|,
-name|SDHC_INT_STATUS
+name|SDHCI_INT_STATUS
 argument_list|,
 literal|4
 argument_list|,
@@ -2767,7 +2811,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|imx_sdhci_get_ro
+name|fsl_sdhci_get_ro
 parameter_list|(
 name|device_t
 name|bus
@@ -2776,18 +2820,202 @@ name|device_t
 name|child
 parameter_list|)
 block|{
+name|struct
+name|fsl_sdhci_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|RD4
+argument_list|(
+name|sc
+argument_list|,
+name|SDHCI_PRESENT_STATE
+argument_list|)
+operator|&
+name|SDHC_PRES_WPSPL
+condition|)
 return|return
 operator|(
 name|false
 operator|)
 return|;
+return|return
+operator|(
+name|true
+operator|)
+return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc__
+end_ifdef
+
+begin_function
+specifier|static
+name|uint32_t
+name|fsl_sdhci_get_platform_clock
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|device_t
+name|parent
+decl_stmt|;
+name|phandle_t
+name|node
+decl_stmt|;
+name|uint32_t
+name|clock
+decl_stmt|;
+name|node
+operator|=
+name|ofw_bus_get_node
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* Get sdhci node properties */
+if|if
+condition|(
+operator|(
+name|OF_getprop
+argument_list|(
+name|node
+argument_list|,
+literal|"clock-frequency"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|clock
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|clock
+argument_list|)
+argument_list|)
+operator|<=
+literal|0
+operator|)
+operator|||
+operator|(
+name|clock
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* 		 * Trying to get clock from parent device (soc) if correct 		 * clock cannot be acquired from sdhci node. 		 */
+name|parent
+operator|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|node
+operator|=
+name|ofw_bus_get_node
+argument_list|(
+name|parent
+argument_list|)
+expr_stmt|;
+comment|/* Get soc properties */
+if|if
+condition|(
+operator|(
+name|OF_getprop
+argument_list|(
+name|node
+argument_list|,
+literal|"bus-frequency"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|clock
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|clock
+argument_list|)
+argument_list|)
+operator|<=
+literal|0
+operator|)
+operator|||
+operator|(
+name|clock
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Cannot acquire correct sdhci "
+literal|"frequency from DTS.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* eSDHC clock is 1/2 platform clock. */
+name|clock
+operator|/=
+literal|2
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Acquired clock: %d from DTS\n"
+argument_list|,
+name|clock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|clock
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
 name|int
-name|imx_sdhci_detach
+name|fsl_sdhci_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -2804,14 +3032,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|imx_sdhci_attach
+name|fsl_sdhci_attach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2828,6 +3056,14 @@ decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc__
+name|uint32_t
+name|protctl
+decl_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|dev
@@ -2857,7 +3093,7 @@ name|HWTYPE_NONE
 condition|)
 name|panic
 argument_list|(
-literal|"Impossible: not compatible in imx_sdhci_attach()"
+literal|"Impossible: not compatible in fsl_sdhci_attach()"
 argument_list|)
 expr_stmt|;
 name|rid
@@ -2962,7 +3198,7 @@ name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
-name|imx_sdhci_intr
+name|fsl_sdhci_intr
 argument_list|,
 name|sc
 argument_list|,
@@ -3006,6 +3242,26 @@ operator||=
 name|SDHCI_QUIRK_BROKEN_DMA
 expr_stmt|;
 comment|/* 	 * Set the buffer watermark level to 128 words (512 bytes) for both read 	 * and write.  The hardware has a restriction that when the read or 	 * write ready status is asserted, that means you can read exactly the 	 * number of words set in the watermark register before you have to 	 * re-check the status and potentially wait for more data.  The main 	 * sdhci driver provides no hook for doing status checking on less than 	 * a full block boundary, so we set the watermark level to be a full 	 * block.  Reads and writes where the block size is less than the 	 * watermark size will work correctly too, no need to change the 	 * watermark for different size blocks.  However, 128 is the maximum 	 * allowed for the watermark, so PIO is limitted to 512 byte blocks 	 * (which works fine for SD cards, may be a problem for SDIO some day). 	 * 	 * XXX need named constants for this stuff. 	 */
+comment|/* P1022 has the '*_BRST_LEN' fields as reserved, always reading 0x10 */
+if|if
+condition|(
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"fsl,p1022-esdhc"
+argument_list|)
+condition|)
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|SDHC_WTMK_LVL
+argument_list|,
+literal|0x10801080
+argument_list|)
+expr_stmt|;
+else|else
 name|WR4
 argument_list|(
 name|sc
@@ -3015,6 +3271,21 @@ argument_list|,
 literal|0x08800880
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We read in native byte order in the main driver, but the register 	 * defaults to little endian. 	 */
+ifdef|#
+directive|ifdef
+name|__powerpc__
+name|sc
+operator|->
+name|baseclk_hz
+operator|=
+name|fsl_sdhci_get_platform_clock
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sc
 operator|->
 name|baseclk_hz
@@ -3022,6 +3293,8 @@ operator|=
 name|imx_ccm_sdhci_hz
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|slot
@@ -3074,6 +3347,53 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__powerpc__
+comment|/* Default to big-endian on powerpc */
+name|protctl
+operator|=
+name|RD4
+argument_list|(
+name|sc
+argument_list|,
+name|SDHC_PROT_CTRL
+argument_list|)
+expr_stmt|;
+name|protctl
+operator|&=
+operator|~
+name|SDHC_PROT_EMODE_MASK
+expr_stmt|;
+if|if
+condition|(
+name|OF_hasprop
+argument_list|(
+name|node
+argument_list|,
+literal|"little-endian"
+argument_list|)
+condition|)
+name|protctl
+operator||=
+name|SDHC_PROT_EMODE_LITTLE
+expr_stmt|;
+else|else
+name|protctl
+operator||=
+name|SDHC_PROT_EMODE_BIG
+expr_stmt|;
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|SDHC_PROT_CTRL
+argument_list|,
+name|protctl
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|callout_init
 argument_list|(
 operator|&
@@ -3189,7 +3509,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|imx_sdhci_probe
+name|fsl_sdhci_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -3264,7 +3584,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|imx_sdhci_methods
+name|fsl_sdhci_methods
 index|[]
 init|=
 block|{
@@ -3273,21 +3593,21 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|imx_sdhci_probe
+name|fsl_sdhci_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|imx_sdhci_attach
+name|fsl_sdhci_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|imx_sdhci_detach
+name|fsl_sdhci_detach
 argument_list|)
 block|,
 comment|/* Bus interface */
@@ -3331,7 +3651,7 @@ name|DEVMETHOD
 argument_list|(
 name|mmcbr_get_ro
 argument_list|,
-name|imx_sdhci_get_ro
+name|fsl_sdhci_get_ro
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -3353,56 +3673,56 @@ name|DEVMETHOD
 argument_list|(
 name|sdhci_read_1
 argument_list|,
-name|imx_sdhci_read_1
+name|fsl_sdhci_read_1
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_read_2
 argument_list|,
-name|imx_sdhci_read_2
+name|fsl_sdhci_read_2
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_read_4
 argument_list|,
-name|imx_sdhci_read_4
+name|fsl_sdhci_read_4
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_read_multi_4
 argument_list|,
-name|imx_sdhci_read_multi_4
+name|fsl_sdhci_read_multi_4
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_write_1
 argument_list|,
-name|imx_sdhci_write_1
+name|fsl_sdhci_write_1
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_write_2
 argument_list|,
-name|imx_sdhci_write_2
+name|fsl_sdhci_write_2
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_write_4
 argument_list|,
-name|imx_sdhci_write_4
+name|fsl_sdhci_write_4
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_write_multi_4
 argument_list|,
-name|imx_sdhci_write_multi_4
+name|fsl_sdhci_write_multi_4
 argument_list|)
 block|,
 block|{
@@ -3417,24 +3737,24 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|imx_sdhci_devclass
+name|fsl_sdhci_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|imx_sdhci_driver
+name|fsl_sdhci_driver
 init|=
 block|{
-literal|"sdhci_imx"
+literal|"sdhci_fsl"
 block|,
-name|imx_sdhci_methods
+name|fsl_sdhci_methods
 block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 argument_list|)
 block|, }
 decl_stmt|;
@@ -3443,13 +3763,13 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|sdhci_imx
+name|sdhci_fsl
 argument_list|,
 name|simplebus
 argument_list|,
-name|imx_sdhci_driver
+name|fsl_sdhci_driver
 argument_list|,
-name|imx_sdhci_devclass
+name|fsl_sdhci_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -3461,7 +3781,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|sdhci_imx
+name|sdhci_fsl
 argument_list|,
 name|sdhci
 argument_list|,
@@ -3479,7 +3799,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|mmc
 argument_list|,
-name|sdhci_imx
+name|sdhci_fsl
 argument_list|,
 name|mmc_driver
 argument_list|,
@@ -3495,7 +3815,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|sdhci_imx
+name|sdhci_fsl
 argument_list|,
 name|mmc
 argument_list|,
