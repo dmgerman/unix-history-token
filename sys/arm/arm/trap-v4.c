@@ -365,31 +365,12 @@ block|,
 literal|"Translation Fault (S)"
 block|}
 block|,
-if|#
-directive|if
-operator|(
-name|ARM_MMU_V6
-operator|+
-name|ARM_MMU_V7
-operator|)
-operator|!=
-literal|0
-block|{
-name|NULL
-block|,
-literal|"Translation Flag Fault"
-block|}
-block|,
-else|#
-directive|else
 block|{
 name|dab_buserr
 block|,
 literal|"External Linefetch Abort (P)"
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 name|NULL
 block|,
