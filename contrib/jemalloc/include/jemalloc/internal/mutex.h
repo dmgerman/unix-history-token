@@ -483,11 +483,6 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
-if|if
-condition|(
-name|isthreaded
-condition|)
-block|{
 name|witness_assert_not_owner
 argument_list|(
 name|tsdn
@@ -498,6 +493,11 @@ operator|->
 name|witness
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isthreaded
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|_WIN32
@@ -570,6 +570,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 name|witness_lock
 argument_list|(
 name|tsdn
@@ -580,7 +581,6 @@ operator|->
 name|witness
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -598,11 +598,6 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
-if|if
-condition|(
-name|isthreaded
-condition|)
-block|{
 name|witness_unlock
 argument_list|(
 name|tsdn
@@ -613,6 +608,11 @@ operator|->
 name|witness
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isthreaded
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|_WIN32
@@ -703,10 +703,6 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
-if|if
-condition|(
-name|isthreaded
-condition|)
 name|witness_assert_owner
 argument_list|(
 name|tsdn
@@ -734,10 +730,6 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
-if|if
-condition|(
-name|isthreaded
-condition|)
 name|witness_assert_not_owner
 argument_list|(
 name|tsdn

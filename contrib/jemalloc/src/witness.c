@@ -366,14 +366,14 @@ end_ifdef
 begin_undef
 undef|#
 directive|undef
-name|witness_lockless_error
+name|witness_depth_error
 end_undef
 
 begin_define
 define|#
 directive|define
-name|witness_lockless_error
-value|JEMALLOC_N(n_witness_lockless_error)
+name|witness_depth_error
+value|JEMALLOC_N(n_witness_depth_error)
 end_define
 
 begin_endif
@@ -383,12 +383,18 @@ end_endif
 
 begin_function
 name|void
-name|witness_lockless_error
+name|witness_depth_error
 parameter_list|(
 specifier|const
 name|witness_list_t
 modifier|*
 name|witnesses
+parameter_list|,
+name|witness_rank_t
+name|rank_inclusive
+parameter_list|,
+name|unsigned
+name|depth
 parameter_list|)
 block|{
 name|witness_t
@@ -397,7 +403,21 @@ name|w
 decl_stmt|;
 name|malloc_printf
 argument_list|(
-literal|"<jemalloc>: Should not own any locks:"
+literal|"<jemalloc>: Should own %u lock%s of rank>= %u:"
+argument_list|,
+name|depth
+argument_list|,
+operator|(
+name|depth
+operator|!=
+literal|1
+operator|)
+condition|?
+literal|"s"
+else|:
+literal|""
+argument_list|,
+name|rank_inclusive
 argument_list|)
 expr_stmt|;
 name|ql_foreach
@@ -443,24 +463,24 @@ end_ifdef
 begin_undef
 undef|#
 directive|undef
-name|witness_lockless_error
+name|witness_depth_error
 end_undef
 
 begin_define
 define|#
 directive|define
-name|witness_lockless_error
-value|JEMALLOC_N(witness_lockless_error)
+name|witness_depth_error
+value|JEMALLOC_N(witness_depth_error)
 end_define
 
 begin_decl_stmt
-name|witness_lockless_error_t
+name|witness_depth_error_t
 modifier|*
-name|witness_lockless_error
+name|witness_depth_error
 init|=
 name|JEMALLOC_N
 argument_list|(
-name|n_witness_lockless_error
+name|n_witness_depth_error
 argument_list|)
 decl_stmt|;
 end_decl_stmt

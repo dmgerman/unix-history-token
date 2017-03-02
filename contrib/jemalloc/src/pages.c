@@ -862,7 +862,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|JEMALLOC_THP
+name|JEMALLOC_HAVE_MADVISE_HUGE
 return|return
 operator|(
 name|madvise
@@ -923,7 +923,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|JEMALLOC_THP
+name|JEMALLOC_HAVE_MADVISE_HUGE
 return|return
 operator|(
 name|madvise

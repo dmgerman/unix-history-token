@@ -3190,17 +3190,11 @@ begin_comment
 comment|/*  * Begin initialization functions.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|JEMALLOC_HAVE_SECURE_GETENV
-end_ifndef
-
 begin_function
 specifier|static
 name|char
 modifier|*
-name|secure_getenv
+name|jemalloc_secure_getenv
 parameter_list|(
 specifier|const
 name|char
@@ -3208,6 +3202,17 @@ modifier|*
 name|name
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|JEMALLOC_HAVE_SECURE_GETENV
+return|return
+name|secure_getenv
+argument_list|(
+name|name
+argument_list|)
+return|;
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|JEMALLOC_HAVE_ISSETUGID
@@ -3233,13 +3238,10 @@ name|name
 argument_list|)
 operator|)
 return|;
-block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -4178,7 +4180,7 @@ condition|(
 operator|(
 name|opts
 operator|=
-name|secure_getenv
+name|jemalloc_secure_getenv
 argument_list|(
 name|envname
 argument_list|)
@@ -4334,7 +4336,7 @@ parameter_list|,
 name|clip
 parameter_list|)
 define|\
-value|if (CONF_MATCH(n)) {				\ 				uintmax_t um;				\ 				char *end;				\ 									\ 				set_errno(0);				\ 				um = malloc_strtoumax(v,&end, 0);	\ 				if (get_errno() != 0 || (uintptr_t)end -\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (clip) {			\ 					if (CONF_MIN_##check_min(um,	\ 					    (min)))			\ 						o = (t)(min);		\ 					else if (CONF_MAX_##check_max(	\ 					    um, (max)))			\ 						o = (t)(max);		\ 					else				\ 						o = (t)um;		\ 				} else {				\ 					if (CONF_MIN_##check_min(um,	\ 					    (min)) ||			\ 					    CONF_MAX_##check_max(um,	\ 					    (max))) {			\ 						malloc_conf_error(	\ 						    "Out-of-range "	\ 						    "conf value",	\ 						    k, klen, v, vlen);	\ 					} else				\ 						o = (t)um;		\ 				}					\ 				continue;				\ 			}
+value|if (CONF_MATCH(n)) {				\ 				uintmax_t um;				\ 				char *end;				\ 									\ 				set_errno(0);				\ 				um = malloc_strtoumax(v,&end, 0);	\ 				if (get_errno() != 0 || (uintptr_t)end -\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (clip) {			\ 					if (CONF_MIN_##check_min(um,	\ 					    (t)(min)))			\ 						o = (t)(min);		\ 					else if (CONF_MAX_##check_max(	\ 					    um, (t)(max)))		\ 						o = (t)(max);		\ 					else				\ 						o = (t)um;		\ 				} else {				\ 					if (CONF_MIN_##check_min(um,	\ 					    (t)(min)) ||		\ 					    CONF_MAX_##check_max(um,	\ 					    (t)(max))) {		\ 						malloc_conf_error(	\ 						    "Out-of-range "	\ 						    "conf value",	\ 						    k, klen, v, vlen);	\ 					} else				\ 						o = (t)um;		\ 				}					\ 				continue;				\ 			}
 define|#
 directive|define
 name|CONF_HANDLE_UNSIGNED
@@ -4409,17 +4411,19 @@ literal|"abort"
 argument_list|,
 argument|true
 argument_list|)
-comment|/* 			 * Chunks always require at least one header page, 			 * as many as 2^(LG_SIZE_CLASS_GROUP+1) data pages, and 			 * possibly an additional page in the presence of 			 * redzones.  In order to simplify options processing, 			 * use a conservative bound that accommodates all these 			 * constraints. 			 */
+comment|/* 			 * Chunks always require at least one header page, as 			 * many as 2^(LG_SIZE_CLASS_GROUP+1) data pages (plus an 			 * additional page in the presence of cache-oblivious 			 * large), and possibly an additional page in the 			 * presence of redzones.  In order to simplify options 			 * processing, use a conservative bound that 			 * accommodates all these constraints. 			 */
 name|CONF_HANDLE_SIZE_T
 argument_list|(
 argument|opt_lg_chunk
 argument_list|,
 literal|"lg_chunk"
 argument_list|,
-argument|LG_PAGE + 			    LG_SIZE_CLASS_GROUP + (config_fill ?
-literal|2
-argument|:
+argument|LG_PAGE + 			    LG_SIZE_CLASS_GROUP +
 literal|1
+argument|+ ((config_cache_oblivious 			    || config_fill) ?
+literal|1
+argument|:
+literal|0
 argument|)
 argument_list|,
 argument|(sizeof(size_t)<<
@@ -4992,6 +4996,20 @@ argument|(sizeof(size_t)<<
 literal|3
 argument|) -
 literal|1
+argument_list|)
+block|}
+if|if
+condition|(
+name|config_thp
+condition|)
+block|{
+name|CONF_HANDLE_BOOL
+argument_list|(
+argument|opt_thp
+argument_list|,
+literal|"thp"
+argument_list|,
+argument|true
 argument_list|)
 block|}
 if|if
@@ -13780,6 +13798,14 @@ name|tsd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tcache_prefork
+argument_list|(
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|malloc_mutex_prefork
 argument_list|(
 name|tsd_tsdn
@@ -14109,6 +14135,14 @@ operator|&
 name|arenas_lock
 argument_list|)
 expr_stmt|;
+name|tcache_postfork_parent
+argument_list|(
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ctl_postfork_parent
 argument_list|(
 name|tsd_tsdn
@@ -14232,6 +14266,14 @@ argument_list|)
 argument_list|,
 operator|&
 name|arenas_lock
+argument_list|)
+expr_stmt|;
+name|tcache_postfork_child
+argument_list|(
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ctl_postfork_child

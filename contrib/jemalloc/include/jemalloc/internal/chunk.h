@@ -205,10 +205,6 @@ begin_function_decl
 name|bool
 name|chunk_register
 parameter_list|(
-name|tsdn_t
-modifier|*
-name|tsdn
-parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -218,6 +214,10 @@ specifier|const
 name|extent_node_t
 modifier|*
 name|node
+parameter_list|,
+name|bool
+modifier|*
+name|gdump
 parameter_list|)
 function_decl|;
 end_function_decl

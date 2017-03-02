@@ -336,6 +336,24 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|bool
+name|config_thp
+init|=
+ifdef|#
+directive|ifdef
+name|JEMALLOC_THP
+name|true
+else|#
+directive|else
+name|false
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bool
 name|config_tls
 init|=
 ifdef|#
@@ -523,12 +541,6 @@ begin_include
 include|#
 directive|include
 file|<mach/vm_map.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<malloc/malloc.h>
 end_include
 
 begin_endif

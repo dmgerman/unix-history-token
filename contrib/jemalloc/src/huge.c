@@ -74,6 +74,10 @@ parameter_list|,
 name|extent_node_t
 modifier|*
 name|node
+parameter_list|,
+name|bool
+modifier|*
+name|gdump
 parameter_list|)
 block|{
 name|assert
@@ -99,11 +103,11 @@ return|return
 operator|(
 name|chunk_register
 argument_list|(
-name|tsdn
-argument_list|,
 name|ptr
 argument_list|,
 name|node
+argument_list|,
+name|gdump
 argument_list|)
 operator|)
 return|;
@@ -127,6 +131,10 @@ parameter_list|,
 name|extent_node_t
 modifier|*
 name|node
+parameter_list|,
+name|bool
+modifier|*
+name|gdump
 parameter_list|)
 block|{
 name|bool
@@ -141,6 +149,8 @@ argument_list|,
 name|ptr
 argument_list|,
 name|node
+argument_list|,
+name|gdump
 argument_list|)
 expr_stmt|;
 name|assert
@@ -270,6 +280,8 @@ name|sn
 decl_stmt|;
 name|bool
 name|is_zeroed
+decl_stmt|,
+name|gdump
 decl_stmt|;
 comment|/* Allocate one or more contiguous chunks for this request. */
 name|assert
@@ -283,6 +295,16 @@ operator|||
 name|arena
 operator|!=
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* prof_gdump() requirement. */
+name|witness_assert_depth_to_rank
+argument_list|(
+name|tsdn
+argument_list|,
+name|WITNESS_RANK_CORE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ausize
@@ -485,6 +507,9 @@ argument_list|,
 name|ret
 argument_list|,
 name|node
+argument_list|,
+operator|&
+name|gdump
 argument_list|)
 condition|)
 block|{
@@ -520,6 +545,19 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|config_prof
+operator|&&
+name|opt_prof
+operator|&&
+name|gdump
+condition|)
+name|prof_gdump
+argument_list|(
+name|tsdn
+argument_list|)
+expr_stmt|;
 comment|/* Insert node into huge. */
 name|malloc_mutex_lock
 argument_list|(
@@ -784,7 +822,19 @@ name|bool
 name|pre_zeroed
 decl_stmt|,
 name|post_zeroed
+decl_stmt|,
+name|gdump
 decl_stmt|;
+comment|/* prof_gdump() requirement. */
+name|witness_assert_depth_to_rank
+argument_list|(
+name|tsdn
+argument_list|,
+name|WITNESS_RANK_CORE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Increase usize to incorporate extra. */
 for|for
 control|(
@@ -968,6 +1018,9 @@ argument_list|,
 name|ptr
 argument_list|,
 name|node
+argument_list|,
+operator|&
+name|gdump
 argument_list|)
 expr_stmt|;
 comment|/* Update zeroed. */
@@ -986,6 +1039,20 @@ operator|&
 name|arena
 operator|->
 name|huge_mtx
+argument_list|)
+expr_stmt|;
+comment|/* gdump without any locks held. */
+if|if
+condition|(
+name|config_prof
+operator|&&
+name|opt_prof
+operator|&&
+name|gdump
+condition|)
+name|prof_gdump
+argument_list|(
+name|tsdn
 argument_list|)
 expr_stmt|;
 name|arena_chunk_ralloc_huge_similar
@@ -1129,6 +1196,8 @@ name|bool
 name|pre_zeroed
 decl_stmt|,
 name|post_zeroed
+decl_stmt|,
+name|gdump
 decl_stmt|;
 name|node
 operator|=
@@ -1165,6 +1234,16 @@ argument_list|(
 name|oldsize
 operator|>
 name|usize
+argument_list|)
+expr_stmt|;
+comment|/* prof_gdump() requirement. */
+name|witness_assert_depth_to_rank
+argument_list|(
+name|tsdn
+argument_list|,
+name|WITNESS_RANK_CORE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Split excess chunks. */
@@ -1344,6 +1423,9 @@ argument_list|,
 name|ptr
 argument_list|,
 name|node
+argument_list|,
+operator|&
+name|gdump
 argument_list|)
 expr_stmt|;
 comment|/* Update zeroed. */
@@ -1362,6 +1444,20 @@ operator|&
 name|arena
 operator|->
 name|huge_mtx
+argument_list|)
+expr_stmt|;
+comment|/* gdump without any locks held. */
+if|if
+condition|(
+name|config_prof
+operator|&&
+name|opt_prof
+operator|&&
+name|gdump
+condition|)
+name|prof_gdump
+argument_list|(
+name|tsdn
 argument_list|)
 expr_stmt|;
 comment|/* Zap the excess chunks. */
@@ -1426,6 +1522,8 @@ name|bool
 name|is_zeroed_subchunk
 decl_stmt|,
 name|is_zeroed_chunk
+decl_stmt|,
+name|gdump
 decl_stmt|;
 name|node
 operator|=
@@ -1466,6 +1564,16 @@ operator|&
 name|arena
 operator|->
 name|huge_mtx
+argument_list|)
+expr_stmt|;
+comment|/* prof_gdump() requirement. */
+name|witness_assert_depth_to_rank
+argument_list|(
+name|tsdn
+argument_list|,
+name|WITNESS_RANK_CORE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Use is_zeroed_chunk to detect whether the trailing memory is zeroed, 	 * update extent's zeroed field, and zero as necessary. 	 */
@@ -1539,6 +1647,9 @@ argument_list|,
 name|ptr
 argument_list|,
 name|node
+argument_list|,
+operator|&
+name|gdump
 argument_list|)
 expr_stmt|;
 name|malloc_mutex_unlock
@@ -1549,6 +1660,20 @@ operator|&
 name|arena
 operator|->
 name|huge_mtx
+argument_list|)
+expr_stmt|;
+comment|/* gdump without any locks held. */
+if|if
+condition|(
+name|config_prof
+operator|&&
+name|opt_prof
+operator|&&
+name|gdump
+condition|)
+name|prof_gdump
+argument_list|(
+name|tsdn
 argument_list|)
 expr_stmt|;
 if|if

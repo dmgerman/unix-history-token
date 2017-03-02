@@ -733,6 +733,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|bool
+name|opt_thp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|purge_mode_t
 name|opt_purge
 decl_stmt|;

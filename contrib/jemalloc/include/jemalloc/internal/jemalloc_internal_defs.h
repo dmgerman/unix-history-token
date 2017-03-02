@@ -482,10 +482,6 @@ comment|/* #undef JEMALLOC_ZONE */
 end_comment
 
 begin_comment
-comment|/* #undef JEMALLOC_ZONE_VERSION */
-end_comment
-
-begin_comment
 comment|/*  * Methods for determining whether the OS overcommits.  * JEMALLOC_PROC_SYS_VM_OVERCOMMIT_MEMORY: Linux's  *                                         /proc/sys/vm.overcommit_memory file.  * JEMALLOC_SYSCTL_VM_OVERCOMMIT: FreeBSD's vm.overcommit sysctl.  */
 end_comment
 
@@ -510,6 +506,14 @@ name|JEMALLOC_HAVE_MADVISE
 end_define
 
 begin_comment
+comment|/*  * Defined if transparent huge pages are supported via the MADV_[NO]HUGEPAGE  * arguments to madvise(2).  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_HAVE_MADVISE_HUGE */
+end_comment
+
+begin_comment
 comment|/*  * Methods for purging unused pages differ between operating systems.  *  *   madvise(..., MADV_FREE) : This marks pages as being unused, such that they  *                             will be discarded rather than swapped out.  *   madvise(..., MADV_DONTNEED) : This immediately discards pages, such that  *                                 new pages will be demand-zeroed if the  *                                 address region is later touched.  */
 end_comment
 
@@ -526,7 +530,7 @@ name|JEMALLOC_PURGE_MADVISE_DONTNEED
 end_define
 
 begin_comment
-comment|/*  * Defined if transparent huge pages are supported via the MADV_[NO]HUGEPAGE  * arguments to madvise(2).  */
+comment|/* Defined if transparent huge page support is enabled. */
 end_comment
 
 begin_comment
