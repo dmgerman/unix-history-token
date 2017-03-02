@@ -24,13 +24,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -61,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<machine/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpuconf.h>
 end_include
 
 begin_include

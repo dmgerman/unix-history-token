@@ -24,12 +24,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/cpuconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/_lock.h>
 end_include
 

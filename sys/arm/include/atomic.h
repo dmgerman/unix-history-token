@@ -22,12 +22,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/armreg.h>
 end_include
 
@@ -41,17 +35,6 @@ begin_include
 include|#
 directive|include
 file|<machine/sysarch.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<machine/cpuconf.h>
 end_include
 
 begin_endif
