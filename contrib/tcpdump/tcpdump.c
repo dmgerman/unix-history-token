@@ -6451,6 +6451,8 @@ index|[]
 init|=
 block|{
 name|BIOCGSTATS
+block|,
+name|BIOCROTZBUF
 block|}
 decl_stmt|;
 comment|/* 		 * The various libpcap devices use a combination of 		 * read (bpf), ioctl (bpf, netmap), poll (netmap). 		 * Grant the relevant access rights, sorted by name. 		 */
