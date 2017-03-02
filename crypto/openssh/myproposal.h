@@ -158,9 +158,17 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|KEX_SHA256_METHODS
+name|KEX_SHA2_METHODS
 define|\
-value|"diffie-hellman-group-exchange-sha256,"
+value|"diffie-hellman-group-exchange-sha256," \ 	"diffie-hellman-group16-sha512," \ 	"diffie-hellman-group18-sha512,"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_SHA2_GROUP14
+define|\
+value|"diffie-hellman-group14-sha256,"
 end_define
 
 begin_define
@@ -179,7 +187,13 @@ end_else
 begin_define
 define|#
 directive|define
-name|KEX_SHA256_METHODS
+name|KEX_SHA2_METHODS
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_SHA2_GROUP14
 end_define
 
 begin_define
@@ -234,14 +248,14 @@ define|#
 directive|define
 name|KEX_COMMON_KEX
 define|\
-value|KEX_CURVE25519_METHODS \ 	KEX_ECDH_METHODS \ 	KEX_SHA256_METHODS
+value|KEX_CURVE25519_METHODS \ 	KEX_ECDH_METHODS \ 	KEX_SHA2_METHODS
 end_define
 
 begin_define
 define|#
 directive|define
 name|KEX_SERVER_KEX
-value|KEX_COMMON_KEX \ 	"diffie-hellman-group14-sha1" \  #define KEX_CLIENT_KEX KEX_COMMON_KEX \ 	"diffie-hellman-group-exchange-sha1," \ 	"diffie-hellman-group14-sha1"
+value|KEX_COMMON_KEX \ 	KEX_SHA2_GROUP14 \ 	"diffie-hellman-group14-sha1" \  #define KEX_CLIENT_KEX KEX_COMMON_KEX \ 	"diffie-hellman-group-exchange-sha1," \ 	KEX_SHA2_GROUP14 \ 	"diffie-hellman-group14-sha1"
 end_define
 
 begin_define

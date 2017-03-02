@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.c,v 1.436 2016/02/15 09:47:49 dtucker Exp $ */
+comment|/* $OpenBSD: ssh.c,v 1.445 2016/07/17 04:20:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -161,6 +161,12 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -528,27 +534,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* forward stdio to remote host and port */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|stdio_forward_host
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|stdio_forward_port
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * General data structure for command line options and options configurable  * in configuration files.  See readconf.h.  */
 end_comment
 
@@ -690,10 +675,11 @@ name|stderr
 argument_list|,
 literal|"usage: ssh [-1246AaCfGgKkMNnqsTtVvXxYy] [-b bind_address] [-c cipher_spec]\n"
 literal|"           [-D [bind_address:]port] [-E log_file] [-e escape_char]\n"
-literal|"           [-F configfile] [-I pkcs11] [-i identity_file] [-L address]\n"
-literal|"           [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]\n"
-literal|"           [-Q query_option] [-R address] [-S ctl_path] [-W host:port]\n"
-literal|"           [-w local_tun[:remote_tun]] [user@]hostname [command]\n"
+literal|"           [-F configfile] [-I pkcs11] [-i identity_file]\n"
+literal|"           [-J [user@]host[:port]] [-L address] [-l login_name] [-m mac_spec]\n"
+literal|"           [-O ctl_cmd] [-o option] [-p port] [-Q query_option] [-R address]\n"
+literal|"           [-S ctl_path] [-W host:port] [-w local_tun[:remote_tun]]\n"
+literal|"           [user@]hostname [command]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1400,6 +1386,9 @@ specifier|static
 name|int
 name|check_follow_cname
 parameter_list|(
+name|int
+name|direct
+parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -1456,16 +1445,11 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 	 * Don't attempt to canonicalize names that will be interpreted by 	 * a proxy unless the user specifically requests so. 	 */
+comment|/* 	 * Don't attempt to canonicalize names that will be interpreted by 	 * a proxy or jump host unless the user specifically requests so. 	 */
 if|if
 condition|(
 operator|!
-name|option_clear_or_none
-argument_list|(
-name|options
-operator|.
-name|proxy_command
-argument_list|)
+name|direct
 operator|&&
 name|options
 operator|.
@@ -1600,6 +1584,8 @@ block|{
 name|int
 name|i
 decl_stmt|,
+name|direct
+decl_stmt|,
 name|ndots
 decl_stmt|;
 name|char
@@ -1631,15 +1617,25 @@ return|return
 name|NULL
 return|;
 comment|/* 	 * Don't attempt to canonicalize names that will be interpreted by 	 * a proxy unless the user specifically requests so. 	 */
-if|if
-condition|(
-operator|!
+name|direct
+operator|=
 name|option_clear_or_none
 argument_list|(
 name|options
 operator|.
 name|proxy_command
 argument_list|)
+operator|&&
+name|options
+operator|.
+name|jump_host
+operator|==
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|direct
 operator|&&
 name|options
 operator|.
@@ -1964,6 +1960,8 @@ condition|(
 operator|!
 name|check_follow_cname
 argument_list|(
+name|direct
+argument_list|,
 operator|&
 name|fullhost
 argument_list|,
@@ -2327,6 +2325,13 @@ modifier|*
 name|av
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -2337,6 +2342,8 @@ decl_stmt|,
 name|exit_status
 decl_stmt|,
 name|use_syslog
+decl_stmt|,
+name|direct
 decl_stmt|,
 name|config_test
 init|=
@@ -2641,6 +2648,13 @@ argument_list|(
 literal|022
 argument_list|)
 expr_stmt|;
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize option structure to indicate that no values have been 	 * set. 	 */
 name|initialize_options
 argument_list|(
@@ -2682,7 +2696,7 @@ argument_list|,
 name|av
 argument_list|,
 literal|"1246ab:c:e:fgi:kl:m:no:p:qstvx"
-literal|"ACD:E:F:GI:KL:MNO:PQ:R:S:TVw:W:XYy"
+literal|"ACD:E:F:GI:J:KL:MNO:PQ:R:S:TVw:W:XYy"
 argument_list|)
 operator|)
 operator|!=
@@ -2832,6 +2846,8 @@ literal|'O'
 case|:
 if|if
 condition|(
+name|options
+operator|.
 name|stdio_forward_host
 operator|!=
 name|NULL
@@ -3305,6 +3321,65 @@ endif|#
 directive|endif
 break|break;
 case|case
+literal|'J'
+case|:
+if|if
+condition|(
+name|options
+operator|.
+name|jump_host
+operator|!=
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"Only a single -J option permitted"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|proxy_command
+operator|!=
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"Cannot specify -J with ProxyCommand"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parse_jump
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|options
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"Invalid -J argument"
+argument_list|)
+expr_stmt|;
+name|options
+operator|.
+name|proxy_command
+operator|=
+name|xstrdup
+argument_list|(
+literal|"none"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 if|if
@@ -3360,11 +3435,16 @@ name|log_level
 operator|<
 name|SYSLOG_LEVEL_DEBUG3
 condition|)
+block|{
+name|debug_flag
+operator|++
+expr_stmt|;
 name|options
 operator|.
 name|log_level
 operator|++
 expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -3484,6 +3564,8 @@ literal|'W'
 case|:
 if|if
 condition|(
+name|options
+operator|.
 name|stdio_forward_host
 operator|!=
 name|NULL
@@ -3519,12 +3601,16 @@ literal|0
 argument_list|)
 condition|)
 block|{
+name|options
+operator|.
 name|stdio_forward_host
 operator|=
 name|fwd
 operator|.
 name|listen_host
 expr_stmt|;
+name|options
+operator|.
 name|stdio_forward_port
 operator|=
 name|fwd
@@ -3563,18 +3649,6 @@ operator|=
 name|REQUEST_TTY_NO
 expr_stmt|;
 name|no_shell_flag
-operator|=
-literal|1
-expr_stmt|;
-name|options
-operator|.
-name|clear_forwardings
-operator|=
-literal|1
-expr_stmt|;
-name|options
-operator|.
-name|exit_on_forward_failure
 operator|=
 literal|1
 expr_stmt|;
@@ -4630,6 +4704,21 @@ name|port
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If CanonicalizePermittedCNAMEs have been specified but 	 * other canonicalization did not happen (by not being requested 	 * or by failing with fallback) then the hostname may still be changed 	 * as a result of CNAME following.  	 * 	 * Try to resolve the bare hostname name using the system resolver's 	 * usual search rules and then apply the CNAME follow rules. 	 * 	 * Skip the lookup if a ProxyCommand is being used unless the user 	 * has specifically requested canonicalisation for this case via 	 * CanonicalizeHostname=always 	 */
+name|direct
+operator|=
+name|option_clear_or_none
+argument_list|(
+name|options
+operator|.
+name|proxy_command
+argument_list|)
+operator|&&
+name|options
+operator|.
+name|jump_host
+operator|==
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|addrs
@@ -4643,12 +4732,7 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-name|option_clear_or_none
-argument_list|(
-name|options
-operator|.
-name|proxy_command
-argument_list|)
+name|direct
 operator|||
 name|options
 operator|.
@@ -4710,6 +4794,8 @@ block|}
 else|else
 name|check_follow_cname
 argument_list|(
+name|direct
+argument_list|,
 operator|&
 name|host
 argument_list|,
@@ -4788,6 +4874,179 @@ operator|&
 name|options
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If ProxyJump option specified, then construct a ProxyCommand now. 	 */
+if|if
+condition|(
+name|options
+operator|.
+name|jump_host
+operator|!=
+name|NULL
+condition|)
+block|{
+name|char
+name|port_s
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Consistency check */
+if|if
+condition|(
+name|options
+operator|.
+name|proxy_command
+operator|!=
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"inconsistent options: ProxyCommand+ProxyJump"
+argument_list|)
+expr_stmt|;
+comment|/* Never use FD passing for ProxyJump */
+name|options
+operator|.
+name|proxy_use_fdpass
+operator|=
+literal|0
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|port_s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|port_s
+argument_list|)
+argument_list|,
+literal|"%d"
+argument_list|,
+name|options
+operator|.
+name|jump_port
+argument_list|)
+expr_stmt|;
+name|xasprintf
+argument_list|(
+operator|&
+name|options
+operator|.
+name|proxy_command
+argument_list|,
+literal|"ssh%s%s%s%s%s%s%s%s%s%.*s -W %%h:%%p %s"
+argument_list|,
+comment|/* Optional "-l user" argument if jump_user set */
+name|options
+operator|.
+name|jump_user
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+literal|" -l "
+argument_list|,
+name|options
+operator|.
+name|jump_user
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|options
+operator|.
+name|jump_user
+argument_list|,
+comment|/* Optional "-p port" argument if jump_port set */
+name|options
+operator|.
+name|jump_port
+operator|<=
+literal|0
+condition|?
+literal|""
+else|:
+literal|" -p "
+argument_list|,
+name|options
+operator|.
+name|jump_port
+operator|<=
+literal|0
+condition|?
+literal|""
+else|:
+name|port_s
+argument_list|,
+comment|/* Optional additional jump hosts ",..." */
+name|options
+operator|.
+name|jump_extra
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+literal|" -J "
+argument_list|,
+name|options
+operator|.
+name|jump_extra
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|options
+operator|.
+name|jump_extra
+argument_list|,
+comment|/* Optional "-F" argumment if -F specified */
+name|config
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+literal|" -F "
+argument_list|,
+name|config
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|config
+argument_list|,
+comment|/* Optional "-v" arguments if -v set */
+name|debug_flag
+condition|?
+literal|" -"
+else|:
+literal|""
+argument_list|,
+name|debug_flag
+argument_list|,
+literal|"vvv"
+argument_list|,
+comment|/* Mandatory hostname */
+name|options
+operator|.
+name|jump_host
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"Setting implicit ProxyCommand from ProxyJump: %s"
+argument_list|,
+name|options
+operator|.
+name|proxy_command
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|options
@@ -5708,6 +5967,11 @@ operator|.
 name|server_alive_count_max
 argument_list|)
 expr_stmt|;
+name|ssh
+operator|=
+name|active_state
+expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|timeout_ms
@@ -6290,6 +6554,118 @@ comment|/* load options.identity_files */
 name|load_public_identity_files
 argument_list|()
 expr_stmt|;
+comment|/* optionally set the SSH_AUTHSOCKET_ENV_NAME varibale */
+if|if
+condition|(
+name|options
+operator|.
+name|identity_agent
+operator|&&
+name|strcmp
+argument_list|(
+name|options
+operator|.
+name|identity_agent
+argument_list|,
+name|SSH_AUTHSOCKET_ENV_NAME
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|options
+operator|.
+name|identity_agent
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|unsetenv
+argument_list|(
+name|SSH_AUTHSOCKET_ENV_NAME
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|p
+operator|=
+name|tilde_expand_filename
+argument_list|(
+name|options
+operator|.
+name|identity_agent
+argument_list|,
+name|original_real_uid
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|percent_expand
+argument_list|(
+name|p
+argument_list|,
+literal|"d"
+argument_list|,
+name|pw
+operator|->
+name|pw_dir
+argument_list|,
+literal|"u"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+literal|"l"
+argument_list|,
+name|thishost
+argument_list|,
+literal|"h"
+argument_list|,
+name|host
+argument_list|,
+literal|"r"
+argument_list|,
+name|options
+operator|.
+name|user
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+name|SSH_AUTHSOCKET_ENV_NAME
+argument_list|,
+name|cp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Expand ~ in known host file names. */
 name|tilde_expand_paths
 argument_list|(
@@ -6365,11 +6741,15 @@ literal|"Authenticated to %s ([%s]:%d)."
 argument_list|,
 name|host
 argument_list|,
-name|get_remote_ipaddr
-argument_list|()
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|,
-name|get_remote_port
-argument_list|()
+name|ssh_remote_port
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6616,6 +6996,8 @@ name|pid
 decl_stmt|;
 name|int
 name|devnull
+decl_stmt|,
+name|keep_stderr
 decl_stmt|;
 name|debug
 argument_list|(
@@ -6746,6 +7128,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|keep_stderr
+operator|=
+name|log_is_on_stderr
+argument_list|()
+operator|&&
+name|debug_flag
+expr_stmt|;
 if|if
 condition|(
 name|dup2
@@ -6767,6 +7156,21 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|||
+operator|(
+operator|!
+name|keep_stderr
+operator|&&
+name|dup2
+argument_list|(
+name|devnull
+argument_list|,
+name|STDERR_FILENO
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|)
 condition|)
 name|error
 argument_list|(
@@ -7210,6 +7614,8 @@ name|out
 decl_stmt|;
 if|if
 condition|(
+name|options
+operator|.
 name|stdio_forward_host
 operator|==
 name|NULL
@@ -7231,8 +7637,12 @@ literal|"%s: %s:%d"
 argument_list|,
 name|__func__
 argument_list|,
+name|options
+operator|.
 name|stdio_forward_host
 argument_list|,
+name|options
+operator|.
 name|stdio_forward_port
 argument_list|)
 expr_stmt|;
@@ -7272,8 +7682,12 @@ name|c
 operator|=
 name|channel_connect_stdio_fwd
 argument_list|(
+name|options
+operator|.
 name|stdio_forward_host
 argument_list|,
+name|options
+operator|.
 name|stdio_forward_port
 argument_list|,
 name|in

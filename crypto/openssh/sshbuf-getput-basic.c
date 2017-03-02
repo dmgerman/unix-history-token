@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf-getput-basic.c,v 1.5 2015/10/20 23:24:25 mmcc Exp $	*/
+comment|/*	$OpenBSD: sshbuf-getput-basic.c,v 1.6 2016/06/16 11:00:17 dtucker Exp $	*/
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_include
@@ -1330,7 +1336,7 @@ name|u_char
 modifier|*
 name|p
 decl_stmt|;
-name|va_copy
+name|VA_COPY
 argument_list|(
 name|ap2
 argument_list|,
@@ -1386,7 +1392,7 @@ argument_list|(
 name|ap2
 argument_list|)
 expr_stmt|;
-name|va_copy
+name|VA_COPY
 argument_list|(
 name|ap2
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-krb5.c,v 1.21 2016/01/27 06:44:58 djm Exp $ */
+comment|/* $OpenBSD: auth-krb5.c,v 1.22 2016/05/04 14:22:33 markus Exp $ */
 end_comment
 
 begin_comment
@@ -45,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|"ssh.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh1.h"
 end_include
 
 begin_include

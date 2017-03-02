@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.280 2016/02/16 03:37:48 djm Exp $ */
+comment|/* $OpenBSD: session.c,v 1.282 2016/03/10 11:47:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3285,6 +3285,14 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 name|socklen_t
 name|fromlen
 decl_stmt|;
@@ -3378,8 +3386,10 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
-name|get_remote_name_or_ip
+name|session_get_remote_name_or_ip
 argument_list|(
+name|ssh
+argument_list|,
 name|utmp_len
 argument_list|,
 name|options
@@ -3424,6 +3434,14 @@ modifier|*
 name|command
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 name|int
 name|ret
 decl_stmt|;
@@ -3668,11 +3686,15 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
-name|get_remote_ipaddr
-argument_list|()
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|,
-name|get_remote_port
-argument_list|()
+name|ssh_remote_port
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|,
 name|s
 operator|->
@@ -3805,6 +3827,14 @@ modifier|*
 name|command
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 name|socklen_t
 name|fromlen
 decl_stmt|;
@@ -3915,8 +3945,10 @@ name|pw
 operator|->
 name|pw_uid
 argument_list|,
-name|get_remote_name_or_ip
+name|session_get_remote_name_or_ip
 argument_list|(
+name|ssh
+argument_list|,
 name|utmp_len
 argument_list|,
 name|options
@@ -5122,6 +5154,14 @@ modifier|*
 name|shell
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 name|char
 name|buf
 index|[
@@ -5745,14 +5785,20 @@ name|buf
 argument_list|,
 literal|"%.50s %d %d"
 argument_list|,
-name|get_remote_ipaddr
-argument_list|()
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|,
-name|get_remote_port
-argument_list|()
+name|ssh_remote_port
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|,
-name|get_local_port
-argument_list|()
+name|ssh_local_port
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|child_set_env
@@ -5785,16 +5831,22 @@ name|buf
 argument_list|,
 literal|"%.50s %d %.50s %d"
 argument_list|,
-name|get_remote_ipaddr
-argument_list|()
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|,
-name|get_remote_port
-argument_list|()
+name|ssh_remote_port
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|,
 name|laddr
 argument_list|,
-name|get_local_port
-argument_list|()
+name|ssh_local_port
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -6046,6 +6098,11 @@ condition|(
 name|options
 operator|.
 name|use_pam
+operator|&&
+operator|!
+name|options
+operator|.
+name|use_login
 condition|)
 block|{
 name|char
@@ -7809,6 +7866,14 @@ modifier|*
 name|command
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 specifier|extern
 name|char
 modifier|*
@@ -8105,8 +8170,10 @@ name|use_login
 condition|)
 name|hostname
 operator|=
-name|get_remote_name_or_ip
+name|session_get_remote_name_or_ip
 argument_list|(
+name|ssh
+argument_list|,
 name|utmp_len
 argument_list|,
 name|options
@@ -8114,7 +8181,7 @@ operator|.
 name|use_dns
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Close the connection descriptors; note that this is the child, and 	 * the server will still have the socket open, and it is important 	 * that we do not shutdown it.  Note that the descriptors cannot be 	 * closed before building the environment, as we call 	 * get_remote_ipaddr there. 	 */
+comment|/* 	 * Close the connection descriptors; note that this is the child, and 	 * the server will still have the socket open, and it is important 	 * that we do not shutdown it.  Note that the descriptors cannot be 	 * closed before building the environment, as we call 	 * ssh_remote_ipaddr there. 	 */
 name|child_close_fds
 argument_list|()
 expr_stmt|;
@@ -11771,6 +11838,14 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+name|struct
+name|ssh
+modifier|*
+name|ssh
+init|=
+name|active_state
+decl_stmt|;
+comment|/* XXX */
 name|u_int
 name|i
 decl_stmt|;
@@ -11784,11 +11859,15 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
-name|get_remote_ipaddr
-argument_list|()
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|,
-name|get_remote_port
-argument_list|()
+name|ssh_remote_port
+argument_list|(
+name|ssh
+argument_list|)
 argument_list|,
 name|s
 operator|->
@@ -13041,6 +13120,76 @@ argument_list|(
 name|session_pty_cleanup2
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Return a name for the remote host that fits inside utmp_size */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|session_get_remote_name_or_ip
+parameter_list|(
+name|struct
+name|ssh
+modifier|*
+name|ssh
+parameter_list|,
+name|u_int
+name|utmp_size
+parameter_list|,
+name|int
+name|use_dns
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|remote
+init|=
+literal|""
+decl_stmt|;
+if|if
+condition|(
+name|utmp_size
+operator|>
+literal|0
+condition|)
+name|remote
+operator|=
+name|auth_get_canonical_hostname
+argument_list|(
+name|ssh
+argument_list|,
+name|use_dns
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|utmp_size
+operator|==
+literal|0
+operator|||
+name|strlen
+argument_list|(
+name|remote
+argument_list|)
+operator|>
+name|utmp_size
+condition|)
+name|remote
+operator|=
+name|ssh_remote_ipaddr
+argument_list|(
+name|ssh
+argument_list|)
+expr_stmt|;
+return|return
+name|remote
+return|;
 block|}
 end_function
 

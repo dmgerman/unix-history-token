@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh_api.c,v 1.5 2015/12/04 16:41:28 markus Exp $ */
+comment|/* $OpenBSD: ssh_api.c,v 1.7 2016/05/04 14:22:33 markus Exp $ */
 end_comment
 
 begin_comment
@@ -12,16 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh1.h"
-end_include
-
-begin_comment
-comment|/* For SSH_MSG_NONE */
-end_comment
 
 begin_include
 include|#
@@ -57,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|"misc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh1.h"
 end_include
 
 begin_include
@@ -563,6 +547,39 @@ name|kex
 operator|->
 name|kex
 index|[
+name|KEX_DH_GRP14_SHA256
+index|]
+operator|=
+name|kexdh_server
+expr_stmt|;
+name|ssh
+operator|->
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP16_SHA512
+index|]
+operator|=
+name|kexdh_server
+expr_stmt|;
+name|ssh
+operator|->
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP18_SHA512
+index|]
+operator|=
+name|kexdh_server
+expr_stmt|;
+name|ssh
+operator|->
+name|kex
+operator|->
+name|kex
+index|[
 name|KEX_DH_GEX_SHA1
 index|]
 operator|=
@@ -660,6 +677,39 @@ operator|->
 name|kex
 index|[
 name|KEX_DH_GRP14_SHA1
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|ssh
+operator|->
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP14_SHA256
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|ssh
+operator|->
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP16_SHA512
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|ssh
+operator|->
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP18_SHA512
 index|]
 operator|=
 name|kexdh_client

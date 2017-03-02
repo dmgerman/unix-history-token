@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.h,v 1.20 2013/04/07 02:10:33 dtucker Exp $ */
+comment|/* $OpenBSD: log.h,v 1.21 2016/07/15 05:01:58 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -262,6 +262,39 @@ end_empty_stmt
 begin_function_decl
 name|void
 name|sigdie
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+end_function_decl
+
+begin_expr_stmt
+unit|))
+name|__attribute__
+argument_list|(
+operator|(
+name|format
+argument_list|(
+name|printf
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|logdie
 parameter_list|(
 specifier|const
 name|char
