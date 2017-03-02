@@ -177,6 +177,22 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__HAIKU__
+argument_list|)
+end_if
+
 begin_comment
 comment|/* We test GID lookup by looking up the name of group number zero and  * checking it against the following list.  If your system uses a  * different conventional name for group number zero, please extend  * this array and send us a patch.  As always, please keep this list  * sorted alphabetically.  */
 end_comment
@@ -198,6 +214,11 @@ comment|/* BSD */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|DEFINE_TEST
@@ -222,6 +243,19 @@ name|umagic
 init|=
 literal|0x1234
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__HAIKU__
+argument_list|)
 specifier|const
 name|char
 modifier|*
@@ -230,6 +264,8 @@ decl_stmt|;
 name|size_t
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 name|assert
 argument_list|(
 operator|(
@@ -440,18 +476,6 @@ argument_list|(
 literal|"standard uname/gname lookup"
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|p
-operator|=
-name|zero_groups
-index|[
-literal|0
-index|]
-expr_stmt|;
-comment|/* avoid unused warnings */
 else|#
 directive|else
 comment|/* XXX Someday, we may need to generalize this the 		 * same way we generalized the group name check below. 		 * That's needed only if we encounter a system where 		 * uid 0 is not "root". XXX */

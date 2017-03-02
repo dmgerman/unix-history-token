@@ -205,6 +205,24 @@ name|HAVE_BCRYPT_H
 argument_list|)
 end_elif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BCRYPT_HASH_REUSABLE_FLAG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BCRYPT_HASH_REUSABLE_FLAG
+value|0x00000020
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int

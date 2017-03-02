@@ -376,7 +376,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Basic owner/owning group should just update mode bits. */
 comment|/* 	 * Note: This features of libarchive's ACL implementation 	 * shouldn't be relied on and should probably be removed.  It 	 * was done to identify trivial ACLs so we could avoid 	 * triggering unnecessary extensions.  It's better to identify 	 * trivial ACLs at the point they are being read from disk. 	 */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -440,7 +440,7 @@ literal|0142
 argument_list|)
 expr_stmt|;
 comment|/* With any extended ACL entry, we should read back a full set. */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -506,7 +506,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -557,7 +557,7 @@ literal|0142
 argument_list|)
 expr_stmt|;
 comment|/* A more extensive set of ACLs. */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -589,7 +589,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -640,7 +640,7 @@ literal|0543
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check that clearing ACLs gets rid of them all by repeating 	 * the first test. 	 */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -704,7 +704,7 @@ literal|0142
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Different types of malformed ACL entries that should 	 * fail when added to existing POSIX.1e ACLs. 	 */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,

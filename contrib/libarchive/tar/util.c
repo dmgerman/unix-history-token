@@ -2369,10 +2369,15 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
+operator|(
 name|bsdtar
 operator|->
-name|option_absolute_paths
+name|flags
+operator|&
+name|OPTFLAG_ABSOLUTE_PATHS
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* By default, don't write or restore absolute pathnames. */

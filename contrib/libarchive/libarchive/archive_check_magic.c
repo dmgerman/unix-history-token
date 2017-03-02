@@ -193,6 +193,7 @@ end_function
 
 begin_function
 specifier|static
+name|__LA_DEAD
 name|void
 name|diediedie
 parameter_list|(
