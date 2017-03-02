@@ -11220,6 +11220,8 @@ name|archive_string_sprintf
 argument_list|(
 name|a_estr
 argument_list|,
+literal|"%s%s"
+argument_list|,
 name|errstr
 argument_list|,
 name|path
@@ -11528,7 +11530,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not stat %s"
+literal|"Could not stat "
 argument_list|,
 name|path
 argument_list|)
@@ -11582,7 +11584,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not chdir %s"
+literal|"Could not chdir "
 argument_list|,
 name|path
 argument_list|)
@@ -11644,7 +11646,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not remove symlink %s"
+literal|"Could not remove symlink "
 argument_list|,
 name|path
 argument_list|)
@@ -11664,7 +11666,7 @@ operator|=
 name|c
 expr_stmt|;
 comment|/* 				 * FIXME:  not sure how important this is to 				 * restore 				 */
-comment|/* 				if (!S_ISLNK(path)) { 					fsobj_error(a_eno, a_estr, 0, 					    "Removing symlink %s", path); 				} 				*/
+comment|/* 				if (!S_ISLNK(path)) { 					fsobj_error(a_eno, a_estr, 0, 					    "Removing symlink ", path); 				} 				*/
 comment|/* Symlink gone.  No more problem! */
 name|res
 operator|=
@@ -11707,7 +11709,7 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Cannot remove intervening "
-literal|"symlink %s"
+literal|"symlink "
 argument_list|,
 name|path
 argument_list|)
@@ -11782,7 +11784,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not stat %s"
+literal|"Could not stat "
 argument_list|,
 name|path
 argument_list|)
@@ -11832,7 +11834,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not chdir %s"
+literal|"Could not chdir "
 argument_list|,
 name|path
 argument_list|)
@@ -11871,7 +11873,7 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Cannot extract through "
-literal|"symlink %s"
+literal|"symlink "
 argument_list|,
 name|path
 argument_list|)
@@ -11900,7 +11902,7 @@ name|a_estr
 argument_list|,
 literal|0
 argument_list|,
-literal|"Cannot extract through symlink %s"
+literal|"Cannot extract through symlink "
 argument_list|,
 name|path
 argument_list|)

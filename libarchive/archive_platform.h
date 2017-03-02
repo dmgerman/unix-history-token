@@ -585,7 +585,7 @@ end_if
 begin_if
 if|#
 directive|if
-name|HAVE_ACL_USER
+name|HAVE_DECL_ACL_USER
 end_if
 
 begin_define
@@ -598,7 +598,9 @@ end_define
 begin_elif
 elif|#
 directive|elif
-name|HAVE_ACL_TYPE_EXTENDED
+name|HAVE_DECL_ACL_TYPE_EXTENDED
+operator|&&
+name|HAVE_MEMBERSHIP_H
 end_elif
 
 begin_define
@@ -613,13 +615,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|HAVE_DECL_ACL_TYPE_NFS4
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_FREEBSD_NFS4_ACL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * If this platform has<sys/acl.h>, acl_get(), facl_get(), acl_set(),  * facl_set() and types aclent_t and ace_t it uses Solaris-style ACL functions  */
+comment|/*  * If this platform has<sys/acl.h>, acl(), facl() and ACLENT_T  * facl_set() and types aclent_t and ace_t it uses Solaris-style ACL functions  */
 end_comment
 
 begin_if
@@ -627,17 +647,18 @@ if|#
 directive|if
 name|HAVE_SYS_ACL_H
 operator|&&
-name|HAVE_ACL_GET
+name|HAVE_ACL
 operator|&&
-name|HAVE_FACL_GET
-operator|&&
-name|HAVE_ACL_SET
-operator|&&
-name|HAVE_FACL_SET
+name|HAVE_FACL
 operator|&&
 name|HAVE_ACLENT_T
 operator|&&
-name|HAVE_ACE_T
+expr|\
+name|HAVE_DECL_GETACL
+operator|&&
+name|HAVE_DECL_GETACLCNT
+operator|&&
+name|HAVE_DECL_SETACL
 end_if
 
 begin_define
@@ -646,6 +667,31 @@ directive|define
 name|HAVE_SUN_ACL
 value|1
 end_define
+
+begin_if
+if|#
+directive|if
+name|HAVE_ACE_T
+operator|&&
+name|HAVE_DECL_ACE_GETACL
+operator|&&
+name|HAVE_DECL_ACE_GETACLCNT
+operator|&&
+expr|\
+name|HAVE_DECL_ACE_SETACL
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_SUN_NFS4_ACL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -659,13 +705,9 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
-name|HAVE_POSIX_ACL
-operator|&&
-name|HAVE_ACL_TYPE_NFS4
-operator|)
+name|HAVE_FREEBSD_NFS4_ACL
 operator|||
-name|HAVE_SUN_ACL
+name|HAVE_SUN_NFS4_ACL
 operator|||
 name|HAVE_DARWIN_ACL
 end_if

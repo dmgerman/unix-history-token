@@ -261,6 +261,40 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_ACL_LIBACL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<acl/libacl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_ACL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/acl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_WINDOWS_H
 end_ifdef
 
@@ -509,7 +543,7 @@ end_if
 begin_if
 if|#
 directive|if
-name|HAVE_ACL_USER
+name|HAVE_DECL_ACL_USER
 end_if
 
 begin_define
@@ -522,13 +556,31 @@ end_define
 begin_elif
 elif|#
 directive|elif
-name|HAVE_ACL_TYPE_EXTENDED
+name|HAVE_DECL_ACL_TYPE_EXTENDED
 end_elif
 
 begin_define
 define|#
 directive|define
 name|HAVE_DARWIN_ACL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_DECL_ACL_TYPE_NFS4
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_FREEBSD_NFS4_ACL
 value|1
 end_define
 
@@ -551,17 +603,18 @@ if|#
 directive|if
 name|HAVE_SYS_ACL_H
 operator|&&
-name|HAVE_ACL_GET
+name|HAVE_ACL
 operator|&&
-name|HAVE_FACL_GET
-operator|&&
-name|HAVE_ACL_SET
-operator|&&
-name|HAVE_FACL_SET
+name|HAVE_FACL
 operator|&&
 name|HAVE_ACLENT_T
 operator|&&
-name|HAVE_ACE_T
+expr|\
+name|HAVE_DECL_GETACL
+operator|&&
+name|HAVE_DECL_GETACLCNT
+operator|&&
+name|HAVE_DECL_SETACL
 end_if
 
 begin_define
@@ -570,6 +623,31 @@ directive|define
 name|HAVE_SUN_ACL
 value|1
 end_define
+
+begin_if
+if|#
+directive|if
+name|HAVE_ACE_T
+operator|&&
+name|HAVE_DECL_ACE_GETACL
+operator|&&
+name|HAVE_DECL_ACE_GETACLCNT
+operator|&&
+expr|\
+name|HAVE_DECL_ACE_SETACL
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_SUN_NFS4_ACL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -583,13 +661,9 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
-name|HAVE_POSIX_ACL
-operator|&&
-name|HAVE_ACL_TYPE_NFS4
-operator|)
+name|HAVE_FREEBSD_NFS4_ACL
 operator|||
-name|HAVE_SUN_ACL
+name|HAVE_SUN_NFS4_ACL
 operator|||
 name|HAVE_DARWIN_ACL
 end_if
@@ -605,6 +679,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_TEST_ACL_TYPE_POSIX1E
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_TEST_ACL_TYPE_NFS4
+value|2
+end_define
 
 begin_comment
 comment|/*  * Redefine DEFINE_TEST for use in defining the test functions.  */
@@ -653,6 +741,23 @@ name|path
 parameter_list|)
 define|\
 value|assertion_chdir(__FILE__, __LINE__, path)
+end_define
+
+begin_comment
+comment|/* Assert two files have the same file flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertEqualFflags
+parameter_list|(
+name|patha
+parameter_list|,
+name|pathb
+parameter_list|)
+define|\
+value|assertion_compare_fflags(__FILE__, __LINE__, patha, pathb, 0)
 end_define
 
 begin_comment
@@ -1156,12 +1261,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|assertNodump
+name|assertSetNodump
 parameter_list|(
 name|path
 parameter_list|)
 define|\
-value|assertion_nodump(__FILE__, __LINE__, path)
+value|assertion_set_nodump(__FILE__, __LINE__, path)
 end_define
 
 begin_define
@@ -1173,6 +1278,23 @@ name|mask
 parameter_list|)
 define|\
 value|assertion_umask(__FILE__, __LINE__, mask)
+end_define
+
+begin_comment
+comment|/* Assert that two files have unequal file flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertUnequalFflags
+parameter_list|(
+name|patha
+parameter_list|,
+name|pathb
+parameter_list|)
+define|\
+value|assertion_compare_fflags(__FILE__, __LINE__, patha, pathb, 1)
 end_define
 
 begin_define
@@ -1304,6 +1426,29 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|assertion_compare_fflags
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1983,7 +2128,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|assertion_nodump
+name|assertion_non_empty_file
 parameter_list|(
 specifier|const
 name|char
@@ -2000,7 +2145,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|assertion_non_empty_file
+name|assertion_set_nodump
 parameter_list|(
 specifier|const
 name|char
@@ -2316,6 +2461,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Set test ACLs */
+end_comment
+
+begin_function_decl
+name|int
+name|setTestAcl
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Return true if the file has large i-node number(>0xffffffff). */
 end_comment
 
@@ -2329,6 +2490,44 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|HAVE_SUN_ACL
+end_if
+
+begin_comment
+comment|/* Fetch ACLs on Solaris using acl() or facl() */
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|sunacl_get
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|int
+modifier|*
+name|aclcnt
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Suck file into string allocated via malloc(). Call free() when done. */

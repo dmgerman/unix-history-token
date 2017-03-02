@@ -1827,7 +1827,7 @@ block|}
 end_function
 
 begin_function
-name|int64_t
+name|la_int64_t
 name|archive_entry_gid
 parameter_list|(
 name|struct
@@ -2391,7 +2391,7 @@ block|}
 end_function
 
 begin_function
-name|int64_t
+name|la_int64_t
 name|archive_entry_ino
 parameter_list|(
 name|struct
@@ -2435,7 +2435,7 @@ block|}
 end_function
 
 begin_function
-name|int64_t
+name|la_int64_t
 name|archive_entry_ino64
 parameter_list|(
 name|struct
@@ -2953,7 +2953,7 @@ block|}
 end_function
 
 begin_function
-name|int64_t
+name|la_int64_t
 name|archive_entry_size
 parameter_list|(
 name|struct
@@ -3419,7 +3419,7 @@ block|}
 end_function
 
 begin_function
-name|int64_t
+name|la_int64_t
 name|archive_entry_uid
 parameter_list|(
 name|struct
@@ -3941,7 +3941,7 @@ name|archive_entry
 modifier|*
 name|entry
 parameter_list|,
-name|int64_t
+name|la_int64_t
 name|g
 parameter_list|)
 block|{
@@ -4185,7 +4185,7 @@ name|archive_entry
 modifier|*
 name|entry
 parameter_list|,
-name|int64_t
+name|la_int64_t
 name|ino
 parameter_list|)
 block|{
@@ -4221,7 +4221,7 @@ name|archive_entry
 modifier|*
 name|entry
 parameter_list|,
-name|int64_t
+name|la_int64_t
 name|ino
 parameter_list|)
 block|{
@@ -5862,7 +5862,7 @@ name|archive_entry
 modifier|*
 name|entry
 parameter_list|,
-name|int64_t
+name|la_int64_t
 name|s
 parameter_list|)
 block|{
@@ -6326,7 +6326,7 @@ name|archive_entry
 modifier|*
 name|entry
 parameter_list|,
-name|int64_t
+name|la_int64_t
 name|u
 parameter_list|)
 block|{

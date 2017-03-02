@@ -8919,12 +8919,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Test4: Traversals with ARCHIVE_READDISK_RESTORE_ATIME and 	 * ARCHIVE_READDISK_HONOR_NODUMP 	 */
-name|assertNodump
+name|assertSetNodump
 argument_list|(
 literal|"at/f1"
 argument_list|)
 expr_stmt|;
-name|assertNodump
+name|assertSetNodump
 argument_list|(
 literal|"at/f2"
 argument_list|)
@@ -10363,7 +10363,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assertNodump
+name|assertSetNodump
 argument_list|(
 literal|"nd/f2"
 argument_list|)

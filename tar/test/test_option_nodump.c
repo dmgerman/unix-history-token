@@ -67,7 +67,7 @@ argument_list|,
 literal|"file3"
 argument_list|)
 expr_stmt|;
-name|assertNodump
+name|assertSetNodump
 argument_list|(
 literal|"file2"
 argument_list|)
