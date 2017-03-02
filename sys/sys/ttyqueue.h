@@ -179,7 +179,7 @@ comment|/* Input queue handling routines. */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|ttyinq_setsize
 parameter_list|(
 name|struct
@@ -634,7 +634,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ttyoutq_setsize
 parameter_list|(
 name|struct
