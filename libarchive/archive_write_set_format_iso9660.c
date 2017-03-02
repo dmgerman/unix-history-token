@@ -19508,6 +19508,7 @@ name|defined
 argument_list|(
 name|HAVE__CTIME64_S
 argument_list|)
+block|{
 name|__time64_t
 name|iso9660_birth_time_tmp
 init|=
@@ -19534,6 +19535,7 @@ name|iso9660_birth_time_tmp
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 elif|#
 directive|elif
 name|defined

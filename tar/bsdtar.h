@@ -87,6 +87,11 @@ name|int
 name|verbose
 decl_stmt|;
 comment|/* -v */
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+comment|/* Bitfield of boolean options */
 name|int
 name|extract_flags
 decl_stmt|;
@@ -133,64 +138,12 @@ name|char
 name|symlink_mode
 decl_stmt|;
 comment|/* H or L, per BSD conventions */
-name|char
-name|option_absolute_paths
-decl_stmt|;
-comment|/* -P */
-name|char
-name|option_chroot
-decl_stmt|;
-comment|/* --chroot */
-name|char
-name|option_fast_read
-decl_stmt|;
-comment|/* --fast-read */
 specifier|const
 name|char
 modifier|*
 name|option_options
 decl_stmt|;
 comment|/* --options */
-name|char
-name|option_ignore_zeros
-decl_stmt|;
-comment|/* --ignore-zeros */
-name|char
-name|option_interactive
-decl_stmt|;
-comment|/* -w */
-name|char
-name|option_no_owner
-decl_stmt|;
-comment|/* -o */
-name|char
-name|option_no_subdirs
-decl_stmt|;
-comment|/* -n */
-name|char
-name|option_numeric_owner
-decl_stmt|;
-comment|/* --numeric-owner */
-name|char
-name|option_null
-decl_stmt|;
-comment|/* --null */
-name|char
-name|option_stdout
-decl_stmt|;
-comment|/* -O */
-name|char
-name|option_totals
-decl_stmt|;
-comment|/* --totals */
-name|char
-name|option_unlink_first
-decl_stmt|;
-comment|/* -U */
-name|char
-name|option_warn_links
-decl_stmt|;
-comment|/* --check-links */
 name|char
 name|day_first
 decl_stmt|;
@@ -328,15 +281,274 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Options for flags bitfield */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_AUTO_COMPRESS
+value|(0x00000001)
+end_define
+
+begin_comment
+comment|/* -a */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_ABSOLUTE_PATHS
+value|(0x00000002)
+end_define
+
+begin_comment
+comment|/* -P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_CHROOT
+value|(0x00000004)
+end_define
+
+begin_comment
+comment|/* --chroot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_FAST_READ
+value|(0x00000008)
+end_define
+
+begin_comment
+comment|/* --fast-read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_IGNORE_ZEROS
+value|(0x00000010)
+end_define
+
+begin_comment
+comment|/* --ignore-zeros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_INTERACTIVE
+value|(0x00000020)
+end_define
+
+begin_comment
+comment|/* -w */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_NO_OWNER
+value|(0x00000040)
+end_define
+
+begin_comment
+comment|/* -o */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_NO_SUBDIRS
+value|(0x00000080)
+end_define
+
+begin_comment
+comment|/* -n */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_NULL
+value|(0x00000100)
+end_define
+
+begin_comment
+comment|/* --null */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_NUMERIC_OWNER
+value|(0x00000200)
+end_define
+
+begin_comment
+comment|/* --numeric-owner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_O
+value|(0x00000400)
+end_define
+
+begin_comment
+comment|/* -o */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_STDOUT
+value|(0x00000800)
+end_define
+
+begin_comment
+comment|/* -O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_TOTALS
+value|(0x00001000)
+end_define
+
+begin_comment
+comment|/* --totals */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_UNLINK_FIRST
+value|(0x00002000)
+end_define
+
+begin_comment
+comment|/* -U */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_WARN_LINKS
+value|(0x00004000)
+end_define
+
+begin_comment
+comment|/* --check-links */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_NO_XATTRS
+value|(0x00008000)
+end_define
+
+begin_comment
+comment|/* --no-xattrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_XATTRS
+value|(0x00010000)
+end_define
+
+begin_comment
+comment|/* --xattrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_NO_ACLS
+value|(0x00020000)
+end_define
+
+begin_comment
+comment|/* --no-acls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_ACLS
+value|(0x00040000)
+end_define
+
+begin_comment
+comment|/* --acls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_NO_FFLAGS
+value|(0x00080000)
+end_define
+
+begin_comment
+comment|/* --no-fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_FFLAGS
+value|(0x00100000)
+end_define
+
+begin_comment
+comment|/* --fflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_NO_MAC_METADATA
+value|(0x00200000)
+end_define
+
+begin_comment
+comment|/* --no-mac-metadata */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTFLAG_MAC_METADATA
+value|(0x00400000)
+end_define
+
+begin_comment
+comment|/* --mac-metadata */
+end_comment
+
+begin_comment
 comment|/* Fake short equivalents for long options that otherwise lack them. */
 end_comment
 
 begin_enum
 enum|enum
 block|{
-name|OPTION_B64ENCODE
+name|OPTION_ACLS
 init|=
 literal|1
+block|,
+name|OPTION_B64ENCODE
 block|,
 name|OPTION_CHECK_LINKS
 block|,
@@ -344,9 +556,9 @@ name|OPTION_CHROOT
 block|,
 name|OPTION_CLEAR_NOCHANGE_FFLAGS
 block|,
-name|OPTION_DISABLE_COPYFILE
-block|,
 name|OPTION_EXCLUDE
+block|,
+name|OPTION_FFLAGS
 block|,
 name|OPTION_FORMAT
 block|,
@@ -376,6 +588,8 @@ name|OPTION_LZMA
 block|,
 name|OPTION_LZOP
 block|,
+name|OPTION_MAC_METADATA
+block|,
 name|OPTION_NEWER_CTIME
 block|,
 name|OPTION_NEWER_CTIME_THAN
@@ -388,11 +602,17 @@ name|OPTION_NODUMP
 block|,
 name|OPTION_NOPRESERVE_HFS_COMPRESSION
 block|,
+name|OPTION_NO_ACLS
+block|,
+name|OPTION_NO_FFLAGS
+block|,
+name|OPTION_NO_MAC_METADATA
+block|,
 name|OPTION_NO_SAME_OWNER
 block|,
 name|OPTION_NO_SAME_PERMISSIONS
 block|,
-name|OPTION_NO_XATTR
+name|OPTION_NO_XATTRS
 block|,
 name|OPTION_NULL
 block|,
@@ -429,6 +649,8 @@ block|,
 name|OPTION_UUENCODE
 block|,
 name|OPTION_VERSION
+block|,
+name|OPTION_XATTRS
 block|}
 enum|;
 end_enum

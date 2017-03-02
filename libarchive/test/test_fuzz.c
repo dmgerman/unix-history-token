@@ -440,6 +440,10 @@ operator|++
 name|i
 control|)
 block|{
+name|char
+modifier|*
+name|newraw
+decl_stmt|;
 name|tmp
 operator|=
 name|slurpfile
@@ -458,10 +462,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|char
-modifier|*
 name|newraw
-init|=
+operator|=
 name|realloc
 argument_list|(
 name|rawimage
@@ -470,7 +472,7 @@ name|oldsize
 operator|+
 name|size
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!

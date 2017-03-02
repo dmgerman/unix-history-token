@@ -4391,12 +4391,6 @@ argument_list|,
 name|unconsumed
 argument_list|)
 expr_stmt|;
-name|tar
-operator|->
-name|entry_bytes_remaining
-operator|-=
-name|bytes_read
-expr_stmt|;
 if|if
 condition|(
 name|bytes_read
@@ -4411,6 +4405,12 @@ operator|)
 name|bytes_read
 operator|)
 return|;
+name|tar
+operator|->
+name|entry_bytes_remaining
+operator|-=
+name|bytes_read
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -12363,6 +12363,18 @@ operator|&
 operator|-
 name|bytes_read
 expr_stmt|;
+comment|/* Fail if tar->entry_bytes_remaing would get negative */
+if|if
+condition|(
+name|to_skip
+operator|>
+name|remaining
+condition|)
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
 if|if
 condition|(
 name|to_skip

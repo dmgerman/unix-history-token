@@ -8918,7 +8918,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Test4: Traversals with archive_read_disk_set_atime_restored() and 	 * archive_read_disk_honor_nodump(). 	 */
+comment|/* 	 * Test4: Traversals with ARCHIVE_READDISK_RESTORE_ATIME and 	 * ARCHIVE_READDISK_HONOR_NODUMP 	 */
 name|assertNodump
 argument_list|(
 literal|"at/f1"
@@ -10444,7 +10444,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Test1: Traversals without archive_read_disk_honor_nodump(). 	 */
+comment|/* 	 * Test1: Traversals without ARCHIVE_READDISK_HONOR_NODUMP 	 */
 name|failure
 argument_list|(
 literal|"Directory traversals should work as well"
@@ -10862,7 +10862,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Test2: Traversals with archive_read_disk_honor_nodump(). 	 */
+comment|/* 	 * Test2: Traversals with ARCHIVE_READDISK_HONOR_NODUMP 	 */
 name|assertUtimes
 argument_list|(
 literal|"nd/f1"

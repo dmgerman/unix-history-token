@@ -548,6 +548,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<windows.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<wincrypt.h>
 end_include
 

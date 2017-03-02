@@ -750,7 +750,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -826,7 +826,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -888,7 +888,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -938,7 +938,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -988,7 +988,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,

@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|3002002
+value|3003001
 end_define
 
 begin_include
@@ -695,7 +695,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_ONLY_STRING
-value|"3.2.2"
+value|"3.3.1"
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING
@@ -3912,6 +3912,16 @@ define|#
 directive|define
 name|ARCHIVE_READDISK_NO_XATTR
 value|(0x0010)
+comment|/* Default: ACLs are read from disk. */
+define|#
+directive|define
+name|ARCHIVE_READDISK_NO_ACL
+value|(0x0020)
+comment|/* Default: File flags are read from disk. */
+define|#
+directive|define
+name|ARCHIVE_READDISK_NO_FFLAGS
+value|(0x0040)
 name|__LA_DECL
 name|int
 name|archive_read_disk_set_behavior

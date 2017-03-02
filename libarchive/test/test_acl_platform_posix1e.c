@@ -1491,7 +1491,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -2292,10 +2292,10 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* Create directory d2 with default ACLs */
+comment|/* Create nested directory d2 with default ACLs */
 name|assertMakeDir
 argument_list|(
-literal|"d2"
+literal|"d/d2"
 argument_list|,
 literal|0755
 argument_list|)
@@ -2401,7 +2401,7 @@ name|n
 operator|=
 name|acl_set
 argument_list|(
-literal|"d2"
+literal|"d/d2"
 argument_list|,
 name|acl3
 argument_list|)
@@ -2416,7 +2416,7 @@ name|n
 operator|=
 name|acl_set_file
 argument_list|(
-literal|"d2"
+literal|"d/d2"
 argument_list|,
 name|ACL_TYPE_DEFAULT
 argument_list|,
@@ -2624,7 +2624,7 @@ argument_list|(
 name|ae
 argument_list|)
 argument_list|,
-literal|"./d2"
+literal|"./d/d2"
 argument_list|)
 operator|==
 literal|0
