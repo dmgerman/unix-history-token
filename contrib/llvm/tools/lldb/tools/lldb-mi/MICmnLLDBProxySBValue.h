@@ -68,11 +68,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: MI proxy wrapper class to lldb::SBValue. The class provides functionality
+comment|//============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI proxy wrapper class to lldb::SBValue. The class provides
+end_comment
+
+begin_comment
+comment|// functionality
 end_comment
 
 begin_comment

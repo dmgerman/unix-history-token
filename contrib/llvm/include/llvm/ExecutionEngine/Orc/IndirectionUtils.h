@@ -62,19 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"JITSymbol.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"LambdaResolver.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
@@ -98,6 +104,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Memory.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Process.h"
 end_include
 
@@ -105,6 +123,60 @@ begin_include
 include|#
 directive|include
 file|"llvm/Transforms/Utils/ValueMapper.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -125,7 +197,7 @@ name|std
 operator|::
 name|function
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 argument_list|()
 operator|>
 name|CompileFtor
@@ -140,7 +212,7 @@ name|public
 label|:
 name|CompileCallbackInfo
 argument_list|(
-argument|TargetAddress Addr
+argument|JITTargetAddress Addr
 argument_list|,
 argument|CompileFtor&Compile
 argument_list|)
@@ -155,7 +227,7 @@ argument_list|(
 argument|Compile
 argument_list|)
 block|{}
-name|TargetAddress
+name|JITTargetAddress
 name|getAddress
 argument_list|()
 specifier|const
@@ -185,7 +257,7 @@ expr_stmt|;
 block|}
 name|private
 label|:
-name|TargetAddress
+name|JITTargetAddress
 name|Addr
 decl_stmt|;
 name|CompileFtor
@@ -199,7 +271,7 @@ comment|/// @param ErrorHandlerAddress The address of an error handler in the ta
 comment|///                            process to be used if a compile callback fails.
 name|JITCompileCallbackManager
 argument_list|(
-argument|TargetAddress ErrorHandlerAddress
+argument|JITTargetAddress ErrorHandlerAddress
 argument_list|)
 block|:
 name|ErrorHandlerAddress
@@ -211,25 +283,28 @@ name|virtual
 operator|~
 name|JITCompileCallbackManager
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// @brief Execute the callback for the given trampoline id. Called by the JIT
 comment|///        to compile functions on demand.
-name|TargetAddress
+name|JITTargetAddress
 name|executeCompileCallback
-argument_list|(
-argument|TargetAddress TrampolineAddr
-argument_list|)
+parameter_list|(
+name|JITTargetAddress
+name|TrampolineAddr
+parameter_list|)
 block|{
 name|auto
 name|I
-operator|=
+init|=
 name|ActiveTrampolines
 operator|.
 name|find
 argument_list|(
 name|TrampolineAddr
 argument_list|)
-block|;
+decl_stmt|;
 comment|// FIXME: Also raise an error in the Orc error-handler when we finally have
 comment|//        one.
 if|if
@@ -254,7 +329,7 @@ comment|// for
 comment|// a new one.
 name|auto
 name|Compile
-operator|=
+init|=
 name|std
 operator|::
 name|move
@@ -263,7 +338,7 @@ name|I
 operator|->
 name|second
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|ActiveTrampolines
 operator|.
 name|erase
@@ -298,7 +373,7 @@ name|CompileCallbackInfo
 name|getCompileCallback
 parameter_list|()
 block|{
-name|TargetAddress
+name|JITTargetAddress
 name|TrampolineAddr
 init|=
 name|getAvailableTrampolineAddr
@@ -328,7 +403,7 @@ comment|/// @brief Get a CompileCallbackInfo for an existing callback.
 name|CompileCallbackInfo
 name|getCompileCallbackInfo
 parameter_list|(
-name|TargetAddress
+name|JITTargetAddress
 name|TrampolineAddr
 parameter_list|)
 block|{
@@ -375,7 +450,7 @@ comment|/// execute.
 name|void
 name|releaseCompileCallback
 parameter_list|(
-name|TargetAddress
+name|JITTargetAddress
 name|TrampolineAddr
 parameter_list|)
 block|{
@@ -418,7 +493,7 @@ expr_stmt|;
 block|}
 name|protected
 label|:
-name|TargetAddress
+name|JITTargetAddress
 name|ErrorHandlerAddress
 decl_stmt|;
 typedef|typedef
@@ -426,7 +501,7 @@ name|std
 operator|::
 name|map
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 operator|,
 name|CompileFtor
 operator|>
@@ -439,13 +514,13 @@ name|std
 operator|::
 name|vector
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 operator|>
 name|AvailableTrampolines
 expr_stmt|;
 name|private
 label|:
-name|TargetAddress
+name|JITTargetAddress
 name|getAvailableTrampolineAddr
 parameter_list|()
 block|{
@@ -474,7 +549,7 @@ operator|&&
 literal|"Failed to grow available trampolines."
 argument_list|)
 expr_stmt|;
-name|TargetAddress
+name|JITTargetAddress
 name|TrampolineAddr
 init|=
 name|this
@@ -529,7 +604,7 @@ comment|/// @param ErrorHandlerAddress The address of an error handler in the ta
 comment|///                            process to be used if a compile callback fails.
 name|LocalJITCompileCallbackManager
 argument_list|(
-argument|TargetAddress ErrorHandlerAddress
+argument|JITTargetAddress ErrorHandlerAddress
 argument_list|)
 operator|:
 name|JITCompileCallbackManager
@@ -644,7 +719,7 @@ block|;   }
 name|private
 operator|:
 specifier|static
-name|TargetAddress
+name|JITTargetAddress
 name|reenter
 argument_list|(
 argument|void *CCMgr
@@ -672,7 +747,7 @@ name|executeCompileCallback
 argument_list|(
 name|static_cast
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 operator|>
 operator|(
 name|reinterpret_cast
@@ -826,7 +901,7 @@ name|push_back
 argument_list|(
 name|static_cast
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 operator|>
 operator|(
 name|reinterpret_cast
@@ -909,17 +984,8 @@ operator|>
 name|TrampolineBlocks
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// @brief Base class for managing collections of named indirect stubs.
-end_comment
-
-begin_decl_stmt
 name|class
 name|IndirectStubsManager
 block|{
@@ -933,7 +999,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 operator|,
 name|JITSymbolFlags
 operator|>>
@@ -943,21 +1009,26 @@ name|virtual
 operator|~
 name|IndirectStubsManager
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// @brief Create a single stub with the given name, target address and flags.
 name|virtual
 name|Error
 name|createStub
-argument_list|(
-argument|StringRef StubName
-argument_list|,
-argument|TargetAddress StubAddr
-argument_list|,
-argument|JITSymbolFlags StubFlags
-argument_list|)
-operator|=
+parameter_list|(
+name|StringRef
+name|StubName
+parameter_list|,
+name|JITTargetAddress
+name|StubAddr
+parameter_list|,
+name|JITSymbolFlags
+name|StubFlags
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|/// @brief Create StubInits.size() stubs with the given names, target
 comment|///        addresses, and flags.
 name|virtual
@@ -1007,7 +1078,7 @@ parameter_list|(
 name|StringRef
 name|Name
 parameter_list|,
-name|TargetAddress
+name|JITTargetAddress
 name|NewAddr
 parameter_list|)
 init|=
@@ -1021,21 +1092,9 @@ name|anchor
 parameter_list|()
 function_decl|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// @brief IndirectStubsManager implementation for the host architecture, e.g.
-end_comment
-
-begin_comment
 comment|///        OrcX86_64. (See OrcArchitectureSupport.h).
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1054,7 +1113,7 @@ name|createStub
 argument_list|(
 argument|StringRef StubName
 argument_list|,
-argument|TargetAddress StubAddr
+argument|JITTargetAddress StubAddr
 argument_list|,
 argument|JITSymbolFlags StubFlags
 argument_list|)
@@ -1089,9 +1148,6 @@ name|success
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|Error
 name|createStubs
 parameter_list|(
@@ -1153,9 +1209,6 @@ name|success
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|JITSymbol
 name|findStub
 parameter_list|(
@@ -1228,7 +1281,7 @@ name|StubTargetAddr
 init|=
 name|static_cast
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 operator|>
 operator|(
 name|reinterpret_cast
@@ -1261,6 +1314,9 @@ operator|&&
 operator|!
 name|StubSymbol
 operator|.
+name|getFlags
+argument_list|()
+operator|.
 name|isExported
 argument_list|()
 condition|)
@@ -1271,9 +1327,6 @@ return|return
 name|StubSymbol
 return|;
 block|}
-end_function
-
-begin_function
 name|JITSymbol
 name|findPointer
 parameter_list|(
@@ -1343,7 +1396,7 @@ name|PtrTargetAddr
 init|=
 name|static_cast
 operator|<
-name|TargetAddress
+name|JITTargetAddress
 operator|>
 operator|(
 name|reinterpret_cast
@@ -1368,16 +1421,13 @@ name|second
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|Error
 name|updatePointer
 parameter_list|(
 name|StringRef
 name|Name
 parameter_list|,
-name|TargetAddress
+name|JITTargetAddress
 name|NewAddr
 parameter_list|)
 function|override
@@ -1450,14 +1500,8 @@ name|success
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_function
 name|Error
 name|reserveStubs
 parameter_list|(
@@ -1573,16 +1617,13 @@ name|success
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|createStubInternal
 parameter_list|(
 name|StringRef
 name|StubName
 parameter_list|,
-name|TargetAddress
+name|JITTargetAddress
 name|InitAddr
 parameter_list|,
 name|JITSymbolFlags
@@ -1647,9 +1688,6 @@ name|StubFlags
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -1661,9 +1699,6 @@ name|IndirectStubsInfo
 operator|>
 name|IndirectStubsInfos
 expr_stmt|;
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1675,9 +1710,6 @@ name|uint16_t
 operator|>
 name|StubKey
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -1686,9 +1718,6 @@ name|StubKey
 operator|>
 name|FreeStubs
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|StringMap
 operator|<
 name|std
@@ -1701,10 +1730,14 @@ name|JITSymbolFlags
 operator|>>
 name|StubIndexes
 expr_stmt|;
-end_expr_stmt
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// @brief Create a local compile callback manager.
 end_comment
 
@@ -1735,7 +1768,7 @@ name|createLocalCompileCallbackManager
 argument_list|(
 argument|const Triple&T
 argument_list|,
-argument|TargetAddress ErrorHandlerAddress
+argument|JITTargetAddress ErrorHandlerAddress
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1805,7 +1838,7 @@ name|FunctionType
 modifier|&
 name|FT
 parameter_list|,
-name|TargetAddress
+name|JITTargetAddress
 name|Addr
 parameter_list|)
 function_decl|;
@@ -2115,7 +2148,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// @brief Clone
+comment|/// @brief Clone a global alias declaration into a new module.
 end_comment
 
 begin_function_decl
@@ -2140,13 +2173,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// @brief Clone module flags metadata into the destination module.
+end_comment
+
+begin_function_decl
+name|void
+name|cloneModuleFlagsMetadata
+parameter_list|(
+name|Module
+modifier|&
+name|Dst
+parameter_list|,
+specifier|const
+name|Module
+modifier|&
+name|Src
+parameter_list|,
+name|ValueToValueMapTy
+modifier|&
+name|VMap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 unit|}
-comment|// End namespace orc.
+comment|// end namespace orc
 end_comment
 
 begin_comment
 unit|}
-comment|// End namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif

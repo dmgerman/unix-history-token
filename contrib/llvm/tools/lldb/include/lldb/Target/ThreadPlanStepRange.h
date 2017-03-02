@@ -238,8 +238,10 @@ argument_list|,
 argument|size_t&insn_offset
 argument_list|)
 block|;
-comment|// Pushes a plan to proceed through the next section of instructions in the range - usually just a RunToAddress
-comment|// plan to run to the next branch.  Returns true if it pushed such a plan.  If there was no available 'quick run'
+comment|// Pushes a plan to proceed through the next section of instructions in the
+comment|// range - usually just a RunToAddress
+comment|// plan to run to the next branch.  Returns true if it pushed such a plan.  If
+comment|// there was no available 'quick run'
 comment|// plan, then just single step.
 name|bool
 name|SetNextBranchBreakpoint
@@ -278,16 +280,19 @@ comment|// Use the stack ID so we can tell step out from step in.
 name|StackID
 name|m_parent_stack_id
 block|;
-comment|// Use the parent stack ID so we can identify tail calls and the like.
+comment|// Use the parent stack ID so we can identify tail
+comment|// calls and the like.
 name|bool
 name|m_no_more_plans
 block|;
-comment|// Need this one so we can tell if we stepped into a call,
+comment|// Need this one so we can tell if we stepped into a
+comment|// call,
 comment|// but can't continue, in which case we are done.
 name|bool
 name|m_first_run_event
 block|;
-comment|// We want to broadcast only one running event, our first.
+comment|// We want to broadcast only one running event, our
+comment|// first.
 name|lldb
 operator|::
 name|BreakpointSP

@@ -120,6 +120,10 @@ name|template
 operator|<
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 name|class
 name|AnalysisManager

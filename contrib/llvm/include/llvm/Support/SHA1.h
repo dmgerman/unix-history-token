@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<array>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdint>
 end_include
 
@@ -178,6 +184,25 @@ name|StringRef
 name|result
 parameter_list|()
 function_decl|;
+comment|/// Returns a raw 160-bit SHA1 hash for the given data.
+specifier|static
+name|std
+operator|::
+name|array
+operator|<
+name|uint8_t
+operator|,
+literal|20
+operator|>
+name|hash
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Data
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 comment|/// Define some constants.
@@ -199,14 +224,25 @@ enum|;
 comment|// Internal State
 struct|struct
 block|{
+union|union
+block|{
+name|uint8_t
+name|C
+index|[
+name|BLOCK_LENGTH
+index|]
+decl_stmt|;
 name|uint32_t
-name|Buffer
+name|L
 index|[
 name|BLOCK_LENGTH
 operator|/
 literal|4
 index|]
 decl_stmt|;
+block|}
+name|Buffer
+union|;
 name|uint32_t
 name|State
 index|[

@@ -823,6 +823,11 @@ block|;
 name|QualType
 name|T
 block|;
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+block|;
 name|unsigned
 name|Count
 block|;
@@ -842,6 +847,8 @@ argument_list|,
 argument|const Stmt *s
 argument_list|,
 argument|QualType t
+argument_list|,
+argument|const LocationContext *LCtx
 argument_list|,
 argument|unsigned count
 argument_list|,
@@ -868,6 +875,11 @@ block|,
 name|T
 argument_list|(
 name|t
+argument_list|)
+block|,
+name|LCtx
+argument_list|(
+name|LCtx
 argument_list|)
 block|,
 name|Count
@@ -900,6 +912,17 @@ specifier|const
 block|{
 return|return
 name|S
+return|;
+block|}
+specifier|const
+name|LocationContext
+operator|*
+name|getLocationContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LCtx
 return|;
 block|}
 name|unsigned
@@ -948,6 +971,8 @@ argument|const Stmt *S
 argument_list|,
 argument|QualType T
 argument_list|,
+argument|const LocationContext *LCtx
+argument_list|,
 argument|unsigned Count
 argument_list|,
 argument|const void *Tag
@@ -986,6 +1011,13 @@ argument_list|)
 block|;
 name|profile
 operator|.
+name|AddPointer
+argument_list|(
+name|LCtx
+argument_list|)
+block|;
+name|profile
+operator|.
 name|AddInteger
 argument_list|(
 name|Count
@@ -1014,6 +1046,8 @@ argument_list|,
 name|S
 argument_list|,
 name|T
+argument_list|,
+name|LCtx
 argument_list|,
 name|Count
 argument_list|,
@@ -2028,6 +2062,8 @@ argument_list|,
 argument|const Stmt *S
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|const LocationContext *LCtx
 argument_list|,
 argument|unsigned VisitCount
 argument_list|,

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- lldb-python.h --------------------------------------------*- C++ -*-===//
+comment|//===-- lldb-python.h --------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -44,7 +48,11 @@ name|LLDB_PLUGINS_SCRIPTINTERPRETER_PYTHON_LLDB_PYTHON_H
 end_define
 
 begin_comment
-comment|// Python.h needs to be included before any system headers in order to avoid redefinition of macros
+comment|// Python.h needs to be included before any system headers in order to avoid
+end_comment
+
+begin_comment
+comment|// redefinition of macros
 end_comment
 
 begin_ifdef
@@ -61,6 +69,48 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LLVM_ON_WIN32
+argument_list|)
+end_if
+
+begin_comment
+comment|// If anyone #includes Host/PosixApi.h later, it will try to typedef pid_t.  We
+end_comment
+
+begin_comment
+comment|// need to ensure this doesn't happen.  At the same time, Python.h will also try
+end_comment
+
+begin_comment
+comment|// to redefine a bunch of stuff that PosixApi.h defines.  So define it all now
+end_comment
+
+begin_comment
+comment|// so that PosixApi.h doesn't redefine it.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_PID_T
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

@@ -29,12 +29,6 @@ directive|include
 file|"clang/Analysis/Analyses/FormatString.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang

@@ -82,24 +82,18 @@ name|class
 name|NullResolver
 range|:
 name|public
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 block|{
 name|public
 operator|:
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbol
 argument_list|(
 argument|const std::string&Name
 argument_list|)
 name|final
 block|;
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbolInLogicalDylib
 argument_list|(
 argument|const std::string&Name

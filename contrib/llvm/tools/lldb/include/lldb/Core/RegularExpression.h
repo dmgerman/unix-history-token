@@ -202,11 +202,11 @@ else|#
 directive|else
 end_else
 
-begin_if
-if|#
-directive|if
-name|__ANDROID_NDK__
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ANDROID__
+end_ifdef
 
 begin_include
 include|#
@@ -390,9 +390,9 @@ block|}
 name|bool
 name|GetMatchAtIndex
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|s
 argument_list|,
 name|uint32_t
@@ -409,9 +409,9 @@ decl_stmt|;
 name|bool
 name|GetMatchAtIndex
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|s
 argument_list|,
 name|uint32_t
@@ -428,9 +428,9 @@ decl_stmt|;
 name|bool
 name|GetMatchSpanningIndices
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|s
 argument_list|,
 name|uint32_t
@@ -471,13 +471,13 @@ argument_list|()
 expr_stmt|;
 name|explicit
 name|RegularExpression
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|re
-parameter_list|)
-function_decl|;
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|string
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor.
 comment|///
@@ -528,12 +528,22 @@ comment|///     \b false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
 name|Compile
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|string
+argument_list|)
+decl_stmt|;
+name|bool
+name|Compile
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|re
 parameter_list|)
+init|=
+name|delete
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Executes a regular expression.
@@ -559,9 +569,9 @@ comment|//------------------------------------------------------------------
 name|bool
 name|Execute
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|string
 argument_list|,
 name|Match
@@ -572,6 +582,21 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|Execute
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|Match
+modifier|*
+init|=
+name|nullptr
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 name|size_t
 name|GetErrorAsCString
 argument_list|(
@@ -604,9 +629,9 @@ comment|/// @return
 comment|///     The NULL terminated C string that was used to compile the
 comment|///     current regular expression
 comment|//------------------------------------------------------------------
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetText
 argument_list|()
 specifier|const

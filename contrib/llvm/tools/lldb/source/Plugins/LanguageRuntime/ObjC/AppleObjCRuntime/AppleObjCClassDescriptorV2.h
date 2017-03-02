@@ -68,7 +68,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"AppleObjCRuntimeV2.h"
 end_include
 
 begin_include
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"AppleObjCRuntimeV2.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -144,11 +144,11 @@ comment|// a custom descriptor is used for tagged pointers
 name|bool
 name|GetTaggedPointerInfo
 argument_list|(
-argument|uint64_t* info_bits = nullptr
+argument|uint64_t *info_bits = nullptr
 argument_list|,
-argument|uint64_t* value_bits = nullptr
+argument|uint64_t *value_bits = nullptr
 argument_list|,
-argument|uint64_t* payload = nullptr
+argument|uint64_t *payload = nullptr
 argument_list|)
 name|override
 block|{
@@ -175,13 +175,13 @@ block|}
 name|bool
 name|Describe
 argument_list|(
-argument|std::function<void (ObjCLanguageRuntime::ObjCISA)> const&superclass_func
+argument|std::function<void(ObjCLanguageRuntime::ObjCISA)> const&superclass_func
 argument_list|,
-argument|std::function<bool (const char *, const char *)> const&instance_method_func
+argument|std::function<bool(const char *, const char *)> const&instance_method_func
 argument_list|,
-argument|std::function<bool (const char *, const char *)> const&class_method_func
+argument|std::function<bool(const char *, const char *)> const&class_method_func
 argument_list|,
-argument|std::function<bool (const char *, const char *,              lldb::addr_t, uint64_t)> const&ivar_func
+argument|std::function<bool(const char *, const char *, lldb::addr_t,                          uint64_t)> const&ivar_func
 argument_list|)
 specifier|const
 name|override
@@ -309,7 +309,7 @@ name|m_flags
 argument_list|(
 literal|0
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -337,7 +337,7 @@ block|;
 name|m_flags
 operator|=
 literal|0
-block|;         }
+block|;     }
 name|bool
 name|Read
 argument_list|(
@@ -752,7 +752,8 @@ name|m_mutex
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|// The constructor should only be invoked by the runtime as it builds its caches
+comment|// The constructor should only be invoked by the runtime as it builds its
+comment|// caches
 comment|// or populates them.  A ClassDescriptorV2 should only ever exist in a cache.
 name|ClassDescriptorV2
 argument_list|(
@@ -780,11 +781,11 @@ argument_list|)
 operator|,
 name|m_ivars_storage
 argument_list|()
-block|{     }
+block|{}
 name|bool
 name|Read_objc_class
 argument_list|(
-argument|Process* process
+argument|Process *process
 argument_list|,
 argument|std::unique_ptr<objc_class_t>&objc_class
 argument_list|)
@@ -832,7 +833,9 @@ operator|::
 name|addr_t
 name|m_objc_class_ptr
 expr_stmt|;
-comment|// The address of the objc_class_t.  (I.e., objects of this class type have this as their ISA)
+comment|// The address of the objc_class_t.  (I.e.,
+comment|// objects of this class type have this as
+comment|// their ISA)
 name|ConstString
 name|m_name
 decl_stmt|;
@@ -913,7 +916,7 @@ literal|0x0000000000000000FFULL
 operator|)
 operator|>>
 literal|8
-block|;     }
+block|;   }
 name|ClassDescriptorV2Tagged
 argument_list|(
 argument|ObjCLanguageRuntime::ClassDescriptorSP actual_class_sp
@@ -997,7 +1000,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}          ~
+unit|}    ~
 name|ClassDescriptorV2Tagged
 argument_list|()
 end_macro
@@ -1029,8 +1032,10 @@ name|GetSuperclass
 argument_list|()
 name|override
 block|{
-comment|// tagged pointers can represent a class that has a superclass, but since that information is not
-comment|// stored in the object itself, we would have to query the runtime to discover the hierarchy
+comment|// tagged pointers can represent a class that has a superclass, but since
+comment|// that information is not
+comment|// stored in the object itself, we would have to query the runtime to
+comment|// discover the hierarchy
 comment|// for the time being, we skip this step in the interest of static discovery
 return|return
 name|ObjCLanguageRuntime
@@ -1294,7 +1299,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|};      }
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

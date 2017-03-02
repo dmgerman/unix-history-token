@@ -44,18 +44,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cinttypes>
 end_include
 
@@ -63,6 +51,18 @@ begin_include
 include|#
 directive|include
 file|<cstdarg>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_comment
@@ -76,7 +76,11 @@ file|"MIDataTypes.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment

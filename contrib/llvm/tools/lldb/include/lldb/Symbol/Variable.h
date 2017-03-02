@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Variable.h ----------------------------------------------*- C++
-end_comment
-
-begin_comment
-comment|//-*-===//
+comment|//===-- Variable.h -----------------------------------------------*- C++-*-===//
 end_comment
 
 begin_comment
@@ -62,18 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-enumerations.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Mangled.h"
 end_include
 
@@ -99,6 +83,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/Declaration.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -143,7 +139,7 @@ argument|lldb::user_id_t uid
 argument_list|,
 argument|const char *name
 argument_list|,
-argument|const char *mangled
+argument|const char                *mangled
 argument_list|,
 comment|// The mangled or fully qualified name of the variable.
 argument|const lldb::SymbolFileTypeSP&symfile_type_sp
@@ -152,11 +148,11 @@ argument|lldb::ValueType scope
 argument_list|,
 argument|SymbolContextScope *owner_scope
 argument_list|,
-argument|const RangeList& scope_range
+argument|const RangeList&scope_range
 argument_list|,
-argument|Declaration* decl
+argument|Declaration *decl
 argument_list|,
-argument|const DWARFExpression& location
+argument|const DWARFExpression&location
 argument_list|,
 argument|bool external
 argument_list|,
@@ -418,55 +414,55 @@ function_decl|;
 specifier|static
 name|Error
 name|GetValuesForVariableExpressionPath
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|variable_expr_path
-parameter_list|,
+argument_list|,
 name|ExecutionContextScope
-modifier|*
+operator|*
 name|scope
-parameter_list|,
+argument_list|,
 name|GetVariableCallback
 name|callback
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|baton
-parameter_list|,
+argument_list|,
 name|VariableList
-modifier|&
+operator|&
 name|variable_list
-parameter_list|,
+argument_list|,
 name|ValueObjectList
-modifier|&
+operator|&
 name|valobj_list
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|size_t
 name|AutoComplete
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExecutionContext
-modifier|&
+operator|&
 name|exe_ctx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|name
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|word_complete
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|CompilerDeclContext
 name|GetDeclContext
 parameter_list|()
@@ -490,7 +486,8 @@ operator|::
 name|SymbolFileTypeSP
 name|m_symfile_type_sp
 expr_stmt|;
-comment|// The type pointer of the variable (int, struct, class, etc)
+comment|// The type pointer of the variable
+comment|// (int, struct, class, etc)
 name|lldb
 operator|::
 name|ValueType
@@ -505,7 +502,8 @@ comment|// The symbol file scope that this variable was defined in
 name|RangeList
 name|m_scope_range
 decl_stmt|;
-comment|// The list of ranges inside the owner's scope where this variable is valid
+comment|// The list of ranges inside the owner's scope where
+comment|// this variable is valid
 name|Declaration
 name|m_declaration
 decl_stmt|;
@@ -513,7 +511,8 @@ comment|// Declaration location for this item.
 name|DWARFExpression
 name|m_location
 decl_stmt|;
-comment|// The location of this variable that can be fed to DWARFExpression::Evaluate()
+comment|// The location of this variable that can be fed
+comment|// to DWARFExpression::Evaluate()
 name|uint8_t
 name|m_external
 range|:
@@ -524,17 +523,21 @@ name|m_artificial
 range|:
 literal|1
 decl_stmt|,
-comment|// Non-zero if the variable is not explicitly declared in source
+comment|// Non-zero if the variable is not explicitly declared
+comment|// in source
 name|m_loc_is_const_data
 range|:
 literal|1
 decl_stmt|,
-comment|// The m_location expression contains the constant variable value data, not a DWARF location
+comment|// The m_location expression contains the
+comment|// constant variable value data, not a DWARF
+comment|// location
 name|m_static_member
 range|:
 literal|1
 decl_stmt|;
-comment|// Non-zero if variable is static member of a class or struct.
+comment|// Non-zero if variable is static member of a class
+comment|// or struct.
 name|private
 label|:
 name|Variable

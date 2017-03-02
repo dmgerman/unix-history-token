@@ -1181,6 +1181,21 @@ end_function_decl
 
 begin_function_decl
 name|__DEVICE__
+name|long
+name|long
+name|llround
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// No llround(double).
+end_comment
+
+begin_function_decl
+name|__DEVICE__
 name|double
 name|modf
 parameter_list|(
@@ -1292,7 +1307,19 @@ name|nexttoward
 parameter_list|(
 name|float
 parameter_list|,
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__DEVICE__
 name|float
+name|nexttowardf
+parameter_list|(
+name|float
+parameter_list|,
+name|double
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1646,11 +1673,44 @@ name|float
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|// We need to define these overloads in exactly the namespace our standard
+end_comment
+
+begin_comment
+comment|// library uses (including the right inline namespace), otherwise they won't be
+end_comment
+
+begin_comment
+comment|// picked up by other functions in the standard library (e.g. functions in
+end_comment
+
+begin_comment
+comment|//<complex>).  Thus the ugliness below.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LIBCPP_BEGIN_NAMESPACE_STD
+end_ifdef
 
 begin_decl_stmt
+name|_LIBCPP_BEGIN_NAMESPACE_STD
+else|#
+directive|else
 name|namespace
 name|std
 block|{
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_BEGIN_NAMESPACE_VERSION
+name|_GLIBCXX_BEGIN_NAMESPACE_VERSION
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|using
 operator|::
 name|abs
@@ -1857,6 +1917,10 @@ name|lround
 expr_stmt|;
 name|using
 operator|::
+name|llround
+expr_stmt|;
+name|using
+operator|::
 name|modf
 expr_stmt|;
 name|using
@@ -1939,12 +2003,29 @@ name|using
 operator|::
 name|trunc
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_LIBCPP_END_NAMESPACE_STD
+name|_LIBCPP_END_NAMESPACE_STD
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_BEGIN_NAMESPACE_VERSION
+name|_GLIBCXX_END_NAMESPACE_VERSION
+endif|#
+directive|endif
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// namespace std
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_pragma
 pragma|#

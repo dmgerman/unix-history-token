@@ -106,9 +106,7 @@ name|class
 name|LinkingSymbolResolver
 range|:
 name|public
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 block|{
 name|public
 operator|:
@@ -122,9 +120,7 @@ name|std
 operator|::
 name|shared_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|Resolver
 argument_list|)
@@ -139,9 +135,7 @@ argument_list|(
 argument|std::move(Resolver)
 argument_list|)
 block|{}
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbol
 argument_list|(
 argument|const std::string&Name
@@ -149,9 +143,7 @@ argument_list|)
 name|override
 block|;
 comment|// MCJIT doesn't support logical dylibs.
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbolInLogicalDylib
 argument_list|(
 argument|const std::string&Name
@@ -172,9 +164,7 @@ name|std
 operator|::
 name|shared_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|ClientResolver
 block|; }
@@ -234,9 +224,7 @@ name|std
 operator|::
 name|shared_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|Resolver
 argument_list|)
@@ -813,7 +801,7 @@ name|Function
 operator|*
 name|FindFunctionNamedInModulePtrSet
 argument_list|(
-argument|const char *FnName
+argument|StringRef FnName
 argument_list|,
 argument|ModulePtrSet::iterator I
 argument_list|,
@@ -824,7 +812,7 @@ name|GlobalVariable
 operator|*
 name|FindGlobalVariableNamedInModulePtrSet
 argument_list|(
-argument|const char *Name
+argument|StringRef Name
 argument_list|,
 argument|bool AllowInternal
 argument_list|,
@@ -894,7 +882,7 @@ name|Function
 operator|*
 name|FindFunctionNamed
 argument_list|(
-argument|const char *FnName
+argument|StringRef FnName
 argument_list|)
 name|override
 block|;
@@ -905,7 +893,7 @@ name|GlobalVariable
 operator|*
 name|FindGlobalVariableNamed
 argument_list|(
-argument|const char *Name
+argument|StringRef Name
 argument_list|,
 argument|bool AllowInternal = false
 argument_list|)
@@ -1121,9 +1109,7 @@ name|std
 operator|::
 name|shared_ptr
 operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|>
 name|Resolver
 argument_list|,
@@ -1137,9 +1123,9 @@ name|TM
 argument_list|)
 block|;
 comment|// @}
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+comment|// Takes a mangled name and returns the corresponding JITSymbol (if a
+comment|// definition of that mangled name has been added to the JIT).
+name|JITSymbol
 name|findSymbol
 argument_list|(
 argument|const std::string&Name
@@ -1148,8 +1134,12 @@ argument|bool CheckFunctionsOnly
 argument_list|)
 block|;
 comment|// DEPRECATED - Please use findSymbol instead.
+comment|//
 comment|// This is not directly exposed via the ExecutionEngine API, but it is
 comment|// used by the LinkingMemoryManager.
+comment|//
+comment|// getSymbolAddress takes an unmangled name and returns the corresponding
+comment|// JITSymbol if a definition of the name has been added to the JIT.
 name|uint64_t
 name|getSymbolAddress
 argument_list|(
@@ -1207,9 +1197,7 @@ operator|&
 name|Obj
 argument_list|)
 block|;
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findExistingSymbol
 argument_list|(
 specifier|const

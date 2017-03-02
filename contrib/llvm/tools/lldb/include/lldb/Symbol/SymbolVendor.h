@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ModuleChild.h"
 end_include
 
@@ -77,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/TypeMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -666,7 +666,10 @@ operator|::
 name|ObjectFileSP
 name|m_objfile_sp
 expr_stmt|;
-comment|// Keep a reference to the object file in case it isn't the same as the module object file (debug symbols in a separate file)
+comment|// Keep a reference to the object file in
+comment|// case it isn't the same as the module
+comment|// object file (debug symbols in a separate
+comment|// file)
 name|std
 operator|::
 name|unique_ptr
@@ -675,7 +678,8 @@ name|SymbolFile
 operator|>
 name|m_sym_file_ap
 expr_stmt|;
-comment|// A single symbol file. Subclasses can add more of these if needed.
+comment|// A single symbol file. Subclasses
+comment|// can add more of these if needed.
 name|private
 label|:
 comment|//------------------------------------------------------------------

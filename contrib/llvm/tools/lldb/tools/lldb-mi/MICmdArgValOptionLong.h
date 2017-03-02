@@ -64,7 +64,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -80,7 +84,11 @@ comment|//          An argument knows what type of argument it is and how it is 
 end_comment
 
 begin_comment
-comment|//          interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a
+end_comment
+
+begin_comment
+comment|//          matching
 end_comment
 
 begin_comment
@@ -88,11 +96,19 @@ comment|//          argument and so extract a value from it.
 end_comment
 
 begin_comment
-comment|//          If *this argument has expected options following it the option objects
+comment|//          If *this argument has expected options following it the option
 end_comment
 
 begin_comment
-comment|//          created to hold each of those option's values belong to *this argument
+comment|//          objects
+end_comment
+
+begin_comment
+comment|//          created to hold each of those option's values belong to *this
+end_comment
+
+begin_comment
+comment|//          argument
 end_comment
 
 begin_comment
@@ -236,25 +252,36 @@ operator|:
 name|MIuint
 name|m_nExpectingNOptions
 block|;
-comment|// The number of options expected to read following *this argument
+comment|// The number of options expected to read
+comment|// following *this argument
 name|VecArgObjPtr_t
 name|m_vecArgsExpected
 block|;
-comment|// The option objects holding the value extracted following *this argument
+comment|// The option objects holding the value
+comment|// extracted following *this argument
 name|ArgValType_e
 name|m_eExpectingOptionType
 block|;
-comment|// The type of options expected to read following *this argument
+comment|// The type of options expected to read
+comment|// following *this argument
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Retrieve the first argument or option value from the list of 1 or more options
+comment|//------------------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|// Details: Retrieve the first argument or option value from the list of 1 or
+end_comment
+
+begin_comment
+comment|// more options
 end_comment
 
 begin_comment
@@ -270,7 +297,11 @@ comment|// Args:    vrwValue    - (W) Templated type return value.
 end_comment
 
 begin_comment
-comment|//          T1          - The argument value's class type of the data hold in the list of options.
+comment|//          T1          - The argument value's class type of the data hold in
+end_comment
+
+begin_comment
+comment|//          the list of options.
 end_comment
 
 begin_comment

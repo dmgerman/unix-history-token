@@ -70,8 +70,10 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class BreakpointResolverFileLine BreakpointResolverFileLine.h "lldb/Breakpoint/BreakpointResolverFileLine.h"
-comment|/// @brief This class sets breakpoints by file and line.  Optionally, it will look for inlined
+comment|/// @class BreakpointResolverFileLine BreakpointResolverFileLine.h
+comment|/// "lldb/Breakpoint/BreakpointResolverFileLine.h"
+comment|/// @brief This class sets breakpoints by file and line.  Optionally, it will
+comment|/// look for inlined
 comment|/// instances of the file and line specification.
 comment|//----------------------------------------------------------------------
 name|class
@@ -98,6 +100,34 @@ argument|bool skip_prologue
 argument_list|,
 argument|bool exact_match
 argument_list|)
+block|;
+specifier|static
+name|BreakpointResolver
+operator|*
+name|CreateFromStructuredData
+argument_list|(
+name|Breakpoint
+operator|*
+name|bkpt
+argument_list|,
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|data_dict
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
+name|override
 block|;
 operator|~
 name|BreakpointResolverFileLine
@@ -199,7 +229,8 @@ comment|// This is the line number that we are looking for.
 name|bool
 name|m_inlines
 block|;
-comment|// This determines whether the resolver looks for inlined functions or not.
+comment|// This determines whether the resolver looks for inlined
+comment|// functions or not.
 name|bool
 name|m_skip_prologue
 block|;

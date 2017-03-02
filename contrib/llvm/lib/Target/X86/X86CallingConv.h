@@ -85,9 +85,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-specifier|inline
+comment|/// When regcall calling convention compiled to 32 bit arch, special treatment
+comment|/// is required for 64 bit masks.
+comment|/// The value should be assigned to two GPRs.
+comment|/// \return true if registers were allocated and false otherwise.
 name|bool
-name|CC_X86_32_VectorCallIndirect
+name|CC_X86_32_RegCall_Assign2Regs
 argument_list|(
 name|unsigned
 operator|&
@@ -117,30 +120,82 @@ name|CCState
 operator|&
 name|State
 argument_list|)
-block|{
-comment|// Similar to CCPassIndirect, with the addition of inreg.
-name|LocVT
-operator|=
+decl_stmt|;
+comment|/// Vectorcall calling convention has special handling for vector types or
+comment|/// HVA for 64 bit arch.
+comment|/// For HVAs shadow registers might be allocated on the first pass
+comment|/// and actual XMM registers are allocated on the second pass.
+comment|/// For vector types, actual XMM registers are allocated on the first pass.
+comment|/// \return true if registers were allocated and false otherwise.
+name|bool
+name|CC_X86_64_VectorCall
+argument_list|(
+name|unsigned
+operator|&
+name|ValNo
+argument_list|,
 name|MVT
-operator|::
-name|i32
-expr_stmt|;
-name|LocInfo
-operator|=
+operator|&
+name|ValVT
+argument_list|,
+name|MVT
+operator|&
+name|LocVT
+argument_list|,
 name|CCValAssign
 operator|::
-name|Indirect
-expr_stmt|;
+name|LocInfo
+operator|&
+name|LocInfo
+argument_list|,
+name|ISD
+operator|::
+name|ArgFlagsTy
+operator|&
 name|ArgFlags
-operator|.
-name|setInReg
-argument_list|()
-expr_stmt|;
-return|return
-name|false
-return|;
-comment|// Continue the search, but now for i32.
-block|}
+argument_list|,
+name|CCState
+operator|&
+name|State
+argument_list|)
+decl_stmt|;
+comment|/// Vectorcall calling convention has special handling for vector types or
+comment|/// HVA for 32 bit arch.
+comment|/// For HVAs actual XMM registers are allocated on the second pass.
+comment|/// For vector types, actual XMM registers are allocated on the first pass.
+comment|/// \return true if registers were allocated and false otherwise.
+name|bool
+name|CC_X86_32_VectorCall
+argument_list|(
+name|unsigned
+operator|&
+name|ValNo
+argument_list|,
+name|MVT
+operator|&
+name|ValVT
+argument_list|,
+name|MVT
+operator|&
+name|LocVT
+argument_list|,
+name|CCValAssign
+operator|::
+name|LocInfo
+operator|&
+name|LocInfo
+argument_list|,
+name|ISD
+operator|::
+name|ArgFlagsTy
+operator|&
+name|ArgFlags
+argument_list|,
+name|CCState
+operator|&
+name|State
+argument_list|)
+decl_stmt|;
 specifier|inline
 name|bool
 name|CC_X86_AnyReg_Error

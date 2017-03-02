@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/RangeMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/RangeMap.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -284,11 +284,14 @@ expr_stmt|;
 name|BlockMap
 name|m_L1_cache
 decl_stmt|;
-comment|// A first level memory cache whose chunk sizes vary that will be used only if the memory read fits entirely in a chunk
+comment|// A first level memory cache whose chunk sizes vary that
+comment|// will be used only if the memory read fits entirely in
+comment|// a chunk
 name|BlockMap
 name|m_L2_cache
 decl_stmt|;
-comment|// A memory cache of fixed size chinks (m_L2_cache_line_byte_size bytes in size each)
+comment|// A memory cache of fixed size chinks
+comment|// (m_L2_cache_line_byte_size bytes in size each)
 name|InvalidRanges
 name|m_invalid_ranges
 decl_stmt|;
@@ -460,12 +463,14 @@ specifier|const
 name|uint32_t
 name|m_permissions
 decl_stmt|;
-comment|// Permissions for this memory (logical OR of lldb::Permissions bits)
+comment|// Permissions for this memory (logical OR of
+comment|// lldb::Permissions bits)
 specifier|const
 name|uint32_t
 name|m_chunk_size
 decl_stmt|;
-comment|// The size of chunks that the memory at m_addr is divied up into
+comment|// The size of chunks that the memory at m_addr
+comment|// is divied up into
 typedef|typedef
 name|std
 operator|::

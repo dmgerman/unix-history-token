@@ -102,10 +102,6 @@ name|MCContext
 operator|&
 name|CTX
 argument_list|,
-name|Mangler
-operator|&
-comment|/*Mang*/
-argument_list|,
 name|AsmPrinter
 operator|&
 name|AP

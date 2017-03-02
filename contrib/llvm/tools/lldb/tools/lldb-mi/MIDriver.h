@@ -54,13 +54,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MICmnConfig.h"
+file|"MICmdData.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"MICmnBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmnConfig.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MICmnStreamStdin.h"
 end_include
 
 begin_include
@@ -73,18 +85,6 @@ begin_include
 include|#
 directive|include
 file|"MIDriverMgr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MICmnStreamStdin.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MICmdData.h"
 end_include
 
 begin_include
@@ -110,7 +110,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -199,13 +203,16 @@ block|,
 comment|// The MI Driver is setting itself up
 name|eDriverState_RunningNotDebugging
 block|,
-comment|// The MI Driver is operational acting on any MI commands sent to it
+comment|// The MI Driver is operational acting on
+comment|// any MI commands sent to it
 name|eDriverState_RunningDebugging
 block|,
-comment|// The MI Driver is currently overseeing an inferior program that is running
+comment|// The MI Driver is currently overseeing an
+comment|// inferior program that is running
 name|eDriverState_ShuttingDown
 block|,
-comment|// The MI Driver is tearing down resources and about exit
+comment|// The MI Driver is tearing down resources and
+comment|// about exit
 name|eDriverState_count
 comment|// Always last
 block|}
@@ -638,14 +645,16 @@ comment|//
 name|bool
 name|m_bFallThruToOtherDriverEnabled
 decl_stmt|;
-comment|// True = yes fall through, false = do not pass on command
+comment|// True = yes fall through, false = do
+comment|// not pass on command
 name|CMIUtilThreadMutex
 name|m_threadMutex
 decl_stmt|;
 name|bool
 name|m_bDriverIsExiting
 decl_stmt|;
-comment|// True = yes, driver told to quit, false = continue working
+comment|// True = yes, driver told to quit, false = continue
+comment|// working
 name|void
 modifier|*
 name|m_handleMainThread
@@ -669,19 +678,26 @@ decl_stmt|;
 name|bool
 name|m_bHaveExecutableFileNamePathOnCmdLine
 decl_stmt|;
-comment|// True = yes, executable given as one of the parameters to the MI Driver, false = not found
+comment|// True = yes, executable given
+comment|// as one of the parameters to
+comment|// the MI Driver, false = not
+comment|// found
 name|CMIUtilString
 name|m_strCmdLineArgExecuteableFileNamePath
 decl_stmt|;
 name|bool
 name|m_bDriverDebuggingArgExecutable
 decl_stmt|;
-comment|// True = the MI Driver (MI mode) is debugging executable passed as argument,
+comment|// True = the MI Driver (MI mode) is
+comment|// debugging executable passed as
+comment|// argument,
 comment|// false = running via a client (e.g. Eclipse)
 name|bool
 name|m_bHaveCommandFileNamePathOnCmdLine
 decl_stmt|;
-comment|// True = file with initial commands given as one of the parameters to the MI Driver, false = not found
+comment|// True = file with initial commands
+comment|// given as one of the parameters to
+comment|// the MI Driver, false = not found
 name|CMIUtilString
 name|m_strCmdLineArgCommandFileNamePath
 decl_stmt|;

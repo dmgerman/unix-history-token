@@ -531,7 +531,7 @@ modifier|&
 name|CGM
 decl_stmt|;
 comment|/// \brief Creates offloading entry for the provided entry ID \a ID,
-comment|/// address \a Addr and size \a Size.
+comment|/// address \a Addr, size \a Size, and flags \a Flags.
 name|virtual
 name|void
 name|createOffloadEntry
@@ -550,6 +550,11 @@ name|Addr
 argument_list|,
 name|uint64_t
 name|Size
+argument_list|,
+name|int32_t
+name|Flags
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// \brief Helper to emit outlined function for 'target' directive.
@@ -596,6 +601,87 @@ operator|&
 name|CodeGen
 argument_list|)
 decl_stmt|;
+comment|/// \brief Emits code for OpenMP 'if' clause using specified \a CodeGen
+comment|/// function. Here is the logic:
+comment|/// if (Cond) {
+comment|///   ThenGen();
+comment|/// } else {
+comment|///   ElseGen();
+comment|/// }
+name|void
+name|emitOMPIfClause
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|Cond
+parameter_list|,
+specifier|const
+name|RegionCodeGenTy
+modifier|&
+name|ThenGen
+parameter_list|,
+specifier|const
+name|RegionCodeGenTy
+modifier|&
+name|ElseGen
+parameter_list|)
+function_decl|;
+comment|/// \brief Emits object of ident_t type with info for source location.
+comment|/// \param Flags Flags for OpenMP location.
+comment|///
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitUpdateLocation
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|unsigned Flags =
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/// \brief Returns pointer to ident_t type.
+name|llvm
+operator|::
+name|Type
+operator|*
+name|getIdentTyPointerTy
+argument_list|()
+expr_stmt|;
+comment|/// \brief Gets thread id value for the current thread.
+comment|///
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getThreadID
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+expr_stmt|;
+comment|/// \brief Get the function name of an outlined region.
+comment|//  The name can be customized depending on the target.
+comment|//
+name|virtual
+name|StringRef
+name|getOutlinedHelperName
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|".omp_outlined."
+return|;
+block|}
 name|private
 label|:
 comment|/// \brief Default const ident_t object used for initialization of all other
@@ -907,13 +993,13 @@ name|OffloadingEntriesNum
 decl_stmt|;
 name|public
 label|:
-comment|/// \brief Base class of the entries info.
+comment|/// Base class of the entries info.
 name|class
 name|OffloadEntryInfo
 block|{
 name|public
 label|:
-comment|/// \brief Kind of a given entry. Currently, only target regions are
+comment|/// Kind of a given entry. Currently, only target regions are
 comment|/// supported.
 enum|enum
 name|OffloadingEntryInfoKinds
@@ -935,6 +1021,11 @@ enum|;
 name|OffloadEntryInfo
 argument_list|()
 operator|:
+name|Flags
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Order
 argument_list|(
 operator|~
@@ -952,8 +1043,15 @@ argument_list|(
 argument|OffloadingEntryInfoKinds Kind
 argument_list|,
 argument|unsigned Order
+argument_list|,
+argument|int32_t Flags
 argument_list|)
 operator|:
+name|Flags
+argument_list|(
+name|Flags
+argument_list|)
+operator|,
 name|Order
 argument_list|(
 name|Order
@@ -994,6 +1092,27 @@ return|return
 name|Kind
 return|;
 block|}
+name|int32_t
+name|getFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+return|;
+block|}
+name|void
+name|setFlags
+parameter_list|(
+name|int32_t
+name|NewFlags
+parameter_list|)
+block|{
+name|Flags
+operator|=
+name|NewFlags
+expr_stmt|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -1008,9 +1127,13 @@ return|return
 name|true
 return|;
 block|}
-name|protected
+name|private
 label|:
-comment|// \brief Order this entry was emitted.
+comment|/// Flags associated with the device global.
+name|int32_t
+name|Flags
+decl_stmt|;
+comment|/// Order this entry was emitted.
 name|unsigned
 name|Order
 decl_stmt|;
@@ -1087,6 +1210,9 @@ name|OFFLOAD_ENTRY_INFO_TARGET_REGION
 argument_list|,
 operator|~
 literal|0u
+argument_list|,
+comment|/*Flags=*/
+literal|0
 argument_list|)
 block|,
 name|Addr
@@ -1107,6 +1233,8 @@ argument_list|,
 argument|llvm::Constant *Addr
 argument_list|,
 argument|llvm::Constant *ID
+argument_list|,
+argument|int32_t Flags
 argument_list|)
 operator|:
 name|OffloadEntryInfo
@@ -1114,6 +1242,8 @@ argument_list|(
 name|OFFLOAD_ENTRY_INFO_TARGET_REGION
 argument_list|,
 name|Order
+argument_list|,
+name|Flags
 argument_list|)
 block|,
 name|Addr
@@ -1234,6 +1364,8 @@ argument_list|,
 argument|llvm::Constant *Addr
 argument_list|,
 argument|llvm::Constant *ID
+argument_list|,
+argument|int32_t Flags
 argument_list|)
 block|;
 comment|/// \brief Return true if a target region entry with the provided
@@ -1400,31 +1532,6 @@ name|QualType
 name|KmpInt32Ty
 parameter_list|)
 function_decl|;
-comment|/// \brief Emits object of ident_t type with info for source location.
-comment|/// \param Flags Flags for OpenMP location.
-comment|///
-name|llvm
-operator|::
-name|Value
-operator|*
-name|emitUpdateLocation
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|SourceLocation Loc
-argument_list|,
-argument|unsigned Flags =
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/// \brief Returns pointer to ident_t type.
-name|llvm
-operator|::
-name|Type
-operator|*
-name|getIdentTyPointerTy
-argument_list|()
-expr_stmt|;
 comment|/// \brief Returns pointer to kmpc_micro type.
 name|llvm
 operator|::
@@ -1528,19 +1635,6 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief Gets thread id value for the current thread.
-comment|///
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getThreadID
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-expr_stmt|;
 comment|/// \brief Gets (if variable with the given name already exist) or creates
 comment|/// internal global variable with the specified Name. The created variable has
 comment|/// linkage CommonLinkage by default and is initialized by null value.
@@ -3034,13 +3128,151 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
+comment|/// Struct that keeps all the relevant information that should be kept
+comment|/// throughout a 'target data' region.
+name|class
+name|TargetDataInfo
+block|{
+comment|/// Set to true if device pointer information have to be obtained.
+name|bool
+name|RequiresDevicePointerInfo
+init|=
+name|false
+decl_stmt|;
+name|public
+label|:
+comment|/// The array of base pointer passed to the runtime library.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|BasePointersArray
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// The array of section pointers passed to the runtime library.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|PointersArray
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// The array of sizes passed to the runtime library.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SizesArray
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// The array of map types passed to the runtime library.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|MapTypesArray
+operator|=
+name|nullptr
+expr_stmt|;
+comment|/// The total number of pointers passed to the runtime library.
+name|unsigned
+name|NumberOfPtrs
+init|=
+literal|0u
+decl_stmt|;
+comment|/// Map between the a declaration of a capture and the corresponding base
+comment|/// pointer address where the runtime returns the device pointers.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|ValueDecl
+operator|*
+operator|,
+name|Address
+operator|>
+name|CaptureDeviceAddrMap
+expr_stmt|;
+name|explicit
+name|TargetDataInfo
+parameter_list|()
+block|{}
+name|explicit
+name|TargetDataInfo
+argument_list|(
+argument|bool RequiresDevicePointerInfo
+argument_list|)
+block|:
+name|RequiresDevicePointerInfo
+argument_list|(
+argument|RequiresDevicePointerInfo
+argument_list|)
+block|{}
+comment|/// Clear information about the data arrays.
+name|void
+name|clearArrayInfo
+parameter_list|()
+block|{
+name|BasePointersArray
+operator|=
+name|nullptr
+expr_stmt|;
+name|PointersArray
+operator|=
+name|nullptr
+expr_stmt|;
+name|SizesArray
+operator|=
+name|nullptr
+expr_stmt|;
+name|MapTypesArray
+operator|=
+name|nullptr
+expr_stmt|;
+name|NumberOfPtrs
+operator|=
+literal|0u
+expr_stmt|;
+block|}
+comment|/// Return true if the current target data information has valid arrays.
+name|bool
+name|isValid
+parameter_list|()
+block|{
+return|return
+name|BasePointersArray
+operator|&&
+name|PointersArray
+operator|&&
+name|SizesArray
+operator|&&
+name|MapTypesArray
+operator|&&
+name|NumberOfPtrs
+return|;
+block|}
+name|bool
+name|requiresDevicePointerInfo
+parameter_list|()
+block|{
+return|return
+name|RequiresDevicePointerInfo
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief Emit the target data mapping code associated with \a D.
 comment|/// \param D Directive to emit.
-comment|/// \param IfCond Expression evaluated in if clause associated with the target
-comment|/// directive, or null if no if clause is used.
+comment|/// \param IfCond Expression evaluated in if clause associated with the
+comment|/// target directive, or null if no device clause is used.
 comment|/// \param Device Expression evaluated in device clause associated with the
 comment|/// target directive, or null if no device clause is used.
-comment|/// \param CodeGen Function that emits the enclosed region.
+comment|/// \param Info A record used to store information that needs to be preserved
+comment|/// until the region is closed.
 name|virtual
 name|void
 name|emitTargetDataCalls
@@ -3068,6 +3300,10 @@ specifier|const
 name|RegionCodeGenTy
 modifier|&
 name|CodeGen
+parameter_list|,
+name|TargetDataInfo
+modifier|&
+name|Info
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit the data mapping/movement code associated with the directive

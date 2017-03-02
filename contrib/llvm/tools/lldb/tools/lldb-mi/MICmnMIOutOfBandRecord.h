@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MIUtilString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MICmnMIValueConst.h"
 end_include
 
@@ -65,12 +59,26 @@ directive|include
 file|"MICmnMIValueResult.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MIUtilString.h"
+end_include
+
 begin_comment
-comment|//++ ============================================================================
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: MI common code MI Out-of-band (Async) Record class. A class that encapsulates
+comment|//============================================================================
+end_comment
+
+begin_comment
+comment|// Details: MI common code MI Out-of-band (Async) Record class. A class that
+end_comment
+
+begin_comment
+comment|// encapsulates
 end_comment
 
 begin_comment
@@ -78,15 +86,27 @@ comment|//          MI result record data and the forming/format of data added t
 end_comment
 
 begin_comment
-comment|//          Out-of-band records are used to notify the GDB/MI client of additional
+comment|//          Out-of-band records are used to notify the GDB/MI client of
 end_comment
 
 begin_comment
-comment|//          changes that have occurred. Those changes can either be a consequence
+comment|//          additional
 end_comment
 
 begin_comment
-comment|//          of GDB/MI (e.g., a breakpoint modified) or a result of target activity
+comment|//          changes that have occurred. Those changes can either be a
+end_comment
+
+begin_comment
+comment|//          consequence
+end_comment
+
+begin_comment
+comment|//          of GDB/MI (e.g., a breakpoint modified) or a result of target
+end_comment
+
+begin_comment
+comment|//          activity
 end_comment
 
 begin_comment
@@ -114,15 +134,27 @@ comment|//          The Out-of-band record can be retrieve at any time *this obj
 end_comment
 
 begin_comment
-comment|//          instantiated so unless work is done on *this Out-of-band record then it is
+comment|//          instantiated so unless work is done on *this Out-of-band record then
 end_comment
 
 begin_comment
-comment|//          possible to return a malformed Out-of-band record. If nothing has been set
+comment|//          it is
 end_comment
 
 begin_comment
-comment|//          or added to *this MI Out-of-band record object then text "<Invalid>" will
+comment|//          possible to return a malformed Out-of-band record. If nothing has
+end_comment
+
+begin_comment
+comment|//          been set
+end_comment
+
+begin_comment
+comment|//          or added to *this MI Out-of-band record object then text "<Invalid>"
+end_comment
+
+begin_comment
+comment|//          will
 end_comment
 
 begin_comment
@@ -156,7 +188,8 @@ comment|// Enumerations:
 name|public
 operator|:
 comment|//++
-comment|// Details: Enumeration of the type of Out-of-band for *this Out-of-band record
+comment|// Details: Enumeration of the type of Out-of-band for *this Out-of-band
+comment|// record
 comment|//--
 expr|enum
 name|OutOfBand_e
@@ -192,6 +225,10 @@ block|,
 name|eOutOfBand_TargetModuleUnloaded
 block|,
 name|eOutOfBand_TargetStreamOutput
+block|,
+name|eOutOfBand_ConsoleStreamOutput
+block|,
+name|eOutOfBand_LogStreamOutput
 block|}
 block|;
 comment|// Methods:

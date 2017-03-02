@@ -81,6 +81,9 @@ name|class
 name|NativeThreadProtocol
 decl_stmt|;
 name|class
+name|ResumeActionList
+decl_stmt|;
+name|class
 name|UnixSignals
 decl_stmt|;
 comment|// ---------------------------------------------------------------

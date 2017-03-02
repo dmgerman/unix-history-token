@@ -233,10 +233,6 @@ comment|/// \brief The number of lines that weren't executed.
 name|size_t
 name|NotCovered
 decl_stmt|;
-comment|/// \brief The number of lines that aren't code.
-name|size_t
-name|NonCodeLines
-decl_stmt|;
 comment|/// \brief The total number of lines in a function/file.
 name|size_t
 name|NumLines
@@ -254,11 +250,6 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|NonCodeLines
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|NumLines
 argument_list|(
 literal|0
@@ -267,8 +258,6 @@ block|{}
 name|LineCoverageInfo
 argument_list|(
 argument|size_t Covered
-argument_list|,
-argument|size_t NumNonCodeLines
 argument_list|,
 argument|size_t NumLines
 argument_list|)
@@ -282,14 +271,7 @@ name|NotCovered
 argument_list|(
 name|NumLines
 operator|-
-name|NumNonCodeLines
-operator|-
 name|Covered
-argument_list|)
-operator|,
-name|NonCodeLines
-argument_list|(
-name|NumNonCodeLines
 argument_list|)
 operator|,
 name|NumLines
@@ -320,12 +302,6 @@ name|RHS
 operator|.
 name|NotCovered
 block|;
-name|NonCodeLines
-operator|+=
-name|RHS
-operator|.
-name|NonCodeLines
-block|;
 name|NumLines
 operator|+=
 name|RHS
@@ -345,11 +321,7 @@ block|{
 return|return
 name|Covered
 operator|==
-operator|(
 name|NumLines
-operator|-
-name|NonCodeLines
-operator|)
 return|;
 block|}
 name|double
@@ -360,8 +332,6 @@ block|{
 if|if
 condition|(
 name|NumLines
-operator|-
-name|NonCodeLines
 operator|==
 literal|0
 condition|)
@@ -377,8 +347,6 @@ operator|/
 name|double
 argument_list|(
 name|NumLines
-operator|-
-name|NonCodeLines
 argument_list|)
 operator|*
 literal|100.0
@@ -572,6 +540,17 @@ operator|&
 name|Function
 argument_list|)
 expr_stmt|;
+comment|/// \brief Update the summary with information from another instantiation
+comment|/// of this function.
+name|void
+name|update
+parameter_list|(
+specifier|const
+name|FunctionCoverageSummary
+modifier|&
+name|Summary
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -595,6 +574,9 @@ name|LineCoverage
 decl_stmt|;
 name|FunctionCoverageInfo
 name|FunctionCoverage
+decl_stmt|;
+name|FunctionCoverageInfo
+name|InstantiationCoverage
 decl_stmt|;
 name|FileCoverageSummary
 argument_list|(
@@ -628,6 +610,28 @@ operator|.
 name|LineCoverage
 expr_stmt|;
 name|FunctionCoverage
+operator|.
+name|addFunction
+argument_list|(
+comment|/*Covered=*/
+name|Function
+operator|.
+name|ExecutionCount
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|addInstantiation
+parameter_list|(
+specifier|const
+name|FunctionCoverageSummary
+modifier|&
+name|Function
+parameter_list|)
+block|{
+name|InstantiationCoverage
 operator|.
 name|addFunction
 argument_list|(

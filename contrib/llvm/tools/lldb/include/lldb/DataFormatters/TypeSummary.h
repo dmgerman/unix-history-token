@@ -86,13 +86,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_include
@@ -1103,8 +1103,10 @@ name|value
 argument_list|)
 expr_stmt|;
 block|}
-comment|// we are using a ValueObject* instead of a ValueObjectSP because we do not need to hold on to this for
-comment|// extended periods of time and we trust the ValueObject to stay around for as long as it is required
+comment|// we are using a ValueObject* instead of a ValueObjectSP because we do not
+comment|// need to hold on to this for
+comment|// extended periods of time and we trust the ValueObject to stay around for as
+comment|// long as it is required
 comment|// for us to generate its summary
 name|virtual
 name|bool
@@ -1167,7 +1169,7 @@ name|TypeSummaryImpl
 argument_list|(
 argument|Kind kind
 argument_list|,
-argument|const TypeSummaryImpl::Flags& flags
+argument|const TypeSummaryImpl::Flags&flags
 argument_list|)
 empty_stmt|;
 name|private
@@ -1261,9 +1263,9 @@ name|FormatObject
 argument_list|(
 argument|ValueObject *valobj
 argument_list|,
-argument|std::string& dest
+argument|std::string&dest
 argument_list|,
-argument|const TypeSummaryOptions& options
+argument|const TypeSummaryOptions&options
 argument_list|)
 name|override
 block|;
@@ -1278,7 +1280,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const TypeSummaryImpl* S
+argument|const TypeSummaryImpl *S
 argument_list|)
 block|{
 return|return
@@ -1298,7 +1300,7 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|StringSummaryFormat
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -1351,11 +1353,11 @@ end_expr_stmt
 begin_macro
 name|CXXFunctionSummaryFormat
 argument_list|(
-argument|const TypeSummaryImpl::Flags& flags
+argument|const TypeSummaryImpl::Flags&flags
 argument_list|,
 argument|Callback impl
 argument_list|,
-argument|const char* description
+argument|const char *description
 argument_list|)
 end_macro
 
@@ -1616,7 +1618,7 @@ block|}
 name|void
 name|SetFunctionName
 argument_list|(
-argument|const char* function_name
+argument|const char *function_name
 argument_list|)
 block|{
 if|if
@@ -1640,11 +1642,11 @@ name|m_python_script
 operator|.
 name|clear
 argument_list|()
-block|;         }
+block|;   }
 name|void
 name|SetPythonScript
 argument_list|(
-argument|const char* script
+argument|const char *script
 argument_list|)
 block|{
 if|if

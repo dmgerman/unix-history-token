@@ -64,7 +64,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -153,7 +157,8 @@ decl_stmt|;
 name|bool
 name|m_bInitialized
 decl_stmt|;
-comment|// True = yes successfully initialized, false = no yet or failed
+comment|// True = yes successfully initialized, false = no yet or
+comment|// failed
 name|CMICmnLog
 modifier|*
 name|m_pLog
@@ -162,7 +167,8 @@ comment|// Allow all derived classes to use the logger
 name|MIint
 name|m_clientUsageRefCnt
 decl_stmt|;
-comment|// Count of client using *this object so not shutdown() object to early
+comment|// Count of client using *this object so not
+comment|// shutdown() object to early
 block|}
 end_decl_stmt
 

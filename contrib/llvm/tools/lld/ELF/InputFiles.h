@@ -76,6 +76,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lld/Core/Reproduce.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/CachedHashString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
@@ -112,19 +124,54 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/StringSaver.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<map>
 end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|class
+name|DWARFDebugLine
+decl_stmt|;
+name|class
+name|TarWriter
+decl_stmt|;
+name|namespace
+name|lto
+block|{
+name|class
+name|InputFile
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|lld
 block|{
+name|namespace
+name|elf
+block|{
+name|class
+name|InputFile
+decl_stmt|;
+block|}
+comment|// Returns "(internal)", "foo.a(bar.o)" or "baz.o".
+name|std
+operator|::
+name|string
+name|toString
+argument_list|(
+specifier|const
+name|elf
+operator|::
+name|InputFile
+operator|*
+name|F
+argument_list|)
+expr_stmt|;
 name|namespace
 name|elf
 block|{
@@ -136,14 +183,26 @@ operator|::
 name|Archive
 expr_stmt|;
 name|class
-name|InputFile
-decl_stmt|;
-name|class
 name|Lazy
 decl_stmt|;
 name|class
 name|SymbolBody
 decl_stmt|;
+comment|// If -reproduce option is given, all input files are written
+comment|// to this tar archive.
+extern|extern llvm::TarWriter *Tar;
+comment|// Opens a given file.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|MemoryBufferRef
+operator|>
+name|readFile
+argument_list|(
+argument|StringRef Path
+argument_list|)
+expr_stmt|;
 comment|// The root class of input files.
 name|class
 name|InputFile
@@ -162,6 +221,8 @@ block|,
 name|ArchiveKind
 block|,
 name|BitcodeKind
+block|,
+name|BinaryKind
 block|,   }
 enum|;
 name|Kind
@@ -194,6 +255,13 @@ comment|// string for creating error messages.
 name|StringRef
 name|ArchiveName
 decl_stmt|;
+comment|// If this file is in an archive, the member contains the offset of
+comment|// the file in the archive. Otherwise, it's just zero. We store this
+comment|// field so that we can pass it to lib/LTO in order to disambiguate
+comment|// between objects.
+name|uint64_t
+name|OffsetInArchive
+decl_stmt|;
 comment|// If this is an architecture-specific file, the following members
 comment|// have ELF type (i.e. ELF{32,64}{LE,BE}) and target machine type.
 name|ELFKind
@@ -209,6 +277,11 @@ operator|::
 name|ELF
 operator|::
 name|EM_NONE
+decl_stmt|;
+name|uint8_t
+name|OSABI
+init|=
+literal|0
 decl_stmt|;
 name|protected
 label|:
@@ -237,18 +310,6 @@ name|FileKind
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|// Returns "(internal)", "foo.a(bar.o)" or "baz.o".
-name|std
-operator|::
-name|string
-name|getFilename
-argument_list|(
-specifier|const
-name|InputFile
-operator|*
-name|F
-argument_list|)
-expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -325,7 +386,6 @@ operator|==
 name|SharedKind
 return|;
 block|}
-specifier|const
 name|llvm
 operator|::
 name|object
@@ -334,15 +394,11 @@ name|ELFFile
 operator|<
 name|ELFT
 operator|>
-operator|&
 name|getObj
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ELFObj
-return|;
-block|}
 name|llvm
 operator|::
 name|object
@@ -351,34 +407,12 @@ name|ELFFile
 operator|<
 name|ELFT
 operator|>
-operator|&
-name|getObj
-argument_list|()
-block|{
-return|return
-name|ELFObj
-return|;
-block|}
-name|uint8_t
-name|getOSABI
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getObj
-argument_list|()
+operator|(
+name|MB
 operator|.
-name|getHeader
+name|getBuffer
 argument_list|()
-operator|->
-name|e_ident
-index|[
-name|llvm
-operator|::
-name|ELF
-operator|::
-name|EI_OSABI
-index|]
+operator|)
 return|;
 block|}
 name|StringRef
@@ -401,30 +435,21 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|Elf_Sym_Range
-name|getElfSymbols
-parameter_list|(
-name|bool
-name|OnlyGlobals
-parameter_list|)
+name|getGlobalSymbols
+parameter_list|()
 function_decl|;
 name|protected
 label|:
-name|llvm
-operator|::
-name|object
-operator|::
-name|ELFFile
+name|ArrayRef
 operator|<
-name|ELFT
+name|Elf_Sym
 operator|>
-name|ELFObj
+name|Symbols
 expr_stmt|;
-specifier|const
-name|Elf_Shdr
-modifier|*
-name|Symtab
+name|uint32_t
+name|FirstNonLocal
 init|=
-name|nullptr
+literal|0
 decl_stmt|;
 name|ArrayRef
 operator|<
@@ -436,9 +461,20 @@ name|StringRef
 name|StringTable
 decl_stmt|;
 name|void
-name|initStringTable
-parameter_list|()
-function_decl|;
+name|initSymtab
+argument_list|(
+name|ArrayRef
+operator|<
+name|Elf_Shdr
+operator|>
+name|Sections
+argument_list|,
+specifier|const
+name|Elf_Shdr
+operator|*
+name|Symtab
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|// .o file.
@@ -462,6 +498,20 @@ operator|<
 name|ELFT
 operator|>
 name|Base
+expr_stmt|;
+typedef|typedef
+name|typename
+name|ELFT
+operator|::
+name|Rel
+name|Elf_Rel
+expr_stmt|;
+typedef|typedef
+name|typename
+name|ELFT
+operator|::
+name|Rela
+name|Elf_Rela
 expr_stmt|;
 typedef|typedef
 name|typename
@@ -500,13 +550,19 @@ name|uintX_t
 expr_stmt|;
 name|StringRef
 name|getShtGroupSignature
-parameter_list|(
+argument_list|(
+name|ArrayRef
+operator|<
+name|Elf_Shdr
+operator|>
+name|Sections
+argument_list|,
 specifier|const
 name|Elf_Shdr
-modifier|&
+operator|&
 name|Sec
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|ArrayRef
 operator|<
 name|Elf_Word
@@ -580,7 +636,9 @@ name|llvm
 operator|::
 name|DenseSet
 operator|<
-name|StringRef
+name|llvm
+operator|::
+name|CachedHashStringRef
 operator|>
 operator|&
 name|ComdatGroups
@@ -622,6 +680,25 @@ name|SymbolIndex
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|SymbolIndex
+operator|>=
+name|SymbolBodies
+operator|.
+name|size
+argument_list|()
+condition|)
+name|fatal
+argument_list|(
+name|toString
+argument_list|(
+name|this
+argument_list|)
+operator|+
+literal|": invalid symbol index"
+argument_list|)
+expr_stmt|;
 return|return
 operator|*
 name|SymbolBodies
@@ -662,56 +739,32 @@ name|SymIndex
 argument_list|)
 return|;
 block|}
-specifier|const
-name|Elf_Shdr
-operator|*
-name|getSymbolTable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|this
-operator|->
-name|Symtab
-return|;
-block|}
-empty_stmt|;
-comment|// Get MIPS GP0 value defined by this file. This value represents the gp value
+comment|// Returns source line information for a given offset.
+comment|// If no information is available, returns "".
+name|std
+operator|::
+name|string
+name|getLineInfo
+argument_list|(
+argument|InputSectionBase<ELFT> *S
+argument_list|,
+argument|uintX_t Offset
+argument_list|)
+expr_stmt|;
+comment|// MIPS GP0 value defined by this file. This value represents the gp value
 comment|// used to create the relocatable object and required to support
 comment|// R_MIPS_GPREL16 / R_MIPS_GPREL32 relocations.
 name|uint32_t
-name|getMipsGp0
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// The number is the offset in the string table. It will be used as the
-comment|// st_name of the symbol.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|DefinedRegular
-operator|<
-name|ELFT
-operator|>
-operator|*
-operator|,
-name|unsigned
-operator|>>
-name|KeptLocalSyms
-expr_stmt|;
-comment|// SymbolBodies and Thunks for sections in this file are allocated
-comment|// using this buffer.
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|Alloc
-expr_stmt|;
+name|MipsGp0
+init|=
+literal|0
+decl_stmt|;
+comment|// Name of source file obtained from STT_FILE symbol value,
+comment|// or empty string if there is no such symbol in object file
+comment|// symbol table.
+name|StringRef
+name|SourceFile
+decl_stmt|;
 name|private
 label|:
 name|void
@@ -721,7 +774,9 @@ name|llvm
 operator|::
 name|DenseSet
 operator|<
-name|StringRef
+name|llvm
+operator|::
+name|CachedHashStringRef
 operator|>
 operator|&
 name|ComdatGroups
@@ -729,6 +784,10 @@ argument_list|)
 decl_stmt|;
 name|void
 name|initializeSymbols
+parameter_list|()
+function_decl|;
+name|void
+name|initializeDwarfLine
 parameter_list|()
 function_decl|;
 name|InputSectionBase
@@ -751,10 +810,9 @@ operator|>
 operator|*
 name|createInputSection
 argument_list|(
-specifier|const
-name|Elf_Shdr
-operator|&
-name|Sec
+argument|const Elf_Shdr&Sec
+argument_list|,
+argument|StringRef SectionStringTable
 argument_list|)
 expr_stmt|;
 name|bool
@@ -799,57 +857,19 @@ operator|*
 operator|>
 name|SymbolBodies
 expr_stmt|;
-comment|// MIPS .reginfo section defined by this file.
+comment|// Debugging information to retrieve source file and line for error
+comment|// reporting. Linker may find reasonable number of errors in a
+comment|// single object file, so we cache debugging information in order to
+comment|// parse it only once for each object file we link.
 name|std
 operator|::
 name|unique_ptr
 operator|<
-name|MipsReginfoInputSection
-operator|<
-name|ELFT
-operator|>>
-name|MipsReginfo
-expr_stmt|;
-comment|// MIPS .MIPS.options section defined by this file.
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MipsOptionsInputSection
-operator|<
-name|ELFT
-operator|>>
-name|MipsOptions
-expr_stmt|;
 name|llvm
 operator|::
-name|SpecificBumpPtrAllocator
-operator|<
-name|InputSection
-operator|<
-name|ELFT
-operator|>>
-name|IAlloc
-expr_stmt|;
-name|llvm
-operator|::
-name|SpecificBumpPtrAllocator
-operator|<
-name|MergeInputSection
-operator|<
-name|ELFT
-operator|>>
-name|MAlloc
-expr_stmt|;
-name|llvm
-operator|::
-name|SpecificBumpPtrAllocator
-operator|<
-name|EhInputSection
-operator|<
-name|ELFT
-operator|>>
-name|EHAlloc
+name|DWARFDebugLine
+operator|>
+name|DwarfLine
 expr_stmt|;
 block|}
 end_decl_stmt
@@ -971,19 +991,6 @@ operator|>
 name|getBitcodeSymbols
 argument_list|()
 block|;
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|Alloc
-block|;
-name|llvm
-operator|::
-name|StringSaver
-name|Saver
-block|{
-name|Alloc
-block|}
-block|;
 name|bool
 name|Seen
 operator|=
@@ -1043,10 +1050,18 @@ name|void
 name|parse
 argument_list|()
 block|;
-comment|// Returns a memory buffer for a given symbol. An empty memory buffer
+comment|// Returns a memory buffer for a given symbol and the offset in the archive
+comment|// for the member. An empty memory buffer and an offset of zero
 comment|// is returned if we have already returned the same memory buffer.
 comment|// (So that we don't instantiate same members more than once.)
+name|std
+operator|::
+name|pair
+operator|<
 name|MemoryBufferRef
+block|,
+name|uint64_t
+operator|>
 name|getMember
 argument_list|(
 specifier|const
@@ -1121,7 +1136,9 @@ name|llvm
 operator|::
 name|DenseSet
 operator|<
-name|StringRef
+name|llvm
+operator|::
+name|CachedHashStringRef
 operator|>
 operator|&
 name|ComdatGroups
@@ -1139,22 +1156,15 @@ return|return
 name|Symbols
 return|;
 block|}
-specifier|static
-name|bool
-name|shouldSkip
-argument_list|(
-argument|uint32_t Flags
-argument_list|)
-block|;
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|llvm
 operator|::
-name|object
+name|lto
 operator|::
-name|IRObjectFile
+name|InputFile
 operator|>
 name|Obj
 block|;
@@ -1168,61 +1178,6 @@ name|Symbol
 operator|*
 operator|>
 name|Symbols
-block|;
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|Alloc
-block|;
-name|llvm
-operator|::
-name|StringSaver
-name|Saver
-block|{
-name|Alloc
-block|}
-block|;
-name|template
-operator|<
-name|class
-name|ELFT
-operator|>
-name|Symbol
-operator|*
-name|createSymbol
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|DenseSet
-operator|<
-specifier|const
-name|llvm
-operator|::
-name|Comdat
-operator|*
-operator|>
-operator|&
-name|KeptComdats
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|object
-operator|::
-name|IRObjectFile
-operator|&
-name|Obj
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|object
-operator|::
-name|BasicSymbolRef
-operator|&
-name|Sym
-argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1260,6 +1215,16 @@ typedef|typedef
 name|typename
 name|ELFT
 operator|::
+name|Dyn
+name|Elf_Dyn
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|ELFT
+operator|::
 name|Shdr
 name|Elf_Shdr
 expr_stmt|;
@@ -1280,8 +1245,8 @@ typedef|typedef
 name|typename
 name|ELFT
 operator|::
-name|Word
-name|Elf_Word
+name|SymRange
+name|Elf_Sym_Range
 expr_stmt|;
 end_typedef
 
@@ -1290,8 +1255,8 @@ typedef|typedef
 name|typename
 name|ELFT
 operator|::
-name|SymRange
-name|Elf_Sym_Range
+name|Verdef
+name|Elf_Verdef
 expr_stmt|;
 end_typedef
 
@@ -1310,8 +1275,18 @@ typedef|typedef
 name|typename
 name|ELFT
 operator|::
-name|Verdef
-name|Elf_Verdef
+name|Word
+name|Elf_Word
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|ELFT
+operator|::
+name|uint
+name|uintX_t
 expr_stmt|;
 end_typedef
 
@@ -1542,37 +1517,112 @@ return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 unit|};
-name|std
-operator|::
-name|unique_ptr
-operator|<
+name|class
+name|BinaryFile
+range|:
+name|public
 name|InputFile
-operator|>
-name|createObjectFile
+block|{
+name|public
+operator|:
+name|explicit
+name|BinaryFile
 argument_list|(
-argument|MemoryBufferRef MB
+argument|MemoryBufferRef M
+argument_list|)
+operator|:
+name|InputFile
+argument_list|(
+argument|BinaryKind
 argument_list|,
-argument|StringRef ArchiveName =
-literal|""
+argument|M
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const InputFile *F
+argument_list|)
+block|{
+return|return
+name|F
+operator|->
+name|kind
+argument_list|()
+operator|==
+name|BinaryKind
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+name|void
+name|parse
+argument_list|()
+block|;
+name|ArrayRef
+operator|<
+name|InputSectionData
+operator|*
+operator|>
+name|getSections
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Sections
+return|;
+block|}
+name|private
+operator|:
 name|std
 operator|::
-name|unique_ptr
+name|vector
 operator|<
-name|InputFile
+name|InputSectionData
+operator|*
 operator|>
+name|Sections
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|InputFile
+modifier|*
+name|createObjectFile
+parameter_list|(
+name|MemoryBufferRef
+name|MB
+parameter_list|,
+name|StringRef
+name|ArchiveName
+init|=
+literal|""
+parameter_list|,
+name|uint64_t
+name|OffsetInArchive
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|InputFile
+modifier|*
 name|createSharedFile
-argument_list|(
-argument|MemoryBufferRef MB
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+name|MemoryBufferRef
+name|MB
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}

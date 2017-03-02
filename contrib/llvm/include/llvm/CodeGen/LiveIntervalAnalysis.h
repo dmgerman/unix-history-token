@@ -554,12 +554,16 @@ argument_list|,
 argument|unsigned Reg
 argument_list|)
 block|;
-comment|/// extendToIndices - Extend the live range of LI to reach all points in
-comment|/// Indices. The points in the Indices array must be jointly dominated by
-comment|/// existing defs in LI. PHI-defs are added as needed to maintain SSA form.
+comment|/// Extend the live range @p LR to reach all points in @p Indices. The
+comment|/// points in the @p Indices array must be jointly dominated by the union
+comment|/// of the existing defs in @p LR and points in @p Undefs.
 comment|///
-comment|/// If a SlotIndex in Indices is the end index of a basic block, LI will be
-comment|/// extended to be live out of the basic block.
+comment|/// PHI-defs are added as needed to maintain SSA form.
+comment|///
+comment|/// If a SlotIndex in @p Indices is the end index of a basic block, @p LR
+comment|/// will be extended to be live out of the basic block.
+comment|/// If a SlotIndex in @p Indices is jointy dominated only by points in
+comment|/// @p Undefs, the live range will not be extended to that point.
 comment|///
 comment|/// See also LiveRangeCalc::extend().
 name|void
@@ -574,8 +578,33 @@ operator|<
 name|SlotIndex
 operator|>
 name|Indices
+argument_list|,
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|Undefs
 argument_list|)
 block|;
+name|void
+name|extendToIndices
+argument_list|(
+argument|LiveRange&LR
+argument_list|,
+argument|ArrayRef<SlotIndex> Indices
+argument_list|)
+block|{
+name|extendToIndices
+argument_list|(
+name|LR
+argument_list|,
+name|Indices
+argument_list|,
+comment|/*Undefs=*/
+block|{
+block|}
+block|)
+block|;     }
 comment|/// If @p LR has a live value at @p Kill, prune its live range by removing
 comment|/// any liveness reachable from Kill. Add live range end points to
 comment|/// EndPoints such that extendToIndices(LI, EndPoints) will reconstruct the
@@ -592,7 +621,7 @@ argument|SlotIndex Kill
 argument_list|,
 argument|SmallVectorImpl<SlotIndex> *EndPoints
 argument_list|)
-block|;
+decl_stmt|;
 name|SlotIndexes
 operator|*
 name|getSlotIndexes
@@ -618,9 +647,12 @@ comment|/// removed or was never entered in the map.
 name|bool
 name|isNotInMIMap
 argument_list|(
-argument|const MachineInstr&Instr
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|Instr
+argument_list|)
+decl|const
 block|{
 return|return
 operator|!
@@ -636,9 +668,12 @@ comment|/// Returns the base index of the given instruction.
 name|SlotIndex
 name|getInstructionIndex
 argument_list|(
-argument|const MachineInstr&Instr
-argument_list|)
 specifier|const
+name|MachineInstr
+operator|&
+name|Instr
+argument_list|)
+decl|const
 block|{
 return|return
 name|Indexes
@@ -651,12 +686,13 @@ return|;
 block|}
 comment|/// Returns the instruction associated with the given index.
 name|MachineInstr
-operator|*
+modifier|*
 name|getInstructionFromIndex
 argument_list|(
-argument|SlotIndex index
+name|SlotIndex
+name|index
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|Indexes
@@ -671,9 +707,12 @@ comment|/// Return the first index in the given basic block.
 name|SlotIndex
 name|getMBBStartIdx
 argument_list|(
-argument|const MachineBasicBlock *mbb
-argument_list|)
 specifier|const
+name|MachineBasicBlock
+operator|*
+name|mbb
+argument_list|)
+decl|const
 block|{
 return|return
 name|Indexes
@@ -688,9 +727,12 @@ comment|/// Return the last index in the given basic block.
 name|SlotIndex
 name|getMBBEndIdx
 argument_list|(
-argument|const MachineBasicBlock *mbb
-argument_list|)
 specifier|const
+name|MachineBasicBlock
+operator|*
+name|mbb
+argument_list|)
+decl|const
 block|{
 return|return
 name|Indexes
@@ -704,11 +746,17 @@ block|}
 name|bool
 name|isLiveInToMBB
 argument_list|(
-argument|const LiveRange&LR
-argument_list|,
-argument|const MachineBasicBlock *mbb
-argument_list|)
 specifier|const
+name|LiveRange
+operator|&
+name|LR
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|mbb
+argument_list|)
+decl|const
 block|{
 return|return
 name|LR
@@ -725,11 +773,17 @@ block|}
 name|bool
 name|isLiveOutOfMBB
 argument_list|(
-argument|const LiveRange&LR
-argument_list|,
-argument|const MachineBasicBlock *mbb
-argument_list|)
 specifier|const
+name|LiveRange
+operator|&
+name|LR
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|mbb
+argument_list|)
+decl|const
 block|{
 return|return
 name|LR
@@ -747,12 +801,13 @@ argument_list|)
 return|;
 block|}
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|getMBBFromIndex
 argument_list|(
-argument|SlotIndex index
+name|SlotIndex
+name|index
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|Indexes
@@ -765,9 +820,11 @@ return|;
 block|}
 name|void
 name|insertMBBInMaps
-argument_list|(
-argument|MachineBasicBlock *MBB
-argument_list|)
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|MBB
+parameter_list|)
 block|{
 name|Indexes
 operator|->
@@ -775,7 +832,7 @@ name|insertMBBInMaps
 argument_list|(
 name|MBB
 argument_list|)
-block|;
+expr_stmt|;
 name|assert
 argument_list|(
 name|unsigned
@@ -793,7 +850,7 @@ argument_list|()
 operator|&&
 literal|"Blocks must be added in order."
 argument_list|)
-block|;
+expr_stmt|;
 name|RegMaskBlocks
 operator|.
 name|push_back
@@ -810,12 +867,15 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-block|;     }
+expr_stmt|;
+block|}
 name|SlotIndex
 name|InsertMachineInstrInMaps
-argument_list|(
-argument|MachineInstr&MI
-argument_list|)
+parameter_list|(
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 return|return
 name|Indexes
@@ -829,9 +889,15 @@ block|}
 name|void
 name|InsertMachineInstrRangeInMaps
 argument_list|(
-argument|MachineBasicBlock::iterator B
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|B
 argument_list|,
-argument|MachineBasicBlock::iterator E
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|E
 argument_list|)
 block|{
 for|for
@@ -861,9 +927,11 @@ expr_stmt|;
 block|}
 name|void
 name|RemoveMachineInstrFromMaps
-argument_list|(
-argument|MachineInstr&MI
-argument_list|)
+parameter_list|(
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|)
 block|{
 name|Indexes
 operator|->
@@ -871,15 +939,21 @@ name|removeMachineInstrFromMaps
 argument_list|(
 name|MI
 argument_list|)
-block|;     }
-name|void
+expr_stmt|;
+block|}
+name|SlotIndex
 name|ReplaceMachineInstrInMaps
-argument_list|(
-argument|MachineInstr&MI
-argument_list|,
-argument|MachineInstr&NewMI
-argument_list|)
+parameter_list|(
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+name|MachineInstr
+modifier|&
+name|NewMI
+parameter_list|)
 block|{
+return|return
 name|Indexes
 operator|->
 name|replaceMachineInstrInMaps
@@ -888,7 +962,8 @@ name|MI
 argument_list|,
 name|NewMI
 argument_list|)
-block|;     }
+return|;
+block|}
 name|VNInfo
 operator|::
 name|Allocator
@@ -903,67 +978,85 @@ block|}
 name|void
 name|getAnalysisUsage
 argument_list|(
-argument|AnalysisUsage&AU
+name|AnalysisUsage
+operator|&
+name|AU
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|void
 name|releaseMemory
 argument_list|()
 name|override
-block|;
+expr_stmt|;
 comment|/// runOnMachineFunction - pass entry point
 name|bool
 name|runOnMachineFunction
 argument_list|(
-argument|MachineFunction&
+name|MachineFunction
+operator|&
 argument_list|)
 name|override
-block|;
+decl_stmt|;
 comment|/// print - Implement the dump method.
 name|void
 name|print
 argument_list|(
-argument|raw_ostream&O
+name|raw_ostream
+operator|&
+name|O
 argument_list|,
-argument|const Module* = nullptr
-argument_list|)
 specifier|const
+name|Module
+operator|*
+operator|=
+name|nullptr
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// intervalIsInOneMBB - If LI is confined to a single basic block, return
 comment|/// a pointer to that block.  If LI is live in to or out of any block,
 comment|/// return NULL.
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|intervalIsInOneMBB
 argument_list|(
-argument|const LiveInterval&LI
-argument_list|)
 specifier|const
-block|;
+name|LiveInterval
+operator|&
+name|LI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Returns true if VNI is killed by any PHI-def values in LI.
 comment|/// This may conservatively return true to avoid expensive computations.
 name|bool
 name|hasPHIKill
 argument_list|(
-argument|const LiveInterval&LI
-argument_list|,
-argument|const VNInfo *VNI
-argument_list|)
 specifier|const
-block|;
+name|LiveInterval
+operator|&
+name|LI
+argument_list|,
+specifier|const
+name|VNInfo
+operator|*
+name|VNI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// addKillFlags - Add kill flags to any instruction that kills a virtual
 comment|/// register.
 name|void
 name|addKillFlags
-argument_list|(
+parameter_list|(
 specifier|const
 name|VirtRegMap
-operator|*
-argument_list|)
-block|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/// handleMove - call this method to notify LiveIntervals that
 comment|/// instruction 'mi' has been moved within a basic block. This will update
 comment|/// the live intervals for all operands of mi. Moves between basic blocks
@@ -972,12 +1065,17 @@ comment|///
 comment|/// \param UpdateFlags Update live intervals for nonallocatable physregs.
 name|void
 name|handleMove
-argument_list|(
-argument|MachineInstr&MI
-argument_list|,
-argument|bool UpdateFlags = false
-argument_list|)
-block|;
+parameter_list|(
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+name|bool
+name|UpdateFlags
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// moveIntoBundle - Update intervals for operands of MI so that they
 comment|/// begin/end on the SlotIndex for BundleStart.
 comment|///
@@ -988,14 +1086,21 @@ comment|/// existing liveness is accurate. BundleStart should be the first
 comment|/// instruction in the Bundle.
 name|void
 name|handleMoveIntoBundle
-argument_list|(
-argument|MachineInstr&MI
-argument_list|,
-argument|MachineInstr&BundleStart
-argument_list|,
-argument|bool UpdateFlags = false
-argument_list|)
-block|;
+parameter_list|(
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+name|MachineInstr
+modifier|&
+name|BundleStart
+parameter_list|,
+name|bool
+name|UpdateFlags
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// repairIntervalsInRange - Update live intervals for instructions in a
 comment|/// range of iterators. It is intended for use after target hooks that may
 comment|/// insert or remove instructions, and is only efficient for a small number
@@ -1009,15 +1114,27 @@ comment|/// and addition of uses.
 name|void
 name|repairIntervalsInRange
 argument_list|(
-argument|MachineBasicBlock *MBB
+name|MachineBasicBlock
+operator|*
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator Begin
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|Begin
 argument_list|,
-argument|MachineBasicBlock::iterator End
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|End
 argument_list|,
-argument|ArrayRef<unsigned> OrigRegs
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|OrigRegs
 argument_list|)
-block|;
+decl_stmt|;
 comment|// Register mask functions.
 comment|//
 comment|// Machine instructions may use a register mask operand to indicate that a
@@ -1155,16 +1272,16 @@ comment|/// Returns false if LI doesn't cross any register mask instructions. In
 comment|/// that case, the bit vector is not filled in.
 name|bool
 name|checkRegMaskInterference
-argument_list|(
+parameter_list|(
 name|LiveInterval
-operator|&
+modifier|&
 name|LI
-argument_list|,
+parameter_list|,
 name|BitVector
-operator|&
+modifier|&
 name|UsableRegs
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|// Register unit functions.
 comment|//
 comment|// Fixed interference occurs when MachineInstrs use physregs directly
@@ -1178,21 +1295,22 @@ comment|// efficiently.
 comment|/// getRegUnit - Return the live range for Unit.
 comment|/// It will be computed if it doesn't exist.
 name|LiveRange
-operator|&
+modifier|&
 name|getRegUnit
-argument_list|(
-argument|unsigned Unit
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Unit
+parameter_list|)
 block|{
 name|LiveRange
-operator|*
+modifier|*
 name|LR
-operator|=
+init|=
 name|RegUnitRanges
 index|[
 name|Unit
 index|]
-block|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1231,11 +1349,12 @@ block|}
 comment|/// getCachedRegUnit - Return the live range for Unit if it has already
 comment|/// been computed, or NULL if it hasn't been computed yet.
 name|LiveRange
-operator|*
+modifier|*
 name|getCachedRegUnit
-argument_list|(
-argument|unsigned Unit
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Unit
+parameter_list|)
 block|{
 return|return
 name|RegUnitRanges
@@ -1246,12 +1365,13 @@ return|;
 block|}
 specifier|const
 name|LiveRange
-operator|*
+modifier|*
 name|getCachedRegUnit
 argument_list|(
-argument|unsigned Unit
+name|unsigned
+name|Unit
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|RegUnitRanges
@@ -1260,27 +1380,55 @@ name|Unit
 index|]
 return|;
 block|}
+comment|/// removeRegUnit - Remove computed live range for Unit. Subsequent uses
+comment|/// should rely on on-demand recomputation.
+name|void
+name|removeRegUnit
+parameter_list|(
+name|unsigned
+name|Unit
+parameter_list|)
+block|{
+name|delete
+name|RegUnitRanges
+index|[
+name|Unit
+index|]
+decl_stmt|;
+name|RegUnitRanges
+index|[
+name|Unit
+index|]
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
 comment|/// Remove value numbers and related live segments starting at position
 comment|/// @p Pos that are part of any liverange of physical register @p Reg or one
 comment|/// of its subregisters.
 name|void
 name|removePhysRegDefAt
-argument_list|(
-argument|unsigned Reg
-argument_list|,
-argument|SlotIndex Pos
-argument_list|)
-block|;
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|SlotIndex
+name|Pos
+parameter_list|)
+function_decl|;
 comment|/// Remove value number and related live segments of @p LI and its subranges
 comment|/// that start at position @p Pos.
 name|void
 name|removeVRegDefAt
-argument_list|(
-argument|LiveInterval&LI
-argument_list|,
-argument|SlotIndex Pos
-argument_list|)
-block|;
+parameter_list|(
+name|LiveInterval
+modifier|&
+name|LI
+parameter_list|,
+name|SlotIndex
+name|Pos
+parameter_list|)
+function_decl|;
 comment|/// Split separate components in LiveInterval \p LI into separate intervals.
 name|void
 name|splitSeparateComponents
@@ -1297,30 +1445,30 @@ operator|>
 operator|&
 name|SplitLIs
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// For live interval \p LI with correct SubRanges construct matching
 comment|/// information for the main live range. Expects the main live range to not
 comment|/// have any segments or value numbers.
 name|void
 name|constructMainRangeFromSubranges
-argument_list|(
+parameter_list|(
 name|LiveInterval
-operator|&
+modifier|&
 name|LI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|private
-operator|:
+label|:
 comment|/// Compute live intervals for all virtual registers.
 name|void
 name|computeVirtRegs
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// Compute RegMaskSlots and RegMaskBits.
 name|void
 name|computeRegMasks
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// Walk the values in @p LI and check for dead values:
 comment|/// - Dead PHIDef values are marked as unused.
 comment|/// - Dead operands are marked as such.
@@ -1343,46 +1491,51 @@ operator|>
 operator|*
 name|dead
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|LiveInterval
-operator|*
+modifier|*
 name|createInterval
-argument_list|(
-argument|unsigned Reg
-argument_list|)
-block|;
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+function_decl|;
 name|void
 name|printInstrs
 argument_list|(
-argument|raw_ostream&O
+name|raw_ostream
+operator|&
+name|O
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|void
 name|dumpInstrs
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|void
 name|computeLiveInRegUnits
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|void
 name|computeRegUnitRange
-argument_list|(
-argument|LiveRange&
-argument_list|,
-argument|unsigned Unit
-argument_list|)
-block|;
+parameter_list|(
+name|LiveRange
+modifier|&
+parameter_list|,
+name|unsigned
+name|Unit
+parameter_list|)
+function_decl|;
 name|void
 name|computeVirtRegInterval
-argument_list|(
+parameter_list|(
 name|LiveInterval
-operator|&
-argument_list|)
-block|;
+modifier|&
+parameter_list|)
+function_decl|;
 comment|/// Helper function for repairIntervalsInRange(), walks backwards and
 comment|/// creates/modifies live segments in @p LR to match the operands found.
 comment|/// Only full operands or operands with subregisters matching @p LaneMask
@@ -1390,28 +1543,48 @@ comment|/// are considered.
 name|void
 name|repairOldRegInRange
 argument_list|(
-argument|MachineBasicBlock::iterator Begin
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|Begin
 argument_list|,
-argument|MachineBasicBlock::iterator End
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|End
 argument_list|,
-argument|const SlotIndex endIdx
+specifier|const
+name|SlotIndex
+name|endIdx
 argument_list|,
-argument|LiveRange&LR
+name|LiveRange
+operator|&
+name|LR
 argument_list|,
-argument|unsigned Reg
+name|unsigned
+name|Reg
 argument_list|,
-argument|LaneBitmask LaneMask = ~
-literal|0u
+name|LaneBitmask
+name|LaneMask
+operator|=
+name|LaneBitmask
+operator|::
+name|getAll
+argument_list|()
 argument_list|)
-block|;
+decl_stmt|;
 name|class
 name|HMEditor
-block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

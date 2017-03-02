@@ -59,14 +59,20 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
-comment|// Posix implementation of the MainLoopBase class. It can monitor file descriptors for
-comment|// readability using pselect. In addition to the common base, this class provides the ability to
+comment|// Posix implementation of the MainLoopBase class. It can monitor file
+comment|// descriptors for
+comment|// readability using pselect. In addition to the common base, this class
+comment|// provides the ability to
 comment|// invoke a given handler when a signal is received.
 comment|//
-comment|// Since this class is primarily intended to be used for single-threaded processing, it does not
-comment|// attempt to perform any internal synchronisation and any concurrent accesses must be protected
-comment|// externally. However, it is perfectly legitimate to have more than one instance of this class
-comment|// running on separate threads, or even a single thread (with some limitations on signal
+comment|// Since this class is primarily intended to be used for single-threaded
+comment|// processing, it does not
+comment|// attempt to perform any internal synchronisation and any concurrent accesses
+comment|// must be protected
+comment|// externally. However, it is perfectly legitimate to have more than one
+comment|// instance of this class
+comment|// running on separate threads, or even a single thread (with some limitations
+comment|// on signal
 comment|// monitoring).
 comment|// TODO: Add locking if this class is to be used in a multi-threaded context.
 name|class
@@ -117,11 +123,16 @@ name|error
 argument_list|)
 name|override
 decl_stmt|;
-comment|// Listening for signals from multiple MainLoopPosix instances is perfectly safe as long as they
-comment|// don't try to listen for the same signal. The callback function is invoked when the control
-comment|// returns to the Run() function, not when the hander is executed. This means that you can
-comment|// treat the callback as a normal function and perform things which would not be safe in a
-comment|// signal handler. However, since the callback is not invoked synchronously, you cannot use
+comment|// Listening for signals from multiple MainLoopPosix instances is perfectly
+comment|// safe as long as they
+comment|// don't try to listen for the same signal. The callback function is invoked
+comment|// when the control
+comment|// returns to the Run() function, not when the hander is executed. This means
+comment|// that you can
+comment|// treat the callback as a normal function and perform things which would not
+comment|// be safe in a
+comment|// signal handler. However, since the callback is not invoked synchronously,
+comment|// you cannot use
 comment|// this mechanism to handle SIGSEGV and the like.
 name|SignalHandleUP
 name|RegisterSignal
@@ -144,7 +155,8 @@ name|Run
 argument_list|()
 name|override
 expr_stmt|;
-comment|// This should only be performed from a callback. Do not attempt to terminate the processing
+comment|// This should only be performed from a callback. Do not attempt to terminate
+comment|// the processing
 comment|// from another thread.
 comment|// TODO: Add synchronization if we want to be terminated from another thread.
 name|void
@@ -212,7 +224,7 @@ name|m_signo
 argument_list|(
 argument|signo
 argument_list|)
-block|{ }
+block|{}
 name|MainLoopPosix
 operator|&
 name|m_mainloop

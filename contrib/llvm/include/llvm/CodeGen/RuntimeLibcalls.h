@@ -682,6 +682,17 @@ name|MEMSET
 block|,
 name|MEMMOVE
 block|,
+comment|// ELEMENT-WISE ATOMIC MEMORY
+name|MEMCPY_ELEMENT_ATOMIC_1
+block|,
+name|MEMCPY_ELEMENT_ATOMIC_2
+block|,
+name|MEMCPY_ELEMENT_ATOMIC_4
+block|,
+name|MEMCPY_ELEMENT_ATOMIC_8
+block|,
+name|MEMCPY_ELEMENT_ATOMIC_16
+block|,
 comment|// EXCEPTION HANDLING
 name|UNWIND_RESUME
 block|,
@@ -1009,6 +1020,15 @@ name|Opc
 parameter_list|,
 name|MVT
 name|VT
+parameter_list|)
+function_decl|;
+comment|/// getMEMCPY_ELEMENT_ATOMIC - Return MEMCPY_ELEMENT_ATOMIC_* value for the
+comment|/// given element size or UNKNOW_LIBCALL if there is none.
+name|Libcall
+name|getMEMCPY_ELEMENT_ATOMIC
+parameter_list|(
+name|uint64_t
+name|ElementSize
 parameter_list|)
 function_decl|;
 block|}

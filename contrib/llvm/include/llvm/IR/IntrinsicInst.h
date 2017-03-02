@@ -108,7 +108,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/GlobalVariable.h"
 end_include
 
 begin_include
@@ -129,6 +141,30 @@ directive|include
 file|"llvm/IR/Metadata.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -142,6 +178,8 @@ range|:
 name|public
 name|CallInst
 block|{
+name|public
+operator|:
 name|IntrinsicInst
 argument_list|()
 operator|=
@@ -156,7 +194,8 @@ argument_list|)
 operator|=
 name|delete
 block|;
-name|void
+name|IntrinsicInst
+operator|&
 name|operator
 operator|=
 operator|(
@@ -167,8 +206,6 @@ operator|)
 operator|=
 name|delete
 block|;
-name|public
-operator|:
 comment|/// Return the intrinsic ID of this intrinsic.
 name|Intrinsic
 operator|::
@@ -1928,6 +1965,69 @@ operator|)
 operator|)
 return|;
 block|}
+name|Value
+operator|*
+name|getStep
+argument_list|()
+specifier|const
+block|;   }
+block|;
+name|class
+name|InstrProfIncrementInstStep
+operator|:
+name|public
+name|InstrProfIncrementInst
+block|{
+name|public
+operator|:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const IntrinsicInst *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getIntrinsicID
+argument_list|()
+operator|==
+name|Intrinsic
+operator|::
+name|instrprof_increment_step
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|isa
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+name|classof
+argument_list|(
+name|cast
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+return|;
+block|}
 expr|}
 block|;
 comment|/// This represents the llvm.instrprof_value_profile intrinsic.
@@ -2122,17 +2222,21 @@ operator|)
 return|;
 block|}
 expr|}
-block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_INTRINSICINST_H
+end_comment
 
 end_unit
 

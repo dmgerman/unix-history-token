@@ -75,7 +75,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTPH2PS instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTPH2PS</c> instruction.
 end_comment
 
 begin_comment
@@ -184,7 +184,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTPS2PH instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTPS2PH</c> instruction.
 end_comment
 
 begin_comment
@@ -208,23 +208,23 @@ comment|/// \param imm
 end_comment
 
 begin_comment
-comment|///    An immediate value controlling rounding using bits [2:0]:
+comment|///    An immediate value controlling rounding using bits [2:0]: \n
 end_comment
 
 begin_comment
-comment|///    000: Nearest
+comment|///    000: Nearest \n
 end_comment
 
 begin_comment
-comment|///    001: Down
+comment|///    001: Down \n
 end_comment
 
 begin_comment
-comment|///    010: Up
+comment|///    010: Up \n
 end_comment
 
 begin_comment
-comment|///    011: Truncate
+comment|///    011: Truncate \n
 end_comment
 
 begin_comment
@@ -285,7 +285,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTPS2PH instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTPS2PH</c> instruction.
 end_comment
 
 begin_comment
@@ -305,23 +305,23 @@ comment|/// \param imm
 end_comment
 
 begin_comment
-comment|///    An immediate value controlling rounding using bits [2:0]:
+comment|///    An immediate value controlling rounding using bits [2:0]: \n
 end_comment
 
 begin_comment
-comment|///    000: Nearest
+comment|///    000: Nearest \n
 end_comment
 
 begin_comment
-comment|///    001: Down
+comment|///    001: Down \n
 end_comment
 
 begin_comment
-comment|///    010: Up
+comment|///    010: Up \n
 end_comment
 
 begin_comment
-comment|///    011: Truncate
+comment|///    011: Truncate \n
 end_comment
 
 begin_comment
@@ -374,7 +374,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This intrinsic corresponds to the \c VCVTPH2PS instruction.
+comment|/// This intrinsic corresponds to the<c> VCVTPH2PS</c> instruction.
 end_comment
 
 begin_comment

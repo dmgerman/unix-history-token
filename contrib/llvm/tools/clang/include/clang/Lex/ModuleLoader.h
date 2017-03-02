@@ -121,6 +121,23 @@ comment|/// \brief Describes the result of attempting to load a module.
 name|class
 name|ModuleLoadResult
 block|{
+name|public
+label|:
+enum|enum
+name|LoadResultKind
+block|{
+comment|// We either succeeded or failed to load the named module.
+name|Normal
+block|,
+comment|// The module exists, but does not actually contain the named submodule.
+comment|// This should only happen if the named submodule was inferred from an
+comment|// umbrella directory, but not actually part of the umbrella header.
+name|MissingExpected
+block|,
+comment|// The module exists but cannot be imported due to a configuration mismatch.
+name|ConfigMismatch
+block|}
+enum|;
 name|llvm
 operator|::
 name|PointerIntPair
@@ -128,14 +145,12 @@ operator|<
 name|Module
 operator|*
 operator|,
-literal|1
+literal|2
 operator|,
-name|bool
+name|LoadResultKind
 operator|>
 name|Storage
 expr_stmt|;
-name|public
-label|:
 name|ModuleLoadResult
 argument_list|()
 operator|:
@@ -144,18 +159,30 @@ argument_list|()
 block|{ }
 name|ModuleLoadResult
 argument_list|(
-argument|Module *module
-argument_list|,
-argument|bool missingExpected
+name|Module
+operator|*
+name|M
 argument_list|)
 operator|:
 name|Storage
 argument_list|(
-argument|module
+argument|M
 argument_list|,
-argument|missingExpected
+argument|Normal
 argument_list|)
-block|{ }
+block|{}
+name|ModuleLoadResult
+argument_list|(
+argument|LoadResultKind Kind
+argument_list|)
+operator|:
+name|Storage
+argument_list|(
+argument|nullptr
+argument_list|,
+argument|Kind
+argument_list|)
+block|{}
 name|operator
 name|Module
 operator|*
@@ -184,6 +211,24 @@ name|Storage
 operator|.
 name|getInt
 argument_list|()
+operator|==
+name|MissingExpected
+return|;
+block|}
+comment|/// \brief Determines whether the module failed to load due to a configuration
+comment|/// mismatch with an explicitly-named .pcm file from the command line.
+name|bool
+name|isConfigMismatch
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Storage
+operator|.
+name|getInt
+argument_list|()
+operator|==
+name|ConfigMismatch
 return|;
 block|}
 block|}

@@ -370,7 +370,7 @@ operator|=
 name|None
 argument_list|,
 name|bool
-name|allowReorder
+name|AllowReorder
 operator|=
 name|false
 argument_list|)
@@ -443,9 +443,6 @@ operator|*
 operator|>
 name|Chain
 argument_list|,
-name|int
-name|CostThreshold
-argument_list|,
 name|slpvectorizer
 operator|::
 name|BoUpSLP
@@ -465,9 +462,6 @@ name|StoreInst
 operator|*
 operator|>
 name|Stores
-argument_list|,
-name|int
-name|costThreshold
 argument_list|,
 name|slpvectorizer
 operator|::

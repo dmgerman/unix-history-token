@@ -313,10 +313,19 @@ decl_stmt|;
 comment|/// \brief True if current scope is for OpenMP declare reduction combiner.
 name|bool
 name|HasOMPDeclareReductionCombiner
+range|:
+literal|1
 decl_stmt|;
 comment|/// \brief Whether there is a fallthrough statement in this function.
 name|bool
 name|HasFallthroughStmt
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we make reference to a declaration that could be
+comment|/// unavailable.
+name|bool
+name|HasPotentialAvailabilityViolations
 range|:
 literal|1
 decl_stmt|;
@@ -1093,6 +1102,11 @@ name|false
 argument_list|)
 operator|,
 name|HasFallthroughStmt
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|HasPotentialAvailabilityViolations
 argument_list|(
 name|false
 argument_list|)
@@ -2257,6 +2271,33 @@ block|,
 literal|8
 operator|>
 name|NonODRUsedCapturingExprs
+block|;
+comment|/// Contains all of the variables defined in this lambda that shadow variables
+comment|/// that were defined in parent contexts. Used to avoid warnings when the
+comment|/// shadowed variables are uncaptured by this lambda.
+block|struct
+name|ShadowedOuterDecl
+block|{
+specifier|const
+name|VarDecl
+operator|*
+name|VD
+block|;
+specifier|const
+name|VarDecl
+operator|*
+name|ShadowedDecl
+block|;   }
+block|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|ShadowedOuterDecl
+block|,
+literal|4
+operator|>
+name|ShadowingDecls
 block|;
 name|SourceLocation
 name|PotentialThisCaptureLocation

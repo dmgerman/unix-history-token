@@ -329,6 +329,19 @@ argument_list|)
 block|{}
 block|}
 struct|;
+enum|enum
+name|OperandMatchResultTy
+block|{
+name|MatchOperand_Success
+block|,
+comment|// operand matched successfully
+name|MatchOperand_NoMatch
+block|,
+comment|// operand did not match
+name|MatchOperand_ParseFail
+comment|// operand matched but had errors
+block|}
+enum|;
 comment|/// MCTargetAsmParser - Generic interface to target specific assembly parsers.
 name|class
 name|MCTargetAsmParser
@@ -646,6 +659,21 @@ return|return
 name|Match_InvalidOperand
 return|;
 block|}
+comment|/// Validate the instruction match against any complex target predicates
+comment|/// before rendering any operands to it.
+name|virtual
+name|unsigned
+name|checkEarlyTargetMatchPredicate
+argument_list|(
+argument|MCInst&Inst
+argument_list|,
+argument|const OperandVector&Operands
+argument_list|)
+block|{
+return|return
+name|Match_Success
+return|;
+block|}
 comment|/// checkTargetMatchPredicate - Validate the instruction match against
 comment|/// any complex target predicates not expressible via match classes.
 name|virtual
@@ -718,6 +746,32 @@ argument_list|(
 argument|MCSymbol *Symbol
 argument_list|)
 block|{ }
+comment|/// Ensure that all previously parsed instructions have been emitted to the
+comment|/// output streamer, if the target does not emit them immediately.
+name|virtual
+name|void
+name|flushPendingInstructions
+argument_list|(
+argument|MCStreamer&Out
+argument_list|)
+block|{ }
+name|virtual
+specifier|const
+name|MCExpr
+operator|*
+name|createTargetUnaryExpr
+argument_list|(
+argument|const MCExpr *E
+argument_list|,
+argument|AsmToken::TokenKind OperatorToken
+argument_list|,
+argument|MCContext&Ctx
+argument_list|)
+block|{
+return|return
+name|nullptr
+return|;
+block|}
 expr|}
 block|;  }
 end_decl_stmt

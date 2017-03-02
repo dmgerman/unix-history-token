@@ -82,6 +82,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/APFloat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -100,7 +112,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
+file|"llvm/ADT/ilist_node.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -118,18 +142,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/iterator_range.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/ISDOpcodes.h"
 end_include
 
@@ -137,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineMemOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -160,25 +178,91 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/AlignOf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MathExtras.h"
+file|"llvm/Support/AtomicOrdering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<climits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tuple>
 end_include
 
 begin_decl_stmt
@@ -201,9 +285,6 @@ name|class
 name|SDNode
 decl_stmt|;
 name|class
-name|HandleSDNode
-decl_stmt|;
-name|class
 name|Value
 decl_stmt|;
 name|class
@@ -216,22 +297,6 @@ name|T
 operator|>
 expr|struct
 name|DenseMapInfo
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|simplify_type
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|ilist_traits
 expr_stmt|;
 name|void
 name|checkForCycles
@@ -347,7 +412,7 @@ name|N
 parameter_list|)
 function_decl|;
 block|}
-comment|// end llvm:ISD namespace
+comment|// end namespace ISD
 comment|//===----------------------------------------------------------------------===//
 comment|/// Unlike LLVM values, Selection DAG nodes may return multiple
 comment|/// values as the result of a computation.  Many nodes return multiple values,
@@ -1042,9 +1107,6 @@ label|:
 name|SDUse
 argument_list|()
 operator|:
-name|Val
-argument_list|()
-operator|,
 name|User
 argument_list|(
 name|nullptr
@@ -1667,63 +1729,6 @@ return|return
 name|VectorReduction
 return|;
 block|}
-comment|/// Return a raw encoding of the flags.
-comment|/// This function should only be used to add data to the NodeID value.
-name|unsigned
-name|getRawFlags
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|NoUnsignedWrap
-operator|<<
-literal|0
-operator|)
-operator||
-operator|(
-name|NoSignedWrap
-operator|<<
-literal|1
-operator|)
-operator||
-operator|(
-name|Exact
-operator|<<
-literal|2
-operator|)
-operator||
-operator|(
-name|UnsafeAlgebra
-operator|<<
-literal|3
-operator|)
-operator||
-operator|(
-name|NoNaNs
-operator|<<
-literal|4
-operator|)
-operator||
-operator|(
-name|NoInfs
-operator|<<
-literal|5
-operator|)
-operator||
-operator|(
-name|NoSignedZeros
-operator|<<
-literal|6
-operator|)
-operator||
-operator|(
-name|AllowReciprocal
-operator|<<
-literal|7
-operator|)
-return|;
-block|}
 comment|/// Clear any flags in this flag set that aren't also set in Flags.
 name|void
 name|intersectWith
@@ -1814,23 +1819,302 @@ comment|/// The operation that this node performs.
 name|int16_t
 name|NodeType
 decl_stmt|;
-comment|/// This tracks whether this node has one or more dbg_value
-comment|/// nodes corresponding to it.
+name|protected
+label|:
+comment|// We define a set of mini-helper classes to help us interpret the bits in our
+comment|// SubclassData.  These are designed to fit within a uint16_t so they pack
+comment|// with NodeType.
+name|class
+name|SDNodeBitfields
+block|{
+name|friend
+name|class
+name|SDNode
+decl_stmt|;
+name|friend
+name|class
+name|MemIntrinsicSDNode
+decl_stmt|;
+name|friend
+name|class
+name|MemSDNode
+decl_stmt|;
 name|uint16_t
 name|HasDebugValue
 range|:
 literal|1
 decl_stmt|;
-name|protected
-label|:
-comment|/// This member is defined by this class, but is not used for
-comment|/// anything.  Subclasses can use it to hold whatever state they find useful.
-comment|/// This field is initialized to zero by the ctor.
 name|uint16_t
-name|SubclassData
+name|IsMemIntrinsic
 range|:
-literal|15
+literal|1
 decl_stmt|;
+block|}
+empty_stmt|;
+enum|enum
+block|{
+name|NumSDNodeBits
+init|=
+literal|2
+block|}
+enum|;
+name|class
+name|ConstantSDNodeBitfields
+block|{
+name|friend
+name|class
+name|ConstantSDNode
+decl_stmt|;
+name|uint16_t
+label|:
+name|NumSDNodeBits
+expr_stmt|;
+name|uint16_t
+name|IsOpaque
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|MemSDNodeBitfields
+block|{
+name|friend
+name|class
+name|MemSDNode
+decl_stmt|;
+name|friend
+name|class
+name|MemIntrinsicSDNode
+decl_stmt|;
+name|friend
+name|class
+name|AtomicSDNode
+decl_stmt|;
+name|uint16_t
+label|:
+name|NumSDNodeBits
+expr_stmt|;
+name|uint16_t
+name|IsVolatile
+range|:
+literal|1
+decl_stmt|;
+name|uint16_t
+name|IsNonTemporal
+range|:
+literal|1
+decl_stmt|;
+name|uint16_t
+name|IsDereferenceable
+range|:
+literal|1
+decl_stmt|;
+name|uint16_t
+name|IsInvariant
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+enum|enum
+block|{
+name|NumMemSDNodeBits
+init|=
+name|NumSDNodeBits
+operator|+
+literal|4
+block|}
+enum|;
+name|class
+name|LSBaseSDNodeBitfields
+block|{
+name|friend
+name|class
+name|LSBaseSDNode
+decl_stmt|;
+name|uint16_t
+label|:
+name|NumMemSDNodeBits
+expr_stmt|;
+name|uint16_t
+name|AddressingMode
+range|:
+literal|3
+decl_stmt|;
+comment|// enum ISD::MemIndexedMode
+block|}
+empty_stmt|;
+enum|enum
+block|{
+name|NumLSBaseSDNodeBits
+init|=
+name|NumMemSDNodeBits
+operator|+
+literal|3
+block|}
+enum|;
+name|class
+name|LoadSDNodeBitfields
+block|{
+name|friend
+name|class
+name|LoadSDNode
+decl_stmt|;
+name|friend
+name|class
+name|MaskedLoadSDNode
+decl_stmt|;
+name|uint16_t
+label|:
+name|NumLSBaseSDNodeBits
+expr_stmt|;
+name|uint16_t
+name|ExtTy
+range|:
+literal|2
+decl_stmt|;
+comment|// enum ISD::LoadExtType
+name|uint16_t
+name|IsExpanding
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|StoreSDNodeBitfields
+block|{
+name|friend
+name|class
+name|StoreSDNode
+decl_stmt|;
+name|friend
+name|class
+name|MaskedStoreSDNode
+decl_stmt|;
+name|uint16_t
+label|:
+name|NumLSBaseSDNodeBits
+expr_stmt|;
+name|uint16_t
+name|IsTruncating
+range|:
+literal|1
+decl_stmt|;
+name|uint16_t
+name|IsCompressing
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+union|union
+block|{
+name|char
+name|RawSDNodeBits
+index|[
+sizeof|sizeof
+argument_list|(
+name|uint16_t
+argument_list|)
+index|]
+decl_stmt|;
+name|SDNodeBitfields
+name|SDNodeBits
+decl_stmt|;
+name|ConstantSDNodeBitfields
+name|ConstantSDNodeBits
+decl_stmt|;
+name|MemSDNodeBitfields
+name|MemSDNodeBits
+decl_stmt|;
+name|LSBaseSDNodeBitfields
+name|LSBaseSDNodeBits
+decl_stmt|;
+name|LoadSDNodeBitfields
+name|LoadSDNodeBits
+decl_stmt|;
+name|StoreSDNodeBitfields
+name|StoreSDNodeBits
+decl_stmt|;
+block|}
+union|;
+comment|// RawSDNodeBits must cover the entirety of the union.  This means that all of
+comment|// the union's members must have size<= RawSDNodeBits.  We write the RHS as
+comment|// "2" instead of sizeof(RawSDNodeBits) because MSVC can't handle the latter.
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|SDNodeBitfields
+argument_list|)
+operator|<=
+literal|2
+argument_list|,
+literal|"field too wide"
+argument_list|)
+expr_stmt|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ConstantSDNodeBitfields
+argument_list|)
+operator|<=
+literal|2
+argument_list|,
+literal|"field too wide"
+argument_list|)
+expr_stmt|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|MemSDNodeBitfields
+argument_list|)
+operator|<=
+literal|2
+argument_list|,
+literal|"field too wide"
+argument_list|)
+expr_stmt|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|LSBaseSDNodeBitfields
+argument_list|)
+operator|<=
+literal|2
+argument_list|,
+literal|"field too wide"
+argument_list|)
+expr_stmt|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|LoadSDNodeBitfields
+argument_list|)
+operator|<=
+literal|4
+argument_list|,
+literal|"field too wide"
+argument_list|)
+expr_stmt|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|StoreSDNodeBitfields
+argument_list|)
+operator|<=
+literal|2
+argument_list|,
+literal|"field too wide"
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 comment|/// Unique id per SDNode in the DAG.
@@ -1888,13 +2172,6 @@ name|friend
 name|class
 name|SelectionDAG
 decl_stmt|;
-name|friend
-block|struct
-name|ilist_traits
-operator|<
-name|SDNode
-operator|>
-expr_stmt|;
 comment|// TODO: unfriend HandleSDNode once we fix its operand handling.
 name|friend
 name|class
@@ -1997,15 +2274,9 @@ operator|::
 name|INTRINSIC_VOID
 operator|)
 operator|&&
-operator|(
-operator|(
-name|SubclassData
-operator|>>
-literal|13
-operator|)
-operator|&
-literal|1
-operator|)
+name|SDNodeBits
+operator|.
+name|IsMemIntrinsic
 return|;
 block|}
 comment|/// Test if this node has a post-isel opcode, directly
@@ -2042,17 +2313,17 @@ operator|~
 name|NodeType
 return|;
 block|}
-comment|/// Get this bit.
 name|bool
 name|getHasDebugValue
 argument_list|()
 specifier|const
 block|{
 return|return
+name|SDNodeBits
+operator|.
 name|HasDebugValue
 return|;
 block|}
-comment|/// Set this bit.
 name|void
 name|setHasDebugValue
 parameter_list|(
@@ -2060,6 +2331,8 @@ name|bool
 name|b
 parameter_list|)
 block|{
+name|SDNodeBits
+operator|.
 name|HasDebugValue
 operator|=
 name|b
@@ -2220,6 +2493,10 @@ name|SDUse
 modifier|*
 name|Op
 decl_stmt|;
+name|friend
+name|class
+name|SDNode
+decl_stmt|;
 name|explicit
 name|use_iterator
 argument_list|(
@@ -2232,13 +2509,9 @@ name|Op
 argument_list|(
 argument|op
 argument_list|)
-block|{     }
-name|friend
-name|class
-name|SDNode
-expr_stmt|;
+block|{}
 name|public
-label|:
+operator|:
 typedef|typedef
 name|std
 operator|::
@@ -3819,16 +4092,6 @@ argument_list|(
 name|Opc
 argument_list|)
 operator|,
-name|HasDebugValue
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|SubclassData
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|NodeId
 argument_list|(
 operator|-
@@ -3874,6 +4137,19 @@ argument_list|(
 argument|std::move(dl)
 argument_list|)
 block|{
+name|memset
+argument_list|(
+operator|&
+name|RawSDNodeBits
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|RawSDNodeBits
+argument_list|)
+argument_list|)
+block|;
 name|assert
 argument_list|(
 name|debugLoc
@@ -4076,11 +4352,17 @@ argument_list|(
 argument|resno
 argument_list|)
 block|{
+comment|// Explicitly check for !ResNo to avoid use-after-free, because there are
+comment|// callers that use SDValue(N, 0) with a deleted N to indicate successful
+comment|// combines.
 name|assert
 argument_list|(
 operator|(
 operator|!
 name|Node
+operator|||
+operator|!
+name|ResNo
 operator|||
 name|ResNo
 operator|<
@@ -4910,33 +5192,85 @@ name|getAlignment
 argument_list|()
 return|;
 block|}
-comment|/// Return the SubclassData value, which contains an
+comment|/// Return the SubclassData value, without HasDebugValue. This contains an
 comment|/// encoding of the volatile flag, as well as bits used by subclasses. This
 comment|/// function should only be used to compute a FoldingSetNodeID value.
+comment|/// The HasDebugValue bit is masked out because CSE map needs to match
+comment|/// nodes with debug info with nodes without debug info.
 name|unsigned
 name|getRawSubclassData
 argument_list|()
 specifier|const
 block|{
+name|uint16_t
+name|Data
+block|;
+expr|union
+block|{
+name|char
+name|RawSDNodeBits
+index|[
+sizeof|sizeof
+argument_list|(
+name|uint16_t
+argument_list|)
+index|]
+block|;
+name|SDNodeBitfields
+name|SDNodeBits
+block|;     }
+block|;
+name|memcpy
+argument_list|(
+operator|&
+name|RawSDNodeBits
+argument_list|,
+operator|&
+name|this
+operator|->
+name|RawSDNodeBits
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|this
+operator|->
+name|RawSDNodeBits
+argument_list|)
+argument_list|)
+block|;
+name|SDNodeBits
+operator|.
+name|HasDebugValue
+operator|=
+literal|0
+block|;
+name|memcpy
+argument_list|(
+operator|&
+name|Data
+argument_list|,
+operator|&
+name|RawSDNodeBits
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|RawSDNodeBits
+argument_list|)
+argument_list|)
+block|;
 return|return
-name|SubclassData
+name|Data
 return|;
 block|}
-comment|// We access subclass data here so that we can check consistency
-comment|// with MachineMemOperand information.
 name|bool
 name|isVolatile
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|SubclassData
-operator|>>
-literal|5
-operator|)
-operator|&
-literal|1
+name|MemSDNodeBits
+operator|.
+name|IsVolatile
 return|;
 block|}
 name|bool
@@ -4945,13 +5279,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|SubclassData
-operator|>>
-literal|6
-operator|)
-operator|&
-literal|1
+name|MemSDNodeBits
+operator|.
+name|IsNonTemporal
+return|;
+block|}
+name|bool
+name|isDereferenceable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MemSDNodeBits
+operator|.
+name|IsDereferenceable
 return|;
 block|}
 name|bool
@@ -4960,49 +5301,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|SubclassData
-operator|>>
-literal|7
-operator|)
-operator|&
-literal|1
-return|;
-block|}
-name|AtomicOrdering
-name|getOrdering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtomicOrdering
-argument_list|(
-operator|(
-name|SubclassData
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|15
-argument_list|)
-return|;
-block|}
-name|SynchronizationScope
-name|getSynchScope
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SynchronizationScope
-argument_list|(
-operator|(
-name|SubclassData
-operator|>>
-literal|12
-operator|)
-operator|&
-literal|1
-argument_list|)
+name|MemSDNodeBits
+operator|.
+name|IsInvariant
 return|;
 block|}
 comment|// Returns the offset from the location of the access.
@@ -5043,6 +5344,34 @@ return|return
 name|MMO
 operator|->
 name|getRanges
+argument_list|()
+return|;
+block|}
+comment|/// Return the synchronization scope for this memory operation.
+name|SynchronizationScope
+name|getSynchScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MMO
+operator|->
+name|getSynchScope
+argument_list|()
+return|;
+block|}
+comment|/// Return the atomic ordering requirements for this memory operation. For
+comment|/// cmpxchg atomic operations, return the atomic ordering requirements when
+comment|/// store occurs.
+name|AtomicOrdering
+name|getOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MMO
+operator|->
+name|getOrdering
 argument_list|()
 return|;
 block|}
@@ -5379,124 +5708,6 @@ operator|:
 name|public
 name|MemSDNode
 block|{
-comment|/// For cmpxchg instructions, the ordering requirements when a store does not
-comment|/// occur.
-name|AtomicOrdering
-name|FailureOrdering
-block|;
-name|void
-name|InitAtomic
-argument_list|(
-argument|AtomicOrdering SuccessOrdering
-argument_list|,
-argument|AtomicOrdering FailureOrdering
-argument_list|,
-argument|SynchronizationScope SynchScope
-argument_list|)
-block|{
-comment|// This must match encodeMemSDNodeFlags() in SelectionDAG.cpp.
-name|assert
-argument_list|(
-call|(
-name|AtomicOrdering
-call|)
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|SuccessOrdering
-operator|&
-literal|15
-argument_list|)
-operator|==
-name|SuccessOrdering
-operator|&&
-literal|"Ordering may not require more than 4 bits!"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-call|(
-name|AtomicOrdering
-call|)
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|FailureOrdering
-operator|&
-literal|15
-argument_list|)
-operator|==
-name|FailureOrdering
-operator|&&
-literal|"Ordering may not require more than 4 bits!"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|(
-name|SynchScope
-operator|&
-literal|1
-operator|)
-operator|==
-name|SynchScope
-operator|&&
-literal|"SynchScope may not require more than 1 bit!"
-argument_list|)
-block|;
-name|SubclassData
-operator||=
-operator|(
-name|unsigned
-operator|)
-name|SuccessOrdering
-operator|<<
-literal|8
-block|;
-name|SubclassData
-operator||=
-name|SynchScope
-operator|<<
-literal|12
-block|;
-name|this
-operator|->
-name|FailureOrdering
-operator|=
-name|FailureOrdering
-block|;
-name|assert
-argument_list|(
-name|getSuccessOrdering
-argument_list|()
-operator|==
-name|SuccessOrdering
-operator|&&
-literal|"Ordering encoding error!"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getFailureOrdering
-argument_list|()
-operator|==
-name|FailureOrdering
-operator|&&
-literal|"Ordering encoding error!"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getSynchScope
-argument_list|()
-operator|==
-name|SynchScope
-operator|&&
-literal|"Synch-scope encoding error!"
-argument_list|)
-block|;   }
 name|public
 operator|:
 name|AtomicSDNode
@@ -5512,12 +5723,6 @@ argument_list|,
 argument|EVT MemVT
 argument_list|,
 argument|MachineMemOperand *MMO
-argument_list|,
-argument|AtomicOrdering SuccessOrdering
-argument_list|,
-argument|AtomicOrdering FailureOrdering
-argument_list|,
-argument|SynchronizationScope SynchScope
 argument_list|)
 operator|:
 name|MemSDNode
@@ -5534,16 +5739,7 @@ argument|MemVT
 argument_list|,
 argument|MMO
 argument_list|)
-block|{
-name|InitAtomic
-argument_list|(
-name|SuccessOrdering
-argument_list|,
-name|FailureOrdering
-argument_list|,
-name|SynchScope
-argument_list|)
-block|;   }
+block|{}
 specifier|const
 name|SDValue
 operator|&
@@ -5572,27 +5768,8 @@ literal|2
 argument_list|)
 return|;
 block|}
-name|AtomicOrdering
-name|getSuccessOrdering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOrdering
-argument_list|()
-return|;
-block|}
-comment|// Not quite enough room in SubclassData for everything, so failure gets its
-comment|// own field.
-name|AtomicOrdering
-name|getFailureOrdering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FailureOrdering
-return|;
-block|}
+comment|/// Returns true if this SDNode represents cmpxchg atomic operation, false
+comment|/// otherwise.
 name|bool
 name|isCompareAndSwap
 argument_list|()
@@ -5616,6 +5793,28 @@ operator|==
 name|ISD
 operator|::
 name|ATOMIC_CMP_SWAP_WITH_SUCCESS
+return|;
+block|}
+comment|/// For cmpxchg atomic operations, return the atomic ordering requirements
+comment|/// when store does not occur.
+name|AtomicOrdering
+name|getFailureOrdering
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isCompareAndSwap
+argument_list|()
+operator|&&
+literal|"Must be cmpxchg operation"
+argument_list|)
+block|;
+return|return
+name|MMO
+operator|->
+name|getFailureOrdering
+argument_list|()
 return|;
 block|}
 comment|// Methods to support isa and dyn_cast
@@ -5807,11 +6006,11 @@ argument_list|,
 argument|MMO
 argument_list|)
 block|{
-name|SubclassData
-operator||=
-literal|1u
-operator|<<
-literal|13
+name|SDNodeBits
+operator|.
+name|IsMemIntrinsic
+operator|=
+name|true
 block|;   }
 comment|// Methods to support isa and dyn_cast
 specifier|static
@@ -6208,11 +6407,10 @@ argument_list|(
 argument|val
 argument_list|)
 block|{
-name|SubclassData
-operator||=
-operator|(
-name|uint16_t
-operator|)
+name|ConstantSDNodeBits
+operator|.
+name|IsOpaque
+operator|=
 name|isOpaque
 block|;   }
 name|public
@@ -6308,9 +6506,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
-operator|&
-literal|1
+name|ConstantSDNodeBits
+operator|.
+name|IsOpaque
 return|;
 block|}
 specifier|static
@@ -6601,6 +6799,22 @@ comment|/// Returns true if \p V is a bitwise not operation. Assumes that an all
 comment|/// constant is canonicalized to be operand 1.
 name|bool
 name|isBitwiseNot
+argument_list|(
+argument|SDValue V
+argument_list|)
+block|;
+comment|/// Returns the SDNode if it is a constant splat BuildVector or constant int.
+name|ConstantSDNode
+operator|*
+name|isConstOrConstSplat
+argument_list|(
+argument|SDValue V
+argument_list|)
+block|;
+comment|/// Returns the SDNode if it is a constant splat BuildVector or constant float.
+name|ConstantFPSDNode
+operator|*
+name|isConstOrConstSplatFP
 argument_list|(
 argument|SDValue V
 argument_list|)
@@ -7318,8 +7532,6 @@ argument_list|(
 argument|Ofs
 argument_list|)
 block|{}
-name|public
-operator|:
 name|unsigned
 name|char
 name|getTargetFlags
@@ -7778,7 +7990,7 @@ name|Reg
 argument_list|(
 argument|reg
 argument_list|)
-block|{   }
+block|{}
 name|public
 operator|:
 name|unsigned
@@ -8157,7 +8369,7 @@ name|TargetFlags
 argument_list|(
 argument|TF
 argument_list|)
-block|{   }
+block|{}
 name|public
 operator|:
 specifier|const
@@ -8329,7 +8541,7 @@ name|Condition
 argument_list|(
 argument|Cond
 argument_list|)
-block|{   }
+block|{}
 name|public
 operator|:
 name|ISD
@@ -8359,89 +8571,6 @@ operator|==
 name|ISD
 operator|::
 name|CONDCODE
-return|;
-block|}
-expr|}
-block|;
-comment|/// NOTE: avoid using this node as this may disappear in the
-comment|/// future and most targets don't support it.
-name|class
-name|CvtRndSatSDNode
-operator|:
-name|public
-name|SDNode
-block|{
-name|ISD
-operator|::
-name|CvtCode
-name|CvtCode
-block|;
-name|friend
-name|class
-name|SelectionDAG
-block|;
-name|explicit
-name|CvtRndSatSDNode
-argument_list|(
-argument|EVT VT
-argument_list|,
-argument|unsigned Order
-argument_list|,
-argument|const DebugLoc&dl
-argument_list|,
-argument|ISD::CvtCode Code
-argument_list|)
-operator|:
-name|SDNode
-argument_list|(
-name|ISD
-operator|::
-name|CONVERT_RNDSAT
-argument_list|,
-name|Order
-argument_list|,
-name|dl
-argument_list|,
-name|getSDVTList
-argument_list|(
-name|VT
-argument_list|)
-argument_list|)
-block|,
-name|CvtCode
-argument_list|(
-argument|Code
-argument_list|)
-block|{   }
-name|public
-operator|:
-name|ISD
-operator|::
-name|CvtCode
-name|getCvtCode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CvtCode
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SDNode *N
-argument_list|)
-block|{
-return|return
-name|N
-operator|->
-name|getOpcode
-argument_list|()
-operator|==
-name|ISD
-operator|::
-name|CONVERT_RNDSAT
 return|;
 block|}
 expr|}
@@ -8490,7 +8619,7 @@ name|ValueType
 argument_list|(
 argument|VT
 argument_list|)
-block|{   }
+block|{}
 name|public
 operator|:
 name|EVT
@@ -8563,11 +8692,11 @@ argument_list|,
 argument|MMO
 argument_list|)
 block|{
-name|SubclassData
-operator||=
+name|LSBaseSDNodeBits
+operator|.
+name|AddressingMode
+operator|=
 name|AM
-operator|<<
-literal|2
 block|;
 name|assert
 argument_list|(
@@ -8576,7 +8705,7 @@ argument_list|()
 operator|==
 name|AM
 operator|&&
-literal|"MemIndexedMode encoding error!"
+literal|"Value truncated"
 argument_list|)
 block|;   }
 specifier|const
@@ -8612,18 +8741,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
 name|ISD
 operator|::
 name|MemIndexedMode
-argument_list|(
+operator|>
 operator|(
-name|SubclassData
-operator|>>
-literal|2
+name|LSBaseSDNodeBits
+operator|.
+name|AddressingMode
 operator|)
-operator|&
-literal|7
-argument_list|)
 return|;
 block|}
 comment|/// Return true if this is a pre/post inc/dec load/store.
@@ -8730,23 +8858,11 @@ argument_list|,
 argument|MMO
 argument_list|)
 block|{
-name|SubclassData
-operator||=
-operator|(
-name|unsigned
-name|short
-operator|)
+name|LoadSDNodeBits
+operator|.
+name|ExtTy
+operator|=
 name|ETy
-block|;
-name|assert
-argument_list|(
-name|getExtensionType
-argument_list|()
-operator|==
-name|ETy
-operator|&&
-literal|"LoadExtType encoding error!"
-argument_list|)
 block|;
 name|assert
 argument_list|(
@@ -8777,14 +8893,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
 name|ISD
 operator|::
 name|LoadExtType
-argument_list|(
-name|SubclassData
-operator|&
-literal|3
-argument_list|)
+operator|>
+operator|(
+name|LoadSDNodeBits
+operator|.
+name|ExtTy
+operator|)
 return|;
 block|}
 specifier|const
@@ -8880,23 +8999,11 @@ argument_list|,
 argument|MMO
 argument_list|)
 block|{
-name|SubclassData
-operator||=
-operator|(
-name|unsigned
-name|short
-operator|)
+name|StoreSDNodeBits
+operator|.
+name|IsTruncating
+operator|=
 name|isTrunc
-block|;
-name|assert
-argument_list|(
-name|isTruncatingStore
-argument_list|()
-operator|==
-name|isTrunc
-operator|&&
-literal|"isTrunc encoding error!"
-argument_list|)
 block|;
 name|assert
 argument_list|(
@@ -8926,9 +9033,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
-operator|&
-literal|1
+name|StoreSDNodeBits
+operator|.
+name|IsTruncating
 return|;
 block|}
 specifier|const
@@ -9120,6 +9227,8 @@ argument|SDVTList VTs
 argument_list|,
 argument|ISD::LoadExtType ETy
 argument_list|,
+argument|bool IsExpanding
+argument_list|,
 argument|EVT MemVT
 argument_list|,
 argument|MachineMemOperand *MMO
@@ -9140,13 +9249,17 @@ argument_list|,
 argument|MMO
 argument_list|)
 block|{
-name|SubclassData
-operator||=
-operator|(
-name|unsigned
-name|short
-operator|)
+name|LoadSDNodeBits
+operator|.
+name|ExtTy
+operator|=
 name|ETy
+block|;
+name|LoadSDNodeBits
+operator|.
+name|IsExpanding
+operator|=
+name|IsExpanding
 block|;   }
 name|ISD
 operator|::
@@ -9156,14 +9269,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
 name|ISD
 operator|::
 name|LoadExtType
-argument_list|(
-name|SubclassData
-operator|&
-literal|3
-argument_list|)
+operator|>
+operator|(
+name|LoadSDNodeBits
+operator|.
+name|ExtTy
+operator|)
 return|;
 block|}
 specifier|const
@@ -9198,6 +9314,17 @@ operator|::
 name|MLOAD
 return|;
 block|}
+name|bool
+name|isExpandingLoad
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LoadSDNodeBits
+operator|.
+name|IsExpanding
+return|;
+block|}
 expr|}
 block|;
 comment|/// This class is used to represent an MSTORE node
@@ -9223,6 +9350,8 @@ argument|SDVTList VTs
 argument_list|,
 argument|bool isTrunc
 argument_list|,
+argument|bool isCompressing
+argument_list|,
 argument|EVT MemVT
 argument_list|,
 argument|MachineMemOperand *MMO
@@ -9243,13 +9372,17 @@ argument_list|,
 argument|MMO
 argument_list|)
 block|{
-name|SubclassData
-operator||=
-operator|(
-name|unsigned
-name|short
-operator|)
+name|StoreSDNodeBits
+operator|.
+name|IsTruncating
+operator|=
 name|isTrunc
+block|;
+name|StoreSDNodeBits
+operator|.
+name|IsCompressing
+operator|=
+name|isCompressing
 block|;   }
 comment|/// Return true if the op does a truncation before store.
 comment|/// For integers this is the same as doing a TRUNCATE and storing the result.
@@ -9260,9 +9393,24 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubclassData
-operator|&
-literal|1
+name|StoreSDNodeBits
+operator|.
+name|IsTruncating
+return|;
+block|}
+comment|/// Returns true if the op does a compression to the vector before storing.
+comment|/// The node contiguously stores the active elements (integers or floats)
+comment|/// in src (those with their respective bit set in writemask k) to unaligned
+comment|/// memory at base_addr.
+name|bool
+name|isCompressingStore
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StoreSDNodeBits
+operator|.
+name|IsCompressing
 return|;
 block|}
 specifier|const
@@ -9961,16 +10109,15 @@ operator|>
 block|{
 typedef|typedef
 name|SDNode
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 typedef|typedef
 name|SDNodeIterator
 name|ChildIteratorType
 typedef|;
 specifier|static
-specifier|inline
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|SDNode *N
@@ -9981,11 +10128,10 @@ name|N
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 argument_list|(
-argument|NodeType *N
+argument|NodeRef N
 argument_list|)
 block|{
 return|return
@@ -9998,11 +10144,10 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 argument_list|(
-argument|NodeType *N
+argument|NodeRef N
 argument_list|)
 block|{
 return|return
@@ -10382,17 +10527,23 @@ operator|::
 name|UNINDEXED
 return|;
 block|}
-expr|}  }
+expr|}
+comment|// end namespace ISD
+expr|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_SELECTIONDAGNODES_H
+end_comment
 
 end_unit
 

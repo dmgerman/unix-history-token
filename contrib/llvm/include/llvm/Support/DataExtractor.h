@@ -112,7 +112,7 @@ return|return
 name|Data
 return|;
 block|}
-comment|/// \brief Get the endianess for this extractor.
+comment|/// \brief Get the endianness for this extractor.
 name|bool
 name|isLittleEndian
 argument_list|()

@@ -137,6 +137,10 @@ specifier|extern
 name|bool
 name|EsanDuringInit
 decl_stmt|;
+specifier|extern
+name|uptr
+name|VmaSize
+decl_stmt|;
 name|void
 name|initializeLibrary
 parameter_list|(

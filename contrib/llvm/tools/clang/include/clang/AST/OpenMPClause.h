@@ -15463,7 +15463,7 @@ name|OMPUseDevicePtrClause
 name|final
 operator|:
 name|public
-name|OMPVarListClause
+name|OMPMappableExprListClause
 operator|<
 name|OMPUseDevicePtrClause
 operator|>
@@ -15477,6 +15477,15 @@ name|OMPUseDevicePtrClause
 block|,
 name|Expr
 operator|*
+block|,
+name|ValueDecl
+operator|*
+block|,
+name|unsigned
+block|,
+name|OMPClauseMappableExprCommon
+operator|::
+name|MappableComponent
 operator|>
 block|{
 name|friend
@@ -15486,16 +15495,66 @@ name|friend
 name|OMPVarListClause
 block|;
 name|friend
+name|OMPMappableExprListClause
+block|;
+name|friend
 name|class
 name|OMPClauseReader
 block|;
-comment|/// Build clause with number of variables \a N.
+comment|/// Define the sizes of each trailing object array except the last one. This
+comment|/// is required for TrailingObjects to work properly.
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<Expr *>
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|3
+operator|*
+name|varlist_size
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<ValueDecl *>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<unsigned>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+operator|+
+name|getTotalComponentListNum
+argument_list|()
+return|;
+block|}
+comment|/// Build clause with number of variables \a NumVars.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param N Number of the variables in the clause.
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
 comment|///
+name|explicit
 name|OMPUseDevicePtrClause
 argument_list|(
 argument|SourceLocation StartLoc
@@ -15504,63 +15563,215 @@ argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
-argument|unsigned N
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
 argument_list|)
 operator|:
-name|OMPVarListClause
-operator|<
-name|OMPUseDevicePtrClause
-operator|>
-operator|(
-name|OMPC_use_device_ptr
-expr|,
-name|StartLoc
-expr|,
-name|LParenLoc
-expr|,
-name|EndLoc
-expr|,
-name|N
-operator|)
+name|OMPMappableExprListClause
+argument_list|(
+argument|OMPC_use_device_ptr
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|LParenLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumVars
+argument_list|,
+argument|NumUniqueDeclarations
+argument_list|,
+argument|NumComponentLists
+argument_list|,
+argument|NumComponents
+argument_list|)
 block|{}
-comment|/// \brief Build an empty clause.
+comment|/// Build an empty clause.
 comment|///
-comment|/// \param N Number of variables.
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
 comment|///
 name|explicit
 name|OMPUseDevicePtrClause
 argument_list|(
-argument|unsigned N
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
 argument_list|)
 operator|:
-name|OMPVarListClause
+name|OMPMappableExprListClause
+argument_list|(
+argument|OMPC_use_device_ptr
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumVars
+argument_list|,
+argument|NumUniqueDeclarations
+argument_list|,
+argument|NumComponentLists
+argument_list|,
+argument|NumComponents
+argument_list|)
+block|{}
+comment|/// Sets the list of references to private copies with initializers for new
+comment|/// private variables.
+comment|/// \param VL List of references.
+name|void
+name|setPrivateCopies
+argument_list|(
+name|ArrayRef
 operator|<
-name|OMPUseDevicePtrClause
+name|Expr
+operator|*
+operator|>
+name|VL
+argument_list|)
+block|;
+comment|/// Gets the list of references to private copies with initializers for new
+comment|/// private variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getPrivateCopies
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
 operator|>
 operator|(
-name|OMPC_use_device_ptr
-expr|,
-name|SourceLocation
+name|varlist_end
 argument_list|()
 expr|,
-name|SourceLocation
+name|varlist_size
 argument_list|()
-expr|,
-name|SourceLocation
-argument_list|()
-expr|,
-name|N
 operator|)
-block|{}
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getPrivateCopies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Sets the list of references to initializer variables for new private
+comment|/// variables.
+comment|/// \param VL List of references.
+name|void
+name|setInits
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VL
+argument_list|)
+block|;
+comment|/// Gets the list of references to initializer variables for new private
+comment|/// variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
-comment|/// Creates clause with a list of variables \a VL.
+comment|/// Creates clause with a list of variables \a Vars.
 comment|///
 comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param VL List of references to the variables.
+comment|/// \param Vars The original expression used in the clause.
+comment|/// \param PrivateVars Expressions referring to private copies.
+comment|/// \param Inits Expressions referring to private copy initializers.
+comment|/// \param Declarations Declarations used in the clause.
+comment|/// \param ComponentLists Component lists used in the clause.
 comment|///
 specifier|static
 name|OMPUseDevicePtrClause
@@ -15575,13 +15786,26 @@ argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
-argument|ArrayRef<Expr *> VL
+argument|ArrayRef<Expr *> Vars
+argument_list|,
+argument|ArrayRef<Expr *> PrivateVars
+argument_list|,
+argument|ArrayRef<Expr *> Inits
+argument_list|,
+argument|ArrayRef<ValueDecl *> Declarations
+argument_list|,
+argument|MappableExprComponentListsRef ComponentLists
 argument_list|)
 block|;
-comment|/// Creates an empty clause with the place for \a N variables.
+comment|/// Creates an empty clause with the place for \a NumVars variables.
 comment|///
 comment|/// \param C AST context.
-comment|/// \param N The number of variables.
+comment|/// \param NumVars Number of expressions listed in the clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
 comment|///
 specifier|static
 name|OMPUseDevicePtrClause
@@ -15590,9 +15814,179 @@ name|CreateEmpty
 argument_list|(
 argument|const ASTContext&C
 argument_list|,
-argument|unsigned N
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
 argument_list|)
 block|;
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|private_copies_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|private_copies_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|private_copies_iterator
+operator|>
+name|private_copies_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|private_copies_const_iterator
+operator|>
+name|private_copies_const_range
+expr_stmt|;
+name|private_copies_range
+name|private_copies
+argument_list|()
+block|{
+return|return
+name|private_copies_range
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|private_copies_const_range
+name|private_copies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|private_copies_const_range
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inits_iterator
+operator|>
+name|inits_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inits_const_iterator
+operator|>
+name|inits_const_range
+expr_stmt|;
+name|inits_range
+name|inits
+argument_list|()
+block|{
+return|return
+name|inits_range
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|inits_const_range
+name|inits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|inits_const_range
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|child_range
 name|children
 argument_list|()
@@ -15656,7 +16050,7 @@ name|OMPIsDevicePtrClause
 name|final
 operator|:
 name|public
-name|OMPVarListClause
+name|OMPMappableExprListClause
 operator|<
 name|OMPIsDevicePtrClause
 operator|>
@@ -15670,6 +16064,15 @@ name|OMPIsDevicePtrClause
 block|,
 name|Expr
 operator|*
+block|,
+name|ValueDecl
+operator|*
+block|,
+name|unsigned
+block|,
+name|OMPClauseMappableExprCommon
+operator|::
+name|MappableComponent
 operator|>
 block|{
 name|friend
@@ -15679,16 +16082,64 @@ name|friend
 name|OMPVarListClause
 block|;
 name|friend
+name|OMPMappableExprListClause
+block|;
+name|friend
 name|class
 name|OMPClauseReader
 block|;
-comment|/// Build clause with number of variables \a N.
+comment|/// Define the sizes of each trailing object array except the last one. This
+comment|/// is required for TrailingObjects to work properly.
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<Expr *>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|varlist_size
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<ValueDecl *>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<unsigned>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+operator|+
+name|getTotalComponentListNum
+argument_list|()
+return|;
+block|}
+comment|/// Build clause with number of variables \a NumVars.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param N Number of the variables in the clause.
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
 comment|///
+name|explicit
 name|OMPIsDevicePtrClause
 argument_list|(
 argument|SourceLocation StartLoc
@@ -15697,63 +16148,83 @@ argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
-argument|unsigned N
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
 argument_list|)
 operator|:
-name|OMPVarListClause
-operator|<
-name|OMPIsDevicePtrClause
-operator|>
-operator|(
-name|OMPC_is_device_ptr
-expr|,
-name|StartLoc
-expr|,
-name|LParenLoc
-expr|,
-name|EndLoc
-expr|,
-name|N
-operator|)
+name|OMPMappableExprListClause
+argument_list|(
+argument|OMPC_is_device_ptr
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|LParenLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumVars
+argument_list|,
+argument|NumUniqueDeclarations
+argument_list|,
+argument|NumComponentLists
+argument_list|,
+argument|NumComponents
+argument_list|)
 block|{}
 comment|/// Build an empty clause.
 comment|///
-comment|/// \param N Number of variables.
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
 comment|///
 name|explicit
 name|OMPIsDevicePtrClause
 argument_list|(
-argument|unsigned N
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
 argument_list|)
 operator|:
-name|OMPVarListClause
-operator|<
-name|OMPIsDevicePtrClause
-operator|>
-operator|(
-name|OMPC_is_device_ptr
-expr|,
-name|SourceLocation
-argument_list|()
-expr|,
-name|SourceLocation
-argument_list|()
-expr|,
-name|SourceLocation
-argument_list|()
-expr|,
-name|N
-operator|)
+name|OMPMappableExprListClause
+argument_list|(
+argument|OMPC_is_device_ptr
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumVars
+argument_list|,
+argument|NumUniqueDeclarations
+argument_list|,
+argument|NumComponentLists
+argument_list|,
+argument|NumComponents
+argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// Creates clause with a list of variables \a VL.
+comment|/// Creates clause with a list of variables \a Vars.
 comment|///
 comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the clause.
-comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param VL List of references to the variables.
+comment|/// \param Vars The original expression used in the clause.
+comment|/// \param Declarations Declarations used in the clause.
+comment|/// \param ComponentLists Component lists used in the clause.
 comment|///
 specifier|static
 name|OMPIsDevicePtrClause
@@ -15768,13 +16239,22 @@ argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
-argument|ArrayRef<Expr *> VL
+argument|ArrayRef<Expr *> Vars
+argument_list|,
+argument|ArrayRef<ValueDecl *> Declarations
+argument_list|,
+argument|MappableExprComponentListsRef ComponentLists
 argument_list|)
 block|;
-comment|/// Creates an empty clause with the place for \a N variables.
+comment|/// Creates an empty clause with the place for \a NumVars variables.
 comment|///
 comment|/// \param C AST context.
-comment|/// \param N The number of variables.
+comment|/// \param NumVars Number of expressions listed in the clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
 comment|///
 specifier|static
 name|OMPIsDevicePtrClause
@@ -15783,7 +16263,13 @@ name|CreateEmpty
 argument_list|(
 argument|const ASTContext&C
 argument_list|,
-argument|unsigned N
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
 argument_list|)
 block|;
 name|child_range

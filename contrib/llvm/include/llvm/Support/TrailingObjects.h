@@ -254,12 +254,10 @@ expr|enum
 block|{
 name|FirstAlignment
 operator|=
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|First
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 block|,
 name|RestAlignment
 operator|=
@@ -305,12 +303,10 @@ expr|enum
 block|{
 name|Alignment
 operator|=
-name|AlignOf
-operator|<
-name|First
-operator|>
-operator|::
-name|Alignment
+name|alignof
+argument_list|(
+argument|First
+argument_list|)
 block|}
 block|; }
 expr_stmt|;
@@ -500,7 +496,7 @@ name|typename
 operator|...
 name|MoreTys
 operator|>
-expr|struct
+name|class
 name|TrailingObjectsImpl
 block|{
 comment|// The main template definition is never used -- the two
@@ -528,7 +524,7 @@ name|typename
 operator|...
 name|MoreTys
 operator|>
-expr|struct
+name|class
 name|TrailingObjectsImpl
 operator|<
 name|Align
@@ -576,43 +572,45 @@ operator|...
 operator|>
 name|ParentType
 expr_stmt|;
-comment|// Ensure the methods we inherit are not hidden.
-name|using
-name|ParentType
-operator|::
-name|getTrailingObjectsImpl
-expr_stmt|;
-name|using
-name|ParentType
-operator|::
-name|additionalSizeToAllocImpl
+block|struct
+name|RequiresRealignment
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|alignof
+argument_list|(
+name|PrevTy
+argument_list|)
+operator|<
+name|alignof
+argument_list|(
+name|NextTy
+argument_list|)
+block|;   }
 expr_stmt|;
 specifier|static
-name|LLVM_CONSTEXPR
+name|constexpr
 name|bool
 name|requiresRealignment
 parameter_list|()
 block|{
 return|return
-name|llvm
+name|RequiresRealignment
 operator|::
-name|AlignOf
-operator|<
-name|PrevTy
-operator|>
-operator|::
-name|Alignment
-operator|<
-name|llvm
-operator|::
-name|AlignOf
-operator|<
-name|NextTy
-operator|>
-operator|::
-name|Alignment
+name|value
 return|;
 block|}
+name|protected
+label|:
+comment|// Ensure the inherited getTrailingObjectsImpl is not hidden.
+name|using
+name|ParentType
+operator|::
+name|getTrailingObjectsImpl
+expr_stmt|;
 comment|// These two functions are helper functions for
 comment|// TrailingObjects::getTrailingObjects. They recurse to the left --
 comment|// the result for each type in the list of trailing types depends on
@@ -696,14 +694,10 @@ name|alignAddr
 argument_list|(
 name|Ptr
 argument_list|,
-name|llvm
-operator|::
-name|alignOf
-operator|<
+name|alignof
+argument_list|(
 name|NextTy
-operator|>
-operator|(
-operator|)
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -791,14 +785,10 @@ name|alignAddr
 argument_list|(
 name|Ptr
 argument_list|,
-name|llvm
-operator|::
-name|alignOf
-operator|<
+name|alignof
+argument_list|(
 name|NextTy
-operator|>
-operator|(
-operator|)
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -818,7 +808,7 @@ comment|// Helper function for TrailingObjects::additionalSizeToAlloc: this
 comment|// function recurses to superclasses, each of which requires one
 comment|// fewer size_t argument, and adds its own size.
 specifier|static
-name|LLVM_CONSTEXPR
+name|constexpr
 name|size_t
 name|additionalSizeToAllocImpl
 argument_list|(
@@ -842,6 +832,8 @@ name|MoreCounts
 argument_list|)
 block|{
 return|return
+name|ParentType
+operator|::
 name|additionalSizeToAllocImpl
 argument_list|(
 operator|(
@@ -851,18 +843,15 @@ condition|?
 name|llvm
 operator|::
 name|alignTo
-argument_list|(
-name|SizeSoFar
-argument_list|,
-name|llvm
-operator|::
-name|alignOf
 operator|<
+name|alignof
+argument_list|(
 name|NextTy
+argument_list|)
 operator|>
 operator|(
+name|SizeSoFar
 operator|)
-argument_list|)
 else|:
 name|SizeSoFar
 operator|)
@@ -897,7 +886,7 @@ operator|,
 name|typename
 name|PrevTy
 operator|>
-expr|struct
+name|class
 name|TrailingObjectsImpl
 operator|<
 name|Align
@@ -915,6 +904,8 @@ operator|<
 name|Align
 operator|>
 block|{
+name|protected
+operator|:
 comment|// This is a dummy method, only here so the "using" doesn't fail --
 comment|// it will never be called, because this function recurses backwards
 comment|// up the inheritance chain to subclasses.
@@ -924,7 +915,7 @@ name|getTrailingObjectsImpl
 argument_list|()
 block|;
 specifier|static
-name|LLVM_CONSTEXPR
+name|constexpr
 name|size_t
 name|additionalSizeToAllocImpl
 argument_list|(
@@ -1013,7 +1004,7 @@ operator|...
 name|M
 operator|>
 name|friend
-expr|struct
+name|class
 name|trailing_objects_internal
 operator|::
 name|TrailingObjectsImpl
@@ -1310,7 +1301,7 @@ operator|...
 name|Tys
 operator|>
 specifier|static
-name|LLVM_CONSTEXPR
+name|constexpr
 name|typename
 name|std
 operator|::
@@ -1340,7 +1331,7 @@ operator|::
 name|type
 name|additionalSizeToAlloc
 argument_list|(
-argument|typename trailing_objects_internal::ExtractSecondType<               TrailingTys
+argument|typename trailing_objects_internal::ExtractSecondType<                         TrailingTys
 argument_list|,
 argument|size_t>::type... Counts
 argument_list|)
@@ -1368,7 +1359,7 @@ operator|...
 name|Tys
 operator|>
 specifier|static
-name|LLVM_CONSTEXPR
+name|constexpr
 name|typename
 name|std
 operator|::
@@ -1398,7 +1389,7 @@ operator|::
 name|type
 name|totalSizeToAlloc
 argument_list|(
-argument|typename trailing_objects_internal::ExtractSecondType<                        TrailingTys
+argument|typename trailing_objects_internal::ExtractSecondType<                    TrailingTys
 argument_list|,
 argument|size_t>::type... Counts
 argument_list|)
@@ -1472,14 +1463,10 @@ name|llvm
 operator|::
 name|AlignedCharArray
 operator|<
-name|llvm
-operator|::
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|BaseTy
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|,
 name|Size
 operator|>

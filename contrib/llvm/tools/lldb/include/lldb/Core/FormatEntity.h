@@ -74,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -179,6 +179,8 @@ name|Lang
 operator|,
 name|FrameIndex
 operator|,
+name|FrameNoDebug
+operator|,
 name|FrameRegisterPC
 operator|,
 name|FrameRegisterSP
@@ -262,7 +264,8 @@ expr_stmt|;
 name|FormatType
 name|format_type
 decl_stmt|;
-comment|// uint32_t, uint64_t, cstr, or anything that can be formatted by printf or lldb::Format
+comment|// uint32_t, uint64_t, cstr, or anything that can
+comment|// be formatted by printf or lldb::Format
 name|uint64_t
 name|data
 decl_stmt|;
@@ -335,7 +338,7 @@ name|deref
 argument_list|(
 argument|false
 argument_list|)
-block|{             }
+block|{}
 name|Entry
 argument_list|(
 argument|llvm::StringRef s
@@ -817,27 +820,27 @@ decl_stmt|;
 specifier|static
 name|size_t
 name|AutoComplete
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|s
-parameter_list|,
+argument_list|,
 name|int
 name|match_start_point
-parameter_list|,
+argument_list|,
 name|int
 name|max_return_elements
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|word_complete
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|matches
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Format the current elements into the stream \a s.
 comment|//

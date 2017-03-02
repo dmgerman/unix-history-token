@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AssumptionCache.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
@@ -562,33 +568,53 @@ name|cg
 operator|=
 name|nullptr
 argument_list|,
-name|AssumptionCacheTracker
+name|std
+operator|::
+name|function
+operator|<
+name|AssumptionCache
+operator|&
+operator|(
+name|Function
+operator|&
+operator|)
+operator|>
 operator|*
-name|ACT
+name|GetAssumptionCache
 operator|=
 name|nullptr
 argument_list|)
-operator|:
+range|:
 name|CG
 argument_list|(
 name|cg
 argument_list|)
-operator|,
-name|ACT
+decl_stmt|,
+name|GetAssumptionCache
 argument_list|(
-argument|ACT
+name|GetAssumptionCache
 argument_list|)
 block|{}
 comment|/// CG - If non-null, InlineFunction will update the callgraph to reflect the
 comment|/// changes it makes.
 name|CallGraph
-operator|*
-name|CG
-expr_stmt|;
-name|AssumptionCacheTracker
 modifier|*
-name|ACT
+name|CG
 decl_stmt|;
+name|std
+operator|::
+name|function
+operator|<
+name|AssumptionCache
+operator|&
+operator|(
+name|Function
+operator|&
+operator|)
+operator|>
+operator|*
+name|GetAssumptionCache
+expr_stmt|;
 comment|/// StaticAllocas - InlineFunction fills this in with all static allocas that
 comment|/// get copied into the caller.
 name|SmallVector
@@ -610,6 +636,19 @@ literal|8
 operator|>
 name|InlinedCalls
 expr_stmt|;
+comment|/// All of the new call sites inlined into the caller.
+comment|///
+comment|/// 'InlineFunction' fills this in by scanning the inlined instructions, and
+comment|/// only if CG is null. If CG is non-null, instead the value handle
+comment|/// `InlinedCalls` above is used.
+name|SmallVector
+operator|<
+name|CallSite
+operator|,
+literal|8
+operator|>
+name|InlinedCallSites
+expr_stmt|;
 name|void
 name|reset
 parameter_list|()
@@ -620,6 +659,11 @@ name|clear
 argument_list|()
 expr_stmt|;
 name|InlinedCalls
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|InlinedCallSites
 operator|.
 name|clear
 argument_list|()
@@ -637,6 +681,10 @@ comment|/// instruction 'call B' is inlined, and 'B' calls 'C', then the call to
 comment|/// exists in the instruction stream.  Similarly this will inline a recursive
 comment|/// function by one level.
 comment|///
+comment|/// Note that while this routine is allowed to cleanup and optimize the
+comment|/// *inlined* code to minimize the actual inserted code, it must not delete
+comment|/// code in the caller as users of this routine may have pointers to
+comment|/// instructions in the caller that need to remain stable.
 name|bool
 name|InlineFunction
 parameter_list|(

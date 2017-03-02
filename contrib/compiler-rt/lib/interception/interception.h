@@ -411,13 +411,17 @@ struct|struct
 name|interpose_substitution
 block|{
 specifier|const
+name|__sanitizer
+operator|::
 name|uptr
 name|replacement
-decl_stmt|;
+expr_stmt|;
 specifier|const
+name|__sanitizer
+operator|::
 name|uptr
 name|original
-decl_stmt|;
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -743,6 +747,18 @@ define|\
 value|typedef ret_type (*FUNC_TYPE(func))(__VA_ARGS__); \     namespace __interception { \       extern FUNC_TYPE(func) PTR_TO_REAL(func); \     }
 end_define
 
+begin_define
+define|#
+directive|define
+name|ASSIGN_REAL
+parameter_list|(
+name|dst
+parameter_list|,
+name|src
+parameter_list|)
+value|REAL(dst) = REAL(src)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -775,6 +791,17 @@ modifier|...
 parameter_list|)
 define|\
 value|extern "C" ret_type func(__VA_ARGS__);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSIGN_REAL
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
 end_define
 
 begin_endif

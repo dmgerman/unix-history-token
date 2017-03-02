@@ -128,11 +128,11 @@ name|virtual
 name|void
 name|NotifyAdd
 argument_list|(
-argument|const char *N
+argument|StringRef N
 argument_list|,
 argument|MachinePassCtor C
 argument_list|,
-argument|const char *D
+argument|StringRef D
 argument_list|)
 operator|=
 literal|0
@@ -141,9 +141,7 @@ name|virtual
 name|void
 name|NotifyRemove
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|N
 parameter_list|)
 init|=
@@ -166,15 +164,11 @@ modifier|*
 name|Next
 decl_stmt|;
 comment|// Next function pass in list.
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 decl_stmt|;
 comment|// Name of function pass.
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Description
 decl_stmt|;
 comment|// Description string.
@@ -235,9 +229,7 @@ operator|&
 name|Next
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -246,9 +238,7 @@ return|return
 name|Name
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getDescription
 argument_list|()
 specifier|const
@@ -525,11 +515,11 @@ comment|//
 name|void
 name|NotifyAdd
 argument_list|(
-argument|const char *N
+argument|StringRef N
 argument_list|,
 argument|MachinePassCtor C
 argument_list|,
-argument|const char *D
+argument|StringRef D
 argument_list|)
 name|override
 block|{
@@ -553,7 +543,7 @@ block|;   }
 name|void
 name|NotifyRemove
 argument_list|(
-argument|const char *N
+argument|StringRef N
 argument_list|)
 name|override
 block|{

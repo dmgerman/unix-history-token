@@ -841,9 +841,7 @@ name|Type
 operator|*
 name|ResultTy
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|Target
 argument_list|,
 name|ArgListTy
@@ -1476,66 +1474,6 @@ name|Op0
 parameter_list|,
 name|bool
 name|Op0IsKill
-parameter_list|,
-name|uint64_t
-name|Imm
-parameter_list|)
-function_decl|;
-comment|/// \brief This method is called by target-independent code to request that an
-comment|/// instruction with the given type, opcode, and register and floating-point
-comment|/// immediate operands be emitted.
-name|virtual
-name|unsigned
-name|fastEmit_rf
-parameter_list|(
-name|MVT
-name|VT
-parameter_list|,
-name|MVT
-name|RetVT
-parameter_list|,
-name|unsigned
-name|Opcode
-parameter_list|,
-name|unsigned
-name|Op0
-parameter_list|,
-name|bool
-name|Op0IsKill
-parameter_list|,
-specifier|const
-name|ConstantFP
-modifier|*
-name|FPImm
-parameter_list|)
-function_decl|;
-comment|/// \brief This method is called by target-independent code to request that an
-comment|/// instruction with the given type, opcode, and register and immediate
-comment|/// operands be emitted.
-name|virtual
-name|unsigned
-name|fastEmit_rri
-parameter_list|(
-name|MVT
-name|VT
-parameter_list|,
-name|MVT
-name|RetVT
-parameter_list|,
-name|unsigned
-name|Opcode
-parameter_list|,
-name|unsigned
-name|Op0
-parameter_list|,
-name|bool
-name|Op0IsKill
-parameter_list|,
-name|unsigned
-name|Op1
-parameter_list|,
-name|bool
-name|Op1IsKill
 parameter_list|,
 name|uint64_t
 name|Imm

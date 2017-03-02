@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/LaneBitmask.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -503,7 +509,7 @@ name|DiffLists
 decl_stmt|;
 comment|// Pointer to the difflists array
 specifier|const
-name|unsigned
+name|LaneBitmask
 modifier|*
 name|RegUnitMaskSequences
 decl_stmt|;
@@ -799,7 +805,7 @@ operator|*
 name|DL
 argument_list|,
 specifier|const
-name|unsigned
+name|LaneBitmask
 operator|*
 name|RUMS
 argument_list|,
@@ -895,6 +901,39 @@ expr_stmt|;
 name|RegEncodingTable
 operator|=
 name|RET
+expr_stmt|;
+comment|// Initialize DWARF register mapping variables
+name|EHL2DwarfRegs
+operator|=
+name|nullptr
+expr_stmt|;
+name|EHL2DwarfRegsSize
+operator|=
+literal|0
+expr_stmt|;
+name|L2DwarfRegs
+operator|=
+name|nullptr
+expr_stmt|;
+name|L2DwarfRegsSize
+operator|=
+literal|0
+expr_stmt|;
+name|EHDwarf2LRegs
+operator|=
+name|nullptr
+expr_stmt|;
+name|EHDwarf2LRegsSize
+operator|=
+literal|0
+expr_stmt|;
+name|Dwarf2LRegs
+operator|=
+name|nullptr
+expr_stmt|;
+name|Dwarf2LRegsSize
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/// \brief Used to initialize LLVM register to Dwarf
@@ -1836,8 +1875,9 @@ argument_list|()
 block|;   }
 block|}
 block|;
-comment|/// MCRegUnitIterator enumerates a list of register units and their associated
-comment|/// lane masks for Reg. The register units are in ascending numerical order.
+comment|/// MCRegUnitMaskIterator enumerates a list of register units and their
+comment|/// associated lane masks for Reg. The register units are in ascending
+comment|/// numerical order.
 name|class
 name|MCRegUnitMaskIterator
 block|{
@@ -1845,7 +1885,7 @@ name|MCRegUnitIterator
 name|RUIter
 block|;
 specifier|const
-name|unsigned
+name|LaneBitmask
 operator|*
 name|MaskListIter
 block|;
@@ -1899,7 +1939,7 @@ name|pair
 operator|<
 name|unsigned
 block|,
-name|unsigned
+name|LaneBitmask
 operator|>
 name|operator
 operator|*

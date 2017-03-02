@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<system_error>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -265,6 +271,8 @@ argument_list|,
 argument|SourceMgr&
 argument_list|,
 argument|bool ShowColors = true
+argument_list|,
+argument|std::error_code *EC = nullptr
 argument_list|)
 empty_stmt|;
 name|Stream
@@ -274,6 +282,8 @@ argument_list|,
 argument|SourceMgr&
 argument_list|,
 argument|bool ShowColors = true
+argument_list|,
+argument|std::error_code *EC = nullptr
 argument_list|)
 empty_stmt|;
 operator|~
@@ -509,7 +519,7 @@ name|Alignment
 init|=
 literal|16
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{
 return|return
 name|Alloc
@@ -537,7 +547,7 @@ parameter_list|,
 name|size_t
 name|Size
 parameter_list|)
-function|LLVM_NOEXCEPT
+function|noexcept
 block|{
 name|Alloc
 operator|.
@@ -570,7 +580,7 @@ argument_list|(
 name|void
 operator|*
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 init|=
 name|delete
 decl_stmt|;

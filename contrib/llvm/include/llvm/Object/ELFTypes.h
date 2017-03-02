@@ -821,6 +821,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LLVM_ELF_IMPORT_TYPES_ELFT
+parameter_list|(
+name|ELFT
+parameter_list|)
+define|\
+value|typedef typename ELFT::Addr Elf_Addr;                                        \   typedef typename ELFT::Off Elf_Off;                                          \   typedef typename ELFT::Half Elf_Half;                                        \   typedef typename ELFT::Word Elf_Word;                                        \   typedef typename ELFT::Sword Elf_Sword;                                      \   typedef typename ELFT::Xword Elf_Xword;                                      \   typedef typename ELFT::Sxword Elf_Sxword;
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLD_ELF_COMMA
+value|,
+end_define
+
+begin_define
+define|#
+directive|define
 name|LLVM_ELF_IMPORT_TYPES
 parameter_list|(
 name|E
@@ -828,18 +846,7 @@ parameter_list|,
 name|W
 parameter_list|)
 define|\
-value|typedef typename ELFDataTypeTypedefHelper<ELFType<E, W>>::Elf_Addr Elf_Addr; \   typedef typename ELFDataTypeTypedefHelper<ELFType<E, W>>::Elf_Off Elf_Off;   \   typedef typename ELFDataTypeTypedefHelper<ELFType<E, W>>::Elf_Half Elf_Half; \   typedef typename ELFDataTypeTypedefHelper<ELFType<E, W>>::Elf_Word Elf_Word; \   typedef                                                                      \       typename ELFDataTypeTypedefHelper<ELFType<E, W>>::Elf_Sword Elf_Sword;   \   typedef                                                                      \       typename ELFDataTypeTypedefHelper<ELFType<E, W>>::Elf_Xword Elf_Xword;   \   typedef                                                                      \       typename ELFDataTypeTypedefHelper<ELFType<E, W>>::Elf_Sxword Elf_Sxword;
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLVM_ELF_IMPORT_TYPES_ELFT
-parameter_list|(
-name|ELFT
-parameter_list|)
-define|\
-value|LLVM_ELF_IMPORT_TYPES(ELFT::TargetEndianness, ELFT::Is64Bits)
+value|LLVM_ELF_IMPORT_TYPES_ELFT(ELFType<E LLD_ELF_COMMA W>)
 end_define
 
 begin_comment
@@ -3026,7 +3033,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// ELFT needed for endianess.
+comment|// ELFT needed for endianness.
 end_comment
 
 begin_expr_stmt
@@ -3459,7 +3466,6 @@ name|Elf_Word
 name|info
 block|;
 comment|// Kind-specific information
-specifier|const
 name|Elf_Mips_RegInfo
 operator|<
 name|ELFT
@@ -3467,7 +3473,6 @@ operator|>
 operator|&
 name|getRegInfo
 argument_list|()
-specifier|const
 block|{
 name|assert
 argument_list|(
@@ -3484,7 +3489,6 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-specifier|const
 name|Elf_Mips_RegInfo
 operator|<
 name|ELFT
@@ -3493,7 +3497,6 @@ operator|*
 operator|>
 operator|(
 operator|(
-specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -3504,6 +3507,30 @@ argument_list|(
 name|Elf_Mips_Options
 argument_list|)
 operator|)
+return|;
+block|}
+specifier|const
+name|Elf_Mips_RegInfo
+operator|<
+name|ELFT
+operator|>
+operator|&
+name|getRegInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Elf_Mips_Options
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getRegInfo
+argument_list|()
 return|;
 block|}
 end_expr_stmt

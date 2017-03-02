@@ -172,7 +172,9 @@ name|addr_t
 name|base_addr
 argument_list|)
 decl_stmt|;
-comment|// Pass LLDB_INVALID_ADDRESS to not show address at start of line
+comment|// Pass LLDB_INVALID_ADDRESS
+comment|// to not show address at
+comment|// start of line
 comment|//------------------------------------------------------------------
 comment|/// Default constructor.
 comment|///
@@ -205,7 +207,7 @@ comment|///     A size of a target byte in 8-bit host bytes
 comment|//------------------------------------------------------------------
 name|DataExtractor
 argument_list|(
-argument|const void* data
+argument|const void *data
 argument_list|,
 argument|lldb::offset_t data_length
 argument_list|,
@@ -239,7 +241,7 @@ comment|///     A size of a target byte in 8-bit host bytes
 comment|//------------------------------------------------------------------
 name|DataExtractor
 argument_list|(
-argument|const lldb::DataBufferSP& data_sp
+argument|const lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::ByteOrder byte_order
 argument_list|,
@@ -277,7 +279,7 @@ comment|///     A size of a target byte in 8-bit host bytes
 comment|//------------------------------------------------------------------
 name|DataExtractor
 argument_list|(
-argument|const DataExtractor& data
+argument|const DataExtractor&data
 argument_list|,
 argument|lldb::offset_t offset
 argument_list|,
@@ -1789,10 +1791,6 @@ decl|const
 block|{
 if|if
 condition|(
-name|length
-operator|>
-literal|0
-operator|&&
 name|ValidOffsetForDataOfSize
 argument_list|(
 name|offset
@@ -1910,7 +1908,7 @@ operator|::
 name|offset_t
 name|SetData
 argument_list|(
-argument|const DataExtractor& data
+argument|const DataExtractor&data
 argument_list|,
 argument|lldb::offset_t offset
 argument_list|,
@@ -1947,7 +1945,7 @@ operator|::
 name|offset_t
 name|SetData
 argument_list|(
-argument|const lldb::DataBufferSP& data_sp
+argument|const lldb::DataBufferSP&data_sp
 argument_list|,
 argument|lldb::offset_t offset =
 literal|0
@@ -2169,14 +2167,16 @@ comment|///< The byte order of the data we are extracting from.
 name|uint32_t
 name|m_addr_size
 decl_stmt|;
-comment|///< The address size to use when extracting pointers or addresses
+comment|///< The address size to use when extracting pointers or
+comment|///addresses
 name|mutable
 name|lldb
 operator|::
 name|DataBufferSP
 name|m_data_sp
 expr_stmt|;
-comment|///< The shared pointer to data that can be shared among multiple instances
+comment|///< The shared pointer to data that can
+comment|///be shared among multiple instances
 specifier|const
 name|uint32_t
 name|m_target_byte_size

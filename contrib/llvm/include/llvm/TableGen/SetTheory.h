@@ -212,6 +212,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/SMLoc.h"
 end_include
 
@@ -219,6 +225,12 @@ begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -280,7 +292,9 @@ name|virtual
 operator|~
 name|Operator
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// apply - Apply this operator to Expr's arguments and insert the result
 comment|/// in Elts.
 name|virtual
@@ -304,9 +318,9 @@ name|SMLoc
 operator|>
 name|Loc
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Expander - A callback function that can transform a Record representing a
@@ -326,24 +340,26 @@ name|virtual
 operator|~
 name|Expander
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 name|void
 name|expand
-argument_list|(
+parameter_list|(
 name|SetTheory
-operator|&
-argument_list|,
+modifier|&
+parameter_list|,
 name|Record
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|RecSet
-operator|&
+modifier|&
 name|Elts
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 block|}
 empty_stmt|;
 name|private
@@ -522,6 +538,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TABLEGEN_SETTHEORY_H
+end_comment
 
 end_unit
 

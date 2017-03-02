@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -113,6 +119,22 @@ specifier|const
 name|Value
 modifier|*
 name|Pers
+parameter_list|)
+function_decl|;
+name|StringRef
+name|getEHPersonalityName
+parameter_list|(
+name|EHPersonality
+name|Pers
+parameter_list|)
+function_decl|;
+name|EHPersonality
+name|getDefaultEHPersonality
+parameter_list|(
+specifier|const
+name|Triple
+modifier|&
+name|T
 parameter_list|)
 function_decl|;
 comment|/// \brief Returns true if this personality function catches asynchronous

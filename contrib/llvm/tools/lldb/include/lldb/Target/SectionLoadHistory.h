@@ -112,7 +112,7 @@ comment|// Call clear since this takes a lock and clears the section load list
 comment|// in case another thread is currently using this section load list
 name|Clear
 argument_list|()
-block|;     }
+block|;   }
 name|SectionLoadList
 operator|&
 name|GetCurrentSectionLoadList

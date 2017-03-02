@@ -633,9 +633,7 @@ name|MCI
 parameter_list|)
 function_decl|;
 comment|// Return instruction name
-name|char
-specifier|const
-modifier|*
+name|StringRef
 name|getName
 parameter_list|(
 name|MCInstrInfo
@@ -841,6 +839,20 @@ function_decl|;
 comment|// Return whether the insn is an actual insn.
 name|bool
 name|isCanon
+parameter_list|(
+name|MCInstrInfo
+specifier|const
+modifier|&
+name|MCII
+parameter_list|,
+name|MCInst
+specifier|const
+modifier|&
+name|MCI
+parameter_list|)
+function_decl|;
+name|bool
+name|isCofMax1
 parameter_list|(
 name|MCInstrInfo
 specifier|const

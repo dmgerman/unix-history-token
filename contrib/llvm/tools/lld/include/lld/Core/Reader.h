@@ -58,19 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/FileSystem.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/YAMLTraits.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<functional>
+file|"llvm/Support/MemoryBuffer.h"
 end_include
 
 begin_include
@@ -108,8 +114,13 @@ name|class
 name|IO
 decl_stmt|;
 block|}
+comment|// end namespace yaml
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -137,7 +148,9 @@ name|virtual
 operator|~
 name|Reader
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Sniffs the file to determine if this Reader can parse it.
 comment|/// The method is called with:
 comment|/// 1) the file_magic enumeration returned by identify_magic()
@@ -146,14 +159,16 @@ name|virtual
 name|bool
 name|canParse
 argument_list|(
-argument|file_magic magic
+name|file_magic
+name|magic
 argument_list|,
-argument|MemoryBufferRef mb
+name|MemoryBufferRef
+name|mb
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|/// \brief Parse a supplied buffer (already filled with the contents of a
 comment|/// file) and create a File object.
 comment|/// The resulting File object takes ownership of the MemoryBuffer.
@@ -500,6 +515,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLD_CORE_READER_H
+end_comment
 
 end_unit
 

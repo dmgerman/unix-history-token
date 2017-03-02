@@ -413,6 +413,11 @@ init|=
 literal|14
 block|,
 comment|// v8_A AArch32
+name|v8_R
+init|=
+literal|15
+block|,
+comment|// e.g. Cortex R52
 name|v8_M_Base
 init|=
 literal|16

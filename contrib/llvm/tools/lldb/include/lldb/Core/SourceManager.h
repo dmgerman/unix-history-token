@@ -44,6 +44,32 @@ name|liblldb_SourceManager_h_
 end_define
 
 begin_comment
+comment|// Project includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Chrono.h"
+end_include
+
+begin_comment
 comment|// C Includes
 end_comment
 
@@ -67,26 +93,6 @@ begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
-comment|// Project includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_decl_stmt
@@ -138,9 +144,18 @@ operator|*
 name|target
 argument_list|)
 expr_stmt|;
+name|File
+argument_list|(
+argument|const FileSpec&file_spec
+argument_list|,
+argument|lldb::DebuggerSP debugger_sp
+argument_list|)
+empty_stmt|;
 operator|~
 name|File
 argument_list|()
+operator|=
+expr|default
 expr_stmt|;
 name|void
 name|UpdateIfNeeded
@@ -151,6 +166,9 @@ name|DisplaySourceLines
 parameter_list|(
 name|uint32_t
 name|line
+parameter_list|,
+name|uint32_t
+name|column
 parameter_list|,
 name|uint32_t
 name|context_before
@@ -278,19 +296,31 @@ function_decl|;
 name|FileSpec
 name|m_file_spec_orig
 decl_stmt|;
-comment|// The original file spec that was used (can be different from m_file_spec)
+comment|// The original file spec that was used (can be
+comment|// different from m_file_spec)
 name|FileSpec
 name|m_file_spec
 decl_stmt|;
-comment|// The actually file spec being used (if the target has source mappings, this might be different from m_file_spec_orig)
-name|TimeValue
-name|m_mod_time
-decl_stmt|;
+comment|// The actually file spec being used (if the target
+comment|// has source mappings, this might be different from
+comment|// m_file_spec_orig)
 comment|// Keep the modification time that this file data is valid for
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
+name|m_mod_time
+expr_stmt|;
+comment|// If the target uses path remappings, be sure to clear our notion of a
+comment|// source file if the path modification ID changes
 name|uint32_t
 name|m_source_map_mod_id
+init|=
+literal|0
 decl_stmt|;
-comment|// If the target uses path remappings, be sure to clear our notion of a source file if the path modification ID changes
 name|lldb
 operator|::
 name|DataBufferSP
@@ -308,6 +338,26 @@ expr_stmt|;
 name|LineOffsets
 name|m_offsets
 decl_stmt|;
+name|lldb
+operator|::
+name|DebuggerWP
+name|m_debugger_wp
+expr_stmt|;
+name|private
+label|:
+name|void
+name|CommonInitializer
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
+name|file_spec
+parameter_list|,
+name|Target
+modifier|*
+name|target
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 endif|#
@@ -325,8 +375,10 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|SWIG
-comment|// The SourceFileCache class separates the source manager from the cache of source files, so the
-comment|// cache can be stored in the Debugger, but the source managers can be per target.
+comment|// The SourceFileCache class separates the source manager from the cache of
+comment|// source files, so the
+comment|// cache can be stored in the Debugger, but the source managers can be per
+comment|// target.
 name|class
 name|SourceFileCache
 block|{
@@ -386,8 +438,10 @@ comment|// SWIG
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
-comment|// A source manager can be made with a non-null target, in which case it can use the path remappings to find
-comment|// source files that are not in their build locations.  With no target it won't be able to do this.
+comment|// A source manager can be made with a non-null target, in which case it can
+comment|// use the path remappings to find
+comment|// source files that are not in their build locations.  With no target it
+comment|// won't be able to do this.
 name|SourceManager
 argument_list|(
 specifier|const
@@ -432,6 +486,9 @@ name|uint32_t
 name|line
 parameter_list|,
 name|uint32_t
+name|column
+parameter_list|,
+name|uint32_t
 name|context_before
 parameter_list|,
 name|uint32_t
@@ -466,6 +523,9 @@ name|count
 parameter_list|,
 name|uint32_t
 name|curr_line
+parameter_list|,
+name|uint32_t
+name|column
 parameter_list|,
 specifier|const
 name|char

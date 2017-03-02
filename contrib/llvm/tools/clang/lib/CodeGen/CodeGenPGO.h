@@ -86,19 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ProfileData/InstrProfReader.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/MemoryBuffer.h"
 end_include
 
 begin_include

@@ -252,6 +252,12 @@ comment|/// \brief An Objective-C method being used as a property.
 name|CCD_MethodAsProperty
 init|=
 literal|2
+block|,
+comment|/// \brief An Objective-C block property completed as a setter with a
+comment|/// block placeholder.
+name|CCD_BlockPropertySetter
+init|=
+literal|3
 block|}
 enum|;
 comment|/// \brief Priority value factors by which we will divide or multiply the
@@ -1172,14 +1178,8 @@ name|GlobalCodeCompletionAllocator
 range|:
 name|public
 name|CodeCompletionAllocator
-decl_stmt|,
-name|public
-name|RefCountedBase
-decl|<
-name|GlobalCodeCompletionAllocator
-decl|>
-block|{  }
-empty_stmt|;
+block|{}
+decl_stmt|;
 name|class
 name|CodeCompletionTUInfo
 block|{
@@ -1195,7 +1195,9 @@ name|StringRef
 operator|>
 name|ParentNames
 expr_stmt|;
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|GlobalCodeCompletionAllocator
 operator|>
@@ -1206,7 +1208,9 @@ label|:
 name|explicit
 name|CodeCompletionTUInfo
 argument_list|(
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|GlobalCodeCompletionAllocator
 operator|>
@@ -1218,7 +1222,9 @@ argument_list|(
 argument|std::move(Allocator)
 argument_list|)
 block|{}
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|GlobalCodeCompletionAllocator
 operator|>
@@ -2018,7 +2024,7 @@ name|CodeCompletionResult
 argument_list|(
 argument|CodeCompletionString *Pattern
 argument_list|,
-argument|NamedDecl *D
+argument|const NamedDecl *D
 argument_list|,
 argument|unsigned Priority
 argument_list|)
@@ -2583,6 +2589,23 @@ operator|~
 name|CodeCompleteConsumer
 argument_list|()
 expr_stmt|;
+comment|/// \name Code-completion filtering
+comment|/// \brief Check if the result should be filtered out.
+name|virtual
+name|bool
+name|isResultFilteredOut
+parameter_list|(
+name|StringRef
+name|Filter
+parameter_list|,
+name|CodeCompletionResult
+name|Results
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \name Code-completion callbacks
 comment|//@{
 comment|/// \brief Process the finalized code-completion results.
@@ -2699,7 +2722,7 @@ argument_list|)
 block|,
 name|CCTUInfo
 argument_list|(
-argument|new GlobalCodeCompletionAllocator
+argument|std::make_shared<GlobalCodeCompletionAllocator>()
 argument_list|)
 block|{}
 comment|/// \brief Prints the finalized code-completion results.
@@ -2726,6 +2749,15 @@ argument_list|,
 argument|OverloadCandidate *Candidates
 argument_list|,
 argument|unsigned NumCandidates
+argument_list|)
+name|override
+block|;
+name|bool
+name|isResultFilteredOut
+argument_list|(
+argument|StringRef Filter
+argument_list|,
+argument|CodeCompletionResult Results
 argument_list|)
 name|override
 block|;

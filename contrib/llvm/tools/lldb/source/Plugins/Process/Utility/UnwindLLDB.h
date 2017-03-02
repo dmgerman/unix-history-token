@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/Unwind.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -133,7 +133,7 @@ argument_list|()
 name|override
 operator|=
 expr|default
-block|;      enum
+block|;    enum
 name|RegisterSearchResult
 block|{
 name|eRegisterFound
@@ -152,30 +152,36 @@ name|class
 name|lldb_private
 operator|::
 name|RegisterContextLLDB
-block|;      struct
+block|;    struct
 name|RegisterLocation
-block|{         enum
+block|{     enum
 name|RegisterLocationTypes
 block|{
 name|eRegisterNotSaved
 operator|=
 literal|0
 block|,
-comment|// register was not preserved by callee.  If volatile reg, is unavailable
+comment|// register was not preserved by callee.  If
+comment|// volatile reg, is unavailable
 name|eRegisterSavedAtMemoryLocation
 block|,
-comment|// register is saved at a specific word of target mem (target_memory_location)
+comment|// register is saved at a specific word of
+comment|// target mem (target_memory_location)
 name|eRegisterInRegister
 block|,
-comment|// register is available in a (possible other) register (register_number)
+comment|// register is available in a (possible other)
+comment|// register (register_number)
 name|eRegisterSavedAtHostMemoryLocation
 block|,
-comment|// register is saved at a word in lldb's address space
+comment|// register is saved at a word in
+comment|// lldb's address space
 name|eRegisterValueInferred
 block|,
-comment|// register val was computed (and is in inferred_value)
+comment|// register val was computed (and is in
+comment|// inferred_value)
 name|eRegisterInLiveRegisterContext
-comment|// register value is in a live (stack frame #0) register
+comment|// register value is in a live (stack frame
+comment|// #0) register
 block|}
 block|;
 name|int
@@ -199,10 +205,11 @@ block|;
 name|uint64_t
 name|inferred_value
 block|;
-comment|// eRegisterValueInferred - e.g. stack pointer == cfa + offset
+comment|// eRegisterValueInferred - e.g. stack pointer ==
+comment|// cfa + offset
 block|}
 name|location
-block|;     }
+block|;   }
 block|;
 name|void
 name|DoClear
@@ -222,7 +229,7 @@ block|;
 name|m_unwind_complete
 operator|=
 name|false
-block|;     }
+block|;   }
 name|uint32_t
 name|DoGetFrameCount
 argument_list|()
@@ -233,9 +240,9 @@ name|DoGetFrameInfoAtIndex
 argument_list|(
 argument|uint32_t frame_idx
 argument_list|,
-argument|lldb::addr_t& cfa
+argument|lldb::addr_t&cfa
 argument_list|,
-argument|lldb::addr_t& start_pc
+argument|lldb::addr_t&start_pc
 argument_list|)
 name|override
 block|;
@@ -257,15 +264,18 @@ name|RegisterContextLLDB
 operator|>
 name|RegisterContextLLDBSP
 expr_stmt|;
-comment|// Needed to retrieve the "next" frame (e.g. frame 2 needs to retrieve frame 1's RegisterContextLLDB)
-comment|// The RegisterContext for frame_num must already exist or this returns an empty shared pointer.
+comment|// Needed to retrieve the "next" frame (e.g. frame 2 needs to retrieve frame
+comment|// 1's RegisterContextLLDB)
+comment|// The RegisterContext for frame_num must already exist or this returns an
+comment|// empty shared pointer.
 name|RegisterContextLLDBSP
 name|GetRegisterContextForFrameNum
 argument_list|(
 argument|uint32_t frame_num
 argument_list|)
 decl_stmt|;
-comment|// Iterate over the RegisterContextLLDB's in our m_frames vector, look for the first one that
+comment|// Iterate over the RegisterContextLLDB's in our m_frames vector, look for the
+comment|// first one that
 comment|// has a saved location for this reg.
 name|bool
 name|SearchForSavedLocationForRegister
@@ -325,7 +335,8 @@ operator|::
 name|addr_t
 name|start_pc
 expr_stmt|;
-comment|// The start address of the function/symbol for this frame - current pc if unknown
+comment|// The start address of the function/symbol for this
+comment|// frame - current pc if unknown
 name|lldb
 operator|::
 name|addr_t
@@ -337,7 +348,8 @@ operator|::
 name|SymbolContext
 name|sctx
 expr_stmt|;
-comment|// A symbol context we'll contribute to& provide to the StackFrame creation
+comment|// A symbol context we'll contribute to&
+comment|// provide to the StackFrame creation
 name|RegisterContextLLDBSP
 name|reg_ctx_lldb_sp
 decl_stmt|;
@@ -360,7 +372,7 @@ argument_list|()
 operator|,
 name|reg_ctx_lldb_sp
 argument_list|()
-block|{ }
+block|{}
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN
@@ -393,8 +405,10 @@ decl_stmt|;
 name|bool
 name|m_unwind_complete
 decl_stmt|;
-comment|// If this is true, we've enumerated all the frames in the stack, and m_frames.size() is the
-comment|// number of frames, etc.  Otherwise we've only gone as far as directly asked, and m_frames.size()
+comment|// If this is true, we've enumerated all the frames in
+comment|// the stack, and m_frames.size() is the
+comment|// number of frames, etc.  Otherwise we've only gone as far as directly asked,
+comment|// and m_frames.size()
 comment|// is how far we've currently gone.
 name|std
 operator|::

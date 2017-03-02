@@ -2766,11 +2766,16 @@ specifier|const
 name|StackFrameContext
 operator|*
 name|L
+argument_list|,
+specifier|const
+name|ReturnStmt
+operator|*
+name|RS
 argument_list|)
 operator|:
 name|ProgramPoint
 argument_list|(
-argument|nullptr
+argument|RS
 argument_list|,
 argument|CallExitBeginKind
 argument_list|,
@@ -2778,7 +2783,7 @@ argument|L
 argument_list|,
 argument|nullptr
 argument_list|)
-block|{}
+block|{ }
 name|private
 operator|:
 name|friend

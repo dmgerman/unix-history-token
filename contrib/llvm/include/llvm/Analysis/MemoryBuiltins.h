@@ -545,6 +545,33 @@ operator|::
 name|Exact
 parameter_list|)
 function_decl|;
+comment|/// Try to turn a call to @llvm.objectsize into an integer value of the given
+comment|/// Type. Returns null on failure.
+comment|/// If MustSucceed is true, this function will not return null, and may return
+comment|/// conservative values governed by the second argument of the call to
+comment|/// objectsize.
+name|ConstantInt
+modifier|*
+name|lowerObjectSizeCall
+parameter_list|(
+name|IntrinsicInst
+modifier|*
+name|ObjectSize
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|,
+name|bool
+name|MustSucceed
+parameter_list|)
+function_decl|;
 typedef|typedef
 name|std
 operator|::

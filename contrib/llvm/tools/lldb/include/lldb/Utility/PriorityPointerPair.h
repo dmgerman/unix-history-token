@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- PriorityPointerPair.h ----------------------------------------*- C++ -*-===//
+comment|//===-- PriorityPointerPair.h ----------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -46,13 +50,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/Utility/SharingPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/SharingPtr.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -182,7 +186,7 @@ name|swap
 argument_list|(
 name|l
 argument_list|)
-block|;     }
+block|; }
 name|void
 name|SwapHigh
 argument_list|(
@@ -195,7 +199,7 @@ name|swap
 argument_list|(
 name|h
 argument_list|)
-block|;     }
+block|; }
 name|void
 name|SwapLow
 argument_list|(
@@ -208,7 +212,7 @@ name|swap
 argument_list|(
 name|l
 argument_list|)
-block|;     }
+block|; }
 name|void
 name|SwapHigh
 argument_list|(
@@ -221,7 +225,7 @@ name|swap
 argument_list|(
 name|h
 argument_list|)
-block|;     }
+block|; }
 name|T_SP
 name|GetLow
 argument_list|()
@@ -323,7 +327,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-unit|}          ~
+unit|}    ~
 name|PriorityPointerPair
 argument_list|()
 expr_stmt|;

@@ -196,7 +196,7 @@ operator|::
 name|SBValueList
 name|GetVariables
 argument_list|(
-argument|lldb::SBFrame& frame
+argument|lldb::SBFrame&frame
 argument_list|,
 argument|bool arguments
 argument_list|,
@@ -212,7 +212,7 @@ operator|::
 name|SBValueList
 name|GetVariables
 argument_list|(
-argument|lldb::SBTarget& target
+argument|lldb::SBTarget&target
 argument_list|,
 argument|bool arguments
 argument_list|,

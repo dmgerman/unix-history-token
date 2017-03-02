@@ -174,9 +174,9 @@ name|ProfileSummaryBuilder
 block|{
 name|private
 label|:
-comment|// We keep track of the number of times a count (block count or samples)
-comment|// appears in the profile. The map is kept sorted in the descending order of
-comment|// counts.
+comment|/// We keep track of the number of times a count (block count or samples)
+comment|/// appears in the profile. The map is kept sorted in the descending order of
+comment|/// counts.
 name|std
 operator|::
 name|map
@@ -219,37 +219,7 @@ argument_list|)
 operator|:
 name|DetailedSummaryCutoffs
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Cutoffs
-argument_list|)
-argument_list|)
-operator|,
-name|TotalCount
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|MaxCount
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|MaxFunctionCount
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumCounts
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumFunctions
-argument_list|(
-literal|0
+argument|std::move(Cutoffs)
 argument_list|)
 block|{}
 specifier|inline
@@ -271,15 +241,25 @@ parameter_list|()
 function_decl|;
 name|uint64_t
 name|TotalCount
+init|=
+literal|0
 decl_stmt|,
 name|MaxCount
+init|=
+literal|0
 decl_stmt|,
 name|MaxFunctionCount
+init|=
+literal|0
 decl_stmt|;
 name|uint32_t
 name|NumCounts
+init|=
+literal|0
 decl_stmt|,
 name|NumFunctions
+init|=
+literal|0
 decl_stmt|;
 name|public
 label|:
@@ -303,6 +283,8 @@ name|ProfileSummaryBuilder
 block|{
 name|uint64_t
 name|MaxInternalBlockCount
+operator|=
+literal|0
 block|;
 specifier|inline
 name|void
@@ -333,17 +315,7 @@ argument_list|)
 operator|:
 name|ProfileSummaryBuilder
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Cutoffs
-argument_list|)
-argument_list|)
-block|,
-name|MaxInternalBlockCount
-argument_list|(
-literal|0
+argument|std::move(Cutoffs)
 argument_list|)
 block|{}
 name|void
@@ -410,7 +382,7 @@ name|getSummary
 argument_list|()
 block|; }
 decl_stmt|;
-comment|// This is called when a count is seen in the profile.
+comment|/// This is called when a count is seen in the profile.
 name|void
 name|ProfileSummaryBuilder
 operator|::

@@ -201,7 +201,7 @@ name|GetId
 argument_list|()
 specifier|const
 block|{
-comment|// 47 lsb is addr, then 14 bits is low part of uid, then 3 zero bits.
+comment|// 48 lsb is addr, then 14 bits is low part of uid, then 2 zero bits.
 return|return
 name|GetLsb
 argument_list|(
@@ -213,10 +213,10 @@ operator||
 operator|(
 name|uid
 operator|<<
-literal|47
+literal|48
 operator|)
 argument_list|,
-literal|61
+literal|60
 argument_list|)
 return|;
 block|}
@@ -270,7 +270,7 @@ name|uid
 operator|=
 name|id
 operator|>>
-literal|47
+literal|48
 expr_stmt|;
 return|return
 operator|(
@@ -280,7 +280,7 @@ name|GetLsb
 argument_list|(
 name|id
 argument_list|,
-literal|47
+literal|48
 argument_list|)
 return|;
 block|}

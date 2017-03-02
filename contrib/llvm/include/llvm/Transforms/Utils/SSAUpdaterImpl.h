@@ -605,13 +605,11 @@ name|BBInfo
 operator|*
 argument_list|)
 argument_list|,
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|BBInfo
 operator|*
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 argument_list|)
 operator|)
 expr_stmt|;

@@ -959,6 +959,11 @@ range|:
 literal|1
 decl_stmt|;
 name|bool
+name|isAdd
+range|:
+literal|1
+decl_stmt|;
+name|bool
 name|canFoldAsLoad
 range|:
 literal|1

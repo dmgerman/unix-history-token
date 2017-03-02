@@ -321,6 +321,9 @@ block|,
 comment|/// __declspec(...)
 name|AS_Declspec
 block|,
+comment|/// [uuid("...")] class Foo
+name|AS_Microsoft
+block|,
 comment|/// __ptr16, alignas(...), etc.
 name|AS_Keyword
 block|,
@@ -329,7 +332,7 @@ name|AS_ContextSensitiveKeyword
 block|,
 comment|/// #pragma ...
 name|AS_Pragma
-block|}
+block|,   }
 enum|;
 name|private
 label|:
@@ -1736,6 +1739,17 @@ return|return
 name|SyntaxUsed
 operator|==
 name|AS_Declspec
+return|;
+block|}
+name|bool
+name|isMicrosoftAttribute
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SyntaxUsed
+operator|==
+name|AS_Microsoft
 return|;
 block|}
 name|bool
@@ -3543,6 +3557,55 @@ name|newList
 expr_stmt|;
 block|}
 name|void
+name|addAllAtEnd
+parameter_list|(
+name|AttributeList
+modifier|*
+name|newList
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|list
+condition|)
+block|{
+name|list
+operator|=
+name|newList
+expr_stmt|;
+return|return;
+block|}
+name|AttributeList
+modifier|*
+name|lastInList
+init|=
+name|list
+decl_stmt|;
+while|while
+condition|(
+name|AttributeList
+modifier|*
+name|next
+init|=
+name|lastInList
+operator|->
+name|getNext
+argument_list|()
+condition|)
+name|lastInList
+operator|=
+name|next
+expr_stmt|;
+name|lastInList
+operator|->
+name|setNext
+argument_list|(
+name|newList
+argument_list|)
+expr_stmt|;
+block|}
+name|void
 name|set
 parameter_list|(
 name|AttributeList
@@ -4124,6 +4187,8 @@ name|ExpectedUnion
 block|,
 name|ExpectedVariableOrFunction
 block|,
+name|ExpectedFunctionOrGlobalVar
+block|,
 name|ExpectedFunctionVariableOrObjCInterface
 block|,
 name|ExpectedFunctionOrMethod
@@ -4135,6 +4200,8 @@ block|,
 name|ExpectedFunctionMethodOrClass
 block|,
 name|ExpectedFunctionMethodOrParameter
+block|,
+name|ExpectedFunctionMethodOrGlobalVar
 block|,
 name|ExpectedClass
 block|,
@@ -4180,6 +4247,8 @@ name|ExpectedFunctionVariableClassOrObjCInterface
 block|,
 name|ExpectedObjectiveCProtocol
 block|,
+name|ExpectedStaticOrTLSVar
+block|,
 name|ExpectedFunctionGlobalVarMethodOrProperty
 block|,
 name|ExpectedStructOrUnionOrTypedef
@@ -4199,7 +4268,9 @@ block|,
 name|ExpectedStructClassVariableFunctionOrInlineNamespace
 block|,
 name|ExpectedForMaybeUnused
-block|}
+block|,
+name|ExpectedEnumOrClass
+block|, }
 enum|;
 end_enum
 

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OptionValueLanguage.h -------------------------------------*- C++ -*-===//
+comment|//===-- OptionValueLanguage.h -------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -62,13 +66,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
+file|"lldb/Interpreter/OptionValue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/OptionValue.h"
+file|"lldb/lldb-enumerations.h"
 end_include
 
 begin_decl_stmt
@@ -100,7 +104,7 @@ name|m_default_value
 argument_list|(
 argument|value
 argument_list|)
-block|{     }
+block|{}
 name|OptionValueLanguage
 argument_list|(
 argument|lldb::LanguageType current_value
@@ -120,12 +124,12 @@ name|m_default_value
 argument_list|(
 argument|default_value
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueLanguage
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -160,6 +164,20 @@ argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|Clear
@@ -220,7 +238,7 @@ block|{
 name|m_current_value
 operator|=
 name|value
-block|;     }
+block|; }
 name|void
 name|SetDefaultValue
 argument_list|(
@@ -230,7 +248,7 @@ block|{
 name|m_default_value
 operator|=
 name|value
-block|;     }
+block|; }
 name|protected
 operator|:
 name|lldb

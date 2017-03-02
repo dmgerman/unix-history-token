@@ -105,21 +105,10 @@ name|Entry
 block|{
 name|Entry
 argument_list|()
-operator|:
-name|cstring
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|value
-argument_list|()
-block|{         }
+block|{}
 name|Entry
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|cstr
+argument|llvm::StringRef cstr
 argument_list|)
 operator|:
 name|cstring
@@ -129,18 +118,12 @@ argument_list|)
 block|,
 name|value
 argument_list|()
-block|{         }
+block|{}
 name|Entry
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|cstr
+argument|llvm::StringRef cstr
 argument_list|,
-specifier|const
-name|T
-operator|&
-name|v
+argument|const T&v
 argument_list|)
 operator|:
 name|cstring
@@ -152,7 +135,7 @@ name|value
 argument_list|(
 argument|v
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|operator
 operator|<
@@ -172,14 +155,14 @@ operator|.
 name|cstring
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|cstring
 block|;
 name|T
 name|value
-block|;     }
+block|;   }
 block|;
 comment|//------------------------------------------------------------------
 comment|// Call this function multiple times to add a bunch of entries to
@@ -189,9 +172,9 @@ comment|//------------------------------------------------------------------
 name|void
 name|Append
 argument_list|(
-argument|const char *unique_cstr
+argument|llvm::StringRef unique_cstr
 argument_list|,
-argument|const T& value
+argument|const T&value
 argument_list|)
 block|{
 name|m_map
@@ -200,7 +183,7 @@ name|push_back
 argument_list|(
 argument|typename UniqueCStringMap<T>::Entry(unique_cstr, value)
 argument_list|)
-block|;     }
+block|;   }
 name|void
 name|Append
 argument_list|(
@@ -213,7 +196,7 @@ name|push_back
 argument_list|(
 name|e
 argument_list|)
-block|;     }
+block|; }
 name|void
 name|Clear
 argument_list|()
@@ -222,7 +205,7 @@ name|m_map
 operator|.
 name|clear
 argument_list|()
-block|;     }
+block|; }
 comment|//------------------------------------------------------------------
 comment|// Call this function to always keep the map sorted when putting
 comment|// entries into the map.
@@ -230,9 +213,9 @@ comment|//------------------------------------------------------------------
 name|void
 name|Insert
 argument_list|(
-argument|const char *unique_cstr
+argument|llvm::StringRef unique_cstr
 argument_list|,
-argument|const T& value
+argument|const T&value
 argument_list|)
 block|{
 name|typename
@@ -272,7 +255,7 @@ argument_list|)
 argument_list|,
 name|e
 argument_list|)
-block|;     }
+block|;   }
 name|void
 name|Insert
 argument_list|(
@@ -302,7 +285,7 @@ argument_list|)
 argument_list|,
 name|e
 argument_list|)
-block|;     }
+block|;   }
 comment|//------------------------------------------------------------------
 comment|// Get an entries by index in a variety of forms.
 comment|//
@@ -345,9 +328,9 @@ return|return
 name|false
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetCStringAtIndexUnchecked
 argument_list|(
 argument|uint32_t idx
@@ -401,9 +384,9 @@ operator|.
 name|value
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetCStringAtIndex
 argument_list|(
 argument|uint32_t idx
@@ -428,7 +411,10 @@ index|]
 operator|.
 name|cstring
 operator|:
-name|nullptr
+name|llvm
+operator|::
+name|StringRef
+argument_list|()
 operator|)
 return|;
 block|}
@@ -443,7 +429,7 @@ comment|//------------------------------------------------------------------
 name|T
 name|Find
 argument_list|(
-argument|const char *unique_cstr
+argument|llvm::StringRef unique_cstr
 argument_list|,
 argument|T fail_value
 argument_list|)
@@ -517,7 +503,7 @@ name|Entry
 operator|*
 name|FindFirstValueForName
 argument_list|(
-argument|const char *unique_cstr
+argument|llvm::StringRef unique_cstr
 argument_list|)
 specifier|const
 block|{
@@ -559,15 +545,15 @@ operator|!=
 name|end
 condition|)
 block|{
-specifier|const
-name|char
-modifier|*
+name|llvm
+operator|::
+name|StringRef
 name|pos_cstr
-init|=
+operator|=
 name|pos
 operator|->
 name|cstring
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|pos_cstr
@@ -677,7 +663,7 @@ block|}
 name|size_t
 name|GetValues
 argument_list|(
-argument|const char *unique_cstr
+argument|llvm::StringRef unique_cstr
 argument_list|,
 argument|std::vector<T>&values
 argument_list|)
@@ -766,7 +752,7 @@ block|}
 name|size_t
 name|GetValues
 argument_list|(
-argument|const RegularExpression& regex
+argument|const RegularExpression&regex
 argument_list|,
 argument|std::vector<T>&values
 argument_list|)
@@ -886,7 +872,7 @@ name|reserve
 argument_list|(
 name|n
 argument_list|)
-block|;     }
+block|; }
 comment|//------------------------------------------------------------------
 comment|// Sort the unsorted contents in this map. A typical code flow would
 comment|// be:
@@ -917,7 +903,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|)
-block|;     }
+block|; }
 comment|//------------------------------------------------------------------
 comment|// Since we are using a vector to contain our items it will always
 comment|// double its memory consumption as things are added to the vector,
@@ -969,7 +955,7 @@ block|}
 name|size_t
 name|Erase
 argument_list|(
-argument|const char *unique_cstr
+argument|llvm::StringRef unique_cstr
 argument_list|)
 block|{
 name|size_t

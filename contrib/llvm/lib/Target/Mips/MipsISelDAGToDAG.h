@@ -144,9 +144,7 @@ argument|nullptr
 argument_list|)
 block|{}
 comment|// Pass Name
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
@@ -274,7 +272,43 @@ block|;
 comment|/// Match addr+simm10 and addr
 name|virtual
 name|bool
-name|selectIntAddrMSA
+name|selectIntAddrSImm10
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|selectIntAddrSImm10Lsl1
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|selectIntAddrSImm10Lsl2
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|selectIntAddrSImm10Lsl3
 argument_list|(
 argument|SDValue Addr
 argument_list|,

@@ -155,10 +155,11 @@ modifier|*
 name|createLanaiSetflagAluCombinerPass
 parameter_list|()
 function_decl|;
-specifier|extern
 name|Target
-name|TheLanaiTarget
-decl_stmt|;
+modifier|&
+name|getTheLanaiTarget
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -358,10 +358,14 @@ name|SMULL
 block|,
 name|UMULL
 block|,
-comment|// Reciprocal estimates.
+comment|// Reciprocal estimates and steps.
 name|FRECPE
 block|,
+name|FRECPS
+block|,
 name|FRSQRTE
+block|,
+name|FRSQRTS
 block|,
 comment|// NEON Load/Store with post-increment base updates
 name|LD2post
@@ -417,6 +421,54 @@ block|}
 enum|;
 block|}
 comment|// end namespace AArch64ISD
+name|namespace
+block|{
+comment|// Any instruction that defines a 32-bit result zeros out the high half of the
+comment|// register. Truncate can be lowered to EXTRACT_SUBREG. CopyFromReg may
+comment|// be copying from a truncate. But any other 32-bit operation will zero-extend
+comment|// up to 64 bits.
+comment|// FIXME: X86 also checks for CMOV here. Do we need something similar?
+specifier|static
+specifier|inline
+name|bool
+name|isDef32
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|&
+name|N
+parameter_list|)
+block|{
+name|unsigned
+name|Opc
+init|=
+name|N
+operator|.
+name|getOpcode
+argument_list|()
+decl_stmt|;
+return|return
+name|Opc
+operator|!=
+name|ISD
+operator|::
+name|TRUNCATE
+operator|&&
+name|Opc
+operator|!=
+name|TargetOpcode
+operator|::
+name|EXTRACT_SUBREG
+operator|&&
+name|Opc
+operator|!=
+name|ISD
+operator|::
+name|CopyFromReg
+return|;
+block|}
+block|}
+comment|// end anonymous namespace
 name|class
 name|AArch64Subtarget
 decl_stmt|;
@@ -453,6 +505,15 @@ argument_list|(
 argument|CallingConv::ID CC
 argument_list|,
 argument|bool IsVarArg
+argument_list|)
+specifier|const
+block|;
+comment|/// Selects the correct CCAssignFn for a given CallingConvention value.
+name|CCAssignFn
+operator|*
+name|CCAssignFnForReturn
+argument_list|(
+argument|CallingConv::ID CC
 argument_list|)
 specifier|const
 block|;
@@ -702,16 +763,6 @@ argument_list|(
 argument|SDValue Val
 argument_list|,
 argument|EVT VT2
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|hasPairedLoad
-argument_list|(
-argument|Type *LoadedType
-argument_list|,
-argument|unsigned&RequiredAligment
 argument_list|)
 specifier|const
 name|override
@@ -1050,6 +1101,19 @@ name|true
 return|;
 block|}
 name|bool
+name|hasAndNotCompare
+argument_list|(
+argument|SDValue
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// 'bics'
+return|return
+name|true
+return|;
+block|}
+name|bool
 name|hasBitPreservingFPLogic
 argument_list|(
 argument|EVT VT
@@ -1265,7 +1329,7 @@ argument|SDValue Chain
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|MachineFrameInfo *MFI
+argument|MachineFrameInfo&MFI
 argument_list|,
 argument|int ClobberedFI
 argument_list|)
@@ -1277,13 +1341,6 @@ argument_list|(
 argument|CallingConv::ID CallCC
 argument_list|,
 argument|bool TailCallOpt
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|IsTailCallConvention
-argument_list|(
-argument|CallingConv::ID CallCC
 argument_list|)
 specifier|const
 block|;
@@ -1734,15 +1791,19 @@ specifier|const
 name|override
 block|;
 name|SDValue
-name|getRsqrtEstimate
+name|getSqrtEstimate
 argument_list|(
 argument|SDValue Operand
 argument_list|,
-argument|DAGCombinerInfo&DCI
+argument|SelectionDAG&DAG
 argument_list|,
-argument|unsigned&RefinementSteps
+argument|int Enabled
 argument_list|,
-argument|bool&UseOneConstNR
+argument|int&ExtraSteps
+argument_list|,
+argument|bool&UseOneConst
+argument_list|,
+argument|bool Reciprocal
 argument_list|)
 specifier|const
 name|override
@@ -1752,9 +1813,11 @@ name|getRecipEstimate
 argument_list|(
 argument|SDValue Operand
 argument_list|,
-argument|DAGCombinerInfo&DCI
+argument|SelectionDAG&DAG
 argument_list|,
-argument|unsigned&RefinementSteps
+argument|int Enabled
+argument_list|,
+argument|int&ExtraSteps
 argument_list|)
 specifier|const
 name|override

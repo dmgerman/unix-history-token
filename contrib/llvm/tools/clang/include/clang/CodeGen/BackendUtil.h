@@ -82,6 +82,9 @@ name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
+name|HeaderSearchOptions
+decl_stmt|;
+name|class
 name|CodeGenOptions
 decl_stmt|;
 name|class
@@ -118,6 +121,10 @@ argument_list|(
 name|DiagnosticsEngine
 operator|&
 name|Diags
+argument_list|,
+specifier|const
+name|HeaderSearchOptions
+operator|&
 argument_list|,
 specifier|const
 name|CodeGenOptions

@@ -44,30 +44,6 @@ name|liblldb_ModuleSpec_h_
 end_define
 
 begin_comment
-comment|// C Includes
-end_comment
-
-begin_comment
-comment|// C++ Includes
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<mutex>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_comment
-comment|// Other libraries and framework includes
-end_comment
-
-begin_comment
 comment|// Project includes
 end_comment
 
@@ -99,6 +75,36 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/PathMappingList.h"
+end_include
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Chrono.h"
+end_include
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -141,12 +147,9 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|m_object_mod_time
-argument_list|()
-operator|,
 name|m_source_mappings
 argument_list|()
-block|{     }
+block|{}
 name|ModuleSpec
 argument_list|(
 specifier|const
@@ -188,12 +191,9 @@ name|GetByteSize
 argument_list|()
 argument_list|)
 operator|,
-name|m_object_mod_time
-argument_list|()
-operator|,
 name|m_source_mappings
 argument_list|()
-block|{     }
+block|{}
 name|ModuleSpec
 argument_list|(
 specifier|const
@@ -242,12 +242,9 @@ name|GetByteSize
 argument_list|()
 argument_list|)
 operator|,
-name|m_object_mod_time
-argument_list|()
-operator|,
 name|m_source_mappings
 argument_list|()
-block|{     }
+block|{}
 name|ModuleSpec
 argument_list|(
 specifier|const
@@ -323,7 +320,7 @@ name|m_source_mappings
 argument_list|(
 argument|rhs.m_source_mappings
 argument_list|)
-block|{     }
+block|{}
 name|ModuleSpec
 operator|&
 name|operator
@@ -753,17 +750,29 @@ operator|=
 name|object_size
 expr_stmt|;
 block|}
-name|TimeValue
-modifier|&
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
+operator|&
 name|GetObjectModificationTime
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_object_mod_time
 return|;
 block|}
 specifier|const
-name|TimeValue
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 operator|&
 name|GetObjectModificationTime
 argument_list|()
@@ -833,9 +842,16 @@ name|false
 argument_list|)
 expr_stmt|;
 name|m_object_mod_time
-operator|.
-name|Clear
-argument_list|()
+operator|=
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
+operator|(
+operator|)
 expr_stmt|;
 block|}
 name|explicit
@@ -902,9 +918,16 @@ return|;
 if|if
 condition|(
 name|m_object_mod_time
-operator|.
-name|IsValid
-argument_list|()
+operator|!=
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
+operator|(
+operator|)
 condition|)
 return|return
 name|true
@@ -1212,9 +1235,16 @@ block|}
 if|if
 condition|(
 name|m_object_mod_time
-operator|.
-name|IsValid
-argument_list|()
+operator|!=
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
+operator|(
+operator|)
 condition|)
 block|{
 if|if
@@ -1230,15 +1260,21 @@ argument_list|)
 expr_stmt|;
 name|strm
 operator|.
-name|Printf
+name|Format
 argument_list|(
-literal|"object_mod_time = 0x%"
-name|PRIx64
+literal|"object_mod_time = {0:x+}"
 argument_list|,
+name|uint64_t
+argument_list|(
+name|llvm
+operator|::
+name|sys
+operator|::
+name|toTimeT
+argument_list|(
 name|m_object_mod_time
-operator|.
-name|GetAsSecondsSinceJan1_1970
-argument_list|()
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1516,9 +1552,15 @@ decl_stmt|;
 name|uint64_t
 name|m_object_size
 decl_stmt|;
-name|TimeValue
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
 name|m_object_mod_time
-decl_stmt|;
+expr_stmt|;
 name|mutable
 name|PathMappingList
 name|m_source_mappings
@@ -1592,7 +1634,7 @@ operator|=
 name|rhs
 operator|.
 name|m_specs
-block|;     }
+block|;   }
 operator|~
 name|ModuleSpecList
 argument_list|()
@@ -2051,7 +2093,8 @@ name|spec
 argument_list|)
 expr_stmt|;
 block|}
-comment|// If there was an architecture, retry with a compatible arch if no matches were found
+comment|// If there was an architecture, retry with a compatible arch if no matches
+comment|// were found
 if|if
 condition|(
 name|module_spec

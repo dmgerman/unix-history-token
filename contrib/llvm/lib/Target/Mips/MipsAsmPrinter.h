@@ -413,9 +413,7 @@ argument_list|(
 argument|*this
 argument_list|)
 block|{}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
@@ -624,6 +622,16 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|)
+block|;
+name|void
+name|EmitDebugValue
+argument_list|(
+argument|const MCExpr *Value
+argument_list|,
+argument|unsigned Size
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

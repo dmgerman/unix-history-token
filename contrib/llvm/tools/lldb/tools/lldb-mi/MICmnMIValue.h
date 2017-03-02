@@ -48,7 +48,11 @@ file|"MICmnBase.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -100,7 +104,11 @@ comment|//          tuple ==>  "{}" | "{" result ( "," result )* "}"
 end_comment
 
 begin_comment
-comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( "," result )* "]"
+comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( ","
+end_comment
+
+begin_comment
+comment|//          result )* "]"
 end_comment
 
 begin_comment
@@ -156,7 +164,8 @@ block|;
 name|bool
 name|m_bJustConstructed
 block|;
-comment|// True = *this just constructed with no value, false = *this has had value added to it
+comment|// True = *this just constructed with no value, false
+comment|// = *this has had value added to it
 block|}
 decl_stmt|;
 end_decl_stmt

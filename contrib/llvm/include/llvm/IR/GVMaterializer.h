@@ -78,12 +78,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<system_error>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -92,13 +86,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Function
+name|Error
 decl_stmt|;
 name|class
 name|GlobalValue
-decl_stmt|;
-name|class
-name|Module
 decl_stmt|;
 name|class
 name|StructType
@@ -110,7 +101,9 @@ name|protected
 label|:
 name|GVMaterializer
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|public
 label|:
 name|virtual
@@ -121,38 +114,32 @@ expr_stmt|;
 comment|/// Make sure the given GlobalValue is fully read.
 comment|///
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|materialize
-argument_list|(
+parameter_list|(
 name|GlobalValue
-operator|*
+modifier|*
 name|GV
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|/// Make sure the entire Module has been completely read.
 comment|///
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|materializeModule
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|materializeMetadata
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|virtual
 name|void
 name|setStripDebugInfo
@@ -180,13 +167,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_GVMATERIALIZER_H
+end_comment
 
 end_unit
 

@@ -139,7 +139,7 @@ argument_list|,
 argument|Socket *&conn_socket
 argument_list|)
 name|override
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

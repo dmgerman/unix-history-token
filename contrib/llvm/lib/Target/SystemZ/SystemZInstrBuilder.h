@@ -128,7 +128,7 @@ name|getParent
 argument_list|()
 decl_stmt|;
 name|MachineFrameInfo
-modifier|*
+modifier|&
 name|MFFrame
 init|=
 name|MF
@@ -206,14 +206,14 @@ argument_list|,
 name|Flags
 argument_list|,
 name|MFFrame
-operator|->
+operator|.
 name|getObjectSize
 argument_list|(
 name|FI
 argument_list|)
 argument_list|,
 name|MFFrame
-operator|->
+operator|.
 name|getObjectAlignment
 argument_list|(
 name|FI

@@ -89,12 +89,15 @@ literal|0
 block|,
 name|eAddressTypeFile
 block|,
-comment|///< Address is an address as found in an object or symbol file
+comment|///< Address is an address as found in an object or symbol
+comment|///file
 name|eAddressTypeLoad
 block|,
-comment|///< Address is an address as in the current target inferior process
+comment|///< Address is an address as in the current target inferior
+comment|///process
 name|eAddressTypeHost
-comment|///< Address is an address in the process that is running this code
+comment|///< Address is an address in the process that is running
+comment|///this code
 block|}
 name|AddressType
 typedef|;
@@ -140,7 +143,7 @@ comment|//----------------------------------------------------------------------
 comment|/// Settable state variable types.
 comment|///
 comment|//----------------------------------------------------------------------
-comment|//typedef enum SettableVariableType
+comment|// typedef enum SettableVariableType
 comment|//{
 comment|//    eSetVarTypeInt,
 comment|//    eSetVarTypeBoolean,
@@ -193,7 +196,8 @@ block|,
 comment|// Repetition of same argument, from 1 to n
 name|eArgRepeatPairPlain
 block|,
-comment|// A pair of arguments that must always go together ([arg-type arg-value]), occurs exactly once
+comment|// A pair of arguments that must always go together
+comment|// ([arg-type arg-value]), occurs exactly once
 name|eArgRepeatPairOptional
 block|,
 comment|// A pair that occurs at most once (optional)
@@ -207,7 +211,8 @@ name|eArgRepeatPairRange
 block|,
 comment|// A pair that repeats from 1 to n
 name|eArgRepeatPairRangeOptional
-comment|// A pair that repeats from 1 to n, but is optional
+comment|// A pair that repeats from 1 to n, but is
+comment|// optional
 block|}
 name|ArgumentRepetitionType
 typedef|;
@@ -280,10 +285,13 @@ block|,
 comment|// Support for any instructions at all (at least one)
 name|eInstructionTypePrologueEpilogue
 block|,
-comment|// All prologue and epilogue instructions that push and pop register values and modify sp/fp
+comment|// All prologue and epilogue instructions
+comment|// that push and pop register values and
+comment|// modify sp/fp
 name|eInstructionTypePCModifying
 block|,
-comment|// Any instruction that modifies the program counter/instruction pointer
+comment|// Any instruction that modifies the program
+comment|// counter/instruction pointer
 name|eInstructionTypeAll
 comment|// All instructions of any kind
 block|}
@@ -408,7 +416,8 @@ block|,
 name|eScriptedCommandSynchronicityAsynchronous
 block|,
 name|eScriptedCommandSynchronicityCurrentValue
-comment|// use whatever the current synchronicity is
+comment|// use whatever the current
+comment|// synchronicity is
 block|}
 name|ScriptedCommandSynchronicity
 typedef|;
@@ -421,10 +430,13 @@ name|LanguageRuntimeDescriptionDisplayVerbosity
 block|{
 name|eLanguageRuntimeDescriptionDisplayVerbosityCompact
 block|,
-comment|// only print the description string, if any
+comment|// only print the
+comment|// description string, if
+comment|// any
 name|eLanguageRuntimeDescriptionDisplayVerbosityFull
 block|,
-comment|// print the full-blown output
+comment|// print the full-blown
+comment|// output
 block|}
 name|LanguageRuntimeDescriptionDisplayVerbosity
 typedef|;
@@ -456,10 +468,12 @@ name|LineStatus
 block|{
 name|Success
 operator|,
-comment|// The line that was just edited if good and should be added to the lines
+comment|// The line that was just edited if good and should be added to the
+comment|// lines
 name|Error
 operator|,
-comment|// There is an error with the current line and it needs to be re-edited before it can be accepted
+comment|// There is an error with the current line and it needs to be re-edited
+comment|// before it can be accepted
 name|Done
 comment|// Lines are complete
 block|}
@@ -475,13 +489,16 @@ name|eExitTypeInvalid
 block|,
 name|eExitTypeExit
 block|,
-comment|// The exit status represents the return code from normal program exit (i.e. WIFEXITED() was true)
+comment|// The exit status represents the return code from normal
+comment|// program exit (i.e. WIFEXITED() was true)
 name|eExitTypeSignal
 block|,
-comment|// The exit status represents the signal number that caused the program to exit (i.e. WIFSIGNALED() was true)
+comment|// The exit status represents the signal number that caused
+comment|// the program to exit (i.e. WIFSIGNALED() was true)
 name|eExitTypeStop
 block|,
-comment|// The exit status represents the stop signal that caused the program to exit (i.e. WIFSTOPPED() was true)
+comment|// The exit status represents the stop signal that caused the
+comment|// program to exit (i.e. WIFSTOPPED() was true)
 block|}
 name|ExitType
 typedef|;

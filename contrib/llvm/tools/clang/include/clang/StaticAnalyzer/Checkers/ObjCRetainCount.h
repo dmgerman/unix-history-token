@@ -213,10 +213,6 @@ block|,
 comment|/// Indicates that the returned value is an owned (+1) symbol.
 name|OwnedSymbol
 block|,
-comment|/// Indicates that the returned value is an owned (+1) symbol and
-comment|/// that it should be treated as freshly allocated.
-name|OwnedAllocatedSymbol
-block|,
 comment|/// Indicates that the returned value is an object with retain count
 comment|/// semantics but that it is not owned (+0).  This is the default
 comment|/// for getters, etc.
@@ -309,10 +305,6 @@ name|OwnedSymbol
 operator|||
 name|K
 operator|==
-name|OwnedAllocatedSymbol
-operator|||
-name|K
-operator|==
 name|OwnedWhenTrackedReceiver
 return|;
 block|}
@@ -372,20 +364,11 @@ name|MakeOwned
 parameter_list|(
 name|ObjKind
 name|o
-parameter_list|,
-name|bool
-name|isAllocated
-init|=
-name|false
 parameter_list|)
 block|{
 return|return
 name|RetEffect
 argument_list|(
-name|isAllocated
-condition|?
-name|OwnedAllocatedSymbol
-else|:
 name|OwnedSymbol
 argument_list|,
 name|o

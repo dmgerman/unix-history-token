@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/STLUtils.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/CommandObjectMultiword.h"
 end_include
 
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/Options.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/STLUtils.h"
 end_include
 
 begin_decl_stmt
@@ -147,7 +147,7 @@ name|result
 argument_list|,
 name|valid_ids
 argument_list|)
-block|;     }
+block|;   }
 specifier|static
 name|void
 name|VerifyBreakpointIDs
@@ -173,7 +173,7 @@ name|result
 argument_list|,
 name|valid_ids
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static

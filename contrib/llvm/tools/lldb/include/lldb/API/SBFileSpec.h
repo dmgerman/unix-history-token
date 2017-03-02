@@ -80,7 +80,8 @@ operator|*
 name|path
 argument_list|)
 expr_stmt|;
-comment|// Deprecated, use SBFileSpec (const char *path, bool resolve)
+comment|// Deprecated, use SBFileSpec (const char *path,
+comment|// bool resolve)
 name|SBFileSpec
 argument_list|(
 argument|const char *path

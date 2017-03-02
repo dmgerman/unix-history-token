@@ -125,19 +125,10 @@ directive|include
 file|"clang/Basic/TargetInfo.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Module.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Module
-decl_stmt|;
 name|class
 name|Constant
 decl_stmt|;
@@ -172,9 +163,6 @@ block|{
 name|namespace
 name|CodeGen
 block|{
-name|class
-name|CodeGenModule
-decl_stmt|;
 name|class
 name|CGBlockInfo
 decl_stmt|;
@@ -758,6 +746,12 @@ operator|::
 name|QuantityType
 name|Offset
 expr_stmt|;
+comment|/// Type of the capture field. Normally, this is identical to the type of
+comment|/// the capture's VarDecl, but can be different if there is an enclosing
+comment|/// lambda.
+name|QualType
+name|FieldType
+decl_stmt|;
 name|public
 label|:
 name|bool
@@ -887,6 +881,15 @@ name|Data
 operator|)
 return|;
 block|}
+name|QualType
+name|fieldType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FieldType
+return|;
+block|}
 specifier|static
 name|Capture
 name|makeIndex
@@ -896,6 +899,9 @@ name|index
 parameter_list|,
 name|CharUnits
 name|offset
+parameter_list|,
+name|QualType
+name|FieldType
 parameter_list|)
 block|{
 name|Capture
@@ -921,6 +927,12 @@ name|offset
 operator|.
 name|getQuantity
 argument_list|()
+expr_stmt|;
+name|v
+operator|.
+name|FieldType
+operator|=
+name|FieldType
 expr_stmt|;
 return|return
 name|v

@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -174,7 +180,7 @@ block|}
 block|}
 name|Diagnostic
 argument_list|(
-argument|const char *message
+argument|llvm::StringRef message
 argument_list|,
 argument|DiagnosticSeverity severity
 argument_list|,
@@ -202,7 +208,7 @@ name|m_compiler_id
 argument_list|(
 argument|compiler_id
 argument_list|)
-block|{     }
+block|{}
 name|Diagnostic
 argument_list|(
 specifier|const
@@ -236,7 +242,7 @@ name|m_compiler_id
 argument_list|(
 argument|rhs.m_compiler_id
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|Diagnostic
@@ -272,33 +278,30 @@ return|return
 name|m_compiler_id
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetMessage
 argument_list|()
 specifier|const
 block|{
 return|return
 name|m_message
-operator|.
-name|c_str
-argument_list|()
 return|;
 block|}
 name|void
 name|AppendMessage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|message
-parameter_list|,
+argument_list|,
 name|bool
 name|precede_with_newline
-init|=
+operator|=
 name|true
-parameter_list|)
+argument_list|)
 block|{
 if|if
 condition|(
@@ -368,7 +371,8 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-comment|// The diagnostic manager holds a list of diagnostics, which are owned by the manager.
+comment|// The diagnostic manager holds a list of diagnostics, which are owned by the
+comment|// manager.
 specifier|const
 name|DiagnosticList
 modifier|&
@@ -427,23 +431,23 @@ return|;
 block|}
 name|void
 name|AddDiagnostic
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|message
-parameter_list|,
+argument_list|,
 name|DiagnosticSeverity
 name|severity
-parameter_list|,
+argument_list|,
 name|DiagnosticOrigin
 name|origin
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|compiler_id
-init|=
+operator|=
 name|LLDB_INVALID_COMPILER_ID
-parameter_list|)
+argument_list|)
 block|{
 name|m_diagnostics
 operator|.
@@ -497,36 +501,37 @@ block|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|size_t
-name|PutCString
-parameter_list|(
+name|PutString
+argument_list|(
 name|DiagnosticSeverity
 name|severity
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|cstr
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|str
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function
+begin_decl_stmt
 name|void
 name|AppendMessageToDiagnostic
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|cstr
-parameter_list|)
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|str
+argument_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|m_diagnostics
 operator|.
-name|size
+name|empty
 argument_list|()
 condition|)
 block|{
@@ -537,12 +542,12 @@ argument_list|()
 operator|->
 name|AppendMessage
 argument_list|(
-name|cstr
+name|str
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|// Returns a string containing errors in this format:

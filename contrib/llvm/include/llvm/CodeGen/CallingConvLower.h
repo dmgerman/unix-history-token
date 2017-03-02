@@ -1074,6 +1074,32 @@ name|CCAssignFn
 name|Fn
 argument_list|)
 decl_stmt|;
+comment|/// The function will invoke AnalyzeFormalArguments.
+name|void
+name|AnalyzeArguments
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
+name|CCAssignFn
+name|Fn
+argument_list|)
+block|{
+name|AnalyzeFormalArguments
+argument_list|(
+name|Ins
+argument_list|,
+name|Fn
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// AnalyzeReturn - Analyze the returned values of a return,
 comment|/// incorporating info about the result values into this state.
 name|void
@@ -1157,6 +1183,32 @@ name|CCAssignFn
 name|Fn
 argument_list|)
 decl_stmt|;
+comment|/// The function will invoke AnalyzeCallOperands.
+name|void
+name|AnalyzeArguments
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
+name|CCAssignFn
+name|Fn
+argument_list|)
+block|{
+name|AnalyzeCallOperands
+argument_list|(
+name|Outs
+argument_list|,
+name|Fn
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// AnalyzeCallResult - Analyze the return values of a call,
 comment|/// incorporating info about the passed values into this state.
 name|void
@@ -1175,6 +1227,17 @@ argument_list|,
 name|CCAssignFn
 name|Fn
 argument_list|)
+decl_stmt|;
+comment|/// A shadow allocated register is a register that was allocated
+comment|/// but wasn't added to the location list (Locs).
+comment|/// \returns true if the register was allocated as shadow or false otherwise.
+name|bool
+name|IsShadowAllocatedReg
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
 decl_stmt|;
 comment|/// AnalyzeCallResult - Same as above except it's specialized for calls which
 comment|/// produce a single value.
@@ -1640,7 +1703,7 @@ name|MF
 operator|.
 name|getFrameInfo
 argument_list|()
-operator|->
+operator|.
 name|ensureMaxAlignment
 argument_list|(
 name|Align
@@ -2023,6 +2086,123 @@ name|CCAssignFn
 name|CallerFn
 argument_list|)
 decl_stmt|;
+comment|/// The function runs an additional analysis pass over function arguments.
+comment|/// It will mark each argument with the attribute flag SecArgPass.
+comment|/// After running, it will sort the locs list.
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|void
+name|AnalyzeArgumentsSecondPass
+argument_list|(
+argument|const SmallVectorImpl<T>&Args
+argument_list|,
+argument|CCAssignFn Fn
+argument_list|)
+block|{
+name|unsigned
+name|NumFirstPassLocs
+operator|=
+name|Locs
+operator|.
+name|size
+argument_list|()
+block|;
+comment|/// Creates similar argument list to \p Args in which each argument is
+comment|/// marked using SecArgPass flag.
+name|SmallVector
+operator|<
+name|T
+block|,
+literal|16
+operator|>
+name|SecPassArg
+block|;
+comment|// SmallVector<ISD::InputArg, 16> SecPassArg;
+for|for
+control|(
+name|auto
+name|Arg
+range|:
+name|Args
+control|)
+block|{
+name|Arg
+operator|.
+name|Flags
+operator|.
+name|setSecArgPass
+argument_list|()
+expr_stmt|;
+name|SecPassArg
+operator|.
+name|push_back
+argument_list|(
+name|Arg
+argument_list|)
+expr_stmt|;
+block|}
+comment|// Run the second argument pass
+name|AnalyzeArguments
+argument_list|(
+name|SecPassArg
+argument_list|,
+name|Fn
+argument_list|)
+expr_stmt|;
+comment|// Sort the locations of the arguments according to their original position.
+name|SmallVector
+operator|<
+name|CCValAssign
+operator|,
+literal|16
+operator|>
+name|TmpArgLocs
+expr_stmt|;
+name|std
+operator|::
+name|swap
+argument_list|(
+name|TmpArgLocs
+argument_list|,
+name|Locs
+argument_list|)
+expr_stmt|;
+name|auto
+name|B
+init|=
+name|TmpArgLocs
+operator|.
+name|begin
+argument_list|()
+decl_stmt|,
+name|E
+init|=
+name|TmpArgLocs
+operator|.
+name|end
+argument_list|()
+decl_stmt|;
+name|std
+operator|::
+name|merge
+argument_list|(
+argument|B
+argument_list|,
+argument|B + NumFirstPassLocs
+argument_list|,
+argument|B + NumFirstPassLocs
+argument_list|,
+argument|E
+argument_list|,
+argument|std::back_inserter(Locs)
+argument_list|,
+argument|[](const CCValAssign&A, const CCValAssign&B) -> bool {                  return A.getValNo()< B.getValNo();                }
+argument_list|)
+expr_stmt|;
+block|}
 name|private
 label|:
 comment|/// MarkAllocated - Mark a register and all of its aliases as allocated.
@@ -2034,11 +2214,14 @@ name|Reg
 parameter_list|)
 function_decl|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

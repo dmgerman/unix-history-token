@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -223,6 +217,11 @@ block|,
 comment|/// \brief The entity being initialized is a function parameter; function
 comment|/// is member of group of audited CF APIs.
 name|EK_Parameter_CF_Audited
+block|,
+comment|/// \brief The entity being initialized is a structured binding of a
+comment|/// decomposition declaration.
+name|EK_Binding
+block|,
 comment|// Note: err_init_conversion_failed in DiagnosticSemaKinds.td uses this
 comment|// enum as an index for its first %select.  When modifying this list,
 comment|// that diagnostic text needs to be updated as well.
@@ -268,6 +267,22 @@ decl_stmt|;
 block|}
 struct|;
 struct|struct
+name|VD
+block|{
+comment|/// \brief The VarDecl, FieldDecl, or BindingDecl being initialized.
+name|ValueDecl
+modifier|*
+name|VariableOrMember
+decl_stmt|;
+comment|/// \brief When Kind == EK_Member, whether this is an implicit member
+comment|/// initialization in a copy or move constructor. These can perform array
+comment|/// copies.
+name|bool
+name|IsImplicitFieldInit
+decl_stmt|;
+block|}
+struct|;
+struct|struct
 name|C
 block|{
 comment|/// \brief The name of the variable being captured by an EK_LambdaCapture.
@@ -283,11 +298,9 @@ block|}
 struct|;
 union|union
 block|{
-comment|/// \brief When Kind == EK_Variable, or EK_Member, the VarDecl or
-comment|/// FieldDecl, respectively.
-name|DeclaratorDecl
-modifier|*
-name|VariableOrMember
+comment|/// \brief When Kind == EK_Variable, EK_Member or EK_Binding, the variable.
+name|VD
+name|Variable
 decl_stmt|;
 comment|/// \brief When Kind == EK_RelatedResult, the ObjectiveC method where
 comment|/// result type was implicitly changed to accommodate ARC semantics.
@@ -339,14 +352,14 @@ block|{}
 comment|/// \brief Create the initialization entity for a variable.
 name|InitializedEntity
 argument_list|(
-name|VarDecl
-operator|*
-name|Var
+argument|VarDecl *Var
+argument_list|,
+argument|EntityKind EK = EK_Variable
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-name|EK_Variable
+name|EK
 argument_list|)
 operator|,
 name|Parent
@@ -367,10 +380,12 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|VariableOrMember
-argument_list|(
-argument|Var
-argument_list|)
+name|Variable
+block|{
+name|Var
+block|,
+name|false
+block|}
 block|{ }
 comment|/// \brief Create the initialization entity for the result of a
 comment|/// function, throwing an object, performing an explicit cast, or
@@ -424,14 +439,11 @@ block|;   }
 comment|/// \brief Create the initialization entity for a member subobject.
 name|InitializedEntity
 argument_list|(
-name|FieldDecl
-operator|*
-name|Member
+argument|FieldDecl *Member
 argument_list|,
-specifier|const
-name|InitializedEntity
-operator|*
-name|Parent
+argument|const InitializedEntity *Parent
+argument_list|,
+argument|bool Implicit
 argument_list|)
 operator|:
 name|Kind
@@ -457,11 +469,13 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|VariableOrMember
-argument_list|(
-argument|Member
-argument_list|)
-block|{ }
+name|Variable
+block|{
+name|Member
+block|,
+name|Implicit
+block|}
+block|{   }
 comment|/// \brief Create the initialization entity for an array element.
 name|InitializedEntity
 argument_list|(
@@ -543,6 +557,7 @@ name|ASTContext
 modifier|&
 name|Context
 parameter_list|,
+specifier|const
 name|ParmVarDecl
 modifier|*
 name|Parm
@@ -572,6 +587,7 @@ name|ASTContext
 modifier|&
 name|Context
 parameter_list|,
+specifier|const
 name|ParmVarDecl
 modifier|*
 name|Parm
@@ -976,6 +992,11 @@ modifier|*
 name|Parent
 init|=
 name|nullptr
+parameter_list|,
+name|bool
+name|Implicit
+init|=
+name|false
 parameter_list|)
 block|{
 return|return
@@ -984,6 +1005,8 @@ argument_list|(
 name|Member
 argument_list|,
 name|Parent
+argument_list|,
+name|Implicit
 argument_list|)
 return|;
 block|}
@@ -1002,6 +1025,11 @@ modifier|*
 name|Parent
 init|=
 name|nullptr
+parameter_list|,
+name|bool
+name|Implicit
+init|=
+name|false
 parameter_list|)
 block|{
 return|return
@@ -1013,6 +1041,8 @@ name|getAnonField
 argument_list|()
 argument_list|,
 name|Parent
+argument_list|,
+name|Implicit
 argument_list|)
 return|;
 block|}
@@ -1042,6 +1072,25 @@ argument_list|,
 name|Index
 argument_list|,
 name|Parent
+argument_list|)
+return|;
+block|}
+comment|/// \brief Create the initialization entity for a structured binding.
+specifier|static
+name|InitializedEntity
+name|InitializeBinding
+parameter_list|(
+name|VarDecl
+modifier|*
+name|Binding
+parameter_list|)
+block|{
+return|return
+name|InitializedEntity
+argument_list|(
+name|Binding
+argument_list|,
+name|EK_Binding
 argument_list|)
 return|;
 block|}
@@ -1173,7 +1222,7 @@ specifier|const
 expr_stmt|;
 comment|/// \brief Retrieve the variable, parameter, or field being
 comment|/// initialized.
-name|DeclaratorDecl
+name|ValueDecl
 operator|*
 name|getDecl
 argument_list|()
@@ -1292,6 +1341,49 @@ return|return
 name|Base
 operator|&
 literal|0x1
+return|;
+block|}
+comment|/// \brief Determine whether this is an array new with an unknown bound.
+name|bool
+name|isVariableLengthArrayNew
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getKind
+argument_list|()
+operator|==
+name|EK_New
+operator|&&
+name|dyn_cast_or_null
+operator|<
+name|IncompleteArrayType
+operator|>
+operator|(
+name|getType
+argument_list|()
+operator|->
+name|getAsArrayTypeUnsafe
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Is this the implicit initialization of a member of a class from
+comment|/// a defaulted constructor?
+name|bool
+name|isImplicitMemberInitializer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getKind
+argument_list|()
+operator|==
+name|EK_Member
+operator|&&
+name|Variable
+operator|.
+name|IsImplicitFieldInit
 return|;
 block|}
 comment|/// \brief Determine the location of the 'return' keyword when initializing
@@ -2181,6 +2273,10 @@ comment|/// temporary object, which is permitted (but not required) by
 comment|/// C++98/03 but not C++0x.
 name|SK_ExtraneousCopyToTemporary
 block|,
+comment|/// \brief Direct-initialization from a reference-related object in the
+comment|/// final stage of class copy-initialization.
+name|SK_FinalCopy
+block|,
 comment|/// \brief Perform a user-defined conversion, either via a conversion
 comment|/// function or via a constructor.
 name|SK_UserConversion
@@ -2235,9 +2331,17 @@ comment|/// \brief An initialization that "converts" an Objective-C object
 comment|/// (not a point to an object) to another Objective-C object type.
 name|SK_ObjCObjectConversion
 block|,
+comment|/// \brief Array indexing for initialization by elementwise copy.
+name|SK_ArrayLoopIndex
+block|,
+comment|/// \brief Array initialization by elementwise copy.
+name|SK_ArrayLoopInit
+block|,
 comment|/// \brief Array initialization (from an array rvalue).
-comment|/// This is a GNU C extension.
 name|SK_ArrayInit
+block|,
+comment|/// \brief Array initialization (from an array rvalue) as a GNU extension.
+name|SK_GNUArrayInit
 block|,
 comment|/// \brief Array initialization from a parenthesized initializer list.
 comment|/// This is a GNU C++ extension.
@@ -2261,6 +2365,9 @@ name|SK_StdInitializerListConstructorCall
 block|,
 comment|/// \brief Initialize an OpenCL sampler from an integer.
 name|SK_OCLSamplerInit
+block|,
+comment|/// \brief Initialize queue_t from 0.
+name|SK_OCLZeroQueue
 block|,
 comment|/// \brief Passing zero to a function where OpenCL event_t is expected.
 name|SK_OCLZeroEvent
@@ -2391,6 +2498,12 @@ name|FK_ReferenceInitOverloadFailed
 block|,
 comment|/// \brief Non-const lvalue reference binding to a temporary.
 name|FK_NonConstLValueReferenceBindingToTemporary
+block|,
+comment|/// \brief Non-const lvalue reference binding to a bit-field.
+name|FK_NonConstLValueReferenceBindingToBitfield
+block|,
+comment|/// \brief Non-const lvalue reference binding to a vector element.
+name|FK_NonConstLValueReferenceBindingToVectorElement
 block|,
 comment|/// \brief Non-const lvalue reference binding to an lvalue of unrelated
 comment|/// type.
@@ -2894,6 +3007,15 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
+comment|/// \brief Add a new step that makes a copy of the input to an object of
+comment|/// the given type, as the final step in class copy-initialization.
+name|void
+name|AddFinalCopy
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
 comment|/// \brief Add a new step invoking a conversion function, which is either
 comment|/// a constructor or a conversion function.
 name|void
@@ -3036,12 +3158,26 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
+comment|/// \brief Add an array initialization loop step.
+name|void
+name|AddArrayInitLoopStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|,
+name|QualType
+name|EltTy
+parameter_list|)
+function_decl|;
 comment|/// \brief Add an array initialization step.
 name|void
 name|AddArrayInitStep
 parameter_list|(
 name|QualType
 name|T
+parameter_list|,
+name|bool
+name|IsGNUExtension
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a parenthesized array initialization step.
@@ -3094,6 +3230,14 @@ comment|/// \brief Add a step to initialize an OpenCL event_t from a NULL
 comment|/// constant.
 name|void
 name|AddOCLZeroEventStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a step to initialize an OpenCL queue_t from 0.
+name|void
+name|AddOCLZeroQueueStep
 parameter_list|(
 name|QualType
 name|T

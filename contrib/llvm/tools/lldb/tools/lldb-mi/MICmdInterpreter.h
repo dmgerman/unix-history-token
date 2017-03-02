@@ -44,13 +44,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"MICmnBase.h"
+file|"MICmdData.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MICmdData.h"
+file|"MICmnBase.h"
 end_include
 
 begin_include
@@ -70,7 +70,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment

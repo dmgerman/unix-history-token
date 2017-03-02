@@ -208,28 +208,22 @@ name|impl
 block|;
 name|unsigned
 name|readers
-block|,
+operator|=
+literal|0
+block|;
+name|unsigned
 name|writers
+operator|=
+literal|0
 block|;
 name|public
 operator|:
 name|explicit
 name|SmartRWMutex
 argument_list|()
-operator|:
-name|impl
-argument_list|()
-block|,
-name|readers
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|writers
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
+operator|=
+expr|default
+block|;
 name|bool
 name|lock_shared
 argument_list|()
@@ -512,11 +506,23 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// end namespace sys
+end_comment
+
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_RWMUTEX_H
+end_comment
 
 end_unit
 

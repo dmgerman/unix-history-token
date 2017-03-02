@@ -74,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -184,7 +184,7 @@ name|m_type
 argument_list|(
 argument|INVALID
 argument_list|)
-block|{ }
+block|{}
 operator|~
 name|DebugMacroEntry
 argument_list|()

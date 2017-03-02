@@ -108,7 +108,8 @@ block|{
 name|uint32_t
 name|length
 decl_stmt|;
-comment|// length of the set of entries for this compilation unit, not including the length field itself
+comment|// length of the set of entries for this compilation unit,
+comment|// not including the length field itself
 name|uint16_t
 name|version
 decl_stmt|;
@@ -143,7 +144,7 @@ name|die_length
 argument_list|(
 literal|0
 argument_list|)
-block|{         }
+block|{     }
 block|}
 struct|;
 struct|struct
@@ -157,7 +158,7 @@ argument_list|()
 operator|,
 name|name
 argument_list|()
-block|{         }
+block|{}
 name|Descriptor
 argument_list|(
 argument|dw_offset_t the_offset
@@ -175,7 +176,7 @@ argument_list|(
 argument|the_name ? the_name :
 literal|""
 argument_list|)
-block|{         }
+block|{}
 name|dw_offset_t
 name|offset
 expr_stmt|;

@@ -417,6 +417,11 @@ parameter_list|(
 name|ExplodedNode
 modifier|*
 name|N
+parameter_list|,
+specifier|const
+name|ReturnStmt
+modifier|*
+name|RS
 parameter_list|)
 function_decl|;
 name|public
@@ -704,6 +709,11 @@ parameter_list|(
 name|ExplodedNodeSet
 modifier|&
 name|Set
+parameter_list|,
+specifier|const
+name|ReturnStmt
+modifier|*
+name|RS
 parameter_list|)
 function_decl|;
 comment|/// \brief Enqueue a single node created as a result of statement processing.

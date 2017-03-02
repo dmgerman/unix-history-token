@@ -92,63 +92,6 @@ operator|>
 expr|struct
 name|simplify_type
 expr_stmt|;
-comment|// ValueHandleBase** is only 4-byte aligned.
-name|template
-operator|<
-operator|>
-name|class
-name|PointerLikeTypeTraits
-operator|<
-name|ValueHandleBase
-operator|*
-operator|*
-operator|>
-block|{
-name|public
-operator|:
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|getAsVoidPointer
-argument_list|(
-argument|ValueHandleBase** P
-argument_list|)
-block|{
-return|return
-name|P
-return|;
-block|}
-specifier|static
-specifier|inline
-name|ValueHandleBase
-operator|*
-operator|*
-name|getFromVoidPointer
-argument_list|(
-argument|void *P
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|ValueHandleBase
-operator|*
-operator|*
-operator|>
-operator|(
-name|P
-operator|)
-return|;
-block|}
-expr|enum
-block|{
-name|NumLowBitsAvailable
-operator|=
-literal|2
-block|}
-block|; }
-expr_stmt|;
 comment|/// \brief This is the common base class of value handles.
 comment|///
 comment|/// ValueHandle's are smart pointers to Value's that have special behavior when

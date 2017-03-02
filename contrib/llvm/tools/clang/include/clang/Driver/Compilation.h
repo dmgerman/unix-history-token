@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Path.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<map>
 end_include
 
@@ -194,24 +188,137 @@ comment|/// The root list of jobs.
 name|JobList
 name|Jobs
 decl_stmt|;
-comment|/// Cache of translated arguments for a particular tool chain and bound
-comment|/// architecture.
-name|llvm
+comment|/// Cache of translated arguments for a particular tool chain, bound
+comment|/// architecture, and device offload kind.
+struct|struct
+name|TCArgsKey
+name|final
+block|{
+specifier|const
+name|ToolChain
+modifier|*
+name|TC
+init|=
+name|nullptr
+decl_stmt|;
+name|StringRef
+name|BoundArch
+decl_stmt|;
+name|Action
 operator|::
-name|DenseMap
-operator|<
-name|std
+name|OffloadKind
+name|DeviceOffloadKind
+operator|=
+name|Action
 operator|::
-name|pair
+name|OFK_None
+expr_stmt|;
+name|bool
+name|operator
 operator|<
+operator|(
+specifier|const
+name|TCArgsKey
+operator|&
+name|K
+operator|)
+specifier|const
+block|{
+if|if
+condition|(
+name|TC
+operator|<
+name|K
+operator|.
+name|TC
+condition|)
+return|return
+name|true
+return|;
+elseif|else
+if|if
+condition|(
+name|TC
+operator|==
+name|K
+operator|.
+name|TC
+operator|&&
+name|BoundArch
+operator|<
+name|K
+operator|.
+name|BoundArch
+condition|)
+return|return
+name|true
+return|;
+elseif|else
+if|if
+condition|(
+name|TC
+operator|==
+name|K
+operator|.
+name|TC
+operator|&&
+name|BoundArch
+operator|==
+name|K
+operator|.
+name|BoundArch
+operator|&&
+name|DeviceOffloadKind
+operator|<
+name|K
+operator|.
+name|DeviceOffloadKind
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+name|TCArgsKey
+argument_list|(
 specifier|const
 name|ToolChain
 operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|>
+name|TC
+argument_list|,
+name|StringRef
+name|BoundArch
+argument_list|,
+name|Action
+operator|::
+name|OffloadKind
+name|DeviceOffloadKind
+argument_list|)
+range|:
+name|TC
+argument_list|(
+name|TC
+argument_list|)
+struct|,
+name|BoundArch
+argument_list|(
+name|BoundArch
+argument_list|)
+struct|,
+name|DeviceOffloadKind
+argument_list|(
+name|DeviceOffloadKind
+argument_list|)
+block|{}
+block|}
+empty_stmt|;
+name|std
+operator|::
+name|map
+operator|<
+name|TCArgsKey
 operator|,
 name|llvm
 operator|::
@@ -372,6 +479,33 @@ name|equal_range
 argument_list|(
 name|Kind
 argument_list|)
+return|;
+block|}
+comment|/// Return true if an offloading tool chain of a given kind exists.
+name|template
+operator|<
+name|Action
+operator|::
+name|OffloadKind
+name|Kind
+operator|>
+name|bool
+name|hasOffloadToolChain
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OrderedOffloadingToolchains
+operator|.
+name|find
+argument_list|(
+name|Kind
+argument_list|)
+operator|!=
+name|OrderedOffloadingToolchains
+operator|.
+name|end
+argument_list|()
 return|;
 block|}
 comment|/// Return an offload toolchain of the provided kind. Only one is expected to
@@ -703,8 +837,12 @@ specifier|const
 expr_stmt|;
 comment|/// getArgsForToolChain - Return the derived argument list for the
 comment|/// tool chain \p TC (or the default tool chain, if TC is not specified).
+comment|/// If a device offloading kind is specified, a translation specific for that
+comment|/// kind is performed, if any.
 comment|///
 comment|/// \param BoundArch - The bound architecture name, or 0.
+comment|/// \param DeviceOffloadKind - The offload device kind that should be used in
+comment|/// the translation, if any.
 specifier|const
 name|llvm
 operator|::
@@ -714,15 +852,11 @@ name|DerivedArgList
 operator|&
 name|getArgsForToolChain
 argument_list|(
-specifier|const
-name|ToolChain
-operator|*
-name|TC
+argument|const ToolChain *TC
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|BoundArch
+argument|StringRef BoundArch
+argument_list|,
+argument|Action::OffloadKind DeviceOffloadKind
 argument_list|)
 expr_stmt|;
 comment|/// addTempFile - Add a file to remove on exit, and returns its
@@ -962,11 +1096,14 @@ function_decl|;
 block|}
 empty_stmt|;
 block|}
-comment|// end namespace driver
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// end namespace driver
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

@@ -99,7 +99,16 @@ argument_list|(
 name|std
 operator|::
 name|error_code
-name|ec
+name|EC
+argument_list|)
+decl_stmt|;
+name|void
+name|error
+argument_list|(
+name|llvm
+operator|::
+name|Error
+name|EC
 argument_list|)
 decl_stmt|;
 name|template

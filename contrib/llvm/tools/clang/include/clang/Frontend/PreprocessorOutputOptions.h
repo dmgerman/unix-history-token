@@ -91,6 +91,12 @@ literal|1
 decl_stmt|;
 comment|///< Print macro definitions.
 name|unsigned
+name|ShowIncludeDirectives
+range|:
+literal|1
+decl_stmt|;
+comment|///< Print includes, imports etc. within preprocessed output.
+name|unsigned
 name|RewriteIncludes
 range|:
 literal|1
@@ -122,6 +128,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|ShowMacros
+operator|=
+literal|0
+expr_stmt|;
+name|ShowIncludeDirectives
 operator|=
 literal|0
 expr_stmt|;

@@ -241,6 +241,21 @@ comment|/// copies.
 name|bool
 name|IsSplitCSR
 block|;
+comment|/// Globals that have had their storage promoted into the constant pool.
+name|SmallPtrSet
+operator|<
+specifier|const
+name|GlobalVariable
+operator|*
+block|,
+literal|2
+operator|>
+name|PromotedGlobals
+block|;
+comment|/// The amount the literal pool has been increasedby due to promoted globals.
+name|int
+name|PromotedGlobalsIncrease
+block|;
 name|public
 operator|:
 name|ARMFunctionInfo
@@ -343,7 +358,12 @@ argument_list|)
 block|,
 name|IsSplitCSR
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|PromotedGlobalsIncrease
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|explicit
@@ -910,6 +930,57 @@ return|return
 name|It
 return|;
 block|}
+comment|/// Indicate to the backend that \c GV has had its storage changed to inside
+comment|/// a constant pool. This means it no longer needs to be emitted as a
+comment|/// global variable.
+name|void
+name|markGlobalAsPromotedToConstantPool
+argument_list|(
+argument|const GlobalVariable *GV
+argument_list|)
+block|{
+name|PromotedGlobals
+operator|.
+name|insert
+argument_list|(
+name|GV
+argument_list|)
+block|;   }
+name|SmallPtrSet
+operator|<
+specifier|const
+name|GlobalVariable
+operator|*
+block|,
+literal|2
+operator|>
+operator|&
+name|getGlobalsPromotedToConstantPool
+argument_list|()
+block|{
+return|return
+name|PromotedGlobals
+return|;
+block|}
+name|int
+name|getPromotedConstpoolIncrease
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PromotedGlobalsIncrease
+return|;
+block|}
+name|void
+name|setPromotedConstpoolIncrease
+argument_list|(
+argument|int Sz
+argument_list|)
+block|{
+name|PromotedGlobalsIncrease
+operator|=
+name|Sz
+block|;   }
 expr|}
 block|; }
 end_decl_stmt

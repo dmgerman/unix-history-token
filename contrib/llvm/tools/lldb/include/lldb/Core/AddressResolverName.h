@@ -64,8 +64,10 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class AddressResolverName AddressResolverName.h "lldb/Core/AddressResolverName.h"
-comment|/// @brief This class finds addresses for a given function name, either by exact match
+comment|/// @class AddressResolverName AddressResolverName.h
+comment|/// "lldb/Core/AddressResolverName.h"
+comment|/// @brief This class finds addresses for a given function name, either by exact
+comment|/// match
 comment|/// or by regular expression.
 comment|//----------------------------------------------------------------------
 name|class
@@ -83,7 +85,8 @@ argument_list|,
 argument|AddressResolver::MatchType type = Exact
 argument_list|)
 block|;
-comment|// Creates a function breakpoint by regular expression.  Takes over control of the lifespan of func_regex.
+comment|// Creates a function breakpoint by regular expression.  Takes over control of
+comment|// the lifespan of func_regex.
 name|AddressResolverName
 argument_list|(
 name|RegularExpression
@@ -142,7 +145,8 @@ block|;
 name|ConstString
 name|m_class_name
 block|;
-comment|// FIXME: Not used yet.  The idea would be to stop on methods of this class.
+comment|// FIXME: Not used yet.  The idea would be to stop
+comment|// on methods of this class.
 name|RegularExpression
 name|m_regex
 block|;

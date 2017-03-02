@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OptionValueUInt64.h --------------------------------------*- C++ -*-===//
+comment|//===-- OptionValueUInt64.h --------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -92,7 +96,7 @@ name|m_default_value
 argument_list|(
 literal|0
 argument_list|)
-block|{     }
+block|{}
 name|OptionValueUInt64
 argument_list|(
 argument|uint64_t value
@@ -110,7 +114,7 @@ name|m_default_value
 argument_list|(
 argument|value
 argument_list|)
-block|{     }
+block|{}
 name|OptionValueUInt64
 argument_list|(
 argument|uint64_t current_value
@@ -130,12 +134,12 @@ name|m_default_value
 argument_list|(
 argument|default_value
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueUInt64
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Decode a uint64_t from "value_cstr" return a OptionValueUInt64 object
 comment|// inside of a lldb::OptionValueSP object if all goes well. If the
@@ -151,11 +155,22 @@ argument_list|(
 specifier|const
 name|char
 operator|*
-name|value_cstr
 argument_list|,
 name|Error
 operator|&
-name|error
+argument_list|)
+operator|=
+name|delete
+block|;
+specifier|static
+name|lldb
+operator|::
+name|OptionValueSP
+name|Create
+argument_list|(
+argument|llvm::StringRef value_str
+argument_list|,
+argument|Error&error
 argument_list|)
 block|;
 comment|//---------------------------------------------------------------------
@@ -192,6 +207,20 @@ argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|Clear
@@ -275,7 +304,7 @@ block|{
 name|m_current_value
 operator|=
 name|value
-block|;     }
+block|; }
 name|void
 name|SetDefaultValue
 argument_list|(
@@ -285,7 +314,7 @@ block|{
 name|m_default_value
 operator|=
 name|value
-block|;     }
+block|; }
 name|protected
 operator|:
 name|uint64_t

@@ -158,6 +158,18 @@ parameter_list|,
 name|uptr
 modifier|*
 name|protection
+parameter_list|,
+name|ModuleArch
+modifier|*
+name|arch
+init|=
+name|nullptr
+parameter_list|,
+name|u8
+modifier|*
+name|uuid
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -268,6 +280,10 @@ argument|char filename[]
 argument_list|,
 argument|uptr filename_size
 argument_list|,
+argument|ModuleArch *arch
+argument_list|,
+argument|u8 *uuid
+argument_list|,
 argument|uptr *protection
 argument_list|)
 expr_stmt|;
@@ -280,12 +296,24 @@ decl_stmt|;
 name|u32
 name|current_filetype_
 decl_stmt|;
+name|ModuleArch
+name|current_arch_
+decl_stmt|;
+name|u8
+name|current_uuid_
+index|[
+name|kModuleUUIDSize
+index|]
+decl_stmt|;
 name|int
 name|current_load_cmd_count_
 decl_stmt|;
 name|char
 modifier|*
 name|current_load_cmd_addr_
+decl_stmt|;
+name|bool
+name|current_instrumented_
 decl_stmt|;
 endif|#
 directive|endif

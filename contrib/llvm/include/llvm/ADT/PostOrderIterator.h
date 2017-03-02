@@ -76,19 +76,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -147,14 +165,14 @@ comment|// Return true if edge destination should be visited.
 name|template
 operator|<
 name|typename
-name|NodeType
+name|NodeRef
 operator|>
 name|bool
 name|insertEdge
 argument_list|(
-argument|NodeType *From
+argument|Optional<NodeRef> From
 argument_list|,
-argument|NodeType *To
+argument|NodeRef To
 argument_list|)
 block|{
 return|return
@@ -172,12 +190,12 @@ comment|// Called after all children of BB have been visited.
 name|template
 operator|<
 name|typename
-name|NodeType
+name|NodeRef
 operator|>
 name|void
 name|finishPostorder
 argument_list|(
-argument|NodeType *BB
+argument|NodeRef BB
 argument_list|)
 block|{}
 expr|}
@@ -233,14 +251,14 @@ comment|// Graph edges can be pruned by specializing this function.
 name|template
 operator|<
 name|class
-name|NodeType
+name|NodeRef
 operator|>
 name|bool
 name|insertEdge
 argument_list|(
-argument|NodeType *From
+argument|Optional<NodeRef> From
 argument_list|,
-argument|NodeType *To
+argument|NodeRef To
 argument_list|)
 block|{
 return|return
@@ -258,12 +276,12 @@ comment|// Called after all children of BB have been visited.
 name|template
 operator|<
 name|class
-name|NodeType
+name|NodeRef
 operator|>
 name|void
 name|finishPostorder
 argument_list|(
-argument|NodeType *BB
+argument|NodeRef BB
 argument_list|)
 block|{}
 expr|}
@@ -276,8 +294,6 @@ block|,
 name|class
 name|SetType
 operator|=
-name|llvm
-operator|::
 name|SmallPtrSet
 operator|<
 name|typename
@@ -286,8 +302,7 @@ operator|<
 name|GraphT
 operator|>
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 block|,
 literal|8
 operator|>
@@ -303,8 +318,7 @@ operator|=
 name|GraphTraits
 operator|<
 name|GraphT
-operator|>
-expr|>
+operator|>>
 name|class
 name|po_iterator
 operator|:
@@ -320,9 +334,7 @@ block|,
 name|typename
 name|GT
 operator|::
-name|NodeType
-block|,
-name|ptrdiff_t
+name|NodeRef
 operator|>
 block|,
 name|public
@@ -345,9 +357,7 @@ operator|,
 name|typename
 name|GT
 operator|::
-name|NodeType
-operator|,
-name|ptrdiff_t
+name|NodeRef
 operator|>
 name|super
 expr_stmt|;
@@ -355,8 +365,8 @@ typedef|typedef
 name|typename
 name|GT
 operator|::
-name|NodeType
-name|NodeType
+name|NodeRef
+name|NodeRef
 expr_stmt|;
 typedef|typedef
 name|typename
@@ -375,12 +385,10 @@ name|std
 operator|::
 name|pair
 operator|<
-name|NodeType
-operator|*
+name|NodeRef
 operator|,
 name|ChildItTy
-operator|>
-block|>
+operator|>>
 name|VisitStack
 expr_stmt|;
 name|void
@@ -409,8 +417,7 @@ name|first
 argument_list|)
 condition|)
 block|{
-name|NodeType
-modifier|*
+name|NodeRef
 name|BB
 init|=
 operator|*
@@ -428,12 +435,18 @@ name|this
 operator|->
 name|insertEdge
 argument_list|(
+name|Optional
+operator|<
+name|NodeRef
+operator|>
+operator|(
 name|VisitStack
 operator|.
 name|back
 argument_list|()
 operator|.
 name|first
+operator|)
 argument_list|,
 name|BB
 argument_list|)
@@ -464,18 +477,19 @@ block|}
 block|}
 name|po_iterator
 argument_list|(
-argument|NodeType *BB
+argument|NodeRef BB
 argument_list|)
 block|{
 name|this
 operator|->
 name|insertEdge
 argument_list|(
+name|Optional
+operator|<
+name|NodeRef
+operator|>
 operator|(
-name|NodeType
-operator|*
 operator|)
-name|nullptr
 argument_list|,
 name|BB
 argument_list|)
@@ -505,19 +519,17 @@ expr_stmt|;
 block|}
 name|po_iterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|// End is when stack is empty.
 name|po_iterator
 argument_list|(
-name|NodeType
-operator|*
-name|BB
+argument|NodeRef BB
 argument_list|,
-name|SetType
-operator|&
-name|S
+argument|SetType&S
 argument_list|)
-operator|:
+block|:
 name|po_iterator_storage
 operator|<
 name|SetType
@@ -534,11 +546,12 @@ name|this
 operator|->
 name|insertEdge
 argument_list|(
+name|Optional
+operator|<
+name|NodeRef
+operator|>
 operator|(
-name|NodeType
-operator|*
 operator|)
-name|nullptr
 argument_list|,
 name|BB
 argument_list|)
@@ -714,7 +727,9 @@ name|x
 operator|)
 return|;
 block|}
-name|pointer
+specifier|const
+name|NodeRef
+operator|&
 name|operator
 operator|*
 operator|(
@@ -734,8 +749,7 @@ comment|// This is a nonstandard operator-> that dereferences the pointer an ext
 comment|// time... so that you can actually call methods ON the BasicBlock, because
 comment|// the contained type is a pointer.  This allows BBIt->getTerminator() f.e.
 comment|//
-name|NodeType
-operator|*
+name|NodeRef
 name|operator
 operator|->
 expr|(
@@ -945,10 +959,9 @@ operator|<
 name|T
 operator|>
 operator|::
-name|NodeType
-operator|*
-operator|>
-expr|> struct
+name|NodeRef
+operator|>>
+expr|struct
 name|po_ext_iterator
 operator|:
 name|public
@@ -1140,8 +1153,7 @@ operator|<
 name|T
 operator|>
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 operator|>
 operator|,
 name|bool
@@ -1317,10 +1329,9 @@ operator|<
 name|T
 operator|>
 operator|::
-name|NodeType
-operator|*
-operator|>
-expr|> struct
+name|NodeRef
+operator|>>
+expr|struct
 name|ipo_ext_iterator
 operator|:
 name|public
@@ -1619,8 +1630,7 @@ operator|=
 name|GraphTraits
 operator|<
 name|GraphT
-operator|>
-expr|>
+operator|>>
 name|class
 name|ReversePostOrderTraversal
 block|{
@@ -1628,15 +1638,14 @@ typedef|typedef
 name|typename
 name|GT
 operator|::
-name|NodeType
-name|NodeType
+name|NodeRef
+name|NodeRef
 expr_stmt|;
 name|std
 operator|::
 name|vector
 operator|<
-name|NodeType
-operator|*
+name|NodeRef
 operator|>
 name|Blocks
 expr_stmt|;
@@ -1650,8 +1659,7 @@ begin_function
 name|void
 name|Initialize
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|BB
 parameter_list|)
 block|{
@@ -1692,8 +1700,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|NodeType
-operator|*
+name|NodeRef
 operator|>
 operator|::
 name|reverse_iterator
@@ -1757,13 +1764,17 @@ end_function
 
 begin_comment
 unit|};  }
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_POSTORDERITERATOR_H
+end_comment
 
 end_unit
 

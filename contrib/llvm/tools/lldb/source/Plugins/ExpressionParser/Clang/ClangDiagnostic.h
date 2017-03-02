@@ -144,7 +144,7 @@ argument|eDiagnosticOriginClang
 argument_list|,
 argument|compiler_id
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|ClangDiagnostic

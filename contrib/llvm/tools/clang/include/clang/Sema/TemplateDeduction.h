@@ -114,6 +114,10 @@ comment|/// \brief Have we suppressed an error during deduction?
 name|bool
 name|HasSFINAEDiagnostic
 decl_stmt|;
+comment|/// \brief The template parameter depth for which we're performing deduction.
+name|unsigned
+name|DeducedDepth
+decl_stmt|;
 comment|/// \brief Warnings (and follow-on notes) that were suppressed due to
 comment|/// SFINAE while performing template argument deduction.
 name|SmallVector
@@ -149,6 +153,9 @@ label|:
 name|TemplateDeductionInfo
 argument_list|(
 argument|SourceLocation Loc
+argument_list|,
+argument|unsigned DeducedDepth =
+literal|0
 argument_list|)
 block|:
 name|Deduced
@@ -166,9 +173,14 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|Expression
+name|DeducedDepth
 argument_list|(
-argument|nullptr
+name|DeducedDepth
+argument_list|)
+operator|,
+name|CallArgIndex
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 comment|/// \brief Returns the location at which template argument is
@@ -180,6 +192,17 @@ specifier|const
 block|{
 return|return
 name|Loc
+return|;
+block|}
+comment|/// \brief The depth of template parameters for which deduction is being
+comment|/// performed.
+name|unsigned
+name|getDeducedDepth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeducedDepth
 return|;
 block|}
 comment|/// \brief Take ownership of the deduced template argument list.
@@ -241,6 +264,15 @@ operator|.
 name|second
 argument_list|)
 expr_stmt|;
+name|clearSFINAEDiagnostic
+argument_list|()
+expr_stmt|;
+block|}
+comment|/// \brief Discard any SFINAE diagnostics.
+name|void
+name|clearSFINAEDiagnostic
+parameter_list|()
+block|{
 name|SuppressedDiagnostics
 operator|.
 name|clear
@@ -435,17 +467,6 @@ comment|/// FIXME: Finish documenting this.
 name|TemplateArgument
 name|SecondArg
 decl_stmt|;
-union|union
-block|{
-comment|/// \brief The expression which caused a deduction failure.
-comment|///
-comment|///   TDK_FailedOverloadResolution: this argument is the reference to
-comment|///   an overloaded function which could not be resolved to a specific
-comment|///   function.
-name|Expr
-modifier|*
-name|Expression
-decl_stmt|;
 comment|/// \brief The index of the function argument that caused a deduction
 comment|/// failure.
 comment|///
@@ -454,8 +475,6 @@ comment|///   different argument type from its substituted parameter type.
 name|unsigned
 name|CallArgIndex
 decl_stmt|;
-block|}
-union|;
 comment|/// \brief Information on packs that we're currently expanding.
 comment|///
 comment|/// FIXME: This should be kept internal to SemaTemplateDeduction.
@@ -496,12 +515,10 @@ modifier|*
 name|Data
 decl_stmt|;
 comment|/// \brief A diagnostic indicating why deduction failed.
-union|union
-block|{
-name|void
-modifier|*
-name|Align
-decl_stmt|;
+name|alignas
+argument_list|(
+argument|PartialDiagnosticAt
+argument_list|)
 name|char
 name|Diagnostic
 index|[
@@ -511,8 +528,6 @@ name|PartialDiagnosticAt
 argument_list|)
 index|]
 decl_stmt|;
-block|}
-union|;
 comment|/// \brief Retrieve the diagnostic which caused this deduction failure,
 comment|/// if any.
 name|PartialDiagnosticAt
@@ -547,13 +562,6 @@ specifier|const
 name|TemplateArgument
 modifier|*
 name|getSecondArg
-parameter_list|()
-function_decl|;
-comment|/// \brief Return the expression this deduction failure refers to,
-comment|/// if any.
-name|Expr
-modifier|*
-name|getExpr
 parameter_list|()
 function_decl|;
 comment|/// \brief Return the index of the call argument that this deduction

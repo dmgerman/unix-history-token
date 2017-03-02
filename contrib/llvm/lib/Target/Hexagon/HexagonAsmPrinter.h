@@ -150,9 +150,7 @@ name|Fn
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const

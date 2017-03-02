@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===----------------- LLDBAssert.h --------------------------------*- C++ -*-===//
+comment|//===----------------- LLDBAssert.h --------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -77,6 +81,7 @@ name|lldbassert
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|lldb_private::lldb_assert(x, #x, __FUNCTION__, __FILE__, __LINE__)
 end_define
 

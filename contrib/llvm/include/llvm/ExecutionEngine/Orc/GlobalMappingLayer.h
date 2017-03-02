@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"JITSymbol.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
@@ -198,7 +198,7 @@ name|string
 operator|&
 name|Name
 argument_list|,
-name|TargetAddress
+name|JITTargetAddress
 name|Addr
 argument_list|)
 block|{
@@ -365,7 +365,7 @@ name|std
 operator|::
 name|string
 operator|,
-name|TargetAddress
+name|JITTargetAddress
 operator|>
 name|SymbolTable
 expr_stmt|;

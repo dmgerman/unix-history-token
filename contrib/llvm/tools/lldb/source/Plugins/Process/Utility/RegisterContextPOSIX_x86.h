@@ -62,13 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/RegisterContext.h"
+file|"RegisterContext_x86.h"
 end_include
 
 begin_include
@@ -80,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterContext_x86.h"
+file|"lldb-x86-register-enums.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb-x86-register-enums.h"
+file|"lldb/Core/Log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/RegisterContext.h"
 end_include
 
 begin_decl_stmt
@@ -137,6 +137,11 @@ block|;
 name|virtual
 name|size_t
 name|GetGPRSize
+argument_list|()
+block|;
+name|virtual
+name|size_t
+name|GetFXSAVEOffset
 argument_list|()
 block|;
 name|virtual
@@ -513,7 +518,7 @@ name|first_dr
 block|;
 name|uint32_t
 name|gpr_flags
-block|;     }
+block|;   }
 block|;
 name|uint64_t
 name|m_gpr_x86_64
@@ -523,7 +528,10 @@ operator|::
 name|k_num_gpr_registers_x86_64
 index|]
 block|;
-comment|// 64-bit general purpose registers.
+comment|// 64-bit
+comment|// general
+comment|// purpose
+comment|// registers.
 name|RegInfo
 name|m_reg_info
 block|;
@@ -554,7 +562,8 @@ operator|>
 name|m_register_info_ap
 block|;
 comment|// Register Info Interface (FreeBSD or Linux)
-comment|// Determines if an extended register set is supported on the processor running the inferior process.
+comment|// Determines if an extended register set is supported on the processor
+comment|// running the inferior process.
 name|virtual
 name|bool
 name|IsRegisterSetAvailable

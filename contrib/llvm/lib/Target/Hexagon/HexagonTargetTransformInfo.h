@@ -200,81 +200,6 @@ argument_list|(
 argument|ST->getTargetLowering()
 argument_list|)
 block|{}
-comment|// Provide value semantics. MSVC requires that we spell all of these out.
-name|HexagonTTIImpl
-argument_list|(
-specifier|const
-name|HexagonTTIImpl
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|BaseT
-argument_list|(
-name|static_cast
-operator|<
-specifier|const
-name|BaseT
-operator|&
-operator|>
-operator|(
-name|Arg
-operator|)
-argument_list|)
-operator|,
-name|ST
-argument_list|(
-name|Arg
-operator|.
-name|ST
-argument_list|)
-operator|,
-name|TLI
-argument_list|(
-argument|Arg.TLI
-argument_list|)
-block|{}
-name|HexagonTTIImpl
-argument_list|(
-name|HexagonTTIImpl
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|BaseT
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|static_cast
-operator|<
-name|BaseT
-operator|&
-operator|>
-operator|(
-name|Arg
-operator|)
-argument_list|)
-argument_list|)
-operator|,
-name|ST
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Arg
-operator|.
-name|ST
-argument_list|)
-argument_list|)
-operator|,
-name|TLI
-argument_list|(
-argument|std::move(Arg.TLI)
-argument_list|)
-block|{}
 comment|/// \name Scalar TTI Implementations
 comment|/// @{
 name|TTI
@@ -301,6 +226,17 @@ operator|&
 name|UP
 argument_list|)
 decl_stmt|;
+comment|// L1 cache prefetch.
+name|unsigned
+name|getPrefetchDistance
+argument_list|()
+specifier|const
+expr_stmt|;
+name|unsigned
+name|getCacheLineSize
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// @}
 comment|/// \name Vector TTI Implementations
 comment|/// @{
@@ -313,6 +249,15 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
+name|int
+name|getUserCost
+parameter_list|(
+specifier|const
+name|User
+modifier|*
+name|U
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

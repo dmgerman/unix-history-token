@@ -152,9 +152,7 @@ argument|CodeGenOpt::Level   OptLevel
 argument_list|)
 block|;
 comment|// Pass Name
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const

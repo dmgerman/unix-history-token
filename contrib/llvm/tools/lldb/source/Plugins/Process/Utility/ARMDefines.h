@@ -43,6 +43,18 @@ directive|define
 name|lldb_ARMDefines_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
 begin_comment
 comment|// Common definitions for the ARM/Thumb Instruction Set Architecture.
 end_comment
@@ -69,20 +81,24 @@ name|SRType_Invalid
 block|}
 name|ARM_ShifterType
 typedef|;
-comment|// ARM conditions          // Meaning (integer)         Meaning (floating-point)      Condition flags
+comment|// ARM conditions          // Meaning (integer)         Meaning (floating-point)
+comment|// Condition flags
 define|#
 directive|define
 name|COND_EQ
+define|\
 value|0x0
 comment|// Equal                     Equal                         Z == 1
 define|#
 directive|define
 name|COND_NE
+define|\
 value|0x1
 comment|// Not equal                 Not equal, or unordered       Z == 0
 define|#
 directive|define
 name|COND_CS
+define|\
 value|0x2
 comment|// Carry set>, ==, or unordered           C == 1
 define|#
@@ -92,6 +108,7 @@ value|0x2
 define|#
 directive|define
 name|COND_CC
+define|\
 value|0x3
 comment|// Carry clear               Less than                     C == 0
 define|#
@@ -101,56 +118,71 @@ value|0x3
 define|#
 directive|define
 name|COND_MI
+define|\
 value|0x4
 comment|// Minus, negative           Less than                     N == 1
 define|#
 directive|define
 name|COND_PL
+define|\
 value|0x5
 comment|// Plus, positive or zero>, ==, or unordered           N == 0
 define|#
 directive|define
 name|COND_VS
+define|\
 value|0x6
 comment|// Overflow                  Unordered                     V == 1
 define|#
 directive|define
 name|COND_VC
+define|\
 value|0x7
 comment|// No overflow               Not unordered                 V == 0
 define|#
 directive|define
 name|COND_HI
+define|\
 value|0x8
-comment|// Unsigned higher           Greater than, or unordered    C == 1 and Z == 0
+comment|// Unsigned higher           Greater than, or unordered    C == 1 and Z ==
+comment|// 0
 define|#
 directive|define
 name|COND_LS
+define|\
 value|0x9
-comment|// Unsigned lower or same    Less than or equal            C == 0 or Z == 1
+comment|// Unsigned lower or same    Less than or equal            C == 0 or Z ==
+comment|// 1
 define|#
 directive|define
 name|COND_GE
+define|\
 value|0xA
 comment|// Greater than or equal     Greater than or equal         N == V
 define|#
 directive|define
 name|COND_LT
+define|\
 value|0xB
 comment|// Less than                 Less than, or unordered       N != V
 define|#
 directive|define
 name|COND_GT
+define|\
 value|0xC
-comment|// Greater than              Greater than                  Z == 0 and N == V
+comment|// Greater than              Greater than                  Z == 0 and N ==
+comment|// V
 define|#
 directive|define
 name|COND_LE
+define|\
 value|0xD
-comment|// Less than or equal<, ==, or unordered           Z == 1 or N != V
+comment|// Less than or equal<, ==, or unordered           Z == 1 or N !=
+comment|// V
 define|#
 directive|define
 name|COND_AL
+define|\
 value|0xE
 comment|// Always (unconditional)    Always (unconditional)        Any
 define|#

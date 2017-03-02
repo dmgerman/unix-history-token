@@ -1025,7 +1025,10 @@ name|end
 argument_list|()
 condition|)
 return|return
-literal|0
+name|LaneBitmask
+operator|::
+name|getNone
+argument_list|()
 return|;
 return|return
 name|I
@@ -1077,7 +1080,7 @@ operator|.
 name|second
 condition|)
 block|{
-name|unsigned
+name|LaneBitmask
 name|PrevMask
 init|=
 name|InsertRes
@@ -1101,7 +1104,10 @@ name|PrevMask
 return|;
 block|}
 return|return
-literal|0
+name|LaneBitmask
+operator|::
+name|getNone
+argument_list|()
 return|;
 block|}
 comment|/// Clears the \p Pair.LaneMask lanes of \p Pair.Reg (mark them as dead).
@@ -1145,9 +1151,12 @@ name|end
 argument_list|()
 condition|)
 return|return
-literal|0
+name|LaneBitmask
+operator|::
+name|getNone
+argument_list|()
 return|;
-name|unsigned
+name|LaneBitmask
 name|PrevMask
 init|=
 name|I
@@ -1216,8 +1225,9 @@ condition|(
 name|P
 operator|.
 name|LaneMask
-operator|!=
-literal|0
+operator|.
+name|any
+argument_list|()
 condition|)
 name|To
 operator|.

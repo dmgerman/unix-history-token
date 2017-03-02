@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//====-- UserSettingsController.h --------------------------------*- C++ -*-===//
+comment|//====-- UserSettingsController.h --------------------------------*- C++-*-===//
 end_comment
 
 begin_comment
@@ -74,19 +74,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StringList.h"
 end_include
 
 begin_include
@@ -104,7 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/StringList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/OptionValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -121,7 +121,7 @@ argument_list|()
 operator|:
 name|m_collection_sp
 argument_list|()
-block|{     }
+block|{}
 name|Properties
 argument_list|(
 specifier|const
@@ -136,12 +136,12 @@ name|m_collection_sp
 argument_list|(
 argument|collection_sp
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 operator|~
 name|Properties
 argument_list|()
-block|{     }
+block|{}
 name|virtual
 name|lldb
 operator|::
@@ -164,7 +164,7 @@ name|GetPropertyValue
 argument_list|(
 argument|const ExecutionContext *exe_ctx
 argument_list|,
-argument|const char *property_path
+argument|llvm::StringRef property_path
 argument_list|,
 argument|bool will_modify
 argument_list|,
@@ -175,48 +175,48 @@ expr_stmt|;
 name|virtual
 name|Error
 name|SetPropertyValue
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExecutionContext
-modifier|*
+operator|*
 name|exe_ctx
-parameter_list|,
+argument_list|,
 name|VarSetOperationType
 name|op
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|property_path
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|value
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|virtual
 name|Error
 name|DumpPropertyValue
-parameter_list|(
+argument_list|(
 specifier|const
 name|ExecutionContext
-modifier|*
+operator|*
 name|exe_ctx
-parameter_list|,
+argument_list|,
 name|Stream
-modifier|&
+operator|&
 name|strm
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|property_path
-parameter_list|,
+argument_list|,
 name|uint32_t
 name|dump_mask
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|virtual
 name|void
 name|DumpAllPropertyValues
@@ -251,9 +251,9 @@ decl_stmt|;
 name|size_t
 name|Apropos
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|keyword
 argument_list|,
 name|std
@@ -286,11 +286,16 @@ name|name
 argument_list|)
 expr_stmt|;
 comment|// We sometimes need to introduce a setting to enable experimental features,
-comment|// but then we don't want the setting for these to cause errors when the setting
-comment|// goes away.  Add a sub-topic of the settings using this experimental name, and
-comment|// two things will happen.  One is that settings that don't find the name will not
-comment|// be treated as errors.  Also, if you decide to keep the settings just move them into
-comment|// the containing properties, and we will auto-forward the experimental settings to the
+comment|// but then we don't want the setting for these to cause errors when the
+comment|// setting
+comment|// goes away.  Add a sub-topic of the settings using this experimental name,
+comment|// and
+comment|// two things will happen.  One is that settings that don't find the name will
+comment|// not
+comment|// be treated as errors.  Also, if you decide to keep the settings just move
+comment|// them into
+comment|// the containing properties, and we will auto-forward the experimental
+comment|// settings to the
 comment|// real one.
 specifier|static
 specifier|const
@@ -302,13 +307,13 @@ function_decl|;
 specifier|static
 name|bool
 name|IsSettingExperimental
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|setting
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 name|lldb

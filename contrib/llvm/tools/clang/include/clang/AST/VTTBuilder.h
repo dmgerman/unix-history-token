@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SetVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<utility>
 end_include
 

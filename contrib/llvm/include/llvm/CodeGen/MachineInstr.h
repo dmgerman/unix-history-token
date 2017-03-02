@@ -177,14 +177,6 @@ decl_stmt|;
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LLVM_BUILD_GLOBAL_ISEL
-name|class
-name|Type
-decl_stmt|;
-endif|#
-directive|endif
 name|class
 name|MachineFunction
 decl_stmt|;
@@ -207,7 +199,11 @@ operator|<
 name|MachineInstr
 decl_stmt|,
 name|MachineBasicBlock
-decl|>
+decl_stmt|,
+name|ilist_sentinel_tracking
+decl|<
+name|true
+decl|>>
 block|{
 name|public
 label|:
@@ -227,6 +223,7 @@ block|{
 name|ReloadReuse
 init|=
 literal|0x1
+comment|// higher bits are reserved for target dep comments.
 block|}
 enum|;
 enum|enum
@@ -335,18 +332,6 @@ name|DebugLoc
 name|debugLoc
 decl_stmt|;
 comment|// Source line information.
-ifdef|#
-directive|ifdef
-name|LLVM_BUILD_GLOBAL_ISEL
-comment|/// Type of the instruction in case of a generic opcode.
-comment|/// \invariant This must be nullptr is getOpcode() is not
-comment|/// in the range of generic opcodes.
-name|Type
-modifier|*
-name|Ty
-decl_stmt|;
-endif|#
-directive|endif
 name|MachineInstr
 argument_list|(
 specifier|const
@@ -384,7 +369,7 @@ operator|>
 expr_stmt|;
 name|friend
 block|struct
-name|ilist_traits
+name|ilist_callback_traits
 operator|<
 name|MachineBasicBlock
 operator|>
@@ -494,15 +479,12 @@ comment|/// Set a flag for the AsmPrinter.
 name|void
 name|setAsmPrinterFlag
 parameter_list|(
-name|CommentFlag
+name|uint8_t
 name|Flag
 parameter_list|)
 block|{
 name|AsmPrinterFlags
 operator||=
-operator|(
-name|uint8_t
-operator|)
 name|Flag
 expr_stmt|;
 block|}
@@ -611,22 +593,6 @@ name|Flag
 operator|)
 expr_stmt|;
 block|}
-comment|/// Set the type of the instruction.
-comment|/// \pre getOpcode() is in the range of the generic opcodes.
-name|void
-name|setType
-parameter_list|(
-name|Type
-modifier|*
-name|Ty
-parameter_list|)
-function_decl|;
-name|Type
-operator|*
-name|getType
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// Return true if MI is in a bundle (but not the first MI in a bundle).
 comment|///
 comment|/// A bundle looks like this before it's finalized:
@@ -1365,7 +1331,7 @@ name|getFlags
 argument_list|()
 operator|&
 operator|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCFlag
 operator|)
@@ -1374,7 +1340,7 @@ comment|// If this is the first instruction in a bundle, take the slow path.
 return|return
 name|hasPropertyInBundle
 argument_list|(
-literal|1
+literal|1ULL
 operator|<<
 name|MCFlag
 argument_list|,
@@ -2384,8 +2350,11 @@ name|IgnoreVRegDefs
 comment|// Ignore virtual register definitions
 block|}
 enum|;
-comment|/// Return true if this instruction is identical to (same
-comment|/// opcode and same operands as) the specified instruction.
+comment|/// Return true if this instruction is identical to \p Other.
+comment|/// Two instructions are identical if they have the same opcode and all their
+comment|/// operands are identical (with respect to MachineOperand::isIdenticalTo()).
+comment|/// Note that this means liveness related flags (dead, undef, kill) do not
+comment|/// affect the notion of identical.
 name|bool
 name|isIdenticalTo
 argument_list|(
@@ -3780,13 +3749,15 @@ name|hasOrderedMemoryRef
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Return true if this instruction is loading from a
-comment|/// location whose value is invariant across the function.  For example,
-comment|/// loading a value from the constant pool or from the argument area of
-comment|/// a function if it does not change.  This should only return true of *all*
-comment|/// loads the instruction does are invariant (if it does multiple loads).
+comment|/// Return true if this load instruction never traps and points to a memory
+comment|/// location whose value doesn't change during the execution of this function.
+comment|///
+comment|/// Examples include loading a value from the constant pool or from the
+comment|/// argument area of a function (if it does not change).  If the instruction
+comment|/// does multiple loads, this returns true only if all of the loads are
+comment|/// dereferenceable and invariant.
 name|bool
-name|isInvariantLoad
+name|isDereferenceableInvariantLoad
 argument_list|(
 name|AliasAnalysis
 operator|*
@@ -3854,6 +3825,13 @@ name|bool
 name|SkipOpers
 operator|=
 name|false
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3872,14 +3850,28 @@ name|bool
 name|SkipOpers
 operator|=
 name|false
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
 name|void
 name|dump
-argument_list|()
+argument_list|(
 specifier|const
-expr_stmt|;
+name|TargetInstrInfo
+operator|*
+name|TII
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Accessors used to build up machine instructions.
 comment|/// Add the specified operand to the instruction.  If it is an implicit

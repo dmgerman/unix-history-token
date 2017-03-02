@@ -138,7 +138,7 @@ name|push_back
 argument_list|(
 name|info
 argument_list|)
-block|;         }
+block|;   }
 name|bool
 name|AppendCloseFileAction
 argument_list|(
@@ -259,10 +259,7 @@ block|;
 name|void
 name|SetProcessPluginName
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|plugin
+argument|llvm::StringRef plugin
 argument_list|)
 block|;
 specifier|const
@@ -299,7 +296,7 @@ block|{
 name|m_resume_count
 operator|=
 name|c
-block|;         }
+block|; }
 name|bool
 name|GetLaunchInSeparateProcessGroup
 argument_list|()
@@ -390,8 +387,10 @@ return|return
 name|m_monitor_signals
 return|;
 block|}
-comment|// If the LaunchInfo has a monitor callback, then arrange to monitor the process.
-comment|// Return true if the LaunchInfo has taken care of monitoring the process, and false if the
+comment|// If the LaunchInfo has a monitor callback, then arrange to monitor the
+comment|// process.
+comment|// Return true if the LaunchInfo has taken care of monitoring the process, and
+comment|// false if the
 comment|// caller might want to monitor the process themselves.
 name|bool
 name|MonitorProcess
@@ -431,7 +430,7 @@ block|{
 name|m_listener_sp
 operator|=
 name|listener_sp
-block|;         }
+block|;   }
 name|lldb
 operator|::
 name|ListenerSP
@@ -462,7 +461,7 @@ block|{
 name|m_hijack_listener_sp
 operator|=
 name|listener_sp
-block|;         }
+block|;   }
 name|void
 name|SetLaunchEventData
 argument_list|(
@@ -475,7 +474,7 @@ name|assign
 argument_list|(
 name|data
 argument_list|)
-block|;         }
+block|; }
 specifier|const
 name|char
 operator|*
@@ -569,7 +568,8 @@ operator|::
 name|string
 name|m_event_data
 block|;
-comment|// A string passed to the plugin launch, having no meaning to the upper levels of lldb.
+comment|// A string passed to the plugin launch, having no
+comment|// meaning to the upper levels of lldb.
 name|lldb
 operator|::
 name|ListenerSP
@@ -579,7 +579,7 @@ name|lldb
 operator|::
 name|ListenerSP
 name|m_hijack_listener_sp
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

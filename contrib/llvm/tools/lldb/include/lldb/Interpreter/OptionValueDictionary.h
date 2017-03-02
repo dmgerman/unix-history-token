@@ -105,12 +105,12 @@ name|m_raw_value_dump
 argument_list|(
 argument|raw_value_dump
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueDictionary
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -227,7 +227,7 @@ name|GetSubValue
 argument_list|(
 argument|const ExecutionContext *exe_ctx
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
 argument|bool will_modify
 argument_list|,
@@ -243,35 +243,11 @@ argument|const ExecutionContext *exe_ctx
 argument_list|,
 argument|VarSetOperationType op
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
-argument|const char *value
+argument|llvm::StringRef value
 argument_list|)
 name|override
-block|;
-comment|//---------------------------------------------------------------------
-comment|// String value getters and setters
-comment|//---------------------------------------------------------------------
-specifier|const
-name|char
-operator|*
-name|GetStringValueForKey
-argument_list|(
-specifier|const
-name|ConstString
-operator|&
-name|key
-argument_list|)
-block|;
-name|bool
-name|SetStringValueForKey
-argument_list|(
-argument|const ConstString&key
-argument_list|,
-argument|const char *value
-argument_list|,
-argument|bool can_replace = true
-argument_list|)
 block|;
 name|bool
 name|SetValueForKey

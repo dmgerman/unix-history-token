@@ -46,25 +46,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamArray.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/SymbolRecord.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/PDBTypes.h"
+file|"llvm/DebugInfo/MSF/MappedBlockStream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/Raw/MappedBlockStream.h"
+file|"llvm/DebugInfo/MSF/StreamArray.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/PDBTypes.h"
 end_include
 
 begin_include
@@ -95,15 +95,15 @@ block|{
 name|class
 name|DbiStream
 decl_stmt|;
+struct_decl|struct
+name|GSIHashHeader
+struct_decl|;
 name|class
 name|PDBFile
 decl_stmt|;
 name|class
 name|PublicsStream
 block|{
-struct_decl|struct
-name|GSIHashHeader
-struct_decl|;
 struct_decl|struct
 name|HeaderInfo
 struct_decl|;
@@ -119,6 +119,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream
@@ -165,7 +167,7 @@ argument|bool *HadError
 argument_list|)
 specifier|const
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -181,7 +183,7 @@ return|return
 name|HashBuckets
 return|;
 block|}
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -197,7 +199,7 @@ return|return
 name|AddressMap
 return|;
 block|}
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -213,7 +215,7 @@ return|return
 name|ThunkMap
 return|;
 block|}
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -241,6 +243,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream
@@ -256,7 +260,7 @@ name|uint8_t
 operator|>
 name|Bitmap
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -264,7 +268,7 @@ name|PSHashRecord
 operator|>
 name|HashRecords
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -274,7 +278,7 @@ name|ulittle32_t
 operator|>
 name|HashBuckets
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -284,7 +288,7 @@ name|ulittle32_t
 operator|>
 name|AddressMap
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -294,7 +298,7 @@ name|ulittle32_t
 operator|>
 name|ThunkMap
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<

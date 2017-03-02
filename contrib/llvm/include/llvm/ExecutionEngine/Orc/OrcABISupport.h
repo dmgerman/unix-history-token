@@ -136,7 +136,7 @@ init|=
 literal|1
 decl_stmt|;
 typedef|typedef
-name|TargetAddress
+name|JITTargetAddress
 function_decl|(
 modifier|*
 name|JITReentryFn
@@ -508,7 +508,7 @@ operator|>
 name|IndirectStubsInfo
 expr_stmt|;
 typedef|typedef
-name|TargetAddress
+name|JITTargetAddress
 function_decl|(
 modifier|*
 name|JITReentryFn
@@ -675,7 +675,7 @@ operator|=
 literal|0x6C
 block|;
 typedef|typedef
-name|TargetAddress
+name|JITTargetAddress
 function_decl|(
 modifier|*
 name|JITReentryFn
@@ -724,7 +724,7 @@ operator|=
 literal|0x74
 block|;
 typedef|typedef
-name|TargetAddress
+name|JITTargetAddress
 function_decl|(
 modifier|*
 name|JITReentryFn
@@ -806,7 +806,7 @@ operator|>
 name|IndirectStubsInfo
 expr_stmt|;
 typedef|typedef
-name|TargetAddress
+name|JITTargetAddress
 function_decl|(
 modifier|*
 name|JITReentryFn

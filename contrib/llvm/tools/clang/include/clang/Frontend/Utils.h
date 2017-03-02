@@ -494,6 +494,9 @@ name|error_code
 name|copyToRoot
 argument_list|(
 argument|StringRef Src
+argument_list|,
+argument|StringRef Dst =
+literal|""
 argument_list|)
 block|;
 name|public
@@ -527,6 +530,9 @@ name|void
 name|addFile
 argument_list|(
 argument|StringRef Filename
+argument_list|,
+argument|StringRef FileDst =
+literal|""
 argument_list|)
 block|;
 name|void
@@ -670,8 +676,12 @@ comment|/// a command line argument vector.
 comment|///
 comment|/// \return A CompilerInvocation, or 0 if none was built for the given
 comment|/// argument vector.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CompilerInvocation
-operator|*
+operator|>
 name|createInvocationFromCommandLine
 argument_list|(
 name|ArrayRef

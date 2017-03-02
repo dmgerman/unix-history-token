@@ -152,6 +152,33 @@ comment|/// -1 if uninitialized, 0 if conflicting goals
 name|int
 name|OptimizationGoals
 block|;
+comment|/// List of globals that have had their storage promoted to a constant
+comment|/// pool. This lives between calls to runOnMachineFunction and collects
+comment|/// data from every MachineFunction. It is used during doFinalization
+comment|/// when all non-function globals are emitted.
+name|SmallPtrSet
+operator|<
+specifier|const
+name|GlobalVariable
+operator|*
+block|,
+literal|2
+operator|>
+name|PromotedGlobals
+block|;
+comment|/// Set of globals in PromotedGlobals that we've emitted labels for.
+comment|/// We need to emit labels even for promoted globals so that DWARF
+comment|/// debug info can link properly.
+name|SmallPtrSet
+operator|<
+specifier|const
+name|GlobalVariable
+operator|*
+block|,
+literal|2
+operator|>
+name|EmittedPromotedGlobalLabels
+block|;
 name|public
 operator|:
 name|explicit
@@ -170,16 +197,14 @@ operator|>
 name|Streamer
 argument_list|)
 block|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPassName
 argument_list|()
 specifier|const
 name|override
 block|{
 return|return
-literal|"ARM Assembly / Object Emitter"
+literal|"ARM Assembly Printer"
 return|;
 block|}
 name|void
@@ -312,6 +337,13 @@ argument|const Constant *CV
 argument_list|)
 name|override
 block|;
+name|void
+name|EmitGlobalVariable
+argument_list|(
+argument|const GlobalVariable *GV
+argument_list|)
+name|override
+block|;
 comment|// lowerOperand - Convert a MachineOperand into the equivalent MCOperand.
 name|bool
 name|lowerOperand
@@ -326,8 +358,49 @@ operator|&
 name|MCOp
 argument_list|)
 block|;
+comment|//===------------------------------------------------------------------===//
+comment|// XRay implementation
+comment|//===------------------------------------------------------------------===//
+name|public
+operator|:
+comment|// XRay-specific lowering for ARM.
+name|void
+name|LowerPATCHABLE_FUNCTION_ENTER
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
+name|void
+name|LowerPATCHABLE_FUNCTION_EXIT
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
+name|void
+name|LowerPATCHABLE_TAIL_CALL
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
 name|private
 operator|:
+name|void
+name|EmitSled
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|SledKind Kind
+argument_list|)
+block|;
 comment|// Helpers for EmitStartOfAsmFile() and EmitEndOfAsmFile()
 name|void
 name|emitAttributes

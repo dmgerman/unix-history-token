@@ -68,13 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/GlobalDecl.h"
+file|"clang/Basic/ABI.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/CodeGen/CGFunctionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/Sema.h"
 end_include
 
 begin_include
@@ -89,21 +95,12 @@ directive|include
 file|"llvm/IR/Module.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|FunctionType
-decl_stmt|;
-name|class
-name|Module
 decl_stmt|;
 name|class
 name|DataLayout
@@ -183,6 +180,9 @@ name|Type
 operator|>
 name|CanQualType
 expr_stmt|;
+name|class
+name|GlobalDecl
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -1277,6 +1277,15 @@ comment|/// IsZeroInitializable - Return whether a type can be
 comment|/// zero-initialized (in the C++ sense) with an LLVM zeroinitializer.
 name|bool
 name|isZeroInitializable
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// Check if the pointer type can be zero-initialized (in the C++ sense)
+comment|/// with an LLVM zeroinitializer.
+name|bool
+name|isPointerZeroInitializable
 parameter_list|(
 name|QualType
 name|T

@@ -50,17 +50,21 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MICmnMIValueResult.h"
+file|"MICmnMIValueConst.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MICmnMIValueConst.h"
+file|"MICmnMIValueResult.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -112,7 +116,11 @@ comment|//          tuple ==>  "{}" | "{" result ( "," result )* "}"
 end_comment
 
 begin_comment
-comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( "," result )* "]"
+comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( ","
+end_comment
+
+begin_comment
+comment|//          result )* "]"
 end_comment
 
 begin_comment
@@ -230,7 +238,8 @@ operator|:
 name|bool
 name|m_bSpaceAfterComma
 block|;
-comment|// True = put space separators into the string, false = no spaces used
+comment|// True = put space separators into the string, false
+comment|// = no spaces used
 block|}
 decl_stmt|;
 end_decl_stmt

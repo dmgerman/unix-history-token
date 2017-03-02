@@ -102,12 +102,12 @@ name|m_raw_value_dump
 argument_list|(
 argument|raw_value_dump
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueArray
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -142,6 +142,20 @@ argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|Clear
@@ -186,7 +200,7 @@ name|GetSubValue
 argument_list|(
 argument|const ExecutionContext *exe_ctx
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
 argument|bool will_modify
 argument_list|,

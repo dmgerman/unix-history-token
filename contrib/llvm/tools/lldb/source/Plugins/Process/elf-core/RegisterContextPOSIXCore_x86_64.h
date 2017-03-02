@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterContextCorePOSIX_x86_64.h -----------------------*- C++ -*-===//
+comment|//===-- RegisterContextPOSIXCore_x86_64.h -----------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -103,11 +103,6 @@ operator|&
 name|fpregset
 argument_list|)
 block|;
-operator|~
-name|RegisterContextCorePOSIX_x86_64
-argument_list|()
-name|override
-block|;
 name|bool
 name|ReadRegister
 argument_list|(
@@ -171,9 +166,23 @@ name|override
 block|;
 name|private
 operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|uint8_t
-operator|*
+index|[]
+operator|>
 name|m_gpregset
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|uint8_t
+index|[]
+operator|>
+name|m_fpregset
 block|; }
 decl_stmt|;
 end_decl_stmt

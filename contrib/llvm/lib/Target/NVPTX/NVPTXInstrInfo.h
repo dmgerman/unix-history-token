@@ -174,14 +174,6 @@ argument|unsigned&AddrSpace
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|bool
-name|CanTailMerge
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
 comment|// Branch analysis.
 name|bool
 name|analyzeBranch
@@ -200,15 +192,17 @@ specifier|const
 name|override
 block|;
 name|unsigned
-name|RemoveBranch
+name|removeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int *BytesRemoved = nullptr
 argument_list|)
 specifier|const
 name|override
 block|;
 name|unsigned
-name|InsertBranch
+name|insertBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -219,6 +213,8 @@ argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|const DebugLoc&DL
+argument_list|,
+argument|int *BytesAdded = nullptr
 argument_list|)
 specifier|const
 name|override

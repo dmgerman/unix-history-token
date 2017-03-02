@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MultiOnDiskHashTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/DeclarationName.h"
 end_include
 
@@ -80,18 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerUnion.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/TinyPtrVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Endian.h"
 end_include
 
@@ -99,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/OnDiskHashTable.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MultiOnDiskHashTable.h"
 end_include
 
 begin_include
@@ -496,53 +484,6 @@ name|ASTDeclContextNameLookupTrait
 operator|>
 name|Table
 expr_stmt|;
-comment|// These look redundant, but don't remove them -- they work around MSVC 2013's
-comment|// inability to synthesize move operations. Without them, the
-comment|// MultiOnDiskHashTable will be copied (despite being move-only!).
-name|DeclContextLookupTable
-argument_list|()
-operator|:
-name|Table
-argument_list|()
-block|{}
-name|DeclContextLookupTable
-argument_list|(
-name|DeclContextLookupTable
-operator|&&
-name|O
-argument_list|)
-operator|:
-name|Table
-argument_list|(
-argument|std::move(O.Table)
-argument_list|)
-block|{}
-name|DeclContextLookupTable
-operator|&
-name|operator
-operator|=
-operator|(
-name|DeclContextLookupTable
-operator|&&
-name|O
-operator|)
-block|{
-name|Table
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|O
-operator|.
-name|Table
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 block|}
 struct|;
 comment|/// \brief Base class for the trait describing the on-disk hash table for the
@@ -1002,9 +943,7 @@ decl_stmt|;
 name|time_t
 name|ModTime
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Filename
 decl_stmt|;
 name|bool

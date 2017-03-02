@@ -66,13 +66,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Thread.h"
+file|"RegisterContextPOSIX.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"RegisterContextPOSIX.h"
+file|"lldb/Target/Thread.h"
 end_include
 
 begin_decl_stmt

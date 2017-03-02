@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Twine.h"
+file|"llvm/ADT/ilist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist.h"
+file|"llvm/ADT/ilist_node.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
@@ -86,13 +92,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Value.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CBindingWrapping.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm-c/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
 end_include
 
 begin_decl_stmt
@@ -103,36 +127,17 @@ name|class
 name|CallInst
 decl_stmt|;
 name|class
-name|LandingPadInst
+name|Function
 decl_stmt|;
 name|class
-name|TerminatorInst
+name|LandingPadInst
 decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
 name|class
-name|BlockAddress
+name|TerminatorInst
 decl_stmt|;
-name|class
-name|Function
-decl_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|SymbolTableListSentinelTraits
-operator|<
-name|BasicBlock
-operator|>
-operator|:
-name|public
-name|ilist_half_embedded_sentinel_traits
-operator|<
-name|BasicBlock
-operator|>
-block|{}
-expr_stmt|;
 comment|/// \brief LLVM Basic Block Representation
 comment|///
 comment|/// This represents a single basic block in LLVM. A basic block is simply a
@@ -163,10 +168,6 @@ decl_stmt|,
 name|Function
 decl|>
 block|{
-name|friend
-name|class
-name|BlockAddress
-decl_stmt|;
 name|public
 label|:
 typedef|typedef
@@ -178,6 +179,17 @@ name|InstListType
 expr_stmt|;
 name|private
 label|:
+name|friend
+name|class
+name|BlockAddress
+decl_stmt|;
+name|friend
+name|class
+name|SymbolTableListTraits
+operator|<
+name|BasicBlock
+operator|>
+expr_stmt|;
 name|InstListType
 name|InstList
 decl_stmt|;
@@ -193,33 +205,6 @@ modifier|*
 name|parent
 parameter_list|)
 function_decl|;
-name|friend
-name|class
-name|SymbolTableListTraits
-operator|<
-name|BasicBlock
-operator|>
-expr_stmt|;
-name|BasicBlock
-argument_list|(
-specifier|const
-name|BasicBlock
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|BasicBlock
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 comment|/// \brief Constructor.
 comment|///
 comment|/// If the function parameter is specified, the basic block is automatically
@@ -254,6 +239,32 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+name|BasicBlock
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|BasicBlock
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|BasicBlock
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+operator|~
+name|BasicBlock
+argument_list|()
+name|override
+expr_stmt|;
 comment|/// \brief Get the context in which this basic block lives.
 name|LLVMContext
 operator|&
@@ -334,11 +345,6 @@ name|InsertBefore
 argument_list|)
 return|;
 block|}
-operator|~
-name|BasicBlock
-argument_list|()
-name|override
-expr_stmt|;
 comment|/// \brief Return the enclosing method, or null if none.
 specifier|const
 name|Function
@@ -1222,13 +1228,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_BASICBLOCK_H
+end_comment
 
 end_unit
 

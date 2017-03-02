@@ -347,7 +347,7 @@ return|;
 block|}
 name|virtual
 name|ProgramStateRef
-name|assumeWithinInclusiveRange
+name|assumeInclusiveRange
 argument_list|(
 name|ProgramStateRef
 name|State
@@ -377,7 +377,7 @@ literal|0
 decl_stmt|;
 name|virtual
 name|ProgramStatePair
-name|assumeWithinInclusiveRangeDual
+name|assumeInclusiveRangeDual
 argument_list|(
 name|ProgramStateRef
 name|State
@@ -403,7 +403,7 @@ block|{
 name|ProgramStateRef
 name|StInRange
 init|=
-name|assumeWithinInclusiveRange
+name|assumeInclusiveRange
 argument_list|(
 name|State
 argument_list|,
@@ -437,7 +437,7 @@ return|;
 name|ProgramStateRef
 name|StOutOfRange
 init|=
-name|assumeWithinInclusiveRange
+name|assumeInclusiveRange
 argument_list|(
 name|State
 argument_list|,

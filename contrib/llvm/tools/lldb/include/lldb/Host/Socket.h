@@ -237,8 +237,10 @@ block|)
 operator|=
 literal|0
 expr_stmt|;
-comment|// Initialize a Tcp Socket object in listening mode.  listen and accept are implemented
-comment|// separately because the caller may wish to manipulate or query the socket after it is
+comment|// Initialize a Tcp Socket object in listening mode.  listen and accept are
+comment|// implemented
+comment|// separately because the caller may wish to manipulate or query the socket
+comment|// after it is
 comment|// initialized, but before entering a blocking accept.
 specifier|static
 name|Error

@@ -199,6 +199,14 @@ literal|32
 operator|>
 name|NewBBs
 block|;
+comment|/// The DominatorTreeBase that is used to compute a normal dominator tree
+name|DominatorTreeBase
+operator|<
+name|MachineBasicBlock
+operator|>
+operator|*
+name|DT
+block|;
 comment|/// \brief Apply all the recorded critical edges to the DT.
 comment|/// This updates the underlying DT information in a way that uses
 comment|/// the fast query path of DT as much as possible.
@@ -216,13 +224,6 @@ name|char
 name|ID
 block|;
 comment|// Pass ID, replacement for typeid
-name|DominatorTreeBase
-operator|<
-name|MachineBasicBlock
-operator|>
-operator|*
-name|DT
-block|;
 name|MachineDominatorTree
 argument_list|()
 block|;
@@ -1122,7 +1123,8 @@ name|MachineDomTreeGraphTraitsBase
 block|{
 typedef|typedef
 name|Node
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 end_expr_stmt
 
@@ -1135,12 +1137,10 @@ end_typedef
 
 begin_function
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1152,12 +1152,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1172,12 +1170,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1271,8 +1267,7 @@ operator|*
 operator|>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|MachineDominatorTree *DT

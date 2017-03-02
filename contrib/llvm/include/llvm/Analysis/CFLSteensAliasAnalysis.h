@@ -179,6 +179,8 @@ argument_list|(
 argument|Function&
 argument_list|,
 argument|const PreservedAnalyses&
+argument_list|,
+argument|FunctionAnalysisManager::Invalidator&
 argument_list|)
 block|{
 return|return
@@ -344,57 +346,6 @@ name|QueryResult
 return|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|/// Get the location associated with a pointer argument of a callsite.
-end_comment
-
-begin_function_decl
-name|ModRefInfo
-name|getArgModRefInfo
-parameter_list|(
-name|ImmutableCallSite
-name|CS
-parameter_list|,
-name|unsigned
-name|ArgIdx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Returns the behavior when calling the given call site.
-end_comment
-
-begin_function_decl
-name|FunctionModRefBehavior
-name|getModRefBehavior
-parameter_list|(
-name|ImmutableCallSite
-name|CS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Returns the behavior when calling the given function. For use when the
-end_comment
-
-begin_comment
-comment|/// call site is not known.
-end_comment
-
-begin_function_decl
-name|FunctionModRefBehavior
-name|getModRefBehavior
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|F
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_label
 name|private
@@ -606,8 +557,8 @@ name|CFLSteensAA
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -622,10 +573,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

@@ -378,6 +378,22 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
+comment|// getBranchTargetOpValueLsl2MMR6 - Return binary encoding of the branch
+comment|// target operand. If the machine operand requires relocation,
+comment|// record the relocation and return zero.
+name|unsigned
+name|getBranchTargetOpValueLsl2MMR6
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
 comment|// getBranchTarget7OpValue - Return binary encoding of the microMIPS branch
 comment|// target operand. If the machine operand requires relocation,
 comment|// record the relocation and return zero.

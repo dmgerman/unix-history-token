@@ -570,75 +570,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* GCOV_PREFIX and GCOV_PREFIX_STRIP support */
-end_comment
-
-begin_comment
-comment|/* Return the path prefix specified by GCOV_PREFIX environment variable.  * If GCOV_PREFIX_STRIP is also specified, the strip level (integer value)  * is returned via \c *PrefixStrip. The prefix length is stored in *PrefixLen.  */
+comment|/*   * Return non zero value if the profile data has already been  * dumped to the file.  */
 end_comment
 
 begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|lprofGetPathPrefix
-parameter_list|(
-name|int
-modifier|*
-name|PrefixStrip
-parameter_list|,
-name|size_t
-modifier|*
-name|PrefixLen
-parameter_list|)
+name|unsigned
+name|lprofProfileDumped
+parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Apply the path prefix specified in \c Prefix to path string in \c PathStr,  * and store the result to buffer pointed to by \c Buffer. If \c PrefixStrip  * is not zero, path prefixes are stripped from \c PathStr (the level of  * stripping is specified by \c PrefixStrip) before \c Prefix is added.  */
-end_comment
 
 begin_function_decl
 name|void
-name|lprofApplyPathPrefix
-parameter_list|(
-name|char
-modifier|*
-name|Dest
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|PathStr
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|Prefix
-parameter_list|,
-name|size_t
-name|PrefixLen
-parameter_list|,
-name|int
-name|PrefixStrip
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|COMPILER_RT_VISIBILITY
-specifier|extern
-name|char
-modifier|*
-function_decl|(
-modifier|*
-name|GetEnvHook
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
+name|lprofSetProfileDumped
+parameter_list|()
 function_decl|;
 end_function_decl
 

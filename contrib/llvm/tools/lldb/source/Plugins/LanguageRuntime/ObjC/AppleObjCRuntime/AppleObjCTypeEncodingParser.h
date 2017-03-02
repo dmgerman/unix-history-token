@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/ObjCLanguageRuntime.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/ObjCLanguageRuntime.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -120,7 +120,7 @@ name|RealizeType
 argument_list|(
 argument|clang::ASTContext&ast_ctx
 argument_list|,
-argument|const char* name
+argument|const char *name
 argument_list|,
 argument|bool for_expression
 argument_list|)
@@ -152,7 +152,7 @@ name|StructElement
 argument_list|()
 operator|=
 expr|default
-block|;         }
+block|;   }
 block|;
 name|clang
 operator|::
@@ -161,7 +161,7 @@ name|BuildType
 argument_list|(
 argument|clang::ASTContext&ast_ctx
 argument_list|,
-argument|lldb_utility::StringLexer& type
+argument|lldb_utility::StringLexer&type
 argument_list|,
 argument|bool for_expression
 argument_list|,
@@ -175,7 +175,7 @@ name|BuildStruct
 argument_list|(
 argument|clang::ASTContext&ast_ctx
 argument_list|,
-argument|lldb_utility::StringLexer& type
+argument|lldb_utility::StringLexer&type
 argument_list|,
 argument|bool for_expression
 argument_list|)
@@ -187,7 +187,7 @@ name|BuildAggregate
 argument_list|(
 argument|clang::ASTContext&ast_ctx
 argument_list|,
-argument|lldb_utility::StringLexer& type
+argument|lldb_utility::StringLexer&type
 argument_list|,
 argument|bool for_expression
 argument_list|,
@@ -205,7 +205,7 @@ name|BuildUnion
 argument_list|(
 argument|clang::ASTContext&ast_ctx
 argument_list|,
-argument|lldb_utility::StringLexer& type
+argument|lldb_utility::StringLexer&type
 argument_list|,
 argument|bool for_expression
 argument_list|)
@@ -217,7 +217,7 @@ name|BuildArray
 argument_list|(
 argument|clang::ASTContext&ast_ctx
 argument_list|,
-argument|lldb_utility::StringLexer& type
+argument|lldb_utility::StringLexer&type
 argument_list|,
 argument|bool for_expression
 argument_list|)
@@ -239,7 +239,7 @@ name|ReadStructElement
 argument_list|(
 argument|clang::ASTContext&ast_ctx
 argument_list|,
-argument|lldb_utility::StringLexer& type
+argument|lldb_utility::StringLexer&type
 argument_list|,
 argument|bool for_expression
 argument_list|)
@@ -251,7 +251,7 @@ name|BuildObjCObjectPointerType
 argument_list|(
 argument|clang::ASTContext&ast_ctx
 argument_list|,
-argument|lldb_utility::StringLexer& type
+argument|lldb_utility::StringLexer&type
 argument_list|,
 argument|bool for_expression
 argument_list|)
@@ -281,7 +281,7 @@ block|;
 name|ObjCLanguageRuntime
 operator|&
 name|m_runtime
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

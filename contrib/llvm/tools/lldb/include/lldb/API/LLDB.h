@@ -62,12 +62,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/API/SBAddress.h"
 end_include
 
@@ -141,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/API/SBDeclaration.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_include
@@ -303,6 +303,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/API/SBStringList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBStructuredData.h"
 end_include
 
 begin_include

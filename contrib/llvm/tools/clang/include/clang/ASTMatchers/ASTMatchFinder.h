@@ -486,6 +486,19 @@ modifier|*
 name|Action
 parameter_list|)
 function_decl|;
+name|void
+name|addMatcher
+parameter_list|(
+specifier|const
+name|CXXCtorInitializerMatcher
+modifier|&
+name|NodeMatch
+parameter_list|,
+name|MatchCallback
+modifier|*
+name|Action
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// \brief Adds a matcher to execute when running over the AST.
 comment|///
@@ -679,6 +692,21 @@ operator|*
 operator|>>
 name|TypeLoc
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|CXXCtorInitializerMatcher
+operator|,
+name|MatchCallback
+operator|*
+operator|>>
+name|CtorInit
+expr_stmt|;
 comment|/// \brief All the callbacks in one container to simplify iteration.
 name|llvm
 operator|::
@@ -715,6 +743,10 @@ comment|/// \p Matcher on \p Node and returns the collected results.
 comment|///
 comment|/// Multiple results occur when using matchers like \c forEachDescendant,
 comment|/// which generate a result for each sub-match.
+comment|///
+comment|/// If you want to find all matches on the sub-tree rooted at \c Node (rather
+comment|/// than only the matches on \c Node itself), surround the \c Matcher with a
+comment|/// \c findAll().
 comment|///
 comment|/// \see selectFirst
 comment|/// @{

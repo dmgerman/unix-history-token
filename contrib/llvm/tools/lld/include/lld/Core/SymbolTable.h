@@ -150,15 +150,6 @@ name|AbsoluteAtom
 modifier|&
 parameter_list|)
 function_decl|;
-comment|/// @brief checks if name is in symbol table and if so atom is not
-comment|///        UndefinedAtom
-name|bool
-name|isDefined
-parameter_list|(
-name|StringRef
-name|sym
-parameter_list|)
-function_decl|;
 comment|/// @brief returns atom in symbol table for specified name (or nullptr)
 specifier|const
 name|Atom
@@ -181,31 +172,6 @@ operator|>
 name|undefines
 argument_list|()
 expr_stmt|;
-comment|/// returns vector of tentative definitions
-name|std
-operator|::
-name|vector
-operator|<
-name|StringRef
-operator|>
-name|tentativeDefinitions
-argument_list|()
-expr_stmt|;
-comment|/// @brief add atom to replacement table
-name|void
-name|addReplacement
-parameter_list|(
-specifier|const
-name|Atom
-modifier|*
-name|replaced
-parameter_list|,
-specifier|const
-name|Atom
-modifier|*
-name|replacement
-parameter_list|)
-function_decl|;
 comment|/// @brief if atom has been coalesced away, return replacement, else return atom
 specifier|const
 name|Atom

@@ -81,12 +81,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
 name|struct
 name|LanaiRegisterInfo
 range|:
@@ -114,8 +108,7 @@ name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -153,7 +146,7 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -217,7 +210,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

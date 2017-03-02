@@ -65,8 +65,8 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// \brief Saves strings in the inheritor's stable storage and returns a stable
-comment|/// raw character pointer.
+comment|/// \brief Saves strings in the inheritor's stable storage and returns a
+comment|/// StringRef with a stable character pointer.
 name|class
 name|StringSaver
 name|final
@@ -89,9 +89,7 @@ argument_list|(
 argument|Alloc
 argument_list|)
 block|{}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|save
 argument_list|(
 argument|const char *S
@@ -107,18 +105,14 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|save
 parameter_list|(
 name|StringRef
 name|S
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|save
 parameter_list|(
 specifier|const
@@ -140,9 +134,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|save
 argument_list|(
 name|std

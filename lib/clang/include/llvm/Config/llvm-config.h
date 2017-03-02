@@ -52,27 +52,11 @@ name|LLVM_CONFIG_H
 end_define
 
 begin_comment
-comment|/* Installation directory for binary executables */
+comment|/* Define if we link Polly to the tools */
 end_comment
 
 begin_comment
-comment|/* #undef LLVM_BINDIR */
-end_comment
-
-begin_comment
-comment|/* Time at which LLVM was configured */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_CONFIGTIME */
-end_comment
-
-begin_comment
-comment|/* Installation directory for data files */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_DATADIR */
+comment|/* #undef LINK_POLLY_INTO_TOOLS */
 end_comment
 
 begin_comment
@@ -84,24 +68,6 @@ comment|/* #undef LLVM_DEFAULT_TARGET_TRIPLE */
 end_comment
 
 begin_comment
-comment|/* Installation directory for documentation */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_DOCSDIR */
-end_comment
-
-begin_comment
-comment|/* Define if LLVM is built with asserts and checks that change the layout of    client-visible data structures.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_ENABLE_ABI_BREAKING_CHECKS
-end_define
-
-begin_comment
 comment|/* Define if threads enabled */
 end_comment
 
@@ -111,14 +77,6 @@ directive|define
 name|LLVM_ENABLE_THREADS
 value|1
 end_define
-
-begin_comment
-comment|/* Installation directory for config files */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_ETCDIR */
-end_comment
 
 begin_comment
 comment|/* Has gcc/MSVC atomic intrinsics */
@@ -137,30 +95,6 @@ end_comment
 
 begin_comment
 comment|/* #undef LLVM_HOST_TRIPLE */
-end_comment
-
-begin_comment
-comment|/* Installation directory for include files */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_INCLUDEDIR */
-end_comment
-
-begin_comment
-comment|/* Installation directory for .info files */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_INFODIR */
-end_comment
-
-begin_comment
-comment|/* Installation directory for man pages */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_MANDIR */
 end_comment
 
 begin_comment
@@ -274,17 +208,23 @@ begin_comment
 comment|/* Define if we have the Intel JIT API runtime support library */
 end_comment
 
-begin_comment
-comment|/* #undef LLVM_USE_INTEL_JITEVENTS */
-end_comment
+begin_define
+define|#
+directive|define
+name|LLVM_USE_INTEL_JITEVENTS
+value|0
+end_define
 
 begin_comment
 comment|/* Define if we have the oprofile JIT-support library */
 end_comment
 
-begin_comment
-comment|/* #undef LLVM_USE_OPROFILE */
-end_comment
+begin_define
+define|#
+directive|define
+name|LLVM_USE_OPROFILE
+value|0
+end_define
 
 begin_comment
 comment|/* Major version of the LLVM API */
@@ -294,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MAJOR
-value|3
+value|4
 end_define
 
 begin_comment
@@ -305,7 +245,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|9
+value|0
 end_define
 
 begin_comment
@@ -316,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_PATCH
-value|1
+value|0
 end_define
 
 begin_comment
@@ -327,16 +267,8 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.9.1"
+value|"4.0.0"
 end_define
-
-begin_comment
-comment|/* Define if we link Polly to the tools */
-end_comment
-
-begin_comment
-comment|/* #undef LINK_POLLY_INTO_TOOLS */
-end_comment
 
 begin_endif
 endif|#

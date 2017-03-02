@@ -176,7 +176,7 @@ literal|0
 return|;
 block|}
 name|basic_symbol_iterator
-name|symbol_begin_impl
+name|symbol_begin
 argument_list|()
 specifier|const
 name|override
@@ -195,7 +195,7 @@ argument_list|)
 return|;
 block|}
 name|basic_symbol_iterator
-name|symbol_end_impl
+name|symbol_end
 argument_list|()
 specifier|const
 name|override
@@ -296,22 +296,11 @@ argument_list|(
 argument|MemoryBufferRef Object
 argument_list|)
 block|;
-comment|/// \brief Looks for summary sections in the given memory buffer,
-comment|/// returns true if found, else false.
-specifier|static
-name|bool
-name|hasGlobalValueSummaryInMemBuffer
-argument_list|(
-argument|MemoryBufferRef Object
-argument_list|,
-argument|const DiagnosticHandlerFunction&DiagnosticHandler
-argument_list|)
-block|;
 comment|/// \brief Parse module summary index in the given memory buffer.
 comment|/// Return new ModuleSummaryIndexObjectFile instance containing parsed module
 comment|/// summary/index.
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -322,15 +311,13 @@ operator|>>
 name|create
 argument_list|(
 argument|MemoryBufferRef Object
-argument_list|,
-argument|const DiagnosticHandlerFunction&DiagnosticHandler
 argument_list|)
 block|; }
 decl_stmt|;
 block|}
 comment|/// Parse the module summary index out of an IR file and return the module
 comment|/// summary index object if found, or nullptr if not.
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -341,8 +328,6 @@ operator|>>
 name|getModuleSummaryIndexForFile
 argument_list|(
 argument|StringRef Path
-argument_list|,
-argument|const DiagnosticHandlerFunction&DiagnosticHandler
 argument_list|)
 expr_stmt|;
 block|}

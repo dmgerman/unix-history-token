@@ -101,6 +101,12 @@ directive|include
 file|<cstring>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -175,10 +181,6 @@ decl_stmt|;
 name|unsigned
 name|BitPos
 decl_stmt|;
-name|reference
-argument_list|()
-expr_stmt|;
-comment|// Undefined
 name|public
 label|:
 name|reference
@@ -207,6 +209,11 @@ operator|%
 name|BITWORD_SIZE
 expr_stmt|;
 block|}
+name|reference
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
 name|reference
 argument_list|(
 specifier|const

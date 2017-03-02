@@ -158,10 +158,6 @@ comment|/// The hasVEX_4V field from the record
 name|bool
 name|HasVEX_4V
 decl_stmt|;
-comment|/// The hasVEX_4VOp3 field from the record
-name|bool
-name|HasVEX_4VOp3
-decl_stmt|;
 comment|/// The hasVEX_WPrefix field from the record
 name|bool
 name|HasVEX_WPrefix
@@ -169,10 +165,6 @@ decl_stmt|;
 comment|/// Inferred from the operands; indicates whether the L bit in the VEX prefix is set
 name|bool
 name|HasVEX_LPrefix
-decl_stmt|;
-comment|/// The hasMemOp4Prefix field from the record
-name|bool
-name|HasMemOp4Prefix
 decl_stmt|;
 comment|/// The ignoreVEX_L field from the record
 name|bool

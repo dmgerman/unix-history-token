@@ -255,6 +255,11 @@ block|,
 comment|// resulting in - R_MICROMIPS_TLS_TPREL_LO16
 name|fixup_MICROMIPS_TLS_TPREL_LO16
 block|,
+comment|// resulting in - R_MIPS_SUB/R_MICROMIPS_SUB
+name|fixup_Mips_SUB
+block|,
+name|fixup_MICROMIPS_SUB
+block|,
 comment|// Marker
 name|LastTargetFixupKind
 block|,

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- RegisterContextLLDB.h --------------------------------------------*- C++ -*-===//
+comment|//===-- RegisterContextLLDB.h --------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -68,19 +72,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/RegisterContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Symbol/UnwindPlan.h"
+file|"UnwindLLDB.h"
 end_include
 
 begin_include
@@ -92,13 +84,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/UnwindPlan.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/RegisterContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Utility/RegisterNumber.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"UnwindLLDB.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -131,13 +135,13 @@ name|RegisterContextLLDB
 argument_list|(
 argument|lldb_private::Thread&thread
 argument_list|,
-argument|const SharedPtr& next_frame
+argument|const SharedPtr&next_frame
 argument_list|,
-argument|lldb_private::SymbolContext& sym_ctx
+argument|lldb_private::SymbolContext&sym_ctx
 argument_list|,
 argument|uint32_t frame_number
 argument_list|,
-argument|lldb_private::UnwindLLDB& unwind_lldb
+argument|lldb_private::UnwindLLDB&unwind_lldb
 argument_list|)
 decl_stmt|;
 operator|~
@@ -308,12 +312,15 @@ name|eTrapHandlerFrame
 block|,
 name|eDebuggerFrame
 block|,
-comment|// a debugger inferior function call frame; we get caller's registers from debugger
+comment|// a debugger inferior function call frame; we get caller's
+comment|// registers from debugger
 name|eSkipFrame
 block|,
-comment|// The unwind resulted in a bogus frame but may get back on track so we don't want to give up yet
+comment|// The unwind resulted in a bogus frame but may get back on
+comment|// track so we don't want to give up yet
 name|eNotAValidFrame
-comment|// this frame is invalid for some reason - most likely it is past the top (end) of the stack
+comment|// this frame is invalid for some reason - most likely it is
+comment|// past the top (end) of the stack
 block|}
 enum|;
 comment|// UnwindLLDB needs to pass around references to RegisterLocations
@@ -352,11 +359,16 @@ name|GetPrevFrame
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// A SkipFrame occurs when the unwind out of frame 0 didn't go right -- we've got one bogus frame at frame #1.
-comment|// There is a good chance we'll get back on track if we follow the frame pointer chain (or whatever is appropriate
-comment|// on this ABI) so we allow one invalid frame to be in the stack.  Ideally we'll mark this frame specially at some
-comment|// point and indicate to the user that the unwinder had a hiccup.  Often when this happens we will miss a frame of
-comment|// the program's actual stack in the unwind and we want to flag that for the user somehow.
+comment|// A SkipFrame occurs when the unwind out of frame 0 didn't go right -- we've
+comment|// got one bogus frame at frame #1.
+comment|// There is a good chance we'll get back on track if we follow the frame
+comment|// pointer chain (or whatever is appropriate
+comment|// on this ABI) so we allow one invalid frame to be in the stack.  Ideally
+comment|// we'll mark this frame specially at some
+comment|// point and indicate to the user that the unwinder had a hiccup.  Often when
+comment|// this happens we will miss a frame of
+comment|// the program's actual stack in the unwind and we want to flag that for the
+comment|// user somehow.
 name|bool
 name|IsSkipFrame
 argument_list|()
@@ -389,16 +401,23 @@ name|m_sym_ctx
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Provide a location for where THIS function saved the CALLER's register value
-comment|// Or a frame "below" this one saved it, i.e. a function called by this one, preserved a register that this
+comment|// Provide a location for where THIS function saved the CALLER's register
+comment|// value
+comment|// Or a frame "below" this one saved it, i.e. a function called by this one,
+comment|// preserved a register that this
 comment|// function didn't modify/use.
 comment|//
-comment|// The RegisterLocation type may be set to eRegisterNotAvailable -- this will happen for a volatile register
-comment|// being queried mid-stack.  Instead of floating frame 0's contents of that register up the stack (which may
-comment|// or may not be the value of that reg when the function was executing), we won't return any value.
+comment|// The RegisterLocation type may be set to eRegisterNotAvailable -- this will
+comment|// happen for a volatile register
+comment|// being queried mid-stack.  Instead of floating frame 0's contents of that
+comment|// register up the stack (which may
+comment|// or may not be the value of that reg when the function was executing), we
+comment|// won't return any value.
 comment|//
-comment|// If a non-volatile register (a "preserved" register) is requested mid-stack and no frames "below" the requested
-comment|// stack have saved the register anywhere, it is safe to assume that frame 0's register values are still the same
+comment|// If a non-volatile register (a "preserved" register) is requested mid-stack
+comment|// and no frames "below" the requested
+comment|// stack have saved the register anywhere, it is safe to assume that frame 0's
+comment|// register values are still the same
 comment|// as the requesting frame's.
 name|lldb_private
 operator|::
@@ -490,7 +509,8 @@ name|bool
 name|ForceSwitchToFallbackUnwindPlan
 parameter_list|()
 function_decl|;
-comment|// Get the contents of a general purpose (address-size) register for this frame
+comment|// Get the contents of a general purpose (address-size) register for this
+comment|// frame
 comment|// (usually retrieved from the next frame)
 name|bool
 name|ReadGPRValue
@@ -645,7 +665,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|// The following tell us how to retrieve the CALLER's register values (ie the "previous" frame, aka the frame above)
+comment|// The following tell us how to retrieve the CALLER's register values (ie the
+end_comment
+
+begin_comment
+comment|// "previous" frame, aka the frame above)
 end_comment
 
 begin_comment
@@ -695,7 +719,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Can we retrieve all regs or just nonvolatile regs?
+comment|// Can we retrieve all regs or just
+end_comment
+
+begin_comment
+comment|// nonvolatile regs?
 end_comment
 
 begin_decl_stmt
@@ -739,7 +767,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// how far into the function we've executed; -1 if unknown
+comment|// how far into the function we've executed; -1 if
+end_comment
+
+begin_comment
+comment|// unknown
 end_comment
 
 begin_comment
@@ -753,7 +785,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// how far into the function we've executed; -1 if unknown
+comment|// how far into the function we've
+end_comment
+
+begin_comment
+comment|// executed; -1 if unknown
 end_comment
 
 begin_comment
@@ -796,7 +832,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// if ResolveSymbolContextForAddress fails, don't try to use m_sym_ctx
+comment|// if ResolveSymbolContextForAddress fails, don't try to
+end_comment
+
+begin_comment
+comment|// use m_sym_ctx
 end_comment
 
 begin_decl_stmt
@@ -840,7 +880,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// The UnwindLLDB that is creating this RegisterContextLLDB
+comment|// The UnwindLLDB that is creating
+end_comment
+
+begin_comment
+comment|// this RegisterContextLLDB
 end_comment
 
 begin_comment

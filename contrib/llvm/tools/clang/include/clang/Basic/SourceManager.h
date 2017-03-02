@@ -200,13 +200,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerUnion.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -218,7 +218,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -230,7 +230,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
 end_include
 
 begin_include
@@ -248,6 +266,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -256,25 +286,19 @@ name|namespace
 name|clang
 block|{
 name|class
-name|DiagnosticsEngine
-decl_stmt|;
-name|class
-name|SourceManager
-decl_stmt|;
-name|class
-name|FileManager
-decl_stmt|;
-name|class
-name|FileEntry
-decl_stmt|;
-name|class
-name|LineTableInfo
+name|ASTReader
 decl_stmt|;
 name|class
 name|ASTWriter
 decl_stmt|;
 name|class
-name|ASTReader
+name|DiagnosticsEngine
+decl_stmt|;
+name|class
+name|LineTableInfo
+decl_stmt|;
+name|class
+name|SourceManager
 decl_stmt|;
 comment|/// \brief Public enums and private classes that are part of the
 comment|/// SourceManager implementation.
@@ -475,10 +499,6 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-operator|~
-name|ContentCache
-argument_list|()
-expr_stmt|;
 comment|/// The copy ctor does not allow copies where source object has either
 comment|/// a non-NULL Buffer or SourceLineCache.  Ownership of allocated memory
 comment|/// is not transferred, so this is a logical error.
@@ -555,6 +575,23 @@ name|RHS
 operator|.
 name|NumLines
 block|;     }
+name|ContentCache
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ContentCache
+operator|&
+name|RHS
+operator|)
+operator|=
+name|delete
+expr_stmt|;
+operator|~
+name|ContentCache
+argument_list|()
+expr_stmt|;
 comment|/// \brief Returns the memory buffer for the associated content.
 comment|///
 comment|/// \param Diag Object through which diagnostics will be emitted if the
@@ -722,36 +759,16 @@ operator|==
 literal|0
 return|;
 block|}
-name|private
-label|:
-comment|// Disable assignments.
-name|ContentCache
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|ContentCache
-operator|&
-name|RHS
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 block|}
 empty_stmt|;
 comment|// Assert that the \c ContentCache objects will always be 8-byte aligned so
 comment|// that we can pack 3 bits of integer into pointers to such objects.
 name|static_assert
 argument_list|(
-name|llvm
-operator|::
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|ContentCache
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|>=
 literal|8
 argument_list|,
@@ -1716,8 +1733,7 @@ operator|::
 name|string
 operator|,
 name|FullSourceLoc
-operator|>
-expr|>
+operator|>>
 name|ModuleBuildStack
 expr_stmt|;
 comment|/// \brief This class handles loading and caching of source files into memory.
@@ -2007,8 +2023,7 @@ operator|<
 name|FileID
 operator|,
 name|unsigned
-operator|>
-expr|>
+operator|>>
 name|IncludedLocMap
 expr_stmt|;
 comment|/// The key value into the IsBeforeInTUCache table.
@@ -2102,9 +2117,12 @@ name|DenseMap
 operator|<
 name|FileID
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MacroArgsMap
-operator|*
-operator|>
+operator|>>
 name|MacroArgsCacheMap
 expr_stmt|;
 comment|/// \brief The stack of modules being built, which is used to detect
@@ -2131,28 +2149,6 @@ literal|2
 operator|>
 name|StoredModuleBuildStack
 expr_stmt|;
-comment|// SourceManager doesn't support copy construction.
-name|explicit
-name|SourceManager
-parameter_list|(
-specifier|const
-name|SourceManager
-modifier|&
-parameter_list|)
-init|=
-name|delete
-function_decl|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|SourceManager
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|public
 label|:
 name|SourceManager
@@ -2164,6 +2160,28 @@ argument_list|,
 argument|bool UserFilesAreVolatile = false
 argument_list|)
 empty_stmt|;
+name|explicit
+name|SourceManager
+parameter_list|(
+specifier|const
+name|SourceManager
+modifier|&
+parameter_list|)
+init|=
+name|delete
+function_decl|;
+name|SourceManager
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|SourceManager
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 operator|~
 name|SourceManager
 argument_list|()
@@ -4838,9 +4856,7 @@ comment|/// getPresumedLoc for normal clients.
 end_comment
 
 begin_decl_stmt
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getBufferName
 argument_list|(
 name|SourceLocation
@@ -5150,13 +5166,14 @@ begin_comment
 comment|/// \brief Returns whether \p Loc is expanded from a macro in a system header.
 end_comment
 
-begin_function
+begin_decl_stmt
 name|bool
 name|isInSystemMacro
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|loc
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|loc
@@ -5173,7 +5190,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/// \brief The size of the SLocEntry that \p FID represents.
@@ -6817,7 +6834,6 @@ name|void
 name|computeMacroArgsCache
 argument_list|(
 name|MacroArgsMap
-operator|*
 operator|&
 name|MacroArgsCache
 argument_list|,
@@ -7014,6 +7030,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_BASIC_SOURCEMANAGER_H
+end_comment
 
 end_unit
 

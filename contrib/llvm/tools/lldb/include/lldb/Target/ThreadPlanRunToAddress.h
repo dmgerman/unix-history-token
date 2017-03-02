@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/ThreadPlan.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/ThreadPlan.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -217,7 +217,8 @@ name|break_id_t
 operator|>
 name|m_break_ids
 block|;
-comment|// This is the breakpoint we are using to stop us at m_address.
+comment|// This is the breakpoint we are
+comment|// using to stop us at m_address.
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ThreadPlanRunToAddress

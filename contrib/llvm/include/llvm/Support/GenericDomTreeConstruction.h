@@ -123,9 +123,9 @@ operator|>
 name|unsigned
 name|DFSPass
 argument_list|(
-argument|DominatorTreeBase<typename GraphT::NodeType>& DT
+argument|DominatorTreeBaseByGraphTraits<GraphT>&DT
 argument_list|,
-argument|typename GraphT::NodeType* V
+argument|typename GraphT::NodeRef V
 argument_list|,
 argument|unsigned N
 argument_list|)
@@ -159,8 +159,7 @@ operator|<
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 block|,
 name|typename
 name|GraphT
@@ -203,8 +202,7 @@ block|{
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|BB
 operator|=
 name|Worklist
@@ -227,16 +225,7 @@ argument_list|()
 operator|.
 name|second
 expr_stmt|;
-name|typename
-name|DominatorTreeBase
-operator|<
-name|typename
-name|GraphT
-operator|::
-name|NodeType
-operator|>
-operator|::
-name|InfoRec
+name|auto
 operator|&
 name|BBInfo
 operator|=
@@ -344,23 +333,13 @@ comment|// Visit the successor next, if it isn't already visited.
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|Succ
 operator|=
 operator|*
 name|NextSucc
 expr_stmt|;
-name|typename
-name|DominatorTreeBase
-operator|<
-name|typename
-name|GraphT
-operator|::
-name|NodeType
-operator|>
-operator|::
-name|InfoRec
+name|auto
 operator|&
 name|SuccVInfo
 operator|=
@@ -421,27 +400,17 @@ operator|>
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|Eval
 argument_list|(
-argument|DominatorTreeBase<typename GraphT::NodeType>&DT
+argument|DominatorTreeBaseByGraphTraits<GraphT>&DT
 argument_list|,
-argument|typename GraphT::NodeType *VIn
+argument|typename GraphT::NodeRef VIn
 argument_list|,
 argument|unsigned LastLinked
 argument_list|)
 block|{
-name|typename
-name|DominatorTreeBase
-operator|<
-name|typename
-name|GraphT
-operator|::
-name|NodeType
-operator|>
-operator|::
-name|InfoRec
+name|auto
 operator|&
 name|VInInfo
 operator|=
@@ -468,8 +437,7 @@ operator|<
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 operator|,
 literal|32
 operator|>
@@ -480,8 +448,7 @@ operator|<
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 operator|,
 literal|32
 operator|>
@@ -514,8 +481,7 @@ block|{
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|V
 operator|=
 name|Work
@@ -523,16 +489,7 @@ operator|.
 name|back
 argument_list|()
 expr_stmt|;
-name|typename
-name|DominatorTreeBase
-operator|<
-name|typename
-name|GraphT
-operator|::
-name|NodeType
-operator|>
-operator|::
-name|InfoRec
+name|auto
 operator|&
 name|VInfo
 operator|=
@@ -546,8 +503,7 @@ expr_stmt|;
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|VAncestor
 operator|=
 name|DT
@@ -602,16 +558,7 @@ operator|<
 name|LastLinked
 condition|)
 continue|continue;
-name|typename
-name|DominatorTreeBase
-operator|<
-name|typename
-name|GraphT
-operator|::
-name|NodeType
-operator|>
-operator|::
-name|InfoRec
+name|auto
 operator|&
 name|VAInfo
 operator|=
@@ -625,8 +572,7 @@ expr_stmt|;
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|VAncestorLabel
 operator|=
 name|VAInfo
@@ -636,8 +582,7 @@ expr_stmt|;
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|VLabel
 operator|=
 name|VInfo
@@ -699,9 +644,9 @@ operator|>
 name|void
 name|Calculate
 argument_list|(
-argument|DominatorTreeBase<typename GraphTraits<NodeT>::NodeType>& DT
+argument|DominatorTreeBaseByGraphTraits<GraphTraits<NodeT>>&DT
 argument_list|,
-argument|FuncT& F
+argument|FuncT&F
 argument_list|)
 block|{
 typedef|typedef
@@ -711,12 +656,40 @@ name|NodeT
 operator|>
 name|GraphT
 expr_stmt|;
-name|unsigned
-name|N
-operator|=
-literal|0
+name|static_assert
+argument_list|(
+argument|std::is_pointer<typename GraphT::NodeRef>::value
+argument_list|,
+literal|"NodeRef should be pointer type"
+argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|std
+operator|::
+name|remove_pointer
+operator|<
+name|typename
+name|GraphT
+operator|::
+name|NodeRef
+operator|>
+operator|::
+name|type
+name|NodeType
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|unsigned
+name|N
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|bool
@@ -741,16 +714,7 @@ condition|(
 name|MultipleRoots
 condition|)
 block|{
-name|typename
-name|DominatorTreeBase
-operator|<
-name|typename
-name|GraphT
-operator|::
-name|NodeType
-operator|>
-operator|::
-name|InfoRec
+name|auto
 operator|&
 name|BBInfo
 operator|=
@@ -990,8 +954,7 @@ block|{
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|W
 operator|=
 name|DT
@@ -1001,16 +964,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|typename
-name|DominatorTreeBase
-operator|<
-name|typename
-name|GraphT
-operator|::
-name|NodeType
-operator|>
-operator|::
-name|InfoRec
+name|auto
 operator|&
 name|WInfo
 operator|=
@@ -1047,8 +1001,7 @@ block|{
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|V
 operator|=
 name|DT
@@ -1064,8 +1017,7 @@ expr_stmt|;
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|U
 operator|=
 name|Eval
@@ -1160,8 +1112,7 @@ block|{
 name|typename
 name|InvTraits
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|N
 operator|=
 operator|*
@@ -1289,8 +1240,7 @@ block|{
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|Root
 operator|=
 name|DT
@@ -1325,8 +1275,7 @@ block|{
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|V
 operator|=
 name|DT
@@ -1375,8 +1324,7 @@ block|{
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|W
 operator|=
 name|DT
@@ -1389,8 +1337,7 @@ expr_stmt|;
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 operator|&
 name|WIDom
 operator|=
@@ -1464,8 +1411,7 @@ begin_expr_stmt
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|Root
 operator|=
 operator|!
@@ -1501,9 +1447,6 @@ name|make_unique
 operator|<
 name|DomTreeNodeBase
 operator|<
-name|typename
-name|GraphT
-operator|::
 name|NodeType
 operator|>>
 operator|(
@@ -1541,8 +1484,7 @@ block|{
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|W
 operator|=
 name|DT
@@ -1567,8 +1509,7 @@ comment|// Haven't calculated this node yet?
 name|typename
 name|GraphT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 name|ImmDom
 operator|=
 name|DT
@@ -1593,9 +1534,6 @@ expr_stmt|;
 comment|// Get or calculate the node for the immediate dominator
 name|DomTreeNodeBase
 operator|<
-name|typename
-name|GraphT
-operator|::
 name|NodeType
 operator|>
 operator|*
@@ -1621,7 +1559,19 @@ name|IDomNode
 operator|->
 name|addChild
 argument_list|(
-argument|llvm::make_unique<DomTreeNodeBase<typename GraphT::NodeType>>(             W, IDomNode)
+name|llvm
+operator|::
+name|make_unique
+operator|<
+name|DomTreeNodeBase
+operator|<
+name|NodeType
+operator|>>
+operator|(
+name|W
+operator|,
+name|IDomNode
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
@@ -59,6 +65,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_decl_stmt
@@ -82,8 +112,6 @@ block|{
 name|public
 operator|:
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|EltTy
@@ -100,8 +128,6 @@ name|value_type
 name|value_type
 expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|PointerUnion
 operator|<
 name|EltTy
@@ -120,7 +146,9 @@ name|public
 label|:
 name|TinyPtrVector
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 operator|~
 name|TinyPtrVector
 argument_list|()
@@ -2012,6 +2040,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_TINYPTRVECTOR_H
+end_comment
 
 end_unit
 

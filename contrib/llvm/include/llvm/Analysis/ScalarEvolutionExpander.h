@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -95,12 +107,6 @@ directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<set>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -123,8 +129,8 @@ modifier|&
 name|SE
 parameter_list|)
 function_decl|;
-comment|/// This class uses information about analyze scalars to
-comment|/// rewrite expressions in canonical form.
+comment|/// This class uses information about analyze scalars to rewrite expressions
+comment|/// in canonical form.
 comment|///
 comment|/// Clients should create an instance of this class when rewriting is needed,
 comment|/// and destroy it when finished to allow the release of the associated
@@ -157,9 +163,7 @@ modifier|*
 name|IVName
 decl_stmt|;
 comment|// InsertedExpressions caches Values for reuse, so must track RAUW.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|std
 operator|::
@@ -176,31 +180,24 @@ operator|,
 name|TrackingVH
 operator|<
 name|Value
-operator|>
-expr|>
+operator|>>
 name|InsertedExpressions
 expr_stmt|;
 comment|// InsertedValues only flags inserted instructions so needs no RAUW.
-name|std
-operator|::
-name|set
+name|DenseSet
 operator|<
 name|AssertingVH
 operator|<
 name|Value
-operator|>
-expr|>
+operator|>>
 name|InsertedValues
 expr_stmt|;
-name|std
-operator|::
-name|set
+name|DenseSet
 operator|<
 name|AssertingVH
 operator|<
 name|Value
-operator|>
-expr|>
+operator|>>
 name|InsertedPostIncValues
 expr_stmt|;
 comment|/// A memoization of the "relevant" loop for a given SCEV.
@@ -216,49 +213,44 @@ operator|*
 operator|>
 name|RelevantLoops
 expr_stmt|;
-comment|/// \brief Addrecs referring to any of the given loops are expanded
-comment|/// in post-inc mode. For example, expanding {1,+,1}<L> in post-inc mode
-comment|/// returns the add instruction that adds one to the phi for {0,+,1}<L>,
-comment|/// as opposed to a new phi starting at 1. This is only supported in
-comment|/// non-canonical mode.
+comment|/// Addrecs referring to any of the given loops are expanded in post-inc
+comment|/// mode. For example, expanding {1,+,1}<L> in post-inc mode returns the add
+comment|/// instruction that adds one to the phi for {0,+,1}<L>, as opposed to a new
+comment|/// phi starting at 1. This is only supported in non-canonical mode.
 name|PostIncLoopSet
 name|PostIncLoops
 decl_stmt|;
-comment|/// \brief When this is non-null, addrecs expanded in the loop it indicates
-comment|/// should be inserted with increments at IVIncInsertPos.
+comment|/// When this is non-null, addrecs expanded in the loop it indicates should
+comment|/// be inserted with increments at IVIncInsertPos.
 specifier|const
 name|Loop
 modifier|*
 name|IVIncInsertLoop
 decl_stmt|;
-comment|/// \brief When expanding addrecs in the IVIncInsertLoop loop, insert the IV
+comment|/// When expanding addrecs in the IVIncInsertLoop loop, insert the IV
 comment|/// increment at this position.
 name|Instruction
 modifier|*
 name|IVIncInsertPos
 decl_stmt|;
-comment|/// \brief Phis that complete an IV chain. Reuse
-name|std
-operator|::
-name|set
+comment|/// Phis that complete an IV chain. Reuse
+name|DenseSet
 operator|<
 name|AssertingVH
 operator|<
 name|PHINode
-operator|>
-expr|>
+operator|>>
 name|ChainedPhis
 expr_stmt|;
-comment|/// \brief When true, expressions are expanded in "canonical" form. In
-comment|/// particular, addrecs are expanded as arithmetic based on a canonical
-comment|/// induction variable. When false, expression are expanded in a more
-comment|/// literal form.
+comment|/// When true, expressions are expanded in "canonical" form. In particular,
+comment|/// addrecs are expanded as arithmetic based on a canonical induction
+comment|/// variable. When false, expression are expanded in a more literal form.
 name|bool
 name|CanonicalMode
 decl_stmt|;
-comment|/// \brief When invoked from LSR, the expander is in "strength reduction"
-comment|/// mode. The only difference is that phi's are only reused if they are
-comment|/// already in "expanded" form.
+comment|/// When invoked from LSR, the expander is in "strength reduction" mode. The
+comment|/// only difference is that phi's are only reused if they are already in
+comment|/// "expanded" form.
 name|bool
 name|LSRMode
 decl_stmt|;
@@ -486,7 +478,7 @@ operator|>
 expr_stmt|;
 name|public
 label|:
-comment|/// \brief Construct a SCEVExpander in "canonical" mode.
+comment|/// Construct a SCEVExpander in "canonical" mode.
 name|explicit
 name|SCEVExpander
 argument_list|(
@@ -585,9 +577,9 @@ name|s
 block|; }
 endif|#
 directive|endif
-comment|/// \brief Erase the contents of the InsertedExpressions map so that users
-comment|/// trying to expand the same expression into multiple BasicBlocks or
-comment|/// different places within the same BasicBlock can do so.
+comment|/// Erase the contents of the InsertedExpressions map so that users trying
+comment|/// to expand the same expression into multiple BasicBlocks or different
+comment|/// places within the same BasicBlock can do so.
 name|void
 name|clear
 argument_list|()
@@ -612,8 +604,8 @@ operator|.
 name|clear
 argument_list|()
 block|;     }
-comment|/// \brief Return true for expressions that may incur non-trivial cost to
-comment|/// evaluate at runtime.
+comment|/// Return true for expressions that may incur non-trivial cost to evaluate
+comment|/// at runtime.
 comment|///
 comment|/// At is an optional parameter which specifies point in code where user is
 comment|/// going to expand this expression. Sometimes this knowledge can lead to a
@@ -651,9 +643,9 @@ name|Processed
 argument_list|)
 return|;
 block|}
-comment|/// \brief This method returns the canonical induction variable of the
-comment|/// specified type for the specified loop (inserting one if there is none).
-comment|/// A canonical induction variable starts at zero and steps by one on each
+comment|/// This method returns the canonical induction variable of the specified
+comment|/// type for the specified loop (inserting one if there is none).  A
+comment|/// canonical induction variable starts at zero and steps by one on each
 comment|/// iteration.
 name|PHINode
 modifier|*
@@ -669,7 +661,7 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// \brief Return the induction variable increment's IV operand.
+comment|/// Return the induction variable increment's IV operand.
 name|Instruction
 modifier|*
 name|getIVIncOperand
@@ -686,7 +678,7 @@ name|bool
 name|allowScale
 parameter_list|)
 function_decl|;
-comment|/// \brief Utility for hoisting an IV increment.
+comment|/// Utility for hoisting an IV increment.
 name|bool
 name|hoistIVInc
 parameter_list|(
@@ -699,8 +691,8 @@ modifier|*
 name|InsertPos
 parameter_list|)
 function_decl|;
-comment|/// \brief replace congruent phis with their most canonical
-comment|/// representative. Return the number of phis eliminated.
+comment|/// replace congruent phis with their most canonical representative. Return
+comment|/// the number of phis eliminated.
 name|unsigned
 name|replaceCongruentIVs
 argument_list|(
@@ -728,9 +720,8 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// \brief Insert code to directly compute the specified SCEV expression
-comment|/// into the program.  The inserted code is inserted into the specified
-comment|/// block.
+comment|/// Insert code to directly compute the specified SCEV expression into the
+comment|/// program.  The inserted code is inserted into the specified block.
 name|Value
 modifier|*
 name|expandCodeFor
@@ -749,10 +740,10 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
-comment|/// \brief Insert code to directly compute the specified SCEV expression
-comment|/// into the program.  The inserted code is inserted into the SCEVExpander's
-comment|/// current insertion point. If a type is specified, the result will be
-comment|/// expanded to have that type, with a cast if necessary.
+comment|/// Insert code to directly compute the specified SCEV expression into the
+comment|/// program.  The inserted code is inserted into the SCEVExpander's current
+comment|/// insertion point. If a type is specified, the result will be expanded to
+comment|/// have that type, with a cast if necessary.
 name|Value
 modifier|*
 name|expandCodeFor
@@ -769,10 +760,9 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// \brief Generates a code sequence that evaluates this predicate.
-comment|/// The inserted instructions will be at position \p Loc.
-comment|/// The result will be of type i1 and will have a value of 0 when the
-comment|/// predicate is false and 1 otherwise.
+comment|/// Generates a code sequence that evaluates this predicate.  The inserted
+comment|/// instructions will be at position \p Loc.  The result will be of type i1
+comment|/// and will have a value of 0 when the predicate is false and 1 otherwise.
 name|Value
 modifier|*
 name|expandCodeForPredicate
@@ -787,8 +777,8 @@ modifier|*
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief A specialized variant of expandCodeForPredicate, handling the
-comment|/// case when we are expanding code for a SCEVEqualPredicate.
+comment|/// A specialized variant of expandCodeForPredicate, handling the case when
+comment|/// we are expanding code for a SCEVEqualPredicate.
 name|Value
 modifier|*
 name|expandEqualPredicate
@@ -803,8 +793,7 @@ modifier|*
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief Generates code that evaluates if the \p AR expression will
-comment|/// overflow.
+comment|/// Generates code that evaluates if the \p AR expression will overflow.
 name|Value
 modifier|*
 name|generateOverflowCheck
@@ -822,8 +811,8 @@ name|bool
 name|Signed
 parameter_list|)
 function_decl|;
-comment|/// \brief A specialized variant of expandCodeForPredicate, handling the
-comment|/// case when we are expanding code for a SCEVWrapPredicate.
+comment|/// A specialized variant of expandCodeForPredicate, handling the case when
+comment|/// we are expanding code for a SCEVWrapPredicate.
 name|Value
 modifier|*
 name|expandWrapPredicate
@@ -838,8 +827,8 @@ modifier|*
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief A specialized variant of expandCodeForPredicate, handling the
-comment|/// case when we are expanding code for a SCEVUnionPredicate.
+comment|/// A specialized variant of expandCodeForPredicate, handling the case when
+comment|/// we are expanding code for a SCEVUnionPredicate.
 name|Value
 modifier|*
 name|expandUnionPredicate
@@ -854,7 +843,7 @@ modifier|*
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// \brief Set the current IV increment loop and position.
+comment|/// Set the current IV increment loop and position.
 name|void
 name|setIVIncInsertPos
 parameter_list|(
@@ -885,7 +874,7 @@ operator|=
 name|Pos
 expr_stmt|;
 block|}
-comment|/// \brief Enable post-inc expansion for addrecs referring to the given
+comment|/// Enable post-inc expansion for addrecs referring to the given
 comment|/// loops. Post-inc expansion is only supported in non-canonical mode.
 name|void
 name|setPostInc
@@ -909,7 +898,7 @@ operator|=
 name|L
 expr_stmt|;
 block|}
-comment|/// \brief Disable all post-inc expansion.
+comment|/// Disable all post-inc expansion.
 name|void
 name|clearPostInc
 parameter_list|()
@@ -927,9 +916,9 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// \brief Disable the behavior of expanding expressions in canonical form
-comment|/// rather than in a more literal form. Non-canonical mode is useful for
-comment|/// late optimization passes.
+comment|/// Disable the behavior of expanding expressions in canonical form rather
+comment|/// than in a more literal form. Non-canonical mode is useful for late
+comment|/// optimization passes.
 name|void
 name|disableCanonicalMode
 parameter_list|()
@@ -948,9 +937,9 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/// \brief Set the current insertion point. This is useful if multiple calls
-comment|/// to expandCodeFor() are going to be made with the same insert point and
-comment|/// the insert point may be moved during one of the expansions (e.g. if the
+comment|/// Set the current insertion point. This is useful if multiple calls to
+comment|/// expandCodeFor() are going to be made with the same insert point and the
+comment|/// insert point may be moved during one of the expansions (e.g. if the
 comment|/// insert point is not a block terminator).
 name|void
 name|setInsertPoint
@@ -973,9 +962,8 @@ name|IP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Clear the current insertion point. This is useful if the
-comment|/// instruction that had been serving as the insertion point may have been
-comment|/// deleted.
+comment|/// Clear the current insertion point. This is useful if the instruction
+comment|/// that had been serving as the insertion point may have been deleted.
 name|void
 name|clearInsertPoint
 parameter_list|()
@@ -986,7 +974,7 @@ name|ClearInsertionPoint
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// \brief Return true if the specified instruction was inserted by the code
+comment|/// Return true if the specified instruction was inserted by the code
 comment|/// rewriter.  If so, the client should not modify the instruction.
 name|bool
 name|isInsertedInstruction
@@ -1049,11 +1037,10 @@ modifier|*
 name|L
 parameter_list|)
 function_decl|;
-comment|/// Try to find the ValueOffsetPair for S. The function is mainly
-comment|/// used to check whether S can be expanded cheaply.
-comment|/// If this returns a non-None value, we know we can codegen the
-comment|/// `ValueOffsetPair` into a suitable expansion identical with S
-comment|/// so that S can be expanded cheaply.
+comment|/// Try to find the ValueOffsetPair for S. The function is mainly used to
+comment|/// check whether S can be expanded cheaply.  If this returns a non-None
+comment|/// value, we know we can codegen the `ValueOffsetPair` into a suitable
+comment|/// expansion identical with S so that S can be expanded cheaply.
 comment|///
 comment|/// L is a hint which tells in which loop to look for the suitable value.
 comment|/// On success return value which is equivalent to the expanded S at point
@@ -1100,7 +1087,7 @@ name|getContext
 argument_list|()
 return|;
 block|}
-comment|/// \brief Recursive helper function for isHighCostExpansion.
+comment|/// Recursive helper function for isHighCostExpansion.
 name|bool
 name|isHighCostExpansionHelper
 argument_list|(
@@ -1128,8 +1115,8 @@ operator|&
 name|Processed
 argument_list|)
 decl_stmt|;
-comment|/// \brief Insert the specified binary operator, doing a small amount
-comment|/// of work to avoid inserting an obviously redundant operation.
+comment|/// Insert the specified binary operator, doing a small amount of work to
+comment|/// avoid inserting an obviously redundant operation.
 name|Value
 modifier|*
 name|InsertBinop
@@ -1148,10 +1135,9 @@ operator|*
 name|RHS
 argument_list|)
 decl_stmt|;
-comment|/// \brief Arrange for there to be a cast of V to Ty at IP, reusing an
-comment|/// existing cast if a suitable one exists, moving an existing cast if a
-comment|/// suitable one exists but isn't in the right place, or or creating a new
-comment|/// one.
+comment|/// Arrange for there to be a cast of V to Ty at IP, reusing an existing
+comment|/// cast if a suitable one exists, moving an existing cast if a suitable one
+comment|/// exists but isn't in the right place, or or creating a new one.
 name|Value
 modifier|*
 name|ReuseOrCreateCast
@@ -1175,8 +1161,8 @@ name|iterator
 name|IP
 argument_list|)
 decl_stmt|;
-comment|/// \brief Insert a cast of V to the specified type, which must be possible
-comment|/// with a noop cast, doing what we can to share the casts.
+comment|/// Insert a cast of V to the specified type, which must be possible with a
+comment|/// noop cast, doing what we can to share the casts.
 name|Value
 modifier|*
 name|InsertNoopCastOfTo
@@ -1190,8 +1176,8 @@ modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// \brief Expand a SCEVAddExpr with a pointer type into a GEP
-comment|/// instead of using ptrtoint+arithmetic+inttoptr.
+comment|/// Expand a SCEVAddExpr with a pointer type into a GEP instead of using
+comment|/// ptrtoint+arithmetic+inttoptr.
 name|Value
 modifier|*
 name|expandAddToGEP
@@ -1223,7 +1209,7 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// \brief Find a previous Value in ExprValueMap for expand.
+comment|/// Find a previous Value in ExprValueMap for expand.
 name|ScalarEvolution
 operator|::
 name|ValueOffsetPair
@@ -1250,7 +1236,7 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
-comment|/// \brief Determine the most "relevant" loop for the given SCEV.
+comment|/// Determine the most "relevant" loop for the given SCEV.
 specifier|const
 name|Loop
 modifier|*

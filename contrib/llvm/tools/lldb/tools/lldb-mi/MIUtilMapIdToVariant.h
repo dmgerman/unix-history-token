@@ -76,7 +76,11 @@ file|"MIUtilVariant.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -243,15 +247,27 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Add to *this container a data object of general type identified by an ID.
+comment|//------------------------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//          If the data with that ID already exists in the container it is replace with
+comment|// Details: Add to *this container a data object of general type identified by
+end_comment
+
+begin_comment
+comment|// an ID.
+end_comment
+
+begin_comment
+comment|//          If the data with that ID already exists in the container it is
+end_comment
+
+begin_comment
+comment|//          replace with
 end_comment
 
 begin_comment
@@ -404,11 +420,19 @@ end_return
 
 begin_comment
 unit|}
-comment|//++ ------------------------------------------------------------------------------------
+comment|//++
 end_comment
 
 begin_comment
-comment|// Details: Retrieve a data object from *this container identified by the specified ID.
+comment|//------------------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|// Details: Retrieve a data object from *this container identified by the
+end_comment
+
+begin_comment
+comment|// specified ID.
 end_comment
 
 begin_comment

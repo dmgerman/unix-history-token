@@ -104,12 +104,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ClangForward.h"
 end_include
 
@@ -137,6 +131,12 @@ directive|include
 file|"lldb/Symbol/TaggedASTType.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -155,7 +155,8 @@ name|class
 name|ValueObjectConstResult
 decl_stmt|;
 comment|//----------------------------------------------------------------------
-comment|/// @class ClangExpressionVariable ClangExpressionVariable.h "lldb/Expression/ClangExpressionVariable.h"
+comment|/// @class ClangExpressionVariable ClangExpressionVariable.h
+comment|/// "lldb/Expression/ClangExpressionVariable.h"
 comment|/// @brief Encapsulates one variable for the expression parser.
 comment|///
 comment|/// The expression parser uses variables in three different contexts:
@@ -221,7 +222,7 @@ argument|ExecutionContextScope *exe_scope
 argument_list|,
 argument|const ConstString&name
 argument_list|,
-argument|const TypeFromUser& user_type
+argument|const TypeFromUser&user_type
 argument_list|,
 argument|lldb::ByteOrder byte_order
 argument_list|,
@@ -229,7 +230,8 @@ argument|uint32_t addr_byte_size
 argument_list|)
 block|;
 comment|//----------------------------------------------------------------------
-comment|/// Utility functions for dealing with ExpressionVariableLists in Clang-specific ways
+comment|/// Utility functions for dealing with ExpressionVariableLists in
+comment|/// Clang-specific ways
 comment|//----------------------------------------------------------------------
 comment|//----------------------------------------------------------------------
 comment|/// Finds a variable by NamedDecl in the list.
@@ -401,7 +403,7 @@ name|m_lldb_sym
 argument_list|(
 argument|NULL
 argument_list|)
-block|{         }
+block|{}
 name|TypeFromParser
 name|m_parser_type
 block|;
@@ -420,7 +422,8 @@ name|Value
 operator|*
 name|m_llvm_value
 block|;
-comment|///< The IR value corresponding to this variable; usually a GlobalValue
+comment|///< The IR value corresponding to this variable;
+comment|///usually a GlobalValue
 name|lldb_private
 operator|::
 name|Value
@@ -440,7 +443,8 @@ name|Symbol
 operator|*
 name|m_lldb_sym
 block|;
-comment|///< The original symbol for this variable, if it was a symbol
+comment|///< The original symbol for this
+comment|///variable, if it was a symbol
 block|}
 block|;
 name|private
@@ -572,7 +576,7 @@ name|m_offset
 argument_list|(
 literal|0
 argument_list|)
-block|{         }
+block|{}
 name|lldb
 operator|::
 name|offset_t

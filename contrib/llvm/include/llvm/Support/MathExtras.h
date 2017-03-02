@@ -1438,7 +1438,8 @@ comment|/// Hi_32 - This function returns the high 32 bits of a 64 bit value.
 end_comment
 
 begin_function
-unit|inline
+unit|constexpr
+specifier|inline
 name|uint32_t
 name|Hi_32
 parameter_list|(
@@ -1465,6 +1466,7 @@ comment|/// Lo_32 - This function returns the low 32 bits of a 64 bit value.
 end_comment
 
 begin_function
+name|constexpr
 specifier|inline
 name|uint32_t
 name|Lo_32
@@ -1494,6 +1496,7 @@ comment|///           32-bit integers.
 end_comment
 
 begin_function
+name|constexpr
 specifier|inline
 name|uint64_t
 name|Make_64
@@ -1533,6 +1536,7 @@ operator|<
 name|unsigned
 name|N
 operator|>
+name|constexpr
 specifier|inline
 name|bool
 name|isInt
@@ -1589,6 +1593,7 @@ begin_expr_stmt
 name|template
 operator|<
 operator|>
+name|constexpr
 specifier|inline
 name|bool
 name|isInt
@@ -1618,6 +1623,7 @@ begin_expr_stmt
 name|template
 operator|<
 operator|>
+name|constexpr
 specifier|inline
 name|bool
 name|isInt
@@ -1647,6 +1653,7 @@ begin_expr_stmt
 name|template
 operator|<
 operator|>
+name|constexpr
 specifier|inline
 name|bool
 name|isInt
@@ -1689,6 +1696,7 @@ operator|,
 name|unsigned
 name|S
 operator|>
+name|constexpr
 specifier|inline
 name|bool
 name|isShiftedInt
@@ -1749,17 +1757,60 @@ begin_comment
 comment|/// isUInt - Checks if an unsigned integer fits into the given bit width.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is written as two functions rather than as simply
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   return N>= 64 || X< (UINT64_C(1)<< N);
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// to keep MSVC from (incorrectly) warning on isUInt<64> that we're shifting
+end_comment
+
+begin_comment
+comment|/// left too many places.
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
 name|unsigned
 name|N
 operator|>
+name|constexpr
 specifier|inline
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+operator|(
+name|N
+operator|<
+literal|64
+operator|)
+operator|,
 name|bool
+operator|>
+operator|::
+name|type
 name|isUInt
 argument_list|(
-argument|uint64_t x
+argument|uint64_t X
 argument_list|)
 block|{
 name|static_assert
@@ -1768,15 +1819,11 @@ name|N
 operator|>
 literal|0
 argument_list|,
-literal|"isUInt<0> doesn't make sense."
+literal|"isUInt<0> doesn't make sense"
 argument_list|)
 block|;
 return|return
-name|N
-operator|>=
-literal|64
-operator|||
-name|x
+name|X
 operator|<
 operator|(
 name|UINT64_C
@@ -1792,6 +1839,38 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|unsigned
+name|N
+operator|>
+name|constexpr
+specifier|inline
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|N
+operator|>=
+literal|64
+operator|,
+name|bool
+operator|>
+operator|::
+name|type
+name|isUInt
+argument_list|(
+argument|uint64_t X
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|// Template specializations to get better code for common cases.
 end_comment
@@ -1800,6 +1879,7 @@ begin_expr_stmt
 name|template
 operator|<
 operator|>
+name|constexpr
 specifier|inline
 name|bool
 name|isUInt
@@ -1829,6 +1909,7 @@ begin_expr_stmt
 name|template
 operator|<
 operator|>
+name|constexpr
 specifier|inline
 name|bool
 name|isUInt
@@ -1858,6 +1939,7 @@ begin_expr_stmt
 name|template
 operator|<
 operator|>
+name|constexpr
 specifier|inline
 name|bool
 name|isUInt
@@ -1896,6 +1978,7 @@ operator|,
 name|unsigned
 name|S
 operator|>
+name|constexpr
 specifier|inline
 name|bool
 name|isShiftedUInt
@@ -2179,6 +2262,7 @@ comment|/// zero (32 bit version).  Ex. isMask_32(0x0000FFFFU) == true.
 end_comment
 
 begin_function
+name|constexpr
 specifier|inline
 name|bool
 name|isMask_32
@@ -2218,6 +2302,7 @@ comment|/// zero (64 bit version).
 end_comment
 
 begin_function
+name|constexpr
 specifier|inline
 name|bool
 name|isMask_64
@@ -2257,6 +2342,7 @@ comment|/// Ex. isShiftedMask_32(0x0000FF00U) == true.
 end_comment
 
 begin_function
+name|constexpr
 specifier|inline
 name|bool
 name|isShiftedMask_32
@@ -2291,6 +2377,7 @@ comment|/// non-empty sequence of ones with the remainder zero (64 bit version.)
 end_comment
 
 begin_function
+name|constexpr
 specifier|inline
 name|bool
 name|isShiftedMask_64
@@ -2325,6 +2412,7 @@ comment|/// two> 0. Ex. isPowerOf2_32(0x00100000U) == true (32 bit edition.)
 end_comment
 
 begin_function
+name|constexpr
 specifier|inline
 name|bool
 name|isPowerOf2_32
@@ -2359,6 +2447,7 @@ comment|///> 0 (64 bit edition.)
 end_comment
 
 begin_function
+name|constexpr
 specifier|inline
 name|bool
 name|isPowerOf2_64
@@ -3167,26 +3256,39 @@ name|uint64_t
 name|Bits
 parameter_list|)
 block|{
-union|union
-block|{
-name|uint64_t
-name|L
-decl_stmt|;
 name|double
 name|D
 decl_stmt|;
-block|}
-name|T
-union|;
-name|T
-operator|.
-name|L
-operator|=
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|double
+argument_list|)
+argument_list|,
+literal|"Unexpected type sizes"
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|D
+argument_list|,
+operator|&
 name|Bits
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Bits
+argument_list|)
+argument_list|)
 expr_stmt|;
 return|return
-name|T
-operator|.
 name|D
 return|;
 block|}
@@ -3209,26 +3311,39 @@ name|uint32_t
 name|Bits
 parameter_list|)
 block|{
-union|union
-block|{
-name|uint32_t
-name|I
-decl_stmt|;
 name|float
 name|F
 decl_stmt|;
-block|}
-name|T
-union|;
-name|T
-operator|.
-name|I
-operator|=
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|float
+argument_list|)
+argument_list|,
+literal|"Unexpected type sizes"
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|F
+argument_list|,
+operator|&
 name|Bits
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Bits
+argument_list|)
+argument_list|)
 expr_stmt|;
 return|return
-name|T
-operator|.
 name|F
 return|;
 block|}
@@ -3259,27 +3374,40 @@ name|double
 name|Double
 parameter_list|)
 block|{
-union|union
-block|{
 name|uint64_t
-name|L
+name|Bits
 decl_stmt|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
 name|double
-name|D
-decl_stmt|;
-block|}
-name|T
-union|;
-name|T
-operator|.
-name|D
-operator|=
+argument_list|)
+argument_list|,
+literal|"Unexpected type sizes"
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|Bits
+argument_list|,
+operator|&
 name|Double
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Double
+argument_list|)
+argument_list|)
 expr_stmt|;
 return|return
-name|T
-operator|.
-name|L
+name|Bits
 return|;
 block|}
 end_function
@@ -3309,27 +3437,40 @@ name|float
 name|Float
 parameter_list|)
 block|{
-union|union
-block|{
 name|uint32_t
-name|I
+name|Bits
 decl_stmt|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
 name|float
-name|F
-decl_stmt|;
-block|}
-name|T
-union|;
-name|T
-operator|.
-name|F
-operator|=
+argument_list|)
+argument_list|,
+literal|"Unexpected type sizes"
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|Bits
+argument_list|,
+operator|&
 name|Float
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Float
+argument_list|)
+argument_list|)
 expr_stmt|;
 return|return
-name|T
-operator|.
-name|I
+name|Bits
 return|;
 block|}
 end_function
@@ -3343,6 +3484,7 @@ comment|/// alignment that may be assumed after adding the two together.
 end_comment
 
 begin_function
+name|constexpr
 specifier|inline
 name|uint64_t
 name|MinAlign
@@ -3623,6 +3765,42 @@ block|}
 end_function
 
 begin_comment
+comment|/// Returns the power of two which is greater than or equal to the given value.
+end_comment
+
+begin_comment
+comment|/// Essentially, it is a ceil operation across the domain of powers of two.
+end_comment
+
+begin_function
+specifier|inline
+name|uint64_t
+name|PowerOf2Ceil
+parameter_list|(
+name|uint64_t
+name|A
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|A
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|NextPowerOf2
+argument_list|(
+name|A
+operator|-
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// Returns the next integer (mod 2**64) that is greater than or equal to
 end_comment
 
@@ -3719,6 +3897,15 @@ init|=
 literal|0
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|Align
+operator|!=
+literal|0u
+operator|&&
+literal|"Align can't be 0."
+argument_list|)
+expr_stmt|;
 name|Skew
 operator|%=
 name|Align
@@ -3742,6 +3929,116 @@ name|Skew
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Returns the next integer (mod 2**64) that is greater than or equal to
+end_comment
+
+begin_comment
+comment|/// \p Value and is a multiple of \c Align. \c Align must be non-zero.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|uint64_t
+name|Align
+operator|>
+name|constexpr
+specifier|inline
+name|uint64_t
+name|alignTo
+argument_list|(
+argument|uint64_t Value
+argument_list|)
+block|{
+name|static_assert
+argument_list|(
+name|Align
+operator|!=
+literal|0u
+argument_list|,
+literal|"Align must be non-zero"
+argument_list|)
+block|;
+return|return
+operator|(
+name|Value
+operator|+
+name|Align
+operator|-
+literal|1
+operator|)
+operator|/
+name|Align
+operator|*
+name|Align
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \c alignTo for contexts where a constant expression is required.
+end_comment
+
+begin_comment
+comment|/// \sa alignTo
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \todo FIXME: remove when \c constexpr becomes really \c constexpr
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|uint64_t
+name|Align
+operator|>
+expr|struct
+name|AlignTo
+block|{
+name|static_assert
+argument_list|(
+name|Align
+operator|!=
+literal|0u
+argument_list|,
+literal|"Align must be non-zero"
+argument_list|)
+block|;
+name|template
+operator|<
+name|uint64_t
+name|Value
+operator|>
+expr|struct
+name|from_value
+block|{
+specifier|static
+specifier|const
+name|uint64_t
+name|value
+operator|=
+operator|(
+name|Value
+operator|+
+name|Align
+operator|-
+literal|1
+operator|)
+operator|/
+name|Align
+operator|*
+name|Align
+block|;   }
+block|; }
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Returns the largest uint64_t less than or equal to \p Value and is
@@ -3768,6 +4065,15 @@ init|=
 literal|0
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|Align
+operator|!=
+literal|0u
+operator|&&
+literal|"Align can't be 0."
+argument_list|)
+expr_stmt|;
 name|Skew
 operator|%=
 name|Align
@@ -3839,6 +4145,7 @@ operator|<
 name|unsigned
 name|B
 operator|>
+name|constexpr
 specifier|inline
 name|int32_t
 name|SignExtend32
@@ -3958,6 +4265,7 @@ operator|<
 name|unsigned
 name|B
 operator|>
+name|constexpr
 specifier|inline
 name|int64_t
 name|SignExtend64

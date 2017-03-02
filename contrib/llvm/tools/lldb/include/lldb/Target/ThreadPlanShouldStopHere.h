@@ -69,18 +69,26 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
-comment|// This is an interface that ThreadPlans can adopt to allow flexible modifications of the behavior
-comment|// when a thread plan comes to a place where it would ordinarily stop.  If such modification makes
-comment|// sense for your plan, inherit from this class, and when you would be about to stop (in your ShouldStop
-comment|// method), call InvokeShouldStopHereCallback, passing in the frame comparison between where the step operation
-comment|// started and where you arrived.  If it returns true, then QueueStepOutFromHere will queue the plan
+comment|// This is an interface that ThreadPlans can adopt to allow flexible
+comment|// modifications of the behavior
+comment|// when a thread plan comes to a place where it would ordinarily stop.  If such
+comment|// modification makes
+comment|// sense for your plan, inherit from this class, and when you would be about to
+comment|// stop (in your ShouldStop
+comment|// method), call InvokeShouldStopHereCallback, passing in the frame comparison
+comment|// between where the step operation
+comment|// started and where you arrived.  If it returns true, then QueueStepOutFromHere
+comment|// will queue the plan
 comment|// to execute instead of stopping.
 comment|//
-comment|// The classic example of the use of this is ThreadPlanStepInRange not stopping in frames that have
+comment|// The classic example of the use of this is ThreadPlanStepInRange not stopping
+comment|// in frames that have
 comment|// no debug information.
 comment|//
-comment|// This class also defines a set of flags to control general aspects of this "ShouldStop" behavior.
-comment|// A class implementing this protocol needs to define a default set of flags, and can provide access to
+comment|// This class also defines a set of flags to control general aspects of this
+comment|// "ShouldStop" behavior.
+comment|// A class implementing this protocol needs to define a default set of flags,
+comment|// and can provide access to
 comment|// changing that default flag set if it wishes.
 name|class
 name|ThreadPlanShouldStopHere
@@ -203,9 +211,12 @@ operator|~
 name|ThreadPlanShouldStopHere
 argument_list|()
 expr_stmt|;
-comment|// Set the ShouldStopHere callbacks.  Pass in null to clear them and have no special behavior (though you
-comment|// can also call ClearShouldStopHereCallbacks for that purpose.  If you pass in a valid pointer, it will
-comment|// adopt the non-null fields, and any null fields will be set to the default values.
+comment|// Set the ShouldStopHere callbacks.  Pass in null to clear them and have no
+comment|// special behavior (though you
+comment|// can also call ClearShouldStopHereCallbacks for that purpose.  If you pass
+comment|// in a valid pointer, it will
+comment|// adopt the non-null fields, and any null fields will be set to the default
+comment|// values.
 name|void
 name|SetShouldStopHereCallbacks
 parameter_list|(
@@ -372,7 +383,8 @@ argument_list|,
 argument|lldb::FrameComparison operation
 argument_list|)
 expr_stmt|;
-comment|// Implement this, and call it in the plan's constructor to set the default flags.
+comment|// Implement this, and call it in the plan's constructor to set the default
+comment|// flags.
 name|virtual
 name|void
 name|SetFlagsToDefault

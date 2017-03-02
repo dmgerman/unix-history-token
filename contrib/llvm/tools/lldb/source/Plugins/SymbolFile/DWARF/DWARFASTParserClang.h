@@ -58,6 +58,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"clang/AST/CharUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/CharUnits.h"
 end_include
 
 begin_comment
@@ -160,7 +160,7 @@ operator|::
 name|TypeSP
 name|ParseTypeFromDWARF
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|,
 argument|const DWARFDIE&die
 argument_list|,
@@ -176,7 +176,7 @@ name|Function
 operator|*
 name|ParseFunctionFromDWARF
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|,
 argument|const DWARFDIE&die
 argument_list|)
@@ -766,7 +766,11 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|//typedef llvm::DenseMap<const clang::DeclContext *, DIEPointerSet> DeclContextToDIEMap;
+comment|// typedef llvm::DenseMap<const clang::DeclContext *, DIEPointerSet>
+end_comment
+
+begin_comment
+comment|// DeclContextToDIEMap;
 end_comment
 
 begin_typedef

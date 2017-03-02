@@ -130,9 +130,9 @@ block|}
 name|bool
 name|LoadSubCommand
 argument_list|(
-argument|const char *cmd_name
+argument|llvm::StringRef cmd_name
 argument_list|,
-argument|const lldb::CommandObjectSP& command_obj
+argument|const lldb::CommandObjectSP&command_obj
 argument_list|)
 name|override
 block|;
@@ -148,7 +148,7 @@ operator|::
 name|CommandObjectSP
 name|GetSubcommandSP
 argument_list|(
-argument|const char *sub_cmd
+argument|llvm::StringRef sub_cmd
 argument_list|,
 argument|StringList *matches = nullptr
 argument_list|)
@@ -158,7 +158,7 @@ name|CommandObject
 operator|*
 name|GetSubcommandObject
 argument_list|(
-argument|const char *sub_cmd
+argument|llvm::StringRef sub_cmd
 argument_list|,
 argument|StringList *matches = nullptr
 argument_list|)
@@ -167,9 +167,9 @@ block|;
 name|void
 name|AproposAllSubCommands
 argument_list|(
-argument|const char *prefix
+argument|llvm::StringRef prefix
 argument_list|,
-argument|const char *search_word
+argument|llvm::StringRef search_word
 argument_list|,
 argument|StringList&commands_found
 argument_list|,
@@ -244,7 +244,7 @@ block|{
 name|m_can_be_removed
 operator|=
 name|removable
-block|;     }
+block|; }
 name|protected
 operator|:
 name|CommandObject
@@ -304,9 +304,9 @@ argument_list|()
 operator|=
 literal|0
 block|;
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetHelpLong
 argument_list|()
 name|override
@@ -340,7 +340,7 @@ operator|::
 name|CommandObjectSP
 name|GetSubcommandSP
 argument_list|(
-argument|const char *sub_cmd
+argument|llvm::StringRef sub_cmd
 argument_list|,
 argument|StringList *matches = nullptr
 argument_list|)
@@ -350,7 +350,7 @@ name|CommandObject
 operator|*
 name|GetSubcommandObject
 argument_list|(
-argument|const char *sub_cmd
+argument|llvm::StringRef sub_cmd
 argument_list|,
 argument|StringList *matches = nullptr
 argument_list|)
@@ -359,9 +359,9 @@ block|;
 name|void
 name|AproposAllSubCommands
 argument_list|(
-argument|const char *prefix
+argument|llvm::StringRef prefix
 argument_list|,
-argument|const char *search_word
+argument|llvm::StringRef search_word
 argument_list|,
 argument|StringList&commands_found
 argument_list|,
@@ -372,9 +372,9 @@ block|;
 name|bool
 name|LoadSubCommand
 argument_list|(
-argument|const char *cmd_name
+argument|llvm::StringRef cmd_name
 argument_list|,
-argument|const lldb::CommandObjectSP& command_obj
+argument|const lldb::CommandObjectSP&command_obj
 argument_list|)
 name|override
 block|;

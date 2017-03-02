@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- StreamGDBRemote.h ----------------------------------------*- C++ -*-===//
+comment|//===-- StreamGDBRemote.h ----------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -106,14 +110,15 @@ comment|///
 comment|/// @return
 comment|///     Number of bytes written.
 comment|//------------------------------------------------------------------
+comment|// TODO: Convert this function to take ArrayRef<uint8_t>
 name|int
 name|PutEscapedBytes
 argument_list|(
-argument|const void* s
+argument|const void *s
 argument_list|,
 argument|size_t src_len
 argument_list|)
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

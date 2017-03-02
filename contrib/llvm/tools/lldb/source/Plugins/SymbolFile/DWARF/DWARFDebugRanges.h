@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"SymbolFileDWARF.h"
+file|"DWARFDIE.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DWARFDIE.h"
+file|"SymbolFileDWARF.h"
 end_include
 
 begin_include
@@ -112,6 +112,9 @@ decl_stmt|;
 name|bool
 name|FindRanges
 argument_list|(
+name|dw_addr_t
+name|debug_ranges_base
+argument_list|,
 name|dw_offset_t
 name|debug_ranges_offset
 argument_list|,

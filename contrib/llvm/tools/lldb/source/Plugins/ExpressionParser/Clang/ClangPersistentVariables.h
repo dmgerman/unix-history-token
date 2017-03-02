@@ -88,8 +88,10 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class ClangPersistentVariables ClangPersistentVariables.h "lldb/Expression/ClangPersistentVariables.h"
-comment|/// @brief Manages persistent values that need to be preserved between expression invocations.
+comment|/// @class ClangPersistentVariables ClangPersistentVariables.h
+comment|/// "lldb/Expression/ClangPersistentVariables.h"
+comment|/// @brief Manages persistent values that need to be preserved between
+comment|/// expression invocations.
 comment|///
 comment|/// A list of variables that can be accessed and updated by any expression.  See
 comment|/// ClangPersistentVariable for more discussion.  Also provides an increasing,
@@ -152,7 +154,7 @@ argument|ExecutionContextScope *exe_scope
 argument_list|,
 argument|const ConstString&name
 argument_list|,
-argument|const CompilerType& compiler_type
+argument|const CompilerType&compiler_type
 argument_list|,
 argument|lldb::ByteOrder byte_order
 argument_list|,
@@ -218,7 +220,7 @@ name|push_back
 argument_list|(
 name|module
 argument_list|)
-block|;     }
+block|;   }
 specifier|const
 name|ClangModulesDeclVendor
 operator|::
@@ -236,7 +238,8 @@ operator|:
 name|uint32_t
 name|m_next_persistent_variable_id
 block|;
-comment|///< The counter used by GetNextResultName().
+comment|///< The counter used by
+comment|///GetNextResultName().
 typedef|typedef
 name|llvm
 operator|::
@@ -262,7 +265,8 @@ operator|::
 name|ModuleVector
 name|m_hand_loaded_clang_modules
 expr_stmt|;
-comment|///< These are Clang modules we hand-loaded; these are the highest-
+comment|///< These are Clang modules we hand-loaded;
+comment|///these are the highest-
 comment|///< priority source for macros.
 block|}
 end_decl_stmt

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Object/ModuleSymbolTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -141,21 +147,25 @@ label|:
 struct|struct
 name|NameAndAttributes
 block|{
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|name
 decl_stmt|;
 name|uint32_t
 name|attributes
+init|=
+literal|0
 decl_stmt|;
 name|bool
 name|isFunction
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|GlobalValue
 modifier|*
 name|symbol
+init|=
+literal|0
 decl_stmt|;
 block|}
 struct|;
@@ -176,12 +186,16 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|object
-operator|::
-name|IRObjectFile
+name|Module
 operator|>
-name|IRFile
+name|Mod
 expr_stmt|;
+name|MemoryBufferRef
+name|MBRef
+decl_stmt|;
+name|ModuleSymbolTable
+name|SymTab
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -214,29 +228,19 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|char
-operator|*
+name|StringRef
 operator|>
 name|_asm_undefines
 expr_stmt|;
 name|LTOModule
 argument_list|(
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|object
-operator|::
-name|IRObjectFile
-operator|>
-name|Obj
+argument|std::unique_ptr<Module> M
 argument_list|,
-name|TargetMachine
-operator|*
-name|TM
+argument|MemoryBufferRef MBRef
+argument_list|,
+argument|TargetMachine *TM
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|public
 label|:
 operator|~
@@ -261,9 +265,7 @@ specifier|static
 name|bool
 name|isBitcodeFile
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|path
 parameter_list|)
 function_decl|;
@@ -337,19 +339,11 @@ name|LTOModule
 operator|>>
 name|createFromFile
 argument_list|(
-name|LLVMContext
-operator|&
-name|Context
+argument|LLVMContext&Context
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|path
+argument|StringRef path
 argument_list|,
-specifier|const
-name|TargetOptions
-operator|&
-name|options
+argument|const TargetOptions&options
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -367,7 +361,7 @@ argument|LLVMContext&Context
 argument_list|,
 argument|int fd
 argument_list|,
-argument|const char *path
+argument|StringRef path
 argument_list|,
 argument|size_t size
 argument_list|,
@@ -389,7 +383,7 @@ argument|LLVMContext&Context
 argument_list|,
 argument|int fd
 argument_list|,
-argument|const char *path
+argument|StringRef path
 argument_list|,
 argument|size_t map_size
 argument_list|,
@@ -451,17 +445,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|LTOModule
 operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getModule
-argument_list|()
+name|Mod
 return|;
 block|}
 name|Module
@@ -470,10 +455,8 @@ name|getModule
 parameter_list|()
 block|{
 return|return
-name|IRFile
-operator|->
-name|getModule
-argument_list|()
+operator|*
+name|Mod
 return|;
 block|}
 name|std
@@ -486,10 +469,12 @@ name|takeModule
 argument_list|()
 block|{
 return|return
-name|IRFile
-operator|->
-name|takeModule
-argument_list|()
+name|std
+operator|::
+name|move
+argument_list|(
+name|Mod
+argument_list|)
 return|;
 block|}
 comment|/// Return the Module's target triple.
@@ -574,9 +559,7 @@ argument_list|)
 return|;
 block|}
 comment|/// Get the name of the symbol at the specified index.
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getSymbolName
 parameter_list|(
 name|uint32_t
@@ -601,7 +584,8 @@ operator|.
 name|name
 return|;
 return|return
-name|nullptr
+name|StringRef
+argument_list|()
 return|;
 block|}
 specifier|const
@@ -634,17 +618,12 @@ return|return
 name|nullptr
 return|;
 block|}
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|getLinkerOpts
 parameter_list|()
 block|{
 return|return
 name|LinkerOpts
-operator|.
-name|c_str
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -652,9 +631,7 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|char
-operator|*
+name|StringRef
 operator|>
 operator|&
 name|getAsmUndefinedRefs
@@ -682,11 +659,9 @@ comment|/// Add a symbol which isn't defined just yet to a list to be resolved l
 name|void
 name|addPotentialUndefinedSymbol
 argument_list|(
-specifier|const
-name|object
+name|ModuleSymbolTable
 operator|::
-name|BasicSymbolRef
-operator|&
+name|Symbol
 name|Sym
 argument_list|,
 name|bool
@@ -697,9 +672,7 @@ comment|/// Add a defined symbol to the list.
 name|void
 name|addDefinedSymbol
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 parameter_list|,
 specifier|const
@@ -715,20 +688,16 @@ comment|/// Add a data symbol as defined to the list.
 name|void
 name|addDefinedDataSymbol
 argument_list|(
-specifier|const
-name|object
+name|ModuleSymbolTable
 operator|::
-name|BasicSymbolRef
-operator|&
+name|Symbol
 name|Sym
 argument_list|)
 decl_stmt|;
 name|void
 name|addDefinedDataSymbol
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 parameter_list|,
 specifier|const
@@ -741,20 +710,16 @@ comment|/// Add a function symbol as defined to the list.
 name|void
 name|addDefinedFunctionSymbol
 argument_list|(
-specifier|const
-name|object
+name|ModuleSymbolTable
 operator|::
-name|BasicSymbolRef
-operator|&
+name|Symbol
 name|Sym
 argument_list|)
 decl_stmt|;
 name|void
 name|addDefinedFunctionSymbol
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|Name
 parameter_list|,
 specifier|const
@@ -767,9 +732,7 @@ comment|/// Add a global symbol from module-level ASM to the defined list.
 name|void
 name|addAsmGlobalSymbol
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 parameter_list|,
 name|lto_symbol_attributes
 name|scope
@@ -779,9 +742,7 @@ comment|/// Add a global symbol from module-level ASM to the undefined list.
 name|void
 name|addAsmGlobalSymbolUndef
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 parameter_list|)
 function_decl|;
 comment|/// Parse i386/ppc ObjC class data structure.

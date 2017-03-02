@@ -176,11 +176,11 @@ comment|// createMachineScheduler(MachineSchedContext *C) {
 end_comment
 
 begin_comment
-comment|//   ScheduleDAGMI *DAG = new ScheduleDAGMI(C, CustomStrategy(C));
+comment|//   ScheduleDAGMI *DAG = createGenericSchedLive(C);
 end_comment
 
 begin_comment
-comment|//   DAG->addMutation(new CustomDependencies(DAG->TII, DAG->TRI));
+comment|//   DAG->addMutation(new CustomDAGMutation(...));
 end_comment
 
 begin_comment
@@ -306,7 +306,49 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
@@ -324,6 +366,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/ScheduleDAG.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ScheduleDAGInstrs.h"
 end_include
 
@@ -336,7 +384,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/TargetSchedule.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CommandLine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -356,9 +446,6 @@ name|MachineLoopInfo
 decl_stmt|;
 name|class
 name|RegisterClassInfo
-decl_stmt|;
-name|class
-name|ScheduleDAGInstrs
 decl_stmt|;
 name|class
 name|SchedDFSResult
@@ -651,23 +738,32 @@ name|virtual
 operator|~
 name|MachineSchedStrategy
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Optionally override the per-region scheduling policy.
 name|virtual
 name|void
 name|initPolicy
 argument_list|(
-argument|MachineBasicBlock::iterator Begin
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|Begin
 argument_list|,
-argument|MachineBasicBlock::iterator End
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|End
 argument_list|,
-argument|unsigned NumRegionInstrs
+name|unsigned
+name|NumRegionInstrs
 argument_list|)
 block|{}
 name|virtual
 name|void
 name|dumpPolicy
-argument_list|()
+parameter_list|()
 block|{}
 comment|/// Check if pressure tracking is needed before building the DAG and
 comment|/// initializing this strategy. Called after initPolicy.
@@ -935,12 +1031,6 @@ operator|&
 name|ExitSU
 argument_list|)
 block|,
-name|CurrentTop
-argument_list|()
-block|,
-name|CurrentBottom
-argument_list|()
-block|,
 name|NextClusterPred
 argument_list|(
 name|nullptr
@@ -1000,6 +1090,10 @@ argument_list|(
 argument|std::unique_ptr<ScheduleDAGMutation> Mutation
 argument_list|)
 block|{
+if|if
+condition|(
+name|Mutation
+condition|)
 name|Mutations
 operator|.
 name|push_back
@@ -1011,7 +1105,8 @@ argument_list|(
 name|Mutation
 argument_list|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief True if an edge can be added from PredSU to SuccSU without creating
 comment|/// a cycle.
 name|bool
@@ -1285,6 +1380,10 @@ name|MachineBasicBlock
 operator|::
 name|iterator
 name|LiveRegionEnd
+block|;
+comment|/// Maps vregs to the SUnits of their uses in the current scheduling region.
+name|VReg2SUnitMultiMap
+name|VRegUses
 block|;
 comment|// Map each SU to its summary of pressure changes. This array is updated for
 comment|// liveness during bottom-up scheduling. Top-down scheduling may proceed but
@@ -1653,6 +1752,14 @@ operator|>
 operator|&
 name|NewMaxPressure
 argument_list|)
+block|;
+name|void
+name|collectVRegUses
+argument_list|(
+name|SUnit
+operator|&
+name|SU
+argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1872,19 +1979,11 @@ name|SU
 parameter_list|)
 block|{
 return|return
-name|std
+name|llvm
 operator|::
 name|find
 argument_list|(
 name|Queue
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Queue
-operator|.
-name|end
-argument_list|()
 argument_list|,
 name|SU
 argument_list|)
@@ -2117,18 +2216,6 @@ comment|/// instruction.
 name|bool
 name|CheckPending
 decl_stmt|;
-comment|// For heuristics, keep a list of the nodes that immediately depend on the
-comment|// most recently scheduled node.
-name|SmallPtrSet
-operator|<
-specifier|const
-name|SUnit
-operator|*
-operator|,
-literal|8
-operator|>
-name|NextSUs
-expr_stmt|;
 comment|/// Number of cycles it takes to issue the instructions scheduled in this
 comment|/// zone. It is defined as: scheduled-micro-ops / issue-width + stalls.
 comment|/// See getStalls().
@@ -2314,27 +2401,6 @@ specifier|const
 block|{
 return|return
 name|CurrMOps
-return|;
-block|}
-comment|/// Return true if the given SU is used by the most recently scheduled
-comment|/// instruction.
-name|bool
-name|isNextSU
-argument_list|(
-specifier|const
-name|SUnit
-operator|*
-name|SU
-argument_list|)
-decl|const
-block|{
-return|return
-name|NextSUs
-operator|.
-name|count
-argument_list|(
-name|SU
-argument_list|)
 return|;
 block|}
 comment|// The latency of dependence chains leading into this zone.
@@ -2576,28 +2642,6 @@ name|SU
 parameter_list|,
 name|unsigned
 name|ReadyCycle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|releaseTopNode
-parameter_list|(
-name|SUnit
-modifier|*
-name|SU
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|releaseBottomNode
-parameter_list|(
-name|SUnit
-modifier|*
-name|SU
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3115,8 +3159,6 @@ block|;
 name|SchedRemainder
 name|Rem
 block|;
-name|protected
-operator|:
 name|GenericSchedulerBase
 argument_list|(
 specifier|const
@@ -3176,28 +3218,6 @@ operator|:
 name|public
 name|GenericSchedulerBase
 block|{
-name|ScheduleDAGMILive
-operator|*
-name|DAG
-block|;
-comment|// State of the top and bottom scheduled instruction boundaries.
-name|SchedBoundary
-name|Top
-block|;
-name|SchedBoundary
-name|Bot
-block|;
-comment|/// Candidate last picked from Top boundary.
-name|SchedCandidate
-name|TopCand
-block|;
-comment|/// Candidate last picked from Bot boundary.
-name|SchedCandidate
-name|BotCand
-block|;
-name|MachineSchedPolicy
-name|RegionPolicy
-block|;
 name|public
 operator|:
 name|GenericScheduler
@@ -3305,11 +3325,22 @@ argument|SUnit *SU
 argument_list|)
 name|override
 block|{
+if|if
+condition|(
+name|SU
+operator|->
+name|isScheduled
+condition|)
+return|return;
 name|Top
 operator|.
-name|releaseTopNode
+name|releaseNode
 argument_list|(
 name|SU
+argument_list|,
+name|SU
+operator|->
+name|TopReadyCycle
 argument_list|)
 block|;
 name|TopCand
@@ -3325,11 +3356,22 @@ argument|SUnit *SU
 argument_list|)
 name|override
 block|{
+if|if
+condition|(
+name|SU
+operator|->
+name|isScheduled
+condition|)
+return|return;
 name|Bot
 operator|.
-name|releaseBottomNode
+name|releaseNode
 argument_list|(
 name|SU
+argument_list|,
+name|SU
+operator|->
+name|BotReadyCycle
 argument_list|)
 block|;
 name|BotCand
@@ -3345,6 +3387,28 @@ name|override
 block|;
 name|protected
 operator|:
+name|ScheduleDAGMILive
+operator|*
+name|DAG
+block|;
+name|MachineSchedPolicy
+name|RegionPolicy
+block|;
+comment|// State of the top and bottom scheduled instruction boundaries.
+name|SchedBoundary
+name|Top
+block|;
+name|SchedBoundary
+name|Bot
+block|;
+comment|/// Candidate last picked from Top boundary.
+name|SchedCandidate
+name|TopCand
+block|;
+comment|/// Candidate last picked from Bot boundary.
+name|SchedCandidate
+name|BotCand
+block|;
 name|void
 name|checkAcyclicLatency
 argument_list|()
@@ -3418,15 +3482,33 @@ argument_list|,
 argument|bool isTop
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// PostGenericScheduler - Interface to the scheduling algorithm used by
+end_comment
+
+begin_comment
 comment|/// ScheduleDAGMI.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Callbacks from ScheduleDAGMI:
+end_comment
+
+begin_comment
 comment|///   initPolicy -> initialize(DAG) -> registerRoots -> pickNode ...
+end_comment
+
+begin_decl_stmt
 name|class
 name|PostGenericScheduler
-operator|:
+range|:
 name|public
 name|GenericSchedulerBase
 block|{
@@ -3472,7 +3554,9 @@ operator|~
 name|PostGenericScheduler
 argument_list|()
 name|override
-block|{}
+operator|=
+expr|default
+block|;
 name|void
 name|initPolicy
 argument_list|(
@@ -3545,11 +3629,22 @@ argument|SUnit *SU
 argument_list|)
 name|override
 block|{
+if|if
+condition|(
+name|SU
+operator|->
+name|isScheduled
+condition|)
+return|return;
 name|Top
 operator|.
-name|releaseTopNode
+name|releaseNode
 argument_list|(
 name|SU
+argument_list|,
+name|SU
+operator|->
+name|TopReadyCycle
 argument_list|)
 block|;   }
 comment|// Only called for roots.
@@ -3580,26 +3675,157 @@ name|SchedCandidate
 operator|&
 name|TryCand
 argument_list|)
-block|;
-name|void
-name|pickNodeFromQueue
-argument_list|(
-name|SchedCandidate
-operator|&
-name|Cand
-argument_list|)
-block|; }
-block|;  }
+decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|pickNodeFromQueue
+parameter_list|(
+name|SchedCandidate
+modifier|&
+name|Cand
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|// namespace llvm
+unit|};
+comment|/// Create the standard converging machine scheduler. This will be used as the
+end_comment
+
+begin_comment
+comment|/// default scheduler if the target does not set a default.
+end_comment
+
+begin_comment
+comment|/// Adds default DAG mutations.
+end_comment
+
+begin_function_decl
+name|ScheduleDAGMILive
+modifier|*
+name|createGenericSchedLive
+parameter_list|(
+name|MachineSchedContext
+modifier|*
+name|C
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Create a generic scheduler with no vreg liveness or DAG mutation passes.
+end_comment
+
+begin_function_decl
+name|ScheduleDAGMI
+modifier|*
+name|createGenericSchedPostRA
+parameter_list|(
+name|MachineSchedContext
+modifier|*
+name|C
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ScheduleDAGMutation
+operator|>
+name|createLoadClusterDAGMutation
+argument_list|(
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ScheduleDAGMutation
+operator|>
+name|createStoreClusterDAGMutation
+argument_list|(
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ScheduleDAGMutation
+operator|>
+name|createMacroFusionDAGMutation
+argument_list|(
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ScheduleDAGMutation
+operator|>
+name|createCopyConstrainDAGMutation
+argument_list|(
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CODEGEN_MACHINESCHEDULER_H
+end_comment
 
 end_unit
 

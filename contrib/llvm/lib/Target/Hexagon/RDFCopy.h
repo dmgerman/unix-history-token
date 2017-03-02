@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- RDFCopy.h --------------------------------------------------------===//
+comment|//===--- RDFCopy.h ----------------------------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|RDF_COPY_H
+name|LLVM_LIB_TARGET_HEXAGON_RDFCOPY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|RDF_COPY_H
+name|LLVM_LIB_TARGET_HEXAGON_RDFCOPY_H
 end_define
 
 begin_include
@@ -109,11 +109,13 @@ name|virtual
 operator|~
 name|CopyPropagation
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|bool
 name|run
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 name|void
 name|trace
 parameter_list|(
@@ -133,6 +135,15 @@ specifier|const
 block|{
 return|return
 name|Trace
+return|;
+block|}
+name|DataFlowGraph
+modifier|&
+name|getDFG
+parameter_list|()
+block|{
+return|return
+name|DFG
 return|;
 block|}
 typedef|typedef
@@ -252,18 +263,22 @@ function_decl|;
 block|}
 struct|;
 block|}
-comment|// namespace rdf
+comment|// end namespace rdf
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_RDFCOPY_H
+end_comment
 
 end_unit
 

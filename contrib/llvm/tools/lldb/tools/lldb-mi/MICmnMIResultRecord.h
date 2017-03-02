@@ -50,17 +50,21 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MIUtilString.h"
+file|"MICmnMIValueResult.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MICmnMIValueResult.h"
+file|"MIUtilString.h"
 end_include
 
 begin_comment
-comment|//++ ============================================================================
+comment|//++
+end_comment
+
+begin_comment
+comment|//============================================================================
 end_comment
 
 begin_comment
@@ -104,7 +108,11 @@ comment|//          value ==> const | tuple | list
 end_comment
 
 begin_comment
-comment|//          const ==> c-string (7 bit iso c string content) i.e. "all" inc quotes
+comment|//          const ==> c-string (7 bit iso c string content) i.e. "all" inc
+end_comment
+
+begin_comment
+comment|//          quotes
 end_comment
 
 begin_comment
@@ -112,7 +120,11 @@ comment|//          tuple ==>  "{}" | "{" result ( "," result )* "}"
 end_comment
 
 begin_comment
-comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( "," result )* "]"
+comment|//          list ==>  "[]" | "[" value ( "," value )* "]" | "[" result ( ","
+end_comment
+
+begin_comment
+comment|//          result )* "]"
 end_comment
 
 begin_comment
@@ -124,11 +136,19 @@ comment|//          The result record can be retrieve at any time *this object i
 end_comment
 
 begin_comment
-comment|//          instantiated so unless work is done on *this result record then it is
+comment|//          instantiated so unless work is done on *this result record then it
 end_comment
 
 begin_comment
-comment|//          possible to return a malformed result record. If nothing has been set
+comment|//          is
+end_comment
+
+begin_comment
+comment|//          possible to return a malformed result record. If nothing has been
+end_comment
+
+begin_comment
+comment|//          set
 end_comment
 
 begin_comment

@@ -272,12 +272,11 @@ name|PARAMATTR_CODE_ENTRY
 init|=
 literal|2
 block|,
-comment|// ENTRY: [paramidx0, attrgrp0,
-comment|//         paramidx1, attrgrp1, ...]
+comment|// ENTRY: [attrgrp0, attrgrp1, ...]
 name|PARAMATTR_GRP_CODE_ENTRY
 init|=
 literal|3
-comment|// ENTRY: [id, attr0, att1, ...]
+comment|// ENTRY: [grpid, idx, attr0, attr1, ...]
 block|}
 enum|;
 comment|/// TYPE blocks have codes for each type primitive they use.
@@ -410,16 +409,6 @@ block|,
 comment|// TAG: [strchr x N]
 block|}
 enum|;
-comment|// The type symbol table only has one code (TST_ENTRY_CODE).
-enum|enum
-name|TypeSymtabCodes
-block|{
-name|TST_CODE_ENTRY
-init|=
-literal|1
-comment|// TST_ENTRY: [typeid, namechar x N]
-block|}
-enum|;
 comment|// Value symbol table codes.
 enum|enum
 name|ValueSymtabCodes
@@ -467,14 +456,14 @@ enum|enum
 name|GlobalValueSummarySymtabCodes
 block|{
 comment|// PERMODULE: [valueid, flags, instcount, numrefs, numrefs x valueid,
-comment|//             n x (valueid, callsitecount)]
+comment|//             n x (valueid)]
 name|FS_PERMODULE
 init|=
 literal|1
 block|,
 comment|// PERMODULE_PROFILE: [valueid, flags, instcount, numrefs,
 comment|//                     numrefs x valueid,
-comment|//                     n x (valueid, callsitecount, profilecount)]
+comment|//                     n x (valueid, hotness)]
 name|FS_PERMODULE_PROFILE
 init|=
 literal|2
@@ -485,14 +474,14 @@ init|=
 literal|3
 block|,
 comment|// COMBINED: [valueid, modid, flags, instcount, numrefs, numrefs x valueid,
-comment|//            n x (valueid, callsitecount)]
+comment|//            n x (valueid)]
 name|FS_COMBINED
 init|=
 literal|4
 block|,
 comment|// COMBINED_PROFILE: [valueid, modid, flags, instcount, numrefs,
 comment|//                    numrefs x valueid,
-comment|//                    n x (valueid, callsitecount, profilecount)]
+comment|//                    n x (valueid, hotness)]
 name|FS_COMBINED_PROFILE
 init|=
 literal|5
@@ -521,6 +510,11 @@ comment|// VERSION of the summary, bumped when adding flags for instance.
 name|FS_VERSION
 init|=
 literal|10
+block|,
+comment|// The list of llvm.type.test type identifiers used by the following function.
+name|FS_TYPE_TESTS
+init|=
+literal|11
 block|, }
 enum|;
 enum|enum
@@ -605,7 +599,7 @@ name|METADATA_FILE
 init|=
 literal|16
 block|,
-comment|// [distinct, filename, directory]
+comment|// [distinct, filename, directory, checksumkind, checksum]
 name|METADATA_DERIVED_TYPE
 init|=
 literal|17
@@ -645,7 +639,7 @@ name|METADATA_NAMESPACE
 init|=
 literal|24
 block|,
-comment|// [distinct, scope, file, name, line]
+comment|// [distinct, scope, file, name, line, exportSymbols]
 name|METADATA_TEMPLATE_TYPE
 init|=
 literal|25
@@ -706,6 +700,21 @@ init|=
 literal|36
 block|,
 comment|// [valueid, n x [id, mdnode]]
+name|METADATA_GLOBAL_VAR_EXPR
+init|=
+literal|37
+block|,
+comment|// [distinct, var, expr]
+name|METADATA_INDEX_OFFSET
+init|=
+literal|38
+block|,
+comment|// [offset]
+name|METADATA_INDEX
+init|=
+literal|39
+block|,
+comment|// [bitpos]
 block|}
 enum|;
 comment|// The constants block (CONSTANTS_BLOCK_ID) describes emission for each
@@ -827,8 +836,14 @@ comment|// DATA:          [n x elements]
 name|CST_CODE_INLINEASM
 init|=
 literal|23
+block|,
 comment|// INLINEASM:     [sideeffect|alignstack|
 comment|//                 asmdialect,asmstr,conststr]
+name|CST_CODE_CE_GEP_WITH_INRANGE_INDEX
+init|=
+literal|24
+block|,
+comment|//      [opty, flags, n x operands]
 block|}
 enum|;
 comment|/// CastOpcodes - These are values used in the bitcode files to encode which

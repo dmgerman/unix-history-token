@@ -137,7 +137,7 @@ operator|::
 name|RegisterInfo
 operator|>
 name|d_register_infos
-block|;  }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

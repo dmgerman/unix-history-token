@@ -73,7 +73,7 @@ name|endianness
 name|Endianness
 operator|>
 name|class
-name|StackMapV1Parser
+name|StackMapV2Parser
 block|{
 name|public
 operator|:
@@ -214,7 +214,7 @@ name|FunctionAccessor
 block|{
 name|friend
 name|class
-name|StackMapV1Parser
+name|StackMapV2Parser
 decl_stmt|;
 name|public
 label|:
@@ -235,7 +235,7 @@ operator|)
 return|;
 block|}
 comment|/// Get the function's stack size.
-name|uint32_t
+name|uint64_t
 name|getStackSize
 argument_list|()
 specifier|const
@@ -252,6 +252,31 @@ sizeof|sizeof
 argument_list|(
 name|uint64_t
 argument_list|)
+operator|)
+return|;
+block|}
+comment|/// Get the number of callsite records.
+name|uint64_t
+name|getRecordCount
+argument_list|()
+specifier|const
+block|{
+return|return
+name|read
+operator|<
+name|uint64_t
+operator|>
+operator|(
+name|P
+operator|+
+operator|(
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+operator|)
 operator|)
 return|;
 block|}
@@ -275,7 +300,7 @@ specifier|static
 name|int
 name|FunctionAccessorSize
 operator|=
-literal|2
+literal|3
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -309,7 +334,7 @@ name|ConstantAccessor
 block|{
 name|friend
 name|class
-name|StackMapV1Parser
+name|StackMapV2Parser
 decl_stmt|;
 name|public
 label|:
@@ -412,7 +437,7 @@ name|LocationAccessor
 block|{
 name|friend
 name|class
-name|StackMapV1Parser
+name|StackMapV2Parser
 decl_stmt|;
 name|friend
 name|class
@@ -636,7 +661,7 @@ name|LiveOutAccessor
 block|{
 name|friend
 name|class
-name|StackMapV1Parser
+name|StackMapV2Parser
 decl_stmt|;
 name|friend
 name|class
@@ -756,7 +781,7 @@ name|RecordAccessor
 block|{
 name|friend
 name|class
-name|StackMapV1Parser
+name|StackMapV2Parser
 decl_stmt|;
 name|public
 label|:
@@ -1170,9 +1195,9 @@ name|P
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// Construct a parser for a version-1 stackmap. StackMap data will be read
+comment|/// Construct a parser for a version-2 stackmap. StackMap data will be read
 comment|/// from the given array.
-name|StackMapV1Parser
+name|StackMapV2Parser
 argument_list|(
 name|ArrayRef
 operator|<
@@ -1202,9 +1227,9 @@ index|[
 literal|0
 index|]
 operator|==
-literal|1
+literal|2
 operator|&&
-literal|"StackMapV1Parser can only parse version 1 stackmaps"
+literal|"StackMapV2Parser can only parse version 2 stackmaps"
 argument_list|)
 block|;
 name|unsigned
@@ -1281,14 +1306,14 @@ name|RecordAccessor
 operator|>
 name|record_iterator
 expr_stmt|;
-comment|/// Get the version number of this stackmap. (Always returns 1).
+comment|/// Get the version number of this stackmap. (Always returns 2).
 name|unsigned
 name|getVersion
 argument_list|()
 specifier|const
 block|{
 return|return
-literal|1
+literal|2
 return|;
 block|}
 comment|/// Get the number of functions in the stack map.
@@ -1776,7 +1801,7 @@ specifier|const
 name|unsigned
 name|FunctionSize
 init|=
-literal|2
+literal|3
 operator|*
 sizeof|sizeof
 argument_list|(

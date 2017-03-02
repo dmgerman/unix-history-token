@@ -62,7 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"AppleObjCRuntime.h"
 end_include
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"AppleObjCRuntime.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -132,7 +132,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ObjCLanguageRuntime* runtime
+argument|const ObjCLanguageRuntime *runtime
 argument_list|)
 block|{
 switch|switch
@@ -221,11 +221,11 @@ comment|// v1 does not support tagged pointers
 name|bool
 name|GetTaggedPointerInfo
 argument_list|(
-argument|uint64_t* info_bits = nullptr
+argument|uint64_t *info_bits = nullptr
 argument_list|,
-argument|uint64_t* value_bits = nullptr
+argument|uint64_t *value_bits = nullptr
 argument_list|,
-argument|uint64_t* payload = nullptr
+argument|uint64_t *payload = nullptr
 argument_list|)
 name|override
 block|{
@@ -254,13 +254,13 @@ block|}
 name|bool
 name|Describe
 argument_list|(
-argument|std::function<void (ObjCLanguageRuntime::ObjCISA)> const&superclass_func
+argument|std::function<void(ObjCLanguageRuntime::ObjCISA)> const&superclass_func
 argument_list|,
-argument|std::function<bool (const char *, const char *)> const&instance_method_func
+argument|std::function<bool(const char *, const char *)> const&instance_method_func
 argument_list|,
-argument|std::function<bool (const char *, const char *)> const&class_method_func
+argument|std::function<bool(const char *, const char *)> const&class_method_func
 argument_list|,
-argument|std::function<bool (const char *, const char *,                  lldb::addr_t, uint64_t)> const&ivar_func
+argument|std::function<bool(const char *, const char *, lldb::addr_t,                                 uint64_t)> const&ivar_func
 argument_list|)
 specifier|const
 name|override
@@ -296,7 +296,7 @@ name|m_process_wp
 block|;
 name|uint64_t
 name|m_instance_size
-block|;     }
+block|;   }
 block|;
 comment|// These are generic runtime functions:
 name|bool
@@ -395,7 +395,7 @@ name|m_buckets_ptr
 argument_list|(
 argument|LLDB_INVALID_ADDRESS
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|NeedsUpdate
 argument_list|(
@@ -441,7 +441,7 @@ block|;
 name|m_buckets_ptr
 operator|=
 name|buckets_ptr
-block|;         }
+block|;     }
 name|protected
 operator|:
 name|uint32_t
@@ -454,7 +454,7 @@ name|lldb
 operator|::
 name|addr_t
 name|m_buckets_ptr
-block|;     }
+block|;   }
 block|;
 name|lldb
 operator|::

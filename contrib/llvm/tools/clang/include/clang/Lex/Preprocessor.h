@@ -413,45 +413,41 @@ comment|/// know anything about preprocessor-level issues like the \#include sta
 comment|/// token expansion, etc.
 name|class
 name|Preprocessor
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|Preprocessor
-operator|>
 block|{
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|PreprocessorOptions
 operator|>
 name|PPOpts
-block|;
+expr_stmt|;
 name|DiagnosticsEngine
-operator|*
+modifier|*
 name|Diags
-block|;
+decl_stmt|;
 name|LangOptions
-operator|&
+modifier|&
 name|LangOpts
-block|;
+decl_stmt|;
 specifier|const
 name|TargetInfo
-operator|*
+modifier|*
 name|Target
-block|;
+decl_stmt|;
 specifier|const
 name|TargetInfo
-operator|*
+modifier|*
 name|AuxTarget
-block|;
+decl_stmt|;
 name|FileManager
-operator|&
+modifier|&
 name|FileMgr
-block|;
+decl_stmt|;
 name|SourceManager
-operator|&
+modifier|&
 name|SourceMgr
-block|;
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -459,20 +455,20 @@ operator|<
 name|ScratchBuffer
 operator|>
 name|ScratchBuf
-block|;
+expr_stmt|;
 name|HeaderSearch
-operator|&
+modifier|&
 name|HeaderInfo
-block|;
+decl_stmt|;
 name|ModuleLoader
-operator|&
+modifier|&
 name|TheModuleLoader
-block|;
+decl_stmt|;
 comment|/// \brief External source of macros.
 name|ExternalPreprocessorSource
-operator|*
+modifier|*
 name|ExternalSource
-block|;
+decl_stmt|;
 comment|/// An optional PTHManager object used for getting tokens from
 comment|/// a token cache rather than lexing the original source file.
 name|std
@@ -482,224 +478,224 @@ operator|<
 name|PTHManager
 operator|>
 name|PTH
-block|;
+expr_stmt|;
 comment|/// A BumpPtrAllocator object used to quickly allocate and release
 comment|/// objects internal to the Preprocessor.
 name|llvm
 operator|::
 name|BumpPtrAllocator
 name|BP
-block|;
+expr_stmt|;
 comment|/// Identifiers for builtin macros and other builtins.
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__LINE__
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|Ident__FILE__
-block|;
+decl_stmt|;
 comment|// __LINE__, __FILE__
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__DATE__
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|Ident__TIME__
-block|;
+decl_stmt|;
 comment|// __DATE__, __TIME__
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__INCLUDE_LEVEL__
-block|;
+decl_stmt|;
 comment|// __INCLUDE_LEVEL__
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__BASE_FILE__
-block|;
+decl_stmt|;
 comment|// __BASE_FILE__
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__TIMESTAMP__
-block|;
+decl_stmt|;
 comment|// __TIMESTAMP__
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__COUNTER__
-block|;
+decl_stmt|;
 comment|// __COUNTER__
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident_Pragma
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|Ident__pragma
-block|;
+decl_stmt|;
 comment|// _Pragma, __pragma
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__identifier
-block|;
+decl_stmt|;
 comment|// __identifier
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__VA_ARGS__
-block|;
+decl_stmt|;
 comment|// __VA_ARGS__
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__has_feature
-block|;
+decl_stmt|;
 comment|// __has_feature
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__has_extension
-block|;
+decl_stmt|;
 comment|// __has_extension
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__has_builtin
-block|;
+decl_stmt|;
 comment|// __has_builtin
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__has_attribute
-block|;
+decl_stmt|;
 comment|// __has_attribute
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__has_include
-block|;
+decl_stmt|;
 comment|// __has_include
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__has_include_next
-block|;
+decl_stmt|;
 comment|// __has_include_next
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__has_warning
-block|;
+decl_stmt|;
 comment|// __has_warning
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__is_identifier
-block|;
+decl_stmt|;
 comment|// __is_identifier
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__building_module
-block|;
+decl_stmt|;
 comment|// __building_module
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__MODULE__
-block|;
+decl_stmt|;
 comment|// __MODULE__
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__has_cpp_attribute
-block|;
+decl_stmt|;
 comment|// __has_cpp_attribute
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Ident__has_declspec
-block|;
+decl_stmt|;
 comment|// __has_declspec_attribute
 name|SourceLocation
 name|DATELoc
-block|,
+decl_stmt|,
 name|TIMELoc
-block|;
+decl_stmt|;
 name|unsigned
 name|CounterValue
-block|;
+decl_stmt|;
 comment|// Next __COUNTER__ value.
-block|enum
+enum|enum
 block|{
 comment|/// \brief Maximum depth of \#includes.
 name|MaxAllowedIncludeStackDepth
-operator|=
+init|=
 literal|200
 block|}
-block|;
+enum|;
 comment|// State that is set before the preprocessor begins.
 name|bool
 name|KeepComments
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|bool
 name|KeepMacroComments
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|bool
 name|SuppressIncludeNotFoundError
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|// State that changes while the preprocessor runs:
 name|bool
 name|InMacroArgs
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|// True if parsing fn macro invocation args.
 comment|/// Whether the preprocessor owns the header search object.
 name|bool
 name|OwnsHeaderSearch
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// True if macro expansion is disabled.
 name|bool
 name|DisableMacroExpansion
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// Temporarily disables DisableMacroExpansion (i.e. enables expansion)
 comment|/// when parsing preprocessor directives.
 name|bool
 name|MacroExpansionInDirectivesOverride
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|class
 name|ResetMacroExpansionHelper
-block|;
+decl_stmt|;
 comment|/// \brief Whether we have already loaded macros from the external source.
 name|mutable
 name|bool
 name|ReadMacrosFromExternalSource
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// \brief True if pragmas are enabled.
 name|bool
 name|PragmasEnabled
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// \brief True if the current build action is a preprocessing action.
 name|bool
 name|PreprocessedOutput
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|/// \brief True if we are currently preprocessing a #if or #elif directive
 name|bool
 name|ParsingIfOrElifDirective
-block|;
+decl_stmt|;
 comment|/// \brief True if we are pre-expanding macro arguments.
 name|bool
 name|InMacroArgPreExpansion
-block|;
+decl_stmt|;
 comment|/// \brief Mapping/lookup information for all identifiers in
 comment|/// the program, including program keywords.
 name|mutable
 name|IdentifierTable
 name|Identifiers
-block|;
+decl_stmt|;
 comment|/// \brief This table contains all the selectors in the program.
 comment|///
 comment|/// Unlike IdentifierTable above, this table *isn't* populated by the
@@ -711,13 +707,13 @@ comment|/// FIXME: Make sure the lifetime of Identifiers/Selectors *isn't* tied 
 comment|/// the lifetime of the preprocessor.
 name|SelectorTable
 name|Selectors
-block|;
+decl_stmt|;
 comment|/// \brief Information about builtins.
 name|Builtin
 operator|::
 name|Context
 name|BuiltinInfo
-block|;
+expr_stmt|;
 comment|/// \brief Tracks all of the pragmas that the client registered
 comment|/// with this preprocessor.
 name|std
@@ -727,7 +723,7 @@ operator|<
 name|PragmaNamespace
 operator|>
 name|PragmaHandlers
-block|;
+expr_stmt|;
 comment|/// \brief Pragma handlers of the original source is stored here during the
 comment|/// parsing of a model file.
 name|std
@@ -737,7 +733,7 @@ operator|<
 name|PragmaNamespace
 operator|>
 name|PragmaHandlersBackup
-block|;
+expr_stmt|;
 comment|/// \brief Tracks all of the comment handlers that the client registered
 comment|/// with this preprocessor.
 name|std
@@ -748,48 +744,48 @@ name|CommentHandler
 operator|*
 operator|>
 name|CommentHandlers
-block|;
+expr_stmt|;
 comment|/// \brief True if we want to ignore EOF token and continue later on (thus
 comment|/// avoid tearing the Lexer and etc. down).
 name|bool
 name|IncrementalProcessing
-block|;
+decl_stmt|;
 comment|/// The kind of translation unit we are processing.
 name|TranslationUnitKind
 name|TUKind
-block|;
+decl_stmt|;
 comment|/// \brief The code-completion handler.
 name|CodeCompletionHandler
-operator|*
+modifier|*
 name|CodeComplete
-block|;
+decl_stmt|;
 comment|/// \brief The file that we're performing code-completion for, if any.
 specifier|const
 name|FileEntry
-operator|*
+modifier|*
 name|CodeCompletionFile
-block|;
+decl_stmt|;
 comment|/// \brief The offset in file for the code-completion point.
 name|unsigned
 name|CodeCompletionOffset
-block|;
+decl_stmt|;
 comment|/// \brief The location for the code-completion point. This gets instantiated
 comment|/// when the CodeCompletionFile gets \#include'ed for preprocessing.
 name|SourceLocation
 name|CodeCompletionLoc
-block|;
+decl_stmt|;
 comment|/// \brief The start location for the file of the code-completion point.
 comment|///
 comment|/// This gets instantiated when the CodeCompletionFile gets \#include'ed
 comment|/// for preprocessing.
 name|SourceLocation
 name|CodeCompletionFileLoc
-block|;
+decl_stmt|;
 comment|/// \brief The source location of the \c import contextual keyword we just
 comment|/// lexed, if any.
 name|SourceLocation
 name|ModuleImportLoc
-block|;
+decl_stmt|;
 comment|/// \brief The module import path that we're currently processing.
 name|SmallVector
 operator|<
@@ -799,45 +795,51 @@ name|pair
 operator|<
 name|IdentifierInfo
 operator|*
-block|,
+operator|,
 name|SourceLocation
 operator|>
-block|,
+operator|,
 literal|2
 operator|>
 name|ModuleImportPath
-block|;
+expr_stmt|;
 comment|/// \brief Whether the last token we lexed was an '@'.
 name|bool
 name|LastTokenWasAt
-block|;
+decl_stmt|;
 comment|/// \brief Whether the module import expects an identifier next. Otherwise,
 comment|/// it expects a '.' or ';'.
 name|bool
 name|ModuleImportExpectsIdentifier
-block|;
+decl_stmt|;
 comment|/// \brief The source location of the currently-active
 comment|/// \#pragma clang arc_cf_code_audited begin.
 name|SourceLocation
 name|PragmaARCCFCodeAuditedLoc
-block|;
+decl_stmt|;
 comment|/// \brief The source location of the currently-active
 comment|/// \#pragma clang assume_nonnull begin.
 name|SourceLocation
 name|PragmaAssumeNonNullLoc
-block|;
+decl_stmt|;
 comment|/// \brief True if we hit the code-completion point.
 name|bool
 name|CodeCompletionReached
-block|;
+decl_stmt|;
+comment|/// \brief The code completion token containing the information
+comment|/// on the stem that is to be code completed.
+name|IdentifierInfo
+modifier|*
+name|CodeCompletionII
+decl_stmt|;
 comment|/// \brief The directory that the main file should be considered to occupy,
 comment|/// if it does not correspond to a real file (as happens when building a
 comment|/// module).
 specifier|const
 name|DirectoryEntry
-operator|*
+modifier|*
 name|MainFileDir
-block|;
+decl_stmt|;
 comment|/// \brief The number of bytes that we will initially skip when entering the
 comment|/// main file, along with a flag that indicates whether skipping this number
 comment|/// of bytes will place the lexer at the start of a line.
@@ -848,11 +850,11 @@ operator|::
 name|pair
 operator|<
 name|int
-block|,
+operator|,
 name|bool
 operator|>
 name|SkipMainFilePreamble
-block|;
+expr_stmt|;
 comment|/// \brief The current top of the stack that we're lexing from if
 comment|/// not expanding a macro and we are lexing directly from source code.
 comment|///
@@ -864,7 +866,7 @@ operator|<
 name|Lexer
 operator|>
 name|CurLexer
-block|;
+expr_stmt|;
 comment|/// \brief The current top of stack that we're lexing from if
 comment|/// not expanding from a macro and we are lexing from a PTH cache.
 comment|///
@@ -876,15 +878,15 @@ operator|<
 name|PTHLexer
 operator|>
 name|CurPTHLexer
-block|;
+expr_stmt|;
 comment|/// \brief The current top of the stack what we're lexing from
 comment|/// if not expanding a macro.
 comment|///
 comment|/// This is an alias for either CurLexer or  CurPTHLexer.
 name|PreprocessorLexer
-operator|*
+modifier|*
 name|CurPPLexer
-block|;
+decl_stmt|;
 comment|/// \brief Used to find the current FileEntry, if CurLexer is non-null
 comment|/// and if applicable.
 comment|///
@@ -892,9 +894,9 @@ comment|/// This allows us to implement \#include_next and find directory-specif
 comment|/// properties.
 specifier|const
 name|DirectoryLookup
-operator|*
+modifier|*
 name|CurDirLookup
-block|;
+decl_stmt|;
 comment|/// \brief The current macro we are expanding, if we are expanding a macro.
 comment|///
 comment|/// One of CurLexer and CurTokenLexer must be null.
@@ -905,9 +907,9 @@ operator|<
 name|TokenLexer
 operator|>
 name|CurTokenLexer
-block|;
+expr_stmt|;
 comment|/// \brief The kind of lexer we're currently working with.
-block|enum
+enum|enum
 name|CurLexerKind
 block|{
 name|CLK_Lexer
@@ -921,26 +923,27 @@ block|,
 name|CLK_LexAfterModuleImport
 block|}
 name|CurLexerKind
-block|;
+enum|;
 comment|/// \brief If the current lexer is for a submodule that is being built, this
 comment|/// is that submodule.
 name|Module
-operator|*
+modifier|*
 name|CurSubmodule
-block|;
+decl_stmt|;
 comment|/// \brief Keeps track of the stack of files currently
 comment|/// \#included, and macros currently being expanded from, not counting
 comment|/// CurLexer/CurTokenLexer.
-block|struct
+struct|struct
 name|IncludeStackInfo
-block|{     enum
+block|{
+name|enum
 name|CurLexerKind
 name|CurLexerKind
-block|;
+decl_stmt|;
 name|Module
-operator|*
+modifier|*
 name|TheSubmodule
-block|;
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -948,7 +951,7 @@ operator|<
 name|Lexer
 operator|>
 name|TheLexer
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -956,11 +959,11 @@ operator|<
 name|PTHLexer
 operator|>
 name|ThePTHLexer
-block|;
+expr_stmt|;
 name|PreprocessorLexer
-operator|*
+modifier|*
 name|ThePPLexer
-block|;
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -968,12 +971,12 @@ operator|<
 name|TokenLexer
 operator|>
 name|TheTokenLexer
-block|;
+expr_stmt|;
 specifier|const
 name|DirectoryLookup
-operator|*
+modifier|*
 name|TheDirLookup
-block|;
+decl_stmt|;
 comment|// The following constructors are completely useless copies of the default
 comment|// versions, only needed to pacify MSVC.
 name|IncludeStackInfo
@@ -992,7 +995,7 @@ argument|std::unique_ptr<TokenLexer>&&TheTokenLexer
 argument_list|,
 argument|const DirectoryLookup *TheDirLookup
 argument_list|)
-operator|:
+block|:
 name|CurLexerKind
 argument_list|(
 name|std
@@ -1002,7 +1005,7 @@ argument_list|(
 name|CurLexerKind
 argument_list|)
 argument_list|)
-block|,
+operator|,
 name|TheSubmodule
 argument_list|(
 name|std
@@ -1012,7 +1015,7 @@ argument_list|(
 name|TheSubmodule
 argument_list|)
 argument_list|)
-block|,
+operator|,
 name|TheLexer
 argument_list|(
 name|std
@@ -1022,7 +1025,7 @@ argument_list|(
 name|TheLexer
 argument_list|)
 argument_list|)
-block|,
+operator|,
 name|ThePTHLexer
 argument_list|(
 name|std
@@ -1032,7 +1035,7 @@ argument_list|(
 name|ThePTHLexer
 argument_list|)
 argument_list|)
-block|,
+operator|,
 name|ThePPLexer
 argument_list|(
 name|std
@@ -1042,7 +1045,7 @@ argument_list|(
 name|ThePPLexer
 argument_list|)
 argument_list|)
-block|,
+operator|,
 name|TheTokenLexer
 argument_list|(
 name|std
@@ -1052,98 +1055,14 @@ argument_list|(
 name|TheTokenLexer
 argument_list|)
 argument_list|)
-block|,
+operator|,
 name|TheDirLookup
 argument_list|(
 argument|std::move(TheDirLookup)
 argument_list|)
 block|{}
-name|IncludeStackInfo
-argument_list|(
-name|IncludeStackInfo
-operator|&&
-name|RHS
-argument_list|)
-operator|:
-name|CurLexerKind
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|CurLexerKind
-argument_list|)
-argument_list|)
-block|,
-name|TheSubmodule
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|TheSubmodule
-argument_list|)
-argument_list|)
-block|,
-name|TheLexer
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|TheLexer
-argument_list|)
-argument_list|)
-block|,
-name|ThePTHLexer
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|ThePTHLexer
-argument_list|)
-argument_list|)
-block|,
-name|ThePPLexer
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|ThePPLexer
-argument_list|)
-argument_list|)
-block|,
-name|TheTokenLexer
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|TheTokenLexer
-argument_list|)
-argument_list|)
-block|,
-name|TheDirLookup
-argument_list|(
-argument|std::move(RHS.TheDirLookup)
-argument_list|)
-block|{}
 block|}
-block|;
+struct|;
 name|std
 operator|::
 name|vector
@@ -1151,7 +1070,7 @@ operator|<
 name|IncludeStackInfo
 operator|>
 name|IncludeMacroStack
-block|;
+expr_stmt|;
 comment|/// \brief Actions invoked when some preprocessor activity is
 comment|/// encountered (e.g. a file is \#included, etc).
 name|std
@@ -1161,18 +1080,19 @@ operator|<
 name|PPCallbacks
 operator|>
 name|Callbacks
-block|;    struct
+expr_stmt|;
+struct|struct
 name|MacroExpandsInfo
 block|{
 name|Token
 name|Tok
-block|;
+decl_stmt|;
 name|MacroDefinition
 name|MD
-block|;
+decl_stmt|;
 name|SourceRange
 name|Range
-block|;
+decl_stmt|;
 name|MacroExpandsInfo
 argument_list|(
 argument|Token Tok
@@ -1181,34 +1101,34 @@ argument|MacroDefinition MD
 argument_list|,
 argument|SourceRange Range
 argument_list|)
-operator|:
+block|:
 name|Tok
 argument_list|(
 name|Tok
 argument_list|)
-block|,
+operator|,
 name|MD
 argument_list|(
 name|MD
 argument_list|)
-block|,
+operator|,
 name|Range
 argument_list|(
 argument|Range
 argument_list|)
 block|{ }
 block|}
-block|;
+struct|;
 name|SmallVector
 operator|<
 name|MacroExpandsInfo
-block|,
+operator|,
 literal|2
 operator|>
 name|DelayedMacroExpandsCallbacks
-block|;
+expr_stmt|;
 comment|/// Information about a name that has been used to define a module macro.
-block|struct
+struct|struct
 name|ModuleMacroInfo
 block|{
 name|ModuleMacroInfo
@@ -1222,12 +1142,12 @@ name|MD
 argument_list|(
 name|MD
 argument_list|)
-block|,
+operator|,
 name|ActiveModuleMacrosGeneration
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|IsAmbiguous
 argument_list|(
 argument|false
@@ -1237,7 +1157,7 @@ comment|/// The most recent macro directive for this identifier.
 name|MacroDirective
 operator|*
 name|MD
-block|;
+expr_stmt|;
 comment|/// The active module macros for this identifier.
 name|llvm
 operator|::
@@ -1247,16 +1167,16 @@ name|ModuleMacro
 operator|*
 operator|>
 name|ActiveModuleMacros
-block|;
+expr_stmt|;
 comment|/// The generation number at which we last updated ActiveModuleMacros.
 comment|/// \see Preprocessor::VisibleModules.
 name|unsigned
 name|ActiveModuleMacrosGeneration
-block|;
+decl_stmt|;
 comment|/// Whether this macro name is ambiguous.
 name|bool
 name|IsAmbiguous
-block|;
+decl_stmt|;
 comment|/// The module macros that are overridden by this macro.
 name|llvm
 operator|::
@@ -1266,8 +1186,9 @@ name|ModuleMacro
 operator|*
 operator|>
 name|OverriddenMacros
-block|;   }
-block|;
+expr_stmt|;
+block|}
+struct|;
 comment|/// The state of a macro for an identifier.
 name|class
 name|MacroState
@@ -1279,22 +1200,49 @@ name|PointerUnion
 operator|<
 name|MacroDirective
 operator|*
-block|,
+operator|,
 name|ModuleMacroInfo
 operator|*
 operator|>
 name|State
-block|;
+expr_stmt|;
 name|ModuleMacroInfo
-operator|*
+modifier|*
 name|getModuleInfo
 argument_list|(
-argument|Preprocessor&PP
+name|Preprocessor
+operator|&
+name|PP
 argument_list|,
-argument|const IdentifierInfo *II
-argument_list|)
 specifier|const
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|)
+decl|const
 block|{
+if|if
+condition|(
+name|II
+operator|->
+name|isOutOfDate
+argument_list|()
+condition|)
+name|PP
+operator|.
+name|updateOutOfDateIdentifier
+argument_list|(
+name|const_cast
+operator|<
+name|IdentifierInfo
+operator|&
+operator|>
+operator|(
+operator|*
+name|II
+operator|)
+argument_list|)
+expr_stmt|;
 comment|// FIXME: Find a spare bit on IdentifierInfo and store a
 comment|//        HasModuleMacros flag.
 if|if
@@ -1349,7 +1297,7 @@ operator|*
 operator|>
 operator|(
 operator|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1435,7 +1383,7 @@ name|MacroState
 argument_list|(
 argument|MacroState&&O
 argument_list|)
-name|LLVM_NOEXCEPT
+name|noexcept
 operator|:
 name|State
 argument_list|(
@@ -1461,7 +1409,7 @@ name|MacroState
 operator|&&
 name|O
 operator|)
-name|LLVM_NOEXCEPT
+name|noexcept
 block|{
 name|auto
 name|S
@@ -1555,9 +1503,6 @@ operator|(
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|setLatest
 parameter_list|(
@@ -1594,9 +1539,6 @@ operator|=
 name|MD
 expr_stmt|;
 block|}
-end_function
-
-begin_decl_stmt
 name|bool
 name|isAmbiguous
 argument_list|(
@@ -1632,9 +1574,6 @@ else|:
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|ArrayRef
 operator|<
 name|ModuleMacro
@@ -1666,16 +1605,11 @@ name|Info
 operator|->
 name|ActiveModuleMacros
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|None
 return|;
-end_return
-
-begin_expr_stmt
-unit|}      MacroDirective
+block|}
+name|MacroDirective
 operator|::
 name|DefInfo
 name|findDirectiveAtLoc
@@ -1706,28 +1640,27 @@ argument_list|,
 name|SourceMgr
 argument_list|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|MacroDirective
 operator|::
 name|DefInfo
 argument_list|()
 return|;
-end_return
+block|}
+end_decl_stmt
 
-begin_macro
-unit|}      void
+begin_function
+name|void
 name|overrideActiveModuleMacros
-argument_list|(
-argument|Preprocessor&PP
-argument_list|,
-argument|IdentifierInfo *II
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Preprocessor
+modifier|&
+name|PP
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1786,7 +1719,7 @@ name|false
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|ArrayRef
@@ -2635,6 +2568,18 @@ name|DeserialMIChainHead
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|updateOutOfDateIdentifier
+argument_list|(
+name|IdentifierInfo
+operator|&
+name|II
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_label
 name|public
 label|:
@@ -2643,7 +2588,7 @@ end_label
 begin_macro
 name|Preprocessor
 argument_list|(
-argument|IntrusiveRefCntPtr<PreprocessorOptions> PPOpts
+argument|std::shared_ptr<PreprocessorOptions> PPOpts
 argument_list|,
 argument|DiagnosticsEngine&diags
 argument_list|,
@@ -4042,6 +3987,10 @@ name|II
 parameter_list|,
 name|MacroDirective
 modifier|*
+name|ED
+parameter_list|,
+name|MacroDirective
+modifier|*
 name|MD
 parameter_list|)
 function_decl|;
@@ -4114,6 +4063,26 @@ argument|const IdentifierInfo *II
 argument_list|)
 specifier|const
 block|{
+if|if
+condition|(
+name|II
+operator|->
+name|isOutOfDate
+argument_list|()
+condition|)
+name|updateOutOfDateIdentifier
+argument_list|(
+name|const_cast
+operator|<
+name|IdentifierInfo
+operator|&
+operator|>
+operator|(
+operator|*
+name|II
+operator|)
+argument_list|)
+expr_stmt|;
 name|auto
 name|I
 operator|=
@@ -4123,7 +4092,10 @@ name|find
 argument_list|(
 name|II
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|I
@@ -4138,7 +4110,7 @@ name|I
 operator|->
 name|second
 return|;
-end_expr_stmt
+end_if
 
 begin_return
 return|return
@@ -4574,6 +4546,51 @@ name|CodeCompleteNaturalLanguage
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Set the code completion token for filtering purposes.
+end_comment
+
+begin_function
+name|void
+name|setCodeCompletionIdentifierInfo
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|Filter
+parameter_list|)
+block|{
+name|CodeCompletionII
+operator|=
+name|Filter
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Get the code completion token for filtering purposes.
+end_comment
+
+begin_function
+name|StringRef
+name|getCodeCompletionFilter
+parameter_list|()
+block|{
+if|if
+condition|(
+name|CodeCompletionII
+condition|)
+return|return
+name|CodeCompletionII
+operator|->
+name|getName
+argument_list|()
+return|;
+return|return
+block|{}
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// \brief Retrieve the preprocessing record, or NULL if there is no
@@ -8926,11 +8943,7 @@ end_comment
 begin_function_decl
 name|void
 name|HandleLineDirective
-parameter_list|(
-name|Token
-modifier|&
-name|Tok
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -8984,11 +8997,7 @@ end_function_decl
 begin_function_decl
 name|void
 name|HandleMacroPrivateDirective
-parameter_list|(
-name|Token
-modifier|&
-name|Tok
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -9214,11 +9223,7 @@ end_function_decl
 begin_function_decl
 name|void
 name|HandleUndefDirective
-parameter_list|(
-name|Token
-modifier|&
-name|Tok
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -9333,11 +9338,7 @@ end_function_decl
 begin_function_decl
 name|void
 name|HandlePragmaPoison
-parameter_list|(
-name|Token
-modifier|&
-name|PoisonTok
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -9512,21 +9513,6 @@ begin_comment
 unit|}
 comment|// end namespace clang
 end_comment
-
-begin_expr_stmt
-unit|extern
-name|template
-name|class
-name|llvm
-operator|::
-name|Registry
-operator|<
-name|clang
-operator|::
-name|PragmaHandler
-operator|>
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#

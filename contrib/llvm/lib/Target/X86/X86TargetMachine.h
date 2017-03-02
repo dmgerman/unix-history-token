@@ -105,9 +105,6 @@ name|TargetLoweringObjectFile
 operator|>
 name|TLOF
 block|;
-name|X86Subtarget
-name|Subtarget
-block|;
 name|mutable
 name|StringMap
 operator|<

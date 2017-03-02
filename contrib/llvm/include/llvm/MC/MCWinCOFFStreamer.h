@@ -226,6 +226,8 @@ name|void
 name|EmitCOFFSecRel32
 argument_list|(
 argument|MCSymbol const *Symbol
+argument_list|,
+argument|uint64_t Offset
 argument_list|)
 name|override
 block|;

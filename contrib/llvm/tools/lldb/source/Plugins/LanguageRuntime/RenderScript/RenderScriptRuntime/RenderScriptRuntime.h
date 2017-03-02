@@ -85,6 +85,18 @@ begin_comment
 comment|// Other libraries and framework includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -93,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Expression/LLVMUserExpression.h"
 end_include
 
 begin_include
@@ -133,6 +151,12 @@ struct_decl|;
 struct_decl|struct
 name|RSKernelDescriptor
 struct_decl|;
+struct_decl|struct
+name|RSReductionDescriptor
+struct_decl|;
+struct_decl|struct
+name|RSScriptGroupDescriptor
+struct_decl|;
 typedef|typedef
 name|std
 operator|::
@@ -163,17 +187,72 @@ expr_stmt|;
 typedef|typedef
 name|std
 operator|::
-name|array
+name|shared_ptr
 operator|<
-name|uint32_t
-operator|,
-literal|3
+name|RSScriptGroupDescriptor
 operator|>
-name|RSCoordinate
+name|RSScriptGroupDescriptorSP
 expr_stmt|;
-comment|// Breakpoint Resolvers decide where a breakpoint is placed,
-comment|// so having our own allows us to limit the search scope to RS kernel modules.
-comment|// As well as check for .expand kernels as a fallback.
+struct|struct
+name|RSCoordinate
+block|{
+name|uint32_t
+name|x
+decl_stmt|,
+name|y
+decl_stmt|,
+name|z
+decl_stmt|;
+name|RSCoordinate
+argument_list|()
+operator|:
+name|x
+argument_list|()
+operator|,
+name|y
+argument_list|()
+operator|,
+name|z
+argument_list|()
+block|{}
+expr_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|lldb_renderscript
+operator|::
+name|RSCoordinate
+operator|&
+name|rhs
+operator|)
+block|{
+return|return
+name|x
+operator|==
+name|rhs
+operator|.
+name|x
+operator|&&
+name|y
+operator|==
+name|rhs
+operator|.
+name|y
+operator|&&
+name|z
+operator|==
+name|rhs
+operator|.
+name|z
+return|;
+block|}
+block|}
+struct|;
+comment|// Breakpoint Resolvers decide where a breakpoint is placed, so having our own
+comment|// allows us to limit the search scope to RS kernel modules. As well as check
+comment|// for .expand kernels as a fallback.
 name|class
 name|RSBreakpointResolver
 range|:
@@ -184,14 +263,14 @@ name|public
 operator|:
 name|RSBreakpointResolver
 argument_list|(
-argument|Breakpoint *bkpt
+argument|Breakpoint *bp
 argument_list|,
 argument|ConstString name
 argument_list|)
 operator|:
 name|BreakpointResolver
 argument_list|(
-name|bkpt
+name|bp
 argument_list|,
 name|BreakpointResolver
 operator|::
@@ -202,7 +281,7 @@ name|m_kernel_name
 argument_list|(
 argument|name
 argument_list|)
-block|{     }
+block|{}
 name|void
 name|GetDescription
 argument_list|(
@@ -234,7 +313,7 @@ argument|Stream *s
 argument_list|)
 specifier|const
 name|override
-block|{     }
+block|{}
 name|Searcher
 operator|::
 name|CallbackReturn
@@ -290,6 +369,211 @@ name|ConstString
 name|m_kernel_name
 block|; }
 decl_stmt|;
+name|class
+name|RSReduceBreakpointResolver
+range|:
+name|public
+name|BreakpointResolver
+block|{
+name|public
+operator|:
+expr|enum
+name|ReduceKernelTypeFlags
+block|{
+name|eKernelTypeAll
+operator|=
+operator|~
+operator|(
+literal|0
+operator|)
+block|,
+name|eKernelTypeNone
+operator|=
+literal|0
+block|,
+name|eKernelTypeAccum
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+name|eKernelTypeInit
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+name|eKernelTypeComb
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+name|eKernelTypeOutC
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
+name|eKernelTypeHalter
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+block|}
+block|;
+name|RSReduceBreakpointResolver
+argument_list|(
+argument|Breakpoint *breakpoint
+argument_list|,
+argument|ConstString reduce_name
+argument_list|,
+argument|std::vector<lldb_renderscript::RSModuleDescriptorSP> *rs_modules
+argument_list|,
+argument|int kernel_types = eKernelTypeAll
+argument_list|)
+operator|:
+name|BreakpointResolver
+argument_list|(
+name|breakpoint
+argument_list|,
+name|BreakpointResolver
+operator|::
+name|NameResolver
+argument_list|)
+block|,
+name|m_reduce_name
+argument_list|(
+name|reduce_name
+argument_list|)
+block|,
+name|m_rsmodules
+argument_list|(
+name|rs_modules
+argument_list|)
+block|,
+name|m_kernel_types
+argument_list|(
+argument|kernel_types
+argument_list|)
+block|{
+comment|// The reduce breakpoint resolver handles adding breakpoints for named
+comment|// reductions.
+comment|// Breakpoints will be resolved for all constituent kernels in the named
+comment|// reduction
+block|}
+name|void
+name|GetDescription
+argument_list|(
+argument|Stream *strm
+argument_list|)
+name|override
+block|{
+if|if
+condition|(
+name|strm
+condition|)
+name|strm
+operator|->
+name|Printf
+argument_list|(
+literal|"RenderScript reduce breakpoint for '%s'"
+argument_list|,
+name|m_reduce_name
+operator|.
+name|AsCString
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|Dump
+argument_list|(
+argument|Stream *s
+argument_list|)
+specifier|const
+name|override
+block|{}
+name|Searcher
+operator|::
+name|CallbackReturn
+name|SearchCallback
+argument_list|(
+argument|SearchFilter&filter
+argument_list|,
+argument|SymbolContext&context
+argument_list|,
+argument|Address *addr
+argument_list|,
+argument|bool containing
+argument_list|)
+name|override
+block|;
+name|Searcher
+operator|::
+name|Depth
+name|GetDepth
+argument_list|()
+name|override
+block|{
+return|return
+name|Searcher
+operator|::
+name|eDepthModule
+return|;
+block|}
+name|lldb
+operator|::
+name|BreakpointResolverSP
+name|CopyForBreakpoint
+argument_list|(
+argument|Breakpoint&breakpoint
+argument_list|)
+name|override
+block|{
+name|lldb
+operator|::
+name|BreakpointResolverSP
+name|ret_sp
+argument_list|(
+argument|new RSReduceBreakpointResolver(&breakpoint, m_reduce_name, m_rsmodules, m_kernel_types)
+argument_list|)
+block|;
+return|return
+name|ret_sp
+return|;
+block|}
+name|private
+operator|:
+name|ConstString
+name|m_reduce_name
+block|;
+comment|// The name of the reduction
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb_renderscript
+operator|::
+name|RSModuleDescriptorSP
+operator|>
+operator|*
+name|m_rsmodules
+block|;
+name|int
+name|m_kernel_types
+block|; }
+decl_stmt|;
 struct|struct
 name|RSKernelDescriptor
 block|{
@@ -299,7 +583,7 @@ name|RSKernelDescriptor
 argument_list|(
 argument|const RSModuleDescriptor *module
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
 argument|uint32_t slot
 argument_list|)
@@ -318,7 +602,7 @@ name|m_slot
 argument_list|(
 argument|slot
 argument_list|)
-block|{     }
+block|{}
 name|void
 name|Dump
 argument_list|(
@@ -346,17 +630,11 @@ name|public
 label|:
 name|RSGlobalDescriptor
 argument_list|(
-specifier|const
-name|RSModuleDescriptor
-operator|*
-name|module
+argument|const RSModuleDescriptor *module
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
+argument|llvm::StringRef name
 argument_list|)
-operator|:
+block|:
 name|m_module
 argument_list|(
 name|module
@@ -384,9 +662,215 @@ name|m_name
 decl_stmt|;
 block|}
 struct|;
+struct|struct
+name|RSReductionDescriptor
+block|{
+name|RSReductionDescriptor
+argument_list|(
+argument|const RSModuleDescriptor *module
+argument_list|,
+argument|uint32_t sig
+argument_list|,
+argument|uint32_t accum_data_size
+argument_list|,
+argument|llvm::StringRef name
+argument_list|,
+argument|llvm::StringRef init_name
+argument_list|,
+argument|llvm::StringRef accum_name
+argument_list|,
+argument|llvm::StringRef comb_name
+argument_list|,
+argument|llvm::StringRef outc_name
+argument_list|,
+argument|llvm::StringRef halter_name =
+literal|"."
+argument_list|)
+block|:
+name|m_module
+argument_list|(
+name|module
+argument_list|)
+operator|,
+name|m_reduce_name
+argument_list|(
+name|name
+argument_list|)
+operator|,
+name|m_init_name
+argument_list|(
+name|init_name
+argument_list|)
+operator|,
+name|m_accum_name
+argument_list|(
+name|accum_name
+argument_list|)
+operator|,
+name|m_comb_name
+argument_list|(
+name|comb_name
+argument_list|)
+operator|,
+name|m_outc_name
+argument_list|(
+name|outc_name
+argument_list|)
+operator|,
+name|m_halter_name
+argument_list|(
+argument|halter_name
+argument_list|)
+block|{
+comment|// TODO Check whether the combiner is an autogenerated name, and track
+comment|// this
+block|}
+name|void
+name|Dump
+argument_list|(
+argument|Stream&strm
+argument_list|)
+specifier|const
+expr_stmt|;
+specifier|const
+name|RSModuleDescriptor
+modifier|*
+name|m_module
+decl_stmt|;
+name|ConstString
+name|m_reduce_name
+decl_stmt|;
+comment|// This is the name given to the general reduction
+comment|// as a group as passed to pragma
+comment|// reduce(m_reduce_name). There is no kernel function with this name
+name|ConstString
+name|m_init_name
+decl_stmt|;
+comment|// The name of the initializer name. "." if no
+comment|// initializer given
+name|ConstString
+name|m_accum_name
+decl_stmt|;
+comment|// The accumulator function name. "." if not given
+name|ConstString
+name|m_comb_name
+decl_stmt|;
+comment|// The name of the combiner function. If this was not
+comment|// given, a name is generated by the
+comment|// compiler. TODO
+name|ConstString
+name|m_outc_name
+decl_stmt|;
+comment|// The name of the outconverter
+name|ConstString
+name|m_halter_name
+decl_stmt|;
+comment|// The name of the halter function. XXX This is not
+comment|// yet specified by the RenderScript
+comment|// compiler or runtime, and its semantics and existence is still under
+comment|// discussion by the
+comment|// RenderScript Contributors
+name|RSSlot
+name|m_accum_sig
+decl_stmt|;
+comment|// metatdata signature for this reduction (bitwise mask of
+comment|// type information (see
+comment|// libbcc/include/bcinfo/MetadataExtractor.h
+name|uint32_t
+name|m_accum_data_size
+decl_stmt|;
+comment|// Data size of the accumulator function input
+name|bool
+name|m_comb_name_generated
+decl_stmt|;
+comment|// Was the combiner name generated by the compiler
+block|}
+struct|;
 name|class
 name|RSModuleDescriptor
 block|{
+name|std
+operator|::
+name|string
+name|m_slang_version
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|m_bcc_version
+expr_stmt|;
+name|bool
+name|ParseVersionInfo
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+operator|*
+argument_list|,
+name|size_t
+name|n_lines
+argument_list|)
+decl_stmt|;
+name|bool
+name|ParseExportForeachCount
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+operator|*
+argument_list|,
+name|size_t
+name|n_lines
+argument_list|)
+decl_stmt|;
+name|bool
+name|ParseExportVarCount
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+operator|*
+argument_list|,
+name|size_t
+name|n_lines
+argument_list|)
+decl_stmt|;
+name|bool
+name|ParseExportReduceCount
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+operator|*
+argument_list|,
+name|size_t
+name|n_lines
+argument_list|)
+decl_stmt|;
+name|bool
+name|ParseBuildChecksum
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+operator|*
+argument_list|,
+name|size_t
+name|n_lines
+argument_list|)
+decl_stmt|;
+name|bool
+name|ParsePragmaCount
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+operator|*
+argument_list|,
+name|size_t
+name|n_lines
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 name|RSModuleDescriptor
@@ -423,6 +907,15 @@ name|strm
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|WarnIfVersionMismatch
+argument_list|(
+name|Stream
+operator|*
+name|s
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|const
 name|lldb
 operator|::
@@ -447,6 +940,14 @@ name|m_globals
 expr_stmt|;
 name|std
 operator|::
+name|vector
+operator|<
+name|RSReductionDescriptor
+operator|>
+name|m_reductions
+expr_stmt|;
+name|std
+operator|::
 name|map
 operator|<
 name|std
@@ -466,6 +967,222 @@ name|m_resname
 expr_stmt|;
 block|}
 empty_stmt|;
+struct|struct
+name|RSScriptGroupDescriptor
+block|{
+struct|struct
+name|Kernel
+block|{
+name|ConstString
+name|m_name
+decl_stmt|;
+name|lldb
+operator|::
+name|addr_t
+name|m_addr
+expr_stmt|;
+block|}
+struct|;
+name|ConstString
+name|m_name
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Kernel
+operator|>
+name|m_kernels
+expr_stmt|;
+block|}
+struct|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|RSScriptGroupDescriptorSP
+operator|>
+name|RSScriptGroupList
+expr_stmt|;
+name|class
+name|RSScriptGroupBreakpointResolver
+range|:
+name|public
+name|BreakpointResolver
+block|{
+name|public
+operator|:
+name|RSScriptGroupBreakpointResolver
+argument_list|(
+argument|Breakpoint *bp
+argument_list|,
+argument|const ConstString&name
+argument_list|,
+argument|const RSScriptGroupList&groups
+argument_list|,
+argument|bool stop_on_all
+argument_list|)
+operator|:
+name|BreakpointResolver
+argument_list|(
+name|bp
+argument_list|,
+name|BreakpointResolver
+operator|::
+name|NameResolver
+argument_list|)
+block|,
+name|m_group_name
+argument_list|(
+name|name
+argument_list|)
+block|,
+name|m_script_groups
+argument_list|(
+name|groups
+argument_list|)
+block|,
+name|m_stop_on_all
+argument_list|(
+argument|stop_on_all
+argument_list|)
+block|{}
+name|void
+name|GetDescription
+argument_list|(
+argument|Stream *strm
+argument_list|)
+name|override
+block|{
+if|if
+condition|(
+name|strm
+condition|)
+name|strm
+operator|->
+name|Printf
+argument_list|(
+literal|"RenderScript ScriptGroup breakpoint for '%s'"
+argument_list|,
+name|m_group_name
+operator|.
+name|AsCString
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|Dump
+argument_list|(
+argument|Stream *s
+argument_list|)
+specifier|const
+name|override
+block|{}
+name|Searcher
+operator|::
+name|CallbackReturn
+name|SearchCallback
+argument_list|(
+argument|SearchFilter&filter
+argument_list|,
+argument|SymbolContext&context
+argument_list|,
+argument|Address *addr
+argument_list|,
+argument|bool containing
+argument_list|)
+name|override
+block|;
+name|Searcher
+operator|::
+name|Depth
+name|GetDepth
+argument_list|()
+name|override
+block|{
+return|return
+name|Searcher
+operator|::
+name|eDepthModule
+return|;
+block|}
+name|lldb
+operator|::
+name|BreakpointResolverSP
+name|CopyForBreakpoint
+argument_list|(
+argument|Breakpoint&breakpoint
+argument_list|)
+name|override
+block|{
+name|lldb
+operator|::
+name|BreakpointResolverSP
+name|ret_sp
+argument_list|(
+argument|new RSScriptGroupBreakpointResolver(&breakpoint, m_group_name, m_script_groups, m_stop_on_all)
+argument_list|)
+block|;
+return|return
+name|ret_sp
+return|;
+block|}
+name|protected
+operator|:
+specifier|const
+name|RSScriptGroupDescriptorSP
+name|FindScriptGroup
+argument_list|(
+argument|const ConstString&name
+argument_list|)
+specifier|const
+block|{
+for|for
+control|(
+name|auto
+name|sg
+range|:
+name|m_script_groups
+control|)
+block|{
+if|if
+condition|(
+name|ConstString
+operator|::
+name|Compare
+argument_list|(
+name|sg
+operator|->
+name|m_name
+argument_list|,
+name|name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|sg
+return|;
+block|}
+return|return
+name|RSScriptGroupDescriptorSP
+argument_list|()
+return|;
+block|}
+name|ConstString
+name|m_group_name
+block|;
+specifier|const
+name|RSScriptGroupList
+operator|&
+name|m_script_groups
+block|;
+name|bool
+name|m_stop_on_all
+block|; }
+decl_stmt|;
 block|}
 comment|// namespace lldb_renderscript
 name|class
@@ -624,7 +1341,7 @@ operator|::
 name|BreakpointResolverSP
 name|CreateExceptionResolver
 argument_list|(
-argument|Breakpoint *bkpt
+argument|Breakpoint *bp
 argument_list|,
 argument|bool catch_bp
 argument_list|,
@@ -696,21 +1413,44 @@ operator|*
 name|frame_ptr
 argument_list|)
 block|;
-name|void
+name|bool
 name|PlaceBreakpointOnKernel
 argument_list|(
-argument|Stream&strm
+argument|lldb::TargetSP target
+argument_list|,
+argument|Stream&messages
 argument_list|,
 argument|const char *name
 argument_list|,
-argument|const std::array<int
-argument_list|,
-literal|3
-argument|> coords
-argument_list|,
-argument|Error&error
-argument_list|,
+argument|const lldb_renderscript::RSCoordinate *coords = nullptr
+argument_list|)
+block|;
+name|bool
+name|PlaceBreakpointOnReduction
+argument_list|(
 argument|lldb::TargetSP target
+argument_list|,
+argument|Stream&messages
+argument_list|,
+argument|const char *reduce_name
+argument_list|,
+argument|const lldb_renderscript::RSCoordinate *coords = nullptr
+argument_list|,
+argument|int kernel_types = ~(
+literal|0
+argument|)
+argument_list|)
+block|;
+name|bool
+name|PlaceBreakpointOnScriptGroup
+argument_list|(
+argument|lldb::TargetSP target
+argument_list|,
+argument|Stream&strm
+argument_list|,
+argument|const ConstString&name
+argument_list|,
+argument|bool stop_on_all
 argument_list|)
 block|;
 name|void
@@ -767,6 +1507,61 @@ name|void
 name|Initiate
 argument_list|()
 block|;
+specifier|const
+name|lldb_renderscript
+operator|::
+name|RSScriptGroupList
+operator|&
+name|GetScriptGroups
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_scriptGroups
+return|;
+block|}
+block|;
+name|bool
+name|IsKnownKernel
+argument_list|(
+argument|const ConstString&name
+argument_list|)
+block|{
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|module
+range|:
+name|m_rsmodules
+control|)
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|kernel
+range|:
+name|module
+operator|->
+name|m_kernels
+control|)
+if|if
+condition|(
+name|kernel
+operator|.
+name|m_name
+operator|==
+name|name
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
@@ -776,12 +1571,12 @@ name|ConstString
 name|GetPluginName
 argument_list|()
 name|override
-block|;
+expr_stmt|;
 name|uint32_t
 name|GetPluginVersion
 argument_list|()
 name|override
-block|;
+expr_stmt|;
 specifier|static
 name|bool
 name|GetKernelCoordinate
@@ -796,20 +1591,43 @@ name|Thread
 operator|*
 name|thread_ptr
 argument_list|)
-block|;
+decl_stmt|;
+name|bool
+name|ResolveKernelName
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|kernel_address
+argument_list|,
+name|ConstString
+operator|&
+name|name
+argument_list|)
+decl_stmt|;
 name|protected
-operator|:
-expr|struct
+label|:
+struct_decl|struct
 name|ScriptDetails
-block|;     struct
+struct_decl|;
+struct_decl|struct
 name|AllocationDetails
-block|;     struct
+struct_decl|;
+struct_decl|struct
 name|Element
-block|;
+struct_decl|;
+name|lldb_renderscript
+operator|::
+name|RSScriptGroupList
+name|m_scriptGroups
+expr_stmt|;
 name|void
 name|InitSearchFilter
 argument_list|(
-argument|lldb::TargetSP target
+name|lldb
+operator|::
+name|TargetSP
+name|target
 argument_list|)
 block|{
 if|if
@@ -828,46 +1646,63 @@ block|}
 name|void
 name|FixupScriptDetails
 argument_list|(
-argument|lldb_renderscript::RSModuleDescriptorSP rsmodule_sp
+name|lldb_renderscript
+operator|::
+name|RSModuleDescriptorSP
+name|rsmodule_sp
 argument_list|)
-block|;
+decl_stmt|;
 name|void
 name|LoadRuntimeHooks
 argument_list|(
-argument|lldb::ModuleSP module
+name|lldb
+operator|::
+name|ModuleSP
+name|module
 argument_list|,
-argument|ModuleKind kind
+name|ModuleKind
+name|kind
 argument_list|)
-block|;
+decl_stmt|;
 name|bool
 name|RefreshAllocation
-argument_list|(
+parameter_list|(
 name|AllocationDetails
-operator|*
-name|allocation
-argument_list|,
+modifier|*
+name|alloc
+parameter_list|,
 name|StackFrame
-operator|*
+modifier|*
 name|frame_ptr
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|bool
 name|EvalRSExpression
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|expression
-argument_list|,
+parameter_list|,
 name|StackFrame
-operator|*
+modifier|*
 name|frame_ptr
-argument_list|,
+parameter_list|,
 name|uint64_t
-operator|*
+modifier|*
 name|result
+parameter_list|)
+function_decl|;
+name|lldb
+operator|::
+name|BreakpointSP
+name|CreateScriptGroupBreakpoint
+argument_list|(
+argument|const ConstString&name
+argument_list|,
+argument|bool multi
 argument_list|)
-block|;
+expr_stmt|;
 name|lldb
 operator|::
 name|BreakpointSP
@@ -878,15 +1713,30 @@ name|ConstString
 operator|&
 name|name
 argument_list|)
-block|;
+expr_stmt|;
+name|lldb
+operator|::
+name|BreakpointSP
+name|CreateReductionBreakpoint
+argument_list|(
+argument|const ConstString&name
+argument_list|,
+argument|int kernel_types
+argument_list|)
+expr_stmt|;
 name|void
 name|BreakOnModuleKernels
 argument_list|(
-argument|const lldb_renderscript::RSModuleDescriptorSP rsmodule_sp
+specifier|const
+name|lldb_renderscript
+operator|::
+name|RSModuleDescriptorSP
+name|rsmodule_sp
 argument_list|)
-block|;      struct
+decl_stmt|;
+struct_decl|struct
 name|RuntimeHook
-block|;
+struct_decl|;
 typedef|typedef
 name|void
 argument_list|(
@@ -906,36 +1756,37 @@ name|context
 argument_list|)
 expr_stmt|;
 comment|// Please do this!
-block|struct
+struct|struct
 name|HookDefn
 block|{
 specifier|const
 name|char
-operator|*
+modifier|*
 name|name
-block|;
+decl_stmt|;
 specifier|const
 name|char
-operator|*
+modifier|*
 name|symbol_name_m32
-block|;
+decl_stmt|;
 comment|// mangled name for the 32 bit architectures
 specifier|const
 name|char
-operator|*
+modifier|*
 name|symbol_name_m64
-block|;
+decl_stmt|;
 comment|// mangled name for the 64 bit archs
 name|uint32_t
 name|version
-block|;
+decl_stmt|;
 name|ModuleKind
 name|kind
-block|;
+decl_stmt|;
 name|CaptureStateFn
 name|grabber
-block|;     }
 decl_stmt|;
+block|}
+struct|;
 struct|struct
 name|RuntimeHook
 block|{
@@ -1050,9 +1901,11 @@ name|user_id_t
 operator|,
 name|std
 operator|::
-name|shared_ptr
+name|unique_ptr
 operator|<
-name|uint32_t
+name|lldb_renderscript
+operator|::
+name|RSCoordinate
 operator|>>
 name|m_conditional_breaks
 expr_stmt|;
@@ -1082,6 +1935,12 @@ specifier|const
 name|size_t
 name|s_runtimeHookCount
 decl_stmt|;
+name|LLVMUserExpression
+operator|::
+name|IRPasses
+operator|*
+name|m_ir_passes
+expr_stmt|;
 name|private
 label|:
 name|RenderScriptRuntime
@@ -1140,6 +1999,19 @@ argument_list|)
 decl_stmt|;
 name|void
 name|HookCallback
+parameter_list|(
+name|RuntimeHook
+modifier|*
+name|hook_info
+parameter_list|,
+name|ExecutionContext
+modifier|&
+name|context
+parameter_list|)
+function_decl|;
+comment|// Callback function when 'debugHintScriptGroup2' executes on the target.
+name|void
+name|CaptureDebugHintScriptGroup2
 parameter_list|(
 name|RuntimeHook
 modifier|*
@@ -1233,7 +2105,7 @@ name|GetAllocationData
 argument_list|(
 name|AllocationDetails
 operator|*
-name|allocation
+name|alloc
 argument_list|,
 name|StackFrame
 operator|*
@@ -1309,6 +2181,28 @@ modifier|&
 name|elem
 parameter_list|)
 function_decl|;
+name|void
+name|SetConditional
+argument_list|(
+name|lldb
+operator|::
+name|BreakpointSP
+name|bp
+argument_list|,
+name|lldb_private
+operator|::
+name|Stream
+operator|&
+name|messages
+argument_list|,
+specifier|const
+name|lldb_renderscript
+operator|::
+name|RSCoordinate
+operator|&
+name|coord
+argument_list|)
+decl_stmt|;
 comment|//
 comment|// Helper functions for jitting the runtime
 comment|//
@@ -1317,7 +2211,7 @@ name|JITDataPointer
 parameter_list|(
 name|AllocationDetails
 modifier|*
-name|allocation
+name|alloc
 parameter_list|,
 name|StackFrame
 modifier|*
@@ -1344,7 +2238,7 @@ name|JITTypePointer
 parameter_list|(
 name|AllocationDetails
 modifier|*
-name|allocation
+name|alloc
 parameter_list|,
 name|StackFrame
 modifier|*
@@ -1356,7 +2250,7 @@ name|JITTypePacked
 parameter_list|(
 name|AllocationDetails
 modifier|*
-name|allocation
+name|alloc
 parameter_list|,
 name|StackFrame
 modifier|*
@@ -1386,7 +2280,7 @@ name|JITAllocationSize
 parameter_list|(
 name|AllocationDetails
 modifier|*
-name|allocation
+name|alloc
 parameter_list|,
 name|StackFrame
 modifier|*
@@ -1416,7 +2310,7 @@ name|JITAllocationStride
 parameter_list|(
 name|AllocationDetails
 modifier|*
-name|allocation
+name|alloc
 parameter_list|,
 name|StackFrame
 modifier|*
@@ -1426,7 +2320,8 @@ function_decl|;
 comment|// Search for a script detail object using a target address.
 comment|// If a script does not currently exist this function will return nullptr.
 comment|// If 'create' is true and there is no previous script with this address,
-comment|// then a new Script detail object will be created for this address and returned.
+comment|// then a new Script detail object will be created for this address and
+comment|// returned.
 name|ScriptDetails
 modifier|*
 name|LookUpScript
@@ -1440,10 +2335,10 @@ name|bool
 name|create
 argument_list|)
 decl_stmt|;
-comment|// Search for a previously saved allocation detail object using a target address.
-comment|// If an allocation does not exist for this address then nullptr will be returned.
-comment|// If 'create' is true and there is no previous allocation then a new allocation
-comment|// detail object will be created for this address and returned.
+comment|// Search for a previously saved allocation detail object using a target
+comment|// address.
+comment|// If an allocation does not exist for this address then nullptr will be
+comment|// returned.
 name|AllocationDetails
 modifier|*
 name|LookUpAllocation
@@ -1452,10 +2347,42 @@ name|lldb
 operator|::
 name|addr_t
 name|address
-argument_list|,
-name|bool
-name|create
 argument_list|)
+decl_stmt|;
+comment|// Creates a new allocation with the specified address assigning a new ID and
+comment|// removes
+comment|// any previous stored allocation which has the same address.
+name|AllocationDetails
+modifier|*
+name|CreateAllocation
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|address
+argument_list|)
+decl_stmt|;
+name|bool
+name|GetOverrideExprOptions
+argument_list|(
+name|clang
+operator|::
+name|TargetOptions
+operator|&
+name|prototype
+argument_list|)
+name|override
+decl_stmt|;
+name|bool
+name|GetIRPasses
+argument_list|(
+name|LLVMUserExpression
+operator|::
+name|IRPasses
+operator|&
+name|passes
+argument_list|)
+name|override
 decl_stmt|;
 block|}
 end_decl_stmt

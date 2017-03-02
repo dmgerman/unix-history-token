@@ -100,27 +100,31 @@ range|:
 name|public
 name|CGOpenMPRuntime
 block|{
-name|public
+name|private
 operator|:
-name|class
+comment|// Parallel outlined function work for workers to execute.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|llvm
+operator|::
+name|Function
+operator|*
+block|,
+literal|16
+operator|>
+name|Work
+block|;    struct
 name|EntryFunctionState
 block|{
-name|public
-operator|:
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
 name|ExitBB
-block|;
-name|EntryFunctionState
-argument_list|()
-operator|:
-name|ExitBB
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+name|nullptr
 block|;   }
 block|;
 name|class
@@ -157,140 +161,6 @@ name|CGM
 argument_list|)
 block|;   }
 block|;
-comment|/// \brief Helper for target entry function. Guide the master and worker
-comment|/// threads to their respective locations.
-name|void
-name|emitEntryHeader
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-name|EntryFunctionState
-operator|&
-name|EST
-argument_list|,
-name|WorkerFunctionState
-operator|&
-name|WST
-argument_list|)
-block|;
-comment|/// \brief Signal termination of OMP execution.
-name|void
-name|emitEntryFooter
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|,
-name|EntryFunctionState
-operator|&
-name|EST
-argument_list|)
-block|;
-name|private
-operator|:
-comment|//
-comment|// NVPTX calls.
-comment|//
-comment|/// \brief Get the GPU warp size.
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getNVPTXWarpSize
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|)
-block|;
-comment|/// \brief Get the id of the current thread on the GPU.
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getNVPTXThreadID
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|)
-block|;
-comment|// \brief Get the maximum number of threads in a block of the GPU.
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getNVPTXNumThreads
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|)
-block|;
-comment|/// \brief Get barrier to synchronize all threads in a block.
-name|void
-name|getNVPTXCTABarrier
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|)
-block|;
-comment|// \brief Synchronize all GPU threads in a block.
-name|void
-name|syncCTAThreads
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|)
-block|;
-comment|//
-comment|// OMP calls.
-comment|//
-comment|/// \brief Get the thread id of the OMP master thread.
-comment|/// The master thread id is the first thread (lane) of the last warp in the
-comment|/// GPU block.  Warp size is assumed to be some power of 2.
-comment|/// Thread id is 0 indexed.
-comment|/// E.g: If NumThreads is 33, master id is 32.
-comment|///      If NumThreads is 64, master id is 32.
-comment|///      If NumThreads is 1024, master id is 992.
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getMasterThreadID
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|)
-block|;
-comment|//
-comment|// Private state and methods.
-comment|//
-comment|// Master-worker control state.
-comment|// Number of requested OMP threads in parallel region.
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|ActiveWorkers
-block|;
-comment|// Outlined function for the workers to execute.
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|WorkID
-block|;
-comment|/// \brief Initialize master-worker control state.
-name|void
-name|initializeEnvironment
-argument_list|()
-block|;
 comment|/// \brief Emit the worker function for the current target region.
 name|void
 name|emitWorkerFunction
@@ -313,6 +183,38 @@ operator|&
 name|WST
 argument_list|)
 block|;
+comment|/// \brief Helper for generic target entry function. Guide the master and
+comment|/// worker threads to their respective locations.
+name|void
+name|emitGenericEntryHeader
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|EntryFunctionState
+operator|&
+name|EST
+argument_list|,
+name|WorkerFunctionState
+operator|&
+name|WST
+argument_list|)
+block|;
+comment|/// \brief Signal termination of OMP execution for generic target entry
+comment|/// function.
+name|void
+name|emitGenericEntryFooter
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|EntryFunctionState
+operator|&
+name|EST
+argument_list|)
+block|;
 comment|/// \brief Returns specified OpenMP runtime function for the current OpenMP
 comment|/// implementation.  Specialized for the NVPTX device.
 comment|/// \param Function OpenMP runtime function.
@@ -330,7 +232,7 @@ comment|//
 comment|// Base class overrides.
 comment|//
 comment|/// \brief Creates offloading entry for the provided entry ID \a ID,
-comment|/// address \a Addr and size \a Size.
+comment|/// address \a Addr, size \a Size, and flags \a Flags.
 name|void
 name|createOffloadEntry
 argument_list|(
@@ -339,8 +241,36 @@ argument_list|,
 argument|llvm::Constant *Addr
 argument_list|,
 argument|uint64_t Size
+argument_list|,
+argument|int32_t Flags =
+literal|0
 argument_list|)
 name|override
+block|;
+comment|/// \brief Emit outlined function specialized for the Fork-Join
+comment|/// programming model for applicable target directives on the NVPTX device.
+comment|/// \param D Directive to emit.
+comment|/// \param ParentName Name of the function that encloses the target region.
+comment|/// \param OutlinedFn Outlined function value to be defined by this call.
+comment|/// \param OutlinedFnID Outlined function ID value to be defined by this call.
+comment|/// \param IsOffloadEntry True if the outlined function is an offload entry.
+comment|/// An outlined function may not be an entry if, e.g. the if clause always
+comment|/// evaluates to false.
+name|void
+name|emitGenericKernel
+argument_list|(
+argument|const OMPExecutableDirective&D
+argument_list|,
+argument|StringRef ParentName
+argument_list|,
+argument|llvm::Function *&OutlinedFn
+argument_list|,
+argument|llvm::Constant *&OutlinedFnID
+argument_list|,
+argument|bool IsOffloadEntry
+argument_list|,
+argument|const RegionCodeGenTy&CodeGen
+argument_list|)
 block|;
 comment|/// \brief Emit outlined function for 'target' directive on the NVPTX
 comment|/// device.
@@ -368,6 +298,45 @@ argument|const RegionCodeGenTy&CodeGen
 argument_list|)
 name|override
 block|;
+comment|/// \brief Emits code for parallel or serial call of the \a OutlinedFn with
+comment|/// variables captured in a record which address is stored in \a
+comment|/// CapturedStruct.
+comment|/// This call is for the Generic Execution Mode.
+comment|/// \param OutlinedFn Outlined function to be run in parallel threads. Type of
+comment|/// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
+comment|/// \param CapturedVars A pointer to the record with the references to
+comment|/// variables used in \a OutlinedFn function.
+comment|/// \param IfCond Condition in the associated 'if' clause, if it was
+comment|/// specified, nullptr otherwise.
+name|void
+name|emitGenericParallelCall
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::Value *OutlinedFn
+argument_list|,
+argument|ArrayRef<llvm::Value *> CapturedVars
+argument_list|,
+argument|const Expr *IfCond
+argument_list|)
+block|;
+name|protected
+operator|:
+comment|/// \brief Get the function name of an outlined region.
+comment|//  The name can be customized depending on the target.
+comment|//
+name|StringRef
+name|getOutlinedHelperName
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|"__omp_outlined__"
+return|;
+block|}
 name|public
 operator|:
 name|explicit
@@ -441,6 +410,30 @@ argument_list|,
 argument|llvm::Value *OutlinedFn
 argument_list|,
 argument|ArrayRef<llvm::Value *> CapturedVars
+argument_list|)
+name|override
+block|;
+comment|/// \brief Emits code for parallel or serial call of the \a OutlinedFn with
+comment|/// variables captured in a record which address is stored in \a
+comment|/// CapturedStruct.
+comment|/// \param OutlinedFn Outlined function to be run in parallel threads. Type of
+comment|/// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
+comment|/// \param CapturedVars A pointer to the record with the references to
+comment|/// variables used in \a OutlinedFn function.
+comment|/// \param IfCond Condition in the associated 'if' clause, if it was
+comment|/// specified, nullptr otherwise.
+name|void
+name|emitParallelCall
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::Value *OutlinedFn
+argument_list|,
+argument|ArrayRef<llvm::Value *> CapturedVars
+argument_list|,
+argument|const Expr *IfCond
 argument_list|)
 name|override
 block|; }

@@ -934,22 +934,6 @@ operator|==
 name|typeCFI
 return|;
 block|}
-comment|// Returns true if lhs should be placed before rhs in the final output.
-specifier|static
-name|bool
-name|compareByPosition
-argument_list|(
-specifier|const
-name|DefinedAtom
-operator|*
-name|lhs
-argument_list|,
-specifier|const
-name|DefinedAtom
-operator|*
-name|rhs
-argument_list|)
-block|;
 name|protected
 operator|:
 comment|// DefinedAtom is an abstract base class. Only subclasses can access

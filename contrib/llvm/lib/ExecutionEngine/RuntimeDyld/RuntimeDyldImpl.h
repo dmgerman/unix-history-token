@@ -485,6 +485,10 @@ comment|/// The size of this relocation (MachO specific).
 name|unsigned
 name|Size
 decl_stmt|;
+comment|// COFF specific.
+name|bool
+name|IsTargetThumbFunc
+decl_stmt|;
 name|RelocationEntry
 argument_list|(
 argument|unsigned id
@@ -529,6 +533,11 @@ operator|,
 name|Size
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|IsTargetThumbFunc
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|RelocationEntry
@@ -578,6 +587,11 @@ name|Size
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|IsTargetThumbFunc
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|RelocationEntry
 argument_list|(
@@ -626,7 +640,12 @@ argument_list|)
 operator|,
 name|Size
 argument_list|(
-argument|Size
+name|Size
+argument_list|)
+operator|,
+name|IsTargetThumbFunc
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|RelocationEntry
@@ -683,7 +702,88 @@ argument_list|)
 operator|,
 name|Size
 argument_list|(
-argument|Size
+name|Size
+argument_list|)
+operator|,
+name|IsTargetThumbFunc
+argument_list|(
+argument|false
+argument_list|)
+block|{
+name|Sections
+operator|.
+name|SectionA
+operator|=
+name|SectionA
+block|;
+name|Sections
+operator|.
+name|SectionB
+operator|=
+name|SectionB
+block|;   }
+name|RelocationEntry
+argument_list|(
+argument|unsigned id
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|uint32_t type
+argument_list|,
+argument|int64_t addend
+argument_list|,
+argument|unsigned SectionA
+argument_list|,
+argument|uint64_t SectionAOffset
+argument_list|,
+argument|unsigned SectionB
+argument_list|,
+argument|uint64_t SectionBOffset
+argument_list|,
+argument|bool IsPCRel
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|bool IsTargetThumbFunc
+argument_list|)
+operator|:
+name|SectionID
+argument_list|(
+name|id
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+name|offset
+argument_list|)
+operator|,
+name|RelType
+argument_list|(
+name|type
+argument_list|)
+operator|,
+name|Addend
+argument_list|(
+name|SectionAOffset
+operator|-
+name|SectionBOffset
+operator|+
+name|addend
+argument_list|)
+operator|,
+name|IsPCRel
+argument_list|(
+name|IsPCRel
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+name|Size
+argument_list|)
+operator|,
+name|IsTargetThumbFunc
+argument_list|(
+argument|IsTargetThumbFunc
 argument_list|)
 block|{
 name|Sections
@@ -859,27 +959,17 @@ end_comment
 begin_decl_stmt
 name|class
 name|SymbolTableEntry
-range|:
-name|public
-name|JITSymbolBase
 block|{
 name|public
-operator|:
+label|:
 name|SymbolTableEntry
 argument_list|()
 operator|:
-name|JITSymbolBase
-argument_list|(
-name|JITSymbolFlags
-operator|::
-name|None
-argument_list|)
-block|,
 name|Offset
 argument_list|(
 literal|0
 argument_list|)
-block|,
+operator|,
 name|SectionID
 argument_list|(
 literal|0
@@ -894,19 +984,19 @@ argument_list|,
 argument|JITSymbolFlags Flags
 argument_list|)
 operator|:
-name|JITSymbolBase
-argument_list|(
-name|Flags
-argument_list|)
-block|,
 name|Offset
 argument_list|(
 name|Offset
 argument_list|)
-block|,
+operator|,
 name|SectionID
 argument_list|(
-argument|SectionID
+name|SectionID
+argument_list|)
+operator|,
+name|Flags
+argument_list|(
+argument|Flags
 argument_list|)
 block|{}
 name|unsigned
@@ -927,16 +1017,32 @@ return|return
 name|Offset
 return|;
 block|}
+name|JITSymbolFlags
+name|getFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+return|;
+block|}
 name|private
-operator|:
+label|:
 name|uint64_t
 name|Offset
-block|;
+decl_stmt|;
 name|unsigned
 name|SectionID
-block|; }
 decl_stmt|;
+name|JITSymbolFlags
+name|Flags
+decl_stmt|;
+block|}
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_typedef
 typedef|typedef
@@ -980,12 +1086,10 @@ operator|&
 name|MemMgr
 expr_stmt|;
 comment|// The symbol resolver to use for external symbols.
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
-operator|&
+name|JITSymbolResolver
+modifier|&
 name|Resolver
-expr_stmt|;
+decl_stmt|;
 comment|// Attached RuntimeDyldChecker instance. Null if no instance attached.
 name|RuntimeDyldCheckerImpl
 modifier|*
@@ -1098,6 +1202,9 @@ name|IsTargetLittleEndian
 decl_stmt|;
 name|bool
 name|IsMipsO32ABI
+decl_stmt|;
+name|bool
+name|IsMipsN32ABI
 decl_stmt|;
 name|bool
 name|IsMipsN64ABI
@@ -1450,6 +1557,10 @@ name|IsMipsO32ABI
 operator|=
 name|false
 expr_stmt|;
+name|IsMipsN32ABI
+operator|=
+name|false
+expr_stmt|;
 name|IsMipsN64ABI
 operator|=
 name|false
@@ -1733,9 +1844,7 @@ name|MemoryManager
 operator|&
 name|MemMgr
 argument_list|,
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|&
 name|Resolver
 argument_list|)
@@ -1892,14 +2001,13 @@ name|getOffset
 argument_list|()
 return|;
 block|}
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITEvaluatedSymbol
 name|getSymbol
 argument_list|(
-argument|StringRef Name
+name|StringRef
+name|Name
 argument_list|)
-specifier|const
+decl|const
 block|{
 comment|// FIXME: Just look up as a function for now. Overly simple of course.
 comment|// Work in progress.
@@ -1914,7 +2022,7 @@ name|find
 argument_list|(
 name|Name
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|pos
@@ -1928,14 +2036,14 @@ return|return
 name|nullptr
 return|;
 specifier|const
-name|auto
-operator|&
+specifier|auto
+modifier|&
 name|SymEntry
-operator|=
+init|=
 name|pos
 operator|->
 name|second
-expr_stmt|;
+decl_stmt|;
 name|uint64_t
 name|SectionAddr
 init|=
@@ -1971,9 +2079,7 @@ name|getOffset
 argument_list|()
 decl_stmt|;
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITEvaluatedSymbol
 argument_list|(
 name|TargetAddr
 argument_list|,
@@ -1984,16 +2090,10 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function_decl
 name|void
 name|resolveRelocations
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|reassignSectionAddress
 parameter_list|(
@@ -2004,9 +2104,6 @@ name|uint64_t
 name|Addr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|mapSectionAddress
 parameter_list|(
@@ -2019,13 +2116,7 @@ name|uint64_t
 name|TargetAddress
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|// Is the linker in an error state?
-end_comment
-
-begin_function
 name|bool
 name|hasError
 parameter_list|()
@@ -2034,13 +2125,7 @@ return|return
 name|HasError
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Mark the error condition as handled and continue.
-end_comment
-
-begin_function
 name|void
 name|clearError
 parameter_list|()
@@ -2050,13 +2135,7 @@ operator|=
 name|false
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|// Get the error message.
-end_comment
-
-begin_function
 name|StringRef
 name|getErrorString
 parameter_list|()
@@ -2065,9 +2144,6 @@ return|return
 name|ErrorStr
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 name|virtual
 name|bool
 name|isCompatibleFile
@@ -2081,25 +2157,16 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|virtual
 name|void
 name|registerEHFrames
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|deregisterEHFrames
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function
 name|virtual
 name|Error
 name|finalizeLoad
@@ -2121,10 +2188,15 @@ name|success
 argument_list|()
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};  }
+unit|}
 comment|// end namespace llvm
 end_comment
 

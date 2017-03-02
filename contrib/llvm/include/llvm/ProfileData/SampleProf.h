@@ -1008,6 +1008,84 @@ name|getSamples
 argument_list|()
 return|;
 block|}
+comment|/// Return the total number of call target samples collected at a given
+comment|/// location. Each location is specified by \p LineOffset and
+comment|/// \p Discriminator. If the location is not found in profile, return error.
+name|ErrorOr
+operator|<
+name|uint64_t
+operator|>
+name|findCallSamplesAt
+argument_list|(
+argument|uint32_t LineOffset
+argument_list|,
+argument|uint32_t Discriminator
+argument_list|)
+specifier|const
+block|{
+specifier|const
+name|auto
+operator|&
+name|ret
+operator|=
+name|BodySamples
+operator|.
+name|find
+argument_list|(
+name|LineLocation
+argument_list|(
+name|LineOffset
+argument_list|,
+name|Discriminator
+argument_list|)
+argument_list|)
+block|;
+if|if
+condition|(
+name|ret
+operator|==
+name|BodySamples
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|std
+operator|::
+name|error_code
+argument_list|()
+return|;
+name|uint64_t
+name|T
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|t_c
+range|:
+name|ret
+operator|->
+name|second
+operator|.
+name|getCallTargets
+argument_list|()
+control|)
+block|{
+name|T
+operator|+=
+name|t_c
+operator|.
+name|second
+expr_stmt|;
+block|}
+return|return
+name|T
+return|;
+block|}
 comment|/// Return the function samples at the given callsite location.
 name|FunctionSamples
 modifier|&
@@ -1483,6 +1561,9 @@ block|}
 block|)
 empty_stmt|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|SamplesWithLocList
 operator|&
@@ -1494,20 +1575,21 @@ return|return
 name|V
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_decl_stmt
 name|SamplesWithLocList
 name|V
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace sampleprof
 end_comment
 

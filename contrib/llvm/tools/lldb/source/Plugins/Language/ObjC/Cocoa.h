@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Cocoa.h ---------------------------------------------------*- C++ -*-===//
+comment|//===-- Cocoa.h ---------------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -255,14 +259,14 @@ modifier|&
 name|options
 parameter_list|)
 function_decl|;
-extern|extern template bool         NSDataSummaryProvider<true> (ValueObject&
+extern|extern template bool NSDataSummaryProvider<true>(ValueObject&
 operator|,
 extern|Stream&
 operator|,
 extern|const TypeSummaryOptions&
 block|)
 decl_stmt|;
-extern|extern template bool         NSDataSummaryProvider<false> (ValueObject&
+extern|extern template bool NSDataSummaryProvider<false>(ValueObject&
 operator|,
 extern|Stream&
 operator|,
@@ -356,6 +360,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bool
+name|ObjCBooleanSummaryProvider
+parameter_list|(
+name|ValueObject
+modifier|&
+name|valobj
+parameter_list|,
+name|Stream
+modifier|&
+name|stream
+parameter_list|,
+specifier|const
+name|TypeSummaryOptions
+modifier|&
+name|options
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|template
 operator|<
@@ -382,7 +406,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_extern
-extern|extern template bool         ObjCSELSummaryProvider<true> (ValueObject&
+extern|extern template bool ObjCSELSummaryProvider<true>(ValueObject&
 operator|,
 extern|Stream&
 operator|,
@@ -395,7 +419,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_extern
-extern|extern template bool         ObjCSELSummaryProvider<false> (ValueObject&
+extern|extern template bool ObjCSELSummaryProvider<false>(ValueObject&
 operator|,
 extern|Stream&
 operator|,

@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/API/SBBlock.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/API/SBCompileUnit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_include

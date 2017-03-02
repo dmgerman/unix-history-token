@@ -65,7 +65,8 @@ name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
 comment|/// @class FileLineResolver FileLineResolver.h "lldb/Core/FileLineResolver.h"
-comment|/// @brief This class finds address for source file and line.  Optionally, it will look for inlined
+comment|/// @brief This class finds address for source file and line.  Optionally, it
+comment|/// will look for inlined
 comment|/// instances of the file and line specification.
 comment|//----------------------------------------------------------------------
 name|class
@@ -95,7 +96,7 @@ name|m_inlines
 argument_list|(
 argument|true
 argument_list|)
-block|{     }
+block|{}
 name|FileLineResolver
 argument_list|(
 argument|const FileSpec&resolver
@@ -179,7 +180,8 @@ block|;
 name|bool
 name|m_inlines
 block|;
-comment|// This determines whether the resolver looks for inlined functions or not.
+comment|// This determines whether the resolver looks for inlined
+comment|// functions or not.
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN

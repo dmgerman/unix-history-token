@@ -348,6 +348,10 @@ argument_list|(
 name|__ARM_FEATURE_CLZ
 argument_list|)
 operator|&&
+name|__ARM_ARCH_ISA_THUMB
+operator|!=
+literal|1
+operator|&&
 expr|\
 operator|(
 name|__ARM_ARCH

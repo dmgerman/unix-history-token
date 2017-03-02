@@ -46,13 +46,37 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/MapVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -65,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/DWARF/DWARFCompileUnit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DWARF/DWARFDebugAbbrev.h"
 end_include
 
 begin_include
@@ -100,7 +130,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DWARF/DWARFDebugRangeList.h"
+file|"llvm/DebugInfo/DWARF/DWARFGdbIndex.h"
 end_include
 
 begin_include
@@ -113,6 +143,54 @@ begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/DWARF/DWARFTypeUnit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DWARF/DWARFUnit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/DWARF/DWARFUnitIndex.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Object/ObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<deque>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -136,8 +214,7 @@ operator|<
 name|uint8_t
 operator|,
 name|int64_t
-operator|>
-expr|>
+operator|>>
 name|RelocAddrMap
 expr_stmt|;
 comment|/// DWARFContext
@@ -173,6 +250,14 @@ operator|<
 name|DWARFUnitIndex
 operator|>
 name|CUIndex
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DWARFGdbIndex
+operator|>
+name|GdbIndex
 block|;
 name|std
 operator|::
@@ -270,25 +355,6 @@ name|DWARFDebugLocDWO
 operator|>
 name|LocDWO
 block|;
-name|DWARFContext
-argument_list|(
-name|DWARFContext
-operator|&
-argument_list|)
-operator|=
-name|delete
-block|;
-name|DWARFContext
-operator|&
-name|operator
-operator|=
-operator|(
-name|DWARFContext
-operator|&
-operator|)
-operator|=
-name|delete
-block|;
 comment|/// Read compile units from the debug_info section (if necessary)
 comment|/// and store them in CUs.
 name|void
@@ -323,6 +389,25 @@ argument_list|(
 argument|CK_DWARF
 argument_list|)
 block|{}
+name|DWARFContext
+argument_list|(
+name|DWARFContext
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|DWARFContext
+operator|&
+name|operator
+operator|=
+operator|(
+name|DWARFContext
+operator|&
+operator|)
+operator|=
+name|delete
+block|;
 specifier|static
 name|bool
 name|classof
@@ -347,6 +432,8 @@ argument_list|,
 argument|DIDumpType DumpType = DIDT_All
 argument_list|,
 argument|bool DumpEH = false
+argument_list|,
+argument|bool SummarizeTypes = false
 argument_list|)
 name|override
 block|;
@@ -580,6 +667,11 @@ specifier|const
 name|DWARFUnitIndex
 modifier|&
 name|getCUIndex
+parameter_list|()
+function_decl|;
+name|DWARFGdbIndex
+modifier|&
+name|getGdbIndex
 parameter_list|()
 function_decl|;
 specifier|const
@@ -969,6 +1061,13 @@ literal|0
 function_decl|;
 name|virtual
 name|StringRef
+name|getGdbIndexSection
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|StringRef
 name|getTUIndexSection
 parameter_list|()
 init|=
@@ -1145,6 +1244,9 @@ name|AppleObjCSection
 block|;
 name|StringRef
 name|CUIndexSection
+block|;
+name|StringRef
+name|GdbIndexSection
 block|;
 name|StringRef
 name|TUIndexSection
@@ -1486,6 +1588,15 @@ name|CUIndexSection
 return|;
 block|}
 name|StringRef
+name|getGdbIndexSection
+argument_list|()
+name|override
+block|{
+return|return
+name|GdbIndexSection
+return|;
+block|}
+name|StringRef
 name|getTUIndexSection
 argument_list|()
 name|override
@@ -1498,10 +1609,18 @@ expr|}
 block|;  }
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_DEBUGINFO_DWARFCONTEXT_H
+end_comment
 
 end_unit
 

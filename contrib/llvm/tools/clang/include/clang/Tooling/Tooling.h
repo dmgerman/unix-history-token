@@ -262,10 +262,14 @@ name|virtual
 name|bool
 name|runInvocation
 argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|clang
 operator|::
 name|CompilerInvocation
-operator|*
+operator|>
 name|Invocation
 argument_list|,
 name|FileManager
@@ -312,7 +316,7 @@ comment|/// \brief Invokes the compiler with a FrontendAction created by create(
 name|bool
 name|runInvocation
 argument_list|(
-argument|clang::CompilerInvocation *Invocation
+argument|std::shared_ptr<clang::CompilerInvocation> Invocation
 argument_list|,
 argument|FileManager *Files
 argument_list|,
@@ -851,10 +855,14 @@ name|Compilation
 operator|*
 name|Compilation
 argument_list|,
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|clang
 operator|::
 name|CompilerInvocation
-operator|*
+operator|>
 name|Invocation
 argument_list|,
 name|std

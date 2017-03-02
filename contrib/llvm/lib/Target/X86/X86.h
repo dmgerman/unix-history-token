@@ -204,6 +204,20 @@ name|PassRegistry
 modifier|&
 parameter_list|)
 function_decl|;
+comment|/// This pass replaces EVEX ecnoded of AVX-512 instructiosn by VEX
+comment|/// encoding when possible in order to reduce code size.
+name|FunctionPass
+modifier|*
+name|createX86EvexToVexInsts
+parameter_list|()
+function_decl|;
+name|void
+name|initializeEvexToVexInstPassPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

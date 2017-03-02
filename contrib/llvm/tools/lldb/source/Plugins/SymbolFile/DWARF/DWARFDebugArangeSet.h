@@ -73,7 +73,8 @@ block|{
 name|uint32_t
 name|length
 decl_stmt|;
-comment|// The total length of the entries for that set, not including the length field itself.
+comment|// The total length of the entries for that set, not
+comment|// including the length field itself.
 name|uint16_t
 name|version
 decl_stmt|;
@@ -81,15 +82,21 @@ comment|// The DWARF version number
 name|uint32_t
 name|cu_offset
 decl_stmt|;
-comment|// The offset from the beginning of the .debug_info section of the compilation unit entry referenced by the table.
+comment|// The offset from the beginning of the .debug_info
+comment|// section of the compilation unit entry referenced by
+comment|// the table.
 name|uint8_t
 name|addr_size
 decl_stmt|;
-comment|// The size in bytes of an address on the target architecture. For segmented addressing, this is the size of the offset portion of the address
+comment|// The size in bytes of an address on the target
+comment|// architecture. For segmented addressing, this is the
+comment|// size of the offset portion of the address
 name|uint8_t
 name|seg_size
 decl_stmt|;
-comment|// The size in bytes of a segment descriptor on the target architecture. If the target system uses a flat address space, this value is 0.
+comment|// The size in bytes of a segment descriptor on the target
+comment|// architecture. If the target system uses a flat address
+comment|// space, this value is 0.
 block|}
 struct|;
 struct|struct

@@ -60,51 +60,31 @@ comment|/// to execute the kernels and answer the queries about the kernels.
 end_comment
 
 begin_comment
-comment|/// The metadata is represented as a byte stream in an ELF section of a
+comment|/// The metadata is represented as a note element in the .note ELF section of a
 end_comment
 
 begin_comment
-comment|/// binary (code object). The byte stream consists of key-value pairs.
+comment|/// binary (code object). The desc field of the note element is a YAML string
 end_comment
 
 begin_comment
-comment|/// Each key is an 8 bit unsigned integer. Each value can be an integer,
+comment|/// consisting of key-value pairs. Each key is a string. Each value can be
 end_comment
 
 begin_comment
-comment|/// a string, or a stream of key-value pairs. There are 3 levels of key-value
+comment|/// an integer, a string, or an YAML sequence. There are 3 levels of YAML maps.
 end_comment
 
 begin_comment
-comment|/// pair streams. At the beginning of the ELF section is the top level
+comment|/// At the beginning of the YAML string is the module level YAML map. A
 end_comment
 
 begin_comment
-comment|/// key-value pair stream. A kernel-level key-value pair stream starts after
+comment|/// kernel-level YAML map is in the amd.Kernels sequence. A
 end_comment
 
 begin_comment
-comment|/// encountering KeyKernelBegin and ends immediately before encountering
-end_comment
-
-begin_comment
-comment|/// KeyKernelEnd. A kernel-argument-level key-value pair stream starts
-end_comment
-
-begin_comment
-comment|/// after encountering KeyArgBegin and ends immediately before encountering
-end_comment
-
-begin_comment
-comment|/// KeyArgEnd. A kernel-level key-value pair stream can only appear in a top
-end_comment
-
-begin_comment
-comment|/// level key-value pair stream. A kernel-argument-level key-value pair stream
-end_comment
-
-begin_comment
-comment|/// can only appear in a kernel-level key-value pair stream.
+comment|/// kernel-argument-level map is in the amd.Args sequence.
 end_comment
 
 begin_comment
@@ -158,7 +138,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -174,7 +166,7 @@ name|unsigned
 name|char
 name|MDVersion
 init|=
-literal|1
+literal|2
 decl_stmt|;
 specifier|const
 name|unsigned
@@ -183,245 +175,236 @@ name|MDRevision
 init|=
 literal|0
 decl_stmt|;
-comment|// ELF section name containing runtime metadata
+comment|// Name of keys for runtime metadata.
+name|namespace
+name|KeyName
+block|{
 specifier|const
 name|char
-name|SectionName
+name|MDVersion
 index|[]
 init|=
-literal|".AMDGPU.runtime_metadata"
+literal|"amd.MDVersion"
 decl_stmt|;
-comment|// Enumeration values of keys in runtime metadata.
-enum|enum
-name|Key
-block|{
-name|KeyNull
-init|=
-literal|0
-block|,
-comment|// Place holder. Ignored when encountered
-name|KeyMDVersion
-init|=
-literal|1
-block|,
 comment|// Runtime metadata version
-name|KeyLanguage
-init|=
-literal|2
-block|,
-comment|// Language
-name|KeyLanguageVersion
-init|=
-literal|3
-block|,
-comment|// Language version
-name|KeyKernelBegin
-init|=
-literal|4
-block|,
-comment|// Beginning of kernel-level stream
-name|KeyKernelEnd
-init|=
-literal|5
-block|,
-comment|// End of kernel-level stream
-name|KeyKernelName
-init|=
-literal|6
-block|,
-comment|// Kernel name
-name|KeyArgBegin
-init|=
-literal|7
-block|,
-comment|// Beginning of kernel-arg-level stream
-name|KeyArgEnd
-init|=
-literal|8
-block|,
-comment|// End of kernel-arg-level stream
-name|KeyArgSize
-init|=
-literal|9
-block|,
-comment|// Kernel arg size
-name|KeyArgAlign
-init|=
-literal|10
-block|,
-comment|// Kernel arg alignment
-name|KeyArgTypeName
-init|=
-literal|11
-block|,
-comment|// Kernel type name
-name|KeyArgName
-init|=
-literal|12
-block|,
-comment|// Kernel name
-name|KeyArgTypeKind
-init|=
-literal|13
-block|,
-comment|// Kernel argument type kind
-name|KeyArgValueType
-init|=
-literal|14
-block|,
-comment|// Kernel argument value type
-name|KeyArgAddrQual
-init|=
-literal|15
-block|,
-comment|// Kernel argument address qualifier
-name|KeyArgAccQual
-init|=
-literal|16
-block|,
-comment|// Kernel argument access qualifier
-name|KeyArgIsConst
-init|=
-literal|17
-block|,
-comment|// Kernel argument is const qualified
-name|KeyArgIsRestrict
-init|=
-literal|18
-block|,
-comment|// Kernel argument is restrict qualified
-name|KeyArgIsVolatile
-init|=
-literal|19
-block|,
-comment|// Kernel argument is volatile qualified
-name|KeyArgIsPipe
-init|=
-literal|20
-block|,
-comment|// Kernel argument is pipe qualified
-name|KeyReqdWorkGroupSize
-init|=
-literal|21
-block|,
-comment|// Required work group size
-name|KeyWorkGroupSizeHint
-init|=
-literal|22
-block|,
-comment|// Work group size hint
-name|KeyVecTypeHint
-init|=
-literal|23
-block|,
-comment|// Vector type hint
-name|KeyKernelIndex
-init|=
-literal|24
-block|,
-comment|// Kernel index for device enqueue
-name|KeySGPRs
-init|=
-literal|25
-block|,
-comment|// Number of SGPRs
-name|KeyVGPRs
-init|=
-literal|26
-block|,
-comment|// Number of VGPRs
-name|KeyMinWavesPerSIMD
-init|=
-literal|27
-block|,
-comment|// Minimum number of waves per SIMD
-name|KeyMaxWavesPerSIMD
-init|=
-literal|28
-block|,
-comment|// Maximum number of waves per SIMD
-name|KeyFlatWorkGroupSizeLimits
-init|=
-literal|29
-block|,
-comment|// Flat work group size limits
-name|KeyMaxWorkGroupSize
-init|=
-literal|30
-block|,
-comment|// Maximum work group size
-name|KeyNoPartialWorkGroups
-init|=
-literal|31
-block|,
-comment|// No partial work groups
-block|}
-enum|;
-enum|enum
+specifier|const
+name|char
 name|Language
-enum|:
-name|uint8_t
-block|{
-name|OpenCL_C
+index|[]
 init|=
-literal|0
-block|,
-name|HCC
-init|=
-literal|1
-block|,
-name|OpenMP
-init|=
-literal|2
-block|,
-name|OpenCL_CPP
-init|=
-literal|3
-block|, }
-enum|;
-enum|enum
+literal|"amd.Language"
+decl_stmt|;
+comment|// Language
+specifier|const
+name|char
 name|LanguageVersion
-enum|:
-name|uint16_t
-block|{
-name|V100
+index|[]
 init|=
-literal|100
-block|,
-name|V110
+literal|"amd.LanguageVersion"
+decl_stmt|;
+comment|// Language version
+specifier|const
+name|char
+name|Kernels
+index|[]
 init|=
-literal|110
-block|,
-name|V120
+literal|"amd.Kernels"
+decl_stmt|;
+comment|// Kernels
+specifier|const
+name|char
+name|KernelName
+index|[]
 init|=
-literal|120
-block|,
-name|V200
+literal|"amd.KernelName"
+decl_stmt|;
+comment|// Kernel name
+specifier|const
+name|char
+name|Args
+index|[]
 init|=
-literal|200
-block|,
-name|V210
+literal|"amd.Args"
+decl_stmt|;
+comment|// Kernel arguments
+specifier|const
+name|char
+name|ArgSize
+index|[]
 init|=
-literal|210
-block|,   }
-enum|;
+literal|"amd.ArgSize"
+decl_stmt|;
+comment|// Kernel arg size
+specifier|const
+name|char
+name|ArgAlign
+index|[]
+init|=
+literal|"amd.ArgAlign"
+decl_stmt|;
+comment|// Kernel arg alignment
+specifier|const
+name|char
+name|ArgTypeName
+index|[]
+init|=
+literal|"amd.ArgTypeName"
+decl_stmt|;
+comment|// Kernel type name
+specifier|const
+name|char
+name|ArgName
+index|[]
+init|=
+literal|"amd.ArgName"
+decl_stmt|;
+comment|// Kernel name
+specifier|const
+name|char
+name|ArgKind
+index|[]
+init|=
+literal|"amd.ArgKind"
+decl_stmt|;
+comment|// Kernel argument kind
+specifier|const
+name|char
+name|ArgValueType
+index|[]
+init|=
+literal|"amd.ArgValueType"
+decl_stmt|;
+comment|// Kernel argument value type
+specifier|const
+name|char
+name|ArgAddrQual
+index|[]
+init|=
+literal|"amd.ArgAddrQual"
+decl_stmt|;
+comment|// Kernel argument address qualifier
+specifier|const
+name|char
+name|ArgAccQual
+index|[]
+init|=
+literal|"amd.ArgAccQual"
+decl_stmt|;
+comment|// Kernel argument access qualifier
+specifier|const
+name|char
+name|ArgIsConst
+index|[]
+init|=
+literal|"amd.ArgIsConst"
+decl_stmt|;
+comment|// Kernel argument is const qualified
+specifier|const
+name|char
+name|ArgIsRestrict
+index|[]
+init|=
+literal|"amd.ArgIsRestrict"
+decl_stmt|;
+comment|// Kernel argument is restrict qualified
+specifier|const
+name|char
+name|ArgIsVolatile
+index|[]
+init|=
+literal|"amd.ArgIsVolatile"
+decl_stmt|;
+comment|// Kernel argument is volatile qualified
+specifier|const
+name|char
+name|ArgIsPipe
+index|[]
+init|=
+literal|"amd.ArgIsPipe"
+decl_stmt|;
+comment|// Kernel argument is pipe qualified
+specifier|const
+name|char
+name|ReqdWorkGroupSize
+index|[]
+init|=
+literal|"amd.ReqdWorkGroupSize"
+decl_stmt|;
+comment|// Required work group size
+specifier|const
+name|char
+name|WorkGroupSizeHint
+index|[]
+init|=
+literal|"amd.WorkGroupSizeHint"
+decl_stmt|;
+comment|// Work group size hint
+specifier|const
+name|char
+name|VecTypeHint
+index|[]
+init|=
+literal|"amd.VecTypeHint"
+decl_stmt|;
+comment|// Vector type hint
+specifier|const
+name|char
+name|KernelIndex
+index|[]
+init|=
+literal|"amd.KernelIndex"
+decl_stmt|;
+comment|// Kernel index for device enqueue
+specifier|const
+name|char
+name|NoPartialWorkGroups
+index|[]
+init|=
+literal|"amd.NoPartialWorkGroups"
+decl_stmt|;
+comment|// No partial work groups
+specifier|const
+name|char
+name|PrintfInfo
+index|[]
+init|=
+literal|"amd.PrintfInfo"
+decl_stmt|;
+comment|// Prinf function call information
+specifier|const
+name|char
+name|ArgActualAcc
+index|[]
+init|=
+literal|"amd.ArgActualAcc"
+decl_stmt|;
+comment|// The actual kernel argument access qualifier
+specifier|const
+name|char
+name|ArgPointeeAlign
+index|[]
+init|=
+literal|"amd.ArgPointeeAlign"
+decl_stmt|;
+comment|// Alignment of pointee type
+block|}
 name|namespace
 name|KernelArg
 block|{
 enum|enum
-name|TypeKind
+name|Kind
 enum|:
 name|uint8_t
 block|{
-name|Value
+name|ByValue
 init|=
 literal|0
 block|,
-name|Pointer
+name|GlobalBuffer
 init|=
 literal|1
 block|,
-name|Image
+name|DynamicSharedPointer
 init|=
 literal|2
 block|,
@@ -429,9 +412,45 @@ name|Sampler
 init|=
 literal|3
 block|,
-name|Queue
+name|Image
 init|=
 literal|4
+block|,
+name|Pipe
+init|=
+literal|5
+block|,
+name|Queue
+init|=
+literal|6
+block|,
+name|HiddenGlobalOffsetX
+init|=
+literal|7
+block|,
+name|HiddenGlobalOffsetY
+init|=
+literal|8
+block|,
+name|HiddenGlobalOffsetZ
+init|=
+literal|9
+block|,
+name|HiddenNone
+init|=
+literal|10
+block|,
+name|HiddenPrintfBuffer
+init|=
+literal|11
+block|,
+name|HiddenDefaultQueue
+init|=
+literal|12
+block|,
+name|HiddenCompletionAction
+init|=
+literal|13
 block|,     }
 enum|;
 enum|enum
@@ -488,12 +507,13 @@ init|=
 literal|11
 block|,     }
 enum|;
+comment|// Avoid using 'None' since it conflicts with a macro in X11 header file.
 enum|enum
 name|AccessQualifer
 enum|:
 name|uint8_t
 block|{
-name|None
+name|AccNone
 init|=
 literal|0
 block|,
@@ -510,8 +530,321 @@ init|=
 literal|3
 block|,     }
 enum|;
+enum|enum
+name|AddressSpaceQualifer
+enum|:
+name|uint8_t
+block|{
+name|Private
+init|=
+literal|0
+block|,
+name|Global
+init|=
+literal|1
+block|,
+name|Constant
+init|=
+literal|2
+block|,
+name|Local
+init|=
+literal|3
+block|,
+name|Generic
+init|=
+literal|4
+block|,
+name|Region
+init|=
+literal|5
+block|,     }
+enum|;
 block|}
 comment|// namespace KernelArg
+comment|// Invalid values are used to indicate an optional key should not be emitted.
+specifier|const
+name|uint8_t
+name|INVALID_ADDR_QUAL
+init|=
+literal|0xff
+decl_stmt|;
+specifier|const
+name|uint8_t
+name|INVALID_ACC_QUAL
+init|=
+literal|0xff
+decl_stmt|;
+specifier|const
+name|uint32_t
+name|INVALID_KERNEL_INDEX
+init|=
+operator|~
+literal|0U
+decl_stmt|;
+name|namespace
+name|KernelArg
+block|{
+comment|// In-memory representation of kernel argument information.
+struct|struct
+name|Metadata
+block|{
+name|uint32_t
+name|Size
+decl_stmt|;
+name|uint32_t
+name|Align
+decl_stmt|;
+name|uint32_t
+name|PointeeAlign
+decl_stmt|;
+name|uint8_t
+name|Kind
+decl_stmt|;
+name|uint16_t
+name|ValueType
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|TypeName
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+name|uint8_t
+name|AddrQual
+decl_stmt|;
+name|uint8_t
+name|AccQual
+decl_stmt|;
+name|uint8_t
+name|IsVolatile
+decl_stmt|;
+name|uint8_t
+name|IsConst
+decl_stmt|;
+name|uint8_t
+name|IsRestrict
+decl_stmt|;
+name|uint8_t
+name|IsPipe
+decl_stmt|;
+name|Metadata
+argument_list|()
+operator|:
+name|Size
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Align
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|PointeeAlign
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|ValueType
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|AddrQual
+argument_list|(
+name|INVALID_ADDR_QUAL
+argument_list|)
+operator|,
+name|AccQual
+argument_list|(
+name|INVALID_ACC_QUAL
+argument_list|)
+operator|,
+name|IsVolatile
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|IsConst
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|IsRestrict
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|IsPipe
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+block|}
+struct|;
+block|}
+name|namespace
+name|Kernel
+block|{
+comment|// In-memory representation of kernel information.
+struct|struct
+name|Metadata
+block|{
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|Language
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|uint8_t
+operator|>
+name|LanguageVersion
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|uint32_t
+operator|>
+name|ReqdWorkGroupSize
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|uint32_t
+operator|>
+name|WorkGroupSizeHint
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|VecTypeHint
+expr_stmt|;
+name|uint32_t
+name|KernelIndex
+decl_stmt|;
+name|uint8_t
+name|NoPartialWorkGroups
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|KernelArg
+operator|::
+name|Metadata
+operator|>
+name|Args
+expr_stmt|;
+name|Metadata
+argument_list|()
+operator|:
+name|KernelIndex
+argument_list|(
+name|INVALID_KERNEL_INDEX
+argument_list|)
+operator|,
+name|NoPartialWorkGroups
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+block|}
+struct|;
+block|}
+name|namespace
+name|Program
+block|{
+comment|// In-memory representation of program information.
+struct|struct
+name|Metadata
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|uint8_t
+operator|>
+name|MDVersionSeq
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|PrintfInfo
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|Kernel
+operator|::
+name|Metadata
+operator|>
+name|Kernels
+expr_stmt|;
+name|explicit
+name|Metadata
+parameter_list|()
+block|{}
+comment|// Construct from an YAML string.
+name|explicit
+name|Metadata
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|YAML
+argument_list|)
+decl_stmt|;
+comment|// Convert to YAML string.
+name|std
+operator|::
+name|string
+name|toYAML
+argument_list|()
+expr_stmt|;
+comment|// Convert from YAML string.
+specifier|static
+name|Metadata
+name|fromYAML
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|S
+argument_list|)
+decl_stmt|;
+block|}
+struct|;
+block|}
 block|}
 comment|// namespace RuntimeMD
 block|}

@@ -125,8 +125,9 @@ name|mutable
 name|unsigned
 name|NextUniqueID
 operator|=
-literal|0
+literal|1
 block|;
+comment|// ID 0 is reserved for execute-only sections
 name|protected
 operator|:
 name|MCSymbolRefExpr
@@ -186,11 +187,9 @@ name|MCSection
 operator|*
 name|getExplicitSectionGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -201,11 +200,9 @@ name|MCSection
 operator|*
 name|SelectSectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -217,8 +214,6 @@ operator|*
 name|getSectionForJumpTable
 argument_list|(
 argument|const Function&F
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -246,8 +241,6 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|unsigned Encoding
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
@@ -263,8 +256,6 @@ operator|*
 name|getCFIPersonalitySymbol
 argument_list|(
 argument|const GlobalValue *GV
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
@@ -310,8 +301,6 @@ argument|const GlobalValue *LHS
 argument_list|,
 argument|const GlobalValue *RHS
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
@@ -334,6 +323,15 @@ block|{}
 name|TargetLoweringObjectFileMachO
 argument_list|()
 block|;
+name|void
+name|Initialize
+argument_list|(
+argument|MCContext&Ctx
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+name|override
+block|;
 comment|/// Emit the module flags that specify the garbage collection information.
 name|void
 name|emitModuleFlags
@@ -341,8 +339,6 @@ argument_list|(
 argument|MCStreamer&Streamer
 argument_list|,
 argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -353,11 +349,9 @@ name|MCSection
 operator|*
 name|SelectSectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -368,11 +362,9 @@ name|MCSection
 operator|*
 name|getExplicitSectionGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -404,8 +396,6 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|unsigned Encoding
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
@@ -421,8 +411,6 @@ operator|*
 name|getCFIPersonalitySymbol
 argument_list|(
 argument|const GlobalValue *GV
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
@@ -457,8 +445,6 @@ argument|SmallVectorImpl<char>&OutName
 argument_list|,
 argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
@@ -484,15 +470,22 @@ name|TargetLoweringObjectFileCOFF
 argument_list|()
 name|override
 block|{}
+name|void
+name|Initialize
+argument_list|(
+argument|MCContext&Ctx
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+name|override
+block|;
 name|MCSection
 operator|*
 name|getExplicitSectionGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -503,11 +496,9 @@ name|MCSection
 operator|*
 name|SelectSectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -521,8 +512,6 @@ argument|SmallVectorImpl<char>&OutName
 argument_list|,
 argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
@@ -533,8 +522,6 @@ operator|*
 name|getSectionForJumpTable
 argument_list|(
 argument|const Function&F
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -549,8 +536,6 @@ argument_list|(
 argument|MCStreamer&Streamer
 argument_list|,
 argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -585,8 +570,6 @@ argument_list|(
 argument|raw_ostream&OS
 argument_list|,
 argument|const GlobalValue *GV
-argument_list|,
-argument|const Mangler&Mang
 argument_list|)
 specifier|const
 name|override

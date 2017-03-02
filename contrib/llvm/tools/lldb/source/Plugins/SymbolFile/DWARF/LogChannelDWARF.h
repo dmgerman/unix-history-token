@@ -208,7 +208,7 @@ block|;
 name|void
 name|Disable
 argument_list|(
-argument|const char** categories
+argument|const char **categories
 argument_list|,
 argument|lldb_private::Stream *feedback_strm
 argument_list|)
@@ -225,14 +225,16 @@ argument|lldb::StreamSP&log_stream_sp
 argument_list|,
 argument|uint32_t log_options
 argument_list|,
-argument|lldb_private::Stream *feedback_strm
+argument|lldb_private::Stream                   *feedback_strm
 argument_list|,
 comment|// Feedback stream for argument errors etc
 argument|const char **categories
 argument_list|)
 name|override
 block|;
-comment|// The categories to enable within this logging stream, if empty, enable default set
+comment|// The categories to enable
+comment|// within this logging stream,
+comment|// if empty, enable default set
 name|void
 name|ListCategories
 argument_list|(

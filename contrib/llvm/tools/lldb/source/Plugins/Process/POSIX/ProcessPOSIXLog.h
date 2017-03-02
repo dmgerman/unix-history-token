@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- ProcessPOSIXLog.h -----------------------------------------*- C++ -*-===//
+comment|//===-- ProcessPOSIXLog.h -----------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -108,6 +112,7 @@ begin_define
 define|#
 directive|define
 name|POSIX_LOG_MEMORY_DATA_SHORT
+define|\
 value|(1u<< 5)
 end_define
 
@@ -119,6 +124,7 @@ begin_define
 define|#
 directive|define
 name|POSIX_LOG_MEMORY_DATA_LONG
+define|\
 value|(1u<< 6)
 end_define
 
@@ -337,7 +343,8 @@ comment|// logging to only the top level function calls.  This is useful for
 comment|// recursive functions.  FIXME: not thread safe!
 comment|//     Example:
 comment|//     void NestingFunc() {
-comment|//         LogSP log (ProcessPOSIXLog::GetLogIfAllCategoriesSet(POSIX_LOG_ALL));
+comment|//         LogSP log
+comment|//         (ProcessPOSIXLog::GetLogIfAllCategoriesSet(POSIX_LOG_ALL));
 comment|//         if (log)
 comment|//         {
 comment|//             ProcessPOSIXLog::IncNestLevel();

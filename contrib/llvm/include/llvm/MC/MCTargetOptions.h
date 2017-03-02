@@ -49,10 +49,37 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|enum
+name|class
+name|ExceptionHandling
+block|{
+name|None
+operator|,
+comment|/// No exception support
+name|DwarfCFI
+operator|,
+comment|/// DWARF-like instruction based exceptions
+name|SjLj
+operator|,
+comment|/// setjmp/longjmp based exceptions
+name|ARM
+operator|,
+comment|/// ARM EHABI
+name|WinEH
+operator|,
+comment|/// Windows Exception Handling
+block|}
+empty_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
@@ -96,6 +123,11 @@ range|:
 literal|1
 decl_stmt|;
 name|bool
+name|MCNoDeprecatedWarn
+range|:
+literal|1
+decl_stmt|;
+name|bool
 name|MCSaveTempLabels
 range|:
 literal|1
@@ -107,6 +139,11 @@ literal|1
 decl_stmt|;
 name|bool
 name|MCIncrementalLinkerCompatible
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|MCPIECopyRelocations
 range|:
 literal|1
 decl_stmt|;
@@ -146,6 +183,18 @@ name|std
 operator|::
 name|string
 name|ABIName
+expr_stmt|;
+comment|/// Additional paths to search for `.include` directives when using the
+comment|/// integrated assembler.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|IASSearchPaths
 expr_stmt|;
 name|MCTargetOptions
 argument_list|()
@@ -204,6 +253,11 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
+name|MCNoDeprecatedWarn
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
 name|MCSaveTempLabels
 argument_list|)
 operator|&&
@@ -215,6 +269,11 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|MCIncrementalLinkerCompatible
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|MCPIECopyRelocations
 argument_list|)
 operator|&&
 name|ARE_EQUAL
@@ -240,6 +299,11 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|ABIName
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|IASSearchPaths
 argument_list|)
 operator|)
 return|;

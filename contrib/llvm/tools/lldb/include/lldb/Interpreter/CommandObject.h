@@ -80,7 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/Flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/StringList.h"
 end_include
 
 begin_include
@@ -98,19 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/StringList.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Flags.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/ExecutionContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -119,8 +119,10 @@ name|lldb_private
 block|{
 comment|// This function really deals with CommandObjectLists, but we didn't make a
 comment|// CommandObjectList class, so I'm sticking it here.  But we really should have
-comment|// such a class.  Anyway, it looks up the commands in the map that match the partial
-comment|// string cmd_str, inserts the matches into matches, and returns the number added.
+comment|// such a class.  Anyway, it looks up the commands in the map that match the
+comment|// partial
+comment|// string cmd_str, inserts the matches into matches, and returns the number
+comment|// added.
 name|template
 operator|<
 name|typename
@@ -129,11 +131,11 @@ operator|>
 name|int
 name|AddNamesMatchingPartialString
 argument_list|(
-argument|std::map<std::string
+argument|const std::map<std::string
 argument_list|,
 argument|ValueType>&in_map
 argument_list|,
-argument|const char *cmd_str
+argument|llvm::StringRef cmd_str
 argument_list|,
 argument|StringList&matches
 argument_list|)
@@ -147,22 +149,10 @@ specifier|const
 name|bool
 name|add_all
 operator|=
-operator|(
-operator|(
 name|cmd_str
-operator|==
-name|nullptr
-operator|)
-operator|||
-operator|(
-name|cmd_str
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-operator|)
-operator|)
+operator|.
+name|empty
+argument_list|()
 block|;
 for|for
 control|(
@@ -305,14 +295,14 @@ block|{
 name|public
 label|:
 typedef|typedef
-specifier|const
-name|char
-modifier|*
-function_decl|(
+name|llvm
+operator|::
+name|StringRef
+argument_list|(
 name|ArgumentHelpCallbackFunction
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|)
+argument_list|()
+expr_stmt|;
 struct|struct
 name|ArgumentHelpCallback
 block|{
@@ -323,9 +313,9 @@ decl_stmt|;
 name|bool
 name|self_formatting
 decl_stmt|;
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|operator
 argument_list|()
 operator|(
@@ -400,7 +390,8 @@ decl_stmt|;
 name|uint32_t
 name|arg_opt_set_association
 decl_stmt|;
-comment|// This arg might be associated only with some particular option set(s).
+comment|// This arg might be associated only with
+comment|// some particular option set(s).
 name|CommandArgumentData
 argument_list|()
 operator|:
@@ -420,7 +411,9 @@ name|arg_opt_set_association
 argument_list|(
 argument|LLDB_OPT_SET_ALL
 argument_list|)
-comment|// By default, the arg associates to all option sets.
+comment|// By default, the arg
+comment|// associates to all option
+comment|// sets.
 block|{}
 block|}
 struct|;
@@ -463,11 +456,13 @@ name|CommandObject
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
-argument|const char *help = nullptr
+argument|llvm::StringRef help =
+literal|""
 argument_list|,
-argument|const char *syntax = nullptr
+argument|llvm::StringRef syntax =
+literal|""
 argument_list|,
 argument|uint32_t flags =
 literal|0
@@ -514,61 +509,62 @@ name|m_interpreter
 return|;
 block|}
 name|virtual
-specifier|const
-name|char
-modifier|*
+name|llvm
+operator|::
+name|StringRef
 name|GetHelp
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|virtual
-specifier|const
-name|char
-modifier|*
+name|llvm
+operator|::
+name|StringRef
 name|GetHelpLong
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|virtual
-specifier|const
-name|char
-modifier|*
+name|llvm
+operator|::
+name|StringRef
 name|GetSyntax
-parameter_list|()
-function_decl|;
-specifier|const
-name|char
-modifier|*
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|StringRef
 name|GetCommandName
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|virtual
 name|void
 name|SetHelp
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|str
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|virtual
 name|void
 name|SetHelpLong
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|str
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|SetSyntax
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|str
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|// override this to return true if you want to enable the user to delete
 comment|// the Command object from the Command dictionary (aliases have their own
 comment|// deletion scheme, so they do not need to care about this)
@@ -628,7 +624,7 @@ operator|::
 name|CommandObjectSP
 name|GetSubcommandSP
 argument_list|(
-argument|const char *sub_cmd
+argument|llvm::StringRef sub_cmd
 argument_list|,
 argument|StringList *matches = nullptr
 argument_list|)
@@ -644,18 +640,18 @@ name|virtual
 name|CommandObject
 modifier|*
 name|GetSubcommandObject
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|sub_cmd
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|*
+operator|*
 name|matches
-init|=
+operator|=
 name|nullptr
-parameter_list|)
+argument_list|)
 block|{
 return|return
 name|nullptr
@@ -664,39 +660,39 @@ block|}
 name|virtual
 name|void
 name|AproposAllSubCommands
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|prefix
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|search_word
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|commands_found
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|commands_help
-parameter_list|)
-block|{     }
+argument_list|)
+block|{}
 name|void
 name|FormatLongHelpText
-parameter_list|(
+argument_list|(
 name|Stream
-modifier|&
+operator|&
 name|output_strm
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|long_help
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|GenerateHelpText
 parameter_list|(
@@ -722,9 +718,9 @@ name|virtual
 name|bool
 name|LoadSubCommand
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|cmd_name
 argument_list|,
 specifier|const
@@ -779,10 +775,7 @@ operator|::
 name|CommandArgumentType
 name|LookupArgumentName
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|arg_name
+argument|llvm::StringRef arg_name
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -878,20 +871,23 @@ parameter_list|)
 function_decl|;
 name|void
 name|SetCommandName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|name
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// The input array contains a parsed version of the line.  The insertion
 comment|/// point is given by cursor_index (the index in input of the word containing
-comment|/// the cursor) and cursor_char_position (the position of the cursor in that word.)
-comment|/// This default version handles calling option argument completions and then calls
+comment|/// the cursor) and cursor_char_position (the position of the cursor in that
+comment|/// word.)
+comment|/// This default version handles calling option argument completions and then
+comment|/// calls
 comment|/// HandleArgumentCompletion if the cursor is on an argument, not an option.
-comment|/// Don't override this method, override HandleArgumentCompletion instead unless
+comment|/// Don't override this method, override HandleArgumentCompletion instead
+comment|/// unless
 comment|/// you have special reasons.
 comment|///
 comment|/// @param[in] interpreter
@@ -908,18 +904,22 @@ comment|///     The character position of the cursor in its argument word.
 comment|///
 comment|/// @param[in] match_start_point
 comment|/// @param[in] match_return_elements
-comment|///     FIXME: Not yet implemented...  If there is a match that is expensive to compute, these are
-comment|///     here to allow you to compute the completions in batches.  Start the completion from \amatch_start_point,
+comment|///     FIXME: Not yet implemented...  If there is a match that is expensive
+comment|///     to compute, these are
+comment|///     here to allow you to compute the completions in batches.  Start the
+comment|///     completion from \amatch_start_point,
 comment|///     and return \amatch_return_elements elements.
 comment|///
 comment|/// @param[out] word_complete
-comment|///     \btrue if this is a complete option value (a space will be inserted after the
+comment|///     \btrue if this is a complete option value (a space will be inserted
+comment|///     after the
 comment|///     completion.)  \bfalse otherwise.
 comment|///
 comment|/// @param[out] matches
 comment|///     The array of matches returned.
 comment|///
-comment|/// FIXME: This is the wrong return value, since we also need to make a distinction between
+comment|/// FIXME: This is the wrong return value, since we also need to make a
+comment|/// distinction between
 comment|/// total number of matches, and the window the user wants returned.
 comment|///
 comment|/// @return
@@ -959,8 +959,10 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// The input array contains a parsed version of the line.  The insertion
 comment|/// point is given by cursor_index (the index in input of the word containing
-comment|/// the cursor) and cursor_char_position (the position of the cursor in that word.)
-comment|/// We've constructed the map of options and their arguments as well if that is
+comment|/// the cursor) and cursor_char_position (the position of the cursor in that
+comment|/// word.)
+comment|/// We've constructed the map of options and their arguments as well if that
+comment|/// is
 comment|/// helpful for the completion.
 comment|///
 comment|/// @param[in] interpreter
@@ -980,16 +982,19 @@ comment|///     The results of the options parse of \a input.
 comment|///
 comment|/// @param[in] match_start_point
 comment|/// @param[in] match_return_elements
-comment|///     See CommandObject::HandleCompletions for a description of how these work.
+comment|///     See CommandObject::HandleCompletions for a description of how these
+comment|///     work.
 comment|///
 comment|/// @param[out] word_complete
-comment|///     \btrue if this is a complete option value (a space will be inserted after the
+comment|///     \btrue if this is a complete option value (a space will be inserted
+comment|///     after the
 comment|///     completion.)  \bfalse otherwise.
 comment|///
 comment|/// @param[out] matches
 comment|///     The array of matches returned.
 comment|///
-comment|/// FIXME: This is the wrong return value, since we also need to make a distinction between
+comment|/// FIXME: This is the wrong return value, since we also need to make a
+comment|/// distinction between
 comment|/// total number of matches, and the window the user wants returned.
 comment|///
 comment|/// @return
@@ -1036,33 +1041,33 @@ return|;
 block|}
 name|bool
 name|HelpTextContainsWord
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|search_word
-parameter_list|,
+argument_list|,
 name|bool
 name|search_short_help
-init|=
+operator|=
 name|true
-parameter_list|,
+argument_list|,
 name|bool
 name|search_long_help
-init|=
+operator|=
 name|true
-parameter_list|,
+argument_list|,
 name|bool
 name|search_syntax
-init|=
+operator|=
 name|true
-parameter_list|,
+argument_list|,
 name|bool
 name|search_options
-init|=
+operator|=
 name|true
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// The flags accessor.
 comment|///
@@ -1102,9 +1107,11 @@ comment|/// @param[in] current_command_line
 comment|///    The complete current command line.
 comment|///
 comment|/// @return
-comment|///     nullptr if there is no special repeat command - it will use the current command line.
+comment|///     nullptr if there is no special repeat command - it will use the
+comment|///     current command line.
 comment|///     Otherwise a pointer to the command to be repeated.
-comment|///     If the returned string is the empty string, the command won't be repeated.
+comment|///     If the returned string is the empty string, the command won't be
+comment|///     repeated.
 comment|//------------------------------------------------------------------
 name|virtual
 specifier|const
@@ -1298,8 +1305,10 @@ return|return
 literal|"invalid frame, no registers"
 return|;
 block|}
-comment|// This is for use in the command interpreter, when you either want the selected target, or if no target
-comment|// is present you want to prime the dummy target with entities that will be copied over to new targets.
+comment|// This is for use in the command interpreter, when you either want the
+comment|// selected target, or if no target
+comment|// is present you want to prime the dummy target with entities that will be
+comment|// copied over to new targets.
 name|Target
 modifier|*
 name|GetSelectedOrDummyTarget
@@ -1316,8 +1325,10 @@ name|GetDummyTarget
 parameter_list|()
 function_decl|;
 comment|// If a command needs to use the "current" thread, use this call.
-comment|// Command objects will have an ExecutionContext to use, and that may or may not have a thread in it.  If it
-comment|// does, you should use that by default, if not, then use the ExecutionContext's target's selected thread, etc...
+comment|// Command objects will have an ExecutionContext to use, and that may or may
+comment|// not have a thread in it.  If it
+comment|// does, you should use that by default, if not, then use the
+comment|// ExecutionContext's target's selected thread, etc...
 comment|// This call insulates you from the details of this calculation.
 name|Thread
 modifier|*
@@ -1523,11 +1534,13 @@ name|CommandObjectRaw
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *name
+argument|llvm::StringRef name
 argument_list|,
-argument|const char *help = nullptr
+argument|llvm::StringRef help =
+literal|""
 argument_list|,
-argument|const char *syntax = nullptr
+argument|llvm::StringRef syntax =
+literal|""
 argument_list|,
 argument|uint32_t flags =
 literal|0

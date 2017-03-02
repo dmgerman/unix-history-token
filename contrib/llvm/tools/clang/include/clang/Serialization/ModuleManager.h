@@ -591,17 +591,14 @@ block|}
 enum|;
 typedef|typedef
 name|ASTFileSignature
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|ASTFileSignatureReader
-argument_list|)
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamReader
-operator|&
-argument_list|)
-expr_stmt|;
+function_decl|)
+parameter_list|(
+name|StringRef
+parameter_list|)
+function_decl|;
 comment|/// \brief Attempts to create a new module and add it to the list of known
 comment|/// modules.
 comment|///

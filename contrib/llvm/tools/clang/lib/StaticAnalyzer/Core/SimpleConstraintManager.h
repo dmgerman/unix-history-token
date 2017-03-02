@@ -98,7 +98,7 @@ name|SimpleConstraintManager
 argument_list|(
 name|SubEngine
 operator|*
-name|subengine
+name|SE
 argument_list|,
 name|SValBuilder
 operator|&
@@ -107,7 +107,7 @@ argument_list|)
 operator|:
 name|SU
 argument_list|(
-name|subengine
+name|SE
 argument_list|)
 block|,
 name|SVB
@@ -126,7 +126,7 @@ comment|//===------------------------------------------------------------------=
 name|ProgramStateRef
 name|assume
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
 argument|DefinedSVal Cond
 argument_list|,
@@ -137,7 +137,7 @@ block|;
 name|ProgramStateRef
 name|assume
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
 argument|NonLoc Cond
 argument_list|,
@@ -145,7 +145,7 @@ argument|bool Assumption
 argument_list|)
 block|;
 name|ProgramStateRef
-name|assumeWithinInclusiveRange
+name|assumeInclusiveRange
 argument_list|(
 argument|ProgramStateRef State
 argument_list|,
@@ -162,13 +162,13 @@ block|;
 name|ProgramStateRef
 name|assumeSymRel
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
 argument|const SymExpr *LHS
 argument_list|,
-argument|BinaryOperator::Opcode op
+argument|BinaryOperator::Opcode Op
 argument_list|,
-argument|const llvm::APSInt& Int
+argument|const llvm::APSInt&Int
 argument_list|)
 block|;
 name|ProgramStateRef
@@ -190,19 +190,19 @@ operator|:
 comment|//===------------------------------------------------------------------===//
 comment|// Interface that subclasses must implement.
 comment|//===------------------------------------------------------------------===//
-comment|// Each of these is of the form "$sym+Adj<> V", where "<>" is the comparison
+comment|// Each of these is of the form "$Sym+Adj<> V", where "<>" is the comparison
 comment|// operation for the method being invoked.
 name|virtual
 name|ProgramStateRef
 name|assumeSymNE
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
-argument|SymbolRef sym
+argument|SymbolRef Sym
 argument_list|,
-argument|const llvm::APSInt& V
+argument|const llvm::APSInt&V
 argument_list|,
-argument|const llvm::APSInt& Adjustment
+argument|const llvm::APSInt&Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -211,13 +211,13 @@ name|virtual
 name|ProgramStateRef
 name|assumeSymEQ
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
-argument|SymbolRef sym
+argument|SymbolRef Sym
 argument_list|,
-argument|const llvm::APSInt& V
+argument|const llvm::APSInt&V
 argument_list|,
-argument|const llvm::APSInt& Adjustment
+argument|const llvm::APSInt&Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -226,13 +226,13 @@ name|virtual
 name|ProgramStateRef
 name|assumeSymLT
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
-argument|SymbolRef sym
+argument|SymbolRef Sym
 argument_list|,
-argument|const llvm::APSInt& V
+argument|const llvm::APSInt&V
 argument_list|,
-argument|const llvm::APSInt& Adjustment
+argument|const llvm::APSInt&Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -241,13 +241,13 @@ name|virtual
 name|ProgramStateRef
 name|assumeSymGT
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
-argument|SymbolRef sym
+argument|SymbolRef Sym
 argument_list|,
-argument|const llvm::APSInt& V
+argument|const llvm::APSInt&V
 argument_list|,
-argument|const llvm::APSInt& Adjustment
+argument|const llvm::APSInt&Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -256,13 +256,13 @@ name|virtual
 name|ProgramStateRef
 name|assumeSymLE
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
-argument|SymbolRef sym
+argument|SymbolRef Sym
 argument_list|,
-argument|const llvm::APSInt& V
+argument|const llvm::APSInt&V
 argument_list|,
-argument|const llvm::APSInt& Adjustment
+argument|const llvm::APSInt&Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -271,13 +271,13 @@ name|virtual
 name|ProgramStateRef
 name|assumeSymGE
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
-argument|SymbolRef sym
+argument|SymbolRef Sym
 argument_list|,
-argument|const llvm::APSInt& V
+argument|const llvm::APSInt&V
 argument_list|,
-argument|const llvm::APSInt& Adjustment
+argument|const llvm::APSInt&Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -303,7 +303,7 @@ name|virtual
 name|ProgramStateRef
 name|assumeSymbolOutOfInclusiveRange
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
 argument|SymbolRef Sym
 argument_list|,
@@ -356,7 +356,7 @@ block|;
 name|ProgramStateRef
 name|assumeAux
 argument_list|(
-argument|ProgramStateRef state
+argument|ProgramStateRef State
 argument_list|,
 argument|NonLoc Cond
 argument_list|,

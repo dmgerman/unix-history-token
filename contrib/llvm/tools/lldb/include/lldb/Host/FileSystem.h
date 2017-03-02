@@ -46,6 +46,30 @@ end_define
 begin_include
 include|#
 directive|include
+file|"lldb/Core/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Chrono.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -59,24 +83,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/Error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_decl_stmt
@@ -340,7 +346,8 @@ operator|&
 name|digest_str
 argument_list|)
 decl_stmt|;
-comment|/// Return \b true if \a spec is on a locally mounted file system, \b false otherwise.
+comment|/// Return \b true if \a spec is on a locally mounted file system, \b false
+comment|/// otherwise.
 specifier|static
 name|bool
 name|IsLocal
@@ -385,6 +392,22 @@ modifier|*
 name|stats
 parameter_list|)
 function_decl|;
+specifier|static
+name|llvm
+operator|::
+name|sys
+operator|::
+name|TimePoint
+operator|<
+operator|>
+name|GetModificationTime
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

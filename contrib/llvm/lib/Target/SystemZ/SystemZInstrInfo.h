@@ -473,6 +473,28 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|expandLOCPseudo
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned LowOpcode
+argument_list|,
+argument|unsigned HighOpcode
+argument_list|)
+specifier|const
+block|;
+name|void
+name|expandLOCRPseudo
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned LowOpcode
+argument_list|,
+argument|unsigned HighOpcode
+argument_list|)
+specifier|const
+block|;
+name|void
 name|expandZExtPseudo
 argument_list|(
 argument|MachineInstr&MI
@@ -515,6 +537,34 @@ name|virtual
 name|void
 name|anchor
 argument_list|()
+block|;
+name|protected
+operator|:
+comment|/// Commutes the operands in the given instruction by changing the operands
+comment|/// order and/or changing the instruction's opcode and/or the immediate value
+comment|/// operand.
+comment|///
+comment|/// The arguments 'CommuteOpIdx1' and 'CommuteOpIdx2' specify the operands
+comment|/// to be commuted.
+comment|///
+comment|/// Do not call this method for a non-commutable instruction or
+comment|/// non-commutable operands.
+comment|/// Even though the instruction is commutable, the method may still
+comment|/// fail to commute the operands, null pointer is returned in such cases.
+name|MachineInstr
+operator|*
+name|commuteInstructionImpl
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|bool NewMI
+argument_list|,
+argument|unsigned CommuteOpIdx1
+argument_list|,
+argument|unsigned CommuteOpIdx2
+argument_list|)
+specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -576,15 +626,17 @@ specifier|const
 name|override
 block|;
 name|unsigned
-name|RemoveBranch
+name|removeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int *BytesRemoved = nullptr
 argument_list|)
 specifier|const
 name|override
 block|;
 name|unsigned
-name|InsertBranch
+name|insertBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -595,6 +647,8 @@ argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|const DebugLoc&DL
+argument_list|,
+argument|int *BytesAdded = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -629,6 +683,60 @@ argument_list|,
 argument|int Value
 argument_list|,
 argument|const MachineRegisterInfo *MRI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|canInsertSelect
+argument_list|(
+argument|const MachineBasicBlock&
+argument_list|,
+argument|ArrayRef<MachineOperand> Cond
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|int&
+argument_list|,
+argument|int&
+argument_list|,
+argument|int&
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|insertSelect
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|const DebugLoc&DL
+argument_list|,
+argument|unsigned DstReg
+argument_list|,
+argument|ArrayRef<MachineOperand> Cond
+argument_list|,
+argument|unsigned TrueReg
+argument_list|,
+argument|unsigned FalseReg
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|FoldImmediate
+argument_list|(
+argument|MachineInstr&UseMI
+argument_list|,
+argument|MachineInstr&DefMI
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
 name|override
@@ -813,7 +921,7 @@ specifier|const
 name|override
 block|;
 name|bool
-name|ReverseBranchCondition
+name|reverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
@@ -833,12 +941,13 @@ name|RI
 return|;
 block|}
 comment|// Return the size in bytes of MI.
-name|uint64_t
+name|unsigned
 name|getInstSizeInBytes
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Return true if MI is a conditional or unconditional branch.
 comment|// When returning true, set Cond to the mask of condition-code
@@ -919,6 +1028,15 @@ argument|const MachineInstr *MI = nullptr
 argument_list|)
 specifier|const
 block|;
+comment|// If Opcode is a LOAD opcode for with an associated LOAD AND TRAP
+comment|// operation exists, returh the opcode for the latter, otherwise return 0.
+name|unsigned
+name|getLoadAndTrap
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
 comment|// Emit code before MBBI in MI to move immediate value Value into
 comment|// physical register Reg.
 name|void
@@ -933,6 +1051,22 @@ argument_list|,
 argument|uint64_t Value
 argument_list|)
 specifier|const
+block|;
+comment|// Sometimes, it is possible for the target to tell, even without
+comment|// aliasing information, that two MIs access different memory
+comment|// addresses. This function returns true if two MIs access different
+comment|// memory addresses and false otherwise.
+name|bool
+name|areMemAccessesTriviallyDisjoint
+argument_list|(
+argument|MachineInstr&MIa
+argument_list|,
+argument|MachineInstr&MIb
+argument_list|,
+argument|AliasAnalysis *AA = nullptr
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"DWARFDefines.h"
+file|"DWARFAbbreviationDeclaration.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DWARFAbbreviationDeclaration.h"
+file|"DWARFDefines.h"
 end_include
 
 begin_typedef
@@ -124,7 +124,7 @@ argument_list|)
 operator|,
 name|m_decls
 argument_list|()
-block|{         }
+block|{}
 name|DWARFAbbreviationDeclarationSet
 argument_list|(
 argument|dw_offset_t offset
@@ -144,7 +144,7 @@ argument_list|)
 operator|,
 name|m_decls
 argument_list|()
-block|{         }
+block|{}
 name|void
 name|Clear
 argument_list|()
@@ -186,7 +186,7 @@ operator|*
 name|offset_ptr
 argument_list|)
 decl_stmt|;
-comment|//void Encode(BinaryStreamBuf& debug_abbrev_buf) const;
+comment|// void Encode(BinaryStreamBuf& debug_abbrev_buf) const;
 name|dw_uleb128_t
 name|AppendAbbrevDeclSequential
 parameter_list|(

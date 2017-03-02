@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"InstrProfilingInternal.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"InstrProfilingPort.h"
 end_include
 
@@ -82,6 +76,24 @@ include|#
 directive|include
 file|<sys/file.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAP_FILE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAP_FILE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

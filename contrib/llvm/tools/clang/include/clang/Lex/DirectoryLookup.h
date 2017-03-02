@@ -260,9 +260,7 @@ return|;
 block|}
 comment|/// getName - Return the directory or filename corresponding to this lookup
 comment|/// object.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|()
 specifier|const

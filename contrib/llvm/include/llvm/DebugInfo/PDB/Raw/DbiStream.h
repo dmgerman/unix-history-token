@@ -52,25 +52,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamArray.h"
+file|"llvm/DebugInfo/MSF/MappedBlockStream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamRef.h"
+file|"llvm/DebugInfo/MSF/StreamArray.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/MSF/StreamRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/DebugInfo/PDB/PDBTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/PDB/Raw/MappedBlockStream.h"
 end_include
 
 begin_include
@@ -142,129 +142,6 @@ name|friend
 name|class
 name|DbiStreamBuilder
 decl_stmt|;
-struct|struct
-name|HeaderInfo
-block|{
-name|support
-operator|::
-name|little32_t
-name|VersionSignature
-expr_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|VersionHeader
-expr_stmt|;
-name|support
-operator|::
-name|ulittle32_t
-name|Age
-expr_stmt|;
-comment|// Should match InfoStream.
-name|support
-operator|::
-name|ulittle16_t
-name|GlobalSymbolStreamIndex
-expr_stmt|;
-comment|// Global symbol stream #
-name|support
-operator|::
-name|ulittle16_t
-name|BuildNumber
-expr_stmt|;
-comment|// See DbiBuildNo structure.
-name|support
-operator|::
-name|ulittle16_t
-name|PublicSymbolStreamIndex
-expr_stmt|;
-comment|// Public symbols stream #
-name|support
-operator|::
-name|ulittle16_t
-name|PdbDllVersion
-expr_stmt|;
-comment|// version of mspdbNNN.dll
-name|support
-operator|::
-name|ulittle16_t
-name|SymRecordStreamIndex
-expr_stmt|;
-comment|// Symbol records stream #
-name|support
-operator|::
-name|ulittle16_t
-name|PdbDllRbld
-expr_stmt|;
-comment|// rbld number of mspdbNNN.dll
-name|support
-operator|::
-name|little32_t
-name|ModiSubstreamSize
-expr_stmt|;
-comment|// Size of module info stream
-name|support
-operator|::
-name|little32_t
-name|SecContrSubstreamSize
-expr_stmt|;
-comment|// Size of sec. contrib stream
-name|support
-operator|::
-name|little32_t
-name|SectionMapSize
-expr_stmt|;
-comment|// Size of sec. map substream
-name|support
-operator|::
-name|little32_t
-name|FileInfoSize
-expr_stmt|;
-comment|// Size of file info substream
-name|support
-operator|::
-name|little32_t
-name|TypeServerSize
-expr_stmt|;
-comment|// Size of type server map
-name|support
-operator|::
-name|ulittle32_t
-name|MFCTypeServerIndex
-expr_stmt|;
-comment|// Index of MFC Type Server
-name|support
-operator|::
-name|little32_t
-name|OptionalDbgHdrSize
-expr_stmt|;
-comment|// Size of DbgHeader info
-name|support
-operator|::
-name|little32_t
-name|ECSubstreamSize
-expr_stmt|;
-comment|// Size of EC stream (what is EC?)
-name|support
-operator|::
-name|ulittle16_t
-name|Flags
-expr_stmt|;
-comment|// See DbiFlags enum.
-name|support
-operator|::
-name|ulittle16_t
-name|MachineType
-expr_stmt|;
-comment|// See PDB_MachineType enum.
-name|support
-operator|::
-name|ulittle32_t
-name|Reserved
-expr_stmt|;
-comment|// Pad to 64 bytes
-block|}
-struct|;
 name|public
 label|:
 name|DbiStream
@@ -277,6 +154,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream
@@ -365,13 +244,6 @@ name|getMachineType
 argument_list|()
 specifier|const
 expr_stmt|;
-enum|enum
-block|{
-name|InvalidStreamIndex
-init|=
-literal|0xffff
-block|}
-enum|;
 comment|/// If the given stream type is present, returns its stream index. If it is
 comment|/// not present, returns InvalidStreamIndex.
 name|uint32_t
@@ -400,7 +272,7 @@ argument|uint32_t Index
 argument_list|)
 specifier|const
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -411,7 +283,7 @@ operator|>
 name|getSectionHeaders
 argument_list|()
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -422,7 +294,7 @@ operator|>
 name|getFpoRecords
 argument_list|()
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -441,12 +313,12 @@ name|Visitor
 argument_list|)
 decl|const
 decl_stmt|;
-name|Error
-name|commit
-parameter_list|()
-function_decl|;
 name|private
 label|:
+name|Error
+name|initializeModInfoArray
+parameter_list|()
+function_decl|;
 name|Error
 name|initializeSectionContributionData
 parameter_list|()
@@ -475,6 +347,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream
@@ -490,42 +364,42 @@ expr_stmt|;
 name|NameHashTable
 name|ECNames
 decl_stmt|;
-name|codeview
+name|msf
 operator|::
-name|StreamRef
+name|ReadableStreamRef
 name|ModInfoSubstream
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
-name|StreamRef
+name|ReadableStreamRef
 name|SecContrSubstream
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
-name|StreamRef
+name|ReadableStreamRef
 name|SecMapSubstream
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
-name|StreamRef
+name|ReadableStreamRef
 name|FileInfoSubstream
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
-name|StreamRef
+name|ReadableStreamRef
 name|TypeServerMapSubstream
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
-name|StreamRef
+name|ReadableStreamRef
 name|ECSubstream
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
-name|StreamRef
+name|ReadableStreamRef
 name|NamesBuffer
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -538,7 +412,7 @@ expr_stmt|;
 name|PdbRaw_DbiSecContribVer
 name|SectionContribVersion
 decl_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -546,7 +420,7 @@ name|SectionContrib
 operator|>
 name|SectionContribs
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -554,7 +428,7 @@ name|SectionContrib2
 operator|>
 name|SectionContribs2
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -562,7 +436,7 @@ name|SecMapEntry
 operator|>
 name|SectionMap
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -576,11 +450,13 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|SectionHeaderStream
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -594,11 +470,13 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|FpoStream
 expr_stmt|;
-name|codeview
+name|msf
 operator|::
 name|FixedStreamArray
 operator|<
@@ -609,7 +487,7 @@ operator|>
 name|FpoRecords
 expr_stmt|;
 specifier|const
-name|HeaderInfo
+name|DbiStreamHeader
 modifier|*
 name|Header
 decl_stmt|;

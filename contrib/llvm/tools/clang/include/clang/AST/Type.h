@@ -420,6 +420,9 @@ name|class
 name|ObjCMethodDecl
 decl_stmt|;
 name|class
+name|ObjCTypeParamDecl
+decl_stmt|;
+name|class
 name|UnresolvedUsingTypenameDecl
 decl_stmt|;
 name|class
@@ -4786,6 +4789,20 @@ end_expr_stmt
 
 begin_decl_stmt
 name|void
+name|dump
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|Profile
 argument_list|(
 name|llvm
@@ -6125,7 +6142,7 @@ comment|/// regparm and the calling convention.
 name|unsigned
 name|ExtInfo
 operator|:
-literal|9
+literal|10
 block|;
 comment|/// Used only by FunctionProtoType, put here to pack with the
 comment|/// other bitfields.
@@ -7192,7 +7209,13 @@ name|isNullPtrType
 argument_list|()
 specifier|const
 block|;
-comment|// C++0x nullptr_t
+comment|// C++11 std::nullptr_t
+name|bool
+name|isAlignValT
+argument_list|()
+specifier|const
+block|;
+comment|// C++17 std::align_val_t
 name|bool
 name|isAtomicType
 argument_list|()
@@ -7818,6 +7841,13 @@ comment|// in CanonicalType.h
 name|void
 name|dump
 argument_list|()
+specifier|const
+block|;
+name|void
+name|dump
+argument_list|(
+argument|llvm::raw_ostream&OS
+argument_list|)
 specifier|const
 block|;
 name|friend
@@ -8881,38 +8911,16 @@ operator|:
 name|public
 name|AdjustedType
 block|{
+specifier|inline
 name|DecayedType
 argument_list|(
 argument|QualType OriginalType
 argument_list|,
-argument|QualType DecayedPtr
+argument|QualType Decayed
 argument_list|,
-argument|QualType CanonicalPtr
+argument|QualType Canonical
 argument_list|)
-operator|:
-name|AdjustedType
-argument_list|(
-argument|Decayed
-argument_list|,
-argument|OriginalType
-argument_list|,
-argument|DecayedPtr
-argument_list|,
-argument|CanonicalPtr
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|isa
-operator|<
-name|PointerType
-operator|>
-operator|(
-name|getAdjustedType
-argument_list|()
-operator|)
-argument_list|)
-block|;   }
+block|;
 name|friend
 name|class
 name|ASTContext
@@ -8930,25 +8938,12 @@ name|getAdjustedType
 argument_list|()
 return|;
 block|}
+specifier|inline
 name|QualType
 name|getPointeeType
 argument_list|()
 specifier|const
-block|{
-return|return
-name|cast
-operator|<
-name|PointerType
-operator|>
-operator|(
-name|getDecayedType
-argument_list|()
-operator|)
-operator|->
-name|getPointeeType
-argument_list|()
-return|;
-block|}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -11110,7 +11105,8 @@ comment|/// ExtVectorType - Extended vector type. This type is created using
 comment|/// __attribute__((ext_vector_type(n)), where "n" is the number of elements.
 comment|/// Unlike vector_size, ext_vector_type is only allowed on typedef's. This
 comment|/// class enables syntactic extensions, like Vector Components for accessing
-comment|/// points, colors, and textures (modeled after OpenGL Shading Language).
+comment|/// points (as .xyzw), colors (as .rgba), and textures (modeled after OpenGL
+comment|/// Shading Language).
 name|class
 name|ExtVectorType
 operator|:
@@ -11166,11 +11162,17 @@ return|;
 case|case
 literal|'x'
 case|:
+case|case
+literal|'r'
+case|:
 return|return
 literal|0
 return|;
 case|case
 literal|'y'
+case|:
+case|case
+literal|'g'
 case|:
 return|return
 literal|1
@@ -11178,11 +11180,17 @@ return|;
 case|case
 literal|'z'
 case|:
+case|case
+literal|'b'
+case|:
 return|return
 literal|2
 return|;
 case|case
 literal|'w'
+case|:
+case|case
+literal|'a'
 case|:
 return|return
 literal|3
@@ -11327,27 +11335,23 @@ name|int
 name|getAccessorIdx
 argument_list|(
 argument|char c
+argument_list|,
+argument|bool isNumericAccessor
 argument_list|)
 block|{
 if|if
 condition|(
-name|int
-name|idx
-init|=
-name|getPointAccessorIdx
+name|isNumericAccessor
+condition|)
+return|return
+name|getNumericAccessorIdx
 argument_list|(
 name|c
 argument_list|)
-operator|+
-literal|1
-condition|)
-return|return
-name|idx
-operator|-
-literal|1
 return|;
+else|else
 return|return
-name|getNumericAccessorIdx
+name|getPointAccessorIdx
 argument_list|(
 name|c
 argument_list|)
@@ -11357,6 +11361,8 @@ name|bool
 name|isAccessorWithinNumElements
 argument_list|(
 argument|char c
+argument_list|,
+argument|bool isNumericAccessor
 argument_list|)
 specifier|const
 block|{
@@ -11368,6 +11374,8 @@ init|=
 name|getAccessorIdx
 argument_list|(
 name|c
+argument_list|,
+name|isNumericAccessor
 argument_list|)
 operator|+
 literal|1
@@ -11466,30 +11474,30 @@ comment|// * Codegen
 name|class
 name|ExtInfo
 block|{
-comment|// Feel free to rearrange or add bits, but if you go over 9,
+comment|// Feel free to rearrange or add bits, but if you go over 10,
 comment|// you'll need to adjust both the Bits field below and
 comment|// Type::FunctionTypeBitfields.
 comment|//   |  CC  |noreturn|produces|regparm|
-comment|//   |0 .. 3|   4    |    5   | 6 .. 8|
+comment|//   |0 .. 4|   5    |    6   | 7 .. 9|
 comment|//
 comment|// regparm is either 0 (no regparm attribute) or the regparm value+1.
 block|enum
 block|{
 name|CallConvMask
 operator|=
-literal|0xF
+literal|0x1F
 block|}
 block|;     enum
 block|{
 name|NoReturnMask
 operator|=
-literal|0x10
+literal|0x20
 block|}
 block|;     enum
 block|{
 name|ProducesResultMask
 operator|=
-literal|0x20
+literal|0x40
 block|}
 block|;     enum
 block|{
@@ -11506,7 +11514,7 @@ operator|)
 block|,
 name|RegParmOffset
 operator|=
-literal|6
+literal|7
 block|}
 block|;
 comment|// Assumed to be the last field
@@ -13225,6 +13233,13 @@ name|hasDependentExceptionSpec
 argument_list|()
 specifier|const
 block|;
+comment|/// Return whether this function has an instantiation-dependent exception
+comment|/// spec.
+name|bool
+name|hasInstantiationDependentExceptionSpec
+argument_list|()
+specifier|const
+block|;
 comment|/// Result type of getNoexceptSpec().
 block|enum
 name|NoexceptResult
@@ -13398,6 +13413,15 @@ index|]
 return|;
 block|}
 comment|/// Determine whether this function type has a non-throwing exception
+comment|/// specification.
+name|CanThrowResult
+name|canThrow
+argument_list|(
+argument|const ASTContext&Ctx
+argument_list|)
+specifier|const
+block|;
+comment|/// Determine whether this function type has a non-throwing exception
 comment|/// specification. If this depends on template arguments, returns
 comment|/// \c ResultIfDependent.
 name|bool
@@ -13408,7 +13432,25 @@ argument_list|,
 argument|bool ResultIfDependent = false
 argument_list|)
 specifier|const
-block|;
+block|{
+return|return
+name|ResultIfDependent
+operator|?
+name|canThrow
+argument_list|(
+name|Ctx
+argument_list|)
+operator|!=
+name|CT_Can
+operator|:
+name|canThrow
+argument_list|(
+name|Ctx
+argument_list|)
+operator|==
+name|CT_Cannot
+return|;
+block|}
 name|bool
 name|isVariadic
 argument_list|()
@@ -13840,6 +13882,8 @@ argument_list|,
 argument|const ExtProtoInfo&EPI
 argument_list|,
 argument|const ASTContext&Context
+argument_list|,
+argument|bool Canonical
 argument_list|)
 block|; }
 block|;
@@ -15065,6 +15109,8 @@ name|attr_stdcall
 block|,
 name|attr_thiscall
 block|,
+name|attr_regcall
+block|,
 name|attr_pascal
 block|,
 name|attr_swiftcall
@@ -15130,22 +15176,22 @@ name|Attributed
 argument_list|,
 name|canon
 argument_list|,
-name|canon
+name|equivalent
 operator|->
 name|isDependentType
 argument_list|()
 argument_list|,
-name|canon
+name|equivalent
 operator|->
 name|isInstantiationDependentType
 argument_list|()
 argument_list|,
-name|canon
+name|equivalent
 operator|->
 name|isVariablyModifiedType
 argument_list|()
 argument_list|,
-name|canon
+name|equivalent
 operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
@@ -16062,9 +16108,9 @@ block|;
 comment|/// \brief Represents a C++11 auto or C++14 decltype(auto) type.
 comment|///
 comment|/// These types are usually a placeholder for a deduced type. However, before
-comment|/// the initializer is attached, or if the initializer is type-dependent, there
-comment|/// is no deduced type and an auto type is canonical. In the latter case, it is
-comment|/// also a dependent type.
+comment|/// the initializer is attached, or (usually) if the initializer is
+comment|/// type-dependent, there is no deduced type and an auto type is canonical. In
+comment|/// the latter case, it is also a dependent type.
 name|class
 name|AutoType
 operator|:
@@ -16103,24 +16149,49 @@ comment|/*VariablyModified=*/
 argument|false
 argument_list|,
 comment|/*ContainsParameterPack=*/
-argument|DeducedType.isNull()                ? false : DeducedType->containsUnexpandedParameterPack()
+argument|false
 argument_list|)
 block|{
-name|assert
-argument_list|(
-operator|(
+if|if
+condition|(
+operator|!
 name|DeducedType
 operator|.
 name|isNull
 argument_list|()
-operator|||
-operator|!
-name|IsDependent
-operator|)
-operator|&&
-literal|"auto deduced to dependent type"
-argument_list|)
-block|;
+condition|)
+block|{
+if|if
+condition|(
+name|DeducedType
+operator|->
+name|isDependentType
+argument_list|()
+condition|)
+name|setDependent
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|DeducedType
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+condition|)
+name|setInstantiationDependent
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|DeducedType
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+condition|)
+name|setContainsUnexpandedParameterPack
+argument_list|()
+expr_stmt|;
+block|}
 name|AutoTypeBits
 operator|.
 name|Keyword
@@ -16129,7 +16200,8 @@ operator|(
 name|unsigned
 operator|)
 name|Keyword
-block|;   }
+expr_stmt|;
+block|}
 name|friend
 name|class
 name|ASTContext
@@ -16197,10 +16269,10 @@ return|return
 operator|!
 name|isCanonicalUnqualified
 argument_list|()
-condition|?
+operator|?
 name|getCanonicalTypeInternal
 argument_list|()
-else|:
+operator|:
 name|QualType
 argument_list|()
 return|;
@@ -18050,6 +18122,447 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// This class wraps the list of protocol qualifiers. For types that can
+comment|/// take ObjC protocol qualifers, they can subclass this class.
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|class
+name|ObjCProtocolQualifiers
+block|{
+name|protected
+operator|:
+name|ObjCProtocolQualifiers
+argument_list|()
+block|{}
+name|ObjCProtocolDecl
+operator|*
+specifier|const
+operator|*
+name|getProtocolStorage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|ObjCProtocolQualifiers
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getProtocolStorage
+argument_list|()
+return|;
+block|}
+name|ObjCProtocolDecl
+operator|*
+operator|*
+name|getProtocolStorage
+argument_list|()
+block|{
+return|return
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getProtocolStorageImpl
+argument_list|()
+return|;
+block|}
+name|void
+name|setNumProtocols
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|setNumProtocolsImpl
+argument_list|(
+name|N
+argument_list|)
+block|;   }
+name|void
+name|initialize
+argument_list|(
+argument|ArrayRef<ObjCProtocolDecl *> protocols
+argument_list|)
+block|{
+name|setNumProtocols
+argument_list|(
+name|protocols
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getNumProtocols
+argument_list|()
+operator|==
+name|protocols
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"bitfield overflow in protocol count"
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|protocols
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|memcpy
+argument_list|(
+name|getProtocolStorage
+argument_list|()
+argument_list|,
+name|protocols
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|protocols
+operator|.
+name|size
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ObjCProtocolDecl
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|public
+operator|:
+typedef|typedef
+name|ObjCProtocolDecl
+modifier|*
+specifier|const
+modifier|*
+name|qual_iterator
+typedef|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|qual_iterator
+operator|>
+name|qual_range
+expr_stmt|;
+name|qual_range
+name|quals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|qual_range
+argument_list|(
+name|qual_begin
+argument_list|()
+argument_list|,
+name|qual_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|qual_iterator
+name|qual_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getProtocolStorage
+argument_list|()
+return|;
+block|}
+name|qual_iterator
+name|qual_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|qual_begin
+argument_list|()
+operator|+
+name|getNumProtocols
+argument_list|()
+return|;
+block|}
+name|bool
+name|qual_empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumProtocols
+argument_list|()
+operator|==
+literal|0
+return|;
+block|}
+comment|/// Return the number of qualifying protocols in this type, or 0 if
+comment|/// there are none.
+name|unsigned
+name|getNumProtocols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+specifier|const
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNumProtocolsImpl
+argument_list|()
+return|;
+block|}
+comment|/// Fetch a protocol by index.
+name|ObjCProtocolDecl
+operator|*
+name|getProtocol
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumProtocols
+argument_list|()
+operator|&&
+literal|"Out-of-range protocol access"
+argument_list|)
+block|;
+return|return
+name|qual_begin
+argument_list|()
+index|[
+name|I
+index|]
+return|;
+block|}
+comment|/// Retrieve all of the protocol qualifiers.
+name|ArrayRef
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|>
+name|getProtocols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|>
+operator|(
+name|qual_begin
+argument_list|()
+expr|,
+name|getNumProtocols
+argument_list|()
+operator|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// Represents a type parameter type in Objective C. It can take
+comment|/// a list of protocols.
+name|class
+name|ObjCTypeParamType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|ObjCProtocolQualifiers
+operator|<
+name|ObjCTypeParamType
+operator|>
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|friend
+name|class
+name|ASTContext
+block|;
+name|friend
+name|class
+name|ObjCProtocolQualifiers
+operator|<
+name|ObjCTypeParamType
+operator|>
+block|;
+comment|/// The number of protocols stored on this type.
+name|unsigned
+name|NumProtocols
+operator|:
+literal|6
+block|;
+name|ObjCTypeParamDecl
+operator|*
+name|OTPDecl
+block|;
+comment|/// The protocols are stored after the ObjCTypeParamType node. In the
+comment|/// canonical type, the list of protocols are sorted alphabetically
+comment|/// and uniqued.
+name|ObjCProtocolDecl
+operator|*
+operator|*
+name|getProtocolStorageImpl
+argument_list|()
+block|;
+comment|/// Return the number of qualifying protocols in this interface type,
+comment|/// or 0 if there are none.
+name|unsigned
+name|getNumProtocolsImpl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumProtocols
+return|;
+block|}
+name|void
+name|setNumProtocolsImpl
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+name|NumProtocols
+operator|=
+name|N
+block|;   }
+name|ObjCTypeParamType
+argument_list|(
+argument|const ObjCTypeParamDecl *D
+argument_list|,
+argument|QualType can
+argument_list|,
+argument|ArrayRef<ObjCProtocolDecl *> protocols
+argument_list|)
+block|;
+name|public
+operator|:
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCanonicalTypeInternal
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|ObjCTypeParam
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+block|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+specifier|const
+name|ObjCTypeParamDecl
+operator|*
+name|OTPDecl
+argument_list|,
+name|ArrayRef
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|>
+name|protocols
+argument_list|)
+block|;
+name|ObjCTypeParamDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OTPDecl
+return|;
+block|}
+expr|}
+block|;
 comment|/// Represents a class type in Objective C.
 comment|///
 comment|/// Every Objective C type is a combination of a base type, a set of
@@ -18083,7 +18596,20 @@ name|ObjCObjectType
 operator|:
 name|public
 name|Type
+block|,
+name|public
+name|ObjCProtocolQualifiers
+operator|<
+name|ObjCObjectType
+operator|>
 block|{
+name|friend
+name|class
+name|ObjCProtocolQualifiers
+operator|<
+name|ObjCObjectType
+operator|>
+block|;
 comment|// ObjCObjectType.NumTypeArgs - the number of type arguments stored
 comment|// after the ObjCObjectPointerType node.
 comment|// ObjCObjectType.NumProtocols - the number of protocols stored
@@ -18115,28 +18641,6 @@ name|bool
 operator|>
 name|CachedSuperClassType
 block|;
-name|ObjCProtocolDecl
-operator|*
-specifier|const
-operator|*
-name|getProtocolStorage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|ObjCObjectType
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getProtocolStorage
-argument_list|()
-return|;
-block|}
 name|QualType
 operator|*
 name|getTypeArgStorage
@@ -18166,9 +18670,34 @@ block|}
 name|ObjCProtocolDecl
 operator|*
 operator|*
-name|getProtocolStorage
+name|getProtocolStorageImpl
 argument_list|()
 block|;
+comment|/// Return the number of qualifying protocols in this interface type,
+comment|/// or 0 if there are none.
+name|unsigned
+name|getNumProtocolsImpl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCObjectTypeBits
+operator|.
+name|NumProtocols
+return|;
+block|}
+name|void
+name|setNumProtocolsImpl
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+name|ObjCObjectTypeBits
+operator|.
+name|NumProtocols
+operator|=
+name|N
+block|;   }
 name|protected
 operator|:
 name|ObjCObjectType
@@ -18488,138 +19017,6 @@ name|NumTypeArgs
 argument_list|)
 return|;
 block|}
-typedef|typedef
-name|ObjCProtocolDecl
-modifier|*
-specifier|const
-modifier|*
-name|qual_iterator
-typedef|;
-typedef|typedef
-name|llvm
-operator|::
-name|iterator_range
-operator|<
-name|qual_iterator
-operator|>
-name|qual_range
-expr_stmt|;
-name|qual_range
-name|quals
-argument_list|()
-specifier|const
-block|{
-return|return
-name|qual_range
-argument_list|(
-name|qual_begin
-argument_list|()
-argument_list|,
-name|qual_end
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|qual_iterator
-name|qual_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getProtocolStorage
-argument_list|()
-return|;
-block|}
-name|qual_iterator
-name|qual_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|qual_begin
-argument_list|()
-operator|+
-name|getNumProtocols
-argument_list|()
-return|;
-block|}
-name|bool
-name|qual_empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getNumProtocols
-argument_list|()
-operator|==
-literal|0
-return|;
-block|}
-comment|/// Return the number of qualifying protocols in this interface type,
-comment|/// or 0 if there are none.
-name|unsigned
-name|getNumProtocols
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ObjCObjectTypeBits
-operator|.
-name|NumProtocols
-return|;
-block|}
-comment|/// Fetch a protocol by index.
-name|ObjCProtocolDecl
-operator|*
-name|getProtocol
-argument_list|(
-argument|unsigned I
-argument_list|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|I
-operator|<
-name|getNumProtocols
-argument_list|()
-operator|&&
-literal|"Out-of-range protocol access"
-argument_list|)
-block|;
-return|return
-name|qual_begin
-argument_list|()
-index|[
-name|I
-index|]
-return|;
-block|}
-comment|/// Retrieve all of the protocol qualifiers.
-name|ArrayRef
-operator|<
-name|ObjCProtocolDecl
-operator|*
-operator|>
-name|getProtocols
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ArrayRef
-operator|<
-name|ObjCProtocolDecl
-operator|*
-operator|>
-operator|(
-name|qual_begin
-argument_list|()
-expr|,
-name|getNumProtocols
-argument_list|()
-operator|)
-return|;
-block|}
 comment|/// Whether this is a "__kindof" type as written.
 name|bool
 name|isKindOfTypeAsWritten
@@ -18848,7 +19245,7 @@ operator|*
 operator|*
 name|ObjCObjectType
 operator|::
-name|getProtocolStorage
+name|getProtocolStorageImpl
 argument_list|()
 block|{
 return|return
@@ -18865,6 +19262,36 @@ operator|+
 name|ObjCObjectTypeBits
 operator|.
 name|NumTypeArgs
+operator|)
+return|;
+block|}
+specifier|inline
+name|ObjCProtocolDecl
+operator|*
+operator|*
+name|ObjCTypeParamType
+operator|::
+name|getProtocolStorageImpl
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|ObjCProtocolDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|ObjCTypeParamType
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|+
+literal|1
 operator|)
 return|;
 block|}
@@ -19747,11 +20174,16 @@ block|{
 name|QualType
 name|ElementType
 block|;
+name|bool
+name|isRead
+block|;
 name|PipeType
 argument_list|(
 argument|QualType elemType
 argument_list|,
 argument|QualType CanonicalPtr
+argument_list|,
+argument|bool isRead
 argument_list|)
 operator|:
 name|Type
@@ -19783,7 +20215,12 @@ argument_list|)
 block|,
 name|ElementType
 argument_list|(
-argument|elemType
+name|elemType
+argument_list|)
+block|,
+name|isRead
+argument_list|(
+argument|isRead
 argument_list|)
 block|{}
 name|friend
@@ -19837,6 +20274,9 @@ name|ID
 argument_list|,
 name|getElementType
 argument_list|()
+argument_list|,
+name|isReadOnly
+argument_list|()
 argument_list|)
 block|;   }
 specifier|static
@@ -19846,6 +20286,8 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|bool isRead
 argument_list|)
 block|{
 name|ID
@@ -19856,6 +20298,13 @@ name|T
 operator|.
 name|getAsOpaquePtr
 argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|isRead
 argument_list|)
 block|;   }
 specifier|static
@@ -19872,6 +20321,15 @@ name|getTypeClass
 argument_list|()
 operator|==
 name|Pipe
+return|;
+block|}
+name|bool
+name|isReadOnly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isRead
 return|;
 block|}
 expr|}
@@ -21955,9 +22413,6 @@ return|return
 name|false
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|BuiltinType
@@ -21993,16 +22448,11 @@ condition|)
 return|return
 name|BT
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|nullptr
 return|;
-end_return
-
-begin_expr_stmt
-unit|}  inline
+block|}
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -22057,16 +22507,11 @@ operator|)
 name|K
 operator|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
-
-begin_expr_stmt
-unit|}  inline
+block|}
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -22095,16 +22540,14 @@ operator|->
 name|isNonOverloadPlaceholderType
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|}  inline
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -22232,19 +22675,17 @@ name|false
 return|;
 end_return
 
-begin_function_decl
-unit|}  extern
-name|bool
+begin_expr_stmt
+unit|}  bool
 name|IsEnumDeclComplete
-parameter_list|(
+argument_list|(
 name|EnumDecl
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
-specifier|extern
 name|bool
 name|IsEnumDeclScoped
 parameter_list|(
@@ -22939,11 +23380,16 @@ name|template
 operator|<
 name|typename
 name|T
-operator|,
-name|bool
-name|isArrayType
+operator|>
+name|using
+name|TypeIsArrayType
 operator|=
-operator|(
+name|std
+operator|::
+name|integral_constant
+operator|<
+name|bool
+operator|,
 name|std
 operator|::
 name|is_same
@@ -22965,26 +23411,6 @@ name|T
 operator|>
 operator|::
 name|value
-operator|)
-operator|>
-expr|struct
-name|ArrayType_cannot_be_used_with_getAs
-block|{}
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|ArrayType_cannot_be_used_with_getAs
-operator|<
-name|T
-operator|,
-name|true
 operator|>
 expr_stmt|;
 end_expr_stmt
@@ -23008,16 +23434,18 @@ name|getAs
 argument_list|()
 specifier|const
 block|{
-name|ArrayType_cannot_be_used_with_getAs
+name|static_assert
+argument_list|(
+operator|!
+name|TypeIsArrayType
 operator|<
 name|T
 operator|>
-name|at
-block|;
-operator|(
-name|void
-operator|)
-name|at
+operator|::
+name|value
+argument_list|,
+literal|"ArrayType cannot be used with getAs!"
+argument_list|)
 block|;
 comment|// If this is directly a T type, return it.
 if|if
@@ -23171,16 +23599,18 @@ name|castAs
 argument_list|()
 specifier|const
 block|{
-name|ArrayType_cannot_be_used_with_getAs
+name|static_assert
+argument_list|(
+operator|!
+name|TypeIsArrayType
 operator|<
 name|T
 operator|>
-name|at
-block|;
-operator|(
-name|void
-operator|)
-name|at
+operator|::
+name|value
+argument_list|,
+literal|"ArrayType cannot be used with castAs!"
+argument_list|)
 block|;
 if|if
 condition|(
@@ -23281,8 +23711,102 @@ operator|)
 return|;
 end_return
 
+begin_expr_stmt
+unit|}  DecayedType
+operator|::
+name|DecayedType
+argument_list|(
+argument|QualType OriginalType
+argument_list|,
+argument|QualType DecayedPtr
+argument_list|,
+argument|QualType CanonicalPtr
+argument_list|)
+operator|:
+name|AdjustedType
+argument_list|(
+argument|Decayed
+argument_list|,
+argument|OriginalType
+argument_list|,
+argument|DecayedPtr
+argument_list|,
+argument|CanonicalPtr
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|QualType
+name|Adjusted
+operator|=
+name|getAdjustedType
+argument_list|()
+block|;
+operator|(
+name|void
+operator|)
+name|AttributedType
+operator|::
+name|stripOuterNullability
+argument_list|(
+name|Adjusted
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Adjusted
+operator|)
+argument_list|)
+block|;
+endif|#
+directive|endif
+block|}
+name|QualType
+name|DecayedType
+operator|::
+name|getPointeeType
+argument_list|()
+specifier|const
+block|{
+name|QualType
+name|Decayed
+operator|=
+name|getDecayedType
+argument_list|()
+block|;
+operator|(
+name|void
+operator|)
+name|AttributedType
+operator|::
+name|stripOuterNullability
+argument_list|(
+name|Decayed
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Decayed
+operator|)
+operator|->
+name|getPointeeType
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|}  }
+unit|}
 comment|// end namespace clang
 end_comment
 

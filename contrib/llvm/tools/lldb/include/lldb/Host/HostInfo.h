@@ -171,7 +171,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__ANDROID_NDK__
+name|__ANDROID__
 argument_list|)
 end_if
 

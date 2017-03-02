@@ -234,7 +234,7 @@ block|;
 name|void
 name|Write
 argument_list|(
-argument|Stream& s
+argument|Stream&s
 argument_list|)
 name|override
 block|;
@@ -329,10 +329,14 @@ name|JSONNumber
 operator|>
 name|SP
 expr_stmt|;
-comment|// We cretae a constructor for all integer and floating point type with using templates and
-comment|// SFINAE to avoid having ambiguous overloads because of the implicit type promotion. If we
-comment|// would have constructors only with int64_t, uint64_t and double types then constructing a
-comment|// JSONNumber from an int32_t (or any other similar type) would fail to compile.
+comment|// We cretae a constructor for all integer and floating point type with using
+comment|// templates and
+comment|// SFINAE to avoid having ambiguous overloads because of the implicit type
+comment|// promotion. If we
+comment|// would have constructors only with int64_t, uint64_t and double types then
+comment|// constructing a
+comment|// JSONNumber from an int32_t (or any other similar type) would fail to
+comment|// compile.
 name|template
 operator|<
 name|typename
@@ -392,7 +396,7 @@ operator|.
 name|m_unsigned
 operator|=
 name|u
-block|;         }
+block|;   }
 name|template
 operator|<
 name|typename
@@ -506,7 +510,7 @@ operator|.
 name|m_double
 operator|=
 name|d
-block|;         }
+block|;   }
 operator|~
 name|JSONNumber
 argument_list|()
@@ -685,7 +689,7 @@ block|;
 name|void
 name|Write
 argument_list|(
-argument|Stream& s
+argument|Stream&s
 argument_list|)
 name|override
 block|;
@@ -766,7 +770,7 @@ block|;
 name|void
 name|Write
 argument_list|(
-argument|Stream& s
+argument|Stream&s
 argument_list|)
 name|override
 block|;
@@ -847,7 +851,7 @@ block|;
 name|void
 name|Write
 argument_list|(
-argument|Stream& s
+argument|Stream&s
 argument_list|)
 name|override
 block|;
@@ -928,7 +932,7 @@ block|;
 name|void
 name|Write
 argument_list|(
-argument|Stream& s
+argument|Stream&s
 argument_list|)
 name|override
 block|;
@@ -964,7 +968,7 @@ block|}
 name|bool
 name|SetObject
 argument_list|(
-argument|const std::string& key
+argument|const std::string&key
 argument_list|,
 argument|JSONValue::SP value
 argument_list|)
@@ -1074,7 +1078,7 @@ block|;
 name|void
 name|Write
 argument_list|(
-argument|Stream& s
+argument|Stream&s
 argument_list|)
 name|override
 block|;
@@ -1307,7 +1311,7 @@ operator|::
 name|SP
 name|ParseJSONArray
 argument_list|()
-block|;     }
+block|; }
 decl_stmt|;
 end_decl_stmt
 

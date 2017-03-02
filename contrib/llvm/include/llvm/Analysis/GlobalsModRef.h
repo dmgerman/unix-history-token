@@ -482,8 +482,8 @@ name|GlobalsAA
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -498,10 +498,7 @@ name|Module
 operator|&
 name|M
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Module
-operator|>
+name|ModuleAnalysisManager
 operator|&
 name|AM
 argument_list|)

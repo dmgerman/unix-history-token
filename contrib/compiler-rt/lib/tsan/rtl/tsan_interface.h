@@ -77,6 +77,14 @@ directive|include
 file|<sanitizer_common/sanitizer_internal_defs.h>
 end_include
 
+begin_expr_stmt
+name|using
+name|__sanitizer
+operator|::
+name|uptr
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|// This header should NOT include any other headers.
 end_comment
@@ -97,14 +105,20 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SANITIZER_GO
 comment|// This function should be called at the very beginning of the process,
 comment|// before any instrumented code is executed and before any call to malloc.
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
 name|__tsan_init
+parameter_list|()
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__tsan_flush_memory
 parameter_list|()
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
@@ -443,6 +457,16 @@ parameter_list|()
 function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
+name|__tsan_ignore_thread_begin
+parameter_list|()
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__tsan_ignore_thread_end
+parameter_list|()
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
 name|__tsan_read_range
 parameter_list|(
 name|void
@@ -753,6 +777,57 @@ modifier|*
 name|tid
 parameter_list|)
 function_decl|;
+comment|// Returns the type of the pointer (heap, stack, global, ...) and if possible
+comment|// also the starting address (e.g. of a heap allocation) and size.
+name|SANITIZER_INTERFACE_ATTRIBUTE
+specifier|const
+name|char
+modifier|*
+name|__tsan_locate_address
+parameter_list|(
+name|uptr
+name|addr
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|uptr
+name|name_size
+parameter_list|,
+name|uptr
+modifier|*
+name|region_address
+parameter_list|,
+name|uptr
+modifier|*
+name|region_size
+parameter_list|)
+function_decl|;
+comment|// Returns the allocation stack for a heap pointer.
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|int
+name|__tsan_get_alloc_stack
+parameter_list|(
+name|uptr
+name|addr
+parameter_list|,
+name|uptr
+modifier|*
+name|trace
+parameter_list|,
+name|uptr
+name|size
+parameter_list|,
+name|int
+modifier|*
+name|thread_id
+parameter_list|,
+name|uptr
+modifier|*
+name|os_id
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 comment|// SANITIZER_GO
@@ -802,10 +877,7 @@ comment|// NOLINT
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
 name|SANITIZER_GO
-argument_list|)
 operator|&&
 operator|(
 name|defined

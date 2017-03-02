@@ -114,8 +114,11 @@ decl_stmt|;
 name|class
 name|StringChunk
 decl_stmt|;
+struct_decl|struct
+name|Symbol
+struct_decl|;
 name|class
-name|Undefined
+name|SymbolBody
 decl_stmt|;
 comment|// Short aliases.
 specifier|static
@@ -163,7 +166,7 @@ name|StringRef
 name|ExtName
 decl_stmt|;
 comment|// E in /export:E=N
-name|Undefined
+name|SymbolBody
 modifier|*
 name|Sym
 init|=
@@ -266,6 +269,31 @@ return|;
 block|}
 block|}
 struct|;
+name|enum
+name|class
+name|DebugType
+block|{
+name|None
+operator|=
+literal|0x0
+operator|,
+name|CV
+operator|=
+literal|0x1
+operator|,
+comment|/// CodeView
+name|PData
+operator|=
+literal|0x2
+operator|,
+comment|/// Procedure Data
+name|Fixup
+operator|=
+literal|0x4
+operator|,
+comment|/// Relocation Table
+block|}
+empty_stmt|;
 comment|// Global configuration.
 struct|struct
 name|Configuration
@@ -313,7 +341,7 @@ name|COFF
 operator|::
 name|IMAGE_SUBSYSTEM_UNKNOWN
 decl_stmt|;
-name|Undefined
+name|SymbolBody
 modifier|*
 name|Entry
 init|=
@@ -359,12 +387,28 @@ name|WriteSymtab
 init|=
 name|true
 decl_stmt|;
+name|unsigned
+name|DebugTypes
+init|=
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|DebugType
+operator|::
+name|None
+operator|)
+decl_stmt|;
+name|StringRef
+name|PDBPath
+decl_stmt|;
 comment|// Symbols in this set are considered as live by the garbage collector.
 name|std
 operator|::
 name|set
 operator|<
-name|Undefined
+name|SymbolBody
 operator|*
 operator|>
 name|GCRoot
@@ -421,20 +465,20 @@ name|int
 operator|>
 name|DLLOrder
 expr_stmt|;
-name|Undefined
+name|SymbolBody
 modifier|*
 name|DelayLoadHelper
 init|=
 name|nullptr
 decl_stmt|;
 comment|// Used for SafeSEH.
-name|DefinedRelative
+name|Symbol
 modifier|*
 name|SEHTable
 init|=
 name|nullptr
 decl_stmt|;
-name|DefinedAbsolute
+name|Symbol
 modifier|*
 name|SEHCount
 init|=
@@ -620,6 +664,17 @@ name|false
 decl_stmt|;
 name|bool
 name|HighEntropyVA
+init|=
+name|false
+decl_stmt|;
+comment|// This is for debugging.
+name|bool
+name|DebugPdb
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|DumpPdb
 init|=
 name|false
 decl_stmt|;

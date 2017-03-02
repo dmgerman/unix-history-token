@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<cstdint>
+file|"llvm/Support/CommandLine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
+file|<cstdint>
 end_include
 
 begin_decl_stmt
@@ -103,6 +103,9 @@ name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
+name|MCTargetOptions
+decl_stmt|;
+name|class
 name|Target
 decl_stmt|;
 name|class
@@ -117,10 +120,11 @@ decl_stmt|;
 name|class
 name|raw_pwrite_stream
 decl_stmt|;
-specifier|extern
 name|Target
-name|TheHexagonTarget
-decl_stmt|;
+modifier|&
+name|getTheHexagonTarget
+parameter_list|()
+function_decl|;
 extern|extern cl::opt<bool> HexagonDisableCompound;
 extern|extern cl::opt<bool> HexagonDisableDuplex;
 specifier|extern
@@ -174,6 +178,11 @@ name|TT
 parameter_list|,
 name|StringRef
 name|CPU
+parameter_list|,
+specifier|const
+name|MCTargetOptions
+modifier|&
+name|Options
 parameter_list|)
 function_decl|;
 name|MCObjectWriter
@@ -192,7 +201,7 @@ name|CPU
 parameter_list|)
 function_decl|;
 name|namespace
-name|HEXAGON_MC
+name|Hexagon_MC
 block|{
 name|StringRef
 name|selectHexagonCPU
@@ -207,11 +216,12 @@ name|CPU
 parameter_list|)
 function_decl|;
 block|}
+comment|// end namespace Hexagon_MC
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_comment
@@ -274,6 +284,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_MCTARGETDESC_HEXAGONMCTARGETDESC_H
+end_comment
 
 end_unit
 

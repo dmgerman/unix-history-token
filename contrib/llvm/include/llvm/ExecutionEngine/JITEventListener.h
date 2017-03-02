@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|<cstdint>
 end_include
 
 begin_include
@@ -98,16 +98,13 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Function
+name|IntelJITEventsWrapper
 decl_stmt|;
 name|class
 name|MachineFunction
 decl_stmt|;
 name|class
 name|OProfileWrapper
-decl_stmt|;
-name|class
-name|IntelJITEventsWrapper
 decl_stmt|;
 name|namespace
 name|object
@@ -116,6 +113,7 @@ name|class
 name|ObjectFile
 decl_stmt|;
 block|}
+comment|// end namespace object
 comment|/// JITEvent_EmittedFunctionDetails - Helper struct for containing information
 comment|/// about a generated machine code function.
 struct|struct
@@ -170,12 +168,16 @@ name|public
 label|:
 name|JITEventListener
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|virtual
 operator|~
 name|JITEventListener
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// NotifyObjectEmitted - Called after an object has been successfully
 comment|/// emitted to memory.  NotifyFunctionEmitted will not be called for
 comment|/// individual functions in the object.
@@ -188,9 +190,19 @@ name|virtual
 name|void
 name|NotifyObjectEmitted
 argument_list|(
-argument|const object::ObjectFile&Obj
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|&
+name|Obj
 argument_list|,
-argument|const RuntimeDyld::LoadedObjectInfo&L
+specifier|const
+name|RuntimeDyld
+operator|::
+name|LoadedObjectInfo
+operator|&
+name|L
 argument_list|)
 block|{}
 comment|/// NotifyFreeingObject - Called just before the memory associated with
@@ -199,23 +211,23 @@ name|virtual
 name|void
 name|NotifyFreeingObject
 argument_list|(
-argument|const object::ObjectFile&Obj
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|&
+name|Obj
 argument_list|)
 block|{}
 comment|// Get a pointe to the GDB debugger registration listener.
 specifier|static
 name|JITEventListener
-operator|*
+modifier|*
 name|createGDBRegistrationListener
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|LLVM_USE_INTEL_JITEVENTS
-argument_list|)
-operator|&&
 name|LLVM_USE_INTEL_JITEVENTS
 comment|// Construct an IntelJITEventListener
 specifier|static
@@ -266,11 +278,6 @@ directive|endif
 comment|// USE_INTEL_JITEVENTS
 if|#
 directive|if
-name|defined
-argument_list|(
-name|LLVM_USE_OPROFILE
-argument_list|)
-operator|&&
 name|LLVM_USE_OPROFILE
 comment|// Construct an OProfileJITEventListener
 specifier|static
@@ -332,7 +339,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
@@ -341,7 +348,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// defined LLVM_EXECUTIONENGINE_JITEVENTLISTENER_H
+comment|// LLVM_EXECUTIONENGINE_JITEVENTLISTENER_H
 end_comment
 
 end_unit

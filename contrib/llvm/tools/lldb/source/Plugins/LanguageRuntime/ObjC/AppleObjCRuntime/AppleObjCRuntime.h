@@ -68,7 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"AppleObjCTrampolineHandler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"AppleThreadPlanStepThroughObjCTrampoline.h"
 end_include
 
 begin_include
@@ -86,13 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"AppleObjCTrampolineHandler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"AppleThreadPlanStepThroughObjCTrampoline.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -117,13 +117,14 @@ block|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
 comment|//------------------------------------------------------------------
-comment|// Note there is no CreateInstance, Initialize& Terminate functions here, because
+comment|// Note there is no CreateInstance, Initialize& Terminate functions here,
+comment|// because
 comment|// you can't make an instance of this generic runtime.
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const ObjCLanguageRuntime* runtime
+argument|const ObjCLanguageRuntime *runtime
 argument_list|)
 block|{
 switch|switch
@@ -199,9 +200,9 @@ block|;
 name|TypeAndOrName
 name|FixUpDynamicType
 argument_list|(
-argument|const TypeAndOrName& type_and_or_name
+argument|const TypeAndOrName&type_and_or_name
 argument_list|,
-argument|ValueObject& static_value
+argument|ValueObject&static_value
 argument_list|)
 name|override
 block|;
@@ -288,6 +289,23 @@ block|;
 name|uint32_t
 name|GetFoundationVersion
 argument_list|()
+block|;
+name|virtual
+name|void
+name|GetValuesForGlobalCFBooleans
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|cf_true
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|cf_false
+argument_list|)
 block|;
 name|protected
 operator|:

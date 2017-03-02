@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/LLVMContext.h"
 end_include
 
@@ -89,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|<memory>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mutex>
 end_include
 
 begin_include
@@ -161,6 +161,13 @@ name|llvm
 operator|::
 name|object
 operator|::
+name|coff_import_header
+expr_stmt|;
+name|using
+name|llvm
+operator|::
+name|object
+operator|::
 name|coff_section
 expr_stmt|;
 name|class
@@ -178,6 +185,12 @@ decl_stmt|;
 name|class
 name|Lazy
 decl_stmt|;
+name|class
+name|SectionChunk
+decl_stmt|;
+struct_decl|struct
+name|Symbol
+struct_decl|;
 name|class
 name|SymbolBody
 decl_stmt|;
@@ -228,21 +241,6 @@ name|getBufferIdentifier
 argument_list|()
 return|;
 block|}
-comment|// Returns symbols defined by this file.
-name|virtual
-name|std
-operator|::
-name|vector
-operator|<
-name|SymbolBody
-operator|*
-operator|>
-operator|&
-name|getSymbols
-argument_list|()
-operator|=
-literal|0
-expr_stmt|;
 comment|// Reads a file (the constructor doesn't do that).
 name|virtual
 name|void
@@ -261,28 +259,10 @@ return|return
 name|IMAGE_FILE_MACHINE_UNKNOWN
 return|;
 block|}
-comment|// Returns a short, human-friendly filename. If this is a member of
-comment|// an archive file, a returned value includes parent's filename.
-comment|// Used for logging or debugging.
-name|std
-operator|::
-name|string
-name|getShortName
-argument_list|()
-expr_stmt|;
-comment|// Sets a parent filename if this file is created from an archive.
-name|void
-name|setParentName
-parameter_list|(
+comment|// An archive file name if this file is created from an archive.
 name|StringRef
-name|N
-parameter_list|)
-block|{
 name|ParentName
-operator|=
-name|N
-expr_stmt|;
-block|}
+decl_stmt|;
 comment|// Returns .drectve section contents if exist.
 name|StringRef
 name|getDirectives
@@ -298,15 +278,6 @@ name|trim
 argument_list|()
 return|;
 block|}
-comment|// Each file has a unique index. The index number is used to
-comment|// resolve ties in symbol resolution.
-name|int
-name|Index
-decl_stmt|;
-specifier|static
-name|int
-name|NextIndex
-decl_stmt|;
 name|protected
 label|:
 name|InputFile
@@ -316,12 +287,6 @@ argument_list|,
 argument|MemoryBufferRef M
 argument_list|)
 block|:
-name|Index
-argument_list|(
-name|NextIndex
-operator|++
-argument_list|)
-operator|,
 name|MB
 argument_list|(
 name|M
@@ -346,9 +311,6 @@ specifier|const
 name|Kind
 name|FileKind
 decl_stmt|;
-name|StringRef
-name|ParentName
-decl_stmt|;
 block|}
 empty_stmt|;
 comment|// .lib or .a file.
@@ -365,14 +327,7 @@ name|ArchiveFile
 argument_list|(
 argument|MemoryBufferRef M
 argument_list|)
-operator|:
-name|InputFile
-argument_list|(
-argument|ArchiveKind
-argument_list|,
-argument|M
-argument_list|)
-block|{}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -394,11 +349,11 @@ name|parse
 argument_list|()
 name|override
 block|;
-comment|// Returns a memory buffer for a given symbol. An empty memory buffer
-comment|// is returned if we have already returned the same memory buffer.
-comment|// (So that we don't instantiate same members more than once.)
-name|MemoryBufferRef
-name|getMember
+comment|// Enqueues an archive member load for the given symbol. If we've already
+comment|// enqueued a load for the same archive member, this function does nothing,
+comment|// which ensures that we don't load the same member more than once.
+name|void
+name|addMember
 argument_list|(
 specifier|const
 name|Archive
@@ -408,37 +363,6 @@ operator|*
 name|Sym
 argument_list|)
 block|;
-name|llvm
-operator|::
-name|MutableArrayRef
-operator|<
-name|Lazy
-operator|>
-name|getLazySymbols
-argument_list|()
-block|{
-return|return
-name|LazySymbols
-return|;
-block|}
-comment|// All symbols returned by ArchiveFiles are of Lazy type.
-name|std
-operator|::
-name|vector
-operator|<
-name|SymbolBody
-operator|*
-operator|>
-operator|&
-name|getSymbols
-argument_list|()
-name|override
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"internal fatal"
-argument_list|)
-block|;   }
 name|private
 operator|:
 name|std
@@ -454,23 +378,11 @@ operator|::
 name|string
 name|Filename
 block|;
-name|std
+name|llvm
 operator|::
-name|vector
-operator|<
-name|Lazy
-operator|>
-name|LazySymbols
-block|;
-name|std
-operator|::
-name|map
+name|DenseSet
 operator|<
 name|uint64_t
-block|,
-name|std
-operator|::
-name|atomic_flag
 operator|>
 name|Seen
 block|; }
@@ -542,13 +454,27 @@ name|std
 operator|::
 name|vector
 operator|<
+name|SectionChunk
+operator|*
+operator|>
+operator|&
+name|getDebugChunks
+argument_list|()
+block|{
+return|return
+name|DebugChunks
+return|;
+block|}
+name|std
+operator|::
+name|vector
+operator|<
 name|SymbolBody
 operator|*
 operator|>
 operator|&
 name|getSymbols
 argument_list|()
-name|override
 block|{
 return|return
 name|SymbolBodies
@@ -615,7 +541,7 @@ name|void
 name|initializeSEH
 argument_list|()
 block|;
-name|Defined
+name|SymbolBody
 operator|*
 name|createDefined
 argument_list|(
@@ -626,7 +552,7 @@ argument_list|,
 argument|bool IsFirst
 argument_list|)
 block|;
-name|Undefined
+name|SymbolBody
 operator|*
 name|createUndefined
 argument_list|(
@@ -663,6 +589,16 @@ name|Chunk
 operator|*
 operator|>
 name|Chunks
+block|;
+comment|// CodeView debug info sections.
+name|std
+operator|::
+name|vector
+operator|<
+name|SectionChunk
+operator|*
+operator|>
+name|DebugChunks
 block|;
 comment|// This vector contains the same chunks as Chunks, but they are
 comment|// indexed such that you can get a SectionChunk by section index.
@@ -747,22 +683,6 @@ operator|==
 name|ImportKind
 return|;
 block|}
-name|std
-operator|::
-name|vector
-operator|<
-name|SymbolBody
-operator|*
-operator|>
-operator|&
-name|getSymbols
-argument_list|()
-name|override
-block|{
-return|return
-name|SymbolBodies
-return|;
-block|}
 name|DefinedImportData
 operator|*
 name|ImpSym
@@ -787,15 +707,6 @@ name|parse
 argument_list|()
 name|override
 block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|SymbolBody
-operator|*
-operator|>
-name|SymbolBodies
-block|;
 name|llvm
 operator|::
 name|BumpPtrAllocator
@@ -810,6 +721,22 @@ name|llvm
 operator|::
 name|StringSaver
 name|StringAlloc
+block|;
+name|public
+operator|:
+name|StringRef
+name|ExternalName
+block|;
+specifier|const
+name|coff_import_header
+operator|*
+name|Hdr
+block|;
+name|Chunk
+operator|*
+name|Location
+operator|=
+name|nullptr
 block|; }
 decl_stmt|;
 comment|// Used for LTO.
@@ -860,7 +787,6 @@ operator|>
 operator|&
 name|getSymbols
 argument_list|()
-name|override
 block|{
 return|return
 name|SymbolBodies
@@ -923,16 +849,22 @@ operator|<
 name|LTOModule
 operator|>
 name|M
-block|;
-specifier|static
-name|std
-operator|::
-name|mutex
-name|Mu
 block|; }
 decl_stmt|;
 block|}
 comment|// namespace coff
+name|std
+operator|::
+name|string
+name|toString
+argument_list|(
+name|coff
+operator|::
+name|InputFile
+operator|*
+name|File
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

@@ -66,7 +66,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -84,7 +102,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<climits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -217,18 +259,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|// AttributesSetNode is uniqued, these should not be publicly available.
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|AttributeSetNode
-operator|&
-operator|)
-operator|=
-name|delete
-expr_stmt|;
+name|public
+operator|:
+comment|// AttributesSetNode is uniqued, these should not be available.
 name|AttributeSetNode
 argument_list|(
 specifier|const
@@ -238,8 +271,18 @@ argument_list|)
 operator|=
 name|delete
 expr_stmt|;
-name|public
-label|:
+name|AttributeSetNode
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|AttributeSetNode
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 name|void
 name|operator
 name|delete
@@ -480,29 +523,14 @@ argument_list|)
 block|{
 for|for
 control|(
-name|unsigned
-name|I
-init|=
-literal|0
-init|,
-name|E
-init|=
+specifier|const
+specifier|auto
+modifier|&
+name|Attr
+range|:
 name|AttrList
-operator|.
-name|size
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
 control|)
-name|AttrList
-index|[
-name|I
-index|]
+name|Attr
 operator|.
 name|Profile
 argument_list|(
@@ -516,13 +544,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_ATTRIBUTESETNODE_H
+end_comment
 
 end_unit
 

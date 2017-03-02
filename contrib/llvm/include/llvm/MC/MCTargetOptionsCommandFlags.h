@@ -137,8 +137,6 @@ literal|"address"
 argument_list|,
 literal|"instrument instructions with memory arguments"
 argument_list|)
-argument_list|,
-name|clEnumValEnd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -183,6 +181,27 @@ name|desc
 argument_list|(
 literal|"When used with filetype=obj, "
 literal|"emit an object file which can be used with an incremental linker"
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cl
+operator|::
+name|opt
+operator|<
+name|bool
+operator|>
+name|PIECopyRelocations
+argument_list|(
+literal|"pie-copy-relocations"
+argument_list|,
+name|cl
+operator|::
+name|desc
+argument_list|(
+literal|"PIE Copy Relocations"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -310,6 +329,27 @@ name|cl
 operator|::
 name|opt
 operator|<
+name|bool
+operator|>
+name|NoDeprecatedWarn
+argument_list|(
+literal|"no-deprecated-warn"
+argument_list|,
+name|cl
+operator|::
+name|desc
+argument_list|(
+literal|"Suppress all deprecated warnings"
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cl
+operator|::
+name|opt
+operator|<
 name|std
 operator|::
 name|string
@@ -375,6 +415,12 @@ name|IncrementalLinkerCompatible
 expr_stmt|;
 name|Options
 operator|.
+name|MCPIECopyRelocations
+operator|=
+name|PIECopyRelocations
+expr_stmt|;
+name|Options
+operator|.
 name|DwarfVersion
 operator|=
 name|DwarfVersion
@@ -402,6 +448,12 @@ operator|.
 name|MCNoWarn
 operator|=
 name|NoWarn
+expr_stmt|;
+name|Options
+operator|.
+name|MCNoDeprecatedWarn
+operator|=
+name|NoDeprecatedWarn
 expr_stmt|;
 return|return
 name|Options

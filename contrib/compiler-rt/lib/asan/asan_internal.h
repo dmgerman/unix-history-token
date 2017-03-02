@@ -143,11 +143,7 @@ if|#
 directive|if
 name|SANITIZER_IOS
 operator|||
-operator|(
-name|SANITIZER_WORDSIZE
-operator|==
-literal|32
-operator|)
+name|SANITIZER_ANDROID
 define|#
 directive|define
 name|ASAN_LOW_MEMORY
@@ -205,6 +201,15 @@ comment|// asan_win.cc
 name|void
 name|InitializePlatformExceptionHandlers
 argument_list|()
+block|;
+comment|// asan_win.cc / asan_posix.cc
+specifier|const
+name|char
+operator|*
+name|DescribeSignalOrException
+argument_list|(
+argument|int signo
+argument_list|)
 block|;
 comment|// asan_rtl.cc
 name|void
@@ -397,65 +402,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// Platform-specific options.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|SANITIZER_MAC
-end_if
-
-begin_function_decl
-name|bool
-name|PlatformHasDifferentMemcpyAndMemmove
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|PLATFORM_HAS_DIFFERENT_MEMCPY_AND_MEMMOVE
-define|\
-value|(PlatformHasDifferentMemcpyAndMemmove())
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|SANITIZER_WINDOWS64
-end_elif
-
-begin_define
-define|#
-directive|define
-name|PLATFORM_HAS_DIFFERENT_MEMCPY_AND_MEMMOVE
-value|false
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PLATFORM_HAS_DIFFERENT_MEMCPY_AND_MEMMOVE
-value|true
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// SANITIZER_MAC
-end_comment
-
-begin_comment
 comment|// Add convenient macro for interface functions that may be represented as
 end_comment
 
@@ -543,15 +489,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|int
-name|kAsanHeapRightRedzoneMagic
-init|=
-literal|0xfb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|int
 name|kAsanHeapFreeMagic
 init|=
 literal|0xfd
@@ -582,15 +519,6 @@ name|int
 name|kAsanStackRightRedzoneMagic
 init|=
 literal|0xf3
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|int
-name|kAsanStackPartialRedzoneMagic
-init|=
-literal|0xf4
 decl_stmt|;
 end_decl_stmt
 

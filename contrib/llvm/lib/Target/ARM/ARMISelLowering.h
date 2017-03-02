@@ -72,7 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/CallingConvLower.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -84,13 +108,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/SelectionDAGNodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ValueTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InlineAsm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -98,10 +158,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|ARMConstantPoolValue
+name|ARMSubtarget
 decl_stmt|;
 name|class
-name|ARMSubtarget
+name|InstrItineraryData
 decl_stmt|;
 name|namespace
 name|ARMISD
@@ -420,11 +480,13 @@ comment|// instructions.
 name|MEMCPY
 block|,
 comment|// Vector load N-element structure to all lanes:
-name|VLD2DUP
+name|VLD1DUP
 init|=
 name|ISD
 operator|::
 name|FIRST_TARGET_MEMORY_OPCODE
+block|,
+name|VLD2DUP
 block|,
 name|VLD3DUP
 block|,
@@ -444,6 +506,8 @@ block|,
 name|VLD3LN_UPD
 block|,
 name|VLD4LN_UPD
+block|,
+name|VLD1DUP_UPD
 block|,
 name|VLD2DUP_UPD
 block|,
@@ -468,6 +532,7 @@ name|VST4LN_UPD
 block|}
 enum|;
 block|}
+comment|// end namespace ARMISD
 comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|ARM
@@ -480,6 +545,7 @@ name|v
 parameter_list|)
 function_decl|;
 block|}
+comment|// end namespace ARM
 comment|//===--------------------------------------------------------------------===//
 comment|//  ARMTargetLowering - ARM Implementation of the TargetLowering interface
 name|class
@@ -723,6 +789,24 @@ comment|/// isLegalAddressingMode - Return true if the addressing mode represent
 comment|/// by AM is legal for this target, for a load/store of the specified type.
 name|bool
 name|isLegalAddressingMode
+argument_list|(
+argument|const DataLayout&DL
+argument_list|,
+argument|const AddrMode&AM
+argument_list|,
+argument|Type *Ty
+argument_list|,
+argument|unsigned AS
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// getScalingFactorCost - Return the cost of the scaling used in
+comment|/// addressing mode represented by AM.
+comment|/// If the AM is supported, the return value must be>= 0.
+comment|/// If the AM is not supported, the return value must be negative.
+name|int
+name|getScalingFactorCost
 argument_list|(
 argument|const DataLayout&DL
 argument_list|,
@@ -1160,6 +1244,18 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Return true if EXTRACT_SUBVECTOR is cheap for this result type
+comment|/// with this index.
+name|bool
+name|isExtractSubvectorCheap
+argument_list|(
+argument|EVT ResVT
+argument_list|,
+argument|unsigned Index
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// \brief Returns true if an argument of type Ty needs to be passed in a
 comment|/// contiguous block of registers in calling convention CallConv.
 name|bool
@@ -1402,6 +1498,26 @@ return|return
 name|HasStandaloneRem
 return|;
 block|}
+name|CCAssignFn
+operator|*
+name|CCAssignFnForCall
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|bool isVarArg
+argument_list|)
+specifier|const
+block|;
+name|CCAssignFn
+operator|*
+name|CCAssignFnForReturn
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|,
+argument|bool isVarArg
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 name|std
@@ -2829,14 +2945,22 @@ function_decl|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// end namespace ARM
+end_comment
+
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|// ARMISELLOWERING_H
+comment|// LLVM_LIB_TARGET_ARM_ARMISELLOWERING_H
 end_comment
 
 end_unit

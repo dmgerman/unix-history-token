@@ -365,6 +365,12 @@ name|char
 name|TimerGroupName
 index|[]
 decl_stmt|;
+specifier|static
+specifier|const
+name|char
+name|TimerGroupDescription
+index|[]
+decl_stmt|;
 comment|/// Method called when the allocator is about to remove a LiveInterval.
 name|virtual
 name|void

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- CommandObjectCommands.h -----------------------------------*- C++ -*-===//
+comment|//===-- CommandObjectCommands.h -----------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -62,6 +66,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Core/STLUtils.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/CommandObject.h"
 end_include
 
@@ -69,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/CommandObjectMultiword.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/STLUtils.h"
 end_include
 
 begin_decl_stmt

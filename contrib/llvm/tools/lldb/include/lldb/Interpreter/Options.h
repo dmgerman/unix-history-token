@@ -74,7 +74,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Interpreter/Args.h"
 end_include
 
 begin_include
@@ -86,7 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Interpreter/Args.h"
+file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_decl_stmt
@@ -132,7 +138,8 @@ comment|/// The options are specified using the format defined for the libc
 comment|/// options parsing function getopt_long_only:
 comment|/// \code
 comment|///     #include<getopt.h>
-comment|///     int getopt_long_only(int argc, char * const *argv, const char *optstring, const struct option *longopts, int *longindex);
+comment|///     int getopt_long_only(int argc, char * const *argv, const char
+comment|///     *optstring, const struct option *longopts, int *longindex);
 comment|/// \endcode
 comment|///
 comment|/// Example code:
@@ -149,7 +156,8 @@ comment|///             return g_options;
 comment|///         }
 comment|///
 comment|///         virtual Error
-comment|///         SetOptionValue (uint32_t option_idx, int option_val, const char *option_arg)
+comment|///         SetOptionValue (uint32_t option_idx, int option_val, const char
+comment|///         *option_arg)
 comment|///         {
 comment|///             Error error;
 comment|///             switch (option_val)
@@ -159,14 +167,16 @@ comment|///             case 'v': verbose = true; break;
 comment|///             case 'l': log_file = option_arg; break;
 comment|///             case 'f': log_flags = strtoull(option_arg, nullptr, 0); break;
 comment|///             default:
-comment|///                 error.SetErrorStringWithFormat("unrecognized short option %c", option_val);
+comment|///                 error.SetErrorStringWithFormat("unrecognized short option
+comment|///                 %c", option_val);
 comment|///                 break;
 comment|///             }
 comment|///
 comment|///             return error;
 comment|///         }
 comment|///
-comment|///         CommandOptions (CommandInterpreter&interpreter) : debug (true), verbose (false), log_file (), log_flags (0)
+comment|///         CommandOptions (CommandInterpreter&interpreter) : debug (true),
+comment|///         verbose (false), log_file (), log_flags (0)
 comment|///         {}
 comment|///
 comment|///         bool debug;
@@ -207,11 +217,7 @@ block|{
 name|public
 label|:
 name|Options
-argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|virtual
 operator|~
@@ -294,6 +300,9 @@ parameter_list|,
 name|CommandObject
 modifier|*
 name|cmd
+parameter_list|,
+name|uint32_t
+name|screen_width
 parameter_list|)
 function_decl|;
 name|bool
@@ -308,14 +317,24 @@ function_decl|;
 comment|// The following two pure virtual functions must be defined by every
 comment|// class that inherits from this class.
 name|virtual
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-modifier|*
+operator|>
 name|GetDefinitions
-parameter_list|()
+argument_list|()
 block|{
 return|return
-name|nullptr
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|OptionDefinition
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 comment|// Call this prior to parsing any options. This call will call the
@@ -325,11 +344,19 @@ comment|// Option::OptionParsingStarting() like they did before. This was error
 comment|// prone and subclasses shouldn't have to do it.
 name|void
 name|NotifyOptionParsingStarting
-parameter_list|()
+parameter_list|(
+name|ExecutionContext
+modifier|*
+name|execution_context
+parameter_list|)
 function_decl|;
 name|Error
 name|NotifyOptionParsingFinished
-parameter_list|()
+parameter_list|(
+name|ExecutionContext
+modifier|*
+name|execution_context
+parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Set the value of an option.
@@ -342,6 +369,10 @@ comment|/// @param[in] option_arg
 comment|///     The argument value for the option that the user entered, or
 comment|///     nullptr if there is no argument for the current option.
 comment|///
+comment|/// @param[in] execution_context
+comment|///     The execution context to use for evaluating the option.
+comment|///     May be nullptr if the option is to be evaluated outside any
+comment|///     particular context.
 comment|///
 comment|/// @see Args::ParseOptions (Options&)
 comment|/// @see man getopt_long_only
@@ -349,18 +380,22 @@ comment|//------------------------------------------------------------------
 name|virtual
 name|Error
 name|SetOptionValue
-parameter_list|(
+argument_list|(
 name|uint32_t
 name|option_idx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|option_arg
-parameter_list|)
+argument_list|,
+name|ExecutionContext
+operator|*
+name|execution_context
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Handles the generic bits of figuring out whether we are in an
 comment|/// option, and if so completing it.
@@ -419,6 +454,10 @@ argument_list|,
 name|int
 name|max_return_elements
 argument_list|,
+name|CommandInterpreter
+operator|&
+name|interpreter
+argument_list|,
 name|bool
 operator|&
 name|word_complete
@@ -457,6 +496,9 @@ comment|/// @param[in] match_start_point
 comment|/// @param[in] match_return_elements
 comment|///     See CommandObject::HandleCompletions for a description of
 comment|///     how these work.
+comment|///
+comment|/// @param[in] interpreter
+comment|///     The command interpreter in which we're doing completion.
 comment|///
 comment|/// @param[out] word_complete
 comment|///     \btrue if this is a complete option value (a space will
@@ -499,6 +541,10 @@ parameter_list|,
 name|int
 name|max_return_elements
 parameter_list|,
+name|CommandInterpreter
+modifier|&
+name|interpreter
+parameter_list|,
 name|bool
 modifier|&
 name|word_complete
@@ -508,18 +554,10 @@ modifier|&
 name|matches
 parameter_list|)
 function_decl|;
-name|CommandInterpreter
-modifier|&
-name|GetInterpreter
-parameter_list|()
-block|{
-return|return
-name|m_interpreter
-return|;
-block|}
 name|protected
 label|:
-comment|// This is a set of options expressed as indexes into the options table for this Option.
+comment|// This is a set of options expressed as indexes into the options table for
+comment|// this Option.
 typedef|typedef
 name|std
 operator|::
@@ -538,10 +576,6 @@ name|OptionSet
 operator|>
 name|OptionSetVector
 expr_stmt|;
-name|CommandInterpreter
-modifier|&
-name|m_interpreter
-decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -639,14 +673,22 @@ comment|// all option settings to default values.
 name|virtual
 name|void
 name|OptionParsingStarting
-parameter_list|()
+parameter_list|(
+name|ExecutionContext
+modifier|*
+name|execution_context
+parameter_list|)
 init|=
 literal|0
 function_decl|;
 name|virtual
 name|Error
 name|OptionParsingFinished
-parameter_list|()
+parameter_list|(
+name|ExecutionContext
+modifier|*
+name|execution_context
+parameter_list|)
 block|{
 comment|// If subclasses need to know when the options are done being parsed
 comment|// they can implement this function to do extra checking
@@ -677,47 +719,43 @@ operator|=
 expr|default
 expr_stmt|;
 name|virtual
-name|uint32_t
-name|GetNumDefinitions
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-name|virtual
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-modifier|*
+operator|>
 name|GetDefinitions
-parameter_list|()
-init|=
+argument_list|()
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 name|virtual
 name|Error
 name|SetOptionValue
-parameter_list|(
-name|CommandInterpreter
-modifier|&
-name|interpreter
-parameter_list|,
+argument_list|(
 name|uint32_t
 name|option_idx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|option_value
-parameter_list|)
+argument_list|,
+name|ExecutionContext
+operator|*
+name|execution_context
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 name|virtual
 name|void
 name|OptionParsingStarting
 parameter_list|(
-name|CommandInterpreter
-modifier|&
-name|interpreter
+name|ExecutionContext
+modifier|*
+name|execution_context
 parameter_list|)
 init|=
 literal|0
@@ -726,9 +764,9 @@ name|virtual
 name|Error
 name|OptionParsingFinished
 parameter_list|(
-name|CommandInterpreter
-modifier|&
-name|interpreter
+name|ExecutionContext
+modifier|*
+name|execution_context
 parameter_list|)
 block|{
 comment|// If subclasses need to know when the options are done being parsed
@@ -751,16 +789,10 @@ block|{
 name|public
 operator|:
 name|OptionGroupOptions
-argument_list|(
-name|CommandInterpreter
-operator|&
-name|interpreter
-argument_list|)
+argument_list|()
 operator|:
 name|Options
-argument_list|(
-name|interpreter
-argument_list|)
+argument_list|()
 block|,
 name|m_option_defs
 argument_list|()
@@ -772,7 +804,7 @@ name|m_did_finalize
 argument_list|(
 argument|false
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|OptionGroupOptions
 argument_list|()
@@ -823,7 +855,7 @@ comment|//----------------------------------------------------------------------
 name|void
 name|Append
 argument_list|(
-argument|OptionGroup* group
+argument|OptionGroup *group
 argument_list|,
 argument|uint32_t src_mask
 argument_list|,
@@ -847,23 +879,32 @@ name|SetOptionValue
 argument_list|(
 argument|uint32_t option_idx
 argument_list|,
-argument|const char *option_arg
+argument|llvm::StringRef option_arg
+argument_list|,
+argument|ExecutionContext *execution_context
 argument_list|)
 name|override
 block|;
 name|void
 name|OptionParsingStarting
-argument_list|()
+argument_list|(
+argument|ExecutionContext *execution_context
+argument_list|)
 name|override
 block|;
 name|Error
 name|OptionParsingFinished
-argument_list|()
+argument_list|(
+argument|ExecutionContext *execution_context
+argument_list|)
 name|override
 block|;
-specifier|const
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|OptionDefinition
-operator|*
+operator|>
 name|GetDefinitions
 argument_list|()
 name|override
@@ -874,11 +915,7 @@ name|m_did_finalize
 argument_list|)
 block|;
 return|return
-operator|&
 name|m_option_defs
-index|[
-literal|0
-index|]
 return|;
 block|}
 specifier|const
@@ -888,12 +925,12 @@ name|GetGroupWithOption
 argument_list|(
 argument|char short_opt
 argument_list|)
-block|;                  struct
+block|;    struct
 name|OptionInfo
 block|{
 name|OptionInfo
 argument_list|(
-argument|OptionGroup* g
+argument|OptionGroup *g
 argument_list|,
 argument|uint32_t i
 argument_list|)
@@ -907,7 +944,7 @@ name|option_index
 argument_list|(
 argument|i
 argument_list|)
-block|{             }
+block|{}
 name|OptionGroup
 operator|*
 name|option_group

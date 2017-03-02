@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Language.h ---------------------------------------------------*- C++ -*-===//
+comment|//===-- Language.h ---------------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -86,18 +90,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/PluginInterface.h"
 end_include
 
@@ -117,6 +109,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/DataFormatters/StringPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -152,7 +156,7 @@ name|virtual
 name|bool
 name|DumpToStream
 argument_list|(
-argument|Stream& stream
+argument|Stream&stream
 argument_list|,
 argument|bool print_help_if_available
 argument_list|)
@@ -165,7 +169,7 @@ name|Result
 argument_list|()
 operator|=
 expr|default
-block|;         }
+block|;     }
 block|;
 typedef|typedef
 name|std
@@ -225,8 +229,411 @@ name|results
 argument_list|)
 operator|=
 literal|0
-block|;     }
+block|;   }
 decl_stmt|;
+name|class
+name|ImageListTypeScavenger
+range|:
+name|public
+name|TypeScavenger
+block|{
+name|class
+name|Result
+operator|:
+name|public
+name|Language
+operator|::
+name|TypeScavenger
+operator|::
+name|Result
+block|{
+name|public
+operator|:
+name|Result
+argument_list|(
+argument|CompilerType type
+argument_list|)
+operator|:
+name|Language
+operator|::
+name|TypeScavenger
+operator|::
+name|Result
+argument_list|()
+block|,
+name|m_compiler_type
+argument_list|(
+argument|type
+argument_list|)
+block|{}
+name|bool
+name|IsValid
+argument_list|()
+name|override
+block|{
+return|return
+name|m_compiler_type
+operator|.
+name|IsValid
+argument_list|()
+return|;
+block|}
+name|bool
+name|DumpToStream
+argument_list|(
+argument|Stream&stream
+argument_list|,
+argument|bool print_help_if_available
+argument_list|)
+name|override
+block|{
+if|if
+condition|(
+name|IsValid
+argument_list|()
+condition|)
+block|{
+name|m_compiler_type
+operator|.
+name|DumpTypeDescription
+argument_list|(
+operator|&
+name|stream
+argument_list|)
+expr_stmt|;
+name|stream
+operator|.
+name|EOL
+argument_list|()
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+operator|~
+name|Result
+argument_list|()
+name|override
+operator|=
+expr|default
+block|;
+name|private
+operator|:
+name|CompilerType
+name|m_compiler_type
+block|;     }
+block|;
+name|protected
+operator|:
+name|ImageListTypeScavenger
+argument_list|()
+operator|=
+expr|default
+block|;
+operator|~
+name|ImageListTypeScavenger
+argument_list|()
+name|override
+operator|=
+expr|default
+block|;
+comment|// is this type something we should accept? it's usually going to be a
+comment|// filter by language + maybe some sugar tweaking
+comment|// returning an empty type means rejecting this candidate entirely;
+comment|// any other result will be accepted as a valid match
+name|virtual
+name|CompilerType
+name|AdjustForInclusion
+argument_list|(
+name|CompilerType
+operator|&
+name|candidate
+argument_list|)
+operator|=
+literal|0
+block|;
+name|bool
+name|Find_Impl
+argument_list|(
+argument|ExecutionContextScope *exe_scope
+argument_list|,
+argument|const char *key
+argument_list|,
+argument|ResultSet&results
+argument_list|)
+name|override
+block|;   }
+decl_stmt|;
+name|template
+operator|<
+name|typename
+operator|...
+name|ScavengerTypes
+operator|>
+name|class
+name|EitherTypeScavenger
+operator|:
+name|public
+name|TypeScavenger
+block|{
+name|public
+operator|:
+name|EitherTypeScavenger
+argument_list|()
+operator|:
+name|TypeScavenger
+argument_list|()
+block|,
+name|m_scavengers
+argument_list|()
+block|{
+for|for
+control|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|TypeScavenger
+operator|>
+name|scavenger
+operator|:
+block|{
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|TypeScavenger
+operator|>
+operator|(
+name|new
+name|ScavengerTypes
+argument_list|()
+operator|)
+operator|...
+block|}
+control|)
+block|{
+if|if
+condition|(
+name|scavenger
+condition|)
+name|m_scavengers
+operator|.
+name|push_back
+argument_list|(
+name|scavenger
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|protected
+operator|:
+name|bool
+name|Find_Impl
+argument_list|(
+argument|ExecutionContextScope *exe_scope
+argument_list|,
+argument|const char *key
+argument_list|,
+argument|ResultSet&results
+argument_list|)
+name|override
+block|{
+specifier|const
+name|bool
+name|append
+operator|=
+name|false
+block|;
+for|for
+control|(
+name|auto
+operator|&
+name|scavenger
+operator|:
+name|m_scavengers
+control|)
+block|{
+if|if
+condition|(
+name|scavenger
+operator|&&
+name|scavenger
+operator|->
+name|Find
+argument_list|(
+name|exe_scope
+argument_list|,
+name|key
+argument_list|,
+name|results
+argument_list|,
+name|append
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+name|private
+operator|:
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|TypeScavenger
+operator|>>
+name|m_scavengers
+block|;   }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+operator|...
+name|ScavengerTypes
+operator|>
+name|class
+name|UnionTypeScavenger
+operator|:
+name|public
+name|TypeScavenger
+block|{
+name|public
+operator|:
+name|UnionTypeScavenger
+argument_list|()
+operator|:
+name|TypeScavenger
+argument_list|()
+block|,
+name|m_scavengers
+argument_list|()
+block|{
+for|for
+control|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|TypeScavenger
+operator|>
+name|scavenger
+operator|:
+block|{
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|TypeScavenger
+operator|>
+operator|(
+name|new
+name|ScavengerTypes
+argument_list|()
+operator|)
+operator|...
+block|}
+control|)
+block|{
+if|if
+condition|(
+name|scavenger
+condition|)
+name|m_scavengers
+operator|.
+name|push_back
+argument_list|(
+name|scavenger
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|protected
+operator|:
+name|bool
+name|Find_Impl
+argument_list|(
+argument|ExecutionContextScope *exe_scope
+argument_list|,
+argument|const char *key
+argument_list|,
+argument|ResultSet&results
+argument_list|)
+name|override
+block|{
+specifier|const
+name|bool
+name|append
+operator|=
+name|true
+block|;
+name|bool
+name|success
+operator|=
+name|false
+block|;
+for|for
+control|(
+name|auto
+operator|&
+name|scavenger
+operator|:
+name|m_scavengers
+control|)
+block|{
+if|if
+condition|(
+name|scavenger
+condition|)
+name|success
+operator|=
+name|scavenger
+operator|->
+name|Find
+argument_list|(
+name|exe_scope
+argument_list|,
+name|key
+argument_list|,
+name|results
+argument_list|,
+name|append
+argument_list|)
+operator|||
+name|success
+expr_stmt|;
+block|}
+return|return
+name|success
+return|;
+block|}
+name|private
+operator|:
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|TypeScavenger
+operator|>>
+name|m_scavengers
+block|;   }
+expr_stmt|;
 name|enum
 name|class
 name|FunctionNameRepresentation
@@ -335,7 +742,7 @@ name|ConstString
 operator|>
 name|GetPossibleFormattersMatches
 argument_list|(
-argument|ValueObject& valobj
+argument|ValueObject&valobj
 argument_list|,
 argument|lldb::DynamicValueType use_dynamic
 argument_list|)
@@ -376,9 +783,12 @@ modifier|*
 name|GetLanguageSpecificTypeLookupHelp
 parameter_list|()
 function_decl|;
-comment|// if an individual data formatter can apply to several types and cross a language boundary
-comment|// it makes sense for individual languages to want to customize the printing of values of that
-comment|// type by appending proper prefix/suffix information in language-specific ways
+comment|// if an individual data formatter can apply to several types and cross a
+comment|// language boundary
+comment|// it makes sense for individual languages to want to customize the printing
+comment|// of values of that
+comment|// type by appending proper prefix/suffix information in language-specific
+comment|// ways
 name|virtual
 name|bool
 name|GetFormatterPrefixSuffix
@@ -403,7 +813,8 @@ operator|&
 name|suffix
 argument_list|)
 decl_stmt|;
-comment|// if a language has a custom format for printing variable declarations that it wants LLDB to honor
+comment|// if a language has a custom format for printing variable declarations that
+comment|// it wants LLDB to honor
 comment|// it should return an appropriate closure here
 name|virtual
 name|DumpValueObjectOptions
@@ -436,9 +847,12 @@ modifier|&
 name|valobj
 parameter_list|)
 function_decl|;
-comment|// for a ValueObject of some "reference type", if the language provides a technique
-comment|// to decide whether the reference has ever been assigned to some object, this method
-comment|// will return true if such detection is possible, and if the reference has never been assigned
+comment|// for a ValueObject of some "reference type", if the language provides a
+comment|// technique
+comment|// to decide whether the reference has ever been assigned to some object, this
+comment|// method
+comment|// will return true if such detection is possible, and if the reference has
+comment|// never been assigned
 name|virtual
 name|bool
 name|IsUninitializedReference
@@ -500,7 +914,8 @@ modifier|&
 name|s
 parameter_list|)
 function_decl|;
-comment|// These are accessors for general information about the Languages lldb knows about:
+comment|// These are accessors for general information about the Languages lldb knows
+comment|// about:
 specifier|static
 name|lldb
 operator|::
@@ -511,6 +926,17 @@ specifier|const
 name|char
 operator|*
 name|string
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguageTypeFromString
+argument_list|(
+argument|llvm::StringRef string
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -603,7 +1029,8 @@ name|LanguageType
 name|language
 argument_list|)
 decl_stmt|;
-comment|// return the primary language, so if LanguageIsC(l), return eLanguageTypeC, etc.
+comment|// return the primary language, so if LanguageIsC(l), return eLanguageTypeC,
+comment|// etc.
 specifier|static
 name|lldb
 operator|::

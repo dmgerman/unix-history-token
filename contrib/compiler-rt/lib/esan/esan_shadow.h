@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"esan.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sanitizer_common/sanitizer_platform.h>
 end_include
 
@@ -92,6 +98,20 @@ begin_decl_stmt
 name|namespace
 name|__esan
 block|{
+struct|struct
+name|ApplicationRegion
+block|{
+name|uptr
+name|Start
+decl_stmt|;
+name|uptr
+name|End
+decl_stmt|;
+name|bool
+name|ShadowMergedWithPrev
+decl_stmt|;
+block|}
+struct|;
 if|#
 directive|if
 name|SANITIZER_LINUX
@@ -164,20 +184,6 @@ comment|// [0x00001b00'00000000, 0x00001d00'00000000)
 comment|// [0x00001400'00000000, 0x000015ff'ff600000]
 comment|// [0x000015ff'ff601000, 0x00001600'00000000]
 comment|// [0x000015ff'ff600000, 0x000015ff'ff601000]
-struct|struct
-name|ApplicationRegion
-block|{
-name|uptr
-name|Start
-decl_stmt|;
-name|uptr
-name|End
-decl_stmt|;
-name|bool
-name|ShadowMergedWithPrev
-decl_stmt|;
-block|}
-struct|;
 specifier|static
 specifier|const
 name|struct
@@ -230,6 +236,83 @@ name|true
 block|}
 block|, }
 decl_stmt|;
+elif|#
+directive|elif
+name|SANITIZER_LINUX
+operator|&&
+name|SANITIZER_MIPS64
+comment|// Application memory falls into these 3 regions
+comment|//
+comment|// [0x00000001'00000000, 0x00000002'00000000) non-PIE + heap
+comment|// [0x000000aa'00000000, 0x000000ab'00000000) PIE
+comment|// [0x000000ff'00000000, 0x000000ff'ffffffff) libraries + stack
+comment|//
+comment|// This formula translates from application memory to shadow memory:
+comment|//
+comment|//   shadow(app) = ((app& 0x00000f'ffffffff) + offset)>> scale
+comment|//
+comment|// Where the offset for 1:1 is 0x000013'00000000.  For other scales, the
+comment|// offset is shifted left by the scale, except for scales of 1 and 2 where
+comment|// it must be tweaked in order to pass the double-shadow test
+comment|// (see the "shadow(shadow)" comments below):
+comment|//   scale == 0: 0x000013'00000000
+comment|//   scale == 1: 0x000022'00000000
+comment|//   scale == 2: 0x000044'00000000
+comment|//   scale>= 3: (0x000013'00000000<< scale)
+comment|//
+comment|// The resulting shadow memory regions for a 0 scaling are:
+comment|//
+comment|// [0x00000014'00000000, 0x00000015'00000000)
+comment|// [0x0000001d'00000000, 0x0000001e'00000000)
+comment|// [0x00000022'00000000, 0x00000022'ffffffff)
+comment|//
+comment|// We also want to ensure that a wild access by the application into the shadow
+comment|// regions will not corrupt our own shadow memory. shadow(shadow) ends up
+comment|// disjoint from shadow(app):
+comment|//
+comment|// [0x00000017'00000000, 0x00000018'00000000)
+comment|// [0x00000020'00000000, 0x00000021'00000000)
+comment|// [0x00000015'00000000, 0x00000015'ffffffff]
+specifier|static
+specifier|const
+name|struct
+name|ApplicationRegion
+name|AppRegions
+index|[]
+init|=
+block|{
+block|{
+literal|0x0100000000u
+block|,
+literal|0x0200000000u
+block|,
+name|false
+block|}
+block|,
+block|{
+literal|0xaa00000000u
+block|,
+literal|0xab00000000u
+block|,
+name|false
+block|}
+block|,
+block|{
+literal|0xff00000000u
+block|,
+literal|0xffffffffffu
+block|,
+name|false
+block|}
+block|, }
+decl_stmt|;
+else|#
+directive|else
+error|#
+directive|error
+error|Platform not supported
+endif|#
+directive|endif
 specifier|static
 specifier|const
 name|u32
@@ -268,13 +351,6 @@ name|ShadowMapping
 block|{
 name|public
 label|:
-specifier|static
-specifier|const
-name|uptr
-name|Mask
-init|=
-literal|0x00000fffffffffffu
-decl_stmt|;
 comment|// The scale and offset vary by tool.
 name|uptr
 name|Scale
@@ -282,6 +358,32 @@ decl_stmt|;
 name|uptr
 name|Offset
 decl_stmt|;
+comment|// TODO(sagar.thakur): Try to hardcode the mask as done in the compiler
+comment|// instrumentation to reduce the runtime cost of appToShadow.
+struct|struct
+name|ShadowMemoryMask40
+block|{
+specifier|static
+specifier|const
+name|uptr
+name|Mask
+init|=
+literal|0x0000000fffffffffu
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|ShadowMemoryMask47
+block|{
+specifier|static
+specifier|const
+name|uptr
+name|Mask
+init|=
+literal|0x00000fffffffffffu
+decl_stmt|;
+block|}
+struct|;
 name|void
 name|initialize
 parameter_list|(
@@ -289,10 +391,24 @@ name|uptr
 name|ShadowScale
 parameter_list|)
 block|{
-specifier|static
 specifier|const
 name|uptr
-name|OffsetArray
+name|OffsetArray40
+index|[
+literal|3
+index|]
+init|=
+block|{
+literal|0x0000001300000000u
+block|,
+literal|0x0000002200000000u
+block|,
+literal|0x0000004400000000u
+block|,     }
+decl_stmt|;
+specifier|const
+name|uptr
+name|OffsetArray47
 index|[
 literal|3
 index|]
@@ -309,6 +425,15 @@ name|Scale
 operator|=
 name|ShadowScale
 expr_stmt|;
+switch|switch
+condition|(
+name|VmaSize
+condition|)
+block|{
+case|case
+literal|40
+case|:
+block|{
 if|if
 condition|(
 name|Scale
@@ -317,7 +442,7 @@ literal|2
 condition|)
 name|Offset
 operator|=
-name|OffsetArray
+name|OffsetArray40
 index|[
 name|Scale
 index|]
@@ -325,7 +450,7 @@ expr_stmt|;
 else|else
 name|Offset
 operator|=
-name|OffsetArray
+name|OffsetArray40
 index|[
 literal|0
 index|]
@@ -333,21 +458,57 @@ operator|<<
 name|Scale
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|47
+case|:
+block|{
+if|if
+condition|(
+name|Scale
+operator|<=
+literal|2
+condition|)
+name|Offset
+operator|=
+name|OffsetArray47
+index|[
+name|Scale
+index|]
+expr_stmt|;
+else|else
+name|Offset
+operator|=
+name|OffsetArray47
+index|[
+literal|0
+index|]
+operator|<<
+name|Scale
+expr_stmt|;
+block|}
+break|break;
+default|default:
+block|{
+name|Printf
+argument_list|(
+literal|"ERROR: %d-bit virtual memory address size not supported\n"
+argument_list|,
+name|VmaSize
+argument_list|)
+expr_stmt|;
+name|Die
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+block|}
 block|}
 empty_stmt|;
 specifier|extern
 name|ShadowMapping
 name|Mapping
 decl_stmt|;
-else|#
-directive|else
-comment|// We'll want to use templatized functions over the ShadowMapping once
-comment|// we support more platforms.
-error|#
-directive|error
-error|Platform not supported
-endif|#
-directive|endif
 specifier|static
 specifier|inline
 name|bool
@@ -449,13 +610,16 @@ return|return
 name|false
 return|;
 block|}
-name|ALWAYS_INLINE
+name|template
+operator|<
+name|typename
+name|Params
+operator|>
 name|uptr
-name|appToShadow
-parameter_list|(
-name|uptr
-name|App
-parameter_list|)
+name|appToShadowImpl
+argument_list|(
+argument|uptr App
+argument_list|)
 block|{
 return|return
 operator|(
@@ -463,7 +627,7 @@ operator|(
 operator|(
 name|App
 operator|&
-name|ShadowMapping
+name|Params
 operator|::
 name|Mask
 operator|)
@@ -478,6 +642,62 @@ operator|.
 name|Scale
 operator|)
 return|;
+block|}
+name|ALWAYS_INLINE
+name|uptr
+name|appToShadow
+parameter_list|(
+name|uptr
+name|App
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|VmaSize
+condition|)
+block|{
+case|case
+literal|40
+case|:
+return|return
+name|appToShadowImpl
+operator|<
+name|ShadowMapping
+operator|::
+name|ShadowMemoryMask40
+operator|>
+operator|(
+name|App
+operator|)
+return|;
+case|case
+literal|47
+case|:
+return|return
+name|appToShadowImpl
+operator|<
+name|ShadowMapping
+operator|::
+name|ShadowMemoryMask47
+operator|>
+operator|(
+name|App
+operator|)
+return|;
+default|default:
+block|{
+name|Printf
+argument_list|(
+literal|"ERROR: %d-bit virtual memory address size not supported\n"
+argument_list|,
+name|VmaSize
+argument_list|)
+expr_stmt|;
+name|Die
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 block|}
 specifier|static
 specifier|inline

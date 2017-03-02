@@ -62,7 +62,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/Target/DynamicLoader.h"
+file|"lldb/Core/UUID.h"
 end_include
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/UUID.h"
+file|"lldb/Target/DynamicLoader.h"
 end_include
 
 begin_include

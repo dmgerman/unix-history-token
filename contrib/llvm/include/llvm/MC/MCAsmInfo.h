@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCTargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -145,27 +151,6 @@ operator|,
 block|}
 empty_stmt|;
 block|}
-name|enum
-name|class
-name|ExceptionHandling
-block|{
-name|None
-operator|,
-comment|/// No exception support
-name|DwarfCFI
-operator|,
-comment|/// DWARF-like instruction based exceptions
-name|SjLj
-operator|,
-comment|/// setjmp/longjmp based exceptions
-name|ARM
-operator|,
-comment|/// ARM EHABI
-name|WinEH
-operator|,
-comment|/// Windows Exception Handling
-block|}
-empty_stmt|;
 name|namespace
 name|LCOMM
 block|{
@@ -236,13 +221,6 @@ comment|/// directive for emitting thread local BSS Symbols.  Default is false.
 name|bool
 name|HasMachoTBSSDirective
 decl_stmt|;
-comment|/// True if the compiler should emit a ".reference .constructors_used" or
-comment|/// ".reference .destructors_used" directive after the static ctor/dtor
-comment|/// list.  This directive is only emitted in Static relocation model.  Default
-comment|/// is false.
-name|bool
-name|HasStaticCtorDtorReferenceInStaticMode
-decl_stmt|;
 comment|/// This is the maximum possible length of an instruction, which is needed to
 comment|/// compute the size of an inline asm.  Defaults to 4.
 name|unsigned
@@ -267,9 +245,7 @@ name|SeparatorString
 decl_stmt|;
 comment|/// This indicates the comment character used by the assembler.  Defaults to
 comment|/// "#"
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|CommentString
 decl_stmt|;
 comment|/// This is appended to emitted labels.  Defaults to ":"
@@ -289,25 +265,19 @@ decl_stmt|;
 comment|/// This prefix is used for globals like constant pool entries that are
 comment|/// completely private to the .s file and should not have names in the .o
 comment|/// file.  Defaults to "L"
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|PrivateGlobalPrefix
 decl_stmt|;
 comment|/// This prefix is used for labels for basic blocks. Defaults to the same as
 comment|/// PrivateGlobalPrefix.
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|PrivateLabelPrefix
 decl_stmt|;
 comment|/// This prefix is used for symbols that should be passed through the
 comment|/// assembler but be removed by the linker.  This is 'l' on Darwin, currently
 comment|/// used for some ObjC metadata.  The default of "" meast that for this system
 comment|/// a plain private symbol should be used.  Defaults to "".
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|LinkerPrivateGlobalPrefix
 decl_stmt|;
 comment|/// If these are nonempty, they contain a directive to emit before and after
@@ -424,6 +394,37 @@ specifier|const
 name|char
 modifier|*
 name|GPRel32Directive
+decl_stmt|;
+comment|/// If non-null, directives that are used to emit a word/dword which should
+comment|/// be relocated as a 32/64-bit DTP/TP-relative offset, e.g. .dtprelword/
+comment|/// .dtpreldword/.tprelword/.tpreldword on Mips.
+specifier|const
+name|char
+modifier|*
+name|DTPRel32Directive
+init|=
+name|nullptr
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|DTPRel64Directive
+init|=
+name|nullptr
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|TPRel32Directive
+init|=
+name|nullptr
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|TPRel64Directive
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// This is true if this target uses "Sun Style" syntax for section switching
 comment|/// ("#alloc,#write" etc) instead of the normal ELF syntax (,"a,w") in
@@ -644,6 +645,13 @@ name|RelaxELFRelocations
 init|=
 name|true
 decl_stmt|;
+comment|// If true, then the lexer and expression parser will support %neg(),
+comment|// %hi(), and similar unary operators.
+name|bool
+name|HasMipsExpressions
+init|=
+name|false
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -770,6 +778,50 @@ specifier|const
 block|{
 return|return
 name|GPRel32Directive
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getDTPRel64Directive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DTPRel64Directive
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getDTPRel32Directive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DTPRel32Directive
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getTPRel64Directive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TPRel64Directive
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getTPRel32Directive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TPRel32Directive
 return|;
 block|}
 comment|/// Targets can implement this method to specify a section to switch to if the
@@ -918,15 +970,6 @@ return|return
 name|HasMachoTBSSDirective
 return|;
 block|}
-name|bool
-name|hasStaticCtorDtorReferenceInStaticMode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasStaticCtorDtorReferenceInStaticMode
-return|;
-block|}
 name|unsigned
 name|getMaxInstLength
 argument_list|()
@@ -976,9 +1019,7 @@ return|return
 literal|40
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getCommentString
 argument_list|()
 specifier|const
@@ -1016,9 +1057,7 @@ return|return
 name|NeedsLocalForSize
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPrivateGlobalPrefix
 argument_list|()
 specifier|const
@@ -1027,9 +1066,7 @@ return|return
 name|PrivateGlobalPrefix
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getPrivateLabelPrefix
 argument_list|()
 specifier|const
@@ -1052,9 +1089,7 @@ operator|!=
 literal|'\0'
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getLinkerPrivateGlobalPrefix
 argument_list|()
 specifier|const
@@ -1673,6 +1708,15 @@ name|RelaxELFRelocations
 operator|=
 name|V
 expr_stmt|;
+block|}
+name|bool
+name|hasMipsExpressions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMipsExpressions
+return|;
 block|}
 block|}
 end_decl_stmt

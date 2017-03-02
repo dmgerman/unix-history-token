@@ -46,19 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamArray.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/DebugInfo/CodeView/SymbolRecord.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo/PDB/Raw/MappedBlockStream.h"
 end_include
 
 begin_include
@@ -71,6 +59,13 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|msf
+block|{
+name|class
+name|MappedBlockStream
+decl_stmt|;
+block|}
 name|namespace
 name|pdb
 block|{
@@ -88,6 +83,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream
@@ -130,6 +127,8 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|msf
+operator|::
 name|MappedBlockStream
 operator|>
 name|Stream

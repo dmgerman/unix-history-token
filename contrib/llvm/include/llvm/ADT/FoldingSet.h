@@ -85,6 +85,30 @@ directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -509,14 +533,6 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|FoldingSetTrait
-expr_stmt|;
 comment|/// DefaultFoldingSetTrait - This class provides default implementations
 comment|/// for FoldingSetTrait implementations.
 comment|///
@@ -619,17 +635,6 @@ name|T
 operator|>
 block|{}
 expr_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|,
-name|typename
-name|Ctx
-operator|>
-expr|struct
-name|ContextualFoldingSetTrait
-expr_stmt|;
 comment|/// DefaultContextualFoldingSetTrait - Like DefaultFoldingSetTrait, but
 comment|/// for ContextualFoldingSets.
 name|template
@@ -727,32 +732,28 @@ specifier|const
 name|unsigned
 modifier|*
 name|Data
+init|=
+name|nullptr
 decl_stmt|;
 name|size_t
 name|Size
+init|=
+literal|0
 decl_stmt|;
 name|public
 label|:
 name|FoldingSetNodeIDRef
 argument_list|()
-operator|:
-name|Data
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Size
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|FoldingSetNodeIDRef
 argument_list|(
 argument|const unsigned *D
 argument_list|,
 argument|size_t S
 argument_list|)
-operator|:
+block|:
 name|Data
 argument_list|(
 name|D
@@ -851,7 +852,9 @@ name|public
 label|:
 name|FoldingSetNodeID
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|FoldingSetNodeID
 argument_list|(
 argument|FoldingSetNodeIDRef Ref
@@ -1738,7 +1741,7 @@ comment|/// function with signature
 end_comment
 
 begin_comment
-comment|///   void Profile(llvm::FoldingSetNodeID&, Ctx);
+comment|///   void Profile(FoldingSetNodeID&, Ctx);
 end_comment
 
 begin_expr_stmt
@@ -2217,8 +2220,7 @@ name|T
 operator|*
 operator|,
 literal|8
-operator|>
-expr|>
+operator|>>
 name|class
 name|FoldingSetVector
 block|{
@@ -3288,7 +3290,7 @@ argument|const std::pair<T1
 argument_list|,
 argument|T2>&P
 argument_list|,
-argument|llvm::FoldingSetNodeID&ID
+argument|FoldingSetNodeID&ID
 argument_list|)
 block|{
 name|ID
@@ -3315,13 +3317,17 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|// End of namespace llvm.
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_FOLDINGSET_H
+end_comment
 
 end_unit
 

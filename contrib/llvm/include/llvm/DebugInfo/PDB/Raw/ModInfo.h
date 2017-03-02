@@ -52,13 +52,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamArray.h"
+file|"llvm/DebugInfo/MSF/StreamArray.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/CodeView/StreamRef.h"
+file|"llvm/DebugInfo/MSF/StreamRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/PDB/Raw/RawTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Error.h"
 end_include
 
 begin_include
@@ -83,11 +95,10 @@ block|{
 name|class
 name|ModInfo
 block|{
-name|private
-label|:
-struct_decl|struct
-name|FileLayout
-struct_decl|;
+name|friend
+name|class
+name|DbiStreamBuilder
+decl_stmt|;
 name|public
 label|:
 name|ModInfo
@@ -109,9 +120,9 @@ specifier|static
 name|Error
 name|initialize
 argument_list|(
-name|codeview
+name|msf
 operator|::
-name|StreamRef
+name|ReadableStreamRef
 name|Stream
 argument_list|,
 name|ModInfo
@@ -188,9 +199,11 @@ name|StringRef
 name|ObjFileName
 decl_stmt|;
 specifier|const
-name|FileLayout
+name|ModuleInfoHeader
 modifier|*
 name|Layout
+init|=
+name|nullptr
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -217,22 +230,12 @@ name|ModuleInfoEx
 operator|&
 name|Ex
 argument_list|)
-operator|:
-name|Info
-argument_list|(
-name|Ex
-operator|.
-name|Info
-argument_list|)
-operator|,
-name|SourceFiles
-argument_list|(
-argument|Ex.SourceFiles
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|ModInfo
 name|Info
-expr_stmt|;
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -246,7 +249,7 @@ struct|;
 block|}
 comment|// end namespace pdb
 name|namespace
-name|codeview
+name|msf
 block|{
 name|template
 operator|<
@@ -263,7 +266,7 @@ name|Error
 name|operator
 argument_list|()
 operator|(
-name|StreamRef
+name|ReadableStreamRef
 name|Stream
 operator|,
 name|uint32_t
@@ -315,6 +318,10 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace msf
+end_comment
 
 begin_comment
 unit|}

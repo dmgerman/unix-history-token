@@ -2353,6 +2353,15 @@ operator|*
 operator|>
 operator|&
 name|Elts
+argument_list|,
+name|Optional
+operator|<
+name|unsigned
+operator|>
+operator|*
+name|InRangeOp
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 name|bool

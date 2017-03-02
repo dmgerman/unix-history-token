@@ -220,7 +220,7 @@ operator|:
 name|bool
 name|isCallDependent
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|SDep::Kind DepType
 argument_list|,
@@ -230,27 +230,27 @@ block|;
 name|bool
 name|promoteToDotCur
 argument_list|(
-argument|MachineInstr* MI
+argument|MachineInstr&MI
 argument_list|,
 argument|SDep::Kind DepType
 argument_list|,
 argument|MachineBasicBlock::iterator&MII
 argument_list|,
-argument|const TargetRegisterClass* RC
+argument|const TargetRegisterClass *RC
 argument_list|)
 block|;
 name|bool
 name|canPromoteToDotCur
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|,
-argument|const SUnit* PacketSU
+argument|const SUnit *PacketSU
 argument_list|,
 argument|unsigned DepReg
 argument_list|,
 argument|MachineBasicBlock::iterator&MII
 argument_list|,
-argument|const TargetRegisterClass* RC
+argument|const TargetRegisterClass *RC
 argument_list|)
 block|;
 name|void
@@ -260,35 +260,35 @@ block|;
 name|bool
 name|promoteToDotNew
 argument_list|(
-argument|MachineInstr* MI
+argument|MachineInstr&MI
 argument_list|,
 argument|SDep::Kind DepType
 argument_list|,
 argument|MachineBasicBlock::iterator&MII
 argument_list|,
-argument|const TargetRegisterClass* RC
+argument|const TargetRegisterClass *RC
 argument_list|)
 block|;
 name|bool
 name|canPromoteToDotNew
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|,
-argument|const SUnit* PacketSU
+argument|const SUnit *PacketSU
 argument_list|,
 argument|unsigned DepReg
 argument_list|,
 argument|MachineBasicBlock::iterator&MII
 argument_list|,
-argument|const TargetRegisterClass* RC
+argument|const TargetRegisterClass *RC
 argument_list|)
 block|;
 name|bool
 name|canPromoteToNewValue
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|,
-argument|const SUnit* PacketSU
+argument|const SUnit *PacketSU
 argument_list|,
 argument|unsigned DepReg
 argument_list|,
@@ -298,9 +298,9 @@ block|;
 name|bool
 name|canPromoteToNewValueStore
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|,
-argument|const MachineInstr* PacketMI
+argument|const MachineInstr&PacketMI
 argument_list|,
 argument|unsigned DepReg
 argument_list|)
@@ -309,7 +309,23 @@ name|bool
 name|demoteToDotOld
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
+name|MI
+argument_list|)
+block|;
+name|bool
+name|useCallersSP
+argument_list|(
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;
+name|void
+name|useCalleesSP
+argument_list|(
+name|MachineInstr
+operator|&
 name|MI
 argument_list|)
 block|;
@@ -329,7 +345,7 @@ name|bool
 name|restrictingDepExistInPacket
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 argument_list|,
 name|unsigned
 argument_list|)
@@ -339,15 +355,20 @@ name|isNewifiable
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|NewRC
 argument_list|)
 block|;
 name|bool
 name|isCurifiable
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 block|;
@@ -356,12 +377,12 @@ name|cannotCoexist
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MJ
 argument_list|)
 block|;
@@ -394,12 +415,12 @@ name|hasDeadDependence
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|I
 argument_list|,
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|J
 argument_list|)
 block|;
@@ -408,12 +429,12 @@ name|hasControlDependence
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|I
 argument_list|,
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|J
 argument_list|)
 block|;
@@ -422,12 +443,12 @@ name|hasV4SpecificDependence
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|I
 argument_list|,
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|J
 argument_list|)
 block|;
@@ -436,7 +457,7 @@ name|producesStall
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 block|; }

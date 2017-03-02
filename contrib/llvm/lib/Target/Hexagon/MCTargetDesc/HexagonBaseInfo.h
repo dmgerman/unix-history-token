@@ -141,7 +141,7 @@ name|TypeXTYPE
 init|=
 literal|8
 block|,
-name|TypeMEMOP
+name|TypeV4LDST
 init|=
 literal|9
 block|,
@@ -332,7 +332,7 @@ name|NoMemAccess
 operator|=
 literal|0
 operator|,
-comment|// Not a memory acces instruction.
+comment|// Not a memory access instruction.
 name|ByteAccess
 operator|=
 literal|1
@@ -627,7 +627,7 @@ name|AccumulatorMask
 init|=
 literal|0x1
 block|,
-comment|// Complex XU, prevent xu competition by prefering slot3
+comment|// Complex XU, prevent xu competition by preferring slot3
 name|PrefersSlot3Pos
 init|=
 literal|55
@@ -635,7 +635,15 @@ block|,
 name|PrefersSlot3Mask
 init|=
 literal|0x1
-block|,   }
+block|,
+name|CofMax1Pos
+init|=
+literal|60
+block|,
+name|CofMax1Mask
+init|=
+literal|0x1
+block|}
 enum|;
 comment|// *** The code above must match HexagonInstrFormat*.td *** //
 comment|// Hexagon specific MO operand flag mask.

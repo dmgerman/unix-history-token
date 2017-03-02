@@ -68,13 +68,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-enumerations.h"
+file|"Plugins/Process/Utility/DynamicRegisterInfo.h"
 end_include
 
 begin_include
@@ -98,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/Utility/DynamicRegisterInfo.h"
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -139,7 +139,7 @@ argument_list|()
 operator|:
 name|DynamicRegisterInfo
 argument_list|()
-block|{     }
+block|{}
 operator|~
 name|GDBRemoteDynamicRegisterInfo
 argument_list|()
@@ -300,7 +300,7 @@ name|PrivateSetRegisterValue
 argument_list|(
 argument|uint32_t reg
 argument_list|,
-argument|StringExtractor&response
+argument|llvm::ArrayRef<uint8_t> data
 argument_list|)
 block|;
 name|bool
@@ -438,15 +438,6 @@ operator|=
 name|valid
 expr_stmt|;
 block|}
-name|void
-name|SyncThreadState
-parameter_list|(
-name|Process
-modifier|*
-name|process
-parameter_list|)
-function_decl|;
-comment|// Assumes the sequence mutex has already been acquired.
 name|GDBRemoteDynamicRegisterInfo
 modifier|&
 name|m_reg_info

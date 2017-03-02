@@ -885,10 +885,49 @@ literal|0
 index|]
 return|;
 block|}
+comment|/// Find a subrange corresponding to the lane mask @p LM in the live
+comment|/// interval @p LI. The interval @p LI is assumed to contain such a subrange.
+comment|/// This function is used to find corresponding subranges between the
+comment|/// original interval and the new intervals.
+name|LiveInterval
+operator|::
+name|SubRange
+operator|&
+name|getSubRangeForMask
+argument_list|(
+argument|LaneBitmask LM
+argument_list|,
+argument|LiveInterval&LI
+argument_list|)
+expr_stmt|;
+comment|/// Add a segment to the interval LI for the value number VNI. If LI has
+comment|/// subranges, corresponding segments will be added to them as well, but
+comment|/// with newly created value numbers. If Original is true, dead def will
+comment|/// only be added a subrange of LI if the corresponding subrange of the
+comment|/// original interval has a def at this index. Otherwise, all subranges
+comment|/// of LI will be updated.
+name|void
+name|addDeadDef
+parameter_list|(
+name|LiveInterval
+modifier|&
+name|LI
+parameter_list|,
+name|VNInfo
+modifier|*
+name|VNI
+parameter_list|,
+name|bool
+name|Original
+parameter_list|)
+function_decl|;
 comment|/// defValue - define a value in RegIdx from ParentVNI at Idx.
 comment|/// Idx does not have to be ParentVNI->def, but it must be contained within
 comment|/// ParentVNI's live range in ParentLI. The new value is added to the value
-comment|/// map.
+comment|/// map. The value being defined may either come from rematerialization
+comment|/// (or an inserted copy), or it may be coming from the original interval.
+comment|/// The parameter Original should be true in the latter case, otherwise
+comment|/// it should be false.
 comment|/// Return the new LI value.
 name|VNInfo
 modifier|*
@@ -904,6 +943,9 @@ name|ParentVNI
 parameter_list|,
 name|SlotIndex
 name|Idx
+parameter_list|,
+name|bool
+name|Original
 parameter_list|)
 function_decl|;
 comment|/// forceRecompute - Force the live range of ParentVNI in RegIdx to be
@@ -1010,6 +1052,36 @@ name|bool
 name|transferValues
 parameter_list|()
 function_decl|;
+comment|/// Live range @p LR corresponding to the lane Mask @p LM has a live
+comment|/// PHI def at the beginning of block @p B. Extend the range @p LR of
+comment|/// all predecessor values that reach this def. If @p LR is a subrange,
+comment|/// the array @p Undefs is the set of all locations where it is undefined
+comment|/// via<def,read-undef> in other subranges for the same register.
+name|void
+name|extendPHIRange
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|B
+argument_list|,
+name|LiveRangeCalc
+operator|&
+name|LRC
+argument_list|,
+name|LiveRange
+operator|&
+name|LR
+argument_list|,
+name|LaneBitmask
+name|LM
+argument_list|,
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|Undefs
+argument_list|)
+decl_stmt|;
 comment|/// extendPHIKillRanges - Extend the ranges of all values killed by original
 comment|/// parent PHIDefs.
 name|void

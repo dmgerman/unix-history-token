@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- IRForTarget.h ---------------------------------------------*- C++ -*-===//
+comment|//===-- IRForTarget.h ---------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -46,12 +50,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -82,19 +80,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-public.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<functional>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<functional>
+file|<map>
 end_include
 
 begin_decl_stmt
@@ -279,9 +283,9 @@ argument|bool resolve_vars
 argument_list|,
 argument|lldb_private::IRExecutionUnit&execution_unit
 argument_list|,
-argument|lldb_private::Stream *error_stream
+argument|lldb_private::Stream&error_stream
 argument_list|,
-argument|const char* func_name =
+argument|const char *func_name =
 literal|"$__lldb_expr"
 argument_list|)
 block|;
@@ -328,7 +332,7 @@ name|assignPassManager
 argument_list|(
 argument|llvm::PMStack&pass_mgr_stack
 argument_list|,
-argument|llvm::PassManagerType pass_mgr_type = llvm::PMT_ModulePassManager
+argument|llvm::PassManagerType pass_mgr_type =                              llvm::PMT_ModulePassManager
 argument_list|)
 name|override
 block|;
@@ -651,6 +655,49 @@ name|basic_block
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
+comment|/// A basic block-level pass to find all Objective-C class references that
+comment|/// use the old-style Objective-C runtime and rewrite them to use
+comment|/// class_getClass instead of statically allocated class references.
+comment|//------------------------------------------------------------------
+comment|//------------------------------------------------------------------
+comment|/// Replace a single old-style class reference
+comment|///
+comment|/// @param[in] selector_load
+comment|///     The load of the statically-allocated selector.
+comment|///
+comment|/// @return
+comment|///     True on success; false otherwise
+comment|//------------------------------------------------------------------
+name|bool
+name|RewriteObjCClassReference
+argument_list|(
+name|llvm
+operator|::
+name|Instruction
+operator|*
+name|class_load
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// The top-level pass implementation
+comment|///
+comment|/// @param[in] basic_block
+comment|///     The basic block currently being processed.
+comment|///
+comment|/// @return
+comment|///     True on success; false otherwise
+comment|//------------------------------------------------------------------
+name|bool
+name|RewriteObjCClassReferences
+argument_list|(
+name|llvm
+operator|::
+name|BasicBlock
+operator|&
+name|basic_block
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
 comment|/// A basic block-level pass to find all newly-declared persistent
 comment|/// variables and register them with the ClangExprDeclMap.  This
 comment|/// allows them to be materialized and dematerialized like normal
@@ -954,7 +1001,8 @@ comment|/// Flags
 name|bool
 name|m_resolve_vars
 block|;
-comment|///< True if external variable references and persistent variable references should be resolved
+comment|///< True if external variable references and persistent
+comment|///variable references should be resolved
 name|lldb_private
 operator|::
 name|ConstString
@@ -979,7 +1027,8 @@ name|Module
 operator|*
 name|m_module
 block|;
-comment|///< The module being processed, or NULL if that has not been determined yet.
+comment|///< The module being processed, or NULL if that has
+comment|///not been determined yet.
 name|std
 operator|::
 name|unique_ptr
@@ -990,7 +1039,10 @@ name|DataLayout
 operator|>
 name|m_target_data
 block|;
-comment|///< The target data for the module being processed, or NULL if there is no module.
+comment|///< The target data for the
+comment|///module being processed, or
+comment|///NULL if there is no
+comment|///module.
 name|lldb_private
 operator|::
 name|ClangExpressionDeclMap
@@ -1004,16 +1056,30 @@ name|Constant
 operator|*
 name|m_CFStringCreateWithBytes
 block|;
-comment|///< The address of the function CFStringCreateWithBytes, cast to the
-comment|///appropriate function pointer type
+comment|///< The address of the function
+comment|///CFStringCreateWithBytes, cast to
+comment|///the
+comment|/// appropriate function pointer type
 name|llvm
 operator|::
 name|Constant
 operator|*
 name|m_sel_registerName
 block|;
-comment|///< The address of the function sel_registerName, cast to the appropriate
-comment|///function pointer type
+comment|///< The address of the function
+comment|///sel_registerName, cast to the
+comment|///appropriate
+comment|/// function pointer type
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|m_objc_getClass
+block|;
+comment|///< The address of the function
+comment|///objc_getClass, cast to the
+comment|///appropriate
+comment|/// function pointer type
 name|llvm
 operator|::
 name|IntegerType
@@ -1024,10 +1090,10 @@ comment|///< The type of an integer large enough to hold a pointer.
 name|lldb_private
 operator|::
 name|Stream
-operator|*
+operator|&
 name|m_error_stream
 block|;
-comment|///< If non-NULL, the stream on which errors should be printed
+comment|///< The stream on which errors should be printed
 name|lldb_private
 operator|::
 name|IRExecutionUnit
@@ -1041,21 +1107,25 @@ name|StoreInst
 operator|*
 name|m_result_store
 block|;
-comment|///< If non-NULL, the store instruction that writes to the result variable.  If
-comment|///m_has_side_effects is true, this is NULL.
+comment|///< If non-NULL, the store instruction that
+comment|///writes to the result variable.  If
+comment|/// m_has_side_effects is true, this is NULL.
 name|bool
 name|m_result_is_pointer
 block|;
-comment|///< True if the function's result in the AST is a pointer (see comments in
-comment|///ASTResultSynthesizer::SynthesizeBodyResult)
+comment|///< True if the function's result in the AST is a
+comment|///pointer (see comments in
+comment|/// ASTResultSynthesizer::SynthesizeBodyResult)
 name|llvm
 operator|::
 name|GlobalVariable
 operator|*
 name|m_reloc_placeholder
 block|;
-comment|///< A placeholder that will be replaced by a pointer to the final
-comment|///location of the static allocation.
+comment|///< A placeholder that will be
+comment|///replaced by a pointer to the
+comment|///final
+comment|/// location of the static allocation.
 comment|//------------------------------------------------------------------
 comment|/// UnfoldConstant operates on a constant [Old] which has just been
 comment|/// replaced with a value [New].  We assume that new_value has
@@ -1170,6 +1240,12 @@ name|Constant
 operator|*
 name|old_constant
 argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|llvm_function
+argument_list|,
 name|FunctionValueCache
 operator|&
 name|value_maker
@@ -1177,6 +1253,12 @@ argument_list|,
 name|FunctionValueCache
 operator|&
 name|entry_instruction_finder
+argument_list|,
+name|lldb_private
+operator|::
+name|Stream
+operator|&
+name|error_stream
 argument_list|)
 decl_stmt|;
 end_decl_stmt

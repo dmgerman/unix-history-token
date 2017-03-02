@@ -251,6 +251,24 @@ argument_list|,
 argument|MCSubtargetInfo const&STI
 argument_list|)
 specifier|const
+block|;
+name|private
+operator|:
+name|uint64_t
+name|computeAvailableFeatures
+argument_list|(
+argument|const FeatureBitset&FB
+argument_list|)
+specifier|const
+block|;
+name|void
+name|verifyInstructionPredicates
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|uint64_t AvailableFeatures
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 comment|// class HexagonMCCodeEmitter

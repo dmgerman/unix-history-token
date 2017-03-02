@@ -137,7 +137,7 @@ name|m_addr
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 name|Kind
 name|GetKind
 argument_list|()
@@ -652,7 +652,7 @@ name|m_child_tid
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 name|ProcessMessage
 argument_list|(
 argument|lldb::tid_t tid
@@ -693,7 +693,7 @@ name|m_child_tid
 argument_list|(
 argument|child_tid
 argument_list|)
-block|{ }
+block|{}
 name|lldb
 operator|::
 name|tid_t

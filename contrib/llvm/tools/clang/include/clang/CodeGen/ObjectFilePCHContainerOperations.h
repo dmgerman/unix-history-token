@@ -114,14 +114,11 @@ return|return
 literal|"obj"
 return|;
 block|}
-comment|/// Initialize an llvm::BitstreamReader with the serialized
-comment|/// AST inside the PCH container Buffer.
-name|void
+comment|/// Returns the serialized AST inside the PCH container Buffer.
+name|StringRef
 name|ExtractPCH
 argument_list|(
 argument|llvm::MemoryBufferRef Buffer
-argument_list|,
-argument|llvm::BitstreamReader&StreamFile
 argument_list|)
 specifier|const
 name|override

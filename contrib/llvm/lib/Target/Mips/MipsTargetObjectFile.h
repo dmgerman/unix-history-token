@@ -75,6 +75,26 @@ name|MipsTargetMachine
 operator|*
 name|TM
 block|;
+name|bool
+name|IsGlobalInSmallSection
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|,
+argument|SectionKind Kind
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|IsGlobalInSmallSectionImpl
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|void
@@ -91,27 +111,7 @@ comment|/// section.
 name|bool
 name|IsGlobalInSmallSection
 argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|const TargetMachine&TM
-argument_list|,
-argument|SectionKind Kind
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|IsGlobalInSmallSection
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|const TargetMachine&TM
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|IsGlobalInSmallSectionImpl
-argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -121,11 +121,9 @@ name|MCSection
 operator|*
 name|SelectSectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -155,6 +153,17 @@ argument_list|,
 argument|const Constant *C
 argument_list|,
 argument|unsigned&Align
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Describe a TLS variable address within debug info.
+specifier|const
+name|MCExpr
+operator|*
+name|getDebugThreadLocalSymbol
+argument_list|(
+argument|const MCSymbol *Sym
 argument_list|)
 specifier|const
 name|override

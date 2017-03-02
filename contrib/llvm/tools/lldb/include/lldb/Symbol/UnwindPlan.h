@@ -80,13 +80,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/AddressRange.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/AddressRange.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/ConstString.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -181,7 +181,7 @@ argument_list|)
 operator|,
 name|m_location
 argument_list|()
-block|{             }
+block|{}
 name|bool
 name|operator
 operator|==
@@ -664,7 +664,7 @@ argument_list|)
 operator|,
 name|m_value
 argument_list|()
-block|{             }
+block|{}
 name|bool
 name|operator
 operator|==
@@ -1090,7 +1090,8 @@ union|union
 block|{
 struct|struct
 block|{
-comment|// For m_type == isRegisterPlusOffset or m_type == isRegisterDereferenced
+comment|// For m_type == isRegisterPlusOffset or m_type ==
+comment|// isRegisterDereferenced
 name|uint32_t
 name|reg_num
 decl_stmt|;
@@ -1496,7 +1497,7 @@ argument_list|()
 operator|,
 name|m_personality_func_addr
 argument_list|()
-block|{     }
+block|{}
 comment|// Performs a deep copy of the plan, including all the rows (expensive).
 name|UnwindPlan
 argument_list|(
@@ -1587,7 +1588,7 @@ name|m_row_list
 operator|.
 name|emplace_back
 argument_list|(
-argument|new Row (*row_sp)
+argument|new Row(*row_sp)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1653,15 +1654,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// Returns a pointer to the best row for the given offset into the function's instructions.
+comment|// Returns a pointer to the best row for the given offset into the function's
 end_comment
 
 begin_comment
-comment|// If offset is -1 it indicates that the function start is unknown - the final row in the UnwindPlan is returned.
+comment|// instructions.
 end_comment
 
 begin_comment
-comment|// In practice, the UnwindPlan for a function with no known start address will be the architectural default
+comment|// If offset is -1 it indicates that the function start is unknown - the final
+end_comment
+
+begin_comment
+comment|// row in the UnwindPlan is returned.
+end_comment
+
+begin_comment
+comment|// In practice, the UnwindPlan for a function with no known start address will
+end_comment
+
+begin_comment
+comment|// be the architectural default
 end_comment
 
 begin_comment
@@ -1917,7 +1930,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Is this UnwindPlan valid at all instructions?  If not, then it is assumed valid at call sites,
+comment|// Is this UnwindPlan valid at all instructions?  If not, then it is assumed
+end_comment
+
+begin_comment
+comment|// valid at call sites,
 end_comment
 
 begin_comment
@@ -1939,7 +1956,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// Is this UnwindPlan valid at all instructions?  If not, then it is assumed valid at call sites,
+comment|// Is this UnwindPlan valid at all instructions?  If not, then it is assumed
+end_comment
+
+begin_comment
+comment|// valid at call sites,
 end_comment
 
 begin_comment
@@ -2127,7 +2148,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// The RegisterKind these register numbers are in terms of - will need to be
+comment|// The RegisterKind these register numbers
+end_comment
+
+begin_comment
+comment|// are in terms of - will need to be
 end_comment
 
 begin_comment
@@ -2141,7 +2166,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The register that has the return address for the caller frame
+comment|// The register that has the return address
+end_comment
+
+begin_comment
+comment|// for the caller frame
 end_comment
 
 begin_comment
@@ -2183,7 +2212,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Where the language specific data area exists in the module - used
+comment|// Where the language specific data area exists in the
+end_comment
+
+begin_comment
+comment|// module - used
 end_comment
 
 begin_comment
@@ -2197,7 +2230,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The address of a pointer to the personality function - used in
+comment|// The address of a pointer to the
+end_comment
+
+begin_comment
+comment|// personality function - used in
 end_comment
 
 begin_comment

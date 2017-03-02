@@ -114,12 +114,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -138,7 +132,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Chrono.h"
 end_include
 
 begin_include
@@ -151,12 +145,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorOr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/TimeValue.h"
 end_include
 
 begin_include
@@ -175,6 +163,12 @@ begin_include
 include|#
 directive|include
 file|<ctime>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -1159,12 +1153,16 @@ return|return
 name|Perms
 return|;
 block|}
-name|TimeValue
+name|TimePoint
+operator|<
+operator|>
 name|getLastAccessedTime
 argument_list|()
 specifier|const
 expr_stmt|;
-name|TimeValue
+name|TimePoint
+operator|<
+operator|>
 name|getLastModificationTime
 argument_list|()
 specifier|const
@@ -1350,6 +1348,9 @@ comment|///< Mach-O kext bundle file
 name|macho_universal_binary
 block|,
 comment|///< Mach-O universal binary
+name|coff_cl_gl_object
+block|,
+comment|///< Microsoft cl.exe's intermediate code file
 name|coff_object
 block|,
 comment|///< COFF object file
@@ -1360,7 +1361,10 @@ name|pecoff_executable
 block|,
 comment|///< PECOFF executable file
 name|windows_resource
+block|,
 comment|///< Windows compiled resource file (.rc)
+name|wasm_object
+comment|///< WebAssembly Object file
 block|}
 enum|;
 name|bool
@@ -1515,6 +1519,28 @@ name|std
 operator|::
 name|error_code
 name|create_link
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|to
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|from
+argument_list|)
+expr_stmt|;
+comment|/// Create a hard link from \a from to \a to, or return an error.
+comment|///
+comment|/// @param to The path to hard link to.
+comment|/// @param from The path to hard link from. This is created.
+comment|/// @returns errc::success if the link was created, otherwise a platform
+comment|/// specific error_code.
+name|std
+operator|::
+name|error_code
+name|create_hard_link
 argument_list|(
 specifier|const
 name|Twine
@@ -2062,7 +2088,7 @@ name|setLastModificationAndAccessTime
 argument_list|(
 argument|int FD
 argument_list|,
-argument|TimeValue Time
+argument|TimePoint<> Time
 argument_list|)
 expr_stmt|;
 comment|/// @brief Is status available?
@@ -2407,30 +2433,6 @@ comment|/// boost::iostreams::mapped_file.
 name|class
 name|mapped_file_region
 block|{
-name|mapped_file_region
-argument_list|()
-operator|=
-name|delete
-expr_stmt|;
-name|mapped_file_region
-argument_list|(
-name|mapped_file_region
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|mapped_file_region
-modifier|&
-name|operator
-init|=
-operator|(
-name|mapped_file_region
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|public
 label|:
 enum|enum
@@ -2470,6 +2472,30 @@ argument_list|)
 expr_stmt|;
 name|public
 label|:
+name|mapped_file_region
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
+name|mapped_file_region
+argument_list|(
+name|mapped_file_region
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|mapped_file_region
+modifier|&
+name|operator
+init|=
+operator|(
+name|mapped_file_region
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|/// \param fd An open file descriptor to map. mapped_file_region takes
 comment|///   ownership if closefd is true. It must have been opended in the correct
 comment|///   mode.
@@ -2579,14 +2605,23 @@ argument_list|)
 block|{}
 name|directory_entry
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|void
 name|assign
-argument_list|(
-argument|const Twine&path
-argument_list|,
-argument|file_status st = file_status()
-argument_list|)
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|path
+parameter_list|,
+name|file_status
+name|st
+init|=
+name|file_status
+argument_list|()
+parameter_list|)
 block|{
 name|Path
 operator|=
@@ -2594,19 +2629,27 @@ name|path
 operator|.
 name|str
 argument_list|()
-block|;
+expr_stmt|;
 name|Status
 operator|=
 name|st
-block|;   }
+expr_stmt|;
+block|}
 name|void
 name|replace_filename
-argument_list|(
-argument|const Twine&filename
-argument_list|,
-argument|file_status st = file_status()
-argument_list|)
-expr_stmt|;
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|filename
+parameter_list|,
+name|file_status
+name|st
+init|=
+name|file_status
+argument_list|()
+parameter_list|)
+function_decl|;
 specifier|const
 name|std
 operator|::
@@ -2750,25 +2793,10 @@ name|DirIterState
 operator|&
 argument_list|)
 expr_stmt|;
-comment|/// DirIterState - Keeps state for the directory_iterator. It is reference
-comment|/// counted in order to preserve InputIterator semantics on copy.
-name|struct
+comment|/// Keeps state for the directory_iterator.
+struct|struct
 name|DirIterState
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|DirIterState
-operator|>
 block|{
-name|DirIterState
-argument_list|()
-operator|:
-name|IterationHandle
-argument_list|(
-literal|0
-argument_list|)
-block|{}
 operator|~
 name|DirIterState
 argument_list|()
@@ -2781,11 +2809,14 @@ argument_list|)
 block|;     }
 name|intptr_t
 name|IterationHandle
-block|;
+operator|=
+literal|0
+expr_stmt|;
 name|directory_entry
 name|CurrentEntry
-block|;   }
 decl_stmt|;
+block|}
+struct|;
 block|}
 comment|// end namespace detail
 comment|/// directory_iterator - Iterates through the entries in path. There is no
@@ -2794,7 +2825,9 @@ comment|/// it call report_fatal_error on error.
 name|class
 name|directory_iterator
 block|{
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|detail
 operator|::
@@ -2821,10 +2854,16 @@ argument_list|)
 block|{
 name|State
 operator|=
-name|new
+name|std
+operator|::
+name|make_shared
+operator|<
 name|detail
 operator|::
 name|DirIterState
+operator|>
+operator|(
+operator|)
 expr_stmt|;
 name|SmallString
 operator|<
@@ -2867,10 +2906,16 @@ argument_list|)
 block|{
 name|State
 operator|=
-name|new
+name|std
+operator|::
+name|make_shared
+operator|<
 name|detail
 operator|::
 name|DirIterState
+operator|>
+operator|(
+operator|)
 expr_stmt|;
 name|ec
 operator|=
@@ -2891,18 +2936,19 @@ block|}
 comment|/// Construct end iterator.
 name|directory_iterator
 argument_list|()
-operator|:
-name|State
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|// No operator++ because we need error_code.
 name|directory_iterator
-operator|&
+modifier|&
 name|increment
 argument_list|(
-argument|std::error_code&ec
+name|std
+operator|::
+name|error_code
+operator|&
+name|ec
 argument_list|)
 block|{
 name|ec
@@ -2912,7 +2958,7 @@ argument_list|(
 operator|*
 name|State
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 operator|*
 name|this
@@ -3052,52 +3098,36 @@ unit|};
 name|namespace
 name|detail
 block|{
-comment|/// RecDirIterState - Keeps state for the recursive_directory_iterator. It is
-comment|/// reference counted in order to preserve InputIterator semantics on copy.
-name|struct
+comment|/// Keeps state for the recursive_directory_iterator.
+struct|struct
 name|RecDirIterState
-range|:
-name|public
-name|RefCountedBase
-operator|<
-name|RecDirIterState
-operator|>
 block|{
-name|RecDirIterState
-argument_list|()
-operator|:
-name|Level
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasNoPushRequest
-argument_list|(
-argument|false
-argument_list|)
-block|{}
 name|std
 operator|::
 name|stack
 operator|<
 name|directory_iterator
-block|,
+operator|,
 name|std
 operator|::
 name|vector
 operator|<
 name|directory_iterator
-operator|>
-expr|>
+operator|>>
 name|Stack
-block|;
+expr_stmt|;
 name|uint16_t
 name|Level
-block|;
+init|=
+literal|0
+decl_stmt|;
 name|bool
 name|HasNoPushRequest
-block|;   }
+init|=
+name|false
 decl_stmt|;
+block|}
+struct|;
 block|}
 end_decl_stmt
 
@@ -3117,7 +3147,9 @@ begin_decl_stmt
 name|class
 name|recursive_directory_iterator
 block|{
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|detail
 operator|::
@@ -3129,7 +3161,9 @@ name|public
 label|:
 name|recursive_directory_iterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|explicit
 name|recursive_directory_iterator
 argument_list|(
@@ -3147,7 +3181,7 @@ argument_list|)
 range|:
 name|State
 argument_list|(
-argument|new detail::RecDirIterState
+argument|std::make_shared<detail::RecDirIterState>()
 argument_list|)
 block|{
 name|State
@@ -3197,6 +3231,8 @@ block|{
 specifier|const
 name|directory_iterator
 name|end_itr
+init|=
+block|{}
 decl_stmt|;
 if|if
 condition|(
@@ -3477,6 +3513,8 @@ expr_stmt|;
 specifier|const
 name|directory_iterator
 name|end_itr
+init|=
+block|{}
 decl_stmt|;
 name|std
 operator|::

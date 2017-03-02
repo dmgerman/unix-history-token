@@ -132,7 +132,7 @@ name|name
 argument_list|(
 argument|NULL
 argument_list|)
-block|{         }
+block|{}
 name|Entry
 argument_list|(
 argument|dw_tag_t t
@@ -149,11 +149,11 @@ name|name
 argument_list|(
 argument|n
 argument_list|)
-block|{         }
+block|{}
 name|bool
 name|NameMatches
 argument_list|(
-argument|const Entry& rhs
+argument|const Entry&rhs
 argument_list|)
 specifier|const
 block|{
@@ -232,7 +232,7 @@ name|m_language
 argument_list|(
 argument|lldb::eLanguageTypeUnknown
 argument_list|)
-block|{     }
+block|{}
 name|void
 name|AppendDeclContext
 argument_list|(
@@ -252,7 +252,7 @@ argument_list|,
 name|name
 argument_list|)
 argument_list|)
-block|;     }
+block|;   }
 name|bool
 name|operator
 operator|==

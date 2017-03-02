@@ -204,7 +204,7 @@ comment|/// would be. This means that the zero value for the tag type is signifi
 end_comment
 
 begin_comment
-comment|/// and may be desireable to set to a state that is particularly desirable to
+comment|/// and may be desirable to set to a state that is particularly desirable to
 end_comment
 
 begin_comment
@@ -487,6 +487,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|explicit
 name|operator
 name|bool
 argument_list|()

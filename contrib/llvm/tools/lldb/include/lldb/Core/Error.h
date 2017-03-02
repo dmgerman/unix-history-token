@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/FormatVariadic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstdarg>
 end_include
 
@@ -80,6 +86,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/FormatVariadic.h"
 end_include
 
 begin_decl_stmt
@@ -985,17 +997,17 @@ begin_comment
 comment|//------------------------------------------------------------------
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|SetErrorString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|err_str
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -1063,47 +1075,55 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|/// Test for success condition.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Returns true if the error code in this object is considered a
-end_comment
-
-begin_comment
-comment|/// successful return value.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @return
-end_comment
-
-begin_comment
-comment|///     \b true if this object contains an value that describes
-end_comment
-
-begin_comment
-comment|///     success (non-erro), \b false otherwise.
-end_comment
-
-begin_comment
-comment|//------------------------------------------------------------------
-end_comment
-
 begin_expr_stmt
+name|template
+operator|<
+name|typename
+operator|...
+name|Args
+operator|>
+name|void
+name|SetErrorStringWithFormatv
+argument_list|(
+argument|const char *format
+argument_list|,
+argument|Args&&... args
+argument_list|)
+block|{
+name|SetErrorString
+argument_list|(
+name|llvm
+operator|::
+name|formatv
+argument_list|(
+name|format
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|Args
+operator|>
+operator|(
+name|args
+operator|)
+operator|...
+argument_list|)
+operator|.
+name|str
+argument_list|()
+argument_list|)
+block|;   }
+comment|//------------------------------------------------------------------
+comment|/// Test for success condition.
+comment|///
+comment|/// Returns true if the error code in this object is considered a
+comment|/// successful return value.
+comment|///
+comment|/// @return
+comment|///     \b true if this object contains an value that describes
+comment|///     success (non-erro), \b false otherwise.
+comment|//------------------------------------------------------------------
 name|bool
 name|Success
 argument_list|()
@@ -1215,6 +1235,61 @@ begin_comment
 unit|};  }
 comment|// namespace lldb_private
 end_comment
+
+begin_macro
+unit|namespace
+name|llvm
+end_macro
+
+begin_block
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|format_provider
+operator|<
+name|lldb_private
+operator|::
+name|Error
+operator|>
+block|{
+specifier|static
+name|void
+name|format
+argument_list|(
+argument|const lldb_private::Error&error
+argument_list|,
+argument|llvm::raw_ostream&OS
+argument_list|,
+argument|llvm::StringRef Options
+argument_list|)
+block|{
+name|llvm
+operator|::
+name|format_provider
+operator|<
+name|llvm
+operator|::
+name|StringRef
+operator|>
+operator|::
+name|format
+argument_list|(
+name|error
+operator|.
+name|AsCString
+argument_list|()
+argument_list|,
+name|OS
+argument_list|,
+name|Options
+argument_list|)
+block|;   }
+block|}
+expr_stmt|;
+block|}
+end_block
 
 begin_endif
 endif|#

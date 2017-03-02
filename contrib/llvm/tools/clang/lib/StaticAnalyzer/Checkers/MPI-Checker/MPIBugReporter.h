@@ -166,9 +166,7 @@ name|BReporter
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Report a missing wait for a nonblocking call. A missing wait report
-comment|/// is emitted if a nonblocking call is not matched in the scope of a
-comment|/// function.
+comment|/// Report a missing wait for a nonblocking call.
 comment|///
 comment|/// \param Req request that is not matched by a wait
 comment|/// \param RequestRegion memory region of the request
@@ -335,8 +333,12 @@ argument_list|(
 name|RequestRegion
 argument_list|)
 block|;     }
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|VisitNode
 argument_list|(
 argument|const ExplodedNode *N

@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Host.h"
 end_include
 
@@ -128,12 +122,10 @@ name|alignment
 operator|==
 literal|0
 operator|?
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|:
 name|alignment
 block|}

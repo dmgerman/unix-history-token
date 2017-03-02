@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"JITSymbol.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_decl_stmt

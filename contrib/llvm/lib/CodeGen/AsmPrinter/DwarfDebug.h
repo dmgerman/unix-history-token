@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -218,7 +224,7 @@ comment|/// This class is used to track local variable information.
 comment|///
 comment|/// Variables can be created from allocas, in which case they're generated from
 comment|/// the MMI table.  Such variables can have multiple expressions and frame
-comment|/// indices.  The \a Expr and \a FrameIndices array must match.
+comment|/// indices.
 comment|///
 comment|/// Variables can be created from \c DBG_VALUE instructions.  Those whose
 comment|/// location changes over time use \a DebugLocListIndex, while those with a
@@ -240,17 +246,6 @@ modifier|*
 name|IA
 decl_stmt|;
 comment|/// Inlined at location.
-name|SmallVector
-operator|<
-specifier|const
-name|DIExpression
-operator|*
-operator|,
-literal|1
-operator|>
-name|Expr
-expr_stmt|;
-comment|/// Complex address.
 name|DIE
 modifier|*
 name|TheDIE
@@ -273,15 +268,29 @@ init|=
 name|nullptr
 decl_stmt|;
 comment|/// DBG_VALUE instruction.
+struct|struct
+name|FrameIndexExpr
+block|{
+name|int
+name|FI
+decl_stmt|;
+specifier|const
+name|DIExpression
+modifier|*
+name|Expr
+decl_stmt|;
+block|}
+struct|;
+name|mutable
 name|SmallVector
 operator|<
-name|int
+name|FrameIndexExpr
 operator|,
 literal|1
 operator|>
-name|FrameIndex
+name|FrameIndexExprs
 expr_stmt|;
-comment|/// Frame index.
+comment|/// Frame index + expression.
 name|public
 label|:
 comment|/// Construct a DbgVariable.
@@ -322,17 +331,7 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|Expr
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"Already initialized?"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
@@ -371,18 +370,15 @@ operator|&&
 literal|"Expected valid index"
 argument_list|)
 block|;
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|push_back
 argument_list|(
-name|E
-argument_list|)
-block|;
-name|FrameIndex
-operator|.
-name|push_back
-argument_list|(
+block|{
 name|FI
+block|,
+name|E
+block|}
 argument_list|)
 block|;   }
 comment|/// Initialize from a DBG_VALUE instruction.
@@ -394,17 +390,7 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|Expr
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"Already initialized?"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
@@ -469,11 +455,15 @@ operator|->
 name|getNumElements
 argument_list|()
 condition|)
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|push_back
 argument_list|(
+block|{
+literal|0
+block|,
 name|E
+block|}
 argument_list|)
 expr_stmt|;
 block|}
@@ -500,20 +490,6 @@ return|return
 name|IA
 return|;
 block|}
-name|ArrayRef
-operator|<
-specifier|const
-name|DIExpression
-operator|*
-operator|>
-name|getExpression
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Expr
-return|;
-block|}
 specifier|const
 name|DIExpression
 operator|*
@@ -525,7 +501,7 @@ name|assert
 argument_list|(
 name|MInsn
 operator|&&
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|size
 argument_list|()
@@ -534,15 +510,17 @@ literal|1
 argument_list|)
 block|;
 return|return
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|size
 argument_list|()
 condition|?
-name|Expr
+name|FrameIndexExprs
 index|[
 literal|0
 index|]
+operator|.
+name|Expr
 else|:
 name|nullptr
 return|;
@@ -615,16 +593,26 @@ return|return
 name|MInsn
 return|;
 block|}
+comment|/// Get the FI entries, sorted by fragment offset.
 name|ArrayRef
 operator|<
-name|int
+name|FrameIndexExpr
 operator|>
-name|getFrameIndex
+name|getFrameIndexExprs
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|hasFrameIndexExprs
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FrameIndex
+operator|!
+name|FrameIndexExprs
+operator|.
+name|empty
+argument_list|()
 return|;
 block|}
 name|void
@@ -691,7 +679,7 @@ expr_stmt|;
 name|assert
 argument_list|(
 operator|!
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
@@ -704,7 +692,7 @@ argument_list|(
 operator|!
 name|V
 operator|.
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
@@ -712,73 +700,20 @@ operator|&&
 literal|"Expected an MMI entry"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|Expr
-operator|.
-name|size
-argument_list|()
-operator|==
-name|FrameIndex
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Mismatched expressions"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|V
-operator|.
-name|Expr
-operator|.
-name|size
-argument_list|()
-operator|==
-name|V
-operator|.
-name|FrameIndex
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Mismatched expressions"
-argument_list|)
-expr_stmt|;
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|append
 argument_list|(
 name|V
 operator|.
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|begin
 argument_list|()
 argument_list|,
 name|V
 operator|.
-name|Expr
-operator|.
-name|end
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|FrameIndex
-operator|.
-name|append
-argument_list|(
-name|V
-operator|.
-name|FrameIndex
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|V
-operator|.
-name|FrameIndex
+name|FrameIndexExprs
 operator|.
 name|end
 argument_list|()
@@ -786,39 +721,32 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|std
-operator|::
 name|all_of
 argument_list|(
-name|Expr
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Expr
-operator|.
-name|end
-argument_list|()
+name|FrameIndexExprs
 argument_list|,
 index|[]
 operator|(
-specifier|const
-name|DIExpression
-operator|*
-name|E
+name|FrameIndexExpr
+operator|&
+name|FIE
 operator|)
 block|{
 return|return
-name|E
+name|FIE
+operator|.
+name|Expr
 operator|&&
-name|E
+name|FIE
+operator|.
+name|Expr
 operator|->
-name|isBitPiece
+name|isFragment
 argument_list|()
 return|;
 block|}
 block|)
-function|&& "conflicting locations for variable"
+function|&&            "conflicting locations for variable"
 block|)
 decl_stmt|;
 block|}
@@ -964,34 +892,26 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
-name|FrameIndex
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"Expected DBG_VALUE, not MMI variable"
-argument_list|)
-block|;
-name|assert
-argument_list|(
 operator|(
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
 operator|||
 operator|(
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|size
 argument_list|()
 operator|==
 literal|1
 operator|&&
-name|Expr
+name|FrameIndexExprs
+index|[
+literal|0
+index|]
 operator|.
-name|back
-argument_list|()
+name|Expr
 operator|->
 name|getNumElements
 argument_list|()
@@ -1003,7 +923,7 @@ argument_list|)
 block|;
 return|return
 operator|!
-name|Expr
+name|FrameIndexExprs
 operator|.
 name|empty
 argument_list|()
@@ -1195,14 +1115,29 @@ name|DebugLocs
 block|;
 comment|/// This is a collection of subprogram MDNodes that are processed to
 comment|/// create DIEs.
-name|SmallPtrSet
+name|SetVector
 operator|<
 specifier|const
-name|MDNode
+name|DISubprogram
+operator|*
+block|,
+name|SmallVector
+operator|<
+specifier|const
+name|DISubprogram
 operator|*
 block|,
 literal|16
 operator|>
+block|,
+name|SmallPtrSet
+operator|<
+specifier|const
+name|DISubprogram
+operator|*
+block|,
+literal|16
+operator|>>
 name|ProcessedSPNodes
 block|;
 comment|/// If nonnull, stores the current machine function we're processing.
@@ -1277,10 +1212,6 @@ block|;
 comment|/// Whether to emit all linkage names, or just abstract subprograms.
 name|bool
 name|UseAllLinkageNames
-block|;
-comment|/// Version of dwarf we're emitting.
-name|unsigned
-name|DwarfVersion
 block|;
 comment|/// DWARF5 Experimental Options
 comment|/// @{
@@ -2085,16 +2016,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Collect variable information from the side table maintained
-end_comment
-
-begin_comment
-comment|/// by MMI.
+comment|/// Collect variable information from the side table maintained by MF.
 end_comment
 
 begin_decl_stmt
 name|void
-name|collectVariableInfoFromMMITable
+name|collectVariableInfoFromMFTable
 argument_list|(
 name|DenseSet
 operator|<
@@ -2444,15 +2371,11 @@ comment|/// Returns the Dwarf Version.
 end_comment
 
 begin_expr_stmt
-name|unsigned
+name|uint16_t
 name|getDwarfVersion
 argument_list|()
 specifier|const
-block|{
-return|return
-name|DwarfVersion
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -2581,33 +2504,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|/// Find the DwarfCompileUnit for the given CU Die.
-end_comment
-
-begin_decl_stmt
-name|DwarfCompileUnit
-modifier|*
-name|lookupUnit
-argument_list|(
-specifier|const
-name|DIE
-operator|*
-name|CU
-argument_list|)
-decl|const
-block|{
-return|return
-name|CUDieMap
-operator|.
-name|lookup
-argument_list|(
-name|CU
-argument_list|)
-return|;
-block|}
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|addSubprogramNames
@@ -2731,29 +2627,6 @@ name|Scope
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// FIXME: Sink these functions down into DwarfFile/Dwarf*Unit.
-end_comment
-
-begin_expr_stmt
-name|SmallPtrSet
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-literal|16
-operator|>
-operator|&
-name|getProcessedSPNodes
-argument_list|()
-block|{
-return|return
-name|ProcessedSPNodes
-return|;
-block|}
-end_expr_stmt
 
 begin_comment
 unit|}; }

@@ -82,6 +82,9 @@ name|class
 name|MCExpr
 decl_stmt|;
 name|class
+name|MCSection
+decl_stmt|;
+name|class
 name|Value
 decl_stmt|;
 struct_decl|struct
@@ -123,6 +126,13 @@ specifier|const
 name|MachineBasicBlock
 operator|*
 name|CurrentFuncletEntry
+operator|=
+name|nullptr
+block|;
+comment|/// The section of the last funclet start.
+name|MCSection
+operator|*
+name|CurrentFuncletTextSection
 operator|=
 name|nullptr
 block|;

@@ -85,12 +85,6 @@ directive|include
 file|<string>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_macro
 name|LLVM_YAML_IS_SEQUENCE_VECTOR
 argument_list|(
@@ -348,22 +342,6 @@ argument_list|,
 name|Doc
 operator|.
 name|MainSourceFile
-argument_list|)
-block|;
-name|Io
-operator|.
-name|mapOptional
-argument_list|(
-literal|"Context"
-argument_list|,
-name|Doc
-operator|.
-name|Context
-argument_list|,
-name|std
-operator|::
-name|string
-argument_list|()
 argument_list|)
 block|;
 name|Io

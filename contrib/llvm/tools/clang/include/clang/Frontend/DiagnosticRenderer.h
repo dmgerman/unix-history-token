@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 

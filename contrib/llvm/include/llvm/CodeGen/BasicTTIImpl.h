@@ -254,9 +254,10 @@ return|return
 name|Cost
 return|;
 block|}
-comment|/// Estimate the cost overhead of SK_Alternate shuffle.
+comment|/// Estimate a cost of shuffle as a sequence of extract and insert
+comment|/// operations.
 name|unsigned
-name|getAltShuffleOverhead
+name|getPermuteShuffleOverhead
 parameter_list|(
 name|Type
 modifier|*
@@ -429,64 +430,49 @@ name|DL
 expr_stmt|;
 name|public
 label|:
-comment|// Provide value semantics. MSVC requires that we spell all of these out.
-name|BasicTTIImplBase
-argument_list|(
-specifier|const
-name|BasicTTIImplBase
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|BaseT
-argument_list|(
-argument|static_cast<const BaseT&>(Arg)
-argument_list|)
-block|{}
-name|BasicTTIImplBase
-argument_list|(
-name|BasicTTIImplBase
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|BaseT
-argument_list|(
-argument|std::move(static_cast<BaseT&>(Arg))
-argument_list|)
-block|{}
 comment|/// \name Scalar TTI Implementations
 comment|/// @{
 name|bool
 name|allowsMisalignedMemoryAccesses
 argument_list|(
-argument|unsigned BitWidth
+name|LLVMContext
+operator|&
+name|Context
 argument_list|,
-argument|unsigned AddressSpace
+name|unsigned
+name|BitWidth
 argument_list|,
-argument|unsigned Alignment
+name|unsigned
+name|AddressSpace
 argument_list|,
-argument|bool *Fast
+name|unsigned
+name|Alignment
+argument_list|,
+name|bool
+operator|*
+name|Fast
 argument_list|)
-specifier|const
+decl|const
 block|{
-name|MVT
-name|M
-operator|=
-name|MVT
+name|EVT
+name|E
+init|=
+name|EVT
 operator|::
 name|getIntegerVT
 argument_list|(
+name|Context
+argument_list|,
 name|BitWidth
 argument_list|)
-block|;
+decl_stmt|;
 return|return
 name|getTLI
 argument_list|()
 operator|->
 name|allowsMisalignedMemoryAccesses
 argument_list|(
-name|M
+name|E
 argument_list|,
 name|AddressSpace
 argument_list|,
@@ -686,6 +672,29 @@ argument_list|,
 name|Ty
 argument_list|,
 name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|bool
+name|isFoldableMemAccessOffset
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|int64_t
+name|Offset
+parameter_list|)
+block|{
+return|return
+name|getTLI
+argument_list|()
+operator|->
+name|isFoldableMemAccessOffset
+argument_list|(
+name|I
+argument_list|,
+name|Offset
 argument_list|)
 return|;
 block|}
@@ -1359,6 +1368,7 @@ return|return;
 block|}
 block|}
 comment|// Enable runtime and partial unrolling up to the specified size.
+comment|// Enable using trip count upper bound to unroll loops.
 name|UP
 operator|.
 name|Partial
@@ -1367,17 +1377,38 @@ name|UP
 operator|.
 name|Runtime
 operator|=
+name|UP
+operator|.
+name|UpperBound
+operator|=
 name|true
 expr_stmt|;
 name|UP
 operator|.
 name|PartialThreshold
 operator|=
+name|MaxOps
+expr_stmt|;
+comment|// Avoid unrolling when optimizing for size.
+name|UP
+operator|.
+name|OptSizeThreshold
+operator|=
+literal|0
+expr_stmt|;
 name|UP
 operator|.
 name|PartialOptSizeThreshold
 operator|=
-name|MaxOps
+literal|0
+expr_stmt|;
+comment|// Set number of instructions optimized when "back edge"
+comment|// becomes "fall through" to default value of 2.
+name|UP
+operator|.
+name|BEInsns
+operator|=
+literal|2
 expr_stmt|;
 block|}
 comment|/// @}
@@ -1465,6 +1496,23 @@ operator|=
 name|TTI
 operator|::
 name|OP_None
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+name|Args
+operator|=
+name|ArrayRef
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|>
+operator|(
+operator|)
 argument_list|)
 block|{
 comment|// Check if any of the operands are vector operands.
@@ -1678,10 +1726,22 @@ operator|==
 name|TTI
 operator|::
 name|SK_Alternate
+operator|||
+name|Kind
+operator|==
+name|TTI
+operator|::
+name|SK_PermuteTwoSrc
+operator|||
+name|Kind
+operator|==
+name|TTI
+operator|::
+name|SK_PermuteSingleSrc
 condition|)
 block|{
 return|return
-name|getAltShuffleOverhead
+name|getPermuteShuffleOverhead
 argument_list|(
 name|Tp
 argument_list|)
@@ -4787,8 +4847,12 @@ name|Type
 modifier|*
 name|Ty
 parameter_list|,
-name|bool
-name|IsComplex
+name|ScalarEvolution
+modifier|*
+parameter_list|,
+specifier|const
+name|SCEV
+modifier|*
 parameter_list|)
 block|{
 return|return
@@ -4819,6 +4883,15 @@ operator|&&
 literal|"Expect a vector type"
 argument_list|)
 expr_stmt|;
+name|Type
+modifier|*
+name|ScalarTy
+init|=
+name|Ty
+operator|->
+name|getVectorElementType
+argument_list|()
+decl_stmt|;
 name|unsigned
 name|NumVecElts
 init|=
@@ -4835,11 +4908,55 @@ argument_list|(
 name|NumVecElts
 argument_list|)
 decl_stmt|;
+comment|// Try to calculate arithmetic and shuffle op costs for reduction operations.
+comment|// We're assuming that reduction operation are performing the following way:
+comment|// 1. Non-pairwise reduction
+comment|// %val1 = shufflevector<n x t> %val,<n x t> %undef,
+comment|//<n x i32><i32 n/2, i32 n/2 + 1, ..., i32 n, i32 undef, ..., i32 undef>
+comment|//            \----------------v-------------/  \----------v------------/
+comment|//                            n/2 elements               n/2 elements
+comment|// %red1 = op<n x t> %val,<n x t> val1
+comment|// After this operation we have a vector %red1 with only maningfull the
+comment|// first n/2 elements, the second n/2 elements are undefined and can be
+comment|// dropped. All other operations are actually working with the vector of
+comment|// length n/2, not n. though the real vector length is still n.
+comment|// %val2 = shufflevector<n x t> %red1,<n x t> %undef,
+comment|//<n x i32><i32 n/4, i32 n/4 + 1, ..., i32 n/2, i32 undef, ..., i32 undef>
+comment|//            \----------------v-------------/  \----------v------------/
+comment|//                            n/4 elements               3*n/4 elements
+comment|// %red2 = op<n x t> %red1,<n x t> val2  - working with the vector of
+comment|// length n/2, the resulting vector has length n/4 etc.
+comment|// 2. Pairwise reduction:
+comment|// Everything is the same except for an additional shuffle operation which
+comment|// is used to produce operands for pairwise kind of reductions.
+comment|// %val1 = shufflevector<n x t> %val,<n x t> %undef,
+comment|//<n x i32><i32 0, i32 2, ..., i32 n-2, i32 undef, ..., i32 undef>
+comment|//            \-------------v----------/  \----------v------------/
+comment|//                   n/2 elements               n/2 elements
+comment|// %val2 = shufflevector<n x t> %val,<n x t> %undef,
+comment|//<n x i32><i32 1, i32 3, ..., i32 n-1, i32 undef, ..., i32 undef>
+comment|//            \-------------v----------/  \----------v------------/
+comment|//                   n/2 elements               n/2 elements
+comment|// %red1 = op<n x t> %val1,<n x t> val2
+comment|// Again, the operation is performed on<n x t> vector, but the resulting
+comment|// vector %red1 is<n/2 x t> vector.
+comment|//
+comment|// The cost model should take into account that the actual length of the
+comment|// vector is reduced on each iteration.
 name|unsigned
 name|ArithCost
 init|=
-name|NumReduxLevels
+literal|0
+decl_stmt|;
+name|unsigned
+name|ShuffleCost
+init|=
+literal|0
+decl_stmt|;
+name|auto
 operator|*
+name|ConcreteTTI
+operator|=
 name|static_cast
 operator|<
 name|T
@@ -4848,34 +4965,74 @@ operator|>
 operator|(
 name|this
 operator|)
+expr_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|MVT
+operator|>
+name|LT
+operator|=
+name|ConcreteTTI
 operator|->
-name|getArithmeticInstrCost
+name|getTLI
+argument_list|()
+operator|->
+name|getTypeLegalizationCost
 argument_list|(
-name|Opcode
+name|DL
 argument_list|,
 name|Ty
 argument_list|)
-decl_stmt|;
-comment|// Assume the pairwise shuffles add a cost.
+expr_stmt|;
 name|unsigned
-name|ShuffleCost
+name|LongVectorCount
 init|=
-name|NumReduxLevels
-operator|*
+literal|0
+decl_stmt|;
+name|unsigned
+name|MVTLen
+init|=
+name|LT
+operator|.
+name|second
+operator|.
+name|isVector
+argument_list|()
+condition|?
+name|LT
+operator|.
+name|second
+operator|.
+name|getVectorNumElements
+argument_list|()
+else|:
+literal|1
+decl_stmt|;
+while|while
+condition|(
+name|NumVecElts
+operator|>
+name|MVTLen
+condition|)
+block|{
+name|NumVecElts
+operator|/=
+literal|2
+expr_stmt|;
+comment|// Assume the pairwise shuffles add a cost.
+name|ShuffleCost
+operator|+=
 operator|(
 name|IsPairwise
 operator|+
 literal|1
 operator|)
 operator|*
-name|static_cast
-operator|<
-name|T
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
+name|ConcreteTTI
 operator|->
 name|getShuffleCost
 argument_list|(
@@ -4886,12 +5043,86 @@ argument_list|,
 name|Ty
 argument_list|,
 name|NumVecElts
-operator|/
-literal|2
 argument_list|,
 name|Ty
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|ArithCost
+operator|+=
+name|ConcreteTTI
+operator|->
+name|getArithmeticInstrCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Ty
+argument_list|)
+expr_stmt|;
+name|Ty
+operator|=
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|ScalarTy
+argument_list|,
+name|NumVecElts
+argument_list|)
+expr_stmt|;
+operator|++
+name|LongVectorCount
+expr_stmt|;
+block|}
+comment|// The minimal length of the vector is limited by the real length of vector
+comment|// operations performed on the current platform. That's why several final
+comment|// reduction opertions are perfomed on the vectors with the same
+comment|// architecture-dependent length.
+name|ShuffleCost
+operator|+=
+operator|(
+name|NumReduxLevels
+operator|-
+name|LongVectorCount
+operator|)
+operator|*
+operator|(
+name|IsPairwise
+operator|+
+literal|1
+operator|)
+operator|*
+name|ConcreteTTI
+operator|->
+name|getShuffleCost
+argument_list|(
+name|TTI
+operator|::
+name|SK_ExtractSubvector
+argument_list|,
+name|Ty
+argument_list|,
+name|NumVecElts
+argument_list|,
+name|Ty
+argument_list|)
+expr_stmt|;
+name|ArithCost
+operator|+=
+operator|(
+name|NumReduxLevels
+operator|-
+name|LongVectorCount
+operator|)
+operator|*
+name|ConcreteTTI
+operator|->
+name|getArithmeticInstrCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Ty
+argument_list|)
+expr_stmt|;
 return|return
 name|ShuffleCost
 operator|+
@@ -5022,87 +5253,6 @@ name|F
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// Provide value semantics. MSVC requires that we spell all of these out.
-end_comment
-
-begin_expr_stmt
-name|BasicTTIImpl
-argument_list|(
-specifier|const
-name|BasicTTIImpl
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|BaseT
-argument_list|(
-name|static_cast
-operator|<
-specifier|const
-name|BaseT
-operator|&
-operator|>
-operator|(
-name|Arg
-operator|)
-argument_list|)
-operator|,
-name|ST
-argument_list|(
-name|Arg
-operator|.
-name|ST
-argument_list|)
-operator|,
-name|TLI
-argument_list|(
-argument|Arg.TLI
-argument_list|)
-block|{}
-name|BasicTTIImpl
-argument_list|(
-name|BasicTTIImpl
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|BaseT
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|static_cast
-operator|<
-name|BaseT
-operator|&
-operator|>
-operator|(
-name|Arg
-operator|)
-argument_list|)
-argument_list|)
-operator|,
-name|ST
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Arg
-operator|.
-name|ST
-argument_list|)
-argument_list|)
-operator|,
-name|TLI
-argument_list|(
-argument|std::move(Arg.TLI)
-argument_list|)
-block|{}
-end_expr_stmt
 
 begin_endif
 unit|};  }

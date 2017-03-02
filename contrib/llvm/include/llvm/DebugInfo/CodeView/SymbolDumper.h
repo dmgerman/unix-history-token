@@ -84,7 +84,7 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|CVTypeDumper
+name|TypeDatabase
 decl_stmt|;
 comment|/// Dumper for CodeView symbol streams found in COFF object files and PDB files.
 name|class
@@ -96,7 +96,7 @@ name|CVSymbolDumper
 argument_list|(
 argument|ScopedPrinter&W
 argument_list|,
-argument|CVTypeDumper&CVTD
+argument|TypeDatabase&TypeDB
 argument_list|,
 argument|std::unique_ptr<SymbolDumpDelegate> ObjDelegate
 argument_list|,
@@ -108,9 +108,9 @@ argument_list|(
 name|W
 argument_list|)
 operator|,
-name|CVTD
+name|TypeDB
 argument_list|(
-name|CVTD
+name|TypeDB
 argument_list|)
 operator|,
 name|ObjDelegate
@@ -132,10 +132,9 @@ comment|/// Dumps one type record.  Returns false if there was a type parsing er
 comment|/// and true otherwise.  This should be called in order, since the dumper
 comment|/// maintains state about previous records which are necessary for cross
 comment|/// type references.
-name|bool
+name|Error
 name|dump
 argument_list|(
-specifier|const
 name|CVRecord
 operator|<
 name|SymbolKind
@@ -146,7 +145,7 @@ argument_list|)
 expr_stmt|;
 comment|/// Dumps the type records in Data. Returns false if there was a type stream
 comment|/// parse error, and true otherwise.
-name|bool
+name|Error
 name|dump
 parameter_list|(
 specifier|const
@@ -161,9 +160,9 @@ name|ScopedPrinter
 modifier|&
 name|W
 decl_stmt|;
-name|CVTypeDumper
+name|TypeDatabase
 modifier|&
-name|CVTD
+name|TypeDB
 decl_stmt|;
 name|std
 operator|::

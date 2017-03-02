@@ -149,6 +149,8 @@ name|FRAMEADDR
 block|,
 name|RETURNADDR
 block|,
+name|ADDROFRETURNADDR
+block|,
 comment|/// LOCAL_RECOVER - Represents the llvm.localrecover intrinsic.
 comment|/// Materializes the offset from the local object pointer of another
 comment|/// function to a particular local object passed to llvm.localescape. The
@@ -656,19 +658,6 @@ block|,
 comment|/// ADDRSPACECAST - This operator converts between pointers of different
 comment|/// address spaces.
 name|ADDRSPACECAST
-block|,
-comment|/// CONVERT_RNDSAT - This operator is used to support various conversions
-comment|/// between various types (float, signed, unsigned and vectors of those
-comment|/// types) with rounding and saturation. NOTE: Avoid using this operator as
-comment|/// most target don't support it and the operator might be removed in the
-comment|/// future. It takes the following arguments:
-comment|///   0) value
-comment|///   1) dest type (type to convert to)
-comment|///   2) src type (type to convert from)
-comment|///   3) rounding imm
-comment|///   4) saturation imm
-comment|///   5) ISD::CvtCode indicating the type of conversion to do
-name|CONVERT_RNDSAT
 block|,
 comment|/// FP16_TO_FP, FP_TO_FP16 - These operators are used to perform promotions
 comment|/// and truncation for half-precision (16 bit) floating numbers. These nodes
@@ -1338,42 +1327,6 @@ name|bool
 name|isInteger
 parameter_list|)
 function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// This enum defines the various converts CONVERT_RNDSAT supports.
-enum|enum
-name|CvtCode
-block|{
-name|CVT_FF
-block|,
-comment|/// Float from Float
-name|CVT_FS
-block|,
-comment|/// Float from Signed
-name|CVT_FU
-block|,
-comment|/// Float from Unsigned
-name|CVT_SF
-block|,
-comment|/// Signed from Float
-name|CVT_UF
-block|,
-comment|/// Unsigned from Float
-name|CVT_SS
-block|,
-comment|/// Signed from Signed
-name|CVT_SU
-block|,
-comment|/// Signed from Unsigned
-name|CVT_US
-block|,
-comment|/// Unsigned from Signed
-name|CVT_UU
-block|,
-comment|/// Unsigned from Unsigned
-name|CVT_INVALID
-comment|/// Marker - Invalid opcode
-block|}
-enum|;
 block|}
 comment|// end llvm::ISD namespace
 block|}

@@ -77,6 +77,7 @@ init|=
 literal|0x2
 decl_stmt|;
 block|}
+comment|// end namespace Hexagon
 comment|/// Hexagon target-specific information for each MachineFunction.
 name|class
 name|HexagonMachineFunctionInfo
@@ -89,32 +90,33 @@ comment|// returning the value of the returned struct in a register. This field
 comment|// holds the virtual register into which the sret argument is passed.
 name|unsigned
 name|SRetReturnReg
+operator|=
+literal|0
 block|;
 name|unsigned
 name|StackAlignBaseVReg
+operator|=
+literal|0
 block|;
 comment|// Aligned-stack base register (virtual)
 name|unsigned
 name|StackAlignBasePhysReg
+operator|=
+literal|0
 block|;
 comment|//                             (physical)
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-name|AllocaAdjustInsts
-block|;
 name|int
 name|VarArgsFrameIndex
 block|;
 name|bool
 name|HasClobberLR
+operator|=
+name|false
 block|;
 name|bool
 name|HasEHReturn
+operator|=
+name|false
 block|;
 name|std
 operator|::
@@ -137,62 +139,12 @@ name|public
 operator|:
 name|HexagonMachineFunctionInfo
 argument_list|()
-operator|:
-name|SRetReturnReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|StackAlignBaseVReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|StackAlignBasePhysReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasClobberLR
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasEHReturn
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|HexagonMachineFunctionInfo
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-operator|:
-name|SRetReturnReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|StackAlignBaseVReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|StackAlignBasePhysReg
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasClobberLR
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasEHReturn
-argument_list|(
-argument|false
+argument|MachineFunction&MF
 argument_list|)
 block|{}
 name|unsigned
@@ -214,35 +166,6 @@ name|SRetReturnReg
 operator|=
 name|Reg
 block|; }
-name|void
-name|addAllocaAdjustInst
-argument_list|(
-argument|MachineInstr* MI
-argument_list|)
-block|{
-name|AllocaAdjustInsts
-operator|.
-name|push_back
-argument_list|(
-name|MI
-argument_list|)
-block|;   }
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-operator|&
-name|getAllocaAdjustInsts
-argument_list|()
-block|{
-return|return
-name|AllocaAdjustInsts
-return|;
-block|}
 name|void
 name|setVarArgsFrameIndex
 argument_list|(
@@ -436,17 +359,21 @@ name|StackAlignBasePhysReg
 return|;
 block|}
 expr|}
-block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_HEXAGONMACHINEFUNCTIONINFO_H
+end_comment
 
 end_unit
 

@@ -95,13 +95,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"PythonDataObjects.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"PythonDataObjects.h"
+file|"lldb/Breakpoint/BreakpointOptions.h"
 end_include
 
 begin_include
@@ -113,13 +113,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/Terminal.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/ScriptInterpreter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Terminal.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -143,6 +149,32 @@ name|IOHandlerDelegateMultiline
 block|{
 name|public
 label|:
+name|class
+name|CommandDataPython
+range|:
+name|public
+name|BreakpointOptions
+operator|::
+name|CommandData
+block|{
+name|public
+operator|:
+name|CommandDataPython
+argument_list|()
+operator|:
+name|BreakpointOptions
+operator|::
+name|CommandData
+argument_list|()
+block|{
+name|interpreter
+operator|=
+name|lldb
+operator|::
+name|eScriptLanguagePython
+block|;     }
+block|}
+decl_stmt|;
 if|#
 directive|if
 name|PY_MAJOR_VERSION
@@ -304,7 +336,7 @@ name|ValueObjectSP
 operator|&
 name|valobj_sp
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|void
 operator|*
 operator|(
@@ -328,7 +360,7 @@ operator|::
 name|DebuggerSP
 name|debugger_sp
 operator|)
-argument_list|;          typedef
+argument_list|;    typedef
 name|void
 operator|*
 call|(
@@ -353,7 +385,7 @@ name|ThreadPlanSP
 operator|&
 name|thread_plan_sp
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 operator|*
@@ -377,7 +409,7 @@ name|bool
 operator|&
 name|got_error
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|void
 operator|*
 call|(
@@ -402,7 +434,7 @@ name|ProcessSP
 operator|&
 name|process_sp
 argument_list|)
-argument_list|;          typedef
+argument_list|;    typedef
 name|size_t
 argument_list|(
 argument|*SWIGPythonCalculateNumChildren
@@ -415,7 +447,7 @@ operator|,
 name|uint32_t
 name|max
 operator|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|void
 operator|*
 operator|(
@@ -430,7 +462,7 @@ operator|,
 name|uint32_t
 name|idx
 operator|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|int
 argument_list|(
 operator|*
@@ -446,7 +478,7 @@ name|char
 operator|*
 name|child_name
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|void
 operator|*
 call|(
@@ -458,7 +490,7 @@ name|void
 operator|*
 name|data
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|lldb
 operator|::
 name|ValueObjectSP
@@ -471,7 +503,7 @@ name|void
 operator|*
 name|data
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 operator|*
@@ -482,7 +514,7 @@ name|void
 operator|*
 name|data
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 operator|*
@@ -493,7 +525,7 @@ name|void
 operator|*
 name|data
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|void
 operator|*
 call|(
@@ -505,7 +537,7 @@ name|void
 operator|*
 name|implementor
 argument_list|)
-argument_list|;          typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 argument|*SWIGPythonCallCommand
@@ -543,7 +575,7 @@ operator|::
 name|ExecutionContextRefSP
 name|exe_ctx_ref_sp
 operator|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 argument|*SWIGPythonCallCommandObject
@@ -575,7 +607,7 @@ operator|::
 name|ExecutionContextRefSP
 name|exe_ctx_ref_sp
 operator|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 operator|*
@@ -598,7 +630,7 @@ name|DebuggerSP
 operator|&
 name|debugger
 argument_list|)
-argument_list|;          typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 operator|*
@@ -627,7 +659,7 @@ name|string
 operator|&
 name|output
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 operator|*
@@ -656,7 +688,7 @@ name|string
 operator|&
 name|output
 argument_list|)
-argument_list|;          typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 operator|*
@@ -685,7 +717,7 @@ name|string
 operator|&
 name|output
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 operator|*
@@ -714,7 +746,7 @@ name|string
 operator|&
 name|output
 argument_list|)
-argument_list|;      typedef
+argument_list|;    typedef
 name|bool
 argument_list|(
 operator|*
@@ -743,7 +775,7 @@ name|string
 operator|&
 name|output
 argument_list|)
-argument_list|;          typedef
+argument_list|;    typedef
 name|void
 operator|*
 call|(
@@ -842,9 +874,9 @@ name|GenerateTypeScriptFunction
 argument_list|(
 argument|StringList&input
 argument_list|,
-argument|std::string& output
+argument|std::string&output
 argument_list|,
-argument|const void* name_token = nullptr
+argument|const void *name_token = nullptr
 argument_list|)
 name|override
 argument_list|;
@@ -853,20 +885,20 @@ name|GenerateTypeSynthClass
 argument_list|(
 argument|StringList&input
 argument_list|,
-argument|std::string& output
+argument|std::string&output
 argument_list|,
-argument|const void* name_token = nullptr
+argument|const void *name_token = nullptr
 argument_list|)
 name|override
 argument_list|;
 name|bool
 name|GenerateTypeSynthClass
 argument_list|(
-argument|const char* oneliner
+argument|const char *oneliner
 argument_list|,
-argument|std::string& output
+argument|std::string&output
 argument_list|,
-argument|const void* name_token = nullptr
+argument|const void *name_token = nullptr
 argument_list|)
 name|override
 argument_list|;
@@ -874,11 +906,11 @@ comment|// use this if the function code is just a one-liner script
 name|bool
 name|GenerateTypeScriptFunction
 argument_list|(
-argument|const char* oneliner
+argument|const char *oneliner
 argument_list|,
-argument|std::string& output
+argument|std::string&output
 argument_list|,
-argument|const void* name_token = nullptr
+argument|const void *name_token = nullptr
 argument_list|)
 name|override
 argument_list|;
@@ -887,7 +919,7 @@ name|GenerateScriptAliasFunction
 argument_list|(
 argument|StringList&input
 argument_list|,
-argument|std::string& output
+argument|std::string&output
 argument_list|)
 name|override
 argument_list|;
@@ -939,6 +971,15 @@ argument_list|(
 argument|StructuredData::ObjectSP implementor_sp
 argument_list|,
 argument|Event *event
+argument_list|,
+argument|bool&script_error
+argument_list|)
+name|override
+argument_list|;
+name|bool
+name|ScriptedThreadPlanIsStale
+argument_list|(
+argument|StructuredData::ObjectSP implementor_sp
 argument_list|,
 argument|bool&script_error
 argument_list|)
@@ -1096,17 +1137,17 @@ argument_list|;
 name|bool
 name|RunScriptBasedCommand
 argument_list|(
-argument|const char* impl_function
+argument|const char *impl_function
 argument_list|,
-argument|const char* args
+argument|const char *args
 argument_list|,
 argument|ScriptedCommandSynchronicity synchronicity
 argument_list|,
-argument|lldb_private::CommandReturnObject& cmd_retobj
+argument|lldb_private::CommandReturnObject&cmd_retobj
 argument_list|,
-argument|Error& error
+argument|Error&error
 argument_list|,
-argument|const lldb_private::ExecutionContext& exe_ctx
+argument|const lldb_private::ExecutionContext&exe_ctx
 argument_list|)
 name|override
 argument_list|;
@@ -1115,15 +1156,15 @@ name|RunScriptBasedCommand
 argument_list|(
 argument|StructuredData::GenericSP impl_obj_sp
 argument_list|,
-argument|const char* args
+argument|const char *args
 argument_list|,
 argument|ScriptedCommandSynchronicity synchronicity
 argument_list|,
-argument|lldb_private::CommandReturnObject& cmd_retobj
+argument|lldb_private::CommandReturnObject&cmd_retobj
 argument_list|,
-argument|Error& error
+argument|Error&error
 argument_list|,
-argument|const lldb_private::ExecutionContext& exe_ctx
+argument|const lldb_private::ExecutionContext&exe_ctx
 argument_list|)
 name|override
 argument_list|;
@@ -1141,7 +1182,7 @@ name|GenerateBreakpointCommandCallbackData
 argument_list|(
 argument|StringList&input
 argument_list|,
-argument|std::string& output
+argument|std::string&output
 argument_list|)
 name|override
 argument_list|;
@@ -1150,21 +1191,23 @@ name|GenerateWatchpointCommandCallbackData
 argument_list|(
 argument|StringList&input
 argument_list|,
-argument|std::string& output
+argument|std::string&output
 argument_list|)
 name|override
 argument_list|;
 comment|//    static size_t
 comment|//    GenerateBreakpointOptionsCommandCallback (void *baton,
 comment|//                                              InputReader&reader,
-comment|//                                              lldb::InputReaderAction notification,
+comment|//                                              lldb::InputReaderAction
+comment|//                                              notification,
 comment|//                                              const char *bytes,
 comment|//                                              size_t bytes_len);
 comment|//
 comment|//    static size_t
 comment|//    GenerateWatchpointOptionsCommandCallback (void *baton,
 comment|//                                              InputReader&reader,
-comment|//                                              lldb::InputReaderAction notification,
+comment|//                                              lldb::InputReaderAction
+comment|//                                              notification,
 comment|//                                              const char *bytes,
 comment|//                                              size_t bytes_len);
 specifier|static
@@ -1214,9 +1257,9 @@ argument_list|;
 name|bool
 name|GetDocumentationForItem
 argument_list|(
-argument|const char* item
+argument|const char *item
 argument_list|,
-argument|std::string& dest
+argument|std::string&dest
 argument_list|)
 name|override
 argument_list|;
@@ -1225,7 +1268,7 @@ name|GetShortHelpForCommandObject
 argument_list|(
 argument|StructuredData::GenericSP cmd_obj_sp
 argument_list|,
-argument|std::string& dest
+argument|std::string&dest
 argument_list|)
 name|override
 argument_list|;
@@ -1241,14 +1284,14 @@ name|GetLongHelpForCommandObject
 argument_list|(
 argument|StructuredData::GenericSP cmd_obj_sp
 argument_list|,
-argument|std::string& dest
+argument|std::string&dest
 argument_list|)
 name|override
 argument_list|;
 name|bool
 name|CheckObjectExists
 argument_list|(
-argument|const char* name
+argument|const char *name
 argument_list|)
 name|override
 block|{
@@ -1270,7 +1313,7 @@ name|std
 operator|::
 name|string
 name|temp
-argument_list|;         return
+argument_list|;     return
 name|GetDocumentationForItem
 argument_list|(
 name|name
@@ -1507,6 +1550,27 @@ specifier|const
 name|char
 operator|*
 name|function_name
+argument_list|)
+name|override
+decl_stmt|;
+comment|/// This one is for deserialization:
+name|Error
+name|SetBreakpointCommandCallback
+argument_list|(
+name|BreakpointOptions
+operator|*
+name|bp_options
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|BreakpointOptions
+operator|::
+name|CommandData
+operator|>
+operator|&
+name|data_up
 argument_list|)
 name|override
 decl_stmt|;
@@ -1776,7 +1840,7 @@ name|NoSTDIN
 operator|=
 literal|0x0008
 block|}
-block|;                  enum
+block|;      enum
 name|OnLeave
 block|{
 name|FreeLock
@@ -1787,7 +1851,8 @@ name|FreeAcquiredLock
 operator|=
 literal|0x0002
 block|,
-comment|// do not free the lock if we already held it when calling constructor
+comment|// do not free the lock if we already held it
+comment|// when calling constructor
 name|TearDownSession
 operator|=
 literal|0x0004
@@ -1854,7 +1919,7 @@ block|;
 comment|//    	FILE*                    m_tmp_fh;
 name|PyGILState_STATE
 name|m_GILState
-block|;     }
+block|;   }
 decl_stmt|;
 name|protected
 label|:

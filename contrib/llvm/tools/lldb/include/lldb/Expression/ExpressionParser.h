@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/Core/Error.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Error.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -63,7 +63,8 @@ name|class
 name|IRExecutionUnit
 decl_stmt|;
 comment|//----------------------------------------------------------------------
-comment|/// @class ExpressionParser ExpressionParser.h "lldb/Expression/ExpressionParser.h"
+comment|/// @class ExpressionParser ExpressionParser.h
+comment|/// "lldb/Expression/ExpressionParser.h"
 comment|/// @brief Encapsulates an instance of a compiler that can parse expressions.
 comment|///
 comment|/// ExpressionParser is the base class for llvm based Expression parsers.
@@ -104,7 +105,7 @@ name|m_generate_debug_info
 argument_list|(
 argument|generate_debug_info
 argument_list|)
-block|{     }
+block|{}
 comment|//------------------------------------------------------------------
 comment|/// Destructor
 comment|//------------------------------------------------------------------

@@ -98,12 +98,10 @@ operator|,
 name|size_t
 name|Align
 operator|=
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|>
 name|class
 name|ArrayRecycler
@@ -122,12 +120,10 @@ name|static_assert
 argument_list|(
 name|Align
 operator|>=
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|FreeList
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 argument_list|,
 literal|"Object underaligned"
 argument_list|)

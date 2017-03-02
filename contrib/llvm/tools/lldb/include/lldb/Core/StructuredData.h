@@ -104,12 +104,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-defines.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -117,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Stream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
 end_include
 
 begin_decl_stmt
@@ -288,7 +288,7 @@ name|m_type
 argument_list|(
 argument|t
 argument_list|)
-block|{         }
+block|{}
 name|virtual
 operator|~
 name|Object
@@ -316,7 +316,7 @@ operator|=
 name|Type
 operator|::
 name|eTypeInvalid
-block|;         }
+block|; }
 name|Type
 name|GetType
 argument_list|()
@@ -335,7 +335,7 @@ block|{
 name|m_type
 operator|=
 name|t
-block|;         }
+block|; }
 name|Array
 operator|*
 name|GetAsArray
@@ -684,9 +684,14 @@ argument_list|)
 decl_stmt|;
 name|void
 name|DumpToStdout
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|bool
+name|pretty_print
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|void
 name|Dump
@@ -694,6 +699,11 @@ argument_list|(
 name|Stream
 operator|&
 name|s
+argument_list|,
+name|bool
+name|pretty_print
+operator|=
+name|true
 argument_list|)
 decl|const
 init|=
@@ -727,7 +737,7 @@ name|Object
 argument_list|(
 argument|Type::eTypeArray
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|Array
 argument_list|()
@@ -738,7 +748,7 @@ block|;
 name|bool
 name|ForEach
 argument_list|(
-argument|std::function<bool(Object* object)> const&foreach_callback
+argument|std::function<bool(Object *object)> const&foreach_callback
 argument_list|)
 specifier|const
 block|{
@@ -915,13 +925,13 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}             return
+unit|}       return
 name|false
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}          template
+unit|}      template
 operator|<
 name|class
 name|IntType
@@ -965,7 +975,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          bool
+unit|}      bool
 name|GetItemAtIndexAsString
 argument_list|(
 argument|size_t idx
@@ -1018,13 +1028,13 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}             return
+unit|}       return
 name|false
 expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}          bool
+unit|}      bool
 name|GetItemAtIndexAsString
 argument_list|(
 argument|size_t idx
@@ -1066,7 +1076,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          bool
+unit|}      bool
 name|GetItemAtIndexAsString
 argument_list|(
 argument|size_t idx
@@ -1122,13 +1132,13 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}             return
+unit|}       return
 name|false
 expr_stmt|;
 end_expr_stmt
 
 begin_macro
-unit|}          bool
+unit|}      bool
 name|GetItemAtIndexAsString
 argument_list|(
 argument|size_t idx
@@ -1173,7 +1183,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          bool
+unit|}      bool
 name|GetItemAtIndexAsDictionary
 argument_list|(
 argument|size_t idx
@@ -1229,7 +1239,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          bool
+unit|}      bool
 name|GetItemAtIndexAsArray
 argument_list|(
 argument|size_t idx
@@ -1285,7 +1295,7 @@ return|;
 end_return
 
 begin_macro
-unit|}          void
+unit|}      void
 name|Push
 argument_list|(
 argument|ObjectSP item
@@ -1329,6 +1339,11 @@ argument_list|(
 name|Stream
 operator|&
 name|s
+argument_list|,
+name|bool
+name|pretty_print
+operator|=
+name|true
 argument_list|)
 decl|const
 name|override
@@ -1385,7 +1400,7 @@ name|m_value
 argument_list|(
 argument|i
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|Integer
 argument_list|()
@@ -1402,7 +1417,7 @@ block|{
 name|m_value
 operator|=
 name|value
-block|;         }
+block|; }
 name|uint64_t
 name|GetValue
 argument_list|()
@@ -1415,6 +1430,8 @@ name|void
 name|Dump
 argument_list|(
 argument|Stream&s
+argument_list|,
+argument|bool pretty_print = true
 argument_list|)
 specifier|const
 name|override
@@ -1423,7 +1440,7 @@ name|protected
 operator|:
 name|uint64_t
 name|m_value
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -1453,7 +1470,7 @@ name|m_value
 argument_list|(
 argument|d
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|Float
 argument_list|()
@@ -1470,7 +1487,7 @@ block|{
 name|m_value
 operator|=
 name|value
-block|;         }
+block|; }
 name|double
 name|GetValue
 argument_list|()
@@ -1483,6 +1500,8 @@ name|void
 name|Dump
 argument_list|(
 argument|Stream&s
+argument_list|,
+argument|bool pretty_print = true
 argument_list|)
 specifier|const
 name|override
@@ -1491,7 +1510,7 @@ name|protected
 operator|:
 name|double
 name|m_value
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -1520,7 +1539,7 @@ name|m_value
 argument_list|(
 argument|b
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|Boolean
 argument_list|()
@@ -1537,7 +1556,7 @@ block|{
 name|m_value
 operator|=
 name|value
-block|;         }
+block|; }
 name|bool
 name|GetValue
 argument_list|()
@@ -1550,6 +1569,8 @@ name|void
 name|Dump
 argument_list|(
 argument|Stream&s
+argument_list|,
+argument|bool pretty_print = true
 argument_list|)
 specifier|const
 name|override
@@ -1558,7 +1579,7 @@ name|protected
 operator|:
 name|bool
 name|m_value
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -1621,7 +1642,7 @@ name|m_value
 argument_list|(
 argument|s
 argument_list|)
-block|{         }
+block|{}
 name|String
 argument_list|(
 specifier|const
@@ -1643,7 +1664,7 @@ name|m_value
 argument_list|(
 argument|s
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|SetValue
 argument_list|(
@@ -1653,7 +1674,7 @@ block|{
 name|m_value
 operator|=
 name|string
-block|;         }
+block|; }
 specifier|const
 name|std
 operator|::
@@ -1670,6 +1691,8 @@ name|void
 name|Dump
 argument_list|(
 argument|Stream&s
+argument_list|,
+argument|bool pretty_print = true
 argument_list|)
 specifier|const
 name|override
@@ -1680,7 +1703,7 @@ name|std
 operator|::
 name|string
 name|m_value
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -1705,7 +1728,7 @@ argument_list|)
 block|,
 name|m_dict
 argument_list|()
-block|{         }
+block|{}
 operator|~
 name|Dictionary
 argument_list|()
@@ -1728,7 +1751,7 @@ block|}
 name|void
 name|ForEach
 argument_list|(
-argument|std::function<bool(ConstString key, Object* object)> const&callback
+argument|std::function<bool(ConstString key, Object *object)> const&callback
 argument_list|)
 specifier|const
 block|{
@@ -1771,7 +1794,7 @@ block|{
 name|ObjectSP
 name|object_sp
 argument_list|(
-argument|new Array ()
+argument|new Array()
 argument_list|)
 block|;
 name|Array
@@ -1868,8 +1891,6 @@ parameter_list|(
 name|key
 parameter_list|)
 function_decl|;
-for|for
-control|(
 name|collection
 operator|::
 name|const_iterator
@@ -1877,41 +1898,90 @@ name|iter
 operator|=
 name|m_dict
 operator|.
-name|begin
-argument_list|()
-init|;
+name|find
+argument_list|(
+name|key_cs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|iter
 operator|!=
 name|m_dict
 operator|.
 name|end
 argument_list|()
-condition|;
-operator|++
-name|iter
-control|)
-block|{
-if|if
-condition|(
-name|key_cs
-operator|==
-name|iter
-operator|->
-name|first
 condition|)
-block|{
 name|value_sp
 operator|=
 name|iter
 operator|->
 name|second
 expr_stmt|;
-break|break;
-block|}
-block|}
 block|}
 return|return
 name|value_sp
+return|;
+block|}
+name|bool
+name|GetValueForKeyAsBoolean
+argument_list|(
+argument|llvm::StringRef key
+argument_list|,
+argument|bool&result
+argument_list|)
+specifier|const
+block|{
+name|bool
+name|success
+operator|=
+name|false
+block|;
+name|ObjectSP
+name|value_sp
+operator|=
+name|GetValueForKey
+argument_list|(
+name|key
+argument_list|)
+block|;
+if|if
+condition|(
+name|value_sp
+operator|.
+name|get
+argument_list|()
+condition|)
+block|{
+name|Boolean
+modifier|*
+name|result_ptr
+init|=
+name|value_sp
+operator|->
+name|GetAsBoolean
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|result_ptr
+condition|)
+block|{
+name|result
+operator|=
+name|result_ptr
+operator|->
+name|GetValue
+argument_list|()
+expr_stmt|;
+name|success
+operator|=
+name|true
+expr_stmt|;
+block|}
+block|}
+return|return
+name|success
 return|;
 block|}
 name|template
@@ -2546,6 +2616,11 @@ argument_list|(
 name|Stream
 operator|&
 name|s
+argument_list|,
+name|bool
+name|pretty_print
+operator|=
+name|true
 argument_list|)
 decl|const
 name|override
@@ -2594,7 +2669,7 @@ name|Object
 argument_list|(
 argument|Type::eTypeNull
 argument_list|)
-block|{         }
+block|{}
 operator|~
 name|Null
 argument_list|()
@@ -2616,10 +2691,12 @@ name|void
 name|Dump
 argument_list|(
 argument|Stream&s
+argument_list|,
+argument|bool pretty_print = true
 argument_list|)
 specifier|const
 name|override
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -2653,7 +2730,7 @@ name|m_object
 argument_list|(
 argument|object
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|SetValue
 argument_list|(
@@ -2663,7 +2740,7 @@ block|{
 name|m_object
 operator|=
 name|value
-block|;         }
+block|; }
 name|void
 operator|*
 name|GetValue
@@ -2690,6 +2767,8 @@ name|void
 name|Dump
 argument_list|(
 argument|Stream&s
+argument_list|,
+argument|bool pretty_print = true
 argument_list|)
 specifier|const
 name|override
@@ -2699,7 +2778,7 @@ operator|:
 name|void
 operator|*
 name|m_object
-block|;     }
+block|;   }
 decl_stmt|;
 end_decl_stmt
 
@@ -2715,6 +2794,23 @@ name|json_text
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|ObjectSP
+name|ParseJSONFromFile
+parameter_list|(
+specifier|const
+name|FileSpec
+modifier|&
+name|file
+parameter_list|,
+name|Error
+modifier|&
+name|error
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|};  }

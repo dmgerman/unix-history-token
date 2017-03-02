@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Error.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/Support/Error.h"
 end_include
 
 begin_decl_stmt
@@ -105,19 +105,14 @@ argument_list|)
 block|;
 name|DIAError
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Context
+argument|StringRef Context
 argument_list|)
 block|;
 name|DIAError
 argument_list|(
 argument|dia_error_code C
 argument_list|,
-argument|const std::string&Context
+argument|StringRef Context
 argument_list|)
 block|;
 name|void
@@ -128,11 +123,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getErrorMessage
 argument_list|()
 specifier|const

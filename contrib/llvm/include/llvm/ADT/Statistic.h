@@ -682,7 +682,7 @@ parameter_list|,
 name|DESC
 parameter_list|)
 define|\
-value|static llvm::Statistic VARNAME = {DEBUG_TYPE, #VARNAME, DESC, {0}, 0}
+value|static llvm::Statistic VARNAME = {DEBUG_TYPE, #VARNAME, DESC, {0}, false}
 end_define
 
 begin_comment
@@ -692,7 +692,12 @@ end_comment
 begin_function_decl
 name|void
 name|EnableStatistics
-parameter_list|()
+parameter_list|(
+name|bool
+name|PrintOnExit
+init|=
+name|true
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -750,7 +755,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Print statistics in JSON format.
+comment|/// Print statistics in JSON format. This does include all global timers (\see
+end_comment
+
+begin_comment
+comment|/// Timer, TimerGroup). Note that the timers are cleared after printing and will
+end_comment
+
+begin_comment
+comment|/// not be printed in human readable form or in a second call of
+end_comment
+
+begin_comment
+comment|/// PrintStatisticsJSON().
 end_comment
 
 begin_function_decl
@@ -766,7 +783,7 @@ end_function_decl
 
 begin_comment
 unit|}
-comment|// end llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

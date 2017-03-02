@@ -63,7 +63,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__ANDROID_NDK__
+name|__ANDROID__
 argument_list|)
 end_elif
 
@@ -106,6 +106,7 @@ argument_list|(
 name|__FreeBSD_kernel__
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__OpenBSD__

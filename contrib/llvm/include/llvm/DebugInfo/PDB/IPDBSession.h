@@ -195,6 +195,9 @@ condition|)
 return|return
 name|nullptr
 return|;
+operator|(
+name|void
+operator|)
 name|Symbol
 operator|.
 name|release

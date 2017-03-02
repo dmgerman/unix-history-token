@@ -430,7 +430,6 @@ name|OwningObject
 decl_stmt|;
 name|public
 label|:
-comment|// FIXME: should we add a SF_Text?
 enum|enum
 name|Flags
 enum|:
@@ -518,6 +517,14 @@ operator|<<
 literal|10
 block|,
 comment|// Symbol value is constant
+name|SF_Executable
+init|=
+literal|1U
+operator|<<
+literal|11
+block|,
+comment|// Symbol points to an executable section
+comment|// (IR only)
 block|}
 enum|;
 name|BasicSymbolRef
@@ -654,7 +661,7 @@ literal|0
 block|;
 name|virtual
 name|basic_symbol_iterator
-name|symbol_begin_impl
+name|symbol_begin
 argument_list|()
 specifier|const
 operator|=
@@ -662,33 +669,13 @@ literal|0
 block|;
 name|virtual
 name|basic_symbol_iterator
-name|symbol_end_impl
+name|symbol_end
 argument_list|()
 specifier|const
 operator|=
 literal|0
 block|;
 comment|// convenience wrappers.
-name|basic_symbol_iterator
-name|symbol_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|symbol_begin_impl
-argument_list|()
-return|;
-block|}
-name|basic_symbol_iterator
-name|symbol_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|symbol_end_impl
-argument_list|()
-return|;
-block|}
 typedef|typedef
 name|iterator_range
 operator|<

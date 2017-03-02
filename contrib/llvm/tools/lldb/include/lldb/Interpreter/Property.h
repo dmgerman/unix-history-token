@@ -68,12 +68,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-defines.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Interpreter/OptionValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-defines.h"
 end_include
 
 begin_decl_stmt
@@ -155,20 +155,23 @@ argument_list|,
 argument|const lldb::OptionValueSP&value_sp
 argument_list|)
 empty_stmt|;
-specifier|const
-name|ConstString
-operator|&
+name|llvm
+operator|::
+name|StringRef
 name|GetName
 argument_list|()
 specifier|const
 block|{
 return|return
 name|m_name
+operator|.
+name|GetStringRef
+argument_list|()
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|GetDescription
 argument_list|()
 specifier|const
@@ -176,7 +179,7 @@ block|{
 return|return
 name|m_description
 operator|.
-name|GetCString
+name|GetStringRef
 argument_list|()
 return|;
 block|}

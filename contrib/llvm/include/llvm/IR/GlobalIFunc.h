@@ -87,6 +87,12 @@ directive|include
 file|"llvm/IR/GlobalIndirectSymbol.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -126,34 +132,6 @@ operator|<
 name|GlobalIFunc
 operator|>
 expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|GlobalIFunc
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
-name|GlobalIFunc
-argument_list|(
-specifier|const
-name|GlobalIFunc
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|setParent
-parameter_list|(
-name|Module
-modifier|*
-name|parent
-parameter_list|)
-function_decl|;
 name|GlobalIFunc
 argument_list|(
 argument|Type *Ty
@@ -171,6 +149,27 @@ argument_list|)
 empty_stmt|;
 name|public
 label|:
+name|GlobalIFunc
+argument_list|(
+specifier|const
+name|GlobalIFunc
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|GlobalIFunc
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|GlobalIFunc
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
 comment|/// If a parent module is specified, the ifunc is automatically inserted into
 comment|/// the end of the specified module's ifunc list.
 specifier|static
@@ -281,13 +280,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_GLOBALIFUNC_H
+end_comment
 
 end_unit
 

@@ -100,7 +100,9 @@ name|public
 label|:
 name|ManagedStringPool
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 operator|~
 name|ManagedStringPool
 argument_list|()
@@ -179,10 +181,18 @@ empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_NVPTX_MANAGEDSTRINGPOOL_H
+end_comment
 
 end_unit
 

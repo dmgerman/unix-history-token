@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBDefines.h"
+file|"lldb/API/SBData.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/API/SBData.h"
+file|"lldb/API/SBDefines.h"
 end_include
 
 begin_decl_stmt
@@ -190,6 +190,23 @@ name|SectionType
 name|GetSectionType
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Gets the permissions (RWX) of the section of the object file
+comment|///
+comment|/// Returns a mask of bits of enum lldb::Permissions for this section.
+comment|/// Sections for which permissions are not defined, 0 is returned for
+comment|/// them. The binary representation of this value corresponds to [XRW]
+comment|/// i.e. for a section having read and execute permissions, the value
+comment|/// returned is 6
+comment|///
+comment|/// @return
+comment|///     Returns an unsigned value for Permissions for the section.
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetPermissions
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Return the size of a target's byte represented by this section
 comment|/// in numbers of host bytes. Note that certain architectures have

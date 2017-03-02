@@ -389,11 +389,16 @@ comment|/// @param[in] exe_ctx
 comment|///     The thread& process in which this function will run.
 comment|///
 comment|/// @param[in] args_addr_ptr
-comment|///     If nullptr, the function will take care of allocating& deallocating the wrapper
-comment|///     args structure.  Otherwise, if set to LLDB_INVALID_ADDRESS, a new structure
-comment|///     will be allocated, filled and the address returned to you.  You are responsible
-comment|///     for deallocating it.  And if passed in with a value other than LLDB_INVALID_ADDRESS,
-comment|///     this should point to an already allocated structure with the values already written.
+comment|///     If nullptr, the function will take care of allocating& deallocating
+comment|///     the wrapper
+comment|///     args structure.  Otherwise, if set to LLDB_INVALID_ADDRESS, a new
+comment|///     structure
+comment|///     will be allocated, filled and the address returned to you.  You are
+comment|///     responsible
+comment|///     for deallocating it.  And if passed in with a value other than
+comment|///     LLDB_INVALID_ADDRESS,
+comment|///     this should point to an already allocated structure with the values
+comment|///     already written.
 comment|///
 comment|/// @param[in] diagnostic_manager
 comment|///     The diagnostic manager to report errors to.
@@ -405,7 +410,8 @@ comment|/// @param[out] results
 comment|///     The result value will be put here after running the function.
 comment|///
 comment|/// @return
-comment|///     Returns one of the ExpressionResults enum indicating function call status.
+comment|///     Returns one of the ExpressionResults enum indicating function call
+comment|///     status.
 comment|//------------------------------------------------------------------
 name|lldb
 operator|::
@@ -437,7 +443,8 @@ name|results
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|/// Get a thread plan to run the function this FunctionCaller was created with.
+comment|/// Get a thread plan to run the function this FunctionCaller was created
+comment|/// with.
 comment|///
 comment|/// @param[in] exe_ctx
 comment|///     The execution context to insert the function and its arguments
@@ -644,15 +651,19 @@ name|Function
 operator|*
 name|m_function_ptr
 block|;
-comment|///< The function we're going to call. May be nullptr if we don't have debug info for the function.
+comment|///< The function we're going to call. May be
+comment|///nullptr if we don't have debug info for the
+comment|///function.
 name|Address
 name|m_function_addr
 block|;
-comment|///< If we don't have the FunctionSP, we at least need the address& return type.
+comment|///< If we don't have the FunctionSP, we at least
+comment|///need the address& return type.
 name|CompilerType
 name|m_function_return_type
 block|;
-comment|///< The opaque clang qual type for the function return type.
+comment|///< The opaque clang qual type for the
+comment|///function return type.
 name|std
 operator|::
 name|string
@@ -670,7 +681,9 @@ operator|::
 name|string
 name|m_wrapper_struct_name
 block|;
-comment|///< The name of the struct that contains the target function address, arguments, and result.
+comment|///< The name of the struct that contains
+comment|///the target function address, arguments,
+comment|///and result.
 name|std
 operator|::
 name|list
@@ -681,11 +694,14 @@ name|addr_t
 operator|>
 name|m_wrapper_args_addrs
 block|;
-comment|///< The addresses of the arguments to the wrapper function.
+comment|///< The addresses of the
+comment|///arguments to the wrapper
+comment|///function.
 name|bool
 name|m_struct_valid
 block|;
-comment|///< True if the ASTStructExtractor has populated the variables below.
+comment|///< True if the ASTStructExtractor has populated the
+comment|///variables below.
 comment|//------------------------------------------------------------------
 comment|/// These values are populated by the ASTStructExtractor
 name|size_t
@@ -708,7 +724,8 @@ comment|///< The size of the result variable, in bytes.
 name|uint64_t
 name|m_return_offset
 block|;
-comment|///< The offset of the result variable in the struct, in bytes.
+comment|///< The offset of the result variable in the
+comment|///struct, in bytes.
 comment|//------------------------------------------------------------------
 name|ValueList
 name|m_arg_values

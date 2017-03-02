@@ -73,7 +73,7 @@ name|namespace
 name|codeview
 block|{
 name|class
-name|MemoryTypeTableBuilder
+name|TypeTableBuilder
 decl_stmt|;
 block|}
 name|class
@@ -189,6 +189,11 @@ name|void
 name|printHashHistogram
 parameter_list|()
 block|{}
+name|virtual
+name|void
+name|printNotes
+parameter_list|()
+block|{}
 comment|// Only implemented for ARM ELF at this time.
 name|virtual
 name|void
@@ -216,6 +221,12 @@ name|void
 name|printMipsOptions
 parameter_list|()
 block|{ }
+comment|// Only implemented for AMDGPU ELF at this time.
+name|virtual
+name|void
+name|printAMDGPURuntimeMD
+parameter_list|()
+block|{}
 comment|// Only implemented for PE/COFF.
 name|virtual
 name|void
@@ -255,7 +266,7 @@ name|llvm
 operator|::
 name|codeview
 operator|::
-name|MemoryTypeTableBuilder
+name|TypeTableBuilder
 operator|&
 name|CVTypes
 argument_list|)
@@ -407,7 +418,7 @@ name|llvm
 operator|::
 name|codeview
 operator|::
-name|MemoryTypeTableBuilder
+name|TypeTableBuilder
 operator|&
 name|CVTypes
 argument_list|)

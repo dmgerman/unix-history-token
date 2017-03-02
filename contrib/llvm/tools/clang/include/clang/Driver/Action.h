@@ -188,13 +188,17 @@ name|VerifyDebugInfoJobClass
 block|,
 name|VerifyPCHJobClass
 block|,
+name|OffloadBundlingJobClass
+block|,
+name|OffloadUnbundlingJobClass
+block|,
 name|JobClassFirst
 init|=
 name|PreprocessJobClass
 block|,
 name|JobClassLast
 init|=
-name|VerifyPCHJobClass
+name|OffloadUnbundlingJobClass
 block|}
 enum|;
 comment|// The offloading kind determines if this action is binded to a particular
@@ -216,6 +220,10 @@ comment|// The device offloading tool chains - one bit for each programming mode
 name|OFK_Cuda
 init|=
 literal|0x02
+block|,
+name|OFK_OpenMP
+init|=
+literal|0x04
 block|,   }
 enum|;
 specifier|static
@@ -241,6 +249,15 @@ name|Type
 expr_stmt|;
 name|ActionList
 name|Inputs
+decl_stmt|;
+comment|/// Flag that is set to true if this action can be collapsed with others
+comment|/// actions that depend on it. This is true by default and set to false when
+comment|/// the action is used by two different tool chains, which is enabled by the
+comment|/// offloading support implementation.
+name|bool
+name|CanBeCollapsedWithNextDependentAction
+init|=
+name|true
 decl_stmt|;
 name|protected
 label|:
@@ -496,6 +513,26 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Mark this action as not legal to collapse.
+name|void
+name|setCannotBeCollapsedWithNextDependentAction
+parameter_list|()
+block|{
+name|CanBeCollapsedWithNextDependentAction
+operator|=
+name|false
+expr_stmt|;
+block|}
+comment|/// Return true if this function can be collapsed with others.
+name|bool
+name|isCollapsingWithNextDependentActionLegal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CanBeCollapsedWithNextDependentAction
+return|;
+block|}
 comment|/// Return a string containing the offload kind of the action.
 name|std
 operator|::
@@ -505,16 +542,30 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// Return a string that can be used as prefix in order to generate unique
-comment|/// files for each offloading kind.
+comment|/// files for each offloading kind. By default, no prefix is used for
+comment|/// non-device kinds, except if \a CreatePrefixForHost is set.
+specifier|static
 name|std
 operator|::
 name|string
-name|getOffloadingFileNamePrefix
+name|GetOffloadingFileNamePrefix
 argument_list|(
+argument|OffloadKind Kind
+argument_list|,
 argument|llvm::StringRef NormalizedTriple
+argument_list|,
+argument|bool CreatePrefixForHost = false
 argument_list|)
-specifier|const
 expr_stmt|;
+comment|/// Return a string containing a offload kind name.
+specifier|static
+name|StringRef
+name|GetOffloadKindName
+parameter_list|(
+name|OffloadKind
+name|Kind
+parameter_list|)
+function_decl|;
 comment|/// Set the device offload info of this action and propagate it to its
 comment|/// dependences.
 name|void
@@ -710,28 +761,19 @@ argument_list|()
 block|;
 comment|/// The architecture to bind, or 0 if the default architecture
 comment|/// should be bound.
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|ArchName
 block|;
 name|public
 operator|:
 name|BindArchAction
 argument_list|(
-name|Action
-operator|*
-name|Input
+argument|Action *Input
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|ArchName
+argument|StringRef ArchName
 argument_list|)
 block|;
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getArchName
 argument_list|()
 specifier|const
@@ -1776,6 +1818,187 @@ name|getKind
 argument_list|()
 operator|==
 name|VerifyPCHJobClass
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|OffloadBundlingJobAction
+operator|:
+name|public
+name|JobAction
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
+name|public
+operator|:
+comment|// Offloading bundling doesn't change the type of output.
+name|OffloadBundlingJobAction
+argument_list|(
+name|ActionList
+operator|&
+name|Inputs
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Action *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|OffloadBundlingJobClass
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|OffloadUnbundlingJobAction
+name|final
+operator|:
+name|public
+name|JobAction
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
+block|;
+name|public
+operator|:
+comment|/// Type that provides information about the actions that depend on this
+comment|/// unbundling action.
+expr|struct
+name|DependentActionInfo
+name|final
+block|{
+comment|/// \brief The tool chain of the dependent action.
+specifier|const
+name|ToolChain
+operator|*
+name|DependentToolChain
+operator|=
+name|nullptr
+block|;
+comment|/// \brief The bound architecture of the dependent action.
+name|StringRef
+name|DependentBoundArch
+block|;
+comment|/// \brief The offload kind of the dependent action.
+specifier|const
+name|OffloadKind
+name|DependentOffloadKind
+operator|=
+name|OFK_None
+block|;
+name|DependentActionInfo
+argument_list|(
+argument|const ToolChain *DependentToolChain
+argument_list|,
+argument|StringRef DependentBoundArch
+argument_list|,
+argument|const OffloadKind DependentOffloadKind
+argument_list|)
+operator|:
+name|DependentToolChain
+argument_list|(
+name|DependentToolChain
+argument_list|)
+block|,
+name|DependentBoundArch
+argument_list|(
+name|DependentBoundArch
+argument_list|)
+block|,
+name|DependentOffloadKind
+argument_list|(
+argument|DependentOffloadKind
+argument_list|)
+block|{}
+block|;   }
+block|;
+name|private
+operator|:
+comment|/// Container that keeps information about each dependence of this unbundling
+comment|/// action.
+name|SmallVector
+operator|<
+name|DependentActionInfo
+block|,
+literal|6
+operator|>
+name|DependentActionInfoArray
+block|;
+name|public
+operator|:
+comment|// Offloading unbundling doesn't change the type of output.
+name|OffloadUnbundlingJobAction
+argument_list|(
+name|Action
+operator|*
+name|Input
+argument_list|)
+block|;
+comment|/// Register information about a dependent action.
+name|void
+name|registerDependentActionInfo
+argument_list|(
+argument|const ToolChain *TC
+argument_list|,
+argument|StringRef BoundArch
+argument_list|,
+argument|OffloadKind Kind
+argument_list|)
+block|{
+name|DependentActionInfoArray
+operator|.
+name|push_back
+argument_list|(
+block|{
+name|TC
+block|,
+name|BoundArch
+block|,
+name|Kind
+block|}
+argument_list|)
+block|;   }
+comment|/// Return the information about all depending actions.
+name|ArrayRef
+operator|<
+name|DependentActionInfo
+operator|>
+name|getDependentActionsInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DependentActionInfoArray
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Action *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|OffloadUnbundlingJobClass
 return|;
 block|}
 expr|}

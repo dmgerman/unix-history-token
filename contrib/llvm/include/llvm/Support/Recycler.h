@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/AlignOf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -133,12 +127,10 @@ operator|,
 name|size_t
 name|Align
 operator|=
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|T
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|>
 name|class
 name|Recycler
@@ -285,12 +277,10 @@ argument_list|)
 block|{
 name|static_assert
 argument_list|(
-name|AlignOf
-operator|<
+name|alignof
+argument_list|(
 name|SubClass
-operator|>
-operator|::
-name|Alignment
+argument_list|)
 operator|<=
 name|Align
 argument_list|,

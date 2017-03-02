@@ -43,12 +43,18 @@ directive|define
 name|_LIBCPP_CONFIG_ELAST
 end_define
 
+begin_include
+include|#
+directive|include
+file|<__config>
+end_include
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|_WIN32
+name|_LIBCPP_MSVCRT
 argument_list|)
 end_if
 
@@ -111,6 +117,19 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|__Fuchsia__
+argument_list|)
+end_elif
+
+begin_comment
+comment|// No _LIBCPP_ELAST needed on Fuchsia
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__linux__
 argument_list|)
 end_elif
@@ -156,7 +175,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_WIN32
+name|_LIBCPP_MSVCRT
 argument_list|)
 end_elif
 
@@ -164,7 +183,7 @@ begin_define
 define|#
 directive|define
 name|_LIBCPP_ELAST
-value|_sys_nerr
+value|(_sys_nerr - 1)
 end_define
 
 begin_else

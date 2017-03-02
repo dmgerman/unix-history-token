@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- OptionValueFormatEntity.h --------------------------------------*- C++ -*-===//
+comment|//===-- OptionValueFormatEntity.h --------------------------------*- C++-*-===//
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ operator|~
 name|OptionValueFormatEntity
 argument_list|()
 name|override
-block|{     }
+block|{}
 comment|//---------------------------------------------------------------------
 comment|// Virtual subclass pure virtual overrides
 comment|//---------------------------------------------------------------------
@@ -131,6 +131,20 @@ argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
 block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
+block|;
 name|bool
 name|Clear
 argument_list|()
@@ -149,7 +163,7 @@ name|AutoComplete
 argument_list|(
 argument|CommandInterpreter&interpreter
 argument_list|,
-argument|const char *s
+argument|llvm::StringRef s
 argument_list|,
 argument|int match_start_point
 argument_list|,
@@ -197,7 +211,7 @@ block|{
 name|m_current_entry
 operator|=
 name|value
-block|;     }
+block|;   }
 name|FormatEntity
 operator|::
 name|Entry

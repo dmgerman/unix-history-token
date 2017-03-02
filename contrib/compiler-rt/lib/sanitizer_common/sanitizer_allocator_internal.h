@@ -286,10 +286,14 @@ operator|::
 name|operator_new_size_type
 name|size
 argument_list|,
+name|__sanitizer
+operator|::
 name|InternalAllocEnum
 argument_list|)
 block|{
 return|return
+name|__sanitizer
+operator|::
 name|InternalAlloc
 argument_list|(
 name|size

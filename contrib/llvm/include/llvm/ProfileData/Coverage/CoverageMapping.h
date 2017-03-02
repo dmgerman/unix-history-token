@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -299,6 +305,9 @@ block|{
 name|class
 name|CoverageMappingReader
 decl_stmt|;
+struct_decl|struct
+name|CoverageMappingRecord
+struct_decl|;
 name|class
 name|CoverageMapping
 decl_stmt|;
@@ -1032,95 +1041,8 @@ name|ColumnEnd
 operator|)
 return|;
 block|}
-name|bool
-name|operator
-operator|<
-operator|(
-specifier|const
-name|CounterMappingRegion
-operator|&
-name|Other
-operator|)
-specifier|const
-block|{
-if|if
-condition|(
-name|FileID
-operator|!=
-name|Other
-operator|.
-name|FileID
-condition|)
-return|return
-name|FileID
-operator|<
-name|Other
-operator|.
-name|FileID
-return|;
-return|return
-name|startLoc
-argument_list|()
-operator|<
-name|Other
-operator|.
-name|startLoc
-argument_list|()
-return|;
 block|}
-name|bool
-name|contains
-argument_list|(
-specifier|const
-name|CounterMappingRegion
-operator|&
-name|Other
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|FileID
-operator|!=
-name|Other
-operator|.
-name|FileID
-condition|)
-return|return
-name|false
-return|;
-if|if
-condition|(
-name|startLoc
-argument_list|()
-operator|>
-name|Other
-operator|.
-name|startLoc
-argument_list|()
-condition|)
-return|return
-name|false
-return|;
-if|if
-condition|(
-name|endLoc
-argument_list|()
-operator|<
-name|Other
-operator|.
-name|endLoc
-argument_list|()
-condition|)
-return|return
-name|false
-return|;
-return|return
-name|true
-return|;
-block|}
-block|}
-empty_stmt|;
+struct|;
 comment|/// \brief Associates a source range with an execution count.
 name|struct
 name|CountedRegion
@@ -1301,13 +1223,35 @@ argument_list|,
 argument|Filenames.end()
 argument_list|)
 block|{}
+name|FunctionRecord
+argument_list|(
+name|FunctionRecord
+operator|&&
+name|FR
+argument_list|)
+operator|=
+expr|default
+expr_stmt|;
+name|FunctionRecord
+modifier|&
+name|operator
+init|=
+operator|(
+name|FunctionRecord
+operator|&&
+operator|)
+operator|=
+expr|default
+decl_stmt|;
 name|void
 name|pushRegion
-argument_list|(
-argument|CounterMappingRegion Region
-argument_list|,
-argument|uint64_t Count
-argument_list|)
+parameter_list|(
+name|CounterMappingRegion
+name|Region
+parameter_list|,
+name|uint64_t
+name|Count
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1331,17 +1275,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+struct|;
 comment|/// \brief Iterator over Functions, optionally filtered to a single file.
-end_comment
-
-begin_decl_stmt
 name|class
 name|FunctionRecordIterator
 range|:
@@ -1488,33 +1423,12 @@ name|this
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief Coverage information for a macro expansion or #included file.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When covered code has pieces that can be expanded for more detail, such as a
-end_comment
-
-begin_comment
 comment|/// preprocessor macro use and its definition, these are represented as
-end_comment
-
-begin_comment
 comment|/// expansions whose coverage can be looked up independently.
-end_comment
-
-begin_struct
 struct|struct
 name|ExpansionRecord
 block|{
@@ -1566,25 +1480,10 @@ argument_list|)
 block|{}
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/// \brief The execution count information starting at a point in a file.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// A sequence of CoverageSegments gives execution counts for a file in format
-end_comment
-
-begin_comment
 comment|/// that's simple to iterate through for processing.
-end_comment
-
-begin_struct
 struct|struct
 name|CoverageSegment
 block|{
@@ -1748,29 +1647,11 @@ return|;
 block|}
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/// \brief Coverage information to be processed or displayed.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This represents the coverage of an entire file, expansion, or function. It
-end_comment
-
-begin_comment
 comment|/// provides a sequence of CoverageSegments to iterate through, as well as the
-end_comment
-
-begin_comment
 comment|/// list of expansions that can be further processed.
-end_comment
-
-begin_decl_stmt
 name|class
 name|CoverageData
 block|{
@@ -1814,42 +1695,6 @@ argument_list|(
 argument|Filename
 argument_list|)
 block|{}
-name|CoverageData
-argument_list|(
-name|CoverageData
-operator|&&
-name|RHS
-argument_list|)
-operator|:
-name|Filename
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|Filename
-argument_list|)
-argument_list|)
-operator|,
-name|Segments
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|RHS
-operator|.
-name|Segments
-argument_list|)
-argument_list|)
-operator|,
-name|Expansions
-argument_list|(
-argument|std::move(RHS.Expansions)
-argument_list|)
-block|{}
 comment|/// \brief Get the name of the file this data covers.
 name|StringRef
 name|getFilename
@@ -1867,9 +1712,10 @@ operator|<
 name|CoverageSegment
 operator|>
 operator|::
-name|iterator
+name|const_iterator
 name|begin
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Segments
@@ -1885,9 +1731,10 @@ operator|<
 name|CoverageSegment
 operator|>
 operator|::
-name|iterator
+name|const_iterator
 name|end
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Segments
@@ -1898,7 +1745,8 @@ return|;
 block|}
 name|bool
 name|empty
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Segments
@@ -1914,38 +1762,26 @@ name|ExpansionRecord
 operator|>
 name|getExpansions
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Expansions
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief The mapping of profile information to coverage data.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This is the main interface to get coverage information, using a profile to
-end_comment
-
-begin_comment
 comment|/// fill out execution counts.
-end_comment
-
-begin_decl_stmt
 name|class
 name|CoverageMapping
 block|{
+name|StringSet
+operator|<
+operator|>
+name|FunctionNames
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -1965,8 +1801,44 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+name|CoverageMapping
+argument_list|(
+specifier|const
+name|CoverageMapping
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+specifier|const
+name|CoverageMapping
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|CoverageMapping
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+comment|/// \brief Add a function record corresponding to \p Record.
+name|Error
+name|loadFunctionRecord
+parameter_list|(
+specifier|const
+name|CoverageMappingRecord
+modifier|&
+name|Record
+parameter_list|,
+name|IndexedInstrProfReader
+modifier|&
+name|ProfileReader
+parameter_list|)
+function_decl|;
 name|public
-operator|:
+label|:
 comment|/// \brief Load the coverage mapping using the given readers.
 specifier|static
 name|Expected
@@ -1982,6 +1854,32 @@ argument_list|(
 name|CoverageMappingReader
 operator|&
 name|CoverageReader
+argument_list|,
+name|IndexedInstrProfReader
+operator|&
+name|ProfileReader
+argument_list|)
+expr_stmt|;
+specifier|static
+name|Expected
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|CoverageMapping
+operator|>>
+name|load
+argument_list|(
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|CoverageMappingReader
+operator|>>
+name|CoverageReaders
 argument_list|,
 name|IndexedInstrProfReader
 operator|&
@@ -2006,6 +1904,41 @@ argument|StringRef ProfileFilename
 argument_list|,
 argument|StringRef Arch = StringRef()
 argument_list|)
+block|{
+return|return
+name|load
+argument_list|(
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+operator|(
+name|ObjectFilename
+operator|)
+argument_list|,
+name|ProfileFilename
+argument_list|,
+name|Arch
+argument_list|)
+return|;
+block|}
+specifier|static
+name|Expected
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|CoverageMapping
+operator|>>
+name|load
+argument_list|(
+argument|ArrayRef<StringRef> ObjectFilenames
+argument_list|,
+argument|StringRef ProfileFilename
+argument_list|,
+argument|StringRef Arch = StringRef()
+argument_list|)
 expr_stmt|;
 comment|/// \brief The number of functions that couldn't have their profiles mapped.
 comment|///
@@ -2019,7 +1952,8 @@ return|return
 name|MismatchedFunctionCount
 return|;
 block|}
-comment|/// \brief Returns the list of files that are covered.
+comment|/// \brief Returns a lexicographically sorted, unique list of files that are
+comment|/// covered.
 name|std
 operator|::
 name|vector
@@ -2132,45 +2066,15 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|// Profile coverage map has the following layout:
-end_comment
-
-begin_comment
 comment|// [CoverageMapFileHeader]
-end_comment
-
-begin_comment
 comment|// [ArrayStart]
-end_comment
-
-begin_comment
 comment|//  [CovMapFunctionRecord]
-end_comment
-
-begin_comment
 comment|//  [CovMapFunctionRecord]
-end_comment
-
-begin_comment
 comment|//  ...
-end_comment
-
-begin_comment
 comment|// [ArrayEnd]
-end_comment
-
-begin_comment
 comment|// [Encoded Region Mapping Data]
-end_comment
-
-begin_expr_stmt
 name|LLVM_PACKED_START
 name|template
 operator|<
@@ -2260,13 +2164,7 @@ name|DataSize
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Return function lookup key. The value is consider opaque.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|support
@@ -2295,13 +2193,7 @@ name|NamePtr
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Return the PGO name of the function */
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|support
@@ -2376,23 +2268,15 @@ operator|::
 name|malformed
 operator|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Error
 operator|::
 name|success
 argument_list|()
 return|;
-end_return
-
-begin_empty_stmt
-unit|} }
+block|}
+block|}
 empty_stmt|;
-end_empty_stmt
-
-begin_struct
 struct|struct
 name|CovMapFunctionRecord
 block|{
@@ -2544,17 +2428,8 @@ return|;
 block|}
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|// Per module coverage mapping data header, i.e. CoverageMapFileHeader
-end_comment
-
-begin_comment
 comment|// documented above.
-end_comment
-
-begin_struct
 struct|struct
 name|CovMapHeader
 block|{
@@ -2688,9 +2563,6 @@ return|;
 block|}
 block|}
 struct|;
-end_struct
-
-begin_decl_stmt
 name|LLVM_PACKED_END
 name|enum
 name|CovMapVersion
@@ -2711,13 +2583,7 @@ name|CurrentVersion
 operator|=
 name|INSTR_PROF_COVMAP_VERSION
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|int
@@ -2733,17 +2599,18 @@ typedef|typedef
 name|CovMapFunctionRecord
 name|CovMapFuncRecordType
 typedef|;
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|uint64_t
 name|NameRefType
 typedef|;
-end_typedef
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 name|class

@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"RuntimeDyld.h"
+file|"llvm/ExecutionEngine/JITSymbol.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm-c/ExecutionEngine.h"
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
 begin_include
@@ -80,7 +80,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Memory.h"
+file|"llvm-c/ExecutionEngine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -97,6 +115,7 @@ name|class
 name|ObjectFile
 decl_stmt|;
 block|}
+comment|// end namespace object
 name|class
 name|MCJITMemoryManager
 range|:
@@ -149,10 +168,15 @@ name|public
 name|MCJITMemoryManager
 decl_stmt|,
 name|public
-name|RuntimeDyld
-decl|::
-name|SymbolResolver
+name|JITSymbolResolver
 block|{
+name|public
+label|:
+name|RTDyldMemoryManager
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
 name|RTDyldMemoryManager
 argument_list|(
 specifier|const
@@ -173,11 +197,6 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|public
-label|:
-name|RTDyldMemoryManager
-argument_list|()
-block|{}
 operator|~
 name|RTDyldMemoryManager
 argument_list|()
@@ -303,19 +322,20 @@ comment|///
 comment|/// Clients writing custom RTDyldMemoryManagers are encouraged to override
 comment|/// this method and return a SymbolInfo with the flags set correctly. This is
 comment|/// necessary for RuntimeDyld to correctly handle weak and non-exported symbols.
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbol
 argument_list|(
-argument|const std::string&Name
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
 argument_list|)
 name|override
 block|{
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|getSymbolAddress
 argument_list|(
@@ -358,19 +378,20 @@ comment|///
 comment|/// Clients writing custom RTDyldMemoryManagers are encouraged to override
 comment|/// this method and return a SymbolInfo with the flags set correctly. This is
 comment|/// necessary for RuntimeDyld to correctly handle weak and non-exported symbols.
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 name|findSymbolInLogicalDylib
 argument_list|(
-argument|const std::string&Name
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
 argument_list|)
 name|override
 block|{
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
+name|JITSymbol
 argument_list|(
 name|getSymbolAddressInLogicalDylib
 argument_list|(
@@ -423,13 +444,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_EXECUTIONENGINE_RTDYLDMEMORYMANAGER_H
+end_comment
 
 end_unit
 

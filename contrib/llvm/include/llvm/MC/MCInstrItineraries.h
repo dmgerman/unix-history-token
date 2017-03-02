@@ -260,7 +260,7 @@ name|unsigned
 modifier|*
 name|Forwardings
 decl_stmt|;
-comment|///< Array of pipeline forwarding pathes
+comment|///< Array of pipeline forwarding paths
 specifier|const
 name|InstrItinerary
 modifier|*

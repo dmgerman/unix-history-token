@@ -261,6 +261,20 @@ literal|2
 operator|>
 name|ExtraTextList
 expr_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|PathDiagnosticNotePiece
+operator|>
+operator|,
+literal|4
+operator|>
+name|NoteList
+expr_stmt|;
 name|protected
 label|:
 name|friend
@@ -316,6 +330,9 @@ name|Ranges
 expr_stmt|;
 name|ExtraTextList
 name|ExtraText
+decl_stmt|;
+name|NoteList
+name|Notes
 decl_stmt|;
 typedef|typedef
 name|llvm
@@ -679,6 +696,27 @@ return|return
 name|BT
 return|;
 block|}
+comment|/// \brief True when the report has an execution path associated with it.
+comment|///
+comment|/// A report is said to be path-sensitive if it was thrown against a
+comment|/// particular exploded node in the path-sensitive analysis graph.
+comment|/// Path-sensitive reports have their intermediate path diagnostics
+comment|/// auto-generated, perhaps with the help of checker-defined visitors,
+comment|/// and may contain extra notes.
+comment|/// Path-insensitive reports consist only of a single warning message
+comment|/// in a specific location, and perhaps extra notes.
+comment|/// Path-sensitive checkers are allowed to throw path-insensitive reports.
+name|bool
+name|isPathSensitive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ErrorNode
+operator|!=
+name|nullptr
+return|;
+block|}
 specifier|const
 name|ExplodedNode
 operator|*
@@ -931,6 +969,116 @@ operator|=
 name|declWithIssue
 expr_stmt|;
 block|}
+comment|/// Add new item to the list of additional notes that need to be attached to
+comment|/// this path-insensitive report. If you want to add extra notes to a
+comment|/// path-sensitive report, you need to use a BugReporterVisitor because it
+comment|/// allows you to specify where exactly in the auto-generated path diagnostic
+comment|/// the extra note should appear.
+name|void
+name|addNote
+argument_list|(
+name|StringRef
+name|Msg
+argument_list|,
+specifier|const
+name|PathDiagnosticLocation
+operator|&
+name|Pos
+argument_list|,
+name|ArrayRef
+operator|<
+name|SourceRange
+operator|>
+name|Ranges
+argument_list|)
+block|{
+name|auto
+name|P
+init|=
+name|std
+operator|::
+name|make_shared
+operator|<
+name|PathDiagnosticNotePiece
+operator|>
+operator|(
+name|Pos
+expr|,
+name|Msg
+operator|)
+decl_stmt|;
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|R
+range|:
+name|Ranges
+control|)
+name|P
+operator|->
+name|addRange
+argument_list|(
+name|R
+argument_list|)
+expr_stmt|;
+name|Notes
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|P
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|// FIXME: Instead of making an override, we could have default-initialized
+comment|// Ranges with {}, however it crashes the MSVC 2013 compiler.
+name|void
+name|addNote
+parameter_list|(
+name|StringRef
+name|Msg
+parameter_list|,
+specifier|const
+name|PathDiagnosticLocation
+modifier|&
+name|Pos
+parameter_list|)
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+name|SourceRange
+operator|>
+name|Ranges
+expr_stmt|;
+name|addNote
+argument_list|(
+name|Msg
+argument_list|,
+name|Pos
+argument_list|,
+name|Ranges
+argument_list|)
+expr_stmt|;
+block|}
+name|virtual
+specifier|const
+name|NoteList
+modifier|&
+name|getNotes
+parameter_list|()
+block|{
+return|return
+name|Notes
+return|;
+block|}
 comment|/// \brief This allows for addition of meta data to the diagnostic.
 comment|///
 comment|/// Currently, only the HTMLDiagnosticClient knows how to display it.
@@ -1115,143 +1263,6 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// end ento namespace
-end_comment
-
-begin_comment
-unit|}
-comment|// end clang namespace
-end_comment
-
-begin_macro
-unit|namespace
-name|llvm
-end_macro
-
-begin_block
-block|{
-name|template
-operator|<
-operator|>
-expr|struct
-name|ilist_traits
-operator|<
-name|clang
-operator|::
-name|ento
-operator|::
-name|BugReport
-operator|>
-operator|:
-name|public
-name|ilist_default_traits
-operator|<
-name|clang
-operator|::
-name|ento
-operator|::
-name|BugReport
-operator|>
-block|{
-name|clang
-operator|::
-name|ento
-operator|::
-name|BugReport
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|clang
-operator|::
-name|ento
-operator|::
-name|BugReport
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
-name|void
-name|destroySentinel
-argument_list|(
-argument|clang::ento::BugReport *
-argument_list|)
-specifier|const
-block|{}
-name|clang
-operator|::
-name|ento
-operator|::
-name|BugReport
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|clang
-operator|::
-name|ento
-operator|::
-name|BugReport
-operator|*
-name|ensureHead
-argument_list|(
-argument|clang::ento::BugReport *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|private
-label|:
-name|mutable
-name|ilist_half_node
-operator|<
-name|clang
-operator|::
-name|ento
-operator|::
-name|BugReport
-operator|>
-name|Sentinel
-expr_stmt|;
-block|}
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-unit|}  namespace
-name|clang
-end_macro
-
-begin_block
-block|{
-name|namespace
-name|ento
-block|{
 comment|//===----------------------------------------------------------------------===//
 comment|// BugTypes (collections of related reports).
 comment|//===----------------------------------------------------------------------===//
@@ -1408,10 +1419,25 @@ argument_list|()
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// BugReporter and friends.
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_decl_stmt
 name|class
 name|BugReporterData
 block|{
@@ -1466,10 +1492,25 @@ init|=
 literal|0
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// BugReporter is a utility class for generating PathDiagnostics for analysis.
+end_comment
+
+begin_comment
 comment|/// It collects the BugReports and BugTypes and knows how to generate
+end_comment
+
+begin_comment
 comment|/// and flush the corresponding diagnostics.
+end_comment
+
+begin_decl_stmt
 name|class
 name|BugReporter
 block|{
@@ -1915,8 +1956,17 @@ name|category
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// FIXME: Get rid of GRBugReporter.  It's the wrong abstraction.
+end_comment
+
+begin_decl_stmt
 name|class
 name|GRBugReporter
 range|:
@@ -2132,11 +2182,14 @@ operator|=
 literal|0
 block|; }
 block|;  }
-comment|// end GR namespace
-block|}
-end_block
+end_decl_stmt
 
 begin_comment
+comment|// end GR namespace
+end_comment
+
+begin_comment
+unit|}
 comment|// end clang namespace
 end_comment
 

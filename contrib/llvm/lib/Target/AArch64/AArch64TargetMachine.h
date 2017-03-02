@@ -183,8 +183,8 @@ return|;
 block|}
 name|private
 operator|:
-name|AArch64Subtarget
-name|Subtarget
+name|bool
+name|isLittle
 block|; }
 decl_stmt|;
 comment|// AArch64 little endian target machine.

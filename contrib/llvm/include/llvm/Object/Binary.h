@@ -175,6 +175,8 @@ comment|// MachO 64-bit, little endian
 name|ID_MachO64B
 block|,
 comment|// MachO 64-bit, big endian
+name|ID_Wasm
+block|,
 name|ID_EndObjects
 block|}
 enum|;
@@ -366,6 +368,17 @@ return|return
 name|TypeID
 operator|==
 name|ID_COFF
+return|;
+block|}
+name|bool
+name|isWasm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeID
+operator|==
+name|ID_Wasm
 return|;
 block|}
 name|bool

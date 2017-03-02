@@ -91,6 +91,22 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|Hexagon
+block|{
+comment|// Generic (pseudo) subreg indices for use with getHexagonSubRegIndex.
+enum|enum
+block|{
+name|ps_sub_lo
+init|=
+literal|0
+block|,
+name|ps_sub_hi
+init|=
+literal|1
+block|}
+enum|;
+block|}
 name|class
 name|HexagonRegisterInfo
 range|:
@@ -206,6 +222,15 @@ block|;
 name|unsigned
 name|getStackRegister
 argument_list|()
+specifier|const
+block|;
+name|unsigned
+name|getHexagonSubRegIndex
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|unsigned GenIdx
+argument_list|)
 specifier|const
 block|;
 specifier|const

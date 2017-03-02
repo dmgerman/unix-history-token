@@ -78,8 +78,6 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|unsigned Encoding
 argument_list|,
-argument|Mangler&Mang
-argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
@@ -96,8 +94,6 @@ operator|*
 name|getCFIPersonalitySymbol
 argument_list|(
 argument|const GlobalValue *GV
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
@@ -156,6 +152,41 @@ specifier|const
 name|override
 block|;   }
 decl_stmt|;
+comment|/// X86FreeBSDTargetObjectFile - This implementation is used for FreeBSD
+comment|/// on x86 and x86-64.
+name|class
+name|X86FreeBSDTargetObjectFile
+range|:
+name|public
+name|X86ELFTargetObjectFile
+block|{
+name|void
+name|Initialize
+argument_list|(
+argument|MCContext&Ctx
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+name|override
+block|;   }
+decl_stmt|;
+comment|/// \brief This implementation is used for Fuchsia on x86-64.
+name|class
+name|X86FuchsiaTargetObjectFile
+range|:
+name|public
+name|X86ELFTargetObjectFile
+block|{
+name|void
+name|Initialize
+argument_list|(
+argument|MCContext&Ctx
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+name|override
+block|;   }
+decl_stmt|;
 comment|/// X86LinuxNaClTargetObjectFile - This implementation is used for linux and
 comment|/// Native Client on x86 and x86-64.
 name|class
@@ -189,8 +220,6 @@ argument_list|(
 argument|const GlobalValue *LHS
 argument_list|,
 argument|const GlobalValue *RHS
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)

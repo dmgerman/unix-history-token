@@ -112,12 +112,6 @@ comment|/// A numeric ID unique among all CUs in the module
 name|unsigned
 name|UniqueID
 block|;
-comment|/// Offset of the UnitDie from beginning of debug info section.
-name|unsigned
-name|DebugInfoOffset
-operator|=
-literal|0
-block|;
 comment|/// The attribute index of DW_AT_stmt_list in the compile unit DIE, avoiding
 comment|/// the need to search for it in applyStmtList.
 name|DIE
@@ -263,27 +257,6 @@ return|return
 name|UniqueID
 return|;
 block|}
-name|unsigned
-name|getDebugInfoOffset
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DebugInfoOffset
-return|;
-block|}
-name|void
-name|setDebugInfoOffset
-parameter_list|(
-name|unsigned
-name|DbgInfoOff
-parameter_list|)
-block|{
-name|DebugInfoOffset
-operator|=
-name|DbgInfoOff
-expr_stmt|;
-block|}
 name|DwarfCompileUnit
 operator|*
 name|getSkeleton
@@ -307,17 +280,39 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
-comment|/// getOrCreateGlobalVariableDIE - get or create global variable DIE.
+comment|/// A pair of GlobalVariable and DIExpression.
+struct|struct
+name|GlobalExpr
+block|{
+specifier|const
+name|GlobalVariable
+modifier|*
+name|Var
+decl_stmt|;
+specifier|const
+name|DIExpression
+modifier|*
+name|Expr
+decl_stmt|;
+block|}
+struct|;
+comment|/// Get or create global variable DIE.
 name|DIE
 modifier|*
 name|getOrCreateGlobalVariableDIE
-parameter_list|(
+argument_list|(
 specifier|const
 name|DIGlobalVariable
-modifier|*
+operator|*
 name|GV
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ArrayRef
+operator|<
+name|GlobalExpr
+operator|>
+name|GlobalExprs
+argument_list|)
+decl_stmt|;
 comment|/// addLabelAddress - Add a dwarf label attribute data and value using
 comment|/// either DW_FORM_addr or DW_FORM_GNU_addr_index.
 name|void
@@ -665,6 +660,11 @@ comment|/// \brief Construct a DIE for this subprogram scope.
 name|void
 name|constructSubprogramScopeDIE
 parameter_list|(
+specifier|const
+name|DISubprogram
+modifier|*
+name|Sub
+parameter_list|,
 name|LexicalScope
 modifier|*
 name|Scope
@@ -726,25 +726,6 @@ operator|&
 name|Skel
 expr_stmt|;
 block|}
-specifier|const
-name|MCSymbol
-operator|*
-name|getSectionSym
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|Section
-argument_list|)
-block|;
-return|return
-name|Section
-operator|->
-name|getBeginSymbol
-argument_list|()
-return|;
-block|}
 name|unsigned
 name|getLength
 parameter_list|()
@@ -759,7 +740,8 @@ comment|// Length field
 name|getHeaderSize
 argument_list|()
 operator|+
-name|UnitDie
+name|getUnitDie
+argument_list|()
 operator|.
 name|getSize
 argument_list|()
@@ -781,7 +763,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|Section
+name|getSection
+argument_list|()
 argument_list|)
 block|;
 return|return

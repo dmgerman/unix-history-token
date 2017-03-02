@@ -68,13 +68,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ASTStructExtractor.h"
+file|"ASTResultSynthesizer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ASTResultSynthesizer.h"
+file|"ASTStructExtractor.h"
 end_include
 
 begin_include
@@ -99,18 +99,6 @@ begin_include
 include|#
 directive|include
 file|"IRForTarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -143,12 +131,25 @@ directive|include
 file|"lldb/Target/ExecutionContext.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class ClangUserExpression ClangUserExpression.h "lldb/Expression/ClangUserExpression.h"
+comment|/// @class ClangUserExpression ClangUserExpression.h
+comment|/// "lldb/Expression/ClangUserExpression.h"
 comment|/// @brief Encapsulates a single expression for use with Clang
 comment|///
 comment|/// LLDB uses expressions for various purposes, notably to call functions
@@ -228,11 +229,11 @@ name|m_expr_decl_map_up
 operator|.
 name|reset
 argument_list|()
-block|;         }
+block|; }
 name|void
 name|ResetDeclMap
 argument_list|(
-argument|ExecutionContext& exe_ctx
+argument|ExecutionContext&exe_ctx
 argument_list|,
 argument|Materializer::PersistentVariableDelegate&result_delegate
 argument_list|,
@@ -284,7 +285,10 @@ name|ASTStructExtractor
 operator|>
 name|m_struct_extractor_up
 block|;
-comment|///< The class that generates the argument struct layout.
+comment|///< The class
+comment|///that generates
+comment|///the argument
+comment|///struct layout.
 name|std
 operator|::
 name|unique_ptr
@@ -295,7 +299,7 @@ name|m_result_synthesizer_up
 block|;
 name|bool
 name|m_top_level
-block|;     }
+block|;   }
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor
@@ -320,9 +324,9 @@ name|ClangUserExpression
 argument_list|(
 argument|ExecutionContextScope&exe_scope
 argument_list|,
-argument|const char *expr
+argument|llvm::StringRef expr
 argument_list|,
-argument|const char *expr_prefix
+argument|llvm::StringRef prefix
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
@@ -403,11 +407,11 @@ name|m_type_system_helper
 operator|.
 name|ResetDeclMap
 argument_list|()
-block|;     }
+block|; }
 name|void
 name|ResetDeclMap
 argument_list|(
-argument|ExecutionContext& exe_ctx
+argument|ExecutionContext&exe_ctx
 argument_list|,
 argument|Materializer::PersistentVariableDelegate&result_delegate
 argument_list|,
@@ -424,7 +428,7 @@ name|result_delegate
 argument_list|,
 name|keep_result_in_memory
 argument_list|)
-block|;     }
+block|;   }
 name|lldb
 operator|::
 name|ExpressionVariableSP
@@ -437,7 +441,8 @@ block|;
 name|private
 operator|:
 comment|//------------------------------------------------------------------
-comment|/// Populate m_in_cplusplus_method and m_in_objectivec_method based on the environment.
+comment|/// Populate m_in_cplusplus_method and m_in_objectivec_method based on the
+comment|/// environment.
 comment|//------------------------------------------------------------------
 name|void
 name|ScanContext
@@ -514,7 +519,7 @@ name|lldb
 operator|::
 name|ExpressionVariableSP
 name|m_variable
-block|;     }
+block|;   }
 block|;
 name|ResultDelegate
 name|m_result_delegate

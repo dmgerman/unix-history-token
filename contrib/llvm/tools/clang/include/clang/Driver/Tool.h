@@ -383,6 +383,54 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// Construct jobs to perform the action \p JA, writing to the \p Outputs and
+comment|/// with \p Inputs, and add the jobs to \p C. The default implementation
+comment|/// assumes a single output and is expected to be overloaded for the tools
+comment|/// that support multiple inputs.
+comment|///
+comment|/// \param TCArgs The argument list for this toolchain, with any
+comment|/// tool chain specific translations applied.
+comment|/// \param LinkingOutput If this output will eventually feed the
+comment|/// linker, then this is the final output name of the linked image.
+name|virtual
+name|void
+name|ConstructJobMultipleOutputs
+argument_list|(
+name|Compilation
+operator|&
+name|C
+argument_list|,
+specifier|const
+name|JobAction
+operator|&
+name|JA
+argument_list|,
+specifier|const
+name|InputInfoList
+operator|&
+name|Outputs
+argument_list|,
+specifier|const
+name|InputInfoList
+operator|&
+name|Inputs
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|TCArgs
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|LinkingOutput
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

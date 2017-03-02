@@ -310,7 +310,7 @@ operator|::
 name|SBSymbolContext
 name|ResolveSymbolContextForAddress
 argument_list|(
-argument|const lldb::SBAddress& addr
+argument|const lldb::SBAddress&addr
 argument_list|,
 argument|uint32_t resolve_scope
 argument_list|)

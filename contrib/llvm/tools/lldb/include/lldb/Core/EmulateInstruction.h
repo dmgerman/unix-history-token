@@ -52,25 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ArchSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/PluginInterface.h"
 end_include
 
 begin_include
@@ -82,7 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/PluginInterface.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/RegisterValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -90,7 +90,8 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class EmulateInstruction EmulateInstruction.h "lldb/Core/EmulateInstruction.h"
+comment|/// @class EmulateInstruction EmulateInstruction.h
+comment|/// "lldb/Core/EmulateInstruction.h"
 comment|/// @brief A class that allows emulation of CPU opcodes.
 comment|///
 comment|/// This class is a plug-in interface that is accessed through the
@@ -167,7 +168,7 @@ argument|InstructionType supported_inst_type
 argument_list|,
 argument|const char *plugin_name
 argument_list|)
-block|;      enum
+block|;    enum
 name|ContextType
 block|{
 name|eContextInvalid
@@ -194,6 +195,10 @@ name|eContextAdjustStackPointer
 block|,
 comment|// Adjust the frame pointer for the current frame
 name|eContextSetFramePointer
+block|,
+comment|// Typically in an epilogue sequence.  Copy the frame pointer back
+comment|// into the stack pointer, use SP for CFA calculations again.
+name|eContextRestoreStackPointer
 block|,
 comment|// Add or subtract a value from a base address register (other than SP)
 name|eContextAdjustBaseRegister
@@ -235,7 +240,7 @@ name|eContextAdvancePC
 block|,
 name|eContextReturnFromException
 block|}
-block|;          enum
+block|;    enum
 name|InfoType
 block|{
 name|eInfoTypeRegisterPlusOffset
@@ -267,17 +272,17 @@ block|,
 name|eInfoTypeNoArgs
 block|}
 name|InfoType
-block|;              struct
+block|;    struct
 name|Context
 block|{
 name|ContextType
 name|type
-block|;         enum
+block|;     enum
 name|InfoType
 name|info_type
 block|;
 expr|union
-block|{             struct
+block|{       struct
 name|RegisterPlusOffset
 block|{
 name|RegisterInfo
@@ -290,7 +295,7 @@ block|;
 comment|// signed offset added to base register
 block|}
 name|RegisterPlusOffset
-block|;                          struct
+block|;        struct
 name|RegisterPlusIndirectOffset
 block|{
 name|RegisterInfo
@@ -303,7 +308,7 @@ block|;
 comment|// offset register kind
 block|}
 name|RegisterPlusIndirectOffset
-block|;                          struct
+block|;        struct
 name|RegisterToRegisterPlusOffset
 block|{
 name|RegisterInfo
@@ -320,7 +325,7 @@ block|;
 comment|// offset for address calculation
 block|}
 name|RegisterToRegisterPlusOffset
-block|;                          struct
+block|;        struct
 name|RegisterToRegisterPlusIndirectOffset
 block|{
 name|RegisterInfo
@@ -337,7 +342,7 @@ block|;
 comment|// source/target register for data
 block|}
 name|RegisterToRegisterPlusIndirectOffset
-block|;                          struct
+block|;        struct
 name|RegisterRegisterOperands
 block|{
 name|RegisterInfo
@@ -354,7 +359,8 @@ block|;
 name|int64_t
 name|signed_offset
 block|;
-comment|// signed offset by which to adjust self (for registers only)
+comment|// signed offset by which to adjust self (for
+comment|// registers only)
 name|RegisterInfo
 name|reg
 block|;
@@ -385,7 +391,7 @@ block|;
 comment|// immediate data
 block|}
 name|ISAAndImmediate
-block|;                          struct
+block|;        struct
 name|ISAAndImmediateSigned
 block|{
 name|uint32_t
@@ -400,7 +406,7 @@ name|ISAAndImmediateSigned
 block|;
 name|uint32_t
 name|isa
-block|;         }
+block|;     }
 name|info
 block|;
 name|Context
@@ -415,7 +421,7 @@ name|info_type
 argument_list|(
 argument|eInfoTypeNoArgs
 argument_list|)
-block|{         }
+block|{}
 name|void
 name|SetRegisterPlusOffset
 argument_list|(
@@ -443,7 +449,7 @@ operator|.
 name|signed_offset
 operator|=
 name|signed_offset
-block|;         }
+block|;     }
 name|void
 name|SetRegisterPlusIndirectOffset
 argument_list|(
@@ -471,7 +477,7 @@ operator|.
 name|offset_reg
 operator|=
 name|offset_reg
-block|;         }
+block|;     }
 name|void
 name|SetRegisterToRegisterPlusOffset
 argument_list|(
@@ -509,7 +515,7 @@ operator|.
 name|offset
 operator|=
 name|offset
-block|;         }
+block|;     }
 name|void
 name|SetRegisterToRegisterPlusIndirectOffset
 argument_list|(
@@ -547,7 +553,7 @@ operator|.
 name|data_reg
 operator|=
 name|data_reg
-block|;         }
+block|;     }
 name|void
 name|SetRegisterRegisterOperands
 argument_list|(
@@ -575,7 +581,7 @@ operator|.
 name|operand2
 operator|=
 name|op2_reg
-block|;         }
+block|;     }
 name|void
 name|SetOffset
 argument_list|(
@@ -591,7 +597,7 @@ operator|.
 name|signed_offset
 operator|=
 name|signed_offset
-block|;         }
+block|;     }
 name|void
 name|SetRegister
 argument_list|(
@@ -607,7 +613,7 @@ operator|.
 name|reg
 operator|=
 name|reg
-block|;         }
+block|;     }
 name|void
 name|SetImmediate
 argument_list|(
@@ -623,7 +629,7 @@ operator|.
 name|unsigned_immediate
 operator|=
 name|immediate
-block|;         }
+block|;     }
 name|void
 name|SetImmediateSigned
 argument_list|(
@@ -639,7 +645,7 @@ operator|.
 name|signed_immediate
 operator|=
 name|signed_immediate
-block|;         }
+block|;     }
 name|void
 name|SetAddress
 argument_list|(
@@ -655,7 +661,7 @@ operator|.
 name|address
 operator|=
 name|address
-block|;         }
+block|;     }
 name|void
 name|SetISAAndImmediate
 argument_list|(
@@ -683,7 +689,7 @@ operator|.
 name|unsigned_data32
 operator|=
 name|data
-block|;         }
+block|;     }
 name|void
 name|SetISAAndImmediateSigned
 argument_list|(
@@ -711,7 +717,7 @@ operator|.
 name|signed_data32
 operator|=
 name|data
-block|;         }
+block|;     }
 name|void
 name|SetISA
 argument_list|(
@@ -727,7 +733,7 @@ operator|.
 name|isa
 operator|=
 name|isa
-block|;         }
+block|;     }
 name|void
 name|SetNoArgs
 argument_list|()
@@ -735,7 +741,7 @@ block|{
 name|info_type
 operator|=
 name|eInfoTypeNoArgs
-block|;         }
+block|; }
 name|void
 name|Dump
 argument_list|(
@@ -744,7 +750,7 @@ argument_list|,
 argument|EmulateInstruction *instruction
 argument_list|)
 specifier|const
-block|;      }
+block|;   }
 block|;
 typedef|typedef
 name|size_t
@@ -867,8 +873,10 @@ modifier|&
 name|reg_value
 parameter_list|)
 function_decl|;
-comment|// Type to represent the condition of an instruction. The UINT32 value is reserved for the
-comment|// unconditional case and all other value can be used in an architecture dependent way.
+comment|// Type to represent the condition of an instruction. The UINT32 value is
+comment|// reserved for the
+comment|// unconditional case and all other value can be used in an architecture
+comment|// dependent way.
 typedef|typedef
 name|uint32_t
 name|InstructionCondition

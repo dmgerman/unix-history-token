@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Transforms/Utils/ValueMapper.h"
 end_include
 
@@ -227,7 +233,7 @@ argument|unsigned memlimit
 argument_list|,
 argument|bool use_valgrind
 argument_list|,
-argument|LLVMContext& ctxt
+argument|LLVMContext&ctxt
 argument_list|)
 empty_stmt|;
 operator|~
@@ -339,21 +345,15 @@ comment|/// run - The top level method that is invoked after all of the instance
 comment|/// variables are set up from command line arguments. The \p as_child argument
 comment|/// indicates whether the driver is to run in parent mode or child mode.
 comment|///
-name|bool
+name|Error
 name|run
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|ErrMsg
-argument_list|)
-decl_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// debugOptimizerCrash - This method is called when some optimizer pass
 comment|/// crashes on input.  It attempts to prune down the testcase to something
 comment|/// reasonable, and figure out exactly which pass is crashing.
 comment|///
-name|bool
+name|Error
 name|debugOptimizerCrash
 argument_list|(
 specifier|const
@@ -369,29 +369,17 @@ decl_stmt|;
 comment|/// debugCodeGeneratorCrash - This method is called when the code generator
 comment|/// crashes on an input.  It attempts to reduce the input as much as possible
 comment|/// while still causing the code generator to crash.
-name|bool
-name|debugCodeGeneratorCrash
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
 name|Error
-argument_list|)
-decl_stmt|;
+name|debugCodeGeneratorCrash
+parameter_list|()
+function_decl|;
 comment|/// debugMiscompilation - This method is used when the passes selected are not
 comment|/// crashing, but the generated output is semantically different from the
 comment|/// input.
-name|void
-name|debugMiscompilation
-argument_list|(
-name|std
-operator|::
-name|string
-operator|*
 name|Error
-argument_list|)
-decl_stmt|;
+name|debugMiscompilation
+parameter_list|()
+function_decl|;
 comment|/// debugPassMiscompilation - This method is called when the specified pass
 comment|/// miscompiles Program as input.  It tries to reduce the testcase to
 comment|/// something that smaller that still miscompiles the program.
@@ -417,9 +405,12 @@ decl_stmt|;
 comment|/// compileSharedObject - This method creates a SharedObject from a given
 comment|/// BitcodeFile for debugging a code generator.
 comment|///
+name|Expected
+operator|<
 name|std
 operator|::
 name|string
+operator|>
 name|compileSharedObject
 argument_list|(
 specifier|const
@@ -428,27 +419,15 @@ operator|::
 name|string
 operator|&
 name|BitcodeFile
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|Error
 argument_list|)
 expr_stmt|;
 comment|/// debugCodeGenerator - This method narrows down a module to a function or
 comment|/// set of functions, using the CBE as a ``safe'' code generator for other
 comment|/// functions that are not under consideration.
-name|bool
-name|debugCodeGenerator
-argument_list|(
-name|std
-operator|::
-name|string
-operator|*
 name|Error
-argument_list|)
-decl_stmt|;
+name|debugCodeGenerator
+parameter_list|()
+function_decl|;
 comment|/// isExecutingJIT - Returns true if bugpoint is currently testing the JIT
 comment|///
 name|bool
@@ -537,31 +516,26 @@ modifier|*
 name|M
 parameter_list|)
 function_decl|;
-comment|/// compileProgram - Try to compile the specified module, returning false and
-comment|/// setting Error if an error occurs.  This is used for code generation
+comment|/// Try to compile the specified module. This is used for code generation
 comment|/// crash testing.
-comment|///
-name|void
+name|Error
 name|compileProgram
 argument_list|(
 name|Module
 operator|*
 name|M
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|Error
 argument_list|)
 decl|const
 decl_stmt|;
 comment|/// executeProgram - This method runs "Program", capturing the output of the
 comment|/// program to a file.  A recommended filename may be optionally specified.
 comment|///
+name|Expected
+operator|<
 name|std
 operator|::
 name|string
+operator|>
 name|executeProgram
 argument_list|(
 argument|const Module *Program
@@ -573,8 +547,6 @@ argument_list|,
 argument|const std::string&SharedObjects
 argument_list|,
 argument|AbstractInterpreter *AI
-argument_list|,
-argument|std::string *Error
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -583,16 +555,17 @@ comment|/// backend, if reference output is not provided.  If there is a problem
 comment|/// the code generator (e.g., llc crashes), this will return false and set
 comment|/// Error.
 comment|///
+name|Expected
+operator|<
 name|std
 operator|::
 name|string
+operator|>
 name|executeProgramSafely
 argument_list|(
 argument|const Module *Program
 argument_list|,
 argument|const std::string&OutputFile
-argument_list|,
-argument|std::string *Error
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -601,7 +574,7 @@ comment|/// into ReferenceOutputFile. Returns true if reference file created, fa
 comment|/// otherwise. Note: initializeExecutionEnvironment should be called BEFORE
 comment|/// this function.
 comment|///
-name|bool
+name|Error
 name|createReferenceFile
 argument_list|(
 name|Module
@@ -623,47 +596,24 @@ comment|/// output against the file specified by ReferenceOutputFile.  If the ou
 comment|/// is different, 1 is returned.  If there is a problem with the code
 comment|/// generator (e.g., llc crashes), this will return -1 and set Error.
 comment|///
+name|Expected
+operator|<
 name|bool
+operator|>
 name|diffProgram
 argument_list|(
-specifier|const
-name|Module
-operator|*
-name|Program
+argument|const Module *Program
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|BitcodeFile
-operator|=
+argument|const std::string&BitcodeFile =
 literal|""
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|SharedObj
-operator|=
+argument|const std::string&SharedObj =
 literal|""
 argument_list|,
-name|bool
-name|RemoveBitcode
-operator|=
-name|false
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|Error
-operator|=
-name|nullptr
+argument|bool RemoveBitcode = false
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|/// EmitProgressBitcode - This function is used to output M to a file named
 comment|/// "bugpoint-ID.bc".
 comment|///
@@ -893,14 +843,13 @@ name|true
 argument_list|)
 return|;
 block|}
-comment|/// runManyPasses - Take the specified pass list and create different
-comment|/// combinations of passes to compile the program with. Compile the program with
-comment|/// each set and mark test to see if it compiled correctly. If the passes
-comment|/// compiled correctly output nothing and rearrange the passes into a new order.
-comment|/// If the passes did not compile correctly, output the command required to
-comment|/// recreate the failure. This returns true if a compiler error is found.
-comment|///
-name|bool
+comment|/// Take the specified pass list and create different combinations of passes
+comment|/// to compile the program with. Compile the program with each set and mark
+comment|/// test to see if it compiled correctly. If the passes compiled correctly
+comment|/// output nothing and rearrange the passes into a new order. If the passes
+comment|/// did not compile correctly, output the command required to recreate the
+comment|/// failure.
+name|Error
 name|runManyPasses
 argument_list|(
 specifier|const
@@ -914,12 +863,6 @@ name|string
 operator|>
 operator|&
 name|AllPasses
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|ErrMsg
 argument_list|)
 decl_stmt|;
 comment|/// writeProgramToFile - This writes the current "Program" to the named
@@ -967,7 +910,7 @@ label|:
 comment|/// initializeExecutionEnvironment - This method is used to set up the
 comment|/// environment for executing LLVM programs.
 comment|///
-name|bool
+name|Error
 name|initializeExecutionEnvironment
 parameter_list|()
 function_decl|;

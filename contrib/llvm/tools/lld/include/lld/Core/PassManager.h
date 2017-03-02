@@ -161,6 +161,8 @@ return|return
 name|llvm
 operator|::
 name|Error
+operator|::
+name|success
 argument_list|()
 return|;
 block|}

@@ -44,18 +44,23 @@ block|{
 comment|// In house headers:
 include|#
 directive|include
-file|"MIUtilString.h"
+file|"MICmnResources.h"
 include|#
 directive|include
-file|"MICmnResources.h"
-comment|//++ ============================================================================
+file|"MIUtilString.h"
+comment|//++
+comment|//============================================================================
 comment|// Details: Short cut helper function to simplify repeated initialisation of
 comment|//          MI components (singletons) required by a client module.
 comment|// Type:    Template method.
-comment|// Args:    vErrorResrcId   - (R)  The string resource ID error message identifier to place in errMsg.
-comment|//          vwrbOk          - (RW) On input True = Try to initialize MI driver module.
-comment|//                                 On output True = MI driver module initialise successfully.
-comment|//          vwrErrMsg       - (W)  MI driver module initialise error description on failure.
+comment|// Args:    vErrorResrcId   - (R)  The string resource ID error message
+comment|// identifier to place in errMsg.
+comment|//          vwrbOk          - (RW) On input True = Try to initialize MI driver
+comment|//          module.
+comment|//                                 On output True = MI driver module initialise
+comment|//                                 successfully.
+comment|//          vwrErrMsg       - (W)  MI driver module initialise error description
+comment|//          on failure.
 comment|// Return:  MIstatus::success - Functional succeeded.
 comment|//          MIstatus::failure - Functional failed.
 comment|//--
@@ -122,15 +127,18 @@ return|return
 name|vwrbOk
 return|;
 block|}
-comment|//++ ============================================================================
+comment|//++
+comment|//============================================================================
 comment|// Details: Short cut helper function to simplify repeated shutdown of
 comment|//          MI components (singletons) required by a client module.
 comment|// Type:    Template method.
-comment|// Args:    vErrorResrcId   - (R)  The string resource ID error message identifier
+comment|// Args:    vErrorResrcId   - (R)  The string resource ID error message
+comment|// identifier
 comment|//                                 to place in errMsg.
 comment|//          vwrbOk          - (W)  If not already false make false on module
 comment|//                                 shutdown failure.
-comment|//          vwrErrMsg       - (RW) Append to existing error description string MI
+comment|//          vwrErrMsg       - (RW) Append to existing error description string
+comment|//          MI
 comment|//                                 driver module initialise error description on
 comment|//                                 failure.
 comment|// Return:  True - Module shutdown succeeded.

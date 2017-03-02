@@ -79,6 +79,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|InlineParams
+struct_decl|;
 name|class
 name|StringRef
 decl_stmt|;
@@ -99,6 +102,9 @@ name|BasicBlock
 decl_stmt|;
 name|class
 name|GlobalValue
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -123,6 +129,13 @@ comment|//
 name|ModulePass
 modifier|*
 name|createStripNonDebugSymbolsPass
+parameter_list|()
+function_decl|;
+comment|/// This function returns a new pass that downgrades the debug info in the
+comment|/// module to line tables only.
+name|ModulePass
+modifier|*
+name|createStripNonLineTableDebugInfoPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -210,14 +223,7 @@ comment|/// This pass performs iterative function importing from other modules.
 name|Pass
 modifier|*
 name|createFunctionImportPass
-parameter_list|(
-specifier|const
-name|ModuleSummaryIndex
-modifier|*
-name|Index
-init|=
-name|nullptr
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// createFunctionInliningPass - Return a new pass object that uses a heuristic
@@ -252,20 +258,13 @@ name|unsigned
 name|SizeOptLevel
 parameter_list|)
 function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// createAlwaysInlinerPass - Return a new pass object that inlines only
-comment|/// functions that are marked as "always_inline".
 name|Pass
 modifier|*
-name|createAlwaysInlinerPass
-parameter_list|()
-function_decl|;
-name|Pass
-modifier|*
-name|createAlwaysInlinerPass
+name|createFunctionInliningPass
 parameter_list|(
-name|bool
-name|InsertLifetime
+name|InlineParams
+modifier|&
+name|Params
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -440,12 +439,38 @@ modifier|*
 name|createBarrierNoopPass
 parameter_list|()
 function_decl|;
+comment|/// What to do with the summary when running the LowerTypeTests pass.
+name|enum
+name|class
+name|LowerTypeTestsSummaryAction
+block|{
+name|None
+operator|,
+comment|///< Do nothing.
+name|Import
+operator|,
+comment|///< Import typeid resolutions from summary and globals.
+name|Export
+operator|,
+comment|///< Export typeid resolutions to summary and globals.
+block|}
+empty_stmt|;
 comment|/// \brief This pass lowers type metadata and the llvm.type.test intrinsic to
 comment|/// bitsets.
+comment|/// \param Action What to do with the summary passed as Index.
+comment|/// \param Index The summary to use for importing or exporting, this can be null
+comment|///              when Action is None.
 name|ModulePass
 modifier|*
 name|createLowerTypeTestsPass
-parameter_list|()
+parameter_list|(
+name|LowerTypeTestsSummaryAction
+name|Action
+parameter_list|,
+name|ModuleSummaryIndex
+modifier|*
+name|Index
+parameter_list|)
 function_decl|;
 comment|/// \brief This pass export CFI checks for use by external modules.
 name|ModulePass
@@ -458,6 +483,13 @@ comment|/// metadata.
 name|ModulePass
 modifier|*
 name|createWholeProgramDevirtPass
+parameter_list|()
+function_decl|;
+comment|/// This pass splits globals into pieces for the benefit of whole-program
+comment|/// devirtualization and control-flow integrity.
+name|ModulePass
+modifier|*
+name|createGlobalSplitPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -474,6 +506,16 @@ name|createSampleProfileLoaderPass
 parameter_list|(
 name|StringRef
 name|Name
+parameter_list|)
+function_decl|;
+comment|/// Write ThinLTO-ready bitcode to Str.
+name|ModulePass
+modifier|*
+name|createWriteThinLTOBitcodePass
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|Str
 parameter_list|)
 function_decl|;
 block|}

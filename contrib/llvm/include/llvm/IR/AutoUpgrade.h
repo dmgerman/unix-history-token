@@ -159,14 +159,16 @@ modifier|&
 name|M
 parameter_list|)
 function_decl|;
-comment|/// If the TBAA tag for the given instruction uses the scalar TBAA format,
-comment|/// we upgrade it to the struct-path aware TBAA format.
-name|void
-name|UpgradeInstWithTBAATag
-parameter_list|(
-name|Instruction
+comment|/// If the given TBAA tag uses the scalar TBAA format, create a new node
+comment|/// corresponding to the upgrade to the struct-path aware TBAA format.
+comment|/// Otherwise return the \p TBAANode itself.
+name|MDNode
 modifier|*
-name|I
+name|UpgradeTBAANode
+parameter_list|(
+name|MDNode
+modifier|&
+name|TBAANode
 parameter_list|)
 function_decl|;
 comment|/// This is an auto-upgrade for bitcast between pointers with different

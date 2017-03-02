@@ -87,6 +87,18 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -97,8 +109,23 @@ name|typename
 name|IRUnitT
 operator|>
 name|class
+name|AllAnalysesOn
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|IRUnitT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
+operator|>
+name|class
 name|AnalysisManager
 expr_stmt|;
+name|class
+name|Invalidator
+decl_stmt|;
 name|class
 name|PreservedAnalyses
 decl_stmt|;
@@ -112,6 +139,13 @@ name|template
 operator|<
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+name|AnalysisManagerT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 expr|struct
 name|PassConcept
@@ -121,7 +155,9 @@ name|virtual
 operator|~
 name|PassConcept
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// \brief The polymorphic API which runs the pass over a given IR entity.
 comment|///
 comment|/// Note that actual pass object can omit the analysis manager argument if
@@ -135,12 +171,13 @@ name|IRUnitT
 operator|&
 name|IR
 argument_list|,
-name|AnalysisManager
-operator|<
-name|IRUnitT
-operator|>
+name|AnalysisManagerT
 operator|&
 name|AM
+argument_list|,
+name|ExtraArgTs
+operator|...
+name|ExtraArgs
 argument_list|)
 operator|=
 literal|0
@@ -158,7 +195,7 @@ comment|/// \brief A template wrapper used to implement the polymorphic API.
 comment|///
 comment|/// Can be instantiated for any object which provides a \c run method accepting
 comment|/// an \c IRUnitT& and an \c AnalysisManager<IRUnit>&. It requires the pass to
-comment|/// be a copyable object. When the
+comment|/// be a copyable object.
 name|template
 operator|<
 name|typename
@@ -169,8 +206,13 @@ name|PassT
 operator|,
 name|typename
 name|PreservedAnalysesT
-operator|=
-name|PreservedAnalyses
+operator|,
+name|typename
+name|AnalysisManagerT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 expr|struct
 name|PassModel
@@ -178,6 +220,11 @@ operator|:
 name|PassConcept
 operator|<
 name|IRUnitT
+operator|,
+name|AnalysisManagerT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>
 block|{
 name|explicit
@@ -270,7 +317,9 @@ name|run
 argument_list|(
 argument|IRUnitT&IR
 argument_list|,
-argument|AnalysisManager<IRUnitT>&AM
+argument|AnalysisManagerT&AM
+argument_list|,
+argument|ExtraArgTs... ExtraArgs
 argument_list|)
 name|override
 block|{
@@ -282,6 +331,9 @@ argument_list|(
 name|IR
 argument_list|,
 name|AM
+argument_list|,
+name|ExtraArgs
+operator|...
 argument_list|)
 return|;
 block|}
@@ -309,6 +361,12 @@ name|template
 operator|<
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+name|PreservedAnalysesT
+operator|,
+name|typename
+name|InvalidatorT
 operator|>
 expr|struct
 name|AnalysisResultConcept
@@ -317,15 +375,22 @@ name|virtual
 operator|~
 name|AnalysisResultConcept
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// \brief Method to try and mark a result as invalid.
 comment|///
 comment|/// When the outer analysis manager detects a change in some underlying
 comment|/// unit of the IR, it will call this method on all of the results cached.
 comment|///
-comment|/// This method also receives a set of preserved analyses which can be used
-comment|/// to avoid invalidation because the pass which changed the underlying IR
-comment|/// took care to update or preserve the analysis result in some way.
+comment|/// \p PA is a set of preserved analyses which can be used to avoid
+comment|/// invalidation because the pass which changed the underlying IR took care
+comment|/// to update or preserve the analysis result in some way.
+comment|///
+comment|/// \p Inv is typically a \c AnalysisManager::Invalidator object that can be
+comment|/// used by a particular analysis result to discover if other analyses
+comment|/// results are also invalidated in the event that this result depends on
+comment|/// them. See the documentation in the \c AnalysisManager for more details.
 comment|///
 comment|/// \returns true if the result is indeed invalid (the default).
 name|virtual
@@ -337,9 +402,13 @@ operator|&
 name|IR
 argument_list|,
 specifier|const
-name|PreservedAnalyses
+name|PreservedAnalysesT
 operator|&
 name|PA
+argument_list|,
+name|InvalidatorT
+operator|&
+name|Inv
 argument_list|)
 operator|=
 literal|0
@@ -360,10 +429,10 @@ name|ResultHasInvalidateMethod
 block|{
 typedef|typedef
 name|char
-name|SmallType
+name|EnabledType
 typedef|;
 block|struct
-name|BigType
+name|DisabledType
 block|{
 name|char
 name|a
@@ -371,28 +440,115 @@ block|,
 name|b
 block|;   }
 expr_stmt|;
+comment|// Purely to help out MSVC which fails to disable the below specialization,
+comment|// explicitly enable using the result type's invalidate routine if we can
+comment|// successfully call that routine.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|Nonce
+block|{
+typedef|typedef
+name|EnabledType
+name|Type
+typedef|;
+block|}
+empty_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|static
+name|typename
+name|Nonce
+operator|<
+name|decltype
+argument_list|(
+name|std
+operator|::
+name|declval
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+operator|.
+name|invalidate
+argument_list|(
+name|std
+operator|::
+name|declval
+operator|<
+name|IRUnitT
+operator|&
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|std
+operator|::
+name|declval
+operator|<
+name|PreservedAnalyses
+operator|>
+operator|(
+operator|)
+argument_list|)
+argument_list|)
+operator|>
+operator|::
+name|Type
+name|check
+argument_list|(
+name|rank
+operator|<
+literal|2
+operator|>
+argument_list|)
+expr_stmt|;
+comment|// First we define an overload that can only be taken if there is no
+comment|// invalidate member. We do this by taking the address of an invalidate
+comment|// member in an adjacent base class of a derived class. This would be
+comment|// ambiguous if there were an invalidate member in the result type.
 name|template
 operator|<
 name|typename
 name|T
 operator|,
-name|bool
+name|typename
+name|U
+operator|>
+specifier|static
+name|DisabledType
+name|NonceFunction
 argument_list|(
+argument|T U::*
+argument_list|)
+expr_stmt|;
+struct|struct
+name|CheckerBase
+block|{
+name|int
+name|invalidate
+decl_stmt|;
+block|}
+struct|;
+name|template
+operator|<
+name|typename
 name|T
-operator|::
-operator|*
-argument_list|)
-argument_list|(
-name|IRUnitT
-operator|&
-argument_list|,
-specifier|const
-name|PreservedAnalyses
-operator|&
-argument_list|)
 operator|>
 expr|struct
 name|Checker
+operator|:
+name|CheckerBase
+operator|,
+name|T
+block|{}
 expr_stmt|;
 name|template
 operator|<
@@ -400,31 +556,33 @@ name|typename
 name|T
 operator|>
 specifier|static
-name|SmallType
-name|f
+name|decltype
 argument_list|(
-name|Checker
+argument|NonceFunction(&Checker<T>::invalidate)
+argument_list|)
+name|check
+argument_list|(
+name|rank
 operator|<
-name|T
-argument_list|,
-operator|&
-name|T
-operator|::
-name|invalidate
+literal|1
 operator|>
-operator|*
 argument_list|)
 expr_stmt|;
+comment|// Now we have the fallback that will only be reached when there is an
+comment|// invalidate member, and enables the trait.
 name|template
 operator|<
 name|typename
 name|T
 operator|>
 specifier|static
-name|BigType
-name|f
+name|EnabledType
+name|check
 argument_list|(
-operator|...
+name|rank
+operator|<
+literal|0
+operator|>
 argument_list|)
 expr_stmt|;
 name|public
@@ -435,18 +593,23 @@ name|Value
 init|=
 sizeof|sizeof
 argument_list|(
-name|f
+name|check
 operator|<
 name|ResultT
 operator|>
 operator|(
-name|nullptr
+name|rank
+operator|<
+literal|2
+operator|>
+operator|(
+operator|)
 operator|)
 argument_list|)
 operator|==
 expr|sizeof
 operator|(
-name|SmallType
+name|EnabledType
 operator|)
 block|}
 enum|;
@@ -471,8 +634,9 @@ name|ResultT
 operator|,
 name|typename
 name|PreservedAnalysesT
-operator|=
-name|PreservedAnalyses
+operator|,
+name|typename
+name|InvalidatorT
 operator|,
 name|bool
 name|HasInvalidateHandler
@@ -504,6 +668,9 @@ name|ResultT
 operator|,
 name|typename
 name|PreservedAnalysesT
+operator|,
+name|typename
+name|InvalidatorT
 operator|>
 expr|struct
 name|AnalysisResultModel
@@ -516,12 +683,18 @@ name|ResultT
 operator|,
 name|PreservedAnalysesT
 operator|,
+name|InvalidatorT
+operator|,
 name|false
 operator|>
 operator|:
 name|AnalysisResultConcept
 operator|<
 name|IRUnitT
+operator|,
+name|PreservedAnalysesT
+operator|,
+name|InvalidatorT
 operator|>
 block|{
 name|explicit
@@ -620,20 +793,43 @@ argument_list|(
 argument|IRUnitT&
 argument_list|,
 argument|const PreservedAnalysesT&PA
+argument_list|,
+argument|InvalidatorT&
 argument_list|)
 name|override
 block|{
-return|return
-operator|!
+name|auto
+name|PAC
+operator|=
 name|PA
 operator|.
-name|preserved
-argument_list|(
+name|template
+name|getChecker
+operator|<
 name|PassT
-operator|::
-name|ID
+operator|>
+operator|(
+operator|)
+block|;
+return|return
+operator|!
+name|PAC
+operator|.
+name|preserved
 argument_list|()
-argument_list|)
+operator|&&
+operator|!
+name|PAC
+operator|.
+name|template
+name|preservedSet
+operator|<
+name|AllAnalysesOn
+operator|<
+name|IRUnitT
+operator|>>
+operator|(
+operator|)
 return|;
 block|}
 name|ResultT
@@ -655,6 +851,9 @@ name|ResultT
 operator|,
 name|typename
 name|PreservedAnalysesT
+operator|,
+name|typename
+name|InvalidatorT
 operator|>
 expr|struct
 name|AnalysisResultModel
@@ -667,12 +866,18 @@ name|ResultT
 operator|,
 name|PreservedAnalysesT
 operator|,
+name|InvalidatorT
+operator|,
 name|true
 operator|>
 operator|:
 name|AnalysisResultConcept
 operator|<
 name|IRUnitT
+operator|,
+name|PreservedAnalysesT
+operator|,
+name|InvalidatorT
 operator|>
 block|{
 name|explicit
@@ -767,6 +972,8 @@ argument_list|(
 argument|IRUnitT&IR
 argument_list|,
 argument|const PreservedAnalysesT&PA
+argument_list|,
+argument|InvalidatorT&Inv
 argument_list|)
 name|override
 block|{
@@ -778,6 +985,8 @@ argument_list|(
 name|IR
 argument_list|,
 name|PA
+argument_list|,
+name|Inv
 argument_list|)
 return|;
 block|}
@@ -793,6 +1002,16 @@ name|template
 operator|<
 name|typename
 name|IRUnitT
+operator|,
+name|typename
+name|PreservedAnalysesT
+operator|,
+name|typename
+name|InvalidatorT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 expr|struct
 name|AnalysisPassConcept
@@ -801,7 +1020,9 @@ name|virtual
 operator|~
 name|AnalysisPassConcept
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// \brief Method to run this analysis over a unit of IR.
 comment|/// \returns A unique_ptr to the analysis result object to be queried by
 comment|/// users.
@@ -813,6 +1034,10 @@ operator|<
 name|AnalysisResultConcept
 operator|<
 name|IRUnitT
+block|,
+name|PreservedAnalysesT
+block|,
+name|InvalidatorT
 operator|>>
 name|run
 argument_list|(
@@ -823,9 +1048,16 @@ argument_list|,
 name|AnalysisManager
 operator|<
 name|IRUnitT
+argument_list|,
+name|ExtraArgTs
+operator|...
 operator|>
 operator|&
 name|AM
+argument_list|,
+name|ExtraArgTs
+operator|...
+name|ExtraArgs
 argument_list|)
 operator|=
 literal|0
@@ -851,6 +1083,16 @@ name|IRUnitT
 operator|,
 name|typename
 name|PassT
+operator|,
+name|typename
+name|PreservedAnalysesT
+operator|,
+name|typename
+name|InvalidatorT
+operator|,
+name|typename
+operator|...
+name|ExtraArgTs
 operator|>
 expr|struct
 name|AnalysisPassModel
@@ -858,6 +1100,13 @@ operator|:
 name|AnalysisPassConcept
 operator|<
 name|IRUnitT
+operator|,
+name|PreservedAnalysesT
+operator|,
+name|InvalidatorT
+operator|,
+name|ExtraArgTs
+operator|...
 operator|>
 block|{
 name|explicit
@@ -957,6 +1206,10 @@ name|typename
 name|PassT
 operator|::
 name|Result
+operator|,
+name|PreservedAnalysesT
+operator|,
+name|InvalidatorT
 operator|>
 name|ResultModelT
 expr_stmt|;
@@ -970,12 +1223,20 @@ operator|<
 name|AnalysisResultConcept
 operator|<
 name|IRUnitT
+operator|,
+name|PreservedAnalysesT
+operator|,
+name|InvalidatorT
 operator|>>
 name|run
 argument_list|(
 argument|IRUnitT&IR
 argument_list|,
-argument|AnalysisManager<IRUnitT>&AM
+argument|AnalysisManager<IRUnitT
+argument_list|,
+argument|ExtraArgTs...>&AM
+argument_list|,
+argument|ExtraArgTs... ExtraArgs
 argument_list|)
 name|override
 block|{
@@ -992,6 +1253,9 @@ argument_list|(
 name|IR
 argument_list|,
 name|AM
+argument_list|,
+name|ExtraArgs
+operator|...
 argument_list|)
 operator|)
 return|;
@@ -1023,14 +1287,22 @@ end_empty_stmt
 
 begin_comment
 unit|}
-comment|// End namespace detail
+comment|// end namespace detail
+end_comment
+
+begin_comment
+unit|}
+comment|// end namespace llvm
 end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_IR_PASSMANAGERINTERNAL_H
+end_comment
 
 end_unit
 

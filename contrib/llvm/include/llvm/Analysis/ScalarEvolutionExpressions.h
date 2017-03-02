@@ -2180,7 +2180,98 @@ argument_list|(
 name|Root
 argument_list|)
 block|;   }
-comment|/// Recursively visits a SCEV expression and re-writes it.
+comment|/// Return true if any node in \p Root satisfies the predicate \p Pred.
+name|template
+operator|<
+name|typename
+name|PredTy
+operator|>
+name|bool
+name|SCEVExprContains
+argument_list|(
+argument|const SCEV *Root
+argument_list|,
+argument|PredTy Pred
+argument_list|)
+block|{     struct
+name|FindClosure
+block|{
+name|bool
+name|Found
+operator|=
+name|false
+block|;
+name|PredTy
+name|Pred
+block|;
+name|FindClosure
+argument_list|(
+argument|PredTy Pred
+argument_list|)
+operator|:
+name|Pred
+argument_list|(
+argument|Pred
+argument_list|)
+block|{}
+name|bool
+name|follow
+argument_list|(
+argument|const SCEV *S
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Pred
+argument_list|(
+name|S
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+name|Found
+operator|=
+name|true
+block|;
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isDone
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Found
+return|;
+block|}
+expr|}
+block|;
+name|FindClosure
+name|FC
+argument_list|(
+name|Pred
+argument_list|)
+block|;
+name|visitAll
+argument_list|(
+name|Root
+argument_list|,
+name|FC
+argument_list|)
+block|;
+return|return
+name|FC
+operator|.
+name|Found
+return|;
+block|}
+comment|/// This visitor recursively visits a SCEV expression and re-writes it.
+comment|/// The result from each visit is cached, so it will return the same
+comment|/// SCEV for the same input.
 name|template
 operator|<
 name|typename
@@ -2205,6 +2296,23 @@ name|ScalarEvolution
 operator|&
 name|SE
 block|;
+comment|// Memoize the result of each visit so that we only compute once for
+comment|// the same input SCEV. This is to avoid redundant computations when
+comment|// a SCEV is referenced by multiple SCEVs. Without memoization, this
+comment|// visit algorithm would have exponential time complexity in the worst
+comment|// case, causing the compiler to hang on certain tests.
+name|DenseMap
+operator|<
+specifier|const
+name|SCEV
+operator|*
+block|,
+specifier|const
+name|SCEV
+operator|*
+operator|>
+name|RewriteResults
+block|;
 name|public
 operator|:
 name|SCEVRewriteVisitor
@@ -2219,6 +2327,85 @@ argument_list|(
 argument|SE
 argument_list|)
 block|{}
+specifier|const
+name|SCEV
+operator|*
+name|visit
+argument_list|(
+argument|const SCEV *S
+argument_list|)
+block|{
+name|auto
+name|It
+operator|=
+name|RewriteResults
+operator|.
+name|find
+argument_list|(
+name|S
+argument_list|)
+block|;
+if|if
+condition|(
+name|It
+operator|!=
+name|RewriteResults
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|It
+operator|->
+name|second
+return|;
+name|auto
+operator|*
+name|Visited
+operator|=
+name|SCEVVisitor
+operator|<
+name|SC
+block|,
+specifier|const
+name|SCEV
+operator|*
+operator|>
+operator|::
+name|visit
+argument_list|(
+name|S
+argument_list|)
+block|;
+name|auto
+name|Result
+operator|=
+name|RewriteResults
+operator|.
+name|try_emplace
+argument_list|(
+name|S
+argument_list|,
+name|Visited
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Result
+operator|.
+name|second
+operator|&&
+literal|"Should insert a new entry"
+argument_list|)
+block|;
+return|return
+name|Result
+operator|.
+name|first
+operator|->
+name|second
+return|;
+block|}
 specifier|const
 name|SCEV
 operator|*

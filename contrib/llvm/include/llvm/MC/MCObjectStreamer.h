@@ -468,6 +468,8 @@ argument_list|(
 argument|const MCExpr *Offset
 argument_list|,
 argument|unsigned char Value
+argument_list|,
+argument|SMLoc Loc
 argument_list|)
 name|override
 block|;
@@ -532,6 +534,8 @@ argument_list|,
 argument|bool IsStmt
 argument_list|,
 argument|StringRef FileName
+argument_list|,
+argument|SMLoc Loc
 argument_list|)
 name|override
 block|;
@@ -558,8 +562,6 @@ argument_list|,
 argument|const MCSymbol *FnStartSym
 argument_list|,
 argument|const MCSymbol *FnEndSym
-argument_list|,
-argument|ArrayRef<unsigned> SecondaryFunctionIds
 argument_list|)
 name|override
 block|;
@@ -582,6 +584,34 @@ block|;
 name|void
 name|EmitCVFileChecksumsDirective
 argument_list|()
+name|override
+block|;
+name|void
+name|EmitDTPRel32Value
+argument_list|(
+argument|const MCExpr *Value
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitDTPRel64Value
+argument_list|(
+argument|const MCExpr *Value
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitTPRel32Value
+argument_list|(
+argument|const MCExpr *Value
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitTPRel64Value
+argument_list|(
+argument|const MCExpr *Value
+argument_list|)
 name|override
 block|;
 name|void

@@ -177,8 +177,8 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-name|MVT
-name|VT
+name|unsigned
+name|ElSize
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -197,8 +197,8 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-name|MVT
-name|VT
+name|unsigned
+name|ElSize
 argument_list|,
 name|SmallVectorImpl
 operator|<

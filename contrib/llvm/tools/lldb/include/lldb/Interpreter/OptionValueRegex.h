@@ -98,9 +98,9 @@ argument_list|()
 block|,
 name|m_regex
 argument_list|(
-argument|value
+argument|llvm::StringRef::withNullAsEmpty(value)
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|OptionValueRegex
 argument_list|()
@@ -142,6 +142,20 @@ argument_list|,
 argument|VarSetOperationType op = eVarSetOperationAssign
 argument_list|)
 name|override
+block|;
+name|Error
+name|SetValueFromString
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|VarSetOperationType
+operator|=
+name|eVarSetOperationAssign
+argument_list|)
+operator|=
+name|delete
 block|;
 name|bool
 name|Clear
@@ -212,7 +226,12 @@ name|m_regex
 operator|.
 name|Compile
 argument_list|(
+name|llvm
+operator|::
+name|StringRef
+argument_list|(
 name|value
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else

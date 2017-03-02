@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Target/RegisterContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Target/RegisterContext.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_comment
@@ -377,7 +377,7 @@ argument_list|(
 argument|uint32_t hw_index
 argument_list|)
 name|override
-block|;      struct
+block|;    struct
 name|GPR
 block|{
 name|uint32_t
@@ -392,7 +392,7 @@ name|cpsr
 block|;
 comment|// CPSR
 block|}
-block|;      struct
+block|;    struct
 name|QReg
 block|{
 name|uint8_t
@@ -400,8 +400,8 @@ name|bytes
 index|[
 literal|16
 index|]
-block|;     }
-block|;      struct
+block|;   }
+block|;    struct
 name|FPU
 block|{
 expr|union
@@ -430,7 +430,7 @@ name|floats
 block|;
 name|uint32_t
 name|fpscr
-block|;     }
+block|;   }
 block|;
 comment|//  struct NeonReg
 comment|//  {
@@ -461,7 +461,7 @@ name|far
 block|;
 comment|/* Virtual Fault Address */
 block|}
-block|;      struct
+block|;    struct
 name|DBG
 block|{
 name|uint32_t
@@ -487,7 +487,7 @@ name|wcr
 index|[
 literal|16
 index|]
-block|;     }
+block|;   }
 block|;
 specifier|static
 name|void
@@ -534,7 +534,7 @@ operator|=
 literal|4
 comment|// ARM_DEBUG_STATE
 block|}
-block|;      enum
+block|;    enum
 block|{
 name|GPRWordCount
 operator|=
@@ -584,7 +584,7 @@ operator|(
 name|uint32_t
 operator|)
 block|}
-block|;      enum
+block|;    enum
 block|{
 name|Read
 operator|=
@@ -672,7 +672,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-block|;     }
+block|;   }
 name|int
 name|GetError
 argument_list|(

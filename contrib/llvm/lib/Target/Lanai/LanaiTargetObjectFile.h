@@ -70,6 +70,26 @@ name|MCSection
 operator|*
 name|SmallBSSSection
 block|;
+name|bool
+name|isGlobalInSmallSection
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|,
+argument|SectionKind Kind
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isGlobalInSmallSectionImpl
+argument_list|(
+argument|const GlobalObject *GO
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|void
@@ -86,27 +106,7 @@ comment|/// section.
 name|bool
 name|isGlobalInSmallSection
 argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|const TargetMachine&TM
-argument_list|,
-argument|SectionKind Kind
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isGlobalInSmallSection
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|const TargetMachine&TM
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isGlobalInSmallSectionImpl
-argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
@@ -116,11 +116,9 @@ name|MCSection
 operator|*
 name|SelectSectionForGlobal
 argument_list|(
-argument|const GlobalValue *GV
+argument|const GlobalObject *GO
 argument_list|,
 argument|SectionKind Kind
-argument_list|,
-argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)

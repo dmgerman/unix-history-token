@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -235,7 +235,7 @@ block|,
 name|OP_SEMICOLON
 block|,
 name|OP_COLON
-block|,     }
+block|,   }
 enum|;
 struct|struct
 name|Token

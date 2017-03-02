@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"X86InstrFMA3Info.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"X86RegisterInfo.h"
 end_include
 
@@ -1050,7 +1056,7 @@ decl|const
 name|override
 decl_stmt|;
 comment|/// Returns true if the routine could find two commutable operands
-comment|/// in the given FMA instruction. Otherwise, returns false.
+comment|/// in the given FMA instruction \p MI. Otherwise, returns false.
 comment|///
 comment|/// \p SrcOpIdx1 and \p SrcOpIdx2 are INPUT and OUTPUT arguments.
 comment|/// The output indices of the commuted operands are returned in these
@@ -1059,10 +1065,12 @@ comment|/// to indices of operands that must be commuted or be equal to a specia
 comment|/// value 'CommuteAnyOperandIndex' which means that the corresponding
 comment|/// operand index is not set and this method is free to pick any of
 comment|/// available commutable operands.
+comment|/// The parameter \p FMA3Group keeps the reference to the group of relative
+comment|/// FMA3 opcodes including register/memory forms of 132/213/231 opcodes.
 comment|///
 comment|/// For example, calling this method this way:
 comment|///     unsigned Idx1 = 1, Idx2 = CommuteAnyOperandIndex;
-comment|///     findFMA3CommutedOpIndices(MI, Idx1, Idx2);
+comment|///     findFMA3CommutedOpIndices(MI, Idx1, Idx2, FMA3Group);
 comment|/// can be interpreted as a query asking if the operand #1 can be swapped
 comment|/// with any other available operand (e.g. operand #2, operand #3, etc.).
 comment|///
@@ -1074,6 +1082,7 @@ comment|///     FMA231 #3, #2, #1
 name|bool
 name|findFMA3CommutedOpIndices
 argument_list|(
+specifier|const
 name|MachineInstr
 operator|&
 name|MI
@@ -1085,13 +1094,23 @@ argument_list|,
 name|unsigned
 operator|&
 name|SrcOpIdx2
+argument_list|,
+specifier|const
+name|X86InstrFMA3Group
+operator|&
+name|FMA3Group
 argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Returns an adjusted FMA opcode that must be used in FMA instruction that
-comment|/// performs the same computations as the given MI but which has the operands
-comment|/// \p SrcOpIdx1 and \p SrcOpIdx2 commuted.
+comment|/// performs the same computations as the given \p MI but which has the
+comment|/// operands \p SrcOpIdx1 and \p SrcOpIdx2 commuted.
 comment|/// It may return 0 if it is unsafe to commute the operands.
+comment|/// Note that a machine instruction (instead of its opcode) is passed as the
+comment|/// first parameter to make it possible to analyze the instruction's uses and
+comment|/// commute the first operand of FMA even when it seems unsafe when you look
+comment|/// at the opcode. For example, it is Ok to commute the first operand of
+comment|/// VFMADD*SD_Int, if ONLY the lowest 64-bit element of the result is used.
 comment|///
 comment|/// The returned FMA opcode may differ from the opcode in the given \p MI.
 comment|/// For example, commuting the operands #1 and #3 in the following FMA
@@ -1101,6 +1120,7 @@ comment|///     FMA231 #3, #2, #1
 name|unsigned
 name|getFMA3OpcodeToCommuteOperands
 argument_list|(
+specifier|const
 name|MachineInstr
 operator|&
 name|MI
@@ -1110,6 +1130,11 @@ name|SrcOpIdx1
 argument_list|,
 name|unsigned
 name|SrcOpIdx2
+argument_list|,
+specifier|const
+name|X86InstrFMA3Group
+operator|&
+name|FMA3Group
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1200,17 +1225,23 @@ decl|const
 name|override
 decl_stmt|;
 name|unsigned
-name|RemoveBranch
+name|removeBranch
 argument_list|(
 name|MachineBasicBlock
 operator|&
 name|MBB
+argument_list|,
+name|int
+operator|*
+name|BytesRemoved
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 name|override
 decl_stmt|;
 name|unsigned
-name|InsertBranch
+name|insertBranch
 argument_list|(
 name|MachineBasicBlock
 operator|&
@@ -1234,6 +1265,12 @@ specifier|const
 name|DebugLoc
 operator|&
 name|DL
+argument_list|,
+name|int
+operator|*
+name|BytesAdded
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 name|override
@@ -1493,6 +1530,18 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+comment|/// Check whether the target can fold a load that feeds a subreg operand
+comment|/// (or a subreg operand that feeds a store).
+name|bool
+name|isSubregFoldable
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// foldMemoryOperand - If this target supports it, fold a load or store of
 comment|/// the specified stack slot into the specified machine instruction for the
 comment|/// specified operand(s).  If this is possible, the target should perform the
@@ -1717,10 +1766,12 @@ decl_stmt|;
 name|bool
 name|shouldScheduleAdjacent
 argument_list|(
+specifier|const
 name|MachineInstr
 operator|&
 name|First
 argument_list|,
+specifier|const
 name|MachineInstr
 operator|&
 name|Second
@@ -1739,7 +1790,7 @@ decl|const
 name|override
 decl_stmt|;
 name|bool
-name|ReverseBranchCondition
+name|reverseBranchCondition
 argument_list|(
 name|SmallVectorImpl
 operator|<
@@ -1928,37 +1979,6 @@ name|AllowCommute
 argument_list|)
 decl|const
 decl_stmt|;
-name|void
-name|getUnconditionalBranch
-argument_list|(
-name|MCInst
-operator|&
-name|Branch
-argument_list|,
-specifier|const
-name|MCSymbolRefExpr
-operator|*
-name|BranchTarget
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|void
-name|getTrap
-argument_list|(
-name|MCInst
-operator|&
-name|MI
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-name|unsigned
-name|getJumpInstrTableEntryBound
-argument_list|()
-specifier|const
-name|override
-expr_stmt|;
 name|bool
 name|isHighLatencyDef
 argument_list|(
@@ -2184,6 +2204,17 @@ argument_list|()
 specifier|const
 name|override
 expr_stmt|;
+name|bool
+name|isTailCall
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|Inst
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|protected
 label|:
 comment|/// Commutes the operands in the given instruction by changing the operands
@@ -2298,13 +2329,36 @@ name|FrameIndex
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Expand the MOVImmSExti8 pseudo-instructions.
+comment|/// Returns true iff the routine could find two commutable operands in the
+comment|/// given machine instruction with 3 vector inputs.
+comment|/// The 'SrcOpIdx1' and 'SrcOpIdx2' are INPUT and OUTPUT arguments. Their
+comment|/// input values can be re-defined in this method only if the input values
+comment|/// are not pre-defined, which is designated by the special value
+comment|/// 'CommuteAnyOperandIndex' assigned to it.
+comment|/// If both of indices are pre-defined and refer to some operands, then the
+comment|/// method simply returns true if the corresponding operands are commutable
+comment|/// and returns false otherwise.
+comment|///
+comment|/// For example, calling this method this way:
+comment|///     unsigned Op1 = 1, Op2 = CommuteAnyOperandIndex;
+comment|///     findThreeSrcCommutedOpIndices(MI, Op1, Op2);
+comment|/// can be interpreted as a query asking to find an operand that would be
+comment|/// commutable with the operand#1.
 name|bool
-name|ExpandMOVImmSExti8
+name|findThreeSrcCommutedOpIndices
 argument_list|(
-name|MachineInstrBuilder
+specifier|const
+name|MachineInstr
 operator|&
-name|MIB
+name|MI
+argument_list|,
+name|unsigned
+operator|&
+name|SrcOpIdx1
+argument_list|,
+name|unsigned
+operator|&
+name|SrcOpIdx2
 argument_list|)
 decl|const
 decl_stmt|;

@@ -58,19 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Iterable.h"
+file|"lldb/Target/Thread.h"
 end_include
 
 begin_include
@@ -82,7 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/Thread.h"
+file|"lldb/Utility/Iterable.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -150,8 +150,10 @@ name|ThreadSP
 name|GetSelectedThread
 argument_list|()
 block|;
-comment|// Manage the thread to use for running expressions.  This is usually the Selected thread,
-comment|// but sometimes (e.g. when evaluating breakpoint conditions& stop hooks) it isn't.
+comment|// Manage the thread to use for running expressions.  This is usually the
+comment|// Selected thread,
+comment|// but sometimes (e.g. when evaluating breakpoint conditions& stop hooks) it
+comment|// isn't.
 name|class
 name|ExpressionExecutionThreadPusher
 block|{
@@ -181,7 +183,7 @@ name|PushExpressionExecutionThread
 argument_list|(
 name|m_tid
 argument_list|)
-block|;         }
+block|;     }
 name|ExpressionExecutionThreadPusher
 argument_list|(
 argument|lldb::ThreadSP thread_sp
@@ -217,7 +219,7 @@ name|lldb
 operator|::
 name|tid_t
 name|m_tid
-block|;     }
+block|;   }
 block|;
 name|lldb
 operator|::
@@ -416,6 +418,7 @@ name|recursive_mutex
 operator|&
 name|GetMutex
 argument_list|()
+specifier|const
 name|override
 block|;
 name|void

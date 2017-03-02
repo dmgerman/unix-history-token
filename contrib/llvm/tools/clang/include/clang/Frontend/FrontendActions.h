@@ -297,6 +297,15 @@ argument|std::string&Sysroot
 argument_list|,
 argument|std::string&OutputFile
 argument_list|)
+block|;
+name|bool
+name|BeginSourceFileAction
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef Filename
+argument_list|)
+name|override
 block|; }
 block|;
 name|class
@@ -305,22 +314,33 @@ operator|:
 name|public
 name|ASTFrontendAction
 block|{
-name|clang
+name|virtual
+name|std
 operator|::
-name|Module
-operator|*
-name|Module
-block|;
-specifier|const
-name|FileEntry
-operator|*
-name|ModuleMapForUniquing
-block|;
-name|bool
-name|IsSystem
+name|unique_ptr
+operator|<
+name|raw_pwrite_stream
+operator|>
+name|CreateOutputFile
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+operator|=
+literal|0
 block|;
 name|protected
 operator|:
+name|bool
+name|BeginSourceFileAction
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef Filename
+argument_list|)
+name|override
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -354,28 +374,36 @@ return|return
 name|false
 return|;
 block|}
+expr|}
+block|;
+name|class
+name|GenerateModuleFromModuleMapAction
+operator|:
 name|public
-operator|:
 name|GenerateModuleAction
-argument_list|(
-argument|const FileEntry *ModuleMap = nullptr
-argument_list|,
-argument|bool IsSystem = false
-argument_list|)
-operator|:
-name|ASTFrontendAction
-argument_list|()
-block|,
+block|{
+name|clang
+operator|::
+name|Module
+operator|*
+name|Module
+operator|=
+name|nullptr
+block|;
+specifier|const
+name|FileEntry
+operator|*
 name|ModuleMapForUniquing
-argument_list|(
-name|ModuleMap
-argument_list|)
-block|,
+operator|=
+name|nullptr
+block|;
+name|bool
 name|IsSystem
-argument_list|(
-argument|IsSystem
-argument_list|)
-block|{ }
+operator|=
+name|false
+block|;
+name|private
+operator|:
 name|bool
 name|BeginSourceFileAction
 argument_list|(
@@ -385,26 +413,74 @@ argument|StringRef Filename
 argument_list|)
 name|override
 block|;
-comment|/// \brief Compute the AST consumer arguments that will be used to
-comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
-comment|///
-comment|/// \returns true if an error occurred, false otherwise.
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|raw_pwrite_stream
 operator|>
-name|ComputeASTConsumerArguments
+name|CreateOutputFile
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
-argument_list|,
-argument|std::string&Sysroot
-argument_list|,
-argument|std::string&OutputFile
 argument_list|)
+name|override
+block|;
+name|public
+operator|:
+name|GenerateModuleFromModuleMapAction
+argument_list|()
+block|{}
+name|GenerateModuleFromModuleMapAction
+argument_list|(
+argument|const FileEntry *ModuleMap
+argument_list|,
+argument|bool IsSystem
+argument_list|)
+operator|:
+name|ModuleMapForUniquing
+argument_list|(
+name|ModuleMap
+argument_list|)
+block|,
+name|IsSystem
+argument_list|(
+argument|IsSystem
+argument_list|)
+block|{}
+block|}
+block|;
+name|class
+name|GenerateModuleInterfaceAction
+operator|:
+name|public
+name|GenerateModuleAction
+block|{
+name|private
+operator|:
+name|bool
+name|BeginSourceFileAction
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef Filename
+argument_list|)
+name|override
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_pwrite_stream
+operator|>
+name|CreateOutputFile
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+name|override
 block|; }
 block|;
 name|class
@@ -469,6 +545,13 @@ argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
+argument_list|)
+name|override
+block|;
+name|bool
+name|BeginInvocation
+argument_list|(
+argument|CompilerInstance&CI
 argument_list|)
 name|override
 block|;

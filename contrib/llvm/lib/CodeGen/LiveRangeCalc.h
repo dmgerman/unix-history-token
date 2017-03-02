@@ -94,6 +94,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -191,6 +197,34 @@ comment|/// when switching live ranges.
 name|BitVector
 name|Seen
 decl_stmt|;
+comment|/// Map LiveRange to sets of blocks (represented by bit vectors) that
+comment|/// in the live range are defined on entry and undefined on entry.
+comment|/// A block is defined on entry if there is a path from at least one of
+comment|/// the defs in the live range to the entry of the block, and conversely,
+comment|/// a block is undefined on entry, if there is no such path (i.e. no
+comment|/// definition reaches the entry of the block). A single LiveRangeCalc
+comment|/// object is used to track live-out information for multiple registers
+comment|/// in live range splitting (which is ok, since the live ranges of these
+comment|/// registers do not overlap), but the defined/undefined information must
+comment|/// be kept separate for each individual range.
+comment|/// By convention, EntryInfoMap[&LR] = { Defined, Undefined }.
+name|std
+operator|::
+name|map
+operator|<
+name|LiveRange
+operator|*
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+name|BitVector
+operator|,
+name|BitVector
+operator|>>
+name|EntryInfoMap
+expr_stmt|;
 comment|/// Map each basic block where a live range is live out to the live-out value
 comment|/// and its defining block.
 comment|///
@@ -282,34 +316,74 @@ literal|16
 operator|>
 name|LiveIn
 expr_stmt|;
-comment|/// Assuming that @p LR is live-in to @p UseMBB, find the set of defs that can
-comment|/// reach it.
+comment|/// Check if the entry to block @p MBB can be reached by any of the defs
+comment|/// in @p LR. Return true if none of the defs reach the entry to @p MBB.
+name|bool
+name|isDefOnEntry
+argument_list|(
+name|LiveRange
+operator|&
+name|LR
+argument_list|,
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|Undefs
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|BitVector
+operator|&
+name|DefOnEntry
+argument_list|,
+name|BitVector
+operator|&
+name|UndefOnEntry
+argument_list|)
+decl_stmt|;
+comment|/// Find the set of defs that can reach @p Kill. @p Kill must belong to
+comment|/// @p UseMBB.
 comment|///
-comment|/// If only one def can reach @p UseMBB, all paths from the def to @p UseMBB
-comment|/// are added to @p LR, and the function returns true.
+comment|/// If exactly one def can reach @p UseMBB, and the def dominates @p Kill,
+comment|/// all paths from the def to @p UseMBB are added to @p LR, and the function
+comment|/// returns true.
 comment|///
 comment|/// If multiple values can reach @p UseMBB, the blocks that need @p LR to be
 comment|/// live in are added to the LiveIn array, and the function returns false.
 comment|///
+comment|/// The array @p Undef provides the locations where the range @p LR becomes
+comment|/// undefined by<def,read-undef> operands on other subranges. If @p Undef
+comment|/// is non-empty and @p Kill is jointly dominated only by the entries of
+comment|/// @p Undef, the function returns false.
+comment|///
 comment|/// PhysReg, when set, is used to verify live-in lists on basic blocks.
 name|bool
 name|findReachingDefs
-parameter_list|(
+argument_list|(
 name|LiveRange
-modifier|&
+operator|&
 name|LR
-parameter_list|,
+argument_list|,
 name|MachineBasicBlock
-modifier|&
+operator|&
 name|UseMBB
-parameter_list|,
+argument_list|,
 name|SlotIndex
 name|Kill
-parameter_list|,
+argument_list|,
 name|unsigned
 name|PhysReg
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|Undefs
+argument_list|)
+decl_stmt|;
 comment|/// updateSSA - Compute the values that will be live in to all requested
 comment|/// blocks in LiveIn.  Create PHI-def values as required to preserve SSA form.
 comment|///
@@ -327,8 +401,14 @@ parameter_list|()
 function_decl|;
 comment|/// Extend the live range of @p LR to reach all uses of Reg.
 comment|///
-comment|/// All uses must be jointly dominated by existing liveness.  PHI-defs are
-comment|/// inserted as needed to preserve SSA form.
+comment|/// If @p LR is a main range, or if @p LI is null, then all uses must be
+comment|/// jointly dominated by the definitions from @p LR. If @p LR is a subrange
+comment|/// of the live interval @p LI, corresponding to lane mask @p LaneMask,
+comment|/// all uses must be jointly dominated by the definitions from @p LR
+comment|/// together with definitions of other lanes where @p LR becomes undefined
+comment|/// (via<def,read-undef> operands).
+comment|/// If @p LR is a main range, the @p LaneMask should be set to ~0, i.e.
+comment|/// LaneBitmask::getAll().
 name|void
 name|extendToUses
 parameter_list|(
@@ -341,6 +421,12 @@ name|Reg
 parameter_list|,
 name|LaneBitmask
 name|LaneMask
+parameter_list|,
+name|LiveInterval
+modifier|*
+name|LI
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Reset Map and Seen fields.
@@ -424,20 +510,24 @@ comment|///
 comment|/// PhysReg, when set, is used to verify live-in lists on basic blocks.
 name|void
 name|extend
-parameter_list|(
+argument_list|(
 name|LiveRange
-modifier|&
+operator|&
 name|LR
-parameter_list|,
+argument_list|,
 name|SlotIndex
 name|Use
-parameter_list|,
+argument_list|,
 name|unsigned
 name|PhysReg
-init|=
-literal|0
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|Undefs
+argument_list|)
+decl_stmt|;
 comment|/// createDeadDefs - Create a dead def in LI for every def operand of Reg.
 comment|/// Each instruction defining Reg gets a new VNInfo with a corresponding
 comment|/// minimal live range.
@@ -473,8 +563,10 @@ name|LR
 argument_list|,
 name|PhysReg
 argument_list|,
-operator|~
-literal|0u
+name|LaneBitmask
+operator|::
+name|getAll
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}

@@ -54,13 +54,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<vector>
 end_include
 
 begin_comment
@@ -88,8 +88,10 @@ name|namespace
 name|lldb_private
 block|{
 comment|//----------------------------------------------------------------------
-comment|/// @class BreakpointResolverName BreakpointResolverName.h "lldb/Breakpoint/BreakpointResolverName.h"
-comment|/// @brief This class sets breakpoints on a given function name, either by exact match
+comment|/// @class BreakpointResolverName BreakpointResolverName.h
+comment|/// "lldb/Breakpoint/BreakpointResolverName.h"
+comment|/// @brief This class sets breakpoints on a given function name, either by exact
+comment|/// match
 comment|/// or by regular expression.
 comment|//----------------------------------------------------------------------
 name|class
@@ -151,7 +153,8 @@ argument_list|,
 argument|bool skip_prologue
 argument_list|)
 block|;
-comment|// Creates a function breakpoint by regular expression.  Takes over control of the lifespan of func_regex.
+comment|// Creates a function breakpoint by regular expression.  Takes over control of
+comment|// the lifespan of func_regex.
 name|BreakpointResolverName
 argument_list|(
 argument|Breakpoint *bkpt
@@ -165,20 +168,33 @@ argument_list|,
 argument|bool skip_prologue
 argument_list|)
 block|;
-name|BreakpointResolverName
+specifier|static
+name|BreakpointResolver
+operator|*
+name|CreateFromStructuredData
 argument_list|(
-argument|Breakpoint *bkpt
+name|Breakpoint
+operator|*
+name|bkpt
 argument_list|,
-argument|const char *class_name
+specifier|const
+name|StructuredData
+operator|::
+name|Dictionary
+operator|&
+name|data_dict
 argument_list|,
-argument|const char *method
-argument_list|,
-argument|Breakpoint::MatchType type
-argument_list|,
-argument|lldb::addr_t offset
-argument_list|,
-argument|bool skip_prologue
+name|Error
+operator|&
+name|error
 argument_list|)
+block|;
+name|StructuredData
+operator|::
+name|ObjectSP
+name|SerializeToStructuredData
+argument_list|()
+name|override
 block|;
 operator|~
 name|BreakpointResolverName

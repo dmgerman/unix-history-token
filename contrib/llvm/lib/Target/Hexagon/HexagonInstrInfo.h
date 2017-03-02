@@ -74,19 +74,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBranchProbabilityInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetFrameLowering.h"
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_define
@@ -117,14 +147,14 @@ range|:
 name|public
 name|HexagonGenInstrInfo
 block|{
+specifier|const
+name|HexagonRegisterInfo
+name|RI
+block|;
 name|virtual
 name|void
 name|anchor
 argument_list|()
-block|;
-specifier|const
-name|HexagonRegisterInfo
-name|RI
 block|;
 name|public
 operator|:
@@ -187,7 +217,7 @@ comment|///    'false' destination in FBB, and a list of operands that evaluate 
 comment|///    condition.  These operands can be passed to other TargetInstrInfo
 comment|///    methods to create new branches.
 comment|///
-comment|/// Note that RemoveBranch and InsertBranch must be implemented to support
+comment|/// Note that removeBranch and insertBranch must be implemented to support
 comment|/// cases where this method returns success.
 comment|///
 comment|/// If AllowModify is true, then this routine is allowed to modify the basic
@@ -213,9 +243,11 @@ comment|/// Remove the branching code at the end of the specific MBB.
 comment|/// This is only invoked in cases where AnalyzeBranch returns success. It
 comment|/// returns the number of instructions that were removed.
 name|unsigned
-name|RemoveBranch
+name|removeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
+argument_list|,
+argument|int *BytesRemoved = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -231,7 +263,7 @@ comment|/// cases where AnalyzeBranch doesn't apply because there was no origina
 comment|/// branch to analyze.  At least this much must be implemented, else tail
 comment|/// merging needs to be disabled.
 name|unsigned
-name|InsertBranch
+name|insertBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -242,6 +274,47 @@ argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
 argument|const DebugLoc&DL
+argument_list|,
+argument|int *BytesAdded = nullptr
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Analyze the loop code, return true if it cannot be understood. Upon
+comment|/// success, this function returns false and returns information about the
+comment|/// induction variable and compare instruction used at the end.
+name|bool
+name|analyzeLoop
+argument_list|(
+argument|MachineLoop&L
+argument_list|,
+argument|MachineInstr *&IndVarInst
+argument_list|,
+argument|MachineInstr *&CmpInst
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Generate code to reduce the loop iteration by one and check if the loop is
+comment|/// finished.  Return the value/register of the the new loop count.  We need
+comment|/// this function when peeling off one or more iterations of a loop. This
+comment|/// function assumes the nth iteration is peeled first.
+name|unsigned
+name|reduceLoopCount
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineInstr *IndVar
+argument_list|,
+argument|MachineInstr&Cmp
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&PrevInsts
+argument_list|,
+argument|unsigned Iter
+argument_list|,
+argument|unsigned MaxIter
 argument_list|)
 specifier|const
 name|override
@@ -394,10 +467,25 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// \brief Get the base register and byte offset of a load/store instr.
+name|bool
+name|getMemOpBaseRegImmOfs
+argument_list|(
+argument|MachineInstr&LdSt
+argument_list|,
+argument|unsigned&BaseReg
+argument_list|,
+argument|int64_t&Offset
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// Reverses the branch condition of the specified condition list,
 comment|/// returning false on success and true if it cannot be reversed.
 name|bool
-name|ReverseBranchCondition
+name|reverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
@@ -418,6 +506,15 @@ block|;
 comment|/// Returns true if the instruction is already predicated.
 name|bool
 name|isPredicated
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return true for post-incremented instructions.
+name|bool
+name|isPostIncrement
 argument_list|(
 argument|const MachineInstr&MI
 argument_list|)
@@ -541,8 +638,7 @@ argument|const InstrItineraryData *ItinData
 argument_list|,
 argument|const MachineInstr&MI
 argument_list|,
-argument|unsigned *PredCost =
-literal|0
+argument|unsigned *PredCost = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -573,6 +669,39 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// For instructions with a base and offset, return the position of the
+comment|/// base register and offset operands.
+name|bool
+name|getBaseAndOffsetPosition
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned&BasePos
+argument_list|,
+argument|unsigned&OffsetPos
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// If the instruction is an increment of a constant value, return the amount.
+name|bool
+name|getIncrementValue
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|int&Value
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isTailCall
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// HexagonInstrInfo specifics.
 comment|///
 specifier|const
@@ -598,116 +727,116 @@ block|;
 name|bool
 name|isAbsoluteSet
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isAccumulator
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isComplex
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isCompoundBranchInstr
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isCondInst
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isConditionalALU32
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isConditionalLoad
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isConditionalStore
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isConditionalTransfer
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isConstExtended
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isDeallocRet
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isDependent
 argument_list|(
-argument|const MachineInstr *ProdMI
+argument|const MachineInstr&ProdMI
 argument_list|,
-argument|const MachineInstr *ConsMI
+argument|const MachineInstr&ConsMI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isDotCurInst
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isDotNewInst
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isDuplexPair
 argument_list|(
-argument|const MachineInstr *MIa
+argument|const MachineInstr&MIa
 argument_list|,
-argument|const MachineInstr *MIb
+argument|const MachineInstr&MIb
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isEarlySourceInstr
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -728,58 +857,58 @@ block|;
 name|bool
 name|isExtendable
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isExtended
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isFloat
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isHVXMemWithAIndirect
 argument_list|(
-argument|const MachineInstr *I
+argument|const MachineInstr&I
 argument_list|,
-argument|const MachineInstr *J
+argument|const MachineInstr&J
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isIndirectCall
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isIndirectL4Return
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isJumpR
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isJumpWithinBranchRange
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned offset
 argument_list|)
@@ -788,44 +917,44 @@ block|;
 name|bool
 name|isLateInstrFeedsEarlyInstr
 argument_list|(
-argument|const MachineInstr *LRMI
+argument|const MachineInstr&LRMI
 argument_list|,
-argument|const MachineInstr *ESMI
+argument|const MachineInstr&ESMI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isLateResultInstr
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isLateSourceInstr
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isLoopN
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isMemOp
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isNewValue
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -839,14 +968,14 @@ block|;
 name|bool
 name|isNewValueInst
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isNewValueJump
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -860,7 +989,7 @@ block|;
 name|bool
 name|isNewValueStore
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -874,16 +1003,9 @@ block|;
 name|bool
 name|isOperandExtended
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned OperandNum
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isPostIncrement
-argument_list|(
-argument|const MachineInstr* MI
 argument_list|)
 specifier|const
 block|;
@@ -939,7 +1061,7 @@ block|;
 name|bool
 name|isSaveCalleeSavedRegsCall
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -953,65 +1075,58 @@ block|;
 name|bool
 name|isSolo
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isSpillPredRegOp
 argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isTailCall
-argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isTC1
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isTC2
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isTC2Early
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isTC4x
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isToBeScheduledASAP
 argument_list|(
-argument|const MachineInstr *MI1
+argument|const MachineInstr&MI1
 argument_list|,
-argument|const MachineInstr *MI2
+argument|const MachineInstr&MI2
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isV60VectorInstruction
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1038,23 +1153,23 @@ block|;
 name|bool
 name|isVecAcc
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isVecALU
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isVecUsableNextPacket
 argument_list|(
-argument|const MachineInstr *ProdMI
+argument|const MachineInstr&ProdMI
 argument_list|,
-argument|const MachineInstr *ConsMI
+argument|const MachineInstr&ConsMI
 argument_list|)
 specifier|const
 block|;
@@ -1068,18 +1183,25 @@ block|;
 name|bool
 name|addLatencyToSchedule
 argument_list|(
-argument|const MachineInstr *MI1
+argument|const MachineInstr&MI1
 argument_list|,
-argument|const MachineInstr *MI2
+argument|const MachineInstr&MI2
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|canExecuteInBundle
 argument_list|(
-argument|const MachineInstr *First
+argument|const MachineInstr&First
 argument_list|,
-argument|const MachineInstr *Second
+argument|const MachineInstr&Second
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|doesNotReturn
+argument_list|(
+argument|const MachineInstr&CallMI
 argument_list|)
 specifier|const
 block|;
@@ -1093,14 +1215,14 @@ block|;
 name|bool
 name|hasNonExtEquivalent
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|hasPseudoInstrPair
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1114,30 +1236,30 @@ block|;
 name|bool
 name|mayBeCurLoad
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|mayBeNewStore
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|producesStall
 argument_list|(
-argument|const MachineInstr *ProdMI
+argument|const MachineInstr&ProdMI
 argument_list|,
-argument|const MachineInstr *ConsMI
+argument|const MachineInstr&ConsMI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|producesStall
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock::const_instr_iterator MII
 argument_list|)
@@ -1146,7 +1268,7 @@ block|;
 name|bool
 name|predCanBeUsedAsDotNew
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned PredReg
 argument_list|)
@@ -1169,36 +1291,25 @@ block|;
 name|short
 name|getAbsoluteForm
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getAddrMode
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getBaseAndOffset
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&Offset
 argument_list|,
 argument|unsigned&AccessSize
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|getBaseAndOffsetPosition
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned&BasePos
-argument_list|,
-argument|unsigned&OffsetPos
 argument_list|)
 specifier|const
 block|;
@@ -1212,14 +1323,14 @@ block|;
 name|short
 name|getBaseWithLongOffset
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|short
 name|getBaseWithRegOffset
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1239,7 +1350,7 @@ block|;
 name|unsigned
 name|getCExtOpNum
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1248,16 +1359,16 @@ operator|::
 name|CompoundGroup
 name|getCompoundCandidateGroup
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getCompoundOpcode
 argument_list|(
-argument|const MachineInstr *GA
+argument|const MachineInstr&GA
 argument_list|,
-argument|const MachineInstr *GB
+argument|const MachineInstr&GB
 argument_list|)
 specifier|const
 block|;
@@ -1273,21 +1384,21 @@ block|;
 name|int
 name|getDotCurOp
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|int
 name|getDotNewOp
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|int
 name|getDotNewPredJumpOp
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|const MachineBranchProbabilityInfo *MBPI
 argument_list|)
@@ -1296,7 +1407,7 @@ block|;
 name|int
 name|getDotNewPredOp
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|const MachineBranchProbabilityInfo *MBPI
 argument_list|)
@@ -1314,14 +1425,14 @@ operator|::
 name|SubInstructionGroup
 name|getDuplexCandidateGroup
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|short
 name|getEquivalentHWInstr
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1338,7 +1449,7 @@ name|getInstrTimingClassLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1359,28 +1470,28 @@ block|;
 name|int
 name|getMaxValue
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getMemAccessSize
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|int
 name|getMinValue
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|short
 name|getNonExtOpcode
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1400,35 +1511,35 @@ block|;
 name|short
 name|getPseudoInstrPair
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|short
 name|getRegForm
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getSize
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|uint64_t
 name|getType
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getUnits
 argument_list|(
-argument|const MachineInstr* MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1458,14 +1569,14 @@ block|;
 name|void
 name|immediateExtend
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|invertAndChangeJumpTarget
 argument_list|(
-argument|MachineInstr* MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock* NewTarget
 argument_list|)
@@ -1481,7 +1592,7 @@ block|;
 name|bool
 name|reversePredSense
 argument_list|(
-argument|MachineInstr* MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1502,7 +1613,7 @@ block|;
 name|short
 name|xformRegToImmOffset
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|; }
@@ -1510,10 +1621,18 @@ decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace llvm
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_HEXAGON_HEXAGONINSTRINFO_H
+end_comment
 
 end_unit
 

@@ -43,6 +43,24 @@ directive|define
 name|liblldb_RegisterContext_x86_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_comment
 comment|//---------------------------------------------------------------------------
 end_comment
@@ -56,7 +74,11 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Register numbers seen in eh_frame (eRegisterKindEHFrame) on i386 systems (non-Darwin)
+comment|// Register numbers seen in eh_frame (eRegisterKindEHFrame) on i386 systems
+end_comment
+
+begin_comment
+comment|// (non-Darwin)
 end_comment
 
 begin_comment
@@ -76,13 +98,16 @@ name|ehframe_edx_i386
 block|,
 name|ehframe_ebx_i386
 block|,
-comment|// on Darwin esp& ebp are reversed in the eh_frame section for i386 (versus dwarf's reg numbering).
+comment|// on Darwin esp& ebp are reversed in the eh_frame section for i386 (versus
+comment|// dwarf's reg numbering).
 comment|// To be specific:
 comment|//    i386+darwin eh_frame:        4 is ebp, 5 is esp
 comment|//    i386+everyone else eh_frame: 4 is esp, 5 is ebp
 comment|//    i386 dwarf:                  4 is esp, 5 is ebp
-comment|// lldb will get the darwin-specific eh_frame reg numberings from debugserver, or the ABI, so we
-comment|// only encode the generally correct 4 == esp, 5 == ebp numbers in this generic header.
+comment|// lldb will get the darwin-specific eh_frame reg numberings from debugserver,
+comment|// or the ABI, so we
+comment|// only encode the generally correct 4 == esp, 5 == ebp numbers in this
+comment|// generic header.
 name|ehframe_esp_i386
 block|,
 name|ehframe_ebp_i386
@@ -280,9 +305,19 @@ block|,
 name|dwarf_gs_i386
 init|=
 literal|45
+block|,
 comment|// I believe the ymm registers use the dwarf_xmm%_i386 register numbers and
 comment|//  then differentiate based on size of the register.
-block|}
+name|dwarf_bnd0_i386
+init|=
+literal|101
+block|,
+name|dwarf_bnd1_i386
+block|,
+name|dwarf_bnd2_i386
+block|,
+name|dwarf_bnd3_i386
+block|, }
 enum|;
 end_enum
 
@@ -299,7 +334,11 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// EHFrame and DWARF Register numbers (eRegisterKindEHFrame& eRegisterKindDWARF)
+comment|// EHFrame and DWARF Register numbers (eRegisterKindEHFrame&
+end_comment
+
+begin_comment
+comment|// eRegisterKindDWARF)
 end_comment
 
 begin_comment
@@ -496,6 +535,17 @@ name|dwarf_ymm14h_x86_64
 block|,
 name|dwarf_ymm15h_x86_64
 block|,
+comment|// MPX registers
+name|dwarf_bnd0_x86_64
+init|=
+literal|126
+block|,
+name|dwarf_bnd1_x86_64
+block|,
+name|dwarf_bnd2_x86_64
+block|,
+name|dwarf_bnd3_x86_64
+block|,
 comment|// AVX2 Vector Mask Registers
 comment|// dwarf_k0_x86_64 = 118,
 comment|// dwarf_k1_x86_64,
@@ -620,7 +670,8 @@ comment|// FPU Operand Pointer Selector (fos)
 block|}
 name|i386_
 struct|;
-comment|// Added _ in the end to avoid error with gcc defining i386 in some cases
+comment|// Added _ in the end to avoid error with gcc defining i386 in some
+comment|// cases
 block|}
 name|ptr
 union|;
@@ -646,10 +697,19 @@ literal|16
 index|]
 decl_stmt|;
 comment|// 16*16 bytes for each XMM-reg = 256 bytes
-name|uint32_t
-name|padding
+name|uint8_t
+name|padding1
 index|[
-literal|24
+literal|48
+index|]
+decl_stmt|;
+name|uint64_t
+name|xcr0
+decl_stmt|;
+name|uint8_t
+name|padding2
+index|[
+literal|40
 index|]
 decl_stmt|;
 block|}
@@ -715,16 +775,77 @@ end_struct
 
 begin_struct
 struct|struct
+name|MPXReg
+block|{
+name|uint8_t
+name|bytes
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|// MPX 128 bit bound registers
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|MPXCsr
+block|{
+name|uint8_t
+name|bytes
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|// MPX 64 bit bndcfgu and bndstatus registers (collectively
+comment|// BNDCSR state)
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|MPX
+block|{
+name|MPXReg
+name|mpxr
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|MPXCsr
+name|mpxc
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_macro
+name|LLVM_PACKED_START
+end_macro
+
+begin_struct
+struct|struct
 name|XSAVE_HDR
 block|{
 name|uint64_t
 name|xstate_bv
 decl_stmt|;
-comment|// OS enabled xstate mask to determine the extended states supported by the processor
+comment|// OS enabled xstate mask to determine the extended states
+comment|// supported by the processor
+name|uint64_t
+name|xcomp_bv
+decl_stmt|;
+comment|// Mask to indicate the format of the XSAVE area and of
+comment|// the XRSTOR instruction
 name|uint64_t
 name|reserved1
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 name|uint64_t
@@ -734,53 +855,65 @@ literal|5
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
 struct|;
 end_struct
 
-begin_comment
-comment|// x86 extensions to FXSAVE (i.e. for AVX processors)
-end_comment
-
-begin_struct
-struct|struct
+begin_expr_stmt
+name|LLVM_PACKED_END
+comment|// x86 extensions to FXSAVE (i.e. for AVX and MPX processors)
+name|LLVM_PACKED_START
+expr|struct
+name|LLVM_ALIGNAS
+argument_list|(
+literal|64
+argument_list|)
 name|XSAVE
 block|{
 name|FXSAVE
 name|i387
-decl_stmt|;
+block|;
 comment|// floating point registers typical in i387_fxsave_struct
 name|XSAVE_HDR
 name|header
-decl_stmt|;
-comment|// The xsave_hdr_struct can be used to determine if the following extensions are usable
+block|;
+comment|// The xsave_hdr_struct can be used to determine if the
+comment|// following extensions are usable
 name|YMMHReg
 name|ymmh
 index|[
 literal|16
 index|]
-decl_stmt|;
-comment|// High 16 bytes of each of 16 YMM registers (the low bytes are in FXSAVE.xmm for compatibility with SSE)
-comment|// Slot any extensions to the register file here
+block|;
+comment|// High 16 bytes of each of 16 YMM registers (the low bytes
+comment|// are in FXSAVE.xmm for compatibility with SSE)
+name|uint64_t
+name|reserved3
+index|[
+literal|16
+index|]
+block|;
+name|MPXReg
+name|mpxr
+index|[
+literal|4
+index|]
+block|;
+comment|// MPX BNDREG state, containing 128-bit bound registers
+name|MPXCsr
+name|mpxc
+index|[
+literal|2
+index|]
+block|;
+comment|// MPX BNDCSR state, containing 64-bit BNDCFGU and
+comment|// BNDSTATUS registers
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|,
-name|aligned
-argument_list|(
-literal|64
-argument_list|)
-operator|)
-argument_list|)
-struct|;
-end_struct
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|LLVM_PACKED_END
+end_macro
 
 begin_comment
 comment|// Floating-point registers

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- NVPTXSection.h - NVPTX-specific section representation -*- C++ -*-===//
+comment|//===- NVPTXSection.h - NVPTX-specific section representation ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/IR/GlobalVariable.h"
+file|"llvm/MC/MCSection.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSection.h"
+file|"llvm/MC/SectionKind.h"
 end_include
 
 begin_decl_stmt
@@ -111,7 +111,9 @@ block|{}
 operator|~
 name|NVPTXSection
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 comment|/// Override this as NVPTX has its own way of printing switching
 comment|/// to a section.
 name|void
@@ -159,6 +161,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_NVPTX_NVPTXSECTION_H
+end_comment
 
 end_unit
 

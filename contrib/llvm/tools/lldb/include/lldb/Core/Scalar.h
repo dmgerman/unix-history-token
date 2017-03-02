@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/APInt.h"
+file|"llvm/ADT/APFloat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/APFloat.h"
+file|"llvm/ADT/APInt.h"
 end_include
 
 begin_define
@@ -177,7 +177,7 @@ name|v
 argument_list|,
 name|true
 argument_list|)
-block|;}
+block|;   }
 name|Scalar
 argument_list|(
 argument|unsigned int v
@@ -209,7 +209,7 @@ literal|8
 argument_list|,
 name|v
 argument_list|)
-block|;}
+block|;   }
 name|Scalar
 argument_list|(
 argument|long v
@@ -243,7 +243,7 @@ name|v
 argument_list|,
 name|true
 argument_list|)
-block|;}
+block|;   }
 name|Scalar
 argument_list|(
 argument|unsigned long v
@@ -275,7 +275,7 @@ literal|8
 argument_list|,
 name|v
 argument_list|)
-block|;}
+block|;   }
 name|Scalar
 argument_list|(
 argument|long long v
@@ -310,7 +310,7 @@ name|v
 argument_list|,
 name|true
 argument_list|)
-block|;}
+block|;   }
 name|Scalar
 argument_list|(
 argument|unsigned long long v
@@ -343,7 +343,7 @@ literal|8
 argument_list|,
 name|v
 argument_list|)
-block|;}
+block|;   }
 name|Scalar
 argument_list|(
 argument|float v
@@ -391,7 +391,7 @@ name|APFloat
 argument_list|(
 name|v
 argument_list|)
-block|; }
+block|;   }
 name|Scalar
 argument_list|(
 argument|long double v
@@ -432,6 +432,7 @@ operator|::
 name|APFloat
 operator|::
 name|IEEEquad
+argument_list|()
 argument_list|,
 name|llvm
 operator|::
@@ -466,6 +467,7 @@ operator|::
 name|APFloat
 operator|::
 name|x87DoubleExtended
+argument_list|()
 argument_list|,
 name|llvm
 operator|::
@@ -634,7 +636,7 @@ operator|&
 name|rhs
 argument_list|)
 expr_stmt|;
-comment|//Scalar(const RegisterValue& reg_value);
+comment|// Scalar(const RegisterValue& reg_value);
 name|virtual
 operator|~
 name|Scalar
@@ -1186,7 +1188,7 @@ operator|::
 name|APInt
 name|SInt128
 argument_list|(
-argument|llvm::APInt& fail_value
+argument|llvm::APInt&fail_value
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1195,7 +1197,7 @@ operator|::
 name|APInt
 name|UInt128
 argument_list|(
-argument|const llvm::APInt& fail_value
+argument|const llvm::APInt&fail_value
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1204,7 +1206,7 @@ operator|::
 name|APInt
 name|SInt256
 argument_list|(
-argument|llvm::APInt& fail_value
+argument|llvm::APInt&fail_value
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1213,7 +1215,7 @@ operator|::
 name|APInt
 name|UInt256
 argument_list|(
-argument|const llvm::APInt& fail_value
+argument|const llvm::APInt&fail_value
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1570,11 +1572,11 @@ name|friend
 specifier|const
 name|Scalar
 name|operator
-function_decl|&   (const
+function_decl|&(const
 name|Scalar
-function_decl|& lhs
+function_decl|&lhs
 operator|,
-function_decl|const Scalar& rhs
+function_decl|const Scalar&rhs
 block|)
 decl_stmt|;
 name|friend
@@ -1905,11 +1907,11 @@ begin_function_decl
 specifier|const
 name|Scalar
 name|operator
-function_decl|& (const
+function_decl|&(const
 name|Scalar
-function_decl|& lhs
+function_decl|&lhs
 operator|,
-function_decl|const Scalar& rhs
+function_decl|const Scalar&rhs
 end_function_decl
 
 begin_empty_stmt

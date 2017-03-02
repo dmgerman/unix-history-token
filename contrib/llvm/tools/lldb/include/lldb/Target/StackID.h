@@ -62,13 +62,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/AddressRange.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/AddressRange.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -100,7 +100,7 @@ name|m_symbol_scope
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{     }
+block|{}
 name|explicit
 name|StackID
 argument_list|(
@@ -125,7 +125,7 @@ name|m_symbol_scope
 argument_list|(
 argument|symbol_scope
 argument_list|)
-block|{     }
+block|{}
 name|StackID
 argument_list|(
 specifier|const
@@ -152,7 +152,7 @@ name|m_symbol_scope
 argument_list|(
 argument|rhs.m_symbol_scope
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|StackID
 argument_list|()

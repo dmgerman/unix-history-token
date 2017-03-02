@@ -55,6 +55,12 @@ directive|include
 file|"llvm/Support/DataExtractor.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Dwarf.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -140,28 +146,44 @@ name|data
 decl_stmt|;
 block|}
 struct|;
-name|uint16_t
+name|dwarf
+operator|::
 name|Form
-decl_stmt|;
+name|Form
+expr_stmt|;
 comment|// Form for this value.
 name|ValueType
 name|Value
 decl_stmt|;
 comment|// Contains all data for the form.
+specifier|const
+name|DWARFUnit
+modifier|*
+name|U
+decl_stmt|;
+comment|// Remember the DWARFUnit at extract time.
 name|public
 label|:
 name|DWARFFormValue
 argument_list|(
-argument|uint16_t Form =
+argument|dwarf::Form F = dwarf::Form(
 literal|0
+argument|)
 argument_list|)
 block|:
 name|Form
 argument_list|(
-argument|Form
+name|F
+argument_list|)
+operator|,
+name|U
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{}
-name|uint16_t
+name|dwarf
+operator|::
+name|Form
 name|getForm
 argument_list|()
 specifier|const
@@ -169,6 +191,64 @@ block|{
 return|return
 name|Form
 return|;
+block|}
+name|void
+name|setForm
+argument_list|(
+name|dwarf
+operator|::
+name|Form
+name|F
+argument_list|)
+block|{
+name|Form
+operator|=
+name|F
+expr_stmt|;
+block|}
+name|void
+name|setUValue
+parameter_list|(
+name|uint64_t
+name|V
+parameter_list|)
+block|{
+name|Value
+operator|.
+name|uval
+operator|=
+name|V
+expr_stmt|;
+block|}
+name|void
+name|setSValue
+parameter_list|(
+name|int64_t
+name|V
+parameter_list|)
+block|{
+name|Value
+operator|.
+name|sval
+operator|=
+name|V
+expr_stmt|;
+block|}
+name|void
+name|setPValue
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|V
+parameter_list|)
+block|{
+name|Value
+operator|.
+name|cstr
+operator|=
+name|V
+expr_stmt|;
 block|}
 name|bool
 name|isFormClass
@@ -178,17 +258,23 @@ name|FC
 argument_list|)
 decl|const
 decl_stmt|;
+specifier|const
+name|DWARFUnit
+operator|*
+name|getUnit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|U
+return|;
+block|}
 name|void
 name|dump
 argument_list|(
 name|raw_ostream
 operator|&
 name|OS
-argument_list|,
-specifier|const
-name|DWARFUnit
-operator|*
-name|U
 argument_list|)
 decl|const
 decl_stmt|;
@@ -201,17 +287,19 @@ comment|/// \returns whether the extraction succeeded.
 name|bool
 name|extractValue
 parameter_list|(
+specifier|const
 name|DataExtractor
-name|data
+modifier|&
+name|Data
 parameter_list|,
 name|uint32_t
 modifier|*
-name|offset_ptr
+name|OffsetPtr
 parameter_list|,
 specifier|const
 name|DWARFUnit
 modifier|*
-name|u
+name|U
 parameter_list|)
 function_decl|;
 name|bool
@@ -247,9 +335,7 @@ operator|<
 name|uint64_t
 operator|>
 name|getAsReference
-argument_list|(
-argument|const DWARFUnit *U
-argument_list|)
+argument_list|()
 specifier|const
 expr_stmt|;
 name|Optional
@@ -275,9 +361,7 @@ name|char
 operator|*
 operator|>
 name|getAsCString
-argument_list|(
-argument|const DWARFUnit *U
-argument_list|)
+argument_list|()
 specifier|const
 expr_stmt|;
 name|Optional
@@ -285,9 +369,7 @@ operator|<
 name|uint64_t
 operator|>
 name|getAsAddress
-argument_list|(
-argument|const DWARFUnit *U
-argument_list|)
+argument_list|()
 specifier|const
 expr_stmt|;
 name|Optional
@@ -308,76 +390,178 @@ name|getAsBlock
 argument_list|()
 specifier|const
 expr_stmt|;
-name|bool
-name|skipValue
-argument_list|(
-name|DataExtractor
-name|debug_info_data
-argument_list|,
-name|uint32_t
-operator|*
-name|offset_ptr
-argument_list|,
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getAsCStringOffset
+argument_list|()
 specifier|const
-name|DWARFUnit
-operator|*
-name|u
-argument_list|)
-decl|const
-decl_stmt|;
-specifier|static
-name|bool
-name|skipValue
-parameter_list|(
-name|uint16_t
-name|form
-parameter_list|,
-name|DataExtractor
-name|debug_info_data
-parameter_list|,
-name|uint32_t
-modifier|*
-name|offset_ptr
-parameter_list|,
+expr_stmt|;
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getAsReferenceUVal
+argument_list|()
 specifier|const
-name|DWARFUnit
-modifier|*
-name|u
-parameter_list|)
-function_decl|;
+expr_stmt|;
+comment|/// Get the fixed byte size for a given form.
+comment|///
+comment|/// If the form always has a fixed valid byte size that doesn't depend on a
+comment|/// DWARFUnit, then an Optional with a value will be returned. If the form
+comment|/// can vary in size depending on the DWARFUnit (DWARF version, address byte
+comment|/// size, or DWARF 32/64) and the DWARFUnit is valid, then an Optional with a
+comment|/// valid value is returned. If the form is always encoded using a variable
+comment|/// length storage format (ULEB or SLEB numbers or blocks) or the size
+comment|/// depends on a DWARFUnit and the DWARFUnit is NULL, then None will be
+comment|/// returned.
+comment|/// \param Form The DWARF form to get the fixed byte size for
+comment|/// \param U The DWARFUnit that can be used to help determine the byte size.
+comment|///
+comment|/// \returns Optional<uint8_t> value with the fixed byte size or None if
+comment|/// \p Form doesn't have a fixed byte size or a DWARFUnit wasn't supplied
+comment|/// and was needed to calculate the byte size.
 specifier|static
-name|bool
-name|skipValue
-parameter_list|(
-name|uint16_t
-name|form
-parameter_list|,
-name|DataExtractor
-name|debug_info_data
-parameter_list|,
-name|uint32_t
-modifier|*
-name|offset_ptr
-parameter_list|,
-name|uint16_t
-name|Version
-parameter_list|,
-name|uint8_t
-name|AddrSize
-parameter_list|)
-function_decl|;
-specifier|static
-name|ArrayRef
+name|Optional
 operator|<
 name|uint8_t
 operator|>
-name|getFixedFormSizes
+name|getFixedByteSize
 argument_list|(
-argument|uint8_t AddrSize
+argument|dwarf::Form Form
 argument_list|,
-argument|uint16_t Version
+argument|const DWARFUnit *U = nullptr
 argument_list|)
 expr_stmt|;
+comment|/// Get the fixed byte size for a given form.
+comment|///
+comment|/// If the form has a fixed byte size given a valid DWARF version and address
+comment|/// byte size, then an Optional with a valid value is returned. If the form
+comment|/// is always encoded using a variable length storage format (ULEB or SLEB
+comment|/// numbers or blocks) then None will be returned.
+comment|///
+comment|/// \param Form DWARF form to get the fixed byte size for
+comment|/// \param Version DWARF version number.
+comment|/// \param AddrSize size of an address in bytes.
+comment|/// \param Format enum value from llvm::dwarf::DwarfFormat.
+comment|/// \returns Optional<uint8_t> value with the fixed byte size or None if
+comment|/// \p Form doesn't have a fixed byte size.
+specifier|static
+name|Optional
+operator|<
+name|uint8_t
+operator|>
+name|getFixedByteSize
+argument_list|(
+argument|dwarf::Form Form
+argument_list|,
+argument|uint16_t Version
+argument_list|,
+argument|uint8_t AddrSize
+argument_list|,
+argument|llvm::dwarf::DwarfFormat Format
+argument_list|)
+expr_stmt|;
+comment|/// Skip a form in \p debug_info_data at offset specified by \p offset_ptr.
+comment|///
+comment|/// Skips the bytes for this form in the debug info and updates the offset.
+comment|///
+comment|/// \param debug_info_data the .debug_info data to use to skip the value.
+comment|/// \param offset_ptr a reference to the offset that will be updated.
+comment|/// \param U the DWARFUnit to use when skipping the form in case the form
+comment|/// size differs according to data in the DWARFUnit.
+comment|/// \returns true on success, false if the form was not skipped.
+name|bool
+name|skipValue
+argument_list|(
+name|DataExtractor
+name|debug_info_data
+argument_list|,
+name|uint32_t
+operator|*
+name|offset_ptr
+argument_list|,
+specifier|const
+name|DWARFUnit
+operator|*
+name|U
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Skip a form in \p debug_info_data at offset specified by \p offset_ptr.
+comment|///
+comment|/// Skips the bytes for this form in the debug info and updates the offset.
+comment|///
+comment|/// \param form the DW_FORM enumeration that indicates the form to skip.
+comment|/// \param debug_info_data the .debug_info data to use to skip the value.
+comment|/// \param offset_ptr a reference to the offset that will be updated.
+comment|/// \param U the DWARFUnit to use when skipping the form in case the form
+comment|/// size differs according to data in the DWARFUnit.
+comment|/// \returns true on success, false if the form was not skipped.
+specifier|static
+name|bool
+name|skipValue
+argument_list|(
+name|dwarf
+operator|::
+name|Form
+name|form
+argument_list|,
+name|DataExtractor
+name|debug_info_data
+argument_list|,
+name|uint32_t
+operator|*
+name|offset_ptr
+argument_list|,
+specifier|const
+name|DWARFUnit
+operator|*
+name|U
+argument_list|)
+decl_stmt|;
+comment|/// Skip a form in \p debug_info_data at offset specified by \p offset_ptr.
+comment|///
+comment|/// Skips the bytes for this form in the debug info and updates the offset.
+comment|///
+comment|/// \param form the DW_FORM enumeration that indicates the form to skip.
+comment|/// \param debug_info_data the .debug_info data to use to skip the value.
+comment|/// \param offset_ptr a reference to the offset that will be updated.
+comment|/// \param Version DWARF version number.
+comment|/// \param AddrSize size of an address in bytes.
+comment|/// \param Format enum value from llvm::dwarf::DwarfFormat.
+comment|/// \returns true on success, false if the form was not skipped.
+specifier|static
+name|bool
+name|skipValue
+argument_list|(
+name|dwarf
+operator|::
+name|Form
+name|form
+argument_list|,
+name|DataExtractor
+name|debug_info_data
+argument_list|,
+name|uint32_t
+operator|*
+name|offset_ptr
+argument_list|,
+name|uint16_t
+name|Version
+argument_list|,
+name|uint8_t
+name|AddrSize
+argument_list|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DwarfFormat
+name|Format
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 name|void
@@ -386,11 +570,6 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
-argument_list|,
-specifier|const
-name|DWARFUnit
-operator|*
-name|U
 argument_list|)
 decl|const
 decl_stmt|;

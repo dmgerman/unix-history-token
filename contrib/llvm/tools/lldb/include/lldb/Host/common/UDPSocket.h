@@ -126,7 +126,7 @@ name|override
 block|;
 name|SocketAddress
 name|m_send_sockaddr
-block|;     }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

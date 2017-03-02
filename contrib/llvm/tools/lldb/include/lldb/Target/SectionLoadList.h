@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SectionLoadList.h -----------------------------------------------*- C++ -*-===//
+comment|//===-- SectionLoadList.h -----------------------------------------------*- C++
+end_comment
+
+begin_comment
+comment|//-*-===//
 end_comment
 
 begin_comment
@@ -80,13 +84,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-public.h"
+file|"lldb/Core/Section.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Section.h"
+file|"lldb/lldb-public.h"
 end_include
 
 begin_decl_stmt
@@ -129,7 +133,7 @@ comment|// Call clear since this takes a lock and clears the section load list
 comment|// in case another thread is currently using this section load list
 name|Clear
 argument_list|()
-block|;     }
+block|;   }
 name|void
 name|operator
 operator|=

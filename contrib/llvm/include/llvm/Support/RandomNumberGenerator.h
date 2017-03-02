@@ -89,6 +89,12 @@ directive|include
 file|<random>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -105,14 +111,58 @@ comment|/// module.
 name|class
 name|RandomNumberGenerator
 block|{
+comment|// 64-bit Mersenne Twister by Matsumoto and Nishimura, 2000
+comment|// http://en.cppreference.com/w/cpp/numeric/random/mersenne_twister_engine
+comment|// This RNG is deterministically portable across C++11
+comment|// implementations.
+name|using
+name|generator_type
+init|=
+name|std
+operator|::
+name|mt19937_64
+decl_stmt|;
 name|public
 label|:
+name|using
+name|result_type
+init|=
+name|generator_type
+operator|::
+name|result_type
+decl_stmt|;
 comment|/// Returns a random number in the range [0, Max).
-name|uint_fast64_t
+name|result_type
 name|operator
 argument_list|()
 argument_list|()
 expr_stmt|;
+specifier|static
+name|constexpr
+name|result_type
+name|min
+parameter_list|()
+block|{
+return|return
+name|generator_type
+operator|::
+name|min
+argument_list|()
+return|;
+block|}
+specifier|static
+name|constexpr
+name|result_type
+name|max
+parameter_list|()
+block|{
+return|return
+name|generator_type
+operator|::
+name|max
+argument_list|()
+return|;
+block|}
 name|private
 label|:
 comment|/// Seeds and salts the underlying RNG engine.
@@ -124,15 +174,9 @@ argument_list|(
 argument|StringRef Salt
 argument_list|)
 empty_stmt|;
-comment|// 64-bit Mersenne Twister by Matsumoto and Nishimura, 2000
-comment|// http://en.cppreference.com/w/cpp/numeric/random/mersenne_twister_engine
-comment|// This RNG is deterministically portable across C++11
-comment|// implementations.
-name|std
-operator|::
-name|mt19937_64
+name|generator_type
 name|Generator
-expr_stmt|;
+decl_stmt|;
 comment|// Noncopyable.
 name|RandomNumberGenerator
 argument_list|(
@@ -163,6 +207,17 @@ name|Module
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|// Get random vector of specified size
+name|std
+operator|::
+name|error_code
+name|getRandomBytes
+argument_list|(
+argument|void *Buffer
+argument_list|,
+argument|size_t Size
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

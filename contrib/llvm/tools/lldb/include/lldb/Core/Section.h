@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|"lldb/Core/AddressRange.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/AddressRange.h"
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
@@ -65,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/ModuleChild.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/ConstString.h"
 end_include
 
 begin_include
@@ -95,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Symbol/ObjectFile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_include
@@ -401,7 +401,9 @@ name|Section
 argument_list|(
 argument|const lldb::SectionSP&parent_section_sp
 argument_list|,
-comment|// NULL for top level sections, non-NULL for child sections
+comment|// NULL for top level
+comment|// sections, non-NULL for
+comment|// child sections
 argument|const lldb::ModuleSP&module_sp
 argument_list|,
 argument|ObjectFile *obj_file
@@ -833,7 +835,7 @@ operator|::
 name|offset_t
 name|GetSectionData
 argument_list|(
-argument|DataExtractor& data
+argument|DataExtractor&data
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -873,7 +875,8 @@ name|ObjectFile
 modifier|*
 name|m_obj_file
 decl_stmt|;
-comment|// The object file that data for this section should be read from
+comment|// The object file that data for this section should
+comment|// be read from
 name|lldb
 operator|::
 name|SectionType
@@ -895,14 +898,16 @@ operator|::
 name|addr_t
 name|m_file_addr
 expr_stmt|;
-comment|// The absolute file virtual address range of this section if m_parent == NULL,
+comment|// The absolute file virtual address range of this
+comment|// section if m_parent == NULL,
 comment|// offset from parent file virtual address if m_parent != NULL
 name|lldb
 operator|::
 name|addr_t
 name|m_byte_size
 expr_stmt|;
-comment|// Size in bytes that this section will occupy in memory at runtime
+comment|// Size in bytes that this section will occupy in
+comment|// memory at runtime
 name|lldb
 operator|::
 name|offset_t
@@ -914,11 +919,13 @@ operator|::
 name|offset_t
 name|m_file_size
 expr_stmt|;
-comment|// Object file size (can be smaller than m_byte_size for zero filled sections...)
+comment|// Object file size (can be smaller than
+comment|// m_byte_size for zero filled sections...)
 name|uint32_t
 name|m_log2align
 decl_stmt|;
-comment|// log_2(align) of the section (i.e. section has to be aligned to 2^m_log2align)
+comment|// log_2(align) of the section (i.e. section has to be
+comment|// aligned to 2^m_log2align)
 name|SectionList
 name|m_children
 decl_stmt|;
@@ -928,9 +935,11 @@ name|m_fake
 range|:
 literal|1
 decl_stmt|,
-comment|// If true, then this section only can contain the address if one of its
+comment|// If true, then this section only can contain the address if
+comment|// one of its
 comment|// children contains an address. This allows for gaps between the children
-comment|// that are contained in the address range for this section, but do not produce
+comment|// that are contained in the address range for this section, but do not
+comment|// produce
 comment|// hits unless the children contain the address.
 name|m_encrypted
 range|:
@@ -960,7 +969,8 @@ comment|// If this section has executable permissions
 name|uint32_t
 name|m_target_byte_size
 decl_stmt|;
-comment|// Some architectures have non-8-bit byte size. This is specified as
+comment|// Some architectures have non-8-bit byte size.
+comment|// This is specified as
 comment|// as a multiple number of a host bytes
 name|private
 label|:

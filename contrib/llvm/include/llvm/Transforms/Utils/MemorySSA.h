@@ -487,6 +487,15 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+enum|enum
+block|{
+comment|// Used to signify what the default invalid ID is for MemoryAccess's
+comment|// getID()
+name|INVALID_MEMORYACCESS_ID
+init|=
+literal|0
+block|}
+enum|;
 name|template
 operator|<
 name|class
@@ -684,7 +693,8 @@ name|friend
 name|class
 name|MemoryPhi
 decl_stmt|;
-comment|/// \brief Used internally to give IDs to MemoryAccesses for printing
+comment|/// \brief Used for debugging and tracking things about MemoryAccesses.
+comment|/// Guaranteed unique among MemoryAccesses, no guarantees otherwise.
 name|virtual
 name|unsigned
 name|getID
@@ -749,95 +759,6 @@ name|Block
 decl_stmt|;
 block|}
 empty_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|ilist_traits
-operator|<
-name|MemoryAccess
-operator|>
-operator|:
-name|public
-name|ilist_default_traits
-operator|<
-name|MemoryAccess
-operator|>
-block|{
-comment|/// See details of the instruction class for why this trick works
-comment|// FIXME: This downcast is UB. See llvm.org/PR26753.
-name|LLVM_NO_SANITIZE
-argument_list|(
-literal|"object-size"
-argument_list|)
-name|MemoryAccess
-operator|*
-name|createSentinel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|MemoryAccess
-operator|*
-operator|>
-operator|(
-operator|&
-name|Sentinel
-operator|)
-return|;
-block|}
-specifier|static
-name|void
-name|destroySentinel
-argument_list|(
-argument|MemoryAccess *
-argument_list|)
-block|{}
-name|MemoryAccess
-operator|*
-name|provideInitialHead
-argument_list|()
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-name|MemoryAccess
-operator|*
-name|ensureHead
-argument_list|(
-argument|MemoryAccess *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|createSentinel
-argument_list|()
-return|;
-block|}
-specifier|static
-name|void
-name|noteHead
-argument_list|(
-argument|MemoryAccess *
-argument_list|,
-argument|MemoryAccess *
-argument_list|)
-block|{}
-name|private
-operator|:
-name|mutable
-name|ilist_half_node
-operator|<
-name|MemoryAccess
-operator|>
-name|Sentinel
-block|; }
-expr_stmt|;
 specifier|inline
 name|raw_ostream
 operator|&
@@ -1125,15 +1046,20 @@ argument_list|)
 operator|:
 name|MemoryUseOrDef
 argument_list|(
-argument|C
+name|C
 argument_list|,
-argument|DMA
+name|DMA
 argument_list|,
-argument|MemoryUseVal
+name|MemoryUseVal
 argument_list|,
-argument|MI
+name|MI
 argument_list|,
-argument|BB
+name|BB
+argument_list|)
+block|,
+name|OptimizedID
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 specifier|static
@@ -1173,12 +1099,68 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|void
+name|setDefiningAccess
+argument_list|(
+argument|MemoryAccess *DMA
+argument_list|,
+argument|bool Optimized = false
+argument_list|)
+block|{
+if|if
+condition|(
+name|Optimized
+condition|)
+name|OptimizedID
+operator|=
+name|DMA
+operator|->
+name|getID
+argument_list|()
+expr_stmt|;
+name|MemoryUseOrDef
+operator|::
+name|setDefiningAccess
+argument_list|(
+name|DMA
+argument_list|)
+block|;   }
+name|bool
+name|isOptimized
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getDefiningAccess
+argument_list|()
+operator|&&
+name|OptimizedID
+operator|==
+name|getDefiningAccess
+argument_list|()
+operator|->
+name|getID
+argument_list|()
+return|;
+block|}
+comment|/// \brief Reset the ID of what this MemoryUse was optimized to, causing it to
+comment|/// be rewalked by the walker if necessary.
+comment|/// This really should only be called by tests.
+name|void
+name|resetOptimized
+parameter_list|()
+block|{
+name|OptimizedID
+operator|=
+name|INVALID_MEMORYACCESS_ID
+expr_stmt|;
+block|}
 name|protected
-operator|:
+label|:
 name|friend
 name|class
 name|MemorySSA
-block|;
+decl_stmt|;
 name|unsigned
 name|getID
 argument_list|()
@@ -1190,8 +1172,20 @@ argument_list|(
 literal|"MemoryUses do not have IDs"
 argument_list|)
 block|;   }
+name|private
+operator|:
+name|unsigned
+name|int
+name|OptimizedID
+expr_stmt|;
 block|}
-decl_stmt|;
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1210,21 +1204,54 @@ literal|1
 operator|>
 block|{}
 expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|MemoryUse
 argument_list|,
 argument|MemoryAccess
 argument_list|)
+end_macro
+
+begin_comment
 comment|/// \brief Represents a read-write access to memory, whether it is a must-alias,
+end_comment
+
+begin_comment
 comment|/// or a may-alias.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// In particular, the set of Instructions that will be represented by
+end_comment
+
+begin_comment
 comment|/// MemoryDef's is exactly the set of Instructions for which
+end_comment
+
+begin_comment
 comment|/// AliasAnalysis::getModRefInfo returns "Mod" or "ModRef".
+end_comment
+
+begin_comment
 comment|/// Note that, in order to provide def-def chains, all defs also have a use
+end_comment
+
+begin_comment
 comment|/// associated with them. This use points to the nearest reaching
+end_comment
+
+begin_comment
 comment|/// MemoryDef/MemoryPhi.
+end_comment
+
+begin_decl_stmt
 name|class
 name|MemoryDef
 name|final
@@ -1346,8 +1373,6 @@ name|friend
 name|class
 name|MemorySSA
 block|;
-comment|// For debugging only. This gets used to give memory accesses pretty numbers
-comment|// when printing them out
 name|unsigned
 name|getID
 argument_list|()
@@ -1365,6 +1390,9 @@ name|unsigned
 name|ID
 block|; }
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1383,44 +1411,146 @@ literal|1
 operator|>
 block|{}
 expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|MemoryDef
 argument_list|,
 argument|MemoryAccess
 argument_list|)
+end_macro
+
+begin_comment
 comment|/// \brief Represents phi nodes for memory accesses.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// These have the same semantic as regular phi nodes, with the exception that
+end_comment
+
+begin_comment
 comment|/// only one phi will ever exist in a given basic block.
+end_comment
+
+begin_comment
 comment|/// Guaranteeing one phi per block means guaranteeing there is only ever one
+end_comment
+
+begin_comment
 comment|/// valid reaching MemoryDef/MemoryPHI along each path to the phi node.
+end_comment
+
+begin_comment
 comment|/// This is ensured by not allowing disambiguation of the RHS of a MemoryDef or
+end_comment
+
+begin_comment
 comment|/// a MemoryPhi's operands.
+end_comment
+
+begin_comment
 comment|/// That is, given
+end_comment
+
+begin_comment
 comment|/// if (a) {
+end_comment
+
+begin_comment
 comment|///   store %a
+end_comment
+
+begin_comment
 comment|///   store %b
+end_comment
+
+begin_comment
 comment|/// }
+end_comment
+
+begin_comment
 comment|/// it *must* be transformed into
+end_comment
+
+begin_comment
 comment|/// if (a) {
+end_comment
+
+begin_comment
 comment|///    1 = MemoryDef(liveOnEntry)
+end_comment
+
+begin_comment
 comment|///    store %a
+end_comment
+
+begin_comment
 comment|///    2 = MemoryDef(1)
+end_comment
+
+begin_comment
 comment|///    store %b
+end_comment
+
+begin_comment
 comment|/// }
+end_comment
+
+begin_comment
 comment|/// and *not*
+end_comment
+
+begin_comment
 comment|/// if (a) {
+end_comment
+
+begin_comment
 comment|///    1 = MemoryDef(liveOnEntry)
+end_comment
+
+begin_comment
 comment|///    store %a
+end_comment
+
+begin_comment
 comment|///    2 = MemoryDef(liveOnEntry)
+end_comment
+
+begin_comment
 comment|///    store %b
+end_comment
+
+begin_comment
 comment|/// }
+end_comment
+
+begin_comment
 comment|/// even if the two stores do not conflict. Otherwise, both 1 and 2 reach the
+end_comment
+
+begin_comment
 comment|/// end of the branch, and if there are not two phi nodes, one will be
+end_comment
+
+begin_comment
 comment|/// disconnected completely from the SSA graph below that point.
+end_comment
+
+begin_comment
 comment|/// Because MemoryUse's do not generate new definitions, they do not have this
+end_comment
+
+begin_comment
 comment|/// issue.
+end_comment
+
+begin_decl_stmt
 name|class
 name|MemoryPhi
 name|final
@@ -1513,6 +1643,9 @@ modifier|*
 modifier|*
 name|block_iterator
 typedef|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|BasicBlock
 modifier|*
@@ -1520,6 +1653,9 @@ specifier|const
 modifier|*
 name|const_block_iterator
 typedef|;
+end_typedef
+
+begin_function
 name|block_iterator
 name|block_begin
 parameter_list|()
@@ -1554,6 +1690,9 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_block_iterator
 name|block_begin
 argument_list|()
@@ -1591,6 +1730,9 @@ literal|1
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|block_iterator
 name|block_end
 parameter_list|()
@@ -1603,6 +1745,9 @@ name|getNumOperands
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_block_iterator
 name|block_end
 argument_list|()
@@ -1616,6 +1761,52 @@ name|getNumOperands
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|iterator_range
+operator|<
+name|block_iterator
+operator|>
+name|blocks
+argument_list|()
+block|{
+return|return
+name|make_range
+argument_list|(
+name|block_begin
+argument_list|()
+argument_list|,
+name|block_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|iterator_range
+operator|<
+name|const_block_iterator
+operator|>
+name|blocks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|block_begin
+argument_list|()
+argument_list|,
+name|block_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
 name|op_range
 name|incoming_values
 parameter_list|()
@@ -1625,6 +1816,9 @@ name|operands
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_op_range
 name|incoming_values
 argument_list|()
@@ -1635,7 +1829,13 @@ name|operands
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Return the number of incoming edges
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getNumIncomingValues
 argument_list|()
@@ -1646,7 +1846,13 @@ name|getNumOperands
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Return incoming value number x
+end_comment
+
+begin_decl_stmt
 name|MemoryAccess
 modifier|*
 name|getIncomingValue
@@ -1663,6 +1869,9 @@ name|I
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setIncomingValue
 parameter_list|(
@@ -1689,6 +1898,9 @@ name|V
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|unsigned
 name|getOperandNumForIncomingValue
@@ -1701,6 +1913,9 @@ return|return
 name|I
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|unsigned
 name|getIncomingValueNumForOperand
@@ -1713,7 +1928,13 @@ return|return
 name|I
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Return incoming basic block number @p i.
+end_comment
+
+begin_decl_stmt
 name|BasicBlock
 modifier|*
 name|getIncomingBlock
@@ -1731,8 +1952,17 @@ name|I
 index|]
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return incoming basic block corresponding
+end_comment
+
+begin_comment
 comment|/// to an operand of the PHI.
+end_comment
+
+begin_decl_stmt
 name|BasicBlock
 modifier|*
 name|getIncomingBlock
@@ -1770,8 +2000,17 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return incoming basic block corresponding
+end_comment
+
+begin_comment
 comment|/// to value use iterator.
+end_comment
+
+begin_decl_stmt
 name|BasicBlock
 modifier|*
 name|getIncomingBlock
@@ -1793,6 +2032,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setIncomingBlock
 parameter_list|(
@@ -1820,7 +2062,13 @@ operator|=
 name|BB
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Add an incoming value to the end of the PHI list
+end_comment
+
+begin_function
 name|void
 name|addIncoming
 parameter_list|(
@@ -1874,8 +2122,17 @@ name|BB
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Return the first index of the specified basic
+end_comment
+
+begin_comment
 comment|/// block in the value list for this PHI.  Returns -1 if no instance.
+end_comment
+
+begin_decl_stmt
 name|int
 name|getBasicBlockIndex
 argument_list|(
@@ -1923,6 +2180,9 @@ operator|-
 literal|1
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|Value
 modifier|*
 name|getIncomingValueForBlock
@@ -1958,6 +2218,9 @@ name|Idx
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1972,6 +2235,9 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|bool
@@ -1992,6 +2258,9 @@ operator|==
 name|MemoryPhiVal
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -2002,15 +2271,33 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_decl_stmt
 name|friend
 name|class
 name|MemorySSA
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief this is more complicated than the generic
+end_comment
+
+begin_comment
 comment|/// User::allocHungoffUses, because we have to allocate Uses for the incoming
+end_comment
+
+begin_comment
 comment|/// values and pointers to the incoming blocks, all in one allocation.
+end_comment
+
+begin_function
 name|void
 name|allocHungoffUses
 parameter_list|(
@@ -2029,8 +2316,9 @@ name|true
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// For debugging only. This gets used to give memory accesses pretty numbers
-comment|/// when printing them out
+end_function
+
+begin_expr_stmt
 name|unsigned
 name|getID
 argument_list|()
@@ -2041,18 +2329,39 @@ return|return
 name|ID
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|// For debugging only
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|unsigned
 name|ID
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|ReservedSpace
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief This grows the operand list in response to a push_back style of
+end_comment
+
+begin_comment
 comment|/// operation.  This grows the number of ops by 1.5 times.
+end_comment
+
+begin_function
 name|void
 name|growOperands
 parameter_list|()
@@ -2088,14 +2397,10 @@ name|true
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -2155,12 +2460,6 @@ name|DominatorTree
 operator|*
 argument_list|)
 expr_stmt|;
-name|MemorySSA
-argument_list|(
-name|MemorySSA
-operator|&&
-argument_list|)
-expr_stmt|;
 operator|~
 name|MemorySSA
 argument_list|()
@@ -2174,12 +2473,12 @@ comment|/// \brief Given a memory Mod/Ref'ing instruction, get the MemorySSA
 comment|/// access associated with it. If passed a basic block gets the memory phi
 comment|/// node that exists for that block, if there is one. Otherwise, this will get
 comment|/// a MemoryUseOrDef.
-name|MemoryAccess
+name|MemoryUseOrDef
 modifier|*
 name|getMemoryAccess
 argument_list|(
 specifier|const
-name|Value
+name|Instruction
 operator|*
 argument_list|)
 decl|const
@@ -2272,35 +2571,16 @@ name|BB
 argument_list|)
 decl|const
 block|{
-name|auto
-name|It
-init|=
-name|PerBlockAccesses
-operator|.
-name|find
+return|return
+name|getWritableBlockAccesses
 argument_list|(
 name|BB
 argument_list|)
-decl_stmt|;
-return|return
-name|It
-operator|==
-name|PerBlockAccesses
-operator|.
-name|end
-argument_list|()
-condition|?
-name|nullptr
-else|:
-name|It
-operator|->
-name|second
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
-comment|/// \brief Create an empty MemoryPhi in MemorySSA
+comment|/// \brief Create an empty MemoryPhi in MemorySSA for a given basic block.
+comment|/// Only one MemoryPhi for a block exists at a time, so this function will
+comment|/// assert if you try to create one where it already exists.
 name|MemoryPhi
 modifier|*
 name|createMemoryPhi
@@ -2329,6 +2609,8 @@ comment|/// solely to determine where in the memoryssa access lists the instruct
 comment|/// will be placed. The caller is expected to keep ordering the same as
 comment|/// instructions.
 comment|/// It will return the new MemoryAccess.
+comment|/// Note: If a MemoryAccess already exists for I, this function will make it
+comment|/// inaccessible and it *must* have removeMemoryAccess called on it.
 name|MemoryAccess
 modifier|*
 name|createMemoryAccessInBB
@@ -2358,7 +2640,9 @@ comment|/// This should be called when a memory instruction is created that is b
 comment|/// used to replace an existing memory instruction. It will *not* create PHI
 comment|/// nodes, or verify the clobbering definition.  The clobbering definition
 comment|/// must be non-null.
-name|MemoryAccess
+comment|/// Note: If a MemoryAccess already exists for I, this function will make it
+comment|/// inaccessible and it *must* have removeMemoryAccess called on it.
+name|MemoryUseOrDef
 modifier|*
 name|createMemoryAccessBefore
 parameter_list|(
@@ -2370,12 +2654,12 @@ name|MemoryAccess
 modifier|*
 name|Definition
 parameter_list|,
-name|MemoryAccess
+name|MemoryUseOrDef
 modifier|*
 name|InsertPt
 parameter_list|)
 function_decl|;
-name|MemoryAccess
+name|MemoryUseOrDef
 modifier|*
 name|createMemoryAccessAfter
 parameter_list|(
@@ -2390,6 +2674,25 @@ parameter_list|,
 name|MemoryAccess
 modifier|*
 name|InsertPt
+parameter_list|)
+function_decl|;
+comment|// \brief Splice \p What to just before \p Where.
+comment|//
+comment|// In order to be efficient, the following conditions must be met:
+comment|//   - \p Where  dominates \p What,
+comment|//   - All memory accesses in [\p Where, \p What) are no-alias with \p What.
+comment|//
+comment|// TODO: relax the MemoryDef requirement on Where.
+name|void
+name|spliceMemoryAccessAbove
+parameter_list|(
+name|MemoryDef
+modifier|*
+name|Where
+parameter_list|,
+name|MemoryUseOrDef
+modifier|*
+name|What
 parameter_list|)
 function_decl|;
 comment|/// \brief Remove a MemoryAccess from MemorySSA, including updating all
@@ -2418,6 +2721,40 @@ argument_list|,
 specifier|const
 name|MemoryAccess
 operator|*
+name|B
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Given two memory accesses in potentially different blocks,
+comment|/// determine whether MemoryAccess \p A dominates MemoryAccess \p B.
+name|bool
+name|dominates
+argument_list|(
+specifier|const
+name|MemoryAccess
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|MemoryAccess
+operator|*
+name|B
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Given a MemoryAccess and a Use, determine whether MemoryAccess \p A
+comment|/// dominates Use \p B.
+name|bool
+name|dominates
+argument_list|(
+specifier|const
+name|MemoryAccess
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|Use
+operator|&
 name|B
 argument_list|)
 decl|const
@@ -2467,13 +2804,65 @@ name|F
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// This is used by the use optimizer class
+name|AccessList
+modifier|*
+name|getWritableBlockAccesses
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+decl|const
+block|{
+name|auto
+name|It
+init|=
+name|PerBlockAccesses
+operator|.
+name|find
+argument_list|(
+name|BB
+argument_list|)
+decl_stmt|;
+return|return
+name|It
+operator|==
+name|PerBlockAccesses
+operator|.
+name|end
+argument_list|()
+condition|?
+name|nullptr
+else|:
+name|It
+operator|->
+name|second
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
 name|private
 label|:
 name|class
 name|CachingWalker
 decl_stmt|;
+name|class
+name|OptimizeUses
+decl_stmt|;
+name|CachingWalker
+modifier|*
+name|getWalkerImpl
+parameter_list|()
+function_decl|;
 name|void
 name|buildMemorySSA
+parameter_list|()
+function_decl|;
+name|void
+name|optimizeUses
 parameter_list|()
 function_decl|;
 name|void
@@ -2588,6 +2977,30 @@ name|MemoryAccess
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+name|placePHINodes
+argument_list|(
+specifier|const
+name|SmallPtrSetImpl
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|&
+argument_list|,
+specifier|const
+name|DenseMap
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+argument_list|,
+name|unsigned
+name|int
+operator|>
+operator|&
+argument_list|)
+decl_stmt|;
 name|MemoryAccess
 modifier|*
 name|renameBlock
@@ -2629,6 +3042,15 @@ name|BasicBlock
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+name|renumberBlock
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
 name|AliasAnalysis
 modifier|*
 name|AA
@@ -2663,6 +3085,32 @@ operator|<
 name|MemoryAccess
 operator|>
 name|LiveOnEntryDef
+expr_stmt|;
+comment|// Domination mappings
+comment|// Note that the numbering is local to a block, even though the map is
+comment|// global.
+name|mutable
+name|SmallPtrSet
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|,
+literal|16
+operator|>
+name|BlockNumberingValid
+expr_stmt|;
+name|mutable
+name|DenseMap
+operator|<
+specifier|const
+name|MemoryAccess
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|>
+name|BlockNumbering
 expr_stmt|;
 comment|// Memory SSA building info
 name|std
@@ -2750,34 +3198,72 @@ name|MemorySSAAnalysis
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
-typedef|typedef
-name|MemorySSA
+comment|// Wrap MemorySSA result to ensure address stability of internal MemorySSA
+comment|// pointers after construction.  Use a wrapper class instead of plain
+comment|// unique_ptr<MemorySSA> to avoid build breakage on MSVC.
+expr|struct
 name|Result
-typedef|;
+block|{
+name|Result
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemorySSA
+operator|>
+operator|&&
+name|MSSA
+argument_list|)
+operator|:
+name|MSSA
+argument_list|(
+argument|std::move(MSSA)
+argument_list|)
+block|{}
+name|MemorySSA
+operator|&
+name|getMSSA
+argument_list|()
+block|{
+return|return
+operator|*
+name|MSSA
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemorySSA
+operator|>
+name|MSSA
+block|;   }
+block|;
+name|Result
 name|run
 argument_list|(
 name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
+block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|};
 comment|/// \brief Printer pass for \c MemorySSA.
 end_comment
 
@@ -2817,10 +3303,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
@@ -2848,10 +3331,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
@@ -3036,7 +3516,7 @@ comment|///   1 = MemoryDef(liveOnEntry)
 comment|///   store %a
 comment|/// } else {
 comment|///   2 = MemoryDef(liveOnEntry)
-comment|///    store %b
+comment|///   store %b
 comment|/// }
 comment|/// 3 = MemoryPhi(2, 1)
 comment|/// MemoryUse(3)
@@ -3044,13 +3524,49 @@ comment|/// load %a
 comment|///
 comment|/// calling this API on load(%a) will return the MemoryPhi, not the MemoryDef
 comment|/// in the if (a) branch.
-name|virtual
 name|MemoryAccess
 modifier|*
 name|getClobberingMemoryAccess
 parameter_list|(
 specifier|const
 name|Instruction
+modifier|*
+name|I
+parameter_list|)
+block|{
+name|MemoryAccess
+modifier|*
+name|MA
+init|=
+name|MSSA
+operator|->
+name|getMemoryAccess
+argument_list|(
+name|I
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|MA
+operator|&&
+literal|"Handed an instruction that MemorySSA doesn't recognize?"
+argument_list|)
+expr_stmt|;
+return|return
+name|getClobberingMemoryAccess
+argument_list|(
+name|MA
+argument_list|)
+return|;
+block|}
+comment|/// Does the same thing as getClobberingMemoryAccess(const Instruction *I),
+comment|/// but takes a MemoryAccess instead of an Instruction.
+name|virtual
+name|MemoryAccess
+modifier|*
+name|getClobberingMemoryAccess
+parameter_list|(
+name|MemoryAccess
 modifier|*
 parameter_list|)
 init|=
@@ -3075,6 +3591,7 @@ parameter_list|(
 name|MemoryAccess
 modifier|*
 parameter_list|,
+specifier|const
 name|MemoryLocation
 modifier|&
 parameter_list|)
@@ -3094,6 +3611,26 @@ name|MemoryAccess
 modifier|*
 parameter_list|)
 block|{}
+name|virtual
+name|void
+name|verify
+parameter_list|(
+specifier|const
+name|MemorySSA
+modifier|*
+name|MSSA
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|MSSA
+operator|==
+name|this
+operator|->
+name|MSSA
+argument_list|)
+expr_stmt|;
+block|}
 name|protected
 label|:
 name|friend
@@ -3131,11 +3668,18 @@ name|MemorySSAWalker
 block|{
 name|public
 operator|:
+comment|// Keep the overrides below from hiding the Instruction overload of
+comment|// getClobberingMemoryAccess.
+name|using
+name|MemorySSAWalker
+operator|::
+name|getClobberingMemoryAccess
+block|;
 name|MemoryAccess
 operator|*
 name|getClobberingMemoryAccess
 argument_list|(
-argument|const Instruction *
+argument|MemoryAccess *
 argument_list|)
 name|override
 block|;
@@ -3145,7 +3689,7 @@ name|getClobberingMemoryAccess
 argument_list|(
 argument|MemoryAccess *
 argument_list|,
-argument|MemoryLocation&
+argument|const MemoryLocation&
 argument_list|)
 name|override
 block|; }
@@ -3577,9 +4121,10 @@ operator|*
 operator|>
 block|{
 name|using
-name|NodeType
+name|NodeRef
 operator|=
 name|MemoryAccess
+operator|*
 block|;
 name|using
 name|ChildIteratorType
@@ -3587,11 +4132,10 @@ operator|=
 name|memoryaccess_def_iterator
 block|;
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
-argument|NodeType *N
+argument|NodeRef N
 argument_list|)
 block|{
 return|return
@@ -3599,11 +4143,10 @@ name|N
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 argument_list|(
-argument|NodeType *N
+argument|NodeRef N
 argument_list|)
 block|{
 return|return
@@ -3617,12 +4160,10 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -3650,9 +4191,10 @@ operator|*
 operator|>>
 block|{
 name|using
-name|NodeType
+name|NodeRef
 operator|=
 name|MemoryAccess
+operator|*
 block|;
 name|using
 name|ChildIteratorType
@@ -3662,11 +4204,10 @@ operator|::
 name|iterator
 block|;
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
-argument|NodeType *N
+argument|NodeRef N
 argument_list|)
 block|{
 return|return
@@ -3674,11 +4215,10 @@ name|N
 return|;
 block|}
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 argument_list|(
-argument|NodeType *N
+argument|NodeRef N
 argument_list|)
 block|{
 return|return
@@ -3692,12 +4232,10 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -4130,6 +4668,30 @@ argument_list|()
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// Return true when MD may alias MU, return false otherwise.
+end_comment
+
+begin_function_decl
+name|bool
+name|defClobbersUseOrDef
+parameter_list|(
+name|MemoryDef
+modifier|*
+name|MD
+parameter_list|,
+specifier|const
+name|MemoryUseOrDef
+modifier|*
+name|MU
+parameter_list|,
+name|AliasAnalysis
+modifier|&
+name|AA
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|}

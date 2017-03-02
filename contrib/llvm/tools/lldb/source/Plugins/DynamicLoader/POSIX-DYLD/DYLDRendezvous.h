@@ -70,6 +70,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/Host/FileSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-defines.h"
 end_include
 
@@ -77,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/FileSpec.h"
 end_include
 
 begin_include
@@ -196,7 +196,7 @@ name|ldbase
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 block|}
 struct|;
 name|public

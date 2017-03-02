@@ -349,6 +349,20 @@ decl_stmt|;
 name|class
 name|TargetCodeGenInfo
 decl_stmt|;
+enum|enum
+name|ForDefinition_t
+enum|:
+name|bool
+block|{
+name|NotForDefinition
+init|=
+name|false
+block|,
+name|ForDefinition
+init|=
+name|true
+block|}
+enum|;
 struct|struct
 name|OrderGlobalInits
 block|{
@@ -571,7 +585,7 @@ name|Constant
 operator|*
 name|objc_release
 expr_stmt|;
-comment|/// id objc_storeStrong(id*, id);
+comment|/// void objc_storeStrong(id*, id);
 name|llvm
 operator|::
 name|Constant
@@ -1670,6 +1684,21 @@ operator|*
 operator|>
 name|ImportedModules
 expr_stmt|;
+comment|/// \brief The set of modules for which the module initializers
+comment|/// have been emitted.
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+name|clang
+operator|::
+name|Module
+operator|*
+operator|,
+literal|16
+operator|>
+name|EmittedModuleInitializers
+expr_stmt|;
 comment|/// \brief A vector of metadata strings.
 name|SmallVector
 operator|<
@@ -1690,22 +1719,6 @@ name|llvm
 operator|::
 name|WeakVH
 name|CFConstantStringClassRef
-expr_stmt|;
-comment|/// Cached reference to the class for constant strings. This value has type
-comment|/// int * but is actually an Obj-C class pointer.
-name|llvm
-operator|::
-name|WeakVH
-name|ConstantStringClassRef
-expr_stmt|;
-comment|/// \brief The LLVM type corresponding to NSConstantString.
-name|llvm
-operator|::
-name|StructType
-operator|*
-name|NSConstantStringType
-operator|=
-name|nullptr
 expr_stmt|;
 comment|/// \brief The type used to describe the state of a fast enumeration in
 comment|/// Objective-C's for..in loop.
@@ -1746,6 +1759,39 @@ name|GlobalDecl
 name|GD
 parameter_list|)
 function_decl|;
+comment|/// Map used to be sure we don't emit the same CompoundLiteral twice.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CompoundLiteralExpr
+operator|*
+operator|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+operator|>
+name|EmittedCompoundLiterals
+expr_stmt|;
+comment|/// Map of the global blocks we've emitted, so that we don't have to re-emit
+comment|/// them if the constexpr evaluator gets aggressive.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|BlockExpr
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|EmittedGlobalBlocks
+expr_stmt|;
 comment|/// @name Cache for Blocks Runtime Globals
 comment|/// @{
 name|llvm
@@ -2457,7 +2503,14 @@ operator|&
 name|getTriple
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|Target
+operator|.
+name|getTriple
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -2896,7 +2949,7 @@ name|GetAddrOfGlobal
 argument_list|(
 argument|GlobalDecl GD
 argument_list|,
-argument|bool IsForDefinition = false
+argument|ForDefinition_t IsForDefinition                                     = NotForDefinition
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3019,7 +3072,7 @@ argument|const VarDecl *D
 argument_list|,
 argument|llvm::Type *Ty = nullptr
 argument_list|,
-argument|bool IsForDefinition = false
+argument|ForDefinition_t IsForDefinition                                        = NotForDefinition
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3047,7 +3100,7 @@ argument|bool ForVTable = false
 argument_list|,
 argument|bool DontDefer = false
 argument_list|,
-argument|bool IsForDefinition = false
+argument|ForDefinition_t IsForDefinition                                       = NotForDefinition
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3304,17 +3357,67 @@ name|Constant
 operator|*
 name|GetAddrOfGlobalBlock
 argument_list|(
+argument|const BlockExpr *BE
+argument_list|,
+argument|StringRef Name
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Returns the address of a block which requires no caputres, or null if
+end_comment
+
+begin_comment
+comment|/// we've yet to emit the block for BE.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getAddrOfGlobalBlockIfEmitted
+argument_list|(
+argument|const BlockExpr *BE
+argument_list|)
+block|{
+return|return
+name|EmittedGlobalBlocks
+operator|.
+name|lookup
+argument_list|(
+name|BE
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Notes that BE's global block is available via Addr. Asserts that BE
+end_comment
+
+begin_comment
+comment|/// isn't already emitted.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setAddrOfGlobalBlock
+argument_list|(
 specifier|const
 name|BlockExpr
 operator|*
 name|BE
 argument_list|,
-specifier|const
-name|char
+name|llvm
+operator|::
+name|Constant
 operator|*
+name|Addr
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Return a pointer to a constant CFString object for the given string.
@@ -3473,6 +3576,55 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// If it's been emitted already, returns the GlobalVariable corresponding to
+end_comment
+
+begin_comment
+comment|/// a compound literal. Otherwise, returns null.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|getAddrOfConstantCompoundLiteralIfEmitted
+argument_list|(
+specifier|const
+name|CompoundLiteralExpr
+operator|*
+name|E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Notes that CLE's GlobalVariable is GV. Asserts that CLE isn't already
+end_comment
+
+begin_comment
+comment|/// emitted.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setAddrOfConstantCompoundLiteral
+argument_list|(
+specifier|const
+name|CompoundLiteralExpr
+operator|*
+name|CLE
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Returns a pointer to a global variable representing a temporary
 end_comment
 
@@ -3559,7 +3711,7 @@ argument|llvm::FunctionType *FnType = nullptr
 argument_list|,
 argument|bool DontDefer = false
 argument_list|,
-argument|bool IsForDefinition = false
+argument|ForDefinition_t IsForDefinition = NotForDefinition
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3575,7 +3727,7 @@ end_comment
 begin_expr_stmt
 name|llvm
 operator|::
-name|Value
+name|Constant
 operator|*
 name|getBuiltinLibFunction
 argument_list|(
@@ -3801,7 +3953,9 @@ argument|llvm::FunctionType *Ty
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|llvm::AttributeSet ExtraAttrs =                                           llvm::AttributeSet()
+argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
+argument_list|,
+argument|bool Local = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5282,6 +5436,51 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|createOpenCLIntToSamplerConversion
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|,
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Get target specific null pointer.
+end_comment
+
+begin_comment
+comment|/// \param T is the LLVM type of the null pointer.
+end_comment
+
+begin_comment
+comment|/// \param QT is the clang QualType of the null pointer.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getNullPointer
+argument_list|(
+argument|llvm::PointerType *T
+argument_list|,
+argument|QualType QT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_label
 name|private
 label|:
@@ -5308,7 +5507,7 @@ argument|bool IsThunk = false
 argument_list|,
 argument|llvm::AttributeSet ExtraAttrs = llvm::AttributeSet()
 argument_list|,
-argument|bool IsForDefinition = false
+argument|ForDefinition_t IsForDefinition = NotForDefinition
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5326,7 +5525,7 @@ argument|llvm::PointerType *PTy
 argument_list|,
 argument|const VarDecl *D
 argument_list|,
-argument|bool IsForDefinition = false
+argument|ForDefinition_t IsForDefinition                                           = NotForDefinition
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5475,12 +5674,12 @@ end_comment
 
 begin_function_decl
 name|void
-name|EmitNamespace
+name|EmitDeclContext
 parameter_list|(
 specifier|const
-name|NamespaceDecl
+name|DeclContext
 modifier|*
-name|D
+name|DC
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5648,22 +5847,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Generates a global array of functions and priorities using the given list
+comment|/// EmitCtorList - Generates a global array of functions and priorities using
 end_comment
 
 begin_comment
-comment|/// and name. This array will have appending linkage and is suitable for use
+comment|/// the given list and name. This array will have appending linkage and is
 end_comment
 
 begin_comment
-comment|/// as a LLVM constructor or destructor array.
+comment|/// suitable for use as a LLVM constructor or destructor array. Clears Fns.
 end_comment
 
 begin_function_decl
 name|void
 name|EmitCtorList
 parameter_list|(
-specifier|const
 name|CtorList
 modifier|&
 name|Fns

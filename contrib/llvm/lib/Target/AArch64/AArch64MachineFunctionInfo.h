@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -83,6 +89,12 @@ directive|include
 file|"llvm/MC/MCLinkerOptimizationHint.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -91,6 +103,7 @@ comment|/// AArch64FunctionInfo - This class is derived from MachineFunctionInfo
 comment|/// contains private AArch64-specific information for each MachineFunction.
 name|class
 name|AArch64FunctionInfo
+name|final
 range|:
 name|public
 name|MachineFunctionInfo
@@ -106,17 +119,23 @@ comment|/// make a stack adjustment necessary, which could not be undone by the
 comment|/// callee.
 name|unsigned
 name|BytesInStackArgArea
+operator|=
+literal|0
 block|;
 comment|/// The number of bytes to restore to deallocate space for incoming
 comment|/// arguments. Canonically 0 in the C calling convention, but non-zero when
 comment|/// callee is expected to pop the args.
 name|unsigned
 name|ArgumentStackToRestore
+operator|=
+literal|0
 block|;
 comment|/// HasStackFrame - True if this function has a stack frame. Set by
 comment|/// determineCalleeSaves().
 name|bool
 name|HasStackFrame
+operator|=
+name|false
 block|;
 comment|/// \brief Amount of stack frame size, not including callee-saved registers.
 name|unsigned
@@ -130,178 +149,76 @@ comment|/// \brief Number of TLS accesses using the special (combinable)
 comment|/// _TLS_MODULE_BASE_ symbol.
 name|unsigned
 name|NumLocalDynamicTLSAccesses
+operator|=
+literal|0
 block|;
 comment|/// \brief FrameIndex for start of varargs area for arguments passed on the
 comment|/// stack.
 name|int
 name|VarArgsStackIndex
+operator|=
+literal|0
 block|;
 comment|/// \brief FrameIndex for start of varargs area for arguments passed in
 comment|/// general purpose registers.
 name|int
 name|VarArgsGPRIndex
+operator|=
+literal|0
 block|;
 comment|/// \brief Size of the varargs area for arguments passed in general purpose
 comment|/// registers.
 name|unsigned
 name|VarArgsGPRSize
+operator|=
+literal|0
 block|;
 comment|/// \brief FrameIndex for start of varargs area for arguments passed in
 comment|/// floating-point registers.
 name|int
 name|VarArgsFPRIndex
+operator|=
+literal|0
 block|;
 comment|/// \brief Size of the varargs area for arguments passed in floating-point
 comment|/// registers.
 name|unsigned
 name|VarArgsFPRSize
+operator|=
+literal|0
 block|;
 comment|/// True if this function has a subset of CSRs that is handled explicitly via
 comment|/// copies.
 name|bool
 name|IsSplitCSR
+operator|=
+name|false
 block|;
 comment|/// True when the stack gets realigned dynamically because the size of stack
 comment|/// frame is unknown at compile time. e.g., in case of VLAs.
 name|bool
 name|StackRealigned
+operator|=
+name|false
 block|;
 comment|/// True when the callee-save stack area has unused gaps that may be used for
 comment|/// other stack allocations.
 name|bool
 name|CalleeSaveStackHasFreeSpace
+operator|=
+name|false
 block|;
 name|public
 operator|:
 name|AArch64FunctionInfo
 argument_list|()
-operator|:
-name|BytesInStackArgArea
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ArgumentStackToRestore
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasStackFrame
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|NumLocalDynamicTLSAccesses
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsStackIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsGPRIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsGPRSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFPRIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFPRSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|IsSplitCSR
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|StackRealigned
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|CalleeSaveStackHasFreeSpace
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+operator|=
+expr|default
+block|;
 name|explicit
 name|AArch64FunctionInfo
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-operator|:
-name|BytesInStackArgArea
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ArgumentStackToRestore
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|HasStackFrame
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|NumLocalDynamicTLSAccesses
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsStackIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsGPRIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsGPRSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFPRIndex
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|VarArgsFPRSize
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|IsSplitCSR
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|StackRealigned
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|CalleeSaveStackHasFreeSpace
-argument_list|(
-argument|false
+argument|MachineFunction&MF
 argument_list|)
 block|{
 operator|(
@@ -779,14 +696,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|}; }
-comment|// End llvm namespace
+unit|};  }
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_LIB_TARGET_AARCH64_AARCH64MACHINEFUNCTIONINFO_H
+end_comment
 
 end_unit
 

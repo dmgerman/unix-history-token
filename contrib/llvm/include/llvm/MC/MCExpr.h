@@ -815,6 +815,18 @@ block|,
 name|VK_WebAssembly_FUNCTION
 block|,
 comment|// Function table index, rather than virtual addr
+name|VK_AMDGPU_GOTPCREL32_LO
+block|,
+comment|// symbol@gotpcrel32@lo
+name|VK_AMDGPU_GOTPCREL32_HI
+block|,
+comment|// symbol@gotpcrel32@hi
+name|VK_AMDGPU_REL32_LO
+block|,
+comment|// symbol@rel32@lo
+name|VK_AMDGPU_REL32_HI
+block|,
+comment|// symbol@rel32@hi
 name|VK_TPREL
 block|,
 name|VK_DTPREL

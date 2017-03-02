@@ -187,6 +187,16 @@ argument|const MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 expr_stmt|;
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getProfileCountFromFreq
+argument_list|(
+argument|uint64_t Freq
+argument_list|)
+specifier|const
+expr_stmt|;
 specifier|const
 name|MachineFunction
 operator|*

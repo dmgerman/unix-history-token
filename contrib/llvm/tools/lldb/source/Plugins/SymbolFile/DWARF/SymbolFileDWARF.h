@@ -100,19 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Core/dwarf.h"
 end_include
 
 begin_include
@@ -136,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Expression/DWARFExpression.h"
 end_include
 
@@ -148,13 +142,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/SymbolContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Symbol/SymbolFile.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/SymbolContext.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_comment
@@ -164,13 +164,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"DWARFDefines.h"
+file|"DWARFDataExtractor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DWARFDataExtractor.h"
+file|"DWARFDefines.h"
 end_include
 
 begin_include
@@ -303,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|DIE_IS_BEING_PARSED
-value|((lldb_private::Type*)1)
+value|((lldb_private::Type *)1)
 end_define
 
 begin_decl_stmt
@@ -357,6 +357,10 @@ decl_stmt|;
 name|friend
 name|class
 name|DWARFASTParserJava
+decl_stmt|;
+name|friend
+name|class
+name|DWARFASTParserOCaml
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Static Functions
@@ -459,7 +463,7 @@ operator|::
 name|LanguageType
 name|ParseCompileUnitLanguage
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|)
 name|override
 expr_stmt|;
@@ -981,7 +985,7 @@ operator|::
 name|CompilerDeclContext
 name|FindNamespace
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|,
 argument|const lldb_private::ConstString&name
 argument_list|,
@@ -1194,7 +1198,7 @@ name|CompileUnit
 operator|*
 name|GetCompUnitForDWARFCompUnit
 argument_list|(
-argument|DWARFCompileUnit* dwarf_cu
+argument|DWARFCompileUnit *dwarf_cu
 argument_list|,
 argument|uint32_t cu_idx = UINT32_MAX
 argument_list|)
@@ -1248,7 +1252,7 @@ operator|::
 name|CompUnitSP
 name|ParseCompileUnit
 argument_list|(
-argument|DWARFCompileUnit* dwarf_cu
+argument|DWARFCompileUnit *dwarf_cu
 argument_list|,
 argument|uint32_t cu_idx
 argument_list|)
@@ -1390,7 +1394,7 @@ name|GetCachedSectionData
 argument_list|(
 argument|lldb::SectionType sect_type
 argument_list|,
-argument|DWARFDataSegment& data_segment
+argument|DWARFDataSegment&data_segment
 argument_list|)
 expr_stmt|;
 name|virtual
@@ -1593,7 +1597,7 @@ operator|::
 name|VariableSP
 name|ParseVariableDIE
 argument_list|(
-argument|const lldb_private::SymbolContext& sc
+argument|const lldb_private::SymbolContext&sc
 argument_list|,
 argument|const DWARFDIE&die
 argument_list|,
@@ -2111,7 +2115,8 @@ decl_stmt|;
 name|DWARFDataSegment
 name|m_data_apple_objc
 decl_stmt|;
-comment|// The unique pointer items below are generated on demand if and when someone accesses
+comment|// The unique pointer items below are generated on demand if and when someone
+comment|// accesses
 comment|// them through a non const version of this class.
 name|std
 operator|::
@@ -2225,7 +2230,8 @@ comment|// All method names for functions of classes
 name|NameToDIE
 name|m_objc_class_selectors_index
 decl_stmt|;
-comment|// Given a class name, find all selectors for the class
+comment|// Given a class name, find all
+comment|// selectors for the class
 name|NameToDIE
 name|m_global_index
 decl_stmt|;
@@ -2266,8 +2272,7 @@ operator|::
 name|set
 operator|<
 name|DIERef
-operator|>
-expr|>
+operator|>>
 name|DIERefSetSP
 expr_stmt|;
 typedef|typedef

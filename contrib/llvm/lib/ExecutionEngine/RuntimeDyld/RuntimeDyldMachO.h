@@ -195,9 +195,7 @@ name|MemoryManager
 operator|&
 name|MemMgr
 argument_list|,
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|&
 name|Resolver
 argument_list|)
@@ -438,7 +436,7 @@ argument|Triple::ArchType Arch
 argument_list|,
 argument|RuntimeDyld::MemoryManager&MemMgr
 argument_list|,
-argument|RuntimeDyld::SymbolResolver&Resolver
+argument|JITSymbolResolver&Resolver
 argument_list|)
 block|;
 name|std
@@ -557,9 +555,7 @@ name|MemoryManager
 operator|&
 name|MemMgr
 argument_list|,
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
+name|JITSymbolResolver
 operator|&
 name|Resolver
 argument_list|)

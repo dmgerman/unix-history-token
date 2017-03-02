@@ -122,7 +122,7 @@ extern|extern template class DomTreeNodeBase<BasicBlock>;
 extern|extern template class DominatorTreeBase<BasicBlock>;
 extern|extern template void Calculate<Function
 operator|,
-extern|BasicBlock *>(     DominatorTreeBase<GraphTraits<BasicBlock *>::NodeType>&DT
+extern|BasicBlock *>(     DominatorTreeBaseByGraphTraits<GraphTraits<BasicBlock *>>&DT
 operator|,
 extern|Function&F
 block|)
@@ -132,7 +132,7 @@ end_decl_stmt
 begin_extern
 extern|extern template void Calculate<Function
 operator|,
-extern|Inverse<BasicBlock *>>(     DominatorTreeBase<GraphTraits<Inverse<BasicBlock *>>::NodeType>&DT
+extern|Inverse<BasicBlock *>>(     DominatorTreeBaseByGraphTraits<GraphTraits<Inverse<BasicBlock *>>>&DT
 operator|,
 extern|Function&F
 end_extern
@@ -499,93 +499,34 @@ argument_list|(
 name|F
 argument_list|)
 block|;   }
-name|DominatorTree
-argument_list|(
-name|DominatorTree
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|Base
-argument_list|(
-argument|std::move(static_cast<Base&>(Arg))
-argument_list|)
-block|{}
-name|DominatorTree
-operator|&
-name|operator
-operator|=
-operator|(
-name|DominatorTree
-operator|&&
-name|RHS
-operator|)
-block|{
-name|Base
-operator|::
-name|operator
-operator|=
-operator|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|static_cast
-operator|<
-name|Base
-operator|&
-operator|>
-operator|(
-name|RHS
-operator|)
-argument_list|)
-operator|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Returns *false* if the other dominator tree matches this dominator
-end_comment
-
-begin_comment
 comment|/// tree.
-end_comment
-
-begin_decl_stmt
 specifier|inline
 name|bool
 name|compare
 argument_list|(
-specifier|const
-name|DominatorTree
-operator|&
-name|Other
+argument|const DominatorTree&Other
 argument_list|)
-decl|const
+specifier|const
 block|{
 specifier|const
 name|DomTreeNode
-modifier|*
+operator|*
 name|R
-init|=
+operator|=
 name|getRootNode
 argument_list|()
-decl_stmt|;
+block|;
 specifier|const
 name|DomTreeNode
-modifier|*
+operator|*
 name|OtherR
-init|=
+operator|=
 name|Other
 operator|.
 name|getRootNode
 argument_list|()
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -607,6 +548,9 @@ condition|)
 return|return
 name|true
 return|;
+end_decl_stmt
+
+begin_if
 if|if
 condition|(
 name|Base
@@ -619,18 +563,21 @@ condition|)
 return|return
 name|true
 return|;
+end_if
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|// Ensure base-class overloads are visible.
 end_comment
 
 begin_expr_stmt
-name|using
+unit|using
 name|Base
 operator|::
 name|dominates
@@ -823,7 +770,8 @@ name|DomTreeGraphTraitsBase
 block|{
 typedef|typedef
 name|Node
-name|NodeType
+modifier|*
+name|NodeRef
 typedef|;
 end_expr_stmt
 
@@ -841,12 +789,10 @@ operator|<
 name|Node
 operator|*
 operator|,
-name|SmallPtrSet
+name|df_iterator_default_set
 operator|<
-name|NodeType
+name|Node
 operator|*
-operator|,
-literal|8
 operator|>>
 name|nodes_iterator
 expr_stmt|;
@@ -854,12 +800,10 @@ end_typedef
 
 begin_function
 specifier|static
-name|NodeType
-modifier|*
+name|NodeRef
 name|getEntryNode
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -871,12 +815,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -891,12 +833,10 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|ChildIteratorType
 name|child_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -914,8 +854,7 @@ specifier|static
 name|nodes_iterator
 name|nodes_begin
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -936,8 +875,7 @@ specifier|static
 name|nodes_iterator
 name|nodes_end
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 block|{
@@ -1023,8 +961,7 @@ operator|*
 operator|>
 block|{
 specifier|static
-name|NodeType
-operator|*
+name|NodeRef
 name|getEntryNode
 argument_list|(
 argument|DominatorTree *DT
@@ -1100,8 +1037,8 @@ name|DominatorTreeAnalysis
 operator|>
 block|;
 specifier|static
-name|char
-name|PassID
+name|AnalysisKey
+name|Key
 block|;
 name|public
 operator|:
@@ -1118,10 +1055,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 argument_list|)
 decl_stmt|;
@@ -1163,10 +1097,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)
@@ -1194,10 +1125,7 @@ name|Function
 operator|&
 name|F
 argument_list|,
-name|AnalysisManager
-operator|<
-name|Function
-operator|>
+name|FunctionAnalysisManager
 operator|&
 name|AM
 argument_list|)

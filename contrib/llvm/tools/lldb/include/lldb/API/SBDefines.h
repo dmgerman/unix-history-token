@@ -288,6 +288,10 @@ name|SBStringList
 decl_stmt|;
 name|class
 name|LLDB_API
+name|SBStructuredData
+decl_stmt|;
+name|class
+name|LLDB_API
 name|SBSymbol
 decl_stmt|;
 name|class

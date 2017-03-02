@@ -179,19 +179,35 @@ file|<vector>
 end_include
 
 begin_comment
-comment|// Global TaskPool class for running tasks in parallel on a set of worker thread created the first
+comment|// Global TaskPool class for running tasks in parallel on a set of worker thread
 end_comment
 
 begin_comment
-comment|// time the task pool is used. The TaskPool provide no gurantee about the order the task will be run
+comment|// created the first
 end_comment
 
 begin_comment
-comment|// and about what tasks will run in parrallel. None of the task added to the task pool should block
+comment|// time the task pool is used. The TaskPool provide no guarantee about the order
 end_comment
 
 begin_comment
-comment|// on something (mutex, future, condition variable) what will be set only by the completion of an
+comment|// the task will be run
+end_comment
+
+begin_comment
+comment|// and about what tasks will run in parallel. None of the task added to the task
+end_comment
+
+begin_comment
+comment|// pool should block
+end_comment
+
+begin_comment
+comment|// on something (mutex, future, condition variable) what will be set only by the
+end_comment
+
+begin_comment
+comment|// completion of an
 end_comment
 
 begin_comment
@@ -204,8 +220,10 @@ name|TaskPool
 block|{
 name|public
 label|:
-comment|// Add a new task to the task pool and return a std::future belonging to the newly created task.
-comment|// The caller of this function has to wait on the future for this task to complete.
+comment|// Add a new task to the task pool and return a std::future belonging to the
+comment|// newly created task.
+comment|// The caller of this function has to wait on the future for this task to
+comment|// complete.
 name|template
 operator|<
 name|typename
@@ -246,9 +264,12 @@ operator|...
 name|args
 argument_list|)
 expr_stmt|;
-comment|// Run all of the specified tasks on the task pool and wait until all of them are finished
-comment|// before returning. This method is intended to be used for small number tasks where listing
-comment|// them as function arguments is acceptable. For running large number of tasks you should use
+comment|// Run all of the specified tasks on the task pool and wait until all of them
+comment|// are finished
+comment|// before returning. This method is intended to be used for small number tasks
+comment|// where listing
+comment|// them as function arguments is acceptable. For running large number of tasks
+comment|// you should use
 comment|// AddTask for each task and then call wait() on each returned future.
 name|template
 operator|<
@@ -305,19 +326,35 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// Wrapper class around the global TaskPool implementation to make it possible to create a set of
+comment|// Wrapper class around the global TaskPool implementation to make it possible
 end_comment
 
 begin_comment
-comment|// tasks and then wait for the tasks to be completed by the WaitForNextCompletedTask call. This
+comment|// to create a set of
 end_comment
 
 begin_comment
-comment|// class should be used when WaitForNextCompletedTask is needed because this class add no other
+comment|// tasks and then wait for the tasks to be completed by the
 end_comment
 
 begin_comment
-comment|// extra functionality to the TaskPool class and it have a very minor performance overhead.
+comment|// WaitForNextCompletedTask call. This
+end_comment
+
+begin_comment
+comment|// class should be used when WaitForNextCompletedTask is needed because this
+end_comment
+
+begin_comment
+comment|// class add no other
+end_comment
+
+begin_comment
+comment|// extra functionality to the TaskPool class and it have a very minor
+end_comment
+
+begin_comment
+comment|// performance overhead.
 end_comment
 
 begin_expr_stmt
@@ -326,14 +363,17 @@ operator|<
 name|typename
 name|T
 operator|>
-comment|// The return type of the tasks what will be added to this task runner
+comment|// The return type of the tasks what will be added to this
+comment|// task runner
 name|class
 name|TaskRunner
 block|{
 name|public
 operator|:
-comment|// Add a task to the task runner what will also add the task to the global TaskPool. The
-comment|// function doesn't return the std::future for the task because it will be supplied by the
+comment|// Add a task to the task runner what will also add the task to the global
+comment|// TaskPool. The
+comment|// function doesn't return the std::future for the task because it will be
+comment|// supplied by the
 comment|// WaitForNextCompletedTask after the task is completed.
 name|template
 operator|<
@@ -357,10 +397,14 @@ operator|...
 name|args
 argument_list|)
 block|;
-comment|// Wait for the next task in this task runner to finish and then return the std::future what
-comment|// belongs to the finished task. If there is no task in this task runner (neither pending nor
-comment|// comleted) then this function will return an invalid future. Usually this function should be
-comment|// called in a loop processing the results of the tasks until it returns an invalid std::future
+comment|// Wait for the next task in this task runner to finish and then return the
+comment|// std::future what
+comment|// belongs to the finished task. If there is no task in this task runner
+comment|// (neither pending nor
+comment|// comleted) then this function will return an invalid future. Usually this
+comment|// function should be
+comment|// called in a loop processing the results of the tasks until it returns an
+comment|// invalid std::future
 comment|// what means that all task in this task runner is completed.
 name|std
 operator|::
@@ -371,8 +415,10 @@ operator|>
 name|WaitForNextCompletedTask
 argument_list|()
 block|;
-comment|// Convenience method to wait for all task in this TaskRunner to finish. Do NOT use this class
-comment|// just because of this method. Use TaskPool instead and wait for each std::future returned by
+comment|// Convenience method to wait for all task in this TaskRunner to finish. Do
+comment|// NOT use this class
+comment|// just because of this method. Use TaskPool instead and wait for each
+comment|// std::future returned by
 comment|// AddTask in a loop.
 name|void
 name|WaitForAllTasks
@@ -449,7 +495,7 @@ name|TaskPool
 operator|::
 name|AddTask
 argument_list|(
-argument|F&& f
+argument|F&&f
 argument_list|,
 argument|Args&&... args
 argument_list|)
@@ -592,7 +638,7 @@ specifier|static
 name|void
 name|Run
 argument_list|(
-argument|Head&& h
+argument|Head&&h
 argument_list|,
 argument|Tail&&... t
 argument_list|)
@@ -637,7 +683,7 @@ name|f
 operator|.
 name|wait
 argument_list|()
-block|;     }
+block|;   }
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -685,7 +731,7 @@ operator|>
 operator|::
 name|AddTask
 argument_list|(
-argument|F&& f
+argument|F&&f
 argument_list|,
 argument|Args&&... args
 argument_list|)
@@ -859,7 +905,7 @@ operator|>
 operator|::
 name|AddTask
 argument_list|(
-argument|F&& f
+argument|F&&f
 argument_list|,
 argument|Args&&... args
 argument_list|)
@@ -979,7 +1025,7 @@ name|m_cv
 operator|.
 name|notify_one
 argument_list|()
-block|;         }
+block|;       }
 argument_list|,
 name|std
 operator|::
