@@ -1983,7 +1983,6 @@ name|unsigned
 name|char
 name|digest
 index|[
-specifier|static
 name|SHA512_224_DIGEST_LENGTH
 index|]
 parameter_list|,
@@ -2166,7 +2165,6 @@ name|unsigned
 name|char
 name|digest
 index|[
-specifier|static
 name|SHA512_256_DIGEST_LENGTH
 index|]
 parameter_list|,

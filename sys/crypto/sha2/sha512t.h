@@ -263,7 +263,6 @@ parameter_list|(
 name|unsigned
 name|char
 index|[
-specifier|static
 name|SHA512_224_DIGEST_LENGTH
 index|]
 parameter_list|,
@@ -383,7 +382,6 @@ parameter_list|(
 name|unsigned
 name|char
 index|[
-specifier|static
 name|SHA512_256_DIGEST_LENGTH
 index|]
 parameter_list|,
