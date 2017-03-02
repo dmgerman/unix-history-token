@@ -4424,6 +4424,9 @@ parameter_list|,
 name|lwb_t
 modifier|*
 name|lwb
+parameter_list|,
+name|boolean_t
+name|last
 parameter_list|)
 block|{
 name|lwb_t
@@ -4877,6 +4880,19 @@ operator|->
 name|lwb_nused
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|last
+condition|)
+name|lwb
+operator|->
+name|lwb_zio
+operator|->
+name|io_pipeline
+operator|&=
+operator|~
+name|ZIO_STAGE_ISSUE_ASYNC
+expr_stmt|;
 name|zio_nowait
 argument_list|(
 name|lwb
@@ -5091,6 +5107,8 @@ argument_list|(
 name|zilog
 argument_list|,
 name|lwb
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7300,6 +7318,8 @@ argument_list|(
 name|zilog
 argument_list|,
 name|lwb
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 name|zilog
