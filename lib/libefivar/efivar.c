@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"efivar.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libefivar_int.h"
 end_include
 
@@ -97,25 +103,10 @@ name|Z
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|static
-struct|struct
+name|struct
 name|uuid_table
-block|{
-specifier|const
-name|char
-modifier|*
-name|uuid_str
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|efi_guid_t
-name|guid
-decl_stmt|;
-block|}
 name|guid_tbl
 index|[]
 init|=
@@ -384,8 +375,8 @@ block|,
 name|Z
 block|}
 block|, }
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_undef
 undef|#
@@ -483,6 +474,33 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|int
+name|efi_known_guid
+parameter_list|(
+name|struct
+name|uuid_table
+modifier|*
+modifier|*
+name|tbl
+parameter_list|)
+block|{
+operator|*
+name|tbl
+operator|=
+name|guid_tbl
+expr_stmt|;
+return|return
+operator|(
+name|nitems
+argument_list|(
+name|guid_tbl
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
