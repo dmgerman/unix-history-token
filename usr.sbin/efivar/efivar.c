@@ -416,7 +416,7 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|efi_str_to_guid
+name|efi_name_to_guid
 argument_list|(
 name|name
 argument_list|,
