@@ -524,9 +524,6 @@ argument_list|,
 literal|"\244\242"
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 comment|/* Moved last as it fails */
 name|h_mbtowc
 argument_list|(
@@ -537,8 +534,6 @@ argument_list|,
 literal|"\241\241"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|h_mbtowc
 argument_list|(
 literal|"zh_TW.Big5"
@@ -557,25 +552,6 @@ argument_list|,
 literal|"\241\241"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|atf_tc_expect_fail
-argument_list|(
-literal|"zh_CN.GB18030"
-argument_list|)
-expr_stmt|;
-name|h_mbtowc
-argument_list|(
-literal|"zh_CN.GB18030"
-argument_list|,
-literal|"\241"
-argument_list|,
-literal|"\241\241"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

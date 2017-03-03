@@ -888,7 +888,7 @@ name|buffer
 argument_list|,
 name|buflen
 argument_list|,
-literal|"%s %s %d"
+literal|"%s:%s:%d:"
 argument_list|,
 name|grp
 operator|->
@@ -962,7 +962,17 @@ name|buffer
 argument_list|,
 name|buflen
 argument_list|,
-literal|" %s"
+literal|"%s%s"
+argument_list|,
+name|cp
+operator|==
+name|grp
+operator|->
+name|gr_mem
+condition|?
+literal|""
+else|:
+literal|","
 argument_list|,
 operator|*
 name|cp
@@ -999,7 +1009,7 @@ name|buffer
 argument_list|,
 name|buflen
 argument_list|,
-literal|" nomem"
+literal|"nomem"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1010,7 +1020,7 @@ name|buffer
 argument_list|,
 name|buflen
 argument_list|,
-literal|" (null)"
+literal|"(null)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1045,6 +1055,11 @@ decl_stmt|,
 modifier|*
 name|ts
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|sep
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1066,6 +1081,10 @@ expr_stmt|;
 name|ps
 operator|=
 name|line
+expr_stmt|;
+name|sep
+operator|=
+literal|":"
 expr_stmt|;
 name|memset
 argument_list|(
@@ -1090,7 +1109,7 @@ argument_list|(
 operator|&
 name|ps
 argument_list|,
-literal|" "
+name|sep
 argument_list|)
 operator|)
 operator|!=
@@ -1207,6 +1226,11 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* Change to parsing groups. */
+name|sep
+operator|=
+literal|","
+expr_stmt|;
 break|break;
 default|default:
 if|if
