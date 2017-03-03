@@ -723,9 +723,16 @@ name|ctx
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 name|ctx
 operator|->
 name|fd
