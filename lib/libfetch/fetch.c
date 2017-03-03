@@ -1637,6 +1637,13 @@ name|NULL
 operator|)
 return|;
 block|}
+name|u
+operator|->
+name|netrcfd
+operator|=
+operator|-
+literal|2
+expr_stmt|;
 comment|/* scheme name */
 if|if
 condition|(
