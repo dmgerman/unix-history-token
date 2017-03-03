@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2017, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2017, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights. You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code. No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision. In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change. Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee. Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution. In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government. In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************  *  * Alternatively, you may choose to be licensed under the terms of the  * following license:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Alternatively, you may choose to be licensed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|AML_NUM_OPCODES
-value|0x82
+value|0x83
 end_define
 
 begin_comment
@@ -2469,6 +2469,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_ASL_COMPILER
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_CONVERTER_ONLY_MEMBERS
+parameter_list|(
+name|a
+parameter_list|)
+value|a;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_CONVERTER_ONLY_MEMBERS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2492,18 +2530,70 @@ value|\     ACPI_PARSE_VALUE                Value;
 comment|/* Value or args associated with the opcode */
 value|\     UINT8                           ArgListLength;
 comment|/* Number of elements in the arg list */
-value|\     ACPI_DISASM_ONLY_MEMBERS (\     UINT16                          DisasmFlags;
+value|\      ACPI_DISASM_ONLY_MEMBERS (\     UINT16                          DisasmFlags;
 comment|/* Used during AML disassembly */
 value|\     UINT8                           DisasmOpcode;
 comment|/* Subtype used for disassembly */
 value|\     char                            *OperatorSymbol;
 comment|/* Used for C-style operator name strings */
 value|\     char                            AmlOpName[16])
+comment|/* Op name (debug only) */
+value|\      ACPI_CONVERTER_ONLY_MEMBERS (\     char                            *InlineComment;
+comment|/* Inline comment */
+value|\     char                            *EndNodeComment;
+comment|/* End of node comment */
+value|\     char                            *NameComment;
+comment|/* Comment associated with the first parameter of the name node */
+value|\     char                            *CloseBraceComment;
+comment|/* Comments that come after } on the same as } */
+value|\     ACPI_COMMENT_NODE               *CommentList;
+comment|/* comments that appears before this node */
+value|\     ACPI_COMMENT_NODE               *EndBlkComment;
+comment|/* comments that at the end of a block but before ) or } */
+value|\     char                            *CvFilename;
+comment|/* Filename associated with this node. Used for ASL/ASL+ converter */
+value|\     char                            *CvParentFilename)
 end_define
 
 begin_comment
-comment|/* Op name (debug only) */
+comment|/* Parent filename associated with this node. Used for ASL/ASL+ converter */
 end_comment
+
+begin_comment
+comment|/* categories of comments */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|STANDARD_COMMENT
+init|=
+literal|1
+block|,
+name|INLINE_COMMENT
+block|,
+name|ENDNODE_COMMENT
+block|,
+name|OPENBRACE_COMMENT
+block|,
+name|CLOSE_BRACE_COMMENT
+block|,
+name|STD_DEFBLK_COMMENT
+block|,
+name|END_DEFBLK_COMMENT
+block|,
+name|FILENAME_COMMENT
+block|,
+name|PARENTFILENAME_COMMENT
+block|,
+name|ENDBLK_COMMENT
+block|,
+name|INCLUDE_COMMENT
+block|}
+name|ASL_COMMENT_TYPES
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Internal opcodes for DisasmOpcode field above */
@@ -2644,8 +2734,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_DASM_SWITCH_PREDICATE
+name|ACPI_DASM_SWITCH
 value|0x0C
+end_define
+
+begin_comment
+comment|/* While is a Switch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_SWITCH_PREDICATE
+value|0x0D
 end_define
 
 begin_comment
@@ -2656,7 +2757,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_CASE
-value|0x0D
+value|0x0E
 end_define
 
 begin_comment
@@ -2667,12 +2768,103 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_DEFAULT
-value|0x0E
+value|0x0F
 end_define
 
 begin_comment
 comment|/* Else is a Default in a Switch/Case block */
 end_comment
+
+begin_comment
+comment|/*  * List struct used in the -ca option  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_comment_node
+block|{
+name|char
+modifier|*
+name|Comment
+decl_stmt|;
+name|struct
+name|acpi_comment_node
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_COMMENT_NODE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_comment_addr_node
+block|{
+name|UINT8
+modifier|*
+name|Addr
+decl_stmt|;
+name|struct
+name|acpi_comment_addr_node
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_COMMENT_ADDR_NODE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * File node - used for "Include" operator file stack and  * depdendency tree for the -ca option  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_file_node
+block|{
+name|void
+modifier|*
+name|File
+decl_stmt|;
+name|char
+modifier|*
+name|Filename
+decl_stmt|;
+name|char
+modifier|*
+name|FileStart
+decl_stmt|;
+comment|/* Points to AML and indicates when the AML for this particular file starts. */
+name|char
+modifier|*
+name|FileEnd
+decl_stmt|;
+comment|/* Points to AML and indicates when the AML for this particular file ends. */
+name|struct
+name|acpi_file_node
+modifier|*
+name|Next
+decl_stmt|;
+name|struct
+name|acpi_file_node
+modifier|*
+name|Parent
+decl_stmt|;
+name|BOOLEAN
+name|IncludeWritten
+decl_stmt|;
+name|ACPI_COMMENT_NODE
+modifier|*
+name|IncludeComment
+decl_stmt|;
+block|}
+name|ACPI_FILE_NODE
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Generic operation (for example:  If, While, Store)  */
@@ -2751,6 +2943,13 @@ decl_stmt|;
 name|char
 modifier|*
 name|Filename
+decl_stmt|;
+name|BOOLEAN
+name|FileChanged
+decl_stmt|;
+name|char
+modifier|*
+name|ParentFilename
 decl_stmt|;
 name|char
 modifier|*
@@ -2844,6 +3043,33 @@ name|Asl
 decl_stmt|;
 block|}
 name|ACPI_PARSE_OBJECT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_comment_state
+block|{
+name|UINT8
+name|CommentType
+decl_stmt|;
+name|UINT32
+name|SpacesBefore
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Latest_Parse_Node
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ParsingParenBraceNode
+decl_stmt|;
+name|BOOLEAN
+name|CaptureComments
+decl_stmt|;
+block|}
+name|ASL_COMMENT_STATE
 typedef|;
 end_typedef
 
