@@ -1008,6 +1008,9 @@ decl_stmt|;
 block|}
 name|gen
 struct|;
+name|u64
+name|drain_cookie
+decl_stmt|;
 block|}
 name|u
 union|;
@@ -1345,6 +1348,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)->u.gen.wrid_low)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CQE_DRAIN_COOKIE
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)->u.drain_cookie;
 end_define
 
 begin_comment
