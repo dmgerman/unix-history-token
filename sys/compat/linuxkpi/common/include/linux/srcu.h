@@ -17,7 +17,7 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|ck_epoch_record
+name|srcu_epoch_record
 struct_decl|;
 end_struct_decl
 
@@ -26,7 +26,7 @@ struct|struct
 name|srcu_struct
 block|{
 name|struct
-name|ck_epoch_record
+name|srcu_epoch_record
 modifier|*
 name|ss_epoch_record
 decl_stmt|;
@@ -81,6 +81,18 @@ begin_function_decl
 specifier|extern
 name|void
 name|synchronize_srcu
+parameter_list|(
+name|struct
+name|srcu_struct
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|srcu_barrier
 parameter_list|(
 name|struct
 name|srcu_struct

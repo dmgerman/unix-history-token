@@ -237,12 +237,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/rcupdate.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/interrupt.h>
 end_include
 
@@ -7342,9 +7336,6 @@ name|linux_class_misc
 operator|.
 name|kobj
 argument_list|)
-expr_stmt|;
-name|synchronize_rcu
-argument_list|()
 expr_stmt|;
 block|}
 end_function
