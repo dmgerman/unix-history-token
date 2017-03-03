@@ -394,7 +394,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|maxcmdsn_delta
+name|maxtags
 init|=
 literal|256
 decl_stmt|;
@@ -407,17 +407,16 @@ name|_kern_cam_ctl_iscsi
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|maxcmdsn_delta
+name|maxtags
 argument_list|,
 name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
-name|maxcmdsn_delta
+name|maxtags
 argument_list|,
-literal|256
+literal|0
 argument_list|,
-literal|"Number of commands the initiator can send "
-literal|"without confirmation"
+literal|"Max number of requests queued by initiator"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1146,8 +1145,10 @@ argument_list|,
 name|cs
 operator|->
 name|cs_cmdsn
+operator|-
+literal|1
 operator|+
-name|maxcmdsn_delta
+name|maxtags
 argument_list|)
 condition|)
 block|{
@@ -1635,8 +1636,19 @@ argument_list|(
 name|cs
 operator|->
 name|cs_cmdsn
+operator|-
+literal|1
 operator|+
-name|maxcmdsn_delta
+name|imax
+argument_list|(
+literal|0
+argument_list|,
+name|maxtags
+operator|-
+name|cs
+operator|->
+name|cs_outstanding_ctl_pdus
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
