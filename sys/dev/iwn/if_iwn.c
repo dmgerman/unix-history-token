@@ -46206,6 +46206,14 @@ argument_list|(
 operator|&
 name|sc
 operator|->
+name|scan_timeout
+argument_list|)
+expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
+name|sc
+operator|->
 name|calib_to
 argument_list|)
 expr_stmt|;
