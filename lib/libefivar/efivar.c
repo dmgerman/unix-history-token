@@ -1369,6 +1369,9 @@ decl_stmt|;
 name|uint32_t
 name|status
 decl_stmt|;
+name|efi_guid_tbl_compile
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1523,6 +1526,9 @@ block|{
 name|size_t
 name|i
 decl_stmt|;
+name|efi_guid_tbl_compile
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
