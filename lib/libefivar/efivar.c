@@ -398,6 +398,17 @@ decl_stmt|;
 name|uint32_t
 name|status
 decl_stmt|;
+specifier|static
+name|int
+name|done
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|done
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -474,6 +485,10 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
+name|done
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
