@@ -698,6 +698,10 @@ index|[
 name|IEEE80211_MODE_MAX
 index|]
 decl_stmt|;
+name|struct
+name|ieee80211_htrateset
+name|ic_sup_htrates
+decl_stmt|;
 comment|/* 	 * Channel state: 	 * 	 * ic_channels is the set of available channels for the device; 	 *    it is setup by the driver 	 * ic_nchans is the number of valid entries in ic_channels 	 * ic_chan_avail is a bit vector of these channels used to check 	 *    whether a channel is available w/o searching the channel table. 	 * ic_chan_active is a (potentially) constrained subset of 	 *    ic_chan_avail that reflects any mode setting or user-specified 	 *    limit on the set of channels to use/scan 	 * ic_curchan is the current channel the device is set to; it may 	 *    be different from ic_bsschan when we are off-channel scanning 	 *    or otherwise doing background work 	 * ic_bsschan is the channel selected for operation; it may 	 *    be undefined (IEEE80211_CHAN_ANYC) 	 * ic_prevchan is a cached ``previous channel'' used to optimize 	 *    lookups when switching back+forth between two channels 	 *    (e.g. for dynamic turbo) 	 */
 name|int
 name|ic_nchans
@@ -3556,6 +3560,25 @@ name|struct
 name|ieee80211com
 modifier|*
 name|ic
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|struct
+name|ieee80211_htrateset
+modifier|*
+name|ieee80211_get_suphtrates
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
 parameter_list|,
 specifier|const
 name|struct

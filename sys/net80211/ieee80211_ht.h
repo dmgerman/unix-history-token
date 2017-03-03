@@ -565,19 +565,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|const
-name|struct
-name|ieee80211_htrateset
-modifier|*
-name|ieee80211_get_suphtrates
+name|void
+name|ieee80211_init_suphtrates
 parameter_list|(
 name|struct
 name|ieee80211com
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
