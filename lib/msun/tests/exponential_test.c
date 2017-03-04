@@ -190,6 +190,7 @@ value|do {		\ 	test(expm1, x, result, exceptmask, excepts);			\ 	test(expm1f, x,
 end_define
 
 begin_function
+specifier|static
 name|void
 name|run_generic_tests
 parameter_list|(
@@ -386,13 +387,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|run_exp2_tests
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 comment|/* 	 * We should insist that exp2() return exactly the correct 	 * result and not raise an inexact exception for integer 	 * arguments. 	 */
@@ -534,13 +536,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf

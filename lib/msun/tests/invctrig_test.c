@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -299,6 +305,7 @@ comment|/* Tests for 0 */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_zero
 parameter_list|(
@@ -461,9 +468,12 @@ comment|/*  * Tests for NaN inputs.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_nan
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|long
 name|double
@@ -482,7 +492,7 @@ name|double
 name|complex
 name|z
 decl_stmt|;
-comment|/* 	 * IN		CACOSH	    CACOS	CASINH	    CATANH 	 * NaN,NaN	NaN,NaN	    NaN,NaN	NaN,NaN	    NaN,NaN 	 * finite,NaN	NaN,NaN*    NaN,NaN*	NaN,NaN*    NaN,NaN* 	 * NaN,finite   NaN,NaN*    NaN,NaN*	NaN,NaN*    NaN,NaN* 	 * NaN,Inf	Inf,NaN     NaN,-Inf	?Inf,NaN    ?0,pi/2	 	 * +-Inf,NaN	Inf,NaN     NaN,?Inf	+-Inf,NaN   +-0,NaN 	 * +-0,NaN	NaN,NaN*    pi/2,NaN	NaN,NaN*    +-0,NaN 	 * NaN,0	NaN,NaN*    NaN,NaN*	NaN,0	    NaN,NaN* 	 * 	 *  * = raise invalid 	 */
+comment|/* 	 * IN		CACOSH	    CACOS	CASINH	    CATANH 	 * NaN,NaN	NaN,NaN	    NaN,NaN	NaN,NaN	    NaN,NaN 	 * finite,NaN	NaN,NaN*    NaN,NaN*	NaN,NaN*    NaN,NaN* 	 * NaN,finite   NaN,NaN*    NaN,NaN*	NaN,NaN*    NaN,NaN* 	 * NaN,Inf	Inf,NaN     NaN,-Inf	?Inf,NaN    ?0,pi/2 	 * +-Inf,NaN	Inf,NaN     NaN,?Inf	+-Inf,NaN   +-0,NaN 	 * +-0,NaN	NaN,NaN*    pi/2,NaN	NaN,NaN*    +-0,NaN 	 * NaN,0	NaN,NaN*    NaN,NaN*	NaN,0	    NaN,NaN* 	 * 	 *  * = raise invalid 	 */
 name|z
 operator|=
 name|nan_nan
@@ -1280,6 +1290,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_inf
 parameter_list|(
@@ -1777,6 +1788,7 @@ comment|/* Tests along the real and imaginary axes. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_axes
 parameter_list|(
@@ -1812,7 +1824,7 @@ name|double
 name|complex
 name|z
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -1823,17 +1835,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|nums
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|nums
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i
@@ -2143,6 +2147,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_small
 parameter_list|(
@@ -2252,6 +2257,7 @@ comment|/* Test inputs that might cause overflow in a sloppy implementation. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_large
 parameter_list|(
@@ -2266,13 +2272,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf

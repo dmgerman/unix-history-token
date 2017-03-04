@@ -160,6 +160,7 @@ comment|/*  * This is needed because clang constant-folds fma in ways that are i
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|double
 name|one
@@ -3369,13 +3370,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|int
@@ -3392,7 +3387,7 @@ block|,
 name|FE_TOWARDZERO
 block|}
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|,
 name|j

@@ -118,6 +118,7 @@ name|ON
 end_pragma
 
 begin_function
+specifier|static
 name|void
 name|run_tests
 parameter_list|(
@@ -694,13 +695,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf

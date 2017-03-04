@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -82,6 +88,7 @@ comment|/* Make sure we're testing the library, not some broken compiler built-i
 end_comment
 
 begin_function_decl
+specifier|static
 name|double
 function_decl|(
 modifier|*
@@ -96,6 +103,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|float
 function_decl|(
 modifier|*
@@ -110,6 +118,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|long
 name|double
 function_decl|(
@@ -242,27 +251,6 @@ block|, }
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|int
-name|ntests
-init|=
-sizeof|sizeof
-argument_list|(
-name|tests
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|tests
-index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Get the appropriate result for the current rounding mode. */
 end_comment
@@ -363,7 +351,7 @@ name|in
 decl_stmt|,
 name|out
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -583,7 +571,7 @@ name|long
 name|double
 name|ipartl
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -888,25 +876,27 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"1..%d\n"
+literal|"1..%zu\n"
 argument_list|,
-name|ntests
+call|(
+name|size_t
+call|)
+argument_list|(
+name|nitems
+argument_list|(
+name|tests
+argument_list|)
 operator|*
 literal|2
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|testnum
@@ -921,7 +911,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|ntests
+name|nitems
+argument_list|(
+name|tests
+argument_list|)
 condition|;
 name|i
 operator|++

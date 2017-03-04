@@ -68,6 +68,7 @@ comment|/*  * This is a test hook that can point to csqrtl(), _csqrt(), or to _c
 end_comment
 
 begin_function_decl
+specifier|static
 name|long
 name|double
 name|complex
@@ -188,7 +189,9 @@ begin_function
 specifier|static
 name|void
 name|test_finite
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 specifier|const
@@ -400,7 +403,7 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|,
 name|j
@@ -537,7 +540,9 @@ begin_function
 specifier|static
 name|void
 name|test_zeros
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|assert_equal
 argument_list|(
@@ -636,7 +641,9 @@ begin_function
 specifier|static
 name|void
 name|test_infinities
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 specifier|const
@@ -661,7 +668,7 @@ operator|-
 name|INFINITY
 block|, 	}
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -816,7 +823,9 @@ begin_function
 specifier|static
 name|void
 name|test_nans
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1235,13 +1244,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf

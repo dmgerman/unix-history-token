@@ -459,7 +459,7 @@ block|}
 decl_stmt|;
 endif|#
 directive|endif
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -1318,13 +1318,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf
