@@ -658,10 +658,6 @@ name|struct
 name|iwn_softc
 modifier|*
 parameter_list|,
-name|struct
-name|ieee80211_channel
-modifier|*
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
