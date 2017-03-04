@@ -3572,6 +3572,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|fts_lfree
+argument_list|(
+name|head
+argument_list|)
+expr_stmt|;
 name|cur
 operator|->
 name|fts_info
