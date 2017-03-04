@@ -2127,13 +2127,35 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|i
+operator|&
+operator|~
+operator|(
+name|VM_LOW_KMEM
+operator||
+name|VM_LOW_PAGES
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
+name|i
+operator|!=
+literal|0
 condition|)
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|vm_lowmem
 argument_list|,
-literal|0
+name|i
 argument_list|)
 expr_stmt|;
 return|return
@@ -2165,7 +2187,7 @@ name|debug_vm_lowmem
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"set to trigger vm_lowmem event"
+literal|"set to trigger vm_lowmem event with given flags"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
