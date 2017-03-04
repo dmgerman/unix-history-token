@@ -38363,7 +38363,7 @@ name|devinfo
 operator|->
 name|poll_jack
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|devinfo

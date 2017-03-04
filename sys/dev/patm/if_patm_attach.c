@@ -1121,7 +1121,7 @@ name|sc
 operator|->
 name|tst_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|sysctl_ctx_init

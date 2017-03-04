@@ -3152,7 +3152,7 @@ name|sc
 operator|->
 name|ndis_stat_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3929,7 +3929,7 @@ name|sc
 operator|->
 name|ndis_scan_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|ifp

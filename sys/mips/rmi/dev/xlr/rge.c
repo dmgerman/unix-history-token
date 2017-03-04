@@ -10155,7 +10155,7 @@ argument_list|(
 operator|&
 name|xlr_tx_stop_bkp
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -10175,7 +10175,7 @@ argument_list|(
 operator|&
 name|rge_dbg_count
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 comment|//callout_reset(&rge_dbg_count, hz, xlr_debug_count, NULL);

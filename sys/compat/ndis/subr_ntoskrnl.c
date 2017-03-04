@@ -16117,7 +16117,7 @@ name|callout_init
 argument_list|(
 name|c
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset

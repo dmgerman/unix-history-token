@@ -461,7 +461,7 @@ name|sc
 operator|->
 name|vtrnd_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|virtio_set_feature_desc

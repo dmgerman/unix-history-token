@@ -483,24 +483,6 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CALLOUT_MPSAFE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CALLOUT_MPSAFE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|IF_DRAIN
 end_ifndef
 
@@ -3463,7 +3445,7 @@ index|[
 name|unit
 index|]
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 else|#
@@ -3826,7 +3808,7 @@ name|d
 operator|->
 name|timeout_handle
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -14967,7 +14949,7 @@ argument_list|(
 operator|&
 name|timeout_handle
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 else|#

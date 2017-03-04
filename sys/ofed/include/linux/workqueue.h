@@ -239,7 +239,7 @@ parameter_list|,
 name|func
 parameter_list|)
 define|\
-value|do {									\ 	INIT_WORK(&(_work)->work, func);				\ 	callout_init(&(_work)->timer, CALLOUT_MPSAFE);			\ } while (0)
+value|do {									\ 	INIT_WORK(&(_work)->work, func);				\ 	callout_init(&(_work)->timer, 1);				\ } while (0)
 end_define
 
 begin_define

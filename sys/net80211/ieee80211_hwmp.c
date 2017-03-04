@@ -1454,7 +1454,7 @@ name|hs
 operator|->
 name|hs_roottimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|vap

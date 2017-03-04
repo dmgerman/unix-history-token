@@ -958,7 +958,7 @@ argument_list|(
 operator|&
 name|V_rtq_mtutimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|in6_mtutimo

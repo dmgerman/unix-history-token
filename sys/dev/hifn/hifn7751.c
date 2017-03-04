@@ -2973,7 +2973,7 @@ name|sc
 operator|->
 name|sc_tickto
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -3763,7 +3763,7 @@ name|sc
 operator|->
 name|sc_rngto
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset

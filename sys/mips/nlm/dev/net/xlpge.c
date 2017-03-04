@@ -6972,7 +6972,7 @@ name|sc
 operator|->
 name|xlpge_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|XLPGE_LOCK_INIT

@@ -1630,7 +1630,7 @@ name|sc
 operator|->
 name|ajus_io_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -1655,7 +1655,7 @@ name|sc
 operator|->
 name|ajus_ac_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset

@@ -491,7 +491,7 @@ name|chip
 operator|->
 name|ns_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT

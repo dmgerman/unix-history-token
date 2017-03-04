@@ -13185,7 +13185,7 @@ argument_list|(
 operator|&
 name|dn_timeout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|dn_reschedule

@@ -62,7 +62,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* callout handler is mp safe */
+comment|/* deprecated */
 end_comment
 
 begin_define

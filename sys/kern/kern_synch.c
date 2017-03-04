@@ -2422,7 +2422,7 @@ argument_list|(
 operator|&
 name|loadav_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Kick off timeout driven events by calling first time. */

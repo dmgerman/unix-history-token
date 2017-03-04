@@ -2889,7 +2889,7 @@ name|sc
 operator|->
 name|sc_ledtimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Don't setup hardware-based blinking. 	 * 	 * Although some NICs may have this configured in the 	 * default reset register values, the user may wish 	 * to alter which pins have which function. 	 * 	 * The reference driver attaches the MAC network LED to GPIO1 and 	 * the MAC power LED to GPIO2.  However, the DWA-552 cardbus 	 * NIC has these reversed. 	 */

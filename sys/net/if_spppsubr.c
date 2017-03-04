@@ -5538,7 +5538,7 @@ name|sp
 operator|->
 name|keepalive_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -5780,7 +5780,7 @@ name|sp
 operator|->
 name|ifstart_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|sp
@@ -11473,7 +11473,7 @@ index|[
 name|IDX_LCP
 index|]
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -14886,7 +14886,7 @@ index|[
 name|IDX_IPCP
 index|]
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -17442,7 +17442,7 @@ index|[
 name|IDX_IPV6CP
 index|]
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -21075,7 +21075,7 @@ index|[
 name|IDX_CHAP
 index|]
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -22740,7 +22740,7 @@ index|[
 name|IDX_PAP
 index|]
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -22750,7 +22750,7 @@ name|sp
 operator|->
 name|pap_my_to_ch
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

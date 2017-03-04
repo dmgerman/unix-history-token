@@ -11887,7 +11887,7 @@ argument_list|(
 operator|&
 name|V_expire_upcalls_ch
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -11895,7 +11895,7 @@ argument_list|(
 operator|&
 name|V_bw_upcalls_ch
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -11903,7 +11903,7 @@ argument_list|(
 operator|&
 name|V_bw_meter_ch
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

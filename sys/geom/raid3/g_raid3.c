@@ -16452,7 +16452,7 @@ name|sc
 operator|->
 name|sc_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|sc

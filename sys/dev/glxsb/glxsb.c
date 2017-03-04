@@ -1859,7 +1859,7 @@ name|sc
 operator|->
 name|sc_rngco
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|glxsb_rnd

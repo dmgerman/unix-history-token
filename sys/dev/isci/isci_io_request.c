@@ -1856,7 +1856,7 @@ name|request
 operator|->
 name|timer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

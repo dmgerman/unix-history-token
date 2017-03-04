@@ -59305,7 +59305,7 @@ name|state
 operator|->
 name|dts_cleaner
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -59315,7 +59315,7 @@ name|state
 operator|->
 name|dts_deadman
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#

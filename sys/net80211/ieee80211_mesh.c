@@ -1315,7 +1315,7 @@ name|rt
 operator|->
 name|rt_discovery
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|rt
@@ -3511,7 +3511,7 @@ name|ms
 operator|->
 name|ms_cleantimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -3521,7 +3521,7 @@ name|ms
 operator|->
 name|ms_gatetimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|ms
@@ -16029,7 +16029,7 @@ name|ni
 operator|->
 name|ni_mltimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -16039,7 +16039,7 @@ name|ni
 operator|->
 name|ni_mlhtimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
