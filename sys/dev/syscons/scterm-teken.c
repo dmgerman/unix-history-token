@@ -720,7 +720,8 @@ argument_list|)
 expr_stmt|;
 name|scteken_revattr
 argument_list|(
-name|SC_KERNEL_CONS_ATTR
+name|sc_kattr
+argument_list|()
 argument_list|,
 operator|&
 name|kattr
