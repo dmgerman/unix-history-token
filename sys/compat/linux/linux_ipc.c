@@ -2534,6 +2534,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2642,6 +2644,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2772,6 +2776,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3413,6 +3419,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3874,6 +3882,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3946,6 +3956,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4013,6 +4025,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4079,6 +4093,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4143,6 +4159,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4228,6 +4246,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
