@@ -1026,7 +1026,8 @@ name|pin
 argument_list|)
 expr_stmt|;
 name|value
-operator||=
+operator|&=
+operator|~
 name|APIC_LVT_TM
 expr_stmt|;
 block|}
