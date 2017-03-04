@@ -95,6 +95,24 @@ value|2
 end_define
 
 begin_comment
+comment|/*  * vm_lowmem flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_LOW_KMEM
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_LOW_PAGES
+value|0x02
+end_define
+
+begin_comment
 comment|/*  *	Exported routines.  */
 end_comment
 
