@@ -791,29 +791,6 @@ name|zfs_sync_pass_deferred_free
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|illumos
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|void
-name|spa_deadman
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * This (illegal) pool name is used when temporarily importing a spa_t in order  * to get the vdev stats associated with the imported devices.  */
 end_comment
@@ -30353,7 +30330,7 @@ comment|/* !illumos */
 ifdef|#
 directive|ifdef
 name|_KERNEL
-name|callout_reset
+name|callout_schedule
 argument_list|(
 operator|&
 name|spa
@@ -30367,10 +30344,6 @@ operator|->
 name|spa_deadman_synctime
 operator|/
 name|NANOSEC
-argument_list|,
-name|spa_deadman
-argument_list|,
-name|spa
 argument_list|)
 expr_stmt|;
 endif|#
