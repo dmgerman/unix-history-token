@@ -422,6 +422,105 @@ end_comment
 begin_define
 define|#
 directive|define
+name|UART_IFLS
+value|0x0d
+end_define
+
+begin_comment
+comment|/* FIFO level select register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLS_RX_SHIFT
+value|3
+end_define
+
+begin_comment
+comment|/* RX level in bits [5:3] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLS_TX_SHIFT
+value|0
+end_define
+
+begin_comment
+comment|/* TX level in bits [2:0] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLS_MASK
+value|0x07
+end_define
+
+begin_comment
+comment|/* RX/TX level is 3 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLS_LVL_1_8th
+value|0
+end_define
+
+begin_comment
+comment|/* Interrupt at 1/8 full */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLS_LVL_2_8th
+value|1
+end_define
+
+begin_comment
+comment|/* Interrupt at 1/4 full */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLS_LVL_4_8th
+value|2
+end_define
+
+begin_comment
+comment|/* Interrupt at 1/2 full */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLS_LVL_6_8th
+value|3
+end_define
+
+begin_comment
+comment|/* Interrupt at 3/4 full */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLS_LVL_7_8th
+value|4
+end_define
+
+begin_comment
+comment|/* Interrupt at 7/8 full */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UART_IMSC
 value|0x0e
 end_define
@@ -550,6 +649,31 @@ end_define
 begin_comment
 comment|/* Interrupt clear register */
 end_comment
+
+begin_comment
+comment|/*  * The hardware FIFOs are 16 bytes each.  We configure them to interrupt when  * 3/4 full/empty.  For RX we set the size to the full hardware capacity so that  * the uart core allocates enough buffer space to hold a complete fifo full of  * incoming data.  For TX, we need to limit the size to the capacity we know  * will be available when the interrupt occurs; uart_core will feed exactly that  * many bytes to uart_pl011_bus_transmit() which must consume them all.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIFO_RX_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_TX_SIZE
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFO_IFLS_BITS
+value|((IFLS_LVL_6_8th<< IFLS_RX_SHIFT) | (IFLS_LVL_2_8th))
+end_define
 
 begin_comment
 comment|/*  * FIXME: actual register size is SoC-dependent, we need to handle it  */
@@ -944,6 +1068,16 @@ literal|0xff
 operator|)
 operator||
 name|line
+argument_list|)
+expr_stmt|;
+comment|/* Set rx and tx fifo levels. */
+name|__uart_setreg
+argument_list|(
+name|bas
+argument_list|,
+name|UART_IFLS
+argument_list|,
+name|FIFO_IFLS_BITS
 argument_list|)
 expr_stmt|;
 name|__uart_setreg
@@ -2035,13 +2169,13 @@ name|sc
 operator|->
 name|sc_rxfifosz
 operator|=
-literal|16
+name|FIFO_RX_SIZE
 expr_stmt|;
 name|sc
 operator|->
 name|sc_txfifosz
 operator|=
-literal|8
+name|FIFO_TX_SIZE
 expr_stmt|;
 return|return
 operator|(
