@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: mem.c,v 1.5 2009/10/27 23:59:37 deraadt Exp $	*/
+comment|/*	$OpenBSD: mem.c,v 1.6 2014/12/01 13:13:00 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -244,14 +244,17 @@ end_function
 begin_function
 name|void
 modifier|*
-name|brealloc
+name|breallocarray
 parameter_list|(
 name|void
 modifier|*
 name|p
 parameter_list|,
 name|size_t
-name|sz
+name|nmemb
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 block|{
 name|void
@@ -260,11 +263,13 @@ name|q
 decl_stmt|;
 name|q
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|p
 argument_list|,
-name|sz
+name|nmemb
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 if|if

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$						*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: extern.h,v 1.3 2006/01/16 08:09:25 otto Exp $	*/
+comment|/*	$OpenBSD: extern.h,v 1.4 2014/12/01 13:13:00 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -188,10 +188,12 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|brealloc
+name|breallocarray
 parameter_list|(
 name|void
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|)

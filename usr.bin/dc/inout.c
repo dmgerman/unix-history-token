@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: inout.c,v 1.17 2012/11/07 11:06:14 otto Exp $	*/
+comment|/*	$OpenBSD: inout.c,v 1.18 2014/12/01 13:13:00 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -1202,9 +1202,11 @@ literal|2
 expr_stmt|;
 name|p
 operator|=
-name|brealloc
+name|breallocarray
 argument_list|(
 name|p
+argument_list|,
+literal|1
 argument_list|,
 name|new_sz
 operator|+

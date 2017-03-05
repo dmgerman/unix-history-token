@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: stack.c,v 1.12 2014/11/26 15:05:51 otto Exp $	*/
+comment|/*	$OpenBSD: stack.c,v 1.13 2014/12/01 13:13:00 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -622,14 +622,14 @@ name|stack
 operator|->
 name|stack
 operator|=
-name|brealloc
+name|breallocarray
 argument_list|(
 name|stack
 operator|->
 name|stack
 argument_list|,
 name|new_size
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1576,14 +1576,14 @@ name|array
 operator|->
 name|data
 operator|=
-name|brealloc
+name|breallocarray
 argument_list|(
 name|array
 operator|->
 name|data
 argument_list|,
 name|newsize
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*

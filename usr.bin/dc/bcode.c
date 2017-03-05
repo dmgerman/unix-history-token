@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: bcode.c,v 1.45 2012/11/07 11:06:14 otto Exp $	*/
+comment|/*	$OpenBSD: bcode.c,v 1.46 2014/10/08 03:59:56 doug Exp $	*/
 end_comment
 
 begin_comment
@@ -8187,14 +8187,14 @@ name|stack
 decl_stmt|;
 name|stack
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|bmachine
 operator|.
 name|readstack
 argument_list|,
 name|newsz
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
