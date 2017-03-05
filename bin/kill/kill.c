@@ -188,12 +188,16 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|long
+name|pidl
+decl_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
 name|int
 name|errors
 decl_stmt|,
 name|numsig
-decl_stmt|,
-name|pid
 decl_stmt|,
 name|ret
 decl_stmt|;
@@ -630,7 +634,7 @@ else|else
 endif|#
 directive|endif
 block|{
-name|pid
+name|pidl
 operator|=
 name|strtol
 argument_list|(
@@ -643,6 +647,14 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+comment|/* Check for overflow of pid_t. */
+name|pid
+operator|=
+operator|(
+name|pid_t
+operator|)
+name|pidl
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -652,6 +664,10 @@ name|argv
 operator|||
 operator|*
 name|ep
+operator|||
+name|pid
+operator|!=
+name|pidl
 condition|)
 name|errx
 argument_list|(
