@@ -9248,8 +9248,8 @@ condition|(
 name|url
 operator|->
 name|offset
-operator|==
-name|size
+operator|>
+literal|0
 operator|&&
 name|url
 operator|->
