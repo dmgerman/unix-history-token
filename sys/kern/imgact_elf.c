@@ -2092,6 +2092,8 @@ comment|/* 	 * Find the page from the underlying object. 	 */
 if|if
 condition|(
 name|object
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sf
@@ -2261,6 +2263,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rv
+operator|!=
+name|KERN_SUCCESS
 condition|)
 return|return
 operator|(
@@ -2327,6 +2331,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rv
+operator|!=
+name|KERN_SUCCESS
 condition|)
 return|return
 operator|(
@@ -2750,7 +2756,7 @@ argument_list|,
 name|pagesize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have two choices.  We can either clear the data in the last page 	 * of an oversized mapping, or we can start the anon mapping a page 	 * early and copy the initialized data into that first page.  We 	 * choose the second.. 	 */
+comment|/* 	 * We have two choices.  We can either clear the data in the last page 	 * of an oversized mapping, or we can start the anon mapping a page 	 * early and copy the initialized data into that first page.  We 	 * choose the second. 	 */
 if|if
 condition|(
 name|memsz
