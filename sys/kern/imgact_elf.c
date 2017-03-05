@@ -2090,14 +2090,14 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|KERN_FAILURE
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
