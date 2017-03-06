@@ -6232,6 +6232,8 @@ name|cpi
 operator|->
 name|hba_misc
 operator|=
+name|PIM_NOINITIATOR
+operator||
 name|PIM_NOBUSRESET
 operator||
 name|PIM_NO_6_BYTE
