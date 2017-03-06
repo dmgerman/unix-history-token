@@ -39,6 +39,12 @@ directive|include
 file|<sys/libkern.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
 begin_struct
 struct|struct
 name|rw_semaphore
@@ -210,6 +216,17 @@ parameter_list|(
 name|name
 parameter_list|)
 value|_rwsem_name(name, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECLARE_RWSEM
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|struct rw_semaphore name;						\ static void name##_rwsem_init(void *arg)				\ {									\ 	linux_init_rwsem(&name, rwsem_name(#name))			\ }									\ SYSINIT(name, SI_SUB_LOCKS, SI_ORDER_SECOND, name##_rwsem_init, NULL)
 end_define
 
 begin_function
