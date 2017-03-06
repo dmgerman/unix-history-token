@@ -3873,26 +3873,81 @@ operator|&=
 operator|~
 name|CTL_FLAG_STATUS_QUEUED
 expr_stmt|;
-comment|/* 			 * If this command was aborted, we don't 			 * need to send status back to the SIM. 			 * Just free the CTIO and ctl_io, and 			 * recycle the ATIO back to the SIM. 			 */
-name|xpt_print
+comment|/* Tell the SIM that we've aborted this ATIO */
+ifdef|#
+directive|ifdef
+name|CTLFEDEBUG
+name|printf
 argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"%s: aborted "
-literal|"command 0x%04x discarded\n"
+literal|"%s: tag %04x abort\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|io
+name|atio
 operator|->
-name|scsiio
-operator|.
-name|tag_num
+name|tag_id
 argument_list|)
 expr_stmt|;
-comment|/* 			 * For a wildcard attachment, commands can 			 * come in with a specific target/lun.  Reset 			 * the target and LUN fields back to the 			 * wildcard values before we send them back 			 * down to the SIM.  The SIM has a wildcard 			 * LUN enabled, not whatever target/lun 			 * these happened to be. 			 */
+endif|#
+directive|endif
+name|KASSERT
+argument_list|(
+name|atio
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|==
+name|XPT_ACCEPT_TARGET_IO
+argument_list|,
+operator|(
+literal|"func_code %#x is not ATIO"
+operator|,
+name|atio
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|)
+argument_list|)
+expr_stmt|;
+name|start_ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|XPT_ABORT
+expr_stmt|;
+name|start_ccb
+operator|->
+name|cab
+operator|.
+name|abort_ccb
+operator|=
+operator|(
+expr|union
+name|ccb
+operator|*
+operator|)
+name|atio
+expr_stmt|;
+name|xpt_action
+argument_list|(
+name|start_ccb
+argument_list|)
+expr_stmt|;
+name|softc
+operator|->
+name|ccbs_freed
+operator|++
+expr_stmt|;
+name|xpt_release_ccb
+argument_list|(
+name|start_ccb
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Send the ATIO back down to the SIM. 			 * For a wildcard attachment, commands can come in 			 * with a specific target/lun.  Reset the target and 			 * LUN fields back to the wildcard values before we 			 * send them back down to the SIM. 			 */
 if|if
 condition|(
 name|softc
@@ -3919,74 +3974,6 @@ operator|=
 name|CAM_LUN_WILDCARD
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|atio
-operator|->
-name|ccb_h
-operator|.
-name|func_code
-operator|!=
-name|XPT_ACCEPT_TARGET_IO
-condition|)
-block|{
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"%s: func_code "
-literal|"is %#x\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|atio
-operator|->
-name|ccb_h
-operator|.
-name|func_code
-argument_list|)
-expr_stmt|;
-block|}
-name|start_ccb
-operator|->
-name|ccb_h
-operator|.
-name|func_code
-operator|=
-name|XPT_ABORT
-expr_stmt|;
-name|start_ccb
-operator|->
-name|cab
-operator|.
-name|abort_ccb
-operator|=
-operator|(
-expr|union
-name|ccb
-operator|*
-operator|)
-name|atio
-expr_stmt|;
-comment|/* Tell the SIM that we've aborted this ATIO */
-name|xpt_action
-argument_list|(
-name|start_ccb
-argument_list|)
-expr_stmt|;
-name|softc
-operator|->
-name|ccbs_freed
-operator|++
-expr_stmt|;
-name|xpt_release_ccb
-argument_list|(
-name|start_ccb
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Send the ATIO back down to the SIM. 			 */
 name|xpt_action
 argument_list|(
 operator|(
@@ -3997,7 +3984,7 @@ operator|)
 name|atio
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If we still have work to do, ask for 			 * another CCB.  Otherwise, deactivate our 			 * callout. 			 */
+comment|/* If we still have work to do, ask for another CCB. */
 if|if
 condition|(
 operator|!
@@ -4149,27 +4136,6 @@ expr_stmt|;
 name|flags
 operator||=
 name|CAM_SEND_SENSE
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|scsi_status
-operator|==
-name|SCSI_STATUS_CHECK_COND
-condition|)
-block|{
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"%s: check condition "
-literal|"with no sense\n"
-argument_list|,
-name|__func__
-argument_list|)
 expr_stmt|;
 block|}
 block|}
