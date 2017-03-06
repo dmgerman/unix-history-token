@@ -6058,13 +6058,22 @@ name|atp
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|atp
+operator|->
+name|state
+operator|==
+name|ATPD_STATE_FREE
+condition|)
+continue|continue;
 name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
 name|ISP_LOGALL
 argument_list|,
-literal|"Chan %d ATP [0x%x] origdlen %u bytes_xfrd %u lun %jx nphdl 0x%04x s_id 0x%06x d_id 0x%06x oxid 0x%04x state %s\n"
+literal|"Chan %d ATP [0x%x] origdlen %u bytes_xfrd %u lun %jx nphdl 0x%04x s_id 0x%06x d_id 0x%06x oxid 0x%04x state %s"
 argument_list|,
 name|chan
 argument_list|,
