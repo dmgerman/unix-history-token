@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: dir.c,v 1.68 2016/06/07 00:40:00 sjg Exp $	*/
+comment|/*	$NetBSD: dir.c,v 1.69 2017/01/31 06:54:23 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: dir.c,v 1.68 2016/06/07 00:40:00 sjg Exp $"
+literal|"$NetBSD: dir.c,v 1.69 2017/01/31 06:54:23 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: dir.c,v 1.68 2016/06/07 00:40:00 sjg Exp $"
+literal|"$NetBSD: dir.c,v 1.69 2017/01/31 06:54:23 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -784,6 +784,12 @@ modifier|*
 name|cdname
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|cdname
+condition|)
+block|{
 name|dirSearchPath
 operator|=
 name|Lst_Init
@@ -814,6 +820,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|Dir_InitCur
 argument_list|(
 name|cdname

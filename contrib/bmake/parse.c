@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.217 2016/12/09 22:56:21 sjg Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.218 2017/03/01 16:39:49 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.217 2016/12/09 22:56:21 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.218 2017/03/01 16:39:49 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.217 2016/12/09 22:56:21 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.218 2017/03/01 16:39:49 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2125,6 +2125,27 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* as for mmap case, ensure trailing \n */
+if|if
+condition|(
+name|lf
+operator|->
+name|buf
+index|[
+name|lf
+operator|->
+name|len
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\n'
+condition|)
+name|lf
+operator|->
+name|len
+operator|++
+expr_stmt|;
 name|lf
 operator|->
 name|buf
@@ -2139,6 +2160,19 @@ name|lf
 operator|->
 name|len
 argument_list|)
+expr_stmt|;
+name|lf
+operator|->
+name|buf
+index|[
+name|lf
+operator|->
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\n'
 expr_stmt|;
 block|}
 ifdef|#
