@@ -81,38 +81,6 @@ directive|include
 file|<cam/cam_xpt_periph.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800002
-end_if
-
-begin_define
-define|#
-directive|define
-name|THREAD_CREATE
-value|kthread_create
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|THREAD_CREATE
-value|kproc_create
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
@@ -962,7 +930,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|THREAD_CREATE
+name|kproc_create
 argument_list|(
 name|isp_kthread
 argument_list|,
@@ -977,7 +945,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"%s: fc_thrd%d"
+literal|"%s_%d"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
