@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -116,31 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/mmc/bridge.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/mmc/mmcreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mmc/mmcbrvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sdhci.h"
+file|<dev/sdhci/sdhci.h>
 end_include
 
 begin_include

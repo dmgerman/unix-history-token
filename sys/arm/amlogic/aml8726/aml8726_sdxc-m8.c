@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -5801,9 +5795,9 @@ name|aml8726_sdxc_driver
 argument_list|,
 name|aml8726_sdxc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

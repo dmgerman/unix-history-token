@@ -918,6 +918,9 @@ block|{
 name|int
 name|timeout
 decl_stmt|;
+name|uint32_t
+name|clock
+decl_stmt|;
 if|if
 condition|(
 name|slot
@@ -961,9 +964,6 @@ name|SDHCI_QUIRK_CLOCK_BEFORE_RESET
 operator|)
 condition|)
 block|{
-name|uint32_t
-name|clock
-decl_stmt|;
 comment|/* This is to force an update */
 name|clock
 operator|=
@@ -1023,7 +1023,7 @@ operator|&
 name|SDHCI_QUIRK_WAITFOR_RESET_ASSERTED
 condition|)
 block|{
-comment|/* 		 * Resets on TI OMAPs and AM335x are incompatible with SDHCI 		 * specification.  The reset bit has internal propagation delay, 		 * so a fast read after write returns 0 even if reset process is 		 * in progress. The workaround is to poll for 1 before polling 		 * for 0.  In the worst case, if we miss seeing it asserted the 		 * time we spent waiting is enough to ensure the reset finishes. 		 */
+comment|/* 		 * Resets on TI OMAPs and AM335x are incompatible with SDHCI 		 * specification.  The reset bit has internal propagation delay, 		 * so a fast read after write returns 0 even if reset process is 		 * in progress.  The workaround is to poll for 1 before polling 		 * for 0.  In the worst case, if we miss seeing it asserted the 		 * time we spent waiting is enough to ensure the reset finishes. 		 */
 name|timeout
 operator|=
 literal|10000
@@ -1289,7 +1289,7 @@ operator|~
 name|SDHCI_CLOCK_CARD_EN
 argument_list|)
 expr_stmt|;
-comment|/* If no clock requested - left it so. */
+comment|/* If no clock requested - leave it so. */
 if|if
 condition|(
 name|clock
@@ -1668,7 +1668,7 @@ argument_list|,
 name|pwr
 argument_list|)
 expr_stmt|;
-comment|/* If power down requested - left it so. */
+comment|/* If power down requested - leave it so. */
 if|if
 condition|(
 name|power
@@ -3745,6 +3745,7 @@ name|sdhci_generic_min_freq
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|struct
 name|sdhci_slot
@@ -3788,6 +3789,7 @@ name|sdhci_generic_get_card_present
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|struct
 name|sdhci_slot
@@ -4384,7 +4386,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Do not issue command if there is no card, clock or power. 	 * Controller will not detect timeout without clock active. */
+comment|/* 	 * Do not issue command if there is no card, clock or power. 	 * Controller will not detect timeout without clock active. 	 */
 if|if
 condition|(
 operator|!
@@ -5641,6 +5643,7 @@ name|sdhci_generic_request
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|device_t
 name|reqdev
@@ -5820,6 +5823,7 @@ name|sdhci_generic_get_ro
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|device_t
 name|reqdev
@@ -5876,6 +5880,7 @@ name|sdhci_generic_acquire_host
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|device_t
 name|reqdev
@@ -5961,6 +5966,7 @@ name|sdhci_generic_release_host
 parameter_list|(
 name|device_t
 name|brdev
+name|__unused
 parameter_list|,
 name|device_t
 name|reqdev
@@ -7342,6 +7348,14 @@ argument_list|(
 name|child
 argument_list|)
 decl_stmt|;
+name|uint32_t
+name|clock
+decl_stmt|,
+name|max_clock
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 switch|switch
 condition|(
 name|which
@@ -7405,15 +7419,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|uint32_t
-name|max_clock
-decl_stmt|;
-name|uint32_t
-name|clock
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|max_clock
 operator|=
 name|slot

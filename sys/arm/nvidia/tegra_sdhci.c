@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/callout.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/gpio.h>
 end_include
 
@@ -114,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -157,12 +145,6 @@ begin_include
 include|#
 directive|include
 file|<dev/mmc/bridge.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mmc/mmcreg.h>
 end_include
 
 begin_include

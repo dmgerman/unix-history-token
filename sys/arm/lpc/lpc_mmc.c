@@ -32,37 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kthread.h>
 end_include
 
 begin_include
@@ -92,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/resource.h>
 end_include
 
@@ -105,30 +75,6 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/timetc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/watchdog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -165,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|<dev/mmc/bridge.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mmc/mmcreg.h>
 end_include
 
 begin_include
@@ -3744,13 +3684,6 @@ argument_list|,
 name|lpc_mmc_write_ivar
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
 comment|/* MMC bridge interface */
 name|DEVMETHOD
 argument_list|(
@@ -3787,11 +3720,7 @@ argument_list|,
 name|lpc_mmc_release_host
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3833,9 +3762,9 @@ name|lpc_mmc_driver
 argument_list|,
 name|lpc_mmc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

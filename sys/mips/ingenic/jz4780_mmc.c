@@ -4920,13 +4920,6 @@ argument_list|,
 name|jz4780_mmc_write_ivar
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
 comment|/* MMC bridge interface */
 name|DEVMETHOD
 argument_list|(
@@ -5005,9 +4998,9 @@ name|jz4780_mmc_driver
 argument_list|,
 name|jz4780_mmc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

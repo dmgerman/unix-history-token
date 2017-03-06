@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -104,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/acpica/include/acpi.h>
 end_include
 
@@ -128,19 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mmc/mmcreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mmc/mmcbrvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sdhci.h"
+file|<dev/sdhci/sdhci.h>
 end_include
 
 begin_include
@@ -887,11 +863,13 @@ operator|)
 condition|)
 continue|continue;
 return|return
+operator|(
 operator|&
 name|sdhci_acpi_devices
 index|[
 name|i
 index|]
+operator|)
 return|;
 block|}
 return|return

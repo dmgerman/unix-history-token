@@ -1199,6 +1199,7 @@ name|struct
 name|disk
 modifier|*
 name|dp
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -1218,6 +1219,7 @@ name|struct
 name|disk
 modifier|*
 name|dp
+name|__unused
 parameter_list|)
 block|{
 return|return
