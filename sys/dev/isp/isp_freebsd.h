@@ -2018,6 +2018,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HBA_REQINVAL
+value|CAM_REQ_INVALID
+end_define
+
+begin_define
+define|#
+directive|define
 name|HBA_BUSRESET
 value|CAM_SCSI_BUS_RESET
 end_define
