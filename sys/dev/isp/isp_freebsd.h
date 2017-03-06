@@ -385,7 +385,7 @@ name|uint32_t
 name|sid
 decl_stmt|;
 name|uint32_t
-name|portid
+name|did
 decl_stmt|;
 name|uint16_t
 name|rxid
