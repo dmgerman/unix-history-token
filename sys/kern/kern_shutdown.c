@@ -3054,6 +3054,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|printf
+argument_list|(
+literal|"time = %ld\n"
+argument_list|,
+name|time_second
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDB
