@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.h,v 1.6 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: serverloop.h,v 1.7 2016/08/13 17:47:41 markus Exp $ */
 end_comment
 
 begin_comment
@@ -22,21 +22,6 @@ define|#
 directive|define
 name|SERVERLOOP_H
 end_define
-
-begin_function_decl
-name|void
-name|server_loop
-parameter_list|(
-name|pid_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

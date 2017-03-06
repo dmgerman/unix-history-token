@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.213 2016/05/02 08:49:03 djm Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.215 2016/11/30 03:07:37 djm Exp $ */
 end_comment
 
 begin_comment
@@ -20,16 +20,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* MIN MAX */
-end_comment
 
 begin_include
 include|#
@@ -284,6 +274,12 @@ directive|include
 file|"ssherr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"match.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -295,6 +291,24 @@ include|#
 directive|include
 file|"ssh-pkcs11.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEFAULT_PKCS11_WHITELIST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PKCS11_WHITELIST
+value|"/usr/lib/*,/usr/local/lib/*"
+end_define
 
 begin_endif
 endif|#
@@ -490,6 +504,18 @@ name|socket_dir
 index|[
 name|PATH_MAX
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PKCS#11 path whitelist */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pkcs11_whitelist
 decl_stmt|;
 end_decl_stmt
 
@@ -3051,7 +3077,7 @@ name|id
 operator|->
 name|death
 else|:
-name|MIN
+name|MINIMUM
 argument_list|(
 name|deadline
 argument_list|,
@@ -4200,6 +4226,11 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|pin
+decl_stmt|,
+name|canonical_provider
+index|[
+name|PATH_MAX
+index|]
 decl_stmt|;
 name|int
 name|r
@@ -4410,6 +4441,69 @@ block|}
 block|}
 if|if
 condition|(
+name|realpath
+argument_list|(
+name|provider
+argument_list|,
+name|canonical_provider
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"failed PKCS#11 add of \"%.100s\": realpath: %s"
+argument_list|,
+name|provider
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|send
+goto|;
+block|}
+if|if
+condition|(
+name|match_pattern_list
+argument_list|(
+name|canonical_provider
+argument_list|,
+name|pkcs11_whitelist
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"refusing PKCS#11 add of \"%.100s\": "
+literal|"provider not whitelisted"
+argument_list|,
+name|canonical_provider
+argument_list|)
+expr_stmt|;
+goto|goto
+name|send
+goto|;
+block|}
+name|debug
+argument_list|(
+literal|"%s: add %.100s"
+argument_list|,
+name|__func__
+argument_list|,
+name|canonical_provider
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|lifetime
 operator|&&
 operator|!
@@ -4426,7 +4520,7 @@ name|count
 operator|=
 name|pkcs11_add_provider
 argument_list|(
-name|provider
+name|canonical_provider
 argument_list|,
 name|pin
 argument_list|,
@@ -4510,7 +4604,7 @@ name|provider
 operator|=
 name|xstrdup
 argument_list|(
-name|provider
+name|canonical_provider
 argument_list|)
 expr_stmt|;
 name|id
@@ -4519,7 +4613,7 @@ name|comment
 operator|=
 name|xstrdup
 argument_list|(
-name|provider
+name|canonical_provider
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -5624,7 +5718,7 @@ name|AUTH_CONNECTION
 case|:
 name|n
 operator|=
-name|MAX
+name|MAXIMUM
 argument_list|(
 name|n
 argument_list|,
@@ -5858,7 +5952,7 @@ operator|)
 condition|?
 name|parent_alive_interval
 else|:
-name|MIN
+name|MINIMUM
 argument_list|(
 name|deadline
 argument_list|,
@@ -6568,7 +6662,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: ssh-agent [-c | -s] [-Dd] [-a bind_address] [-E fingerprint_hash]\n"
-literal|"                 [-t life] [command [arg ...]]\n"
+literal|"                 [-P pkcs11_whitelist] [-t life] [command [arg ...]]\n"
 literal|"       ssh-agent [-c | -s] -k\n"
 argument_list|)
 expr_stmt|;
@@ -6771,7 +6865,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"cDdksE:a:t:x"
+literal|"cDdksE:a:P:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -6828,6 +6922,28 @@ literal|'k'
 case|:
 name|k_flag
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+if|if
+condition|(
+name|pkcs11_whitelist
+operator|!=
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"-P option already specified"
+argument_list|)
+expr_stmt|;
+name|pkcs11_whitelist
+operator|=
+name|xstrdup
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -6956,6 +7072,19 @@ operator|)
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pkcs11_whitelist
+operator|==
+name|NULL
+condition|)
+name|pkcs11_whitelist
+operator|=
+name|xstrdup
+argument_list|(
+name|DEFAULT_PKCS11_WHITELIST
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7746,7 +7875,7 @@ if|if
 condition|(
 name|pledge
 argument_list|(
-literal|"stdio cpath unix id proc exec"
+literal|"stdio rpath cpath unix id proc exec"
 argument_list|,
 name|NULL
 argument_list|)

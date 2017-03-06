@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.124 2016/05/25 23:48:45 schwarze Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.125 2016/09/12 01:22:38 deraadt Exp $ */
 end_comment
 
 begin_comment
@@ -28,16 +28,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* MIN MAX */
-end_comment
 
 begin_include
 include|#
@@ -2888,7 +2878,7 @@ name|ret
 operator|->
 name|transfer_buflen
 operator|=
-name|MIN
+name|MINIMUM
 argument_list|(
 name|ret
 operator|->
@@ -8207,7 +8197,7 @@ name|buflen
 condition|)
 name|buflen
 operator|=
-name|MAX
+name|MAXIMUM
 argument_list|(
 name|MIN_READ_SIZE
 argument_list|,

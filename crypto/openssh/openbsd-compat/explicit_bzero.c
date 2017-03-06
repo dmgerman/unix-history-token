@@ -17,6 +17,12 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * explicit_bzero - don't let the compiler optimize away bzero  */
 end_comment
@@ -106,6 +112,32 @@ name|size_t
 name|n
 parameter_list|)
 block|{
+comment|/* 	 * clang -fsanitize=memory needs to intercept memset-like functions 	 * to correctly detect memory initialisation. Make sure one is called 	 * directly since our indirection trick above sucessfully confuses it. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__has_feature
+argument_list|)
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|memory_sanitizer
+argument_list|)
+name|memset
+argument_list|(
+name|p
+argument_list|,
+literal|0
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|ssh_bzero
 argument_list|(
 name|p

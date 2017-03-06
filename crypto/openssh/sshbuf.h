@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf.h,v 1.7 2016/05/02 08:49:03 djm Exp $	*/
+comment|/*	$OpenBSD: sshbuf.h,v 1.8 2016/11/25 23:22:04 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -431,6 +431,25 @@ name|int
 name|sshbuf_check_reserve
 parameter_list|(
 specifier|const
+name|struct
+name|sshbuf
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Preallocates len additional bytes in buf.  * Useful for cases where the caller knows how many bytes will ultimately be  * required to avoid realloc in the buffer code.  * Returns 0 on success, or a negative SSH_ERR_* error code on failure.  */
+end_comment
+
+begin_function_decl
+name|int
+name|sshbuf_allocate
+parameter_list|(
 name|struct
 name|sshbuf
 modifier|*

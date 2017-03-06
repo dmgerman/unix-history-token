@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: atomicio.c,v 1.27 2015/01/16 06:40:12 deraadt Exp $ */
+comment|/* $OpenBSD: atomicio.c,v 1.28 2016/07/27 23:18:12 djm Exp $ */
 end_comment
 
 begin_comment
@@ -443,6 +443,10 @@ decl_stmt|;
 if|if
 condition|(
 name|iovcnt
+operator|<
+literal|0
+operator|||
+name|iovcnt
 operator|>
 name|IOV_MAX
 condition|)
@@ -462,6 +466,9 @@ name|iov
 argument_list|,
 name|_iov
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|iovcnt
 operator|*
 sizeof|sizeof

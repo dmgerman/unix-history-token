@@ -107,14 +107,6 @@ comment|/* #undef BROKEN_LIBIAF */
 end_comment
 
 begin_comment
-comment|/* Ultrix mmap can't map files */
-end_comment
-
-begin_comment
-comment|/* #undef BROKEN_MMAP */
-end_comment
-
-begin_comment
 comment|/* Define if your struct dirent expects you to allocate extra space for d_name    */
 end_comment
 
@@ -214,7 +206,7 @@ comment|/* #undef BROKEN_SNPRINTF */
 end_comment
 
 begin_comment
-comment|/* missing VIS_ALL */
+comment|/* strnvis detected broken */
 end_comment
 
 begin_define
@@ -2445,17 +2437,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `mmap' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MMAP
-value|1
-end_define
-
-begin_comment
 comment|/* define if you have mode_t data type */
 end_comment
 
@@ -3380,6 +3361,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strcasestr' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCASESTR
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `strdup' function. */
 end_comment
 
@@ -3865,6 +3857,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SYS_PTMS_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/ptrace.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_PTRACE_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/select.h> header file. */
@@ -4659,39 +4662,12 @@ comment|/* #undef LOCKED_PASSWD_SUBSTR */
 end_comment
 
 begin_comment
-comment|/* Some versions of /bin/login need the TERM supplied on the commandline */
-end_comment
-
-begin_comment
-comment|/* #undef LOGIN_NEEDS_TERM */
-end_comment
-
-begin_comment
 comment|/* Some systems need a utmpx entry for /bin/login to work */
 end_comment
 
 begin_comment
 comment|/* #undef LOGIN_NEEDS_UTMPX */
 end_comment
-
-begin_comment
-comment|/* Define if your login program cannot handle end of options ("--") */
-end_comment
-
-begin_comment
-comment|/* #undef LOGIN_NO_ENDOPT */
-end_comment
-
-begin_comment
-comment|/* If your header files don't define LOGIN_PROGRAM, then use this (detected)    from environment and PATH */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOGIN_PROGRAM_FALLBACK
-value|"/usr/bin/login"
-end_define
 
 begin_comment
 comment|/* Set this to your mail directory if you do not have _PATH_MAILDIR */
@@ -5143,6 +5119,14 @@ end_comment
 
 begin_comment
 comment|/* #undef SSHD_ACQUIRES_CTTY */
+end_comment
+
+begin_comment
+comment|/* sshd PAM service name */
+end_comment
+
+begin_comment
+comment|/* #undef SSHD_PAM_SERVICE */
 end_comment
 
 begin_comment

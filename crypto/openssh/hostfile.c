@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hostfile.c,v 1.66 2015/05/04 06:10:48 djm Exp $ */
+comment|/* $OpenBSD: hostfile.c,v 1.67 2016/09/17 18:00:27 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -477,8 +477,6 @@ literal|1024
 index|]
 decl_stmt|;
 name|u_int
-name|i
-decl_stmt|,
 name|len
 decl_stmt|;
 name|len
@@ -496,26 +494,12 @@ name|NULL
 condition|)
 block|{
 comment|/* Create new salt */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
+name|arc4random_buf
+argument_list|(
 name|salt
-index|[
-name|i
-index|]
-operator|=
-name|arc4random
-argument_list|()
+argument_list|,
+name|len
+argument_list|)
 expr_stmt|;
 block|}
 else|else

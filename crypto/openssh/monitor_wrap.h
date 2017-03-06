@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.h,v 1.30 2016/03/07 19:02:43 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.h,v 1.32 2016/09/28 16:33:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -45,10 +45,6 @@ block|,
 name|MM_HOSTKEY
 block|,
 name|MM_USERKEY
-block|,
-name|MM_RSAHOSTKEY
-block|,
-name|MM_RSAUSERKEY
 block|}
 enum|;
 end_enum
@@ -250,28 +246,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mm_auth_rhosts_rsa_key_allowed
-parameter_list|(
-name|struct
-name|passwd
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|Key
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mm_key_verify
 parameter_list|(
 name|Key
@@ -286,51 +260,6 @@ name|u_char
 modifier|*
 parameter_list|,
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mm_auth_rsa_key_allowed
-parameter_list|(
-name|struct
-name|passwd
-modifier|*
-parameter_list|,
-name|BIGNUM
-modifier|*
-parameter_list|,
-name|Key
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mm_auth_rsa_verify_response
-parameter_list|(
-name|Key
-modifier|*
-parameter_list|,
-name|BIGNUM
-modifier|*
-parameter_list|,
-name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|BIGNUM
-modifier|*
-name|mm_auth_rsa_generate_challenge
-parameter_list|(
-name|Key
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -584,30 +513,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* SSHv1 interfaces */
-end_comment
-
-begin_function_decl
-name|void
-name|mm_ssh1_session_id
-parameter_list|(
-name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mm_ssh1_session_key
-parameter_list|(
-name|BIGNUM
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Key export functions */
 end_comment
 
@@ -769,21 +674,6 @@ name|u_int
 parameter_list|,
 name|char
 modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* zlib allocation hooks */
-end_comment
-
-begin_function_decl
-name|void
-name|mm_init_compression
-parameter_list|(
-name|struct
-name|mm_master
 modifier|*
 parameter_list|)
 function_decl|;

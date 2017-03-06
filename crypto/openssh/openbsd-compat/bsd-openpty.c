@@ -437,7 +437,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Try to push the appropriate streams modules, as described  	 * in Solaris pts(7). 	 */
+comment|/* 	 * Try to push the appropriate streams modules, as described 	 * in Solaris pts(7). 	 */
 name|ioctl
 argument_list|(
 operator|*

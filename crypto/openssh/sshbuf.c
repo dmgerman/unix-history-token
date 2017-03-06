@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshbuf.c,v 1.6 2016/01/12 23:42:54 djm Exp $	*/
+comment|/*	$OpenBSD: sshbuf.c,v 1.8 2016/11/25 23:22:04 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -18,16 +18,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_comment
-comment|/* roundup */
-end_comment
 
 begin_include
 include|#
@@ -69,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"sshbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
 end_include
 
 begin_function
@@ -1199,7 +1195,7 @@ expr_stmt|;
 else|else
 name|rlen
 operator|=
-name|roundup
+name|ROUNDUP
 argument_list|(
 name|buf
 operator|->
@@ -1567,7 +1563,7 @@ end_function
 
 begin_function
 name|int
-name|sshbuf_reserve
+name|sshbuf_allocate
 parameter_list|(
 name|struct
 name|sshbuf
@@ -1576,11 +1572,6 @@ name|buf
 parameter_list|,
 name|size_t
 name|len
-parameter_list|,
-name|u_char
-modifier|*
-modifier|*
-name|dpp
 parameter_list|)
 block|{
 name|size_t
@@ -1595,21 +1586,10 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-if|if
-condition|(
-name|dpp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|dpp
-operator|=
-name|NULL
-expr_stmt|;
 name|SSHBUF_DBG
 argument_list|(
 operator|(
-literal|"reserve buf = %p len = %zu"
+literal|"allocate buf = %p len = %zu"
 operator|,
 name|buf
 operator|,
@@ -1653,7 +1633,7 @@ argument_list|)
 expr_stmt|;
 name|SSHBUF_TELL
 argument_list|(
-literal|"reserve"
+literal|"allocate"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1663,13 +1643,16 @@ operator|+
 name|buf
 operator|->
 name|size
-operator|>
+operator|<=
 name|buf
 operator|->
 name|alloc
 condition|)
-block|{
-comment|/* 		 * Prefer to alloc in SSHBUF_SIZE_INC units, but 		 * allocate less if doing so would overflow max_size. 		 */
+return|return
+literal|0
+return|;
+comment|/* already have it. */
+comment|/* 	 * Prefer to alloc in SSHBUF_SIZE_INC units, but 	 * allocate less if doing so would overflow max_size. 	 */
 name|need
 operator|=
 name|len
@@ -1684,7 +1667,7 @@ name|alloc
 expr_stmt|;
 name|rlen
 operator|=
-name|roundup
+name|ROUNDUP
 argument_list|(
 name|buf
 operator|->
@@ -1756,17 +1739,6 @@ literal|"realloc fail"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dpp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|dpp
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 name|SSH_ERR_ALLOC_FAIL
 return|;
@@ -1804,6 +1776,46 @@ literal|0
 condition|)
 block|{
 comment|/* shouldn't fail */
+return|return
+name|r
+return|;
+block|}
+name|SSHBUF_TELL
+argument_list|(
+literal|"done"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|sshbuf_reserve
+parameter_list|(
+name|struct
+name|sshbuf
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+name|dpp
+parameter_list|)
+block|{
+name|u_char
+modifier|*
+name|dp
+decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|dpp
@@ -1815,11 +1827,35 @@ name|dpp
 operator|=
 name|NULL
 expr_stmt|;
+name|SSHBUF_DBG
+argument_list|(
+operator|(
+literal|"reserve buf = %p len = %zu"
+operator|,
+name|buf
+operator|,
+name|len
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|r
+operator|=
+name|sshbuf_allocate
+argument_list|(
+name|buf
+argument_list|,
+name|len
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
 return|return
 name|r
 return|;
-block|}
-block|}
 name|dp
 operator|=
 name|buf
@@ -1835,11 +1871,6 @@ operator|->
 name|size
 operator|+=
 name|len
-expr_stmt|;
-name|SSHBUF_TELL
-argument_list|(
-literal|"done"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

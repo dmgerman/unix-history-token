@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.120 2015/07/10 06:21:53 markus Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.123 2016/11/30 03:00:05 djm Exp $ */
 end_comment
 
 begin_comment
@@ -354,17 +354,9 @@ name|pid_file
 decl_stmt|;
 comment|/* Where to put our pid */
 name|int
-name|server_key_bits
-decl_stmt|;
-comment|/* Size of the server key. */
-name|int
 name|login_grace_time
 decl_stmt|;
 comment|/* Disconnect if no auth in this time 					 * (sec). */
-name|int
-name|key_regeneration_time
-decl_stmt|;
-comment|/* Server key lifetime (seconds). */
 name|int
 name|permit_root_login
 decl_stmt|;
@@ -441,10 +433,6 @@ modifier|*
 name|kex_algorithms
 decl_stmt|;
 comment|/* SSH2 kex methods in order of preference. */
-name|int
-name|protocol
-decl_stmt|;
-comment|/* Supported protocol versions. */
 name|struct
 name|ForwardOptions
 name|fwd_opts
@@ -458,10 +446,6 @@ name|LogLevel
 name|log_level
 decl_stmt|;
 comment|/* Level for system logging. */
-name|int
-name|rhosts_rsa_authentication
-decl_stmt|;
-comment|/* If true, permit rhosts RSA 						 * authentication. */
 name|int
 name|hostbased_authentication
 decl_stmt|;
@@ -480,10 +464,6 @@ modifier|*
 name|hostkeyalgorithms
 decl_stmt|;
 comment|/* SSH2 server key types */
-name|int
-name|rsa_authentication
-decl_stmt|;
-comment|/* If true, permit RSA authentication. */
 name|int
 name|pubkey_authentication
 decl_stmt|;
@@ -541,10 +521,6 @@ name|permit_user_env
 decl_stmt|;
 comment|/* If true, read ~/.ssh/environment */
 name|int
-name|use_login
-decl_stmt|;
-comment|/* If true, login(1) is used */
-name|int
 name|compression
 decl_stmt|;
 comment|/* If true, compression is allowed */
@@ -558,6 +534,9 @@ decl_stmt|;
 comment|/* One of FORWARD_* */
 name|int
 name|allow_agent_forwarding
+decl_stmt|;
+name|int
+name|disable_forwarding
 decl_stmt|;
 name|u_int
 name|num_allow_users
