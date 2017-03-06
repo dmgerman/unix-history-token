@@ -3056,8 +3056,11 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"time = %ld\n"
+literal|"time = %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time_second
 argument_list|)
 expr_stmt|;
