@@ -19970,7 +19970,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"%s: [0x%x] no state pointer found for %s\n"
+literal|"%s: no state pointer found for %s\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -19984,6 +19984,11 @@ operator|.
 name|status
 operator|=
 name|CAM_DEV_NOT_THERE
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
