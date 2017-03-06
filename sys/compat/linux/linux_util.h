@@ -247,6 +247,19 @@ define|\
 value|LIN_SDT_PROBE_DEFINE0(dummy, s, entry);					\ LIN_SDT_PROBE_DEFINE0(dummy, s, not_implemented);			\ LIN_SDT_PROBE_DEFINE1(dummy, s, return, "int");				\ int									\ linux_ ## s(struct thread *td, struct linux_ ## s ## _args *args)	\ {									\ 	static pid_t pid;						\ 									\ 	LIN_SDT_PROBE0(dummy, s, entry);				\ 									\ 	if (pid != td->td_proc->p_pid) {				\ 		linux_msg(td, "syscall %s not implemented", #s);	\ 		LIN_SDT_PROBE0(dummy, s, not_implemented);		\ 		pid = td->td_proc->p_pid;				\ 	};								\ 									\ 	LIN_SDT_PROBE1(dummy, s, return, ENOSYS);			\ 	return (ENOSYS);						\ }									\ struct __hack
 end_define
 
+begin_comment
+comment|/*  * This is for the syscalls that are not even yet implemented in Linux.  *  * They're marked as UNIMPL in syscall.master so it will  * have nosys record in linux_sysent[].  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNIMPLEMENTED
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
 begin_function_decl
 name|void
 name|linux_msg
