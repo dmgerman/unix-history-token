@@ -2373,6 +2373,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|C4IW_DRAIN_OPCODE
+value|FW_RI_SGE_EC_CR_RETURN
+end_define
+
 begin_function
 specifier|static
 specifier|inline
