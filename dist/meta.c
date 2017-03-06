@@ -1033,11 +1033,6 @@ name|char
 modifier|*
 name|meta_name
 parameter_list|(
-name|struct
-name|GNode
-modifier|*
-name|gn
-parameter_list|,
 name|char
 modifier|*
 name|mname
@@ -1682,11 +1677,6 @@ name|char
 modifier|*
 name|dname
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|tname
-parameter_list|,
 name|char
 modifier|*
 name|objdir
@@ -2037,8 +2027,6 @@ name|gn
 argument_list|,
 name|dname
 argument_list|,
-name|tname
-argument_list|,
 name|objdir
 argument_list|,
 name|TRUE
@@ -2142,8 +2130,6 @@ name|fname
 operator|=
 name|meta_name
 argument_list|(
-name|gn
-argument_list|,
 name|pbm
 operator|->
 name|meta_fname
@@ -4529,8 +4515,6 @@ name|gn
 argument_list|,
 name|dname
 argument_list|,
-name|tname
-argument_list|,
 name|fname3
 argument_list|,
 name|FALSE
@@ -4558,8 +4542,6 @@ argument_list|)
 expr_stmt|;
 name|meta_name
 argument_list|(
-name|gn
-argument_list|,
 name|fname
 argument_list|,
 sizeof|sizeof

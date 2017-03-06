@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.254 2016/12/10 23:12:39 christos Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.257 2017/02/08 17:47:36 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: main.c,v 1.254 2016/12/10 23:12:39 christos Exp $"
+literal|"$NetBSD: main.c,v 1.257 2017/02/08 17:47:36 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.254 2016/12/10 23:12:39 christos Exp $"
+literal|"$NetBSD: main.c,v 1.257 2017/02/08 17:47:36 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1464,6 +1464,12 @@ name|char
 modifier|*
 name|getopt_def
 decl_stmt|;
+name|struct
+name|stat
+name|sa
+decl_stmt|,
+name|sb
+decl_stmt|;
 name|char
 modifier|*
 name|optscan
@@ -1780,6 +1786,55 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|stat
+argument_list|(
+name|argvalue
+argument_list|,
+operator|&
+name|sa
+argument_list|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|stat
+argument_list|(
+name|curdir
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|sa
+operator|.
+name|st_ino
+operator|==
+name|sb
+operator|.
+name|st_ino
+operator|&&
+name|sa
+operator|.
+name|st_dev
+operator|==
+name|sb
+operator|.
+name|st_dev
+condition|)
+name|strncpy
+argument_list|(
+name|curdir
+argument_list|,
+name|argvalue
+argument_list|,
+name|MAXPATHLEN
+argument_list|)
+expr_stmt|;
 name|ignorePWD
 operator|=
 name|TRUE
@@ -4599,6 +4654,12 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|Dir_Init
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Dir_* safe to call from MainParseArgs */
 comment|/* 	 * First snag any flags out of the MAKE environment variable. 	 * (Note this is *not* MAKEFLAGS since /bin/make uses that and it's 	 * in a different format). 	 */
 ifdef|#
 directive|ifdef
@@ -5637,6 +5698,11 @@ argument_list|,
 name|compatMake
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|printVars
+condition|)
 name|Main_ExportMAKEFLAGS
 argument_list|(
 name|TRUE
@@ -7894,6 +7960,7 @@ parameter_list|,
 name|void
 modifier|*
 name|gnp
+name|MAKE_ATTR_UNUSED
 parameter_list|)
 block|{
 if|if
