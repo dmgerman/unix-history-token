@@ -7303,18 +7303,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* linux_create_module */
-case|case
-literal|174
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
 comment|/* linux_init_module */
 case|case
 literal|175
@@ -7339,105 +7327,9 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* linux_get_kernel_syms */
-case|case
-literal|177
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_query_module */
-case|case
-literal|178
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
 comment|/* linux_quotactl */
 case|case
 literal|179
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_nfsservctl */
-case|case
-literal|180
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_getpmsg */
-case|case
-literal|181
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_putpmsg */
-case|case
-literal|182
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_afs_syscall */
-case|case
-literal|183
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_tuxcall */
-case|case
-literal|184
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_security */
-case|case
-literal|185
 case|:
 block|{
 operator|*
@@ -7866,18 +7758,6 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* linux_set_thread_area */
-case|case
-literal|205
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
 comment|/* linux_lookup_dcookie */
 case|case
 literal|212
@@ -7916,30 +7796,6 @@ operator|*
 name|n_args
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_epoll_ctl_old */
-case|case
-literal|214
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-comment|/* linux_epoll_wait_old */
-case|case
-literal|215
-case|:
-block|{
-operator|*
-name|n_args
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 block|}
@@ -18065,11 +17921,6 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* linux_create_module */
-case|case
-literal|174
-case|:
-break|break;
 comment|/* linux_init_module */
 case|case
 literal|175
@@ -18080,49 +17931,9 @@ case|case
 literal|176
 case|:
 break|break;
-comment|/* linux_get_kernel_syms */
-case|case
-literal|177
-case|:
-break|break;
-comment|/* linux_query_module */
-case|case
-literal|178
-case|:
-break|break;
 comment|/* linux_quotactl */
 case|case
 literal|179
-case|:
-break|break;
-comment|/* linux_nfsservctl */
-case|case
-literal|180
-case|:
-break|break;
-comment|/* linux_getpmsg */
-case|case
-literal|181
-case|:
-break|break;
-comment|/* linux_putpmsg */
-case|case
-literal|182
-case|:
-break|break;
-comment|/* linux_afs_syscall */
-case|case
-literal|183
-case|:
-break|break;
-comment|/* linux_tuxcall */
-case|case
-literal|184
-case|:
-break|break;
-comment|/* linux_security */
-case|case
-literal|185
 case|:
 break|break;
 comment|/* linux_gettid */
@@ -18380,11 +18191,6 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* linux_set_thread_area */
-case|case
-literal|205
-case|:
-break|break;
 comment|/* linux_lookup_dcookie */
 case|case
 literal|212
@@ -18411,16 +18217,6 @@ default|default:
 break|break;
 block|}
 empty_stmt|;
-break|break;
-comment|/* linux_epoll_ctl_old */
-case|case
-literal|214
-case|:
-break|break;
-comment|/* linux_epoll_wait_old */
-case|case
-literal|215
-case|:
 break|break;
 comment|/* linux_remap_file_pages */
 case|case
@@ -24859,10 +24655,6 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* linux_create_module */
-case|case
-literal|174
-case|:
 comment|/* linux_init_module */
 case|case
 literal|175
@@ -24871,41 +24663,9 @@ comment|/* linux_delete_module */
 case|case
 literal|176
 case|:
-comment|/* linux_get_kernel_syms */
-case|case
-literal|177
-case|:
-comment|/* linux_query_module */
-case|case
-literal|178
-case|:
 comment|/* linux_quotactl */
 case|case
 literal|179
-case|:
-comment|/* linux_nfsservctl */
-case|case
-literal|180
-case|:
-comment|/* linux_getpmsg */
-case|case
-literal|181
-case|:
-comment|/* linux_putpmsg */
-case|case
-literal|182
-case|:
-comment|/* linux_afs_syscall */
-case|case
-literal|183
-case|:
-comment|/* linux_tuxcall */
-case|case
-literal|184
-case|:
-comment|/* linux_security */
-case|case
-literal|185
 case|:
 comment|/* linux_gettid */
 case|case
@@ -25054,10 +24814,6 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* linux_set_thread_area */
-case|case
-literal|205
-case|:
 comment|/* linux_lookup_dcookie */
 case|case
 literal|212
@@ -25081,14 +24837,6 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* linux_epoll_ctl_old */
-case|case
-literal|214
-case|:
-comment|/* linux_epoll_wait_old */
-case|case
-literal|215
-case|:
 comment|/* linux_remap_file_pages */
 case|case
 literal|216

@@ -818,13 +818,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_create_module
-value|127
-end_define
-
-begin_define
-define|#
-directive|define
 name|LINUX_SYS_linux_init_module
 value|128
 end_define
@@ -834,13 +827,6 @@ define|#
 directive|define
 name|LINUX_SYS_linux_delete_module
 value|129
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_SYS_linux_get_kernel_syms
-value|130
 end_define
 
 begin_define
@@ -1091,22 +1077,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_query_module
-value|167
-end_define
-
-begin_define
-define|#
-directive|define
 name|LINUX_SYS_poll
 value|168
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_SYS_linux_nfsservctl
-value|169
 end_define
 
 begin_define
