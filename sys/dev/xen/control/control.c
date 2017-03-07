@@ -459,7 +459,13 @@ argument_list|(
 name|power_suspend_early
 argument_list|)
 expr_stmt|;
+name|xs_lock
+argument_list|()
+expr_stmt|;
 name|stop_all_proc
+argument_list|()
+expr_stmt|;
+name|xs_unlock
 argument_list|()
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
