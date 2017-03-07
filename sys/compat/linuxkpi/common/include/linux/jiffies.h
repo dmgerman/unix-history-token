@@ -66,7 +66,7 @@ name|jiffies_to_msecs
 parameter_list|(
 name|x
 parameter_list|)
-value|(((int64_t)(x)) * 1000 / hz)
+value|(((int64_t)(int)(x)) * 1000 / hz)
 end_define
 
 begin_define
