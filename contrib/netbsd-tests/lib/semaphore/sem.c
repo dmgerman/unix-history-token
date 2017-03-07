@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: sem.c,v 1.10 2012/03/09 14:25:34 joerg Exp $	*/
+comment|/*	$NetBSD: sem.c,v 1.11 2017/01/13 21:30:42 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../h_macros.h"
+file|"h_macros.h"
 end_include
 
 begin_expr_stmt

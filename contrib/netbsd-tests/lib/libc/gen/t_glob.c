@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_glob.c,v 1.3 2013/01/02 11:28:48 martin Exp $	*/
+comment|/*	$NetBSD: t_glob.c,v 1.5 2017/01/14 20:47:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_glob.c,v 1.3 2013/01/02 11:28:48 martin Exp $"
+literal|"$NetBSD: t_glob.c,v 1.5 2017/01/14 20:47:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -75,47 +75,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"h_macros.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|__gl_stat_t
-value|struct stat
-end_define
-
-begin_define
-define|#
-directive|define
-name|_S_IFDIR
-value|S_IFDIR
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"../../../h_macros.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -300,11 +264,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GLOB_STAR
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -747,7 +711,7 @@ name|st
 operator|->
 name|st_mode
 operator||=
-name|_S_IFDIR
+name|S_IFDIR
 expr_stmt|;
 return|return
 literal|0
@@ -1118,11 +1082,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GLOB_STAR
+end_ifdef
 
 begin_expr_stmt
 name|ATF_TC
@@ -1268,9 +1232,9 @@ end_macro
 
 begin_block
 block|{
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
+ifdef|#
+directive|ifdef
+name|GLOB_STAR
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp

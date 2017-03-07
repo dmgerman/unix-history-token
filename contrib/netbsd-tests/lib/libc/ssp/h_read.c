@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: h_read.c,v 1.1 2010/12/27 02:04:19 pgoyette Exp $ */
+comment|/* $NetBSD: h_read.c,v 1.2 2017/01/16 16:35:57 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: h_read.c,v 1.1 2010/12/27 02:04:19 pgoyette Exp $"
+literal|"$NetBSD: h_read.c,v 1.2 2017/01/16 16:35:57 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -33,6 +33,18 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -51,24 +63,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
 end_include
 
 begin_function
@@ -163,62 +157,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-name|int
-name|main
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
-parameter_list|)
-block|{
-name|char
-name|b
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
-name|size_t
-name|len
-init|=
-name|atoi
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|b
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

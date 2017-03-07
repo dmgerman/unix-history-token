@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_socketpair.c,v 1.1 2011/11/05 18:19:02 jruoho Exp $ */
+comment|/* $NetBSD: t_socketpair.c,v 1.2 2017/01/13 20:04:52 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_socketpair.c,v 1.1 2011/11/05 18:19:02 jruoho Exp $"
+literal|"$NetBSD: t_socketpair.c,v 1.2 2017/01/13 20:04:52 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -167,11 +167,9 @@ else|#
 directive|else
 name|ATF_REQUIRE
 argument_list|(
-name|fcntl
+name|closefrom
 argument_list|(
 literal|3
-argument_list|,
-name|F_CLOSEM
 argument_list|)
 operator|!=
 operator|-

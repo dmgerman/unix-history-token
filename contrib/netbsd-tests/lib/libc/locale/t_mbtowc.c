@@ -524,7 +524,6 @@ argument_list|,
 literal|"\244\242"
 argument_list|)
 expr_stmt|;
-comment|/* Moved last as it fails */
 name|h_mbtowc
 argument_list|(
 literal|"zh_CN.GB18030"

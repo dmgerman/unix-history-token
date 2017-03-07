@@ -29,6 +29,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* For itimer*, etc. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -96,23 +117,6 @@ directive|define
 name|NTHREADS
 value|25
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

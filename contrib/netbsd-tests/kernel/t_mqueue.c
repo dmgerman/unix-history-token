@@ -1,22 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_mqueue.c,v 1.5 2017/01/10 22:10:22 christos Exp $ */
+comment|/*	$NetBSD: t_mqueue.c,v 1.6 2017/01/14 20:57:24 christos Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Test for POSIX message queue priority handling.  *  * This file is in the Public Domain.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -28,24 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"freebsd_test_suite/macros.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<atf-c.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
+file|<mqueue.h>
 end_include
 
 begin_include
@@ -69,20 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<mqueue.h>
+file|"freebsd_test_suite/macros.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

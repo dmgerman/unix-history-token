@@ -25,7 +25,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do { \         int ret = (x); \         ATF_REQUIRE_MSG(ret == 0, "%s: %s", #x, strerror(ret)); \     } while (0)
+value|do { \         int _ret = (x); \         ATF_REQUIRE_MSG(_ret == 0, "%s: %s", #x, strerror(_ret)); \     } while (0)
 end_define
 
 begin_define
@@ -38,7 +38,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do { \         int ret = (x); \         ATF_REQUIRE_MSG(ret == (v), "%s: %s", #x, strerror(ret)); \     } while (0)
+value|do { \         int _ret = (x); \         ATF_REQUIRE_MSG(_ret == (v), "%s: %s", #x, strerror(_ret)); \     } while (0)
 end_define
 
 begin_endif

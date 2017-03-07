@@ -79,12 +79,6 @@ parameter_list|)
 value|ATF_REQUIRE_MSG(x, "%s", strerror(errno))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -323,6 +317,9 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|hdestroy1
 argument_list|(
 name|free
@@ -330,13 +327,15 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_endif
+else|#
+directive|else
+name|hdestroy
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
+block|}
+end_block
 
 begin_expr_stmt
 name|ATF_TC
@@ -894,12 +893,6 @@ operator|<=
 name|__FreeBSD_version
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -1163,6 +1156,9 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|hdestroy1_r
 argument_list|(
 operator|&
@@ -1173,6 +1169,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|hdestroy_r
+argument_list|(
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1180,6 +1186,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+literal|1100027
+operator|<=
+name|__FreeBSD_version
+end_if
 
 begin_expr_stmt
 name|ATF_TC
@@ -1462,6 +1481,16 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"behavior doesn't match docs; see bug # 216872"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|e
 operator|.
 name|key
@@ -1840,9 +1869,6 @@ end_macro
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1850,8 +1876,6 @@ argument_list|,
 name|hsearch_basic
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1883,9 +1907,6 @@ operator|&&
 literal|1100027
 operator|<=
 name|__FreeBSD_version
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1893,8 +1914,6 @@ argument_list|,
 name|hsearch_r_basic
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
