@@ -362,7 +362,51 @@ name|ofw_real_mode
 condition|)
 return|return;
 comment|/* 	 * Assume that interrupt are disabled at this point, or 	 * SPRG1-3 could be trashed 	 */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("mtsprg1 %0\n\t"
+literal|"mtsprg2 %1\n\t"
+literal|"mtsprg3 %2\n\t"
+operator|:
+operator|:
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|2
+index|]
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|3
+index|]
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|4
+index|]
+operator|)
+block|)
+function|;
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_asm
 asm|__asm __volatile("mfsprg0 %0\n\t"
+end_asm
+
+begin_expr_stmt
 literal|"mtsprg0 %1\n\t"
 literal|"mtsprg1 %2\n\t"
 literal|"mtsprg2 %3\n\t"
@@ -404,9 +448,17 @@ index|[
 literal|4
 index|]
 operator|)
-block|)
-function|;
-end_function
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 unit|}  static
@@ -423,7 +475,12 @@ name|ofw_real_mode
 condition|)
 return|return;
 comment|/* 	 * Note that SPRG1-3 contents are irrelevant. They are scratch 	 * registers used in the early portion of trap handling when 	 * interrupts are disabled. 	 * 	 * PCPU data cannot be used until this routine is called ! 	 */
+ifndef|#
+directive|ifndef
+name|__powerpc64__
 asm|__asm __volatile("mtsprg0 %0" :: "r"(ofw_sprg0_save));
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1589,9 +1646,11 @@ operator|&=
 operator|~
 name|PSL_SF
 expr_stmt|;
+else|#
+directive|else
+asm|__asm __volatile("mfsprg0 %0" : "=&r"(ofmsr[1]));
 endif|#
 directive|endif
-asm|__asm __volatile("mfsprg0 %0" : "=&r"(ofmsr[1]));
 asm|__asm __volatile("mfsprg1 %0" : "=&r"(ofmsr[2]));
 asm|__asm __volatile("mfsprg2 %0" : "=&r"(ofmsr[3]));
 asm|__asm __volatile("mfsprg3 %0" : "=&r"(ofmsr[4]));
