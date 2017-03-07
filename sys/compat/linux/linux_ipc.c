@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_compat.h"
 end_include
 
@@ -554,6 +560,14 @@ operator|=
 name|bpp
 operator|->
 name|mode
+operator|&
+operator|(
+name|S_IRWXU
+operator||
+name|S_IRWXG
+operator||
+name|S_IRWXO
+operator|)
 expr_stmt|;
 name|lpp
 operator|->
