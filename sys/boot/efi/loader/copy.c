@@ -266,23 +266,6 @@ operator|>=
 name|end
 condition|)
 continue|continue;
-if|if
-condition|(
-name|p
-operator|->
-name|Type
-operator|!=
-name|EfiConventionalMemory
-condition|)
-name|printf
-argument_list|(
-literal|"Warning: wrong EFI memory type: %d\n"
-argument_list|,
-name|p
-operator|->
-name|Type
-argument_list|)
-expr_stmt|;
 name|available_pages
 operator|=
 name|p
@@ -317,6 +300,9 @@ goto|goto
 name|out
 goto|;
 block|}
+name|i
+operator|++
+expr_stmt|;
 for|for
 control|(
 init|;
