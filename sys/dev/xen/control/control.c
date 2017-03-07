@@ -269,6 +269,12 @@ directive|include
 file|<xen/xenbus/xenbusvar.h>
 end_include
 
+begin_decl_stmt
+name|bool
+name|xen_suspend_cancelled
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*--------------------------- Forward Declarations --------------------------*/
 end_comment
@@ -448,9 +454,6 @@ name|cpu_suspend_map
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|suspend_cancelled
-decl_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|power_suspend_early
@@ -675,23 +678,30 @@ expr_stmt|;
 name|xen_hvm_suspend
 argument_list|()
 expr_stmt|;
-name|suspend_cancelled
+name|xen_suspend_cancelled
 operator|=
+operator|!
+operator|!
 name|HYPERVISOR_suspend
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|xen_suspend_cancelled
+condition|)
+block|{
 name|xen_hvm_resume
 argument_list|(
-name|suspend_cancelled
-operator|!=
-literal|0
+name|false
 argument_list|)
 expr_stmt|;
+block|}
 name|intr_resume
 argument_list|(
-name|suspend_cancelled
+name|xen_suspend_cancelled
 operator|!=
 literal|0
 argument_list|)
@@ -700,11 +710,18 @@ name|enable_intr
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Reset grant table info. 	 */
+if|if
+condition|(
+operator|!
+name|xen_suspend_cancelled
+condition|)
+block|{
 name|gnttab_resume
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SMP
