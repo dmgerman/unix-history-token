@@ -9285,6 +9285,10 @@ name|free
 operator|=
 literal|1
 expr_stmt|;
+name|abort
+operator|=
+literal|1
+expr_stmt|;
 name|BUG_ON
 argument_list|(
 operator|!
