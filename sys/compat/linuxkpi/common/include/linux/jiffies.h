@@ -142,6 +142,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|time_is_after_eq_jiffies
+parameter_list|(
+name|a
+parameter_list|)
+value|time_after_eq(a, jiffies)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HZ
 value|hz
 end_define
