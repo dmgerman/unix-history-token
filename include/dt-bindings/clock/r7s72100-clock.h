@@ -94,6 +94,28 @@ value|0
 end_define
 
 begin_comment
+comment|/* MSTP7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R7S72100_CLK_ETHER
+value|4
+end_define
+
+begin_comment
+comment|/* MSTP8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R7S72100_CLK_MMCIF
+value|4
+end_define
+
+begin_comment
 comment|/* MSTP9 */
 end_comment
 
@@ -162,6 +184,24 @@ define|#
 directive|define
 name|R7S72100_CLK_SPI4
 value|3
+end_define
+
+begin_comment
+comment|/* MSTP12 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R7S72100_CLK_SDHI0
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|R7S72100_CLK_SDHI1
+value|2
 end_define
 
 begin_endif

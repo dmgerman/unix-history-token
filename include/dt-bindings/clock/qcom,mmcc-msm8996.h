@@ -1986,6 +1986,13 @@ name|GPU_GX_GDSC
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|MMAGIC_BIMC_GDSC
+value|15
+end_define
+
 begin_endif
 endif|#
 directive|endif

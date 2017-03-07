@@ -330,6 +330,38 @@ name|PMA8084_MPP_L6
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|PM8994_MPP_VPH
+value|0
+end_define
+
+begin_comment
+comment|/* Only supported for MPP_05-MPP_08 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PM8994_MPP_L19
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM8994_MPP_S4
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM8994_MPP_L12
+value|3
+end_define
+
 begin_comment
 comment|/*  * Analog Input - Set the source for analog input.  * To be used with "qcom,amux-route" property  */
 end_comment

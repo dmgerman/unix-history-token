@@ -810,6 +810,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCLK_DDRC
+value|168
+end_define
+
+begin_define
+define|#
+directive|define
 name|DCLK_VOP0
 value|180
 end_define
@@ -840,6 +847,20 @@ define|#
 directive|define
 name|DCLK_M0_PERILP
 value|184
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCLK_VOP0_FRAC
+value|185
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCLK_VOP1_FRAC
+value|186
 end_define
 
 begin_define

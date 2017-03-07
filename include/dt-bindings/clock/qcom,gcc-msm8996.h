@@ -2255,6 +2255,34 @@ name|GCC_QREFS_VBG_CAL_BCR
 value|100
 end_define
 
+begin_define
+define|#
+directive|define
+name|GCC_PCIE_PHY_COM_BCR
+value|101
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCC_PCIE_PHY_COM_NOCSR_BCR
+value|102
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCC_USB3_PHY_BCR
+value|103
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCC_USB3PHY_PHY_BCR
+value|104
+end_define
+
 begin_comment
 comment|/* Indexes for GDSCs */
 end_comment

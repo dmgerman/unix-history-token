@@ -413,6 +413,27 @@ name|PMA8084_GPIO_L6
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|PM8994_GPIO_VPH
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM8994_GPIO_S4
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM8994_GPIO_L12
+value|3
+end_define
+
 begin_comment
 comment|/* To be used with "function" */
 end_comment

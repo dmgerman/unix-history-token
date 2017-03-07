@@ -60,6 +60,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91_PINCTRL_OUTPUT
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91_PINCTRL_OUTPUT_VAL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x& 0x1)<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91_PINCTRL_DEBOUNCE
 value|(1<< 16)
 end_define

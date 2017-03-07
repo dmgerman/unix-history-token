@@ -75,6 +75,31 @@ name|BCM2835_FSEL_ALT3
 value|7
 end_define
 
+begin_comment
+comment|/* brcm,pull property */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCM2835_PUD_OFF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM2835_PUD_DOWN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCM2835_PUD_UP
+value|2
+end_define
+
 begin_endif
 endif|#
 directive|endif

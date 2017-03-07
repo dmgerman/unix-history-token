@@ -293,8 +293,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|HI6220_AO_NR_CLKS
+name|HI6220_RTC0_PCLK
 value|37
+end_define
+
+begin_define
+define|#
+directive|define
+name|HI6220_RTC1_PCLK
+value|38
+end_define
+
+begin_define
+define|#
+directive|define
+name|HI6220_AO_NR_CLKS
+value|39
 end_define
 
 begin_comment

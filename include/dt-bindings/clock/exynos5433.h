@@ -4130,8 +4130,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|FSYS_NR_CLK
+name|CLK_PCIE
 value|115
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSYS_NR_CLK
+value|116
 end_define
 
 begin_comment

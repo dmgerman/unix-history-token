@@ -377,6 +377,20 @@ name|ACLK_CIF0
 value|202
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACLK_CPU
+value|203
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACLK_PERI
+value|204
+end_define
+
 begin_comment
 comment|/* pclk gates */
 end_comment
@@ -591,6 +605,20 @@ name|PCLK_TSADC
 value|349
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCLK_CPU
+value|350
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCLK_PERI
+value|351
+end_define
+
 begin_comment
 comment|/* hclk gates */
 end_comment
@@ -738,8 +766,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|HCLK_CPU
+value|468
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCLK_PERI
+value|469
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLK_NR_CLKS
-value|(HCLK_NANDC0 + 1)
+value|(HCLK_PERI + 1)
 end_define
 
 begin_comment

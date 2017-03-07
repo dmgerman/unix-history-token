@@ -1396,6 +1396,27 @@ name|CLK_MOUT_SW_ACLK300_GSCL
 value|653
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_MCLK_CDREX
+value|654
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_BPLL
+value|655
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_MX_MSPLL_CCORE
+value|656
+end_define
+
 begin_comment
 comment|/* divider clocks */
 end_comment
@@ -1561,6 +1582,48 @@ name|CLK_DOUT_ACLK400_DISP1
 value|790
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLK_DOUT_PCLK_CDREX
+value|791
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DOUT_SCLK_CDREX
+value|792
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DOUT_ACLK_CDREX1
+value|793
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DOUT_CCLK_DREX0
+value|794
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DOUT_CLK2X_PHY0
+value|795
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DOUT_PCLK_CORE_MEM
+value|796
+end_define
+
 begin_comment
 comment|/* must be greater than maximal clock id */
 end_comment
@@ -1569,7 +1632,7 @@ begin_define
 define|#
 directive|define
 name|CLK_NR_CLKS
-value|791
+value|797
 end_define
 
 begin_endif
