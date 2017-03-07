@@ -352,7 +352,7 @@ name|READ_ONCE
 parameter_list|(
 name|x
 parameter_list|)
-value|({			\ 	__typeof(x) __var;		\ 	barrier();			\ 	__var = ACCESS_ONCE(x);		\ 	barrier();			\ 	__var;				\ })
+value|({			\ 	__typeof(x) __var = ({		\ 		barrier();		\ 		ACCESS_ONCE(x);		\ 	});				\ 	barrier();			\ 	__var;				\ })
 end_define
 
 begin_define
