@@ -1775,7 +1775,11 @@ name|ovl_fail_enable_if
 block|,
 comment|/// This candidate was not viable because its address could not be taken.
 name|ovl_fail_addr_not_available
-block|}
+block|,
+comment|/// This inherited constructor is not viable because it would slice the
+comment|/// argument.
+name|ovl_fail_inhctor_slice
+block|,   }
 enum|;
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).
 struct|struct
