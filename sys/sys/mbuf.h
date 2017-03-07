@@ -3135,6 +3135,7 @@ name|struct
 name|uio
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
