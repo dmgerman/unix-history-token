@@ -2077,6 +2077,10 @@ name|MX6SX_PAD_ENET1_TX_CLK__ENET1_TX_CLK
 value|0x0090 0x03D8 0x0000 0x0 0x0
 end_define
 
+begin_comment
+comment|/*  * SION bit is necessary for ENET1_REF_CLK1 (ENET2_REF_CLK2 untested) if it is  * used as clock output of IMX6SX_CLK_ENET_REF (ENET1_TX_CLK) to e.g. supply a  * PHY in RMII mode. This configuration is valid if:  *  - bit 1 in field IMX6SX_GPR1_FEC_CLOCK_PAD_DIR_MASK is set  *  - bit 1 in field IMX6SX_GPR1_FEC_CLOCK_MUX_SEL_MASK unset  * It seems to be a silicon bug that in this configuration ENET1_TX reference  * clock isn't provided automatically.  According to i.MX6SX reference manual  * (IOMUXC_GPR_GPR1 field descriptions: ENET1_CLK_SEL, Rev. 0 from 2/2015) it  * should be the case.  * So this might have unwanted side effects for other hardware units that are  * also connected to that pin and using respective function as input (e.g.  * UART1's DTR handling on MX6SX_PAD_ENET1_TX_CLK__UART1_DTR_B).  */
+end_comment
+
 begin_define
 define|#
 directive|define

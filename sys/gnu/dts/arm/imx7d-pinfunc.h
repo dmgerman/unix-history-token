@@ -218,7 +218,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO04__UART5_CTS_B
+name|MX7D_PAD_GPIO1_IO04__UART5_DCE_CTS
+value|0x0010 0x0040 0x0000 0x3 0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX7D_PAD_GPIO1_IO04__UART5_DTE_RTS
 value|0x0010 0x0040 0x0710 0x3 0x4
 end_define
 
@@ -260,8 +267,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO05__UART5_RTS_B
+name|MX7D_PAD_GPIO1_IO05__UART5_DCE_RTS
 value|0x0014 0x0044 0x0710 0x3 0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX7D_PAD_GPIO1_IO05__UART5_DTE_CTS
+value|0x0014 0x0044 0x0000 0x3 0x0
 end_define
 
 begin_define
@@ -302,8 +316,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO06__UART5_RX_DATA
+name|MX7D_PAD_GPIO1_IO06__UART5_DCE_RX
 value|0x0018 0x0048 0x0714 0x3 0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX7D_PAD_GPIO1_IO06__UART5_DTE_TX
+value|0x0018 0x0048 0x0000 0x3 0x0
 end_define
 
 begin_define
@@ -351,7 +372,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX7D_PAD_GPIO1_IO07__UART5_TX_DATA
+name|MX7D_PAD_GPIO1_IO07__UART5_DCE_TX
+value|0x001C 0x004C 0x0000 0x3 0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX7D_PAD_GPIO1_IO07__UART5_DTE_RX
 value|0x001C 0x004C 0x0714 0x3 0x5
 end_define
 
@@ -4076,7 +4104,7 @@ begin_define
 define|#
 directive|define
 name|MX7D_PAD_UART2_TX_DATA__UART2_DTE_RX
-value|0x0134 0x03A4 0x0000 0x0 0x0
+value|0x0134 0x03A4 0x06FC 0x0 0x3
 end_define
 
 begin_define

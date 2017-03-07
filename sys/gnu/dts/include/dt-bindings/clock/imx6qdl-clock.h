@@ -1838,8 +1838,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMX6QDL_CLK_END
+name|IMX6QDL_CLK_MLB_SEL
 value|259
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX6QDL_CLK_MLB_PODF
+value|260
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX6QDL_CLK_END
+value|261
 end_define
 
 begin_endif

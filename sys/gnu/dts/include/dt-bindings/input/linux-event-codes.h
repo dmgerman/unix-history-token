@@ -4342,7 +4342,7 @@ begin_define
 define|#
 directive|define
 name|KEY_DATA
-value|0x275
+value|0x277
 end_define
 
 begin_define

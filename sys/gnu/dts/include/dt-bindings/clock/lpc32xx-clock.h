@@ -264,6 +264,13 @@ name|LPC32XX_CLK_HCLK_PLL
 value|35
 end_define
 
+begin_define
+define|#
+directive|define
+name|LPC32XX_CLK_PERIPH
+value|36
+end_define
+
 begin_comment
 comment|/* LPC32XX USB clocks */
 end_comment

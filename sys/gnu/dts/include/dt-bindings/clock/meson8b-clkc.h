@@ -116,8 +116,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLK_NR_CLKS
-value|(CLKID_ZERO + 1)
+name|CLKID_MPEG_SEL
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKID_MPEG_DIV
+value|15
 end_define
 
 begin_endif

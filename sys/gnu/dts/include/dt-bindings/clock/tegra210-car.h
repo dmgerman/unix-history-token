@@ -1630,9 +1630,12 @@ begin_comment
 comment|/* 281 */
 end_comment
 
-begin_comment
-comment|/* 282 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_SOR1_SRC
+value|282
+end_define
 
 begin_comment
 comment|/* 283 */

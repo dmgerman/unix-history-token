@@ -16,6 +16,24 @@ name|_DT_BINDINGS_CLK_STIH407
 end_define
 
 begin_comment
+comment|/* CLOCKGEN A0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLK_IC_LMI0
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_IC_LMI1
+value|1
+end_define
+
+begin_comment
 comment|/* CLOCKGEN C0 */
 end_comment
 
