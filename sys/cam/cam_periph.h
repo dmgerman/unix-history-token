@@ -82,6 +82,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|periphdriver_unregister
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|periphdriver_init
 parameter_list|(
@@ -107,8 +117,12 @@ parameter_list|,
 name|driver
 parameter_list|)
 define|\
-value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		switch (type) { \ 		case MOD_LOAD: \ 			periphdriver_register(data); \ 			break; \ 		case MOD_UNLOAD: \ 			printf(#name " module unload - not possible for this module type\n"); \ 			return EINVAL; \ 		default: \ 			return EOPNOTSUPP; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)&driver \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_DRIVERS, SI_ORDER_ANY); \ 	MODULE_DEPEND(name, cam, 1, 1, 1)
+value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		switch (type) { \ 		case MOD_LOAD: \ 			periphdriver_register(data); \ 			break; \ 		case MOD_UNLOAD: \ 			return (periphdriver_unregister(data)); \ 		default: \ 			return EOPNOTSUPP; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)&driver \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_DRIVERS, SI_ORDER_ANY); \ 	MODULE_DEPEND(name, cam, 1, 1, 1)
 end_define
+
+begin_comment
+comment|/*  * Callback informing the peripheral driver it can perform it's  * initialization since the XPT is now fully initialized.  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -123,22 +137,27 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/* 				     * Callback informing the peripheral driver 				     * it can perform it's initialization since 				     * the XPT is now fully initialized. 				     */
+comment|/*  * Callback requesting the peripheral driver to remove its instances  * and shutdown, if possible.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|periph_init_t
-modifier|*
-name|periph_init_func_t
-typedef|;
+name|int
+function_decl|(
+name|periph_deinit_t
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_struct
 struct|struct
 name|periph_driver
 block|{
-name|periph_init_func_t
+name|periph_init_t
+modifier|*
 name|init
 decl_stmt|;
 name|char
@@ -162,6 +181,10 @@ define|#
 directive|define
 name|CAM_PERIPH_DRV_EARLY
 value|0x01
+name|periph_deinit_t
+modifier|*
+name|deinit
+decl_stmt|;
 block|}
 struct|;
 end_struct
