@@ -4478,11 +4478,11 @@ decl_stmt|;
 name|KASSERT
 argument_list|(
 name|len
-operator|>
+operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"%s: len is %d but it is supposed to be +ve"
+literal|"%s: len is %d but it is supposed to be>= 0"
 operator|,
 name|__func__
 operator|,
