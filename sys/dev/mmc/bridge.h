@@ -270,6 +270,24 @@ name|mmc_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|MMC_VERSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMC_DECLARE_BRIDGE
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|DRIVER_MODULE(mmc, name, mmc_driver, mmc_devclass, NULL, NULL);	\     MODULE_DEPEND(name, mmc, MMC_VERSION, MMC_VERSION, MMC_VERSION);
+end_define
+
 begin_endif
 endif|#
 directive|endif
