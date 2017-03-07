@@ -652,14 +652,24 @@ name|sadb_x_policy_dir
 decl_stmt|;
 comment|/* direction, see ipsec.h */
 name|u_int8_t
-name|sadb_x_policy_reserved
+name|sadb_x_policy_scope
 decl_stmt|;
+comment|/* scope, see ipsec.h */
 name|u_int32_t
 name|sadb_x_policy_id
 decl_stmt|;
 name|u_int32_t
 name|sadb_x_policy_priority
 decl_stmt|;
+define|#
+directive|define
+name|sadb_x_policy_reserved
+value|sadb_x_policy_scope
+comment|/* Policy with ifnet scope uses priority field to store ifindex */
+define|#
+directive|define
+name|sadb_x_policy_ifindex
+value|sadb_x_policy_priority
 block|}
 struct|;
 end_struct

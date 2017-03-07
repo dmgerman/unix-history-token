@@ -42,13 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netipsec/ipsec.h>
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<net/pfkeyv2.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netipsec/ipsec.h>
 end_include
 
 begin_include
@@ -706,6 +712,42 @@ literal|1
 block|,
 name|NULL
 block|, }
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|val2str
+name|str_sp_scope
+index|[]
+init|=
+block|{
+block|{
+name|IPSEC_POLICYSCOPE_GLOBAL
+block|,
+literal|"global"
+block|}
+block|,
+block|{
+name|IPSEC_POLICYSCOPE_IFNET
+block|,
+literal|"ifnet"
+block|}
+block|,
+block|{
+name|IPSEC_POLICYSCOPE_PCB
+block|,
+literal|"pcb"
+block|}
+block|,
+block|{
+operator|-
+literal|1
+block|,
+name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1837,13 +1879,11 @@ begin_function
 name|void
 name|pfkey_spdump
 parameter_list|(
-name|m
-parameter_list|)
 name|struct
 name|sadb_msg
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|pbuf
@@ -2355,7 +2395,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\tspid=%ld seq=%ld pid=%ld\n"
+literal|"\tspid=%ld seq=%ld pid=%ld scope="
 argument_list|,
 operator|(
 name|u_long
@@ -2377,6 +2417,46 @@ operator|)
 name|m
 operator|->
 name|sadb_msg_pid
+argument_list|)
+expr_stmt|;
+name|GETMSGV2S
+argument_list|(
+name|str_sp_scope
+argument_list|,
+name|m_xpl
+operator|->
+name|sadb_x_policy_scope
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m_xpl
+operator|->
+name|sadb_x_policy_scope
+operator|==
+name|IPSEC_POLICYSCOPE_IFNET
+operator|&&
+name|if_indextoname
+argument_list|(
+name|m_xpl
+operator|->
+name|sadb_x_policy_ifindex
+argument_list|,
+name|pbuf
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"ifname=%s"
+argument_list|,
+name|pbuf
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* XXX TEST */

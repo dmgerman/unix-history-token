@@ -3388,6 +3388,11 @@ name|int
 name|ipsec_newpolicies
 parameter_list|(
 name|struct
+name|ipsec_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
 name|secpolicy
 modifier|*
 name|sp
@@ -3524,6 +3529,20 @@ operator|->
 name|created
 operator|=
 name|time_second
+expr_stmt|;
+comment|/* Use priority field to store if_index */
+name|sp
+index|[
+name|i
+index|]
+operator|->
+name|priority
+operator|=
+name|sc
+operator|->
+name|ifp
+operator|->
+name|if_index
 expr_stmt|;
 name|isr
 operator|->
@@ -4562,6 +4581,8 @@ if|if
 condition|(
 name|ipsec_newpolicies
 argument_list|(
+name|sc
+argument_list|,
 name|sp
 argument_list|,
 name|src

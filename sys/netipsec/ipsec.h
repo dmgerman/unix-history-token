@@ -543,6 +543,54 @@ comment|/* only for privileged socket. */
 end_comment
 
 begin_comment
+comment|/* Policy scope */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPSEC_POLICYSCOPE_ANY
+value|0x00
+end_define
+
+begin_comment
+comment|/* unspecified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPSEC_POLICYSCOPE_GLOBAL
+value|0x01
+end_define
+
+begin_comment
+comment|/* global scope */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPSEC_POLICYSCOPE_IFNET
+value|0x02
+end_define
+
+begin_comment
+comment|/* if_ipsec(4) scope */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPSEC_POLICYSCOPE_PCB
+value|0x04
+end_define
+
+begin_comment
+comment|/* PCB scope */
+end_comment
+
+begin_comment
 comment|/* Security protocol level */
 end_comment
 
