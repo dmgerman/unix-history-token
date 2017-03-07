@@ -445,7 +445,7 @@ specifier|static
 name|char
 name|name
 index|[
-name|MAXNAMLEN
+name|UFS_MAXNAMLEN
 operator|+
 literal|1
 index|]
@@ -523,7 +523,7 @@ operator|-
 name|path
 operator|)
 operator|>
-name|MAXNAMLEN
+name|UFS_MAXNAMLEN
 condition|)
 return|return
 literal|0
