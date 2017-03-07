@@ -634,6 +634,15 @@ operator|->
 name|adminq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ctrlr
+operator|->
+name|ioq
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -660,6 +669,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|nvme_notify_fail_consumers
 argument_list|(
 name|ctrlr
@@ -1656,7 +1666,7 @@ name|nvme_printf
 argument_list|(
 name|ctrlr
 argument_list|,
-literal|"nvme_set_num_queues failed!\n"
+literal|"nvme_ctrlr_set_num_qpairs failed!\n"
 argument_list|)
 expr_stmt|;
 return|return
