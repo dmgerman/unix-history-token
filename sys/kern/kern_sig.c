@@ -14009,7 +14009,7 @@ directive|endif
 break|break;
 comment|/* == ignore */
 block|}
-comment|/* 			 * If there is a pending stop signal to process 			 * with default action, stop here, 			 * then clear the signal.  However, 			 * if process is member of an orphaned 			 * process group, ignore tty stop signals. 			 */
+comment|/* 			 * If there is a pending stop signal to process with 			 * default action, stop here, then clear the signal. 			 * Traced or exiting processes should ignore stops. 			 * Additionally, a member of an orphaned process group 			 * should ignore tty stops. 			 */
 if|if
 condition|(
 name|prop
@@ -14027,6 +14027,8 @@ operator|(
 name|P_TRACED
 operator||
 name|P_WEXIT
+operator||
+name|P_SINGLE_EXIT
 operator|)
 operator|||
 operator|(
