@@ -2562,6 +2562,25 @@ name|semop_args
 comment|/* { 	int	semid; 	struct	sembuf *sops; 	int		nsops; 	} */
 name|bsd_args
 decl_stmt|;
+if|if
+condition|(
+name|args
+operator|->
+name|nsops
+operator|<
+literal|1
+operator|||
+name|args
+operator|->
+name|semid
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|bsd_args
 operator|.
 name|semid
