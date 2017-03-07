@@ -1922,6 +1922,10 @@ condition|(
 name|termwidth
 operator|<
 literal|131
+operator|&&
+name|termwidth
+operator|!=
+name|UNLIMITED
 condition|)
 name|termwidth
 operator|=
