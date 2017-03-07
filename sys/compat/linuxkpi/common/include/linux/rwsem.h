@@ -226,7 +226,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|struct rw_semaphore name;						\ static void name##_rwsem_init(void *arg)				\ {									\ 	linux_init_rwsem(&name, rwsem_name(#name))			\ }									\ SYSINIT(name, SI_SUB_LOCKS, SI_ORDER_SECOND, name##_rwsem_init, NULL)
+value|struct rw_semaphore name;						\ static void name##_rwsem_init(void *arg)				\ {									\ 	linux_init_rwsem(&name, rwsem_name(#name));			\ }									\ SYSINIT(name, SI_SUB_LOCK, SI_ORDER_SECOND, name##_rwsem_init, NULL)
 end_define
 
 begin_function
