@@ -2333,6 +2333,22 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* 	 * If the size of is zero, chances are this isn't a valid 	 * namespace (eg one that's not been configured yet). The 	 * standard says the entire id will be zeros, so this is a 	 * cheap way to test for that. 	 */
+if|if
+condition|(
+name|ns
+operator|->
+name|data
+operator|.
+name|nsze
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* 	 * Note: format is a 0-based value, so> is appropriate here, 	 *  not>=. 	 */
 if|if
 condition|(
@@ -2374,7 +2390,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
