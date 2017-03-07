@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_timer_create.c,v 1.4 2012/03/18 07:00:52 jruoho Exp $ */
+comment|/*	$NetBSD: t_timer_create.c,v 1.5 2017/01/16 16:32:13 christos Exp $ */
 end_comment
 
 begin_comment
@@ -68,9 +68,6 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|timer_signal_handler
 parameter_list|(
 name|int
@@ -85,23 +82,6 @@ modifier|*
 name|osi
 name|__unused
 parameter_list|)
-else|#
-directive|else
-function|timer_signal_handler
-parameter_list|(
-name|int
-name|signo
-parameter_list|,
-name|siginfo_t
-modifier|*
-name|si
-parameter_list|,
-name|void
-modifier|*
-name|osi
-parameter_list|)
-endif|#
-directive|endif
 block|{
 name|timer_t
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_ptrace.c,v 1.17 2016/11/13 22:59:31 kamil Exp $	*/
+comment|/*	$NetBSD: t_ptrace.c,v 1.18 2017/01/13 21:30:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_ptrace.c,v 1.17 2016/11/13 22:59:31 kamil Exp $"
+literal|"$NetBSD: t_ptrace.c,v 1.18 2017/01/13 21:30:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h_macros.h"
+file|"h_macros.h"
 end_include
 
 begin_comment
