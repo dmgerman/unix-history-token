@@ -5697,8 +5697,7 @@ operator|&
 name|NETRXF_data_validated
 condition|)
 block|{
-comment|/* Tell the stack the checksums are okay */
-comment|/* 				 * XXX this isn't necessarily the case - need to add 				 * check 				 */
+comment|/* 				 * According to mbuf(9) the correct way to tell 				 * the stack that the checksum of an inbound 				 * packet is correct, without it actually being 				 * present (because the underlying interface 				 * doesn't provide it), is to set the 				 * CSUM_DATA_VALID and CSUM_PSEUDO_HDR flags, 				 * and the csum_data field to 0xffff. 				 */
 name|m
 operator|->
 name|m_pkthdr
@@ -5706,10 +5705,6 @@ operator|.
 name|csum_flags
 operator||=
 operator|(
-name|CSUM_IP_CHECKED
-operator||
-name|CSUM_IP_VALID
-operator||
 name|CSUM_DATA_VALID
 operator||
 name|CSUM_PSEUDO_HDR
