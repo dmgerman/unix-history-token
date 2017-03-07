@@ -1603,7 +1603,7 @@ name|bi
 operator|->
 name|brand
 operator|||
-name|strncmp
+name|strcmp
 argument_list|(
 operator|(
 specifier|const
@@ -1621,13 +1621,6 @@ argument_list|,
 name|bi
 operator|->
 name|compat_3_brand
-argument_list|,
-name|strlen
-argument_list|(
-name|bi
-operator|->
-name|compat_3_brand
-argument_list|)
 argument_list|)
 operator|==
 literal|0
