@@ -613,20 +613,6 @@ end_function
 begin_define
 define|#
 directive|define
-name|kmalloc_node
-parameter_list|(
-name|chunk
-parameter_list|,
-name|mask
-parameter_list|,
-name|node
-parameter_list|)
-value|kmalloc(chunk, mask)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SetPageReserved
 parameter_list|(
 name|page
