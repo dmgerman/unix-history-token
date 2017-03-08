@@ -1439,17 +1439,8 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* LINTED const cast */
 name|m_copydata
 argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|m
 argument_list|,
 literal|0
