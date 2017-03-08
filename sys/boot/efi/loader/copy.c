@@ -303,6 +303,15 @@ block|}
 name|i
 operator|++
 expr_stmt|;
+name|p
+operator|=
+name|NextMemoryDescriptor
+argument_list|(
+name|p
+argument_list|,
+name|dsz
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
