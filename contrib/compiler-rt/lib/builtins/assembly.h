@@ -383,6 +383,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|__ARM_ARCH_ISA_THUMB
+end_undef
+
+begin_define
+define|#
+directive|define
+name|__ARM_ARCH_ISA_THUMB
+value|0
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
