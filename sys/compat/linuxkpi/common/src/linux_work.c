@@ -145,7 +145,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|const
 name|uint8_t
 name|linux_update_state
 parameter_list|(
@@ -208,7 +207,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|const
 name|bool
 name|linux_work_exec_unblock
 parameter_list|(
