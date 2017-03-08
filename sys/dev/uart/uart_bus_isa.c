@@ -741,6 +741,13 @@ block|}
 block|,
 comment|/* WACF004 - Wacom Tablet PC Screen*/
 block|{
+literal|0x0ef0235c
+block|,
+name|NULL
+block|}
+block|,
+comment|/* WACF004 - Wacom Tablet PC Screen*/
+block|{
 literal|0x0300695c
 block|,
 name|NULL

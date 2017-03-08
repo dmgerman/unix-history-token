@@ -264,6 +264,13 @@ block|}
 block|,
 comment|/* WACF004 */
 block|{
+literal|0x0ef0235c
+block|,
+literal|"Wacom Tablet PC Screen 00e"
+block|}
+block|,
+comment|/* WACF00e */
+block|{
 literal|0xe502aa1a
 block|,
 literal|"Wacom Tablet at FuS Lifebook T"
