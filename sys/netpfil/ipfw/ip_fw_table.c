@@ -1763,7 +1763,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* Sigle add/delete, use on-stack buffer */
+comment|/* Single add/delete, use on-stack buffer */
 name|memset
 argument_list|(
 operator|*
