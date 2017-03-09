@@ -10213,7 +10213,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|INVARIANT_SUPPORT
 end_ifdef
 
 begin_function

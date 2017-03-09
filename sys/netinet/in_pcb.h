@@ -1218,7 +1218,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|INVARIANT_SUPPORT
 end_ifdef
 
 begin_function_decl
@@ -1248,35 +1248,25 @@ else|#
 directive|else
 end_else
 
-begin_function
-specifier|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|inp_lock_assert
 parameter_list|(
-name|struct
-name|inpcb
-modifier|*
 name|inp
-name|__unused
 parameter_list|)
-block|{ }
-end_function
+value|do {} while (0)
+end_define
 
-begin_function
-specifier|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|inp_unlock_assert
 parameter_list|(
-name|struct
-name|inpcb
-modifier|*
 name|inp
-name|__unused
 parameter_list|)
-block|{ }
-end_function
+value|do {} while (0)
+end_define
 
 begin_endif
 endif|#
