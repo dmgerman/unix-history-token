@@ -102,7 +102,7 @@ file|"pxe.h"
 end_include
 
 begin_comment
-comment|/*  * Allocate the PXE buffers statically instead of sticking grimy fingers into  * BTX's private data area.  The scratch buffer is used to send information to  * the PXE BIOS, and the data buffer is used to receive data from the PXE BIOS.  */
+comment|/*  * Allocate the PXE buffers statically instead of sticking grimy fingers into  * BTX's private data area. The scratch buffer is used to send information to  * the PXE BIOS, and the data buffer is used to receive data from the PXE BIOS.  */
 end_comment
 
 begin_define
@@ -588,7 +588,7 @@ name|pxe_ifs
 index|[]
 init|=
 block|{
-comment|/*      dif_unit        dif_nsel        dif_stats       dif_private     */
+comment|/*	dif_unit        dif_nsel        dif_stats       dif_private     */
 block|{
 literal|0
 block|,
@@ -693,7 +693,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This function is called by the loader to enable PXE support if we  * are booted by PXE.  The passed in pointer is a pointer to the  * PXENV+ structure.  */
+comment|/*  * This function is called by the loader to enable PXE support if we  * are booted by PXE. The passed in pointer is a pointer to the PXENV+  * structure.  */
 end_comment
 
 begin_function
@@ -744,7 +744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * return true if pxe structures are found/initialized,  * also figures out our IP information via the pxe cached info struct   */
+comment|/*  * return true if pxe structures are found/initialized,  * also figures out our IP information via the pxe cached info struct  */
 end_comment
 
 begin_function
@@ -780,7 +780,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/*  look for "PXENV+" */
+comment|/* look for "PXENV+" */
 if|if
 condition|(
 name|bcmp
@@ -839,7 +839,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*  	 * do byte checksum: 	 * add up each byte in the structure, the total should be 0 	 */
+comment|/* 	 * do byte checksum: 	 * add up each byte in the structure, the total should be 0 	 */
 name|checksum
 operator|=
 literal|0
@@ -1306,7 +1306,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Do a bootp/dhcp request to find out where our 		 * NFS/TFTP server is.  Even if we dont get back 		 * the proper information, fall back to the server 		 * which brought us to life and a default rootpath. 		 */
+comment|/* 			 * Do a bootp/dhcp request to find out where our 			 * NFS/TFTP server is. Even if we dont get back 			 * the proper information, fall back to the server 			 * which brought us to life and a default rootpath. 			 */
 name|bootp
 argument_list|(
 name|pxe_sock
@@ -3334,7 +3334,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX: This happens a lot.  It shouldn't. */
+comment|/* XXX: This happens a lot. It shouldn't. */
 if|if
 condition|(
 name|udpwrite_p
@@ -3489,7 +3489,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX: This happens a lot.  It shouldn't. */
+comment|/* XXX: This happens a lot. It shouldn't. */
 if|if
 condition|(
 name|udpread_p
