@@ -25596,6 +25596,22 @@ name|i
 condition|)
 block|{
 case|case
+name|PIM_ATA_EXT
+case|:
+name|str
+operator|=
+literal|"can understand ata_ext requests"
+expr_stmt|;
+break|break;
+case|case
+name|PIM_EXTLUNS
+case|:
+name|str
+operator|=
+literal|"64bit extended LUNs supported"
+expr_stmt|;
+break|break;
+case|case
 name|PIM_SCANHILO
 case|:
 name|str
@@ -25642,6 +25658,22 @@ case|:
 name|str
 operator|=
 literal|"scan bus sequentially"
+expr_stmt|;
+break|break;
+case|case
+name|PIM_UNMAPPED
+case|:
+name|str
+operator|=
+literal|"unmapped I/O supported"
+expr_stmt|;
+break|break;
+case|case
+name|PIM_NOSCAN
+case|:
+name|str
+operator|=
+literal|"does its own scanning"
 expr_stmt|;
 break|break;
 default|default:
