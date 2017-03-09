@@ -210,7 +210,7 @@ parameter_list|,
 name|fn
 parameter_list|)
 define|\
-value|struct work_struct name = { .func = (fn) }
+value|struct work_struct name;					\ 	static void name##_init(void *arg)				\ 	{								\ 		INIT_WORK(&name, fn);					\ 	}								\ 	SYSINIT(name, SI_SUB_LOCK, SI_ORDER_SECOND, name##_init, NULL)
 end_define
 
 begin_struct
