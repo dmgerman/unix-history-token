@@ -26,18 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/specialreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stand.h>
 end_include
 
@@ -78,6 +66,18 @@ argument_list|(
 name|__amd64__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/specialreg.h>
+end_include
 
 begin_comment
 comment|/*  * The code is excerpted from sys/x86/x86/identcpu.c: identify_cpu(),  * identify_hypervisor(), and dev/hyperv/vmbus/hyperv.c: hyperv_identify().  */
