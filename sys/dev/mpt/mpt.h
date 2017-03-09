@@ -2215,6 +2215,9 @@ decl_stmt|;
 name|uint64_t
 name|wwpn
 decl_stmt|;
+name|uint32_t
+name|portid
+decl_stmt|;
 block|}
 name|fc
 struct|;
