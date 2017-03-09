@@ -245,6 +245,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<capsicum_helpers.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -4291,6 +4297,9 @@ name|false
 expr_stmt|;
 endif|#
 directive|endif
+name|caph_cache_catpages
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Here we enter capability mode. Further down access to global 	 * namespaces (e.g filesystem) is restricted (see capsicum(4)). 	 * We must connect(2) our socket before this point. 	 */
 if|if
 condition|(
