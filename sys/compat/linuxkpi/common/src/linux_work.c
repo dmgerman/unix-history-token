@@ -2288,9 +2288,9 @@ name|SYSINIT
 argument_list|(
 name|linux_work_init
 argument_list|,
-name|SI_SUB_LOCK
+name|SI_SUB_INIT_IF
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_THIRD
 argument_list|,
 name|linux_work_init
 argument_list|,
@@ -2344,9 +2344,9 @@ name|SYSUNINIT
 argument_list|(
 name|linux_work_uninit
 argument_list|,
-name|SI_SUB_LOCK
+name|SI_SUB_INIT_IF
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_THIRD
 argument_list|,
 name|linux_work_uninit
 argument_list|,
