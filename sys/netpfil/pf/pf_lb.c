@@ -3352,6 +3352,7 @@ name|uma_zfree
 argument_list|(
 name|V_pf_state_key_z
 argument_list|,
+operator|*
 name|skp
 argument_list|)
 expr_stmt|;
