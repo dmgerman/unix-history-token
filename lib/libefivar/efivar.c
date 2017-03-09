@@ -68,13 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"efivar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"libefivar_int.h"
+file|"efichar.h"
 end_include
 
 begin_decl_stmt
@@ -799,7 +793,7 @@ argument_list|)
 expr_stmt|;
 name|rv
 operator|=
-name|libefi_utf8_to_ucs2
+name|utf8_to_ucs2
 argument_list|(
 name|name
 argument_list|,
@@ -1095,7 +1089,7 @@ else|else
 block|{
 name|rv
 operator|=
-name|libefi_utf8_to_ucs2
+name|utf8_to_ucs2
 argument_list|(
 operator|*
 name|name
@@ -1230,7 +1224,7 @@ expr_stmt|;
 comment|/* EFI doesn't NUL terminate */
 name|rv
 operator|=
-name|libefi_ucs2_to_utf8
+name|ucs2_to_utf8
 argument_list|(
 name|var
 operator|.
@@ -1647,7 +1641,7 @@ argument_list|)
 expr_stmt|;
 name|rv
 operator|=
-name|libefi_utf8_to_ucs2
+name|utf8_to_ucs2
 argument_list|(
 name|name
 argument_list|,

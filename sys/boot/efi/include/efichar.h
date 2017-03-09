@@ -6,18 +6,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LIBEFI_INT_H_
+name|_BOOT_EFI_EFICHAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LIBEFI_INT_H_
+name|_BOOT_EFI_EFICHAR_H_
 end_define
 
 begin_function_decl
 name|int
-name|libefi_ucs2_to_utf8
+name|ucs2_to_utf8
 parameter_list|(
 specifier|const
 name|efi_char
@@ -32,7 +32,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libefi_utf8_to_ucs2
+name|utf8_to_ucs2
 parameter_list|(
 specifier|const
 name|char
@@ -54,7 +54,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LIBEFI_INT_H_ */
+comment|/* _BOOT_EFI_EFICHAR_H_ */
 end_comment
 
 end_unit

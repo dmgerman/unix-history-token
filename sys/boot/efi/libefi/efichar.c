@@ -68,13 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libefivar_int.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|"efichar.h"
 end_include
 
 begin_comment
@@ -150,7 +144,7 @@ end_function
 
 begin_function
 name|int
-name|libefi_ucs2_to_utf8
+name|ucs2_to_utf8
 parameter_list|(
 specifier|const
 name|efi_char
@@ -452,7 +446,7 @@ end_function
 
 begin_function
 name|int
-name|libefi_utf8_to_ucs2
+name|utf8_to_ucs2
 parameter_list|(
 specifier|const
 name|char
