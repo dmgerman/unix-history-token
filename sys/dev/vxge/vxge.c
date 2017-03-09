@@ -10145,9 +10145,9 @@ name|VXGE_DEFAULT_TTI_RTIMER_VAL
 expr_stmt|;
 name|vpath
 operator|->
-name|tti_rtimer_val
+name|rti_rtimer_val
 operator|=
-name|VXGE_DEFAULT_TTI_RTIMER_VAL
+name|VXGE_DEFAULT_RTI_RTIMER_VAL
 expr_stmt|;
 name|vpath
 operator|->
