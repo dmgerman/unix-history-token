@@ -536,11 +536,6 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|INVARIANT_SUPPORT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|LOCK_PROFILING
 argument_list|)
 operator|||
