@@ -4308,9 +4308,12 @@ begin_comment
 comment|/* leap smear mechanism */
 end_comment
 
-begin_comment
-comment|/* #undef LEAP_SMEAR */
-end_comment
+begin_define
+define|#
+directive|define
+name|LEAP_SMEAR
+value|1
+end_define
 
 begin_comment
 comment|/* Define to any value to include libseccomp sandboxing. */
