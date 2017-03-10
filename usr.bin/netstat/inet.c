@@ -2393,7 +2393,7 @@ expr_stmt|;
 else|else
 name|xo_emit
 argument_list|(
-literal|"{q:adddress/%*lx} "
+literal|"{q:address/%*lx} "
 argument_list|,
 literal|2
 operator|*
