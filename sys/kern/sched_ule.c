@@ -7418,13 +7418,19 @@ name|t
 init|=
 name|ticks
 decl_stmt|;
+comment|/* 	 * The signed difference may be negative if the thread hasn't run for 	 * over half of the ticks rollover period. 	 */
 if|if
 condition|(
+call|(
+name|u_int
+call|)
+argument_list|(
 name|t
 operator|-
 name|ts
 operator|->
 name|ts_ltick
+argument_list|)
 operator|>=
 name|SCHED_TICK_TARG
 condition|)
