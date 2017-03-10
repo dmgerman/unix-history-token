@@ -1586,8 +1586,14 @@ name|ctype
 operator|&
 name|_ISCNTRL
 operator|)
+operator|&&
+operator|(
+name|ctn
+operator|->
+name|ctype
 operator|&
 name|_ISPRINT
+operator|)
 condition|)
 name|conflict
 operator|++
