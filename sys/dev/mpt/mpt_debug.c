@@ -2569,14 +2569,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tLUN:              0x%0x\n"
+literal|"\tLUN:              0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|be64dec
+argument_list|(
 name|msg
 operator|->
 name|LUN
-index|[
-literal|1
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2805,14 +2808,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tLun             0x%02x\n"
+literal|"\tLun             0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|be64dec
+argument_list|(
 name|msg
 operator|->
 name|LUN
-index|[
-literal|1
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2895,14 +2901,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tLun           0x%02x\n"
+literal|"\tLun           0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|be64dec
+argument_list|(
 name|msg
 operator|->
 name|LUN
-index|[
-literal|1
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2995,14 +3004,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tLun           0x%02x\n"
+literal|"\tLun           0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|be64dec
+argument_list|(
 name|msg
 operator|->
 name|LUN
-index|[
-literal|1
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|x
