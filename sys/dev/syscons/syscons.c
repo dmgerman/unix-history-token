@@ -1877,6 +1877,9 @@ name|scr_stat
 name|fake_main_console
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 operator|.
 name|scr
 operator|.
@@ -1884,6 +1887,8 @@ name|vtb_buffer
 operator|=
 literal|0xb8000
 block|,
+endif|#
+directive|endif
 operator|.
 name|xsize
 operator|=
@@ -1934,6 +1939,9 @@ name|int
 name|c
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__sparc64__
 name|u_short
 modifier|*
 name|scrptr
@@ -2178,6 +2186,9 @@ operator|!=
 literal|0
 condition|)
 do|;
+endif|#
+directive|endif
+comment|/* !__sparc64__ */
 block|}
 end_function
 
