@@ -42,9 +42,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
-name|the_boot_info
+name|parser_output
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ end_decl_stmt
 
 begin_function
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
 name|dt_from_source
 parameter_list|(
@@ -66,7 +66,7 @@ modifier|*
 name|fname
 parameter_list|)
 block|{
-name|the_boot_info
+name|parser_output
 operator|=
 name|NULL
 expr_stmt|;
@@ -113,7 +113,7 @@ literal|"Syntax error parsing input tree\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|the_boot_info
+name|parser_output
 return|;
 block|}
 end_function
@@ -439,8 +439,12 @@ operator|(
 name|m
 operator|->
 name|offset
-operator|<
+operator|<=
+operator|(
 name|i
+operator|+
+literal|1
+operator|)
 operator|)
 condition|)
 block|{
@@ -879,9 +883,15 @@ name|f
 argument_list|,
 literal|"%02hhx"
 argument_list|,
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 operator|*
 name|bp
 operator|++
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1426,9 +1436,9 @@ modifier|*
 name|f
 parameter_list|,
 name|struct
-name|boot_info
+name|dt_info
 modifier|*
-name|bi
+name|dti
 parameter_list|)
 block|{
 name|struct
@@ -1447,7 +1457,7 @@ for|for
 control|(
 name|re
 operator|=
-name|bi
+name|dti
 operator|->
 name|reservelist
 init|;
@@ -1516,7 +1526,7 @@ name|write_tree_source_node
 argument_list|(
 name|f
 argument_list|,
-name|bi
+name|dti
 operator|->
 name|dt
 argument_list|,

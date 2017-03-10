@@ -51,7 +51,7 @@ parameter_list|(
 name|fdt
 parameter_list|)
 define|\
-value|{ \ 		int err; \ 		if ((err = fdt_check_header(fdt)) != 0) \ 			return err; \ 	}
+value|{ \ 		int __err; \ 		if ((__err = fdt_check_header(fdt)) != 0) \ 			return __err; \ 	}
 end_define
 
 begin_function_decl

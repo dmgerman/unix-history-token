@@ -699,13 +699,6 @@ argument_list|(
 name|s2
 argument_list|)
 decl_stmt|;
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|s2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|strncmp

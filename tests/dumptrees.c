@@ -88,6 +88,11 @@ name|TREE
 argument_list|(
 name|bad_prop_char
 argument_list|)
+block|,
+name|TREE
+argument_list|(
+name|ovf_size_strings
+argument_list|)
 block|, }
 struct|;
 end_struct

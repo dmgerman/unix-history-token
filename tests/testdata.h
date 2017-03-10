@@ -122,6 +122,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|TEST_STRING_4_PARTIAL
+value|"foobar"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEST_STRING_4_RESULT
+value|"testfoobar"
+end_define
+
+begin_define
+define|#
+directive|define
 name|TEST_CHAR1
 value|'\r'
 end_define
@@ -197,6 +211,14 @@ specifier|extern
 name|struct
 name|fdt_header
 name|_bad_prop_char
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fdt_header
+name|_ovf_size_strings
 decl_stmt|;
 end_decl_stmt
 
