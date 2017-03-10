@@ -143,18 +143,6 @@ end_include
 
 begin_decl_stmt
 name|int
-name|cpu_deepest_sleep
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Deepest Cx state available. */
-end_comment
-
-begin_decl_stmt
-name|int
 name|cpu_disable_c2_sleep
 init|=
 literal|0

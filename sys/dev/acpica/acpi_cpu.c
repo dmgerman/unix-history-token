@@ -3263,10 +3263,6 @@ operator|->
 name|cpu_cx_count
 operator|++
 expr_stmt|;
-name|cpu_deepest_sleep
-operator|=
-literal|1
-expr_stmt|;
 comment|/*       * The spec says P_BLK must be 6 bytes long.  However, some systems      * use it to indicate a fractional set of features present so we      * take 5 as C2.  Some may also have a value of 7 to indicate      * another C3 but most use _CST for this (as required) and having      * "only" C1-C3 is not a hardship.      */
 if|if
 condition|(
@@ -3381,10 +3377,6 @@ operator|->
 name|cpu_cx_count
 operator|++
 expr_stmt|;
-name|cpu_deepest_sleep
-operator|=
-literal|2
-expr_stmt|;
 block|}
 block|}
 if|if
@@ -3486,10 +3478,6 @@ name|sc
 operator|->
 name|cpu_cx_count
 operator|++
-expr_stmt|;
-name|cpu_deepest_sleep
-operator|=
-literal|3
 expr_stmt|;
 block|}
 block|}
@@ -3898,10 +3886,6 @@ operator|->
 name|cpu_cx_count
 operator|++
 expr_stmt|;
-name|cpu_deepest_sleep
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Set up all valid states. */
 for|for
 control|(
@@ -4234,16 +4218,6 @@ name|sc
 operator|->
 name|cpu_cx_count
 expr_stmt|;
-if|if
-condition|(
-name|cpu_deepest_sleep
-operator|<
-literal|2
-condition|)
-name|cpu_deepest_sleep
-operator|=
-literal|2
-expr_stmt|;
 break|break;
 case|case
 name|ACPI_STATE_C3
@@ -4280,11 +4254,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-else|else
-name|cpu_deepest_sleep
-operator|=
-literal|3
-expr_stmt|;
 break|break;
 block|}
 comment|/* Free up any previous register. */
