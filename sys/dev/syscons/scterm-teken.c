@@ -127,7 +127,7 @@ end_include
 begin_function_decl
 specifier|static
 name|void
-name|scteken_revattr
+name|scteken_sc_to_te_attr
 parameter_list|(
 name|unsigned
 name|char
@@ -140,9 +140,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|unsigned
 name|int
-name|scteken_attr
+name|scteken_te_to_sc_attr
 parameter_list|(
 specifier|const
 name|teken_attr_t
@@ -718,7 +717,7 @@ operator|->
 name|ts_teken
 argument_list|)
 expr_stmt|;
-name|scteken_revattr
+name|scteken_sc_to_te_attr
 argument_list|(
 name|sc_kattr
 argument_list|()
@@ -826,7 +825,6 @@ name|vid_info_t
 modifier|*
 name|vi
 decl_stmt|;
-name|unsigned
 name|int
 name|attr
 decl_stmt|;
@@ -846,7 +844,7 @@ operator|*
 operator|)
 name|data
 operator|=
-name|scteken_attr
+name|scteken_te_to_sc_attr
 argument_list|(
 name|teken_get_curattr
 argument_list|(
@@ -891,7 +889,7 @@ name|EINVAL
 return|;
 name|attr
 operator|=
-name|scteken_attr
+name|scteken_te_to_sc_attr
 argument_list|(
 name|teken_get_defattr
 argument_list|(
@@ -992,7 +990,7 @@ decl_stmt|;
 name|teken_attr_t
 name|ta
 decl_stmt|;
-name|scteken_revattr
+name|scteken_sc_to_te_attr
 argument_list|(
 name|color
 argument_list|,
@@ -1490,7 +1488,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|scteken_revattr
+name|scteken_sc_to_te_attr
 parameter_list|(
 name|unsigned
 name|char
@@ -1653,9 +1651,8 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
 name|int
-name|scteken_attr
+name|scteken_te_to_sc_attr
 parameter_list|(
 specifier|const
 name|teken_attr_t
@@ -1663,7 +1660,6 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|unsigned
 name|int
 name|attr
 init|=
@@ -3639,7 +3635,7 @@ decl_stmt|;
 comment|/* 	 * No support for printing right hand sides for CJK fullwidth 	 * characters. Simply print a space and assume that the left 	 * hand side describes the entire character. 	 */
 name|attr
 operator|=
-name|scteken_attr
+name|scteken_te_to_sc_attr
 argument_list|(
 name|a
 argument_list|)
@@ -3808,7 +3804,7 @@ name|row
 decl_stmt|;
 name|attr
 operator|=
-name|scteken_attr
+name|scteken_te_to_sc_attr
 argument_list|(
 name|a
 argument_list|)
