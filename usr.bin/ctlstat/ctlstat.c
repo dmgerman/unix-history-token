@@ -1517,12 +1517,10 @@ define|#
 directive|define
 name|PRINT_BINTIME
 parameter_list|(
-name|prefix
-parameter_list|,
 name|bt
 parameter_list|)
 define|\
-value|printf("%s %jd.%06ju\n", prefix, (intmax_t)(bt).sec, \ 	       (uintmax_t)(((bt).frac>> 32) * 1000000>> 32))
+value|printf("%jd.%06ju", (intmax_t)(bt).sec, \ 	       (uintmax_t)(((bt).frac>> 32) * 1000000>> 32))
 end_define
 
 begin_decl_stmt
@@ -1704,10 +1702,13 @@ name|iotype
 index|]
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"   io time "
+argument_list|)
+expr_stmt|;
 name|PRINT_BINTIME
 argument_list|(
-literal|"   io time"
-argument_list|,
 name|stats
 index|[
 name|i
@@ -1719,10 +1720,13 @@ name|iotype
 index|]
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n   dma time "
+argument_list|)
+expr_stmt|;
 name|PRINT_BINTIME
 argument_list|(
-literal|"   dma time"
-argument_list|,
 name|stats
 index|[
 name|i
@@ -1734,23 +1738,15 @@ name|iotype
 index|]
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|JSON_BINTIME
-parameter_list|(
-name|prefix
-parameter_list|,
-name|bt
-parameter_list|)
-define|\
-value|printf("\"%s\":%jd.%06ju,", prefix, (intmax_t)(bt).sec, \ 	    (uintmax_t)(((bt).frac>> 32) * 1000000>> 32))
-end_define
 
 begin_function
 specifier|static
@@ -1900,7 +1896,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\"dmas\":%ju}"
+literal|"\"dmas\":%ju,"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1916,10 +1912,13 @@ name|iotype
 index|]
 argument_list|)
 expr_stmt|;
-name|JSON_BINTIME
+name|printf
 argument_list|(
-literal|"io time"
-argument_list|,
+literal|"\"io time\":"
+argument_list|)
+expr_stmt|;
+name|PRINT_BINTIME
+argument_list|(
 name|stats
 index|[
 name|i
@@ -1931,10 +1930,13 @@ name|iotype
 index|]
 argument_list|)
 expr_stmt|;
-name|JSON_BINTIME
+name|printf
 argument_list|(
-literal|"dma time"
-argument_list|,
+literal|",\"dma time\":"
+argument_list|)
+expr_stmt|;
+name|PRINT_BINTIME
+argument_list|(
 name|stats
 index|[
 name|i
@@ -1944,6 +1946,11 @@ name|dma_time
 index|[
 name|iotype
 index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"}"
 argument_list|)
 expr_stmt|;
 if|if
