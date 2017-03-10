@@ -360,37 +360,6 @@ parameter_list|)
 value|((tp) != NULL&& tty_opened(tp))
 end_define
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|default_attr
-block|{
-name|int
-name|std_color
-decl_stmt|;
-comment|/* normal hardware color */
-name|int
-name|rev_color
-decl_stmt|;
-comment|/* reverse hardware color */
-block|}
-name|default_attr
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|static
-name|default_attr
-name|user_default
-init|=
-block|{
-name|SC_NORM_ATTR
-block|,
-name|SC_NORM_REV_ATTR
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|u_char
@@ -16976,13 +16945,9 @@ call|)
 argument_list|(
 name|scp
 argument_list|,
-name|user_default
-operator|.
-name|std_color
+name|SC_NORM_ATTR
 argument_list|,
-name|user_default
-operator|.
-name|rev_color
+name|SC_NORM_REV_ATTR
 argument_list|)
 expr_stmt|;
 block|}
@@ -19405,7 +19370,6 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 call|(
 modifier|*
 name|sw
@@ -19415,13 +19379,9 @@ call|)
 argument_list|(
 name|scp
 argument_list|,
-name|user_default
-operator|.
-name|std_color
+name|SC_NORM_ATTR
 argument_list|,
-name|user_default
-operator|.
-name|rev_color
+name|SC_NORM_REV_ATTR
 argument_list|)
 expr_stmt|;
 name|sc_clear_screen
