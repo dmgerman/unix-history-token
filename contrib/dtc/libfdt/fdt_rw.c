@@ -197,7 +197,7 @@ parameter_list|(
 name|fdt
 parameter_list|)
 define|\
-value|{ \ 		int err; \ 		if ((err = _fdt_rw_check_header(fdt)) != 0) \ 			return err; \ 	}
+value|{ \ 		int __err; \ 		if ((__err = _fdt_rw_check_header(fdt)) != 0) \ 			return __err; \ 	}
 end_define
 
 begin_function
@@ -286,6 +286,38 @@ name|oldlen
 operator|)
 operator|>
 name|end
+operator|)
+condition|)
+return|return
+operator|-
+name|FDT_ERR_BADOFFSET
+return|;
+if|if
+condition|(
+operator|(
+name|p
+operator|<
+operator|(
+name|char
+operator|*
+operator|)
+name|fdt
+operator|)
+operator|||
+operator|(
+operator|(
+name|end
+operator|-
+name|oldlen
+operator|+
+name|newlen
+operator|)
+operator|<
+operator|(
+name|char
+operator|*
+operator|)
+name|fdt
 operator|)
 condition|)
 return|return
@@ -827,9 +859,6 @@ argument_list|,
 name|n
 argument_list|)
 decl_stmt|;
-name|int
-name|err
-decl_stmt|;
 name|FDT_RW_CHECK_HEADER
 argument_list|(
 name|fdt
@@ -848,8 +877,7 @@ return|return
 operator|-
 name|FDT_ERR_NOTFOUND
 return|;
-name|err
-operator|=
+return|return
 name|_fdt_splice_mem_rsv
 argument_list|(
 name|fdt
@@ -860,16 +888,6 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-name|err
-return|;
-return|return
-literal|0
 return|;
 block|}
 end_function
@@ -1343,6 +1361,10 @@ condition|)
 return|return
 name|err
 return|;
+if|if
+condition|(
+name|len
+condition|)
 name|memcpy
 argument_list|(
 name|prop
