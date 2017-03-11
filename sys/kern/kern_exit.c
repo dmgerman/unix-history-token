@@ -914,14 +914,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Deref SU mp, since the thread does not return to userspace. 	 */
-if|if
-condition|(
-name|softdep_ast_cleanup
-operator|!=
-name|NULL
-condition|)
-name|softdep_ast_cleanup
-argument_list|()
+name|td_softdep_cleanup
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 comment|/* 	 * MUST abort all other threads before proceeding past here. 	 */
 name|PROC_LOCK
