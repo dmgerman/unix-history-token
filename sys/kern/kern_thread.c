@@ -1928,6 +1928,13 @@ operator|->
 name|td_name
 argument_list|)
 expr_stmt|;
+name|SDT_PROBE0
+argument_list|(
+name|proc
+argument_list|, , ,
+name|lwp__exit
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|TAILQ_EMPTY
