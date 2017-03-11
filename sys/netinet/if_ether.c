@@ -5583,7 +5583,6 @@ operator|(
 name|u_char
 operator|*
 operator|)
-operator|&
 name|la
 operator|->
 name|ll_addr
