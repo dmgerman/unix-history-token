@@ -1788,6 +1788,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|argvalue
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+operator|&&
 name|stat
 argument_list|(
 name|argvalue
