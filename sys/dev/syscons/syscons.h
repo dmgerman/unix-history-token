@@ -1608,6 +1608,24 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|void
+name|sc_term_set_cursor_t
+parameter_list|(
+name|scr_stat
+modifier|*
+name|scp
+parameter_list|,
+name|int
+name|col
+parameter_list|,
+name|int
+name|row
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|sc_term_sw
 block|{
@@ -1679,6 +1697,10 @@ decl_stmt|;
 name|sc_term_fkeystr_t
 modifier|*
 name|te_fkeystr
+decl_stmt|;
+name|sc_term_set_cursor_t
+modifier|*
+name|te_set_cursor
 decl_stmt|;
 block|}
 name|sc_term_sw_t
