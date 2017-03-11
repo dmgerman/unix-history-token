@@ -1923,15 +1923,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  uk_slabsize = %d\n"
-argument_list|,
-name|kz
-operator|.
-name|uk_slabsize
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"  uk_pgoff = %d\n"
 argument_list|,
 name|kz
