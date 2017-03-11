@@ -2387,19 +2387,27 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|end
-operator|>
 name|start
+operator|>=
+name|end
 condition|)
-block|{
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
 if|if
 condition|(
+operator|(
 name|offset
 operator|&
 name|PAGE_MASK
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* 			 * The mapping is not page aligned. This means we have 			 * to copy the data. Sigh. 			 */
+comment|/* 		 * The mapping is not page aligned.  This means that we have 		 * to copy the data. 		 */
 name|rv
 operator|=
 name|vm_map_fixed
@@ -2551,10 +2559,6 @@ operator|+=
 name|sz
 expr_stmt|;
 block|}
-name|rv
-operator|=
-name|KERN_SUCCESS
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2629,22 +2633,18 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 return|return
 operator|(
 name|rv
 operator|)
 return|;
 block|}
-else|else
-block|{
+block|}
 return|return
 operator|(
 name|KERN_SUCCESS
 operator|)
 return|;
-block|}
 block|}
 end_function
 
