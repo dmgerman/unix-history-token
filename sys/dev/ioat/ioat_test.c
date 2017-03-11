@@ -316,7 +316,6 @@ end_define
 
 begin_function_decl
 specifier|static
-specifier|inline
 name|void
 name|_ioat_test_log
 parameter_list|(
@@ -3115,7 +3114,6 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|static
-specifier|inline
 name|void
 name|_ioat_test_log
 parameter_list|(
