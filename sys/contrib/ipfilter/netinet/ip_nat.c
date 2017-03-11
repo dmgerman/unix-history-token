@@ -24133,7 +24133,7 @@ name|nl_realip
 operator|=
 name|nat
 operator|->
-name|nat_ndstip
+name|nat_odstip
 expr_stmt|;
 name|np
 operator|->
@@ -24141,7 +24141,7 @@ name|nl_realport
 operator|=
 name|nat
 operator|->
-name|nat_ndport
+name|nat_odport
 expr_stmt|;
 block|}
 block|}

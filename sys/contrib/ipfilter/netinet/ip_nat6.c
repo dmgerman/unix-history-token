@@ -13421,7 +13421,7 @@ name|nl_realip6
 operator|=
 name|nat
 operator|->
-name|nat_ndst6
+name|nat_odst6
 operator|.
 name|in6
 expr_stmt|;
@@ -13431,7 +13431,7 @@ name|nl_realport
 operator|=
 name|nat
 operator|->
-name|nat_ndport
+name|nat_odport
 expr_stmt|;
 block|}
 block|}
