@@ -2852,10 +2852,6 @@ name|u_int
 name|n
 decl_stmt|,
 name|newsize
-init|=
-name|oldsize
-operator|*
-literal|2
 decl_stmt|;
 comment|/* Detect overflow */
 if|if
@@ -2872,6 +2868,12 @@ operator|-
 literal|1
 operator|)
 return|;
+name|newsize
+operator|=
+name|oldsize
+operator|*
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|newsize
