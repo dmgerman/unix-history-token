@@ -912,6 +912,17 @@ goto|goto
 name|cleanup2
 goto|;
 block|}
+name|krb5_get_init_creds_opt_set_default_flags
+argument_list|(
+name|pam_context
+argument_list|,
+name|service
+argument_list|,
+name|NULL
+argument_list|,
+name|opts
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|openpam_get_option
