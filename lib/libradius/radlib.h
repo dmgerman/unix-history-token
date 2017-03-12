@@ -588,7 +588,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Integer */
+comment|/* String */
 end_comment
 
 begin_define
