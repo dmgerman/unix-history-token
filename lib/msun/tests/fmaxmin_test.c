@@ -84,6 +84,7 @@ value|\ 	type __y = (y);							      \ 	feclearexcept(ALL_STD_EXCEPT);					     
 end_define
 
 begin_function
+specifier|static
 name|int
 name|testall_r
 parameter_list|(
@@ -294,6 +295,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -308,6 +310,7 @@ comment|/*  * Test all the functions: fmaxf, fmax, fmaxl, fminf, fmin, and fminl
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|testall
 parameter_list|(
@@ -472,13 +475,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf

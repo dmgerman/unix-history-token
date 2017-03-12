@@ -209,6 +209,7 @@ comment|/* Tests for 0 */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_zero
 parameter_list|(
@@ -302,11 +303,14 @@ comment|/*  * Tests for NaN.  The signs of the results are indeterminate unless 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_nan
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 comment|/* cexp(x + NaNi) = NaN + NaNi and optionally raises invalid */
@@ -535,13 +539,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_inf
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 comment|/* cexp(x + inf i) = NaN + NaNi and raises invalid */
@@ -935,13 +940,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_reals
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -1122,13 +1128,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_imaginaries
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -1334,6 +1341,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_small
 parameter_list|(
@@ -1412,7 +1420,7 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -1543,6 +1551,7 @@ comment|/* Test inputs with a real part r that would overflow exp(r). */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_large
 parameter_list|(
@@ -1810,13 +1819,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf

@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<complex.h>
 end_include
 
@@ -1382,7 +1388,7 @@ name|c
 decl_stmt|,
 name|s
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 comment|/* 	 * IN		CSINH		CCOSH		CTANH 	 * Inf,Inf	+-Inf,NaN inval	+-Inf,NaN inval	1,+-0 	 * Inf,finite	Inf cis(finite)	Inf cis(finite)	1,0 sin(2 finite) 	 * 0,Inf	+-0,NaN	inval	NaN,+-0 inval	NaN,NaN	inval 	 * finite,Inf	NaN,NaN inval	NaN,NaN inval	NaN,NaN inval 	 */
@@ -1524,17 +1530,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|finites
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|finites
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i
@@ -2112,7 +2110,7 @@ name|double
 name|complex
 name|z
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -2123,17 +2121,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|nums
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|nums
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i
@@ -3016,7 +3006,7 @@ name|double
 name|complex
 name|z
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -3027,17 +3017,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|tests
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|tests
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i

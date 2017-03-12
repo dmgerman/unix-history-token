@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -70,6 +76,7 @@ file|<string.h>
 end_include
 
 begin_function
+specifier|static
 name|void
 name|testnan
 parameter_list|(
@@ -108,7 +115,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 name|snprintf
@@ -133,7 +140,10 @@ literal|0
 init|;
 name|i
 operator|<
-literal|4
+name|nitems
+argument_list|(
+name|ad
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -677,13 +687,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf

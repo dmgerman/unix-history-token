@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -179,6 +185,7 @@ value|do {		\ 	test(log1p, x, result, exceptmask, excepts);			\ 	test(log1pf, x,
 end_define
 
 begin_function
+specifier|static
 name|void
 name|run_generic_tests
 parameter_list|(
@@ -368,13 +375,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|run_log2_tests
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 comment|/* 	 * We should insist that log2() return exactly the correct 	 * result and not raise an inexact exception for powers of 2. 	 */
@@ -510,6 +518,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|run_roundingmode_tests
 parameter_list|(
@@ -698,6 +707,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|run_accuracy_tests
 parameter_list|(
@@ -801,7 +811,7 @@ literal|3.139856666636059855894123306947856631e1L
 block|}
 block|, 	}
 struct|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 for|for
@@ -812,17 +822,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|tests
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|tests
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i
@@ -1117,6 +1119,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|run_log1p_accuracy_tests
 parameter_list|(
@@ -1214,13 +1217,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|printf

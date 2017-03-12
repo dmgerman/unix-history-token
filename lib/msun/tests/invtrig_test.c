@@ -306,6 +306,7 @@ value|testall2_tol(prefix, (y), (x), (result), 0, (excepts))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|long
 name|double
 name|pi
@@ -319,10 +320,6 @@ decl_stmt|,
 name|c3pi
 init|=
 literal|9.42477796076937971538793014983850839e+00L
-decl_stmt|,
-name|c5pi
-init|=
-literal|1.57079632679489661923132169163975140e+01L
 decl_stmt|,
 name|c7pi
 init|=
@@ -3504,13 +3501,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 if|#
