@@ -8033,6 +8033,9 @@ argument_list|(
 name|pf_purge_thread
 argument_list|)
 expr_stmt|;
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|kproc_exit
 argument_list|(
 literal|0
