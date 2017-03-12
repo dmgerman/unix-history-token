@@ -4784,9 +4784,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|b
 operator|=
 name|pop_number
@@ -4931,9 +4929,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|b
 operator|=
 name|pop_number
@@ -5204,9 +5200,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|b
 operator|=
 name|pop_number
@@ -5299,9 +5293,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|b
 operator|=
 name|pop_number
@@ -5474,9 +5466,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|b
 operator|=
 name|pop_number
@@ -5661,9 +5651,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|b
 operator|=
 name|pop_number
@@ -5868,9 +5856,7 @@ name|p
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|a
 operator|=
 name|pop_number
@@ -6515,9 +6501,7 @@ name|n
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 if|if
 condition|(
 name|BN_is_zero
@@ -6770,9 +6754,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|a
 operator|->
 name|scale
@@ -6854,9 +6836,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|b
 operator|=
 name|pop_number
@@ -6942,9 +6922,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|b
 operator|=
 name|pop_number
@@ -7030,9 +7008,7 @@ name|a
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|b
 operator|=
 name|pop_number
@@ -8272,10 +8248,9 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return;
 name|eval_string
 argument_list|(
 name|p
