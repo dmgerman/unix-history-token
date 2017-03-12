@@ -2391,6 +2391,8 @@ argument_list|,
 name|EVDEV_FLAG_SOFTREPEAT
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|evdev_register
 argument_list|(
 name|state
@@ -2398,6 +2400,12 @@ operator|->
 name|ucs_evdev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
 name|state
 operator|->
 name|ucs_state
@@ -2406,7 +2414,7 @@ name|UINPUT_RUNNING
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ret
 operator|)
 return|;
 case|case
