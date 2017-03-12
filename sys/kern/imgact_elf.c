@@ -2716,6 +2716,11 @@ comment|/* 	 * It's necessary to fail if the filsz + offset taken from the 	 * h
 if|if
 condition|(
 operator|(
+name|filsz
+operator|!=
+literal|0
+operator|&&
+operator|(
 name|off_t
 operator|)
 name|filsz
@@ -2727,6 +2732,7 @@ operator|->
 name|attr
 operator|->
 name|va_size
+operator|)
 operator|||
 name|filsz
 operator|>
@@ -2783,6 +2789,17 @@ name|pagesize
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We have two choices.  We can either clear the data in the last page 	 * of an oversized mapping, or we can start the anon mapping a page 	 * early and copy the initialized data into that first page.  We 	 * choose the second. 	 */
+if|if
+condition|(
+name|filsz
+operator|==
+literal|0
+condition|)
+name|map_len
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|memsz
@@ -2896,6 +2913,12 @@ block|}
 comment|/* 	 * We have to get the remaining bit of the file into the first part 	 * of the oversized map segment.  This is normally because the .data 	 * segment in the file is extended to provide bss.  It's a neat idea 	 * to try and save a page, but it's a pain in the behind to implement. 	 */
 name|copy_len
 operator|=
+name|filsz
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
 operator|(
 name|offset
 operator|+
