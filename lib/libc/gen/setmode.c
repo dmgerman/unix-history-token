@@ -688,7 +688,7 @@ decl_stmt|;
 name|int
 name|equalopdone
 decl_stmt|;
-name|int
+name|u_int
 name|setlen
 decl_stmt|;
 if|if
@@ -728,16 +728,11 @@ name|set
 operator|=
 name|malloc
 argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
+name|setlen
+operator|*
 sizeof|sizeof
 argument_list|(
 name|BITCMD
-argument_list|)
-operator|*
-name|setlen
 argument_list|)
 argument_list|)
 operator|)
