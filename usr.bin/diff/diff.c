@@ -205,6 +205,8 @@ block|,
 name|OPT_NO_IGN_FN_CASE
 block|,
 name|OPT_NORMAL
+block|,
+name|OPT_HORIZON_LINES
 block|, }
 enum|;
 end_enum
@@ -475,6 +477,16 @@ block|,
 name|NULL
 block|,
 name|OPT_IGN_FN_CASE
+block|}
+block|,
+block|{
+literal|"horizon-lines"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPT_HORIZON_LINES
 block|}
 block|,
 block|{
@@ -1131,6 +1143,11 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|OPT_HORIZON_LINES
+case|:
+break|break;
+comment|/* XXX TODO for compatibility with GNU diff3 */
 case|case
 name|OPT_IGN_FN_CASE
 case|:
