@@ -1167,10 +1167,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|num
-operator|=
-literal|0
-expr_stmt|;
 name|ret
 operator|=
 name|_lookup_seq_open
