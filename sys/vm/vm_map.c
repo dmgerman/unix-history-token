@@ -16903,7 +16903,7 @@ comment|/* 	 * Return the object/offset from this entry.  If the entry was 	 * c
 operator|*
 name|pindex
 operator|=
-name|OFF_TO_IDX
+name|UOFF_TO_IDX
 argument_list|(
 operator|(
 name|vaddr
@@ -17145,7 +17145,7 @@ comment|/* 	 * Return the object/offset from this entry.  If the entry was 	 * c
 operator|*
 name|pindex
 operator|=
-name|OFF_TO_IDX
+name|UOFF_TO_IDX
 argument_list|(
 operator|(
 name|vaddr
