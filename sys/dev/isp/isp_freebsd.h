@@ -1089,10 +1089,6 @@ modifier|*
 name|cdev
 decl_stmt|;
 name|struct
-name|intr_config_hook
-name|ehook
-decl_stmt|;
-name|struct
 name|cam_devq
 modifier|*
 name|devq
@@ -1185,10 +1181,6 @@ range|:
 literal|1
 decl_stmt|,
 name|autoconf
-range|:
-literal|1
-decl_stmt|,
-name|ehook_active
 range|:
 literal|1
 decl_stmt|,
