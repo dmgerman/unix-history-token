@@ -913,14 +913,6 @@ range|:
 literal|2
 decl_stmt|,
 comment|/* default role */
-name|gdt_running
-range|:
-literal|1
-decl_stmt|,
-name|loop_dead
-range|:
-literal|1
-decl_stmt|,
 name|loop_seen_once
 range|:
 literal|1
