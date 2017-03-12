@@ -412,7 +412,7 @@ parameter_list|,
 name|FILE
 modifier|*
 parameter_list|,
-name|off_t
+name|size_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -2061,6 +2061,15 @@ decl_stmt|;
 name|cap_rights_t
 name|rights_ro
 decl_stmt|;
+name|e
+operator|=
+name|NULL
+expr_stmt|;
+name|kq
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|f1
 operator|=
 name|f2
@@ -3123,6 +3132,10 @@ name|ostdout
 operator|!=
 operator|-
 literal|1
+operator|&&
+name|e
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* close the pipe to pr and restore stdout */
@@ -3591,7 +3604,7 @@ name|FILE
 modifier|*
 name|fd
 parameter_list|,
-name|off_t
+name|size_t
 name|filesize
 parameter_list|,
 name|int

@@ -230,6 +230,12 @@ decl_stmt|;
 name|int
 name|pos
 decl_stmt|;
+name|edp1
+operator|=
+name|edp2
+operator|=
+name|NULL
+expr_stmt|;
 name|dirlen1
 operator|=
 name|strlcpy
