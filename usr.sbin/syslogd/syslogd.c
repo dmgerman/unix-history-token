@@ -74,6 +74,17 @@ begin_comment
 comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first characters of the line.  If this is  * not present, a default priority is used.  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * MAXLINE -- the maximum line length that can be handled.  * DEFUPRI -- the default priority for user messages  * DEFSPRI -- the default priority for kernel messages  *  * Author: Eric Allman  * extensive changes by Ralph Campbell  * more extensive changes by Eric Allman (again)  * Extension to log by program name as well as facility and priority  *   by Peter da Silva.  * -u and -v by Harlan Stenn.  * Priority comparison code by Harlan Stenn.  */
 end_comment
 
+begin_comment
+comment|/* Maximum number of characters in time of last occurrence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDATELEN
+value|16
+end_define
+
 begin_define
 define|#
 directive|define
@@ -680,7 +691,7 @@ comment|/* last message logged */
 name|char
 name|f_lasttime
 index|[
-literal|16
+name|MAXDATELEN
 index|]
 decl_stmt|;
 comment|/* time of last occurrence */
@@ -4946,7 +4957,7 @@ if|if
 condition|(
 name|msglen
 operator|<
-literal|16
+name|MAXDATELEN
 operator|||
 name|msg
 index|[
@@ -5022,11 +5033,11 @@ name|msg
 expr_stmt|;
 name|msg
 operator|+=
-literal|16
+name|MAXDATELEN
 expr_stmt|;
 name|msglen
 operator|-=
-literal|16
+name|MAXDATELEN
 expr_stmt|;
 block|}
 comment|/* skip leading blanks */
