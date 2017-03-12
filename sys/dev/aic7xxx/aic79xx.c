@@ -44058,6 +44058,14 @@ operator|.
 name|target_id
 operator|!=
 name|our_id
+operator|&&
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|target_id
+operator|!=
+name|CAM_TARGET_WILDCARD
 condition|)
 block|{
 if|if
