@@ -437,10 +437,11 @@ literal|0
 expr_stmt|;
 name|tmp
 operator|=
-name|reallocarray
+name|realloc
 argument_list|(
 name|envlist
 argument_list|,
+operator|(
 name|envlen
 operator|+
 name|nitems
@@ -450,7 +451,8 @@ operator|+
 name|nitems_rv
 operator|+
 literal|1
-argument_list|,
+operator|)
+operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
