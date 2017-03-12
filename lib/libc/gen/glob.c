@@ -4215,7 +4215,7 @@ decl_stmt|;
 name|size_t
 name|i
 decl_stmt|,
-name|newsize
+name|newn
 decl_stmt|,
 name|len
 decl_stmt|;
@@ -4257,15 +4257,8 @@ name|GLOB_NOSPACE
 operator|)
 return|;
 block|}
-name|newsize
+name|newn
 operator|=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|pathv
-argument_list|)
-operator|*
-operator|(
 literal|2
 operator|+
 name|pglob
@@ -4275,22 +4268,23 @@ operator|+
 name|pglob
 operator|->
 name|gl_offs
-operator|)
 expr_stmt|;
-comment|/* realloc(NULL, newsize) is equivalent to malloc(newsize). */
+comment|/* reallocarray(NULL, newn, size) is equivalent to malloc(newn*size). */
 name|pathv
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|pglob
 operator|->
 name|gl_pathv
 argument_list|,
-name|newsize
+name|newn
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pathv
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

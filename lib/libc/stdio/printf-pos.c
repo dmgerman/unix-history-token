@@ -2944,12 +2944,12 @@ else|else
 block|{
 name|newtable
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|oldtable
 argument_list|,
 name|newsize
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|enum

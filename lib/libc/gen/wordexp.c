@@ -1102,7 +1102,7 @@ condition|(
 operator|(
 name|nwv
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|we
 operator|->
@@ -1127,7 +1127,7 @@ else|:
 literal|0
 operator|)
 operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
