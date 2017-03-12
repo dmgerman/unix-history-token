@@ -7985,15 +7985,9 @@ init|;
 condition|;
 control|)
 block|{
-name|PF_RULES_RLOCK
-argument_list|()
-expr_stmt|;
-name|rw_sleep
+name|tsleep
 argument_list|(
 name|pf_purge_thread
-argument_list|,
-operator|&
-name|pf_rules_lock
 argument_list|,
 literal|0
 argument_list|,
@@ -8003,9 +7997,6 @@ name|hz
 operator|/
 literal|10
 argument_list|)
-expr_stmt|;
-name|PF_RULES_RUNLOCK
-argument_list|()
 expr_stmt|;
 name|VNET_LIST_RLOCK
 argument_list|()

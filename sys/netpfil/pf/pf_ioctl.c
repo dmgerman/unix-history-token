@@ -20608,12 +20608,9 @@ argument_list|(
 name|pf_purge_thread
 argument_list|)
 expr_stmt|;
-name|rw_sleep
+name|tsleep
 argument_list|(
 name|pf_purge_thread
-argument_list|,
-operator|&
-name|pf_rules_lock
 argument_list|,
 literal|0
 argument_list|,
