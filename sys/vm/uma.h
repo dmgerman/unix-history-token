@@ -381,7 +381,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Definitions for uma_zcreate flags  *  * These flags share space with UMA_ZFLAGs in uma_int.h.  Be careful not to  * overlap when adding new features.  0xf0000000 is in use by uma_int.h.  */
+comment|/*  * Definitions for uma_zcreate flags  *  * These flags share space with UMA_ZFLAGs in uma_int.h.  Be careful not to  * overlap when adding new features.  0xff000000 is in use by uma_int.h.  */
 end_comment
 
 begin_define
