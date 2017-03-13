@@ -714,7 +714,7 @@ name|reqs
 operator|=
 name|calloc
 argument_list|(
-literal|1
+name|cnt
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -722,8 +722,6 @@ expr|struct
 name|ping_req
 operator|*
 argument_list|)
-operator|*
-name|cnt
 argument_list|)
 expr_stmt|;
 name|xid_seed
