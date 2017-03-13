@@ -2313,6 +2313,14 @@ name|SNAPSHOT_FILE
 value|"snapshot_grp"
 end_define
 
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
+name|getgrent
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_macro
 name|ATF_TC_BODY
 argument_list|(
@@ -2578,14 +2586,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_expr_stmt
-name|ATF_TC_WITHOUT_HEAD
-argument_list|(
-name|getgrent
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_macro
 name|ATF_TP_ADD_TCS
