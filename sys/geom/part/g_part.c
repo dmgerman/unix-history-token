@@ -4966,7 +4966,7 @@ name|entry
 operator|->
 name|gpe_pp
 argument_list|,
-literal|0
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|entry
