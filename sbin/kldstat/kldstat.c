@@ -417,7 +417,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldstata[-d] [-h] [-q] [-v] [-i id] [-n filename]\n"
+literal|"usage: kldstat [-d] [-h] [-q] [-v] [-i id] [-n filename]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
