@@ -2060,6 +2060,20 @@ name|MPI26_EVENT_ACTIVE_CABLE_INSUFFICIENT_POWER
 value|(0x00)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_ACTIVE_CABLE_PRESENT
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI26_EVENT_ACTIVE_CABLE_DEGRADED
+value|(0x02)
+end_define
+
 begin_comment
 comment|/* Hard Reset Received Event data */
 end_comment
