@@ -11703,7 +11703,23 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Found. Bump refcount and update kidx. */
+comment|/* 	 * Object is already exist. 	 * Its subtype should match with expected value. 	 */
+if|if
+condition|(
+name|ti
+operator|->
+name|type
+operator|!=
+name|no
+operator|->
+name|subtype
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|/* Bump refcount and update kidx. */
 name|no
 operator|->
 name|refcnt
