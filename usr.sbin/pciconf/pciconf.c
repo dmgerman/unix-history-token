@@ -3930,6 +3930,32 @@ literal|"signal processing management"
 block|}
 block|,
 block|{
+name|PCIC_ACCEL
+block|,
+operator|-
+literal|1
+block|,
+literal|"processing accelerators"
+block|}
+block|,
+block|{
+name|PCIC_ACCEL
+block|,
+name|PCIS_ACCEL_PROCESSING
+block|,
+literal|"processing accelerators"
+block|}
+block|,
+block|{
+name|PCIC_INSTRUMENT
+block|,
+operator|-
+literal|1
+block|,
+literal|"non-essential instrumentation"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
