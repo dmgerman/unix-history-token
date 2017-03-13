@@ -55,6 +55,9 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|vfprintf
 argument_list|(
 name|stderr
@@ -97,9 +100,6 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
@@ -110,8 +110,9 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+operator|(
+name|void
+operator|)
 name|vfprintf
 argument_list|(
 name|stderr
