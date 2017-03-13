@@ -598,11 +598,6 @@ decl_stmt|;
 comment|/* deferred HT CHW update */
 name|struct
 name|task
-name|ic_wme_task
-decl_stmt|;
-comment|/* deferred WME update */
-name|struct
-name|task
 name|ic_restart_task
 decl_stmt|;
 comment|/* deferred device restart */
@@ -2478,6 +2473,28 @@ name|route
 modifier|*
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|iv_wme_update
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|wmeParams
+modifier|*
+name|wme_params
+parameter_list|)
+function_decl|;
+name|struct
+name|task
+name|iv_wme_task
+decl_stmt|;
+comment|/* deferred VAP WME update */
 name|uint64_t
 name|iv_spare
 index|[

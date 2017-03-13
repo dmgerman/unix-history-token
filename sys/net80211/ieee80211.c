@@ -3289,6 +3289,16 @@ operator|->
 name|iv_swbmiss_task
 argument_list|)
 expr_stmt|;
+name|ieee80211_draintask
+argument_list|(
+name|ic
+argument_list|,
+operator|&
+name|vap
+operator|->
+name|iv_wme_task
+argument_list|)
+expr_stmt|;
 comment|/* XXX band-aid until ifnet handles this for us */
 name|taskqueue_drain
 argument_list|(
