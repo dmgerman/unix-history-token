@@ -2623,20 +2623,22 @@ name|fw_event
 operator|->
 name|event_data
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|ace_event_data
 operator|->
 name|ReasonCode
-operator|==
-name|MPI26_EVENT_ACTIVE_CABLE_INSUFFICIENT_POWER
 condition|)
+block|{
+case|case
+name|MPI26_EVENT_ACTIVE_CABLE_INSUFFICIENT_POWER
+case|:
 block|{
 name|mpr_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"Currently an active cable with "
+literal|"Currently a cable with "
 literal|"ReceptacleID %d cannot be powered and device "
 literal|"connected to this active cable will not be seen. "
 literal|"This active cable requires %d mW of power.\n"
@@ -2650,6 +2652,29 @@ operator|->
 name|ActiveCablePowerRequirement
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+case|case
+name|MPI26_EVENT_ACTIVE_CABLE_DEGRADED
+case|:
+block|{
+name|mpr_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"Currently a cable with "
+literal|"ReceptacleID %d is not running at optimal speed "
+literal|"(12 Gb/s rate)\n"
+argument_list|,
+name|ace_event_data
+operator|->
+name|ReceptacleID
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+default|default:
+break|break;
 block|}
 break|break;
 block|}
