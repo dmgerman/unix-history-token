@@ -1406,7 +1406,7 @@ operator|.
 name|max_ncq_depth
 operator|<
 literal|1
-operator|&&
+operator|||
 name|scif_parms
 operator|->
 name|sas
