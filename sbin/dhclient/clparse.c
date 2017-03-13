@@ -2154,6 +2154,11 @@ argument_list|(
 literal|"unterminated lease declaration."
 argument_list|)
 expr_stmt|;
+name|free_client_lease
+argument_list|(
+name|lease
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
