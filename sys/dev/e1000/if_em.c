@@ -1023,7 +1023,7 @@ name|igb_vendor_info_array
 index|[]
 init|=
 block|{
-comment|/* Intel(R) PRO/1000 Network Connection - em */
+comment|/* Intel(R) PRO/1000 Network Connection - igb */
 name|PVID
 argument_list|(
 literal|0x8086
@@ -1764,13 +1764,27 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|em_if_queue_intr_enable
+name|em_if_rx_queue_intr_enable
 parameter_list|(
 name|if_ctx_t
 name|ctx
 parameter_list|,
 name|uint16_t
 name|rxqid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|em_if_tx_queue_intr_enable
+parameter_list|(
+name|if_ctx_t
+name|ctx
+parameter_list|,
+name|uint16_t
+name|txqid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1790,6 +1804,17 @@ begin_function_decl
 specifier|static
 name|void
 name|em_if_update_admin_status
+parameter_list|(
+name|if_ctx_t
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|em_if_debug
 parameter_list|(
 name|if_ctx_t
 name|ctx
@@ -1874,6 +1899,16 @@ begin_function_decl
 specifier|static
 name|int
 name|em_sysctl_debug_info
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|em_get_rs
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -2165,19 +2200,6 @@ name|ctx
 parameter_list|,
 name|int
 name|onoff
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|em_init_tx_ring
-parameter_list|(
-name|struct
-name|em_tx_queue
-modifier|*
-name|que
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2714,9 +2736,23 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|ifdi_queue_intr_enable
+name|ifdi_rx_queue_intr_enable
 argument_list|,
-name|em_if_queue_intr_enable
+name|em_if_rx_queue_intr_enable
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|ifdi_tx_queue_intr_enable
+argument_list|,
+name|em_if_tx_queue_intr_enable
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|ifdi_debug
+argument_list|,
+name|em_if_debug
 argument_list|)
 block|,
 name|DEVMETHOD_END
@@ -4374,19 +4410,6 @@ name|j
 operator|++
 control|)
 block|{
-name|struct
-name|em_txbuffer
-modifier|*
-name|buf
-init|=
-operator|&
-name|txr
-operator|->
-name|tx_buffers
-index|[
-name|j
-index|]
-decl_stmt|;
 name|unsigned
 name|int
 modifier|*
@@ -4521,88 +4544,6 @@ operator|(
 name|igb_sctx
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|em_init_tx_ring
-parameter_list|(
-name|struct
-name|em_tx_queue
-modifier|*
-name|que
-parameter_list|)
-block|{
-name|struct
-name|adapter
-modifier|*
-name|sc
-init|=
-name|que
-operator|->
-name|adapter
-decl_stmt|;
-name|if_softc_ctx_t
-name|scctx
-init|=
-name|sc
-operator|->
-name|shared
-decl_stmt|;
-name|struct
-name|tx_ring
-modifier|*
-name|txr
-init|=
-operator|&
-name|que
-operator|->
-name|txr
-decl_stmt|;
-name|struct
-name|em_txbuffer
-modifier|*
-name|tx_buffer
-decl_stmt|;
-name|tx_buffer
-operator|=
-name|txr
-operator|->
-name|tx_buffers
-expr_stmt|;
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-name|scctx
-operator|->
-name|isc_ntxd
-index|[
-literal|0
-index|]
-condition|;
-name|i
-operator|++
-operator|,
-name|tx_buffer
-operator|++
-control|)
-block|{
-name|tx_buffer
-operator|->
-name|eop
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -4982,6 +4923,40 @@ argument_list|,
 literal|"Dump Registers"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|device_get_sysctl_ctx
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|device_get_sysctl_tree
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rs_dump"
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|adapter
+argument_list|,
+literal|0
+argument_list|,
+name|em_get_rs
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Dump RS indexes"
+argument_list|)
+expr_stmt|;
 comment|/* Determine hardware and mac info */
 name|em_identify_hardware
 argument_list|(
@@ -5122,6 +5097,32 @@ name|e1000_adv_rx_desc
 argument_list|)
 argument_list|,
 name|EM_DBA_ALIGN
+argument_list|)
+expr_stmt|;
+name|scctx
+operator|->
+name|isc_txd_size
+index|[
+literal|0
+index|]
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|union
+name|e1000_adv_tx_desc
+argument_list|)
+expr_stmt|;
+name|scctx
+operator|->
+name|isc_rxd_size
+index|[
+literal|0
+index|]
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|union
+name|e1000_adv_rx_desc
 argument_list|)
 expr_stmt|;
 name|scctx
@@ -5267,6 +5268,32 @@ argument_list|)
 expr_stmt|;
 name|scctx
 operator|->
+name|isc_txd_size
+index|[
+literal|0
+index|]
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|e1000_tx_desc
+argument_list|)
+expr_stmt|;
+name|scctx
+operator|->
+name|isc_rxd_size
+index|[
+literal|0
+index|]
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|union
+name|e1000_rx_desc_extended
+argument_list|)
+expr_stmt|;
+name|scctx
+operator|->
 name|isc_txrx
 operator|=
 operator|&
@@ -5347,6 +5374,32 @@ name|e1000_rx_desc
 argument_list|)
 argument_list|,
 name|EM_DBA_ALIGN
+argument_list|)
+expr_stmt|;
+name|scctx
+operator|->
+name|isc_txd_size
+index|[
+literal|0
+index|]
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|e1000_tx_desc
+argument_list|)
+expr_stmt|;
+name|scctx
+operator|->
+name|isc_rxd_size
+index|[
+literal|0
+index|]
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|e1000_rx_desc
 argument_list|)
 expr_stmt|;
 name|scctx
@@ -5436,7 +5489,7 @@ goto|goto
 name|err_pci
 goto|;
 block|}
-comment|/* 	** For ICH8 and family we need to 	** map the flash memory, and this 	** must happen after the MAC is  	** identified 	*/
+comment|/* 	** For ICH8 and family we need to 	** map the flash memory, and this 	** must happen after the MAC is 	** identified 	*/
 if|if
 condition|(
 operator|(
@@ -6619,16 +6672,37 @@ operator|=
 literal|4096
 expr_stmt|;
 break|break;
-comment|/* Adapters that do not support jumbo frames */
+case|case
+name|e1000_82542
+case|:
 case|case
 name|e1000_ich8lan
 case|:
+comment|/* Adapters that do not support jumbo frames */
 name|max_frame_size
 operator|=
 name|ETHER_MAX_LEN
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|>=
+name|igb_mac_min
+condition|)
+name|max_frame_size
+operator|=
+literal|9234
+expr_stmt|;
+else|else
+comment|/* lem */
 name|max_frame_size
 operator|=
 name|MAX_JUMBO_FRAME_SIZE
@@ -6712,6 +6786,14 @@ name|iflib_get_ifp
 argument_list|(
 name|ctx
 argument_list|)
+decl_stmt|;
+name|struct
+name|em_tx_queue
+modifier|*
+name|tx_que
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
@@ -6812,6 +6894,56 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|tx_que
+operator|=
+name|adapter
+operator|->
+name|tx_queues
+init|;
+name|i
+operator|<
+name|adapter
+operator|->
+name|tx_num_queues
+condition|;
+name|i
+operator|++
+operator|,
+name|tx_que
+operator|++
+control|)
+block|{
+name|struct
+name|tx_ring
+modifier|*
+name|txr
+init|=
+operator|&
+name|tx_que
+operator|->
+name|txr
+decl_stmt|;
+name|txr
+operator|->
+name|tx_rs_cidx
+operator|=
+name|txr
+operator|->
+name|tx_rs_pidx
+operator|=
+name|txr
+operator|->
+name|tx_cidx_processed
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* Setup VLAN support, basic and offload if available */
 name|E1000_WRITE_REG
 argument_list|(
@@ -6864,7 +6996,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/* 	** Figure out the desired mbuf 	** pool for doing jumbos 	*/
+comment|/* 	 * Figure out the desired mbuf 	 * pool for doing jumbos 	 */
 if|if
 condition|(
 name|adapter
@@ -6883,6 +7015,18 @@ name|rx_mbuf_sz
 operator|=
 name|MCLBYTES
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|CONTIGMALLOC_WORKS
+else|else
+name|adapter
+operator|->
+name|rx_mbuf_sz
+operator|=
+name|MJUMPAGESIZE
+expr_stmt|;
+else|#
+directive|else
 elseif|else
 if|if
 condition|(
@@ -6909,6 +7053,8 @@ name|rx_mbuf_sz
 operator|=
 name|MJUM9BYTES
 expr_stmt|;
+endif|#
+directive|endif
 name|em_initialize_receive_unit
 argument_list|(
 name|ctx
@@ -7170,7 +7316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Fast Legacy/MSI Combined Interrupt Service routine    *  *********************************************************************/
+comment|/*********************************************************************  *  *  Fast Legacy/MSI Combined Interrupt Service routine  *  *********************************************************************/
 end_comment
 
 begin_function
@@ -7222,7 +7368,7 @@ condition|)
 goto|goto
 name|skip_stray
 goto|;
-comment|/* Hot eject?  */
+comment|/* Hot eject? */
 if|if
 condition|(
 name|reg_icr
@@ -7232,7 +7378,7 @@ condition|)
 return|return
 name|FILTER_STRAY
 return|;
-comment|/* Definitely not our interrupt.  */
+comment|/* Definitely not our interrupt. */
 if|if
 condition|(
 name|reg_icr
@@ -7318,7 +7464,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|igb_enable_queue
+name|igb_rx_enable_queue
 parameter_list|(
 name|struct
 name|adapter
@@ -7351,7 +7497,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|em_enable_queue
+name|em_rx_enable_queue
 parameter_list|(
 name|struct
 name|adapter
@@ -7383,8 +7529,74 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|igb_tx_enable_queue
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|,
+name|struct
+name|em_tx_queue
+modifier|*
+name|txq
+parameter_list|)
+block|{
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_EIMS
+argument_list|,
+name|txq
+operator|->
+name|eims
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|em_tx_enable_queue
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|,
+name|struct
+name|em_tx_queue
+modifier|*
+name|txq
+parameter_list|)
+block|{
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_IMS
+argument_list|,
+name|txq
+operator|->
+name|eims
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
-name|em_if_queue_intr_enable
+name|em_if_rx_queue_intr_enable
 parameter_list|(
 name|if_ctx_t
 name|ctx
@@ -7428,7 +7640,7 @@ name|type
 operator|>=
 name|igb_mac_min
 condition|)
-name|igb_enable_queue
+name|igb_rx_enable_queue
 argument_list|(
 name|adapter
 argument_list|,
@@ -7436,11 +7648,81 @@ name|rxq
 argument_list|)
 expr_stmt|;
 else|else
-name|em_enable_queue
+name|em_rx_enable_queue
 argument_list|(
 name|adapter
 argument_list|,
 name|rxq
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|em_if_tx_queue_intr_enable
+parameter_list|(
+name|if_ctx_t
+name|ctx
+parameter_list|,
+name|uint16_t
+name|txqid
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|iflib_get_softc
+argument_list|(
+name|ctx
+argument_list|)
+decl_stmt|;
+name|struct
+name|em_tx_queue
+modifier|*
+name|txq
+init|=
+operator|&
+name|adapter
+operator|->
+name|tx_queues
+index|[
+name|txqid
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+operator|>=
+name|igb_mac_min
+condition|)
+name|igb_tx_enable_queue
+argument_list|(
+name|adapter
+argument_list|,
+name|txq
+argument_list|)
+expr_stmt|;
+else|else
+name|em_tx_enable_queue
+argument_list|(
+name|adapter
+argument_list|,
+name|txq
 argument_list|)
 expr_stmt|;
 return|return
@@ -7610,7 +7892,7 @@ name|link_mask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	** Because we must read the ICR for this interrupt  	** it may clear other causes using autoclear, for  	** this reason we simply create a soft interrupt  	** for all these vectors.  	*/
+comment|/* 	 * Because we must read the ICR for this interrupt 	 * it may clear other causes using autoclear, for 	 * this reason we simply create a soft interrupt 	 * for all these vectors. 	 */
 if|if
 condition|(
 name|reg_icr
@@ -8701,10 +8983,7 @@ name|qid
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* XXX all this stuff is per-adapter */
 return|return;
-block|}
 name|em_if_update_admin_status
 argument_list|(
 name|ctx
@@ -9841,6 +10120,8 @@ decl_stmt|,
 name|vector
 init|=
 literal|0
+decl_stmt|,
+name|rx_vectors
 decl_stmt|;
 name|char
 name|buf
@@ -9904,7 +10185,7 @@ name|que_irq
 argument_list|,
 name|rid
 argument_list|,
-name|IFLIB_INTR_RX
+name|IFLIB_INTR_RXTX
 argument_list|,
 name|em_msix_que
 argument_list|,
@@ -9954,7 +10235,7 @@ name|msix
 operator|=
 name|vector
 expr_stmt|;
-comment|/* 		** Set the bit to enable interrupt 		** in E1000_IMS -- bits 20 and 21 		** are for RX0 and RX1, note this has 		** NOTHING to do with the MSIX vector 		*/
+comment|/* 		 * Set the bit to enable interrupt 		 * in E1000_IMS -- bits 20 and 21 		 * are for RX0 and RX1, note this has 		 * NOTHING to do with the MSIX vector 		 */
 if|if
 condition|(
 name|adapter
@@ -10038,6 +10319,14 @@ operator|<<
 name|vector
 expr_stmt|;
 block|}
+name|rx_vectors
+operator|=
+name|vector
+expr_stmt|;
+name|vector
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -10054,6 +10343,9 @@ name|i
 operator|++
 operator|,
 name|tx_que
+operator|++
+operator|,
+name|vector
 operator|++
 control|)
 block|{
@@ -10108,9 +10400,15 @@ name|tx_que
 operator|->
 name|msix
 operator|=
+operator|(
 name|vector
+operator|%
+name|adapter
+operator|->
+name|tx_num_queues
+operator|)
 expr_stmt|;
-comment|/* 		** Set the bit to enable interrupt 		** in E1000_IMS -- bits 22 and 23 		** are for TX0 and TX1, note this has 		** NOTHING to do with the MSIX vector 		*/
+comment|/* 		 * Set the bit to enable interrupt 		 * in E1000_IMS -- bits 22 and 23 		 * are for TX0 and TX1, note this has 		 * NOTHING to do with the MSIX vector 		 */
 if|if
 condition|(
 name|adapter
@@ -10120,8 +10418,8 @@ operator|.
 name|mac
 operator|.
 name|type
-operator|<
-name|igb_mac_min
+operator|==
+name|e1000_82574
 condition|)
 block|{
 name|tx_que
@@ -10212,7 +10510,7 @@ block|}
 comment|/* Link interrupt */
 name|rid
 operator|=
-name|vector
+name|rx_vectors
 operator|+
 literal|1
 expr_stmt|;
@@ -10263,7 +10561,7 @@ name|adapter
 operator|->
 name|linkvec
 operator|=
-name|vector
+name|rx_vectors
 expr_stmt|;
 if|if
 condition|(
@@ -10285,7 +10583,7 @@ operator||=
 operator|(
 literal|8
 operator||
-name|vector
+name|rx_vectors
 operator|)
 operator|<<
 literal|16
@@ -12161,7 +12459,7 @@ operator|-
 name|tx_space
 operator|)
 expr_stmt|;
-comment|/*                          * if short on rx space, rx wins                          * and must trump tx adjustment                          */
+comment|/* 			 * if short on rx space, rx wins 			 * and must trump tx adjustment 			 */
 if|if
 condition|(
 name|pba
@@ -13274,7 +13572,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	** Don't turn this on by default, if vlans are 	** created on another pseudo device (eg. lagg) 	** then vlan events are not passed thru, breaking 	** operation, but with HW FILTER off it works. If 	** using vlans directly on the em driver you can 	** enable this and get full hardware tag filtering. 	*/
+comment|/* 	 * Don't turn this on by default, if vlans are 	 * created on another pseudo device (eg. lagg) 	 * then vlan events are not passed thru, breaking 	 * operation, but with HW FILTER off it works. If 	 * using vlans directly on the em driver you can 	 * enable this and get full hardware tag filtering. 	 */
 name|if_setcapabilitiesbit
 argument_list|(
 name|ifp
@@ -13602,6 +13900,8 @@ name|que
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|MPASS
 argument_list|(
@@ -13718,12 +14018,6 @@ name|adapter
 operator|=
 name|adapter
 expr_stmt|;
-name|txr
-operator|->
-name|que
-operator|=
-name|que
-expr_stmt|;
 name|que
 operator|->
 name|me
@@ -13734,26 +14028,24 @@ name|me
 operator|=
 name|i
 expr_stmt|;
-comment|/* Allocate transmit buffer memory */
+comment|/* Allocate report status array */
 if|if
 condition|(
 operator|!
 operator|(
 name|txr
 operator|->
-name|tx_buffers
+name|tx_rsq
 operator|=
 operator|(
-expr|struct
-name|em_txbuffer
+name|qidx_t
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|em_txbuffer
+name|qidx_t
 argument_list|)
 operator|*
 name|scctx
@@ -13779,7 +14071,7 @@ argument_list|(
 name|ctx
 argument_list|)
 argument_list|,
-literal|"failed to allocate tx_buffer memory\n"
+literal|"failed to allocate rs_idxs memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -13790,6 +14082,33 @@ goto|goto
 name|fail
 goto|;
 block|}
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|scctx
+operator|->
+name|isc_ntxd
+index|[
+literal|0
+index|]
+condition|;
+name|j
+operator|++
+control|)
+name|txr
+operator|->
+name|tx_rsq
+index|[
+name|j
+index|]
+operator|=
+name|QIDX_INVALID
+expr_stmt|;
 comment|/* get the virtual and physical address of the hardware queues */
 name|txr
 operator|->
@@ -14171,7 +14490,7 @@ if|if
 condition|(
 name|txr
 operator|->
-name|tx_buffers
+name|tx_rsq
 operator|==
 name|NULL
 condition|)
@@ -14180,14 +14499,14 @@ name|free
 argument_list|(
 name|txr
 operator|->
-name|tx_buffers
+name|tx_rsq
 argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|txr
 operator|->
-name|tx_buffers
+name|tx_rsq
 operator|=
 name|NULL
 expr_stmt|;
@@ -14376,12 +14695,6 @@ operator|=
 name|txr
 operator|->
 name|tx_paddr
-expr_stmt|;
-comment|/*Enable all queues */
-name|em_init_tx_ring
-argument_list|(
-name|que
-argument_list|)
 expr_stmt|;
 comment|/* Clear checksum offload context. */
 name|offp
@@ -15376,7 +15689,7 @@ name|rfctl
 operator||=
 name|E1000_RFCTL_EXTEN
 expr_stmt|;
-comment|/* 	** When using MSIX interrupts we need to throttle 	** using the EITR register (82574 only) 	*/
+comment|/* 	 * When using MSIX interrupts we need to throttle 	 * using the EITR register (82574 only) 	 */
 if|if
 condition|(
 name|hw
@@ -15600,7 +15913,7 @@ name|adapter
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	** XXX TEMPORARY WORKAROUND: on some systems with 82573 	** long latencies are observed, like Lenovo X60. This 	** change eliminates the problem, but since having positive 	** values in RDTR is a known source of problems on other 	** platforms another solution is being sought. 	*/
+comment|/* 	 * XXX TEMPORARY WORKAROUND: on some systems with 82573 	 * long latencies are observed, like Lenovo X60. This 	 * change eliminates the problem, but since having positive 	 * values in RDTR is a known source of problems on other 	 * platforms another solution is being sought. 	 */
 if|if
 condition|(
 name|hw
@@ -15948,15 +16261,11 @@ name|ETHERMTU
 condition|)
 block|{
 comment|/* Set maximum packet len */
-name|psize
-operator|=
-name|scctx
-operator|->
-name|isc_max_frame_size
-expr_stmt|;
 if|if
 condition|(
-name|psize
+name|adapter
+operator|->
+name|rx_mbuf_sz
 operator|<=
 literal|4096
 condition|)
@@ -15977,7 +16286,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|psize
+name|adapter
+operator|->
+name|rx_mbuf_sz
 operator|>
 literal|4096
 condition|)
@@ -15995,6 +16306,12 @@ operator||
 name|E1000_RCTL_BSEX
 expr_stmt|;
 block|}
+name|psize
+operator|=
+name|scctx
+operator|->
+name|isc_max_frame_size
+expr_stmt|;
 comment|/* are we on a vlan? */
 if|if
 condition|(
@@ -16523,7 +16840,7 @@ decl_stmt|;
 name|u32
 name|reg
 decl_stmt|;
-comment|/* 	** We get here thru init_locked, meaning 	** a soft reset, this has already cleared 	** the VFTA and other state, so if there 	** have been no vlan's registered do nothing. 	*/
+comment|/* 	 * We get here thru init_locked, meaning 	 * a soft reset, this has already cleared 	 * the VFTA and other state, so if there 	 * have been no vlan's registered do nothing. 	 */
 if|if
 condition|(
 name|adapter
@@ -16533,7 +16850,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	** A soft reset zero's out the VFTA, so 	** we need to repopulate it now. 	*/
+comment|/* 	 * A soft reset zero's out the VFTA, so 	 * we need to repopulate it now. 	 */
 for|for
 control|(
 name|int
@@ -17456,7 +17773,7 @@ name|has_amt
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Falls thru */
+comment|/* FALLTHROUGH */
 case|case
 name|e1000_82571
 case|:
@@ -17619,7 +17936,7 @@ operator||
 name|E1000_WUFC_MC
 operator|)
 expr_stmt|;
-comment|/*          * We have the eeprom settings, now apply the special cases          * where the eeprom may be wrong or the board won't support          * wake on lan on a particular port 	 */
+comment|/* 	 * We have the eeprom settings, now apply the special cases 	 * where the eeprom may be wrong or the board won't support 	 * wake on lan on a particular port 	 */
 name|device_id
 operator|=
 name|pci_get_device
@@ -18010,7 +18327,7 @@ name|ctrl_ext
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	** Determine type of Wakeup: note that wol 	** is set with all bits on by default. 	*/
+comment|/* 	 * Determine type of Wakeup: note that wol 	 * is set with all bits on by default. 	 */
 if|if
 condition|(
 operator|(
@@ -18229,7 +18546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** WOL in the newer chipset interfaces (pchlan) ** require thing to be copied into the phy */
+comment|/*  * WOL in the newer chipset interfaces (pchlan)  * require thing to be copied into the phy  */
 end_comment
 
 begin_function
@@ -18701,7 +19018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Disable the L0S and L1 LINK states */
+comment|/*  * Disable the L0S and L1 LINK states  */
 end_comment
 
 begin_function
@@ -22573,7 +22890,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Set flow control using sysctl: ** Flow control values: **      0 - off **      1 - rx pause **      2 - tx pause **      3 - full */
+comment|/*  * Set flow control using sysctl:  * Flow control values:  *      0 - off  *      1 - rx pause  *      2 - tx pause  *      3 - full  */
 end_comment
 
 begin_function
@@ -22728,7 +23045,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Manage Energy Efficient Ethernet: ** Control values: **     0/1 - enabled/disabled */
+comment|/*  * Manage Energy Efficient Ethernet:  * Control values:  *     0/1 - enabled/disabled  */
 end_comment
 
 begin_function
@@ -22910,8 +23227,103 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|em_get_rs
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+operator|(
+expr|struct
+name|adapter
+operator|*
+operator|)
+name|arg1
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|int
+name|result
+decl_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|result
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|||
+operator|!
+name|req
+operator|->
+name|newptr
+operator|||
+name|result
+operator|!=
+literal|1
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|em_dump_rs
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|em_if_debug
+parameter_list|(
+name|if_ctx_t
+name|ctx
+parameter_list|)
+block|{
+name|em_dump_rs
+argument_list|(
+name|iflib_get_softc
+argument_list|(
+name|ctx
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/* ** This routine is meant to be fluid, add whatever is ** needed for debugging a problem.  -jfv */
+comment|/*  * This routine is meant to be fluid, add whatever is  * needed for debugging a problem.  -jfv  */
 end_comment
 
 begin_function

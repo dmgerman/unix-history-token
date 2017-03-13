@@ -1180,17 +1180,6 @@ modifier|*
 name|adapter
 decl_stmt|;
 name|struct
-name|em_tx_queue
-modifier|*
-name|que
-decl_stmt|;
-name|u32
-name|me
-decl_stmt|;
-name|int
-name|busy
-decl_stmt|;
-name|struct
 name|e1000_tx_desc
 modifier|*
 name|tx_base
@@ -1198,15 +1187,26 @@ decl_stmt|;
 name|uint64_t
 name|tx_paddr
 decl_stmt|;
-name|struct
-name|em_txbuffer
+name|qidx_t
 modifier|*
-name|tx_buffers
+name|tx_rsq
 decl_stmt|;
-name|u32
+name|bool
 name|tx_tso
 decl_stmt|;
 comment|/* last tx was tso */
+name|uint8_t
+name|me
+decl_stmt|;
+name|qidx_t
+name|tx_rs_cidx
+decl_stmt|;
+name|qidx_t
+name|tx_rs_pidx
+decl_stmt|;
+name|qidx_t
+name|tx_cidx_processed
+decl_stmt|;
 comment|/* Interrupt resources */
 name|void
 modifier|*
@@ -1657,16 +1657,16 @@ name|em_vendor_info_t
 typedef|;
 end_typedef
 
-begin_struct
-struct|struct
-name|em_txbuffer
-block|{
-name|int
-name|eop
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_function_decl
+name|void
+name|em_dump_rs
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#

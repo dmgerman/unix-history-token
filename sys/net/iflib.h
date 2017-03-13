@@ -58,6 +58,24 @@ file|<sys/gtaskqueue.h>
 end_include
 
 begin_comment
+comment|/*  * The value type for indexing, limits max descriptors  * to 65535 can be conditionally redefined to uint32_t  * in the future if the need arises.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|qidx_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|QIDX_INVALID
+value|0xFFFF
+end_define
+
+begin_comment
 comment|/*  * Most cards can handle much larger TSO requests  * but the FreeBSD TCP stack will break on larger  * values  */
 end_comment
 
@@ -125,7 +143,7 @@ block|{
 name|uint8_t
 name|irf_flid
 decl_stmt|;
-name|uint16_t
+name|qidx_t
 name|irf_idx
 decl_stmt|;
 name|uint16_t
@@ -156,7 +174,7 @@ name|uint16_t
 name|iri_len
 decl_stmt|;
 comment|/* packet length */
-name|uint16_t
+name|qidx_t
 name|iri_cidx
 decl_stmt|;
 comment|/* consumer index of cq */
@@ -167,10 +185,9 @@ name|iri_ifp
 decl_stmt|;
 comment|/* some drivers>1 interface per softc */
 comment|/* updated by driver */
-name|uint16_t
-name|iri_flags
+name|if_rxd_frag_t
+name|iri_frags
 decl_stmt|;
-comment|/* mbuf flags for packet */
 name|uint32_t
 name|iri_flowid
 decl_stmt|;
@@ -184,6 +201,10 @@ name|iri_csum_data
 decl_stmt|;
 comment|/* m_pkthdr csum data */
 name|uint8_t
+name|iri_flags
+decl_stmt|;
+comment|/* mbuf flags for packet */
+name|uint8_t
 name|iri_nfrags
 decl_stmt|;
 comment|/* number of fragments in packet */
@@ -195,12 +216,47 @@ name|uint8_t
 name|iri_pad
 decl_stmt|;
 comment|/* any padding in the received data */
-name|if_rxd_frag_t
-name|iri_frags
-decl_stmt|;
 block|}
 typedef|*
 name|if_rxd_info_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|if_rxd_update
+block|{
+name|uint64_t
+modifier|*
+name|iru_paddrs
+decl_stmt|;
+name|caddr_t
+modifier|*
+name|iru_vaddrs
+decl_stmt|;
+name|qidx_t
+modifier|*
+name|iru_idxs
+decl_stmt|;
+name|qidx_t
+name|iru_pidx
+decl_stmt|;
+name|uint16_t
+name|iru_qsidx
+decl_stmt|;
+name|uint16_t
+name|iru_count
+decl_stmt|;
+name|uint16_t
+name|iru_buf_size
+decl_stmt|;
+name|uint8_t
+name|iru_flidx
+decl_stmt|;
+block|}
+typedef|*
+name|if_rxd_update_t
 typedef|;
 end_typedef
 
@@ -242,24 +298,24 @@ typedef|typedef
 struct|struct
 name|if_pkt_info
 block|{
-name|uint32_t
-name|ipi_len
-decl_stmt|;
-comment|/* packet length */
 name|bus_dma_segment_t
 modifier|*
 name|ipi_segs
 decl_stmt|;
 comment|/* physical addresses */
+name|uint32_t
+name|ipi_len
+decl_stmt|;
+comment|/* packet length */
 name|uint16_t
 name|ipi_qsidx
 decl_stmt|;
 comment|/* queue set index */
-name|uint16_t
+name|qidx_t
 name|ipi_nsegs
 decl_stmt|;
 comment|/* number of segments */
-name|uint16_t
+name|qidx_t
 name|ipi_ndescs
 decl_stmt|;
 comment|/* number of descriptors used by encap */
@@ -267,35 +323,15 @@ name|uint16_t
 name|ipi_flags
 decl_stmt|;
 comment|/* iflib per-packet flags */
-name|uint32_t
+name|qidx_t
 name|ipi_pidx
 decl_stmt|;
 comment|/* start pidx for encap */
-name|uint32_t
+name|qidx_t
 name|ipi_new_pidx
 decl_stmt|;
 comment|/* next available pidx post-encap */
 comment|/* offload handling */
-name|uint64_t
-name|ipi_csum_flags
-decl_stmt|;
-comment|/* packet checksum flags */
-name|uint16_t
-name|ipi_tso_segsz
-decl_stmt|;
-comment|/* tso segment size */
-name|uint16_t
-name|ipi_mflags
-decl_stmt|;
-comment|/* packet mbuf flags */
-name|uint16_t
-name|ipi_vtag
-decl_stmt|;
-comment|/* VLAN tag */
-name|uint16_t
-name|ipi_etype
-decl_stmt|;
-comment|/* ether header type */
 name|uint8_t
 name|ipi_ehdrlen
 decl_stmt|;
@@ -309,14 +345,33 @@ name|ipi_tcp_hlen
 decl_stmt|;
 comment|/* tcp header length */
 name|uint8_t
+name|ipi_ipproto
+decl_stmt|;
+comment|/* ip protocol */
+name|uint32_t
+name|ipi_csum_flags
+decl_stmt|;
+comment|/* packet checksum flags */
+name|uint16_t
+name|ipi_tso_segsz
+decl_stmt|;
+comment|/* tso segment size */
+name|uint16_t
+name|ipi_vtag
+decl_stmt|;
+comment|/* VLAN tag */
+name|uint16_t
+name|ipi_etype
+decl_stmt|;
+comment|/* ether header type */
+name|uint8_t
 name|ipi_tcp_hflags
 decl_stmt|;
 comment|/* tcp header flags */
 name|uint8_t
-name|ipi_ipproto
+name|ipi_mflags
 decl_stmt|;
-comment|/* ip protocol */
-comment|/* implied padding */
+comment|/* packet mbuf flags */
 name|uint32_t
 name|ipi_tcp_seq
 decl_stmt|;
@@ -502,7 +557,8 @@ modifier|*
 parameter_list|,
 name|uint16_t
 parameter_list|,
-name|uint32_t
+name|qidx_t
+name|pidx
 parameter_list|)
 function_decl|;
 name|int
@@ -515,10 +571,10 @@ name|void
 modifier|*
 parameter_list|,
 name|uint16_t
-parameter_list|,
-name|uint32_t
+name|qsidx
 parameter_list|,
 name|bool
+name|clear
 parameter_list|)
 function_decl|;
 name|int
@@ -533,10 +589,10 @@ parameter_list|,
 name|uint16_t
 name|qsidx
 parameter_list|,
-name|uint32_t
+name|qidx_t
 name|pidx
 parameter_list|,
-name|int
+name|qidx_t
 name|budget
 parameter_list|)
 function_decl|;
@@ -562,28 +618,8 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|uint16_t
-name|qsidx
-parameter_list|,
-name|uint8_t
-name|flidx
-parameter_list|,
-name|uint32_t
-name|pidx
-parameter_list|,
-name|uint64_t
-modifier|*
-name|paddrs
-parameter_list|,
-name|caddr_t
-modifier|*
-name|vaddrs
-parameter_list|,
-name|uint16_t
-name|count
-parameter_list|,
-name|uint16_t
-name|buf_size
+name|if_rxd_update_t
+name|iru
 parameter_list|)
 function_decl|;
 name|void
@@ -601,7 +637,7 @@ parameter_list|,
 name|uint8_t
 name|flidx
 parameter_list|,
-name|uint32_t
+name|qidx_t
 name|pidx
 parameter_list|)
 function_decl|;
@@ -663,6 +699,19 @@ index|]
 decl_stmt|;
 name|uint32_t
 name|isc_rxqsizes
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* is there such thing as a descriptor that is more than 248 bytes ? */
+name|uint8_t
+name|isc_txd_size
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint8_t
+name|isc_rxd_size
 index|[
 literal|8
 index|]
@@ -735,12 +784,6 @@ name|driver_t
 modifier|*
 name|isc_driver
 decl_stmt|;
-name|int
-name|isc_nfl
-decl_stmt|;
-name|int
-name|isc_flags
-decl_stmt|;
 name|bus_size_t
 name|isc_q_align
 decl_stmt|;
@@ -760,23 +803,9 @@ name|int
 name|isc_rx_nsegments
 decl_stmt|;
 name|int
-name|isc_rx_process_limit
-decl_stmt|;
-name|int
-name|isc_ntxqs
-decl_stmt|;
-comment|/* # of tx queues per tx qset - usually 1 */
-name|int
-name|isc_nrxqs
-decl_stmt|;
-comment|/* # of rx queues per rx qset - intel 1, chelsio 2, broadcom 3 */
-name|int
 name|isc_admin_intrcnt
 decl_stmt|;
 comment|/* # of admin/link interrupts */
-name|int
-name|isc_tx_reclaim_thresh
-decl_stmt|;
 comment|/* fields necessary for probe */
 name|pci_vendor_info_t
 modifier|*
@@ -846,6 +875,31 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+comment|/* actively used during operation */
+name|int
+name|isc_nfl
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
+name|int
+name|isc_ntxqs
+decl_stmt|;
+comment|/* # of tx queues per tx qset - usually 1 */
+name|int
+name|isc_nrxqs
+decl_stmt|;
+comment|/* # of rx queues per rx qset - intel 1, chelsio 2, broadcom 3 */
+name|int
+name|isc_rx_process_limit
+decl_stmt|;
+name|int
+name|isc_tx_reclaim_thresh
+decl_stmt|;
+name|int
+name|isc_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -887,9 +941,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|IFLIB_INTR_RX
+block|,
 name|IFLIB_INTR_TX
 block|,
-name|IFLIB_INTR_RX
+name|IFLIB_INTR_RXTX
 block|,
 name|IFLIB_INTR_ADMIN
 block|,
@@ -981,6 +1037,17 @@ define|#
 directive|define
 name|IFLIB_TSO_INIT_IP
 value|0x20
+end_define
+
+begin_comment
+comment|/*  * Interface doesn't align IP header  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLIB_DO_RX_FIXUP
+value|0x40
 end_define
 
 begin_comment
