@@ -2447,7 +2447,7 @@ name|entries
 operator|=
 name|calloc
 argument_list|(
-literal|1
+name|INITIAL_ENTRIES_CAPACITY
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2456,8 +2456,6 @@ name|retval
 operator|->
 name|entries
 argument_list|)
-operator|*
-name|INITIAL_ENTRIES_CAPACITY
 argument_list|)
 expr_stmt|;
 name|assert
@@ -2676,15 +2674,13 @@ name|new_entries
 operator|=
 name|calloc
 argument_list|(
-literal|1
+name|new_capacity
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|new_entries
 argument_list|)
-operator|*
-name|new_capacity
 argument_list|)
 expr_stmt|;
 name|assert
@@ -2902,7 +2898,7 @@ name|policies
 operator|=
 name|calloc
 argument_list|(
-literal|1
+name|policies_size
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2911,8 +2907,6 @@ name|new_common_entry
 operator|->
 name|policies
 argument_list|)
-operator|*
-name|policies_size
 argument_list|)
 expr_stmt|;
 name|assert
