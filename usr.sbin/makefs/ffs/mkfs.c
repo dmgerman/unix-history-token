@@ -496,8 +496,6 @@ name|space
 decl_stmt|;
 name|int
 name|size
-decl_stmt|,
-name|blks
 decl_stmt|;
 name|int
 name|nprintcols
@@ -2252,17 +2250,6 @@ operator|=
 name|sblock
 operator|.
 name|fs_cssize
-expr_stmt|;
-name|blks
-operator|=
-name|howmany
-argument_list|(
-name|size
-argument_list|,
-name|sblock
-operator|.
-name|fs_fsize
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
