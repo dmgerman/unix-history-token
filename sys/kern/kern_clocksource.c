@@ -960,6 +960,12 @@ operator|>=
 name|state
 operator|->
 name|nextcallopt
+operator|||
+name|now
+operator|>=
+name|state
+operator|->
+name|nextcall
 condition|)
 block|{
 name|state
