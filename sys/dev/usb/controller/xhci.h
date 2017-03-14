@@ -2167,6 +2167,17 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
+name|xhci_reset_controller
+parameter_list|(
+name|struct
+name|xhci_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usb_error_t
 name|xhci_init
 parameter_list|(
 name|struct
