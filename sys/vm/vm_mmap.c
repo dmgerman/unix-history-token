@@ -2078,6 +2078,9 @@ decl_stmt|;
 name|vm_map_entry_t
 name|entry
 decl_stmt|;
+name|bool
+name|pmc_handled
+decl_stmt|;
 endif|#
 directive|endif
 name|vm_offset_t
@@ -2186,7 +2189,23 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
-comment|/* 	 * Inform hwpmc if the address range being unmapped contains 	 * an executable region. 	 */
+name|pmc_handled
+operator|=
+name|false
+expr_stmt|;
+if|if
+condition|(
+name|PMC_HOOK_INSTALLED
+argument_list|(
+name|PMC_FN_MUNMAP
+argument_list|)
+condition|)
+block|{
+name|pmc_handled
+operator|=
+name|true
+expr_stmt|;
+comment|/* 		 * Inform hwpmc if the address range being unmapped contains 		 * an executable region. 		 */
 name|pkm
 operator|.
 name|pm_address
@@ -2276,6 +2295,7 @@ break|break;
 block|}
 block|}
 block|}
+block|}
 endif|#
 directive|endif
 name|vm_map_delete
@@ -2292,6 +2312,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+name|pmc_handled
+argument_list|)
+condition|)
+block|{
 comment|/* downgrade the lock to prevent a LOR with the pmc-sx lock */
 name|vm_map_lock_downgrade
 argument_list|(
@@ -2328,15 +2356,15 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+endif|#
+directive|endif
 name|vm_map_unlock
 argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* vm_map_delete returns nothing but KERN_SUCCESS anyway */
 return|return
 operator|(
