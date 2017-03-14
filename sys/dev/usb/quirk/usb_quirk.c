@@ -4245,6 +4245,19 @@ argument_list|,
 name|UQ_AU_VENDOR_CLASS
 argument_list|)
 block|,
+name|USB_QUIRK
+argument_list|(
+name|CMEDIA
+argument_list|,
+name|CM6206
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_AU_SET_SPDIF_CM6206
+argument_list|)
+block|,
 comment|/* 	 * Quirks for manufacturers which USB devices does not respond 	 * after issuing non-supported commands: 	 */
 name|USB_QUIRK
 argument_list|(
@@ -4772,6 +4785,12 @@ name|UQ_MSC_DYMO_EJECT
 index|]
 operator|=
 literal|"UQ_MSC_DYMO_EJECT"
+block|,
+index|[
+name|UQ_AU_SET_SPDIF_CM6206
+index|]
+operator|=
+literal|"UQ_AU_SET_SPDIF_CM6206"
 block|, }
 decl_stmt|;
 end_decl_stmt
