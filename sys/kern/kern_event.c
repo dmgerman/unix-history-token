@@ -4184,6 +4184,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTRACE
+end_ifdef
+
 begin_function
 specifier|static
 name|size_t
@@ -4230,6 +4236,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
