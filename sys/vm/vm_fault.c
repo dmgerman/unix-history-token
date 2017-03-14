@@ -6048,7 +6048,7 @@ name|vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
 argument_list|,
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|dst_entry
 operator|->

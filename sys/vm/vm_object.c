@@ -1005,7 +1005,7 @@ name|_vm_object_allocate
 argument_list|(
 name|OBJT_PHYS
 argument_list|,
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|VM_MAX_KERNEL_ADDRESS
 operator|-
@@ -1054,7 +1054,7 @@ name|_vm_object_allocate
 argument_list|(
 name|OBJT_PHYS
 argument_list|,
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|VM_MAX_KERNEL_ADDRESS
 operator|-
@@ -3768,7 +3768,7 @@ name|offset
 operator|==
 literal|0
 operator|&&
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|size
 argument_list|)

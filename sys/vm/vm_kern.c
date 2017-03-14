@@ -404,8 +404,7 @@ name|vm_offset_t
 name|addr
 decl_stmt|,
 name|i
-decl_stmt|;
-name|vm_ooffset_t
+decl_stmt|,
 name|offset
 decl_stmt|;
 name|vm_page_t
@@ -493,7 +492,7 @@ name|vm_page_alloc_contig
 argument_list|(
 name|object
 argument_list|,
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|offset
 operator|+
@@ -721,10 +720,9 @@ decl_stmt|;
 name|vm_offset_t
 name|addr
 decl_stmt|,
-name|tmp
-decl_stmt|;
-name|vm_ooffset_t
 name|offset
+decl_stmt|,
+name|tmp
 decl_stmt|;
 name|vm_page_t
 name|end_m
@@ -808,7 +806,7 @@ name|vm_page_alloc_contig
 argument_list|(
 name|object
 argument_list|,
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|offset
 argument_list|)
@@ -1350,7 +1348,7 @@ name|vm_page_alloc
 argument_list|(
 name|object
 argument_list|,
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|offset
 operator|+
@@ -1573,7 +1571,7 @@ name|vm_page_lookup
 argument_list|(
 name|object
 argument_list|,
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|offset
 operator|+

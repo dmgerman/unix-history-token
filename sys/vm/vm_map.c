@@ -11760,7 +11760,7 @@ name|count
 decl_stmt|,
 name|size1
 decl_stmt|;
-name|vm_ooffset_t
+name|vm_size_t
 name|size
 decl_stmt|;
 name|vm_map_entry_unlink
@@ -11870,7 +11870,7 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|size
 argument_list|)

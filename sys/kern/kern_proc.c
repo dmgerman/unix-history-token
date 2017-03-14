@@ -12022,7 +12022,7 @@ else|else
 block|{
 name|pi_adv
 operator|=
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|entry
 operator|->
@@ -12186,7 +12186,7 @@ name|KVME_FLAG_SUPER
 expr_stmt|;
 name|pi_adv
 operator|=
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|pagesizes
 index|[
