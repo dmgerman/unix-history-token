@@ -281,20 +281,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Common chip shutdown function  */
-end_comment
-
-begin_function_decl
-name|void
-name|isp_shutdown
-parameter_list|(
-name|ispsoftc_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Put/Get routines to push from CPU view to device view  * or to pull from device view to CPU view for various  * data structures (IOCB)  */
 end_comment
 
