@@ -56,6 +56,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_INHERIT_ZERO
+value|((vm_inherit_t) 3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_INHERIT_DEFAULT
 value|VM_INHERIT_COPY
 end_define
