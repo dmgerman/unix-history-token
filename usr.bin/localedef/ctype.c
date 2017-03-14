@@ -1182,7 +1182,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|rl
 operator|.
@@ -1538,7 +1538,7 @@ name|ctype
 operator|&
 name|_ISPUNCT
 operator|)
-operator|&
+operator|&&
 operator|(
 name|ctn
 operator|->
@@ -1586,8 +1586,14 @@ name|ctype
 operator|&
 name|_ISCNTRL
 operator|)
+operator|&&
+operator|(
+name|ctn
+operator|->
+name|ctype
 operator|&
 name|_ISPRINT
+operator|)
 condition|)
 name|conflict
 operator|++
