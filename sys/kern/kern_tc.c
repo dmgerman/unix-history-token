@@ -5383,6 +5383,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+comment|/* 	 * td_rtcgen is modified by curthread when it is running, 	 * and by other threads in this function.  By finding the thread 	 * on a sleepqueue and holding the lock on the sleepqueue 	 * chain, we guarantee that the thread is not running and that 	 * modifying td_rtcgen is safe.  Setting td_rtcgen to zero informs 	 * the thread that it was woken due to a real-time clock adjustment. 	 * (The declaration of td_rtcgen refers to this comment.) 	 */
 if|if
 condition|(
 name|td
