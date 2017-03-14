@@ -206,7 +206,7 @@ parameter_list|(
 name|TF
 parameter_list|)
 define|\
-value|do {								\ 	__asm __volatile("mov %0, pc" : "=r" ((TF)->tf_pc));		\ 	} while (0)
+value|do {								\ 	(TF)->tf_spsr = PSR_SVC32_MODE;					\ 	__asm __volatile("mov %0, pc" : "=r" ((TF)->tf_pc));		\ 	__asm __volatile("mov %0, r11" : "=r" ((TF)->tf_r11));		\ 	} while (0)
 end_define
 
 begin_comment
