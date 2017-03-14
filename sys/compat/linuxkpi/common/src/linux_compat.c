@@ -4914,6 +4914,11 @@ name|timer_list
 modifier|*
 name|timer
 decl_stmt|;
+name|linux_set_current
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|timer
 operator|=
 name|context
@@ -6455,6 +6460,11 @@ name|irq_ent
 modifier|*
 name|irqe
 decl_stmt|;
+name|linux_set_current
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|irqe
 operator|=
 name|ent
