@@ -3899,21 +3899,6 @@ decl_stmt|,
 modifier|*
 name|nims
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|struct
-name|in_addr
-name|ia
-decl_stmt|;
-name|char
-name|addrbuf
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|find
 operator|.
 name|ims_haddr
@@ -4016,28 +4001,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR
-name|ia
-operator|.
-name|s_addr
-operator|=
-name|htonl
-argument_list|(
-name|haddr
-argument_list|)
-expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: allocated %s as %p"
+literal|"%s: allocated 0x%08x as %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_r
+name|htonl
 argument_list|(
-name|ia
-argument_list|,
-name|addrbuf
+name|haddr
 argument_list|)
 argument_list|,
 name|ims
@@ -4097,19 +4071,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR
-name|char
-name|addrbuf
-index|[
-name|INET_ADDRSTRLEN
-index|]
+name|uint32_t
+name|addr
 decl_stmt|;
-name|struct
-name|in_addr
-name|ia
-decl_stmt|;
-name|ia
-operator|.
-name|s_addr
+name|addr
 operator|=
 name|htonl
 argument_list|(
@@ -4136,18 +4101,13 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: t1 ex -= %d on %s"
+literal|"%s: t1 ex -= %d on 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
 name|n
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
-name|ia
-argument_list|,
-name|addrbuf
-argument_list|)
+name|addr
 argument_list|)
 expr_stmt|;
 name|ims
@@ -4179,18 +4139,13 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: t1 in -= %d on %s"
+literal|"%s: t1 in -= %d on 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
 name|n
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
-name|ia
-argument_list|,
-name|addrbuf
-argument_list|)
+name|addr
 argument_list|)
 expr_stmt|;
 name|ims
@@ -4221,18 +4176,13 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: t1 ex += %d on %s"
+literal|"%s: t1 ex += %d on 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
 name|n
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
-name|ia
-argument_list|,
-name|addrbuf
-argument_list|)
+name|addr
 argument_list|)
 expr_stmt|;
 name|ims
@@ -4264,18 +4214,13 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: t1 in += %d on %s"
+literal|"%s: t1 in += %d on 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
 name|n
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
-name|ia
-argument_list|,
-name|addrbuf
-argument_list|)
+name|addr
 argument_list|)
 expr_stmt|;
 name|ims
@@ -5423,17 +5368,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|char
-name|addrbuf
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|IN_MULTI_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
@@ -5441,17 +5375,13 @@ name|CTR4
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: join %s on %p(%s))"
+literal|"%s: join 0x%08x on %p(%s))"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
-operator|*
 name|gina
-argument_list|,
-name|addrbuf
-argument_list|)
+operator|->
+name|s_addr
 argument_list|,
 name|ifp
 argument_list|,
@@ -5707,17 +5637,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|char
-name|addrbuf
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 literal|0
@@ -5729,20 +5648,17 @@ name|CTR5
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: leave inm %p, %s/%s, imf %p"
+literal|"%s: leave inm %p, 0x%08x/%s, imf %p"
 argument_list|,
 name|__func__
 argument_list|,
 name|inm
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
 name|inm
 operator|->
 name|inm_addr
-argument_list|,
-name|addrbuf
-argument_list|)
+operator|.
+name|s_addr
 argument_list|,
 operator|(
 name|inm_is_ifp_detached
@@ -6084,17 +6000,6 @@ name|error
 decl_stmt|,
 name|doblock
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|char
-name|addrbuf
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|=
 name|NULL
@@ -6287,18 +6192,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: imr_interface = %s, ifp = %p"
+literal|"%s: imr_interface = 0x%08x, ifp = %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
 name|mreqs
 operator|.
 name|imr_interface
-argument_list|,
-name|addrbuf
-argument_list|)
+operator|.
+name|s_addr
 argument_list|,
 name|ifp
 argument_list|)
@@ -6622,20 +6524,17 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: source %s %spresent"
+literal|"%s: source 0x%08x %spresent"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
 name|ssa
 operator|->
 name|sin
 operator|.
 name|sin_addr
-argument_list|,
-name|addrbuf
-argument_list|)
+operator|.
+name|s_addr
 argument_list|,
 name|doblock
 condition|?
@@ -8719,17 +8618,6 @@ name|error
 decl_stmt|,
 name|is_new
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|char
-name|addrbuf
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|=
 name|NULL
@@ -9023,18 +8911,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: imr_interface = %s, ifp = %p"
+literal|"%s: imr_interface = 0x%08x, ifp = %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
 name|mreqs
 operator|.
 name|imr_interface
-argument_list|,
-name|addrbuf
-argument_list|)
+operator|.
+name|s_addr
 argument_list|,
 name|ifp
 argument_list|)
@@ -9943,17 +9828,6 @@ name|error
 decl_stmt|,
 name|is_final
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|char
-name|addrbuf
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|=
 name|NULL
@@ -10216,18 +10090,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: imr_interface = %s, ifp = %p"
+literal|"%s: imr_interface = 0x%08x, ifp = %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
 name|mreqs
 operator|.
 name|imr_interface
-argument_list|,
-name|addrbuf
-argument_list|)
+operator|.
+name|s_addr
 argument_list|,
 name|ifp
 argument_list|)
@@ -10596,20 +10467,17 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: source %s %spresent"
+literal|"%s: source 0x%08x %spresent"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
 name|ssa
 operator|->
 name|sin
 operator|.
 name|sin_addr
-argument_list|,
-name|addrbuf
-argument_list|)
+operator|.
+name|s_addr
 argument_list|,
 literal|"not "
 argument_list|)
@@ -10896,17 +10764,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|char
-name|addrbuf
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sopt
@@ -11081,18 +10938,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: ifp = %p, addr = %s"
+literal|"%s: ifp = %p, addr = 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
 name|ifp
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
 name|addr
-argument_list|,
-name|addrbuf
-argument_list|)
+operator|.
+name|s_addr
 argument_list|)
 expr_stmt|;
 block|}
@@ -12376,17 +12230,6 @@ name|fmode
 decl_stmt|,
 name|ifindex
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|char
-name|addrbuf
-index|[
-name|INET_ADDRSTRLEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|name
 operator|=
 operator|(
@@ -12485,16 +12328,13 @@ name|CTR2
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: group %s is not multicast"
+literal|"%s: group 0x%08x is not multicast"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_r
-argument_list|(
 name|group
-argument_list|,
-name|addrbuf
-argument_list|)
+operator|.
+name|s_addr
 argument_list|)
 expr_stmt|;
 return|return
@@ -12665,42 +12505,22 @@ argument_list|,
 argument|&inm->inm_srcs
 argument_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|KTR
-name|struct
-name|in_addr
-name|ina
-decl_stmt|;
-name|ina
-operator|.
-name|s_addr
-operator|=
+name|CTR2
+argument_list|(
+name|KTR_IGMPV3
+argument_list|,
+literal|"%s: visit node 0x%08x"
+argument_list|,
+name|__func__
+argument_list|,
 name|htonl
 argument_list|(
 name|ims
 operator|->
 name|ims_haddr
 argument_list|)
-expr_stmt|;
-name|CTR2
-argument_list|(
-name|KTR_IGMPV3
-argument_list|,
-literal|"%s: visit node %s"
-argument_list|,
-name|__func__
-argument_list|,
-name|inet_ntoa_r
-argument_list|(
-name|ina
-argument_list|,
-name|addrbuf
-argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * Only copy-out sources which are in-mode. 			 */
 if|if
 condition|(
