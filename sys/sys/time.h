@@ -1654,6 +1654,14 @@ name|sbt_tickthreshold
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|int
+name|rtc_generation
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Functions for looking at our clock: [get]{bin,nano,micro}[up]time()  *  * Functions without the "get" prefix returns the best timestamp  * we can produce in the given format.  *  * "bin"   == struct bintime  == seconds + 64 bit fraction of seconds.  * "nano"  == struct timespec == seconds + nanoseconds.  * "micro" == struct timeval  == seconds + microseconds.  *  * Functions containing "up" returns time relative to boot and  * should be used for calculating time intervals.  *  * Functions without "up" returns UTC time.  *  * Functions with the "get" prefix returns a less precise result  * much faster than the functions without "get" prefix and should  * be used where a precision of 1/hz seconds is acceptable or where  * performance is priority. (NB: "precision", _not_ "resolution" !)  */
 end_comment
