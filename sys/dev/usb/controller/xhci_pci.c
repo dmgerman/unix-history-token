@@ -1461,6 +1461,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|xhci_reset_controller
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|pci_disable_busmaster
 argument_list|(
 name|self
