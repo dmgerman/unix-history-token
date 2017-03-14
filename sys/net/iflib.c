@@ -3963,7 +3963,7 @@ name|slot
 operator|->
 name|len
 decl_stmt|;
-name|vm_paddr_t
+name|uint64_t
 name|paddr
 decl_stmt|;
 name|void
