@@ -60,17 +60,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
+begin_decl_stmt
+name|__NULLABILITY_PRAGMA_PUSH
 if|#
 directive|if
 name|__BSD_VISIBLE
-end_if
-
-begin_comment
 comment|/*  * XXX should enlarge these, if only to give empty names instead of bounds  * errors for large signal numbers.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|char
@@ -357,6 +352,7 @@ name|sigpending
 parameter_list|(
 name|sigset_t
 modifier|*
+name|_Nonnull
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -386,6 +382,7 @@ parameter_list|(
 specifier|const
 name|sigset_t
 modifier|*
+name|_Nonnull
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -397,10 +394,12 @@ parameter_list|(
 specifier|const
 name|sigset_t
 modifier|*
+name|_Nonnull
 name|__restrict
 parameter_list|,
 name|int
 modifier|*
+name|_Nonnull
 name|__restrict
 parameter_list|)
 function_decl|;
@@ -556,26 +555,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_macro
+name|void
+argument_list|(
+argument|* _Nullable sigset(int, void (* _Nullable)(int))
+argument_list|)
+end_macro
+
 begin_expr_stmt
-name|void
-argument_list|(
-operator|*
-name|sigset
-argument_list|(
+operator|(
 name|int
-argument_list|,
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-argument_list|)
-argument_list|(
-name|int
-argument_list|)
+operator|)
 expr_stmt|;
 end_expr_stmt
 
@@ -717,9 +707,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_expr_stmt
 name|__END_DECLS
-end_macro
+name|__NULLABILITY_PRAGMA_POP
+end_expr_stmt
 
 begin_endif
 endif|#

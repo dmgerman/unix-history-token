@@ -33,6 +33,10 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_macro
+name|__NULLABILITY_PRAGMA_PUSH
+end_macro
+
 begin_typedef
 typedef|typedef
 name|__off_t
@@ -270,6 +274,7 @@ comment|/* (*) cookie passed to io functions */
 name|int
 function_decl|(
 modifier|*
+name|_Nullable
 name|_close
 function_decl|)
 parameter_list|(
@@ -280,6 +285,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
+name|_Nullable
 name|_read
 function_decl|)
 parameter_list|(
@@ -295,6 +301,7 @@ function_decl|;
 name|fpos_t
 function_decl|(
 modifier|*
+name|_Nullable
 name|_seek
 function_decl|)
 parameter_list|(
@@ -309,6 +316,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
+name|_Nullable
 name|_write
 function_decl|)
 parameter_list|(
@@ -2283,6 +2291,7 @@ parameter_list|,
 name|int
 function_decl|(
 modifier|*
+name|_Nullable
 function_decl|)
 parameter_list|(
 name|void
@@ -2297,6 +2306,7 @@ parameter_list|,
 name|int
 function_decl|(
 modifier|*
+name|_Nullable
 function_decl|)
 parameter_list|(
 name|void
@@ -2312,6 +2322,7 @@ parameter_list|,
 name|fpos_t
 function_decl|(
 modifier|*
+name|_Nullable
 function_decl|)
 parameter_list|(
 name|void
@@ -2325,6 +2336,7 @@ parameter_list|,
 name|int
 function_decl|(
 modifier|*
+name|_Nullable
 function_decl|)
 parameter_list|(
 name|void
@@ -3006,9 +3018,10 @@ begin_comment
 comment|/* __cplusplus */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|__END_DECLS
-end_macro
+name|__NULLABILITY_PRAGMA_POP
+end_expr_stmt
 
 begin_endif
 endif|#

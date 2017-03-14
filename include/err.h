@@ -32,6 +32,7 @@ file|<sys/_types.h>
 end_include
 
 begin_decl_stmt
+name|__NULLABILITY_PRAGMA_PUSH
 name|__BEGIN_DECLS
 name|void
 name|err
@@ -321,6 +322,7 @@ parameter_list|(
 name|void
 function_decl|(
 modifier|*
+name|_Nullable
 function_decl|)
 parameter_list|(
 name|int
@@ -329,9 +331,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|__END_DECLS
-end_macro
+name|__NULLABILITY_PRAGMA_POP
+end_expr_stmt
 
 begin_endif
 endif|#
