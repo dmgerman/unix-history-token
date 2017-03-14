@@ -184,7 +184,7 @@ name|result
 decl_stmt|;
 name|result
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|path
 operator|=

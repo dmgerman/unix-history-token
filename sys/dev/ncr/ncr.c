@@ -17040,7 +17040,7 @@ literal|0
 expr_stmt|;
 name|script_base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|script_name
 operator|=
@@ -19619,7 +19619,7 @@ decl_stmt|;
 name|nccb_p
 name|cp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|u_long
 name|dsa

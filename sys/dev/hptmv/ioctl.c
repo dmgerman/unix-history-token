@@ -3489,7 +3489,7 @@ name|void
 modifier|*
 name|buffer
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|_VBUS_INST
 argument_list|(

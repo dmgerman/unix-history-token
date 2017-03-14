@@ -580,7 +580,7 @@ name|cdev
 modifier|*
 name|status_dev
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 

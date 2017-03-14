@@ -1780,7 +1780,7 @@ if|if
 condition|(
 name|newm
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|bad

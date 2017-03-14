@@ -711,7 +711,7 @@ name|assert
 argument_list|(
 name|pVM
 operator|!=
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

@@ -19510,7 +19510,7 @@ name|ccb_t
 modifier|*
 name|pccb
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|offset
@@ -20275,7 +20275,7 @@ name|ccb_hdr_t
 modifier|*
 name|hdr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|AGTIAPI_PRINTK
 argument_list|(
@@ -21159,7 +21159,7 @@ index|[
 name|devIdx
 index|]
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 comment|// AGTIAPI_PRINTK( "agtiapi_GetDevHandle: agDev %d not NULL %p\n",
@@ -23078,7 +23078,7 @@ name|ccb_t
 modifier|*
 name|pccb
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|AGTIAPI_PRINTK
 argument_list|(

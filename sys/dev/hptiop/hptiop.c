@@ -1862,7 +1862,7 @@ name|hpt_iop_request_scsi_command
 modifier|*
 name|req
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|union
 name|ccb

@@ -354,7 +354,7 @@ operator|&
 name|sectorsize
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 operator|||
 name|CALLBACK
 argument_list|(
@@ -368,7 +368,7 @@ operator|&
 name|mediasize
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

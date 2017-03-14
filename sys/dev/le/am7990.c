@@ -2399,7 +2399,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 comment|/* 		 * If BPF is listening on this interface, let it see the packet 		 * before we commit it to the wire. 		 */

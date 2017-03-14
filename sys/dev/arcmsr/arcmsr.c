@@ -6807,7 +6807,7 @@ name|u_int8_t
 modifier|*
 name|buf1
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|u_int32_t
 modifier|*
@@ -6816,7 +6816,7 @@ decl_stmt|,
 modifier|*
 name|buf2
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|u_int32_t
 name|iop_len
@@ -7263,7 +7263,7 @@ name|u_int8_t
 modifier|*
 name|buf1
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|u_int32_t
 modifier|*
@@ -7272,7 +7272,7 @@ decl_stmt|,
 modifier|*
 name|buf2
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|u_int32_t
 name|allxfer_len

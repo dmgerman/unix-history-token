@@ -15349,7 +15349,7 @@ name|ip
 modifier|*
 name|ip
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|i

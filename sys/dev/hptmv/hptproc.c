@@ -2288,12 +2288,12 @@ name|char
 modifier|*
 name|sType
 init|=
-literal|0
+name|NULL
 decl_stmt|,
 modifier|*
 name|sStatus
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 name|buf

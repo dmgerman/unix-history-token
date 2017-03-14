@@ -5453,14 +5453,14 @@ name|char
 modifier|*
 name|ptr
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|ppb_microseq
 modifier|*
 name|stack
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 comment|/* microsequence registers are equivalent to PC-like port registers */
 define|#
@@ -6396,7 +6396,7 @@ expr_stmt|;
 comment|/* reset the stack */
 name|stack
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* XXX return code */
 name|INCR_PC

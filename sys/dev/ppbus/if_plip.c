@@ -853,7 +853,7 @@ name|lp
 operator|->
 name|res_irq
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|device_printf
@@ -1971,7 +1971,7 @@ if|if
 condition|(
 name|ifr
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 return|return

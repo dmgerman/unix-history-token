@@ -4550,7 +4550,7 @@ index|[
 name|cnt
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 operator|*
 name|out_array

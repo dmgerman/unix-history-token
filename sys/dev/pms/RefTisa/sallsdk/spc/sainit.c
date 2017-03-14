@@ -143,7 +143,7 @@ name|void
 modifier|*
 name|eventLogAddress
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 

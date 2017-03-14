@@ -1369,7 +1369,7 @@ operator|+
 literal|1
 operator|)
 operator|==
-literal|0
+literal|'\0'
 operator|&&
 operator|!
 name|nullin

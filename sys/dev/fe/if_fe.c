@@ -7131,7 +7131,7 @@ name|m
 init|;
 name|mp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|mp
 operator|=
@@ -7181,7 +7181,7 @@ name|m
 init|;
 name|mp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|mp
 operator|=

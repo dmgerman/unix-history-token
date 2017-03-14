@@ -3693,7 +3693,7 @@ operator|->
 name|num
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* Deallocate buffers. */
 name|cp_bus_dma_mem_free
@@ -3712,7 +3712,7 @@ operator|->
 name|num
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|cp_bus_dma_mem_free
 argument_list|(

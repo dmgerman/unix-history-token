@@ -297,7 +297,7 @@ if|if
 condition|(
 name|addr
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

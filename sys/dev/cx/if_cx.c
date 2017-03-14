@@ -5834,7 +5834,7 @@ name|bd
 operator|->
 name|board
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|adapter
 index|[
@@ -5843,7 +5843,7 @@ operator|->
 name|num
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|free
 argument_list|(
