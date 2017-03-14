@@ -3790,11 +3790,11 @@ value|0x400
 end_define
 
 begin_comment
-comment|/*  * Handle an asynchronous event  *  * Return nonzero if the interrupt that generated this event has been dismissed.  */
+comment|/*  * Handle an asynchronous event  */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|isp_target_async
 parameter_list|(
 name|ispsoftc_t
