@@ -397,7 +397,7 @@ name|image_params
 modifier|*
 name|imgp
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|caddr_t
@@ -2612,7 +2612,7 @@ name|image_params
 modifier|*
 name|imgp
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|caddr_t
@@ -2658,7 +2658,7 @@ decl_stmt|;
 name|size_t
 name|copy_len
 decl_stmt|;
-name|vm_offset_t
+name|vm_ooffset_t
 name|file_addr
 decl_stmt|;
 comment|/* 	 * It's necessary to fail if the filsz + offset taken from the 	 * header is greater than the actual file pager object's size. 	 * If we were to allow this, then the vm_map_find() below would 	 * walk right off the end of the file object and into the ether. 	 * 	 * While I'm here, might as well check for something else that 	 * is invalid: filsz cannot be greater than memsz. 	 */
