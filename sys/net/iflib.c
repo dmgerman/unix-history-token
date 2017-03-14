@@ -817,7 +817,7 @@ name|CACHE_PTR_NEXT
 parameter_list|(
 name|ptr
 parameter_list|)
-value|((void *)(((vm_paddr_t)(ptr)+CACHE_LINE_SIZE-1)& (CACHE_LINE_SIZE-1)))
+value|((void *)(((uintptr_t)(ptr)+CACHE_LINE_SIZE-1)& (CACHE_LINE_SIZE-1)))
 end_define
 
 begin_define
