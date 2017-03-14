@@ -125,6 +125,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPUID_HV_MSR_TIME_REFCNT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* MSR_HV_TIME_REF_COUNT */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPUID_HV_MSR_HYPERCALL
 value|0x0020
 end_define
@@ -306,6 +317,24 @@ literal|0
 index|]
 operator|&
 name|CPUID_HV_MSR_HYPERCALL
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|regs
+index|[
+literal|0
+index|]
+operator|&
+name|CPUID_HV_MSR_TIME_REFCNT
 operator|)
 operator|==
 literal|0
@@ -669,6 +698,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __i386__ || __amd64__ */
+end_comment
 
 begin_ifndef
 ifndef|#
