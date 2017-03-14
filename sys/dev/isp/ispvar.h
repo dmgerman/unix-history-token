@@ -2056,29 +2056,9 @@ decl_stmt|;
 comment|/* last mbox command sent */
 specifier|volatile
 name|uint16_t
-name|isp_mbxwrk0
-decl_stmt|;
-specifier|volatile
-name|uint16_t
-name|isp_mbxwrk1
-decl_stmt|;
-specifier|volatile
-name|uint16_t
-name|isp_mbxwrk2
-decl_stmt|;
-specifier|volatile
-name|uint16_t
-name|isp_mbxwrk8
-decl_stmt|;
-specifier|volatile
-name|uint16_t
 name|isp_seqno
 decl_stmt|;
 comment|/* running sequence number */
-name|void
-modifier|*
-name|isp_mbxworkp
-decl_stmt|;
 comment|/* 	 * Active commands are stored here, indexed by handle functions. 	 */
 name|isp_hdl_t
 modifier|*
