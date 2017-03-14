@@ -606,7 +606,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|1024
+literal|3072
 condition|;
 name|i
 operator|++
