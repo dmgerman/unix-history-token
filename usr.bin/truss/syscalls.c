@@ -5255,7 +5255,7 @@ block|,
 operator|.
 name|nargs
 operator|=
-literal|3
+literal|2
 block|,
 operator|.
 name|args
@@ -5273,14 +5273,6 @@ block|{
 name|Ptr
 operator||
 name|OUT
-block|,
-literal|1
-block|}
-block|,
-block|{
-name|Ptr
-operator||
-name|IN
 block|,
 literal|1
 block|}
