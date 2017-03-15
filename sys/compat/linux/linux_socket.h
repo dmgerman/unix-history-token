@@ -502,15 +502,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
-end_comment
-
 begin_comment
 comment|/* Operations for socketcall */
 end_comment
@@ -654,6 +645,15 @@ directive|define
 name|LINUX_SENDMMSG
 value|20
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
+end_comment
 
 begin_comment
 comment|/* Socket options */
