@@ -1277,6 +1277,11 @@ operator|)
 name|target
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ld_bind_not
+condition|)
 operator|*
 name|where
 operator|=

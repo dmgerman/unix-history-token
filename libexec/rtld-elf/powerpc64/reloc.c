@@ -1864,6 +1864,13 @@ operator|->
 name|relocbase
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ld_bind_not
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * For the trampoline, the second two elements of the function 	 * descriptor are unused, so we are fine replacing those at any time 	 * with the real ones with no thread safety implications. However, we 	 * need to make sure the main entry point pointer ([0]) is seen to be 	 * modified *after* the second two elements. This can't be done in 	 * general, since there are no barriers in the reading code, but put in 	 * some isyncs to at least make it a little better. 	 */
 name|memcpy
 argument_list|(
@@ -1997,6 +2004,8 @@ operator|->
 name|relocbase
 expr_stmt|;
 block|}
+name|out
+label|:
 else|#
 directive|else
 name|dbg
@@ -2016,6 +2025,11 @@ operator|)
 name|target
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ld_bind_not
+condition|)
 operator|*
 name|wherep
 operator|=

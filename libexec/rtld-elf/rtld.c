@@ -1610,6 +1610,16 @@ comment|/* True if environment variables have been 				   used to affect the lib
 end_comment
 
 begin_decl_stmt
+name|bool
+name|ld_bind_not
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disable PLT update */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -3048,6 +3058,24 @@ argument_list|(
 literal|"BIND_NOW"
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ld_bind_now
+operator|==
+name|NULL
+condition|)
+name|ld_bind_not
+operator|=
+name|getenv
+argument_list|(
+name|_LD
+argument_list|(
+literal|"BIND_NOT"
+argument_list|)
+argument_list|)
+operator|!=
+name|NULL
 expr_stmt|;
 comment|/*       * If the process is tainted, then we un-set the dangerous environment      * variables.  The process will be marked as tainted until setuid(2)      * is called.  If any child process calls setuid(2) we do not want any      * future processes to honor the potentially un-safe variables.      */
 if|if

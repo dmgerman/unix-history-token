@@ -1306,6 +1306,9 @@ operator|*
 name|where
 operator|!=
 name|target
+operator|&&
+operator|!
+name|ld_bind_not
 condition|)
 operator|*
 name|where
@@ -1313,7 +1316,9 @@ operator|=
 name|target
 expr_stmt|;
 return|return
+operator|(
 name|target
+operator|)
 return|;
 block|}
 end_function
