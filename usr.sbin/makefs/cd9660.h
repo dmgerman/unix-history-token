@@ -438,34 +438,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CD9660_IS_COMMAND_ARG_DUAL
-parameter_list|(
-name|var
-parameter_list|,
-name|short
-parameter_list|,
-name|long
-parameter_list|)
-define|\
-value|(strcmp((var),(short)) == 0) || (strcmp((var),(long))==0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CD9660_IS_COMMAND_ARG
-parameter_list|(
-name|var
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|(strcmp((var),(arg)) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CD9660_TYPE_FILE
 value|0x01
 end_define

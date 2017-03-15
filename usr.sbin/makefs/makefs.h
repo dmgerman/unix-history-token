@@ -187,12 +187,85 @@ comment|/* fsnode is optional */
 end_comment
 
 begin_comment
+comment|/*  * option_t - contains option name, description, pointer to location to store  * result, and range checks for the result. Used to simplify fs specific  * option setting  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|OPT_STRARRAY
+block|,
+name|OPT_STRPTR
+block|,
+name|OPT_STRBUF
+block|,
+name|OPT_BOOL
+block|,
+name|OPT_INT8
+block|,
+name|OPT_INT16
+block|,
+name|OPT_INT32
+block|,
+name|OPT_INT64
+block|}
+name|opttype_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|char
+name|letter
+decl_stmt|;
+comment|/* option letter NUL for none */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* option name */
+name|void
+modifier|*
+name|value
+decl_stmt|;
+comment|/* where to stuff the value */
+name|opttype_t
+name|type
+decl_stmt|;
+comment|/* type of entry */
+name|long
+name|long
+name|minimum
+decl_stmt|;
+comment|/* minimum for value */
+name|long
+name|long
+name|maximum
+decl_stmt|;
+comment|/* maximum for value */
+specifier|const
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+comment|/* option description */
+block|}
+name|option_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * fsinfo_t - contains various settings and parameters pertaining to  * the image, including current settings, global options, and fs  * specific options  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
+name|makefs_fsinfo
 block|{
 comment|/* current settings */
 name|off_t
@@ -234,14 +307,14 @@ name|off_t
 name|freefiles
 decl_stmt|;
 comment|/* free file entries to leave */
-name|int
-name|freefilepc
-decl_stmt|;
-comment|/* free file % */
 name|off_t
 name|freeblocks
 decl_stmt|;
 comment|/* free blocks to leave */
+name|int
+name|freefilepc
+decl_stmt|;
+comment|/* free file % */
 name|int
 name|freeblockpc
 decl_stmt|;
@@ -267,46 +340,13 @@ modifier|*
 name|fs_specific
 decl_stmt|;
 comment|/* File system specific additions. */
+name|option_t
+modifier|*
+name|fs_options
+decl_stmt|;
+comment|/* File system specific options */
 block|}
 name|fsinfo_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * option_t - contains option name, description, pointer to location to store  * result, and range checks for the result. Used to simplify fs specific  * option setting  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* option name */
-name|int
-modifier|*
-name|value
-decl_stmt|;
-comment|/* where to stuff the value */
-name|int
-name|minimum
-decl_stmt|;
-comment|/* minimum for value */
-name|int
-name|maximum
-decl_stmt|;
-comment|/* maximum for value */
-specifier|const
-name|char
-modifier|*
-name|desc
-decl_stmt|;
-comment|/* option description */
-block|}
-name|option_t
 typedef|;
 end_typedef
 
@@ -370,6 +410,27 @@ begin_function_decl
 name|int
 name|set_option
 parameter_list|(
+specifier|const
+name|option_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|set_option_var
+parameter_list|(
+specifier|const
 name|option_t
 modifier|*
 parameter_list|,
@@ -380,6 +441,11 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -411,6 +477,18 @@ name|void
 name|free_fsnodes
 parameter_list|(
 name|fsnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|option_t
+modifier|*
+name|copy_opts
+parameter_list|(
+specifier|const
+name|option_t
 modifier|*
 parameter_list|)
 function_decl|;
