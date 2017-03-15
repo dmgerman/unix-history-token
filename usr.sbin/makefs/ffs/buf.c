@@ -183,9 +183,7 @@ name|DEBUG_BUF_BREAD
 condition|)
 name|printf
 argument_list|(
-literal|"bread: fs %p blkno %lld size %d\n"
-argument_list|,
-name|fs
+literal|"bread: blkno %lld size %d\n"
 argument_list|,
 operator|(
 name|long
@@ -234,12 +232,7 @@ name|DEBUG_BUF_BREAD
 condition|)
 name|printf
 argument_list|(
-literal|"bread: bp %p blkno %lld offset %lld bcount %ld\n"
-argument_list|,
-operator|(
-operator|*
-name|bpp
-operator|)
+literal|"bread: blkno %lld offset %lld bcount %ld\n"
 argument_list|,
 call|(
 name|long
@@ -557,9 +550,7 @@ name|DEBUG_BUF_BWRITE
 condition|)
 name|printf
 argument_list|(
-literal|"bwrite: bp %p blkno %lld offset %lld bcount %ld\n"
-argument_list|,
-name|bp
+literal|"bwrite: blkno %lld offset %lld bcount %ld\n"
 argument_list|,
 operator|(
 name|long
@@ -836,9 +827,7 @@ name|DEBUG_BUF_GETBLK
 condition|)
 name|printf
 argument_list|(
-literal|"getblk: fs %p blkno %lld size %d\n"
-argument_list|,
-name|fs
+literal|"getblk: blkno %lld size %d\n"
 argument_list|,
 operator|(
 name|long
