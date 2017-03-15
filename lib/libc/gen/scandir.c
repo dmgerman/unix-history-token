@@ -313,9 +313,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|size_t
-name|nitems
-init|=
-literal|0
+name|numitems
 decl_stmt|;
 name|long
 name|arraysz
@@ -377,6 +375,10 @@ condition|)
 goto|goto
 name|fail
 goto|;
+name|numitems
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -482,7 +484,7 @@ expr_stmt|;
 comment|/* 		 * Check to make sure the array has space left and 		 * realloc the maximum size. 		 */
 if|if
 condition|(
-name|nitems
+name|numitems
 operator|>=
 name|arraysz
 condition|)
@@ -550,7 +552,7 @@ expr_stmt|;
 block|}
 name|names
 index|[
-name|nitems
+name|numitems
 operator|++
 index|]
 operator|=
@@ -564,7 +566,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nitems
+name|numitems
 operator|&&
 name|dcomp
 operator|!=
@@ -577,7 +579,7 @@ name|qsort_b
 argument_list|(
 name|names
 argument_list|,
-name|nitems
+name|numitems
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -599,7 +601,7 @@ name|qsort_r
 argument_list|(
 name|names
 argument_list|,
-name|nitems
+name|numitems
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -623,14 +625,14 @@ name|names
 expr_stmt|;
 return|return
 operator|(
-name|nitems
+name|numitems
 operator|)
 return|;
 name|fail
 label|:
 while|while
 condition|(
-name|nitems
+name|numitems
 operator|>
 literal|0
 condition|)
@@ -639,7 +641,7 @@ argument_list|(
 name|names
 index|[
 operator|--
-name|nitems
+name|numitems
 index|]
 argument_list|)
 expr_stmt|;
