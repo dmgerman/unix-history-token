@@ -912,6 +912,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|filecaps
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|filedesc
 struct_decl|;
 end_struct_decl
@@ -1024,6 +1030,11 @@ parameter_list|,
 name|u_int
 modifier|*
 name|fflagp
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|havecaps
 parameter_list|)
 function_decl|;
 end_function_decl
