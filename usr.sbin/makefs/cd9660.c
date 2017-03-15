@@ -1644,7 +1644,9 @@ name|DEBUG_FS_PARSE_OPTS
 condition|)
 name|printf
 argument_list|(
-literal|"cd9660_parse_opts: got `%s'\n"
+literal|"%s: got `%s'\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|option
 argument_list|)
@@ -1942,7 +1944,7 @@ block|{
 name|warnx
 argument_list|(
 literal|"The Boot Image Directory parameter"
-literal|" requires a directory name\n"
+literal|" requires a directory name"
 argument_list|)
 expr_stmt|;
 name|rv
@@ -2178,7 +2180,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"cd9660_makefs: ISO level is %i\n"
+literal|"%s: ISO level is %i\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|diskStructure
 operator|->
@@ -2199,9 +2203,9 @@ name|allow_multidot
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EXIT_FAILURE
 argument_list|,
-literal|"allow-multidot requires iso level of 2\n"
+literal|"allow-multidot requires iso level of 2"
 argument_list|)
 expr_stmt|;
 name|assert
@@ -2245,7 +2249,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"cd9660_makefs: image %s directory %s root %p\n"
+literal|"%s: image %s directory %s root %p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|image
 argument_list|,
@@ -2369,10 +2375,12 @@ condition|)
 block|{
 name|errx
 argument_list|(
-literal|1
+name|EXIT_FAILURE
 argument_list|,
-literal|"cd9660_makefs: converted directory is empty. "
-literal|"Tree conversion failed\n"
+literal|"%s: converted directory is empty. "
+literal|"Tree conversion failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2386,9 +2394,11 @@ condition|)
 block|{
 name|errx
 argument_list|(
-literal|1
+name|EXIT_FAILURE
 argument_list|,
-literal|"cd9660_makefs: tree conversion failed\n"
+literal|"%s: tree conversion failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2404,7 +2414,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"cd9660_makefs: tree converted\n"
+literal|"%s: tree converted\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2431,7 +2443,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"cd9660_makefs: done converting tree\n"
+literal|"%s: done converting tree\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* non-SUSP extensions */
@@ -2526,7 +2540,7 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EXIT_FAILURE
 argument_list|,
 literal|"setup_boot failed"
 argument_list|)
@@ -2584,10 +2598,12 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"cd9660_makefs: Path table conversion complete. "
+literal|"%s: Path table conversion complete. "
 literal|"Each table is %i bytes, or %"
 name|PRIu64
 literal|" sectors.\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|diskStructure
 operator|->
@@ -2694,14 +2710,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd9660_makefs: Sectors 0-15 reserved\n"
+literal|"%s: Sectors 0-15 reserved\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cd9660_makefs: Primary path tables starts in sector %"
+literal|"%s: Primary path tables starts in sector %"
 name|PRId64
 literal|"\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|diskStructure
 operator|->
@@ -2710,9 +2730,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cd9660_makefs: File data starts in sector %"
+literal|"%s: File data starts in sector %"
 name|PRId64
 literal|"\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|diskStructure
 operator|->
@@ -2721,9 +2743,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cd9660_makefs: Total sectors: %"
+literal|"%s: Total sectors: %"
 name|PRId64
 literal|"\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|diskStructure
 operator|->
@@ -2796,7 +2820,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"cd9660_makefs: done\n"
+literal|"%s: done\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -3960,8 +3986,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"cd9660_translate_node: NULL node passed, "
-literal|"returning\n"
+literal|"%s: NULL node passed, returning\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -5429,7 +5456,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ((next = TAILQ_NEXT(iter, cn_next_child)) != NULL) { 		printf("cd9660_recurse_on_collision: count is %i \n", count); 		compare = cd9660_compare_filename(iter->isoDirRecord->name, 			next->isoDirRecord->name); 		if (compare == 0) { 			count++; 			return cd9660_recurse_on_collision(next, count); 		} else 			return count; 	}
+block|if ((next = TAILQ_NEXT(iter, cn_next_child)) != NULL) { 		printf("%s: count is %i\n", __func__, count); 		compare = cd9660_compare_filename(iter->isoDirRecord->name, 			next->isoDirRecord->name); 		if (compare == 0) { 			count++; 			return cd9660_recurse_on_collision(next, count); 		} else 			return count; 	}
 endif|#
 directive|endif
 return|return
@@ -5862,7 +5889,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: root is null\n"
+literal|"%s: root is null"
 argument_list|,
 name|__func__
 argument_list|)
@@ -6705,7 +6732,7 @@ name|CD9660MAXPATH
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EXIT_FAILURE
 argument_list|,
 literal|"Pathname too long."
 argument_list|)

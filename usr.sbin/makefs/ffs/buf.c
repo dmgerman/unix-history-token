@@ -183,7 +183,9 @@ name|DEBUG_BUF_BREAD
 condition|)
 name|printf
 argument_list|(
-literal|"bread: blkno %lld size %d\n"
+literal|"%s: blkno %lld size %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|long
@@ -232,7 +234,9 @@ name|DEBUG_BUF_BREAD
 condition|)
 name|printf
 argument_list|(
-literal|"bread: blkno %lld offset %lld bcount %ld\n"
+literal|"%s: blkno %lld offset %lld bcount %ld\n"
+argument_list|,
+name|__func__
 argument_list|,
 call|(
 name|long
@@ -282,7 +286,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"bread: lseek %lld (%lld)"
+literal|"%s: lseek %lld (%lld)"
+argument_list|,
+name|__func__
 argument_list|,
 call|(
 name|long
@@ -336,7 +342,9 @@ name|DEBUG_BUF_BREAD
 condition|)
 name|printf
 argument_list|(
-literal|"bread: read %ld (%lld) returned %d\n"
+literal|"%s: read %ld (%lld) returned %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 operator|*
@@ -369,7 +377,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"bread: read %ld (%lld) returned %d"
+literal|"%s: read %ld (%lld) returned %d"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 operator|*
@@ -407,7 +417,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"bread: read %ld (%lld) returned %d"
+literal|"%s: read %ld (%lld) returned %d"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 operator|*

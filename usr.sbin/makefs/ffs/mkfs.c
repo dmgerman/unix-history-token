@@ -4834,18 +4834,15 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"ffs_rdfs: seek error for sector %lld: %s\n"
+literal|"%s: seek error for sector %lld"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|long
 name|long
 operator|)
 name|bno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|n
@@ -4876,7 +4873,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"ffs_rdfs: read error bno %lld size %d"
+literal|"%s: read error bno %lld size %d"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|long
@@ -4899,18 +4898,15 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"ffs_rdfs: read error for sector %lld: %s\n"
+literal|"%s: read error for sector %lld"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|long
 name|long
 operator|)
 name|bno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4975,18 +4971,15 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"wtfs: seek error for sector %lld: %s\n"
+literal|"%s: seek error for sector %lld"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|long
 name|long
 operator|)
 name|bno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|n
@@ -5013,18 +5006,15 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"wtfs: write error for sector %lld: %s\n"
+literal|"%s: write error for sector %lld"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|long
 name|long
 operator|)
 name|bno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5038,18 +5028,15 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"wtfs: write error for sector %lld: %s\n"
+literal|"%s: write error for sector %lld"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|long
 name|long
 operator|)
 name|bno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5144,7 +5131,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"ilog2: %d is not a power of 2\n"
+literal|"%s: %d is not a power of 2"
+argument_list|,
+name|__func__
 argument_list|,
 name|val
 argument_list|)

@@ -2580,7 +2580,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"sparse option disabled.\n"
+literal|"sparse option disabled."
 argument_list|)
 expr_stmt|;
 name|fsopts
