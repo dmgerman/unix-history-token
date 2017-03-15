@@ -3824,6 +3824,9 @@ case|case
 name|SYS_bindat
 case|:
 case|case
+name|SYS_chflagsat
+case|:
+case|case
 name|SYS_connectat
 case|:
 case|case
@@ -4460,6 +4463,9 @@ expr_stmt|;
 break|break;
 case|case
 name|SYS_chflags
+case|:
+case|case
+name|SYS_chflagsat
 case|:
 case|case
 name|SYS_fchflags
