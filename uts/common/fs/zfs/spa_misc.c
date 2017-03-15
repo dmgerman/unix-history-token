@@ -6874,6 +6874,9 @@ expr_stmt|;
 name|range_tree_init
 argument_list|()
 expr_stmt|;
+name|metaslab_alloc_trace_init
+argument_list|()
+expr_stmt|;
 name|zio_init
 argument_list|()
 expr_stmt|;
@@ -6927,6 +6930,9 @@ name|dmu_fini
 argument_list|()
 expr_stmt|;
 name|zio_fini
+argument_list|()
+expr_stmt|;
+name|metaslab_alloc_trace_fini
 argument_list|()
 expr_stmt|;
 name|range_tree_fini
