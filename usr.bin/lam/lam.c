@@ -592,6 +592,10 @@ name|rights_ro
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
 condition|)
 name|err
 argument_list|(
