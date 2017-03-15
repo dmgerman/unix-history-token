@@ -1221,7 +1221,7 @@ argument_list|)
 block|,
 name|OPT_BOOL
 argument_list|(
-literal|'d'
+literal|'m'
 argument_list|,
 literal|"allow-multidot"
 argument_list|,
