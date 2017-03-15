@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2017, Intel Corporation   All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions are met:     1. Redistributions of source code must retain the above copyright notice,       this list of conditions and the following disclaimer.     2. Redistributions in binary form must reproduce the above copyright       notice, this list of conditions and the following disclaimer in the       documentation and/or other materials provided with the distribution.     3. Neither the name of the Intel Corporation nor the names of its       contributors may be used to endorse or promote products derived from       this software without specific prior written permission.    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -391,6 +391,14 @@ name|mac
 operator|->
 name|ops
 operator|.
+name|init_swfw_sync
+operator|=
+name|ixgbe_init_swfw_sync_X540
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
 name|disable_sec_rx_path
 operator|=
 name|ixgbe_disable_sec_rx_path_generic
@@ -522,6 +530,38 @@ operator|.
 name|check_link
 operator|=
 name|ixgbe_check_mac_link_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|bypass_rw
+operator|=
+name|ixgbe_bypass_rw_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|bypass_valid_rd
+operator|=
+name|ixgbe_bypass_valid_rd_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|bypass_set
+operator|=
+name|ixgbe_bypass_set_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|bypass_rd_eep
+operator|=
+name|ixgbe_bypass_rd_eep_generic
 expr_stmt|;
 name|mac
 operator|->
@@ -1006,35 +1046,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|hw
-operator|->
-name|mac
-operator|.
-name|ops
-operator|.
-name|set_rar
-argument_list|(
-name|hw
-argument_list|,
-name|hw
-operator|->
-name|mac
-operator|.
-name|num_rar_entries
-operator|-
-literal|1
-argument_list|,
-name|hw
-operator|->
-name|mac
-operator|.
-name|san_addr
-argument_list|,
-literal|0
-argument_list|,
-name|IXGBE_RAH_AV
-argument_list|)
-expr_stmt|;
 comment|/* Save the SAN MAC RAR index */
 name|hw
 operator|->
@@ -1049,6 +1060,53 @@ operator|.
 name|num_rar_entries
 operator|-
 literal|1
+expr_stmt|;
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|set_rar
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|san_mac_rar_index
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|san_addr
+argument_list|,
+literal|0
+argument_list|,
+name|IXGBE_RAH_AV
+argument_list|)
+expr_stmt|;
+comment|/* clear VMDq pool/queue selection for this RAR */
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|clear_vmdq
+argument_list|(
+name|hw
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|san_mac_rar_index
+argument_list|,
+name|IXGBE_CLEAR_VMDQ_ALL
+argument_list|)
 expr_stmt|;
 comment|/* Reserve the last RAR for the SAN MAC address */
 name|hw
@@ -1743,11 +1801,6 @@ init|=
 literal|0
 decl_stmt|;
 name|u16
-name|checksum_last_word
-init|=
-name|IXGBE_EEPROM_CHECKSUM
-decl_stmt|;
-name|u16
 name|ptr_start
 init|=
 name|IXGBE_PCIE_ANALOG_PTR
@@ -1758,7 +1811,7 @@ argument_list|(
 literal|"ixgbe_calc_eeprom_checksum_X540"
 argument_list|)
 expr_stmt|;
-comment|/* Include 0x0-0x3F in the checksum */
+comment|/* Include 0x0 up to IXGBE_EEPROM_CHECKSUM; do not include the 	 * checksum itself 	 */
 for|for
 control|(
 name|i
@@ -1766,8 +1819,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
-name|checksum_last_word
+operator|<
+name|IXGBE_EEPROM_CHECKSUM
 condition|;
 name|i
 operator|++
@@ -1795,12 +1848,6 @@ return|return
 name|IXGBE_ERR_EEPROM
 return|;
 block|}
-if|if
-condition|(
-name|i
-operator|!=
-name|IXGBE_EEPROM_CHECKSUM
-condition|)
 name|checksum
 operator|+=
 name|word
@@ -2720,9 +2767,16 @@ argument_list|(
 name|hw
 argument_list|)
 condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"Failed to get NVM access and register semaphore, returning IXGBE_ERR_SWFW_SYNC\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|IXGBE_ERR_SWFW_SYNC
 return|;
+block|}
 name|swfw_sync
 operator|=
 name|IXGBE_READ_REG
@@ -2772,11 +2826,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|msec_delay
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
 return|return
 name|IXGBE_SUCCESS
 return|;
@@ -2808,6 +2857,11 @@ argument_list|,
 literal|"Failed to get SW only semaphore"
 argument_list|)
 expr_stmt|;
+name|DEBUGOUT
+argument_list|(
+literal|"Failed to get SW only semaphore, returning IXGBE_ERR_SWFW_SYNC\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|IXGBE_ERR_SWFW_SYNC
 return|;
@@ -2820,9 +2874,16 @@ argument_list|(
 name|hw
 argument_list|)
 condition|)
+block|{
+name|DEBUGOUT
+argument_list|(
+literal|"Failed to get NVM sempahore and register semaphore while forcefully ignoring FW sempahore bit(s) and setting SW semaphore bit(s), returning IXGBE_ERR_SWFW_SYNC\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|IXGBE_ERR_SWFW_SYNC
 return|;
+block|}
 name|swfw_sync
 operator|=
 name|IXGBE_READ_REG
@@ -2915,6 +2976,11 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+name|DEBUGOUT
+argument_list|(
+literal|"Resource not released by other SW, returning IXGBE_ERR_SWFW_SYNC\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|IXGBE_ERR_SWFW_SYNC
 return|;
@@ -2922,6 +2988,11 @@ block|}
 name|ixgbe_release_swfw_sync_semaphore
 argument_list|(
 name|hw
+argument_list|)
+expr_stmt|;
+name|DEBUGOUT
+argument_list|(
+literal|"Returning error IXGBE_ERR_SWFW_SYNC\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3019,7 +3090,7 @@ argument_list|)
 expr_stmt|;
 name|msec_delay
 argument_list|(
-literal|5
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -3295,6 +3366,34 @@ block|}
 end_function
 
 begin_comment
+comment|/**  *  ixgbe_init_swfw_sync_X540 - Release hardware semaphore  *  @hw: pointer to hardware structure  *  *  This function reset hardware semaphore bits for a semaphore that may  *  have be left locked due to a catastrophic failure.  **/
+end_comment
+
+begin_function
+name|void
+name|ixgbe_init_swfw_sync_X540
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+comment|/* First try to grab the semaphore but we don't need to bother 	 * looking to see whether we got the lock or  not since we do 	 * the same thing regardless of whether we got the lock or not. 	 * We got the lock - we release it. 	 * We timeout trying to get the lock - we force its release. 	 */
+name|ixgbe_get_swfw_sync_semaphore
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+name|ixgbe_release_swfw_sync_semaphore
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * ixgbe_blink_led_start_X540 - Blink LED based on index.  * @hw: pointer to hardware structure  * @index: led number to blink  *  * Devices that implement the version 2 interface:  *   X540  **/
 end_comment
 
@@ -3328,6 +3427,15 @@ argument_list|(
 literal|"ixgbe_blink_led_start_X540"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|index
+operator|>
+literal|3
+condition|)
+return|return
+name|IXGBE_ERR_PARAM
+return|;
 comment|/* 	 * Link should be up in order for the blink bit in the LED control 	 * register to work. Force link and speed in the MAC if link is down. 	 * This will be reversed when we stop the blinking. 	 */
 name|hw
 operator|->
@@ -3450,6 +3558,15 @@ decl_stmt|;
 name|u32
 name|ledctl_reg
 decl_stmt|;
+if|if
+condition|(
+name|index
+operator|>
+literal|3
+condition|)
+return|return
+name|IXGBE_ERR_PARAM
+return|;
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_blink_led_stop_X540"

@@ -33,7 +33,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"ixgbe.h"
+file|"ixv.h"
 end_include
 
 begin_decl_stmt
@@ -53,19 +53,6 @@ name|bool
 name|ixgbe_rsc_enable
 init|=
 name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * For Flow Director: this is the  * number of TX packets we sample  * for the filter pool, this means  * every 20th packet will be probed.  *  * This feature can be disabled by  * setting this to 0.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|atr_sample_rate
-init|=
-literal|20
 decl_stmt|;
 end_decl_stmt
 
@@ -289,18 +276,18 @@ end_function_decl
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
-name|M_IXGBE
+name|M_IXV
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/************************************************************************  * ixgbe_legacy_start_locked - Transmit entry point  *  *   Called by the stack to initiate a transmit.  *   The driver will remain in this routine as long as there are  *   packets to transmit and transmit resources are available.  *   In case resources are not available, the stack is notified  *   and the packet is requeued.  ************************************************************************/
+comment|/************************************************************************  * ixv_legacy_start_locked - Transmit entry point  *  *   Called by the stack to initiate a transmit.  *   The driver will remain in this routine as long as there are  *   packets to transmit and transmit resources are available.  *   In case resources are not available, the stack is notified  *   and the packet is requeued.  ************************************************************************/
 end_comment
 
 begin_function
 name|int
-name|ixgbe_legacy_start_locked
+name|ixv_legacy_start_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -444,16 +431,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* ixgbe_legacy_start_locked */
+comment|/* ixv_legacy_start_locked */
 end_comment
 
 begin_comment
-comment|/************************************************************************  * ixgbe_legacy_start  *  *   Called by the stack, this always uses the first tx ring,  *   and should not be used with multiqueue tx enabled.  ************************************************************************/
+comment|/************************************************************************  * ixv_legacy_start  *  *   Called by the stack, this always uses the first tx ring,  *   and should not be used with multiqueue tx enabled.  ************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|ixgbe_legacy_start
+name|ixv_legacy_start
 parameter_list|(
 name|struct
 name|ifnet
@@ -493,7 +480,7 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-name|ixgbe_legacy_start_locked
+name|ixv_legacy_start_locked
 argument_list|(
 name|ifp
 argument_list|,
@@ -510,16 +497,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* ixgbe_legacy_start */
+comment|/* ixv_legacy_start */
 end_comment
 
 begin_comment
-comment|/************************************************************************  * ixgbe_mq_start - Multiqueue Transmit Entry Point  *  *   (if_transmit function)  ************************************************************************/
+comment|/************************************************************************  * ixv_mq_start - Multiqueue Transmit Entry Point  *  *   (if_transmit function)  ************************************************************************/
 end_comment
 
 begin_function
 name|int
-name|ixgbe_mq_start
+name|ixv_mq_start
 parameter_list|(
 name|struct
 name|ifnet
@@ -738,7 +725,7 @@ name|txr
 argument_list|)
 condition|)
 block|{
-name|ixgbe_mq_start_locked
+name|ixv_mq_start_locked
 argument_list|(
 name|ifp
 argument_list|,
@@ -773,16 +760,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* ixgbe_mq_start */
+comment|/* ixv_mq_start */
 end_comment
 
 begin_comment
-comment|/************************************************************************  * ixgbe_mq_start_locked  ************************************************************************/
+comment|/************************************************************************  * ixv_mq_start_locked  ************************************************************************/
 end_comment
 
 begin_function
 name|int
-name|ixgbe_mq_start_locked
+name|ixv_mq_start_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -841,67 +828,6 @@ name|ENETDOWN
 operator|)
 return|;
 comment|/* Process the queue */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|901504
-name|next
-operator|=
-name|drbr_dequeue
-argument_list|(
-name|ifp
-argument_list|,
-name|txr
-operator|->
-name|br
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|next
-operator|!=
-name|NULL
-condition|)
-block|{
-name|err
-operator|=
-name|ixgbe_xmit
-argument_list|(
-name|txr
-argument_list|,
-operator|&
-name|next
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|next
-operator|!=
-name|NULL
-condition|)
-name|err
-operator|=
-name|drbr_enqueue
-argument_list|(
-name|ifp
-argument_list|,
-name|txr
-operator|->
-name|br
-argument_list|,
-name|next
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 while|while
 condition|(
 operator|(
@@ -964,15 +890,8 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|901504
 name|drbr_advance
 argument_list|(
 name|ifp
@@ -982,11 +901,34 @@ operator|->
 name|br
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|enqueued
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100036
+comment|/* 		 * Since we're looking at the tx ring, we can check 		 * to see if we're a VF by examing our tail register 		 * address. 		 */
+if|if
+condition|(
+name|next
+operator|->
+name|m_flags
+operator|&
+name|M_MCAST
+condition|)
+name|if_inc_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_OMCASTS
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Send a copy of the frame to the BPF listener */
 name|ETHER_BPF_MTAP
 argument_list|(
@@ -1008,24 +950,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|901504
-name|next
-operator|=
-name|drbr_dequeue
-argument_list|(
-name|ifp
-argument_list|,
-name|txr
-operator|->
-name|br
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -1040,7 +964,7 @@ operator|->
 name|adapter
 argument_list|)
 condition|)
-name|ixgbe_txeof
+name|ixv_txeof
 argument_list|(
 name|txr
 argument_list|)
@@ -1051,10 +975,19 @@ name|err
 operator|)
 return|;
 block|}
-comment|/* ixgbe_mq_start_locked */
-comment|/************************************************************************  * ixgbe_deferred_mq_start  *  *   Called from a taskqueue to drain queued transmit packets.  ************************************************************************/
+end_function
+
+begin_comment
+comment|/* ixv_mq_start_locked */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_deferred_mq_start  *  *   Called from a taskqueue to drain queued transmit packets.  ************************************************************************/
+end_comment
+
+begin_function
 name|void
-name|ixgbe_deferred_mq_start
+name|ixv_deferred_mq_start
 parameter_list|(
 name|void
 modifier|*
@@ -1106,7 +1039,7 @@ operator|->
 name|br
 argument_list|)
 condition|)
-name|ixgbe_mq_start_locked
+name|ixv_mq_start_locked
 argument_list|(
 name|ifp
 argument_list|,
@@ -1119,10 +1052,19 @@ name|txr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* ixgbe_deferred_mq_start */
-comment|/************************************************************************  * ixgbe_qflush - Flush all ring buffers  ************************************************************************/
+end_function
+
+begin_comment
+comment|/* ixv_deferred_mq_start */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_qflush - Flush all ring buffers  ************************************************************************/
+end_comment
+
+begin_function
 name|void
-name|ixgbe_qflush
+name|ixv_qflush
 parameter_list|(
 name|struct
 name|ifnet
@@ -1210,8 +1152,17 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* ixgbe_qflush */
+end_function
+
+begin_comment
+comment|/* ixv_qflush */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_xmit  *  *   This routine maps the mbufs to tx descriptors, allowing the  *   TX engine to transmit the packets.  *  *   Return 0 on success, positive on failure  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|ixgbe_xmit
@@ -1569,60 +1520,6 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* Do the flow director magic */
-if|if
-condition|(
-operator|(
-name|adapter
-operator|->
-name|feat_en
-operator|&
-name|IXGBE_FEATURE_FDIR
-operator|)
-operator|&&
-operator|(
-name|txr
-operator|->
-name|atr_sample
-operator|)
-operator|&&
-operator|(
-operator|!
-name|adapter
-operator|->
-name|fdir_reinit
-operator|)
-condition|)
-block|{
-operator|++
-name|txr
-operator|->
-name|atr_count
-expr_stmt|;
-if|if
-condition|(
-name|txr
-operator|->
-name|atr_count
-operator|>=
-name|atr_sample_rate
-condition|)
-block|{
-name|ixgbe_atr
-argument_list|(
-name|txr
-argument_list|,
-name|m_head
-argument_list|)
-expr_stmt|;
-name|txr
-operator|->
-name|atr_count
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
 name|olinfo_status
 operator||=
 name|IXGBE_ADVTXD_CC
@@ -1883,8 +1780,17 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_xmit */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_allocate_transmit_buffers  *  *   Allocate memory for tx_buffer structures. The tx_buffer stores all  *   the information needed to transmit a packet on the wire. This is  *   called only once at attach, setup is done every reset.  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|ixgbe_allocate_transmit_buffers
@@ -2015,7 +1921,7 @@ name|adapter
 operator|->
 name|num_tx_desc
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2112,7 +2018,7 @@ return|;
 name|fail
 label|:
 comment|/* We free all, it handles case where we are in the middle */
-name|ixgbe_free_transmit_structures
+name|ixv_free_transmit_structures
 argument_list|(
 name|adapter
 argument_list|)
@@ -2123,8 +2029,17 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_allocate_transmit_buffers */
+end_comment
+
+begin_comment
 comment|/************************************************************************  *  *  Initialize a transmit ring.  *  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ixgbe_setup_transmit_ring
@@ -2389,21 +2304,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Set the rate at which we sample packets */
-if|if
-condition|(
-name|adapter
-operator|->
-name|feat_en
-operator|&
-name|IXGBE_FEATURE_FDIR
-condition|)
-name|txr
-operator|->
-name|atr_sample
-operator|=
-name|atr_sample_rate
-expr_stmt|;
 comment|/* Set number of descriptors available */
 name|txr
 operator|->
@@ -2438,10 +2338,19 @@ name|txr
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_setup_transmit_ring */
-comment|/************************************************************************  * ixgbe_setup_transmit_structures - Initialize all transmit rings.  ************************************************************************/
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_setup_transmit_structures - Initialize all transmit rings.  ************************************************************************/
+end_comment
+
+begin_function
 name|int
-name|ixgbe_setup_transmit_structures
+name|ixv_setup_transmit_structures
 parameter_list|(
 name|struct
 name|adapter
@@ -2488,10 +2397,19 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* ixgbe_setup_transmit_structures */
-comment|/************************************************************************  * ixgbe_free_transmit_structures - Free all transmit rings.  ************************************************************************/
+end_function
+
+begin_comment
+comment|/* ixv_setup_transmit_structures */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_free_transmit_structures - Free all transmit rings.  ************************************************************************/
+end_comment
+
+begin_function
 name|void
-name|ixgbe_free_transmit_structures
+name|ixv_free_transmit_structures
 parameter_list|(
 name|struct
 name|adapter
@@ -2565,12 +2483,21 @@ name|adapter
 operator|->
 name|tx_rings
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* ixgbe_free_transmit_structures */
+end_function
+
+begin_comment
+comment|/* ixv_free_transmit_structures */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_free_transmit_buffers  *  *   Free transmit ring related data structures.  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ixgbe_free_transmit_buffers
@@ -2765,7 +2692,7 @@ name|txr
 operator|->
 name|br
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|)
 expr_stmt|;
 if|if
@@ -2783,7 +2710,7 @@ name|txr
 operator|->
 name|tx_buffers
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|)
 expr_stmt|;
 name|txr
@@ -2817,8 +2744,17 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_free_transmit_buffers */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_tx_ctx_setup  *  *   Advanced Context Descriptor setup for VLAN, CSUM or TSO  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|ixgbe_tx_ctx_setup
@@ -3452,8 +3388,17 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_tx_ctx_setup */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_tso_setup  *  *   Setup work for hardware segmentation offload (TSO) on  *   adapters using advanced tx descriptors  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|ixgbe_tso_setup
@@ -4008,10 +3953,19 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_tso_setup */
-comment|/************************************************************************  * ixgbe_txeof  *  *   Examine each tx_buffer in the used queue. If the hardware is done  *   processing the packet then free associated resources. The  *   tx_buffer is put back on the free queue.  ************************************************************************/
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_txeof  *  *   Examine each tx_buffer in the used queue. If the hardware is done  *   processing the packet then free associated resources. The  *   tx_buffer is put back on the free queue.  ************************************************************************/
+end_comment
+
+begin_function
 name|void
-name|ixgbe_txeof
+name|ixv_txeof
 parameter_list|(
 name|struct
 name|tx_ring
@@ -4615,8 +4569,17 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* ixgbe_txeof */
+end_function
+
+begin_comment
+comment|/* ixv_txeof */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_rsc_count  *  *   Used to detect a descriptor that has been merged by Hardware RSC.  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 specifier|inline
 name|u32
@@ -4649,8 +4612,17 @@ operator|>>
 name|IXGBE_RXDADV_RSCCNT_SHIFT
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_rsc_count */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_setup_hw_rsc  *  *   Initialize Hardware RSC (LRO) feature on 82599  *   for an RX ring, this is toggled by the LRO capability  *   even though it is transparent to the stack.  *  *   NOTE: Since this HW feature only works with IPv4 and  *         testing has shown soft LRO to be as effective,  *         this feature will be disabled by default.  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ixgbe_setup_hw_rsc
@@ -4912,8 +4884,17 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_setup_hw_rsc */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_refresh_mbufs  *  *   Refresh mbuf buffers for RX descriptor rings  *    - now keeps its own state so discards due to resource  *      exhaustion are unnecessary, if an mbuf cannot be obtained  *      it just returns, keeping its placeholder, thus it can simply  *      be recalled to try again.  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ixgbe_refresh_mbufs
@@ -5280,8 +5261,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_refresh_mbufs */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_allocate_receive_buffers  *  *   Allocate memory for rx_buffer structures. Since we use one  *   rx_buffer per received packet, the maximum number of rx_buffer's  *   that we'll need is equal to the number of receive descriptors  *   that we've allocated.  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|ixgbe_allocate_receive_buffers
@@ -5343,7 +5333,7 @@ name|malloc
 argument_list|(
 name|bsize
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -5512,7 +5502,7 @@ return|;
 name|fail
 label|:
 comment|/* Frees all, but can handle partial completion */
-name|ixgbe_free_receive_structures
+name|ixv_free_receive_structures
 argument_list|(
 name|adapter
 argument_list|)
@@ -5523,8 +5513,17 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_allocate_receive_buffers */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_free_receive_ring  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ixgbe_free_receive_ring
@@ -5630,8 +5629,17 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_free_receive_ring */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_setup_receive_ring  *  *   Initialize a receive ring and its buffers.  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|ixgbe_setup_receive_ring
@@ -6233,10 +6241,19 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_setup_receive_ring */
-comment|/************************************************************************  * ixgbe_setup_receive_structures - Initialize all receive rings.  ************************************************************************/
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_setup_receive_structures - Initialize all receive rings.  ************************************************************************/
+end_comment
+
+begin_function
 name|int
-name|ixgbe_setup_receive_structures
+name|ixv_setup_receive_structures
 parameter_list|(
 name|struct
 name|adapter
@@ -6329,10 +6346,19 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-comment|/* ixgbe_setup_receive_structures */
-comment|/************************************************************************  * ixgbe_free_receive_structures - Free all receive rings.  ************************************************************************/
+end_function
+
+begin_comment
+comment|/* ixv_setup_receive_structures */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_free_receive_structures - Free all receive rings.  ************************************************************************/
+end_comment
+
+begin_function
 name|void
-name|ixgbe_free_receive_structures
+name|ixv_free_receive_structures
 parameter_list|(
 name|struct
 name|adapter
@@ -6356,7 +6382,7 @@ name|lro
 decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
-literal|"ixgbe_free_receive_structures: begin"
+literal|"ixv_free_receive_structures: begin"
 argument_list|)
 expr_stmt|;
 for|for
@@ -6415,12 +6441,22 @@ name|adapter
 operator|->
 name|rx_rings
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* ixgbe_free_receive_structures */
+end_function
+
+begin_comment
+comment|/* ixv_free_receive_structures */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_free_receive_buffers - Free receive ring data structures  ************************************************************************/
+end_comment
+
+begin_function
+specifier|static
 name|void
 name|ixgbe_free_receive_buffers
 parameter_list|(
@@ -6584,7 +6620,7 @@ name|rxr
 operator|->
 name|rx_buffers
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|)
 expr_stmt|;
 name|rxr
@@ -6620,8 +6656,17 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_free_receive_buffers */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_rx_input  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|void
@@ -6778,8 +6823,17 @@ name|rxr
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_rx_input */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_rx_discard  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|void
@@ -6890,10 +6944,19 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_rx_discard */
-comment|/************************************************************************  * ixgbe_rxeof  *  *   This routine executes in interrupt context. It replenishes  *   the mbufs in the descriptor and sends data which has been  *   dma'ed into host memory to upper layer.  *  *   Return TRUE for more work, FALSE for all clean.  ************************************************************************/
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_rxeof  *  *   This routine executes in interrupt context. It replenishes  *   the mbufs in the descriptor and sends data which has been  *   dma'ed into host memory to upper layer.  *  *   Return TRUE for more work, FALSE for all clean.  ************************************************************************/
+end_comment
+
+begin_function
 name|bool
-name|ixgbe_rxeof
+name|ixv_rxeof
 parameter_list|(
 name|struct
 name|ix_queue
@@ -7254,6 +7317,22 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100036
+name|if_inc_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rxr
 operator|->
 name|rx_discarded
@@ -7446,7 +7525,7 @@ name|m_data
 operator|+=
 name|IXGBE_RX_COPY_ALIGN
 expr_stmt|;
-name|ixgbe_bcopy
+name|ixv_bcopy
 argument_list|(
 name|mp
 operator|->
@@ -8029,8 +8108,17 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* ixgbe_rxeof */
+end_function
+
+begin_comment
+comment|/* ixv_rxeof */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_rx_checksum  *  *   Verify that the hardware indicated that the checksum is valid.  *   Inform the stack about the status of checksum so that stack  *   doesn't spend time verifying the checksum.  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ixgbe_rx_checksum
@@ -8182,8 +8270,17 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_rx_checksum */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_dmamap_cb - Manage DMA'able memory.  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ixgbe_dmamap_cb
@@ -8221,8 +8318,17 @@ name|ds_addr
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_dmamap_cb */
+end_comment
+
+begin_comment
 comment|/************************************************************************  * ixgbe_dma_malloc  ************************************************************************/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|ixgbe_dma_malloc
@@ -8475,7 +8581,13 @@ name|r
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_dma_malloc */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ixgbe_dma_free
@@ -8540,10 +8652,19 @@ name|dma_tag
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* ixgbe_dma_free */
-comment|/************************************************************************  * ixgbe_allocate_queues  *  *   Allocate memory for the transmit and receive rings, and then  *   the descriptors associated with each, called only once at attach.  ************************************************************************/
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_allocate_queues  *  *   Allocate memory for the transmit and receive rings, and then  *   the descriptors associated with each, called only once at attach.  ************************************************************************/
+end_comment
+
+begin_function
 name|int
-name|ixgbe_allocate_queues
+name|ixv_allocate_queues
 parameter_list|(
 name|struct
 name|adapter
@@ -8613,7 +8734,7 @@ name|adapter
 operator|->
 name|num_queues
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -8665,7 +8786,7 @@ name|adapter
 operator|->
 name|num_queues
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -8717,7 +8838,7 @@ name|adapter
 operator|->
 name|num_queues
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -8809,23 +8930,11 @@ name|br
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* In case SR-IOV is enabled, align the index properly */
 name|txr
 operator|->
 name|me
 operator|=
-name|ixgbe_vf_que_index
-argument_list|(
-name|adapter
-operator|->
-name|iov_mode
-argument_list|,
-name|adapter
-operator|->
-name|pool
-argument_list|,
 name|i
-argument_list|)
 expr_stmt|;
 name|txr
 operator|->
@@ -8982,7 +9091,7 @@ name|buf_ring_alloc
 argument_list|(
 name|IXGBE_BR_SIZE
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|,
 name|M_WAITOK
 argument_list|,
@@ -9073,23 +9182,11 @@ name|adapter
 operator|=
 name|adapter
 expr_stmt|;
-comment|/* In case SR-IOV is enabled, align the index properly */
 name|rxr
 operator|->
 name|me
 operator|=
-name|ixgbe_vf_que_index
-argument_list|(
-name|adapter
-operator|->
-name|iov_mode
-argument_list|,
-name|adapter
-operator|->
-name|pool
-argument_list|,
 name|i
-argument_list|)
 expr_stmt|;
 name|rxr
 operator|->
@@ -9362,7 +9459,7 @@ name|adapter
 operator|->
 name|rx_rings
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|)
 expr_stmt|;
 name|rx_fail
@@ -9373,7 +9470,7 @@ name|adapter
 operator|->
 name|tx_rings
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|)
 expr_stmt|;
 name|tx_fail
@@ -9384,7 +9481,7 @@ name|adapter
 operator|->
 name|queues
 argument_list|,
-name|M_IXGBE
+name|M_IXV
 argument_list|)
 expr_stmt|;
 name|fail
@@ -9398,7 +9495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ixgbe_allocate_queues */
+comment|/* ixv_allocate_queues */
 end_comment
 
 end_unit

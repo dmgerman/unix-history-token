@@ -304,25 +304,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ixgbe_features.h"
+file|"ixv_features.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ixgbe_api.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ixgbe_common.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ixgbe_phy.h"
+file|"ixv_vf.h"
 end_include
 
 begin_comment
@@ -932,6 +920,21 @@ name|IXGBE_LINK_ITR
 value|((IXGBE_LINK_ITR_QUANTA<< 3)& \                                 IXGBE_EITR_ITR_INT_MASK)
 end_define
 
+begin_comment
+comment|/* MAC type macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_IS_X550VF
+parameter_list|(
+name|_adapter
+parameter_list|)
+define|\
+value|((_adapter->hw.mac.type == ixgbe_mac_X550_vf) || \ 	 (_adapter->hw.mac.type == ixgbe_mac_X550EM_x_vf) || \ 	 (_adapter->hw.mac.type == ixgbe_mac_X550EM_a_vf))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -939,28 +942,7 @@ name|IXGBE_IS_VF
 parameter_list|(
 name|_x
 parameter_list|)
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_IS_X550VF
-parameter_list|(
-name|_x
-parameter_list|)
-value|0
-end_define
-
-begin_comment
-comment|/* Netmap helper macro */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VFTDH
-value|IXGBE_TDH
+value|1
 end_define
 
 begin_comment
@@ -1728,8 +1710,8 @@ name|long
 name|link_irq
 decl_stmt|;
 name|struct
-name|ixgbe_hw_stats
-name|stats_pf
+name|ixgbevf_hw_stats
+name|stats_vf
 decl_stmt|;
 if|#
 directive|if
@@ -2524,7 +2506,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|ixgbe_legacy_start
+name|ixv_legacy_start
 parameter_list|(
 name|struct
 name|ifnet
@@ -2535,7 +2517,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixgbe_legacy_start_locked
+name|ixv_legacy_start_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -2550,7 +2532,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixgbe_mq_start
+name|ixv_mq_start
 parameter_list|(
 name|struct
 name|ifnet
@@ -2565,7 +2547,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixgbe_mq_start_locked
+name|ixv_mq_start_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -2580,7 +2562,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixgbe_qflush
+name|ixv_qflush
 parameter_list|(
 name|struct
 name|ifnet
@@ -2591,7 +2573,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixgbe_deferred_mq_start
+name|ixv_deferred_mq_start
 parameter_list|(
 name|void
 modifier|*
@@ -2603,7 +2585,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixgbe_init_locked
+name|ixv_init_locked
 parameter_list|(
 name|struct
 name|adapter
@@ -2614,7 +2596,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixgbe_allocate_queues
+name|ixv_allocate_queues
 parameter_list|(
 name|struct
 name|adapter
@@ -2625,7 +2607,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixgbe_setup_transmit_structures
+name|ixv_setup_transmit_structures
 parameter_list|(
 name|struct
 name|adapter
@@ -2636,7 +2618,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixgbe_free_transmit_structures
+name|ixv_free_transmit_structures
 parameter_list|(
 name|struct
 name|adapter
@@ -2647,7 +2629,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ixgbe_setup_receive_structures
+name|ixv_setup_receive_structures
 parameter_list|(
 name|struct
 name|adapter
@@ -2658,7 +2640,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixgbe_free_receive_structures
+name|ixv_free_receive_structures
 parameter_list|(
 name|struct
 name|adapter
@@ -2669,7 +2651,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixgbe_txeof
+name|ixv_txeof
 parameter_list|(
 name|struct
 name|tx_ring
@@ -2680,7 +2662,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|ixgbe_rxeof
+name|ixv_rxeof
 parameter_list|(
 name|struct
 name|ix_queue
@@ -2692,31 +2674,13 @@ end_function_decl
 begin_include
 include|#
 directive|include
-file|"ixgbe_sriov.h"
+file|"ixv_rss.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ixgbe_bypass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ixgbe_fdir.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ixgbe_rss.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ixgbe_netmap.h"
+file|"ixv_netmap.h"
 end_include
 
 begin_endif

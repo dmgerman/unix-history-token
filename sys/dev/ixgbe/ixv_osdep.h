@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_IXGBE_OSDEP_H_
+name|_IXGBEVF_OSDEP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_IXGBE_OSDEP_H_
+name|_IXGBEVF_OSDEP_H_
 end_define
 
 begin_include
@@ -137,38 +137,6 @@ parameter_list|)
 value|if(!(x)) panic("IXGBE: x")
 end_define
 
-begin_define
-define|#
-directive|define
-name|EWARN
-parameter_list|(
-name|H
-parameter_list|,
-name|W
-parameter_list|,
-name|S
-parameter_list|)
-value|printf(W)
-end_define
-
-begin_enum
-enum|enum
-block|{
-name|IXGBE_ERROR_SOFTWARE
-block|,
-name|IXGBE_ERROR_POLLING
-block|,
-name|IXGBE_ERROR_INVALID_STATE
-block|,
-name|IXGBE_ERROR_UNSUPPORTED
-block|,
-name|IXGBE_ERROR_ARGUMENT
-block|,
-name|IXGBE_ERROR_CAUTION
-block|, }
-enum|;
-end_enum
-
 begin_comment
 comment|/* The happy-fun DELAY macro is defined in /usr/src/sys/i386/include/clock.h */
 end_comment
@@ -198,20 +166,6 @@ define|#
 directive|define
 name|DBG
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSGOUT
-parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|printf(S "\n", A, B)
 end_define
 
 begin_define
@@ -370,36 +324,42 @@ begin_define
 define|#
 directive|define
 name|ERROR_REPORT1
-value|ERROR_REPORT
+parameter_list|(
+name|S
+parameter_list|,
+name|A
+parameter_list|)
+value|printf(S "\n",A)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERROR_REPORT2
-value|ERROR_REPORT
+parameter_list|(
+name|S
+parameter_list|,
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|printf(S "\n",A,B)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERROR_REPORT3
-value|ERROR_REPORT
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERROR_REPORT
 parameter_list|(
-name|level
+name|S
 parameter_list|,
-name|format
+name|A
 parameter_list|,
-name|arg
-modifier|...
+name|B
+parameter_list|,
+name|C
 parameter_list|)
-value|do { \ 		switch (level) { \ 		case IXGBE_ERROR_SOFTWARE: \ 		case IXGBE_ERROR_CAUTION: \ 		case IXGBE_ERROR_POLLING: \ 		case IXGBE_ERROR_INVALID_STATE: \ 		case IXGBE_ERROR_UNSUPPORTED: \ 		case IXGBE_ERROR_ARGUMENT: \ 			device_printf(ixgbe_dev_from_hw(hw), format, ## arg); \ 			break; \ 		default: \ 			break; \ 		} \ 	} while (0)
+value|printf(S "\n",A,B,C)
 end_define
 
 begin_else
@@ -611,24 +571,6 @@ name|true
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|CMD_MEM_WRT_INVALIDATE
-value|0x0010
-end_define
-
-begin_comment
-comment|/* BIT_4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_COMMAND_REGISTER
-value|PCIR_COMMAND
-end_define
-
 begin_comment
 comment|/* Shared code dropped this define.. */
 end_comment
@@ -684,96 +626,6 @@ name|_q
 parameter_list|,
 name|_r
 parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNREFERENCED_4PARAMETER
-parameter_list|(
-name|_p
-parameter_list|,
-name|_q
-parameter_list|,
-name|_r
-parameter_list|,
-name|_s
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_NTOHL
-parameter_list|(
-name|_i
-parameter_list|)
-value|ntohl(_i)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_NTOHS
-parameter_list|(
-name|_i
-parameter_list|)
-value|ntohs(_i)
-end_define
-
-begin_comment
-comment|/* XXX these need to be revisited */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CPU_TO_LE16
-value|htole16
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CPU_TO_LE32
-value|htole32
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LE32_TO_CPU
-value|le32toh
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LE32_TO_CPUS
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CPU_TO_BE16
-value|htobe16
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CPU_TO_BE32
-value|htobe32
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_BE32_TO_CPU
-value|be32toh
 end_define
 
 begin_typedef
@@ -889,94 +741,6 @@ name|__be64
 value|u64
 end_define
 
-begin_define
-define|#
-directive|define
-name|le16_to_cpu
-end_define
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800000
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|mb
-parameter_list|()
-value|__asm volatile("mfence" ::: "memory")
-end_define
-
-begin_define
-define|#
-directive|define
-name|wmb
-parameter_list|()
-value|__asm volatile("sfence" ::: "memory")
-end_define
-
-begin_define
-define|#
-directive|define
-name|rmb
-parameter_list|()
-value|__asm volatile("lfence" ::: "memory")
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|mb
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|rmb
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|wmb
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -1033,7 +797,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|ixgbe_bcopy
+name|ixv_bcopy
 parameter_list|(
 name|void
 modifier|*
@@ -1142,50 +906,6 @@ begin_comment
 comment|/* These routines are needed by the shared code */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|u16
-name|ixgbe_read_pci_cfg
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|,
-name|u32
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|IXGBE_READ_PCIE_WORD
-value|ixgbe_read_pci_cfg
-end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|ixgbe_write_pci_cfg
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-parameter_list|,
-name|u32
-parameter_list|,
-name|u16
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|IXGBE_WRITE_PCIE_WORD
-value|ixgbe_write_pci_cfg
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1199,7 +919,7 @@ end_define
 begin_function_decl
 specifier|extern
 name|u32
-name|ixgbe_read_reg
+name|ixv_read_reg
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -1219,13 +939,13 @@ name|a
 parameter_list|,
 name|reg
 parameter_list|)
-value|ixgbe_read_reg(a, reg)
+value|ixv_read_reg(a, reg)
 end_define
 
 begin_function_decl
 specifier|extern
 name|void
-name|ixgbe_write_reg
+name|ixv_write_reg
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -1249,13 +969,13 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|ixgbe_write_reg(a, reg, val)
+value|ixv_write_reg(a, reg, val)
 end_define
 
 begin_function_decl
 specifier|extern
 name|u32
-name|ixgbe_read_reg_array
+name|ixv_read_reg_array
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -1280,13 +1000,13 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|ixgbe_read_reg_array(a, reg, offset)
+value|ixv_read_reg_array(a, reg, offset)
 end_define
 
 begin_function_decl
 specifier|extern
 name|void
-name|ixgbe_write_reg_array
+name|ixv_write_reg_array
 parameter_list|(
 name|struct
 name|ixgbe_hw
@@ -1315,7 +1035,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|ixgbe_write_reg_array(a, reg, offset, val)
+value|ixv_write_reg_array(a, reg, offset, val)
 end_define
 
 begin_endif
@@ -1324,7 +1044,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _IXGBE_OSDEP_H_ */
+comment|/* _IXGBEVF_OSDEP_H_ */
 end_comment
 
 end_unit

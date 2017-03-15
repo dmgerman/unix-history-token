@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2017, Intel Corporation   All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions are met:     1. Redistributions of source code must retain the above copyright notice,       this list of conditions and the following disclaimer.     2. Redistributions in binary form must reproduce the above copyright       notice, this list of conditions and the following disclaimer in the       documentation and/or other materials provided with the distribution.     3. Neither the name of the Intel Corporation nor the names of its       contributors may be used to endorse or promote products derived from       this software without specific prior written permission.    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -33,11 +33,11 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"ixgbe.h"
+file|"ixv.h"
 end_include
 
 begin_comment
-comment|/*********************************************************************  *  Driver version  *********************************************************************/
+comment|/************************************************************************  *  Driver version  ************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -45,12 +45,12 @@ name|char
 name|ixv_driver_version
 index|[]
 init|=
-literal|"1.4.6-k"
+literal|"1.5.9-k"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*********************************************************************  *  PCI Device ID Table  *  *  Used by probe to select devices to load on  *  Last field stores an index into ixv_strings  *  Last entry must be all 0s  *  *  { Vendor ID, Device ID, SubVendor ID, SubDevice ID, String Index }  *********************************************************************/
+comment|/************************************************************************  *  PCI Device ID Table  *  *  Used by probe to select devices to load on  *  Last field stores an index into ixv_strings  *  Last entry must be all 0s  *  *  { Vendor ID, Device ID, SubVendor ID, SubDevice ID, String Index }  ************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -108,6 +108,18 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+name|IXGBE_INTEL_VENDOR_ID
+block|,
+name|IXGBE_DEV_ID_X550EM_A_VF
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
 comment|/* required last entry */
 block|{
 literal|0
@@ -125,7 +137,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*********************************************************************  *  Table of branding strings  *********************************************************************/
+comment|/************************************************************************  *  Table of branding strings  ************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -142,7 +154,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*********************************************************************  *  Function prototypes  *********************************************************************/
+comment|/************************************************************************  *  Function prototypes  ************************************************************************/
 end_comment
 
 begin_function_decl
@@ -215,10 +227,9 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ixv_init_locked
+name|ixv_stop
 parameter_list|(
-name|struct
-name|adapter
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -227,9 +238,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ixv_stop
+name|ixv_init_device_features
 parameter_list|(
-name|void
+name|struct
+name|adapter
 modifier|*
 parameter_list|)
 function_decl|;
@@ -265,18 +277,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ixv_identify_hardware
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|ixv_allocate_pci_resources
 parameter_list|(
@@ -302,7 +302,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ixv_setup_msix
+name|ixv_configure_interrupts
 parameter_list|(
 name|struct
 name|adapter
@@ -351,18 +351,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ixv_config_link
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|ixv_initialize_transmit_units
 parameter_list|(
 name|struct
@@ -376,6 +364,30 @@ begin_function_decl
 specifier|static
 name|void
 name|ixv_initialize_receive_units
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ixv_initialize_rss_mapping
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ixv_check_link
 parameter_list|(
 name|struct
 name|adapter
@@ -612,7 +624,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* The MSI/X Interrupt handlers */
+comment|/* The MSI-X Interrupt handlers */
 end_comment
 
 begin_function_decl
@@ -657,7 +669,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ixv_handle_mbx
+name|ixv_handle_link
 parameter_list|(
 name|void
 modifier|*
@@ -667,58 +679,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-end_ifdef
-
 begin_comment
-comment|/*  * This is defined in<dev/netmap/ixgbe_netmap.h>, which is included by  * if_ix.c.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|ixgbe_netmap_attach
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_include
-include|#
-directive|include
-file|<net/netmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/selinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/netmap/netmap_kern.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEV_NETMAP */
-end_comment
-
-begin_comment
-comment|/*********************************************************************  *  FreeBSD Device Interface Entry Points  *********************************************************************/
+comment|/************************************************************************  *  FreeBSD Device Interface Entry Points  ************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -837,16 +799,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+end_if
 
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|ix
+name|ixv
 argument_list|,
 name|netmap
 argument_list|,
@@ -865,19 +829,30 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DEV_NETMAP */
+comment|/*  * TUNEABLE PARAMETERS:  */
 end_comment
 
-begin_comment
-comment|/* XXX depend on 'ix' ? */
-end_comment
+begin_expr_stmt
+specifier|static
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ixv
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"IXV driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* ** TUNEABLE PARAMETERS: */
-end_comment
-
-begin_comment
-comment|/* Number of Queues - do not exceed MSIX vectors - 1 */
+comment|/* Number of Queues - do not exceed MSI-X vectors - 1 */
 end_comment
 
 begin_decl_stmt
@@ -900,8 +875,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ixv
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|num_queues
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixv_num_queues
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of queues to configure, 0 indicates autoconfigure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/* ** AIM: Adaptive Interrupt Moderation ** which means that the interrupt rate ** is varied over time based on the ** traffic for that interrupt vector */
+comment|/*  * AIM: Adaptive Interrupt Moderation  * which means that the interrupt rate  * is varied over time based on the  * traffic for that interrupt vector  */
 end_comment
 
 begin_decl_stmt
@@ -920,6 +916,27 @@ literal|"hw.ixv.enable_aim"
 argument_list|,
 operator|&
 name|ixv_enable_aim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ixv
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_aim
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixv_enable_aim
+argument_list|,
+literal|0
+argument_list|,
+literal|"Adaptive Interrupt Moderation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -948,6 +965,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ixv
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rx_process_limit
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixv_rx_process_limit
+argument_list|,
+literal|0
+argument_list|,
+literal|"Limit to RX packet processing"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* How many packets txeof tries to clean at a time */
 end_comment
@@ -968,6 +1006,27 @@ literal|"hw.ixv.tx_process_limit"
 argument_list|,
 operator|&
 name|ixv_tx_process_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ixv
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tx_process_limit
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixv_tx_process_limit
+argument_list|,
+literal|0
+argument_list|,
+literal|"Limit to TX packet processing"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -996,8 +1055,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ixv
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|flow_control
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixv_flow_control
+argument_list|,
+literal|0
+argument_list|,
+literal|"Flow Control"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * Header split: this causes the hardware to DMA  * the header into a seperate mbuf from the payload,  * it can be a performance win in some workloads, but  * in others it actually hurts, its off by default.  */
+comment|/*  * Header split: this causes the hardware to DMA  * the header into a separate mbuf from the payload,  * it can be a performance win in some workloads, but  * in others it actually hurts, its off by default.  */
 end_comment
 
 begin_decl_stmt
@@ -1020,8 +1100,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ixv
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|header_split
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixv_header_split
+argument_list|,
+literal|0
+argument_list|,
+literal|"Header Split: DMA header into separate mbuf"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/* ** Number of TX descriptors per ring, ** setting higher than RX as this seems ** the better performing choice. */
+comment|/*  * Number of TX descriptors per ring,  * setting higher than RX as this seems  * the better performing choice.  */
 end_comment
 
 begin_decl_stmt
@@ -1040,6 +1141,27 @@ literal|"hw.ixv.txd"
 argument_list|,
 operator|&
 name|ixv_txd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ixv
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|txd
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixv_txd
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of Transmit descriptors"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1068,8 +1190,74 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ixv
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rxd
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixv_rxd
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of Receive descriptors"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/* ** Shadow VFTA table, this is needed because ** the real filter table gets cleared during ** a soft reset and we need to repopulate it. */
+comment|/* Legacy Transmit (single queue) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ixv_enable_legacy_tx
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ixv.enable_legacy_tx"
+argument_list|,
+operator|&
+name|ixv_enable_legacy_tx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ixv
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_legacy_tx
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixv_enable_legacy_tx
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable Legacy TX flow"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Shadow VFTA table, this is needed because  * the real filter table gets cleared during  * a soft reset and we need to repopulate it.  */
 end_comment
 
 begin_decl_stmt
@@ -1082,8 +1270,58 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+function_decl|(
+modifier|*
+name|ixv_start_locked
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|tx_ring
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+function_decl|(
+modifier|*
+name|ixv_ring_empty
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|buf_ring
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_IXV
+argument_list|,
+literal|"ixv"
+argument_list|,
+literal|"ixv driver allocations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*********************************************************************  *  Device identification routine  *  *  ixv_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return BUS_PROBE_DEFAULT on success, positive on failure  *********************************************************************/
+comment|/************************************************************************  * ixv_probe - Device identification routine  *  *   Determines if the driver should be loaded on  *   adapter based on its PCI vendor/device ID.  *  *   return BUS_PROBE_DEFAULT on success, positive on failure  ************************************************************************/
 end_comment
 
 begin_function
@@ -1274,7 +1512,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Device initialization routine  *  *  The attach entry point is called when the driver is being loaded.  *  This routine identifies the type of hardware, allocates all resources  *  and initializes the hardware.  *  *  return 0 on success, positive on failure  *********************************************************************/
+comment|/* ixv_probe */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_attach - Device initialization routine  *  *   Called when the driver is being loaded.  *   Identifies the type of hardware, allocates all resources  *   and initializes the hardware.  *  *   return 0 on success, positive on failure  ************************************************************************/
 end_comment
 
 begin_function
@@ -1306,6 +1548,12 @@ argument_list|(
 literal|"ixv_attach: begin"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Make sure BUSMASTER is set, on a VM under 	 * KVM it may not be and will break things. 	 */
+name|pci_enable_busmaster
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* Allocate, clear, and link in our adapter structure */
 name|adapter
 operator|=
@@ -1320,6 +1568,14 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+name|adapter
+operator|->
+name|hw
+operator|.
+name|back
+operator|=
+name|adapter
+expr_stmt|;
 name|hw
 operator|=
 operator|&
@@ -1327,9 +1583,6 @@ name|adapter
 operator|->
 name|hw
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
 name|adapter
 operator|->
 name|init_locked
@@ -1342,8 +1595,6 @@ name|stop_locked
 operator|=
 name|ixv_stop
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Core Lock Init*/
 name|IXGBE_CORE_LOCK_INIT
 argument_list|(
@@ -1355,6 +1606,30 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Do base PCI setup - map BAR0 */
+if|if
+condition|(
+name|ixv_allocate_pci_resources
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"ixv_allocate_pci_resources() failed!\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|err_out
+goto|;
+block|}
 comment|/* SYSCTL APIs */
 name|SYSCTL_ADD_PROC
 argument_list|(
@@ -1435,26 +1710,127 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Determine hardware revision */
-name|ixv_identify_hardware
+comment|/* Save off the information about this board */
+name|hw
+operator|->
+name|vendor_id
+operator|=
+name|pci_get_vendor
 argument_list|(
-name|adapter
+name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Do base PCI setup - map BAR0 */
-if|if
-condition|(
-name|ixv_allocate_pci_resources
+name|hw
+operator|->
+name|device_id
+operator|=
+name|pci_get_device
 argument_list|(
-name|adapter
+name|dev
 argument_list|)
+expr_stmt|;
+name|hw
+operator|->
+name|revision_id
+operator|=
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|hw
+operator|->
+name|subsystem_vendor_id
+operator|=
+name|pci_get_subvendor
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|hw
+operator|->
+name|subsystem_device_id
+operator|=
+name|pci_get_subdevice
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* A subset of set_mac_type */
+switch|switch
+condition|(
+name|hw
+operator|->
+name|device_id
 condition|)
 block|{
+case|case
+name|IXGBE_DEV_ID_82599_VF
+case|:
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|=
+name|ixgbe_mac_82599_vf
+expr_stmt|;
+break|break;
+case|case
+name|IXGBE_DEV_ID_X540_VF
+case|:
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|=
+name|ixgbe_mac_X540_vf
+expr_stmt|;
+break|break;
+case|case
+name|IXGBE_DEV_ID_X550_VF
+case|:
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|=
+name|ixgbe_mac_X550_vf
+expr_stmt|;
+break|break;
+case|case
+name|IXGBE_DEV_ID_X550EM_X_VF
+case|:
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|=
+name|ixgbe_mac_X550EM_x_vf
+expr_stmt|;
+break|break;
+case|case
+name|IXGBE_DEV_ID_X550EM_A_VF
+case|:
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|=
+name|ixgbe_mac_X550EM_a_vf
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Shouldn't get here since probe succeeded */
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"ixv_allocate_pci_resources() failed!\n"
+literal|"Unknown device ID!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1464,38 +1840,285 @@ expr_stmt|;
 goto|goto
 name|err_out
 goto|;
+break|break;
 block|}
-comment|/* Sysctls for limiting the amount of work done in the taskqueues */
-name|ixv_set_sysctl_value
+name|ixv_init_device_features
 argument_list|(
 name|adapter
-argument_list|,
-literal|"rx_processing_limit"
-argument_list|,
-literal|"max number of rx packets to process"
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|rx_process_limit
-argument_list|,
-name|ixv_rx_process_limit
 argument_list|)
 expr_stmt|;
-name|ixv_set_sysctl_value
+comment|/* Initialize the shared code */
+name|error
+operator|=
+name|ixgbe_init_ops_vf
 argument_list|(
-name|adapter
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
 argument_list|,
-literal|"tx_processing_limit"
-argument_list|,
-literal|"max number of tx packets to process"
-argument_list|,
-operator|&
+literal|"ixgbe_init_ops_vf() failed!\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|err_out
+goto|;
+block|}
+comment|/* Setup the mailbox */
+name|ixv_init_mbx_params_vf
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+comment|//hw->mac.max_tx_queues = 2;
+comment|//hw->mac.max_rx_queues = 2;
+comment|/* Set the right number of segments */
 name|adapter
 operator|->
-name|tx_process_limit
+name|num_segs
+operator|=
+name|IXGBE_82599_SCATTER
+expr_stmt|;
+name|error
+operator|=
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|reset_hw
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|IXGBE_ERR_RESET_FAILED
+condition|)
+name|device_printf
+argument_list|(
+name|dev
 argument_list|,
-name|ixv_tx_process_limit
+literal|"...reset_hw() failure: Reset Failed!\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|error
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"...reset_hw() failed with error %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|err_out
+goto|;
+block|}
+name|error
+operator|=
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|init_hw
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"...init_hw() failed with error %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|err_out
+goto|;
+block|}
+comment|/* Negotiate mailbox API version */
+name|error
+operator|=
+name|ixgbevf_negotiate_api_version
+argument_list|(
+name|hw
+argument_list|,
+name|ixgbe_mbox_api_12
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"MBX API 1.2 negotiation failed! Error %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|err_out
+goto|;
+block|}
+comment|/* If no mac address was assigned, make a random one */
+if|if
+condition|(
+operator|!
+name|ixv_check_ether_addr
+argument_list|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|addr
+argument_list|)
+condition|)
+block|{
+name|u8
+name|addr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+name|arc4rand
+argument_list|(
+operator|&
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|addr
+index|[
+literal|0
+index|]
+operator|&=
+literal|0xFE
+expr_stmt|;
+name|addr
+index|[
+literal|0
+index|]
+operator||=
+literal|0x02
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|addr
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|addr
+argument_list|,
+name|hw
+operator|->
+name|mac
+operator|.
+name|perm_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Register for VLAN events */
+name|adapter
+operator|->
+name|vlan_attach
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|vlan_config
+argument_list|,
+name|ixv_register_vlan
+argument_list|,
+name|adapter
+argument_list|,
+name|EVENTHANDLER_PRI_FIRST
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|vlan_detach
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|vlan_unconfig
+argument_list|,
+name|ixv_unregister_vlan
+argument_list|,
+name|adapter
+argument_list|,
+name|EVENTHANDLER_PRI_FIRST
 argument_list|)
 expr_stmt|;
 comment|/* Sysctls for limiting the amount of work done in the taskqueues */
@@ -1628,10 +2251,25 @@ name|num_rx_desc
 operator|=
 name|ixv_rxd
 expr_stmt|;
+comment|/* Setup MSI-X */
+name|error
+operator|=
+name|ixv_configure_interrupts
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|err_out
+goto|;
 comment|/* Allocate our TX/RX Queues */
 if|if
 condition|(
-name|ixgbe_allocate_queues
+name|ixv_allocate_queues
 argument_list|(
 name|adapter
 argument_list|)
@@ -1641,7 +2279,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"ixgbe_allocate_queues() failed!\n"
+literal|"ixv_allocate_queues() failed!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1652,147 +2290,14 @@ goto|goto
 name|err_out
 goto|;
 block|}
-comment|/* 	** Initialize the shared code: its 	** at this point the mac type is set. 	*/
-name|error
-operator|=
-name|ixgbe_init_shared_code
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|device_printf
+comment|/* Setup OS specific network interface */
+name|ixv_setup_interface
 argument_list|(
 name|dev
 argument_list|,
-literal|"ixgbe_init_shared_code() failed!\n"
+name|adapter
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-goto|goto
-name|err_late
-goto|;
-block|}
-comment|/* Setup the mailbox */
-name|ixgbe_init_mbx_params_vf
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-comment|/* Reset mbox api to 1.0 */
-name|error
-operator|=
-name|ixgbe_reset_hw
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-name|IXGBE_ERR_RESET_FAILED
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ixgbe_reset_hw() failure: Reset Failed!\n"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|error
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ixgbe_reset_hw() failed with error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-goto|goto
-name|err_late
-goto|;
-block|}
-comment|/* Negotiate mailbox API version */
-name|error
-operator|=
-name|ixgbevf_negotiate_api_version
-argument_list|(
-name|hw
-argument_list|,
-name|ixgbe_mbox_api_11
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"MBX API 1.1 negotiation failed! Error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-goto|goto
-name|err_late
-goto|;
-block|}
-name|error
-operator|=
-name|ixgbe_init_hw
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ixgbe_init_hw() failed!\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-goto|goto
-name|err_late
-goto|;
-block|}
 name|error
 operator|=
 name|ixv_allocate_msix
@@ -1816,78 +2321,6 @@ goto|goto
 name|err_late
 goto|;
 block|}
-comment|/* If no mac address was assigned, make a random one */
-if|if
-condition|(
-operator|!
-name|ixv_check_ether_addr
-argument_list|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|addr
-argument_list|)
-condition|)
-block|{
-name|u8
-name|addr
-index|[
-name|ETHER_ADDR_LEN
-index|]
-decl_stmt|;
-name|arc4rand
-argument_list|(
-operator|&
-name|addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|addr
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|addr
-index|[
-literal|0
-index|]
-operator|&=
-literal|0xFE
-expr_stmt|;
-name|addr
-index|[
-literal|0
-index|]
-operator||=
-literal|0x02
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|addr
-argument_list|,
-name|hw
-operator|->
-name|mac
-operator|.
-name|addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Setup OS specific network interface */
-name|ixv_setup_interface
-argument_list|(
-name|dev
-argument_list|,
-name|adapter
-argument_list|)
-expr_stmt|;
 comment|/* Do the stats setup */
 name|ixv_save_stats
 argument_list|(
@@ -1904,48 +2337,19 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* Register for VLAN events */
+if|if
+condition|(
 name|adapter
 operator|->
-name|vlan_attach
-operator|=
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|vlan_config
-argument_list|,
-name|ixv_register_vlan
-argument_list|,
-name|adapter
-argument_list|,
-name|EVENTHANDLER_PRI_FIRST
-argument_list|)
-expr_stmt|;
-name|adapter
-operator|->
-name|vlan_detach
-operator|=
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|vlan_unconfig
-argument_list|,
-name|ixv_unregister_vlan
-argument_list|,
-name|adapter
-argument_list|,
-name|EVENTHANDLER_PRI_FIRST
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
+name|feat_en
+operator|&
+name|IXGBE_FEATURE_NETMAP
+condition|)
 name|ixgbe_netmap_attach
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEV_NETMAP */
 name|INIT_DEBUGOUT
 argument_list|(
 literal|"ixv_attach: end"
@@ -1958,19 +2362,33 @@ operator|)
 return|;
 name|err_late
 label|:
-name|ixgbe_free_transmit_structures
+name|ixv_free_transmit_structures
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|ixgbe_free_receive_structures
+name|ixv_free_receive_structures
 argument_list|(
 name|adapter
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|adapter
+operator|->
+name|queues
+argument_list|,
+name|M_IXV
 argument_list|)
 expr_stmt|;
 name|err_out
 label|:
 name|ixv_free_pci_resources
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+name|IXGBE_CORE_LOCK_DESTROY
 argument_list|(
 name|adapter
 argument_list|)
@@ -1984,7 +2402,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Device removal routine  *  *  The detach entry point is called when the driver is being removed.  *  This routine stops the adapter and deallocates all the resources  *  that were allocated for driver operation.  *  *  return 0 on success, positive on failure  *********************************************************************/
+comment|/* ixv_attach */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_detach - Device removal routine  *  *   Called when the driver is being removed.  *   Stops the adapter and deallocates all the resources  *   that were allocated for driver operation.  *  *   return 0 on success, positive on failure  ************************************************************************/
 end_comment
 
 begin_function
@@ -2045,6 +2467,13 @@ name|EBUSY
 operator|)
 return|;
 block|}
+name|ether_ifdetach
+argument_list|(
+name|adapter
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|IXGBE_CORE_LOCK
 argument_list|(
 name|adapter
@@ -2192,13 +2621,6 @@ operator|->
 name|vlan_detach
 argument_list|)
 expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|adapter
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
 name|callout_drain
 argument_list|(
 operator|&
@@ -2207,9 +2629,14 @@ operator|->
 name|timer
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
+if|if
+condition|(
+name|adapter
+operator|->
+name|feat_en
+operator|&
+name|IXGBE_FEATURE_NETMAP
+condition|)
 name|netmap_detach
 argument_list|(
 name|adapter
@@ -2217,9 +2644,6 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEV_NETMAP */
 name|ixv_free_pci_resources
 argument_list|(
 name|adapter
@@ -2237,14 +2661,23 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-name|ixgbe_free_transmit_structures
+name|ixv_free_transmit_structures
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|ixgbe_free_receive_structures
+name|ixv_free_receive_structures
 argument_list|(
 name|adapter
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|adapter
+operator|->
+name|queues
+argument_list|,
+name|M_IXV
 argument_list|)
 expr_stmt|;
 name|IXGBE_CORE_LOCK_DESTROY
@@ -2261,7 +2694,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Shutdown entry point  *  **********************************************************************/
+comment|/* ixv_detach */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_shutdown - Shutdown entry point  ************************************************************************/
 end_comment
 
 begin_function
@@ -2307,7 +2744,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Ioctl entry point  *  *  ixv_ioctl is called when the user wants to configure the  *  interface.  *  *  return 0 on success, positive on failure  **********************************************************************/
+comment|/* ixv_shutdown */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_ioctl - Ioctl entry point  *  *   Called when the user wants to configure the interface.  *  *   return 0 on success, positive on failure  ************************************************************************/
 end_comment
 
 begin_function
@@ -2440,7 +2881,7 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
-comment|/* 		** Calling init results in link renegotiation, 		** so we avoid doing it when possible. 		*/
+comment|/* 		 * Calling init results in link renegotiation, 		 * so we avoid doing it when possible. 		 */
 if|if
 condition|(
 name|avoid_reset
@@ -2516,9 +2957,7 @@ name|ifr
 operator|->
 name|ifr_mtu
 operator|>
-name|IXGBE_MAX_FRAME_SIZE
-operator|-
-name|IXGBE_MTU_HDR
+name|IXGBE_MAX_MTU
 condition|)
 block|{
 name|error
@@ -2551,14 +2990,6 @@ name|if_mtu
 operator|+
 name|IXGBE_MTU_HDR
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-condition|)
 name|ixv_init_locked
 argument_list|(
 name|adapter
@@ -2847,7 +3278,146 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Init entry point  *  *  This routine is used in two ways. It is used by the stack as  *  init entry point in network interface structure. It is also used  *  by the driver as a hw/sw initialization routine to get to a  *  consistent state.  *  *  return 0 on success, positive on failure  **********************************************************************/
+comment|/* ixv_ioctl */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_init_device_features  ************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ixv_init_device_features
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+block|{
+name|adapter
+operator|->
+name|feat_cap
+operator|=
+name|IXGBE_FEATURE_NETMAP
+operator||
+name|IXGBE_FEATURE_RSS
+operator||
+name|IXGBE_FEATURE_LEGACY_TX
+expr_stmt|;
+comment|/* A tad short on feature flags for VFs, atm. */
+switch|switch
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|ixgbe_mac_82599_vf
+case|:
+name|adapter
+operator|->
+name|feat_cap
+operator||=
+name|IXGBE_FEATURE_FRAME_LIMIT
+expr_stmt|;
+break|break;
+case|case
+name|ixgbe_mac_X540_vf
+case|:
+case|case
+name|ixgbe_mac_X550_vf
+case|:
+case|case
+name|ixgbe_mac_X550EM_x_vf
+case|:
+case|case
+name|ixgbe_mac_X550EM_a_vf
+case|:
+default|default:
+break|break;
+block|}
+comment|/* Enabled by default... */
+comment|/* Netmap */
+if|if
+condition|(
+name|adapter
+operator|->
+name|feat_cap
+operator|&
+name|IXGBE_FEATURE_NETMAP
+condition|)
+name|adapter
+operator|->
+name|feat_en
+operator||=
+name|IXGBE_FEATURE_NETMAP
+expr_stmt|;
+comment|/* Receive-Side Scaling (RSS) */
+if|if
+condition|(
+name|adapter
+operator|->
+name|feat_cap
+operator|&
+name|IXGBE_FEATURE_RSS
+condition|)
+name|adapter
+operator|->
+name|feat_en
+operator||=
+name|IXGBE_FEATURE_RSS
+expr_stmt|;
+comment|/* Frame size limitation */
+if|if
+condition|(
+name|adapter
+operator|->
+name|feat_cap
+operator|&
+name|IXGBE_FEATURE_FRAME_LIMIT
+condition|)
+name|adapter
+operator|->
+name|feat_en
+operator||=
+name|IXGBE_FEATURE_FRAME_LIMIT
+expr_stmt|;
+comment|/* Enabled via sysctl... */
+comment|/* Legacy (single queue) transmit */
+if|if
+condition|(
+operator|(
+name|adapter
+operator|->
+name|feat_cap
+operator|&
+name|IXGBE_FEATURE_LEGACY_TX
+operator|)
+operator|&&
+name|ixv_enable_legacy_tx
+condition|)
+name|adapter
+operator|->
+name|feat_en
+operator||=
+name|IXGBE_FEATURE_LEGACY_TX
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ixv_init_device_features */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_init_locked - Init entry point  *  *   Used in two ways: It is used by the stack as init entry  *   point in network interface structure. It is also used  *   by the driver as a hw/sw initialization routine to get  *   to a consistent state.  *  *   return 0 on success, positive on failure  ************************************************************************/
 end_comment
 
 begin_define
@@ -2858,7 +3428,6 @@ value|16
 end_define
 
 begin_function
-specifier|static
 name|void
 name|ixv_init_locked
 parameter_list|(
@@ -2920,7 +3489,13 @@ name|adapter_stopped
 operator|=
 name|FALSE
 expr_stmt|;
-name|ixgbe_stop_adapter
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|stop_adapter
 argument_list|(
 name|hw
 argument_list|)
@@ -2934,7 +3509,13 @@ name|timer
 argument_list|)
 expr_stmt|;
 comment|/* reprogram the RAR[0] in case user changed it. */
-name|ixgbe_set_rar
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|set_rar
 argument_list|(
 name|hw
 argument_list|,
@@ -2970,7 +3551,13 @@ argument_list|,
 name|IXGBE_ETH_LENGTH_OF_ADDRESS
 argument_list|)
 expr_stmt|;
-name|ixgbe_set_rar
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|set_rar
 argument_list|(
 name|hw
 argument_list|,
@@ -2987,18 +3574,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|hw
-operator|->
-name|addr_ctrl
-operator|.
-name|rar_used_count
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Prepare transmit descriptors and buffers */
 if|if
 condition|(
-name|ixgbe_setup_transmit_structures
+name|ixv_setup_transmit_structures
 argument_list|(
 name|adapter
 argument_list|)
@@ -3019,7 +3598,13 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Reset VF and renegotiate mailbox API version */
-name|ixgbe_reset_hw
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|reset_hw
 argument_list|(
 name|hw
 argument_list|)
@@ -3030,7 +3615,7 @@ name|ixgbevf_negotiate_api_version
 argument_list|(
 name|hw
 argument_list|,
-name|ixgbe_mbox_api_11
+name|ixgbe_mbox_api_12
 argument_list|)
 expr_stmt|;
 if|if
@@ -3057,7 +3642,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* 	** Determine the correct mbuf pool 	** for doing jumbo/headersplit 	*/
+comment|/* 	 * Determine the correct mbuf pool 	 * for doing jumbo/headersplit 	 */
 if|if
 condition|(
 name|ifp
@@ -3082,7 +3667,7 @@ expr_stmt|;
 comment|/* Prepare receive descriptors and buffers */
 if|if
 condition|(
-name|ixgbe_setup_receive_structures
+name|ixv_setup_receive_structures
 argument_list|(
 name|adapter
 argument_list|)
@@ -3168,7 +3753,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* Set up MSI/X routing */
+comment|/* Set up MSI-X routing */
 name|ixv_configure_ivars
 argument_list|(
 name|adapter
@@ -3206,9 +3791,27 @@ name|adapter
 argument_list|)
 expr_stmt|;
 comment|/* Config/Enable Link */
-name|ixv_config_link
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|check_link
 argument_list|(
+name|hw
+argument_list|,
+operator|&
 name|adapter
+operator|->
+name|link_speed
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|link_up
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* Start watchdog */
@@ -3250,6 +3853,14 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/* ixv_init_locked */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_init  ************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -3287,7 +3898,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** ** MSIX Interrupt Handlers and Tasklets ** */
+comment|/* ixv_init */
+end_comment
+
+begin_comment
+comment|/*  * MSI-X Interrupt Handlers and Tasklets  */
 end_comment
 
 begin_function
@@ -3344,6 +3959,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* ixv_enable_queue */
+end_comment
 
 begin_function
 specifier|static
@@ -3405,6 +4024,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* ixv_disable_queue */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -3443,6 +4066,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* ixv_rearm_queues */
+end_comment
 
 begin_function
 specifier|static
@@ -3505,7 +4132,7 @@ condition|)
 block|{
 name|more
 operator|=
-name|ixgbe_rxeof
+name|ixv_rxeof
 argument_list|(
 name|que
 argument_list|)
@@ -3515,20 +4142,15 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-name|ixgbe_txeof
+name|ixv_txeof
 argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
 if|if
 condition|(
 operator|!
-name|drbr_empty
+name|ixv_ring_empty
 argument_list|(
 name|ifp
 argument_list|,
@@ -3537,35 +4159,13 @@ operator|->
 name|br
 argument_list|)
 condition|)
-name|ixgbe_mq_start_locked
+name|ixv_start_locked
 argument_list|(
 name|ifp
 argument_list|,
 name|txr
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-name|IFQ_DRV_IS_EMPTY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-condition|)
-name|ixgbe_start_locked
-argument_list|(
-name|txr
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|IXGBE_TX_UNLOCK
 argument_list|(
 name|txr
@@ -3606,7 +4206,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  MSI Queue Interrupt Service routine  *  **********************************************************************/
+comment|/* ixv_handle_que */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_msix_que - MSI Queue Interrupt Service routine  ************************************************************************/
 end_comment
 
 begin_function
@@ -3685,7 +4289,7 @@ name|irqs
 expr_stmt|;
 name|more
 operator|=
-name|ixgbe_rxeof
+name|ixv_rxeof
 argument_list|(
 name|que
 argument_list|)
@@ -3695,41 +4299,16 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-name|ixgbe_txeof
+name|ixv_txeof
 argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-comment|/* 	** Make certain that if the stack 	** has anything queued the task gets 	** scheduled to handle it. 	*/
-ifdef|#
-directive|ifdef
-name|IXGBE_LEGACY_TX
+comment|/* 	 * Make certain that if the stack 	 * has anything queued the task gets 	 * scheduled to handle it. 	 */
 if|if
 condition|(
 operator|!
-name|IFQ_DRV_IS_EMPTY
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-condition|)
-name|ixgbe_start_locked
-argument_list|(
-name|txr
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-name|drbr_empty
+name|ixv_ring_empty
 argument_list|(
 name|adapter
 operator|->
@@ -3740,15 +4319,13 @@ operator|->
 name|br
 argument_list|)
 condition|)
-name|ixgbe_mq_start_locked
+name|ixv_start_locked
 argument_list|(
 name|ifp
 argument_list|,
 name|txr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|IXGBE_TX_UNLOCK
 argument_list|(
 name|txr
@@ -3764,7 +4341,7 @@ condition|)
 goto|goto
 name|no_calc
 goto|;
-comment|/* 	** Do Adaptive Interrupt Moderation:         **  - Write out last calculated setting 	**  - Calculate based on average size over 	**    the last interval. 	*/
+comment|/* 	 * Do Adaptive Interrupt Moderation: 	 *  - Write out last calculated setting 	 *  - Calculate based on average size over 	 *    the last interval. 	 */
 if|if
 condition|(
 name|que
@@ -3991,6 +4568,14 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/* ixv_msix_que */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_msix_mbx  ************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -4079,7 +4664,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Media Ioctl callback  *  *  This routine is called whenever the user queries the status of  *  the interface using ifconfig.  *  **********************************************************************/
+comment|/* ixv_msix_mbx */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_media_status - Media Ioctl callback  *  *   Called whenever the user queries the status of  *   the interface using ifconfig.  ************************************************************************/
 end_comment
 
 begin_function
@@ -4181,6 +4770,32 @@ name|ifmr
 operator|->
 name|ifm_active
 operator||=
+name|IFM_10G_T
+operator||
+name|IFM_FDX
+expr_stmt|;
+break|break;
+case|case
+name|IXGBE_LINK_SPEED_100_FULL
+case|:
+name|ifmr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_100_TX
+operator||
+name|IFM_FDX
+expr_stmt|;
+break|break;
+case|case
+name|IXGBE_LINK_SPEED_10_FULL
+case|:
+name|ifmr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_10_T
+operator||
 name|IFM_FDX
 expr_stmt|;
 break|break;
@@ -4195,7 +4810,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Media Ioctl callback  *  *  This routine is called when the user changes speed/duplex using  *  media/mediopt option with ifconfig.  *  **********************************************************************/
+comment|/* ixv_media_status */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_media_change - Media Ioctl callback  *  *   Called when the user changes speed/duplex using  *   media/mediopt option with ifconfig.  ************************************************************************/
 end_comment
 
 begin_function
@@ -4288,15 +4907,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Multicast Update  *  *  This routine is called whenever multicast address list is updated.  *  **********************************************************************/
+comment|/* ixv_media_change */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IXGBE_RAR_ENTRIES
-value|16
-end_define
+begin_comment
+comment|/************************************************************************  * ixv_set_multi - Multicast Update  *  *   Called whenever multicast address list is updated.  ************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -4326,11 +4942,6 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|int
-name|mcnt
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -4339,6 +4950,11 @@ init|=
 name|adapter
 operator|->
 name|ifp
+decl_stmt|;
+name|int
+name|mcnt
+init|=
+literal|0
 decl_stmt|;
 name|IOCTL_DEBUGOUT
 argument_list|(
@@ -4436,7 +5052,15 @@ name|update_ptr
 operator|=
 name|mta
 expr_stmt|;
-name|ixgbe_update_mc_addr_list
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|ops
+operator|.
+name|update_mc_addr_list
 argument_list|(
 operator|&
 name|adapter
@@ -4457,7 +5081,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is an iterator function now needed by the multicast  * shared code. It simply feeds the shared code routine the  * addresses in the array of ixv_set_multi() one by one.  */
+comment|/* ixv_set_multi */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_mc_array_itr  *  *   An iterator function needed by the multicast shared code.  *   It feeds the shared code routine the addresses in the  *   array of ixv_set_multi() one by one.  ************************************************************************/
 end_comment
 
 begin_function
@@ -4515,7 +5143,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  Timer routine  *  *  This routine checks for link status,updates statistics,  *  and runs the watchdog check.  *  **********************************************************************/
+comment|/* ixv_mc_array_itr */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_local_timer - Timer routine  *  *   Checks for link status, updates statistics,  *   and runs the watchdog check.  ************************************************************************/
 end_comment
 
 begin_function
@@ -4571,7 +5203,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|ixv_update_link_status
+name|ixv_check_link
 argument_list|(
 name|adapter
 argument_list|)
@@ -4582,7 +5214,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* 	** Check the TX queues status 	**      - mark hung queues so we don't schedule on them 	**      - watchdog only if all queues show hung 	*/
+comment|/* 	 * Check the TX queues status 	 *      - mark hung queues so we don't schedule on them 	 *      - watchdog only if all queues show hung 	 */
 for|for
 control|(
 name|int
@@ -4625,7 +5257,7 @@ operator|->
 name|me
 operator|)
 expr_stmt|;
-comment|/* 		** Each time txeof runs without cleaning, but there 		** are uncleaned descriptors it increments busy. If 		** we get to the MAX we declare it hung. 		*/
+comment|/* 		 * Each time txeof runs without cleaning, but there 		 * are uncleaned descriptors it increments busy. If 		 * we get to the MAX we declare it hung. 		 */
 if|if
 condition|(
 name|que
@@ -4710,8 +5342,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Warning queue %d "
-literal|"appears to be hung!\n"
+literal|"Warning queue %d appears to be hung!\n"
 argument_list|,
 name|i
 argument_list|)
@@ -4729,7 +5360,7 @@ name|hung
 expr_stmt|;
 block|}
 block|}
-comment|/* Only truely watchdog if all queues show hung */
+comment|/* Only truly watchdog if all queues show hung */
 if|if
 condition|(
 name|hung
@@ -4807,7 +5438,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Note: this routine updates the OS on the link state **	the real check of the hardware only happens with **	a link interrupt. */
+comment|/* ixv_local_timer */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_update_link_status - Update OS on link state  *  * Note: Only updates the OS on the cached link state.  *       The real check of the hardware only happens with  *       a link interrupt.  ************************************************************************/
 end_comment
 
 begin_function
@@ -4938,7 +5573,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  This routine disables all traffic on the adapter by issuing a  *  global reset on the MAC and deallocates TX/RX buffers.  *  **********************************************************************/
+comment|/* ixv_update_link_status */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_stop - Stop the hardware  *  *   Disables all traffic on the adapter by issuing a  *   global reset on the MAC and deallocates TX/RX buffers.  ************************************************************************/
 end_comment
 
 begin_function
@@ -5011,7 +5650,13 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
-name|ixgbe_reset_hw
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|reset_hw
 argument_list|(
 name|hw
 argument_list|)
@@ -5024,7 +5669,13 @@ name|adapter_stopped
 operator|=
 name|FALSE
 expr_stmt|;
-name|ixgbe_stop_adapter
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|stop_adapter
 argument_list|(
 name|hw
 argument_list|)
@@ -5038,7 +5689,13 @@ name|timer
 argument_list|)
 expr_stmt|;
 comment|/* reprogram the RAR[0] in case user changed it. */
-name|ixgbe_set_rar
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|set_rar
 argument_list|(
 name|hw
 argument_list|,
@@ -5060,120 +5717,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Determine hardware revision.  *  **********************************************************************/
+comment|/* ixv_stop */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|ixv_identify_hardware
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|)
-block|{
-name|device_t
-name|dev
-init|=
-name|adapter
-operator|->
-name|dev
-decl_stmt|;
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-init|=
-operator|&
-name|adapter
-operator|->
-name|hw
-decl_stmt|;
-comment|/* 	** Make sure BUSMASTER is set, on a VM under 	** KVM it may not be and will break things. 	*/
-name|pci_enable_busmaster
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-comment|/* Save off the information about this board */
-name|hw
-operator|->
-name|vendor_id
-operator|=
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|hw
-operator|->
-name|device_id
-operator|=
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|hw
-operator|->
-name|revision_id
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_REVID
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|hw
-operator|->
-name|subsystem_vendor_id
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_SUBVEND_0
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|hw
-operator|->
-name|subsystem_device_id
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_SUBDEV_0
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* We need this to determine device-specific things */
-name|ixgbe_set_mac_type
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-comment|/* Set the right number of segments */
-name|adapter
-operator|->
-name|num_segs
-operator|=
-name|IXGBE_82599_SCATTER
-expr_stmt|;
-return|return;
-block|}
-end_function
-
 begin_comment
-comment|/*********************************************************************  *  *  Setup MSIX Interrupt resources and handlers   *  **********************************************************************/
+comment|/************************************************************************  * ixv_allocate_msix - Setup MSI-X Interrupt resources and handlers  ************************************************************************/
 end_comment
 
 begin_function
@@ -5214,6 +5762,8 @@ name|tx_rings
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|msix_ctrl
 decl_stmt|,
 name|rid
 decl_stmt|,
@@ -5284,8 +5834,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unable to allocate"
-literal|" bus resource: que interrupt [%d]\n"
+literal|"Unable to allocate bus resource: que interrupt [%d]\n"
 argument_list|,
 name|vector
 argument_list|)
@@ -5392,7 +5941,7 @@ operator|->
 name|msix
 argument_list|)
 expr_stmt|;
-comment|/* 		** Bind the msix vector, and thus the 		** ring to the corresponding cpu. 		*/
+comment|/* 		 * Bind the MSI-X vector, and thus the 		 * ring to the corresponding CPU. 		 */
 if|if
 condition|(
 name|adapter
@@ -5421,7 +5970,7 @@ name|txq_task
 argument_list|,
 literal|0
 argument_list|,
-name|ixgbe_deferred_mq_start
+name|ixv_deferred_mq_start
 argument_list|,
 name|txr
 argument_list|)
@@ -5517,8 +6066,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unable to allocate"
-literal|" bus resource: MBX interrupt [%d]\n"
+literal|"Unable to allocate bus resource: MBX interrupt [%d]\n"
 argument_list|,
 name|rid
 argument_list|)
@@ -5618,7 +6166,7 @@ name|link_task
 argument_list|,
 literal|0
 argument_list|,
-name|ixv_handle_mbx
+name|ixv_handle_link
 argument_list|,
 name|adapter
 argument_list|)
@@ -5662,7 +6210,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	** Due to a broken design QEMU will fail to properly 	** enable the guest for MSIX unless the vectors in 	** the table are all set up, so we must rewrite the 	** ENABLE in the MSIX control register again at this 	** point to cause it to successfully initialize us. 	*/
+comment|/* 	 * Due to a broken design QEMU will fail to properly 	 * enable the guest for MSI-X unless the vectors in 	 * the table are all set up, so we must rewrite the 	 * ENABLE in the MSI-X control register again at this 	 * point to cause it to successfully initialize us. 	 */
 if|if
 condition|(
 name|adapter
@@ -5676,9 +6224,6 @@ operator|==
 name|ixgbe_mac_82599_vf
 condition|)
 block|{
-name|int
-name|msix_ctrl
-decl_stmt|;
 name|pci_find_cap
 argument_list|(
 name|dev
@@ -5729,13 +6274,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup MSIX resources, note that the VF  * device MUST use MSIX, there is no fallback.  */
+comment|/* ixv_allocate_msix */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_configure_interrupts - Setup MSI-X resources  *  *   Note: The VF device MUST use MSI-X, there is no fallback.  ************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|ixv_setup_msix
+name|ixv_configure_interrupts
 parameter_list|(
 name|struct
 name|adapter
@@ -5757,7 +6306,7 @@ name|want
 decl_stmt|,
 name|msgs
 decl_stmt|;
-comment|/* Must have at least 2 MSIX vectors */
+comment|/* Must have at least 2 MSI-X vectors */
 name|msgs
 operator|=
 name|pci_msix_count
@@ -5812,14 +6361,14 @@ name|adapter
 operator|->
 name|dev
 argument_list|,
-literal|"Unable to map MSIX table \n"
+literal|"Unable to map MSI-X table \n"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	** Want vectors for the queues, 	** plus an additional for mailbox. 	*/
+comment|/* 	 * Want vectors for the queues, 	 * plus an additional for mailbox. 	 */
 name|want
 operator|=
 name|adapter
@@ -5880,14 +6429,21 @@ name|adapter
 operator|->
 name|dev
 argument_list|,
-literal|"Using MSIX interrupts with %d vectors\n"
+literal|"Using MSI-X interrupts with %d vectors\n"
 argument_list|,
 name|want
 argument_list|)
 expr_stmt|;
+comment|/* reflect correct sysctl value */
+name|ixv_num_queues
+operator|=
+name|adapter
+operator|->
+name|num_queues
+expr_stmt|;
 return|return
 operator|(
-name|want
+literal|0
 operator|)
 return|;
 block|}
@@ -5934,7 +6490,7 @@ name|adapter
 operator|->
 name|dev
 argument_list|,
-literal|"MSIX config error\n"
+literal|"MSI-X config error\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5944,6 +6500,14 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* ixv_configure_interrupts */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_allocate_pci_resources  ************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -5956,15 +6520,15 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
-name|int
-name|rid
-decl_stmt|;
 name|device_t
 name|dev
 init|=
 name|adapter
 operator|->
 name|dev
+decl_stmt|;
+name|int
+name|rid
 decl_stmt|;
 name|rid
 operator|=
@@ -6062,38 +6626,6 @@ name|num_queues
 operator|=
 name|ixv_num_queues
 expr_stmt|;
-name|adapter
-operator|->
-name|hw
-operator|.
-name|back
-operator|=
-name|adapter
-expr_stmt|;
-comment|/* 	** Now setup MSI/X, should 	** return us the number of 	** configured vectors. 	*/
-name|adapter
-operator|->
-name|msix
-operator|=
-name|ixv_setup_msix
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|msix
-operator|==
-name|ENXIO
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-else|else
 return|return
 operator|(
 literal|0
@@ -6101,6 +6633,14 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* ixv_allocate_pci_resources */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_free_pci_resources  ************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -6141,7 +6681,7 @@ argument_list|(
 name|MSIX_82598_BAR
 argument_list|)
 expr_stmt|;
-comment|/* 	** There is a slight possibility of a failure mode 	** in attach that will result in entering this function 	** before interrupt resources have been initialized, and 	** in that case we do not want to execute the loops below 	** We can detect this reliably by the state of the adapter 	** res pointer. 	*/
+comment|/* 	 * There is a slight possibility of a failure mode 	 * in attach that will result in entering this function 	 * before interrupt resources have been initialized, and 	 * in that case we do not want to execute the loops below 	 * We can detect this reliably by the state of the adapter 	 * res pointer. 	 */
 if|if
 condition|(
 name|adapter
@@ -6153,7 +6693,7 @@ condition|)
 goto|goto
 name|mem
 goto|;
-comment|/* 	**  Release all msix queue resources: 	*/
+comment|/* 	 *  Release all msix queue resources: 	 */
 for|for
 control|(
 name|int
@@ -6233,14 +6773,7 @@ name|res
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Clean the Legacy or Link interrupt last */
-if|if
-condition|(
-name|adapter
-operator|->
-name|vector
-condition|)
-comment|/* we are doing MSIX */
+comment|/* Clean the Mailbox interrupt last */
 name|rid
 operator|=
 name|adapter
@@ -6248,27 +6781,6 @@ operator|->
 name|vector
 operator|+
 literal|1
-expr_stmt|;
-else|else
-operator|(
-name|adapter
-operator|->
-name|msix
-operator|!=
-literal|0
-operator|)
-condition|?
-operator|(
-name|rid
-operator|=
-literal|1
-operator|)
-else|:
-operator|(
-name|rid
-operator|=
-literal|0
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -6322,12 +6834,6 @@ argument_list|)
 expr_stmt|;
 name|mem
 label|:
-if|if
-condition|(
-name|adapter
-operator|->
-name|msix
-condition|)
 name|pci_release_msi
 argument_list|(
 name|dev
@@ -6383,7 +6889,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Setup networking device structure and register an interface.  *  **********************************************************************/
+comment|/* ixv_free_pci_resources */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_setup_interface  *  *   Setup networking device structure and register an interface.  ************************************************************************/
 end_comment
 
 begin_function
@@ -6490,40 +7000,88 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|800000
+literal|1100045
+comment|/* TSO parameters */
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|=
+literal|65518
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hw_tsomaxsegcount
+operator|=
+name|IXGBE_82599_SCATTER
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hw_tsomaxsegsize
+operator|=
+literal|2048
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|adapter
+operator|->
+name|feat_en
+operator|&
+name|IXGBE_FEATURE_LEGACY_TX
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_start
+operator|=
+name|ixv_legacy_start
+expr_stmt|;
+name|ixv_start_locked
+operator|=
+name|ixv_legacy_start_locked
+expr_stmt|;
+name|ixv_ring_empty
+operator|=
+name|ixgbe_legacy_ring_empty
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ifp
 operator|->
 name|if_transmit
 operator|=
-name|ixgbe_mq_start
+name|ixv_mq_start
 expr_stmt|;
 name|ifp
 operator|->
 name|if_qflush
 operator|=
-name|ixgbe_qflush
+name|ixv_qflush
 expr_stmt|;
-else|#
-directive|else
-name|ifp
-operator|->
-name|if_start
+name|ixv_start_locked
 operator|=
-name|ixgbe_start
+name|ixv_mq_start_locked
 expr_stmt|;
-endif|#
-directive|endif
+name|ixv_ring_empty
+operator|=
+name|drbr_empty
+expr_stmt|;
+block|}
+name|IFQ_SET_MAXLEN
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
-operator|.
-name|ifq_maxlen
-operator|=
+argument_list|,
 name|adapter
 operator|->
 name|num_tx_desc
 operator|-
 literal|2
+argument_list|)
 expr_stmt|;
 name|ether_ifattach
 argument_list|(
@@ -6546,7 +7104,7 @@ name|ifp
 operator|->
 name|if_mtu
 operator|+
-name|IXGBE_MTU_HDR_VLAN
+name|IXGBE_MTU_HDR
 expr_stmt|;
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
 name|ifp
@@ -6559,38 +7117,30 @@ expr|struct
 name|ether_vlan_header
 argument_list|)
 expr_stmt|;
+comment|/* Set capability flags */
 name|ifp
 operator|->
 name|if_capabilities
 operator||=
 name|IFCAP_HWCSUM
 operator||
-name|IFCAP_TSO4
+name|IFCAP_HWCSUM_IPV6
 operator||
-name|IFCAP_VLAN_HWCSUM
-expr_stmt|;
-name|ifp
-operator|->
-name|if_capabilities
-operator||=
-name|IFCAP_JUMBO_MTU
-expr_stmt|;
-name|ifp
-operator|->
-name|if_capabilities
-operator||=
+name|IFCAP_TSO
+operator||
+name|IFCAP_LRO
+operator||
 name|IFCAP_VLAN_HWTAGGING
 operator||
 name|IFCAP_VLAN_HWTSO
 operator||
+name|IFCAP_VLAN_HWCSUM
+operator||
+name|IFCAP_JUMBO_MTU
+operator||
 name|IFCAP_VLAN_MTU
 expr_stmt|;
-name|ifp
-operator|->
-name|if_capabilities
-operator||=
-name|IFCAP_LRO
-expr_stmt|;
+comment|/* Enable the above capabilities by default */
 name|ifp
 operator|->
 name|if_capenable
@@ -6646,66 +7196,12 @@ return|return;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|ixv_config_link
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|)
-block|{
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-init|=
-operator|&
-name|adapter
-operator|->
-name|hw
-decl_stmt|;
-name|u32
-name|autoneg
-decl_stmt|;
-if|if
-condition|(
-name|hw
-operator|->
-name|mac
-operator|.
-name|ops
-operator|.
-name|check_link
-condition|)
-name|hw
-operator|->
-name|mac
-operator|.
-name|ops
-operator|.
-name|check_link
-argument_list|(
-name|hw
-argument_list|,
-operator|&
-name|autoneg
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|link_up
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/* ixv_setup_interface */
+end_comment
 
 begin_comment
-comment|/*********************************************************************  *  *  Enable transmit unit.  *  **********************************************************************/
+comment|/************************************************************************  * ixv_initialize_transmit_units - Enable transmit unit.  ************************************************************************/
 end_comment
 
 begin_function
@@ -6963,15 +7459,415 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  Setup receive registers and features.  *  **********************************************************************/
+comment|/* ixv_initialize_transmit_units */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT
-value|2
-end_define
+begin_comment
+comment|/************************************************************************  * ixv_initialize_rss_mapping  ************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ixv_initialize_rss_mapping
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+block|{
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+init|=
+operator|&
+name|adapter
+operator|->
+name|hw
+decl_stmt|;
+name|u32
+name|reta
+init|=
+literal|0
+decl_stmt|,
+name|mrqc
+decl_stmt|,
+name|rss_key
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|int
+name|queue_id
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|u32
+name|rss_hash_config
+decl_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|feat_en
+operator|&
+name|IXGBE_FEATURE_RSS
+condition|)
+block|{
+comment|/* Fetch the configured RSS key */
+name|rss_getkey
+argument_list|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
+operator|&
+name|rss_key
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* set up random bits */
+name|arc4rand
+argument_list|(
+operator|&
+name|rss_key
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rss_key
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Now fill out hash function seeds */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|10
+condition|;
+name|i
+operator|++
+control|)
+name|IXGBE_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_VFRSSRK
+argument_list|(
+name|i
+argument_list|)
+argument_list|,
+name|rss_key
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* Set up the redirection table */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|j
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|64
+condition|;
+name|i
+operator|++
+operator|,
+name|j
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|j
+operator|==
+name|adapter
+operator|->
+name|num_queues
+condition|)
+name|j
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|feat_en
+operator|&
+name|IXGBE_FEATURE_RSS
+condition|)
+block|{
+comment|/* 			 * Fetch the RSS bucket id for the given indirection 			 * entry. Cap it at the number of configured buckets 			 * (which is num_queues.) 			 */
+name|queue_id
+operator|=
+name|rss_get_indirection_to_bucket
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+name|queue_id
+operator|=
+name|queue_id
+operator|%
+name|adapter
+operator|->
+name|num_queues
+expr_stmt|;
+block|}
+else|else
+name|queue_id
+operator|=
+name|j
+expr_stmt|;
+comment|/* 		 * The low 8 bits are for hash value (n+0); 		 * The next 8 bits are for hash value (n+1), etc. 		 */
+name|reta
+operator|>>=
+literal|8
+expr_stmt|;
+name|reta
+operator||=
+operator|(
+operator|(
+name|uint32_t
+operator|)
+name|queue_id
+operator|)
+operator|<<
+literal|24
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|&
+literal|3
+operator|)
+operator|==
+literal|3
+condition|)
+block|{
+name|IXGBE_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_VFRETA
+argument_list|(
+name|i
+operator|>>
+literal|2
+argument_list|)
+argument_list|,
+name|reta
+argument_list|)
+expr_stmt|;
+name|reta
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+comment|/* Perform hash on these packet types */
+if|if
+condition|(
+name|adapter
+operator|->
+name|feat_en
+operator|&
+name|IXGBE_FEATURE_RSS
+condition|)
+name|rss_hash_config
+operator|=
+name|rss_gethashconfig
+argument_list|()
+expr_stmt|;
+else|else
+block|{
+comment|/* 		 * Disable UDP - IP fragments aren't currently being handled 		 * and so we end up with a mix of 2-tuple and 4-tuple 		 * traffic. 		 */
+name|rss_hash_config
+operator|=
+name|RSS_HASHTYPE_RSS_IPV4
+operator||
+name|RSS_HASHTYPE_RSS_TCP_IPV4
+operator||
+name|RSS_HASHTYPE_RSS_IPV6
+operator||
+name|RSS_HASHTYPE_RSS_TCP_IPV6
+expr_stmt|;
+block|}
+name|mrqc
+operator|=
+name|IXGBE_MRQC_RSSEN
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_IPV4
+condition|)
+name|mrqc
+operator||=
+name|IXGBE_MRQC_RSS_FIELD_IPV4
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_TCP_IPV4
+condition|)
+name|mrqc
+operator||=
+name|IXGBE_MRQC_RSS_FIELD_IPV4_TCP
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_IPV6
+condition|)
+name|mrqc
+operator||=
+name|IXGBE_MRQC_RSS_FIELD_IPV6
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_TCP_IPV6
+condition|)
+name|mrqc
+operator||=
+name|IXGBE_MRQC_RSS_FIELD_IPV6_TCP
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_IPV6_EX
+condition|)
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"%s: RSS_HASHTYPE_RSS_IPV6_EX defined, but not supported\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_TCP_IPV6_EX
+condition|)
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"%s: RSS_HASHTYPE_RSS_TCP_IPV6_EX defined, but not supported\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_UDP_IPV4
+condition|)
+name|mrqc
+operator||=
+name|IXGBE_MRQC_RSS_FIELD_IPV4_UDP
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_UDP_IPV4_EX
+condition|)
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"%s: RSS_HASHTYPE_RSS_UDP_IPV4_EX defined, but not supported\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_UDP_IPV6
+condition|)
+name|mrqc
+operator||=
+name|IXGBE_MRQC_RSS_FIELD_IPV6_UDP
+expr_stmt|;
+if|if
+condition|(
+name|rss_hash_config
+operator|&
+name|RSS_HASHTYPE_RSS_UDP_IPV6_EX
+condition|)
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"%s: RSS_HASHTYPE_RSS_UDP_IPV6_EX defined, but not supported\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|IXGBE_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_VFMRQC
+argument_list|,
+name|mrqc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ixv_initialize_rss_mapping */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_initialize_receive_units - Setup receive registers and features.  ************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -7052,6 +7948,20 @@ name|IXGBE_PSRTYPE_IPV6HDR
 operator||
 name|IXGBE_PSRTYPE_L2HDR
 expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_queues
+operator|>
+literal|1
+condition|)
+name|psrtype
+operator||=
+literal|1
+operator|<<
+literal|29
+expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
 name|hw
@@ -7062,6 +7972,8 @@ name|psrtype
 argument_list|)
 expr_stmt|;
 comment|/* Tell PF our max_frame size */
+if|if
+condition|(
 name|ixgbevf_rlpml_set_vf
 argument_list|(
 name|hw
@@ -7070,7 +7982,76 @@ name|adapter
 operator|->
 name|max_frame_size
 argument_list|)
+condition|)
+block|{
+comment|/* 		 * Workaround for hardware that can't support frames with VLAN 		 * headers without turning on jumbo frames in the PF driver. 		 */
+if|if
+condition|(
+name|adapter
+operator|->
+name|feat_en
+operator|&
+name|IXGBE_FEATURE_FRAME_LIMIT
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"This is a device with a frame size limitation.  The PF driver is forced to deny a change in frame size to allow for VLAN headers while jumbo frames is not enabled.  To work around this, we're telling the stack that the MTU must shrink by sizeof(VLAN header) if VLANs are enabled.  Thus, our maximum frame size is standard MTU + ethernet header/CRC. If you want standard MTU plus VLAN headers, you can also enable jumbo frames in the PF first.\n"
+argument_list|)
 expr_stmt|;
+name|adapter
+operator|->
+name|max_frame_size
+operator|=
+name|ifp
+operator|->
+name|if_mtu
+operator|+
+name|IXGBE_MTU_HDR
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator|&=
+operator|~
+name|IFCAP_VLAN_MTU
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|&=
+operator|~
+name|IFCAP_VLAN_MTU
+expr_stmt|;
+block|}
+comment|/* Try again... */
+if|if
+condition|(
+name|ixgbevf_rlpml_set_vf
+argument_list|(
+name|hw
+argument_list|,
+name|adapter
+operator|->
+name|max_frame_size
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"There is a problem with the PF setup.  It is likely the receive unit for this VF will not function correctly.\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 for|for
 control|(
 name|int
@@ -7300,7 +8281,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* Capture  Rx Tail register */
+comment|/* Capture Rx Tail index */
 name|rxr
 operator|->
 name|tail
@@ -7361,7 +8342,6 @@ operator|&
 name|IXGBE_RXDCTL_ENABLE
 condition|)
 break|break;
-else|else
 name|msec_delay
 argument_list|(
 literal|1
@@ -7372,17 +8352,27 @@ name|wmb
 argument_list|()
 expr_stmt|;
 comment|/* Set the Tail Pointer */
+comment|/* 		 * In netmap mode, we must preserve the buffers made 		 * available to userspace before the if_init() 		 * (this is true by default on the TX side, because 		 * init makes all buffers available to userspace). 		 * 		 * netmap_reset() and the device specific routines 		 * (e.g. ixgbe_setup_receive_rings()) map these 		 * buffers at the end of the NIC ring, so here we 		 * must set the RDT (tail) register to make sure 		 * they are not overwritten. 		 * 		 * In this driver the NIC ring starts at RDH = 0, 		 * RDT points to the last slot available for reception (?), 		 * so RDT = num_rx_desc - 1 means the whole ring is available. 		 */
 ifdef|#
 directive|ifdef
 name|DEV_NETMAP
-comment|/* 		 * In netmap mode, we must preserve the buffers made 		 * available to userspace before the if_init() 		 * (this is true by default on the TX side, because 		 * init makes all buffers available to userspace). 		 * 		 * netmap_reset() and the device specific routines 		 * (e.g. ixgbe_setup_receive_rings()) map these 		 * buffers at the end of the NIC ring, so here we 		 * must set the RDT (tail) register to make sure 		 * they are not overwritten. 		 * 		 * In this driver the NIC ring starts at RDH = 0, 		 * RDT points to the last slot available for reception (?), 		 * so RDT = num_rx_desc - 1 means the whole ring is available. 		 */
 if|if
 condition|(
+operator|(
+name|adapter
+operator|->
+name|feat_en
+operator|&
+name|IXGBE_FEATURE_NETMAP
+operator|)
+operator|&&
+operator|(
 name|ifp
 operator|->
 name|if_capenable
 operator|&
 name|IFCAP_NETMAP
+operator|)
 condition|)
 block|{
 name|struct
@@ -7471,6 +8461,26 @@ argument_list|,
 name|IXGBE_RXCSUM
 argument_list|)
 expr_stmt|;
+name|ixv_initialize_rss_mapping
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_queues
+operator|>
+literal|1
+condition|)
+block|{
+comment|/* RSS and RX IPP Checksum are mutually exclusive */
+name|rxcsum
+operator||=
+name|IXGBE_RXCSUM_PCSD
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ifp
@@ -7509,6 +8519,14 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/* ixv_initialize_receive_units */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_setup_vlan_support  ************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -7539,12 +8557,7 @@ name|vfta
 decl_stmt|,
 name|retry
 decl_stmt|;
-name|struct
-name|rx_ring
-modifier|*
-name|rxr
-decl_stmt|;
-comment|/* 	** We get here thru init_locked, meaning 	** a soft reset, this has already cleared 	** the VFTA and other state, so if there 	** have been no vlan's registered do nothing. 	*/
+comment|/* 	 * We get here thru init_locked, meaning 	 * a soft reset, this has already cleared 	 * the VFTA and other state, so if there 	 * have been no vlan's registered do nothing. 	 */
 if|if
 condition|(
 name|adapter
@@ -7601,24 +8614,19 @@ name|ctrl
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Let Rx path know that it needs to store VLAN tag 		 * as part of extra mbuf info. 		 */
-name|rxr
-operator|=
-operator|&
 name|adapter
 operator|->
 name|rx_rings
 index|[
 name|i
 index|]
-expr_stmt|;
-name|rxr
-operator|->
+operator|.
 name|vtag_strip
 operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* 	** A soft reset zero's out the VFTA, so 	** we need to repopulate it now. 	*/
+comment|/* 	 * A soft reset zero's out the VFTA, so 	 * we need to repopulate it now. 	 */
 for|for
 control|(
 name|int
@@ -7651,7 +8659,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 		** Reconstruct the vlan id's 		** based on the bits set in each 		** of the array ints. 		*/
+comment|/* 		 * Reconstruct the vlan id's 		 * based on the bits set in each 		 * of the array ints. 		 */
 for|for
 control|(
 name|int
@@ -7699,7 +8707,13 @@ expr_stmt|;
 comment|/* Call the shared code mailbox routine */
 while|while
 condition|(
-name|ixgbe_set_vfta
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|set_vfta
 argument_list|(
 name|hw
 argument_list|,
@@ -7708,6 +8722,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|TRUE
+argument_list|,
+name|FALSE
 argument_list|)
 condition|)
 block|{
@@ -7726,7 +8742,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** This routine is run via an vlan config EVENT, ** it enables us to use the HW Filter table since ** we can get the vlan id. This just creates the ** entry in the soft version of the VFTA, init will ** repopulate the real table. */
+comment|/* ixv_setup_vlan_support */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_register_vlan  *  *   Run via a vlan config EVENT, it enables us to use the  *   HW Filter table since we can get the vlan id. This just  *   creates the entry in the soft version of the VFTA, init  *   will repopulate the real table.  ************************************************************************/
 end_comment
 
 begin_function
@@ -7839,7 +8859,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** This routine is run via an vlan ** unconfig EVENT, remove our entry ** in the soft vfta. */
+comment|/* ixv_register_vlan */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_unregister_vlan  *  *   Run via a vlan unconfig EVENT, remove our entry  *   in the soft vfta.  ************************************************************************/
 end_comment
 
 begin_function
@@ -7951,6 +8975,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* ixv_unregister_vlan */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_enable_intr  ************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -8059,6 +9091,14 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/* ixv_enable_intr */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_disable_intr  ************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -8108,7 +9148,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Setup the correct IVAR register for a particular MSIX interrupt **  - entry is the register array entry **  - vector is the MSIX vector for this queue **  - type is RX/TX/MISC */
+comment|/* ixv_disable_intr */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_set_ivar  *  *   Setup the correct IVAR register for a particular MSI-X interrupt  *    - entry is the register array entry  *    - vector is the MSI-X vector for this queue  *    - type is RX/TX/MISC  ************************************************************************/
 end_comment
 
 begin_function
@@ -8257,6 +9301,14 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* ixv_set_ivar */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_configure_ivars  ************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -8340,7 +9392,7 @@ operator|->
 name|msix
 argument_list|)
 argument_list|,
-name|IXV_EITR_DEFAULT
+name|IXGBE_EITR_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
@@ -8363,13 +9415,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Tasklet handler for MSIX MBX interrupts **  - do outside interrupt since it might sleep */
+comment|/* ixv_configure_ivars */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_handle_link - Tasklet handler for MSI-X MBX interrupts  *  *   Done outside of interrupt context since the driver might sleep  ************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|ixv_handle_mbx
+name|ixv_handle_link
 parameter_list|(
 name|void
 modifier|*
@@ -8386,7 +9442,15 @@ name|adapter
 init|=
 name|context
 decl_stmt|;
-name|ixgbe_check_link
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|ops
+operator|.
+name|check_link
 argument_list|(
 operator|&
 name|adapter
@@ -8403,7 +9467,7 @@ name|adapter
 operator|->
 name|link_up
 argument_list|,
-literal|0
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|ixv_update_link_status
@@ -8415,7 +9479,76 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** The VF stats registers never have a truely virgin ** starting point, so this routine tries to make an ** artificial one, marking ground zero on attach as ** it were. */
+comment|/* ixv_handle_link */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_check_link - Used in the local timer to poll for link changes  ************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ixv_check_link
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+block|{
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|get_link_status
+operator|=
+name|TRUE
+expr_stmt|;
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac
+operator|.
+name|ops
+operator|.
+name|check_link
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|link_speed
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|link_up
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|ixv_update_link_status
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* ixv_check_link */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_save_stats  *  *   The VF stats registers never have a truly virgin  *   starting point, so this routine tries to make an  *   artificial one, marking ground zero on attach as  *   it were.  ************************************************************************/
 end_comment
 
 begin_function
@@ -8433,144 +9566,118 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgprc
 operator|||
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgptc
 condition|)
 block|{
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|saved_reset_vfgprc
 operator|+=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgprc
 operator|-
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfgprc
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|saved_reset_vfgptc
 operator|+=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgptc
 operator|-
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfgptc
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|saved_reset_vfgorc
 operator|+=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgorc
 operator|-
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfgorc
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|saved_reset_vfgotc
 operator|+=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgotc
 operator|-
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfgotc
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|saved_reset_vfmprc
 operator|+=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfmprc
 operator|-
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfmprc
 expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* ixv_save_stats */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_init_stats  ************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -8595,9 +9702,7 @@ name|hw
 decl_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgprc
 operator|=
@@ -8610,9 +9715,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgorc
 operator|=
@@ -8625,9 +9728,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgorc
 operator||=
@@ -8651,9 +9752,7 @@ operator|)
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgptc
 operator|=
@@ -8666,9 +9765,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgotc
 operator|=
@@ -8681,9 +9778,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgotc
 operator||=
@@ -8707,9 +9802,7 @@ operator|)
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfmprc
 operator|=
@@ -8722,86 +9815,70 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfgprc
 operator|=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgprc
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfgorc
 operator|=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgorc
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfgptc
 operator|=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgptc
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfgotc
 operator|=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgotc
 expr_stmt|;
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|base_vfmprc
 operator|=
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfmprc
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* ixv_init_stats */
+end_comment
 
 begin_define
 define|#
@@ -8815,7 +9892,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|{							\ 	u32 current = IXGBE_READ_REG(hw, reg);		\ 	if (current< last)				\ 		count += 0x100000000LL;			\ 	last = current;					\ 	count&= 0xFFFFFFFF00000000LL;			\ 	count |= current;				\ }
+value|{                                                       \ 	u32 current = IXGBE_READ_REG(hw, reg);          \ 	if (current< last)                             \ 		count += 0x100000000LL;                 \ 	last = current;                                 \ 	count&= 0xFFFFFFFF00000000LL;                  \ 	count |= current;                               \ }
 end_define
 
 begin_define
@@ -8832,11 +9909,11 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|{							\ 	u64 cur_lsb = IXGBE_READ_REG(hw, lsb);		\ 	u64 cur_msb = IXGBE_READ_REG(hw, msb);		\ 	u64 current = ((cur_msb<< 32) | cur_lsb);	\ 	if (current< last)				\ 		count += 0x1000000000LL;		\ 	last = current;					\ 	count&= 0xFFFFFFF000000000LL;			\ 	count |= current;				\ }
+value|{                                                       \ 	u64 cur_lsb = IXGBE_READ_REG(hw, lsb);          \ 	u64 cur_msb = IXGBE_READ_REG(hw, msb);          \ 	u64 current = ((cur_msb<< 32) | cur_lsb);      \ 	if (current< last)                             \ 		count += 0x1000000000LL;                \ 	last = current;                                 \ 	count&= 0xFFFFFFF000000000LL;                  \ 	count |= current;                               \ }
 end_define
 
 begin_comment
-comment|/* ** ixv_update_stats - Update the board statistics counters. */
+comment|/************************************************************************  * ixv_update_stats - Update the board statistics counters.  ************************************************************************/
 end_comment
 
 begin_function
@@ -8865,17 +9942,13 @@ name|IXGBE_VFGPRC
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgprc
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgprc
 argument_list|)
@@ -8886,17 +9959,13 @@ name|IXGBE_VFGPTC
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgptc
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgptc
 argument_list|)
@@ -8909,17 +9978,13 @@ name|IXGBE_VFGORC_MSB
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgorc
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgorc
 argument_list|)
@@ -8932,17 +9997,13 @@ name|IXGBE_VFGOTC_MSB
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfgotc
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfgotc
 argument_list|)
@@ -8953,17 +10014,13 @@ name|IXGBE_VFMPRC
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|last_vfmprc
 argument_list|,
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 operator|.
 name|vfmprc
 argument_list|)
@@ -8972,7 +10029,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add statistic sysctls for the VF.  */
+comment|/* ixv_update_stats */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_add_stats_sysctls - Add statistic sysctls for the VF.  ************************************************************************/
 end_comment
 
 begin_function
@@ -8994,35 +10055,22 @@ operator|->
 name|dev
 decl_stmt|;
 name|struct
-name|ix_queue
-modifier|*
-name|que
-init|=
-operator|&
-name|adapter
-operator|->
-name|queues
-index|[
-literal|0
-index|]
-decl_stmt|;
-name|struct
 name|tx_ring
 modifier|*
 name|txr
 init|=
-name|que
+name|adapter
 operator|->
-name|txr
+name|tx_rings
 decl_stmt|;
 name|struct
 name|rx_ring
 modifier|*
 name|rxr
 init|=
-name|que
+name|adapter
 operator|->
-name|rxr
+name|rx_rings
 decl_stmt|;
 name|struct
 name|sysctl_ctx_list
@@ -9062,9 +10110,7 @@ init|=
 operator|&
 name|adapter
 operator|->
-name|stats
-operator|.
-name|vf
+name|stats_vf
 decl_stmt|;
 name|struct
 name|sysctl_oid
@@ -9081,6 +10127,16 @@ name|stat_list
 decl_stmt|,
 modifier|*
 name|queue_list
+decl_stmt|;
+define|#
+directive|define
+name|QUEUE_NAME_LEN
+value|32
+name|char
+name|namebuf
+index|[
+name|QUEUE_NAME_LEN
+index|]
 decl_stmt|;
 comment|/* Driver Statistics */
 name|SYSCTL_ADD_ULONG
@@ -9143,6 +10199,321 @@ argument_list|,
 literal|"Watchdog timeouts"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_ULONG
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"link_irq"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|link_irq
+argument_list|,
+literal|"Link MSI-X IRQ Handled"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|adapter
+operator|->
+name|num_queues
+condition|;
+name|i
+operator|++
+operator|,
+name|txr
+operator|++
+control|)
+block|{
+name|snprintf
+argument_list|(
+name|namebuf
+argument_list|,
+name|QUEUE_NAME_LEN
+argument_list|,
+literal|"queue%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|queue_node
+operator|=
+name|SYSCTL_ADD_NODE
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|namebuf
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Queue Name"
+argument_list|)
+expr_stmt|;
+name|queue_list
+operator|=
+name|SYSCTL_CHILDREN
+argument_list|(
+name|queue_node
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"irqs"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+operator|(
+name|adapter
+operator|->
+name|queues
+index|[
+name|i
+index|]
+operator|.
+name|irqs
+operator|)
+argument_list|,
+literal|"IRQs on queue"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"no_tx_dma_setup"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|txr
+operator|->
+name|no_tx_dma_setup
+argument_list|,
+literal|"Driver Tx DMA failure in Tx"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_no_desc"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+operator|(
+name|txr
+operator|->
+name|no_desc_avail
+operator|)
+argument_list|,
+literal|"Not-enough-descriptors count: TX"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_packets"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+operator|(
+name|txr
+operator|->
+name|total_packets
+operator|)
+argument_list|,
+literal|"TX Packets"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"br_drops"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|txr
+operator|->
+name|br
+operator|->
+name|br_drops
+argument_list|,
+literal|"Not-enough-descriptors count: TX"
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|adapter
+operator|->
+name|num_queues
+condition|;
+name|i
+operator|++
+operator|,
+name|rxr
+operator|++
+control|)
+block|{
+name|snprintf
+argument_list|(
+name|namebuf
+argument_list|,
+name|QUEUE_NAME_LEN
+argument_list|,
+literal|"queue%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|queue_node
+operator|=
+name|SYSCTL_ADD_NODE
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|namebuf
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Queue Name"
+argument_list|)
+expr_stmt|;
+name|queue_list
+operator|=
+name|SYSCTL_CHILDREN
+argument_list|(
+name|queue_node
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_packets"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+operator|(
+name|rxr
+operator|->
+name|rx_packets
+operator|)
+argument_list|,
+literal|"RX packets"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_bytes"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+operator|(
+name|rxr
+operator|->
+name|rx_bytes
+operator|)
+argument_list|,
+literal|"RX bytes"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|queue_list
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_discarded"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+operator|(
+name|rxr
+operator|->
+name|rx_discarded
+operator|)
+argument_list|,
+literal|"Discarded RX packets"
+argument_list|)
+expr_stmt|;
+block|}
 name|stat_node
 operator|=
 name|SYSCTL_ADD_NODE
@@ -9269,212 +10640,16 @@ argument_list|,
 literal|"Good Octets Transmitted"
 argument_list|)
 expr_stmt|;
-name|queue_node
-operator|=
-name|SYSCTL_ADD_NODE
-argument_list|(
-name|ctx
-argument_list|,
-name|child
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"que"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-name|NULL
-argument_list|,
-literal|"Queue Statistics (collected by SW)"
-argument_list|)
-expr_stmt|;
-name|queue_list
-operator|=
-name|SYSCTL_CHILDREN
-argument_list|(
-name|queue_node
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|queue_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"irqs"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-operator|(
-name|que
-operator|->
-name|irqs
-operator|)
-argument_list|,
-literal|"IRQs on queue"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|queue_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"rx_irqs"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-operator|(
-name|rxr
-operator|->
-name|rx_irq
-operator|)
-argument_list|,
-literal|"RX irqs on queue"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|queue_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"rx_packets"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-operator|(
-name|rxr
-operator|->
-name|rx_packets
-operator|)
-argument_list|,
-literal|"RX packets"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|queue_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"rx_bytes"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-operator|(
-name|rxr
-operator|->
-name|rx_bytes
-operator|)
-argument_list|,
-literal|"RX bytes"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|queue_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"rx_discarded"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-operator|(
-name|rxr
-operator|->
-name|rx_discarded
-operator|)
-argument_list|,
-literal|"Discarded RX packets"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|queue_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"tx_packets"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-operator|(
-name|txr
-operator|->
-name|total_packets
-operator|)
-argument_list|,
-literal|"TX Packets"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UINT
-argument_list|(
-name|ctx
-argument_list|,
-name|queue_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"tx_bytes"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-operator|(
-name|txr
-operator|->
-name|bytes
-operator|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"TX Bytes"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_UQUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|queue_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"tx_no_desc"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-operator|(
-name|txr
-operator|->
-name|no_desc_avail
-operator|)
-argument_list|,
-literal|"# of times not enough descriptors were available during TX"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* ixv_add_stats_sysctls */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_set_sysctl_value  ************************************************************************/
+end_comment
 
 begin_function
 specifier|static
@@ -9545,7 +10720,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**********************************************************************  *  *  This routine is called only when em_display_debug_stats is enabled.  *  This routine provides a way to take a look at important statistics  *  maintained by the driver and hardware.  *  **********************************************************************/
+comment|/* ixv_set_sysctl_value */
+end_comment
+
+begin_comment
+comment|/************************************************************************  * ixv_print_debug_info  *  *   Called only when em_display_debug_stats is enabled.  *   Provides a way to take a look at important statistics  *   maintained by the driver and hardware.  ************************************************************************/
 end_comment
 
 begin_function
@@ -9708,11 +10887,56 @@ operator|->
 name|rx_bytes
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1100000
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"RX(%d) LRO Queued= %d\n"
+literal|"RX(%d) LRO Queued= %lld\n"
+argument_list|,
+name|rxr
+operator|->
+name|me
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|lro
+operator|->
+name|lro_queued
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"RX(%d) LRO Flushed= %lld\n"
+argument_list|,
+name|rxr
+operator|->
+name|me
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|lro
+operator|->
+name|lro_flushed
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"RX(%d) LRO Queued= %lu\n"
 argument_list|,
 name|rxr
 operator|->
@@ -9727,7 +10951,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"RX(%d) LRO Flushed= %d\n"
+literal|"RX(%d) LRO Flushed= %lu\n"
 argument_list|,
 name|rxr
 operator|->
@@ -9738,6 +10962,8 @@ operator|->
 name|lro_flushed
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|device_printf
 argument_list|(
 name|dev
@@ -9789,9 +11015,12 @@ operator|->
 name|link_irq
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
+
+begin_comment
+comment|/* ixv_print_debug_info */
+end_comment
 
 begin_function
 specifier|static
@@ -9801,15 +11030,15 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|,
-name|result
-decl_stmt|;
 name|struct
 name|adapter
 modifier|*
 name|adapter
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|result
 decl_stmt|;
 name|result
 operator|=
@@ -9871,6 +11100,10 @@ name|error
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* ixv_sysctl_debug */
+end_comment
 
 end_unit
 
