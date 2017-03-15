@@ -417,21 +417,11 @@ name|device_printf
 argument_list|(
 name|bus
 argument_list|,
-literal|"<unknown card>"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" at cs %d\n"
+literal|"<unknown card> at cs %d mode %d\n"
 argument_list|,
 name|devi
 operator|->
 name|cs
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" mode %d"
 argument_list|,
 name|devi
 operator|->
