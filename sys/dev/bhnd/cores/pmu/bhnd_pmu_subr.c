@@ -9205,7 +9205,7 @@ name|BHND_PMU_CTRL
 argument_list|)
 expr_stmt|;
 name|pmuctrl
-operator|=
+operator|&=
 operator|~
 operator|(
 name|BHND_PMU_CTRL_ILP_DIV_MASK
