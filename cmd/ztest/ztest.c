@@ -469,8 +469,9 @@ name|zo_vdev_size
 operator|=
 name|SPA_MINDEVSIZE
 operator|*
-literal|2
+literal|4
 block|,
+comment|/* 256m default size */
 operator|.
 name|zo_datasets
 operator|=
