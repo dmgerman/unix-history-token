@@ -7015,7 +7015,7 @@ name|p
 decl_stmt|,
 name|next
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|object
 argument_list|)
