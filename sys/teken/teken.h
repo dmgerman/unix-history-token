@@ -174,6 +174,17 @@ name|TC_NCOLORS
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|TC_LIGHT
+value|8
+end_define
+
+begin_comment
+comment|/* ORed with the others. */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1006,6 +1017,15 @@ end_function_decl
 begin_comment
 comment|/* Color conversion. */
 end_comment
+
+begin_function_decl
+name|teken_color_t
+name|teken_256to16
+parameter_list|(
+name|teken_color_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|teken_color_t
