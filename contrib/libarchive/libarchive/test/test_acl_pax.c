@@ -761,7 +761,7 @@ literal|0777
 argument_list|)
 expr_stmt|;
 comment|/* Basic owner/owning group should just update mode bits. */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -794,7 +794,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* With any extended ACL entry, we should read back a full set. */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -827,7 +827,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* A more extensive set of ACLs. */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -860,7 +860,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check that clearing ACLs gets rid of them all by repeating 	 * the first test. 	 */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1151,7 +1151,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1227,7 +1227,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1501,7 +1501,7 @@ literal|0777
 argument_list|)
 expr_stmt|;
 comment|/* NFS4 ACLs mirroring 0754 file mode */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1534,7 +1534,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* A more extensive set of NFS4 ACLs. */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1567,7 +1567,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Set with special (audit, alarm) NFS4 ACLs. */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1796,7 +1796,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_ALLOW
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1846,7 +1846,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1896,7 +1896,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,

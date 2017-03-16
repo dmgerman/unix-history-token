@@ -710,7 +710,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -764,7 +764,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -830,7 +830,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -895,7 +895,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -954,7 +954,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1010,7 +1010,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1069,7 +1069,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_POSIX1E
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1139,7 +1139,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_POSIX1E
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1198,7 +1198,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_POSIX1E
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1268,7 +1268,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_POSIX1E
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1327,7 +1327,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1397,7 +1397,7 @@ name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_test_compare_acls
+name|assertEntryCompareAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1479,7 +1479,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Write POSIX.1e ACLs  */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,
@@ -1644,7 +1644,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Write NFSv4 ACLs */
-name|archive_test_set_acls
+name|assertEntrySetAcls
 argument_list|(
 name|ae
 argument_list|,

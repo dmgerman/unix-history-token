@@ -112,25 +112,9 @@ name|tree
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Set 1 if users request to restore atime . */
+comment|/* Bitfield with ARCHIVE_READDISK_* tunables */
 name|int
-name|restore_time
-decl_stmt|;
-comment|/* Set 1 if users request to honor nodump flag . */
-name|int
-name|honor_nodump
-decl_stmt|;
-comment|/* Set 1 if users request to enable mac copyfile. */
-name|int
-name|enable_copyfile
-decl_stmt|;
-comment|/* Set 1 if users request to traverse mount points. */
-name|int
-name|traverse_mount_points
-decl_stmt|;
-comment|/* Set 1 if users want to suppress xattr information. */
-name|int
-name|suppress_xattr
+name|flags
 decl_stmt|;
 specifier|const
 name|char

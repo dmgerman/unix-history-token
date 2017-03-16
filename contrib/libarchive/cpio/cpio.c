@@ -484,15 +484,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|long_help
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__LA_DEAD
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -570,29 +571,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|mode_in
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|cpio
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__LA_DEAD
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|mode_list
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|cpio
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__LA_DEAD
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -659,25 +662,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__LA_DEAD
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|version
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__LA_DEAD
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
