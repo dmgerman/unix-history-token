@@ -371,6 +371,36 @@ argument_list|,
 literal|0.0
 argument_list|)
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|&&
+expr|\
+operator|(
+operator|(
+name|__clang_major__
+operator|>=
+literal|4
+operator|)
+operator|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"test fails with clang 4.x+ - bug 217528"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* csinh(0) = ctanh(0) = 0; ccosh(0) = 1 (no exceptions raised) */
 name|testall_odd
 argument_list|(
