@@ -207,46 +207,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * NOTE: The returned value from pagefault_disable() must be stored  * and passed to pagefault_enable(). Else possible recursion on the  * state can be lost.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|__must_check
+begin_define
+define|#
+directive|define
 name|pagefault_disable
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-return|return
-operator|(
-name|vm_fault_disable_pagefaults
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
+value|do {		\ 	int __saved_pflags =			\ 	    vm_fault_disable_pagefaults()
+end_define
 
-begin_function
-specifier|static
-specifier|inline
-name|void
+begin_define
+define|#
+directive|define
 name|pagefault_enable
 parameter_list|(
-name|int
-name|save
+name|void
 parameter_list|)
-block|{
-name|vm_fault_enable_pagefaults
-argument_list|(
-name|save
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+define|\
+value|vm_fault_enable_pagefaults(__saved_pflags);	\ } while (0)
+end_define
 
 begin_function
 specifier|static
