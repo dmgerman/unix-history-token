@@ -683,18 +683,19 @@ define|\
 value|(&nchashtbl[(hash)& nchash])
 end_define
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|__read_mostly
 name|LIST_HEAD
 argument_list|(
 name|nchashhead
 argument_list|,
 name|namecache
 argument_list|)
-operator|*
+modifier|*
 name|nchashtbl
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Hash Table */
@@ -703,6 +704,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|u_long
+name|__read_mostly
 name|nchash
 decl_stmt|;
 end_decl_stmt
@@ -735,6 +737,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|u_long
+name|__read_mostly
 name|ncnegfactor
 init|=
 literal|16
@@ -769,6 +772,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|u_long
+name|__exclusive_cache_line
 name|numneg
 decl_stmt|;
 end_decl_stmt
@@ -801,6 +805,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|u_long
+name|__exclusive_cache_line
 name|numcache
 decl_stmt|;
 end_decl_stmt
@@ -833,6 +838,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|u_long
+name|__exclusive_cache_line
 name|numcachehv
 decl_stmt|;
 end_decl_stmt
@@ -864,6 +870,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|u_int
+name|__read_mostly
 name|ncsizefactor
 init|=
 literal|2
@@ -894,6 +901,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|u_int
+name|__read_mostly
 name|ncpurgeminvnodes
 decl_stmt|;
 end_decl_stmt
@@ -922,6 +930,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|u_int
+name|__read_mostly
 name|ncneghitsrequeue
 init|=
 literal|8
@@ -968,6 +977,13 @@ name|ncneg_shrink_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|shrink_list_turn
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|neglist
@@ -995,6 +1011,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|neglist
+name|__read_mostly
 modifier|*
 name|neglists
 decl_stmt|;
@@ -1008,13 +1025,6 @@ name|ncneg_hot
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|shrink_list_turn
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1025,6 +1035,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|u_int
+name|__read_mostly
 name|ncneghash
 decl_stmt|;
 end_decl_stmt
@@ -1078,6 +1089,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|u_int
+name|__read_mostly
 name|ncbuckethash
 decl_stmt|;
 end_decl_stmt
@@ -1086,6 +1098,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|rwlock_padalign
+name|__read_mostly
 modifier|*
 name|bucketlocks
 decl_stmt|;
@@ -1112,6 +1125,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|u_int
+name|__read_mostly
 name|ncvnodehash
 decl_stmt|;
 end_decl_stmt
@@ -1120,6 +1134,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx
+name|__read_mostly
 modifier|*
 name|vnodelocks
 decl_stmt|;
@@ -1171,6 +1186,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
+name|__read_mostly
 name|cache_zone_small
 decl_stmt|;
 end_decl_stmt
@@ -1178,6 +1194,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
+name|__read_mostly
 name|cache_zone_small_ts
 decl_stmt|;
 end_decl_stmt
@@ -1185,6 +1202,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
+name|__read_mostly
 name|cache_zone_large
 decl_stmt|;
 end_decl_stmt
@@ -1192,6 +1210,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
+name|__read_mostly
 name|cache_zone_large_ts
 decl_stmt|;
 end_decl_stmt
@@ -1526,6 +1545,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|int
+name|__read_mostly
 name|doingcache
 init|=
 literal|1
@@ -1631,7 +1651,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static counter_u64_t name;	\ 	SYSCTL_COUNTER_U64(_vfs_cache, OID_AUTO, name, CTLFLAG_RD,&name, descr);
+value|static counter_u64_t __read_mostly name; \ 	SYSCTL_COUNTER_U64(_vfs_cache, OID_AUTO, name, CTLFLAG_RD,&name, descr);
 end_define
 
 begin_expr_stmt
@@ -10674,6 +10694,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|__read_mostly
 name|disablecwd
 decl_stmt|;
 end_decl_stmt
@@ -10988,6 +11009,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|__read_mostly
 name|disablefullpath
 decl_stmt|;
 end_decl_stmt
