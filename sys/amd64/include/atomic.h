@@ -139,6 +139,44 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|atomic_fcmpset_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|dst
+parameter_list|,
+name|u_int
+modifier|*
+name|expect
+parameter_list|,
+name|u_int
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|atomic_fcmpset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|dst
+parameter_list|,
+name|u_long
+modifier|*
+name|expect
+parameter_list|,
+name|u_long
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|atomic_fetchadd_int
 parameter_list|(
@@ -477,6 +515,148 @@ operator|,
 comment|/* 1 */
 literal|"+a"
 operator|(
+name|expect
+operator|)
+comment|/* 2 */
+operator|:
+literal|"r"
+operator|(
+name|src
+operator|)
+comment|/* 3 */
+operator|:
+literal|"memory"
+operator|,
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|int
+name|atomic_fcmpset_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|dst
+parameter_list|,
+name|u_int
+modifier|*
+name|expect
+parameter_list|,
+name|u_int
+name|src
+parameter_list|)
+block|{
+name|u_char
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	cmpxchgl %3,%1 ;	"
+literal|"       sete	%0 ;		"
+literal|"# atomic_fcmpset_int"
+operator|:
+literal|"=r"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|dst
+operator|)
+operator|,
+comment|/* 1 */
+literal|"+a"
+operator|(
+operator|*
+name|expect
+operator|)
+comment|/* 2 */
+operator|:
+literal|"r"
+operator|(
+name|src
+operator|)
+comment|/* 3 */
+operator|:
+literal|"memory"
+operator|,
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|int
+name|atomic_fcmpset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|dst
+parameter_list|,
+name|u_long
+modifier|*
+name|expect
+parameter_list|,
+name|u_long
+name|src
+parameter_list|)
+block|{
+name|u_char
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	cmpxchgq %3,%1 ;	"
+literal|"       sete	%0 ;		"
+literal|"# atomic_fcmpset_long"
+operator|:
+literal|"=r"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|dst
+operator|)
+operator|,
+comment|/* 1 */
+literal|"+a"
+operator|(
+operator|*
 name|expect
 operator|)
 comment|/* 2 */
@@ -1747,6 +1927,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_fcmpset_acq_int
+value|atomic_fcmpset_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_int
+value|atomic_fcmpset_int
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_set_acq_long
 value|atomic_set_barr_long
 end_define
@@ -1812,6 +2006,20 @@ define|#
 directive|define
 name|atomic_cmpset_rel_long
 value|atomic_cmpset_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_long
+value|atomic_fcmpset_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_long
+value|atomic_fcmpset_long
 end_define
 
 begin_define
@@ -2164,6 +2372,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_fcmpset_32
+value|atomic_fcmpset_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_32
+value|atomic_fcmpset_acq_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_32
+value|atomic_fcmpset_rel_int
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_swap_32
 value|atomic_swap_int
 end_define
@@ -2322,6 +2551,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_fcmpset_64
+value|atomic_fcmpset_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_64
+value|atomic_fcmpset_acq_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_64
+value|atomic_fcmpset_rel_long
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_swap_64
 value|atomic_swap_long
 end_define
@@ -2475,6 +2725,27 @@ define|#
 directive|define
 name|atomic_cmpset_rel_ptr
 value|atomic_cmpset_rel_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_ptr
+value|atomic_fcmpset_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_ptr
+value|atomic_fcmpset_acq_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_ptr
+value|atomic_fcmpset_rel_long
 end_define
 
 begin_define
