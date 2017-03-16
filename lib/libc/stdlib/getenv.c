@@ -1224,15 +1224,13 @@ name|envVars
 operator|=
 name|calloc
 argument_list|(
-literal|1
+name|envVarsSize
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|envVars
 argument_list|)
-operator|*
-name|envVarsSize
 argument_list|)
 expr_stmt|;
 if|if
