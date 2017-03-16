@@ -5575,11 +5575,6 @@ operator|->
 name|td_proc
 decl_stmt|;
 comment|/* 	 * Note: OpenBSD sets a P_SUGIDEXEC flag set at execve() time, 	 * we use P_SUGID because we consider changing the owners as 	 * "tainting" as well. 	 * This is significant for procs that start as root and "become" 	 * a user without an exec - programs cannot know *everything* 	 * that libc *might* have put in their data segment. 	 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_retval
@@ -5598,11 +5593,6 @@ condition|?
 literal|1
 else|:
 literal|0
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
