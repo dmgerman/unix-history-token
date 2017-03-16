@@ -60,7 +60,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SOFTFLOAT
+name|__mips_soft_float
 end_ifdef
 
 begin_define
@@ -238,10 +238,37 @@ name|_ENABLE_MASK
 value|(FE_ALL_EXCEPT<< _ENABLE_SHIFT)
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips_soft_float
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_hard_float
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|compiler didnt set soft/hard float macros
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SOFTFLOAT
+name|__mips_soft_float
 end_ifndef
 
 begin_define
@@ -272,7 +299,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SOFTFLOAT
+name|__mips_soft_float
 end_ifdef
 
 begin_function_decl
@@ -843,7 +870,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !SOFTFLOAT */
+comment|/* !__mips_soft_float */
 end_comment
 
 begin_if
@@ -859,7 +886,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SOFTFLOAT
+name|__mips_soft_float
 end_ifdef
 
 begin_function_decl
@@ -1038,7 +1065,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !SOFTFLOAT */
+comment|/* !__mips_soft_float */
 end_comment
 
 begin_endif

@@ -48,7 +48,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SOFTFLOAT
+name|__mips_soft_float
 end_ifdef
 
 begin_define
