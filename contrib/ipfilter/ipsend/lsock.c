@@ -895,6 +895,10 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
+name|fs
+operator|->
+name|count
+operator|+
 literal|1
 argument_list|,
 sizeof|sizeof
@@ -902,14 +906,6 @@ argument_list|(
 operator|*
 name|o
 argument_list|)
-operator|*
-operator|(
-name|fs
-operator|->
-name|count
-operator|+
-literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

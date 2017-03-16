@@ -716,14 +716,14 @@ literal|8
 expr_stmt|;
 name|sh
 operator|=
-name|realloc
+name|reallocarray
 argument_list|(
 name|sh
 argument_list|,
 name|ihp
 operator|->
 name|sd_sz
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
