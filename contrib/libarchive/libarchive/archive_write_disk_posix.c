@@ -7791,6 +7791,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|a
+operator|->
+name|todo
+operator|&
+name|TODO_MAC_METADATA
+operator|)
+operator|==
+literal|0
+operator|||
 name|metadata
 operator|==
 name|NULL
@@ -9445,6 +9455,10 @@ name|linkname_copy
 decl_stmt|;
 comment|/* non-const copy of linkname */
 name|struct
+name|stat
+name|st
+decl_stmt|;
+name|struct
 name|archive_string
 name|error_string
 decl_stmt|;
@@ -9690,6 +9704,61 @@ operator|>
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_LSTAT
+name|r
+operator|=
+name|lstat
+argument_list|(
+name|a
+operator|->
+name|name
+argument_list|,
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|r
+operator|=
+name|stat
+argument_list|(
+name|a
+operator|->
+name|name
+argument_list|,
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|r
+operator|!=
+literal|0
+condition|)
+name|r
+operator|=
+name|errno
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|st
+operator|.
+name|st_mode
+operator|&
+name|AE_IFMT
+operator|)
+operator|==
+name|AE_IFREG
+condition|)
+block|{
 name|a
 operator|->
 name|fd
@@ -9730,6 +9799,7 @@ name|r
 operator|=
 name|errno
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -10267,6 +10337,16 @@ directive|ifdef
 name|HAVE_DARWIN_ACL
 if|if
 condition|(
+operator|(
+name|p
+operator|->
+name|fixup
+operator|&
+name|TODO_MAC_METADATA
+operator|)
+operator|==
+literal|0
+operator|||
 name|p
 operator|->
 name|mac_metadata
@@ -11140,6 +11220,8 @@ name|archive_string_sprintf
 argument_list|(
 name|a_estr
 argument_list|,
+literal|"%s%s"
+argument_list|,
 name|errstr
 argument_list|,
 name|path
@@ -11448,7 +11530,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not stat %s"
+literal|"Could not stat "
 argument_list|,
 name|path
 argument_list|)
@@ -11502,7 +11584,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not chdir %s"
+literal|"Could not chdir "
 argument_list|,
 name|path
 argument_list|)
@@ -11564,7 +11646,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not remove symlink %s"
+literal|"Could not remove symlink "
 argument_list|,
 name|path
 argument_list|)
@@ -11584,7 +11666,7 @@ operator|=
 name|c
 expr_stmt|;
 comment|/* 				 * FIXME:  not sure how important this is to 				 * restore 				 */
-comment|/* 				if (!S_ISLNK(path)) { 					fsobj_error(a_eno, a_estr, 0, 					    "Removing symlink %s", path); 				} 				*/
+comment|/* 				if (!S_ISLNK(path)) { 					fsobj_error(a_eno, a_estr, 0, 					    "Removing symlink ", path); 				} 				*/
 comment|/* Symlink gone.  No more problem! */
 name|res
 operator|=
@@ -11627,7 +11709,7 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Cannot remove intervening "
-literal|"symlink %s"
+literal|"symlink "
 argument_list|,
 name|path
 argument_list|)
@@ -11702,7 +11784,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not stat %s"
+literal|"Could not stat "
 argument_list|,
 name|path
 argument_list|)
@@ -11752,7 +11834,7 @@ name|a_estr
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not chdir %s"
+literal|"Could not chdir "
 argument_list|,
 name|path
 argument_list|)
@@ -11791,7 +11873,7 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Cannot extract through "
-literal|"symlink %s"
+literal|"symlink "
 argument_list|,
 name|path
 argument_list|)
@@ -11820,7 +11902,7 @@ name|a_estr
 argument_list|,
 literal|0
 argument_list|,
-literal|"Cannot extract through symlink %s"
+literal|"Cannot extract through symlink "
 argument_list|,
 name|path
 argument_list|)
@@ -15021,21 +15103,56 @@ name|UF_APPEND
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FS_APPEND_FL
+argument_list|)
+name|critical_flags
+operator||=
+name|FS_APPEND_FL
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|EXT2_APPEND_FL
+argument_list|)
 name|critical_flags
 operator||=
 name|EXT2_APPEND_FL
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FS_IMMUTABLE_FL
+argument_list|)
+name|critical_flags
+operator||=
+name|FS_IMMUTABLE_FL
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|EXT2_IMMUTABLE_FL
+argument_list|)
 name|critical_flags
 operator||=
 name|EXT2_IMMUTABLE_FL
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|FS_JOURNAL_DATA_FL
+name|critical_flags
+operator||=
+name|FS_JOURNAL_DATA_FL
 expr_stmt|;
 endif|#
 directive|endif
@@ -15538,6 +15655,26 @@ end_function
 begin_elif
 elif|#
 directive|elif
+operator|(
+name|defined
+argument_list|(
+name|FS_IOC_GETFLAGS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|FS_IOC_SETFLAGS
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|HAVE_WORKING_FS_IOC_GETFLAGS
+argument_list|)
+operator|)
+operator|||
+expr|\
+operator|(
 name|defined
 argument_list|(
 name|EXT2_IOC_GETFLAGS
@@ -15548,10 +15685,12 @@ argument_list|(
 name|EXT2_IOC_SETFLAGS
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
 name|HAVE_WORKING_EXT2_IOC_GETFLAGS
 argument_list|)
+operator|)
 end_elif
 
 begin_comment
@@ -15682,21 +15821,59 @@ name|ARCHIVE_OK
 operator|)
 return|;
 comment|/* 	 * Linux has no define for the flags that are only settable by 	 * the root user.  This code may seem a little complex, but 	 * there seem to be some Linux systems that lack these 	 * defines. (?)  The code below degrades reasonably gracefully 	 * if sf_mask is incomplete. 	 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FS_IMMUTABLE_FL
+argument_list|)
+name|sf_mask
+operator||=
+name|FS_IMMUTABLE_FL
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|EXT2_IMMUTABLE_FL
+argument_list|)
 name|sf_mask
 operator||=
 name|EXT2_IMMUTABLE_FL
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FS_APPEND_FL
+argument_list|)
+name|sf_mask
+operator||=
+name|FS_APPEND_FL
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|EXT2_APPEND_FL
+argument_list|)
 name|sf_mask
 operator||=
 name|EXT2_APPEND_FL
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FS_JOURNAL_DATA_FL
+argument_list|)
+name|sf_mask
+operator||=
+name|FS_JOURNAL_DATA_FL
 expr_stmt|;
 endif|#
 directive|endif
@@ -15712,8 +15889,17 @@ name|ioctl
 argument_list|(
 name|myfd
 argument_list|,
+ifdef|#
+directive|ifdef
+name|FS_IOC_GETFLAGS
+name|FS_IOC_GETFLAGS
+argument_list|,
+else|#
+directive|else
 name|EXT2_IOC_GETFLAGS
 argument_list|,
+endif|#
+directive|endif
 operator|&
 name|oldflags
 argument_list|)
@@ -15741,8 +15927,17 @@ name|ioctl
 argument_list|(
 name|myfd
 argument_list|,
+ifdef|#
+directive|ifdef
+name|FS_IOC_SETFLAGS
+name|FS_IOC_SETFLAGS
+argument_list|,
+else|#
+directive|else
 name|EXT2_IOC_SETFLAGS
 argument_list|,
+endif|#
+directive|endif
 operator|&
 name|newflags
 argument_list|)
@@ -15781,8 +15976,17 @@ name|ioctl
 argument_list|(
 name|myfd
 argument_list|,
+ifdef|#
+directive|ifdef
+name|FS_IOC_SETFLAGS
+name|FS_IOC_SETFLAGS
+argument_list|,
+else|#
+directive|else
 name|EXT2_IOC_SETFLAGS
 argument_list|,
+endif|#
+directive|endif
 operator|&
 name|newflags
 argument_list|)
