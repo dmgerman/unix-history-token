@@ -458,9 +458,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCHEDULER_STOPPED_TD
+parameter_list|(
+name|td
+parameter_list|)
+value|({					\ 	MPASS((td) == curthread);					\ 	__predict_false((td)->td_stopsched);				\ })
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCHEDULER_STOPPED
 parameter_list|()
-value|__predict_false(curthread->td_stopsched)
+value|SCHEDULER_STOPPED_TD(curthread)
 end_define
 
 begin_comment

@@ -973,12 +973,6 @@ name|tid
 decl_stmt|,
 name|v
 decl_stmt|;
-if|if
-condition|(
-name|SCHEDULER_STOPPED
-argument_list|()
-condition|)
-return|return;
 name|m
 operator|=
 name|mtxlock2mtx
@@ -1215,12 +1209,6 @@ name|mtx
 modifier|*
 name|m
 decl_stmt|;
-if|if
-condition|(
-name|SCHEDULER_STOPPED
-argument_list|()
-condition|)
-return|return;
 name|m
 operator|=
 name|mtxlock2mtx
