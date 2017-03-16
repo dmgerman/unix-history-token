@@ -431,27 +431,6 @@ parameter_list|)
 value|do {		\ 	lock_profile_release_lock(&(lp)->lock_object);			\ 	LOCKSTAT_RECORD1(probe, lp, a);					\ } while (0)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCK_PROFILING
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LOCKSTAT_PROFILE_ENABLED
-parameter_list|(
-name|probe
-parameter_list|)
-value|SDT_PROBE_ENABLED(lockstat, , , probe)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct_decl
 struct_decl|struct
 name|lock_object
@@ -625,6 +604,15 @@ define|\
 value|LOCKSTAT_PROFILE_RELEASE_LOCK(probe, lp)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !KDTRACE_HOOKS */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -638,22 +626,40 @@ name|LOCKSTAT_PROFILE_ENABLED
 parameter_list|(
 name|probe
 parameter_list|)
-value|0
+define|\
+value|SDT_PROBE_ENABLED(lockstat, , , probe)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCKSTAT_OOL_PROFILE_ENABLED
+parameter_list|(
+name|probe
+parameter_list|)
+define|\
+value|SDT_PROBE_ENABLED(lockstat, , , probe)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOCKSTAT_OOL_PROFILE_ENABLED
+parameter_list|(
+name|probe
+parameter_list|)
+value|1
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !KDTRACE_HOOKS */
-end_comment
 
 begin_endif
 endif|#
