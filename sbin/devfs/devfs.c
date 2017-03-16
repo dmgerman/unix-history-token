@@ -978,7 +978,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: devfs rule|ruleset arguments\n"
+literal|"usage: %s\n%s\n"
+argument_list|,
+literal|"\tdevfs [-m mount-point] [-s ruleset] rule ..."
+argument_list|,
+literal|"\tdevfs [-m mount-point] ruleset ..."
 argument_list|)
 expr_stmt|;
 name|exit
