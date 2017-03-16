@@ -347,6 +347,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|__read_mostly
 name|uma_zone_t
 name|file_zone
 decl_stmt|;
@@ -354,6 +355,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__read_mostly
 name|uma_zone_t
 name|filedesc0_zone
 decl_stmt|;
@@ -639,6 +641,7 @@ end_comment
 begin_decl_stmt
 specifier|volatile
 name|int
+name|__exclusive_cache_line
 name|openfiles
 decl_stmt|;
 end_decl_stmt
@@ -660,6 +663,7 @@ end_comment
 
 begin_function_decl
 name|void
+name|__read_mostly
 function_decl|(
 modifier|*
 name|mq_fdclose
