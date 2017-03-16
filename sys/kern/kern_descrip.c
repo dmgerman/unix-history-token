@@ -11624,14 +11624,14 @@ operator|)
 return|;
 endif|#
 directive|endif
-name|retry
-label|:
 name|count
 operator|=
 name|fp
 operator|->
 name|f_count
 expr_stmt|;
+name|retry
+label|:
 if|if
 condition|(
 name|count
@@ -11662,13 +11662,14 @@ block|}
 comment|/* 		 * Use an acquire barrier to force re-reading of fdt so it is 		 * refreshed for verification. 		 */
 if|if
 condition|(
-name|atomic_cmpset_acq_int
+name|atomic_fcmpset_acq_int
 argument_list|(
 operator|&
 name|fp
 operator|->
 name|f_count
 argument_list|,
+operator|&
 name|count
 argument_list|,
 name|count
