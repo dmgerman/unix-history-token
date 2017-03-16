@@ -533,6 +533,7 @@ argument_list|(
 name|INVARIANTS
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|INVARIANT_SUPPORT
@@ -543,18 +544,10 @@ argument_list|(
 name|LOCK_PROFILING
 argument_list|)
 operator|||
-operator|(
 name|defined
 argument_list|(
 name|KTR
 argument_list|)
-operator|&&
-operator|(
-name|KTR_COMPILE
-operator|&
-name|KTR_LOCK
-operator|)
-operator|)
 end_if
 
 begin_define
@@ -635,6 +628,14 @@ begin_comment
 comment|/*  * Macros for KTR_LOCK tracing.  *  * opname  - name of this operation (LOCK/UNLOCK/SLOCK, etc.)  * lo      - struct lock_object * for this lock  * flags   - flags passed to the lock operation  * recurse - this locks recursion level (or 0 if class is not recursable)  * result  - result of a try lock operation  * file    - file name  * line    - line number  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -647,6 +648,28 @@ parameter_list|)
 define|\
 value|(((flags)& LOP_QUIET) == 0&& ((lo)->lo_flags& LO_QUIET) == 0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOCK_LOG_TEST
+parameter_list|(
+name|lo
+parameter_list|,
+name|flags
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -609,12 +609,6 @@ name|LOCK_DEBUG
 operator|==
 literal|0
 operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SX_NOINLINE
-argument_list|)
 end_if
 
 begin_comment
