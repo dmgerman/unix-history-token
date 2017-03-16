@@ -853,7 +853,7 @@ name|slot_printf
 argument_list|(
 name|slot
 argument_list|,
-literal|"AC12 err: 0x%08x | Slot int: 0x%08x\n"
+literal|"AC12 err: 0x%08x | Host ctl2: 0x%08x\n"
 argument_list|,
 name|RD2
 argument_list|(
@@ -866,7 +866,7 @@ name|RD2
 argument_list|(
 name|slot
 argument_list|,
-name|SDHCI_SLOT_INT_STATUS
+name|SDHCI_HOST_CONTROL2
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -874,7 +874,7 @@ name|slot_printf
 argument_list|(
 name|slot
 argument_list|,
-literal|"Caps:     0x%08x | Max curr: 0x%08x\n"
+literal|"Caps:     0x%08x | Caps2:    0x%08x\n"
 argument_list|,
 name|RD4
 argument_list|(
@@ -887,7 +887,49 @@ name|RD4
 argument_list|(
 name|slot
 argument_list|,
+name|SDHCI_CAPABILITIES2
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|slot_printf
+argument_list|(
+name|slot
+argument_list|,
+literal|"Max curr: 0x%08x | ADMA err: 0x%08x\n"
+argument_list|,
+name|RD4
+argument_list|(
+name|slot
+argument_list|,
 name|SDHCI_MAX_CURRENT
+argument_list|)
+argument_list|,
+name|RD1
+argument_list|(
+name|slot
+argument_list|,
+name|SDHCI_ADMA_ERR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|slot_printf
+argument_list|(
+name|slot
+argument_list|,
+literal|"ADMA addr: 0x%08x | Slot int: 0x%08x\n"
+argument_list|,
+name|RD4
+argument_list|(
+name|slot
+argument_list|,
+name|SDHCI_ADMA_ADDRESS_LO
+argument_list|)
+argument_list|,
+name|RD2
+argument_list|(
+name|slot
+argument_list|,
+name|SDHCI_SLOT_INT_STATUS
 argument_list|)
 argument_list|)
 expr_stmt|;
