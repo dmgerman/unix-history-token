@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<dev/mmc/bridge.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/mmc/mmcreg.h>
 end_include
 
@@ -64,12 +58,14 @@ block|,
 name|MMCBR_IVAR_TIMING
 block|,
 name|MMCBR_IVAR_MAX_DATA
+block|,
+name|MMCBR_IVAR_MAX_BUSY_TIMEOUT
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * Simplified accessors for pci devices  */
+comment|/*  * Simplified accessors for bridge devices  */
 end_comment
 
 begin_define
@@ -238,6 +234,17 @@ argument_list|,
 argument|MAX_DATA
 argument_list|,
 argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|MMCBR_ACCESSOR
+argument_list|(
+argument|max_busy_timeout
+argument_list|,
+argument|MAX_BUSY_TIMEOUT
+argument_list|,
+argument|u_int
 argument_list|)
 end_macro
 

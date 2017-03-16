@@ -2318,6 +2318,15 @@ name|quirks
 operator||=
 name|SDHCI_QUIRK_WAITFOR_RESET_ASSERTED
 expr_stmt|;
+comment|/* 	 * The controller waits for busy responses. 	 */
+name|sc
+operator|->
+name|slot
+operator|.
+name|quirks
+operator||=
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+expr_stmt|;
 comment|/* 	 * DMA is not really broken, I just haven't implemented it yet. 	 */
 name|sc
 operator|->

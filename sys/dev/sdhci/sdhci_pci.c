@@ -379,6 +379,18 @@ block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+block|}
+block|,
+block|{
+literal|0x0f158086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Bay Trail SDXC Controller"
+block|,
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -391,6 +403,8 @@ block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -405,6 +419,28 @@ operator||
 name|SDHCI_QUIRK_DATA_TIMEOUT_1MHZ
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+block|}
+block|,
+block|{
+literal|0x22968086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Braswell SDXC Controller"
+block|,
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+block|}
+block|,
+block|{
+literal|0x5aca8086
+block|,
+literal|0xffff
+block|,
+literal|"Intel Apollo Lake SDXC Controller"
+block|,
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -417,6 +453,8 @@ block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{

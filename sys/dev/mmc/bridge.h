@@ -243,6 +243,16 @@ directive|define
 name|MMC_CAP_HSPEED
 value|(1<<  2)
 comment|/* Can do High Speed transfers */
+define|#
+directive|define
+name|MMC_CAP_BOOT_NOACC
+value|(1<<  4)
+comment|/* Cannot access boot partitions */
+define|#
+directive|define
+name|MMC_CAP_WAIT_WHILE_BUSY
+value|(1<<  5)
+comment|/* Host waits for busy responses */
 name|enum
 name|mmc_card_mode
 name|mode
@@ -274,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|MMC_VERSION
-value|1
+value|2
 end_define
 
 begin_define
@@ -286,6 +296,17 @@ name|name
 parameter_list|)
 define|\
 value|DRIVER_MODULE(mmc, name, mmc_driver, mmc_devclass, NULL, NULL);	\     MODULE_DEPEND(name, mmc, MMC_VERSION, MMC_VERSION, MMC_VERSION);
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMC_DEPEND
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|MODULE_DEPEND(name, mmc, MMC_VERSION, MMC_VERSION, MMC_VERSION);
 end_define
 
 begin_endif

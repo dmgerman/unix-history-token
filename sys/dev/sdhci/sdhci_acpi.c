@@ -163,11 +163,13 @@ literal|"80860F14"
 block|,
 literal|1
 block|,
-literal|"Intel Bay Trail SD Host Controller"
+literal|"Intel Bay Trail eMMC 4.5 Controller"
 block|,
 name|SDHCI_QUIRK_ALL_SLOTS_NON_REMOVABLE
 operator||
 name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+operator||
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -175,9 +177,9 @@ literal|"80860F14"
 block|,
 literal|3
 block|,
-literal|"Intel Bay Trail SD Host Controller"
+literal|"Intel Bay Trail SDXC Controller"
 block|,
-name|SDHCI_QUIRK_INTEL_POWER_UP_RESET
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{
@@ -185,9 +187,9 @@ literal|"80860F16"
 block|,
 literal|0
 block|,
-literal|"Intel Bay Trail SD Host Controller"
+literal|"Intel Bay Trail SDXC Controller"
 block|,
-literal|0
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
 block|}
 block|,
 block|{

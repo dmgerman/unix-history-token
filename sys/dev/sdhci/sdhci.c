@@ -3205,6 +3205,38 @@ name|caps
 operator||=
 name|MMC_CAP_HSPEED
 expr_stmt|;
+if|if
+condition|(
+name|slot
+operator|->
+name|quirks
+operator|&
+name|SDHCI_QUIRK_BOOT_NOACC
+condition|)
+name|slot
+operator|->
+name|host
+operator|.
+name|caps
+operator||=
+name|MMC_CAP_BOOT_NOACC
+expr_stmt|;
+if|if
+condition|(
+name|slot
+operator|->
+name|quirks
+operator|&
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+condition|)
+name|slot
+operator|->
+name|host
+operator|.
+name|caps
+operator||=
+name|MMC_CAP_WAIT_WHILE_BUSY
+expr_stmt|;
 comment|/* Decide if we have usable DMA. */
 if|if
 condition|(
@@ -4744,7 +4776,7 @@ name|cmd_done
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Interrupt aggregation: Restore command interrupt. 	 * Main restore point for the case when command interrupt 	 * happened first. */
+comment|/* 	 * Interrupt aggregation: Restore command interrupt. 	 * Main restore point for the case when command interrupt 	 * happened first. 	 */
 name|WR4
 argument_list|(
 name|slot
@@ -7310,6 +7342,16 @@ operator|*
 name|result
 operator|=
 literal|65535
+expr_stmt|;
+break|break;
+case|case
+name|MMCBR_IVAR_MAX_BUSY_TIMEOUT
+case|:
+comment|/* 		 * Currently, sdhci_start_data() hardcodes 1 s for all CMDs. 		 */
+operator|*
+name|result
+operator|=
+literal|1000000
 expr_stmt|;
 break|break;
 block|}

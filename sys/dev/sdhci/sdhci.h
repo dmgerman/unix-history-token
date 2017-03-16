@@ -265,6 +265,28 @@ value|(1<< 20)
 end_define
 
 begin_comment
+comment|/* Controller doesn't allow access boot partitions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BOOT_NOACC
+value|(1<< 21)
+end_define
+
+begin_comment
+comment|/* Controller waits for busy responses. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_WAIT_WHILE_BUSY
+value|(1<< 22)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
