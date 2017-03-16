@@ -91,16 +91,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|beri_sdcard_disk_cleanup
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|beri_sdcard_disk_strategy
 parameter_list|(
@@ -181,7 +171,7 @@ block|,
 operator|.
 name|dv_cleanup
 operator|=
-name|beri_sdcard_disk_cleanup
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -405,8 +395,6 @@ argument_list|()
 argument_list|,
 name|altera_sdcard_get_sectorsize
 argument_list|()
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 return|;
@@ -571,8 +559,6 @@ argument_list|()
 argument_list|,
 name|altera_sdcard_get_sectorsize
 argument_list|()
-argument_list|,
-literal|0
 argument_list|)
 operator|==
 literal|0
@@ -616,23 +602,6 @@ operator|(
 name|ret
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|beri_sdcard_disk_cleanup
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|disk_cleanup
-argument_list|(
-operator|&
-name|beri_sdcard_disk
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

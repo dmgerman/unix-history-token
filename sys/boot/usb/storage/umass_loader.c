@@ -490,8 +490,6 @@ operator|)
 name|blocksize
 argument_list|,
 name|blocksize
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 return|;
@@ -910,12 +908,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|disk_cleanup
-argument_list|(
-operator|&
-name|umass_disk
-argument_list|)
-expr_stmt|;
 name|usb_uninit
 argument_list|()
 expr_stmt|;
