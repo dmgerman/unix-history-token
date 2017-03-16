@@ -5679,7 +5679,7 @@ name|ticksp
 operator|=
 name|ticks
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 operator|*
 name|vpp
@@ -11115,7 +11115,7 @@ name|fdp
 operator|->
 name|fd_rdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|rdir
 argument_list|)
