@@ -1252,16 +1252,13 @@ name|u32
 name|packets
 decl_stmt|;
 comment|/* Soft Stats */
-name|unsigned
-name|long
+name|u64
 name|tso_tx
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|no_tx_map_avail
 decl_stmt|;
-name|unsigned
-name|long
+name|u64
 name|no_tx_dma_setup
 decl_stmt|;
 name|u64

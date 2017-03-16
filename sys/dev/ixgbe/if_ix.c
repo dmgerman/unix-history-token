@@ -21374,7 +21374,7 @@ argument_list|,
 literal|"Transmit Descriptor Tail"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -21394,7 +21394,7 @@ argument_list|,
 literal|"TSO"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,

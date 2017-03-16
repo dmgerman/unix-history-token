@@ -10316,9 +10316,11 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
+operator|(
 name|txr
 operator|->
 name|no_tx_dma_setup
+operator|)
 argument_list|,
 literal|"Driver Tx DMA failure in Tx"
 argument_list|)
