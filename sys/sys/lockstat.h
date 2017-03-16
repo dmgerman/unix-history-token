@@ -431,6 +431,27 @@ parameter_list|)
 value|do {		\ 	lock_profile_release_lock(&(lp)->lock_object);			\ 	LOCKSTAT_RECORD1(probe, lp, a);					\ } while (0)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCK_PROFILING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOCKSTAT_PROFILE_ENABLED
+parameter_list|(
+name|probe
+parameter_list|)
+value|SDT_PROBE_ENABLED(lockstat, , , probe)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct_decl
 struct_decl|struct
 name|lock_object
@@ -603,6 +624,27 @@ parameter_list|)
 define|\
 value|LOCKSTAT_PROFILE_RELEASE_LOCK(probe, lp)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCK_PROFILING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOCKSTAT_PROFILE_ENABLED
+parameter_list|(
+name|probe
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
