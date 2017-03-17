@@ -4074,6 +4074,47 @@ name|rm_align
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|hn_rndis_agg_align
+operator|<
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * The RNDIS packet messsage encap assumes that the RNDIS 		 * packet message is at least 4 bytes aligned.  Fix up the 		 * alignment here, if the remote side sets the alignment 		 * too low. 		 */
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"fixup RNDIS aggpkt align: %u -> %zu\n"
+argument_list|,
+name|sc
+operator|->
+name|hn_rndis_agg_align
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|hn_rndis_agg_align
+operator|=
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|bootverbose
 condition|)
 block|{
@@ -4083,8 +4124,8 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"RNDIS ver %u.%u, pktsz %u, pktcnt %u, "
-literal|"align %u\n"
+literal|"RNDIS ver %u.%u, "
+literal|"aggpkt size %u, aggpkt cnt %u, aggpkt align %u\n"
 argument_list|,
 name|comp
 operator|->
