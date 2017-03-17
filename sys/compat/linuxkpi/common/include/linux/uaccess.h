@@ -207,6 +207,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * NOTE: Each pagefault_disable() call must have a corresponding  * pagefault_enable() call in the same scope. The former creates a new  * block and defines a temporary variable, and the latter uses the  * temporary variable and closes the block. Failure to balance the  * calls will result in a compile-time error.  */
+end_comment
+
 begin_define
 define|#
 directive|define
