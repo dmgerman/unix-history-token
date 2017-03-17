@@ -1491,52 +1491,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KTR
-end_ifdef
-
-begin_function
-specifier|static
-name|__inline
-name|char
-modifier|*
-name|inet_ntoa_haddr
-parameter_list|(
-name|in_addr_t
-name|haddr
-parameter_list|)
-block|{
-name|struct
-name|in_addr
-name|ia
-decl_stmt|;
-name|ia
-operator|.
-name|s_addr
-operator|=
-name|htonl
-argument_list|(
-name|haddr
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|inet_ntoa
-argument_list|(
-name|ia
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Restore context from a queued IGMP output chain.  * Return saved ifindex.  *  * VIMAGE: The assertion is there to make sure that we  * actually called CURVNET_SET() with what's in the mbuf chain.  */
 end_comment
@@ -3539,13 +3493,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"process v2 query %s on ifp %p(%s)"
+literal|"process v2 query 0x%08x on ifp %p(%s)"
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|igmp
 operator|->
 name|igmp_group
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|ifp
@@ -3603,15 +3559,17 @@ name|CTR4
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: %s/%s timer=%d"
+literal|"0x%08x: %s/%s timer=%d"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -4265,13 +4223,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"process v3 %s query on ifp %p(%s)"
+literal|"process v3 0x%08x query on ifp %p(%s)"
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|igmpv3
 operator|->
 name|igmp_group
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|ifp
@@ -4807,13 +4767,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"process v1 report %s on ifp %p(%s)"
+literal|"process v1 report 0x%08x on ifp %p(%s)"
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|igmp
 operator|->
 name|igmp_group
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|ifp
@@ -4943,13 +4905,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"report suppressed for %s on ifp %p(%s)"
+literal|"report suppressed for 0x%08x on ifp %p(%s)"
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|igmp
 operator|->
 name|igmp_group
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|ifp
@@ -4976,13 +4940,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"report suppressed for %s on ifp %p(%s)"
+literal|"report suppressed for 0x%08x on ifp %p(%s)"
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|igmp
 operator|->
 name|igmp_group
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|ifp
@@ -5272,13 +5238,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"process v2 report %s on ifp %p(%s)"
+literal|"process v2 report 0x%08x on ifp %p(%s)"
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|igmp
 operator|->
 name|igmp_group
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|ifp
@@ -5400,13 +5368,15 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"report suppressed for %s on ifp %p(%s)"
+literal|"report suppressed for 0x%08x on ifp %p(%s)"
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|igmp
 operator|->
 name|igmp_group
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|ifp
@@ -7063,15 +7033,17 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: T1 -> T0 for %s/%s"
+literal|"%s: T1 -> T0 for 0x%08x/%s"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -8646,15 +8618,17 @@ name|CTR4
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: initial join %s on ifp %p(%s)"
+literal|"%s: initial join 0x%08x on ifp %p(%s)"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -8987,15 +8961,17 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: T1 -> T0 for %s/%s"
+literal|"%s: T1 -> T0 for 0x%08x/%s"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -9046,15 +9022,17 @@ name|CTR4
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: state change for %s on ifp %p(%s)"
+literal|"%s: state change for 0x%08x on ifp %p(%s)"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -9171,15 +9149,17 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: T1 -> T0 for %s/%s"
+literal|"%s: T1 -> T0 for 0x%08x/%s"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -9314,15 +9294,17 @@ name|CTR4
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: final leave %s on ifp %p(%s)"
+literal|"%s: final leave 0x%08x on ifp %p(%s)"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -9486,16 +9468,18 @@ name|CTR4
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: Leaving %s/%s with %d "
+literal|"%s: Leaving 0x%08x/%s with %d "
 literal|"pending retransmissions."
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -9624,15 +9608,17 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: T1 -> T0 for %s/%s"
+literal|"%s: T1 -> T0 for 0x%08x/%s"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -9657,15 +9643,17 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: T1 now MCAST_UNDEFINED for %s/%s"
+literal|"%s: T1 now MCAST_UNDEFINED for 0x%08x/%s"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -10049,15 +10037,17 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: nothing to do for %s/%s"
+literal|"%s: nothing to do for 0x%08x/%s"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -10097,7 +10087,7 @@ name|CTR4
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: queueing %s for %s/%s"
+literal|"%s: queueing %s for 0x%08x/%s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10106,11 +10096,13 @@ argument_list|(
 name|type
 argument_list|)
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|inm
 operator|->
 name|inm_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|inm
@@ -10529,16 +10521,13 @@ name|CTR2
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: visit node %s"
+literal|"%s: visit node 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_haddr
-argument_list|(
 name|ims
 operator|->
 name|ims_haddr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|now
@@ -11067,16 +11056,13 @@ name|CTR2
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: visit node %s"
+literal|"%s: visit node 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_haddr
-argument_list|(
 name|ims
 operator|->
 name|ims_haddr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|now
@@ -11934,16 +11920,13 @@ name|CTR2
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: visit node %s"
+literal|"%s: visit node 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa_haddr
-argument_list|(
 name|ims
 operator|->
 name|ims_haddr
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|now

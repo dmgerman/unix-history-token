@@ -8078,22 +8078,26 @@ name|CTR3
 argument_list|(
 name|KTR_IW_CXGB
 argument_list|,
-literal|"%s local %s remote %s"
+literal|"%s local 0x%08x remote 0x%08x"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|local
 operator|->
 name|sin_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|remote
 operator|->
 name|sin_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8487,15 +8491,17 @@ name|CTR3
 argument_list|(
 name|KTR_IW_CXGB
 argument_list|,
-literal|"%s remote addr %s port %d"
+literal|"%s remote addr 0x%08x port %d"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|remote
 operator|->
 name|sin_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|ntohs

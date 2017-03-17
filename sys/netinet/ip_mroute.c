@@ -4025,7 +4025,7 @@ name|CTR4
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"%s: add vif %d laddr %s thresh %x"
+literal|"%s: add vif %d laddr 0x%08x thresh %x"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4036,11 +4036,13 @@ name|vifcp
 operator|->
 name|vifc_vifi
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|vifcp
 operator|->
 name|vifc_lcl_addr
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 operator|(
@@ -4575,15 +4577,17 @@ name|CTR4
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"%s: update mfc orig %s group %lx parent %x"
+literal|"%s: update mfc orig 0x%08x group %lx parent %x"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|mfccp
 operator|->
 name|mfcc_origin
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 operator|(
@@ -4687,15 +4691,17 @@ name|CTR5
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"%s: add mfc orig %s group %lx parent %x qh %p"
+literal|"%s: add mfc orig 0x%08x group %lx parent %x qh %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|mfccp
 operator|->
 name|mfcc_origin
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 operator|(
@@ -5061,13 +5067,15 @@ name|CTR3
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"%s: delete mfc orig %s group %lx"
+literal|"%s: delete mfc orig 0x%08x group %lx"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|origin
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 operator|(
@@ -5296,13 +5304,15 @@ name|CTR3
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"ip_mforward: delete mfc orig %s group %lx ifp %p"
+literal|"ip_mforward: delete mfc orig 0x%08x group %lx ifp %p"
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|ip
 operator|->
 name|ip_src
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 operator|(
@@ -5551,13 +5561,15 @@ name|CTR2
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"ip_mforward: no mfc for (%s,%lx)"
+literal|"ip_mforward: no mfc for (0x%08x,%lx)"
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|ip
 operator|->
 name|ip_src
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 operator|(
@@ -11030,17 +11042,19 @@ name|CTR3
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"%s: short packet (%d) from %s"
+literal|"%s: short packet (%d) from 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
 name|datalen
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|ip
 operator|->
 name|ip_src
+operator|.
+name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11444,15 +11458,17 @@ name|CTR3
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"%s: register: encap ip src %s len %d"
+literal|"%s: register: encap ip src 0x%08x len %d"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|encap_ip
 operator|->
 name|ip_src
+operator|.
+name|s_addr
 argument_list|)
 argument_list|,
 name|ntohs
@@ -11524,15 +11540,17 @@ name|CTR2
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"%s: bad encap ip dest %s"
+literal|"%s: bad encap ip dest 0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
-name|inet_ntoa
+name|ntohl
 argument_list|(
 name|encap_ip
 operator|->
 name|ip_dst
+operator|.
+name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
