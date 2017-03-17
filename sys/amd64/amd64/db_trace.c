@@ -2871,7 +2871,9 @@ end_function
 begin_function
 name|void
 name|db_md_list_watchpoints
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|dbreg
@@ -3001,10 +3003,8 @@ name|db_addr_t
 operator|)
 name|DBREG_DRX
 argument_list|(
-operator|(
 operator|&
 name|d
-operator|)
 argument_list|,
 name|i
 argument_list|)
@@ -3047,7 +3047,16 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
+if|if
+condition|(
+name|i
+operator|!=
+literal|4
+operator|&&
+name|i
+operator|!=
+literal|5
+condition|)
 name|db_printf
 argument_list|(
 literal|"  dr%d 0x%016lx\n"
@@ -3056,16 +3065,13 @@ name|i
 argument_list|,
 name|DBREG_DRX
 argument_list|(
-operator|(
 operator|&
 name|d
-operator|)
 argument_list|,
 name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|db_printf
 argument_list|(
 literal|"\n"
