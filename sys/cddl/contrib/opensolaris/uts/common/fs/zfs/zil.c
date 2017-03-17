@@ -4348,6 +4348,27 @@ literal|1024
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_QUAD
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|zil_slog_limit
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zil_slog_limit
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximal commit size to use SLOG"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
