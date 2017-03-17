@@ -468,6 +468,19 @@ define|\
 value|.long	0; \ 	.byte	0,0,0,0,0,0,0,0; \ 	END_SIZE(name)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LOAD_ADDR
+parameter_list|(
+name|reg
+parameter_list|,
+name|var
+parameter_list|)
+define|\
+value|lis	reg, var@highest; \ 	ori	reg, reg, var@higher; \ 	rldicr	reg, reg, 32, 31; \ 	oris	reg, reg, var@h; \ 	ori	reg, reg, var@l;
+end_define
+
 begin_else
 else|#
 directive|else
@@ -495,6 +508,19 @@ name|_END
 parameter_list|(
 name|name
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOAD_ADDR
+parameter_list|(
+name|reg
+parameter_list|,
+name|var
+parameter_list|)
+define|\
+value|lis	reg, var@ha; \ 	ori	reg, reg, var@l;
 end_define
 
 begin_endif

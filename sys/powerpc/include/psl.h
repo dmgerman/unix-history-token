@@ -133,6 +133,28 @@ begin_comment
 comment|/* Machine State Register - Book-E cores */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PSL_CM
+value|0x80000000UL
+end_define
+
+begin_comment
+comment|/* Computation Mode (64-bit) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -425,12 +447,35 @@ name|PSL_KERNSET_INIT
 value|(PSL_IS | PSL_DS)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PSL_KERNSET
+value|(PSL_CM | PSL_CE | PSL_ME | PSL_EE)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|PSL_KERNSET
 value|(PSL_CE | PSL_ME | PSL_EE)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

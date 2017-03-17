@@ -139,9 +139,10 @@ block|{
 name|uint32_t
 name|msr
 decl_stmt|,
-name|sp
-decl_stmt|,
 name|csr
+decl_stmt|;
+name|uintptr_t
+name|sp
 decl_stmt|;
 comment|/* Enable L1 caches */
 name|csr
@@ -195,10 +196,23 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* Set MSR */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|msr
+operator|=
+name|PSL_CM
+operator||
+name|PSL_ME
+expr_stmt|;
+else|#
+directive|else
 name|msr
 operator|=
 name|PSL_ME
 expr_stmt|;
+endif|#
+directive|endif
 name|mtmsr
 argument_list|(
 name|msr

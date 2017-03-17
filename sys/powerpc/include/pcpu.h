@@ -145,12 +145,42 @@ name|BOOKE_TLBSAVE_LEN
 value|(BOOKE_TLB_SAVELEN * BOOKE_TLB_MAXNEST)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BOOKE_PCPU_PAD
+value|773
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BOOKE_PCPU_PAD
+value|173
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|PCPU_MD_BOOKE_FIELDS
 define|\
-value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	vm_offset_t	pc_qmap_addr;					\ 	uint32_t	*pc_booke_tlb_lock;				\ 	int		pc_tid_next;					\ 	char		__pad[173]
+value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	vm_offset_t	pc_qmap_addr;					\ 	uintptr_t	*pc_booke_tlb_lock;				\ 	int		pc_tid_next;					\ 	char		__pad[BOOKE_PCPU_PAD]
 end_define
 
 begin_comment
@@ -276,6 +306,28 @@ end_define
 
 begin_comment
 comment|/* where SRR1 gets saved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOKE_CRITSAVE_SRR0
+value|9
+end_define
+
+begin_comment
+comment|/* where real SRR0 gets saved (critical) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOKE_CRITSAVE_SRR1
+value|10
+end_define
+
+begin_comment
+comment|/* where real SRR0 gets saved (critical) */
 end_comment
 
 begin_comment

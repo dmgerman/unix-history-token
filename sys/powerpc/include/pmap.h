@@ -692,6 +692,28 @@ name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+comment|/* Page table directory, array of pointers to page directories. */
+name|pte_t
+modifier|*
+modifier|*
+name|pm_pp2d
+index|[
+name|PP2D_NENTRIES
+index|]
+decl_stmt|;
+comment|/* List of allocated pdir bufs (pdir kva regions). */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ptbl_buf
+argument_list|)
+name|pm_pdir_list
+expr_stmt|;
+else|#
+directive|else
 comment|/* Page table directory, array of pointers to page tables. */
 name|pte_t
 modifier|*
@@ -700,6 +722,8 @@ index|[
 name|PDIR_NENTRIES
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* List of allocated ptbl bufs (ptbl kva regions). */
 name|TAILQ_HEAD
 argument_list|(

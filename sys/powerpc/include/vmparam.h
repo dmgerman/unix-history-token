@@ -189,12 +189,35 @@ name|VM_MIN_ADDRESS
 value|(0x0000000000000000UL)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
 value|(0xfffffffffffff000UL)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
+value|(0x7ffffffffffff000UL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -250,20 +273,11 @@ begin_comment
 comment|/* LOCORE */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__powerpc64__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|BOOKE
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -272,12 +286,35 @@ name|VM_MIN_ADDRESS
 value|0
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
+value|0x7ffffffffffff000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
 value|0x7ffff000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -310,23 +347,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AIM
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|KERNBASE
-value|0x00100000UL
-end_define
-
-begin_comment
-comment|/* start of kernel virtual */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__powerpc64__
 end_ifdef
 
@@ -351,10 +371,33 @@ name|VM_MAX_SAFE_KERNEL_ADDRESS
 value|VM_MAX_KERNEL_ADDRESS
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|0x00100000UL
+end_define
+
+begin_comment
+comment|/* start of kernel virtual */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__powerpc64__
+end_ifndef
 
 begin_define
 define|#
@@ -401,6 +444,55 @@ begin_comment
 comment|/* Book-E */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|0xc000000000000000UL
+end_define
+
+begin_comment
+comment|/* start of kernel virtual */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|0xc000000000000000
+end_define
+
+begin_comment
+comment|/* start of kernel virtual */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -432,6 +524,11 @@ directive|define
 name|VM_MAX_SAFE_KERNEL_ADDRESS
 value|VM_MAX_KERNEL_ADDRESS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -774,7 +774,8 @@ operator|&
 name|interrupt_vector_base
 operator|)
 operator|&
-literal|0xffff0000
+operator|~
+literal|0xffffUL
 argument_list|)
 expr_stmt|;
 name|SET_TRAP
@@ -953,6 +954,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+comment|/* Set 64-bit interrupt mode. */
+name|mtspr
+argument_list|(
+name|SPR_EPCR
+argument_list|,
+name|mfspr
+argument_list|(
+name|SPR_EPCR
+argument_list|)
+operator||
+name|EPCR_ICM
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1312,7 +1331,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|uint32_t
+name|uintptr_t
 name|tlb0_miss_locks
 index|[]
 decl_stmt|;
@@ -1347,7 +1366,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-name|uint32_t
+name|uintptr_t
 modifier|*
 name|ptr
 decl_stmt|;
@@ -1358,7 +1377,7 @@ name|RES_GRANULE
 operator|/
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|uintptr_t
 argument_list|)
 decl_stmt|;
 name|ptr
