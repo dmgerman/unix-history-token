@@ -54,7 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/completion.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/pid.h>
 end_include
 
 begin_include
@@ -149,6 +161,9 @@ decl_stmt|;
 name|int
 name|task_ret
 decl_stmt|;
+name|atomic_t
+name|usage
+decl_stmt|;
 name|int
 name|state
 decl_stmt|;
@@ -158,6 +173,7 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+comment|/* BSD thread ID */
 specifier|const
 name|char
 modifier|*
@@ -192,11 +208,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|task_pid_group_leader
+parameter_list|(
+name|task
+parameter_list|)
+define|\
+value|FIRST_THREAD_IN_PROC((task)->task_thread->td_proc)->td_tid
+end_define
+
+begin_define
+define|#
+directive|define
 name|task_pid
 parameter_list|(
 name|task
 parameter_list|)
-value|((task)->task_thread->td_proc->p_pid)
+value|((task)->pid)
 end_define
 
 begin_define
@@ -206,7 +233,7 @@ name|task_pid_nr
 parameter_list|(
 name|task
 parameter_list|)
-value|((task)->task_thread->td_tid)
+value|((task)->pid)
 end_define
 
 begin_define
@@ -226,6 +253,7 @@ name|put_pid
 parameter_list|(
 name|x
 parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_define
@@ -256,6 +284,59 @@ name|x
 parameter_list|)
 value|current->state = (x)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|get_task_struct
+parameter_list|(
+name|struct
+name|task_struct
+modifier|*
+name|task
+parameter_list|)
+block|{
+name|atomic_inc
+argument_list|(
+operator|&
+name|task
+operator|->
+name|usage
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|put_task_struct
+parameter_list|(
+name|struct
+name|task_struct
+modifier|*
+name|task
+parameter_list|)
+block|{
+if|if
+condition|(
+name|atomic_dec_and_test
+argument_list|(
+operator|&
+name|task
+operator|->
+name|usage
+argument_list|)
+condition|)
+name|linux_free_current
+argument_list|(
+name|task
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_define
 define|#

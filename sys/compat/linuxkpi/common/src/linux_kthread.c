@@ -176,7 +176,7 @@ name|task
 operator|->
 name|task_ret
 expr_stmt|;
-name|linux_free_current
+name|put_task_struct
 argument_list|(
 name|task
 argument_list|)
