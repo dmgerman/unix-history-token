@@ -1140,9 +1140,25 @@ condition|(
 name|sectsz
 operator|==
 literal|0
+operator|||
+name|sectsz
+operator|%
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 		 * Can't use chimney sending buffer; done! 		 */
+if|if
+condition|(
+name|sectsz
+operator|==
+literal|0
+condition|)
+block|{
 name|if_printf
 argument_list|(
 name|sc
@@ -1153,6 +1169,22 @@ literal|"zero chimney sending buffer "
 literal|"section size\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"misaligned chimney sending "
+literal|"buffers, section size: %u\n"
+argument_list|,
+name|sectsz
+argument_list|)
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|hn_chim_szmax
