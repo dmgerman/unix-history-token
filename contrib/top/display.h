@@ -125,6 +125,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|i_carc
+parameter_list|(
+name|int
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|i_cpustates
 parameter_list|(
 name|int
@@ -273,6 +284,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|u_arc
+parameter_list|(
+name|int
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|u_carc
 parameter_list|(
 name|int
 modifier|*

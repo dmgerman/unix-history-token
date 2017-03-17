@@ -524,6 +524,18 @@ begin_function_decl
 name|void
 function_decl|(
 modifier|*
+name|d_carc
+function_decl|)
+parameter_list|()
+init|=
+name|i_carc
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
 name|d_swap
 function_decl|)
 parameter_list|()
@@ -2392,6 +2404,16 @@ operator|.
 name|arc
 argument_list|)
 expr_stmt|;
+call|(
+modifier|*
+name|d_carc
+call|)
+argument_list|(
+name|system_info
+operator|.
+name|carc
+argument_list|)
+expr_stmt|;
 comment|/* display swap stats */
 call|(
 modifier|*
@@ -2577,6 +2599,10 @@ expr_stmt|;
 name|d_arc
 operator|=
 name|u_arc
+expr_stmt|;
+name|d_carc
+operator|=
+name|u_carc
 expr_stmt|;
 name|d_swap
 operator|=
@@ -4299,6 +4325,10 @@ expr_stmt|;
 name|d_arc
 operator|=
 name|i_arc
+expr_stmt|;
+name|d_carc
+operator|=
+name|i_carc
 expr_stmt|;
 name|d_swap
 operator|=
