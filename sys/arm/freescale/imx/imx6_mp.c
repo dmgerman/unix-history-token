@@ -95,6 +95,24 @@ directive|include
 file|<machine/intr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/platformvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/freescale/imx/imx6_mp.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -260,9 +278,10 @@ end_comment
 
 begin_function
 name|void
-name|platform_mp_setmaxid
+name|imx6_mp_setmaxid
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|bus_space_handle_t
@@ -378,9 +397,10 @@ end_function
 
 begin_function
 name|void
-name|platform_mp_start_ap
+name|imx6_mp_start_ap
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|bus_space_handle_t

@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/freescale/imx/imx6_mp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"platform_if.h"
 end_include
 
@@ -898,6 +904,25 @@ argument_list|,
 name|imx6_cpu_reset
 argument_list|)
 block|,
+ifdef|#
+directive|ifdef
+name|SMP
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_mp_start_ap
+argument_list|,
+name|imx6_mp_start_ap
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_mp_setmaxid
+argument_list|,
+name|imx6_mp_setmaxid
+argument_list|)
+block|,
+endif|#
+directive|endif
 name|PLATFORMMETHOD_END
 block|, }
 decl_stmt|;
