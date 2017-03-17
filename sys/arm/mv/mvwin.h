@@ -57,46 +57,6 @@ value|0xF1100000
 end_define
 
 begin_comment
-comment|/* AXI Regs */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SOC_MV_DOVE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MV_AXI_PHYS_BASE
-value|0xF1800000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_AXI_BASE
-value|MV_AXI_PHYS_BASE
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_AXI_SIZE
-value|(16 * 1024 * 1024)
-end_define
-
-begin_comment
-comment|/* 16 MB */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * External devices: 0x80000000, 1 GB (VA == PA)  * Includes Device Bus, PCI and PCIE.  */
 end_comment
 
@@ -126,11 +86,6 @@ directive|elif
 name|defined
 argument_list|(
 name|SOC_MV_KIRKWOOD
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SOC_MV_FREY
 argument_list|)
 end_elif
 
@@ -163,31 +118,6 @@ end_define
 
 begin_comment
 comment|/* 8x PCIE */
-end_comment
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|SOC_MV_DOVE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SOC_MV_LOKIPLUS
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|MV_PCI_PORTS
-value|2
-end_define
-
-begin_comment
-comment|/* 2x PCIE */
 end_comment
 
 begin_elif
@@ -338,38 +268,12 @@ parameter_list|)
 value|(MV_PCI_IO_BASE + ((n) * MV_PCI_IO_SLICE_SIZE))
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_MV_FREY
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MV_PCI_VA_MEM_BASE
-value|MV_PCI_MEM_BASE
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|MV_PCI_VA_MEM_BASE
 value|0
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -474,38 +378,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SOC_MV_DOVE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MV_DDR_CADR_BASE
-value|(MV_AXI_BASE + 0x100)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|SOC_MV_LOKIPLUS
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|MV_DDR_CADR_BASE
-value|(MV_BASE + 0xF1500)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
 operator|||
@@ -513,7 +385,7 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADA38X
 argument_list|)
-end_elif
+end_if
 
 begin_define
 define|#
@@ -595,15 +467,10 @@ name|MV_CPU_CONTROL_BASE
 value|(MV_MBUS_BRIDGE_BASE + 0x1800)
 end_define
 
-begin_elif
-elif|#
-directive|elif
-operator|!
-name|defined
-argument_list|(
-name|SOC_MV_FREY
-argument_list|)
-end_elif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -624,18 +491,6 @@ define|#
 directive|define
 name|MV_CPU_CONTROL_BASE
 value|(MV_MBUS_BRIDGE_BASE + 0x100)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MV_CPU_CONTROL_BASE
-value|(MV_BASE + 0x10000)
 end_define
 
 begin_endif
@@ -662,25 +517,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SOC_MV_FREY
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MV_PCIE_BASE
-value|(MV_BASE + 0x8000)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|SOC_MV_ARMADA38X
 argument_list|)
-end_elif
+end_if
 
 begin_define
 define|#
@@ -952,34 +791,6 @@ name|MV_WIN_CPU_ATTR_SHIFT
 value|8
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_MV_LOKIPLUS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_CPU_TARGET_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_CPU_ENABLE_BIT
-value|(1<< 5)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -993,74 +804,6 @@ directive|define
 name|MV_WIN_CPU_ENABLE_BIT
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_MV_DOVE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_DDR_MAX
-value|2
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SOC_MV_DOVE */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_MV_LOKIPLUS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_DDR_BASE
-parameter_list|(
-name|n
-parameter_list|)
-value|(0xc * (n) + 0x4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_DDR_SIZE
-parameter_list|(
-name|n
-parameter_list|)
-value|(0xc * (n) + 0x0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SOC_MV_LOKIPLUS */
-end_comment
 
 begin_define
 define|#
@@ -1082,30 +825,12 @@ parameter_list|)
 value|(0x8 * (n) + 0x4)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SOC_MV_LOKIPLUS */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|MV_WIN_DDR_MAX
 value|4
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SOC_MV_DOVE */
-end_comment
 
 begin_comment
 comment|/*  * These values are valid only for peripherals decoding windows  * Bit in ATTR is zeroed according to CS bank number  */
@@ -1479,11 +1204,6 @@ name|defined
 argument_list|(
 name|SOC_MV_KIRKWOOD
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SOC_MV_DOVE
-argument_list|)
 end_if
 
 begin_define
@@ -1611,45 +1331,6 @@ parameter_list|(
 name|n
 parameter_list|)
 value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_PCIE_MEM_ATTR
-parameter_list|(
-name|n
-parameter_list|)
-value|0x59
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_PCIE_IO_ATTR
-parameter_list|(
-name|n
-parameter_list|)
-value|0x51
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|SOC_MV_LOKIPLUS
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_PCIE_TARGET
-parameter_list|(
-name|n
-parameter_list|)
-value|(3 + (n))
 end_define
 
 begin_define

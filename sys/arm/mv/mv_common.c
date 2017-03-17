@@ -232,12 +232,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SOC_MV_FREY
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|int
@@ -247,11 +241,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -323,12 +312,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SOC_MV_FREY
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|void
@@ -338,11 +321,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1485,18 +1463,6 @@ name|defined
 argument_list|(
 name|SOC_MV_ORION
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SOC_MV_LOKIPLUS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SOC_MV_FREY
-argument_list|)
 if|if
 condition|(
 name|mask
@@ -1545,12 +1511,6 @@ operator|!
 name|defined
 argument_list|(
 name|SOC_MV_ORION
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SOC_MV_LOKIPLUS
 argument_list|)
 if|if
 condition|(
@@ -2253,9 +2213,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|SOC_MV_FREY
 if|if
 condition|(
 operator|!
@@ -2298,45 +2255,6 @@ return|;
 name|decode_win_cpu_setup
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-name|decode_win_usb_valid
-argument_list|()
-operator|||
-operator|!
-name|decode_win_eth_valid
-argument_list|()
-operator|||
-operator|!
-name|decode_win_idma_valid
-argument_list|()
-operator|||
-operator|!
-name|decode_win_pcie_valid
-argument_list|()
-operator|||
-operator|!
-name|decode_win_sata_valid
-argument_list|()
-operator|||
-operator|!
-name|decode_win_xor_valid
-argument_list|()
-operator|||
-operator|!
-name|decode_win_usb3_valid
-argument_list|()
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|MV_DUMP_WIN
@@ -2380,16 +2298,6 @@ begin_comment
 comment|/**************************************************************************  * Decode windows registers accessors  **************************************************************************/
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SOC_MV_FREY
-argument_list|)
-end_if
-
 begin_macro
 name|WIN_REG_IDX_RD
 argument_list|(
@@ -2493,11 +2401,6 @@ argument_list|,
 argument|MV_MBUS_BRIDGE_BASE
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|WIN_REG_BASE_IDX_RD
@@ -3298,16 +3201,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SOC_MV_FREY
-argument_list|)
-end_if
 
 begin_comment
 comment|/**************************************************************************  * Decode windows helper routines  **************************************************************************/
@@ -4419,11 +4312,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -5889,30 +5777,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOC_MV_LOKIPLUS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_ETH_DDR_TRGT
-parameter_list|(
-name|n
-parameter_list|)
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -5922,11 +5786,6 @@ name|n
 parameter_list|)
 value|ddr_target(n)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

@@ -939,13 +939,6 @@ name|void
 parameter_list|)
 block|{
 comment|/* 	 * Re-initialise decode windows 	 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SOC_MV_FREY
-argument_list|)
 if|if
 condition|(
 name|soc_decode_win
@@ -959,20 +952,6 @@ literal|"WARNING: could not re-initialise decode windows! "
 literal|"Running with existing settings...\n"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* Disable watchdog and timers */
-name|write_cpu_ctrl
-argument_list|(
-name|CPU_TIMERS_BASE
-operator|+
-name|CPU_TIMER_CONTROL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
