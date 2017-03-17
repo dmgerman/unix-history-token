@@ -1480,7 +1480,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Version 3.0 divisors are multiples of two up to 1023*2 */
+comment|/* Version 3.0 divisors are multiples of two up to 1023 * 2 */
 if|if
 condition|(
 name|clock
@@ -6449,7 +6449,7 @@ name|curcmd
 operator|->
 name|data
 expr_stmt|;
-comment|/* Unload DMA buffer... */
+comment|/* Unload DMA buffer ... */
 name|left
 operator|=
 name|data

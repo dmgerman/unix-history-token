@@ -9299,6 +9299,8 @@ name|ivar
 operator|->
 name|rca
 argument_list|)
+operator|!=
+name|MMC_ERR_NONE
 condition|)
 block|{
 if|if

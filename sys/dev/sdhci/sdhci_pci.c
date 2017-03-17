@@ -563,6 +563,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -628,6 +629,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -697,6 +699,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -762,6 +765,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -831,6 +835,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -896,6 +901,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -965,6 +971,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off
@@ -1020,6 +1027,7 @@ name|struct
 name|sdhci_slot
 modifier|*
 name|slot
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|off

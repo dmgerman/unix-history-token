@@ -173,7 +173,7 @@ name|enum
 name|mmc_vdd
 name|vdd
 decl_stmt|;
-comment|/* Voltage to apply to the power pins/ */
+comment|/* Voltage to apply to the power pins */
 name|enum
 name|mmc_bus_mode
 name|bus_mode
