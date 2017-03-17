@@ -1305,12 +1305,13 @@ operator|)
 operator|&
 name|rt_gateway
 expr_stmt|;
-comment|/* Always use the default FIB. */
 if|if
 condition|(
 name|rib_lookup_info
 argument_list|(
-name|RT_DEFAULT_FIB
+name|ifp
+operator|->
+name|if_fib
 argument_list|,
 operator|(
 expr|struct
@@ -2300,7 +2301,7 @@ name|error
 operator|=
 name|in6_selectsrc_addr
 argument_list|(
-name|RT_DEFAULT_FIB
+name|fibnum
 argument_list|,
 operator|&
 name|dst6
@@ -4441,7 +4442,7 @@ name|error
 operator|=
 name|in6_selectsrc_addr
 argument_list|(
-name|RT_DEFAULT_FIB
+name|fibnum
 argument_list|,
 operator|&
 name|dst6

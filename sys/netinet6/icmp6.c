@@ -9233,7 +9233,10 @@ name|error
 operator|=
 name|in6_selectsrc_addr
 argument_list|(
-name|RT_DEFAULT_FIB
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|,
 operator|&
 name|dst6
@@ -9873,7 +9876,9 @@ if|if
 condition|(
 name|fib6_lookup_nh_basic
 argument_list|(
-name|RT_DEFAULT_FIB
+name|ifp
+operator|->
+name|if_fib
 argument_list|,
 operator|&
 name|kdst
