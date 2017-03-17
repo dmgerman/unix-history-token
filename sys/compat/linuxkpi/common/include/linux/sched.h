@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/mm_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<asm/atomic.h>
 end_include
 
@@ -126,6 +132,11 @@ name|struct
 name|thread
 modifier|*
 name|task_thread
+decl_stmt|;
+name|struct
+name|mm_struct
+modifier|*
+name|mm
 decl_stmt|;
 name|linux_task_fn_t
 modifier|*

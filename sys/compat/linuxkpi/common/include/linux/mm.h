@@ -33,6 +33,12 @@ directive|include
 file|<linux/kernel.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<linux/mm_types.h>
+end_include
+
 begin_define
 define|#
 directive|define
