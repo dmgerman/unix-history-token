@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vmmeter.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -620,10 +614,6 @@ decl_stmt|;
 name|struct
 name|clockinfo
 name|clockrate
-decl_stmt|;
-name|struct
-name|vmmeter
-name|cnt
 decl_stmt|;
 name|struct
 name|ifmibdata
