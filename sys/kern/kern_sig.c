@@ -5258,13 +5258,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|td
-operator|=
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|ps
 operator|=
 name|p
@@ -5392,6 +5385,19 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Reset stack state to the user stack. 	 * Clear set of signals caught on the signal stack. 	 */
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|td
+operator|->
+name|td_proc
+operator|==
+name|p
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_sigstk
