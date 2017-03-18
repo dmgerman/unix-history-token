@@ -141,6 +141,8 @@ name|FileFlags
 block|,
 name|Flockop
 block|,
+name|Getfsstatmode
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
