@@ -403,6 +403,34 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Fudge fg brightness as TF_BOLD (shifted). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCOLOR_FG_FUDGED
+parameter_list|(
+name|color
+parameter_list|)
+value|__extension__ ({			\ 	teken_color_t _c;						\ 									\ 	_c = (color);							\ 	TCOLOR_FG(_c& 7) | ((_c& 8)<< 18);				\ })
+end_define
+
+begin_comment
+comment|/* Fudge bg brightness as TF_BLINK (shifted). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCOLOR_BG_FUDGED
+parameter_list|(
+name|color
+parameter_list|)
+value|__extension__ ({			\ 	teken_color_t _c;						\ 									\ 	_c = (color);							\ 	TCOLOR_BG(_c& 7) | ((_c& 8)<< 20);				\ })
+end_define
+
 begin_define
 define|#
 directive|define
@@ -412,7 +440,7 @@ name|c
 parameter_list|,
 name|a
 parameter_list|)
-value|((c) | TFORMAT((a)->ta_format) |	\ 	TCOLOR_FG(teken_256to8((a)->ta_fgcolor)) |			\ 	TCOLOR_BG(teken_256to8((a)->ta_bgcolor)))
+value|((c) | TFORMAT((a)->ta_format) |	\ 	TCOLOR_FG_FUDGED(teken_256to16((a)->ta_fgcolor)) |		\ 	TCOLOR_BG_FUDGED(teken_256to16((a)->ta_bgcolor)))
 end_define
 
 begin_function
