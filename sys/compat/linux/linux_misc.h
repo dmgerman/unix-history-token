@@ -627,6 +627,24 @@ name|LINUX_RLIM_INFINITY
 value|(~0UL)
 end_define
 
+begin_comment
+comment|/* Linux getrandom flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_GRND_NONBLOCK
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_GRND_RANDOM
+value|0x0002
+end_define
+
 begin_function_decl
 name|int
 name|linux_common_wait
