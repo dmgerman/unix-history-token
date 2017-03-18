@@ -139,6 +139,8 @@ name|Fadvice
 block|,
 name|FileFlags
 block|,
+name|Flockop
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
