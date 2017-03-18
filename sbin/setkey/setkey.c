@@ -167,6 +167,8 @@ name|void
 name|sendkeyshort
 parameter_list|(
 name|u_int
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -355,6 +357,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|f_scope
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|time_t
 name|thiszone
@@ -397,7 +407,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       setkey [-Palv] -D\n"
+literal|"       setkey [-Pagltv] -D\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -474,7 +484,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"acdf:hlvxDFP"
+literal|"acdf:ghltvxDFP"
 argument_list|)
 operator|)
 operator|!=
@@ -593,6 +603,24 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'g'
+case|:
+comment|/* global */
+name|f_scope
+operator||=
+name|IPSEC_POLICYSCOPE_GLOBAL
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+comment|/* tunnel */
+name|f_scope
+operator||=
+name|IPSEC_POLICYSCOPE_IFNET
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 name|f_verbose
@@ -645,6 +673,12 @@ condition|?
 name|SADB_X_SPDDUMP
 else|:
 name|SADB_DUMP
+argument_list|,
+name|f_policy
+condition|?
+name|f_scope
+else|:
+name|SADB_SATYPE_UNSPEC
 argument_list|)
 expr_stmt|;
 break|break;
@@ -658,6 +692,8 @@ condition|?
 name|SADB_X_SPDFLUSH
 else|:
 name|SADB_FLUSH
+argument_list|,
+name|SADB_SATYPE_UNSPEC
 argument_list|)
 expr_stmt|;
 break|break;
@@ -763,11 +799,12 @@ begin_function
 name|void
 name|sendkeyshort
 parameter_list|(
-name|type
-parameter_list|)
 name|u_int
 name|type
-decl_stmt|;
+parameter_list|,
+name|uint8_t
+name|satype
+parameter_list|)
 block|{
 name|struct
 name|sadb_msg
@@ -795,7 +832,7 @@ name|msg
 operator|.
 name|sadb_msg_satype
 operator|=
-name|SADB_SATYPE_UNSPEC
+name|satype
 expr_stmt|;
 name|msg
 operator|.

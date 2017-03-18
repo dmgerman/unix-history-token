@@ -337,32 +337,11 @@ begin_comment
 comment|/* INET6 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<netipsec/ipsec.h>
+file|<netipsec/ipsec_support.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<netipsec/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
-end_comment
 
 begin_include
 include|#
@@ -1581,19 +1560,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IPSEC_SUPPORT
+argument_list|)
 name|error
 operator|=
-name|ipsec_init_policy
+name|ipsec_init_pcbpolicy
 argument_list|(
-name|so
-argument_list|,
-operator|&
 name|inp
-operator|->
-name|inp_sp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1732,6 +1714,11 @@ directive|if
 name|defined
 argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IPSEC_SUPPORT
 argument_list|)
 operator|||
 name|defined
@@ -5831,9 +5818,17 @@ name|inp
 argument_list|)
 expr_stmt|;
 comment|/* XXXRW: Do as much as possible here. */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IPSEC_SUPPORT
+argument_list|)
 if|if
 condition|(
 name|inp

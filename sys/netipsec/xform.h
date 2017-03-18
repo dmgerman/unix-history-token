@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -74,31 +80,49 @@ begin_comment
 comment|/* replay counter initial value */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|secpolicy
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|secasvar
+struct_decl|;
+end_struct_decl
+
 begin_comment
-comment|/*  * Packet tag assigned on completion of IPsec processing; used  * to speedup processing when/if the packet comes back for more  * processing.  */
+comment|/*  * Packet tag assigned on completion of IPsec processing; used  * to speedup security policy checking for INBOUND packets.  */
 end_comment
 
 begin_struct
 struct|struct
-name|tdb_ident
+name|xform_history
 block|{
-name|u_int32_t
-name|spi
-decl_stmt|;
 name|union
 name|sockaddr_union
 name|dst
 decl_stmt|;
-name|u_int8_t
+comment|/* destination address */
+name|uint32_t
+name|spi
+decl_stmt|;
+comment|/* Security Parameters Index */
+name|uint8_t
 name|proto
 decl_stmt|;
-comment|/* Cache those two for enc(4) in xform_ipip. */
-name|u_int8_t
-name|alg_auth
+comment|/* IPPROTO_ESP or IPPROTO_AH */
+name|uint8_t
+name|mode
 decl_stmt|;
-name|u_int8_t
-name|alg_enc
-decl_stmt|;
+comment|/* transport or tunnel */
 block|}
 struct|;
 end_struct
@@ -109,64 +133,98 @@ end_comment
 
 begin_struct
 struct|struct
-name|tdb_crypto
+name|xform_data
 block|{
 name|struct
-name|ipsecrequest
+name|secpolicy
 modifier|*
-name|tc_isr
+name|sp
 decl_stmt|;
-comment|/* ipsec request state */
-name|u_int32_t
-name|tc_spi
-decl_stmt|;
-comment|/* associated SPI */
-name|union
-name|sockaddr_union
-name|tc_dst
-decl_stmt|;
-comment|/* dst addr of packet */
-name|u_int8_t
-name|tc_proto
-decl_stmt|;
-comment|/* current protocol, e.g. AH */
-name|u_int8_t
-name|tc_nxt
-decl_stmt|;
-comment|/* next protocol, e.g. IPV4 */
-name|int
-name|tc_protoff
-decl_stmt|;
-comment|/* current protocol offset */
-name|int
-name|tc_skip
-decl_stmt|;
-comment|/* data offset */
-name|caddr_t
-name|tc_ptr
-decl_stmt|;
-comment|/* associated crypto data */
+comment|/* security policy */
 name|struct
 name|secasvar
 modifier|*
-name|tc_sav
+name|sav
 decl_stmt|;
 comment|/* related SA */
+name|uint64_t
+name|cryptoid
+decl_stmt|;
+comment|/* used crypto session id */
+name|u_int
+name|idx
+decl_stmt|;
+comment|/* IPsec request index */
+name|int
+name|protoff
+decl_stmt|;
+comment|/* current protocol offset */
+name|int
+name|skip
+decl_stmt|;
+comment|/* data offset */
+name|uint8_t
+name|nxt
+decl_stmt|;
+comment|/* next protocol, e.g. IPV4 */
 block|}
 struct|;
 end_struct
 
-begin_struct_decl
-struct_decl|struct
-name|secasvar
-struct_decl|;
-end_struct_decl
+begin_define
+define|#
+directive|define
+name|XF_IP4
+value|1
+end_define
 
-begin_struct_decl
-struct_decl|struct
-name|ipescrequest
-struct_decl|;
-end_struct_decl
+begin_comment
+comment|/* unused */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XF_AH
+value|2
+end_define
+
+begin_comment
+comment|/* AH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XF_ESP
+value|3
+end_define
+
+begin_comment
+comment|/* ESP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XF_TCPSIGNATURE
+value|5
+end_define
+
+begin_comment
+comment|/* TCP MD5 Signature option, RFC 2358 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XF_IPCOMP
+value|6
+end_define
+
+begin_comment
+comment|/* IPCOMP */
+end_comment
 
 begin_struct
 struct|struct
@@ -176,46 +234,6 @@ name|u_short
 name|xf_type
 decl_stmt|;
 comment|/* xform ID */
-define|#
-directive|define
-name|XF_IP4
-value|1
-comment|/* unused */
-define|#
-directive|define
-name|XF_AH
-value|2
-comment|/* AH */
-define|#
-directive|define
-name|XF_ESP
-value|3
-comment|/* ESP */
-define|#
-directive|define
-name|XF_TCPSIGNATURE
-value|5
-comment|/* TCP MD5 Signature option, RFC 2358 */
-define|#
-directive|define
-name|XF_IPCOMP
-value|6
-comment|/* IPCOMP */
-name|u_short
-name|xf_flags
-decl_stmt|;
-define|#
-directive|define
-name|XFT_AUTH
-value|0x0001
-define|#
-directive|define
-name|XFT_CONF
-value|0x0100
-define|#
-directive|define
-name|XFT_COMP
-value|0x1000
 name|char
 modifier|*
 name|xf_name
@@ -281,72 +299,82 @@ modifier|*
 parameter_list|,
 comment|/* output */
 name|struct
-name|ipsecrequest
+name|secpolicy
 modifier|*
 parameter_list|,
 name|struct
-name|mbuf
+name|secasvar
 modifier|*
-modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|int
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|struct
-name|xformsw
-modifier|*
-name|xf_next
-decl_stmt|;
-comment|/* list of registered xforms */
+name|LIST_ENTRY
+argument_list|(
+argument|xformsw
+argument_list|)
+name|chain
+expr_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_function_decl
-specifier|extern
-name|void
-name|xform_register
-parameter_list|(
+specifier|const
 name|struct
-name|xformsw
+name|enc_xform
 modifier|*
+name|enc_algorithm_lookup
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
-name|xform_init
-parameter_list|(
-name|struct
-name|secasvar
-modifier|*
-name|sav
-parameter_list|,
-name|int
-name|xftype
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|xform_ah_authsize
-parameter_list|(
+specifier|const
 name|struct
 name|auth_hash
 modifier|*
-name|esph
+name|auth_algorithm_lookup
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|struct
+name|comp_algo
+modifier|*
+name|comp_algorithm_lookup
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|xform_attach
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|xform_detach
+parameter_list|(
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -360,6 +388,18 @@ end_struct_decl
 begin_comment
 comment|/* XF_AH */
 end_comment
+
+begin_function_decl
+name|int
+name|xform_ah_authsize
+parameter_list|(
+specifier|const
+name|struct
+name|auth_hash
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -396,19 +436,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|struct
-name|auth_hash
-modifier|*
-name|ah_algorithm_lookup
-parameter_list|(
-name|int
-name|alg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|size_t
 name|ah_hdrsiz
 parameter_list|(
@@ -425,19 +452,6 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|struct
-name|enc_xform
-modifier|*
-name|esp_algorithm_lookup
-parameter_list|(
-name|int
-name|alg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|size_t
 name|esp_hdrsiz
 parameter_list|(
@@ -445,23 +459,6 @@ name|struct
 name|secasvar
 modifier|*
 name|sav
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XF_COMP */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|struct
-name|comp_algo
-modifier|*
-name|ipcomp_algorithm_lookup
-parameter_list|(
-name|int
-name|alg
 parameter_list|)
 function_decl|;
 end_function_decl

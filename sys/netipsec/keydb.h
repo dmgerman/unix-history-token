@@ -32,6 +32,24 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netipsec/key_var.h>
 end_include
 
@@ -102,15 +120,15 @@ name|sockaddr_union
 name|dst
 decl_stmt|;
 comment|/* destination address for SA */
-name|u_int16_t
+name|uint8_t
 name|proto
 decl_stmt|;
 comment|/* IPPROTO_ESP or IPPROTO_AH */
-name|u_int8_t
+name|uint8_t
 name|mode
 decl_stmt|;
 comment|/* mode of protocol, see ipsec.h */
-name|u_int32_t
+name|uint32_t
 name|reqid
 decl_stmt|;
 comment|/* reqid id who owned this SA */
@@ -180,20 +198,85 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|secnatt
+block|{
+name|union
+name|sockaddr_union
+name|oai
+decl_stmt|;
+comment|/* original addresses of initiator */
+name|union
+name|sockaddr_union
+name|oar
+decl_stmt|;
+comment|/* original address of responder */
+name|uint16_t
+name|sport
+decl_stmt|;
+comment|/* source port */
+name|uint16_t
+name|dport
+decl_stmt|;
+comment|/* destination port */
+name|uint16_t
+name|cksum
+decl_stmt|;
+comment|/* checksum delta */
+name|uint16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|IPSEC_NATT_F_OAI
+value|0x0001
+define|#
+directive|define
+name|IPSEC_NATT_F_OAR
+value|0x0002
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Security Association Data Base */
 end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|secasvar_queue
+argument_list|,
+name|secasvar
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
 name|secashead
 block|{
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|secashead
 argument_list|)
 name|chain
 expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|secashead
+argument_list|)
+name|addrhash
+expr_stmt|;
+comment|/* hash by sproto+src+dst addresses */
+name|LIST_ENTRY
+argument_list|(
+argument|secashead
+argument_list|)
+name|drainq
+expr_stmt|;
+comment|/* used ONLY by flush callout */
 name|struct
 name|secasindex
 name|saidx
@@ -211,25 +294,25 @@ name|identd
 decl_stmt|;
 comment|/* destination identity */
 comment|/* XXX I don't know how to use them. */
-name|u_int8_t
+specifier|volatile
+name|u_int
+name|refcnt
+decl_stmt|;
+comment|/* reference count */
+name|uint8_t
 name|state
 decl_stmt|;
 comment|/* MATURE or DEAD. */
-name|LIST_HEAD
-argument_list|(
-argument|_satree
-argument_list|,
-argument|secasvar
-argument_list|)
-name|savtree
-index|[
-name|SADB_SASTATE_MAX
-operator|+
-literal|1
-index|]
-expr_stmt|;
-comment|/* SA chain */
-comment|/* The first of this list is newer SA */
+name|struct
+name|secasvar_queue
+name|savtree_alive
+decl_stmt|;
+comment|/* MATURE and DYING SA */
+name|struct
+name|secasvar_queue
+name|savtree_larval
+decl_stmt|;
+comment|/* LARVAL SA */
 block|}
 struct|;
 end_struct
@@ -259,52 +342,39 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* Security Association */
+comment|/*  * Security Association  *  * For INBOUND packets we do SA lookup using SPI, thus only SPIHASH is used.  * For OUTBOUND packets there may be several SA suitable for packet.  * We use key_preferred_oldsa variable to choose better SA. First of we do  * lookup for suitable SAH using packet's saidx. Then we use SAH's savtree  * to search better candidate. The newer SA (by created time) are placed  * in the beginning of the savtree list. There is no preference between  * DYING and MATURE.  *  * NB: Fields with a tdb_ prefix are part of the "glue" used  *     to interface to the OpenBSD crypto support.  This was done  *     to distinguish this code from the mainline KAME code.  * NB: Fields are sorted on the basis of the frequency of changes, i.e.  *     constants and unchangeable fields are going first.  * NB: if you want to change this structure, check that this will not break  *     key_updateaddresses().  */
 end_comment
 
 begin_struct
 struct|struct
 name|secasvar
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|secasvar
-argument_list|)
-name|chain
-expr_stmt|;
-name|struct
-name|mtx
-name|lock
-decl_stmt|;
-comment|/* update/access lock */
-name|u_int
-name|refcnt
-decl_stmt|;
-comment|/* reference count */
-name|u_int8_t
-name|state
-decl_stmt|;
-comment|/* Status of this Association */
-name|u_int8_t
-name|alg_auth
-decl_stmt|;
-comment|/* Authentication Algorithm Identifier*/
-name|u_int8_t
-name|alg_enc
-decl_stmt|;
-comment|/* Cipher Algorithm Identifier */
-name|u_int8_t
-name|alg_comp
-decl_stmt|;
-comment|/* Compression Algorithm Identifier */
-name|u_int32_t
+name|uint32_t
 name|spi
 decl_stmt|;
 comment|/* SPI Value, network byte order */
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 comment|/* holder for SADB_KEY_FLAGS */
+name|uint32_t
+name|seq
+decl_stmt|;
+comment|/* sequence number */
+name|pid_t
+name|pid
+decl_stmt|;
+comment|/* message's pid */
+name|u_int
+name|ivlen
+decl_stmt|;
+comment|/* length of IV */
+name|struct
+name|secashead
+modifier|*
+name|sah
+decl_stmt|;
+comment|/* back pointer to the secashead */
 name|struct
 name|seckey
 modifier|*
@@ -317,38 +387,84 @@ modifier|*
 name|key_enc
 decl_stmt|;
 comment|/* Key for Encryption */
-name|u_int
-name|ivlen
-decl_stmt|;
-comment|/* length of IV */
-name|void
-modifier|*
-name|sched
-decl_stmt|;
-comment|/* intermediate encryption key */
-name|size_t
-name|schedlen
-decl_stmt|;
-name|uint64_t
-name|cntr
-decl_stmt|;
-comment|/* counter for GCM and CTR */
 name|struct
 name|secreplay
 modifier|*
 name|replay
 decl_stmt|;
 comment|/* replay prevention */
-name|time_t
-name|created
-decl_stmt|;
-comment|/* for lifetime */
 name|struct
-name|seclifetime
+name|secnatt
 modifier|*
+name|natt
+decl_stmt|;
+comment|/* NAT-T config */
+name|struct
+name|mtx
+modifier|*
+name|lock
+decl_stmt|;
+comment|/* update/access lock */
+specifier|const
+name|struct
+name|xformsw
+modifier|*
+name|tdb_xform
+decl_stmt|;
+comment|/* transform */
+specifier|const
+name|struct
+name|enc_xform
+modifier|*
+name|tdb_encalgxform
+decl_stmt|;
+comment|/* encoding algorithm */
+specifier|const
+name|struct
+name|auth_hash
+modifier|*
+name|tdb_authalgxform
+decl_stmt|;
+comment|/* authentication algorithm */
+specifier|const
+name|struct
+name|comp_algo
+modifier|*
+name|tdb_compalgxform
+decl_stmt|;
+comment|/* compression algorithm */
+name|uint64_t
+name|tdb_cryptoid
+decl_stmt|;
+comment|/* crypto session id */
+name|uint8_t
+name|alg_auth
+decl_stmt|;
+comment|/* Authentication Algorithm Identifier*/
+name|uint8_t
+name|alg_enc
+decl_stmt|;
+comment|/* Cipher Algorithm Identifier */
+name|uint8_t
+name|alg_comp
+decl_stmt|;
+comment|/* Compression Algorithm Identifier */
+name|uint8_t
+name|state
+decl_stmt|;
+comment|/* Status of this SA (pfkeyv2.h) */
+name|counter_u64_t
 name|lft_c
 decl_stmt|;
-comment|/* CURRENT lifetime, it's constant. */
+comment|/* CURRENT lifetime */
+define|#
+directive|define
+name|lft_c_allocations
+value|lft_c
+define|#
+directive|define
+name|lft_c_bytes
+value|lft_c + 1
 name|struct
 name|seclifetime
 modifier|*
@@ -361,72 +477,45 @@ modifier|*
 name|lft_s
 decl_stmt|;
 comment|/* SOFT lifetime */
-name|u_int32_t
-name|seq
+name|uint64_t
+name|created
 decl_stmt|;
-comment|/* sequence number */
-name|pid_t
-name|pid
+comment|/* time when SA was created */
+name|uint64_t
+name|firstused
 decl_stmt|;
-comment|/* message's pid */
-name|struct
-name|secashead
-modifier|*
-name|sah
+comment|/* time when SA was first used */
+name|TAILQ_ENTRY
+argument_list|(
+argument|secasvar
+argument_list|)
+name|chain
+expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|secasvar
+argument_list|)
+name|spihash
+expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|secasvar
+argument_list|)
+name|drainq
+expr_stmt|;
+comment|/* used ONLY by flush callout */
+name|uint64_t
+name|cntr
 decl_stmt|;
-comment|/* back pointer to the secashead */
-comment|/* 	 * NB: Fields with a tdb_ prefix are part of the "glue" used 	 *     to interface to the OpenBSD crypto support.  This was done 	 *     to distinguish this code from the mainline KAME code. 	 */
-name|struct
-name|xformsw
-modifier|*
-name|tdb_xform
+comment|/* counter for GCM and CTR */
+specifier|volatile
+name|u_int
+name|refcnt
 decl_stmt|;
-comment|/* transform */
-name|struct
-name|enc_xform
-modifier|*
-name|tdb_encalgxform
-decl_stmt|;
-comment|/* encoding algorithm */
-name|struct
-name|auth_hash
-modifier|*
-name|tdb_authalgxform
-decl_stmt|;
-comment|/* authentication algorithm */
-name|struct
-name|comp_algo
-modifier|*
-name|tdb_compalgxform
-decl_stmt|;
-comment|/* compression algorithm */
-name|u_int64_t
-name|tdb_cryptoid
-decl_stmt|;
-comment|/* crypto session id */
-comment|/* 	 * NAT-Traversal. 	 */
-name|u_int16_t
-name|natt_type
-decl_stmt|;
-comment|/* IKE/ESP-marker in output. */
-name|u_int16_t
-name|natt_esp_frag_len
-decl_stmt|;
-comment|/* MTU for payload fragmentation. */
+comment|/* reference count */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|SECASVAR_LOCK_INIT
-parameter_list|(
-name|_sav
-parameter_list|)
-define|\
-value|mtx_init(&(_sav)->lock, "ipsec association", NULL, MTX_DEF)
-end_define
 
 begin_define
 define|#
@@ -435,7 +524,7 @@ name|SECASVAR_LOCK
 parameter_list|(
 name|_sav
 parameter_list|)
-value|mtx_lock(&(_sav)->lock)
+value|mtx_lock((_sav)->lock)
 end_define
 
 begin_define
@@ -445,17 +534,7 @@ name|SECASVAR_UNLOCK
 parameter_list|(
 name|_sav
 parameter_list|)
-value|mtx_unlock(&(_sav)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SECASVAR_LOCK_DESTROY
-parameter_list|(
-name|_sav
-parameter_list|)
-value|mtx_destroy(&(_sav)->lock)
+value|mtx_unlock((_sav)->lock)
 end_define
 
 begin_define
@@ -465,7 +544,7 @@ name|SECASVAR_LOCK_ASSERT
 parameter_list|(
 name|_sav
 parameter_list|)
-value|mtx_assert(&(_sav)->lock, MA_OWNED)
+value|mtx_assert((_sav)->lock, MA_OWNED)
 end_define
 
 begin_define
@@ -500,7 +579,7 @@ value|(SAV_ISCTR((_sav)) || SAV_ISGCM((_sav)))
 end_define
 
 begin_comment
-comment|/* replay prevention */
+comment|/* Replay prevention, protected by SECASVAR_LOCK:  *  (m) locked by mtx  *  (c) read only except during creation / free  */
 end_comment
 
 begin_struct
@@ -510,26 +589,32 @@ block|{
 name|u_int32_t
 name|count
 decl_stmt|;
+comment|/* (m) */
 name|u_int
 name|wsize
 decl_stmt|;
-comment|/* window size, i.g. 4 bytes */
+comment|/* (c) window size, i.g. 4 bytes */
 name|u_int32_t
 name|seq
 decl_stmt|;
-comment|/* used by sender */
+comment|/* (m) used by sender */
 name|u_int32_t
 name|lastseq
 decl_stmt|;
-comment|/* used by receiver */
-name|caddr_t
+comment|/* (m) used by receiver */
+name|u_int32_t
+modifier|*
 name|bitmap
 decl_stmt|;
-comment|/* used by receiver */
+comment|/* (m) used by receiver */
+name|u_int
+name|bitmap_size
+decl_stmt|;
+comment|/* (c) size of the bitmap array */
 name|int
 name|overflow
 decl_stmt|;
-comment|/* overflow flag */
+comment|/* (m) overflow flag */
 block|}
 struct|;
 end_struct
@@ -571,11 +656,23 @@ argument|secacq
 argument_list|)
 name|chain
 expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|secacq
+argument_list|)
+name|addrhash
+expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|secacq
+argument_list|)
+name|seqhash
+expr_stmt|;
 name|struct
 name|secasindex
 name|saidx
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|seq
 decl_stmt|;
 comment|/* sequence number */

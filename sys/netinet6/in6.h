@@ -1584,16 +1584,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* IPSEC */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1603,15 +1593,6 @@ end_define
 
 begin_comment
 comment|/* struct; get/set security policy */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
 end_comment
 
 begin_comment

@@ -143,33 +143,6 @@ directive|include
 file|<netinet/udp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -2758,7 +2731,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Hmm what about the IPSEC stuff that is missing here but in 	 * sctp_attach()? 	 */
 name|SCTP_INP_WUNLOCK
 argument_list|(
 name|inp

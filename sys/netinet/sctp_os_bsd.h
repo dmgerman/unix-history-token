@@ -36,12 +36,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_compat.h"
 end_include
 
@@ -276,33 +270,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipsec/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|INET6
 end_ifdef
 
@@ -311,23 +278,6 @@ include|#
 directive|include
 file|<sys/domain.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
