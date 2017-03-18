@@ -7235,7 +7235,7 @@ condition|(
 name|args
 operator|->
 name|optlen
-operator|!=
+operator|<
 sizeof|sizeof
 argument_list|(
 name|lxu
