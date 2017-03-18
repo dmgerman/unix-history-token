@@ -107,6 +107,10 @@ name|uint64_t
 name|nt_tagval
 decl_stmt|;
 comment|/* tag value */
+name|lun_id_t
+name|nt_lun
+decl_stmt|;
+comment|/* logical unit */
 name|uint32_t
 name|nt_sid
 range|:
@@ -129,15 +133,8 @@ range|:
 literal|24
 decl_stmt|;
 comment|/* destination port id */
-name|uint32_t
-name|nt_lun
-range|:
-literal|16
-decl_stmt|,
-comment|/* logical unit */
+name|uint16_t
 name|nt_nphdl
-range|:
-literal|16
 decl_stmt|;
 comment|/* n-port handle */
 name|uint8_t
