@@ -3931,12 +3931,21 @@ name|kevent_copyops
 name|k_ops
 init|=
 block|{
+operator|.
+name|arg
+operator|=
 name|uap
 block|,
+operator|.
+name|k_copyout
+operator|=
 name|freebsd32_kevent_copyout
 block|,
+operator|.
+name|k_copyin
+operator|=
 name|freebsd32_kevent_copyin
-block|}
+block|, 	}
 decl_stmt|;
 name|int
 name|error
