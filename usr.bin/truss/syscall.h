@@ -137,6 +137,8 @@ name|CapFcntlRights
 block|,
 name|Fadvice
 block|,
+name|FileFlags
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
