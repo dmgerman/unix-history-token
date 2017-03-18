@@ -133,6 +133,8 @@ name|IntArray
 block|,
 name|Pipe2
 block|,
+name|CapFcntlRights
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
