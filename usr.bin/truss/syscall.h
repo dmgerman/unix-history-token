@@ -135,6 +135,8 @@ name|Pipe2
 block|,
 name|CapFcntlRights
 block|,
+name|Fadvice
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
