@@ -1001,6 +1001,13 @@ define|\
 value|ktrstruct("stat", (s), sizeof(struct stat))
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|ktr_geniosize
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
