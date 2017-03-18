@@ -4574,7 +4574,7 @@ operator|->
 name|a_end
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|vp
 operator|->
@@ -4598,7 +4598,7 @@ name|end
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|vp
 operator|->
