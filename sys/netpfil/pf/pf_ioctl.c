@@ -20533,9 +20533,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|pf_unload_vnet_purge
-argument_list|()
-expr_stmt|;
 name|PF_RULES_WLOCK
 argument_list|()
 expr_stmt|;
@@ -20543,6 +20540,9 @@ name|shutdown_pf
 argument_list|()
 expr_stmt|;
 name|PF_RULES_WUNLOCK
+argument_list|()
+expr_stmt|;
+name|pf_unload_vnet_purge
 argument_list|()
 expr_stmt|;
 name|pf_normalize_cleanup
