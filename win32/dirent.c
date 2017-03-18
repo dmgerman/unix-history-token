@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/dirent.c,v 1.9 2006/04/07 00:57:59 amold Exp $*/
+comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/dirent.c,v 1.10 2014/08/13 23:39:34 amold Exp $*/
 end_comment
 
 begin_comment
@@ -350,6 +350,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|tmp
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|buf
 index|[
@@ -465,6 +475,16 @@ name|DIR
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dptr
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
 name|dptr
 operator|->
 name|dd_fd
@@ -1602,6 +1622,16 @@ name|nethandle_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hnet
+condition|)
+block|{
+return|return
+name|INVALID_HANDLE_VALUE
+return|;
+block|}
 name|hnet
 operator|->
 name|netres

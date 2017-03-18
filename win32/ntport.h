@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/ntport.h,v 1.14 2010/05/23 17:20:32 amold Exp $*/
+comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/ntport.h,v 1.15 2014/08/13 23:39:34 amold Exp $*/
 end_comment
 
 begin_comment
@@ -1310,6 +1310,14 @@ begin_typedef
 typedef|typedef
 name|UINT32
 name|uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|uint8_t
 typedef|;
 end_typedef
 

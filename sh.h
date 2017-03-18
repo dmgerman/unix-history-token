@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /p/tcsh/cvsroot/tcsh/sh.h,v 3.165 2011/04/14 18:25:25 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/sh.h,v 3.178 2016/09/12 16:33:54 christos Exp $ */
 end_comment
 
 begin_comment
@@ -636,6 +636,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TCSH_PTRDIFF_T_FMT
+value|"I"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TCSH_PTRDIFF_T_FMT
+value|"t"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Elide unused argument warnings */
 end_comment
@@ -943,6 +973,31 @@ end_endif
 begin_comment
 comment|/* ECHO_STYLE */
 end_comment
+
+begin_comment
+comment|/* values for noclobber */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOCLOBBER_DEFAULT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOCLOBBER_NOTEMPTY
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOCLOBBER_ASK
+value|4
+end_define
 
 begin_comment
 comment|/*  * The shell moves std in/out/diag and the old std input away from units  * 0, 1, and 2 so that it is easy to set up these standards for invoked  * commands.  */
@@ -2663,30 +2718,11 @@ name|sgi
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|INET6
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __CYGWIN__ */
-end_comment
 
 begin_endif
 endif|#
@@ -2747,97 +2783,13 @@ name|_exit
 value|exit
 end_define
 
-begin_typedef
-typedef|typedef
-name|int
-name|pret_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* !PURIFY */
-end_comment
-
-begin_comment
-comment|/*  * If your compiler complains, then you can either  * throw it away and get gcc or, use the following define  * and get rid of the typedef.  * [The 4.2/3BSD vax compiler does not like that]  * Both MULTIFLOW and PCC compilers exhbit this bug.  -- sterling@netcom.com  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|uts
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|MULTIFLOW
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|PCC
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|pret_t
-value|void
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !((vax || uts || MULTIFLOW || PCC)&& !__GNUC__) */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|pret_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* (vax || uts || MULTIFLOW || PCC)&& !__GNUC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PURIFY */
 end_comment
 
 begin_comment
@@ -3548,7 +3500,7 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|handle_intr
+name|handle_interrupt
 name|IZERO
 decl_stmt|;
 end_decl_stmt
@@ -3704,6 +3656,18 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
+name|cdtohome
+name|IZERO
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cd without args goes home */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
 name|inheredoc
 name|IZERO
 decl_stmt|;
@@ -3711,6 +3675,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Currently parsing a heredoc */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|no_clobber
+name|IZERO
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* no clobber enabled? 1=yes 2=notempty, 4=ask*/
 end_comment
 
 begin_comment
@@ -4042,6 +4018,17 @@ end_endif
 
 begin_comment
 comment|/*  * Miscellany  */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|pid_t
+name|mainpid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pid of the main shell ($$) */
 end_comment
 
 begin_decl_stmt
@@ -4412,18 +4399,22 @@ begin_comment
 comment|/* 31st char bit used for 'ing (not 32nd, we want all values nonnegative) */
 end_comment
 
+begin_comment
+comment|/*  * Notice  *  * By fix for handling unicode name file, 32nd bit is used.  * We need use '&' instead of '> or<' when comparing with INVALID_BYTE etc..  * Cast to uChar is not recommended,  *  becase Char is 4bytes but uChar is 8bytes on I32LP64. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|QUOTE
-value|0x40000000
+value|0x80000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRIM
-value|0x3FFFFFFF
+value|0x7FFFFFFF
 end_define
 
 begin_comment
@@ -4489,7 +4480,7 @@ begin_define
 define|#
 directive|define
 name|INVALID_BYTE
-value|0x00800000
+value|0xF0000000
 end_define
 
 begin_comment
@@ -4749,6 +4740,17 @@ directive|define
 name|CHAR_DBWIDTH
 value|(LITERAL|(LITERAL-1))
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_UTF32
+value|0x7FFFFFFF
+end_define
+
+begin_comment
+comment|/* max UTF32 is U+7FFFFFFF */
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -5789,27 +5791,6 @@ begin_comment
 comment|/*  * Filename/command name expansion variables  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__CYGWIN__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|MAXPATHLEN
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __CYGWIN__ */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -5951,7 +5932,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|EXTERN
+specifier|extern
 name|struct
 name|wordent
 name|paraml
@@ -6767,7 +6748,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* word_chars is set by default to WORD_CHARS but can be overridden by    the worchars variable--if unset, reverts to WORD_CHARS */
+comment|/* word_chars is set by default to WORD_CHARS (or WORD_CHARS_VI) but can    be overridden by the wordchars variable--if unset, reverts to    WORD_CHARS (or WORD_CHARS_VI) */
 end_comment
 
 begin_decl_stmt
@@ -6783,6 +6764,17 @@ define|#
 directive|define
 name|WORD_CHARS
 value|"*?_-.[]~="
+end_define
+
+begin_comment
+comment|/* default chars besides alnums in words */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WORD_CHARS_VI
+value|"_"
 end_define
 
 begin_comment
@@ -6821,6 +6813,14 @@ name|EXTERN
 name|Char
 modifier|*
 name|STR_WORD_CHARS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|Char
+modifier|*
+name|STR_WORD_CHARS_VI
 decl_stmt|;
 end_decl_stmt
 

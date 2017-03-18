@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/globals.c,v 1.11 2008/09/10 20:34:21 amold Exp $*/
+comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/globals.c,v 1.12 2014/08/13 23:39:34 amold Exp $*/
 end_comment
 
 begin_comment
@@ -486,6 +486,9 @@ return|return
 literal|0
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|ReadFile
 argument_list|(
 name|hImage
@@ -540,6 +543,9 @@ name|doshdr
 operator|.
 name|e_lfanew
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ReadFile
 argument_list|(
 name|hImage
@@ -598,6 +604,9 @@ argument_list|(
 name|IMAGE_FILE_HEADER
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ReadFile
 argument_list|(
 name|hImage

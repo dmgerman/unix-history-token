@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/support.c,v 1.14 2008/08/31 14:09:01 amold Exp $*/
+comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/support.c,v 1.16 2014/08/17 02:56:37 amold Exp $*/
 end_comment
 
 begin_comment
@@ -76,6 +76,17 @@ include|#
 directive|include
 file|"nt.const.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|disable
+name|:
+name|6001
+name|)
+end_pragma
 
 begin_decl_stmt
 name|DWORD
@@ -712,6 +723,16 @@ argument_list|(
 name|OSVERSIONINFO
 argument_list|)
 expr_stmt|;
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|suppress
+name|:
+name|4996
+name|28159
+name|)
+comment|//deprecated function
 if|if
 condition|(
 operator|!
@@ -773,12 +794,15 @@ name|StringCbPrintf
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|temp
 argument_list|)
 argument_list|,
-literal|"%s %d.%d Build %d (%s)"
+literal|"%s %u.%u Build %u (%s)"
 argument_list|,
 name|ostr
 argument_list|,
@@ -840,12 +864,15 @@ name|StringCbPrintf
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|temp
 argument_list|)
 argument_list|,
-literal|"Win9x %d.%d:%d"
+literal|"Win9x %u.%u:%u"
 argument_list|,
 name|osver
 operator|.
@@ -943,12 +970,15 @@ name|StringCbPrintf
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|temp
 argument_list|)
 argument_list|,
-literal|"i%d86"
+literal|"i%u86"
 argument_list|,
 name|sysinfo
 operator|.
@@ -966,6 +996,9 @@ name|StringCbPrintf
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|temp
@@ -985,6 +1018,9 @@ name|StringCbPrintf
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|temp
@@ -1004,6 +1040,9 @@ name|StringCbPrintf
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|temp
@@ -1023,6 +1062,9 @@ name|StringCbPrintf
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|temp
@@ -1040,6 +1082,9 @@ name|StringCbPrintf
 argument_list|(
 name|temp
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|temp
@@ -2544,6 +2589,16 @@ argument_list|(
 name|OSVERSIONINFO
 argument_list|)
 expr_stmt|;
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|suppress
+name|:
+name|4996
+name|28159
+name|)
+comment|//deprecated function
 if|if
 condition|(
 operator|!
@@ -3206,6 +3261,8 @@ condition|(
 name|rc
 operator|!=
 literal|0
+operator|&&
+name|path1
 condition|)
 block|{
 name|path1
@@ -3508,6 +3565,16 @@ argument_list|(
 name|tqlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tempquotedbuf
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
 name|noquoteprotect
 operator|=
 call|(
@@ -3991,6 +4058,19 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|oldpath
+operator|||
+operator|!
+name|pathstr
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
 name|len
 operator|=
 name|GetEnvironmentVariable
@@ -4004,6 +4084,14 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|suppress
+name|:
+name|6102
+name|)
 name|memcpy
 argument_list|(
 name|pathstr

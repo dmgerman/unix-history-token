@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/fork.c,v 1.11 2008/08/31 14:09:01 amold Exp $*/
+comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/fork.c,v 1.13 2014/08/17 02:56:37 amold Exp $*/
 end_comment
 
 begin_comment
@@ -331,6 +331,14 @@ condition|)
 return|return
 name|the_tib
 return|;
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|suppress
+name|:
+name|6309
+name|)
 name|myNtCurrentTeb
 operator|=
 operator|(
@@ -731,6 +739,11 @@ name|STR_environ
 argument_list|)
 expr_stmt|;
 comment|/* So that we can free it */
+name|dprintf
+argument_list|(
+literal|"returning 0\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -942,6 +955,65 @@ expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
+block|{
+name|char
+modifier|*
+name|stk
+decl_stmt|,
+modifier|*
+name|end
+decl_stmt|;
+name|stk
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|__fork_stack_begin
+operator|+
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+operator|-
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+operator|-
+literal|65536
+expr_stmt|;
+name|dprintf
+argument_list|(
+literal|"begin is 0x%08x\n"
+argument_list|,
+name|stk
+argument_list|)
+expr_stmt|;
+name|end
+operator|=
+name|VirtualAllocEx
+argument_list|(
+name|hProc
+argument_list|,
+name|stk
+argument_list|,
+operator|(
+literal|1
+operator|<<
+literal|20
+operator|)
+operator|+
+literal|65536
+argument_list|,
+name|MEM_RESERVE
+argument_list|,
+name|PAGE_READWRITE
+argument_list|)
+expr_stmt|;
 block|}
 comment|// Do NOT expect existing events
 if|if
@@ -1955,7 +2027,7 @@ name|wsprintfA
 argument_list|(
 name|parentname
 argument_list|,
-literal|"Local\\%d-%s"
+literal|"Local\\%u-%s"
 argument_list|,
 name|pid
 argument_list|,
@@ -1966,7 +2038,7 @@ name|wsprintfA
 argument_list|(
 name|childname
 argument_list|,
-literal|"Local\\%d-%s"
+literal|"Local\\%u-%s"
 argument_list|,
 name|pid
 argument_list|,

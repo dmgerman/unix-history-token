@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/signal.c,v 1.12 2010/05/13 22:04:17 amold Exp $*/
+comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/signal.c,v 1.13 2014/08/13 23:39:34 amold Exp $*/
 end_comment
 
 begin_comment
@@ -1845,6 +1845,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|__halarm
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -2214,6 +2224,14 @@ decl_stmt|;
 name|HANDLE
 name|hthr
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|args
+condition|)
+block|{
+return|return;
+block|}
 name|args
 operator|->
 name|hproc
@@ -2257,11 +2275,17 @@ operator|&
 name|tid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hthr
+condition|)
+block|{
 name|CloseHandle
 argument_list|(
 name|hthr
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2409,6 +2433,7 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 else|else
 block|{

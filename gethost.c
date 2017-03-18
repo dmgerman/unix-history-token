@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /p/tcsh/cvsroot/tcsh/gethost.c,v 1.15 2012/01/15 17:14:54 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/gethost.c,v 1.19 2014/03/09 00:11:54 christos Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|RCSID
 argument_list|(
-literal|"$tcsh: gethost.c,v 1.15 2012/01/15 17:14:54 christos Exp $"
+literal|"$tcsh: gethost.c,v 1.19 2014/03/09 00:11:54 christos Exp $"
 argument_list|)
 end_macro
 
@@ -509,7 +509,13 @@ name|strlen
 argument_list|(
 name|b
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
+if|if
+condition|(
+name|a
+condition|)
 name|l
 operator|=
 name|strlen
@@ -518,8 +524,11 @@ name|a
 argument_list|)
 operator|+
 name|len
-operator|+
-literal|1
+expr_stmt|;
+else|else
+name|l
+operator|=
+name|len
 expr_stmt|;
 if|if
 condition|(
@@ -537,6 +546,10 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|a
+condition|)
 name|snprintf
 argument_list|(
 name|r
@@ -546,6 +559,23 @@ argument_list|,
 literal|"%s%.*s"
 argument_list|,
 name|a
+argument_list|,
+operator|(
+name|int
+operator|)
+name|len
+argument_list|,
+name|b
+argument_list|)
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|r
+argument_list|,
+name|l
+argument_list|,
+literal|"%.*s"
 argument_list|,
 operator|(
 name|int
@@ -607,11 +637,6 @@ decl_stmt|,
 modifier|*
 name|name
 decl_stmt|;
-name|size_t
-name|buflen
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|strstr
@@ -625,6 +650,19 @@ condition|)
 return|return
 name|defs
 return|;
+if|if
+condition|(
+operator|!
+name|strstr
+argument_list|(
+name|defs
+argument_list|,
+name|def
+argument_list|)
+condition|)
+return|return
+name|defs
+return|;
 name|free
 argument_list|(
 name|buf
@@ -632,12 +670,8 @@ argument_list|)
 expr_stmt|;
 name|buf
 operator|=
-name|strdup
-argument_list|(
-literal|"("
-argument_list|)
+name|NULL
 expr_stmt|;
-comment|/* ) */
 for|for
 control|(
 name|ptr
@@ -681,8 +715,22 @@ argument_list|,
 name|bptr
 operator|-
 name|ptr
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
+name|buf
+operator|=
+name|cat
+argument_list|(
+name|buf
+argument_list|,
+literal|"("
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ) */
 if|if
 condition|(
 operator|(
@@ -718,6 +766,11 @@ argument_list|,
 name|pname
 argument_list|,
 name|defs
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -777,6 +830,11 @@ argument_list|,
 name|defs
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 name|defs
 return|;
@@ -787,6 +845,20 @@ operator|*
 name|name
 operator|!=
 literal|'_'
+operator|&&
+operator|(
+operator|*
+name|name
+operator|!=
+literal|'M'
+operator|&&
+name|name
+index|[
+literal|1
+index|]
+operator|!=
+literal|'_'
+operator|)
 condition|)
 block|{
 name|char
@@ -800,13 +872,22 @@ operator|+
 literal|10
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|undername
+operator|==
+name|NULL
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 name|buf
 operator|=
 name|cat
 argument_list|(
 name|buf
 argument_list|,
-literal|" || defined("
+literal|") || defined("
 argument_list|,
 literal|0
 argument_list|)
@@ -848,7 +929,7 @@ name|cat
 argument_list|(
 name|buf
 argument_list|,
-literal|" || defined("
+literal|") || defined("
 argument_list|,
 literal|0
 argument_list|)
@@ -885,6 +966,17 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
+name|buf
+operator|=
+name|cat
+argument_list|(
+name|buf
+argument_list|,
+literal|"))"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -919,17 +1011,6 @@ argument_list|,
 name|eptr
 operator|+
 literal|1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|buf
-operator|=
-name|cat
-argument_list|(
-name|buf
-argument_list|,
-literal|")"
 argument_list|,
 literal|0
 argument_list|)
@@ -1298,7 +1379,10 @@ name|stdout
 argument_list|,
 literal|"\n#if %s\n# define %s\n#endif\n\n"
 argument_list|,
+name|explode
+argument_list|(
 name|stmt
+argument_list|)
 argument_list|,
 name|defs
 argument_list|)
@@ -1535,9 +1619,12 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"#if %s\n"
+literal|"#if (%s)\n"
 argument_list|,
+name|explode
+argument_list|(
 name|defs
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|inprocess

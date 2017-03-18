@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/clip.c,v 1.9 2006/03/05 08:59:36 amold Exp $*/
+comment|/*$Header: /p/tcsh/cvsroot/tcsh/win32/clip.c,v 1.10 2014/08/13 23:39:34 amold Exp $*/
 end_comment
 
 begin_comment
@@ -849,6 +849,16 @@ argument_list|(
 name|hclip
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|clipbuf
+condition|)
+block|{
+return|return
+name|CC_ERROR
+return|;
+block|}
 name|cbp
 operator|=
 name|clipbuf
@@ -1542,6 +1552,14 @@ argument_list|(
 name|obsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|outbuf
+condition|)
+block|{
+return|return;
+block|}
 name|ptr
 operator|=
 name|outbuf
@@ -1596,6 +1614,16 @@ argument_list|(
 name|hclip
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|clipbuf
+condition|)
+block|{
+goto|goto
+name|done
+goto|;
+block|}
 name|cbp
 operator|=
 name|clipbuf
