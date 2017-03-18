@@ -13998,14 +13998,6 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
-name|refcount_release
-argument_list|(
-operator|&
-name|cs
-operator|->
-name|cs_outstanding_ctl_pdus
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|request
@@ -14049,6 +14041,14 @@ name|bhs_opcode
 argument_list|)
 expr_stmt|;
 block|}
+name|refcount_release
+argument_list|(
+operator|&
+name|cs
+operator|->
+name|cs_outstanding_ctl_pdus
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
