@@ -2130,6 +2130,8 @@ comment|/* 	 * Find the page from the underlying object. 	 */
 if|if
 condition|(
 name|object
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sf
@@ -2299,6 +2301,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rv
+operator|!=
+name|KERN_SUCCESS
 condition|)
 return|return
 operator|(
@@ -2365,6 +2369,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rv
+operator|!=
+name|KERN_SUCCESS
 condition|)
 return|return
 operator|(
@@ -2381,19 +2387,27 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|end
-operator|>
 name|start
+operator|>=
+name|end
 condition|)
-block|{
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
 if|if
 condition|(
+operator|(
 name|offset
 operator|&
 name|PAGE_MASK
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* 			 * The mapping is not page aligned. This means we have 			 * to copy the data. Sigh. 			 */
+comment|/* 		 * The mapping is not page aligned.  This means that we have 		 * to copy the data. 		 */
 name|rv
 operator|=
 name|vm_map_fixed
@@ -2545,10 +2559,6 @@ operator|+=
 name|sz
 expr_stmt|;
 block|}
-name|rv
-operator|=
-name|KERN_SUCCESS
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2623,22 +2633,18 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 return|return
 operator|(
 name|rv
 operator|)
 return|;
 block|}
-else|else
-block|{
+block|}
 return|return
 operator|(
 name|KERN_SUCCESS
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -2774,7 +2780,7 @@ argument_list|,
 name|pagesize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have two choices.  We can either clear the data in the last page 	 * of an oversized mapping, or we can start the anon mapping a page 	 * early and copy the initialized data into that first page.  We 	 * choose the second.. 	 */
+comment|/* 	 * We have two choices.  We can either clear the data in the last page 	 * of an oversized mapping, or we can start the anon mapping a page 	 * early and copy the initialized data into that first page.  We 	 * choose the second. 	 */
 if|if
 condition|(
 name|memsz
