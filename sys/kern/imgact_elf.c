@@ -2993,7 +2993,7 @@ name|map_addr
 operator|+
 name|map_len
 argument_list|,
-name|VM_PROT_ALL
+name|prot
 argument_list|,
 literal|0
 argument_list|)
@@ -3097,7 +3097,17 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * set it to the specified protection. 	 */
+comment|/* 	 * Remove write access to the page if it was only granted by map_insert 	 * to allow copyout. 	 */
+if|if
+condition|(
+operator|(
+name|prot
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|==
+literal|0
+condition|)
 name|vm_map_protect
 argument_list|(
 name|map
