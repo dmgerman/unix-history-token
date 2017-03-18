@@ -1117,7 +1117,7 @@ comment|/* Shift right is unsigned */
 name|lhs
 operator|=
 operator|(
-name|unsigned
+name|db_addr_t
 operator|)
 name|lhs
 operator|>>
