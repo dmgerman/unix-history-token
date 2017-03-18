@@ -143,6 +143,10 @@ name|Flockop
 block|,
 name|Getfsstatmode
 block|,
+name|Kldsymcmd
+block|,
+name|Kldunloadflags
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
