@@ -1503,6 +1503,13 @@ name|offset
 operator|<
 literal|0
 operator|&&
+operator|(
+name|fp
+operator|->
+name|f_vnode
+operator|==
+name|NULL
+operator|||
 name|fp
 operator|->
 name|f_vnode
@@ -1510,6 +1517,7 @@ operator|->
 name|v_type
 operator|!=
 name|VCHR
+operator|)
 condition|)
 name|error
 operator|=
@@ -2571,6 +2579,13 @@ name|offset
 operator|<
 literal|0
 operator|&&
+operator|(
+name|fp
+operator|->
+name|f_vnode
+operator|==
+name|NULL
+operator|||
 name|fp
 operator|->
 name|f_vnode
@@ -2578,6 +2593,7 @@ operator|->
 name|v_type
 operator|!=
 name|VCHR
+operator|)
 condition|)
 name|error
 operator|=
