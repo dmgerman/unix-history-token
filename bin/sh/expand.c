@@ -394,7 +394,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|subevalvar_misc
 parameter_list|(
 specifier|const
@@ -3278,7 +3278,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|subevalvar_misc
 parameter_list|(
 specifier|const
@@ -3374,9 +3374,7 @@ argument_list|,
 name|expdest
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 case|case
 name|VSQUESTION
 case|:
@@ -3435,9 +3433,6 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 default|default:
 name|abort
 argument_list|()
@@ -4144,8 +4139,6 @@ operator|!
 name|set
 condition|)
 block|{
-if|if
-condition|(
 name|subevalvar_misc
 argument_list|(
 name|p
@@ -4161,8 +4154,8 @@ name|startloc
 argument_list|,
 name|varflags
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
+comment|/* assert(subtype == VSASSIGN); */
 name|varflags
 operator|&=
 operator|~
@@ -4171,8 +4164,6 @@ expr_stmt|;
 goto|goto
 name|again
 goto|;
-block|}
-break|break;
 block|}
 break|break;
 case|case
