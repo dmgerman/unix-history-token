@@ -2745,6 +2745,11 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/* pointer into pathname argument */
+name|char
+modifier|*
+name|prev_ni_next
+decl_stmt|;
+comment|/* saved ndp->ni_next */
 name|struct
 name|vnode
 modifier|*
@@ -2770,6 +2775,10 @@ name|prison
 modifier|*
 name|pr
 decl_stmt|;
+name|size_t
+name|prev_ni_pathlen
+decl_stmt|;
+comment|/* saved ndp->ni_pathlen */
 name|int
 name|docache
 decl_stmt|;
@@ -3044,6 +3053,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|prev_ni_pathlen
+operator|=
+name|ndp
+operator|->
+name|ni_pathlen
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_pathlen
@@ -3051,6 +3066,31 @@ operator|-=
 name|cnp
 operator|->
 name|cn_namelen
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ndp
+operator|->
+name|ni_pathlen
+operator|<=
+name|PATH_MAX
+argument_list|,
+operator|(
+literal|"%s: ni_pathlen underflow to %zd\n"
+operator|,
+name|__func__
+operator|,
+name|ndp
+operator|->
+name|ni_pathlen
+operator|)
+argument_list|)
+expr_stmt|;
+name|prev_ni_next
+operator|=
+name|ndp
+operator|->
+name|ni_next
 expr_stmt|;
 name|ndp
 operator|->
@@ -4468,6 +4508,18 @@ block|{
 name|relookup
 operator|=
 literal|0
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_pathlen
+operator|=
+name|prev_ni_pathlen
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_next
+operator|=
+name|prev_ni_next
 expr_stmt|;
 if|if
 condition|(
