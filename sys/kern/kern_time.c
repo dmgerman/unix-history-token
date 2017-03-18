@@ -2703,6 +2703,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+name|EINTR
 operator|&&
 name|uap
 operator|->
