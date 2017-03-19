@@ -1959,11 +1959,6 @@ name|u_int
 name|isp_state
 decl_stmt|;
 specifier|volatile
-name|u_int
-name|isp_nactive
-decl_stmt|;
-comment|/* how many commands active */
-specifier|volatile
 name|mbreg_t
 name|isp_curmbx
 decl_stmt|;
