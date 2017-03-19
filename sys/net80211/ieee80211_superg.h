@@ -165,6 +165,11 @@ index|[
 name|WME_NUM_AC
 index|]
 decl_stmt|;
+comment|/* flush queues automatically */
+name|struct
+name|timeout_task
+name|ff_qtimer
+decl_stmt|;
 block|}
 struct|;
 end_struct
