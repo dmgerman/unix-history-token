@@ -411,6 +411,10 @@ begin_comment
 comment|/* has tmpfs vnode allocated */
 end_comment
 
+begin_comment
+comment|/*  * Helpers to perform conversion between vm_object page indexes and offsets.  * IDX_TO_OFF() converts an index into an offset.  * OFF_TO_IDX() converts an offset into an index.  Since offsets are signed  *   by default, the sign propagation in OFF_TO_IDX(), when applied to  *   negative offsets, is intentional and returns a vm_object page index  *   that cannot be created by a userspace mapping.  * UOFF_TO_IDX() treats the offset as an unsigned value and converts it  *   into an index accordingly.  Use it only when the full range of offset  *   values are allowed.  Currently, this only applies to device mappings.  * OBJ_MAX_SIZE specifies the maximum page index corresponding to the  *   maximum unsigned offset.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -429,6 +433,23 @@ parameter_list|(
 name|off
 parameter_list|)
 value|((vm_pindex_t)(((vm_ooffset_t)(off))>> PAGE_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UOFF_TO_IDX
+parameter_list|(
+name|off
+parameter_list|)
+value|(((vm_pindex_t)(off))>> PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OBJ_MAX_SIZE
+value|(UOFF_TO_IDX(UINT64_MAX) + 1)
 end_define
 
 begin_ifdef
