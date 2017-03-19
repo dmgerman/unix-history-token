@@ -287,6 +287,61 @@ value|(1<< 22)
 end_define
 
 begin_comment
+comment|/* Controller supports eMMC DDR52 mode. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_MMC_DDR52
+value|(1<< 23)
+end_define
+
+begin_comment
+comment|/* Controller support for UHS DDR50 mode is broken. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BROKEN_UHS_DDR50
+value|(1<< 24)
+end_define
+
+begin_comment
+comment|/* Controller support for eMMC HS200 mode is broken. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_BROKEN_MMC_HS200
+value|(1<< 25)
+end_define
+
+begin_comment
+comment|/* Controller reports support for eMMC HS400 mode as SDHCI_CAN_MMC_HS400. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_CAPS_BIT63_FOR_MMC_HS400
+value|(1<< 26)
+end_define
+
+begin_comment
+comment|/* Controller support for SDHCI_CTRL2_PRESET_VALUE is broken. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_PRESET_VALUE_BROKEN
+value|(1<< 27)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
@@ -1188,6 +1243,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_CTRL2_MMC_HS400
+value|0x0005
+end_define
+
+begin_comment
+comment|/* non-standard */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SDHCI_CAPABILITIES
 value|0x40
 end_define
@@ -1447,6 +1513,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_CAN_MMC_HS400
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* non-standard */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SDHCI_MAX_CURRENT
 value|0x48
 end_define
@@ -1613,6 +1690,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|sdhci_quirk_clear
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|sdhci_quirk_set
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|sdhci_slot
@@ -1625,6 +1716,10 @@ name|u_int
 name|caps
 decl_stmt|;
 comment|/* Override SDHCI_CAPABILITIES */
+name|u_int
+name|caps2
+decl_stmt|;
+comment|/* Override SDHCI_CAPABILITIES2 */
 name|device_t
 name|bus
 decl_stmt|;
@@ -1918,6 +2013,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sdhci_generic_switch_vccq
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|reqdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sdhci_generic_request
 parameter_list|(
 name|device_t
@@ -2003,6 +2111,21 @@ end_function_decl
 begin_function_decl
 name|bool
 name|sdhci_generic_get_card_present
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|struct
+name|sdhci_slot
+modifier|*
+name|slot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sdhci_generic_set_uhs_timing
 parameter_list|(
 name|device_t
 name|brdev

@@ -88,6 +88,21 @@ end_enum
 
 begin_enum
 enum|enum
+name|mmc_vccq
+block|{
+name|vccq_120
+init|=
+literal|0
+block|,
+name|vccq_180
+block|,
+name|vccq_330
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
 name|mmc_power_mode
 block|{
 name|power_off
@@ -150,6 +165,23 @@ end_enum
 
 begin_enum
 enum|enum
+name|mmc_drv_type
+block|{
+name|drv_type_b
+init|=
+literal|0
+block|,
+name|drv_type_a
+block|,
+name|drv_type_c
+block|,
+name|drv_type_d
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
 name|mmc_bus_timing
 block|{
 name|bus_timing_normal
@@ -157,6 +189,28 @@ init|=
 literal|0
 block|,
 name|bus_timing_hs
+block|,
+name|bus_timing_uhs_sdr12
+block|,
+name|bus_timing_uhs_sdr25
+block|,
+name|bus_timing_uhs_sdr50
+block|,
+name|bus_timing_uhs_ddr50
+block|,
+name|bus_timing_uhs_sdr104
+block|,
+name|bus_timing_mmc_ddr52
+block|,
+name|bus_timing_mmc_hs200
+block|,
+name|bus_timing_mmc_hs400
+block|,
+name|bus_timing_mmc_hs400es
+block|,
+name|bus_timing_max
+init|=
+name|bus_timing_mmc_hs400es
 block|}
 enum|;
 end_enum
@@ -174,6 +228,11 @@ name|mmc_vdd
 name|vdd
 decl_stmt|;
 comment|/* Voltage to apply to the power pins */
+name|enum
+name|mmc_vccq
+name|vccq
+decl_stmt|;
+comment|/* Voltage to use for signaling */
 name|enum
 name|mmc_bus_mode
 name|bus_mode
@@ -193,6 +252,10 @@ decl_stmt|;
 name|enum
 name|mmc_bus_timing
 name|timing
+decl_stmt|;
+name|enum
+name|mmc_drv_type
+name|drv_type
 decl_stmt|;
 block|}
 struct|;
@@ -253,6 +316,112 @@ directive|define
 name|MMC_CAP_WAIT_WHILE_BUSY
 value|(1<<  5)
 comment|/* Host waits for busy responses */
+define|#
+directive|define
+name|MMC_CAP_UHS_SDR12
+value|(1<<  6)
+comment|/* Can do UHS SDR12 */
+define|#
+directive|define
+name|MMC_CAP_UHS_SDR25
+value|(1<<  7)
+comment|/* Can do UHS SDR25 */
+define|#
+directive|define
+name|MMC_CAP_UHS_SDR50
+value|(1<<  8)
+comment|/* Can do UHS SDR50 */
+define|#
+directive|define
+name|MMC_CAP_UHS_SDR104
+value|(1<<  9)
+comment|/* Can do UHS SDR104 */
+define|#
+directive|define
+name|MMC_CAP_UHS_DDR50
+value|(1<< 10)
+comment|/* Can do UHS DDR50 */
+define|#
+directive|define
+name|MMC_CAP_MMC_DDR52_120
+value|(1<< 11)
+comment|/* Can do eMMC DDR52 at 1.2 V */
+define|#
+directive|define
+name|MMC_CAP_MMC_DDR52_180
+value|(1<< 12)
+comment|/* Can do eMMC DDR52 at 1.8 V */
+define|#
+directive|define
+name|MMC_CAP_MMC_DDR52
+value|(MMC_CAP_MMC_DDR52_120 | MMC_CAP_MMC_DDR52_180)
+define|#
+directive|define
+name|MMC_CAP_MMC_HS200_120
+value|(1<< 13)
+comment|/* Can do eMMC HS200 at 1.2 V */
+define|#
+directive|define
+name|MMC_CAP_MMC_HS200_180
+value|(1<< 14)
+comment|/* Can do eMMC HS200 at 1.8 V */
+define|#
+directive|define
+name|MMC_CAP_MMC_HS200
+value|(MMC_CAP_MMC_HS200_120| MMC_CAP_MMC_HS200_180)
+define|#
+directive|define
+name|MMC_CAP_MMC_HS400_120
+value|(1<< 15)
+comment|/* Can do eMMC HS400 at 1.2 V */
+define|#
+directive|define
+name|MMC_CAP_MMC_HS400_180
+value|(1<< 16)
+comment|/* Can do eMMC HS400 at 1.8 V */
+define|#
+directive|define
+name|MMC_CAP_MMC_HS400
+value|(MMC_CAP_MMC_HS400_120 | MMC_CAP_MMC_HS400_180)
+define|#
+directive|define
+name|MMC_CAP_MMC_HSX00_120
+value|(MMC_CAP_MMC_HS200_120 | MMC_CAP_MMC_HS400_120)
+define|#
+directive|define
+name|MMC_CAP_MMC_ENH_STROBE
+value|(1<< 17)
+comment|/* Can do eMMC Enhanced Strobe */
+define|#
+directive|define
+name|MMC_CAP_SIGNALING_120
+value|(1<< 18)
+comment|/* Can do signaling at 1.2 V */
+define|#
+directive|define
+name|MMC_CAP_SIGNALING_180
+value|(1<< 19)
+comment|/* Can do signaling at 1.8 V */
+define|#
+directive|define
+name|MMC_CAP_SIGNALING_330
+value|(1<< 20)
+comment|/* Can do signaling at 3.3 V */
+define|#
+directive|define
+name|MMC_CAP_DRIVER_TYPE_A
+value|(1<< 21)
+comment|/* Can do Driver Type A */
+define|#
+directive|define
+name|MMC_CAP_DRIVER_TYPE_C
+value|(1<< 22)
+comment|/* Can do Driver Type C */
+define|#
+directive|define
+name|MMC_CAP_DRIVER_TYPE_D
+value|(1<< 23)
+comment|/* Can do Driver Type D */
 name|enum
 name|mmc_card_mode
 name|mode
@@ -284,7 +453,7 @@ begin_define
 define|#
 directive|define
 name|MMC_VERSION
-value|2
+value|3
 end_define
 
 begin_define
