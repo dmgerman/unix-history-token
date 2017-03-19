@@ -827,9 +827,15 @@ name|l_int
 name|f_namelen
 decl_stmt|;
 name|l_int
+name|f_frsize
+decl_stmt|;
+name|l_int
+name|f_flags
+decl_stmt|;
+name|l_int
 name|f_spare
 index|[
-literal|6
+literal|4
 index|]
 decl_stmt|;
 block|}
