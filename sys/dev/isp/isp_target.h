@@ -88,16 +88,9 @@ decl_stmt|;
 comment|/* HBA tag */
 name|void
 modifier|*
-name|nt_tmd
-decl_stmt|;
-name|void
-modifier|*
 name|nt_lreserved
 decl_stmt|;
-name|void
-modifier|*
-name|nt_hreserved
-decl_stmt|;
+comment|/* original IOCB pointer */
 name|uint64_t
 name|nt_wwn
 decl_stmt|;
@@ -121,16 +114,6 @@ literal|24
 decl_stmt|;
 comment|/* source port id */
 name|uint32_t
-name|nt_failed
-range|:
-literal|1
-decl_stmt|,
-comment|/* notify operation failed */
-name|nt_need_ack
-range|:
-literal|1
-decl_stmt|,
-comment|/* this notify needs an ACK */
 name|nt_did
 range|:
 literal|24
@@ -144,6 +127,10 @@ name|uint8_t
 name|nt_channel
 decl_stmt|;
 comment|/* channel id */
+name|uint8_t
+name|nt_need_ack
+decl_stmt|;
+comment|/* this notify needs an ACK */
 name|isp_ncode_t
 name|nt_ncode
 decl_stmt|;
@@ -152,23 +139,6 @@ block|}
 name|isp_notify_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|MATCH_TMD
-parameter_list|(
-name|tmd
-parameter_list|,
-name|iid
-parameter_list|,
-name|lun
-parameter_list|,
-name|tag
-parameter_list|)
-define|\
-value|(                                                   \         (tmd)&&                                        \         (iid == INI_ANY || iid == tmd->cd_iid)&&       \         (lun == LUN_ANY || lun == tmd->cd_lun)&&       \         (tag == TAG_ANY || tag == tmd->cd_tagval)       \     )
-end_define
 
 begin_comment
 comment|/*  * Debug macros  */
