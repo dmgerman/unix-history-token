@@ -147,6 +147,8 @@ name|Kldsymcmd
 block|,
 name|Kldunloadflags
 block|,
+name|Sizet
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID

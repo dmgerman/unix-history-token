@@ -2971,7 +2971,7 @@ literal|0
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|1
 block|}
@@ -3105,7 +3105,7 @@ literal|0
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|1
 block|}
@@ -3145,7 +3145,7 @@ literal|0
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|1
 block|}
@@ -3565,7 +3565,7 @@ literal|1
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|2
 block|}
@@ -3607,7 +3607,7 @@ literal|1
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|2
 block|}
@@ -3655,7 +3655,7 @@ literal|2
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|3
 block|}
@@ -3697,7 +3697,7 @@ literal|1
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|2
 block|}
@@ -3949,7 +3949,7 @@ literal|1
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|2
 block|}
@@ -5116,7 +5116,7 @@ literal|1
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|2
 block|}
@@ -5429,7 +5429,7 @@ literal|1
 block|}
 block|,
 block|{
-name|Int
+name|Sizet
 block|,
 literal|2
 block|}
@@ -11249,6 +11249,27 @@ name|fp
 argument_list|,
 literal|"%ld"
 argument_list|,
+name|args
+index|[
+name|sc
+operator|->
+name|offset
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Sizet
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%zu"
+argument_list|,
+operator|(
+name|size_t
+operator|)
 name|args
 index|[
 name|sc
