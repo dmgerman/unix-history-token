@@ -1466,41 +1466,6 @@ break|break;
 block|}
 name|finish
 label|:
-comment|/* Finished receive; age anything left on the FF queue by a little bump */
-comment|/* 	 * XXX TODO: just make this a callout timer schedule so we can 	 * flush the FF staging queue if we're approaching idle. 	 */
-ifdef|#
-directive|ifdef
-name|IEEE80211_SUPPORT_SUPERG
-if|if
-condition|(
-operator|!
-operator|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|RTWN_FW_LOADED
-operator|)
-operator|||
-name|sc
-operator|->
-name|sc_ratectl
-operator|!=
-name|RTWN_RATECTL_NET80211
-condition|)
-name|rtwn_cmd_sleepable
-argument_list|(
-name|sc
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|rtwn_ff_flush_all
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Kick-start more transmit in case we stalled */
 name|rtwn_start
 argument_list|(
