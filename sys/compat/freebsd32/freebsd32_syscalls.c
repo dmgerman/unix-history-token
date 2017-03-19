@@ -767,9 +767,9 @@ comment|/* 242 = ffclock_setestimate */
 literal|"ffclock_getestimate"
 block|,
 comment|/* 243 = ffclock_getestimate */
-literal|"#244"
+literal|"freebsd32_clock_nanosleep"
 block|,
-comment|/* 244 = nosys */
+comment|/* 244 = freebsd32_clock_nanosleep */
 literal|"#245"
 block|,
 comment|/* 245 = nosys */

@@ -1298,6 +1298,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FREEBSD32_SYS_freebsd32_clock_nanosleep
+value|244
+end_define
+
+begin_define
+define|#
+directive|define
 name|FREEBSD32_SYS_freebsd32_clock_getcpuclockid2
 value|247
 end_define
