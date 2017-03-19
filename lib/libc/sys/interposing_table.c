@@ -336,6 +336,13 @@ name|fdatasync
 argument_list|,
 name|__sys_fdatasync
 argument_list|)
+block|,
+name|SLOT
+argument_list|(
+name|clock_nanosleep
+argument_list|,
+name|__sys_clock_nanosleep
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt

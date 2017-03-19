@@ -107,6 +107,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|clock_nanosleep
+value|_clock_nanosleep
+end_define
+
+begin_define
+define|#
+directive|define
 name|close
 value|_close
 end_define
