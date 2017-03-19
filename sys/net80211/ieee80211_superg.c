@@ -3175,7 +3175,6 @@ name|head
 operator|=
 name|m
 expr_stmt|;
-comment|/* Do not restart the timer if task was already scheduled. */
 name|struct
 name|timeout_task
 modifier|*
@@ -3196,7 +3195,6 @@ name|ic_tq
 argument_list|,
 name|qtask
 argument_list|,
-operator|-
 name|age
 argument_list|)
 expr_stmt|;
