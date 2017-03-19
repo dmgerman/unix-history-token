@@ -149,6 +149,8 @@ name|Kldunloadflags
 block|,
 name|Sizet
 block|,
+name|Madvice
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
