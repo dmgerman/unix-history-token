@@ -2695,6 +2695,8 @@ name|vm_object_t
 name|object
 decl_stmt|;
 name|vm_offset_t
+name|off
+decl_stmt|,
 name|map_addr
 decl_stmt|;
 name|int
@@ -2885,13 +2887,11 @@ name|memsz
 operator|==
 name|filsz
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 comment|/* 	 * We have to get the remaining bit of the file into the first part 	 * of the oversized map segment.  This is normally because the .data 	 * segment in the file is extended to provide bss.  It's a neat idea 	 * to try and save a page, but it's a pain in the behind to implement. 	 */
 name|copy_len
@@ -2981,13 +2981,11 @@ name|rv
 operator|!=
 name|KERN_SUCCESS
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -2996,9 +2994,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vm_offset_t
-name|off
-decl_stmt|;
 name|sf
 operator|=
 name|vm_imgact_map_page
@@ -3070,16 +3065,16 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-block|}
-comment|/* 	 * set it to the specified protection. 	 * XXX had better undo the damage from pasting over the cracks here! 	 */
+comment|/* 	 * set it to the specified protection. 	 */
 name|vm_map_protect
 argument_list|(
 name|map
