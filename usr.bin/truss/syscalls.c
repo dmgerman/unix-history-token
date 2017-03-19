@@ -2013,7 +2013,7 @@ literal|1
 block|}
 block|,
 block|{
-name|Hex
+name|Ptr
 block|,
 literal|2
 block|}
@@ -4009,7 +4009,7 @@ literal|4
 block|}
 block|,
 block|{
-name|Ptr
+name|Int
 operator||
 name|IN
 block|,
