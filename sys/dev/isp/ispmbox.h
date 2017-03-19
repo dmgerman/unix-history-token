@@ -4527,6 +4527,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_CAP_MSIX
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(IS_24XX(isp)? (isp->isp_fwattr& ISP2400_FW_ATTR_MSIX) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_CAP_VP0
 parameter_list|(
 name|isp
