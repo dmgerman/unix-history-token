@@ -405,6 +405,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|root_mount_always_wait
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|root_mount_always_wait
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|root_mount_always_wait
+argument_list|,
+literal|0
+argument_list|,
+literal|"Wait for root mount holds even if the root device already exists"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
@@ -4536,7 +4566,7 @@ name|delay
 decl_stmt|,
 name|timeout
 decl_stmt|;
-comment|/* 	 * In case of ZFS and NFS we don't have a way to wait for 	 * specific device. 	 */
+comment|/* 	 * In case of ZFS and NFS we don't have a way to wait for 	 * specific device.  Also do the wait if the user forced that 	 * behaviour by setting vfs.root_mount_always_wait=1. 	 */
 if|if
 condition|(
 name|strcmp
@@ -4563,6 +4593,10 @@ literal|0
 index|]
 operator|==
 literal|'\0'
+operator|||
+name|root_mount_always_wait
+operator|!=
+literal|0
 condition|)
 block|{
 name|vfs_mountroot_wait
