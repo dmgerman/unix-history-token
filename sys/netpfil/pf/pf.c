@@ -38582,6 +38582,16 @@ name|PF_FWD
 expr_stmt|;
 if|if
 condition|(
+name|dir
+operator|==
+name|PF_FWD
+condition|)
+name|dir
+operator|=
+name|PF_OUT
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|V_pf_status
 operator|.
