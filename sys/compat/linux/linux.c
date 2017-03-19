@@ -323,7 +323,9 @@ operator|<=
 name|LINUX_SIGRTMAX
 argument_list|,
 operator|(
-literal|"Invalid Linux signal\n"
+literal|"invalid Linux signal %d\n"
+operator|,
+name|sig
 operator|)
 argument_list|)
 expr_stmt|;
