@@ -709,7 +709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Obtain the current TID from the given frame.  *  * Non-QoS frames need to go into TID 16 (IEEE80211_NONQOS_TID.)  * This has implications for which AC/priority the packet is placed  * in.  */
+comment|/*  * Obtain the current TID from the given frame.  *  * Non-QoS frames get mapped to a TID so frames consistently  * go on a sensible queue.  */
 end_comment
 
 begin_function
@@ -735,14 +735,6 @@ name|ieee80211_frame
 modifier|*
 name|wh
 decl_stmt|;
-name|int
-name|pri
-init|=
-name|M_WME_GETAC
-argument_list|(
-name|m0
-argument_list|)
-decl_stmt|;
 name|wh
 operator|=
 name|mtod
@@ -755,6 +747,7 @@ name|ieee80211_frame
 operator|*
 argument_list|)
 expr_stmt|;
+comment|/* Non-QoS: map frame to a TID queue for software queueing */
 if|if
 condition|(
 operator|!
@@ -764,14 +757,24 @@ name|wh
 argument_list|)
 condition|)
 return|return
-name|IEEE80211_NONQOS_TID
-return|;
-else|else
-return|return
+operator|(
 name|WME_AC_TO_TID
 argument_list|(
-name|pri
+name|M_WME_GETAC
+argument_list|(
+name|m0
 argument_list|)
+argument_list|)
+operator|)
+return|;
+comment|/* QoS - fetch the TID from the header, ignore mbuf WME */
+return|return
+operator|(
+name|ieee80211_gettid
+argument_list|(
+name|wh
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -864,7 +867,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine what the correct AC queue for the given frame  * should be.  *  * This code assumes that the TIDs map consistently to  * the underlying hardware (or software) ath_txq.  * Since the sender may try to set an AC which is  * arbitrary, non-QoS TIDs may end up being put on  * completely different ACs. There's no way to put a  * TID into multiple ath_txq's for scheduling, so  * for now we override the AC/TXQ selection and set  * non-QOS TID frames into the BE queue.  *  * This may be completely incorrect - specifically,  * some management frames may end up out of order  * compared to the QoS traffic they're controlling.  * I'll look into this later.  */
+comment|/*  * Determine what the correct AC queue for the given frame  * should be.  *  * For QoS frames, obey the TID.  That way things like  * management frames that are related to a given TID  * are thus serialised with the rest of the TID traffic,  * regardless of net80211 overriding priority.  *  * For non-QoS frames, return the mbuf WMI priority.  *  * This has implications that higher priority non-QoS traffic  * may end up being scheduled before other non-QoS traffic,  * leading to out-of-sequence packets being emitted.  *  * (It'd be nice to log/count this so we can see if it  * really is a problem.)  *  * TODO: maybe we should throw multicast traffic, QoS or  * otherwise, into a separate TX queue?  */
 end_comment
 
 begin_function
@@ -890,14 +893,6 @@ name|ieee80211_frame
 modifier|*
 name|wh
 decl_stmt|;
-name|int
-name|pri
-init|=
-name|M_WME_GETAC
-argument_list|(
-name|m0
-argument_list|)
-decl_stmt|;
 name|wh
 operator|=
 name|mtod
@@ -910,6 +905,7 @@ name|ieee80211_frame
 operator|*
 argument_list|)
 expr_stmt|;
+comment|/* 	 * QoS data frame (sequence number or otherwise) - 	 * return hardware queue mapping for the underlying 	 * TID. 	 */
 if|if
 condition|(
 name|IEEE80211_QOS_HAS_SEQ
@@ -918,10 +914,22 @@ name|wh
 argument_list|)
 condition|)
 return|return
-name|pri
+name|TID_TO_WME_AC
+argument_list|(
+name|ieee80211_gettid
+argument_list|(
+name|wh
+argument_list|)
+argument_list|)
 return|;
+comment|/* 	 * Otherwise - return mbuf QoS pri. 	 */
 return|return
-name|ATH_NONQOS_TID_AC
+operator|(
+name|M_WME_GETAC
+argument_list|(
+name|m0
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -5603,6 +5611,7 @@ name|ath_node
 modifier|*
 name|an
 decl_stmt|;
+comment|/* XXX TODO: this pri is only used for non-QoS check, right? */
 name|u_int
 name|pri
 decl_stmt|;
@@ -5872,8 +5881,10 @@ expr_stmt|;
 comment|/* default no multi-rate retry*/
 name|pri
 operator|=
-name|M_WME_GETAC
+name|ath_tx_getac
 argument_list|(
+name|sc
+argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
@@ -6824,7 +6835,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Determine the target hardware queue. 	 * 	 * For multicast frames, the txq gets overridden appropriately 	 * depending upon the state of PS. 	 * 	 * For any other frame, we do a TID/QoS lookup inside the frame 	 * to see what the TID should be. If it's a non-QoS frame, the 	 * AC and TID are overridden. The TID/TXQ code assumes the 	 * TID is on a predictable hardware TXQ, so we don't support 	 * having a node TID queued to multiple hardware TXQs. 	 * This may change in the future but would require some locking 	 * fudgery. 	 */
+comment|/* 	 * Determine the target hardware queue. 	 * 	 * For multicast frames, the txq gets overridden appropriately 	 * depending upon the state of PS.  If powersave is enabled 	 * then they get added to the cabq for later transmit. 	 * 	 * The "fun" issue here is that group addressed frames should 	 * have the sequence number from a different pool, rather than 	 * the per-TID pool.  That means that even QoS group addressed 	 * frames will have a sequence number from that global value, 	 * which means if we transmit different group addressed frames 	 * at different traffic priorities, the sequence numbers will 	 * all be out of whack.  So - chances are, the right thing 	 * to do here is to always put group addressed frames into the BE 	 * queue, and ignore the TID for queue selection. 	 * 	 * For any other frame, we do a TID/QoS lookup inside the frame 	 * to see what the TID should be. If it's a non-QoS frame, the 	 * AC and TID are overridden. The TID/TXQ code assumes the 	 * TID is on a predictable hardware TXQ, so we don't support 	 * having a node TID queued to multiple hardware TXQs. 	 * This may change in the future but would require some locking 	 * fudgery. 	 */
 name|pri
 operator|=
 name|ath_tx_getac
@@ -7127,13 +7138,23 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* A-MPDU TX? Manually set sequence number */
-comment|/* 	 * Don't do it whilst pending; the net80211 layer still 	 * assigns them. 	 */
+comment|/* 	 * Don't do it whilst pending; the net80211 layer still 	 * assigns them. 	 * 	 * Don't assign A-MPDU sequence numbers to group address 	 * frames; they come from a different sequence number space. 	 */
 if|if
 condition|(
 name|is_ampdu_tx
+operator|&&
+operator|(
+operator|!
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|wh
+operator|->
+name|i_addr1
+argument_list|)
+operator|)
 condition|)
 block|{
-comment|/* 		 * Always call; this function will 		 * handle making sure that null data frames 		 * don't get a sequence number from the current 		 * TID and thus mess with the BAW. 		 */
+comment|/* 		 * Always call; this function will 		 * handle making sure that null data frames 		 * and group-addressed frames don't get a sequence number 		 * from the current TID and thus mess with the BAW. 		 */
 name|seqno
 operator|=
 name|ath_tx_tid_seqno_assign
@@ -7147,7 +7168,7 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Don't add QoS NULL frames to the BAW. 		 */
+comment|/* 		 * Don't add QoS NULL frames and group-addressed frames 		 * to the BAW. 		 */
 if|if
 condition|(
 name|IEEE80211_QOS_HAS_SEQ
@@ -7155,9 +7176,21 @@ argument_list|(
 name|wh
 argument_list|)
 operator|&&
+operator|(
+operator|!
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|wh
+operator|->
+name|i_addr1
+argument_list|)
+operator|)
+operator|&&
+operator|(
 name|subtype
 operator|!=
 name|IEEE80211_FC0_SUBTYPE_QOS_NULL
+operator|)
 condition|)
 block|{
 name|bf
@@ -7207,7 +7240,7 @@ name|m0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* This also sets up the DMA map */
+comment|/* This also sets up the DMA map; crypto; frame parameters, etc */
 name|r
 operator|=
 name|ath_tx_normal_setup
@@ -7653,8 +7686,27 @@ condition|)
 block|{
 if|#
 directive|if
-literal|0
-block|DPRINTF(sc, ATH_DEBUG_XMIT,  		    "%s: overriding tid %d pri %d -> %d\n", 		    __func__, o_tid, pri, TID_TO_WME_AC(o_tid));
+literal|1
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_XMIT
+argument_list|,
+literal|"%s: overriding tid %d pri %d -> %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|o_tid
+argument_list|,
+name|pri
+argument_list|,
+name|TID_TO_WME_AC
+argument_list|(
+name|o_tid
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|pri
@@ -7665,6 +7717,7 @@ name|o_tid
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * "pri" is the hardware queue to transmit on. 	 * 	 * Look at the description in ath_tx_start() to understand 	 * what needs to be "fixed" here so we just use the TID 	 * for QoS frames. 	 */
 comment|/* Handle encryption twiddling if needed */
 if|if
 condition|(
@@ -10792,7 +10845,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Assign a sequence number manually to the given frame.  *  * This should only be called for A-MPDU TX frames.  */
+comment|/*  * Assign a sequence number manually to the given frame.  *  * This should only be called for A-MPDU TX frames.  *  * Note: for group addressed frames, the sequence number  * should be from NONQOS_TID, and net80211 should have  * already assigned it for us.  */
 end_comment
 
 begin_function
@@ -10828,8 +10881,6 @@ name|wh
 decl_stmt|;
 name|int
 name|tid
-decl_stmt|,
-name|pri
 decl_stmt|;
 name|ieee80211_seq
 name|seqno
@@ -10837,7 +10888,6 @@ decl_stmt|;
 name|uint8_t
 name|subtype
 decl_stmt|;
-comment|/* TID lookup */
 name|wh
 operator|=
 name|mtod
@@ -10849,19 +10899,11 @@ name|ieee80211_frame
 operator|*
 argument_list|)
 expr_stmt|;
-name|pri
-operator|=
-name|M_WME_GETAC
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-comment|/* honor classification */
 name|tid
 operator|=
-name|WME_AC_TO_TID
+name|ieee80211_gettid
 argument_list|(
-name|pri
+name|wh
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -10870,11 +10912,9 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
 argument_list|,
-literal|"%s: pri=%d, tid=%d, qos has seq=%d\n"
+literal|"%s: tid=%d, qos has seq=%d\n"
 argument_list|,
 name|__func__
-argument_list|,
-name|pri
 argument_list|,
 name|tid
 argument_list|,
@@ -10923,6 +10963,40 @@ name|IEEE80211_FC0_SUBTYPE_QOS_NULL
 condition|)
 block|{
 comment|/* XXX no locking for this TID? This is a bit of a problem. */
+name|seqno
+operator|=
+name|ni
+operator|->
+name|ni_txseqs
+index|[
+name|IEEE80211_NONQOS_TID
+index|]
+expr_stmt|;
+name|INCR
+argument_list|(
+name|ni
+operator|->
+name|ni_txseqs
+index|[
+name|IEEE80211_NONQOS_TID
+index|]
+argument_list|,
+name|IEEE80211_SEQ_RANGE
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|wh
+operator|->
+name|i_addr1
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * group addressed frames get a sequence number from 		 * a different sequence number space. 		 */
 name|seqno
 operator|=
 name|ni
