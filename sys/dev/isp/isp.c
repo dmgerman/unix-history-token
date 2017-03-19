@@ -7082,14 +7082,6 @@ name|isp
 argument_list|)
 expr_stmt|;
 block|}
-name|GET_NANOTIME
-argument_list|(
-operator|&
-name|isp
-operator|->
-name|isp_init_time
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -12968,14 +12960,6 @@ name|EIO
 operator|)
 return|;
 block|}
-name|GET_NANOTIME
-argument_list|(
-operator|&
-name|isp
-operator|->
-name|isp_init_time
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -32019,14 +32003,6 @@ case|case
 name|ASYNC_PTPMODE
 case|:
 comment|/* 		 * These are broadcast events that have to be sent across 		 * all active channels. 		 */
-name|GET_NANOTIME
-argument_list|(
-operator|&
-name|isp
-operator|->
-name|isp_init_time
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|chan
@@ -32267,14 +32243,6 @@ case|case
 name|ASYNC_LOOP_UP
 case|:
 comment|/* 		 * This is a broadcast event that has to be sent across 		 * all active channels. 		 */
-name|GET_NANOTIME
-argument_list|(
-operator|&
-name|isp
-operator|->
-name|isp_init_time
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|chan
@@ -32451,14 +32419,6 @@ case|case
 name|ASYNC_LOOP_RESET
 case|:
 comment|/* 		 * This is a broadcast event that has to be sent across 		 * all active channels. 		 */
-name|GET_NANOTIME
-argument_list|(
-operator|&
-name|isp
-operator|->
-name|isp_init_time
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|chan
@@ -33396,14 +33356,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|GET_NANOTIME
-argument_list|(
-operator|&
-name|isp
-operator|->
-name|isp_init_time
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|chan

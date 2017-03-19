@@ -1937,10 +1937,6 @@ name|uint32_t
 name|isp_respoutrp
 decl_stmt|;
 comment|/* register for RESOUTP */
-name|NANOTIME_T
-name|isp_init_time
-decl_stmt|;
-comment|/* time were last initialized */
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
 name|u_int
