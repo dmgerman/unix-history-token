@@ -9894,6 +9894,16 @@ name|nmatched
 init|=
 literal|0
 decl_stmt|;
+comment|/* Ignore ifnet renaming. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RENAMING
+condition|)
+return|return;
 name|BPF_LOCK
 argument_list|()
 expr_stmt|;
