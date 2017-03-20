@@ -2142,6 +2142,11 @@ argument_list|(
 literal|"unterminated lease declaration."
 argument_list|)
 expr_stmt|;
+name|free_client_lease
+argument_list|(
+name|lease
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -2940,6 +2945,11 @@ argument_list|(
 name|cfile
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|vendor
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2988,6 +2998,11 @@ expr_stmt|;
 name|skip_to_semi
 argument_list|(
 name|cfile
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|vendor
 argument_list|)
 expr_stmt|;
 return|return
@@ -3067,6 +3082,11 @@ expr_stmt|;
 name|skip_to_semi
 argument_list|(
 name|cfile
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|vendor
 argument_list|)
 expr_stmt|;
 return|return
