@@ -2845,6 +2845,9 @@ expr_stmt|;
 name|caph_cache_catpages
 argument_list|()
 expr_stmt|;
+name|caph_cache_tzdata
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|cap_enter
