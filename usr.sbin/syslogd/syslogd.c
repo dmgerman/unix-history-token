@@ -10818,6 +10818,11 @@ argument_list|(
 name|ebuf
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -10988,6 +10993,11 @@ expr_stmt|;
 name|logerror
 argument_list|(
 name|ebuf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|f
 argument_list|)
 expr_stmt|;
 return|return
