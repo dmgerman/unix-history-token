@@ -1726,8 +1726,13 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+sizeof|sizeof
+argument_list|(
+name|mtu
+argument_list|)
+argument_list|,
 name|mtu
 argument_list|,
 literal|"%u"
