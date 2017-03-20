@@ -495,11 +495,11 @@ value|0x0002
 define|#
 directive|define
 name|FLTR_PRMSCS
-value|0x0003
+value|0x0004
 define|#
 directive|define
 name|FLTR_SRC_RTG
-value|0x0004
+value|0x0008
 name|t_PXENV_UNDI_MCAST_ADDRESS
 name|R_Mcast_Buf
 decl_stmt|;
