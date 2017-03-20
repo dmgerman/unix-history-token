@@ -1901,18 +1901,13 @@ literal|8
 decl_stmt|,
 comment|/* input clock */
 range|:
-literal|4
+literal|5
 decl_stmt|,
 name|isp_port
 range|:
 literal|1
 decl_stmt|,
 comment|/* 23XX/24XX only */
-name|isp_open
-range|:
-literal|1
-decl_stmt|,
-comment|/* opened (ioctl) */
 name|isp_bustype
 range|:
 literal|1
