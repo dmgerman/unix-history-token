@@ -14717,9 +14717,17 @@ operator|=
 name|AI_PASSIVE
 block|}
 expr_stmt|;
+if|if
+condition|(
+name|pe
+operator|->
+name|pe_name
+operator|!=
+name|NULL
+condition|)
 name|dprintf
 argument_list|(
-literal|"Try %s\n"
+literal|"Trying peer: %s\n"
 argument_list|,
 name|pe
 operator|->
