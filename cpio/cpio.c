@@ -6941,22 +6941,6 @@ name|name
 argument_list|,
 name|id
 argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|name
-operator|==
-name|NULL
-operator|||
-name|name
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
 condition|)
 block|{
 comment|/* If lookup failed, format it as a number. */
@@ -7034,8 +7018,7 @@ name|name
 operator|)
 return|;
 block|}
-comment|/* 		 * Conveniently, NULL marks an empty slot, so 		 * if the strdup() fails, we've just failed to 		 * cache it.  No recovery necessary. 		 */
-block|}
+comment|/* 	 * Conveniently, NULL marks an empty slot, so 	 * if the strdup() fails, we've just failed to 	 * cache it.  No recovery necessary. 	 */
 return|return
 operator|(
 name|NULL
@@ -7136,16 +7119,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|*
-name|name
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|errno
-operator|!=
-literal|0
 operator|&&
 name|errno
 operator|!=
@@ -7167,9 +7143,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|errno
-operator|)
+literal|1
 return|;
 block|}
 operator|*
@@ -7180,9 +7154,7 @@ operator|->
 name|pw_name
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -7279,16 +7251,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|*
-name|name
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|errno
+operator|&&
+name|errno
 operator|!=
-literal|0
+name|ENOENT
 condition|)
 name|lafe_warnc
 argument_list|(
@@ -7306,9 +7275,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|errno
-operator|)
+literal|1
 return|;
 block|}
 operator|*
@@ -7319,9 +7286,7 @@ operator|->
 name|gr_name
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
