@@ -11192,7 +11192,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|read_zip64_eocd
 parameter_list|(
 name|struct
@@ -11230,7 +11230,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* Must be only a single volume. */
 if|if
 condition|(
@@ -11243,7 +11245,9 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* Find the Zip64 EOCD record. */
 name|eocd64_offset
 operator|=
@@ -11267,7 +11271,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|(
@@ -11285,7 +11291,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* Make sure we can read all of it. */
 name|eocd64_size
 operator|=
@@ -11308,7 +11316,9 @@ name|eocd64_size
 operator|>
 literal|16384
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|(
@@ -11329,7 +11339,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* Sanity-check the EOCD64 */
 if|if
 condition|(
@@ -11343,7 +11355,9 @@ operator|!=
 literal|0
 condition|)
 comment|/* Must be disk #0 */
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|archive_le32dec
@@ -11356,7 +11370,9 @@ operator|!=
 literal|0
 condition|)
 comment|/* CD must be on disk #0 */
-return|return;
+return|return
+literal|0
+return|;
 comment|/* CD can't be split. */
 if|if
 condition|(
@@ -11374,7 +11390,9 @@ operator|+
 literal|32
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* Save the central directory offset for later use. */
 name|zip
 operator|->
@@ -11387,6 +11405,9 @@ operator|+
 literal|48
 argument_list|)
 expr_stmt|;
+return|return
+literal|32
+return|;
 block|}
 end_function
 
@@ -11585,14 +11606,7 @@ operator|+
 name|i
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|ret
-operator|>
-literal|0
-condition|)
-block|{
-comment|/* Zip64 EOCD locator precedes 					 * regular EOCD if present. */
+comment|/* Zip64 EOCD locator precedes 				 * regular EOCD if present. */
 if|if
 condition|(
 name|i
@@ -11615,6 +11629,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|int
+name|ret_zip64
+init|=
 name|read_zip64_eocd
 argument_list|(
 name|a
@@ -11627,6 +11644,16 @@ name|i
 operator|-
 literal|20
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ret_zip64
+operator|>
+name|ret
+condition|)
+name|ret
+operator|=
+name|ret_zip64
 expr_stmt|;
 block|}
 return|return
@@ -11634,7 +11661,6 @@ operator|(
 name|ret
 operator|)
 return|;
-block|}
 block|}
 name|i
 operator|-=

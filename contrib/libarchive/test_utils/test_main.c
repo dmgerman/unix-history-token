@@ -185,9 +185,16 @@ directive|include
 file|<time.h>
 end_include
 
-begin_comment
-comment|/* ACL support */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SIGNAL_H
+end_ifdef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -240,10 +247,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_RICHACL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/richacl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
+name|HAVE_MEMBERSHIP_H
 end_if
 
 begin_include
@@ -13224,7 +13248,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|HAVE_SUN_ACL
+name|ARCHIVE_ACL_SUNOS
 end_if
 
 begin_comment
@@ -13285,7 +13309,7 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|HAVE_SUN_NFS4_ACL
+name|ARCHIVE_ACL_SUNOS_NFS4
 elseif|else
 if|if
 condition|(
@@ -13504,7 +13528,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_SUN_ACL */
+comment|/* ARCHIVE_ACL_SUNOS */
 end_comment
 
 begin_comment
@@ -13523,9 +13547,7 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|HAVE_POSIX_ACL
-operator|||
-name|HAVE_NFS4_ACL
+name|ARCHIVE_ACL_SUPPORT
 name|int
 name|r
 init|=
@@ -13533,8 +13555,11 @@ literal|1
 decl_stmt|;
 if|#
 directive|if
-operator|!
-name|HAVE_SUN_ACL
+name|ARCHIVE_ACL_LIBACL
+operator|||
+name|ARCHIVE_ACL_FREEBSD
+operator|||
+name|ARCHIVE_ACL_DARWIN
 name|acl_t
 name|acl
 decl_stmt|;
@@ -13542,8 +13567,19 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|HAVE_POSIX_ACL
-comment|/* Linux, FreeBSD POSIX.1e */
+name|ARCHIVE_ACL_LIBRICHACL
+name|struct
+name|richacl
+modifier|*
+name|richacl
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|ARCHIVE_ACL_LIBACL
+operator|||
+name|ARCHIVE_ACL_FREEBSD
 specifier|const
 name|char
 modifier|*
@@ -13558,7 +13594,7 @@ literal|"mask::rwx"
 decl_stmt|;
 elif|#
 directive|elif
-name|HAVE_SUN_ACL
+name|ARCHIVE_ACL_SUNOS
 comment|/* Solaris POSIX.1e */
 name|aclent_t
 name|aclp_posix1e
@@ -13642,7 +13678,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD
 comment|/* FreeBSD NFS4 */
 specifier|const
 name|char
@@ -13657,7 +13693,24 @@ literal|"everyone@:rxaRcs::allow"
 decl_stmt|;
 elif|#
 directive|elif
-name|HAVE_SUN_NFS4_ACL
+name|ARCHIVE_ACL_LIBRICHACL
+specifier|const
+name|char
+modifier|*
+name|acltext_nfs4
+init|=
+literal|"owner:rwpxaARWcCoS::mask,"
+literal|"group:rwpxaRcS::mask,"
+literal|"other:rxaRcS::mask,"
+literal|"user:1:rwpaRcS::allow,"
+literal|"group:15:rxaRcS::allow,"
+literal|"owner@:rwpxaARWcCoS::allow,"
+literal|"group@:rwpxaRcS::allow,"
+literal|"everyone@:rxaRcS::allow"
+decl_stmt|;
+elif|#
+directive|elif
+name|ARCHIVE_ACL_SUNOS_NFS4
 comment|/* Solaris NFS4 */
 name|ace_t
 name|aclp_nfs4
@@ -13790,7 +13843,7 @@ block|}
 decl_stmt|;
 elif|#
 directive|elif
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 comment|/* Mac OS X */
 name|acl_entry_t
 name|aclent
@@ -13840,10 +13893,10 @@ block|}
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_DARWIN_ACL */
+comment|/* ARCHIVE_ACL_DARWIN */
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD
 name|acl
 operator|=
 name|acl_from_text
@@ -13879,7 +13932,47 @@ operator|)
 return|;
 elif|#
 directive|elif
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_LIBRICHACL
+name|richacl
+operator|=
+name|richacl_from_text
+argument_list|(
+name|acltext_nfs4
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|failure
+argument_list|(
+literal|"richacl_from_text() error: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|assert
+argument_list|(
+name|richacl
+operator|!=
+name|NULL
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+elif|#
+directive|elif
+name|ARCHIVE_ACL_DARWIN
 name|acl
 operator|=
 name|acl_init
@@ -14117,24 +14210,16 @@ name|testacl_free
 goto|;
 name|r
 operator|=
-name|mbr_identifier_to_uuid
+name|mbr_uid_to_uuid
 argument_list|(
-name|ID_TYPE_UID
-argument_list|,
-operator|&
 name|uid
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|uid_t
-argument_list|)
 argument_list|,
 name|uuid
 argument_list|)
 expr_stmt|;
 name|failure
 argument_list|(
-literal|"mbr_identifier_to_uuid() error: %s"
+literal|"mbr_uid_to_uuid() error: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -14191,13 +14276,13 @@ name|testacl_free
 goto|;
 endif|#
 directive|endif
-comment|/* HAVE_DARWIN_ACL */
+comment|/* ARCHIVE_ACL_DARWIN */
 if|#
 directive|if
-name|HAVE_NFS4_ACL
+name|ARCHIVE_ACL_NFS4
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD
 name|r
 operator|=
 name|acl_set_file
@@ -14216,7 +14301,24 @@ argument_list|)
 expr_stmt|;
 elif|#
 directive|elif
-name|HAVE_SUN_NFS4_ACL
+name|ARCHIVE_ACL_LIBRICHACL
+name|r
+operator|=
+name|richacl_set_file
+argument_list|(
+name|path
+argument_list|,
+name|richacl
+argument_list|)
+expr_stmt|;
+name|richacl_free
+argument_list|(
+name|richacl
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|ARCHIVE_ACL_SUNOS_NFS4
 name|r
 operator|=
 name|acl
@@ -14248,7 +14350,7 @@ argument_list|)
 expr_stmt|;
 elif|#
 directive|elif
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 name|r
 operator|=
 name|acl_set_file
@@ -14280,15 +14382,15 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* HAVE_NFS4_ACL */
+comment|/* ARCHIVE_ACL_NFS4 */
 if|#
 directive|if
-name|HAVE_POSIX_ACL
+name|ARCHIVE_ACL_POSIX1E
+if|#
+directive|if
+name|ARCHIVE_ACL_FREEBSD
 operator|||
-name|HAVE_SUN_ACL
-if|#
-directive|if
-name|HAVE_POSIX_ACL
+name|ARCHIVE_ACL_LIBACL
 name|acl
 operator|=
 name|acl_from_text
@@ -14340,7 +14442,7 @@ argument_list|)
 expr_stmt|;
 elif|#
 directive|elif
-name|HAVE_SUN_ACL
+name|ARCHIVE_ACL_SUNOS
 name|r
 operator|=
 name|acl
@@ -14391,10 +14493,10 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* HAVE_POSIX_ACL || HAVE_SUN_ACL */
+comment|/* ARCHIVE_ACL_POSIX1E */
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 name|testacl_free
 label|:
 name|acl_free
@@ -14406,7 +14508,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* HAVE_POSIX_ACL || HAVE_NFS4_ACL */
+comment|/* ARCHIVE_ACL_SUPPORT */
 operator|(
 name|void
 operator|)

@@ -143,10 +143,6 @@ block|{
 if|#
 directive|if
 name|HAVE_DARWIN_ACL
-name|ACL_FLAG_DEFER_INHERIT
-block|,
-name|ACL_FLAG_NO_INHERIT
-block|,
 name|ACL_ENTRY_INHERITED
 block|,
 name|ACL_ENTRY_FILE_INHERIT
