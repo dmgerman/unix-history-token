@@ -5806,6 +5806,8 @@ name|host
 argument_list|,
 name|port
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -5826,6 +5828,8 @@ name|open_client_local
 argument_list|(
 name|host
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
