@@ -101,7 +101,7 @@ parameter_list|,
 name|_entries_size
 parameter_list|)
 define|\
-value|do {								\ 		hashtable_index_t var;					\ 		(table)->entries = calloc(1,				\ 			sizeof(*(table)->entries) * (_entries_size));	\ 		(table)->entries_size = (_entries_size);		\ 		for (var = 0; var< HASHTABLE_ENTRIES_COUNT(table); ++var) {\ 			(table)->entries[var].field.capacity = 		\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY;	\ 			(table)->entries[var].field.size = 0;		\ 			(table)->entries[var].field.values = malloc(	\ 				sizeof(type) *				\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY);	\ 			assert((table)->entries[var].field.values != NULL);\ 		}							\ 	} while (0)
+value|do {								\ 		hashtable_index_t var;					\ 		(table)->entries = calloc(_entries_size,		\ 			sizeof(*(table)->entries));			\ 		(table)->entries_size = (_entries_size);		\ 		for (var = 0; var< HASHTABLE_ENTRIES_COUNT(table); ++var) {\ 			(table)->entries[var].field.capacity = 		\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY;	\ 			(table)->entries[var].field.size = 0;		\ 			(table)->entries[var].field.values = malloc(	\ 				sizeof(type) *				\ 				HASHTABLE_INITIAL_ENTRIES_CAPACITY);	\ 			assert((table)->entries[var].field.values != NULL);\ 		}							\ 	} while (0)
 end_define
 
 begin_comment

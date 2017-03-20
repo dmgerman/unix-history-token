@@ -1932,15 +1932,13 @@ name|firmware
 operator|=
 name|calloc
 argument_list|(
-literal|1
+name|size
 argument_list|,
 expr|sizeof
 operator|(
 name|unsigned
 name|char
 operator|)
-operator|*
-name|size
 argument_list|)
 expr_stmt|;
 if|if
