@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landon@landonf.org>  * Copyright (c) 2010 Broadcom Corporation  * All rights reserved.  *  * This file is derived from the sbchipc.h header distributed with  * Broadcom's initial brcm80211 Linux driver release, as  * contributed to the Linux staging repository.  *   * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landon@landonf.org>  * Copyright (c) 2010-2015 Broadcom Corporation  * All rights reserved.  *  * This file is derived from the sbchipc.h header contributed by Broadcom   * to to the Linux staging repository, as well as later revisions of sbchipc.h  * distributed with the Asus RT-N16 firmware source code release.  *   * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY  * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -6419,6 +6419,215 @@ directive|define
 name|CHIPC_CST43228_SDIO_RESET
 value|0x20
 end_define
+
+begin_comment
+comment|/* 4706 chipstatus reg bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CST4706_LOWCOST_PKG
+value|(1<<0)
+end_define
+
+begin_comment
+comment|/* 0: full-featured package 1: low-cost package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CST4706_SFLASH_PRESENT
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* 0: parallel, 1: serial flash is present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CST4706_SFLASH_TYPE
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* 0: 8b-p/ST-s flash, 1: 16b-p/Atmal-s flash */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CST4706_MIPS_BENDIAN
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/* 0: little,  1: big endian */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_CST4706_PCIE1_DISABLE
+value|(1<<5)
+end_define
+
+begin_comment
+comment|/* PCIE1 enable strap pin */
+end_comment
+
+begin_comment
+comment|/* 4706 flashstrconfig reg bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_MASK
+value|0x000000ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_SF1
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* 2nd serial flash present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_PF1
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* 2nd parallel flash present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_SF1_TYPE
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* 2nd serial flash type : 0 : ST, 1 : Atmel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_NF1
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* 2nd NAND flash present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_1ST_MADDR_SEG_MASK
+value|0x000000f0
+end_define
+
+begin_comment
+comment|/* Valid value mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_1ST_MADDR_SEG_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_1ST_MADDR_SEG_4MB
+value|0x1
+end_define
+
+begin_comment
+comment|/* 4MB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_1ST_MADDR_SEG_8MB
+value|0x2
+end_define
+
+begin_comment
+comment|/* 8MB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_1ST_MADDR_SEG_16MB
+value|0x3
+end_define
+
+begin_comment
+comment|/* 16MB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_1ST_MADDR_SEG_32MB
+value|0x4
+end_define
+
+begin_comment
+comment|/* 32MB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_1ST_MADDR_SEG_64MB
+value|0x5
+end_define
+
+begin_comment
+comment|/* 64MB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_1ST_MADDR_SEG_128MB
+value|0x6
+end_define
+
+begin_comment
+comment|/* 128MB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_FLSTRCF4706_1ST_MADDR_SEG_256MB
+value|0x7
+end_define
+
+begin_comment
+comment|/* 256MB */
+end_comment
 
 begin_comment
 comment|/* * Register eci_inputlo bitfield values. * - BT packet type information bits [7:0] */
