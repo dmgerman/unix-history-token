@@ -245,6 +245,17 @@ name|skiminfo
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|skinf
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|memset
 argument_list|(
 name|skinf
