@@ -57,12 +57,6 @@ name|acl_perm_map_t
 typedef|;
 end_typedef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ARCHIVE_ACL_MAPS_DEFS
-end_ifndef
-
 begin_if
 if|#
 directive|if
@@ -135,15 +129,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_ARCHIVE_ACL_MAPS_DEFS */
-end_comment
 
 begin_endif
 endif|#

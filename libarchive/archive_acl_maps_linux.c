@@ -88,12 +88,6 @@ directive|include
 file|"archive_read_disk_private.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|_ARCHIVE_ACL_MAPS_DEFS
-end_define
-
 begin_include
 include|#
 directive|include
