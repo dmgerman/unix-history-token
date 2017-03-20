@@ -8472,6 +8472,7 @@ name|ni
 parameter_list|,
 name|int
 name|isnew
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -8500,8 +8501,11 @@ name|id
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|isnew
+name|un
+operator|->
+name|id
+operator|!=
+name|RTWN_MACID_UNDEFINED
 condition|)
 return|return;
 name|RTWN_NT_LOCK
