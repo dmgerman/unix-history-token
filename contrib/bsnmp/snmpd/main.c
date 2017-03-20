@@ -3423,6 +3423,12 @@ name|tport
 modifier|*
 name|p
 decl_stmt|;
+name|port
+operator|->
+name|transport
+operator|=
+name|t
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|p
@@ -3462,12 +3468,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|port
-operator|->
-name|transport
-operator|=
-name|t
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
