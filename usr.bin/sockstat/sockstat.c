@@ -2979,6 +2979,8 @@ name|struct
 name|xtcpcb
 modifier|*
 name|xtp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|xsocket
