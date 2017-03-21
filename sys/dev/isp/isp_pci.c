@@ -11361,6 +11361,11 @@ operator|(
 literal|0
 operator|)
 return|;
+name|ISP_UNLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ISP_CAP_MSIX
@@ -11713,6 +11718,11 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|ISP_LOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|isp
