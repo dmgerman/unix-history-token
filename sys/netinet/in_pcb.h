@@ -841,6 +841,10 @@ name|xig_sogen
 decl_stmt|;
 comment|/* socket generation count this time */
 block|}
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
