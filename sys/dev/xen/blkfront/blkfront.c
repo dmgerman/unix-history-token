@@ -6997,6 +6997,23 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|xen_suspend_cancelled
+condition|)
+block|{
+name|sc
+operator|->
+name|xbd_state
+operator|=
+name|XBD_STATE_CONNECTED
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|DPRINTK
 argument_list|(
 literal|"xbd_resume: %s\n"
