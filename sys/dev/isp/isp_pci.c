@@ -10110,9 +10110,6 @@ comment|/* original request */
 name|int
 name|error
 decl_stmt|;
-name|bus_size_t
-name|mapsize
-decl_stmt|;
 block|}
 name|mush_t
 typedef|;
@@ -10899,12 +10896,6 @@ expr_stmt|;
 name|mp
 operator|->
 name|error
-operator|=
-literal|0
-expr_stmt|;
-name|mp
-operator|->
-name|mapsize
 operator|=
 literal|0
 expr_stmt|;
