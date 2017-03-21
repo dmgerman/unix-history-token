@@ -1542,8 +1542,6 @@ index|]
 operator|.
 name|tp
 operator|->
-name|xt_tp
-operator|.
 name|t_state
 condition|)
 block|{

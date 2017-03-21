@@ -287,6 +287,12 @@ directive|include
 file|<netinet/ip.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_INPCB
+end_define
+
 begin_include
 include|#
 directive|include

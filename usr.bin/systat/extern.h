@@ -200,7 +200,7 @@ end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|inpcb
+name|in_conninfo
 struct_decl|;
 end_struct_decl
 
@@ -262,7 +262,7 @@ name|int
 name|checkhost
 parameter_list|(
 name|struct
-name|inpcb
+name|in_conninfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -273,7 +273,7 @@ name|int
 name|checkport
 parameter_list|(
 name|struct
-name|inpcb
+name|in_conninfo
 modifier|*
 parameter_list|)
 function_decl|;

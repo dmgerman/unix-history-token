@@ -102,12 +102,6 @@ begin_comment
 comment|/* for KAME src sync over BSD*'s */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|inpcbpolicy
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * struct inpcb is the common protocol control block structure used in most  * IP transport protocols.  *  * Pointers to local and foreign host table entries, local and foreign socket  * numbers, and pointers up (to a socket structure) and down (to a  * protocol-specific control block) are stored here.  */
 end_comment
@@ -134,7 +128,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|u_quad_t
+name|uint64_t
 name|inp_gen_t
 typedef|;
 end_typedef
@@ -340,15 +334,35 @@ name|inc6_zoneid
 value|inc_ie.ie6_zoneid
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_INPCB
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * struct inpcb captures the network layer state for TCP, UDP, and raw IPv4 and  * IPv6 sockets.  In the case of TCP and UDP, further per-connection state is  * hung off of inp_ppcb most of the time.  Almost all fields of struct inpcb  * are static after creation or protected by a per-inpcb rwlock, inp_lock.  A  * few fields are protected by multiple locks as indicated in the locking notes  * below.  For these fields, all of the listed locks must be write-locked for  * any modifications.  However, these fields can be safely read while any one of  * the listed locks are read-locked.  This model can permit greater concurrency  * for read operations.  For example, connections can be looked up while only  * holding a read lock on the global pcblist lock.  This is important for  * performance when attempting to find the connection for a packet given its IP  * and port tuple.  *  * One noteworthy exception is that the global pcbinfo lock follows a different  * set of rules in relation to the inp_list field.  Rather than being  * write-locked for modifications and read-locked for list iterations, it must  * be read-locked during modifications and write-locked during list iterations.  * This ensures that the relatively rare global list iterations safely walk a  * stable snapshot of connections while allowing more common list modifications  * to safely grab the pcblist lock just while adding or removing a connection  * from the global list.  *  * Key:  * (c) - Constant after initialization  * (g) - Protected by the pcbgroup lock  * (i) - Protected by the inpcb lock  * (p) - Protected by the pcbinfo lock for the inpcb  * (l) - Protected by the pcblist lock for the inpcb  * (h) - Protected by the pcbhash lock for the inpcb  * (s) - Protected by another subsystem's locks  * (x) - Undefined locking  *  * A few other notes:  *  * When a read lock is held, stability of the field is guaranteed; to write  * to a field, a write lock must generally be held.  *  * netinet/netinet6-layer code should not assume that the inp_socket pointer  * is safe to dereference without inp_lock being held, even for protocols  * other than TCP (where the inpcb persists during TIMEWAIT even after the  * socket has been freed), or there may be close(2)-related races.  *  * The inp_vflag field is overloaded, and would otherwise ideally be (c).  *  * TODO:  Currently only the TCP stack is leveraging the global pcbinfo lock  * read-lock usage during modification, this model can be applied to other  * protocols (especially SCTP).  */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|icmp6_filter
 struct_decl|;
 end_struct_decl
 
-begin_comment
-comment|/*-  * struct inpcb captures the network layer state for TCP, UDP, and raw IPv4 and  * IPv6 sockets.  In the case of TCP and UDP, further per-connection state is  * hung off of inp_ppcb most of the time.  Almost all fields of struct inpcb  * are static after creation or protected by a per-inpcb rwlock, inp_lock.  A  * few fields are protected by multiple locks as indicated in the locking notes  * below.  For these fields, all of the listed locks must be write-locked for  * any modifications.  However, these fields can be safely read while any one of  * the listed locks are read-locked.  This model can permit greater concurrency  * for read operations.  For example, connections can be looked up while only  * holding a read lock on the global pcblist lock.  This is important for  * performance when attempting to find the connection for a packet given its IP  * and port tuple.  *  * One noteworthy exception is that the global pcbinfo lock follows a different  * set of rules in relation to the inp_list field.  Rather than being  * write-locked for modifications and read-locked for list iterations, it must  * be read-locked during modifications and write-locked during list iterations.  * This ensures that the relatively rare global list iterations safely walk a  * stable snapshot of connections while allowing more common list modifications  * to safely grab the pcblist lock just while adding or removing a connection  * from the global list.  *  * Key:  * (c) - Constant after initialization  * (g) - Protected by the pcbgroup lock  * (i) - Protected by the inpcb lock  * (p) - Protected by the pcbinfo lock for the inpcb  * (l) - Protected by the pcblist lock for the inpcb  * (h) - Protected by the pcbhash lock for the inpcb  * (s) - Protected by another subsystem's locks  * (x) - Undefined locking  *  * A few other notes:  *  * When a read lock is held, stability of the field is guaranteed; to write  * to a field, a write lock must generally be held.  *  * netinet/netinet6-layer code should not assume that the inp_socket pointer  * is safe to dereference without inp_lock being held, even for protocols  * other than TCP (where the inpcb persists during TIMEWAIT even after the  * socket has been freed), or there may be close(2)-related races.  *  * The inp_vflag field is overloaded, and would otherwise ideally be (c).  *  * TODO:  Currently only the TCP stack is leveraging the global pcbinfo lock  * read-lock usage during modification, this model can be applied to other  * protocols (especially SCTP).  */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|inpcbpolicy
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -461,14 +475,6 @@ modifier|*
 name|inp_snd_tag
 decl_stmt|;
 comment|/* (i) send tag for outgoing mbufs */
-name|void
-modifier|*
-name|inp_pspare
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* (x) general use */
 name|uint32_t
 name|inp_flowtype
 decl_stmt|;
@@ -477,13 +483,6 @@ name|uint32_t
 name|inp_rss_listen_bucket
 decl_stmt|;
 comment|/* (x) overridden RSS listen bucket */
-name|u_int
-name|inp_ispare
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* (x) user cookie / general use */
 comment|/* Local and foreign ports, local and foreign addr. */
 name|struct
 name|in_conninfo
@@ -507,23 +506,22 @@ comment|/* Protocol-dependent part; options. */
 struct|struct
 block|{
 name|u_char
-name|inp4_ip_tos
+name|inp_ip_tos
 decl_stmt|;
 comment|/* (i) type of service proto */
 name|struct
 name|mbuf
 modifier|*
-name|inp4_options
+name|inp_options
 decl_stmt|;
 comment|/* (i) IP options */
 name|struct
 name|ip_moptions
 modifier|*
-name|inp4_moptions
+name|inp_moptions
 decl_stmt|;
-comment|/* (i) IP mcast options */
+comment|/* (i) mcast options */
 block|}
-name|inp_depend4
 struct|;
 struct|struct
 block|{
@@ -531,35 +529,34 @@ comment|/* (i) IP options */
 name|struct
 name|mbuf
 modifier|*
-name|inp6_options
+name|in6p_options
 decl_stmt|;
 comment|/* (i) IP6 options for outgoing packets */
 name|struct
 name|ip6_pktopts
 modifier|*
-name|inp6_outputopts
+name|in6p_outputopts
 decl_stmt|;
 comment|/* (i) IP multicast options */
 name|struct
 name|ip6_moptions
 modifier|*
-name|inp6_moptions
+name|in6p_moptions
 decl_stmt|;
 comment|/* (i) ICMPv6 code type filter */
 name|struct
 name|icmp6_filter
 modifier|*
-name|inp6_icmp6filt
+name|in6p_icmp6filt
 decl_stmt|;
 comment|/* (i) IPV6_CHECKSUM setsockopt */
 name|int
-name|inp6_cksum
+name|in6p_cksum
 decl_stmt|;
 name|short
-name|inp6_hops
+name|in6p_hops
 decl_stmt|;
 block|}
-name|inp_depend6
 struct|;
 name|LIST_ENTRY
 argument_list|(
@@ -622,6 +619,15 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -653,27 +659,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|inp_ip_tos
-value|inp_depend4.inp4_ip_tos
-end_define
-
-begin_define
-define|#
-directive|define
-name|inp_options
-value|inp_depend4.inp4_options
-end_define
-
-begin_define
-define|#
-directive|define
-name|inp_moptions
-value|inp_depend4.inp4_moptions
-end_define
-
-begin_define
-define|#
-directive|define
 name|in6p_faddr
 value|inp_inc.inc6_faddr
 end_define
@@ -695,54 +680,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|in6p_hops
-value|inp_depend6.inp6_hops
-end_define
-
-begin_comment
-comment|/* default hop limit */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|in6p_flowinfo
 value|inp_flow
-end_define
-
-begin_define
-define|#
-directive|define
-name|in6p_options
-value|inp_depend6.inp6_options
-end_define
-
-begin_define
-define|#
-directive|define
-name|in6p_outputopts
-value|inp_depend6.inp6_outputopts
-end_define
-
-begin_define
-define|#
-directive|define
-name|in6p_moptions
-value|inp_depend6.inp6_moptions
-end_define
-
-begin_define
-define|#
-directive|define
-name|in6p_icmp6filt
-value|inp_depend6.inp6_icmp6filt
-end_define
-
-begin_define
-define|#
-directive|define
-name|in6p_cksum
-value|inp_depend6.inp6_cksum
 end_define
 
 begin_define
@@ -757,7 +696,7 @@ comment|/*  * The range of the generation count, as used in this implementation,
 end_comment
 
 begin_comment
-comment|/*  * Interface exported to userland by various protocols which use inpcbs.  Hack  * alert -- only define if struct xsocket is in scope.  */
+comment|/*  * Interface exported to userland by various protocols which use inpcbs.  Hack  * alert -- only define if struct xsocket is in scope.  * Fields prefixed with "xi_" are unique to this structure, and the rest  * match fields in the struct inpcb, to ease coding and porting.  *  * Legend:  * (s) - used by userland utilities in src  * (p) - used by utilities in ports  * (3) - is known to be used by third party software not in ports  * (n) - no known usage  */
 end_comment
 
 begin_ifdef
@@ -775,17 +714,109 @@ name|xi_len
 decl_stmt|;
 comment|/* length of this structure */
 name|struct
-name|inpcb
-name|xi_inp
-decl_stmt|;
-name|struct
 name|xsocket
 name|xi_socket
 decl_stmt|;
-name|u_quad_t
-name|xi_alignment_hack
+comment|/* (s,p) */
+name|struct
+name|in_conninfo
+name|inp_inc
+decl_stmt|;
+comment|/* (s,p) */
+name|uint64_t
+name|inp_gencnt
+decl_stmt|;
+comment|/* (s,p) */
+union|union
+block|{
+name|void
+modifier|*
+name|inp_ppcb
+decl_stmt|;
+comment|/* (s) netstat(1) */
+name|int64_t
+name|ph_ppcb
 decl_stmt|;
 block|}
+union|;
+name|int64_t
+name|inp_spare64
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint32_t
+name|inp_flow
+decl_stmt|;
+comment|/* (s) */
+name|uint32_t
+name|inp_flowid
+decl_stmt|;
+comment|/* (s) */
+name|uint32_t
+name|inp_flowtype
+decl_stmt|;
+comment|/* (s) */
+name|int32_t
+name|inp_flags
+decl_stmt|;
+comment|/* (s,p) */
+name|int32_t
+name|inp_flags2
+decl_stmt|;
+comment|/* (s) */
+name|int32_t
+name|inp_rss_listen_bucket
+decl_stmt|;
+comment|/* (n) */
+name|int32_t
+name|in6p_cksum
+decl_stmt|;
+comment|/* (n) */
+name|int32_t
+name|inp_spare32
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint16_t
+name|in6p_hops
+decl_stmt|;
+comment|/* (n) */
+name|uint8_t
+name|inp_ip_tos
+decl_stmt|;
+comment|/* (n) */
+name|int8_t
+name|pad8
+decl_stmt|;
+name|uint8_t
+name|inp_vflag
+decl_stmt|;
+comment|/* (s,p) */
+name|uint8_t
+name|inp_ip_ttl
+decl_stmt|;
+comment|/* (n) */
+name|uint8_t
+name|inp_ip_p
+decl_stmt|;
+comment|/* (n) */
+name|uint8_t
+name|inp_ip_minttl
+decl_stmt|;
+comment|/* (n) */
+name|int8_t
+name|inp_spare8
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -808,10 +839,37 @@ comment|/* generation count at this time */
 name|so_gen_t
 name|xig_sogen
 decl_stmt|;
-comment|/* socket generation count at this time */
+comment|/* socket generation count this time */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function_decl
+name|void
+name|in_pcbtoxinpcb
+parameter_list|(
+specifier|const
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|xinpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

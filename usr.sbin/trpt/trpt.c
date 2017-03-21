@@ -197,6 +197,12 @@ directive|include
 file|<netinet/tcp_timer.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WANT_TCPCB
+end_define
+
 begin_include
 include|#
 directive|include

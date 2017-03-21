@@ -1057,17 +1057,12 @@ decl_stmt|;
 name|struct
 name|xtcpcb
 modifier|*
-name|xpcb
+name|xtp
 decl_stmt|;
 name|struct
-name|tcpcb
+name|xinpcb
 modifier|*
-name|tp
-decl_stmt|;
-name|struct
-name|inpcb
-modifier|*
-name|inp
+name|xip
 decl_stmt|;
 name|bool
 name|ok
@@ -1116,7 +1111,7 @@ name|xinp
 argument_list|)
 control|)
 block|{
-name|xpcb
+name|xtp
 operator|=
 operator|(
 expr|struct
@@ -1125,17 +1120,10 @@ operator|*
 operator|)
 name|xinp
 expr_stmt|;
-name|tp
+name|xip
 operator|=
 operator|&
-name|xpcb
-operator|->
-name|xt_tp
-expr_stmt|;
-name|inp
-operator|=
-operator|&
-name|xpcb
+name|xtp
 operator|->
 name|xt_inp
 expr_stmt|;
@@ -1143,7 +1131,7 @@ comment|/* 		 * XXX 		 * Check protocol, support just v4 or v6, etc. 		 */
 comment|/* Ignore PCBs which were freed during copyout.  */
 if|if
 condition|(
-name|inp
+name|xip
 operator|->
 name|inp_gencnt
 operator|>
@@ -1155,7 +1143,7 @@ continue|continue;
 comment|/* Skip listening sockets.  */
 if|if
 condition|(
-name|tp
+name|xtp
 operator|->
 name|t_state
 operator|==
@@ -1168,7 +1156,7 @@ operator|!
 name|tcpdropconn
 argument_list|(
 operator|&
-name|inp
+name|xip
 operator|->
 name|inp_inc
 argument_list|)

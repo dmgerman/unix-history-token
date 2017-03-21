@@ -463,8 +463,6 @@ if|if
 condition|(
 name|inp
 operator|->
-name|xi_inp
-operator|.
 name|inp_gencnt
 operator|>
 name|xinpgen
@@ -474,8 +472,6 @@ operator|||
 operator|(
 name|inp
 operator|->
-name|xi_inp
-operator|.
 name|inp_vflag
 operator|&
 name|INP_IPV4
@@ -619,8 +615,6 @@ if|if
 condition|(
 name|inp
 operator|->
-name|xi_inp
-operator|.
 name|inp_gencnt
 operator|>
 name|xinpgen
@@ -630,8 +624,6 @@ operator|||
 operator|(
 name|inp
 operator|->
-name|xi_inp
-operator|.
 name|inp_vflag
 operator|&
 name|INP_IPV4
@@ -660,8 +652,6 @@ name|ntohl
 argument_list|(
 name|inp
 operator|->
-name|xi_inp
-operator|.
 name|inp_laddr
 operator|.
 name|s_addr
@@ -748,8 +738,6 @@ name|ntohs
 argument_list|(
 name|inp
 operator|->
-name|xi_inp
-operator|.
 name|inp_lport
 argument_list|)
 expr_stmt|;
