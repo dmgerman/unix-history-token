@@ -2470,6 +2470,7 @@ operator|(
 name|cp
 operator|-
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
