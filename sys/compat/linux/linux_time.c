@@ -2664,6 +2664,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|==
+name|EINTR
+operator|&&
 name|args
 operator|->
 name|rmtp
@@ -3023,6 +3027,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|==
+name|EINTR
+operator|&&
 name|args
 operator|->
 name|rmtp
