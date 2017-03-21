@@ -1627,11 +1627,14 @@ name|timo
 operator|=
 name|howmany
 argument_list|(
+operator|(
+name|int64_t
+operator|)
 name|msecs
 operator|*
 name|hz
 argument_list|,
-literal|1000
+literal|1000L
 argument_list|)
 expr_stmt|;
 if|if
