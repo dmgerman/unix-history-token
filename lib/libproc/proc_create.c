@@ -790,6 +790,14 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|phdl
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Fork a new process. */
 if|if
 condition|(
