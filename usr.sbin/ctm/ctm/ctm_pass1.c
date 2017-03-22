@@ -597,6 +597,11 @@ argument_list|(
 literal|"Absolute paths are illegal."
 argument_list|)
 expr_stmt|;
+name|Delete
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 name|Exit_Mess
 return|;
@@ -647,6 +652,11 @@ block|{
 name|Fatal
 argument_list|(
 literal|"Paths containing '..' are illegal."
+argument_list|)
+expr_stmt|;
+name|Delete
+argument_list|(
+name|name
 argument_list|)
 expr_stmt|;
 return|return
