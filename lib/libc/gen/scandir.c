@@ -341,6 +341,10 @@ operator|-
 literal|1
 operator|)
 return|;
+name|numitems
+operator|=
+literal|0
+expr_stmt|;
 name|arraysz
 operator|=
 literal|32
@@ -375,10 +379,6 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|numitems
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
