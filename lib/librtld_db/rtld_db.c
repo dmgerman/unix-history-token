@@ -1052,16 +1052,9 @@ name|e
 operator|==
 name|NULL
 condition|)
-block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 goto|goto
 name|err
 goto|;
-block|}
 name|scn
 operator|=
 name|NULL
