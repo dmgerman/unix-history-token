@@ -200,30 +200,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MINIMUM
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)< (b)) ? (a) : (b))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXIMUM
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)> (b)) ? (a) : (b))
-end_define
-
 begin_comment
 comment|/*  * diff - compare two files.  */
 end_comment
@@ -4627,7 +4603,7 @@ argument_list|)
 expr_stmt|;
 name|bound
 operator|=
-name|MAXIMUM
+name|MAX
 argument_list|(
 literal|256
 argument_list|,
@@ -8835,7 +8811,7 @@ expr_stmt|;
 comment|/* gcc */
 name|lowa
 operator|=
-name|MAXIMUM
+name|MAX
 argument_list|(
 literal|1
 argument_list|,
@@ -8848,7 +8824,7 @@ argument_list|)
 expr_stmt|;
 name|upb
 operator|=
-name|MINIMUM
+name|MIN
 argument_list|(
 name|len
 index|[
@@ -8864,7 +8840,7 @@ argument_list|)
 expr_stmt|;
 name|lowc
 operator|=
-name|MAXIMUM
+name|MAX
 argument_list|(
 literal|1
 argument_list|,
@@ -8877,7 +8853,7 @@ argument_list|)
 expr_stmt|;
 name|upd
 operator|=
-name|MINIMUM
+name|MIN
 argument_list|(
 name|len
 index|[
@@ -9442,7 +9418,7 @@ expr_stmt|;
 comment|/* gcc */
 name|lowa
 operator|=
-name|MAXIMUM
+name|MAX
 argument_list|(
 literal|1
 argument_list|,
@@ -9455,7 +9431,7 @@ argument_list|)
 expr_stmt|;
 name|upb
 operator|=
-name|MINIMUM
+name|MIN
 argument_list|(
 name|len
 index|[
@@ -9471,7 +9447,7 @@ argument_list|)
 expr_stmt|;
 name|lowc
 operator|=
-name|MAXIMUM
+name|MAX
 argument_list|(
 literal|1
 argument_list|,
@@ -9484,7 +9460,7 @@ argument_list|)
 expr_stmt|;
 name|upd
 operator|=
-name|MINIMUM
+name|MIN
 argument_list|(
 name|len
 index|[
