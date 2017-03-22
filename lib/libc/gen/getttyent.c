@@ -460,14 +460,9 @@ expr_stmt|;
 if|if
 condition|(
 name|dev
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return
-literal|0
-return|;
-if|if
-condition|(
+operator|&&
 name|stat
 argument_list|(
 name|dev
