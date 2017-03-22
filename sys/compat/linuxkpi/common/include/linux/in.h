@@ -71,6 +71,26 @@ parameter_list|)
 value|IN_LOOPBACK(ntohl(be))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ipv4_is_multicast
+parameter_list|(
+name|be
+parameter_list|)
+value|IN_MULTICAST(ntohl(be))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipv4_is_lbcast
+parameter_list|(
+name|be
+parameter_list|)
+value|((be) == INADDR_BROADCAST)
+end_define
+
 begin_endif
 endif|#
 directive|endif
