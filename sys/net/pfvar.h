@@ -551,6 +551,14 @@ parameter_list|()
 value|rw_assert(&pf_rules_lock, RA_WLOCKED)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|pf_end_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

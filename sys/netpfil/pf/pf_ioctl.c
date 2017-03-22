@@ -1134,6 +1134,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
+name|proc
+modifier|*
+name|pf_purge_proc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|rwlock
 name|pf_rules_lock
 decl_stmt|;
@@ -1143,6 +1151,13 @@ begin_decl_stmt
 name|struct
 name|sx
 name|pf_ioctl_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|sx
+name|pf_end_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -20412,6 +20427,14 @@ argument_list|,
 literal|"pf ioctl"
 argument_list|)
 expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|pf_end_lock
+argument_list|,
+literal|"pf end thread"
+argument_list|)
+expr_stmt|;
 name|pf_mtag_initialize
 argument_list|()
 expr_stmt|;
@@ -20456,7 +20479,8 @@ name|pf_purge_thread
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+operator|&
+name|pf_purge_proc
 argument_list|,
 literal|0
 argument_list|,
@@ -20592,6 +20616,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|pf_end_lock
+argument_list|)
+expr_stmt|;
 name|pf_end_threads
 operator|=
 literal|1
@@ -20608,9 +20638,12 @@ argument_list|(
 name|pf_purge_thread
 argument_list|)
 expr_stmt|;
-name|tsleep
+name|sx_sleep
 argument_list|(
-name|pf_purge_thread
+name|pf_purge_proc
+argument_list|,
+operator|&
+name|pf_end_lock
 argument_list|,
 literal|0
 argument_list|,
@@ -20620,6 +20653,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|sx_xunlock
+argument_list|(
+operator|&
+name|pf_end_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pf_dev
@@ -20644,6 +20683,12 @@ name|sx_destroy
 argument_list|(
 operator|&
 name|pf_ioctl_lock
+argument_list|)
+expr_stmt|;
+name|sx_destroy
+argument_list|(
+operator|&
+name|pf_end_lock
 argument_list|)
 expr_stmt|;
 return|return
