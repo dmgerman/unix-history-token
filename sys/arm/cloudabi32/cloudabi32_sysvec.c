@@ -790,9 +790,9 @@ operator|=
 literal|"CloudABI"
 block|,
 operator|.
-name|interp_path
+name|flags
 operator|=
-literal|"/nonexistent"
+name|BI_BRAND_NOTE_ONLY_STATIC
 block|, }
 decl_stmt|;
 end_decl_stmt

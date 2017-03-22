@@ -744,16 +744,13 @@ operator|.
 name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
+operator||
+name|BI_BRAND_NOTE_ONLY_STATIC
 block|,
 operator|.
 name|compat_3_brand
 operator|=
 literal|"CloudABI"
-block|,
-operator|.
-name|interp_path
-operator|=
-literal|"/nonexistent"
 block|, }
 decl_stmt|;
 end_decl_stmt
