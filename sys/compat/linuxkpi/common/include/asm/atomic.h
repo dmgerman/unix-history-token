@@ -676,7 +676,26 @@ name|old
 parameter_list|,
 name|new
 parameter_list|)
-value|({				\ 	__typeof(*(ptr)) __ret = (old);				\ 	CTASSERT(sizeof(__ret) == 4 || sizeof(__ret) == 8);	\ 	for (;;) {						\ 		if (sizeof(__ret) == 4) {			\ 			if (atomic_cmpset_int((volatile int *)	\ 			    (ptr), (old), (new)))		\ 				break;				\ 			__ret = atomic_load_acq_int(		\ 			    (volatile int *)(ptr));		\ 			if (__ret != (old))			\ 				break;				\ 		} else {					\ 			if (atomic_cmpset_64(			\ 			    (volatile int64_t *)(ptr),		\ 			    (old), (new)))			\ 				break;				\ 			__ret = atomic_load_acq_64(		\ 			    (volatile int64_t *)(ptr));		\ 			if (__ret != (old))			\ 				break;				\ 		}						\ 	}							\ 	__ret;							\ })
+value|({				\ 	__typeof(*(ptr)) __ret;					\ 								\ 	CTASSERT(sizeof(__ret) == 1 || sizeof(__ret) == 2 ||	\ 	    sizeof(__ret) == 4 || sizeof(__ret) == 8);		\ 								\ 	__ret = (old);						\ 	switch (sizeof(__ret)) {				\ 	case 1:							\ 		while (!atomic_fcmpset_8((volatile int8_t *)(ptr), \ 		    (int8_t *)&__ret, (new))&& __ret == (old))	\ 			;					\ 		break;						\ 	case 2:							\ 		while (!atomic_fcmpset_16((volatile int16_t *)(ptr), \ 		    (int16_t *)&__ret, (new))&& __ret == (old)) \ 			;					\ 		break;						\ 	case 4:							\ 		while (!atomic_fcmpset_32((volatile int32_t *)(ptr), \ 		    (int32_t *)&__ret, (new))&& __ret == (old)) \ 			;					\ 		break;						\ 	case 8:							\ 		while (!atomic_fcmpset_64((volatile int64_t *)(ptr), \ 		    (int64_t *)&__ret, (new))&& __ret == (old)) \ 			;					\ 		break;						\ 	}							\ 	__ret;							\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|cmpxchg_relaxed
+value|cmpxchg
+end_define
+
+begin_define
+define|#
+directive|define
+name|xchg
+parameter_list|(
+name|ptr
+parameter_list|,
+name|v
+parameter_list|)
+value|({						\ 	__typeof(*(ptr)) __ret;					\ 								\ 	__ret = *(ptr);						\ 	*(ptr) = v;						\ 	__ret;							\ })
 end_define
 
 begin_define
