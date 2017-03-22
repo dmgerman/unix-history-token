@@ -1254,12 +1254,26 @@ end_endif
 
 begin_function
 name|int
+ifdef|#
+directive|ifdef
+name|__arm__
 name|_arm_native
 parameter_list|(
 name|kvm_t
 modifier|*
 name|kd
 parameter_list|)
+else|#
+directive|else
+function|_arm_native
+parameter_list|(
+name|kvm_t
+modifier|*
+name|kd
+name|__unused
+parameter_list|)
+endif|#
+directive|endif
 block|{
 ifdef|#
 directive|ifdef
@@ -1314,6 +1328,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kvm_arch
 name|kvm_arm

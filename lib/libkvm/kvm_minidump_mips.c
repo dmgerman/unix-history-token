@@ -1247,12 +1247,26 @@ end_function
 begin_function
 specifier|static
 name|int
+ifdef|#
+directive|ifdef
+name|__mips__
 name|_mips_native
 parameter_list|(
 name|kvm_t
 modifier|*
 name|kd
 parameter_list|)
+else|#
+directive|else
+function|_mips_native
+parameter_list|(
+name|kvm_t
+modifier|*
+name|kd
+name|__unused
+parameter_list|)
+endif|#
+directive|endif
 block|{
 ifdef|#
 directive|ifdef
@@ -1390,6 +1404,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kvm_arch
 name|kvm_mips_minidump

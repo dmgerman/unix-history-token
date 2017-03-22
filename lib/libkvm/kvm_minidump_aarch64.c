@@ -1098,6 +1098,7 @@ parameter_list|(
 name|kvm_t
 modifier|*
 name|kd
+name|__unused
 parameter_list|)
 block|{
 ifdef|#
@@ -1121,6 +1122,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kvm_arch
 name|kvm_aarch64_minidump
