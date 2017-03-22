@@ -933,7 +933,7 @@ block|,
 operator|.
 name|flags
 operator|=
-name|BI_BRAND_NOTE_ONLY_STATIC
+name|BI_BRAND_ONLY_STATIC
 block|, }
 decl_stmt|;
 end_decl_stmt

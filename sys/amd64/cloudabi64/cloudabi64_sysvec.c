@@ -889,7 +889,7 @@ name|flags
 operator|=
 name|BI_CAN_EXEC_DYN
 operator||
-name|BI_BRAND_NOTE_ONLY_STATIC
+name|BI_BRAND_ONLY_STATIC
 block|,
 operator|.
 name|compat_3_brand

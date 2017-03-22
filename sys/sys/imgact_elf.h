@@ -217,8 +217,9 @@ value|0x0004
 comment|/* Must have note.ABI-tag section. */
 define|#
 directive|define
-name|BI_BRAND_NOTE_ONLY_STATIC
+name|BI_BRAND_ONLY_STATIC
 value|0x0008
+comment|/* Match only interp-less binaries. */
 block|}
 name|__ElfN
 typedef|(

@@ -1431,7 +1431,7 @@ name|bi
 operator|->
 name|flags
 operator|&
-name|BI_BRAND_NOTE_ONLY_STATIC
+name|BI_BRAND_ONLY_STATIC
 operator|)
 operator|!=
 literal|0
@@ -1611,7 +1611,7 @@ name|bi
 operator|->
 name|flags
 operator|&
-name|BI_BRAND_NOTE_ONLY_STATIC
+name|BI_BRAND_ONLY_STATIC
 operator|)
 operator|!=
 literal|0
@@ -1874,7 +1874,7 @@ operator|&
 operator|(
 name|BI_BRAND_NOTE_MANDATORY
 operator||
-name|BI_BRAND_NOTE_ONLY_STATIC
+name|BI_BRAND_ONLY_STATIC
 operator|)
 operator|)
 operator|!=
@@ -1971,7 +1971,7 @@ name|bi
 operator|->
 name|flags
 operator|&
-name|BI_BRAND_NOTE_ONLY_STATIC
+name|BI_BRAND_ONLY_STATIC
 operator|)
 operator|!=
 literal|0
