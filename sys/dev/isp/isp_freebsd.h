@@ -713,14 +713,6 @@ name|datalen
 decl_stmt|;
 comment|/* data length for this command (target mode only) */
 name|uint8_t
-name|totslen
-decl_stmt|;
-comment|/* sense length on status response */
-name|uint8_t
-name|cumslen
-decl_stmt|;
-comment|/* sense length on status response */
-name|uint8_t
 name|crn
 decl_stmt|;
 comment|/* command reference number */
@@ -2004,13 +1996,11 @@ name|XS_SAVE_SENSE
 parameter_list|(
 name|xs
 parameter_list|,
-name|sense_ptr
+name|sp
 parameter_list|,
-name|totslen
-parameter_list|,
-name|slen
+name|len
 parameter_list|)
-value|do {			\ 		uint32_t tlen = slen;						\ 		if (tlen> (xs)->sense_len)					\ 			tlen = (xs)->sense_len;					\ 		PISP_PCMD(xs)->totslen = imin((xs)->sense_len, totslen);	\ 		PISP_PCMD(xs)->cumslen = tlen;					\ 		memcpy(&(xs)->sense_data, sense_ptr, tlen);			\ 		(xs)->sense_resid = (xs)->sense_len - tlen;			\ 		(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;			\ 	} while (0)
+value|do {				\ 		uint32_t amt = min(len, (xs)->sense_len);		\ 		memcpy(&(xs)->sense_data, sp, amt);			\ 		(xs)->sense_resid = (xs)->sense_len - amt;		\ 		(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;		\ 	} while (0)
 end_define
 
 begin_define
@@ -2020,11 +2010,11 @@ name|XS_SENSE_APPEND
 parameter_list|(
 name|xs
 parameter_list|,
-name|xsnsp
+name|sp
 parameter_list|,
-name|xsnsl
+name|len
 parameter_list|)
-value|do {				\ 		uint32_t off = PISP_PCMD(xs)->cumslen;				\ 		uint8_t *ptr =&((uint8_t *)(&(xs)->sense_data))[off];		\ 		uint32_t amt = imin(xsnsl, PISP_PCMD(xs)->totslen - off);	\ 		if (amt) {							\ 			memcpy(ptr, xsnsp, amt);				\ 			(xs)->sense_resid -= amt;				\ 			PISP_PCMD(xs)->cumslen += amt;				\ 		}								\ 	} while (0)
+value|do {				\ 		uint8_t *ptr = (uint8_t *)(&(xs)->sense_data) +		\ 		    ((xs)->sense_len - (xs)->sense_resid);		\ 		uint32_t amt = min((len), (xs)->sense_resid);		\ 		memcpy(ptr, sp, amt);					\ 		(xs)->sense_resid -= amt;				\ 	} while (0)
 end_define
 
 begin_define
