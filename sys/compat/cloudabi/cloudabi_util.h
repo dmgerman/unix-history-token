@@ -251,6 +251,40 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Socket operations. */
+end_comment
+
+begin_function_decl
+name|int
+name|cloudabi_sock_send
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|cloudabi_fd_t
+parameter_list|,
+name|struct
+name|iovec
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|cloudabi_fd_t
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|cloudabi_msgflags_t
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* vDSO setup and teardown. */
 end_comment
 
