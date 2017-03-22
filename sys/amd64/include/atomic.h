@@ -104,6 +104,42 @@ end_define
 
 begin_function_decl
 name|int
+name|atomic_cmpset_char
+parameter_list|(
+specifier|volatile
+name|u_char
+modifier|*
+name|dst
+parameter_list|,
+name|u_char
+name|expect
+parameter_list|,
+name|u_char
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|atomic_cmpset_short
+parameter_list|(
+specifier|volatile
+name|u_short
+modifier|*
+name|dst
+parameter_list|,
+name|u_short
+name|expect
+parameter_list|,
+name|u_short
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|atomic_cmpset_int
 parameter_list|(
 specifier|volatile
@@ -133,6 +169,44 @@ name|u_long
 name|expect
 parameter_list|,
 name|u_long
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|atomic_fcmpset_char
+parameter_list|(
+specifier|volatile
+name|u_char
+modifier|*
+name|dst
+parameter_list|,
+name|u_char
+modifier|*
+name|expect
+parameter_list|,
+name|u_char
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|atomic_fcmpset_short
+parameter_list|(
+specifier|volatile
+name|u_short
+modifier|*
+name|dst
+parameter_list|,
+name|u_short
+modifier|*
+name|expect
+parameter_list|,
+name|u_short
 name|src
 parameter_list|)
 function_decl|;
@@ -399,296 +473,74 @@ value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_
 end_define
 
 begin_comment
-comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == expect) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
+comment|/*  * Atomic compare and set, used by the mutex functions.  *  * cmpset:  *	if (*dst == expect)  *		*dst = src  *  * fcmpset:  *	if (*dst == *expect)  *		*dst = src  *	else  *		*expect = *dst  *  * Returns 0 on failure, non-zero on success.  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|int
-name|atomic_cmpset_int
+begin_define
+define|#
+directive|define
+name|ATOMIC_CMPSET
 parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-name|dst
-parameter_list|,
-name|u_int
-name|expect
-parameter_list|,
-name|u_int
-name|src
+name|TYPE
 parameter_list|)
-block|{
-name|u_char
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"	"
-name|MPLOCKED
-literal|"		"
-literal|"	cmpxchgl %3,%1 ;	"
-literal|"       sete	%0 ;		"
-literal|"# atomic_cmpset_int"
-operator|:
-literal|"=q"
-operator|(
-name|res
-operator|)
-operator|,
+define|\
+value|static __inline int					\ atomic_cmpset_##TYPE(volatile u_##TYPE *dst, u_##TYPE expect, u_##TYPE src) \ {							\ 	u_char res;					\ 							\ 	__asm __volatile(				\ 	"	" MPLOCKED "		"		\ 	"	cmpxchg %3,%1 ;	"			\ 	"	sete	%0 ;		"		\ 	"# atomic_cmpset_" #TYPE "	"		\ 	: "=q" (res),
 comment|/* 0 */
-literal|"+m"
-operator|(
-operator|*
-name|dst
-operator|)
-operator|,
+value|\ 	  "+m" (*dst),
 comment|/* 1 */
-literal|"+a"
-operator|(
-name|expect
-operator|)
+value|\ 	  "+a" (expect)
 comment|/* 2 */
-operator|:
-literal|"r"
-operator|(
-name|src
-operator|)
+value|\ 	: "r" (src)
 comment|/* 3 */
-operator|:
-literal|"memory"
-operator|,
-literal|"cc"
-block|)
-function|;
-end_function
+value|\ 	: "memory", "cc");				\ 	return (res);					\ }							\ 							\ static __inline int					\ atomic_fcmpset_##TYPE(volatile u_##TYPE *dst, u_##TYPE *expect, u_##TYPE src) \ {							\ 	u_char res;					\ 							\ 	__asm __volatile(				\ 	"	" MPLOCKED "		"		\ 	"	cmpxchg %3,%1 ;		"		\ 	"	sete	%0 ;		"		\ 	"# atomic_fcmpset_" #TYPE "	"		\ 	: "=q" (res),
+comment|/* 0 */
+value|\ 	  "+m" (*dst),
+comment|/* 1 */
+value|\ 	  "+a" (*expect)
+comment|/* 2 */
+value|\ 	: "r" (src)
+comment|/* 3 */
+value|\ 	: "memory", "cc");				\ 	return (res);					\ }
+end_define
 
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
+begin_expr_stmt
+name|ATOMIC_CMPSET
+argument_list|(
+name|char
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function
-unit|}  static
-name|__inline
+begin_expr_stmt
+name|ATOMIC_CMPSET
+argument_list|(
+name|short
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ATOMIC_CMPSET
+argument_list|(
 name|int
-name|atomic_cmpset_long
-parameter_list|(
-specifier|volatile
-name|u_long
-modifier|*
-name|dst
-parameter_list|,
-name|u_long
-name|expect
-parameter_list|,
-name|u_long
-name|src
-parameter_list|)
-block|{
-name|u_char
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"	"
-name|MPLOCKED
-literal|"		"
-literal|"	cmpxchgq %3,%1 ;	"
-literal|"       sete	%0 ;		"
-literal|"# atomic_cmpset_long"
-operator|:
-literal|"=q"
-operator|(
-name|res
-operator|)
-operator|,
-comment|/* 0 */
-literal|"+m"
-operator|(
-operator|*
-name|dst
-operator|)
-operator|,
-comment|/* 1 */
-literal|"+a"
-operator|(
-name|expect
-operator|)
-comment|/* 2 */
-operator|:
-literal|"r"
-operator|(
-name|src
-operator|)
-comment|/* 3 */
-operator|:
-literal|"memory"
-operator|,
-literal|"cc"
-block|)
-function|;
-end_function
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|int
-name|atomic_fcmpset_int
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-name|dst
-parameter_list|,
-name|u_int
-modifier|*
-name|expect
-parameter_list|,
-name|u_int
-name|src
-parameter_list|)
-block|{
-name|u_char
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"	"
-name|MPLOCKED
-literal|"		"
-literal|"	cmpxchgl %3,%1 ;	"
-literal|"       sete	%0 ;		"
-literal|"# atomic_fcmpset_int"
-operator|:
-literal|"=r"
-operator|(
-name|res
-operator|)
-operator|,
-comment|/* 0 */
-literal|"+m"
-operator|(
-operator|*
-name|dst
-operator|)
-operator|,
-comment|/* 1 */
-literal|"+a"
-operator|(
-operator|*
-name|expect
-operator|)
-comment|/* 2 */
-operator|:
-literal|"r"
-operator|(
-name|src
-operator|)
-comment|/* 3 */
-operator|:
-literal|"memory"
-operator|,
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|int
-name|atomic_fcmpset_long
-parameter_list|(
-specifier|volatile
-name|u_long
-modifier|*
-name|dst
-parameter_list|,
-name|u_long
-modifier|*
-name|expect
-parameter_list|,
-name|u_long
-name|src
-parameter_list|)
-block|{
-name|u_char
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"	"
-name|MPLOCKED
-literal|"		"
-literal|"	cmpxchgq %3,%1 ;	"
-literal|"       sete	%0 ;		"
-literal|"# atomic_fcmpset_long"
-operator|:
-literal|"=r"
-operator|(
-name|res
-operator|)
-operator|,
-comment|/* 0 */
-literal|"+m"
-operator|(
-operator|*
-name|dst
-operator|)
-operator|,
-comment|/* 1 */
-literal|"+a"
-operator|(
-operator|*
-name|expect
-operator|)
-comment|/* 2 */
-operator|:
-literal|"r"
-operator|(
-name|src
-operator|)
-comment|/* 3 */
-operator|:
-literal|"memory"
-operator|,
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
+begin_expr_stmt
+name|ATOMIC_CMPSET
+argument_list|(
+name|long
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-unit|}
 comment|/*  * Atomically add the value of v to the integer pointed to by p and return  * the previous value of *p.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|u_int
 name|atomic_fetchadd_int
@@ -1801,6 +1653,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_cmpset_acq_char
+value|atomic_cmpset_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_rel_char
+value|atomic_cmpset_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_char
+value|atomic_fcmpset_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_char
+value|atomic_fcmpset_char
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_set_acq_short
 value|atomic_set_barr_short
 end_define
@@ -1852,6 +1732,34 @@ define|#
 directive|define
 name|atomic_subtract_rel_short
 value|atomic_subtract_barr_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_acq_short
+value|atomic_cmpset_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_rel_short
+value|atomic_cmpset_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_short
+value|atomic_fcmpset_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_short
+value|atomic_fcmpset_short
 end_define
 
 begin_define
@@ -2144,6 +2052,48 @@ name|atomic_store_rel_8
 value|atomic_store_rel_char
 end_define
 
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_8
+value|atomic_cmpset_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_acq_8
+value|atomic_cmpset_acq_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_rel_8
+value|atomic_cmpset_rel_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_8
+value|atomic_fcmpset_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_8
+value|atomic_fcmpset_acq_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_8
+value|atomic_fcmpset_rel_char
+end_define
+
 begin_comment
 comment|/* Operations on 16-bit words. */
 end_comment
@@ -2244,6 +2194,48 @@ define|#
 directive|define
 name|atomic_store_rel_16
 value|atomic_store_rel_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_16
+value|atomic_cmpset_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_acq_16
+value|atomic_cmpset_acq_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_rel_16
+value|atomic_cmpset_rel_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_16
+value|atomic_fcmpset_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_acq_16
+value|atomic_fcmpset_acq_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fcmpset_rel_16
+value|atomic_fcmpset_rel_short
 end_define
 
 begin_comment
