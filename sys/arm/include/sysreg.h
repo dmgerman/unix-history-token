@@ -365,6 +365,76 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CP15_HCR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c1, c1, 0
+end_define
+
+begin_comment
+comment|/* Hyp Configuration Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_HCPTR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c1, c1, 2
+end_define
+
+begin_comment
+comment|/* Hyp Coprocessor Trap Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_HSTR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c1, c1, 3
+end_define
+
+begin_comment
+comment|/* Hyp System Trap Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_HSCTLR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c1, c0, 0
+end_define
+
+begin_comment
+comment|/* Hyp System Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_HDCR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c1, c1, 1
+end_define
+
+begin_comment
+comment|/* Hyp Debug Configuration Register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CP15_ID_ISAR0
 parameter_list|(
 name|rr
@@ -1855,6 +1925,20 @@ end_define
 
 begin_comment
 comment|/* Interrupt Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_HVBAR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c12, c0, 0
+end_define
+
+begin_comment
+comment|/* Hyp Vector Base Address Register*/
 end_comment
 
 begin_comment

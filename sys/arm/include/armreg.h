@@ -2998,6 +2998,17 @@ begin_comment
 comment|/* Some are 4 bytes.  */
 end_comment
 
+begin_comment
+comment|/* ARM Hypervisor Related Defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM_CP15_HDCR_HPMN
+value|0x0000001f
+end_define
+
 begin_endif
 endif|#
 directive|endif
