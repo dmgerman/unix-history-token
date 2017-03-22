@@ -69,6 +69,11 @@ specifier|inline
 name|void
 name|inet_get_local_port_range
 parameter_list|(
+name|struct
+name|vnet
+modifier|*
+name|vnet
+parameter_list|,
 name|int
 modifier|*
 name|low
@@ -83,10 +88,7 @@ directive|ifdef
 name|INET
 name|CURVNET_SET_QUIET
 argument_list|(
-name|TD_TO_VNET
-argument_list|(
-name|curthread
-argument_list|)
+name|vnet
 argument_list|)
 expr_stmt|;
 operator|*

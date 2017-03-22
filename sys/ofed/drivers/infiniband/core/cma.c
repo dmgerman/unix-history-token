@@ -13618,6 +13618,9 @@ decl_stmt|;
 name|inet_get_local_port_range
 argument_list|(
 operator|&
+name|init_net
+argument_list|,
+operator|&
 name|low
 argument_list|,
 operator|&
