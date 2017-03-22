@@ -929,6 +929,11 @@ operator|.
 name|compat_3_brand
 operator|=
 literal|"CloudABI"
+block|,
+operator|.
+name|interp_path
+operator|=
+literal|"/nonexistent"
 block|, }
 decl_stmt|;
 end_decl_stmt
