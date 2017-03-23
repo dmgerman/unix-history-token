@@ -14981,8 +14981,6 @@ name|s_time
 expr_stmt|;
 block|}
 block|}
-name|tt
-operator|=
 name|ap
 argument_list|(
 name|start
@@ -16956,11 +16954,11 @@ name|char
 modifier|*
 name|t
 parameter_list|,
-comment|// pointer to the output string buffer
-name|int
+comment|/* pointer to the output string buffer */
+name|uint16_t
 name|wnt
 parameter_list|,
-name|int
+name|uint16_t
 name|wnlsf
 parameter_list|,
 name|int
@@ -16974,7 +16972,7 @@ name|dtlsf
 parameter_list|,
 name|int
 name|size
-comment|// size of the output string buffer
+comment|/* size of the output string buffer */
 parameter_list|)
 block|{
 comment|/* 	 * The week number transmitted by the GPS satellites for the leap date 	 * is truncated to 8 bits only. If the nearest leap second date is off 	 * the current date by more than +/- 128 weeks then conversion to a 	 * calendar date is ambiguous. On the other hand, if a leap second is 	 * currently being announced (i.e. dtlsf != dtls) then the week number 	 * wnlsf is close enough, and we can unambiguously determine the date 	 * for which the leap second is scheduled. 	 */
@@ -16994,9 +16992,7 @@ modifier|*
 name|tm
 decl_stmt|;
 name|int
-name|n
-init|=
-literal|0
+name|nc
 decl_stmt|;
 if|if
 condition|(
@@ -17008,16 +17004,7 @@ name|wnlsf
 operator|+=
 name|GPSWEEKS
 expr_stmt|;
-if|if
-condition|(
-name|wnt
-operator|<
-name|GPSWRAP
-condition|)
-name|wnt
-operator|+=
-name|GPSWEEKS
-expr_stmt|;
+comment|/* 'wnt' not used here: would need the same treatment as 'wnlsf */
 name|t_ls
 operator|=
 operator|(
@@ -17052,7 +17039,7 @@ name|tm
 operator|==
 name|NULL
 condition|)
-comment|// gmtime() failed
+comment|/* gmtime() failed */
 block|{
 name|snprintf
 argument_list|(
@@ -17065,8 +17052,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|n
-operator|+=
+name|nc
+operator|=
 name|snprintf
 argument_list|(
 name|t
@@ -17090,17 +17077,39 @@ else|:
 literal|"deletion"
 argument_list|)
 expr_stmt|;
-name|n
-operator|+=
+if|if
+condition|(
+name|nc
+operator|<
+literal|0
+condition|)
+name|nc
+operator|=
+name|strlen
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|nc
+operator|>
+name|size
+condition|)
+name|nc
+operator|=
+name|size
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|t
 operator|+
-name|n
+name|nc
 argument_list|,
 name|size
 operator|-
-name|n
+name|nc
 argument_list|,
 literal|" at UTC midnight at the end of %s, %04i-%02i-%02i"
 argument_list|,
@@ -17130,6 +17139,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|snprintf
 argument_list|(
 name|t
@@ -17141,6 +17151,7 @@ argument_list|,
 name|dtls
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

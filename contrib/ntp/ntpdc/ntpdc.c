@@ -3388,8 +3388,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|n
-operator|=
-literal|0
+operator|-=
+name|n
 expr_stmt|;
 comment|/* faked timeout return from 'select()'*/
 block|}

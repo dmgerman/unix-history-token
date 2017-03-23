@@ -4332,7 +4332,7 @@ comment|/* #undef LOCKCLOCK */
 end_comment
 
 begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
 end_comment
 
 begin_define
@@ -4653,7 +4653,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"ntp 4.2.8p9"
+value|"ntp 4.2.8p10"
 end_define
 
 begin_comment
@@ -4686,7 +4686,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.2.8p9"
+value|"4.2.8p10"
 end_define
 
 begin_comment
@@ -5419,7 +5419,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.2.8p9"
+value|"4.2.8p10"
 end_define
 
 begin_comment
@@ -6078,14 +6078,14 @@ begin_define
 define|#
 directive|define
 name|MKREPRO_DATE
-value|"Nov 22 2016"
+value|"Mar 22 2017"
 end_define
 
 begin_define
 define|#
 directive|define
 name|MKREPRO_TIME
-value|"06:54:45"
+value|"05:40:15"
 end_define
 
 end_unit

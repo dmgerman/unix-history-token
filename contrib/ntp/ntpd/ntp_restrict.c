@@ -453,10 +453,10 @@ name|res
 return|;
 name|rl
 operator|=
-name|emalloc_zero
+name|eallocarray
 argument_list|(
 name|count
-operator|*
+argument_list|,
 name|cb
 argument_list|)
 expr_stmt|;
@@ -591,10 +591,10 @@ name|res
 return|;
 name|rl
 operator|=
-name|emalloc_zero
+name|eallocarray
 argument_list|(
 name|count
-operator|*
+argument_list|,
 name|cb
 argument_list|)
 expr_stmt|;

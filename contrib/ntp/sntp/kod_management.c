@@ -1118,6 +1118,7 @@ argument_list|(
 name|db_s
 argument_list|)
 expr_stmt|;
+comment|/* Allocate the array of pointers to the struct kod_entry items */
 name|kod_db
 operator|=
 name|eallocarray
@@ -1203,6 +1204,7 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Allocate this struct kod_entry item */
 name|kod_db
 index|[
 name|b
@@ -1215,7 +1217,7 @@ argument_list|(
 operator|*
 name|kod_db
 index|[
-name|b
+literal|0
 index|]
 argument_list|)
 argument_list|)

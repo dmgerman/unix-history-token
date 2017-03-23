@@ -655,10 +655,10 @@ name|peers
 decl_stmt|;
 name|peers
 operator|=
-name|emalloc_zero
+name|eallocarray
 argument_list|(
 name|INC_PEER_ALLOC
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1186,8 +1186,15 @@ name|adr_link
 control|)
 block|{
 comment|/* [Bug 3072] ensure interface of peer matches */
+comment|/* [Bug 3356] ... if NOT a broadcast peer!     */
 if|if
 condition|(
+name|p
+operator|->
+name|hmode
+operator|!=
+name|MODE_BCLIENT
+operator|&&
 name|p
 operator|->
 name|dstadr

@@ -113,7 +113,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"openssl/asn1.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"openssl/bn.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openssl/crypto.h"
 end_include
 
 begin_include
@@ -137,7 +149,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"openssl/opensslv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"openssl/pem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openssl/x509.h"
 end_include
 
 begin_include
@@ -1356,6 +1380,20 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* AUTOKEY */
+ifdef|#
+directive|ifdef
+name|OPENSSL
+specifier|const
+name|char
+modifier|*
+name|sslvtext
+decl_stmt|;
+name|int
+name|sslvmatch
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* OPENSSL */
 name|progname
 operator|=
 name|argv
@@ -1491,12 +1529,23 @@ comment|// Just in case we care later.
 ifdef|#
 directive|ifdef
 name|OPENSSL
-if|if
-condition|(
-name|SSLeay
+name|sslvtext
+operator|=
+name|OpenSSL_version
+argument_list|(
+name|OPENSSL_VERSION
+argument_list|)
+expr_stmt|;
+name|sslvmatch
+operator|=
+name|OpenSSL_version_num
 argument_list|()
 operator|==
-name|SSLEAY_VERSION_NUMBER
+name|OPENSSL_VERSION_NUMBER
+expr_stmt|;
+if|if
+condition|(
+name|sslvmatch
 condition|)
 name|fprintf
 argument_list|(
@@ -1504,10 +1553,7 @@ name|stderr
 argument_list|,
 literal|"Using OpenSSL version %s\n"
 argument_list|,
-name|SSLeay_version
-argument_list|(
-name|SSLEAY_VERSION
-argument_list|)
+name|sslvtext
 argument_list|)
 expr_stmt|;
 else|else
@@ -1519,10 +1565,7 @@ literal|"Built against OpenSSL %s, using version %s\n"
 argument_list|,
 name|OPENSSL_VERSION_TEXT
 argument_list|,
-name|SSLeay_version
-argument_list|(
-name|SSLEAY_VERSION
-argument_list|)
+name|sslvtext
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1866,12 +1909,20 @@ name|certnamebuf
 expr_stmt|;
 block|}
 comment|/* 	 * Seed random number generator and grow weeds. 	 */
+if|#
+directive|if
+name|OPENSSL_VERSION_NUMBER
+operator|<
+literal|0x10100000L
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
 name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* OPENSSL_VERSION_NUMBER */
 if|if
 condition|(
 operator|!
@@ -8071,7 +8122,7 @@ argument_list|)
 expr_stmt|;
 name|X509_time_adj
 argument_list|(
-name|X509_get_notBefore
+name|X509_getm_notBefore
 argument_list|(
 name|cert
 argument_list|)
@@ -8084,7 +8135,7 @@ argument_list|)
 expr_stmt|;
 name|X509_time_adj
 argument_list|(
-name|X509_get_notAfter
+name|X509_getm_notAfter
 argument_list|(
 name|cert
 argument_list|)

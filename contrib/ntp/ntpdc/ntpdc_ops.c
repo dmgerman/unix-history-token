@@ -11898,7 +11898,8 @@ name|string
 argument_list|)
 expr_stmt|;
 name|err
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else

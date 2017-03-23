@@ -2745,7 +2745,7 @@ index|[
 name|MAX_LOGTEXT
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|iLen
 decl_stmt|,
 name|iCopyLen
@@ -3409,7 +3409,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-name|strncpy
+name|memcpy
 argument_list|(
 name|sLogText
 argument_list|,
@@ -3423,7 +3423,7 @@ index|[
 name|iCopyLen
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|jjy_write_clockstats
 argument_list|(
@@ -13233,15 +13233,16 @@ literal|4
 index|]
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|iNumberOfDigitsOfPhoneNumber
 decl_stmt|,
 name|iCommaCount
 decl_stmt|,
 name|iCommaPosition
 decl_stmt|;
-name|int
+name|size_t
+name|i
+decl_stmt|;
+name|size_t
 name|iFirstThreeDigitsCount
 decl_stmt|;
 name|jjy_write_clockstats
@@ -19637,7 +19638,7 @@ name|char
 modifier|*
 name|pBuf
 decl_stmt|;
-name|int
+name|size_t
 name|iLen
 decl_stmt|;
 ifdef|#
@@ -19969,7 +19970,7 @@ index|[
 literal|40
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|iCopyLen
 decl_stmt|;
 name|iCopyLen
@@ -20028,7 +20029,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"refclock_jjy.c : modem_receive : iLen=%d pBuf=[%s] iModemEvent=%d\n"
+literal|"refclock_jjy.c : modem_receive : iLen=%zu pBuf=[%s] iModemEvent=%d\n"
 argument_list|,
 name|iCopyLen
 argument_list|,

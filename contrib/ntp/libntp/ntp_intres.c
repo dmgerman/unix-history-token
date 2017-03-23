@@ -1551,7 +1551,7 @@ if|if
 condition|(
 name|NULL
 operator|!=
-name|serialized_ai
+name|ai
 operator|->
 name|ai_canonname
 condition|)
