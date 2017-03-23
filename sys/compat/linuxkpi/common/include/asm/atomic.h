@@ -683,7 +683,10 @@ begin_define
 define|#
 directive|define
 name|cmpxchg_relaxed
-value|cmpxchg
+parameter_list|(
+modifier|...
+parameter_list|)
+value|cmpxchg(__VA_ARGS__)
 end_define
 
 begin_define
