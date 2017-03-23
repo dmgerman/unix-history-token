@@ -60,12 +60,6 @@ directive|include
 file|"isc/string.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"libssl_compat.h"
-end_include
-
 begin_comment
 comment|/*  * MD5authencrypt - generate message digest  *  * Returns length of MAC including key ID and digest.  */
 end_comment

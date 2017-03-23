@@ -117,7 +117,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"openssl/asn1.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"openssl/bn.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openssl/crypto.h"
 end_include
 
 begin_include
@@ -135,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"openssl/opensslv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"openssl/pem.h"
 end_include
 
@@ -142,6 +160,12 @@ begin_include
 include|#
 directive|include
 file|"openssl/rand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openssl/x509.h"
 end_include
 
 begin_include
@@ -953,6 +977,7 @@ specifier|static
 name|void
 name|asn_to_calendar
 parameter_list|(
+specifier|const
 name|ASN1_TIME
 modifier|*
 parameter_list|,
@@ -7930,6 +7955,7 @@ specifier|static
 name|void
 name|asn_to_calendar
 parameter_list|(
+specifier|const
 name|ASN1_TIME
 modifier|*
 name|asn1time
@@ -12734,7 +12760,7 @@ argument_list|)
 expr_stmt|;
 name|X509_gmtime_adj
 argument_list|(
-name|X509_get_notBefore
+name|X509_getm_notBefore
 argument_list|(
 name|cert
 argument_list|)
@@ -12744,7 +12770,7 @@ argument_list|)
 expr_stmt|;
 name|X509_gmtime_adj
 argument_list|(
-name|X509_get_notAfter
+name|X509_getm_notAfter
 argument_list|(
 name|cert
 argument_list|)
@@ -14096,7 +14122,7 @@ argument_list|)
 expr_stmt|;
 name|asn_to_calendar
 argument_list|(
-name|X509_get_notBefore
+name|X509_get0_notBefore
 argument_list|(
 name|cert
 argument_list|)
@@ -14111,7 +14137,7 @@ argument_list|)
 expr_stmt|;
 name|asn_to_calendar
 argument_list|(
-name|X509_get_notAfter
+name|X509_get0_notAfter
 argument_list|(
 name|cert
 argument_list|)
@@ -15922,7 +15948,7 @@ argument_list|,
 operator|(
 literal|"crypto_setup: OpenSSL version %lx random seed file %s bytes read %d\n"
 operator|,
-name|SSLeay
+name|OpenSSL_version_num
 argument_list|()
 operator|,
 name|randfile

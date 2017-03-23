@@ -347,6 +347,9 @@ specifier|volatile
 name|u_long
 name|cov_count
 decl_stmt|;
+name|int
+name|pps_active
+decl_stmt|;
 name|PPSData_t
 name|pps_data
 decl_stmt|;

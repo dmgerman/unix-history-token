@@ -247,6 +247,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|wrap_dbg_free_ex
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|f
+parameter_list|,
+name|int
+name|l
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

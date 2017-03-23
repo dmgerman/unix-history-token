@@ -4456,8 +4456,10 @@ argument_list|)
 expr_stmt|;
 name|sys_huffpuff
 operator|=
-name|emalloc
+name|eallocarray
 argument_list|(
+name|sys_hufflen
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|sys_huffpuff
@@ -4465,8 +4467,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|*
-name|sys_hufflen
 argument_list|)
 expr_stmt|;
 for|for

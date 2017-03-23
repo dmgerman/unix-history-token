@@ -380,13 +380,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|BOOL
-name|DoPPShack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|DWORD
 name|ActiveWaitHandles
 decl_stmt|;
@@ -625,11 +618,6 @@ block|{
 name|OSVERSIONINFO
 name|vi
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|envp
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -641,63 +629,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TODO: this should not be done via environment; 	 * It would be much better to have this as proper config option. 	 * (The same is true for the PPS API DLL list...) 	 */
-if|if
-condition|(
-name|NULL
-operator|!=
-operator|(
-name|envp
-operator|=
-name|getenv
-argument_list|(
-literal|"PPSAPI_HACK"
-argument_list|)
-operator|)
-condition|)
-comment|/* check for [Tt]{rue}, [Yy]{es}, or '1' as first char*/
-name|DoPPShack
-operator|=
-operator|!
-operator|!
-name|strchr
-argument_list|(
-literal|"yYtT1"
-argument_list|,
-operator|(
-name|u_char
-operator|)
-operator|*
-name|envp
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|NULL
-operator|!=
-operator|(
-name|envp
-operator|=
-name|getenv
-argument_list|(
-literal|"PPSAPI_DLLS"
-argument_list|)
-operator|)
-condition|)
-comment|/* any non-empty list disables PPS hack */
-name|DoPPShack
-operator|=
-operator|!
-operator|*
-name|envp
-expr_stmt|;
-else|else
-comment|/* otherwise use the PPS hack */
-name|DoPPShack
-operator|=
-name|TRUE
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -2477,7 +2408,7 @@ name|covc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* perlinger@ntp.org, 2012-11-19 		 * It can be argued that once you have the PPS API active, you can 		 * disable the old pps hack. This would give a behaviour that's much 		 * more like the behaviour under a UN*Xish OS. On the other hand, it 		 * will give a nasty surprise for people which have until now happily 		 * taken the pps hack for granted, and after the first complaint, I have 		 * decided to keep the old implementation unconditionally. So here it is: 		 * 		 * backward compat: 'usermode-pps-hack' 		 */
+comment|/* perlinger@ntp.org, 2012-11-19 		 * It can be argued that once you have the PPS API active, you can 		 * disable the old pps hack. This would give a behaviour that's much 		 * more like the behaviour under a UN*Xish OS. On the other hand, it 		 * will give a nasty surprise for people which have until now happily 		 * taken the pps hack for granted, and after the first complaint, I have 		 * decided to keep the old implementation. 		 * 		 * perlinger@ntp.org, 2017-03-04 		 * If the loopback PPS API provider is active on this channel, the 		 * PPS hack will be *disabled*. 		 * 		 * backward compat: 'usermode-pps-hack' 		 */
 if|if
 condition|(
 operator|(
@@ -2486,7 +2417,14 @@ operator|&
 name|modem_status
 operator|)
 operator|&&
-name|DoPPShack
+operator|!
+operator|(
+name|dev
+operator|&&
+name|dev
+operator|->
+name|pps_active
+operator|)
 condition|)
 block|{
 name|lpo
@@ -4352,10 +4290,10 @@ goto|goto
 name|fail
 goto|;
 block|}
-empty_stmt|;
 if|if
 condition|(
-operator|!
+name|NULL
+operator|==
 operator|(
 name|rio
 operator|->
@@ -4410,7 +4348,8 @@ name|rio
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|NULL
+operator|==
 operator|(
 name|rio
 operator|->
@@ -4441,7 +4380,8 @@ goto|;
 block|}
 if|if
 condition|(
-operator|!
+name|NULL
+operator|==
 operator|(
 name|lpo
 operator|=
@@ -5234,12 +5174,6 @@ name|msg
 init|=
 literal|"OnSocketSend: send to socket failed"
 decl_stmt|;
-name|IoHndPad_T
-modifier|*
-name|iopad
-init|=
-name|NULL
-decl_stmt|;
 name|endpt
 modifier|*
 name|ep
@@ -5464,6 +5398,9 @@ name|iopad
 argument_list|,
 name|OnInterfaceDetach
 argument_list|,
+operator|(
+name|UINT_PTR
+operator|)
 operator|-
 literal|1
 argument_list|)

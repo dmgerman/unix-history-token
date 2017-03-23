@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|Version
 init|=
-literal|"sntp 4.2.8p9@1.3265-o Mon Nov 21 12:58:21 UTC 2016 (31)"
+literal|"sntp 4.2.8p10-beta@1.3728-o Tue Mar 21 14:36:42 UTC 2017 (43)"
 decl_stmt|;
 end_decl_stmt
 
