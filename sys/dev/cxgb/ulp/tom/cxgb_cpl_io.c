@@ -8214,15 +8214,6 @@ name|tod
 operator|->
 name|tod_softc
 decl_stmt|;
-name|struct
-name|inpcb
-modifier|*
-name|inp
-init|=
-name|toep
-operator|->
-name|tp_inp
-decl_stmt|;
 name|unsigned
 name|int
 name|tid
@@ -8233,7 +8224,9 @@ name|tp_tid
 decl_stmt|;
 name|inp_lock_assert
 argument_list|(
-name|inp
+name|toep
+operator|->
+name|tp_inp
 argument_list|)
 expr_stmt|;
 while|while
