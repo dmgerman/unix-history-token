@@ -1354,13 +1354,13 @@ name|reply_desc
 decl_stmt|;
 comment|/* current reply descriptor */
 name|uint32_t
-name|resid
-decl_stmt|;
-comment|/* current data residual */
-name|uint32_t
 name|bytes_xfered
 decl_stmt|;
 comment|/* current relative offset */
+name|int
+name|resid
+decl_stmt|;
+comment|/* current data residual */
 name|union
 name|ccb
 modifier|*
