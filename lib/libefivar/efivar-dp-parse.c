@@ -9336,12 +9336,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
 begin_comment
 comment|/**   Converts a text device path node to File device path structure.    @param TextDeviceNode  The input Text device path node.    @return A pointer to the newly-created File device path structure.  **/
 end_comment
@@ -9362,6 +9356,9 @@ name|FILEPATH_DEVICE_PATH
 modifier|*
 name|File
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|File
 operator|=
 operator|(
@@ -9408,6 +9405,61 @@ argument_list|,
 name|TextDeviceNode
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|File
+operator|=
+operator|(
+name|FILEPATH_DEVICE_PATH
+operator|*
+operator|)
+name|CreateDeviceNode
+argument_list|(
+name|MEDIA_DEVICE_PATH
+argument_list|,
+name|MEDIA_FILEPATH_DP
+argument_list|,
+call|(
+name|UINT16
+call|)
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|FILEPATH_DEVICE_PATH
+argument_list|)
+operator|+
+name|StrLen
+argument_list|(
+name|TextDeviceNode
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*     * Note: We'd have to change the Tianocore header files to fix this    * to not need a cast.  Instead we just cast it here. The Interface    * to the user may have issues since this won't be a UCS-2    * string. Also note that in the original code, a NUL wasn't    * allocated for the end of the string, but we copy that below. This    * has been corrected.    */
+name|StrCpyS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|File
+operator|->
+name|PathName
+argument_list|,
+name|StrLen
+argument_list|(
+name|TextDeviceNode
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|TextDeviceNode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EFI_DEVICE_PATH_PROTOCOL
@@ -9417,11 +9469,6 @@ name|File
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**   Converts a text device path node to Media protocol device path structure.    @param TextDeviceNode  The input Text device path node.    @return A pointer to the newly-created Media protocol device path structure.  **/
@@ -11657,9 +11704,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 if|if
 condition|(
 name|FromText
@@ -11684,11 +11728,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-else|#
-directive|else
-block|{
-endif|#
-directive|endif
 name|DeviceNode
 operator|=
 name|FromText
@@ -11711,7 +11750,13 @@ return|return
 name|DeviceNode
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/**   Convert text to the binary representation of a device path.     @param TextDevicePath  TextDevicePath points to the text representation of a device                          path. Conversion starts with the first character and continues                          until the first non-device node character.    @return A pointer to the allocated device path or NULL if TextDeviceNode is NULL or           there was insufficient memory.  **/
+end_comment
+
+begin_function
 specifier|static
 name|EFI_DEVICE_PATH_PROTOCOL
 modifier|*
@@ -11924,6 +11969,9 @@ return|return
 name|DevicePath
 return|;
 block|}
+end_function
+
+begin_function
 name|ssize_t
 name|efidp_parse_device_path
 parameter_list|(
