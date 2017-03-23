@@ -2196,7 +2196,7 @@ begin_expr_stmt
 specifier|static
 name|DEFINE_CLASS_0
 argument_list|(
-name|sdhci
+name|sdhci_tegra
 argument_list|,
 name|tegra_sdhci_driver
 argument_list|,
