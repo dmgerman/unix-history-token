@@ -2221,6 +2221,9 @@ index|[
 literal|19
 index|]
 decl_stmt|;
+name|uint32_t
+name|portid
+decl_stmt|;
 block|}
 name|fc
 struct|;
