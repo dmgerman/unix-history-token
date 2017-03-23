@@ -1037,6 +1037,10 @@ parameter_list|)
 value|realloc(ptr, new)
 end_define
 
+begin_comment
+comment|/*  * Quirky StrCmp returns 0 if equal, 1 if not. This is what the code  * expects, though that expectation is likely a bug (it casts the  * return value. EDK2's StrCmp returns values just like C's strcmp,  * but the parse code casts this to an UINTN, which is bogus. This  * definition papers over that bogusness to do the right thing.  If  * iSCSI protocol string processing is ever fixed, we can remove this  * bletcherous kludge.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1046,7 +1050,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|strcmp(a, b)
+value|(strcmp(a, b) != 0)
 end_define
 
 begin_define
