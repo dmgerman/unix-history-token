@@ -823,6 +823,16 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * Clear VI_MOUNT and decrement the use count "atomically", 		 * under the vnode lock.  This is not strictly required, 		 * but makes it easier to reason about the life-cycle and 		 * ownership of the covered vnode. 		 */
+name|vn_lock
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
 name|VI_LOCK
 argument_list|(
 name|vp
@@ -840,7 +850,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|vrele
+name|vput
 argument_list|(
 name|vp
 argument_list|)
