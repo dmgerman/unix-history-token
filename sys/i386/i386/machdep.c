@@ -12399,16 +12399,6 @@ index|[
 name|LSYS5CALLS_SEL
 index|]
 expr_stmt|;
-name|ldt
-index|[
-name|LSOL26CALLS_SEL
-index|]
-operator|=
-name|ldt
-index|[
-name|LSYS5CALLS_SEL
-index|]
-expr_stmt|;
 comment|/* transfer to user mode */
 name|_ucodesel
 operator|=
