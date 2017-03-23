@@ -38,9 +38,8 @@ begin_function_decl
 name|int
 name|zygote_clone
 parameter_list|(
-name|zygote_func_t
-modifier|*
-name|func
+name|uint64_t
+name|funcidx
 parameter_list|,
 name|int
 modifier|*
@@ -52,6 +51,31 @@ name|procfdp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|zygote_clone_service_execute
+parameter_list|(
+name|int
+modifier|*
+name|chanfdp
+parameter_list|,
+name|int
+modifier|*
+name|procfdp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Functions reachable via zygote_clone().  */
+end_comment
+
+begin_decl_stmt
+name|zygote_func_t
+name|service_execute
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

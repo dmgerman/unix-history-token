@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012 The FreeBSD Foundation  * Copyright (c) 2015 Mariusz Zaborski<oshogbo@FreeBSD.org>  * All rights reserved.  *  * This software was developed by Pawel Jakub Dawidek under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2012 The FreeBSD Foundation  * Copyright (c) 2015 Mariusz Zaborski<oshogbo@FreeBSD.org>  * Copyright (c) 2017 Robert N. M. Watson  *  * This software was developed by Pawel Jakub Dawidek under sponsorship from  * the FreeBSD Foundation.  *  * All rights reserved.  * This software was developed by SRI International and the University of  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-10-C-0237)  * ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -109,13 +109,19 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|ZYGOTE_SERVICE_EXECUTE
+value|1
+end_define
+
 begin_function
 name|int
 name|zygote_clone
 parameter_list|(
-name|zygote_func_t
-modifier|*
-name|func
+name|uint64_t
+name|funcidx
 parameter_list|,
 name|int
 modifier|*
@@ -164,15 +170,9 @@ name|nvlist_add_number
 argument_list|(
 name|nvl
 argument_list|,
-literal|"func"
+literal|"funcidx"
 argument_list|,
-operator|(
-name|uint64_t
-operator|)
-operator|(
-name|uintptr_t
-operator|)
-name|func
+name|funcidx
 argument_list|)
 expr_stmt|;
 name|nvl
@@ -269,6 +269,34 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|zygote_clone_service_execute
+parameter_list|(
+name|int
+modifier|*
+name|chanfdp
+parameter_list|,
+name|int
+modifier|*
+name|procfdp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|zygote_clone
+argument_list|(
+name|ZYGOTE_SERVICE_EXECUTE
+argument_list|,
+name|chanfdp
+argument_list|,
+name|procfdp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * This function creates sandboxes on-demand whoever has access to it via  * 'sock' socket. Function sends two descriptors to the caller: process  * descriptor of the sandbox and socket pair descriptor for communication  * between sandbox and its owner.  */
 end_comment
@@ -299,6 +327,9 @@ name|nvlin
 decl_stmt|,
 modifier|*
 name|nvlout
+decl_stmt|;
+name|uint64_t
+name|funcidx
 decl_stmt|;
 name|zygote_func_t
 modifier|*
@@ -357,20 +388,13 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-name|func
+name|funcidx
 operator|=
-operator|(
-name|zygote_func_t
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|nvlist_get_number
 argument_list|(
 name|nvlin
 argument_list|,
-literal|"func"
+literal|"funcidx"
 argument_list|)
 expr_stmt|;
 name|nvlist_destroy
@@ -378,6 +402,26 @@ argument_list|(
 name|nvlin
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|funcidx
+condition|)
+block|{
+case|case
+name|ZYGOTE_SERVICE_EXECUTE
+case|:
+name|func
+operator|=
+name|service_execute
+expr_stmt|;
+break|break;
+default|default:
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Someone is requesting a new process, create one. 		 */
 name|procfd
 operator|=
