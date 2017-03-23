@@ -160,6 +160,17 @@ argument_list|,
 name|chipc_quirks
 argument_list|)
 block|,
+name|BHND_DEVICE
+argument_list|(
+name|BCM
+argument_list|,
+literal|4706_CC
+argument_list|,
+name|NULL
+argument_list|,
+name|chipc_quirks
+argument_list|)
+block|,
 name|BHND_DEVICE_END
 block|}
 decl_stmt|;
