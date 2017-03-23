@@ -890,11 +890,6 @@ operator|=
 name|BI_CAN_EXEC_DYN
 operator||
 name|BI_BRAND_ONLY_STATIC
-block|,
-operator|.
-name|compat_3_brand
-operator|=
-literal|"CloudABI"
 block|, }
 decl_stmt|;
 end_decl_stmt

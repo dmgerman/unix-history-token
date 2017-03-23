@@ -847,11 +847,6 @@ operator|&
 name|cloudabi32_elf_sysvec
 block|,
 operator|.
-name|compat_3_brand
-operator|=
-literal|"CloudABI"
-block|,
-operator|.
 name|flags
 operator|=
 name|BI_BRAND_ONLY_STATIC
