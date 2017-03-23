@@ -712,10 +712,6 @@ name|uint32_t
 name|datalen
 decl_stmt|;
 comment|/* data length for this command (target mode only) */
-name|uint8_t
-name|crn
-decl_stmt|;
-comment|/* command reference number */
 block|}
 struct|;
 end_struct
