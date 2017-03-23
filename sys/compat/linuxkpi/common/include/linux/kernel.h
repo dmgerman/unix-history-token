@@ -912,6 +912,16 @@ define|\
 value|printk(KERN_CONT fmt, ##__VA_ARGS__)
 end_define
 
+begin_define
+define|#
+directive|define
+name|pr_warn_ratelimited
+parameter_list|(
+modifier|...
+parameter_list|)
+value|do {		\ 	static time_t __ratelimited;		\ 	if (linux_ratelimited(&__ratelimited))	\ 		pr_warning(__VA_ARGS__);	\ } while (0)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1399,6 +1409,17 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function_decl
+specifier|extern
+name|bool
+name|linux_ratelimited
+parameter_list|(
+name|time_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -637,6 +637,30 @@ define|\
 value|device_printf((dev)->bsddev, fmt, ##__VA_ARGS__)
 end_define
 
+begin_define
+define|#
+directive|define
+name|dev_err_ratelimited
+parameter_list|(
+name|dev
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {	\ 	static time_t __ratelimited;		\ 	if (linux_ratelimited(&__ratelimited))	\ 		dev_err(dev, __VA_ARGS__);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dev_warn_ratelimited
+parameter_list|(
+name|dev
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {	\ 	static time_t __ratelimited;		\ 	if (linux_ratelimited(&__ratelimited))	\ 		dev_warn(dev, __VA_ARGS__);	\ } while (0)
+end_define
+
 begin_function
 specifier|static
 specifier|inline
