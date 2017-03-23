@@ -1229,11 +1229,6 @@ name|aac_cam
 modifier|*
 name|camsc
 decl_stmt|;
-name|struct
-name|aac_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|camsc
 operator|=
 operator|(
@@ -6248,11 +6243,6 @@ name|union
 name|ccb
 modifier|*
 name|ccb
-decl_stmt|;
-name|struct
-name|aac_softc
-modifier|*
-name|sc
 decl_stmt|;
 name|u_int32_t
 name|status
