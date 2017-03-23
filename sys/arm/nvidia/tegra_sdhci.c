@@ -2196,7 +2196,7 @@ begin_expr_stmt
 specifier|static
 name|DEFINE_CLASS_0
 argument_list|(
-name|sdhci_tegra
+name|sdhci
 argument_list|,
 name|tegra_sdhci_driver
 argument_list|,
@@ -2248,7 +2248,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MMC_DECLARE_BRIDGE
 argument_list|(
-name|sdhci_tegra
+name|sdhci
 argument_list|)
 expr_stmt|;
 end_expr_stmt
