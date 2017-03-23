@@ -1500,6 +1500,16 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* atomic_fcmpset_32 is only defined for the kernel */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -1542,6 +1552,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
