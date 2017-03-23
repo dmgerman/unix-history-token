@@ -11786,6 +11786,33 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+name|KTR_STATE1
+argument_list|(
+name|KTR_SCHED
+argument_list|,
+literal|"thread"
+argument_list|,
+name|sched_tdname
+argument_list|(
+name|td
+argument_list|)
+argument_list|,
+literal|"running"
+argument_list|,
+literal|"prio:%d"
+argument_list|,
+name|td
+operator|->
+name|td_priority
+argument_list|)
+expr_stmt|;
+name|SDT_PROBE0
+argument_list|(
+name|sched
+argument_list|, , ,
+name|on__cpu
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
