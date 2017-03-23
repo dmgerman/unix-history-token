@@ -1384,6 +1384,11 @@ decl_stmt|;
 name|uint32_t
 name|tag_id
 decl_stmt|;
+comment|/* Our local tag. */
+name|uint16_t
+name|itag
+decl_stmt|;
+comment|/* Initiator tag. */
 enum|enum
 block|{
 name|TGT_STATE_NIL
@@ -4117,17 +4122,21 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|MPT_ABORT_TASK_SET
+name|MPT_QUERY_TASK_SET
 init|=
 literal|1234
 block|,
+name|MPT_ABORT_TASK_SET
+block|,
 name|MPT_CLEAR_TASK_SET
+block|,
+name|MPT_QUERY_ASYNC_EVENT
+block|,
+name|MPT_LOGICAL_UNIT_RESET
 block|,
 name|MPT_TARGET_RESET
 block|,
 name|MPT_CLEAR_ACA
-block|,
-name|MPT_TERMINATE_TASK
 block|,
 name|MPT_NIL_TMT_VALUE
 init|=
