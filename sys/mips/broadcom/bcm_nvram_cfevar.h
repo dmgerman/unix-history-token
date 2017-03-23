@@ -36,8 +36,75 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/nvram/bhnd_nvram_iovar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/bhnd/nvram/bhnd_nvram_store.h>
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|bcm_nvram_iocfe
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|bcm_nvram_find_cfedev
+parameter_list|(
+name|struct
+name|bcm_nvram_iocfe
+modifier|*
+name|iocfe
+parameter_list|,
+name|bhnd_nvram_data_class
+modifier|*
+modifier|*
+name|cls
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * CFE-backed bhnd_nvram_io implementation.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bcm_nvram_iocfe
+block|{
+name|struct
+name|bhnd_nvram_io
+name|io
+decl_stmt|;
+comment|/**< common I/O instance state */
+name|char
+modifier|*
+name|dname
+decl_stmt|;
+comment|/**< CFE device name (borrowed) */
+name|int
+name|fd
+decl_stmt|;
+comment|/**< CFE file descriptor */
+name|size_t
+name|offset
+decl_stmt|;
+comment|/**< base offset */
+name|size_t
+name|size
+decl_stmt|;
+comment|/**< device size */
+name|bool
+name|req_blk_erase
+decl_stmt|;
+comment|/**< flash blocks must be erased 						     before writing */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/** bhnd_nvram_cfe driver instance state. */

@@ -145,6 +145,41 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/** @see bhnd_nvram_data_probe() */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|bhnd_nvram_data_op_getvar_direct
+function_decl|)
+parameter_list|(
+name|struct
+name|bhnd_nvram_io
+modifier|*
+name|io
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|outp
+parameter_list|,
+name|size_t
+modifier|*
+name|olen
+parameter_list|,
+name|bhnd_nvram_type
+name|otype
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/** @see bhnd_nvram_data_serialize() */
 end_comment
 
@@ -560,6 +595,10 @@ name|bhnd_nvram_data_op_probe
 modifier|*
 name|op_probe
 decl_stmt|;
+name|bhnd_nvram_data_op_getvar_direct
+modifier|*
+name|op_getvar_direct
+decl_stmt|;
 name|bhnd_nvram_data_op_serialize
 modifier|*
 name|op_serialize
@@ -694,7 +733,7 @@ parameter_list|,
 name|_macro
 parameter_list|)
 define|\
-value|_macro(_cname, probe)					\ 	_macro(_cname, serialize)				\ 	_macro(_cname, new)					\ 	_macro(_cname, free)					\ 	_macro(_cname, count)					\ 	_macro(_cname, options)					\ 	_macro(_cname, caps)					\ 	_macro(_cname, next)					\ 	_macro(_cname, find)					\ 	_macro(_cname, copy_val)				\ 	_macro(_cname, getvar_order)				\ 	_macro(_cname, getvar)					\ 	_macro(_cname, getvar_ptr)				\ 	_macro(_cname, getvar_name)				\ 	_macro(_cname, filter_setvar)				\ 	_macro(_cname, filter_unsetvar)
+value|_macro(_cname, probe)					\ 	_macro(_cname, getvar_direct)				\ 	_macro(_cname, serialize)				\ 	_macro(_cname, new)					\ 	_macro(_cname, free)					\ 	_macro(_cname, count)					\ 	_macro(_cname, options)					\ 	_macro(_cname, caps)					\ 	_macro(_cname, next)					\ 	_macro(_cname, find)					\ 	_macro(_cname, copy_val)				\ 	_macro(_cname, getvar_order)				\ 	_macro(_cname, getvar)					\ 	_macro(_cname, getvar_ptr)				\ 	_macro(_cname, getvar_name)				\ 	_macro(_cname, filter_setvar)				\ 	_macro(_cname, filter_unsetvar)
 end_define
 
 begin_comment

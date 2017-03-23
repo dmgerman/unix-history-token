@@ -45,6 +45,12 @@ directive|include
 file|<dev/bhnd/cores/pmu/bhnd_pmuvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"bcm_nvram_cfevar.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -116,6 +122,17 @@ decl_stmt|;
 block|}
 name|erom
 union|;
+name|struct
+name|bhnd_nvram_io
+modifier|*
+name|nvram_io
+decl_stmt|;
+comment|/**< NVRAM I/O context, or NULL if unavailable */
+name|bhnd_nvram_data_class
+modifier|*
+name|nvram_cls
+decl_stmt|;
+comment|/**< NVRAM data class, or NULL if unavailable */
 ifdef|#
 directive|ifdef
 name|CFE
@@ -196,6 +213,34 @@ name|struct
 name|bcm_platform
 modifier|*
 name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bcm_get_nvram
+parameter_list|(
+name|struct
+name|bcm_platform
+modifier|*
+name|bp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|outp
+parameter_list|,
+name|size_t
+modifier|*
+name|olen
+parameter_list|,
+name|bhnd_nvram_type
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
