@@ -992,7 +992,7 @@ block|{
 block|{
 literal|"blkvsc"
 block|,
-literal|"Hyper-V IDE Storage Interface"
+literal|"Hyper-V IDE"
 block|,
 name|BLKVSC_MAX_IDE_DISKS_PER_TARGET
 block|,
@@ -1006,7 +1006,7 @@ block|,
 block|{
 literal|"storvsc"
 block|,
-literal|"Hyper-V SCSI Storage Interface"
+literal|"Hyper-V SCSI"
 block|,
 name|STORVSC_MAX_LUNS_PER_TARGET
 block|,
@@ -6176,7 +6176,7 @@ name|protocol_version
 operator|=
 name|SCSI_REV_SPC2
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->
@@ -6187,7 +6187,7 @@ argument_list|,
 name|SIM_IDLEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->
@@ -6202,7 +6202,7 @@ argument_list|,
 name|HBA_IDLEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|cpi
 operator|->
