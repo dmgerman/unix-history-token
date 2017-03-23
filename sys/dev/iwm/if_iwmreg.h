@@ -1995,7 +1995,7 @@ comment|/*  * BEGIN iwl-fw.h  */
 end_comment
 
 begin_comment
-comment|/**  * enum iwm_ucode_tlv_flag - ucode API flags  * @IWM_UCODE_TLV_FLAGS_PAN: This is PAN capable microcode; this previously  *	was a separate TLV but moved here to save space.  * @IWM_UCODE_TLV_FLAGS_NEWSCAN: new uCode scan behaviour on hidden SSID,  *	treats good CRC threshold as a boolean  * @IWM_UCODE_TLV_FLAGS_MFP: This uCode image supports MFP (802.11w).  * @IWM_UCODE_TLV_FLAGS_P2P: This uCode image supports P2P.  * @IWM_UCODE_TLV_FLAGS_DW_BC_TABLE: The SCD byte count table is in DWORDS  * @IWM_UCODE_TLV_FLAGS_UAPSD: This uCode image supports uAPSD  * @IWM_UCODE_TLV_FLAGS_SHORT_BL: 16 entries of black list instead of 64 in scan  *	offload profile config command.  * @IWM_UCODE_TLV_FLAGS_RX_ENERGY_API: supports rx signal strength api  * @IWM_UCODE_TLV_FLAGS_TIME_EVENT_API_V2: using the new time event API.  * @IWM_UCODE_TLV_FLAGS_D3_6_IPV6_ADDRS: D3 image supports up to six  *	(rather than two) IPv6 addresses  * @IWM_UCODE_TLV_FLAGS_BF_UPDATED: new beacon filtering API  * @IWM_UCODE_TLV_FLAGS_NO_BASIC_SSID: not sending a probe with the SSID element  *	from the probe request template.  * @IWM_UCODE_TLV_FLAGS_D3_CONTINUITY_API: modified D3 API to allow keeping  *	connection when going back to D0  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_SMALL: new NS offload (small version)  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_LARGE: new NS offload (large version)  * @IWM_UCODE_TLV_FLAGS_SCHED_SCAN: this uCode image supports scheduled scan.  * @IWM_UCODE_TLV_FLAGS_STA_KEY_CMD: new ADD_STA and ADD_STA_KEY command API  * @IWM_UCODE_TLV_FLAGS_DEVICE_PS_CMD: support device wide power command  *	containing CAM (Continuous Active Mode) indication.  * @IWM_UCODE_TLV_FLAGS_P2P_PS: P2P client power save is supported (only on a  *	single bound interface).  * @IWM_UCODE_TLV_FLAGS_UAPSD_SUPPORT: General support for uAPSD  * @IWM_UCODE_TLV_FLAGS_EBS_SUPPORT: this uCode image supports EBS.  * @IWM_UCODE_TLV_FLAGS_P2P_PS_UAPSD: P2P client supports uAPSD power save  * @IWM_UCODE_TLV_FLAGS_BCAST_FILTERING: uCode supports broadcast filtering.  * @IWM_UCODE_TLV_FLAGS_GO_UAPSD: AP/GO interfaces support uAPSD clients  *  */
+comment|/**  * enum iwm_ucode_tlv_flag - ucode API flags  * @IWM_UCODE_TLV_FLAGS_PAN: This is PAN capable microcode; this previously  *	was a separate TLV but moved here to save space.  * @IWM_UCODE_TLV_FLAGS_NEWSCAN: new uCode scan behaviour on hidden SSID,  *	treats good CRC threshold as a boolean  * @IWM_UCODE_TLV_FLAGS_MFP: This uCode image supports MFP (802.11w).  * @IWM_UCODE_TLV_FLAGS_P2P: This uCode image supports P2P.  * @IWM_UCODE_TLV_FLAGS_DW_BC_TABLE: The SCD byte count table is in DWORDS  * @IWM_UCODE_TLV_FLAGS_UAPSD: This uCode image supports uAPSD  * @IWM_UCODE_TLV_FLAGS_SHORT_BL: 16 entries of black list instead of 64 in scan  *	offload profile config command.  * @IWM_UCODE_TLV_FLAGS_D3_6_IPV6_ADDRS: D3 image supports up to six  *	(rather than two) IPv6 addresses  * @IWM_UCODE_TLV_FLAGS_NO_BASIC_SSID: not sending a probe with the SSID element  *	from the probe request template.  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_SMALL: new NS offload (small version)  * @IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_LARGE: new NS offload (large version)  * @IWM_UCODE_TLV_FLAGS_P2P_PS: P2P client power save is supported (only on a  *	single bound interface).  * @IWM_UCODE_TLV_FLAGS_UAPSD_SUPPORT: General support for uAPSD  * @IWM_UCODE_TLV_FLAGS_EBS_SUPPORT: this uCode image supports EBS.  * @IWM_UCODE_TLV_FLAGS_P2P_PS_UAPSD: P2P client supports uAPSD power save  * @IWM_UCODE_TLV_FLAGS_BCAST_FILTERING: uCode supports broadcast filtering.  * @IWM_UCODE_TLV_FLAGS_GO_UAPSD: AP/GO interfaces support uAPSD clients  *  */
 end_comment
 
 begin_enum
@@ -2042,44 +2042,12 @@ operator|<<
 literal|4
 operator|)
 block|,
-name|IWM_UCODE_TLV_FLAGS_NEWBT_COEX
-init|=
-operator|(
-literal|1
-operator|<<
-literal|5
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_PM_CMD_SUPPORT
-init|=
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-block|,
 name|IWM_UCODE_TLV_FLAGS_SHORT_BL
 init|=
 operator|(
 literal|1
 operator|<<
 literal|7
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_RX_ENERGY_API
-init|=
-operator|(
-literal|1
-operator|<<
-literal|8
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_TIME_EVENT_API_V2
-init|=
-operator|(
-literal|1
-operator|<<
-literal|9
 operator|)
 block|,
 name|IWM_UCODE_TLV_FLAGS_D3_6_IPV6_ADDRS
@@ -2090,28 +2058,12 @@ operator|<<
 literal|10
 operator|)
 block|,
-name|IWM_UCODE_TLV_FLAGS_BF_UPDATED
-init|=
-operator|(
-literal|1
-operator|<<
-literal|11
-operator|)
-block|,
 name|IWM_UCODE_TLV_FLAGS_NO_BASIC_SSID
 init|=
 operator|(
 literal|1
 operator|<<
 literal|12
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_D3_CONTINUITY_API
-init|=
-operator|(
-literal|1
-operator|<<
-literal|14
 operator|)
 block|,
 name|IWM_UCODE_TLV_FLAGS_NEW_NSOFFL_SMALL
@@ -2128,30 +2080,6 @@ operator|(
 literal|1
 operator|<<
 literal|16
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_SCHED_SCAN
-init|=
-operator|(
-literal|1
-operator|<<
-literal|17
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_STA_KEY_CMD
-init|=
-operator|(
-literal|1
-operator|<<
-literal|19
-operator|)
-block|,
-name|IWM_UCODE_TLV_FLAGS_DEVICE_PS_CMD
-init|=
-operator|(
-literal|1
-operator|<<
-literal|20
 operator|)
 block|,
 name|IWM_UCODE_TLV_FLAGS_P2P_PS
@@ -6856,68 +6784,7 @@ comment|/* IWM_MAC_EVENT_ACTION_API_E_VER_2 */
 end_comment
 
 begin_comment
-comment|/**  * struct iwm_time_event_cmd_api_v1 - configuring Time Events  * with struct IWM_MAC_TIME_EVENT_DATA_API_S_VER_1 (see also  * with version 2. determined by IWM_UCODE_TLV_FLAGS)  * ( IWM_TIME_EVENT_CMD = 0x29 )  * @id_and_color: ID and color of the relevant MAC  * @action: action to perform, one of IWM_FW_CTXT_ACTION_*  * @id: this field has two meanings, depending on the action:  *	If the action is ADD, then it means the type of event to add.  *	For all other actions it is the unique event ID assigned when the  *	event was added by the FW.  * @apply_time: When to start the Time Event (in GP2)  * @max_delay: maximum delay to event's start (apply time), in TU  * @depends_on: the unique ID of the event we depend on (if any)  * @interval: interval between repetitions, in TU  * @interval_reciprocal: 2^32 / interval  * @duration: duration of event in TU  * @repeat: how many repetitions to do, can be IWM_TE_REPEAT_ENDLESS  * @dep_policy: one of IWM_TE_V1_INDEPENDENT, IWM_TE_V1_DEP_OTHER, IWM_TE_V1_DEP_TSF  *	and IWM_TE_V1_EVENT_SOCIOPATHIC  * @is_present: 0 or 1, are we present or absent during the Time Event  * @max_frags: maximal number of fragments the Time Event can be divided to  * @notify: notifications using IWM_TE_V1_NOTIF_* (whom to notify when)  */
-end_comment
-
-begin_struct
-struct|struct
-name|iwm_time_event_cmd_v1
-block|{
-comment|/* COMMON_INDEX_HDR_API_S_VER_1 */
-name|uint32_t
-name|id_and_color
-decl_stmt|;
-name|uint32_t
-name|action
-decl_stmt|;
-name|uint32_t
-name|id
-decl_stmt|;
-comment|/* IWM_MAC_TIME_EVENT_DATA_API_S_VER_1 */
-name|uint32_t
-name|apply_time
-decl_stmt|;
-name|uint32_t
-name|max_delay
-decl_stmt|;
-name|uint32_t
-name|dep_policy
-decl_stmt|;
-name|uint32_t
-name|depends_on
-decl_stmt|;
-name|uint32_t
-name|is_present
-decl_stmt|;
-name|uint32_t
-name|max_frags
-decl_stmt|;
-name|uint32_t
-name|interval
-decl_stmt|;
-name|uint32_t
-name|interval_reciprocal
-decl_stmt|;
-name|uint32_t
-name|duration
-decl_stmt|;
-name|uint32_t
-name|repeat
-decl_stmt|;
-name|uint32_t
-name|notify
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_comment
-comment|/* IWM_MAC_TIME_EVENT_CMD_API_S_VER_1 */
-end_comment
-
-begin_comment
-comment|/* Time event - defines for command API v2 */
+comment|/* Time event - defines for command API */
 end_comment
 
 begin_comment
@@ -6987,7 +6854,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* Time event policy values (for time event cmd api v2)  * A notification (both event and fragment) includes a status indicating weather  * the FW was able to schedule the event or not. For fragment start/end  * notification the status is always success. There is no start/end fragment  * notification for monolithic events.  *  * @IWM_TE_V2_DEFAULT_POLICY: independent, social, present, unoticable  * @IWM_TE_V2_NOTIF_HOST_EVENT_START: request/receive notification on event start  * @IWM_TE_V2_NOTIF_HOST_EVENT_END:request/receive notification on event end  * @IWM_TE_V2_NOTIF_INTERNAL_EVENT_START: internal FW use  * @IWM_TE_V2_NOTIF_INTERNAL_EVENT_END: internal FW use.  * @IWM_TE_V2_NOTIF_HOST_FRAG_START: request/receive notification on frag start  * @IWM_TE_V2_NOTIF_HOST_FRAG_END:request/receive notification on frag end  * @IWM_TE_V2_NOTIF_INTERNAL_FRAG_START: internal FW use.  * @IWM_TE_V2_NOTIF_INTERNAL_FRAG_END: internal FW use.  * @IWM_TE_V2_DEP_OTHER: depends on another time event  * @IWM_TE_V2_DEP_TSF: depends on a specific time  * @IWM_TE_V2_EVENT_SOCIOPATHIC: can't co-exist with other events of tha same MAC  * @IWM_TE_V2_ABSENCE: are we present or absent during the Time Event.  */
+comment|/* Time event policy values  * A notification (both event and fragment) includes a status indicating weather  * the FW was able to schedule the event or not. For fragment start/end  * notification the status is always success. There is no start/end fragment  * notification for monolithic events.  *  * @IWM_TE_V2_DEFAULT_POLICY: independent, social, present, unoticable  * @IWM_TE_V2_NOTIF_HOST_EVENT_START: request/receive notification on event start  * @IWM_TE_V2_NOTIF_HOST_EVENT_END:request/receive notification on event end  * @IWM_TE_V2_NOTIF_INTERNAL_EVENT_START: internal FW use  * @IWM_TE_V2_NOTIF_INTERNAL_EVENT_END: internal FW use.  * @IWM_TE_V2_NOTIF_HOST_FRAG_START: request/receive notification on frag start  * @IWM_TE_V2_NOTIF_HOST_FRAG_END:request/receive notification on frag end  * @IWM_TE_V2_NOTIF_INTERNAL_FRAG_START: internal FW use.  * @IWM_TE_V2_NOTIF_INTERNAL_FRAG_END: internal FW use.  * @IWM_TE_V2_DEP_OTHER: depends on another time event  * @IWM_TE_V2_DEP_TSF: depends on a specific time  * @IWM_TE_V2_EVENT_SOCIOPATHIC: can't co-exist with other events of tha same MAC  * @IWM_TE_V2_ABSENCE: are we present or absent during the Time Event.  */
 end_comment
 
 begin_enum
@@ -7112,12 +6979,12 @@ enum|;
 end_enum
 
 begin_comment
-comment|/**  * struct iwm_time_event_cmd_api_v2 - configuring Time Events  * with struct IWM_MAC_TIME_EVENT_DATA_API_S_VER_2 (see also  * with version 1. determined by IWM_UCODE_TLV_FLAGS)  * ( IWM_TIME_EVENT_CMD = 0x29 )  * @id_and_color: ID and color of the relevant MAC  * @action: action to perform, one of IWM_FW_CTXT_ACTION_*  * @id: this field has two meanings, depending on the action:  *	If the action is ADD, then it means the type of event to add.  *	For all other actions it is the unique event ID assigned when the  *	event was added by the FW.  * @apply_time: When to start the Time Event (in GP2)  * @max_delay: maximum delay to event's start (apply time), in TU  * @depends_on: the unique ID of the event we depend on (if any)  * @interval: interval between repetitions, in TU  * @duration: duration of event in TU  * @repeat: how many repetitions to do, can be IWM_TE_REPEAT_ENDLESS  * @max_frags: maximal number of fragments the Time Event can be divided to  * @policy: defines whether uCode shall notify the host or other uCode modules  *	on event and/or fragment start and/or end  *	using one of IWM_TE_INDEPENDENT, IWM_TE_DEP_OTHER, IWM_TE_DEP_TSF  *	IWM_TE_EVENT_SOCIOPATHIC  *	using IWM_TE_ABSENCE and using IWM_TE_NOTIF_*  */
+comment|/**  * struct iwm_time_event_cmd_api - configuring Time Events  * with struct IWM_MAC_TIME_EVENT_DATA_API_S_VER_2 (see also  * with version 1. determined by IWM_UCODE_TLV_FLAGS)  * ( IWM_TIME_EVENT_CMD = 0x29 )  * @id_and_color: ID and color of the relevant MAC  * @action: action to perform, one of IWM_FW_CTXT_ACTION_*  * @id: this field has two meanings, depending on the action:  *	If the action is ADD, then it means the type of event to add.  *	For all other actions it is the unique event ID assigned when the  *	event was added by the FW.  * @apply_time: When to start the Time Event (in GP2)  * @max_delay: maximum delay to event's start (apply time), in TU  * @depends_on: the unique ID of the event we depend on (if any)  * @interval: interval between repetitions, in TU  * @duration: duration of event in TU  * @repeat: how many repetitions to do, can be IWM_TE_REPEAT_ENDLESS  * @max_frags: maximal number of fragments the Time Event can be divided to  * @policy: defines whether uCode shall notify the host or other uCode modules  *	on event and/or fragment start and/or end  *	using one of IWM_TE_INDEPENDENT, IWM_TE_DEP_OTHER, IWM_TE_DEP_TSF  *	IWM_TE_EVENT_SOCIOPATHIC  *	using IWM_TE_ABSENCE and using IWM_TE_NOTIF_*  */
 end_comment
 
 begin_struct
 struct|struct
-name|iwm_time_event_cmd_v2
+name|iwm_time_event_cmd
 block|{
 comment|/* COMMON_INDEX_HDR_API_S_VER_1 */
 name|uint32_t
@@ -15312,12 +15179,12 @@ value|8
 end_define
 
 begin_comment
-comment|/**  * struct iwm_mvm_add_sta_cmd_v7 - Add/modify a station in the fw's sta table.  * ( REPLY_ADD_STA = 0x18 )  * @add_modify: 1: modify existing, 0: add new station  * @awake_acs:  * @tid_disable_tx: is tid BIT(tid) enabled for Tx. Clear BIT(x) to enable  *	AMPDU for tid x. Set %IWM_STA_MODIFY_TID_DISABLE_TX to change this field.  * @mac_id_n_color: the Mac context this station belongs to  * @addr[IEEE80211_ADDR_LEN]: station's MAC address  * @sta_id: index of station in uCode's station table  * @modify_mask: IWM_STA_MODIFY_*, selects which parameters to modify vs. leave  *	alone. 1 - modify, 0 - don't change.  * @station_flags: look at %iwm_sta_flags  * @station_flags_msk: what of %station_flags have changed  * @add_immediate_ba_tid: tid for which to add block-ack support (Rx)  *	Set %IWM_STA_MODIFY_ADD_BA_TID to use this field, and also set  *	add_immediate_ba_ssn.  * @remove_immediate_ba_tid: tid for which to remove block-ack support (Rx)  *	Set %IWM_STA_MODIFY_REMOVE_BA_TID to use this field  * @add_immediate_ba_ssn: ssn for the Rx block-ack session. Used together with  *	add_immediate_ba_tid.  * @sleep_tx_count: number of packets to transmit to station even though it is  *	asleep. Used to synchronise PS-poll and u-APSD responses while ucode  *	keeps track of STA sleep state.  * @sleep_state_flags: Look at %iwm_sta_sleep_flag.  * @assoc_id: assoc_id to be sent in VHT PLCP (9-bit), for grp use 0, for AP  *	mac-addr.  * @beamform_flags: beam forming controls  * @tfd_queue_msk: tfd queues used by this station  *  * The device contains an internal table of per-station information, with info  * on security keys, aggregation parameters, and Tx rates for initial Tx  * attempt and any retries (set by IWM_REPLY_TX_LINK_QUALITY_CMD).  *  * ADD_STA sets up the table entry for one station, either creating a new  * entry, or modifying a pre-existing one.  */
+comment|/**  * struct iwm_mvm_add_sta_cmd - Add/modify a station in the fw's sta table.  * ( REPLY_ADD_STA = 0x18 )  * @add_modify: 1: modify existing, 0: add new station  * @awake_acs:  * @tid_disable_tx: is tid BIT(tid) enabled for Tx. Clear BIT(x) to enable  *	AMPDU for tid x. Set %IWM_STA_MODIFY_TID_DISABLE_TX to change this field.  * @mac_id_n_color: the Mac context this station belongs to  * @addr[IEEE80211_ADDR_LEN]: station's MAC address  * @sta_id: index of station in uCode's station table  * @modify_mask: IWM_STA_MODIFY_*, selects which parameters to modify vs. leave  *	alone. 1 - modify, 0 - don't change.  * @station_flags: look at %iwm_sta_flags  * @station_flags_msk: what of %station_flags have changed  * @add_immediate_ba_tid: tid for which to add block-ack support (Rx)  *	Set %IWM_STA_MODIFY_ADD_BA_TID to use this field, and also set  *	add_immediate_ba_ssn.  * @remove_immediate_ba_tid: tid for which to remove block-ack support (Rx)  *	Set %IWM_STA_MODIFY_REMOVE_BA_TID to use this field  * @add_immediate_ba_ssn: ssn for the Rx block-ack session. Used together with  *	add_immediate_ba_tid.  * @sleep_tx_count: number of packets to transmit to station even though it is  *	asleep. Used to synchronise PS-poll and u-APSD responses while ucode  *	keeps track of STA sleep state.  * @sleep_state_flags: Look at %iwm_sta_sleep_flag.  * @assoc_id: assoc_id to be sent in VHT PLCP (9-bit), for grp use 0, for AP  *	mac-addr.  * @beamform_flags: beam forming controls  * @tfd_queue_msk: tfd queues used by this station  *  * The device contains an internal table of per-station information, with info  * on security keys, aggregation parameters, and Tx rates for initial Tx  * attempt and any retries (set by IWM_REPLY_TX_LINK_QUALITY_CMD).  *  * ADD_STA sets up the table entry for one station, either creating a new  * entry, or modifying a pre-existing one.  */
 end_comment
 
 begin_struct
 struct|struct
-name|iwm_mvm_add_sta_cmd_v7
+name|iwm_mvm_add_sta_cmd
 block|{
 name|uint8_t
 name|add_modify
