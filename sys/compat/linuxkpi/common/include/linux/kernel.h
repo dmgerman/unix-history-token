@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/bitops.h>
 end_include
 
@@ -919,7 +925,7 @@ name|pr_warn_ratelimited
 parameter_list|(
 modifier|...
 parameter_list|)
-value|do {		\ 	static time_t __ratelimited;		\ 	if (linux_ratelimited(&__ratelimited))	\ 		pr_warning(__VA_ARGS__);	\ } while (0)
+value|do {		\ 	static linux_ratelimit_t __ratelimited;	\ 	if (linux_ratelimited(&__ratelimited))	\ 		pr_warning(__VA_ARGS__);	\ } while (0)
 end_define
 
 begin_ifndef
@@ -1876,16 +1882,54 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-specifier|extern
+begin_typedef
+typedef|typedef
+struct|struct
+name|linux_ratelimit
+block|{
+name|struct
+name|timeval
+name|lasttime
+decl_stmt|;
+name|int
+name|counter
+decl_stmt|;
+block|}
+name|linux_ratelimit_t
+typedef|;
+end_typedef
+
+begin_function
+specifier|static
+specifier|inline
 name|bool
 name|linux_ratelimited
 parameter_list|(
-name|time_t
+name|linux_ratelimit_t
 modifier|*
+name|rl
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+operator|(
+name|ppsratecheck
+argument_list|(
+operator|&
+name|rl
+operator|->
+name|lasttime
+argument_list|,
+operator|&
+name|rl
+operator|->
+name|counter
+argument_list|,
+literal|1
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

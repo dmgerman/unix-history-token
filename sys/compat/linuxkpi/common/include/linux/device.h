@@ -646,7 +646,7 @@ name|dev
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {	\ 	static time_t __ratelimited;		\ 	if (linux_ratelimited(&__ratelimited))	\ 		dev_err(dev, __VA_ARGS__);	\ } while (0)
+value|do {	\ 	static linux_ratelimit_t __ratelimited;	\ 	if (linux_ratelimited(&__ratelimited))	\ 		dev_err(dev, __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_define
@@ -658,7 +658,7 @@ name|dev
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {	\ 	static time_t __ratelimited;		\ 	if (linux_ratelimited(&__ratelimited))	\ 		dev_warn(dev, __VA_ARGS__);	\ } while (0)
+value|do {	\ 	static linux_ratelimit_t __ratelimited;	\ 	if (linux_ratelimited(&__ratelimited))	\ 		dev_warn(dev, __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_function
