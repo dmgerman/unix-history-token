@@ -10452,6 +10452,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|adapter
@@ -10464,6 +10465,7 @@ name|type
 operator|==
 name|e1000_82575
 condition|)
+block|{
 name|tx_que
 operator|->
 name|eims
@@ -10478,7 +10480,9 @@ operator|->
 name|tx_num_queues
 operator|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|tx_que
 operator|->
 name|eims
@@ -10493,6 +10497,7 @@ operator|->
 name|tx_num_queues
 operator|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Link interrupt */
 name|rid
