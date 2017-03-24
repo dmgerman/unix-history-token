@@ -342,7 +342,7 @@ name|struct
 name|task
 name|refdrain_task
 decl_stmt|;
-name|TAILQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|ccb_hdr
@@ -1824,7 +1824,7 @@ name|softc
 operator|->
 name|parent_softc
 expr_stmt|;
-name|TAILQ_INIT
+name|STAILQ_INIT
 argument_list|(
 operator|&
 name|softc
@@ -3432,9 +3432,10 @@ name|softc
 expr_stmt|;
 name|next
 label|:
+comment|/* Take the ATIO off the work queue */
 name|ccb_h
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|softc
@@ -3456,19 +3457,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Take the ATIO off the work queue */
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|softc
 operator|->
 name|work_queue
 argument_list|,
-name|ccb_h
-argument_list|,
 name|periph_links
 operator|.
-name|tqe
+name|stqe
 argument_list|)
 expr_stmt|;
 name|atio
@@ -4126,7 +4124,7 @@ comment|/* 	 * If we still have work to do, ask for another CCB. 	 */
 if|if
 condition|(
 operator|!
-name|TAILQ_EMPTY
+name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|softc
@@ -5727,7 +5725,7 @@ argument_list|(
 name|done_ccb
 argument_list|)
 expr_stmt|;
-name|TAILQ_INSERT_HEAD
+name|STAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|softc
@@ -5741,7 +5739,7 @@ name|ccb_h
 argument_list|,
 name|periph_links
 operator|.
-name|tqe
+name|stqe
 argument_list|)
 expr_stmt|;
 name|xpt_schedule
@@ -8294,13 +8292,13 @@ name|num_items
 operator|=
 literal|0
 expr_stmt|;
-name|TAILQ_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|hdr
 argument_list|,
 argument|&softc->work_queue
 argument_list|,
-argument|periph_links.tqe
+argument|periph_links.stqe
 argument_list|)
 block|{
 name|union
@@ -8514,7 +8512,7 @@ name|flags
 operator||=
 name|CTL_FLAG_STATUS_QUEUED
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|softc
@@ -8528,7 +8526,7 @@ name|ccb_h
 argument_list|,
 name|periph_links
 operator|.
-name|tqe
+name|stqe
 argument_list|)
 expr_stmt|;
 name|xpt_schedule
@@ -8793,7 +8791,7 @@ name|flags
 operator||=
 name|CTL_FLAG_STATUS_QUEUED
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|softc
@@ -8807,7 +8805,7 @@ name|ccb_h
 argument_list|,
 name|periph_links
 operator|.
-name|tqe
+name|stqe
 argument_list|)
 expr_stmt|;
 name|xpt_schedule
