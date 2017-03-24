@@ -5957,7 +5957,7 @@ parameter_list|(
 name|chan
 parameter_list|)
 define|\
-value|(ICB2400_VPINFO_OFF + 			\      sizeof (isp_icb_2400_vpinfo_t) + (chan * ICB2400_VPOPT_WRITE_SIZE))
+value|(ICB2400_VPINFO_OFF + 			\      sizeof (isp_icb_2400_vpinfo_t) + ((chan) * ICB2400_VPOPT_WRITE_SIZE))
 end_define
 
 begin_define
