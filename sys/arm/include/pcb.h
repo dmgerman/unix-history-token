@@ -22,13 +22,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/fp.h>
+file|<machine/frame.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
+file|<machine/vfp.h>
 end_include
 
 begin_comment

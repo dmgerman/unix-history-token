@@ -856,6 +856,38 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_struct
+struct|struct
+name|vfp_state
+block|{
+name|uint64_t
+name|reg
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|uint32_t
+name|fpscr
+decl_stmt|;
+name|uint32_t
+name|fpexec
+decl_stmt|;
+name|uint32_t
+name|fpinst
+decl_stmt|;
+name|uint32_t
+name|fpinst2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
 name|void
 name|vfp_init
@@ -893,6 +925,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCORE */
+end_comment
 
 begin_endif
 endif|#

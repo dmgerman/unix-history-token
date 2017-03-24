@@ -19,12 +19,6 @@ directive|define
 name|MACHINE_REG_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/fp.h>
-end_include
-
 begin_struct
 struct|struct
 name|reg
@@ -55,6 +49,31 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|fp_extended_precision
+block|{
+name|u_int32_t
+name|fp_exponent
+decl_stmt|;
+name|u_int32_t
+name|fp_mantissa_hi
+decl_stmt|;
+name|u_int32_t
+name|fp_mantissa_lo
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|fp_extended_precision
+name|fp_reg_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
