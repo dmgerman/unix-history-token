@@ -91,35 +91,39 @@ decl_stmt|;
 define|#
 directive|define
 name|ZFS_DEBUG_DPRINTF
-value|(1<<0)
+value|(1<< 0)
 define|#
 directive|define
 name|ZFS_DEBUG_DBUF_VERIFY
-value|(1<<1)
+value|(1<< 1)
 define|#
 directive|define
 name|ZFS_DEBUG_DNODE_VERIFY
-value|(1<<2)
+value|(1<< 2)
 define|#
 directive|define
 name|ZFS_DEBUG_SNAPNAMES
-value|(1<<3)
+value|(1<< 3)
 define|#
 directive|define
 name|ZFS_DEBUG_MODIFY
-value|(1<<4)
+value|(1<< 4)
 define|#
 directive|define
 name|ZFS_DEBUG_SPA
-value|(1<<5)
+value|(1<< 5)
 define|#
 directive|define
 name|ZFS_DEBUG_ZIO_FREE
-value|(1<<6)
+value|(1<< 6)
 define|#
 directive|define
 name|ZFS_DEBUG_HISTOGRAM_VERIFY
-value|(1<<7)
+value|(1<< 7)
+define|#
+directive|define
+name|ZFS_DEBUG_METASLAB_VERIFY
+value|(1<< 8)
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG
