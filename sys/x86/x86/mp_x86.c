@@ -962,14 +962,9 @@ block|{
 name|printf
 argument_list|(
 literal|"WARNING: L%u data cache covers more "
-literal|"APIC IDs than a package\n"
+literal|"APIC IDs than a package (%u> %u)\n"
 argument_list|,
 name|level
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%u> %u\n"
 argument_list|,
 name|caches
 index|[
@@ -1011,15 +1006,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: L%u data cache covers less "
-literal|"APIC IDs than a core\n"
+literal|"WARNING: L%u data cache covers fewer "
+literal|"APIC IDs than a core (%u< %u)\n"
 argument_list|,
 name|level
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%u< %u\n"
 argument_list|,
 name|caches
 index|[
