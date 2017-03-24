@@ -658,6 +658,25 @@ comment|/* num. of times tx queue full occured */
 name|uint32_t
 name|tx_queue_full_return
 decl_stmt|;
+comment|/* debug stats */
+name|uint32_t
+name|bxe_tx_mq_sc_state_failures
+decl_stmt|;
+name|uint32_t
+name|tx_request_link_down_failures
+decl_stmt|;
+name|uint32_t
+name|bd_avail_too_less_failures
+decl_stmt|;
+name|uint32_t
+name|tx_mq_not_empty
+decl_stmt|;
+name|uint32_t
+name|nsegs_path1_errors
+decl_stmt|;
+name|uint32_t
+name|nsegs_path2_errors
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -933,6 +952,25 @@ decl_stmt|;
 comment|/* num. of times tx queue full occured */
 name|uint32_t
 name|tx_queue_full_return
+decl_stmt|;
+comment|/* debug stats */
+name|uint32_t
+name|bxe_tx_mq_sc_state_failures
+decl_stmt|;
+name|uint32_t
+name|tx_request_link_down_failures
+decl_stmt|;
+name|uint32_t
+name|bd_avail_too_less_failures
+decl_stmt|;
+name|uint32_t
+name|tx_mq_not_empty
+decl_stmt|;
+name|uint32_t
+name|nsegs_path1_errors
+decl_stmt|;
+name|uint32_t
+name|nsegs_path2_errors
 decl_stmt|;
 block|}
 struct|;

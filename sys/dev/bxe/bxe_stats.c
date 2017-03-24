@@ -59,6 +59,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|extern
+name|int
+name|bxe_grc_dump
+parameter_list|(
+name|struct
+name|bxe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 specifier|inline
