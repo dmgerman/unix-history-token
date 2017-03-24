@@ -64,6 +64,17 @@ decl_stmt|;
 name|ENTER
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|pamh
+operator|==
+name|NULL
+condition|)
+name|RETURNC
+argument_list|(
+name|PAM_SYSTEM_ERR
+argument_list|)
+expr_stmt|;
 comment|/* clear module data */
 while|while
 condition|(
