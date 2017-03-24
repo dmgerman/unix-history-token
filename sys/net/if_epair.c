@@ -3679,13 +3679,17 @@ name|if_init
 operator|=
 name|epair_init
 expr_stmt|;
+name|if_setsendqlen
+argument_list|(
 name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_maxlen
-operator|=
+argument_list|,
 name|ifqmaxlen
+argument_list|)
+expr_stmt|;
+name|if_setsendqready
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 comment|/* Assign a hopefully unique, locally administered etheraddr. */
 name|eaddr
@@ -3846,13 +3850,17 @@ name|if_init
 operator|=
 name|epair_init
 expr_stmt|;
+name|if_setsendqlen
+argument_list|(
 name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_maxlen
-operator|=
+argument_list|,
 name|ifqmaxlen
+argument_list|)
+expr_stmt|;
+name|if_setsendqready
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 comment|/* We need to play some tricks here for the second interface. */
 name|strlcpy
