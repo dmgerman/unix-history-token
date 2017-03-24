@@ -1129,10 +1129,6 @@ modifier|*
 name|pcmd_free
 decl_stmt|;
 name|int
-name|sixtyfourbit
-decl_stmt|;
-comment|/* sixtyfour bit platform */
-name|int
 name|mbox_sleeping
 decl_stmt|;
 name|int
@@ -1670,6 +1666,51 @@ parameter_list|)
 define|\
 value|{						\ 	ispds_t *d = a;				\ 	bus_dma_segment_t *e = b;		\ 	uint32_t f = c;				\ 	e += f;					\         d->ds_base = DMA_LO32(e->ds_addr);	\         d->ds_count = e->ds_len;		\ }
 end_define
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BUS_SPACE_MAXADDR
+operator|>
+name|UINT32_MAX
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|XS_NEED_DMA64_SEG
+parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(((bus_dma_segment_t *)s)[n].ds_addr +			\ 	    ((bus_dma_segment_t *)s)[n].ds_len> UINT32_MAX)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|XS_NEED_DMA64_SEG
+parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
