@@ -5010,6 +5010,7 @@ comment|/* network interface media structure */
 name|int
 name|media
 decl_stmt|;
+specifier|volatile
 name|int
 name|state
 decl_stmt|;
@@ -6565,6 +6566,9 @@ decl_stmt|;
 name|unsigned
 name|int
 name|grcdump_started
+decl_stmt|;
+name|int
+name|bxe_pause_param
 decl_stmt|;
 name|void
 modifier|*
@@ -9102,19 +9106,6 @@ name|m
 parameter_list|,
 name|uint8_t
 name|contents
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bxe_grc_dump
-parameter_list|(
-name|struct
-name|bxe_softc
-modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
