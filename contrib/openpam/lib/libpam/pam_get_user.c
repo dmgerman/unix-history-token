@@ -184,8 +184,9 @@ name|prompt
 operator|==
 name|NULL
 condition|)
-if|if
-condition|(
+block|{
+name|r
+operator|=
 name|pam_get_item
 argument_list|(
 name|pamh
@@ -195,6 +196,12 @@ argument_list|,
 operator|&
 name|promptp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|PAM_SUCCESS
 operator|&&
 name|promptp
 operator|!=
@@ -204,6 +211,7 @@ name|prompt
 operator|=
 name|promptp
 expr_stmt|;
+block|}
 comment|/* fall back to hardcoded default */
 if|if
 condition|(
