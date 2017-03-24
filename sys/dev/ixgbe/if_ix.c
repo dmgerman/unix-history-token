@@ -18204,6 +18204,11 @@ decl_stmt|;
 name|bool
 name|negotiate
 decl_stmt|;
+name|IXGBE_CORE_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
 comment|/* get_supported_phy_layer will call hw->phy.ops.identify_sfp() */
 name|adapter
 operator|->
