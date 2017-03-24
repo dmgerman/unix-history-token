@@ -1324,6 +1324,13 @@ name|port
 operator|=
 name|port
 expr_stmt|;
+name|u
+operator|->
+name|netrcfd
+operator|=
+operator|-
+literal|2
+expr_stmt|;
 return|return
 operator|(
 name|u
@@ -1630,6 +1637,13 @@ name|NULL
 operator|)
 return|;
 block|}
+name|u
+operator|->
+name|netrcfd
+operator|=
+operator|-
+literal|2
+expr_stmt|;
 comment|/* scheme name */
 if|if
 condition|(
@@ -1816,9 +1830,6 @@ name|URL
 expr_stmt|;
 block|}
 comment|/* hostname */
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 operator|*
@@ -1868,8 +1879,6 @@ operator|=
 name|q
 operator|-
 name|p
-operator|-
-literal|2
 operator|)
 operator|>
 name|MAXHOSTNAMELEN
@@ -1884,7 +1893,6 @@ name|u
 operator|->
 name|host
 argument_list|,
-operator|++
 name|p
 argument_list|,
 name|i
@@ -1896,8 +1904,7 @@ name|q
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
+block|{
 for|for
 control|(
 name|i
@@ -1941,6 +1948,7 @@ operator|=
 operator|*
 name|p
 expr_stmt|;
+block|}
 comment|/* port */
 if|if
 condition|(
@@ -2212,12 +2220,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"scheme:   [%s]\n"
-literal|"user:     [%s]\n"
-literal|"password: [%s]\n"
-literal|"host:     [%s]\n"
-literal|"port:     [%d]\n"
-literal|"document: [%s]\n"
+literal|"scheme:   \"%s\"\n"
+literal|"user:     \"%s\"\n"
+literal|"password: \"%s\"\n"
+literal|"host:     \"%s\"\n"
+literal|"port:     \"%d\"\n"
+literal|"document: \"%s\"\n"
 argument_list|,
 name|u
 operator|->
