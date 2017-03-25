@@ -291,41 +291,6 @@ begin_comment
 comment|/*  * BEGIN mvm/scan.c  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IWM_PLCP_QUIET_THRESH
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM_ACTIVE_QUIET_TIME
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|LONG_OUT_TIME_PERIOD
-value|(600 * IEEE80211_DUR_TU)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHORT_OUT_TIME_PERIOD
-value|(200 * IEEE80211_DUR_TU)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SUSPEND_TIME_PERIOD
-value|(100 * IEEE80211_DUR_TU)
-end_define
-
 begin_function
 specifier|static
 name|uint16_t
@@ -382,18 +347,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static uint32_t iwm_mvm_scan_max_out_time(struct iwm_softc *sc, uint32_t flags, int is_assoc) { 	if (!is_assoc) 		return 0; 	if (flags& 0x1) 		return htole32(SHORT_OUT_TIME_PERIOD); 	return htole32(LONG_OUT_TIME_PERIOD); }  static uint32_t iwm_mvm_scan_suspend_time(struct iwm_softc *sc, int is_assoc) { 	if (!is_assoc) 		return 0; 	return htole32(SUSPEND_TIME_PERIOD); }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -517,22 +470,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * If req->n_ssids> 0, it means we should do an active scan.  * In case of active scan w/o directed scan, we receive a zero-length SSID  * just to notify that this scan is active and not passive.  * In order to notify the FW of the number of SSIDs we wish to scan (including  * the zero-length one), we need to set the corresponding bits in chan->type,  * one for each SSID, and set the active bit (first). If the first SSID is  * already included in the probe template, so we need to set only  * req->n_ssids - 1 bits in addition to the first bit.  */
-end_comment
-
-begin_endif
-unit|static uint16_t iwm_mvm_get_active_dwell(struct iwm_softc *sc, int flags, int n_ssids) { 	if (flags& IEEE80211_CHAN_2GHZ) 		return 30  + 3 * (n_ssids + 1); 	return 20  + 2 * (n_ssids + 1); }  static uint16_t iwm_mvm_get_passive_dwell(struct iwm_softc *sc, int flags) { 	return (flags& IEEE80211_CHAN_2GHZ) ? 100 + 20 : 100 + 10; }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
