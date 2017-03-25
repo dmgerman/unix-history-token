@@ -3059,7 +3059,8 @@ literal|"\034PTSC"
 comment|/* Performance TSC */
 literal|"\035PL2I"
 comment|/* L2I perf count */
-literal|"\036<b29>"
+literal|"\036MWAITX"
+comment|/* MONITORX/MWAITX instructions */
 literal|"\037<b30>"
 literal|"\040<b31>"
 argument_list|)
