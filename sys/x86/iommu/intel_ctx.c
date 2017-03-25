@@ -2378,13 +2378,30 @@ else|:
 literal|"re"
 argument_list|)
 expr_stmt|;
+name|dmar_unmap_pgtbl
+argument_list|(
+name|sf
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Nothing needs to be done to destroy ctx1. */
+name|dmar_unmap_pgtbl
+argument_list|(
+name|sf
+argument_list|)
+expr_stmt|;
 name|dmar_domain_destroy
 argument_list|(
 name|domain1
+argument_list|)
+expr_stmt|;
+comment|/* Nothing needs to be done to destroy ctx1. */
+name|free
+argument_list|(
+name|ctx1
+argument_list|,
+name|M_DMAR_CTX
 argument_list|)
 expr_stmt|;
 name|domain
@@ -2400,11 +2417,6 @@ operator|++
 expr_stmt|;
 comment|/* tag referenced us */
 block|}
-name|dmar_unmap_pgtbl
-argument_list|(
-name|sf
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
