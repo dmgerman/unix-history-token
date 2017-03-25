@@ -1355,8 +1355,7 @@ name|sc_iid_y
 operator|)
 condition|)
 name|dy
-operator|=
-operator|-
+operator|-=
 name|hid_get_data
 argument_list|(
 name|buf
