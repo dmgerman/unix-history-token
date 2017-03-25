@@ -320,7 +320,11 @@ value|0x34
 end_define
 
 begin_comment
-comment|/* Filter Threshold = 8 * 21.3 = ~128us< 200us */
+comment|/*  * Frequency sample: 23437.5Hz (Cycle: 42.7us)  * Pulse of NEC Remote> 560us  */
+end_comment
+
+begin_comment
+comment|/* Filter Threshold = 8 * 42.7 = ~341us< 500us */
 end_comment
 
 begin_define
@@ -1347,6 +1351,21 @@ argument_list|,
 name|AW_IR_RXSTA
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"RX interrupt status: %x\n"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 comment|/* Clean all pending interrupt statuses */
 name|WRITE
 argument_list|(
@@ -1371,6 +1390,19 @@ name|AW_IR_RXINT_RPEI_EN
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"RX FIFO Data available or Packet end\n"
+argument_list|)
+expr_stmt|;
 comment|/* Get available message count in RX FIFO */
 name|dcnt
 operator|=
