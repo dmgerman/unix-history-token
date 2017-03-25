@@ -228,6 +228,14 @@ literal|"Realtek ALC221"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC233
+block|,
+literal|0
+block|,
+literal|"Realtek ALC233"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC260
 block|,
 literal|0
