@@ -6894,7 +6894,6 @@ argument_list|)
 operator|)
 return|;
 comment|/* NOTREACHED */
-break|break;
 default|default:
 break|break;
 block|}
@@ -7228,7 +7227,6 @@ argument_list|)
 operator|)
 return|;
 comment|/* NOTREACHED */
-break|break;
 case|case
 name|LOCAL_PEERCRED
 case|:
@@ -7336,7 +7334,6 @@ argument_list|)
 operator|)
 return|;
 comment|/* NOTREACHED */
-break|break;
 case|case
 name|SO_ERROR
 case|:
