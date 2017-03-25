@@ -3510,7 +3510,7 @@ operator|*
 name|child_ep
 argument_list|)
 argument_list|,
-name|M_WAITOK
+name|GFP_KERNEL
 argument_list|)
 expr_stmt|;
 name|CTR5
@@ -11110,7 +11110,7 @@ operator|*
 name|ep
 argument_list|)
 argument_list|,
-name|M_NOWAIT
+name|GFP_KERNEL
 argument_list|)
 expr_stmt|;
 if|if
