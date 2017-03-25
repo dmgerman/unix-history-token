@@ -3111,6 +3111,10 @@ define|#
 directive|define
 name|IWN4965_ID_BROADCAST
 value|31
+define|#
+directive|define
+name|IWN_ID_UNDEFINED
+value|(uint8_t)-1
 name|uint8_t
 name|flags
 decl_stmt|;
