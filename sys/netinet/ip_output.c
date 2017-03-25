@@ -1141,13 +1141,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|ro
-operator|->
-name|ro_flags
-operator||=
-name|RT_LLE_CACHE
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FLOWTABLE
