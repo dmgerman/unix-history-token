@@ -11490,6 +11490,7 @@ name|remote_addr
 expr_stmt|;
 name|err
 operator|=
+operator|-
 name|soconnect
 argument_list|(
 name|ep
