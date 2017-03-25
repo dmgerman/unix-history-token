@@ -152,6 +152,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"brcm,bcm2835-i2c"
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
