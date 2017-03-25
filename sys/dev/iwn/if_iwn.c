@@ -26500,7 +26500,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|EAGAIN
+literal|1
 case|:
 comment|/* radio is disabled via RFkill switch */
 name|taskqueue_enqueue
@@ -46389,13 +46389,27 @@ name|IWN_GP_CNTRL_RFKILL
 operator|)
 condition|)
 block|{
-name|error
-operator|=
-name|EAGAIN
+name|iwn_stop_locked
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 comment|/* Read firmware images from the filesystem. */
 if|if
@@ -46550,7 +46564,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+operator|-
+literal|1
 operator|)
 return|;
 block|}
