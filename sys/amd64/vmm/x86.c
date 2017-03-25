@@ -613,6 +613,15 @@ operator|&=
 operator|~
 name|AMDID2_OSVW
 expr_stmt|;
+comment|/* Hide mwaitx/monitorx capability from the guest */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|AMDID2_MWAITX
+expr_stmt|;
 comment|/* 			 * Hide rdtscp/ia32_tsc_aux until we know how 			 * to deal with them. 			 */
 name|regs
 index|[

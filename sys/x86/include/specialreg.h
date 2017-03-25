@@ -1254,6 +1254,13 @@ name|AMDID2_PTSCEL2I
 value|0x10000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|AMDID2_MWAITX
+value|0x20000000
+end_define
+
 begin_comment
 comment|/*  * CPUID instruction 1 eax info  */
 end_comment
