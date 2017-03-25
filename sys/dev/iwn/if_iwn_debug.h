@@ -236,6 +236,12 @@ case|:
 return|return
 literal|"RX_DONE"
 return|;
+case|case
+name|IWN_RX_COMPRESSED_BA
+case|:
+return|return
+literal|"RX_COMPRESSED_BA"
+return|;
 comment|/* Command Notifications */
 case|case
 name|IWN_CMD_RXON
@@ -278,6 +284,12 @@ name|IWN5000_CMD_WIMAX_COEX
 case|:
 return|return
 literal|"IWN5000_CMD_WIMAX_COEX"
+return|;
+case|case
+name|IWN_TEMP_NOTIFICATION
+case|:
+return|return
+literal|"IWN_TEMP_NOTIFICATION"
 return|;
 case|case
 name|IWN5000_CMD_CALIB_CONFIG
