@@ -664,6 +664,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|j
+decl_stmt|,
 name|symcnt
 decl_stmt|;
 name|ehdr
@@ -998,15 +1000,15 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|j
 operator|=
 literal|0
 init|;
-name|i
+name|j
 operator|<
 name|symcnt
 condition|;
-name|i
+name|j
 operator|++
 operator|,
 name|sym
