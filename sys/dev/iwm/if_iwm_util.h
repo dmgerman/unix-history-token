@@ -178,6 +178,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|uint8_t
+name|iwm_ridx2rate
+parameter_list|(
+name|struct
+name|ieee80211_rateset
+modifier|*
+name|rs
+parameter_list|,
+name|int
+name|ridx
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 specifier|inline
