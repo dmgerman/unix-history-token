@@ -11299,7 +11299,7 @@ operator|(
 name|ret
 operator|)
 return|;
-comment|/* 	 * SIGKILL: Remove procfs STOPEVENTs and ptrace events. 	 */
+comment|/* SIGKILL: Remove procfs STOPEVENTs. */
 if|if
 condition|(
 name|sig
@@ -11307,12 +11307,6 @@ operator|==
 name|SIGKILL
 condition|)
 block|{
-name|p
-operator|->
-name|p_ptevents
-operator|=
-literal|0
-expr_stmt|;
 comment|/* from procfs_ioctl.c: PIOCBIC */
 name|p
 operator|->
@@ -13670,7 +13664,7 @@ directive|endif
 break|break;
 comment|/* == ignore */
 block|}
-comment|/* 			 * If there is a pending stop signal to process 			 * with default action, stop here, 			 * then clear the signal.  However, 			 * if process is member of an orphaned 			 * process group, ignore tty stop signals. 			 */
+comment|/* 			 * If there is a pending stop signal to process with 			 * default action, stop here, then clear the signal. 			 * Traced or exiting processes should ignore stops. 			 * Additionally, a member of an orphaned process group 			 * should ignore tty stops. 			 */
 if|if
 condition|(
 name|prop
@@ -13688,6 +13682,8 @@ operator|(
 name|P_TRACED
 operator||
 name|P_WEXIT
+operator||
+name|P_SINGLE_EXIT
 operator|)
 operator|||
 operator|(
