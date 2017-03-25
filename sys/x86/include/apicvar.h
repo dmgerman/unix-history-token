@@ -811,7 +811,8 @@ modifier|*
 name|eoi
 function_decl|)
 parameter_list|(
-name|void
+name|u_int
+name|vector
 parameter_list|)
 function_decl|;
 name|int
@@ -1232,13 +1233,16 @@ specifier|inline
 name|void
 name|lapic_eoi
 parameter_list|(
-name|void
+name|u_int
+name|vector
 parameter_list|)
 block|{
 name|apic_ops
 operator|.
 name|eoi
-argument_list|()
+argument_list|(
+name|vector
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1834,6 +1838,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|native_lapic_eoi
+parameter_list|(
+name|u_int
+name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

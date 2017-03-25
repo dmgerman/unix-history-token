@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_host.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_lapic.h"
 end_include
 
@@ -7444,10 +7450,9 @@ name|ipi_cpu
 argument_list|(
 name|curcpu
 argument_list|,
-name|IPI_AST
+name|vmm_ipinum
 argument_list|)
 expr_stmt|;
-comment|/* XXX vmm_ipinum? */
 block|}
 else|else
 block|{

@@ -32,6 +32,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|vmm_ipinum
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|xsave_limits

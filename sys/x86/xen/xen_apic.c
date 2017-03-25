@@ -554,7 +554,8 @@ specifier|static
 name|void
 name|xen_pv_lapic_eoi
 parameter_list|(
-name|void
+name|u_int
+name|vector
 parameter_list|)
 block|{
 name|XEN_APIC_UNSUPPORTED
