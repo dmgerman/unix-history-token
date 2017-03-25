@@ -4366,6 +4366,19 @@ name|td_xsig
 operator|=
 name|data
 expr_stmt|;
+comment|/* 			 * P_WKILLED is insurance that a PT_KILL/SIGKILL always 			 * works immediately, even if another thread is 			 * unsuspended first and attempts to handle a different 			 * signal or if the POSIX.1b style signal queue cannot 			 * accommodate any new signals. 			 */
+if|if
+condition|(
+name|data
+operator|==
+name|SIGKILL
+condition|)
+name|p
+operator|->
+name|p_flag
+operator||=
+name|P_WKILLED
+expr_stmt|;
 if|if
 condition|(
 name|req
