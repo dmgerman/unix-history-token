@@ -13472,6 +13472,21 @@ block|, }
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|iwm_scan_ebs_status
+block|{
+name|IWM_SCAN_EBS_SUCCESS
+block|,
+name|IWM_SCAN_EBS_FAILED
+block|,
+name|IWM_SCAN_EBS_CHAN_NOT_FOUND
+block|,
+name|IWM_SCAN_EBS_INACTIVE
+block|, }
+enum|;
+end_enum
+
 begin_comment
 comment|/**  * struct iwm_lmac_scan_complete_notif - notifies end of scanning (all channels)  *	SCAN_COMPLETE_NTF_API_S_VER_3  * @scanned_channels: number of channels scanned (and number of valid results)  * @status: one of SCAN_COMP_STATUS_*  * @bt_status: BT on/off status  * @last_channel: last channel that was scanned  * @tsf_low: TSF timer (lower half) in usecs  * @tsf_high: TSF timer (higher half) in usecs  * @results: an array of scan results, only "scanned_channels" of them are valid  */
 end_comment

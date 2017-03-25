@@ -1313,6 +1313,9 @@ decl_stmt|;
 name|uint16_t
 name|num_of_pages_in_last_blk
 decl_stmt|;
+name|boolean_t
+name|last_ebs_successful
+decl_stmt|;
 block|}
 struct|;
 end_struct
