@@ -1199,7 +1199,7 @@ name|um_report
 operator|.
 name|y
 operator|=
-name|MOUSE_MAX_X
+name|MOUSE_MAX_Y
 operator|*
 name|y
 operator|/
