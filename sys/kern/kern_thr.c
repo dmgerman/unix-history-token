@@ -1534,6 +1534,8 @@ argument_list|(
 name|td
 argument_list|,
 name|SIGTRAP
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK

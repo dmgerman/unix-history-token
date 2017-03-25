@@ -4620,6 +4620,8 @@ argument_list|(
 name|td
 argument_list|,
 name|SIGSTOP
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|td
@@ -4731,6 +4733,8 @@ argument_list|(
 name|td
 argument_list|,
 name|SIGTRAP
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|td
