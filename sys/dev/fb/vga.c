@@ -2025,7 +2025,7 @@ comment|/* EGA */
 block|{
 name|M_ENH_B80x43
 block|,
-literal|0
+name|V_INFO_COLOR
 block|,
 literal|80
 block|,
@@ -2406,11 +2406,11 @@ literal|2
 block|,
 literal|1
 block|,
-name|CGA_BUF_BASE
+name|MDA_BUF_BASE
 block|,
-name|CGA_BUF_SIZE
+name|MDA_BUF_SIZE
 block|,
-name|CGA_BUF_SIZE
+name|MDA_BUF_SIZE
 block|,
 literal|0
 block|,
@@ -4174,7 +4174,7 @@ block|,
 block|{
 name|M_VGA_M90x43
 block|,
-name|M_ENH_B80x25
+name|M_VGA_M80x25
 block|}
 block|,
 block|{
