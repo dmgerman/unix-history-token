@@ -2134,6 +2134,39 @@ argument_list|(
 literal|"Set audit trail size in kernel."
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Configure audit trail queue size in kernel. 	 */
+name|err
+operator|=
+name|auditd_set_qsize
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|auditd_log_err
+argument_list|(
+literal|"audit_set_qsize() %s: %m"
+argument_list|,
+name|auditd_strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|auditd_log_debug
+argument_list|(
+literal|"Set audit trail queue in kernel."
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Configure audit trail volume minimum free percentage of blocks in 	 * kernel. 	 */
 name|err
 operator|=

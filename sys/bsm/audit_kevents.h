@@ -4970,6 +4970,347 @@ begin_comment
 comment|/* FreeBSD-specific. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AUE_PREADV
+value|43210
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PWRITEV
+value|43211
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_POSIX_FALLOCATE
+value|43212
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AIO_MLOCK
+value|43213
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_PROCCTL
+value|43214
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AIO_READ
+value|43215
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AIO_WRITE
+value|43216
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AIO_RETURN
+value|43217
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AIO_SUSPEND
+value|43218
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AIO_CANCEL
+value|43219
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AIO_ERROR
+value|43220
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AIO_WAITCOMPLETE
+value|43221
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_AIO_FSYNC
+value|43222
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_THR_CREATE
+value|43223
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_THR_NEW
+value|43224
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_THR_EXIT
+value|43225
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_THR_KILL
+value|43226
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_THR_KILL2
+value|43227
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SETFIB
+value|43228
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_LIO_LISTIO
+value|43229
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SETUGID
+value|43230
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SCTP_PEELOFF
+value|43231
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SCTP_GENERIC_SENDMSG
+value|43232
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SCTP_GENERIC_RECVMSG
+value|43233
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_JAIL_GET
+value|43234
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_JAIL_SET
+value|43235
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_JAIL_REMOVE
+value|43236
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_GETLOGINCLASS
+value|43237
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SETLOGINCLASS
+value|43238
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_POSIX_FADVISE
+value|43239
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUE_SCTP_GENERIC_SENDMSG_IOV
+value|43240
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
 begin_comment
 comment|/*  * Darwin BSM uses a number of AUE_O_* definitions, which are aliased to the  * normal Solaris BSM identifiers.  _O_ refers to it being an old, or compat  * interface.  In most cases, Darwin has never implemented these system calls  * but picked up the fields in their system call table from their FreeBSD  * import.  Happily, these have different names than the AUE_O* definitions  * in Solaris BSM.  */
 end_comment
@@ -6081,13 +6422,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUE_PREADV
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_PROCINFO
 value|AUE_NULL
 end_define
@@ -6180,13 +6514,6 @@ begin_define
 define|#
 directive|define
 name|AUE_PTHREADMUTEXUNLOCK
-value|AUE_NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUE_PWRITEV
 value|AUE_NULL
 end_define
 

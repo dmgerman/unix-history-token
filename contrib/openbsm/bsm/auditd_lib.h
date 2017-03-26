@@ -452,6 +452,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|auditd_set_qsize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|auditd_set_host
 parameter_list|(
 name|void

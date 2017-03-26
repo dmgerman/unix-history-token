@@ -782,7 +782,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
 end_comment
 
 begin_define
@@ -833,7 +833,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"OpenBSM 1.2-alpha4"
+value|"OpenBSM 1.2-alpha5"
 end_define
 
 begin_comment
@@ -866,7 +866,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.2-alpha4"
+value|"1.2-alpha5"
 end_define
 
 begin_comment
@@ -980,7 +980,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.2-alpha4"
+value|"1.2-alpha5"
 end_define
 
 begin_comment

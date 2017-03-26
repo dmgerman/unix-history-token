@@ -241,6 +241,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|QSZ_CONTROL_ENTRY
+value|"qsize"
+end_define
+
+begin_define
+define|#
+directive|define
 name|AU_CLASS_NAME_MAX
 value|8
 end_define
@@ -296,6 +303,17 @@ end_define
 
 begin_comment
 comment|/* OpenSSH compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_DEFAULT_QSZ
+value|-1
+end_define
+
+begin_comment
+comment|/* Use system default queue size */
 end_comment
 
 begin_comment
@@ -2145,6 +2163,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|getacqsize
+parameter_list|(
+name|int
+modifier|*
+name|size_val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|getacflg
 parameter_list|(
 name|char
@@ -3294,6 +3323,34 @@ parameter_list|(
 name|au_evclass_map_t
 modifier|*
 name|evc_map
+parameter_list|,
+name|size_t
+name|sz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|audit_get_event
+parameter_list|(
+name|au_evname_map_t
+modifier|*
+name|evn_map
+parameter_list|,
+name|size_t
+name|sz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|audit_set_event
+parameter_list|(
+name|au_evname_map_t
+modifier|*
+name|evn_map
 parameter_list|,
 name|size_t
 name|sz
