@@ -1445,31 +1445,6 @@ parameter_list|)
 value|DELAY(x)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|1000029
-end_if
-
-begin_define
-define|#
-directive|define
-name|ISP_SLEEP
-parameter_list|(
-name|isp
-parameter_list|,
-name|x
-parameter_list|)
-value|msleep(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", ((x) + tick - 1) / tick)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1481,11 +1456,6 @@ name|x
 parameter_list|)
 value|msleep_sbt(&(isp)->isp_osinfo.is_exiting, \&(isp)->isp_osinfo.lock, 0, "isp_sleep", (x) * SBT_1US, 0, 0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
