@@ -78,18 +78,17 @@ comment|/* These decode the vendor data. */
 end_comment
 
 begin_function_decl
-specifier|extern
-name|int
-name|printfn
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|rfc1048_print
-parameter_list|()
+parameter_list|(
+name|u_char
+modifier|*
+name|bp
+parameter_list|,
+name|int
+name|length
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -97,7 +96,14 @@ begin_function_decl
 specifier|static
 name|void
 name|cmu_print
-parameter_list|()
+parameter_list|(
+name|u_char
+modifier|*
+name|bp
+parameter_list|,
+name|int
+name|length
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -105,7 +111,14 @@ begin_function_decl
 specifier|static
 name|void
 name|other_print
-parameter_list|()
+parameter_list|(
+name|u_char
+modifier|*
+name|bp
+parameter_list|,
+name|int
+name|length
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -113,7 +126,14 @@ begin_function_decl
 specifier|static
 name|void
 name|dump_hex
-parameter_list|()
+parameter_list|(
+name|u_char
+modifier|*
+name|bp
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 function_decl|;
 end_function_decl
 

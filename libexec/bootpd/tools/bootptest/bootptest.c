@@ -195,7 +195,10 @@ begin_function_decl
 specifier|static
 name|void
 name|send_request
-parameter_list|()
+parameter_list|(
+name|int
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -429,22 +432,6 @@ end_decl_stmt
 begin_comment
 comment|/* How long client has waited */
 end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|get_errmsg
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|bootp_print
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Initialization such as command-line processing is done, then  * the receiver loop is started.  Die when interrupted.  */
@@ -1728,6 +1715,11 @@ name|snaplen
 expr_stmt|;
 name|bootp_print
 argument_list|(
+operator|(
+expr|struct
+name|bootp
+operator|*
+operator|)
 name|rcvbuf
 argument_list|,
 name|n
@@ -1784,6 +1776,11 @@ argument_list|)
 expr_stmt|;
 name|bootp_print
 argument_list|(
+operator|(
+expr|struct
+name|bootp
+operator|*
+operator|)
 name|sndbuf
 argument_list|,
 name|snaplen

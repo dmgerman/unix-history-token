@@ -185,7 +185,15 @@ begin_function_decl
 specifier|static
 name|int
 name|nmatch
-parameter_list|()
+parameter_list|(
+name|u_char
+modifier|*
+name|ca
+parameter_list|,
+name|u_char
+modifier|*
+name|cb
+parameter_list|)
 function_decl|;
 end_function_decl
 
