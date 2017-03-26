@@ -1535,6 +1535,8 @@ name|entry
 operator|->
 name|offset
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|pager_last
 argument_list|)
