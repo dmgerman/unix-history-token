@@ -17403,7 +17403,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_TRACE
 argument_list|,
-literal|"->%s received after clib done\n"
+literal|"->%s received after calib done\n"
 argument_list|,
 name|__func__
 argument_list|)
