@@ -1038,7 +1038,26 @@ end_comment
 begin_function_decl
 name|long
 name|percentages
-parameter_list|()
+parameter_list|(
+name|int
+name|cnt
+parameter_list|,
+name|int
+modifier|*
+name|out
+parameter_list|,
+name|long
+modifier|*
+name|new
+parameter_list|,
+name|long
+modifier|*
+name|old
+parameter_list|,
+name|long
+modifier|*
+name|diffs
+parameter_list|)
 function_decl|;
 end_function_decl
 

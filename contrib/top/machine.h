@@ -242,7 +242,11 @@ begin_function_decl
 name|char
 modifier|*
 name|format_header
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|uname_field
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -250,7 +254,23 @@ begin_function_decl
 name|char
 modifier|*
 name|format_next_process
-parameter_list|()
+parameter_list|(
+name|caddr_t
+name|handle
+parameter_list|,
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|get_userid
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -308,7 +328,11 @@ begin_function_decl
 name|char
 modifier|*
 name|printable
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|string
+parameter_list|)
 function_decl|;
 end_function_decl
 
