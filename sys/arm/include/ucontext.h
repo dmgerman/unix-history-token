@@ -199,6 +199,28 @@ name|_REG_PC
 value|_REG_R15
 end_define
 
+begin_comment
+comment|/*  * Floating point register state  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|__uint64_t
+name|mcv_reg
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|__uint32_t
+name|mcv_fpscr
+decl_stmt|;
+block|}
+name|mcontext_vfp_t
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -207,17 +229,30 @@ name|__gregset_t
 name|__gregs
 decl_stmt|;
 comment|/* 	 * Originally, rest of this structure was named __fpu, 35 * 4 bytes 	 * long, never accessed from kernel.  	 */
+name|size_t
+name|mc_vfp_size
+decl_stmt|;
+name|void
+modifier|*
+name|mc_vfp_ptr
+decl_stmt|;
 name|unsigned
 name|int
 name|mc_spare
 index|[
-literal|35
+literal|33
 index|]
 decl_stmt|;
 block|}
 name|mcontext_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|UC_
+end_define
 
 begin_endif
 endif|#

@@ -523,9 +523,20 @@ operator|->
 name|uc_mcontext
 decl_stmt|;
 comment|/* XXX */
+name|mc
+operator|->
+name|mc_vfp_size
+operator|=
+literal|0
+expr_stmt|;
+name|mc
+operator|->
+name|mc_vfp_ptr
+operator|=
+name|NULL
+expr_stmt|;
 name|memset
 argument_list|(
-operator|&
 name|mc
 operator|->
 name|mc_spare
