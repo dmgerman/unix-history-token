@@ -339,20 +339,6 @@ parameter_list|)
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|DB_SMALL_VALUE_MAX
-value|(KERNBASE-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DB_SMALL_VALUE_MIN
-value|(-0x40001)
-end_define
-
 begin_endif
 endif|#
 directive|endif

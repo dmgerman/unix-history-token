@@ -292,20 +292,6 @@ parameter_list|)
 value|(db_inst_type(i) == IT_STORE)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DB_SMALL_VALUE_MAX
-value|0x7fffffff
-end_define
-
-begin_define
-define|#
-directive|define
-name|DB_SMALL_VALUE_MIN
-value|(-0x400001)
-end_define
-
 begin_function_decl
 name|int
 name|db_inst_type
