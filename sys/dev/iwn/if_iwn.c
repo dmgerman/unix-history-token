@@ -20666,6 +20666,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|IWN_DEBUG
 case|case
 name|IWN_STATE_CHANGED
 case|:
@@ -20686,9 +20689,6 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IWN_DEBUG
 name|uint32_t
 modifier|*
 name|status
@@ -20720,8 +20720,6 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
 case|case
@@ -20743,9 +20741,6 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IWN_DEBUG
 name|struct
 name|iwn_start_scan
 modifier|*
@@ -20784,10 +20779,10 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
+endif|#
+directive|endif
 case|case
 name|IWN_STOP_SCAN
 case|:
