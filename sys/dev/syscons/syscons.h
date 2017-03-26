@@ -1446,9 +1446,6 @@ name|buf
 parameter_list|,
 name|int
 name|len
-parameter_list|,
-name|int
-name|kernel
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2456,15 +2453,6 @@ name|pitch
 parameter_list|,
 name|int
 name|duration
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sc_kattr
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
