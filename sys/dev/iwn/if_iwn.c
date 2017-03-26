@@ -24534,6 +24534,8 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* XXX fix this */
+comment|/* 			 * NB: Do not return error; 			 * original mbuf does not exist anymore. 			 */
 name|device_printf
 argument_list|(
 name|sc
@@ -24547,8 +24549,31 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_ifp
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
-name|error
+literal|0
 return|;
 block|}
 block|}
