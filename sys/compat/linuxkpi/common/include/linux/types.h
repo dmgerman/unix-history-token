@@ -172,6 +172,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|unsigned
+name|long
+name|pgoff_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|u64
 name|phys_addr_t
 typedef|;
