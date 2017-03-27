@@ -2233,7 +2233,7 @@ name|ri
 operator|->
 name|iri_rsstype
 operator|=
-name|M_HASHTYPE_OPAQUE
+name|M_HASHTYPE_OPAQUE_HASH
 expr_stmt|;
 break|break;
 block|}
