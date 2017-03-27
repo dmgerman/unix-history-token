@@ -2302,8 +2302,8 @@ name|teken_256to8tab
 index|[]
 init|=
 block|{
-comment|/* xterm-16+ 8 dark colors: */
-literal|0
+comment|/* xterm normal colors: */
+name|k
 block|,
 name|r
 block|,
@@ -2319,22 +2319,22 @@ name|c
 block|,
 name|w
 block|,
-comment|/* xterm-16+ 8 light colors: */
-literal|0
+comment|/* xterm bright colors: */
+name|k
 block|,
-name|R
+name|r
 block|,
-name|G
+name|g
 block|,
-name|Y
+name|y
 block|,
-name|B
+name|b
 block|,
-name|M
+name|m
 block|,
-name|C
+name|c
 block|,
-name|W
+name|w
 block|,
 comment|/* Red0 submap. */
 name|k
@@ -2838,8 +2838,8 @@ name|teken_256to16tab
 index|[]
 init|=
 block|{
-comment|/* xterm-16+ 8 dark colors: */
-literal|0
+comment|/* xterm normal colors: */
+name|k
 block|,
 name|r
 block|,
@@ -2855,8 +2855,8 @@ name|c
 block|,
 name|w
 block|,
-comment|/* xterm-16+ 8 light colors: */
-literal|0
+comment|/* xterm bright colors: */
+name|K
 block|,
 name|R
 block|,

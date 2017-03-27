@@ -434,13 +434,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|TCOLOR_256TO16
+parameter_list|(
+name|color
+parameter_list|)
+value|__extension__ ({				\ 	teken_color_t _c;						\ 									\ 	_c = (color);							\ 	if (_c>= 16)							\ 		_c = teken_256to16(_c);					\ 	_c;								\ })
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCHAR_CREATE
 parameter_list|(
 name|c
 parameter_list|,
 name|a
 parameter_list|)
-value|((c) | TFORMAT((a)->ta_format) |	\ 	TCOLOR_FG_FUDGED(teken_256to16((a)->ta_fgcolor)) |		\ 	TCOLOR_BG_FUDGED(teken_256to16((a)->ta_bgcolor)))
+value|((c) | TFORMAT((a)->ta_format) |	\ 	TCOLOR_FG_FUDGED(TCOLOR_256TO16((a)->ta_fgcolor)) |		\ 	TCOLOR_BG_FUDGED(TCOLOR_256TO16((a)->ta_bgcolor)))
 end_define
 
 begin_function
