@@ -5512,7 +5512,9 @@ end_function
 begin_function
 name|void
 name|xuio_stat_wbuf_copied
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|XUIOSTAT_BUMP
 argument_list|(
@@ -5525,7 +5527,9 @@ end_function
 begin_function
 name|void
 name|xuio_stat_wbuf_nocopy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|XUIOSTAT_BUMP
 argument_list|(
