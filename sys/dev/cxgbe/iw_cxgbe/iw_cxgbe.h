@@ -2263,6 +2263,31 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/*  * IW_CXGBE event bits.  * These bits are used for handling all events for a particular 'ep' serially.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C4IW_EVENT_SOCKET
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|C4IW_EVENT_TIMEOUT
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|C4IW_EVENT_TERM
+value|0x0004
+end_define
+
 begin_function
 specifier|static
 specifier|inline
@@ -3107,6 +3132,9 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|int
+name|ep_events
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3146,10 +3174,6 @@ decl_stmt|;
 name|struct
 name|timer_list
 name|timer
-decl_stmt|;
-name|struct
-name|list_head
-name|entry
 decl_stmt|;
 name|unsigned
 name|int
