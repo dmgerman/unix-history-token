@@ -200,17 +200,6 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
-name|isp_intr_enable
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|isp_cam_async
 parameter_list|(
 name|void
