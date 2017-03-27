@@ -511,6 +511,8 @@ directive|define
 name|ATOMIC_CMPSET
 parameter_list|(
 name|TYPE
+parameter_list|,
+name|CONS
 parameter_list|)
 define|\
 value|static __inline int					\ atomic_cmpset_##TYPE(volatile u_##TYPE *dst, u_##TYPE expect, u_##TYPE src) \ {							\ 	u_char res;					\ 							\ 	__asm __volatile(				\ 	"	" MPLOCKED "		"		\ 	"	cmpxchg	%3,%1 ;		"		\ 	"	sete	%0 ;		"		\ 	"# atomic_cmpset_" #TYPE "	"		\ 	: "=q" (res),
@@ -519,7 +521,7 @@ value|\ 	  "+m" (*dst),
 comment|/* 1 */
 value|\ 	  "+a" (expect)
 comment|/* 2 */
-value|\ 	: "r" (src)
+value|\ 	: CONS (src)
 comment|/* 3 */
 value|\ 	: "memory", "cc");				\ 	return (res);					\ }							\ 							\ static __inline int					\ atomic_fcmpset_##TYPE(volatile u_##TYPE *dst, u_##TYPE *expect, u_##TYPE src) \ {							\ 	u_char res;					\ 							\ 	__asm __volatile(				\ 	"	" MPLOCKED "		"		\ 	"	cmpxchg	%3,%1 ;		"		\ 	"	sete	%0 ;		"		\ 	"# atomic_fcmpset_" #TYPE "	"		\ 	: "=q" (res),
 comment|/* 0 */
@@ -527,7 +529,7 @@ value|\ 	  "+m" (*dst),
 comment|/* 1 */
 value|\ 	  "+a" (*expect)
 comment|/* 2 */
-value|\ 	: "r" (src)
+value|\ 	: CONS (src)
 comment|/* 3 */
 value|\ 	: "memory", "cc");				\ 	return (res);					\ }
 end_define
@@ -536,6 +538,8 @@ begin_expr_stmt
 name|ATOMIC_CMPSET
 argument_list|(
 name|char
+argument_list|,
+literal|"q"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -544,6 +548,8 @@ begin_expr_stmt
 name|ATOMIC_CMPSET
 argument_list|(
 name|short
+argument_list|,
+literal|"r"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -552,6 +558,8 @@ begin_expr_stmt
 name|ATOMIC_CMPSET
 argument_list|(
 name|int
+argument_list|,
+literal|"r"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
