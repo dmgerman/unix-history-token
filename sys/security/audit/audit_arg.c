@@ -2813,7 +2813,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Store a path as given by the user process for auditing into the audit  * record stored on the user thread.  This function will allocate the memory  * to store the path info if not already available.  This memory will be  * freed when the audit record is freed.  */
+comment|/*  * Store a path as given by the user process for auditing into the audit  * record stored on the user thread.  This function will allocate the memory  * to store the path info if not already available.  This memory will be  * freed when the audit record is freed.  The path is canonlicalised with  * respect to the thread and directory descriptor passed.  */
 end_comment
 
 begin_function
