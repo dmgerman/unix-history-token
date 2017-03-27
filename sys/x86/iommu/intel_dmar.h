@@ -1351,6 +1351,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|dmar_get_timeout
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dmar_update_timeout
+parameter_list|(
+name|uint64_t
+name|newval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|dmar_fault_intr
 parameter_list|(
@@ -2758,6 +2777,25 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|timespec
+name|dmar_hw_timeout
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DMAR_WAIT_UNTIL
+parameter_list|(
+name|cond
+parameter_list|)
+define|\
+value|{								\ 	struct timespec last, curr;				\ 	bool forever;						\ 								\ 	if (dmar_hw_timeout.tv_sec == 0&&			\ 	    dmar_hw_timeout.tv_nsec == 0) {			\ 		forever = true;					\ 	} else {						\ 		forever = false;				\ 		nanouptime(&curr);				\ 		last = curr;					\ 		timespecadd(&last,&dmar_hw_timeout);		\ 	}							\ 	for (;;) {						\ 		if (cond) {					\ 			error = 0;				\ 			break;					\ 		}						\ 		nanouptime(&curr);				\ 		if (!forever&& timespeccmp(&last,&curr,<)) {	\ 			error = ETIMEDOUT;			\ 			break;					\ 		}						\ 		cpu_spinwait();					\ 	}							\ }
+end_define
 
 begin_ifdef
 ifdef|#

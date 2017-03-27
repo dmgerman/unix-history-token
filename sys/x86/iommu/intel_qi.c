@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tree.h>
 end_include
 
@@ -228,6 +234,9 @@ modifier|*
 name|unit
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|DMAR_ASSERT_LOCKED
 argument_list|(
 name|unit
@@ -250,9 +259,9 @@ operator|->
 name|hw_gcmd
 argument_list|)
 expr_stmt|;
-comment|/* XXXKIB should have a timeout */
-while|while
-condition|(
+name|DMAR_WAIT_UNTIL
+argument_list|(
+operator|(
 operator|(
 name|dmar_read4
 argument_list|(
@@ -263,15 +272,14 @@ argument_list|)
 operator|&
 name|DMAR_GSTS_QIES
 operator|)
-operator|==
+operator|!=
 literal|0
-condition|)
-name|cpu_spinwait
-argument_list|()
+operator|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -288,6 +296,9 @@ modifier|*
 name|unit
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|DMAR_ASSERT_LOCKED
 argument_list|(
 name|unit
@@ -311,9 +322,9 @@ operator|->
 name|hw_gcmd
 argument_list|)
 expr_stmt|;
-comment|/* XXXKIB should have a timeout */
-while|while
-condition|(
+name|DMAR_WAIT_UNTIL
+argument_list|(
+operator|(
 operator|(
 name|dmar_read4
 argument_list|(
@@ -324,15 +335,14 @@ argument_list|)
 operator|&
 name|DMAR_GSTS_QIES
 operator|)
-operator|!=
+operator|==
 literal|0
-condition|)
-name|cpu_spinwait
-argument_list|()
+operator|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
