@@ -15088,9 +15088,6 @@ operator|->
 name|sc_provider_open
 operator|!=
 literal|0
-operator|||
-name|SCHEDULER_STOPPED
-argument_list|()
 condition|)
 block|{
 switch|switch
@@ -16813,6 +16810,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return;
 name|mp
 operator|=
 name|arg
