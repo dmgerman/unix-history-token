@@ -2368,7 +2368,7 @@ name|DEBUG
 end_ifdef
 
 begin_comment
-comment|/*  * function to dump the contents of the interface structure  * for debugging use only.  */
+comment|/*  * function to dump the contents of the interface structure  * for debugging use only.  * We face a dilemma here -- sockets are FDs under POSIX and  * actually HANDLES under Windows. So we use '%lld' as format  * and cast the value to 'long long'; this should not hurt  * with UNIX-like systems and does not truncate values on Win64.  */
 end_comment
 
 begin_function
@@ -2390,8 +2390,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"fd = %d\n"
+literal|"fd = %lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|itf
 operator|->
 name|fd
@@ -2399,8 +2403,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bfd = %d\n"
+literal|"bfd = %lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|itf
 operator|->
 name|bfd
@@ -2701,7 +2709,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%sinterface #%d: fd=%d, bfd=%d, name=%s, flags=0x%x, ifindex=%u, sin=%s"
+literal|"%sinterface #%d: fd=%lld, bfd=%lld, name=%s, flags=0x%x, ifindex=%u, sin=%s"
 argument_list|,
 name|pfx
 argument_list|,
@@ -2709,10 +2717,18 @@ name|iface
 operator|->
 name|ifnum
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|iface
 operator|->
 name|fd
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|iface
 operator|->
 name|bfd
@@ -10295,6 +10311,7 @@ name|interface
 modifier|*
 name|interf
 decl_stmt|;
+name|unsigned
 name|int
 name|nif
 decl_stmt|;
@@ -10530,7 +10547,7 @@ expr_stmt|;
 if|if
 condition|(
 name|nif
-operator|>
+operator|!=
 literal|0
 condition|)
 block|{
@@ -10550,12 +10567,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|nif
-condition|)
+else|else
 block|{
 name|broadcast_client_enabled
 operator|=

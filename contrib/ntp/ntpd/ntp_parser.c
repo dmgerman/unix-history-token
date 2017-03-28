@@ -93,7 +93,7 @@ begin_line
 line|#
 directive|line
 number|11
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 end_line
 
 begin_comment
@@ -2622,7 +2622,7 @@ block|{
 line|#
 directive|line
 number|51
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:355  */
 name|char
 modifier|*
@@ -5228,9 +5228,9 @@ literal|654
 block|,
 literal|655
 block|,
-literal|659
+literal|656
 block|,
-literal|660
+literal|657
 block|,
 literal|661
 block|,
@@ -8423,27 +8423,27 @@ literal|0
 block|,
 literal|86
 block|,
-literal|92
-block|,
 literal|87
-block|,
-literal|0
 block|,
 literal|88
 block|,
-literal|96
-block|,
-literal|94
-block|,
-literal|95
-block|,
-literal|93
-block|,
-literal|91
+literal|0
 block|,
 literal|89
 block|,
 literal|90
+block|,
+literal|96
+block|,
+literal|91
+block|,
+literal|95
+block|,
+literal|92
+block|,
+literal|93
+block|,
+literal|94
 block|,
 literal|80
 block|,
@@ -13357,9 +13357,9 @@ literal|231
 block|,
 literal|231
 block|,
-literal|232
+literal|231
 block|,
-literal|232
+literal|231
 block|,
 literal|232
 block|,
@@ -16682,7 +16682,7 @@ case|:
 line|#
 directive|line
 number|378
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 comment|/* I will need to incorporate much more fine grained 			 * error messages. The following should suffice for 			 * the time being. 			 */
@@ -16730,7 +16730,7 @@ case|:
 line|#
 directive|line
 number|414
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|peer_node
@@ -16793,7 +16793,7 @@ case|:
 line|#
 directive|line
 number|433
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -16837,7 +16837,7 @@ case|:
 line|#
 directive|line
 number|438
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -16873,7 +16873,7 @@ case|:
 line|#
 directive|line
 number|443
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -16897,7 +16897,7 @@ case|:
 line|#
 directive|line
 number|445
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -16921,7 +16921,7 @@ case|:
 line|#
 directive|line
 number|450
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -16945,7 +16945,7 @@ case|:
 line|#
 directive|line
 number|452
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -16995,7 +16995,7 @@ case|:
 line|#
 directive|line
 number|466
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17031,7 +17031,7 @@ case|:
 line|#
 directive|line
 number|482
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17075,7 +17075,7 @@ case|:
 line|#
 directive|line
 number|484
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17119,7 +17119,7 @@ case|:
 line|#
 directive|line
 number|498
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17163,7 +17163,7 @@ case|:
 line|#
 directive|line
 number|512
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|unpeer_node
@@ -17210,7 +17210,7 @@ case|:
 line|#
 directive|line
 number|533
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17232,7 +17232,7 @@ case|:
 line|#
 directive|line
 number|535
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -17264,7 +17264,7 @@ case|:
 line|#
 directive|line
 number|537
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -17296,7 +17296,7 @@ case|:
 line|#
 directive|line
 number|539
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17325,7 +17325,7 @@ case|:
 line|#
 directive|line
 number|550
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|attr_val
@@ -17378,7 +17378,7 @@ case|:
 line|#
 directive|line
 number|557
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17409,7 +17409,7 @@ case|:
 line|#
 directive|line
 number|559
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17450,7 +17450,7 @@ case|:
 line|#
 directive|line
 number|564
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17481,7 +17481,7 @@ case|:
 line|#
 directive|line
 number|566
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17512,7 +17512,7 @@ case|:
 line|#
 directive|line
 number|568
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17543,7 +17543,7 @@ case|:
 line|#
 directive|line
 number|570
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17574,7 +17574,7 @@ case|:
 line|#
 directive|line
 number|572
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17609,7 +17609,7 @@ case|:
 line|#
 directive|line
 number|581
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|cfgt
@@ -17640,7 +17640,7 @@ case|:
 line|#
 directive|line
 number|586
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17664,7 +17664,7 @@ case|:
 line|#
 directive|line
 number|588
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17714,7 +17714,7 @@ case|:
 line|#
 directive|line
 number|596
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17758,7 +17758,7 @@ case|:
 line|#
 directive|line
 number|598
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17817,7 +17817,7 @@ case|:
 line|#
 directive|line
 number|623
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -17849,7 +17849,7 @@ case|:
 line|#
 directive|line
 number|628
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17899,7 +17899,7 @@ case|:
 line|#
 directive|line
 number|633
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17941,7 +17941,7 @@ case|:
 line|#
 directive|line
 number|641
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -17988,7 +17988,7 @@ case|:
 line|#
 directive|line
 number|643
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -18032,7 +18032,7 @@ case|:
 line|#
 directive|line
 number|645
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -18079,7 +18079,7 @@ case|:
 line|#
 directive|line
 number|672
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -18111,7 +18111,7 @@ case|:
 line|#
 directive|line
 number|674
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -18167,7 +18167,7 @@ case|:
 line|#
 directive|line
 number|683
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|filegen_node
@@ -18220,7 +18220,7 @@ case|:
 line|#
 directive|line
 number|693
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -18273,7 +18273,7 @@ case|:
 line|#
 directive|line
 number|698
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -18318,7 +18318,7 @@ case|:
 line|#
 directive|line
 number|717
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -18342,7 +18342,7 @@ case|:
 line|#
 directive|line
 number|719
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -18392,7 +18392,7 @@ case|:
 line|#
 directive|line
 number|727
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -18471,7 +18471,7 @@ case|:
 line|#
 directive|line
 number|737
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -18538,7 +18538,7 @@ case|:
 line|#
 directive|line
 number|746
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 specifier|const
@@ -18624,7 +18624,7 @@ case|:
 line|#
 directive|line
 number|761
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -18660,7 +18660,7 @@ case|:
 line|#
 directive|line
 number|791
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -18692,7 +18692,7 @@ case|:
 line|#
 directive|line
 number|795
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -18724,7 +18724,7 @@ case|:
 line|#
 directive|line
 number|799
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|restrict_node
@@ -18786,7 +18786,7 @@ case|:
 line|#
 directive|line
 number|807
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|restrict_node
@@ -18856,7 +18856,7 @@ case|:
 line|#
 directive|line
 number|815
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|restrict_node
@@ -18910,7 +18910,7 @@ case|:
 line|#
 directive|line
 number|823
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|restrict_node
@@ -18980,7 +18980,7 @@ case|:
 line|#
 directive|line
 number|838
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|restrict_node
@@ -19050,7 +19050,7 @@ case|:
 line|#
 directive|line
 number|853
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|restrict_node
@@ -19129,7 +19129,7 @@ case|:
 line|#
 directive|line
 number|865
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19153,7 +19153,7 @@ case|:
 line|#
 directive|line
 number|867
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19206,7 +19206,7 @@ case|:
 line|#
 directive|line
 number|893
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19256,7 +19256,7 @@ case|:
 line|#
 directive|line
 number|898
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19298,7 +19298,7 @@ case|:
 line|#
 directive|line
 number|906
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19342,7 +19342,7 @@ case|:
 line|#
 directive|line
 number|917
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19392,7 +19392,7 @@ case|:
 line|#
 directive|line
 number|922
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19434,7 +19434,7 @@ case|:
 line|#
 directive|line
 number|930
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19478,7 +19478,7 @@ case|:
 line|#
 directive|line
 number|950
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|addr_opts_node
@@ -19531,7 +19531,7 @@ case|:
 line|#
 directive|line
 number|960
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19581,7 +19581,7 @@ case|:
 line|#
 directive|line
 number|965
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19623,7 +19623,7 @@ case|:
 line|#
 directive|line
 number|973
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19667,7 +19667,7 @@ case|:
 line|#
 directive|line
 number|975
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19711,7 +19711,7 @@ case|:
 line|#
 directive|line
 number|977
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -19797,7 +19797,7 @@ case|:
 line|#
 directive|line
 number|986
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19841,7 +19841,7 @@ case|:
 line|#
 directive|line
 number|988
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19885,7 +19885,7 @@ case|:
 line|#
 directive|line
 number|1009
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -19917,7 +19917,7 @@ case|:
 line|#
 directive|line
 number|1014
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -19967,7 +19967,7 @@ case|:
 line|#
 directive|line
 number|1019
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -20009,7 +20009,7 @@ case|:
 line|#
 directive|line
 number|1027
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -20053,7 +20053,7 @@ case|:
 line|#
 directive|line
 number|1043
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -20085,7 +20085,7 @@ case|:
 line|#
 directive|line
 number|1045
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -20117,7 +20117,7 @@ case|:
 line|#
 directive|line
 number|1050
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -20167,7 +20167,7 @@ case|:
 line|#
 directive|line
 number|1055
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -20209,7 +20209,7 @@ case|:
 line|#
 directive|line
 number|1063
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -20245,7 +20245,7 @@ case|:
 line|#
 directive|line
 number|1065
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -20334,7 +20334,7 @@ case|:
 line|#
 directive|line
 number|1104
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -20366,7 +20366,7 @@ case|:
 line|#
 directive|line
 number|1109
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -20416,7 +20416,7 @@ case|:
 line|#
 directive|line
 number|1114
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -20458,7 +20458,7 @@ case|:
 line|#
 directive|line
 number|1122
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -20502,7 +20502,7 @@ case|:
 line|#
 directive|line
 number|1147
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|attr_val
@@ -20555,7 +20555,7 @@ case|:
 line|#
 directive|line
 number|1154
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|attr_val
@@ -20608,7 +20608,7 @@ case|:
 line|#
 directive|line
 number|1161
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|attr_val
@@ -20661,7 +20661,7 @@ case|:
 line|#
 directive|line
 number|1168
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|char
@@ -20772,7 +20772,7 @@ case|:
 line|#
 directive|line
 number|1184
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -20905,7 +20905,7 @@ case|:
 line|#
 directive|line
 number|1203
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|lex_flush_stack
@@ -20924,7 +20924,7 @@ case|:
 line|#
 directive|line
 number|1205
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 comment|/* see drift_parm below for actions */
@@ -20941,7 +20941,7 @@ case|:
 line|#
 directive|line
 number|1207
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -20973,7 +20973,7 @@ case|:
 line|#
 directive|line
 number|1209
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -21005,7 +21005,7 @@ case|:
 line|#
 directive|line
 number|1211
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|APPEND_G_FIFO
@@ -21037,7 +21037,7 @@ case|:
 line|#
 directive|line
 number|1213
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|addr_opts_node
@@ -21090,7 +21090,7 @@ case|:
 line|#
 directive|line
 number|1220
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -21122,7 +21122,7 @@ case|:
 line|#
 directive|line
 number|1235
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 ifndef|#
@@ -21148,7 +21148,7 @@ case|:
 line|#
 directive|line
 number|1255
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -21220,7 +21220,7 @@ case|:
 line|#
 directive|line
 number|1266
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -21319,7 +21319,7 @@ case|:
 line|#
 directive|line
 number|1279
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -21375,7 +21375,7 @@ case|:
 line|#
 directive|line
 number|1292
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -21429,7 +21429,7 @@ case|:
 line|#
 directive|line
 number|1298
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -21453,7 +21453,7 @@ case|:
 line|#
 directive|line
 number|1303
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -21477,7 +21477,7 @@ case|:
 line|#
 directive|line
 number|1305
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -21527,7 +21527,7 @@ case|:
 line|#
 directive|line
 number|1313
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -21571,7 +21571,7 @@ case|:
 line|#
 directive|line
 number|1315
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -21632,7 +21632,7 @@ case|:
 line|#
 directive|line
 number|1323
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -21682,7 +21682,7 @@ case|:
 line|#
 directive|line
 number|1328
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -21724,7 +21724,7 @@ case|:
 line|#
 directive|line
 number|1336
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|char
@@ -21844,7 +21844,7 @@ case|:
 line|#
 directive|line
 number|1361
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|nic_rule_node
@@ -21899,7 +21899,7 @@ case|:
 line|#
 directive|line
 number|1368
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|nic_rule_node
@@ -21954,7 +21954,7 @@ case|:
 line|#
 directive|line
 number|1396
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|CONCAT_G_FIFOS
@@ -21986,7 +21986,7 @@ case|:
 line|#
 directive|line
 number|1401
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22039,7 +22039,7 @@ case|:
 line|#
 directive|line
 number|1406
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22084,7 +22084,7 @@ case|:
 line|#
 directive|line
 number|1430
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22137,7 +22137,7 @@ case|:
 line|#
 directive|line
 number|1435
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22182,7 +22182,7 @@ case|:
 line|#
 directive|line
 number|1443
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22232,7 +22232,7 @@ case|:
 line|#
 directive|line
 number|1448
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22274,7 +22274,7 @@ case|:
 line|#
 directive|line
 number|1456
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22310,7 +22310,7 @@ case|:
 line|#
 directive|line
 number|1462
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22357,7 +22357,7 @@ case|:
 line|#
 directive|line
 number|1467
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22410,7 +22410,7 @@ case|:
 line|#
 directive|line
 number|1472
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22455,7 +22455,7 @@ case|:
 line|#
 directive|line
 number|1480
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22505,7 +22505,7 @@ case|:
 line|#
 directive|line
 number|1485
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22547,7 +22547,7 @@ case|:
 line|#
 directive|line
 number|1493
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 if|if
@@ -22620,7 +22620,7 @@ case|:
 line|#
 directive|line
 number|1501
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22644,7 +22644,7 @@ case|:
 line|#
 directive|line
 number|1502
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22668,7 +22668,7 @@ case|:
 line|#
 directive|line
 number|1506
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22702,7 +22702,7 @@ case|:
 line|#
 directive|line
 number|1517
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|sim_node
@@ -22761,7 +22761,7 @@ case|:
 line|#
 directive|line
 number|1534
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 name|old_config_style
@@ -22781,7 +22781,7 @@ case|:
 line|#
 directive|line
 number|1539
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22832,7 +22832,7 @@ case|:
 line|#
 directive|line
 number|1544
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22875,7 +22875,7 @@ case|:
 line|#
 directive|line
 number|1552
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22919,7 +22919,7 @@ case|:
 line|#
 directive|line
 number|1562
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -22969,7 +22969,7 @@ case|:
 line|#
 directive|line
 number|1567
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -23011,7 +23011,7 @@ case|:
 line|#
 directive|line
 number|1575
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -23069,7 +23069,7 @@ case|:
 line|#
 directive|line
 number|1580
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -23101,7 +23101,7 @@ case|:
 line|#
 directive|line
 number|1585
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -23132,7 +23132,7 @@ case|:
 line|#
 directive|line
 number|1590
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -23182,7 +23182,7 @@ case|:
 line|#
 directive|line
 number|1595
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -23224,7 +23224,7 @@ case|:
 line|#
 directive|line
 number|1603
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -23272,7 +23272,7 @@ case|:
 line|#
 directive|line
 number|1608
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -23323,7 +23323,7 @@ case|:
 line|#
 directive|line
 number|1613
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -23366,7 +23366,7 @@ case|:
 line|#
 directive|line
 number|1621
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 comment|/* yacc.c:1646  */
 block|{
 operator|(
@@ -24040,7 +24040,7 @@ begin_line
 line|#
 directive|line
 number|1632
-file|"../../ntpd/ntp_parser.y"
+file|"ntp_parser.y"
 end_line
 
 begin_comment

@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libssl_compat.h"
+file|"ntp_md5.h"
 end_include
 
 begin_decl_stmt

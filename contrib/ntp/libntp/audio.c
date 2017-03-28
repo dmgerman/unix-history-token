@@ -236,6 +236,57 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*   * 4.4BSD-Lite switched to an unsigned long ioctl arg.  Detect common  * derivatives here, and apply that type. To make the following code  * less verbose we make a proper typedef.  * The joy of IOCTL programming...  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+name|__OpenBSD__
+end_if
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|ioctl_arg_T
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|int
+name|ioctl_arg_T
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Global variables  */
 end_comment
 
@@ -280,7 +331,8 @@ value|"/etc/ntp.audio"
 end_define
 
 begin_decl_stmt
-name|int
+specifier|static
+name|ioctl_arg_T
 name|agc
 init|=
 name|SOUND_MIXER_WRITE_RECLEV
@@ -292,7 +344,8 @@ comment|/* or IGAIN or LINE */
 end_comment
 
 begin_decl_stmt
-name|int
+specifier|static
+name|ioctl_arg_T
 name|audiomonitor
 init|=
 name|SOUND_MIXER_WRITE_VOLUME
@@ -304,6 +357,7 @@ comment|/* or OGAIN */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|devmask
 init|=
@@ -312,6 +366,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|recmask
 init|=
@@ -320,6 +375,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|cf_c_dev
 index|[
@@ -344,6 +400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1751,9 +1808,6 @@ name|ioctl
 argument_list|(
 name|ctl_fd
 argument_list|,
-operator|(
-name|int
-operator|)
 name|AUDIO_SETINFO
 argument_list|,
 operator|(
@@ -2219,9 +2273,6 @@ name|ioctl
 argument_list|(
 name|ctl_fd
 argument_list|,
-operator|(
-name|int
-operator|)
 name|AUDIO_GETINFO
 argument_list|,
 operator|(
@@ -2292,9 +2343,6 @@ name|ioctl
 argument_list|(
 name|ctl_fd
 argument_list|,
-operator|(
-name|int
-operator|)
 name|AUDIO_SETINFO
 argument_list|,
 operator|(
@@ -2405,9 +2453,6 @@ name|ioctl
 argument_list|(
 name|ctl_fd
 argument_list|,
-operator|(
-name|int
-operator|)
 name|AUDIO_GETDEV
 argument_list|,
 operator|&
@@ -2438,9 +2483,6 @@ name|ioctl
 argument_list|(
 name|ctl_fd
 argument_list|,
-operator|(
-name|int
-operator|)
 name|AUDIO_GETINFO
 argument_list|,
 operator|(
