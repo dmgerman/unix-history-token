@@ -1876,6 +1876,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_c
 index|[]
 init|=
@@ -1893,6 +1894,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_df
 index|[]
 init|=
@@ -1908,6 +1910,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_g
 index|[]
 init|=
@@ -1923,6 +1926,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_il
 index|[]
 init|=
@@ -1940,6 +1944,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_m
 index|[]
 init|=
@@ -1957,6 +1962,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_no
 index|[]
 init|=
@@ -1974,6 +1980,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_r
 index|[]
 init|=
@@ -1991,6 +1998,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_s
 index|[]
 init|=
@@ -2020,6 +2028,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_t
 index|[]
 init|=
@@ -2037,6 +2046,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|keys_u
 index|[]
 init|=
@@ -2051,6 +2061,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|keys
 decl_stmt|;

@@ -1094,6 +1094,7 @@ end_function
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
 name|int
