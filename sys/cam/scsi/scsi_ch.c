@@ -6243,6 +6243,11 @@ argument_list|(
 literal|"chgetparams: couldn't malloc mode sense data\n"
 argument_list|)
 expr_stmt|;
+name|xpt_release_ccb
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOSPC
