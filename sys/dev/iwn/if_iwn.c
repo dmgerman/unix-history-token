@@ -15692,7 +15692,7 @@ operator|->
 name|rxq
 decl_stmt|;
 name|struct
-name|ieee80211_frame
+name|ieee80211_frame_min
 modifier|*
 name|wh
 decl_stmt|;
@@ -16291,7 +16291,7 @@ argument_list|(
 name|m
 argument_list|,
 expr|struct
-name|ieee80211_frame
+name|ieee80211_frame_min
 operator|*
 argument_list|)
 expr_stmt|;
@@ -16311,11 +16311,6 @@ name|ieee80211_find_rxnode
 argument_list|(
 name|ic
 argument_list|,
-operator|(
-expr|struct
-name|ieee80211_frame_min
-operator|*
-operator|)
 name|wh
 argument_list|)
 expr_stmt|;
@@ -16501,7 +16496,7 @@ argument_list|(
 name|m
 argument_list|,
 expr|struct
-name|ieee80211_frame
+name|ieee80211_frame_min
 operator|*
 argument_list|)
 expr_stmt|;
