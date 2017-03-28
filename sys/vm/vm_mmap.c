@@ -3697,7 +3697,7 @@ expr_stmt|;
 comment|/* 			 * calculate index into user supplied byte vector 			 */
 name|vecindex
 operator|=
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|addr
 operator|-
@@ -3805,7 +3805,7 @@ expr_stmt|;
 comment|/* 	 * Zero the last entries in the byte vector. 	 */
 name|vecindex
 operator|=
-name|OFF_TO_IDX
+name|atop
 argument_list|(
 name|end
 operator|-
