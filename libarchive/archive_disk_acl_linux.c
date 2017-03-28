@@ -9,6 +9,14 @@ directive|include
 file|"archive_platform.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|ARCHIVE_ACL_LIBACL
+operator|||
+name|ARCHIVE_ACL_LIBRICHACL
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3259,6 +3267,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ARCHIVE_ACL_LIBACL || ARCHIVE_ACL_LIBRICHACL */
+end_comment
 
 end_unit
 
