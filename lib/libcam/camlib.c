@@ -411,7 +411,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: device pathname was NULL"
 argument_list|,
@@ -494,7 +497,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: no text after slash"
 argument_list|,
@@ -616,7 +622,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: must have both device name and unit number"
 argument_list|,
@@ -649,7 +658,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: device name cannot begin with a number"
 argument_list|,
@@ -690,7 +702,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: unable to find device unit number"
 argument_list|,
@@ -946,7 +961,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: couldn't open %s\n%s: %s"
 argument_list|,
@@ -1060,7 +1078,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: couldn't malloc match buffer"
 argument_list|,
@@ -1142,7 +1163,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: couldn't malloc pattern buffer"
 argument_list|,
@@ -1267,7 +1291,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: CAMIOCOMMAND ioctl failed\n"
 literal|"%s: %s"
@@ -1326,7 +1353,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: CAM error %#x, CDM error %d "
 literal|"returned from XPT_DEV_MATCH ccb"
@@ -1365,7 +1395,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: CDM reported more than one"
 literal|" passthrough device at %d:%d:%jx!!\n"
@@ -1401,7 +1434,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: no passthrough device found at"
 literal|" %d:%d:%jx"
@@ -1550,7 +1586,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: asked for a peripheral match, but"
 literal|" got a bus or device match"
@@ -1765,7 +1804,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: couldn't open %s\n%s: %s"
 argument_list|,
@@ -1882,7 +1924,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: CAMGETPASSTHRU ioctl failed\n"
 literal|"%s: %s%s"
@@ -1939,7 +1984,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: device %s%d does not exist!"
 argument_list|,
@@ -2089,7 +2137,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: device structure malloc"
 literal|" failed\n%s: %s"
@@ -2214,7 +2265,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: couldn't open passthrough device %s\n"
 literal|"%s: %s"
@@ -2284,7 +2338,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: CAMGETPASSTHRU ioctl failed\n"
 literal|"%s: %s"
@@ -2319,7 +2376,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: passthrough device does not exist!"
 argument_list|,
@@ -2418,7 +2478,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: Path Inquiry CCB failed\n"
 literal|"%s: %s"
@@ -2506,7 +2569,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: Get Device Type CCB failed\n"
 literal|"%s: %s"
@@ -2635,7 +2701,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: Get Transfer Settings CCB failed\n"
 literal|"%s: %s"
@@ -2986,7 +3055,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: device is NULL"
 argument_list|,
@@ -3021,7 +3093,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: couldn't malloc CAM device structure"
 argument_list|,
@@ -3091,7 +3166,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: source device struct was NULL"
 argument_list|,
@@ -3111,7 +3189,10 @@ name|snprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-name|CAM_ERRBUF_SIZE
+sizeof|sizeof
+argument_list|(
+name|cam_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: destination device struct was NULL"
 argument_list|,
