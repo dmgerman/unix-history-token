@@ -3837,6 +3837,21 @@ index|[
 name|NTP_SHIFT
 index|]
 decl_stmt|;
+name|INSIST
+argument_list|(
+operator|(
+literal|0
+operator|<
+name|sys_samples
+operator|)
+operator|&&
+operator|(
+name|sys_samples
+operator|<=
+name|NTP_SHIFT
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Sort indices into increasing delay order 	 */
 for|for
 control|(

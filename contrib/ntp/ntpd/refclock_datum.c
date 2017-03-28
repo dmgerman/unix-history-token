@@ -1305,6 +1305,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|nb
 decl_stmt|;
 name|l_fp
 name|tstmp
@@ -1401,11 +1403,15 @@ comment|/*									*/
 comment|/*...... save the ntp system time when the first byte is received ......*/
 comment|/*									*/
 comment|/* 	** Save the ntp system time when the first byte is received. Note that 	** because it may take several calls to this routine before all seven 	** bytes of our return message are finally received by the io handlers in 	** ntpd, we really do want to use the time tag when the first byte is 	** received to reduce the jitter. 	*/
-if|if
-condition|(
+name|nb
+operator|=
 name|datum_pts
 operator|->
 name|nbytes
+expr_stmt|;
+if|if
+condition|(
+name|nb
 operator|==
 literal|0
 condition|)
@@ -1419,18 +1425,34 @@ operator|->
 name|recv_time
 expr_stmt|;
 block|}
-comment|/* 	** Increment our count to the number of bytes received so far. Return if we 	** haven't gotten all seven bytes yet. 	*/
+comment|/* 	** Increment our count to the number of bytes received so far. Return if we 	** haven't gotten all seven bytes yet. 	** [Sec 3388] make sure we do not overrun the buffer. 	** TODO: what to do with excessive bytes, if we ever get them? 	*/
 for|for
 control|(
 name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|i
 operator|<
 name|dpend
+operator|)
+operator|&&
+operator|(
+name|nb
+operator|<
+sizeof|sizeof
+argument_list|(
+name|datum_pts
+operator|->
+name|retbuf
+argument_list|)
+operator|)
 condition|;
 name|i
+operator|++
+operator|,
+name|nb
 operator|++
 control|)
 block|{
@@ -1438,11 +1460,7 @@ name|datum_pts
 operator|->
 name|retbuf
 index|[
-name|datum_pts
-operator|->
-name|nbytes
-operator|+
-name|i
+name|nb
 index|]
 operator|=
 name|dpt
@@ -1454,15 +1472,13 @@ block|}
 name|datum_pts
 operator|->
 name|nbytes
-operator|+=
-name|dpend
+operator|=
+name|nb
 expr_stmt|;
 if|if
 condition|(
-name|datum_pts
-operator|->
-name|nbytes
-operator|!=
+name|nb
+operator|<
 literal|7
 condition|)
 block|{

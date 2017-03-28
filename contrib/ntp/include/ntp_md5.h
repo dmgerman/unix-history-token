@@ -27,6 +27,12 @@ directive|include
 file|"openssl/evp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libssl_compat.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -125,6 +131,24 @@ name|MD5_CTX
 name|EVP_MD_CTX
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|EVP_MD_CTX_free
+parameter_list|(
+name|c
+parameter_list|)
+value|free(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVP_MD_CTX_new
+parameter_list|()
+value|calloc(1, sizeof(MD5_CTX))
+end_define
 
 begin_define
 define|#

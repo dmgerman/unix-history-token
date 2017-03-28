@@ -329,10 +329,10 @@ directive|ifndef
 name|DEBUG
 name|bufp
 operator|=
-name|emalloc_zero
+name|eallocarray
 argument_list|(
 name|abuf
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*

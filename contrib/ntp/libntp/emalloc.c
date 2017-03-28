@@ -200,7 +200,7 @@ end_define
 begin_function
 name|void
 modifier|*
-name|oreallocarray
+name|oreallocarrayxz
 parameter_list|(
 name|void
 modifier|*
@@ -211,6 +211,9 @@ name|nmemb
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|size_t
+name|extra
 ifdef|#
 directive|ifdef
 name|EREALLOC_CALLSITE
@@ -289,6 +292,8 @@ name|ereallocz
 argument_list|(
 name|optr
 argument_list|,
+name|extra
+operator|+
 operator|(
 name|size
 operator|*
@@ -297,7 +302,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 return|;
 else|#
@@ -307,6 +312,8 @@ name|ereallocz
 argument_list|(
 name|optr
 argument_list|,
+name|extra
+operator|+
 operator|(
 name|size
 operator|*
@@ -315,7 +322,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|,
 name|file
 argument_list|,

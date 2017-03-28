@@ -933,7 +933,7 @@ comment|/* GPS time */
 name|l_fp
 name|secs
 decl_stmt|;
-name|int
+name|u_int
 name|week
 init|=
 name|getshort
