@@ -2793,17 +2793,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|isp_uninit
-parameter_list|(
-name|ispsoftc_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|uint64_t
 name|isp_default_wwn
 parameter_list|(

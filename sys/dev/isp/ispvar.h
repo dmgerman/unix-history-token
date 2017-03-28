@@ -239,20 +239,10 @@ parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
-name|dv_reset0
-function_decl|)
-parameter_list|(
-name|ispsoftc_t
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|dv_reset1
+name|dv_irqsetup
 function_decl|)
 parameter_list|(
 name|ispsoftc_t
@@ -432,23 +422,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_RESET0
+name|ISP_IRQSETUP
 parameter_list|(
 name|isp
 parameter_list|)
 define|\
-value|if ((isp)->isp_mdvec->dv_reset0) (*(isp)->isp_mdvec->dv_reset0)((isp))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_RESET1
-parameter_list|(
-name|isp
-parameter_list|)
-define|\
-value|if ((isp)->isp_mdvec->dv_reset1) (*(isp)->isp_mdvec->dv_reset1)((isp))
+value|(((isp)->isp_mdvec->dv_irqsetup) ? (*(isp)->isp_mdvec->dv_irqsetup)(isp) : 0)
 end_define
 
 begin_define
@@ -2010,33 +1989,18 @@ decl_stmt|;
 comment|/* time were last initialized */
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
-name|uint32_t
-operator|:
-literal|8
-operator|,
-operator|:
-literal|2
-operator|,
-name|isp_dead
-operator|:
-literal|1
-operator|,
-operator|:
-literal|1
-operator|,
+name|u_int
 name|isp_mboxbsy
-operator|:
-literal|1
-operator|,
+decl_stmt|;
 comment|/* mailbox command active */
+specifier|volatile
+name|u_int
 name|isp_state
-operator|:
-literal|3
-operator|,
+decl_stmt|;
+specifier|volatile
+name|u_int
 name|isp_nactive
-operator|:
-literal|16
-expr_stmt|;
+decl_stmt|;
 comment|/* how many commands active */
 specifier|volatile
 name|mbreg_t
@@ -3243,6 +3207,20 @@ name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Shutdown hardware after use.  */
+end_comment
+
+begin_function_decl
+name|void
+name|isp_shutdown
+parameter_list|(
+name|ispsoftc_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
