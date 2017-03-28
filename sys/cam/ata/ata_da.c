@@ -2518,24 +2518,6 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ADA_DEFAULT_LEGACY_ALIASES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ADA_DEFAULT_LEGACY_ALIASES
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|ADA_DEFAULT_TIMEOUT
 end_ifndef
 
