@@ -7727,6 +7727,7 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|flag
 block|{
@@ -8948,6 +8949,7 @@ name|unsigned
 name|long
 name|bits
 decl_stmt|;
+specifier|const
 name|struct
 name|flag
 modifier|*
@@ -9228,6 +9230,7 @@ decl_stmt|,
 modifier|*
 name|end
 decl_stmt|;
+specifier|const
 name|struct
 name|flag
 modifier|*
@@ -9533,6 +9536,7 @@ decl_stmt|,
 modifier|*
 name|end
 decl_stmt|;
+specifier|const
 name|struct
 name|flag
 modifier|*

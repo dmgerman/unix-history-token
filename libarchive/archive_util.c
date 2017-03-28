@@ -723,8 +723,8 @@ block|{
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|msg1
+index|[]
 init|=
 literal|"Fatal Internal Error in libarchive: "
 decl_stmt|;
@@ -832,16 +832,16 @@ block|{
 specifier|static
 specifier|const
 name|wchar_t
-modifier|*
 name|prefix
+index|[]
 init|=
 literal|L"libarchive_"
 decl_stmt|;
 specifier|static
 specifier|const
 name|wchar_t
-modifier|*
 name|suffix
+index|[]
 init|=
 literal|L"XXXXXXXXXX"
 decl_stmt|;

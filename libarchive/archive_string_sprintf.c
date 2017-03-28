@@ -80,8 +80,8 @@ block|{
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|digits
+index|[]
 init|=
 literal|"0123456789abcdef"
 decl_stmt|;
