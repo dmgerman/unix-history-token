@@ -969,7 +969,9 @@ begin_function
 specifier|static
 name|void
 name|wdc_cap_diag_usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -1130,7 +1132,9 @@ begin_function
 specifier|static
 name|void
 name|wdc_drive_log_usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -1291,7 +1295,9 @@ begin_function
 specifier|static
 name|void
 name|wdc_get_crash_dump_usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
