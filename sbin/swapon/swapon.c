@@ -1854,6 +1854,36 @@ name|strcmp
 argument_list|(
 name|token
 argument_list|,
+literal|"late"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* ignore known option */
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|token
+argument_list|,
+literal|"noauto"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* ignore known option */
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|token
+argument_list|,
 literal|"sw"
 argument_list|)
 operator|!=
