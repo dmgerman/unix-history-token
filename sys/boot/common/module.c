@@ -792,6 +792,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_GELI_SUPPORT
+end_ifdef
+
 begin_expr_stmt
 name|COMMAND_SET
 argument_list|(
@@ -994,6 +1000,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
