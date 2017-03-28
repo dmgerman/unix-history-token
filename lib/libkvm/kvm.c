@@ -172,6 +172,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|_kd_is_null
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* from src/lib/libc/gen/nlist.c */
 end_comment
@@ -467,6 +477,17 @@ modifier|*
 name|kd
 parameter_list|)
 block|{
+if|if
+condition|(
+name|kd
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|_kd_is_null
+operator|)
+return|;
 return|return
 operator|(
 name|kd
@@ -5007,6 +5028,7 @@ operator|(
 name|cp
 operator|-
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
