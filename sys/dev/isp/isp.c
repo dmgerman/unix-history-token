@@ -460,7 +460,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|isp_parse_async
 parameter_list|(
 name|ispsoftc_t
@@ -473,7 +473,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|isp_parse_async_fc
 parameter_list|(
 name|ispsoftc_t
@@ -28361,20 +28361,21 @@ block|}
 block|}
 else|else
 block|{
-name|i
-operator|=
+if|if
+condition|(
 name|IS_FC
 argument_list|(
 name|isp
 argument_list|)
-condition|?
+condition|)
 name|isp_parse_async_fc
 argument_list|(
 name|isp
 argument_list|,
 name|info
 argument_list|)
-else|:
+expr_stmt|;
+else|else
 name|isp_parse_async
 argument_list|(
 name|isp
@@ -28382,15 +28383,6 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|<
-literal|0
-condition|)
-block|{
-return|return;
-block|}
 block|}
 if|if
 condition|(
@@ -31454,12 +31446,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse an ASYNC mailbox complete  *  * Return non-zero if the event has been acknowledged.  */
+comment|/*  * Parse an ASYNC mailbox complete  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|isp_parse_async
 parameter_list|(
 name|ispsoftc_t
@@ -31470,11 +31462,6 @@ name|uint16_t
 name|mbox
 parameter_list|)
 block|{
-name|int
-name|acked
-init|=
-literal|0
-decl_stmt|;
 name|uint32_t
 name|h1
 init|=
@@ -31547,8 +31534,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-if|if
-condition|(
 name|isp_target_async
 argument_list|(
 name|isp
@@ -31557,13 +31542,7 @@ name|chan
 argument_list|,
 name|mbox
 argument_list|)
-condition|)
-block|{
-name|acked
-operator|=
-literal|1
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|isp_async
@@ -31621,10 +31600,6 @@ name|isp
 argument_list|,
 name|ISPASYNC_FW_CRASH
 argument_list|)
-expr_stmt|;
-name|acked
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -31695,8 +31670,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-if|if
-condition|(
 name|isp_target_async
 argument_list|(
 name|isp
@@ -31705,13 +31678,7 @@ name|chan
 argument_list|,
 name|mbox
 argument_list|)
-condition|)
-block|{
-name|acked
-operator|=
-literal|1
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 break|break;
@@ -31741,8 +31708,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-if|if
-condition|(
 name|isp_target_async
 argument_list|(
 name|isp
@@ -31751,13 +31716,7 @@ name|chan
 argument_list|,
 name|mbox
 argument_list|)
-condition|)
-block|{
-name|acked
-operator|=
-literal|1
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 break|break;
@@ -32223,17 +32182,12 @@ name|isp_intoasync
 operator|++
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|acked
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|isp_parse_async_fc
 parameter_list|(
 name|ispsoftc_t
@@ -32247,11 +32201,6 @@ block|{
 name|fcparam
 modifier|*
 name|fcp
-decl_stmt|;
-name|int
-name|acked
-init|=
-literal|0
 decl_stmt|;
 name|uint16_t
 name|chan
@@ -32362,10 +32311,6 @@ name|isp
 argument_list|,
 name|ISPASYNC_FW_CRASH
 argument_list|)
-expr_stmt|;
-name|acked
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -32486,8 +32431,6 @@ case|:
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-if|if
-condition|(
 name|isp_target_async
 argument_list|(
 name|isp
@@ -32512,21 +32455,12 @@ argument_list|)
 argument_list|,
 name|mbox
 argument_list|)
-condition|)
-block|{
-name|acked
-operator|=
-literal|1
 expr_stmt|;
-block|}
-else|else
-block|{
 name|isp
 operator|->
 name|isp_fphccmplt
 operator|++
 expr_stmt|;
-block|}
 else|#
 directive|else
 name|isp_prt
@@ -32638,8 +32572,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-if|if
-condition|(
 name|isp_target_async
 argument_list|(
 name|isp
@@ -32648,13 +32580,7 @@ name|chan
 argument_list|,
 name|mbox
 argument_list|)
-condition|)
-block|{
-name|acked
-operator|=
-literal|1
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* 			 * We've had problems with data corruption occuring on 			 * commands that complete (with no apparent error) after 			 * we receive a LIP. This has been observed mostly on 			 * Local Loop topologies. To be safe, let's just mark 			 * all active initiator commands as dead. 			 */
@@ -32893,8 +32819,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-if|if
-condition|(
 name|isp_target_async
 argument_list|(
 name|isp
@@ -32903,13 +32827,7 @@ name|chan
 argument_list|,
 name|mbox
 argument_list|)
-condition|)
-block|{
-name|acked
-operator|=
-literal|1
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -32985,8 +32903,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-if|if
-condition|(
 name|isp_target_async
 argument_list|(
 name|isp
@@ -32995,13 +32911,7 @@ name|chan
 argument_list|,
 name|mbox
 argument_list|)
-condition|)
-block|{
-name|acked
-operator|=
-literal|1
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -33087,8 +32997,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
-if|if
-condition|(
 name|isp_target_async
 argument_list|(
 name|isp
@@ -33097,13 +33005,7 @@ name|chan
 argument_list|,
 name|mbox
 argument_list|)
-condition|)
-block|{
-name|acked
-operator|=
-literal|1
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -33615,12 +33517,7 @@ argument_list|,
 name|ISPASYNC_FW_CRASH
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 case|case
 name|ISP_CONN_LOOPBACK
 case|:
@@ -33860,11 +33757,6 @@ name|isp_intoasync
 operator|++
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|acked
-operator|)
-return|;
 block|}
 end_function
 

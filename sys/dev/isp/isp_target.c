@@ -3141,7 +3141,7 @@ comment|/*  * These are either broadcast events or specifically CTIO fast comple
 end_comment
 
 begin_function
-name|int
+name|void
 name|isp_target_async
 parameter_list|(
 name|ispsoftc_t
@@ -3582,11 +3582,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
