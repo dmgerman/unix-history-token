@@ -366,6 +366,12 @@ name|bootinfo
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_GELI_SUPPORT
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -373,6 +379,11 @@ name|geli_boot_args
 name|geliargs
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -2609,6 +2620,9 @@ name|dsk
 operator|.
 name|drive
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOADER_GELI_SUPPORT
 name|geliargs
 operator|.
 name|size
@@ -2618,9 +2632,6 @@ argument_list|(
 name|geliargs
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOADER_GELI_SUPPORT
 name|bcopy
 argument_list|(
 name|gelipw
@@ -2646,17 +2657,6 @@ argument_list|(
 name|gelipw
 argument_list|)
 argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|geliargs
-operator|.
-name|gelipw
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
@@ -2708,8 +2708,13 @@ argument_list|(
 operator|&
 name|bootinfo
 argument_list|)
+ifdef|#
+directive|ifdef
+name|LOADER_GELI_SUPPORT
 argument_list|,
 name|geliargs
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 block|}
