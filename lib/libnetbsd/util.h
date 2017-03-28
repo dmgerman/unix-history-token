@@ -49,6 +49,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sockaddr_snprintf
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|string_to_flags
 parameter_list|(
 name|char
