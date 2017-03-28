@@ -120,16 +120,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
-name|zfs_crc64_table
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 specifier|const
 name|dnode_phys_t
 modifier|*
