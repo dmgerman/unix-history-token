@@ -316,13 +316,6 @@ name|ID_SRPTLP
 value|0x9d238086
 end_define
 
-begin_define
-define|#
-directive|define
-name|PCIS_SERIALBUS_SMBUS_PROGIF
-value|0x00
-end_define
-
 begin_comment
 comment|/* Internal functions */
 end_comment
