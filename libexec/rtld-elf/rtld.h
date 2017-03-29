@@ -1563,6 +1563,13 @@ begin_comment
 comment|/* For resolving undefined weak refs. */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|bool
+name|ld_bind_not
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|dump_relocations

@@ -1955,6 +1955,13 @@ operator|)
 name|target
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ld_bind_not
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * At the PLT entry pointed at by `wherep', construct 	 * a direct transfer to the now fully resolved function 	 * address. 	 */
 name|offset
 operator|=
@@ -2134,6 +2141,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|out
+label|:
 return|return
 operator|(
 name|target

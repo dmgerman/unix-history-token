@@ -3627,6 +3627,14 @@ name|where
 decl_stmt|;
 if|if
 condition|(
+name|ld_bind_not
+condition|)
+block|{
+comment|/* Skip any PLT modifications */
+block|}
+elseif|else
+if|if
+condition|(
 name|rela
 operator|-
 name|refobj
