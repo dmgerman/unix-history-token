@@ -18690,6 +18690,12 @@ name|cnt_addr
 argument_list|)
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|idx
+operator|<=
+name|MEM_EDC1
+condition|)
 name|t4_edc_err_read
 argument_list|(
 name|adapter
