@@ -153,22 +153,13 @@ begin_struct
 struct|struct
 name|ispmdvec
 block|{
-name|int
+name|void
 function_decl|(
 modifier|*
-name|dv_rd_isr
+name|dv_run_isr
 function_decl|)
 parameter_list|(
 name|ispsoftc_t
-modifier|*
-parameter_list|,
-name|uint16_t
-modifier|*
-parameter_list|,
-name|uint16_t
-modifier|*
-parameter_list|,
-name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -336,18 +327,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_READ_ISR
+name|ISP_RUN_ISR
 parameter_list|(
 name|isp
-parameter_list|,
-name|isrp
-parameter_list|,
-name|semap
-parameter_list|,
-name|info
 parameter_list|)
 define|\
-value|(*(isp)->isp_mdvec->dv_rd_isr)(isp, isrp, semap, info)
+value|(*(isp)->isp_mdvec->dv_run_isr)(isp)
 end_define
 
 begin_define
@@ -1952,37 +1937,6 @@ name|uint32_t
 name|isp_respoutrp
 decl_stmt|;
 comment|/* register for RESOUTP */
-comment|/* 	 * Instrumentation 	 */
-name|uint64_t
-name|isp_intcnt
-decl_stmt|;
-comment|/* total int count */
-name|uint64_t
-name|isp_intbogus
-decl_stmt|;
-comment|/* spurious int count */
-name|uint64_t
-name|isp_intmboxc
-decl_stmt|;
-comment|/* mbox completions */
-name|uint64_t
-name|isp_intoasync
-decl_stmt|;
-comment|/* other async */
-name|uint64_t
-name|isp_rsltccmplt
-decl_stmt|;
-comment|/* CMDs on result q */
-name|uint64_t
-name|isp_fphccmplt
-decl_stmt|;
-comment|/* CMDs via fastpost */
-name|uint16_t
-name|isp_rscchiwater
-decl_stmt|;
-name|uint16_t
-name|isp_fpcchiwater
-decl_stmt|;
 name|NANOTIME_T
 name|isp_init_time
 decl_stmt|;
@@ -3206,21 +3160,62 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Internal Interrupt Service Routine  *  * The outer layers do the spade work to get the appropriate status register,  * semaphore register and first mailbox register (if appropriate). This also  * means that most spurious/bogus interrupts not for us can be filtered first.  */
+comment|/*  * Internal Interrupt Service Routine  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
 
 begin_function_decl
 name|void
-name|isp_intr
+name|isp_intr_atioq
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|void
+name|isp_intr_async
 parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
 name|uint16_t
+name|event
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_intr_mbox
+parameter_list|(
+name|ispsoftc_t
+modifier|*
 parameter_list|,
 name|uint16_t
-parameter_list|,
-name|uint16_t
+name|mbox0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_intr_respq
+parameter_list|(
+name|ispsoftc_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
