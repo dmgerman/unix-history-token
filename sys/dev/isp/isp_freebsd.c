@@ -2271,14 +2271,6 @@ name|int
 name|chan
 parameter_list|)
 block|{
-if|if
-condition|(
-name|IS_FC
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-block|{
 name|struct
 name|isp_fc
 modifier|*
@@ -2291,6 +2283,15 @@ argument_list|,
 name|chan
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|fc
+operator|->
+name|sim
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|fc
@@ -2351,7 +2352,6 @@ name|SIMQFRZ_LOOPDOWN
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_function
@@ -2367,14 +2367,6 @@ name|int
 name|chan
 parameter_list|)
 block|{
-if|if
-condition|(
-name|IS_FC
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-block|{
 name|struct
 name|isp_fc
 modifier|*
@@ -2387,6 +2379,15 @@ argument_list|,
 name|chan
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|fc
+operator|->
+name|sim
+operator|==
+name|NULL
+condition|)
+return|return;
 name|int
 name|wasfrozen
 init|=
@@ -2437,7 +2438,6 @@ expr_stmt|;
 name|xpt_release_boot
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
