@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<security/audit/audit.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -9145,6 +9151,13 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|AUDIT_ARG_SVIPC_WHICH
+argument_list|(
+name|uap
+operator|->
+name|which
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -9679,6 +9692,13 @@ name|defined
 argument_list|(
 name|COMPAT_FREEBSD7
 argument_list|)
+name|AUDIT_ARG_SVIPC_WHICH
+argument_list|(
+name|uap
+operator|->
+name|which
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|uap

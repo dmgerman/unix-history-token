@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2009 Apple Inc.  * Copyright (c) 2005, 2016 Robert N. M. Watson  * All rights reserved.  *  * Portions of this software were developed by BAE Systems, the University of  * Cambridge Computer Laboratory, and Memorial University under DARPA/AFRL  * contract FA8650-15-C-7558 ("CADETS"), as part of the DARPA Transparent  * Computing (TC) research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1999-2009 Apple Inc.  * Copyright (c) 2005, 2016-2017 Robert N. M. Watson  * All rights reserved.  *  * Portions of this software were developed by BAE Systems, the University of  * Cambridge Computer Laboratory, and Memorial University under DARPA/AFRL  * contract FA8650-15-C-7558 ("CADETS"), as part of the DARPA Transparent  * Computing (TC) research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.  Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  * 2.  Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  * 3.  Neither the name of Apple Inc. ("Apple") nor the names of  *     its contributors may be used to endorse or promote products derived  *     from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -616,6 +616,126 @@ block|,
 name|AUE_OPENAT_WT
 block|}
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|aue_msgsys
+index|[]
+init|=
+block|{
+comment|/* 0 */
+name|AUE_MSGCTL
+block|,
+comment|/* 1 */
+name|AUE_MSGGET
+block|,
+comment|/* 2 */
+name|AUE_MSGSND
+block|,
+comment|/* 3 */
+name|AUE_MSGRCV
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|aue_msgsys_count
+init|=
+sizeof|sizeof
+argument_list|(
+name|aue_msgsys
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|aue_semsys
+index|[]
+init|=
+block|{
+comment|/* 0 */
+name|AUE_SEMCTL
+block|,
+comment|/* 1 */
+name|AUE_SEMGET
+block|,
+comment|/* 2 */
+name|AUE_SEMOP
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|aue_semsys_count
+init|=
+sizeof|sizeof
+argument_list|(
+name|aue_semsys
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|aue_shmsys
+index|[]
+init|=
+block|{
+comment|/* 0 */
+name|AUE_SHMAT
+block|,
+comment|/* 1 */
+name|AUE_SHMDT
+block|,
+comment|/* 2 */
+name|AUE_SHMGET
+block|,
+comment|/* 3 */
+name|AUE_SHMCTL
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|aue_shmsys_count
+init|=
+sizeof|sizeof
+argument_list|(
+name|aue_shmsys
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1981,6 +2101,127 @@ name|AUE_SEMCTL
 operator|)
 return|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Convert msgsys(2), semsys(2), and shmsys(2) system-call variations into  * audit events, if possible.  */
+end_comment
+
+begin_function
+name|au_event_t
+name|audit_msgsys_to_event
+parameter_list|(
+name|int
+name|which
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|which
+operator|>=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|which
+operator|<
+name|aue_msgsys_count
+operator|)
+condition|)
+return|return
+operator|(
+name|aue_msgsys
+index|[
+name|which
+index|]
+operator|)
+return|;
+comment|/* Audit a bad command. */
+return|return
+operator|(
+name|AUE_MSGSYS
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|au_event_t
+name|audit_semsys_to_event
+parameter_list|(
+name|int
+name|which
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|which
+operator|>=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|which
+operator|<
+name|aue_semsys_count
+operator|)
+condition|)
+return|return
+operator|(
+name|aue_semsys
+index|[
+name|which
+index|]
+operator|)
+return|;
+comment|/* Audit a bad command. */
+return|return
+operator|(
+name|AUE_SEMSYS
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|au_event_t
+name|audit_shmsys_to_event
+parameter_list|(
+name|int
+name|which
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|which
+operator|>=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|which
+operator|<
+name|aue_shmsys_count
+operator|)
+condition|)
+return|return
+operator|(
+name|aue_shmsys
+index|[
+name|which
+index|]
+operator|)
+return|;
+comment|/* Audit a bad command. */
+return|return
+operator|(
+name|AUE_SHMSYS
+operator|)
+return|;
 block|}
 end_function
 
