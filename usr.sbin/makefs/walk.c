@@ -1733,6 +1733,11 @@ argument_list|,
 name|speconly
 argument_list|)
 expr_stmt|;
+name|free_nodes
+argument_list|(
+name|root
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
