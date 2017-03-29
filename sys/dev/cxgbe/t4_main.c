@@ -45385,6 +45385,8 @@ name|reg
 operator|==
 name|A_TP_KEEP_IDLE
 operator|||
+name|reg
+operator|==
 name|A_TP_KEEP_INTVL
 operator|||
 name|reg
