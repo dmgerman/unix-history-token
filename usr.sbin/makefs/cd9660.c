@@ -612,6 +612,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|cd9660_add_generic_bootimage
+parameter_list|(
+name|iso9660_disk
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Allocate and initialize a cd9660node  * @returns struct cd9660node * Pointer to new node, or NULL on error  */
 end_comment
@@ -8977,6 +8992,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cd9660_add_generic_bootimage
 parameter_list|(

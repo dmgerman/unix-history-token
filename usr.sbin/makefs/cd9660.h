@@ -1225,20 +1225,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cd9660_add_generic_bootimage
-parameter_list|(
-name|iso9660_disk
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|cd9660_write_boot
 parameter_list|(
 name|iso9660_disk
