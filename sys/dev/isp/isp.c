@@ -33698,12 +33698,6 @@ case|case
 name|RQSTYPE_CTIO
 case|:
 case|case
-name|RQSTYPE_ENABLE_LUN
-case|:
-case|case
-name|RQSTYPE_MODIFY_LUN
-case|:
-case|case
 name|RQSTYPE_NOTIFY
 case|:
 case|case
