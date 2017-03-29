@@ -653,12 +653,6 @@ name|struct
 name|ntpdlist
 name|restart_queue
 decl_stmt|;
-name|uint16_t
-name|atio_count
-decl_stmt|;
-name|uint16_t
-name|inot_count
-decl_stmt|;
 block|}
 name|tstate_t
 typedef|;
