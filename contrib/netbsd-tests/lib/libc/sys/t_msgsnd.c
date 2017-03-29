@@ -1043,8 +1043,9 @@ name|msg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
 name|msg
+operator|.
+name|buf
 argument_list|)
 argument_list|,
 name|IPC_NOWAIT
