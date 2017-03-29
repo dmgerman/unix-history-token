@@ -5857,7 +5857,6 @@ name|r2hisr
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|BXR2
 argument_list|(
@@ -5869,10 +5868,12 @@ name|isp
 argument_list|,
 name|BIU_ISR
 argument_list|)
+argument_list|)
 operator|&
 name|BIU2100_ISR_RISC_INT
-argument_list|)
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 operator|*
