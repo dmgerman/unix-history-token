@@ -14290,7 +14290,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"%s: code 0x%x sid  0x%x tagval 0x%016llx chan %d lun %jx"
+literal|"%s: code 0x%x sid  0x%x tagval 0x%016llx chan %d lun %x"
 argument_list|,
 name|__func__
 argument_list|,
