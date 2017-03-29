@@ -744,7 +744,6 @@ end_include
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|xfsread
 parameter_list|(
