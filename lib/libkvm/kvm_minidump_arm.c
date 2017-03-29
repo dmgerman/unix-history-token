@@ -1157,6 +1157,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kvm_arch
 name|kvm_arm_minidump
