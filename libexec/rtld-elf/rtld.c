@@ -4584,6 +4584,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * NB: MIPS uses a private version of this function (_mips_rtld_bind).  * Changes to this function should be applied there as well.  */
+end_comment
+
 begin_function
 name|Elf_Addr
 name|_rtld_bind
