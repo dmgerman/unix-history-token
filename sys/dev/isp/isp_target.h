@@ -68,6 +68,9 @@ block|,
 name|NT_QUERY_TASK_SET
 block|,
 name|NT_QUERY_ASYNC_EVENT
+block|,
+name|NT_SRR
+comment|/* Sequence Retransmission Request */
 block|}
 name|isp_ncode_t
 typedef|;
