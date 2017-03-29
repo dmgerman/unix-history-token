@@ -3644,7 +3644,7 @@ name|char
 name|f1
 index|[]
 init|=
-literal|"%s from N-port handle 0x%x lun %x seq 0x%x"
+literal|"%s from N-port handle 0x%x lun %jx seq 0x%x"
 decl_stmt|;
 specifier|static
 specifier|const
@@ -3652,7 +3652,7 @@ name|char
 name|f2
 index|[]
 init|=
-literal|"unknown %s 0x%x lun %x N-Port handle 0x%x task flags 0x%x seq 0x%x\n"
+literal|"unknown %s 0x%x lun %jx N-Port handle 0x%x task flags 0x%x seq 0x%x\n"
 decl_stmt|;
 name|uint16_t
 name|seqid
@@ -4147,7 +4147,7 @@ name|char
 name|f1
 index|[]
 init|=
-literal|"%s from PortID 0x%06x lun %x seq 0x%08x"
+literal|"%s from PortID 0x%06x lun %jx seq 0x%08x"
 decl_stmt|;
 specifier|static
 specifier|const
@@ -4155,7 +4155,7 @@ name|char
 name|f2
 index|[]
 init|=
-literal|"unknown Task Flag 0x%x lun %x PortID 0x%x tag 0x%08x"
+literal|"unknown Task Flag 0x%x lun %jx PortID 0x%x tag 0x%08x"
 decl_stmt|;
 name|fcportdb_t
 modifier|*
@@ -4196,29 +4196,17 @@ name|notify
 operator|.
 name|nt_lun
 operator|=
-operator|(
+name|CAM_EXTLUN_BYTE_SWIZZLE
+argument_list|(
+name|be64dec
+argument_list|(
 name|aep
 operator|->
 name|at_cmnd
 operator|.
 name|fcp_cmnd_lun
-index|[
-literal|0
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|aep
-operator|->
-name|at_cmnd
-operator|.
-name|fcp_cmnd_lun
-index|[
-literal|1
-index|]
-operator|)
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|notify
 operator|.

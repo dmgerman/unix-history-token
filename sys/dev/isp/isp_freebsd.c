@@ -13883,10 +13883,11 @@ case|case
 name|IN_ABORT_TASK
 case|:
 block|{
+name|lun_id_t
+name|lun
+decl_stmt|;
 name|uint16_t
 name|nphdl
-decl_stmt|,
-name|lun
 decl_stmt|;
 name|uint32_t
 name|sid
@@ -15523,7 +15524,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"%s: code 0x%x sid  0x%x tagval 0x%016llx chan %d lun 0x%x"
+literal|"%s: code 0x%x sid  0x%x tagval 0x%016llx chan %d lun %jx"
 argument_list|,
 name|__func__
 argument_list|,
