@@ -2608,7 +2608,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"can't remove non-dynamic nodes!\n"
+literal|"Warning: can't remove non-dynamic nodes (%s)!\n"
+argument_list|,
+name|oidp
+operator|->
+name|oid_name
 argument_list|)
 expr_stmt|;
 return|return
