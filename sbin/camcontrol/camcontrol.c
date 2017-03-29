@@ -24616,7 +24616,7 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|int
+name|uint64_t
 name|i
 decl_stmt|;
 name|snprintf
@@ -24660,7 +24660,7 @@ literal|1
 init|;
 name|i
 operator|<
-literal|0xff
+name|UINT8_MAX
 condition|;
 name|i
 operator|=
@@ -24790,7 +24790,7 @@ literal|1
 init|;
 name|i
 operator|<
-literal|0xff
+name|UINT32_MAX
 condition|;
 name|i
 operator|=
@@ -24905,7 +24905,7 @@ literal|1
 init|;
 name|i
 operator|<
-literal|0xff
+name|UINT16_MAX
 condition|;
 name|i
 operator|=
