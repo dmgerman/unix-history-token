@@ -12249,20 +12249,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * No active disks or no disks at all, 			 * so destroy device. 			 */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_provider
-operator|!=
-name|NULL
-condition|)
-name|g_mirror_destroy_provider
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|/* 			 * No usable disks, so destroy the device. 			 */
 name|sc
 operator|->
 name|sc_flags
