@@ -1665,7 +1665,7 @@ operator|*
 operator|)
 name|freebsd32_ioctl
 block|,
-name|AUE_NULL
+name|AUE_IOCTL
 block|,
 name|NULL
 block|,
@@ -2887,7 +2887,7 @@ argument_list|,
 name|freebsd32_sigreturn
 argument_list|)
 block|,
-name|AUE_NULL
+name|AUE_SIGRETURN
 block|,
 name|NULL
 block|,
@@ -6670,7 +6670,7 @@ operator|*
 operator|)
 name|freebsd32_aio_read
 block|,
-name|AUE_NULL
+name|AUE_AIO_READ
 block|,
 name|NULL
 block|,
@@ -6696,7 +6696,7 @@ operator|*
 operator|)
 name|freebsd32_aio_write
 block|,
-name|AUE_NULL
+name|AUE_AIO_WRITE
 block|,
 name|NULL
 block|,
@@ -6722,7 +6722,7 @@ operator|*
 operator|)
 name|freebsd32_lio_listio
 block|,
-name|AUE_NULL
+name|AUE_LIO_LISTIO
 block|,
 name|NULL
 block|,
@@ -8113,7 +8113,7 @@ operator|*
 operator|)
 name|freebsd32_aio_return
 block|,
-name|AUE_NULL
+name|AUE_AIO_RETURN
 block|,
 name|NULL
 block|,
@@ -8139,7 +8139,7 @@ operator|*
 operator|)
 name|freebsd32_aio_suspend
 block|,
-name|AUE_NULL
+name|AUE_AIO_SUSPEND
 block|,
 name|NULL
 block|,
@@ -8165,7 +8165,7 @@ operator|*
 operator|)
 name|sys_aio_cancel
 block|,
-name|AUE_NULL
+name|AUE_AIO_CANCEL
 block|,
 name|NULL
 block|,
@@ -8191,7 +8191,7 @@ operator|*
 operator|)
 name|freebsd32_aio_error
 block|,
-name|AUE_NULL
+name|AUE_AIO_ERROR
 block|,
 name|NULL
 block|,
@@ -8216,7 +8216,7 @@ argument_list|,
 name|freebsd32_aio_read
 argument_list|)
 block|,
-name|AUE_NULL
+name|AUE_AIO_READ
 block|,
 name|NULL
 block|,
@@ -8241,7 +8241,7 @@ argument_list|,
 name|freebsd32_aio_write
 argument_list|)
 block|,
-name|AUE_NULL
+name|AUE_AIO_WRITE
 block|,
 name|NULL
 block|,
@@ -8266,7 +8266,7 @@ argument_list|,
 name|freebsd32_lio_listio
 argument_list|)
 block|,
-name|AUE_NULL
+name|AUE_LIO_LISTIO
 block|,
 name|NULL
 block|,
@@ -8947,7 +8947,7 @@ operator|*
 operator|)
 name|sys___acl_get_file
 block|,
-name|AUE_NULL
+name|AUE_ACL_GET_FILE
 block|,
 name|NULL
 block|,
@@ -8973,7 +8973,7 @@ operator|*
 operator|)
 name|sys___acl_set_file
 block|,
-name|AUE_NULL
+name|AUE_ACL_SET_FILE
 block|,
 name|NULL
 block|,
@@ -8999,7 +8999,7 @@ operator|*
 operator|)
 name|sys___acl_get_fd
 block|,
-name|AUE_NULL
+name|AUE_ACL_GET_FD
 block|,
 name|NULL
 block|,
@@ -9025,7 +9025,7 @@ operator|*
 operator|)
 name|sys___acl_set_fd
 block|,
-name|AUE_NULL
+name|AUE_ACL_SET_FD
 block|,
 name|NULL
 block|,
@@ -9051,7 +9051,7 @@ operator|*
 operator|)
 name|sys___acl_delete_file
 block|,
-name|AUE_NULL
+name|AUE_ACL_DELETE_FILE
 block|,
 name|NULL
 block|,
@@ -9077,7 +9077,7 @@ operator|*
 operator|)
 name|sys___acl_delete_fd
 block|,
-name|AUE_NULL
+name|AUE_ACL_DELETE_FD
 block|,
 name|NULL
 block|,
@@ -9103,7 +9103,7 @@ operator|*
 operator|)
 name|sys___acl_aclcheck_file
 block|,
-name|AUE_NULL
+name|AUE_ACL_CHECK_FILE
 block|,
 name|NULL
 block|,
@@ -9129,7 +9129,7 @@ operator|*
 operator|)
 name|sys___acl_aclcheck_fd
 block|,
-name|AUE_NULL
+name|AUE_ACL_CHECK_FD
 block|,
 name|NULL
 block|,
@@ -9259,7 +9259,7 @@ operator|*
 operator|)
 name|freebsd32_aio_waitcomplete
 block|,
-name|AUE_NULL
+name|AUE_AIO_WAITCOMPLETE
 block|,
 name|NULL
 block|,
@@ -9360,7 +9360,7 @@ operator|*
 operator|)
 name|freebsd32_kevent
 block|,
-name|AUE_NULL
+name|AUE_KEVENT
 block|,
 name|NULL
 block|,
@@ -9625,7 +9625,7 @@ operator|*
 operator|)
 name|sys___setugid
 block|,
-name|AUE_NULL
+name|AUE_SETUGID
 block|,
 name|NULL
 block|,
@@ -10882,7 +10882,7 @@ operator|*
 operator|)
 name|sys___acl_get_link
 block|,
-name|AUE_NULL
+name|AUE_ACL_GET_LINK
 block|,
 name|NULL
 block|,
@@ -10908,7 +10908,7 @@ operator|*
 operator|)
 name|sys___acl_set_link
 block|,
-name|AUE_NULL
+name|AUE_ACL_SET_LINK
 block|,
 name|NULL
 block|,
@@ -10934,7 +10934,7 @@ operator|*
 operator|)
 name|sys___acl_delete_link
 block|,
-name|AUE_NULL
+name|AUE_ACL_DELETE_LINK
 block|,
 name|NULL
 block|,
@@ -10960,7 +10960,7 @@ operator|*
 operator|)
 name|sys___acl_aclcheck_link
 block|,
-name|AUE_NULL
+name|AUE_ACL_CHECK_LINK
 block|,
 name|NULL
 block|,
@@ -11035,7 +11035,7 @@ operator|*
 operator|)
 name|sys_thr_exit
 block|,
-name|AUE_NULL
+name|AUE_THR_EXIT
 block|,
 name|NULL
 block|,
@@ -11087,7 +11087,7 @@ operator|*
 operator|)
 name|sys_thr_kill
 block|,
-name|AUE_NULL
+name|AUE_THR_KILL
 block|,
 name|NULL
 block|,
@@ -11159,7 +11159,7 @@ operator|*
 operator|)
 name|sys_jail_attach
 block|,
-name|AUE_NULL
+name|AUE_JAIL_ATTACH
 block|,
 name|NULL
 block|,
@@ -11650,7 +11650,7 @@ operator|*
 operator|)
 name|freebsd32_thr_new
 block|,
-name|AUE_NULL
+name|AUE_THR_NEW
 block|,
 name|NULL
 block|,
@@ -11910,7 +11910,7 @@ operator|*
 operator|)
 name|freebsd32_aio_fsync
 block|,
-name|AUE_NULL
+name|AUE_AIO_FSYNC
 block|,
 name|NULL
 block|,
@@ -12477,7 +12477,7 @@ operator|*
 operator|)
 name|sys_thr_kill2
 block|,
-name|AUE_KILL
+name|AUE_THR_KILL2
 block|,
 name|NULL
 block|,
@@ -13157,7 +13157,7 @@ operator|*
 operator|)
 name|freebsd32_jail_get
 block|,
-name|AUE_NULL
+name|AUE_JAIL_GET
 block|,
 name|NULL
 block|,
@@ -13183,7 +13183,7 @@ operator|*
 operator|)
 name|freebsd32_jail_set
 block|,
-name|AUE_NULL
+name|AUE_JAIL_SET
 block|,
 name|NULL
 block|,
@@ -13209,7 +13209,7 @@ operator|*
 operator|)
 name|sys_jail_remove
 block|,
-name|AUE_NULL
+name|AUE_JAIL_REMOVE
 block|,
 name|NULL
 block|,
@@ -13590,7 +13590,7 @@ operator|*
 operator|)
 name|sys_getloginclass
 block|,
-name|AUE_NULL
+name|AUE_GETLOGINCLASS
 block|,
 name|NULL
 block|,
@@ -13616,7 +13616,7 @@ operator|*
 operator|)
 name|sys_setloginclass
 block|,
-name|AUE_NULL
+name|AUE_SETLOGINCLASS
 block|,
 name|NULL
 block|,
@@ -13775,7 +13775,7 @@ operator|*
 operator|)
 name|freebsd32_posix_fallocate
 block|,
-name|AUE_NULL
+name|AUE_POSIX_FALLOCATE
 block|,
 name|NULL
 block|,
@@ -13801,7 +13801,7 @@ operator|*
 operator|)
 name|freebsd32_posix_fadvise
 block|,
-name|AUE_NULL
+name|AUE_POSIX_FADVISE
 block|,
 name|NULL
 block|,
@@ -13855,7 +13855,7 @@ operator|*
 operator|)
 name|freebsd32_posix_fallocate
 block|,
-name|AUE_NULL
+name|AUE_POSIX_FALLOCATE
 block|,
 name|NULL
 block|,
@@ -13881,7 +13881,7 @@ operator|*
 operator|)
 name|freebsd32_posix_fadvise
 block|,
-name|AUE_NULL
+name|AUE_POSIX_FADVISE
 block|,
 name|NULL
 block|,
@@ -14195,7 +14195,7 @@ operator|*
 operator|)
 name|freebsd32_aio_mlock
 block|,
-name|AUE_NULL
+name|AUE_AIO_MLOCK
 block|,
 name|NULL
 block|,
@@ -14224,7 +14224,7 @@ operator|*
 operator|)
 name|freebsd32_procctl
 block|,
-name|AUE_NULL
+name|AUE_PROCCTL
 block|,
 name|NULL
 block|,
@@ -14252,7 +14252,7 @@ operator|*
 operator|)
 name|freebsd32_procctl
 block|,
-name|AUE_NULL
+name|AUE_PROCCTL
 block|,
 name|NULL
 block|,

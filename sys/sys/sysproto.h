@@ -37128,7 +37128,7 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_setfib
-value|AUE_NULL
+value|AUE_SETFIB
 end_define
 
 begin_define
@@ -37506,21 +37506,21 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_aio_read
-value|AUE_NULL
+value|AUE_AIO_READ
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_aio_write
-value|AUE_NULL
+value|AUE_AIO_WRITE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_lio_listio
-value|AUE_NULL
+value|AUE_LIO_LISTIO
 end_define
 
 begin_define
@@ -37695,49 +37695,49 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_aio_return
-value|AUE_NULL
+value|AUE_AIO_RETURN
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_aio_suspend
-value|AUE_NULL
+value|AUE_AIO_SUSPEND
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_aio_cancel
-value|AUE_NULL
+value|AUE_AIO_CANCEL
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_aio_error
-value|AUE_NULL
+value|AUE_AIO_ERROR
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_freebsd6_aio_read
-value|AUE_NULL
+value|AUE_AIO_READ
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_freebsd6_aio_write
-value|AUE_NULL
+value|AUE_AIO_WRITE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_freebsd6_lio_listio
-value|AUE_NULL
+value|AUE_LIO_LISTIO
 end_define
 
 begin_define
@@ -37912,56 +37912,56 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_get_file
-value|AUE_NULL
+value|AUE_ACL_GET_FILE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_set_file
-value|AUE_NULL
+value|AUE_ACL_SET_FILE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_get_fd
-value|AUE_NULL
+value|AUE_ACL_GET_FD
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_set_fd
-value|AUE_NULL
+value|AUE_ACL_SET_FD
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_delete_file
-value|AUE_NULL
+value|AUE_ACL_DELETE_FILE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_delete_fd
-value|AUE_NULL
+value|AUE_ACL_DELETE_FD
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_aclcheck_file
-value|AUE_NULL
+value|AUE_ACL_CHECK_FILE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_aclcheck_fd
-value|AUE_NULL
+value|AUE_ACL_CHECK_FD
 end_define
 
 begin_define
@@ -37996,7 +37996,7 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_aio_waitcomplete
-value|AUE_NULL
+value|AUE_AIO_WAITCOMPLETE
 end_define
 
 begin_define
@@ -38024,7 +38024,7 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_kevent
-value|AUE_NULL
+value|AUE_KEVENT
 end_define
 
 begin_define
@@ -38052,7 +38052,7 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE___setugid
-value|AUE_NULL
+value|AUE_SETUGID
 end_define
 
 begin_define
@@ -38185,63 +38185,63 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_close
-value|AUE_NULL
+value|AUE_SEMCLOSE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_post
-value|AUE_NULL
+value|AUE_SEMPOST
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_wait
-value|AUE_NULL
+value|AUE_SEMWAIT
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_trywait
-value|AUE_NULL
+value|AUE_SEMTRYWAIT
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_init
-value|AUE_NULL
+value|AUE_SEMINIT
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_open
-value|AUE_NULL
+value|AUE_SEMOPEN
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_unlink
-value|AUE_NULL
+value|AUE_SEMUNLINK
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_getvalue
-value|AUE_NULL
+value|AUE_SEMGETVALUE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_destroy
-value|AUE_NULL
+value|AUE_SEMDESTROY
 end_define
 
 begin_define
@@ -38339,28 +38339,28 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_get_link
-value|AUE_NULL
+value|AUE_ACL_GET_LINK
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_set_link
-value|AUE_NULL
+value|AUE_ACL_SET_LINK
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_delete_link
-value|AUE_NULL
+value|AUE_ACL_DELETE_LINK
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE___acl_aclcheck_link
-value|AUE_NULL
+value|AUE_ACL_CHECK_LINK
 end_define
 
 begin_define
@@ -38374,14 +38374,14 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_thr_create
-value|AUE_NULL
+value|AUE_THR_CREATE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_thr_exit
-value|AUE_NULL
+value|AUE_THR_EXIT
 end_define
 
 begin_define
@@ -38395,14 +38395,14 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_thr_kill
-value|AUE_NULL
+value|AUE_THR_KILL
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_jail_attach
-value|AUE_NULL
+value|AUE_JAIL_ATTACH
 end_define
 
 begin_define
@@ -38430,7 +38430,7 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_ksem_timedwait
-value|AUE_NULL
+value|AUE_SEMWAIT
 end_define
 
 begin_define
@@ -38528,7 +38528,7 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_thr_new
-value|AUE_NULL
+value|AUE_THR_NEW
 end_define
 
 begin_define
@@ -38542,42 +38542,42 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_kmq_open
-value|AUE_NULL
+value|AUE_MQ_OPEN
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_kmq_setattr
-value|AUE_NULL
+value|AUE_MQ_SETATTR
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_kmq_timedreceive
-value|AUE_NULL
+value|AUE_MQ_TIMEDRECEIVE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_kmq_timedsend
-value|AUE_NULL
+value|AUE_MQ_TIMEDSEND
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_kmq_notify
-value|AUE_NULL
+value|AUE_MQ_NOTIFY
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_kmq_unlink
-value|AUE_NULL
+value|AUE_MQ_UNLINK
 end_define
 
 begin_define
@@ -38598,7 +38598,7 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_aio_fsync
-value|AUE_NULL
+value|AUE_AIO_FSYNC
 end_define
 
 begin_define
@@ -38612,28 +38612,28 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_sctp_peeloff
-value|AUE_NULL
+value|AUE_SCTP_PEELOFF
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_sctp_generic_sendmsg
-value|AUE_NULL
+value|AUE_SCTP_GENERIC_SENDMSG
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_sctp_generic_sendmsg_iov
-value|AUE_NULL
+value|AUE_SCTP_GENERIC_SENDMSG_IOV
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_sctp_generic_recvmsg
-value|AUE_NULL
+value|AUE_SCTP_GENERIC_RECVMSG
 end_define
 
 begin_define
@@ -38682,7 +38682,7 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_thr_kill2
-value|AUE_KILL
+value|AUE_THR_KILL2
 end_define
 
 begin_define
@@ -38857,21 +38857,21 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_jail_get
-value|AUE_NULL
+value|AUE_JAIL_GET
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_jail_set
-value|AUE_NULL
+value|AUE_JAIL_SET
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_jail_remove
-value|AUE_NULL
+value|AUE_JAIL_REMOVE
 end_define
 
 begin_define
@@ -38962,14 +38962,14 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_getloginclass
-value|AUE_NULL
+value|AUE_GETLOGINCLASS
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_setloginclass
-value|AUE_NULL
+value|AUE_SETLOGINCLASS
 end_define
 
 begin_define
@@ -39011,14 +39011,14 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_posix_fallocate
-value|AUE_NULL
+value|AUE_POSIX_FALLOCATE
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_posix_fadvise
-value|AUE_NULL
+value|AUE_POSIX_FADVISE
 end_define
 
 begin_define
@@ -39102,14 +39102,14 @@ begin_define
 define|#
 directive|define
 name|SYS_AUE_aio_mlock
-value|AUE_NULL
+value|AUE_AIO_MLOCK
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_AUE_procctl
-value|AUE_NULL
+value|AUE_PROCCTL
 end_define
 
 begin_define

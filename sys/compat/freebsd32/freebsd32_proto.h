@@ -16412,7 +16412,7 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_ioctl
-value|AUE_NULL
+value|AUE_IOCTL
 end_define
 
 begin_define
@@ -16475,7 +16475,7 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_ofreebsd32_sigreturn
-value|AUE_NULL
+value|AUE_SIGRETURN
 end_define
 
 begin_define
@@ -16797,21 +16797,21 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_aio_read
-value|AUE_NULL
+value|AUE_AIO_READ
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_aio_write
-value|AUE_NULL
+value|AUE_AIO_WRITE
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_lio_listio
-value|AUE_NULL
+value|AUE_LIO_LISTIO
 end_define
 
 begin_define
@@ -16860,42 +16860,42 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_aio_return
-value|AUE_NULL
+value|AUE_AIO_RETURN
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_aio_suspend
-value|AUE_NULL
+value|AUE_AIO_SUSPEND
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_aio_error
-value|AUE_NULL
+value|AUE_AIO_ERROR
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd6_freebsd32_aio_read
-value|AUE_NULL
+value|AUE_AIO_READ
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd6_freebsd32_aio_write
-value|AUE_NULL
+value|AUE_AIO_WRITE
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd6_freebsd32_lio_listio
-value|AUE_NULL
+value|AUE_LIO_LISTIO
 end_define
 
 begin_define
@@ -16944,14 +16944,14 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_aio_waitcomplete
-value|AUE_NULL
+value|AUE_AIO_WAITCOMPLETE
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_kevent
-value|AUE_NULL
+value|AUE_KEVENT
 end_define
 
 begin_define
@@ -16972,14 +16972,14 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_ksem_init
-value|AUE_NULL
+value|AUE_SEMINIT
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_ksem_open
-value|AUE_NULL
+value|AUE_SEMOPEN
 end_define
 
 begin_define
@@ -17021,7 +17021,7 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_ksem_timedwait
-value|AUE_NULL
+value|AUE_SEMWAIT
 end_define
 
 begin_define
@@ -17042,49 +17042,49 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_thr_new
-value|AUE_NULL
+value|AUE_THR_NEW
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_kmq_open
-value|AUE_NULL
+value|AUE_MQ_OPEN
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_kmq_setattr
-value|AUE_NULL
+value|AUE_MQ_SETATTR
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_kmq_timedreceive
-value|AUE_NULL
+value|AUE_MQ_TIMEDRECEIVE
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_kmq_timedsend
-value|AUE_NULL
+value|AUE_MQ_TIMEDSEND
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_kmq_notify
-value|AUE_NULL
+value|AUE_MQ_NOTIFY
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_aio_fsync
-value|AUE_NULL
+value|AUE_AIO_FSYNC
 end_define
 
 begin_define
@@ -17231,14 +17231,14 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_jail_get
-value|AUE_NULL
+value|AUE_JAIL_GET
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_jail_set
-value|AUE_NULL
+value|AUE_JAIL_SET
 end_define
 
 begin_define
@@ -17273,14 +17273,14 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_posix_fallocate
-value|AUE_NULL
+value|AUE_POSIX_FALLOCATE
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_posix_fadvise
-value|AUE_NULL
+value|AUE_POSIX_FADVISE
 end_define
 
 begin_define
@@ -17294,14 +17294,14 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_posix_fallocate
-value|AUE_NULL
+value|AUE_POSIX_FALLOCATE
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_posix_fadvise
-value|AUE_NULL
+value|AUE_POSIX_FADVISE
 end_define
 
 begin_define
@@ -17329,21 +17329,21 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_aio_mlock
-value|AUE_NULL
+value|AUE_AIO_MLOCK
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_procctl
-value|AUE_NULL
+value|AUE_PROCCTL
 end_define
 
 begin_define
 define|#
 directive|define
 name|FREEBSD32_SYS_AUE_freebsd32_procctl
-value|AUE_NULL
+value|AUE_PROCCTL
 end_define
 
 begin_define
