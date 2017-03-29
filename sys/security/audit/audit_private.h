@@ -238,6 +238,13 @@ name|AR_PRESELECT_USER_PIPE
 value|0x00008000U
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR_PRESELECT_DTRACE
+value|0x00010000U
+end_define
+
 begin_comment
 comment|/*  * Audit data is generated as a stream of struct audit_record structures,  * linked by struct kaudit_record, and contain storage for possible audit so  * that it will not need to be allocated during the processing of a system  * call, both improving efficiency and avoiding sleeping at untimely moments.  * This structure is converted to BSM format before being written to disk.  */
 end_comment
@@ -1149,6 +1156,15 @@ modifier|*
 name|k_uthread
 decl_stmt|;
 comment|/* Audited thread. */
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|void
+modifier|*
+name|k_dtaudit_state
+decl_stmt|;
+endif|#
+directive|endif
 name|TAILQ_ENTRY
 argument_list|(
 argument|kaudit_record
@@ -1385,7 +1401,7 @@ value|(FWRITE | O_APPEND)
 end_define
 
 begin_comment
-comment|/*  * Audit event-to-name mapping structure, maintained in audit_bsm_klib.c.  It  * appears in this header so that the DTrace audit provider can dereference  * instances passed back in the au_evname_foreach() callbacks.  Safe access to  * its fields rquires holding ene_lock (after it is visible in the global  * table).  *  * Locking:  * (c) - Constant after inserted in the global table  * (l) - Protected by ene_lock  * (m) - Protected by evnamemap_lock (audit_bsm_klib.c)  * (M) - Writes protected by evnamemap_lock; reads unprotected.  */
+comment|/*  * Audit event-to-name mapping structure, maintained in audit_bsm_klib.c.  It  * appears in this header so that the DTrace audit provider can dereference  * instances passed back in the au_evname_foreach() callbacks.  Safe access to  * its fields requires holding ene_lock (after it is visible in the global  * table).  *  * Locking:  * (c) - Constant after inserted in the global table  * (l) - Protected by ene_lock  * (m) - Protected by evnamemap_lock (audit_bsm_klib.c)  * (M) - Writes protected by evnamemap_lock; reads unprotected.  */
 end_comment
 
 begin_struct
@@ -1414,6 +1430,29 @@ name|struct
 name|mtx
 name|ene_lock
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+comment|/* DTrace probe IDs; 0 if not yet registered. */
+name|uint32_t
+name|ene_commit_probe_id
+decl_stmt|;
+comment|/* (M) */
+name|uint32_t
+name|ene_bsm_probe_id
+decl_stmt|;
+comment|/* (M) */
+comment|/* Flags indicating if the probes enabled or not. */
+name|int
+name|ene_commit_probe_enabled
+decl_stmt|;
+comment|/* (M) */
+name|int
+name|ene_bsm_probe_enabled
+decl_stmt|;
+comment|/* (M) */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1457,6 +1496,109 @@ name|ene
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/*  * DTrace audit provider (dtaudit) hooks -- to be set non-NULL when the audit  * provider is loaded and ready to be called into.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|dtaudit_hook_preselect
+function_decl|)
+parameter_list|(
+name|au_id_t
+name|auid
+parameter_list|,
+name|au_event_t
+name|event
+parameter_list|,
+name|au_class_t
+name|class
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|dtaudit_hook_commit
+function_decl|)
+parameter_list|(
+name|struct
+name|kaudit_record
+modifier|*
+name|kar
+parameter_list|,
+name|au_id_t
+name|auid
+parameter_list|,
+name|au_event_t
+name|event
+parameter_list|,
+name|au_class_t
+name|class
+parameter_list|,
+name|int
+name|sorf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|dtaudit_hook_bsm
+function_decl|)
+parameter_list|(
+name|struct
+name|kaudit_record
+modifier|*
+name|kar
+parameter_list|,
+name|au_id_t
+name|auid
+parameter_list|,
+name|au_event_t
+name|event
+parameter_list|,
+name|au_class_t
+name|class
+parameter_list|,
+name|int
+name|sorf
+parameter_list|,
+name|void
+modifier|*
+name|bsm_data
+parameter_list|,
+name|size_t
+name|bsm_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !KDTRACE_HOOKS */
+end_comment
 
 begin_include
 include|#
@@ -1582,6 +1724,29 @@ name|callback
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+end_ifdef
+
+begin_function_decl
+name|struct
+name|evname_elem
+modifier|*
+name|au_evnamemap_lookup
+parameter_list|(
+name|au_event_t
+name|event
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
