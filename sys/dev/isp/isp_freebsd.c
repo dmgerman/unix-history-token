@@ -10619,22 +10619,19 @@ operator|.
 name|sle
 argument_list|)
 expr_stmt|;
-name|tptr
-operator|->
-name|atio_count
-operator|--
-expr_stmt|;
-name|isp_prt
+name|ISP_PATH_PRT
 argument_list|(
 name|isp
 argument_list|,
 name|ISP_LOGTDEBUG2
 argument_list|,
-literal|"Take FREE ATIO count now %d"
-argument_list|,
-name|tptr
+name|atiop
 operator|->
-name|atio_count
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+literal|"Take FREE ATIO\n"
 argument_list|)
 expr_stmt|;
 name|atiop
@@ -11864,11 +11861,6 @@ operator|.
 name|sle
 argument_list|)
 expr_stmt|;
-name|tptr
-operator|->
-name|atio_count
-operator|--
-expr_stmt|;
 name|ISP_PATH_PRT
 argument_list|(
 name|isp
@@ -11881,11 +11873,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"Take FREE ATIO count now %d\n"
-argument_list|,
-name|tptr
-operator|->
-name|atio_count
+literal|"Take FREE ATIO\n"
 argument_list|)
 expr_stmt|;
 name|atiop
@@ -16077,11 +16065,6 @@ name|nt_tagval
 operator|>>
 literal|32
 expr_stmt|;
-name|tptr
-operator|->
-name|inot_count
-operator|--
-expr_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -16106,13 +16089,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"%s: Take FREE INOT count now %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|tptr
-operator|->
-name|inot_count
+literal|"Take FREE INOT\n"
 argument_list|)
 expr_stmt|;
 name|inot
@@ -18344,10 +18321,18 @@ operator|.
 name|sle
 argument_list|)
 expr_stmt|;
-name|tptr
+name|ISP_PATH_PRT
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGTDEBUG2
+argument_list|,
+name|sccb
 operator|->
-name|atio_count
-operator|--
+name|path
+argument_list|,
+literal|"Abort FREE ATIO\n"
+argument_list|)
 expr_stmt|;
 name|accb
 operator|->
@@ -18656,10 +18641,18 @@ operator|.
 name|sle
 argument_list|)
 expr_stmt|;
-name|tptr
+name|ISP_PATH_PRT
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGTDEBUG2
+argument_list|,
+name|sccb
 operator|->
-name|inot_count
-operator|--
+name|path
+argument_list|,
+literal|"Abort FREE INOT\n"
+argument_list|)
 expr_stmt|;
 name|accb
 operator|->
@@ -19533,11 +19526,6 @@ name|tag_id
 operator|=
 literal|0
 expr_stmt|;
-name|tptr
-operator|->
-name|atio_count
-operator|++
-expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -19567,11 +19555,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"Put FREE ATIO, count now %d\n"
-argument_list|,
-name|tptr
-operator|->
-name|atio_count
+literal|"Put FREE ATIO\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -19600,11 +19584,6 @@ operator|.
 name|tag_id
 operator|=
 literal|0
-expr_stmt|;
-name|tptr
-operator|->
-name|inot_count
-operator|++
 expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -19635,11 +19614,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|"Put FREE INOT, count now %d\n"
-argument_list|,
-name|tptr
-operator|->
-name|inot_count
+literal|"Put FREE INOT\n"
 argument_list|)
 expr_stmt|;
 block|}
