@@ -3570,7 +3570,7 @@ name|np
 operator|->
 name|xbdev
 argument_list|,
-literal|"Unable to release %u of %u in use grant references out of %ld total.\n"
+literal|"Unable to release %u of %u in use grant references out of %zu total.\n"
 argument_list|,
 name|busy
 argument_list|,
