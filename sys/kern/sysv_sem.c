@@ -4,7 +4,7 @@ comment|/*-  * Implementation of SVID semaphores  *  * Author:  Daniel Boulet  *
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2003-2005 McAfee, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Security Research Division of McAfee, Inc under DARPA/SPAWAR  * contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA CHATS research  * program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003-2005 McAfee, Inc.  * Copyright (c) 2016-2017 Robert N. M. Watson  * All rights reserved.  *  * This software was developed for the FreeBSD Project in part by McAfee  * Research, the Security Research Division of McAfee, Inc under DARPA/SPAWAR  * contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA CHATS research  * program.  *  * Portions of this software were developed by BAE Systems, the University of  * Cambridge Computer Laboratory, and Memorial University under DARPA/AFRL  * contract FA8650-15-C-7558 ("CADETS"), as part of the DARPA Transparent  * Computing (TC) research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -3791,6 +3791,16 @@ name|arg
 operator|)
 argument_list|)
 expr_stmt|;
+name|AUDIT_ARG_SVIPC_CMD
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+name|AUDIT_ARG_SVIPC_ID
+argument_list|(
+name|semid
+argument_list|)
+expr_stmt|;
 name|rpr
 operator|=
 name|sem_find_prison
@@ -4169,6 +4179,16 @@ break|break;
 case|case
 name|IPC_SET
 case|:
+name|AUDIT_ARG_SVIPC_PERM
+argument_list|(
+operator|&
+name|arg
+operator|->
+name|buf
+operator|->
+name|sem_perm
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5332,6 +5352,11 @@ name|semflg
 operator|)
 argument_list|)
 expr_stmt|;
+name|AUDIT_ARG_VALUE
+argument_list|(
+name|semflg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sem_find_prison
@@ -5438,6 +5463,11 @@ operator|.
 name|semmni
 condition|)
 block|{
+name|AUDIT_ARG_SVIPC_ID
+argument_list|(
+name|semid
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -6281,6 +6311,11 @@ name|sops
 operator|,
 name|nsops
 operator|)
+argument_list|)
+expr_stmt|;
+name|AUDIT_ARG_SVIPC_ID
+argument_list|(
+name|semid
 argument_list|)
 expr_stmt|;
 name|rpr
