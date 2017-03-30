@@ -1701,6 +1701,7 @@ name|LINUX_EPOLLERR
 expr_stmt|;
 return|return;
 block|}
+comment|/* XXX EPOLLPRI, EPOLLHUP */
 switch|switch
 condition|(
 name|kevent
@@ -1716,10 +1717,6 @@ operator|->
 name|events
 operator|=
 name|LINUX_EPOLLIN
-operator||
-name|LINUX_EPOLLRDNORM
-operator||
-name|LINUX_EPOLLPRI
 expr_stmt|;
 if|if
 condition|(
@@ -1748,8 +1745,6 @@ operator|->
 name|events
 operator|=
 name|LINUX_EPOLLOUT
-operator||
-name|LINUX_EPOLLWRNORM
 expr_stmt|;
 break|break;
 block|}
