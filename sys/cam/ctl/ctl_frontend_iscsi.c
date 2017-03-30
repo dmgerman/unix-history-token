@@ -952,7 +952,7 @@ end_decl_stmt
 begin_expr_stmt
 name|CTL_FRONTEND_DECLARE
 argument_list|(
-name|ctlcfiscsi
+name|cfiscsi
 argument_list|,
 name|cfiscsi_frontend
 argument_list|)
@@ -962,7 +962,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|ctlcfiscsi
+name|cfiscsi
 argument_list|,
 name|icl
 argument_list|,
