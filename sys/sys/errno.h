@@ -1365,6 +1365,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -1407,6 +1413,11 @@ end_endif
 begin_comment
 comment|/* __EXT1_VISIBLE */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
