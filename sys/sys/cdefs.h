@@ -3751,6 +3751,13 @@ name|__ISO_C_VISIBLE
 value|1990
 end_define
 
+begin_define
+define|#
+directive|define
+name|__EXT1_VISIBLE
+value|0
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -3790,6 +3797,13 @@ define|#
 directive|define
 name|__ISO_C_VISIBLE
 value|1999
+end_define
+
+begin_define
+define|#
+directive|define
+name|__EXT1_VISIBLE
+value|0
 end_define
 
 begin_elif
@@ -3833,6 +3847,13 @@ name|__ISO_C_VISIBLE
 value|2011
 end_define
 
+begin_define
+define|#
+directive|define
+name|__EXT1_VISIBLE
+value|0
+end_define
+
 begin_else
 else|#
 directive|else
@@ -3870,6 +3891,13 @@ name|__ISO_C_VISIBLE
 value|2011
 end_define
 
+begin_define
+define|#
+directive|define
+name|__EXT1_VISIBLE
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -3879,6 +3907,64 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* User override __EXT1_VISIBLE */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_WANT_LIB_EXT1__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|__EXT1_VISIBLE
+end_undef
+
+begin_if
+if|#
+directive|if
+name|__STDC_WANT_LIB_EXT1__
+end_if
+
+begin_define
+define|#
+directive|define
+name|__EXT1_VISIBLE
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__EXT1_VISIBLE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __STDC_WANT_LIB_EXT1__ */
+end_comment
 
 begin_if
 if|#

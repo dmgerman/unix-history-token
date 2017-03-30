@@ -210,6 +210,49 @@ parameter_list|)
 value|__offsetof(type, member)
 end_define
 
+begin_if
+if|#
+directive|if
+name|__EXT1_VISIBLE
+end_if
+
+begin_comment
+comment|/* ISO/IEC 9899:2011 K.3.3.2 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_RSIZE_T_DEFINED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_RSIZE_T_DEFINED
+end_define
+
+begin_typedef
+typedef|typedef
+name|size_t
+name|rsize_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __EXT1_VISIBLE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
