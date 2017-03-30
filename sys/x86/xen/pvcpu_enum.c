@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/dev/acpica/include/aclocal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
 

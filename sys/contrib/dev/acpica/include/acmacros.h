@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2017, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights. You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code. No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision. In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change. Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee. Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution. In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government. In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************  *  * Alternatively, you may choose to be licensed under the terms of the  * following license:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Alternatively, you may choose to be licensed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|__ACMACROS_H__
 end_define
 
 begin_comment
-comment|/*  * Extract data using a pointer. Any more than a byte and we  * get into potential aligment issues -- see the STORE macros below.  * Use with care.  */
+comment|/*  * Extract data using a pointer. Any more than a byte and we  * get into potential alignment issues -- see the STORE macros below.  * Use with care.  */
 end_comment
 
 begin_define
@@ -152,7 +152,7 @@ value|(*ACPI_CAST64 (ptr) = (UINT64) (val))
 end_define
 
 begin_comment
-comment|/*  * printf() format helper. This macros is a workaround for the difficulties  * with emitting 64-bit integers and 64-bit pointers with the same code  * for both 32-bit and 64-bit hosts.  */
+comment|/*  * printf() format helper. This macro is a workaround for the difficulties  * with emitting 64-bit integers and 64-bit pointers with the same code  * for both 32-bit and 64-bit hosts.  */
 end_comment
 
 begin_define
@@ -996,7 +996,336 @@ value|(((ACPI_SIZE) value)& (sizeof(ACPI_SIZE)-1))
 end_define
 
 begin_comment
-comment|/*  * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  */
+comment|/* Generic bit manipulation */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_NATIVE_BIT_FINDER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_2
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8)  (a))& 0x02) ? (r)+1 : (r))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_4
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8)  (a))& 0x0C) ? \                                              __ACPI_FIND_LAST_BIT_2  ((a)>>2,  (r)+2) : \                                              __ACPI_FIND_LAST_BIT_2  ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_8
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8)  (a))& 0xF0) ? \                                              __ACPI_FIND_LAST_BIT_4  ((a)>>4,  (r)+4) : \                                              __ACPI_FIND_LAST_BIT_4  ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_16
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT16) (a))& 0xFF00) ? \                                              __ACPI_FIND_LAST_BIT_8  ((a)>>8,  (r)+8) : \                                              __ACPI_FIND_LAST_BIT_8  ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_32
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT32) (a))& 0xFFFF0000) ? \                                              __ACPI_FIND_LAST_BIT_16 ((a)>>16, (r)+16) : \                                              __ACPI_FIND_LAST_BIT_16 ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_LAST_BIT_64
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT64) (a))& 0xFFFFFFFF00000000) ? \                                              __ACPI_FIND_LAST_BIT_32 ((a)>>32, (r)+32) : \                                              __ACPI_FIND_LAST_BIT_32 ((a), (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_LAST_BIT_8
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_LAST_BIT_8 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_LAST_BIT_16
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_LAST_BIT_16 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_LAST_BIT_32
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_LAST_BIT_32 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_LAST_BIT_64
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_LAST_BIT_64 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_2
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8) (a))& 0x01) ? (r) : (r)+1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_4
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8) (a))& 0x03) ? \                                              __ACPI_FIND_FIRST_BIT_2  ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_2  ((a)>>2, (r)+2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_8
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT8) (a))& 0x0F) ? \                                              __ACPI_FIND_FIRST_BIT_4  ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_4  ((a)>>4, (r)+4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_16
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT16) (a))& 0x00FF) ? \                                              __ACPI_FIND_FIRST_BIT_8  ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_8  ((a)>>8, (r)+8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_32
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT32) (a))& 0x0000FFFF) ? \                                              __ACPI_FIND_FIRST_BIT_16 ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_16 ((a)>>16, (r)+16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ACPI_FIND_FIRST_BIT_64
+parameter_list|(
+name|a
+parameter_list|,
+name|r
+parameter_list|)
+value|((((UINT64) (a))& 0x00000000FFFFFFFF) ? \                                              __ACPI_FIND_FIRST_BIT_32 ((a), (r)) : \                                              __ACPI_FIND_FIRST_BIT_32 ((a)>>32, (r)+32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_FIRST_BIT_8
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_FIRST_BIT_8 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_FIRST_BIT_16
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_FIRST_BIT_16 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_FIRST_BIT_32
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_FIRST_BIT_32 (a, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIND_FIRST_BIT_64
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) ? __ACPI_FIND_FIRST_BIT_64 (a, 1) : 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_USE_NATIVE_BIT_FINDER */
+end_comment
+
+begin_comment
+comment|/* Generic (power-of-two) rounding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_UP_POWER_OF_TWO_8
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT8) \                                             (((UINT16) 1)<<  ACPI_FIND_LAST_BIT_8  ((a)  - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_DOWN_POWER_OF_TWO_8
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT8) \                                             (((UINT16) 1)<< (ACPI_FIND_LAST_BIT_8  ((a)) - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_UP_POWER_OF_TWO_16
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT16) \                                             (((UINT32) 1)<<  ACPI_FIND_LAST_BIT_16 ((a)  - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_DOWN_POWER_OF_TWO_16
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT16) \                                             (((UINT32) 1)<< (ACPI_FIND_LAST_BIT_16 ((a)) - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_UP_POWER_OF_TWO_32
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT32) \                                             (((UINT64) 1)<<  ACPI_FIND_LAST_BIT_32 ((a)  - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ROUND_DOWN_POWER_OF_TWO_32
+parameter_list|(
+name|a
+parameter_list|)
+value|((UINT32) \                                             (((UINT64) 1)<< (ACPI_FIND_LAST_BIT_32 ((a)) - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ALIGNED
+parameter_list|(
+name|a
+parameter_list|,
+name|s
+parameter_list|)
+value|(((a)& ((s) - 1)) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_POWER_OF_TWO
+parameter_list|(
+name|a
+parameter_list|)
+value|ACPI_IS_ALIGNED(a, a)
+end_define
+
+begin_comment
+comment|/*  * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  * MASK_BITS_ABOVE/BELOW accepts a bit offset to create a mask  * MASK_BITS_ABOVE/BELOW_32/64 accepts a bit width to create a mask  * Note: The ACPI_INTEGER_BIT_SIZE check is used to bypass compiler  * differences with the shift operator  */
 end_comment
 
 begin_define
@@ -1017,6 +1346,46 @@ parameter_list|(
 name|position
 parameter_list|)
 value|((ACPI_UINT64_MAX)<< ((UINT32) (position)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_ABOVE_32
+parameter_list|(
+name|width
+parameter_list|)
+value|((UINT32) ACPI_MASK_BITS_ABOVE(width))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_BELOW_32
+parameter_list|(
+name|width
+parameter_list|)
+value|((UINT32) ACPI_MASK_BITS_BELOW(width))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_ABOVE_64
+parameter_list|(
+name|width
+parameter_list|)
+value|((width) == ACPI_INTEGER_BIT_SIZE ? \                                                 ACPI_UINT64_MAX : \                                                 ACPI_MASK_BITS_ABOVE(width))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MASK_BITS_BELOW_64
+parameter_list|(
+name|width
+parameter_list|)
+value|((width) == ACPI_INTEGER_BIT_SIZE ? \                                                 (UINT64) 0 : \                                                 ACPI_MASK_BITS_BELOW(width))
 end_define
 
 begin_comment
@@ -1718,7 +2087,7 @@ name|ACPI_NO_ERROR_MESSAGES
 end_ifndef
 
 begin_comment
-comment|/*  * Error reporting. Callers module and line number are inserted by AE_INFO,  * the plist contains a set of parens to allow variable-length lists.  * These macros are used for both the debug and non-debug versions of the code.  */
+comment|/*  * Error reporting. The callers module and line number are inserted by AE_INFO,  * the plist contains a set of parens to allow variable-length lists.  * These macros are used for both the debug and non-debug versions of the code.  */
 end_comment
 
 begin_define
@@ -1937,6 +2306,293 @@ name|d
 parameter_list|)
 value|(((char)(d)>= '0')&& ((char)(d)<= '7'))
 end_define
+
+begin_comment
+comment|/*  * Macors used for the ASL-/ASL+ converter utility  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_LABEL_FILENODE
+parameter_list|(
+name|a
+parameter_list|)
+value|CvLabelFileNode(a);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CAPTURE_COMMENTS_ONLY
+parameter_list|(
+name|a
+parameter_list|)
+value|CvCaptureCommentsOnly (a);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CAPTURE_COMMENTS
+parameter_list|(
+name|a
+parameter_list|)
+value|CvCaptureComments (a);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_TRANSFER_COMMENTS
+parameter_list|(
+name|a
+parameter_list|)
+value|CvTransferComments (a);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CLOSE_PAREN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|CvCloseParenWriteComment(a,b);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CLOSE_BRACE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|CvCloseBraceWriteComment(a,b);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_SWITCH_FILES
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|CvSwitchFiles(a,b);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CLEAR_OP_COMMENTS
+parameter_list|(
+name|a
+parameter_list|)
+value|CvClearOpComments(a);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_PRINT_ONE_COMMENT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|CvPrintOneCommentType (a,b,c,d);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_PRINT_ONE_COMMENT_LIST
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|CvPrintOneCommentList (a,b);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_FILE_HAS_SWITCHED
+parameter_list|(
+name|a
+parameter_list|)
+value|CvFileHasSwitched(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_INIT_FILETREE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|CvInitFileTree(a,b,c);
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_LABEL_FILENODE
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CAPTURE_COMMENTS_ONLY
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CAPTURE_COMMENTS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_TRANSFER_COMMENTS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CLOSE_PAREN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|AcpiOsPrintf (")");
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CLOSE_BRACE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|AcpiOsPrintf ("}");
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_SWITCH_FILES
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_CLEAR_OP_COMMENTS
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_PRINT_ONE_COMMENT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_PRINT_ONE_COMMENT_LIST
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_FILE_HAS_SWITCHED
+parameter_list|(
+name|a
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_CV_INIT_FILETREE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

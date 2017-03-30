@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2017, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights. You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code. No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision. In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change. Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee. Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution. In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government. In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************  *  * Alternatively, you may choose to be licensed under the terms of the  * following license:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Alternatively, you may choose to be licensed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -7225,7 +7225,7 @@ literal|0x52
 block|,
 literal|0x54
 block|,
-literal|0x48
+literal|0x74
 block|,
 literal|0x01
 block|,
@@ -7233,10 +7233,10 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000000    "IORTH..." */
+comment|/* 00000000    "IORTt..." */
 literal|0x00
 block|,
-literal|0x02
+literal|0xD2
 block|,
 literal|0x49
 block|,
@@ -7285,11 +7285,11 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x12
+literal|0x19
 block|,
-literal|0x02
+literal|0x01
 block|,
-literal|0x16
+literal|0x17
 block|,
 literal|0x20
 block|,
@@ -7329,13 +7329,13 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x2C
+literal|0x18
 block|,
 literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000030    ".....,.." */
+comment|/* 00000030    "........" */
 literal|0x00
 block|,
 literal|0x00
@@ -7344,7 +7344,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x01
+literal|0x00
 block|,
 literal|0x00
 block|,
@@ -7353,7 +7353,7 @@ block|,
 literal|0x00
 block|,
 comment|/* 00000038    "........" */
-literal|0x18
+literal|0x00
 block|,
 literal|0x00
 block|,
@@ -7378,6 +7378,15 @@ literal|0x00
 block|,
 literal|0x00
 block|,
+literal|0x01
+block|,
+literal|0x44
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000048    ".....D.." */
 literal|0x00
 block|,
 literal|0x00
@@ -7386,16 +7395,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000048    "........" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
+literal|0x01
 block|,
 literal|0x00
 block|,
@@ -7404,25 +7404,6 @@ block|,
 literal|0x00
 block|,
 comment|/* 00000050    "........" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 00000058    "........" */
-literal|0x01
-block|,
 literal|0x30
 block|,
 literal|0x00
@@ -7437,24 +7418,9 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000060    ".0......" */
 literal|0x00
 block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x30
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 00000068    "....0..." */
+comment|/* 00000058    "0......." */
 literal|0x00
 block|,
 literal|0x00
@@ -7471,15 +7437,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000070    "........" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
+comment|/* 00000060    "........" */
 literal|0x00
 block|,
 literal|0x5C
@@ -7488,7 +7446,6 @@ literal|0x5F
 block|,
 literal|0x53
 block|,
-comment|/* 00000078    ".....\_S" */
 literal|0x42
 block|,
 literal|0x2E
@@ -7497,6 +7454,7 @@ literal|0x50
 block|,
 literal|0x43
 block|,
+comment|/* 00000068    ".\_SB.PC" */
 literal|0x49
 block|,
 literal|0x30
@@ -7505,7 +7463,6 @@ literal|0x2E
 block|,
 literal|0x44
 block|,
-comment|/* 00000080    "B.PCI0.D" */
 literal|0x45
 block|,
 literal|0x56
@@ -7514,6 +7471,7 @@ literal|0x30
 block|,
 literal|0x00
 block|,
+comment|/* 00000070    "I0.DEV0." */
 literal|0x00
 block|,
 literal|0x00
@@ -7522,10 +7480,52 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000088    "EV0....." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000078    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000080    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000088    "........" */
 literal|0x02
 block|,
-literal|0x20
+literal|0x34
 block|,
 literal|0x00
 block|,
@@ -7539,8 +7539,8 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000090    ". ......" */
-literal|0x00
+comment|/* 00000090    ".4......" */
+literal|0x01
 block|,
 literal|0x00
 block|,
@@ -7591,10 +7591,57 @@ block|,
 literal|0x00
 block|,
 comment|/* 000000A8    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000B0    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000B8    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
 literal|0x03
 block|,
-literal|0x5C
+literal|0x60
 block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000C0    ".....`.." */
 literal|0x00
 block|,
 literal|0x00
@@ -7603,54 +7650,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 000000B0    ".\......" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x5C
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 000000B8    "....\..." */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 000000C0    "........" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
+literal|0x01
 block|,
 literal|0x00
 block|,
@@ -7659,40 +7659,6 @@ block|,
 literal|0x00
 block|,
 comment|/* 000000C8    "........" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 000000D0    "........" */
-literal|0x3C
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x01
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 000000D8    "<......." */
 literal|0x4C
 block|,
 literal|0x00
@@ -7701,17 +7667,6 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x01
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 000000E0    "L......." */
-literal|0x54
-block|,
 literal|0x00
 block|,
 literal|0x00
@@ -7720,13 +7675,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 000000E8    "T......." */
+comment|/* 000000D0    "L......." */
 literal|0x00
 block|,
 literal|0x00
@@ -7743,7 +7692,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 000000F0    "........" */
+comment|/* 000000D8    "........" */
 literal|0x00
 block|,
 literal|0x00
@@ -7760,7 +7709,58 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 000000F8    "........" */
+comment|/* 000000E0    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x3C
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000E8    "....<..." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x4C
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000F0    "....L..." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x4C
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 000000F8    "....L..." */
 literal|0x00
 block|,
 literal|0x00
@@ -7786,15 +7786,15 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x04
+literal|0x00
 block|,
-literal|0x3C
+literal|0x00
 block|,
 literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000108    ".....<.." */
+comment|/* 00000108    "........" */
 literal|0x00
 block|,
 literal|0x00
@@ -7812,6 +7812,57 @@ block|,
 literal|0x00
 block|,
 comment|/* 00000110    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000118    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x04
+block|,
+literal|0x50
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000120    ".....P.." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000128    "........" */
 literal|0x3C
 block|,
 literal|0x00
@@ -7828,58 +7879,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000118    "<......." */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 00000120    "........" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 00000128    "........" */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-comment|/* 00000130    "........" */
+comment|/* 00000130    "<......." */
 literal|0x00
 block|,
 literal|0x00
@@ -7912,7 +7912,101 @@ block|,
 literal|0x00
 block|,
 literal|0x00
+block|,
 comment|/* 00000140    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000148    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000150    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000158    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000160    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000168    "........" */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+comment|/* 00000170    "...."     */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -12565,6 +12659,119 @@ literal|0x00
 block|,
 literal|0x00
 comment|/* 000000B0    "...."     */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|unsigned
+name|char
+name|TemplateRasf
+index|[]
+init|=
+block|{
+literal|0x52
+block|,
+literal|0x41
+block|,
+literal|0x53
+block|,
+literal|0x46
+block|,
+literal|0x30
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000000    "RASF0..." */
+literal|0x01
+block|,
+literal|0x31
+block|,
+literal|0x49
+block|,
+literal|0x4E
+block|,
+literal|0x54
+block|,
+literal|0x45
+block|,
+literal|0x4C
+block|,
+literal|0x20
+block|,
+comment|/* 00000008    ".1INTEL " */
+literal|0x54
+block|,
+literal|0x65
+block|,
+literal|0x6D
+block|,
+literal|0x70
+block|,
+literal|0x6C
+block|,
+literal|0x61
+block|,
+literal|0x74
+block|,
+literal|0x65
+block|,
+comment|/* 00000010    "Template" */
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x49
+block|,
+literal|0x4E
+block|,
+literal|0x54
+block|,
+literal|0x4C
+block|,
+comment|/* 00000018    "....INTL" */
+literal|0x27
+block|,
+literal|0x05
+block|,
+literal|0x16
+block|,
+literal|0x20
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000020    "'.. ...." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+comment|/* 00000028    "........" */
 block|}
 decl_stmt|;
 end_decl_stmt

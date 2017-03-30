@@ -302,9 +302,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_PARSE_OBJECT
-name|obj
-decl_stmt|;
 specifier|static
 name|int
 name|initted
@@ -336,12 +333,7 @@ literal|"Entering ACPICA debugger...\n"
 argument_list|)
 expr_stmt|;
 name|AcpiDbUserCommands
-argument_list|(
-literal|'A'
-argument_list|,
-operator|&
-name|obj
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function

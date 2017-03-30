@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2017, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights. You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code. No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision. In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change. Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee. Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution. In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE. ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES. INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS. INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES. THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government. In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************  *  * Alternatively, you may choose to be licensed under the terms of the  * following license:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Alternatively, you may choose to be licensed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -116,6 +116,12 @@ operator|(
 name|defined
 name|ACPI_EXAMPLE_APP
 operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+name|ACPI_EFI_HELLO
+operator|)
 end_if
 
 begin_define
@@ -128,6 +134,12 @@ begin_define
 define|#
 directive|define
 name|ACPI_SINGLE_THREADED
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_NATIVE_ALLOCATE_ZEROED
 end_define
 
 begin_endif
@@ -320,12 +332,6 @@ directive|define
 name|ACPI_USE_NATIVE_MEMORY_MAPPING
 end_define
 
-begin_define
-define|#
-directive|define
-name|USE_NATIVE_ALLOCATE_ZEROED
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -427,12 +433,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ACPI_USE_SYSTEM_CLIBRARY
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_USE_LOCAL_CACHE
 end_define
 
@@ -481,8 +481,64 @@ comment|/*! [Begin] no source code translation */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * Host configuration files. The compiler configuration files are included  * by the host files.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Host configuration files. The compiler configuration files are included  * first.  *  *****************************************************************************/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/platform/acgcc.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acmsvc.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acintel.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -699,36 +755,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_AED_EFI
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acefi.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_GNU_EFI
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acefi.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|__HAIKU__
 argument_list|)
 end_elif
@@ -752,6 +778,35 @@ begin_include
 include|#
 directive|include
 file|"acqnx.h"
+end_include
+
+begin_comment
+comment|/*  * EFI applications can be built with -nostdlib, in this case, it must be  * included after including all other host environmental definitions, in  * order to override the definitions.  */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_AED_EFI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_GNU_EFI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_EDK2_EFI
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acefi.h"
 end_include
 
 begin_else
@@ -1072,14 +1127,8 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * ACPI_USE_SYSTEM_CLIBRARY - Define this if linking to an actual C library.  *      Otherwise, local versions of string/memory functions will be used.  * ACPI_USE_STANDARD_HEADERS - Define this if linking to a C library and  *      the standard header files may be used.  *  * The ACPICA subsystem only uses low level C library functions that do not  * call operating system services and may therefore be inlined in the code.  *  * It may be necessary to tailor these include files to the target  * generation environment.  */
+comment|/*  * ACPI_USE_SYSTEM_CLIBRARY - Define this if linking to an actual C library.  *      Otherwise, local versions of string/memory functions will be used.  * ACPI_USE_STANDARD_HEADERS - Define this if linking to a C library and  *      the standard header files may be used. Defining this implies that  *      ACPI_USE_SYSTEM_CLIBRARY has been defined.  *  * The ACPICA subsystem only uses low level C library functions that do not  * call operating system services and may therefore be inlined in the code.  *  * It may be necessary to tailor these include files to the target  * generation environment.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_USE_SYSTEM_CLIBRARY
-end_ifdef
 
 begin_comment
 comment|/* Use the standard C library headers. We want to keep these to a minimum. */
@@ -1094,12 +1143,6 @@ end_ifdef
 begin_comment
 comment|/* Use the standard headers from the standard locations */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
 
 begin_include
 include|#
@@ -1119,6 +1162,55 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_APPLICATION
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_LIBRARY
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -1128,165 +1220,11 @@ begin_comment
 comment|/* ACPI_USE_STANDARD_HEADERS */
 end_comment
 
-begin_comment
-comment|/* We will be linking to the standard Clib functions */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/******************************************************************************  *  * Not using native C library, use local implementations  *  *****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * Use local definitions of C library macros and functions. These function  * implementations may not be as efficient as an inline or assembly code  * implementation provided by a native C library, but they are functionally  * equivalent.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|va_arg
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_VALIST
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_VALIST
-end_define
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|va_list
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _VALIST */
-end_comment
-
-begin_comment
-comment|/* Storage alignment properties */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_AUPBND
-value|(sizeof (ACPI_NATIVE_INT) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ADNBND
-value|(sizeof (ACPI_NATIVE_INT) - 1)
-end_define
-
-begin_comment
-comment|/* Variable argument list macro definitions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_Bnd
-parameter_list|(
-name|X
-parameter_list|,
-name|bnd
-parameter_list|)
-value|(((sizeof (X)) + (bnd))& (~(bnd)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_arg
-parameter_list|(
-name|ap
-parameter_list|,
-name|T
-parameter_list|)
-value|(*(T *)(((ap) += (_Bnd (T, _AUPBND))) - (_Bnd (T,_ADNBND))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_end
-parameter_list|(
-name|ap
-parameter_list|)
-value|(ap = (va_list) NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_start
-parameter_list|(
-name|ap
-parameter_list|,
-name|A
-parameter_list|)
-value|(void) ((ap) = (((char *)&(A)) + (_Bnd (A,_AUPBND))))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* va_arg */
-end_comment
-
-begin_comment
-comment|/* Use the local (ACPICA) definitions of the clib functions */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_USE_SYSTEM_CLIBRARY */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_FILE
-end_ifndef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|ACPI_APPLICATION
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_define
 define|#
@@ -1344,14 +1282,22 @@ begin_comment
 comment|/* ACPI_APPLICATION */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_INIT_FUNCTION
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_INIT_FUNCTION
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ACPI_FILE */
-end_comment
 
 begin_endif
 endif|#
