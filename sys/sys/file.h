@@ -277,6 +277,17 @@ begin_comment
 comment|/* emulation eventfd type */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DTYPE_LINUXTFD
+value|14
+end_define
+
+begin_comment
+comment|/* emulation timerfd type */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

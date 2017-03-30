@@ -525,34 +525,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|DUMMY
-argument_list|(
-name|timerfd_create
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* linux 2.6.25: */
-end_comment
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
-name|timerfd_settime
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
-name|timerfd_gettime
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* linux 2.6.27: */
 end_comment

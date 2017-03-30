@@ -162,6 +162,55 @@ name|LINUX_EFD_SEMAPHORE
 value|(1<< 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_TFD_TIMER_ABSTIME
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_TFD_TIMER_CANCEL_ON_SET
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_TFD_CLOEXEC
+value|LINUX_O_CLOEXEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_TFD_NONBLOCK
+value|LINUX_O_NONBLOCK
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_TFD_SHARED_FCNTL_FLAGS
+value|(LINUX_TFD_CLOEXEC		\ 		|LINUX_TFD_NONBLOCK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_TFD_CREATE_FLAGS
+value|LINUX_TFD_SHARED_FCNTL_FLAGS
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_TFD_SETTIME_FLAGS
+value|(LINUX_TFD_TIMER_ABSTIME		\ 		|LINUX_TFD_TIMER_CANCEL_ON_SET)
+end_define
+
 begin_endif
 endif|#
 directive|endif
