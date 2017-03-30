@@ -72,6 +72,16 @@ define|#
 directive|define
 name|DTRACE_DYNVAR_CHUNKSIZE
 value|256
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+define|#
+directive|define
+name|NCPU
+value|MAXCPU
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 struct_decl|struct
 name|dtrace_probe
 struct_decl|;
@@ -1644,6 +1654,16 @@ name|int
 name|dts_getf
 decl_stmt|;
 comment|/* number of getf() calls */
+name|uint64_t
+name|dts_rstate
+index|[
+name|NCPU
+index|]
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* per-CPU random state */
 block|}
 struct|;
 struct|struct
