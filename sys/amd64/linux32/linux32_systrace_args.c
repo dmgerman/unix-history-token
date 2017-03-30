@@ -10825,10 +10825,37 @@ case|case
 literal|322
 case|:
 block|{
+name|struct
+name|linux_timerfd_create_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|clockid
+expr_stmt|;
+comment|/* l_int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* l_int */
 operator|*
 name|n_args
 operator|=
-literal|0
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -10925,10 +10952,63 @@ case|case
 literal|325
 case|:
 block|{
+name|struct
+name|linux_timerfd_settime_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* l_int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* l_int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|new_value
+expr_stmt|;
+comment|/* const struct l_itimerspec * */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|old_value
+expr_stmt|;
+comment|/* struct l_itimerspec * */
 operator|*
 name|n_args
 operator|=
-literal|0
+literal|4
 expr_stmt|;
 break|break;
 block|}
@@ -10937,10 +11017,40 @@ case|case
 literal|326
 case|:
 block|{
+name|struct
+name|linux_timerfd_gettime_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* l_int */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|old_value
+expr_stmt|;
+comment|/* struct l_itimerspec * */
 operator|*
 name|n_args
 operator|=
-literal|0
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -21280,6 +21390,31 @@ comment|/* linux_timerfd_create */
 case|case
 literal|322
 case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"l_int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"l_int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
 break|break;
 comment|/* linux_eventfd */
 case|case
@@ -21353,11 +21488,77 @@ comment|/* linux_timerfd_settime */
 case|case
 literal|325
 case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"l_int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"l_int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"const struct l_itimerspec *"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"struct l_itimerspec *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
 break|break;
 comment|/* linux_timerfd_gettime */
 case|case
 literal|326
 case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"l_int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"struct l_itimerspec *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
 break|break;
 comment|/* linux_signalfd4 */
 case|case
@@ -21511,7 +21712,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland struct iovec *"
+literal|"struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -21565,7 +21766,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland struct iovec *"
+literal|"struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -21635,7 +21836,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"userland l_siginfo_t *"
+literal|"l_siginfo_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21868,7 +22069,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland const struct iovec *"
+literal|"const struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -21884,7 +22085,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"userland const struct iovec *"
+literal|"const struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -21930,7 +22131,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland const struct iovec *"
+literal|"const struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -21946,7 +22147,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"userland const struct iovec *"
+literal|"const struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -22046,7 +22247,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland const char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -22084,7 +22285,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland void *"
+literal|"void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22122,7 +22323,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland void *"
+literal|"void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22168,7 +22369,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland const char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -22184,7 +22385,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"userland const char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -22230,7 +22431,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"userland const char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22252,7 +22453,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"userland char *"
+literal|"char *"
 expr_stmt|;
 break|break;
 case|case
@@ -22290,7 +22491,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"userland const char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -22328,7 +22529,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland void *"
+literal|"void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22366,7 +22567,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland const char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -22374,7 +22575,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"userland const char **"
+literal|"const char **"
 expr_stmt|;
 break|break;
 case|case
@@ -22382,7 +22583,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"userland const char **"
+literal|"const char **"
 expr_stmt|;
 break|break;
 case|case
@@ -23160,7 +23361,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland l_loff_t *"
+literal|"l_loff_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -23176,7 +23377,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"userland l_loff_t *"
+literal|"l_loff_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -23222,7 +23423,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland const struct iovec *"
+literal|"const struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -23284,7 +23485,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"userland const struct iovec *"
+literal|"const struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -27819,6 +28020,21 @@ comment|/* linux_timerfd_create */
 case|case
 literal|322
 case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
 comment|/* linux_eventfd */
 case|case
 literal|323
@@ -27861,10 +28077,40 @@ comment|/* linux_timerfd_settime */
 case|case
 literal|325
 case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
 comment|/* linux_timerfd_gettime */
 case|case
 literal|326
 case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
 comment|/* linux_signalfd4 */
 case|case
 literal|327
