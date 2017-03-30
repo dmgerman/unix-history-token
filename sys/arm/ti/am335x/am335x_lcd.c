@@ -1707,6 +1707,8 @@ parameter_list|)
 block|{
 name|phandle_t
 name|node
+decl_stmt|,
+name|xref
 decl_stmt|;
 name|phandle_t
 name|endpoint
@@ -1817,11 +1819,11 @@ argument_list|,
 literal|"remote-endpoint"
 argument_list|,
 operator|&
-name|node
+name|xref
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|node
+name|xref
 argument_list|)
 argument_list|)
 operator|!=
@@ -1829,15 +1831,15 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* port node of remote endpoint */
+comment|/* port/port@0/endpoint@0 */
 name|node
 operator|=
 name|OF_node_from_xref
 argument_list|(
-name|node
+name|xref
 argument_list|)
 expr_stmt|;
-comment|/* port/ node */
+comment|/* port/port@0 */
 name|node
 operator|=
 name|OF_parent
@@ -1845,14 +1847,25 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* actual owner of port/endpoint, in our case HDMI framer */
+comment|/* port */
+name|node
+operator|=
+name|OF_parent
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* actual owner of port, in our case HDMI framer */
 name|sc
 operator|->
 name|sc_hdmi_framer
 operator|=
+name|OF_xref_from_node
+argument_list|(
 name|OF_parent
 argument_list|(
 name|node
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
