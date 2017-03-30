@@ -1505,6 +1505,17 @@ name|bi_m
 operator|==
 name|NULL
 operator|&&
+name|interp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|bi
+operator|->
+name|interp_path
+operator|==
+name|NULL
+operator|||
 operator|(
 name|strlen
 argument_list|(
@@ -1529,6 +1540,7 @@ name|interp_name_len
 argument_list|)
 operator|!=
 literal|0
+operator|)
 operator|)
 condition|)
 block|{
@@ -1898,6 +1910,12 @@ operator|==
 name|bi
 operator|->
 name|machine
+operator|&&
+name|bi
+operator|->
+name|interp_path
+operator|!=
+name|NULL
 operator|&&
 comment|/* ELF image p_filesz includes terminating zero */
 name|strlen
