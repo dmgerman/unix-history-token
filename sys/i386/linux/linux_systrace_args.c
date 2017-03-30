@@ -11242,10 +11242,20 @@ operator|->
 name|mask
 expr_stmt|;
 comment|/* l_sigset_t * */
+name|iarg
+index|[
+literal|5
+index|]
+operator|=
+name|p
+operator|->
+name|sigsetsize
+expr_stmt|;
+comment|/* l_size_t */
 operator|*
 name|n_args
 operator|=
-literal|5
+literal|6
 expr_stmt|;
 break|break;
 block|}
@@ -22208,6 +22218,14 @@ case|:
 name|p
 operator|=
 literal|"l_sigset_t *"
+expr_stmt|;
+break|break;
+case|case
+literal|5
+case|:
+name|p
+operator|=
+literal|"l_size_t"
 expr_stmt|;
 break|break;
 default|default:
