@@ -5232,14 +5232,7 @@ name|tp
 argument_list|,
 name|th
 argument_list|,
-name|mtod
-argument_list|(
 name|m
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill in IP length and desired time to live and 	 * send to IP level.  There should be a better way 	 * to handle ttl and tos; we could keep them in 	 * the template, but need a way to checksum without them. 	 */

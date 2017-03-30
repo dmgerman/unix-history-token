@@ -142,7 +142,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -172,7 +172,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -202,7 +202,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -232,7 +232,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -292,7 +292,7 @@ literal|"struct tcpcb *"
 argument_list|,
 literal|"csinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|,
@@ -388,7 +388,7 @@ literal|"struct tcphdr *"
 argument_list|,
 literal|"tcpinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|)
@@ -428,7 +428,7 @@ literal|"struct tcphdr *"
 argument_list|,
 literal|"tcpinfo_t *"
 argument_list|,
-literal|"uint8_t *"
+literal|"struct mbuf *"
 argument_list|,
 literal|"ipinfo_t *"
 argument_list|)
