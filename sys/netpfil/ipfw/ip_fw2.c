@@ -4142,6 +4142,11 @@ name|dyn_dir
 init|=
 name|MATCH_UNKNOWN
 decl_stmt|;
+name|uint16_t
+name|dyn_name
+init|=
+literal|0
+decl_stmt|;
 name|ipfw_dyn_rule
 modifier|*
 name|q
@@ -9251,12 +9256,26 @@ case|:
 case|case
 name|O_CHECK_STATE
 case|:
-comment|/* 				 * dynamic rules are checked at the first 				 * keep-state or check-state occurrence, 				 * with the result being stored in dyn_dir. 				 * The compiler introduces a PROBE_STATE 				 * instruction for us when we have a 				 * KEEP_STATE (because PROBE_STATE needs 				 * to be run first). 				 */
+comment|/* 				 * dynamic rules are checked at the first 				 * keep-state or check-state occurrence, 				 * with the result being stored in dyn_dir 				 * and dyn_name. 				 * The compiler introduces a PROBE_STATE 				 * instruction for us when we have a 				 * KEEP_STATE (because PROBE_STATE needs 				 * to be run first). 				 * 				 * (dyn_dir == MATCH_UNKNOWN) means this is 				 * first lookup for such f_id. Do lookup. 				 * 				 * (dyn_dir != MATCH_UNKNOWN&& 				 *  dyn_name != 0&& dyn_name != cmd->arg1) 				 * means previous lookup didn't find dynamic 				 * rule for specific state name and current 				 * lookup will search rule with another state 				 * name. Redo lookup. 				 * 				 * (dyn_dir != MATCH_UNKNOWN&& dyn_name == 0) 				 * means previous lookup was for `any' name 				 * and it didn't find rule. No need to do 				 * lookup again. 				 */
 if|if
 condition|(
+operator|(
 name|dyn_dir
 operator|==
 name|MATCH_UNKNOWN
+operator|||
+operator|(
+name|dyn_name
+operator|!=
+literal|0
+operator|&&
+name|dyn_name
+operator|!=
+name|cmd
+operator|->
+name|arg1
+operator|)
+operator|)
 operator|&&
 operator|(
 name|q
@@ -9281,6 +9300,14 @@ name|ulp
 argument_list|)
 else|:
 name|NULL
+argument_list|,
+operator|(
+name|dyn_name
+operator|=
+name|cmd
+operator|->
+name|arg1
+operator|)
 argument_list|)
 operator|)
 operator|!=

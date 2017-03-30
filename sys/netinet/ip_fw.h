@@ -2040,7 +2040,16 @@ name|u_int16_t
 name|count
 decl_stmt|;
 comment|/* refcount			*/
+name|u_int16_t
+name|kidx
+decl_stmt|;
+comment|/* index of named object */
 block|}
+name|__packed
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -2588,6 +2597,13 @@ define|#
 directive|define
 name|IPFW_TLV_EACTION
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_STATE_NAME
+value|14
 end_define
 
 begin_define

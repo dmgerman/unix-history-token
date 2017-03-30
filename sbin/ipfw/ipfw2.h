@@ -866,7 +866,7 @@ name|_ip_fw3_opheader
 modifier|*
 name|op3
 parameter_list|,
-name|uintptr_t
+name|size_t
 name|optlen
 parameter_list|)
 function_decl|;
