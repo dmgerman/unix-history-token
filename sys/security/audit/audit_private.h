@@ -1166,15 +1166,10 @@ modifier|*
 name|k_uthread
 decl_stmt|;
 comment|/* Audited thread. */
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
 name|void
 modifier|*
 name|k_dtaudit_state
 decl_stmt|;
-endif|#
-directive|endif
 name|TAILQ_ENTRY
 argument_list|(
 argument|kaudit_record
@@ -1440,9 +1435,6 @@ name|struct
 name|mtx
 name|ene_lock
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
 comment|/* DTrace probe IDs; 0 if not yet registered. */
 name|uint32_t
 name|ene_commit_probe_id
@@ -1461,8 +1453,6 @@ name|int
 name|ene_bsm_probe_enabled
 decl_stmt|;
 comment|/* (M) */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1510,12 +1500,6 @@ end_typedef
 begin_comment
 comment|/*  * DTrace audit provider (dtaudit) hooks -- to be set non-NULL when the audit  * provider is loaded and ready to be called into.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
-end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -1600,15 +1584,6 @@ name|bsm_len
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !KDTRACE_HOOKS */
-end_comment
 
 begin_include
 include|#
@@ -1735,12 +1710,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
-end_ifdef
-
 begin_function_decl
 name|struct
 name|evname_elem
@@ -1752,11 +1721,6 @@ name|event
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
