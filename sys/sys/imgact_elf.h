@@ -53,6 +53,12 @@ name|thread
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vnode
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Structure used to pass information from the loader to the  * stack fixup routine.  */
 end_comment
