@@ -768,7 +768,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|zargs
 operator|->
@@ -862,7 +862,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|gargs
 operator|->

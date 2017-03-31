@@ -2648,7 +2648,7 @@ name|gelipw
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|gelipw
 argument_list|,

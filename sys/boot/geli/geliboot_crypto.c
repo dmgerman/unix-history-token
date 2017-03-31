@@ -425,7 +425,7 @@ index|[
 name|keysize
 index|]
 decl_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|iv
 argument_list|,

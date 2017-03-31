@@ -762,9 +762,8 @@ name|dkey
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
-operator|&
 name|dkey
 argument_list|,
 sizeof|sizeof
@@ -801,9 +800,8 @@ operator|&
 name|keynum
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
-operator|&
 name|key
 argument_list|,
 sizeof|sizeof
@@ -820,9 +818,8 @@ operator|-
 literal|1
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
-operator|&
 name|mkey
 argument_list|,
 sizeof|sizeof
@@ -852,9 +849,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
-operator|&
 name|mkey
 argument_list|,
 sizeof|sizeof
@@ -982,9 +978,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|explicit_bzero
 argument_list|(
-operator|&
 name|mkey
 argument_list|,
 sizeof|sizeof
@@ -1314,7 +1309,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 operator|&
 name|gkey
@@ -1341,7 +1336,7 @@ operator|+=
 name|secsize
 expr_stmt|;
 block|}
-name|bzero
+name|explicit_bzero
 argument_list|(
 operator|&
 name|gkey
