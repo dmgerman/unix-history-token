@@ -2138,7 +2138,7 @@ name|guid
 parameter_list|,
 name|vdev_read_t
 modifier|*
-name|read
+name|_read
 parameter_list|)
 block|{
 name|vdev_t
@@ -2191,7 +2191,7 @@ name|vdev
 operator|->
 name|v_read
 operator|=
-name|read
+name|_read
 expr_stmt|;
 name|vdev
 operator|->
@@ -3962,7 +3962,7 @@ name|vdev_probe
 parameter_list|(
 name|vdev_phys_read_t
 modifier|*
-name|read
+name|_read
 parameter_list|,
 name|void
 modifier|*
@@ -4079,7 +4079,7 @@ name|vtmp
 operator|.
 name|v_phys_read
 operator|=
-name|read
+name|_read
 expr_stmt|;
 name|vtmp
 operator|.
@@ -4624,7 +4624,7 @@ name|vdev
 operator|->
 name|v_phys_read
 operator|=
-name|read
+name|_read
 expr_stmt|;
 name|vdev
 operator|->
