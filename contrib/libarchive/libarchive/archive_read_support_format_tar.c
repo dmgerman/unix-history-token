@@ -564,6 +564,9 @@ decl_stmt|;
 name|int
 name|read_concatenated_archives
 decl_stmt|;
+name|int
+name|realsize_override
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2758,6 +2761,12 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Mark this as "unset" */
+name|tar
+operator|->
+name|realsize_override
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Setup default string conversion. */
 name|tar
 operator|->
@@ -9415,6 +9424,12 @@ operator|->
 name|realsize
 argument_list|)
 expr_stmt|;
+name|tar
+operator|->
+name|realsize_override
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* GNU "0.1" sparse pax format. */
 if|if
@@ -9593,6 +9608,12 @@ name|tar
 operator|->
 name|realsize
 argument_list|)
+expr_stmt|;
+name|tar
+operator|->
+name|realsize_override
+operator|=
+literal|1
 expr_stmt|;
 block|}
 break|break;
@@ -9985,6 +10006,12 @@ argument_list|(
 name|value
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|tar
+operator|->
+name|realsize_override
+operator|=
+literal|1
 expr_stmt|;
 name|archive_entry_set_size
 argument_list|(
@@ -10435,14 +10462,13 @@ name|value
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * But, "size" is not necessarily the size of 			 * the file on disk; if this is a sparse file, 			 * the disk size may have already been set from 			 * GNU.sparse.realsize or GNU.sparse.size or 			 * an old GNU header field or SCHILY.realsize 			 * or .... 			 */
+comment|/* 			 * The "size" pax header keyword always overrides the 			 * "size" field in the tar header. 			 * GNU.sparse.realsize, GNU.sparse.size and 			 * SCHILY.realsize override this value. 			 */
 if|if
 condition|(
+operator|!
 name|tar
 operator|->
-name|realsize
-operator|<
-literal|0
+name|realsize_override
 condition|)
 block|{
 name|archive_entry_set_size
@@ -11160,6 +11186,12 @@ name|tar
 operator|->
 name|realsize
 argument_list|)
+expr_stmt|;
+name|tar
+operator|->
+name|realsize_override
+operator|=
+literal|1
 expr_stmt|;
 block|}
 if|if

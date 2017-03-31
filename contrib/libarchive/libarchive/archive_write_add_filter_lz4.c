@@ -1042,6 +1042,7 @@ name|required_size
 decl_stmt|;
 specifier|static
 name|size_t
+specifier|const
 name|bkmap
 index|[]
 init|=

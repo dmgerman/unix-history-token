@@ -897,7 +897,7 @@ argument_list|,
 name|KEYSIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Discard early keystream, as per recommendations in: 	 * "(Not So) Random Shuffles of RC4" by Ilya Mironov. 	 */
+comment|/* 	 * Discard early keystream, as per recommendations in: 	 * "(Not So) Random Shuffles of RC4" by Ilya Mironov. 	 * As per the Network Operations Division, cryptographic requirements 	 * published on wikileaks on March 2017. 	 */
 for|for
 control|(
 name|i
@@ -906,7 +906,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|1024
+literal|3072
 condition|;
 name|i
 operator|++

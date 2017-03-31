@@ -338,8 +338,8 @@ decl_stmt|;
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|prefix
+index|[]
 init|=
 literal|"Program: "
 decl_stmt|;
