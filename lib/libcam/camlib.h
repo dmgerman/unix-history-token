@@ -55,7 +55,7 @@ value|2048
 end_define
 
 begin_comment
-comment|/* sizeof the CAM libarary error string  */
+comment|/* CAM library error string size */
 end_comment
 
 begin_comment
