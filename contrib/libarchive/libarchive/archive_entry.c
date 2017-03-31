@@ -7727,6 +7727,7 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|flag
 block|{
@@ -8171,6 +8172,21 @@ block|,
 literal|L"nocompressed"
 block|,
 name|UF_COMPRESSED
+block|,
+literal|0
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|UF_HIDDEN
+block|{
+literal|"nohidden"
+block|,
+literal|L"nohidden"
+block|,
+name|UF_HIDDEN
 block|,
 literal|0
 block|}
@@ -8933,6 +8949,7 @@ name|unsigned
 name|long
 name|bits
 decl_stmt|;
+specifier|const
 name|struct
 name|flag
 modifier|*
@@ -9213,6 +9230,7 @@ decl_stmt|,
 modifier|*
 name|end
 decl_stmt|;
+specifier|const
 name|struct
 name|flag
 modifier|*
@@ -9518,6 +9536,7 @@ decl_stmt|,
 modifier|*
 name|end
 decl_stmt|;
+specifier|const
 name|struct
 name|flag
 modifier|*

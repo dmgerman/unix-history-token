@@ -35,7 +35,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"archive_platform_acl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive_acl_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"archive_entry.h"
 end_include
 
 begin_struct_decl
@@ -53,16 +65,16 @@ name|archive
 modifier|*
 parameter_list|,
 name|int
-comment|/* fd */
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-comment|/* pathname */
 parameter_list|,
 name|struct
 name|archive_acl
 modifier|*
+parameter_list|,
+name|__LA_MODE_T
 parameter_list|)
 function_decl|;
 end_function_decl

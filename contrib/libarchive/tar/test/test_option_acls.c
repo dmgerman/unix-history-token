@@ -20,9 +20,11 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|HAVE_POSIX_ACL
+name|ARCHIVE_ACL_FREEBSD
 operator|||
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
+operator|||
+name|ARCHIVE_ACL_LIBACL
 end_if
 
 begin_decl_stmt
@@ -35,7 +37,7 @@ init|=
 block|{
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 name|ACL_READ_DATA
 block|,
 name|ACL_LIST_DIRECTORY
@@ -73,7 +75,7 @@ block|,
 name|ACL_SYNCHRONIZE
 else|#
 directive|else
-comment|/* !HAVE_DARWIN_ACL */
+comment|/* !ARCHIVE_ACL_DARWIN */
 name|ACL_EXECUTE
 block|,
 name|ACL_WRITE
@@ -82,7 +84,7 @@ name|ACL_READ
 block|,
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 name|ACL_READ_DATA
 block|,
 name|ACL_LIST_DIRECTORY
@@ -116,10 +118,10 @@ block|,
 name|ACL_SYNCHRONIZE
 endif|#
 directive|endif
-comment|/* HAVE_FREEBSD_NFS4_ACL */
+comment|/* ARCHIVE_ACL_FREEBSD_NFS4 */
 endif|#
 directive|endif
-comment|/* !HAVE_DARWIN_ACL */
+comment|/* !ARCHIVE_ACL_DARWIN */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -127,9 +129,9 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 operator|||
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 end_if
 
 begin_decl_stmt
@@ -142,11 +144,7 @@ init|=
 block|{
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
-name|ACL_FLAG_DEFER_INHERIT
-block|,
-name|ACL_FLAG_NO_INHERIT
-block|,
+name|ARCHIVE_ACL_DARWIN
 name|ACL_ENTRY_INHERITED
 block|,
 name|ACL_ENTRY_FILE_INHERIT
@@ -158,7 +156,7 @@ block|,
 name|ACL_ENTRY_ONLY_INHERIT
 else|#
 directive|else
-comment|/* HAVE_FREEBSD_NFS4_ACL */
+comment|/* ARCHIVE_ACL_FREEBSD_NFS4 */
 name|ACL_ENTRY_FILE_INHERIT
 block|,
 name|ACL_ENTRY_DIRECTORY_INHERIT
@@ -174,7 +172,7 @@ block|,
 name|ACL_ENTRY_INHERITED
 endif|#
 directive|endif
-comment|/* HAVE_FREEBSD_NFS4_ACL */
+comment|/* ARCHIVE_ACL_FREEBSD_NFS4 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -185,7 +183,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_DARWIN_ACL || HAVE_FREEBSD_NFS4_ACL */
+comment|/* ARCHIVE_ACL_DARWIN || ARCHIVE_ACL_FREEBSD_NFS4 */
 end_comment
 
 begin_comment
@@ -235,7 +233,7 @@ name|qual_b
 decl_stmt|;
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 name|acl_entry_type_t
 name|type_a
 decl_stmt|,
@@ -245,9 +243,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 operator|||
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 name|acl_flagset_t
 name|flagset_a
 decl_stmt|,
@@ -354,7 +352,7 @@ return|;
 comment|/* Compare ACL qualifier */
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 if|if
 condition|(
 name|tag_a
@@ -457,7 +455,7 @@ return|;
 block|}
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 if|if
 condition|(
 name|memcmp
@@ -567,7 +565,7 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 if|if
 condition|(
 name|is_nfs4
@@ -763,7 +761,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 if|if
 condition|(
 name|is_nfs4
@@ -796,7 +794,7 @@ control|)
 block|{
 if|#
 directive|if
-name|HAVE_LIBACL
+name|ARCHIVE_ACL_LIBACL
 name|perm_a
 operator|=
 name|acl_get_perm
@@ -881,9 +879,9 @@ return|;
 block|}
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 operator|||
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 if|if
 condition|(
 name|is_nfs4
@@ -1051,7 +1049,7 @@ block|}
 block|}
 else|#
 directive|else
-comment|/* HAVE_FREEBSD_NFS4_ACL || HAVE_DARWIN_ACL*/
+comment|/* ARCHIVE_ACL_FREEBSD_NFS4 || ARCHIVE_ACL_DARWIN */
 operator|(
 name|void
 operator|)
@@ -1074,17 +1072,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_POSIX_ACL || HAVE_DARWIN_ACL */
+comment|/* ARCHIVE_ACL_FREEBSD || ARCHIVE_ACL_DARWIN || ARCHIVE_ACL_LIBACL */
 end_comment
 
 begin_if
 if|#
 directive|if
-name|HAVE_SUN_ACL
-operator|||
-name|HAVE_DARWIN_ACL
-operator|||
-name|HAVE_POSIX_ACL
+name|ARCHIVE_ACL_SUPPORT
 end_if
 
 begin_comment
@@ -1115,7 +1109,11 @@ name|ARCHIVE_TEST_ACL_TYPE_POSIX1E
 case|:
 if|#
 directive|if
-name|HAVE_POSIX_ACL
+name|ARCHIVE_ACL_POSIX1E
+if|#
+directive|if
+operator|!
+name|ARCHIVE_ACL_SUNOS
 name|acl_delete_def_file
 argument_list|(
 name|path
@@ -1131,13 +1129,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* ARCHIVE_ACL_POSIX1E */
 break|break;
 case|case
 name|ARCHIVE_TEST_ACL_TYPE_NFS4
 case|:
 if|#
 directive|if
-name|HAVE_NFS4_ACL
+name|ARCHIVE_ACL_NFS4
 name|setTestAcl
 argument_list|(
 name|path
@@ -1186,7 +1187,7 @@ literal|0
 decl_stmt|;
 if|#
 directive|if
-name|HAVE_SUN_ACL
+name|ARCHIVE_ACL_SUNOS
 name|void
 modifier|*
 name|acl_a
@@ -1216,8 +1217,13 @@ decl_stmt|;
 name|int
 name|e
 decl_stmt|;
-else|#
-directive|else
+elif|#
+directive|elif
+name|ARCHIVE_ACL_DARWIN
+operator|||
+name|ARCHIVE_ACL_FREEBSD
+operator|||
+name|ARCHIVE_ACL_LIBACL
 name|acl_t
 name|acl_a
 decl_stmt|,
@@ -1237,6 +1243,37 @@ name|r
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|ARCHIVE_ACL_LIBRICHACL
+name|struct
+name|richacl
+modifier|*
+name|richacl_a
+decl_stmt|,
+modifier|*
+name|richacl_b
+decl_stmt|;
+name|richacl_a
+operator|=
+name|NULL
+expr_stmt|;
+name|richacl_b
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|ARCHIVE_ACL_DARWIN
+operator|||
+name|ARCHIVE_ACL_FREEBSD
+operator|||
+name|ARCHIVE_ACL_LIBACL
+operator|||
+expr|\
+name|ARCHIVE_ACL_SUNOS
 name|acl_a
 operator|=
 name|NULL
@@ -1245,9 +1282,11 @@ name|acl_b
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
-name|HAVE_SUN_ACL
+name|ARCHIVE_ACL_SUNOS
 name|acl_a
 operator|=
 name|sunacl_get
@@ -1271,7 +1310,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|HAVE_SUN_NFS4_ACL
+name|ARCHIVE_ACL_SUNOS_NFS4
 name|is_nfs4
 operator|=
 literal|1
@@ -1321,7 +1360,7 @@ operator|)
 return|;
 if|#
 directive|if
-name|HAVE_SUN_NFS4_ACL
+name|ARCHIVE_ACL_SUNOS_NFS4
 name|acl_b
 operator|=
 name|sunacl_get
@@ -1517,7 +1556,7 @@ block|}
 block|}
 if|#
 directive|if
-name|HAVE_SUN_NFS4_ACL
+name|ARCHIVE_ACL_SUNOS_NFS4
 else|else
 block|{
 name|ace_a
@@ -1597,10 +1636,196 @@ directive|endif
 block|}
 else|#
 directive|else
-comment|/* !HAVE_SUN_ACL */
+comment|/* !ARCHIVE_ACL_SUNOS */
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_LIBRICHACL
+name|richacl_a
+operator|=
+name|richacl_get_file
+argument_list|(
+name|path_a
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+operator|!
+name|ARCHIVE_ACL_LIBACL
+if|if
+condition|(
+name|richacl_a
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|errno
+operator|==
+name|ENODATA
+operator|||
+name|errno
+operator|==
+name|ENOTSUP
+operator|||
+name|errno
+operator|==
+name|ENOSYS
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|failure
+argument_list|(
+literal|"richacl_get_file() error: %s (%s)"
+argument_list|,
+name|path_a
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|assert
+argument_list|(
+name|richacl_a
+operator|!=
+name|NULL
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|richacl_a
+operator|!=
+name|NULL
+condition|)
+block|{
+name|richacl_b
+operator|=
+name|richacl_get_file
+argument_list|(
+name|path_b
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|richacl_b
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|errno
+operator|==
+name|ENODATA
+operator|||
+name|errno
+operator|==
+name|ENOTSUP
+operator|||
+name|errno
+operator|==
+name|ENOSYS
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|failure
+argument_list|(
+literal|"richacl_get_file() error: %s (%s)"
+argument_list|,
+name|path_b
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|assert
+argument_list|(
+name|richacl_b
+operator|!=
+name|NULL
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|richacl_free
+argument_list|(
+name|richacl_a
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|richacl_compare
+argument_list|(
+name|richacl_a
+argument_list|,
+name|richacl_b
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+name|richacl_free
+argument_list|(
+name|richacl_a
+argument_list|)
+expr_stmt|;
+name|richacl_free
+argument_list|(
+name|richacl_b
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* ARCHIVE_ACL_LIBRICHACL */
+if|#
+directive|if
+name|ARCHIVE_ACL_DARWIN
+operator|||
+name|ARCHIVE_ACL_FREEBSD
+operator|||
+name|ARCHIVE_ACL_LIBACL
+if|#
+directive|if
+name|ARCHIVE_ACL_DARWIN
 name|is_nfs4
 operator|=
 literal|1
@@ -1616,7 +1841,7 @@ argument_list|)
 expr_stmt|;
 elif|#
 directive|elif
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 name|acl_a
 operator|=
 name|acl_get_file
@@ -1638,10 +1863,6 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-operator|!
-name|HAVE_DARWIN_ACL
 if|if
 condition|(
 name|acl_a
@@ -1657,8 +1878,6 @@ argument_list|,
 name|ACL_TYPE_ACCESS
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|failure
 argument_list|(
 literal|"acl_get_file() error: %s (%s)"
@@ -1690,7 +1909,7 @@ operator|)
 return|;
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 name|acl_b
 operator|=
 name|acl_get_file
@@ -1702,7 +1921,7 @@ argument_list|)
 expr_stmt|;
 elif|#
 directive|elif
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 name|acl_b
 operator|=
 name|acl_get_file
@@ -1717,7 +1936,7 @@ directive|endif
 if|#
 directive|if
 operator|!
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 if|if
 condition|(
 name|acl_b
@@ -1727,7 +1946,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|HAVE_FREEBSD_NFS4_ACL
+name|ARCHIVE_ACL_FREEBSD_NFS4
 if|if
 condition|(
 name|is_nfs4
@@ -1852,7 +2071,7 @@ goto|;
 block|}
 if|#
 directive|if
-name|HAVE_DARWIN_ACL
+name|ARCHIVE_ACL_DARWIN
 while|while
 condition|(
 name|a
@@ -1943,12 +2162,15 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !HAVE_SUN_ACL */
+comment|/* ARCHIVE_ACL_DARWIN || ARCHIVE_ACL_FREEBSD || ARCHIVE_ACL_LIBACL */
+endif|#
+directive|endif
+comment|/* !ARCHIVE_ACL_SUNOS */
 name|exit_free
 label|:
 if|#
 directive|if
-name|HAVE_SUN_ACL
+name|ARCHIVE_ACL_SUNOS
 name|free
 argument_list|(
 name|acl_a
@@ -1987,7 +2209,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_SUN_ACL || HAVE_DARWIN_ACL || HAVE_POSIX_ACL */
+comment|/* ARCHIVE_ACL_SUPPORT */
 end_comment
 
 begin_macro
@@ -2002,13 +2224,7 @@ block|{
 if|#
 directive|if
 operator|!
-name|HAVE_SUN_ACL
-operator|&&
-operator|!
-name|HAVE_DARWIN_ACL
-operator|&&
-operator|!
-name|HAVE_POSIX_ACL
+name|ARCHIVE_ACL_SUPPORT
 name|skipping
 argument_list|(
 literal|"ACLs are not supported on this platform"
@@ -2016,7 +2232,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* HAVE_SUN_ACL || HAVE_DARWIN_ACL || HAVE_POSIX_ACL */
+comment|/* ARCHIVE_ACL_SUPPORT */
 name|int
 name|acltype
 decl_stmt|,
@@ -2276,7 +2492,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_SUN_ACL || HAVE_DARWIN_ACL || HAVE_POSIX_ACL */
+comment|/* ARCHIVE_ACL_SUPPORT */
 block|}
 end_block
 
