@@ -2432,21 +2432,42 @@ end_comment
 begin_function_decl
 name|void
 name|postoa
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|num
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|linenumtoa
-parameter_list|()
+parameter_list|(
+name|LINENUM
+name|num
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|inttoa
-parameter_list|()
+parameter_list|(
+name|int
+name|num
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|)
 function_decl|;
 end_function_decl
 

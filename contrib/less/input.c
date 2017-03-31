@@ -110,11 +110,9 @@ name|public
 name|POSITION
 name|forw_line
 parameter_list|(
-name|curr_pos
-parameter_list|)
 name|POSITION
 name|curr_pos
-decl_stmt|;
+parameter_list|)
 block|{
 name|POSITION
 name|base_pos
@@ -122,7 +120,6 @@ decl_stmt|;
 name|POSITION
 name|new_pos
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -714,11 +711,9 @@ name|public
 name|POSITION
 name|back_line
 parameter_list|(
-name|curr_pos
-parameter_list|)
 name|POSITION
 name|curr_pos
-decl_stmt|;
+parameter_list|)
 block|{
 name|POSITION
 name|new_pos
@@ -1238,11 +1233,9 @@ name|public
 name|void
 name|set_attnpos
 parameter_list|(
-name|pos
-parameter_list|)
 name|POSITION
 name|pos
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c

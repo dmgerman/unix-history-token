@@ -4,7 +4,12 @@ name|public
 name|char
 modifier|*
 name|save
-parameter_list|()
+parameter_list|(
+name|constant
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -12,7 +17,14 @@ begin_function_decl
 name|public
 name|VOID_POINTER
 name|ecalloc
-parameter_list|()
+parameter_list|(
+name|int
+name|count
+parameter_list|,
+name|unsigned
+name|int
+name|size
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -21,7 +33,24 @@ name|public
 name|char
 modifier|*
 name|skipsp
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|public
+name|char
+modifier|*
+name|skipnsp
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -29,7 +58,18 @@ begin_function_decl
 name|public
 name|int
 name|sprefix
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|ps
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|uppercase
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -37,7 +77,10 @@ begin_function_decl
 name|public
 name|void
 name|quit
-parameter_list|()
+parameter_list|(
+name|int
+name|status
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -45,7 +88,10 @@ begin_function_decl
 name|public
 name|void
 name|raw_mode
-parameter_list|()
+parameter_list|(
+name|int
+name|on
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -53,7 +99,9 @@ begin_function_decl
 name|public
 name|void
 name|scrsize
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -62,7 +110,10 @@ name|public
 name|char
 modifier|*
 name|special_key_str
-parameter_list|()
+parameter_list|(
+name|int
+name|key
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -70,7 +121,9 @@ begin_function_decl
 name|public
 name|void
 name|get_term
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -78,7 +131,9 @@ begin_function_decl
 name|public
 name|void
 name|init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -86,7 +141,9 @@ begin_function_decl
 name|public
 name|void
 name|deinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -94,7 +151,9 @@ begin_function_decl
 name|public
 name|void
 name|home
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -102,7 +161,9 @@ begin_function_decl
 name|public
 name|void
 name|add_line
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -110,7 +171,10 @@ begin_function_decl
 name|public
 name|void
 name|remove_top
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -118,7 +182,10 @@ begin_function_decl
 name|public
 name|void
 name|win32_scroll_up
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -126,7 +193,9 @@ begin_function_decl
 name|public
 name|void
 name|lower_left
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -134,7 +203,9 @@ begin_function_decl
 name|public
 name|void
 name|line_left
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -142,7 +213,9 @@ begin_function_decl
 name|public
 name|void
 name|check_winch
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -150,7 +223,10 @@ begin_function_decl
 name|public
 name|void
 name|goto_line
-parameter_list|()
+parameter_list|(
+name|int
+name|slinenum
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -158,7 +234,9 @@ begin_function_decl
 name|public
 name|void
 name|vbell
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -166,7 +244,9 @@ begin_function_decl
 name|public
 name|void
 name|bell
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -174,7 +254,9 @@ begin_function_decl
 name|public
 name|void
 name|clear
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -182,7 +264,9 @@ begin_function_decl
 name|public
 name|void
 name|clear_eol
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -190,7 +274,9 @@ begin_function_decl
 name|public
 name|void
 name|clear_bot
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -198,7 +284,10 @@ begin_function_decl
 name|public
 name|void
 name|at_enter
-parameter_list|()
+parameter_list|(
+name|int
+name|attr
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -206,7 +295,9 @@ begin_function_decl
 name|public
 name|void
 name|at_exit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -214,7 +305,10 @@ begin_function_decl
 name|public
 name|void
 name|at_switch
-parameter_list|()
+parameter_list|(
+name|int
+name|attr
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -222,7 +316,13 @@ begin_function_decl
 name|public
 name|int
 name|is_at_equiv
-parameter_list|()
+parameter_list|(
+name|int
+name|attr1
+parameter_list|,
+name|int
+name|attr2
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -230,7 +330,10 @@ begin_function_decl
 name|public
 name|int
 name|apply_at_specials
-parameter_list|()
+parameter_list|(
+name|int
+name|attr
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -238,7 +341,9 @@ begin_function_decl
 name|public
 name|void
 name|backspace
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -246,7 +351,9 @@ begin_function_decl
 name|public
 name|void
 name|putbs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -254,7 +361,10 @@ begin_function_decl
 name|public
 name|char
 name|WIN32getch
-parameter_list|()
+parameter_list|(
+name|int
+name|tty
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -262,7 +372,13 @@ begin_function_decl
 name|public
 name|void
 name|WIN32setcolors
-parameter_list|()
+parameter_list|(
+name|int
+name|fg
+parameter_list|,
+name|int
+name|bg
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -270,7 +386,14 @@ begin_function_decl
 name|public
 name|void
 name|WIN32textout
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|text
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -278,7 +401,19 @@ begin_function_decl
 name|public
 name|void
 name|match_brac
-parameter_list|()
+parameter_list|(
+name|int
+name|obrac
+parameter_list|,
+name|int
+name|cbrac
+parameter_list|,
+name|int
+name|forwdir
+parameter_list|,
+name|int
+name|n
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -286,7 +421,10 @@ begin_function_decl
 name|public
 name|void
 name|ch_ungetchar
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -294,7 +432,9 @@ begin_function_decl
 name|public
 name|void
 name|end_logfile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -302,7 +442,9 @@ begin_function_decl
 name|public
 name|void
 name|sync_logfile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -310,7 +452,10 @@ begin_function_decl
 name|public
 name|int
 name|ch_seek
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -318,7 +463,9 @@ begin_function_decl
 name|public
 name|int
 name|ch_end_seek
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -326,7 +473,9 @@ begin_function_decl
 name|public
 name|int
 name|ch_end_buffer_seek
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -334,7 +483,9 @@ begin_function_decl
 name|public
 name|int
 name|ch_beg_seek
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -342,7 +493,9 @@ begin_function_decl
 name|public
 name|POSITION
 name|ch_length
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -350,7 +503,9 @@ begin_function_decl
 name|public
 name|POSITION
 name|ch_tell
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -358,7 +513,9 @@ begin_function_decl
 name|public
 name|int
 name|ch_forw_get
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -366,7 +523,9 @@ begin_function_decl
 name|public
 name|int
 name|ch_back_get
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -374,7 +533,10 @@ begin_function_decl
 name|public
 name|void
 name|ch_setbufspace
-parameter_list|()
+parameter_list|(
+name|int
+name|bufspace
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -382,7 +544,9 @@ begin_function_decl
 name|public
 name|void
 name|ch_flush
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -390,7 +554,10 @@ begin_function_decl
 name|public
 name|int
 name|seekable
-parameter_list|()
+parameter_list|(
+name|int
+name|f
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -398,7 +565,9 @@ begin_function_decl
 name|public
 name|void
 name|ch_set_eof
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -406,7 +575,13 @@ begin_function_decl
 name|public
 name|void
 name|ch_init
-parameter_list|()
+parameter_list|(
+name|int
+name|f
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -414,7 +589,9 @@ begin_function_decl
 name|public
 name|void
 name|ch_close
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -422,15 +599,28 @@ begin_function_decl
 name|public
 name|int
 name|ch_getflags
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|filestate
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|public
 name|void
 name|ch_dump
-parameter_list|()
+parameter_list|(
+name|struct
+name|filestate
+modifier|*
+name|fs
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -438,7 +628,9 @@ begin_function_decl
 name|public
 name|void
 name|init_charset
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -446,7 +638,10 @@ begin_function_decl
 name|public
 name|int
 name|binary_char
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -454,7 +649,10 @@ begin_function_decl
 name|public
 name|int
 name|control_char
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -463,7 +661,10 @@ name|public
 name|char
 modifier|*
 name|prchar
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -472,7 +673,10 @@ name|public
 name|char
 modifier|*
 name|prutfchar
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|ch
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -480,7 +684,10 @@ begin_function_decl
 name|public
 name|int
 name|utf_len
-parameter_list|()
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -488,7 +695,15 @@ begin_function_decl
 name|public
 name|int
 name|is_utf8_well_formed
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|slen
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -496,7 +711,15 @@ begin_function_decl
 name|public
 name|int
 name|utf_bin_count
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -504,7 +727,12 @@ begin_function_decl
 name|public
 name|LWCHAR
 name|get_wchar
-parameter_list|()
+parameter_list|(
+name|constant
+name|char
+modifier|*
+name|p
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -512,7 +740,15 @@ begin_function_decl
 name|public
 name|void
 name|put_wchar
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|pp
+parameter_list|,
+name|LWCHAR
+name|ch
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -520,7 +756,22 @@ begin_function_decl
 name|public
 name|LWCHAR
 name|step_char
-parameter_list|()
+parameter_list|(
+name|constant
+name|char
+modifier|*
+modifier|*
+name|pp
+parameter_list|,
+name|signed
+name|int
+name|dir
+parameter_list|,
+name|constant
+name|char
+modifier|*
+name|limit
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -528,7 +779,10 @@ begin_function_decl
 name|public
 name|int
 name|is_composing_char
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|ch
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -536,7 +790,10 @@ begin_function_decl
 name|public
 name|int
 name|is_ubin_char
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|ch
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -544,7 +801,10 @@ begin_function_decl
 name|public
 name|int
 name|is_wide_char
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|ch
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -552,7 +812,13 @@ begin_function_decl
 name|public
 name|int
 name|is_combining_char
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|ch1
+parameter_list|,
+name|LWCHAR
+name|ch2
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -560,7 +826,9 @@ begin_function_decl
 name|public
 name|void
 name|cmd_reset
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -568,7 +836,9 @@ begin_function_decl
 name|public
 name|void
 name|clear_cmd
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -576,7 +846,12 @@ begin_function_decl
 name|public
 name|void
 name|cmd_putstr
-parameter_list|()
+parameter_list|(
+name|constant
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -584,7 +859,9 @@ begin_function_decl
 name|public
 name|int
 name|len_cmdbuf
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -592,15 +869,42 @@ begin_function_decl
 name|public
 name|void
 name|set_mlist
-parameter_list|()
+parameter_list|(
+name|constant
+name|void
+modifier|*
+name|mlist
+parameter_list|,
+name|int
+name|cmdflags
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mlist
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|public
 name|void
 name|cmd_addhist
-parameter_list|()
+parameter_list|(
+name|struct
+name|mlist
+modifier|*
+name|constant
+name|mlist
+parameter_list|,
+name|char
+modifier|*
+name|cmd
+parameter_list|,
+name|int
+name|modified
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -608,7 +912,9 @@ begin_function_decl
 name|public
 name|void
 name|cmd_accept
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -616,7 +922,10 @@ begin_function_decl
 name|public
 name|int
 name|cmd_char
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -624,7 +933,11 @@ begin_function_decl
 name|public
 name|LINENUM
 name|cmd_int
-parameter_list|()
+parameter_list|(
+name|long
+modifier|*
+name|frac
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -633,7 +946,9 @@ name|public
 name|char
 modifier|*
 name|get_cmdbuf
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -642,7 +957,9 @@ name|public
 name|char
 modifier|*
 name|cmd_lastpattern
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -650,7 +967,9 @@ begin_function_decl
 name|public
 name|void
 name|init_cmdhist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -658,7 +977,9 @@ begin_function_decl
 name|public
 name|void
 name|save_cmdhist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -666,7 +987,9 @@ begin_function_decl
 name|public
 name|int
 name|in_mca
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -674,7 +997,9 @@ begin_function_decl
 name|public
 name|void
 name|dispversion
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -682,7 +1007,9 @@ begin_function_decl
 name|public
 name|int
 name|getcc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -690,7 +1017,10 @@ begin_function_decl
 name|public
 name|void
 name|ungetcc
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -698,7 +1028,11 @@ begin_function_decl
 name|public
 name|void
 name|ungetsc
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -706,7 +1040,9 @@ begin_function_decl
 name|public
 name|void
 name|commands
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -714,7 +1050,13 @@ begin_function_decl
 name|public
 name|int
 name|cvt_length
-parameter_list|()
+parameter_list|(
+name|int
+name|len
+parameter_list|,
+name|int
+name|ops
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -723,7 +1065,10 @@ name|public
 name|int
 modifier|*
 name|cvt_alloc_chpos
-parameter_list|()
+parameter_list|(
+name|int
+name|len
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -731,7 +1076,26 @@ begin_function_decl
 name|public
 name|void
 name|cvt_text
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|odst
+parameter_list|,
+name|char
+modifier|*
+name|osrc
+parameter_list|,
+name|int
+modifier|*
+name|chpos
+parameter_list|,
+name|int
+modifier|*
+name|lenp
+parameter_list|,
+name|int
+name|ops
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -739,7 +1103,9 @@ begin_function_decl
 name|public
 name|void
 name|init_cmds
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -747,7 +1113,14 @@ begin_function_decl
 name|public
 name|void
 name|add_fcmd_table
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -755,7 +1128,14 @@ begin_function_decl
 name|public
 name|void
 name|add_ecmd_table
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -763,7 +1143,16 @@ begin_function_decl
 name|public
 name|int
 name|fcmd_decode
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|cmd
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|sp
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -771,7 +1160,16 @@ begin_function_decl
 name|public
 name|int
 name|ecmd_decode
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|cmd
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|sp
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -780,7 +1178,11 @@ name|public
 name|char
 modifier|*
 name|lgetenv
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|var
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -788,7 +1190,14 @@ begin_function_decl
 name|public
 name|int
 name|lesskey
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|int
+name|sysvar
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -796,7 +1205,18 @@ begin_function_decl
 name|public
 name|void
 name|add_hometable
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|envname
+parameter_list|,
+name|char
+modifier|*
+name|def_filename
+parameter_list|,
+name|int
+name|sysvar
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -804,7 +1224,13 @@ begin_function_decl
 name|public
 name|int
 name|editchar
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -812,7 +1238,16 @@ begin_function_decl
 name|public
 name|void
 name|init_textlist
-parameter_list|()
+parameter_list|(
+name|struct
+name|textlist
+modifier|*
+name|tlist
+parameter_list|,
+name|char
+modifier|*
+name|str
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -821,7 +1256,16 @@ name|public
 name|char
 modifier|*
 name|forw_textlist
-parameter_list|()
+parameter_list|(
+name|struct
+name|textlist
+modifier|*
+name|tlist
+parameter_list|,
+name|char
+modifier|*
+name|prev
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -830,7 +1274,16 @@ name|public
 name|char
 modifier|*
 name|back_textlist
-parameter_list|()
+parameter_list|(
+name|struct
+name|textlist
+modifier|*
+name|tlist
+parameter_list|,
+name|char
+modifier|*
+name|prev
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -838,7 +1291,11 @@ begin_function_decl
 name|public
 name|int
 name|edit
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -846,7 +1303,10 @@ begin_function_decl
 name|public
 name|int
 name|edit_ifile
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -854,7 +1314,11 @@ begin_function_decl
 name|public
 name|int
 name|edit_list
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filelist
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -862,7 +1326,9 @@ begin_function_decl
 name|public
 name|int
 name|edit_first
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -870,7 +1336,9 @@ begin_function_decl
 name|public
 name|int
 name|edit_last
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -878,7 +1346,10 @@ begin_function_decl
 name|public
 name|int
 name|edit_next
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -886,7 +1357,10 @@ begin_function_decl
 name|public
 name|int
 name|edit_prev
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -894,7 +1368,10 @@ begin_function_decl
 name|public
 name|int
 name|edit_index
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -902,7 +1379,9 @@ begin_function_decl
 name|public
 name|IFILE
 name|save_curr_ifile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -910,7 +1389,10 @@ begin_function_decl
 name|public
 name|void
 name|unsave_ifile
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|save_ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -918,7 +1400,10 @@ begin_function_decl
 name|public
 name|void
 name|reedit_ifile
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|save_ifiler
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -926,7 +1411,9 @@ begin_function_decl
 name|public
 name|void
 name|reopen_curr_ifile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -934,7 +1421,9 @@ begin_function_decl
 name|public
 name|int
 name|edit_stdin
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -942,7 +1431,9 @@ begin_function_decl
 name|public
 name|void
 name|cat_file
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -950,7 +1441,11 @@ begin_function_decl
 name|public
 name|void
 name|use_logfile
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -959,7 +1454,11 @@ name|public
 name|char
 modifier|*
 name|shell_unquote
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -968,7 +1467,9 @@ name|public
 name|char
 modifier|*
 name|get_meta_escape
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -977,7 +1478,11 @@ name|public
 name|char
 modifier|*
 name|shell_quote
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -986,7 +1491,11 @@ name|public
 name|char
 modifier|*
 name|homefile
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -995,7 +1504,11 @@ name|public
 name|char
 modifier|*
 name|fexpand
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1004,7 +1517,11 @@ name|public
 name|char
 modifier|*
 name|fcomplete
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1012,7 +1529,10 @@ begin_function_decl
 name|public
 name|int
 name|bin_file
-parameter_list|()
+parameter_list|(
+name|int
+name|f
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1021,7 +1541,11 @@ name|public
 name|char
 modifier|*
 name|lglob
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1030,7 +1554,20 @@ name|public
 name|char
 modifier|*
 name|open_altfile
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|int
+modifier|*
+name|pf
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|pfd
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1038,7 +1575,19 @@ begin_function_decl
 name|public
 name|void
 name|close_altfile
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|altfilename
+parameter_list|,
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|void
+modifier|*
+name|pipefd
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1046,7 +1595,11 @@ begin_function_decl
 name|public
 name|int
 name|is_dir
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1055,7 +1608,11 @@ name|public
 name|char
 modifier|*
 name|bad_file
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1063,7 +1620,10 @@ begin_function_decl
 name|public
 name|POSITION
 name|filesize
-parameter_list|()
+parameter_list|(
+name|int
+name|f
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1072,7 +1632,9 @@ name|public
 name|char
 modifier|*
 name|shell_coption
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1081,7 +1643,11 @@ name|public
 name|char
 modifier|*
 name|last_component
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1089,7 +1655,9 @@ begin_function_decl
 name|public
 name|int
 name|eof_displayed
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1097,7 +1665,9 @@ begin_function_decl
 name|public
 name|int
 name|entire_file_displayed
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1105,7 +1675,9 @@ begin_function_decl
 name|public
 name|void
 name|squish_check
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1113,7 +1685,22 @@ begin_function_decl
 name|public
 name|void
 name|forw
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+name|POSITION
+name|pos
+parameter_list|,
+name|int
+name|force
+parameter_list|,
+name|int
+name|only_last
+parameter_list|,
+name|int
+name|nblank
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1121,7 +1708,19 @@ begin_function_decl
 name|public
 name|void
 name|back
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+name|POSITION
+name|pos
+parameter_list|,
+name|int
+name|force
+parameter_list|,
+name|int
+name|only_last
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1129,7 +1728,16 @@ begin_function_decl
 name|public
 name|void
 name|forward
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+name|int
+name|force
+parameter_list|,
+name|int
+name|only_last
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1137,7 +1745,16 @@ begin_function_decl
 name|public
 name|void
 name|backward
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+name|int
+name|force
+parameter_list|,
+name|int
+name|only_last
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1145,7 +1762,9 @@ begin_function_decl
 name|public
 name|int
 name|get_back_scroll
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1153,7 +1772,10 @@ begin_function_decl
 name|public
 name|void
 name|del_ifile
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|h
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1161,7 +1783,10 @@ begin_function_decl
 name|public
 name|IFILE
 name|next_ifile
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|h
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1169,7 +1794,10 @@ begin_function_decl
 name|public
 name|IFILE
 name|prev_ifile
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|h
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1177,7 +1805,10 @@ begin_function_decl
 name|public
 name|IFILE
 name|getoff_ifile
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1185,7 +1816,9 @@ begin_function_decl
 name|public
 name|int
 name|nifile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1193,7 +1826,14 @@ begin_function_decl
 name|public
 name|IFILE
 name|get_ifile
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|IFILE
+name|prev
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1202,7 +1842,10 @@ name|public
 name|char
 modifier|*
 name|get_filename
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1210,7 +1853,10 @@ begin_function_decl
 name|public
 name|int
 name|get_index
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1218,7 +1864,15 @@ begin_function_decl
 name|public
 name|void
 name|store_pos
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|,
+name|struct
+name|scrpos
+modifier|*
+name|scrpos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1226,7 +1880,15 @@ begin_function_decl
 name|public
 name|void
 name|get_pos
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|,
+name|struct
+name|scrpos
+modifier|*
+name|scrpos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1234,7 +1896,10 @@ begin_function_decl
 name|public
 name|void
 name|set_open
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1242,7 +1907,10 @@ begin_function_decl
 name|public
 name|int
 name|opened
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1250,7 +1918,13 @@ begin_function_decl
 name|public
 name|void
 name|hold_ifile
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|,
+name|int
+name|incr
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1258,7 +1932,10 @@ begin_function_decl
 name|public
 name|int
 name|held_ifile
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1267,7 +1944,10 @@ name|public
 name|void
 modifier|*
 name|get_filestate
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1275,7 +1955,14 @@ begin_function_decl
 name|public
 name|void
 name|set_filestate
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|,
+name|void
+modifier|*
+name|filestate
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1283,7 +1970,9 @@ begin_function_decl
 name|public
 name|void
 name|if_dump
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1291,7 +1980,10 @@ begin_function_decl
 name|public
 name|POSITION
 name|forw_line
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|curr_pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1299,7 +1991,10 @@ begin_function_decl
 name|public
 name|POSITION
 name|back_line
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|curr_pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1307,7 +2002,10 @@ begin_function_decl
 name|public
 name|void
 name|set_attnpos
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1315,7 +2013,9 @@ begin_function_decl
 name|public
 name|void
 name|jump_forw
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1323,7 +2023,9 @@ begin_function_decl
 name|public
 name|void
 name|jump_forw_buffered
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1331,7 +2033,10 @@ begin_function_decl
 name|public
 name|void
 name|jump_back
-parameter_list|()
+parameter_list|(
+name|LINENUM
+name|linenum
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1339,7 +2044,9 @@ begin_function_decl
 name|public
 name|void
 name|repaint
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1347,7 +2054,13 @@ begin_function_decl
 name|public
 name|void
 name|jump_percent
-parameter_list|()
+parameter_list|(
+name|int
+name|percent
+parameter_list|,
+name|long
+name|fraction
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1355,7 +2068,13 @@ begin_function_decl
 name|public
 name|void
 name|jump_line_loc
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|,
+name|int
+name|sline
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1363,7 +2082,13 @@ begin_function_decl
 name|public
 name|void
 name|jump_loc
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|,
+name|int
+name|sline
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1371,7 +2096,9 @@ begin_function_decl
 name|public
 name|void
 name|init_line
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1379,7 +2106,10 @@ begin_function_decl
 name|public
 name|int
 name|is_ascii_char
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|ch
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1387,7 +2117,9 @@ begin_function_decl
 name|public
 name|void
 name|prewind
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1395,7 +2127,10 @@ begin_function_decl
 name|public
 name|void
 name|plinenum
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1403,7 +2138,9 @@ begin_function_decl
 name|public
 name|void
 name|pshift_all
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1411,7 +2148,10 @@ begin_function_decl
 name|public
 name|int
 name|is_ansi_end
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|ch
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1419,7 +2159,10 @@ begin_function_decl
 name|public
 name|int
 name|is_ansi_middle
-parameter_list|()
+parameter_list|(
+name|LWCHAR
+name|ch
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1427,7 +2170,14 @@ begin_function_decl
 name|public
 name|int
 name|pappend
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|char
+name|c
+parameter_list|,
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1435,7 +2185,9 @@ begin_function_decl
 name|public
 name|int
 name|pflushmbc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1443,7 +2195,13 @@ begin_function_decl
 name|public
 name|void
 name|pdone
-parameter_list|()
+parameter_list|(
+name|int
+name|endline
+parameter_list|,
+name|int
+name|forw
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1451,7 +2209,10 @@ begin_function_decl
 name|public
 name|void
 name|set_status_col
-parameter_list|()
+parameter_list|(
+name|char
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1459,7 +2220,14 @@ begin_function_decl
 name|public
 name|int
 name|gline
-parameter_list|()
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+name|int
+modifier|*
+name|ap
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1467,7 +2235,9 @@ begin_function_decl
 name|public
 name|void
 name|null_line
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1475,7 +2245,19 @@ begin_function_decl
 name|public
 name|POSITION
 name|forw_raw_line
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|curr_pos
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|linep
+parameter_list|,
+name|int
+modifier|*
+name|line_lenp
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1483,7 +2265,19 @@ begin_function_decl
 name|public
 name|POSITION
 name|back_raw_line
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|curr_pos
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|linep
+parameter_list|,
+name|int
+modifier|*
+name|line_lenp
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1491,7 +2285,9 @@ begin_function_decl
 name|public
 name|void
 name|clr_linenum
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1499,7 +2295,13 @@ begin_function_decl
 name|public
 name|void
 name|add_lnum
-parameter_list|()
+parameter_list|(
+name|LINENUM
+name|linenum
+parameter_list|,
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1507,7 +2309,10 @@ begin_function_decl
 name|public
 name|LINENUM
 name|find_linenum
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1515,7 +2320,10 @@ begin_function_decl
 name|public
 name|POSITION
 name|find_pos
-parameter_list|()
+parameter_list|(
+name|LINENUM
+name|linenum
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1523,7 +2331,10 @@ begin_function_decl
 name|public
 name|LINENUM
 name|currline
-parameter_list|()
+parameter_list|(
+name|int
+name|where
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1531,7 +2342,15 @@ begin_function_decl
 name|public
 name|void
 name|lsystem
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|cmd
+parameter_list|,
+name|char
+modifier|*
+name|donemsg
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1539,7 +2358,14 @@ begin_function_decl
 name|public
 name|int
 name|pipe_mark
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|,
+name|char
+modifier|*
+name|cmd
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1547,7 +2373,17 @@ begin_function_decl
 name|public
 name|int
 name|pipe_data
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|cmd
+parameter_list|,
+name|POSITION
+name|spos
+parameter_list|,
+name|POSITION
+name|epos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1555,7 +2391,9 @@ begin_function_decl
 name|public
 name|void
 name|init_mark
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1563,7 +2401,10 @@ begin_function_decl
 name|public
 name|int
 name|badmark
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1571,7 +2412,10 @@ begin_function_decl
 name|public
 name|void
 name|setmark
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1579,7 +2423,9 @@ begin_function_decl
 name|public
 name|void
 name|lastmark
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1587,7 +2433,10 @@ begin_function_decl
 name|public
 name|void
 name|gomark
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1595,7 +2444,10 @@ begin_function_decl
 name|public
 name|POSITION
 name|markpos
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1603,7 +2455,10 @@ begin_function_decl
 name|public
 name|void
 name|unmark
-parameter_list|()
+parameter_list|(
+name|IFILE
+name|ifile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1611,7 +2466,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_o
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1619,7 +2481,14 @@ begin_function_decl
 name|public
 name|void
 name|opt__O
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1627,7 +2496,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_j
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1635,7 +2511,9 @@ begin_function_decl
 name|public
 name|void
 name|calc_jump_sline
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1643,7 +2521,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_shift
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1651,7 +2536,9 @@ begin_function_decl
 name|public
 name|void
 name|calc_shift_count
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1659,7 +2546,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_k
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1667,7 +2561,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_t
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1675,7 +2576,14 @@ begin_function_decl
 name|public
 name|void
 name|opt__T
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1683,7 +2591,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_p
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1691,7 +2606,14 @@ begin_function_decl
 name|public
 name|void
 name|opt__P
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1699,7 +2621,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_b
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1707,7 +2636,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_i
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1715,7 +2651,14 @@ begin_function_decl
 name|public
 name|void
 name|opt__V
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1723,7 +2666,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_D
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1731,7 +2681,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_x
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1739,7 +2696,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_quote
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1747,7 +2711,14 @@ begin_function_decl
 name|public
 name|void
 name|opt_query
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1755,7 +2726,9 @@ begin_function_decl
 name|public
 name|int
 name|get_swindow
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1764,7 +2737,10 @@ name|public
 name|char
 modifier|*
 name|propt
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1772,15 +2748,40 @@ begin_function_decl
 name|public
 name|void
 name|scan_option
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|loption
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|public
 name|void
 name|toggle_option
-parameter_list|()
+parameter_list|(
+name|struct
+name|loption
+modifier|*
+name|o
+parameter_list|,
+name|int
+name|lower
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|how_toggle
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1788,7 +2789,12 @@ begin_function_decl
 name|public
 name|int
 name|opt_has_param
-parameter_list|()
+parameter_list|(
+name|struct
+name|loption
+modifier|*
+name|o
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1797,7 +2803,12 @@ name|public
 name|char
 modifier|*
 name|opt_prompt
-parameter_list|()
+parameter_list|(
+name|struct
+name|loption
+modifier|*
+name|o
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1805,7 +2816,9 @@ begin_function_decl
 name|public
 name|int
 name|isoptpending
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1813,7 +2826,9 @@ begin_function_decl
 name|public
 name|void
 name|nopendopt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1821,7 +2836,20 @@ begin_function_decl
 name|public
 name|int
 name|getnum
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|sp
+parameter_list|,
+name|char
+modifier|*
+name|printopt
+parameter_list|,
+name|int
+modifier|*
+name|errp
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1829,7 +2857,20 @@ begin_function_decl
 name|public
 name|long
 name|getfraction
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|sp
+parameter_list|,
+name|char
+modifier|*
+name|printopt
+parameter_list|,
+name|int
+modifier|*
+name|errp
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1837,7 +2878,9 @@ begin_function_decl
 name|public
 name|int
 name|get_quit_at_eof
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1845,7 +2888,9 @@ begin_function_decl
 name|public
 name|void
 name|init_option
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1855,7 +2900,10 @@ name|struct
 name|loption
 modifier|*
 name|findopt
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1865,7 +2913,21 @@ name|struct
 name|loption
 modifier|*
 name|findopt_name
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|p_optname
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|p_oname
+parameter_list|,
+name|int
+modifier|*
+name|p_err
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1873,7 +2935,18 @@ begin_function_decl
 name|public
 name|int
 name|iread
-parameter_list|()
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|unsigned
+name|int
+name|len
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1881,7 +2954,9 @@ begin_function_decl
 name|public
 name|void
 name|intread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1889,7 +2964,9 @@ begin_function_decl
 name|public
 name|time_type
 name|get_time
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1898,7 +2975,11 @@ name|public
 name|char
 modifier|*
 name|errno_message
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1906,7 +2987,13 @@ begin_function_decl
 name|public
 name|int
 name|percentage
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|num
+parameter_list|,
+name|POSITION
+name|den
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1914,7 +3001,16 @@ begin_function_decl
 name|public
 name|POSITION
 name|percent_pos
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|,
+name|int
+name|percent
+parameter_list|,
+name|long
+name|fraction
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1922,7 +3018,17 @@ begin_function_decl
 name|public
 name|int
 name|os9_signal
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|RETSIGTYPE
+function_decl|(
+modifier|*
+name|handler
+function_decl|)
 parameter_list|()
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1930,7 +3036,9 @@ begin_function_decl
 name|public
 name|void
 name|put_line
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1938,7 +3046,9 @@ begin_function_decl
 name|public
 name|void
 name|flush
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1946,7 +3056,10 @@ begin_function_decl
 name|public
 name|int
 name|putchr
-parameter_list|()
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1954,7 +3067,12 @@ begin_function_decl
 name|public
 name|void
 name|putstr
-parameter_list|()
+parameter_list|(
+name|constant
+name|char
+modifier|*
+name|s
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1962,7 +3080,9 @@ begin_function_decl
 name|public
 name|void
 name|get_return
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1970,7 +3090,15 @@ begin_function_decl
 name|public
 name|void
 name|error
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|PARG
+modifier|*
+name|parg
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1978,7 +3106,15 @@ begin_function_decl
 name|public
 name|void
 name|ierror
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|PARG
+modifier|*
+name|parg
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1986,7 +3122,15 @@ begin_function_decl
 name|public
 name|int
 name|query
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|PARG
+modifier|*
+name|parg
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1994,7 +3138,19 @@ begin_function_decl
 name|public
 name|int
 name|compile_pattern
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|pattern
+parameter_list|,
+name|int
+name|search_type
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|comp_pattern
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2002,7 +3158,12 @@ begin_function_decl
 name|public
 name|void
 name|uncompile_pattern
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|pattern
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2010,7 +3171,11 @@ begin_function_decl
 name|public
 name|int
 name|valid_pattern
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|pattern
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2018,7 +3183,11 @@ begin_function_decl
 name|public
 name|int
 name|is_null_pattern
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|pattern
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2026,7 +3195,38 @@ begin_function_decl
 name|public
 name|int
 name|match_pattern
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|pattern
+parameter_list|,
+name|char
+modifier|*
+name|tpattern
+parameter_list|,
+name|char
+modifier|*
+name|line
+parameter_list|,
+name|int
+name|line_len
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|sp
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|ep
+parameter_list|,
+name|int
+name|notbol
+parameter_list|,
+name|int
+name|search_type
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2034,7 +3234,10 @@ begin_function_decl
 name|public
 name|POSITION
 name|position
-parameter_list|()
+parameter_list|(
+name|int
+name|where
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2042,7 +3245,10 @@ begin_function_decl
 name|public
 name|void
 name|add_forw_pos
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2050,7 +3256,10 @@ begin_function_decl
 name|public
 name|void
 name|add_back_pos
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2058,7 +3267,9 @@ begin_function_decl
 name|public
 name|void
 name|pos_clear
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2066,7 +3277,9 @@ begin_function_decl
 name|public
 name|void
 name|pos_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2074,7 +3287,10 @@ begin_function_decl
 name|public
 name|int
 name|onscreen
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2082,7 +3298,9 @@ begin_function_decl
 name|public
 name|int
 name|empty_screen
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2090,7 +3308,13 @@ begin_function_decl
 name|public
 name|int
 name|empty_lines
-parameter_list|()
+parameter_list|(
+name|int
+name|s
+parameter_list|,
+name|int
+name|e
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2098,7 +3322,12 @@ begin_function_decl
 name|public
 name|void
 name|get_scrpos
-parameter_list|()
+parameter_list|(
+name|struct
+name|scrpos
+modifier|*
+name|scrpos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2106,7 +3335,10 @@ begin_function_decl
 name|public
 name|int
 name|adjsline
-parameter_list|()
+parameter_list|(
+name|int
+name|sline
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2114,7 +3346,9 @@ begin_function_decl
 name|public
 name|void
 name|init_prompt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2123,7 +3357,15 @@ name|public
 name|char
 modifier|*
 name|pr_expand
-parameter_list|()
+parameter_list|(
+name|constant
+name|char
+modifier|*
+name|proto
+parameter_list|,
+name|int
+name|maxwidth
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2132,7 +3374,9 @@ name|public
 name|char
 modifier|*
 name|eq_message
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2141,7 +3385,9 @@ name|public
 name|char
 modifier|*
 name|pr_string
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2150,7 +3396,9 @@ name|public
 name|char
 modifier|*
 name|wait_message
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2158,7 +3406,9 @@ begin_function_decl
 name|public
 name|void
 name|init_search
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2166,7 +3416,10 @@ begin_function_decl
 name|public
 name|void
 name|repaint_hilite
-parameter_list|()
+parameter_list|(
+name|int
+name|on
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2174,7 +3427,9 @@ begin_function_decl
 name|public
 name|void
 name|clear_attn
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2182,15 +3437,28 @@ begin_function_decl
 name|public
 name|void
 name|undo_search
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|hilite_tree
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|public
 name|void
 name|clr_hlist
-parameter_list|()
+parameter_list|(
+name|struct
+name|hilite_tree
+modifier|*
+name|anchor
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2198,7 +3466,9 @@ begin_function_decl
 name|public
 name|void
 name|clr_hilite
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2206,7 +3476,9 @@ begin_function_decl
 name|public
 name|void
 name|clr_filter
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2214,7 +3486,10 @@ begin_function_decl
 name|public
 name|int
 name|is_filtered
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2222,7 +3497,10 @@ begin_function_decl
 name|public
 name|POSITION
 name|next_unfiltered
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2230,7 +3508,10 @@ begin_function_decl
 name|public
 name|POSITION
 name|prev_unfiltered
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2238,7 +3519,20 @@ begin_function_decl
 name|public
 name|int
 name|is_hilited
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|pos
+parameter_list|,
+name|POSITION
+name|epos
+parameter_list|,
+name|int
+name|nohide
+parameter_list|,
+name|int
+modifier|*
+name|p_matches
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2246,7 +3540,9 @@ begin_function_decl
 name|public
 name|void
 name|chg_caseless
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2254,7 +3550,9 @@ begin_function_decl
 name|public
 name|void
 name|chg_hilite
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2262,7 +3560,17 @@ begin_function_decl
 name|public
 name|int
 name|search
-parameter_list|()
+parameter_list|(
+name|int
+name|search_type
+parameter_list|,
+name|char
+modifier|*
+name|pattern
+parameter_list|,
+name|int
+name|n
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2270,7 +3578,16 @@ begin_function_decl
 name|public
 name|void
 name|prep_hilite
-parameter_list|()
+parameter_list|(
+name|POSITION
+name|spos
+parameter_list|,
+name|POSITION
+name|epos
+parameter_list|,
+name|int
+name|maxlines
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2278,7 +3595,14 @@ begin_function_decl
 name|public
 name|void
 name|set_filter_pattern
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|pattern
+parameter_list|,
+name|int
+name|search_type
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2286,7 +3610,9 @@ begin_function_decl
 name|public
 name|int
 name|is_filtering
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2294,15 +3620,10 @@ begin_function_decl
 name|public
 name|RETSIGTYPE
 name|winch
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|public
-name|RETSIGTYPE
-name|winch
-parameter_list|()
+parameter_list|(
+name|int
+name|type
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2310,7 +3631,10 @@ begin_function_decl
 name|public
 name|void
 name|init_signals
-parameter_list|()
+parameter_list|(
+name|int
+name|on
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2318,7 +3642,9 @@ begin_function_decl
 name|public
 name|void
 name|psignals
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2326,7 +3652,9 @@ begin_function_decl
 name|public
 name|void
 name|cleantags
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2334,7 +3662,9 @@ begin_function_decl
 name|public
 name|int
 name|gettagtype
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2342,7 +3672,11 @@ begin_function_decl
 name|public
 name|void
 name|findtag
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|tag
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2350,7 +3684,9 @@ begin_function_decl
 name|public
 name|POSITION
 name|tagsearch
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2359,7 +3695,10 @@ name|public
 name|char
 modifier|*
 name|nexttag
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2368,7 +3707,10 @@ name|public
 name|char
 modifier|*
 name|prevtag
-parameter_list|()
+parameter_list|(
+name|int
+name|n
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2376,7 +3718,9 @@ begin_function_decl
 name|public
 name|int
 name|ntags
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2384,7 +3728,9 @@ begin_function_decl
 name|public
 name|int
 name|curr_tag
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2392,7 +3738,9 @@ begin_function_decl
 name|public
 name|int
 name|edit_tagfile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2400,7 +3748,9 @@ begin_function_decl
 name|public
 name|void
 name|open_getchr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2408,7 +3758,9 @@ begin_function_decl
 name|public
 name|void
 name|close_getchr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2416,7 +3768,9 @@ begin_function_decl
 name|public
 name|int
 name|getchr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
