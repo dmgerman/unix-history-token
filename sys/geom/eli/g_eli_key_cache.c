@@ -536,7 +536,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|key
 argument_list|,
@@ -870,7 +870,7 @@ operator|->
 name|sc_ekeys_allocated
 operator|--
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|key
 argument_list|,
@@ -1214,7 +1214,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|sc
 operator|->

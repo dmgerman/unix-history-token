@@ -204,7 +204,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|hmkey
 argument_list|,
@@ -306,7 +306,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|hmkey
 argument_list|,
@@ -484,7 +484,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|tmpmkey
 argument_list|,
@@ -494,7 +494,7 @@ name|tmpmkey
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|enckey
 argument_list|,
@@ -529,7 +529,7 @@ argument_list|,
 name|G_ELI_DATAIVKEYLEN
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|tmpmkey
 argument_list|,
@@ -539,7 +539,7 @@ name|tmpmkey
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|enckey
 argument_list|,
@@ -567,7 +567,7 @@ operator|)
 return|;
 block|}
 block|}
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|enckey
 argument_list|,
@@ -577,7 +577,7 @@ name|enckey
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|tmpmkey
 argument_list|,
@@ -673,7 +673,7 @@ argument_list|,
 name|keylen
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|enckey
 argument_list|,
