@@ -508,14 +508,7 @@ decl_stmt|;
 name|char
 modifier|*
 name|path
-decl_stmt|,
-modifier|*
-name|tail
 decl_stmt|;
-name|tail
-operator|=
-name|NULL
-expr_stmt|;
 name|fd
 operator|=
 operator|-
