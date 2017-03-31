@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|PIE_DQ_THRESHOLD
-value|(1UL<< PIE_DQ_THRESHOLD_BITS)
+value|(1L<< PIE_DQ_THRESHOLD_BITS)
 end_define
 
 begin_define
@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|PIE_MAX_PROB
-value|((1ULL<<PIE_PROB_BITS) -1)
+value|((1LL<<PIE_PROB_BITS) -1)
 end_define
 
 begin_comment
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|PIE_SCALE
-value|(1UL<<PIE_FIX_POINT_BITS)
+value|(1L<<PIE_FIX_POINT_BITS)
 end_define
 
 begin_comment
