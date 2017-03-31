@@ -1504,6 +1504,9 @@ decl_stmt|;
 name|uint64_t
 name|arc_size
 decl_stmt|;
+name|boolean_t
+name|carc_en
+decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
@@ -1572,7 +1575,7 @@ name|size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|arc_size
+name|carc_en
 argument_list|)
 expr_stmt|;
 if|if
@@ -1582,7 +1585,7 @@ argument_list|(
 literal|"vfs.zfs.compressed_arc_enabled"
 argument_list|,
 operator|&
-name|arc_size
+name|carc_en
 argument_list|,
 operator|&
 name|size
@@ -1594,7 +1597,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|arc_size
+name|carc_en
 operator|==
 literal|1
 condition|)
