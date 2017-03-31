@@ -500,6 +500,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|audit_arg_upath1_canon
+parameter_list|(
+name|char
+modifier|*
+name|upath
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|audit_arg_upath2
 parameter_list|(
 name|struct
@@ -510,6 +521,17 @@ parameter_list|,
 name|int
 name|dirfd
 parameter_list|,
+name|char
+modifier|*
+name|upath
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|audit_arg_upath2_canon
+parameter_list|(
 name|char
 modifier|*
 name|upath
@@ -1277,6 +1299,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUDIT_ARG_UPATH1_CANON
+parameter_list|(
+name|upath
+parameter_list|)
+value|do {				\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_upath1_canon((upath));			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUDIT_ARG_UPATH2
 parameter_list|(
 name|td
@@ -1286,6 +1318,16 @@ parameter_list|,
 name|upath
 parameter_list|)
 value|do {				\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_upath2((td), (dirfd), (upath));		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_UPATH2_CANON
+parameter_list|(
+name|upath
+parameter_list|)
+value|do {				\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_upath2_canon((upath));			\ } while (0)
 end_define
 
 begin_define
@@ -1757,11 +1799,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUDIT_ARG_UPATH1_NONCANON
+parameter_list|(
+name|td
+parameter_list|,
+name|upath
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUDIT_ARG_UPATH2
 parameter_list|(
 name|td
 parameter_list|,
 name|dirfd
+parameter_list|,
+name|upath
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_UPATH2_NONCANON
+parameter_list|(
+name|td
 parameter_list|,
 name|upath
 parameter_list|)
