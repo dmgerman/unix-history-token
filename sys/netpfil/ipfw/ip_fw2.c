@@ -11079,6 +11079,7 @@ name|done
 operator|==
 literal|0
 condition|)
+block|{
 name|IPFW_INC_RULE_COUNTER
 argument_list|(
 name|f
@@ -11086,6 +11087,12 @@ argument_list|,
 name|pktlen
 argument_list|)
 expr_stmt|;
+comment|/* 					 * Reset the result of the last 					 * dynamic state lookup. 					 * External action can change 					 * @args content, and it may be 					 * used for new state lookup later. 					 */
+name|dyn_dir
+operator|=
+name|MATCH_UNKNOWN
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|panic
