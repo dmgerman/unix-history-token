@@ -1799,10 +1799,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUDIT_ARG_UPATH1_NONCANON
+name|AUDIT_ARG_UPATH1_CANON
 parameter_list|(
-name|td
-parameter_list|,
 name|upath
 parameter_list|)
 end_define
@@ -1823,10 +1821,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUDIT_ARG_UPATH2_NONCANON
+name|AUDIT_ARG_UPATH2_CANON
 parameter_list|(
-name|td
-parameter_list|,
 name|upath
 parameter_list|)
 end_define
