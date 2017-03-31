@@ -156,16 +156,6 @@ block|{
 name|off_t
 name|i
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"old=%p new=%p\n"
-argument_list|,
-name|old
-argument_list|,
-name|new
-argument_list|)
-expr_stmt|;
-comment|//printf("oldsize=%ld newsize=%ld\n", oldsize, newsize);
 for|for
 control|(
 name|i
@@ -187,8 +177,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-comment|//printf("old[%ld] != new[%ld]\n", i, i);
 if|if
 condition|(
 name|old
@@ -202,7 +190,6 @@ name|i
 index|]
 condition|)
 break|break;
-block|}
 return|return
 name|i
 return|;
@@ -257,57 +244,6 @@ operator|<
 literal|2
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"oldsize=%ld, newsize=%ld\n"
-argument_list|,
-name|oldsize
-argument_list|,
-name|newsize
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"x=matchlen(old, oldsize=%ld st=%ld I[st]=%ld, new, newsize=%ld)\n"
-argument_list|,
-name|oldsize
-operator|-
-name|I
-index|[
-name|st
-index|]
-argument_list|,
-name|st
-argument_list|,
-name|I
-index|[
-name|st
-index|]
-argument_list|,
-name|newsize
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"y=matchlen(old, oldsize=%ld en=%ld I[en]=%ld, new, newsize=%ld)\n"
-argument_list|,
-name|oldsize
-operator|-
-name|I
-index|[
-name|en
-index|]
-argument_list|,
-name|en
-argument_list|,
-name|I
-index|[
-name|en
-index|]
-argument_list|,
-name|newsize
-argument_list|)
-expr_stmt|;
 name|x
 operator|=
 name|matchlen
