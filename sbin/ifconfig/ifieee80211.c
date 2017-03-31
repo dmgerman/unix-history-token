@@ -8668,6 +8668,7 @@ argument_list|,
 name|NULL
 argument_list|)
 block|; }
+comment|/* XXX 11ac density/size is different */
 specifier|static
 name|void
 name|set80211ampdu
@@ -9025,8 +9026,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|/* XXX 11ac density/size is different */
+end_comment
+
 begin_macro
-unit|}  static
+unit|static
 name|DECL_CMD_FUNC
 argument_list|(
 argument|set80211ampdudensity
@@ -25434,6 +25440,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* XXX 11ac density/size is different */
 if|if
 condition|(
 name|get80211val
@@ -25493,6 +25500,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* XXX 11ac density/size is different */
 if|if
 condition|(
 name|get80211val
@@ -25866,6 +25874,7 @@ literal|"-rifs"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* XXX VHT STBC? */
 if|if
 condition|(
 name|get80211val
