@@ -667,6 +667,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXT2F_COMPAT_EXT_ATTR
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXT2F_COMPAT_RESIZE
 value|0x0010
 end_define
