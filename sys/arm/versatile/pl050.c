@@ -386,10 +386,20 @@ begin_comment
 comment|/* units */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SET_SCANCODE_SET
+value|0xf0
+end_define
+
 begin_struct
 struct|struct
 name|kmi_softc
 block|{
+name|device_t
+name|sc_dev
+decl_stmt|;
 name|keyboard_t
 name|sc_kbd
 decl_stmt|;
@@ -575,6 +585,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|int
+name|kmi_attached
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* early keyboard probe, not supported */
@@ -2607,6 +2626,16 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 	 * PL050 is plain PS2 port that pushes bytes to/from computer 	 * VersatilePB has two such ports and QEMU simulates keyboard 	 * connected to port #0 and mouse connected to port #1. This 	 * information can't be obtained from device tree so we just 	 * hardcode this knowledge here. We attach keyboard driver to 	 * port #0 and ignore port #1 	 */
+if|if
+condition|(
+name|kmi_attached
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 name|ofw_bus_is_compatible
@@ -2667,6 +2696,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|uint32_t
+name|ack
+decl_stmt|;
+name|sc
+operator|->
+name|sc_dev
+operator|=
+name|dev
+expr_stmt|;
 name|kbd
 operator|=
 operator|&
@@ -2810,6 +2848,54 @@ operator|)
 return|;
 block|}
 comment|/* TODO: clock& divisor */
+name|pl050_kmi_write_4
+argument_list|(
+name|sc
+argument_list|,
+name|KMICR
+argument_list|,
+name|KMICR_EN
+argument_list|)
+expr_stmt|;
+name|pl050_kmi_write_4
+argument_list|(
+name|sc
+argument_list|,
+name|KMIDATA
+argument_list|,
+name|SET_SCANCODE_SET
+argument_list|)
+expr_stmt|;
+comment|/* read out ACK */
+name|ack
+operator|=
+name|pl050_kmi_read_4
+argument_list|(
+name|sc
+argument_list|,
+name|KMIDATA
+argument_list|)
+expr_stmt|;
+comment|/* Set Scan Code set 1 (XT) */
+name|pl050_kmi_write_4
+argument_list|(
+name|sc
+argument_list|,
+name|KMIDATA
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* read out ACK */
+name|ack
+operator|=
+name|pl050_kmi_read_4
+argument_list|(
+name|sc
+argument_list|,
+name|KMIDATA
+argument_list|)
+expr_stmt|;
 name|pl050_kmi_write_4
 argument_list|(
 name|sc
@@ -2980,6 +3066,10 @@ name|bootverbose
 argument_list|)
 expr_stmt|;
 block|}
+name|kmi_attached
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
