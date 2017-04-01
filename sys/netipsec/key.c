@@ -5970,8 +5970,6 @@ operator|->
 name|sa
 argument_list|,
 operator|&
-name|sav
-operator|->
 name|sah
 operator|->
 name|saidx
@@ -5996,8 +5994,6 @@ operator|->
 name|sa
 argument_list|,
 operator|&
-name|sav
-operator|->
 name|sah
 operator|->
 name|saidx
