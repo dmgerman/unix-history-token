@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2012 Oleksandr Tymoshenko<gonzo@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2012-2017 Oleksandr Tymoshenko<gonzo@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/versatile/versatile_scm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -136,76 +142,6 @@ define|#
 directive|define
 name|PL110_VENDOR_ARM926PXP
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_SYS
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_CLCD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_REGIONS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_CLCD
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_CLCD_CLCDID_SHIFT
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_CLCD_CLCDID_MASK
-value|0x1f
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_CLCD_PWR3V5VSWITCH
-value|(1<< 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_CLCD_VDDPOSSWITCH
-value|(1<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_CLCD_NLCDIOON
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_CLCD_LCD_MODE_MASK
-value|0x03
 end_define
 
 begin_define
@@ -562,34 +498,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|versatile_clcdc_sys_read_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|bus_read_4((sc)->mem_res[MEM_SYS], (reg))
-end_define
-
-begin_define
-define|#
-directive|define
-name|versatile_clcdc_sys_write_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|bus_write_4((sc)->mem_res[MEM_SYS], (reg), (val))
-end_define
-
-begin_define
-define|#
-directive|define
 name|versatile_clcdc_read_4
 parameter_list|(
 name|sc
@@ -597,7 +505,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_read_4((sc)->mem_res[MEM_CLCD], (reg))
+value|bus_read_4((sc)->mem_res, (reg))
 end_define
 
 begin_define
@@ -612,7 +520,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_write_4((sc)->mem_res[MEM_CLCD], (reg), (val))
+value|bus_write_4((sc)->mem_res, (reg), (val))
 end_define
 
 begin_struct
@@ -623,9 +531,6 @@ name|struct
 name|resource
 modifier|*
 name|mem_res
-index|[
-name|MEM_REGIONS
-index|]
 decl_stmt|;
 name|struct
 name|mtx
@@ -988,42 +893,6 @@ name|va_softc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|resource_spec
-name|versatile_clcdc_mem_spec
-index|[]
-init|=
-block|{
-block|{
-name|SYS_RES_MEMORY
-block|,
-literal|0
-block|,
-name|RF_ACTIVE
-block|}
-block|,
-block|{
-name|SYS_RES_MEMORY
-block|,
-literal|1
-block|,
-name|RF_ACTIVE
-block|}
-block|,
-block|{
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -1178,6 +1047,8 @@ name|va_softc
 decl_stmt|;
 name|int
 name|err
+decl_stmt|,
+name|rid
 decl_stmt|;
 name|uint32_t
 name|reg
@@ -1189,17 +1060,56 @@ name|int
 name|dma_size
 decl_stmt|;
 comment|/* Request memory resources */
-name|err
+name|rid
 operator|=
-name|bus_alloc_resources
-argument_list|(
-name|dev
-argument_list|,
-name|versatile_clcdc_mem_spec
-argument_list|,
+literal|0
+expr_stmt|;
 name|sc
 operator|->
 name|mem_res
+operator|=
+name|bus_alloc_resource_any
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+operator|&
+name|rid
+argument_list|,
+name|RF_ACTIVE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mem_res
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not allocate memory resources\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|err
+operator|=
+name|versatile_scm_reg_read_4
+argument_list|(
+name|SCM_CLCD
+argument_list|,
+operator|&
+name|reg
 argument_list|)
 expr_stmt|;
 if|if
@@ -1211,33 +1121,22 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Error: could not allocate memory resources\n"
+literal|"failed to read SCM register\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
-name|reg
-operator|=
-name|versatile_clcdc_sys_read_4
-argument_list|(
-name|sc
-argument_list|,
-name|SYS_CLCD
-argument_list|)
-expr_stmt|;
 name|clcdid
 operator|=
 operator|(
 name|reg
 operator|>>
-name|SYS_CLCD_CLCDID_SHIFT
+name|SCM_CLCD_CLCDID_SHIFT
 operator|)
 operator|&
-name|SYS_CLCD_CLCDID_MASK
+name|SCM_CLCD_CLCDID_MASK
 expr_stmt|;
 switch|switch
 condition|(
@@ -1284,7 +1183,7 @@ block|}
 name|reg
 operator|&=
 operator|~
-name|SYS_CLCD_LCD_MODE_MASK
+name|SCM_CLCD_LCD_MODE_MASK
 expr_stmt|;
 name|reg
 operator||=
@@ -1296,11 +1195,9 @@ name|mode
 operator|=
 name|CLCD_MODE_RGB565
 expr_stmt|;
-name|versatile_clcdc_sys_write_4
+name|versatile_scm_reg_write_4
 argument_list|(
-name|sc
-argument_list|,
-name|SYS_CLCD
+name|SCM_CLCD
 argument_list|,
 name|reg
 argument_list|)
@@ -1320,15 +1217,13 @@ expr_stmt|;
 comment|/* 	 * Power on LCD 	 */
 name|reg
 operator||=
-name|SYS_CLCD_PWR3V5VSWITCH
+name|SCM_CLCD_PWR3V5VSWITCH
 operator||
-name|SYS_CLCD_NLCDIOON
+name|SCM_CLCD_NLCDIOON
 expr_stmt|;
-name|versatile_clcdc_sys_write_4
+name|versatile_scm_reg_write_4
 argument_list|(
-name|sc
-argument_list|,
-name|SYS_CLCD
+name|SCM_CLCD
 argument_list|,
 name|reg
 argument_list|)
