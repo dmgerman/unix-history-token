@@ -2195,6 +2195,12 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|id_mapped
+condition|)
+block|{
 name|error
 operator|=
 name|domain_init_rmrr
@@ -2223,6 +2229,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 name|ctx1
 operator|=
