@@ -266,6 +266,20 @@ name|FAULTBUF_R14
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOREARGS
+parameter_list|(
+name|sp
+parameter_list|)
+value|((caddr_t)((uintptr_t)(sp) + \     sizeof(struct callframe) - 3*sizeof(register_t)))
+end_define
+
+begin_comment
+comment|/* more args go here */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -1198,7 +1212,7 @@ operator|&=
 operator|~
 operator|(
 name|DBCR0_IDM
-operator|||
+operator||
 name|DBCR0_IC
 operator|)
 expr_stmt|;

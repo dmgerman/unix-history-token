@@ -791,6 +791,11 @@ begin_enum
 enum|enum
 name|intr_trigger
 block|{
+name|INTR_TRIGGER_INVALID
+init|=
+operator|-
+literal|1
+block|,
 name|INTR_TRIGGER_CONFORM
 init|=
 literal|0
