@@ -6377,6 +6377,8 @@ specifier|const
 name|char
 modifier|*
 name|cfg
+init|=
+name|NULL
 decl_stmt|;
 name|login_cap_t
 modifier|*
@@ -7284,6 +7286,17 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|grname
+condition|)
+name|grname
+operator|=
+name|cmdcnf
+operator|->
+name|default_group
+expr_stmt|;
 name|pwd
 operator|=
 operator|&
@@ -8103,6 +8116,8 @@ specifier|const
 name|char
 modifier|*
 name|cfg
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
