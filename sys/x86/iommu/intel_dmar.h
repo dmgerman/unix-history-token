@@ -234,7 +234,7 @@ comment|/*  * Locking annotations:  * (u) - Protected by dmar unit lock  * (d) -
 end_comment
 
 begin_comment
-comment|/*  * The domain abstraction.  Most non-constant members of the domain  * are locked by the owning dmar unit lock, not by the domain lock.  * Most important, dmar lock protects the contexts list.  *  * The domain lock protects the address map for the domain, and list  * of unload entries delayed.  *  * Page tables pages and pages content is protected by the vm object  * lock pgtbl_obj, which contains the page tables pages.  */
+comment|/*  * The domain abstraction.  Most non-constant members of the domain  * are protected by owning dmar unit lock, not by the domain lock.  * Most important, the dmar lock protects the contexts list.  *  * The domain lock protects the address map for the domain, and list  * of unload entries delayed.  *  * Page tables pages and pages content is protected by the vm object  * lock pgtbl_obj, which contains the page tables pages.  */
 end_comment
 
 begin_struct
