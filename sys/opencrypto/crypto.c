@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -123,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<vm/uma.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<crypto/intake.h>
 end_include
 
 begin_include
@@ -188,6 +200,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/metadata.h>
+end_include
 
 begin_expr_stmt
 name|SDT_PROVIDER_DEFINE
@@ -695,6 +713,120 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Try to avoid directly exposing the key buffer as a symbol */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|keybuf
+modifier|*
+name|keybuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|keybuf
+name|empty_keybuf
+init|=
+block|{
+operator|.
+name|kb_nents
+operator|=
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Obtain the key buffer from boot metadata */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|keybuf_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|caddr_t
+name|kmdp
+decl_stmt|;
+name|kmdp
+operator|=
+name|preload_search_by_type
+argument_list|(
+literal|"elf kernel"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kmdp
+operator|==
+name|NULL
+condition|)
+name|kmdp
+operator|=
+name|preload_search_by_type
+argument_list|(
+literal|"elf64 kernel"
+argument_list|)
+expr_stmt|;
+name|keybuf
+operator|=
+operator|(
+expr|struct
+name|keybuf
+operator|*
+operator|)
+name|preload_search_info
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFO_METADATA
+operator||
+name|MODINFOMD_KEYBUF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|keybuf
+operator|==
+name|NULL
+condition|)
+name|keybuf
+operator|=
+operator|&
+name|empty_keybuf
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* It'd be nice if we could store these in some kind of secure memory... */
+end_comment
+
+begin_function
+name|struct
+name|keybuf
+modifier|*
+name|get_keybuf
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|keybuf
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|int
@@ -973,6 +1105,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|keybuf_init
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1112,7 +1247,7 @@ name|CRYPTO_DRIVER_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* XXX flush queues??? */
-comment|/*  	 * Reclaim dynamically allocated resources. 	 */
+comment|/* 	 * Reclaim dynamically allocated resources. 	 */
 if|if
 condition|(
 name|crypto_drivers

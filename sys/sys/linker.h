@@ -935,6 +935,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MODINFOMD_KEYBUF
+value|0x000d
+end_define
+
+begin_comment
+comment|/* Crypto key intake buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MODINFOMD_NOCOPY
 value|0x8000
 end_define

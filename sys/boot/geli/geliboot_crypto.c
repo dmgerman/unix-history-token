@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"geliboot_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"geliboot.h"
 end_include
 

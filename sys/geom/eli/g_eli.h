@@ -87,6 +87,12 @@ directive|include
 file|<geom/geom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<crypto/intake.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -543,6 +549,27 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|MAX_KEY_BYTES
+operator|<
+name|G_ELI_DATAIVKEYLEN
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"MAX_KEY_BYTES is less than G_ELI_DATAKEYLEN"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
