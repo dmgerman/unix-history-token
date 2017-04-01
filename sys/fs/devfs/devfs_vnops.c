@@ -3372,7 +3372,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|panic
+name|printf
 argument_list|(
 literal|"devfs_fsync: vop_stdfsync failed."
 argument_list|)
