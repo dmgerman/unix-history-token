@@ -99,6 +99,16 @@ literal|2
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|_Unwind_State
+name|_US_ACTION_MASK
+init|=
+literal|3
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -127,6 +137,13 @@ define|#
 directive|define
 name|_US_UNWIND_FRAME_RESUME
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|_US_ACTION_MASK
+value|3
 end_define
 
 begin_endif
