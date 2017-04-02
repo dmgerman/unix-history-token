@@ -207,8 +207,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_EP80579
+value|0x5032
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_82801JI
 value|0x3a30
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_82801JD
+value|0x3a60
 end_define
 
 begin_define
@@ -305,6 +319,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_BAYTRAIL
+value|0x0f12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_BRASWELL
+value|0x2292
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_WELLSBURG
 value|0x8d22
 end_define
@@ -321,6 +349,41 @@ define|#
 directive|define
 name|ID_SRPTLP
 value|0x9d23
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_DENVERTON
+value|0x19df
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_BROXTON
+value|0x5ad4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_LEWISBURG
+value|0xa1a3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_LEWISBURG2
+value|0xa223
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_KABYLAKE
+value|0xa2a3
 end_define
 
 begin_struct
@@ -421,9 +484,21 @@ literal|"Intel 82801I (ICH9) SMBus controller"
 block|}
 block|,
 block|{
+name|ID_EP80579
+block|,
+literal|"Intel EP80579 SMBus controller"
+block|}
+block|,
+block|{
 name|ID_82801JI
 block|,
 literal|"Intel 82801JI (ICH10) SMBus controller"
+block|}
+block|,
+block|{
+name|ID_82801JD
+block|,
+literal|"Intel 82801JD (ICH10) SMBus controller"
 block|}
 block|,
 block|{
@@ -499,6 +574,18 @@ literal|"Intel Wildcat Point-LP SMBus controller"
 block|}
 block|,
 block|{
+name|ID_BAYTRAIL
+block|,
+literal|"Intel Baytrail SMBus controller"
+block|}
+block|,
+block|{
+name|ID_BRASWELL
+block|,
+literal|"Intel Braswell SMBus controller"
+block|}
+block|,
+block|{
 name|ID_COLETOCRK
 block|,
 literal|"Intel Coleto Creek SMBus controller"
@@ -520,6 +607,36 @@ block|{
 name|ID_SRPTLP
 block|,
 literal|"Intel Sunrise Point-LP SMBus controller"
+block|}
+block|,
+block|{
+name|ID_DENVERTON
+block|,
+literal|"Intel Denverton SMBus controller"
+block|}
+block|,
+block|{
+name|ID_BROXTON
+block|,
+literal|"Intel Broxton SMBus controller"
+block|}
+block|,
+block|{
+name|ID_LEWISBURG
+block|,
+literal|"Intel Lewisburg SMBus controller"
+block|}
+block|,
+block|{
+name|ID_LEWISBURG2
+block|,
+literal|"Intel Lewisburg SMBus controller"
+block|}
+block|,
+block|{
+name|ID_KABYLAKE
+block|,
+literal|"Intel Kaby Lake SMBus controller"
 block|}
 block|,
 block|{
