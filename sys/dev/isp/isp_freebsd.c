@@ -5069,7 +5069,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
@@ -6639,7 +6639,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
@@ -6663,7 +6663,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
@@ -6698,7 +6698,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
@@ -6968,7 +6968,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
@@ -7594,7 +7594,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
@@ -8718,7 +8718,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
@@ -9465,7 +9465,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
@@ -9516,7 +9516,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
@@ -9642,7 +9642,7 @@ name|ccb
 operator|->
 name|ccb_h
 argument_list|,
-name|periph_links
+name|sim_links
 operator|.
 name|tqe
 argument_list|)
