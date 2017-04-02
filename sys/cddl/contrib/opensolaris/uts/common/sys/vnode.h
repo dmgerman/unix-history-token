@@ -777,8 +777,7 @@ name|xvap
 parameter_list|,
 name|attr
 parameter_list|)
-define|\
-value|ASSERT((xvap)->xva_vattr.va_mask | AT_XVATTR);		\ 	ASSERT((xvap)->xva_magic == XVA_MAGIC);			\ 	(xvap)->xva_reqattrmap[XVA_INDEX(attr)] |= XVA_ATTRBIT(attr)
+value|{				\ 	ASSERT((xvap)->xva_vattr.va_mask | AT_XVATTR);		\ 	ASSERT((xvap)->xva_magic == XVA_MAGIC);			\ 	(xvap)->xva_reqattrmap[XVA_INDEX(attr)] |= XVA_ATTRBIT(attr); \ }
 end_define
 
 begin_comment
@@ -794,8 +793,7 @@ name|xvap
 parameter_list|,
 name|attr
 parameter_list|)
-define|\
-value|ASSERT((xvap)->xva_vattr.va_mask | AT_XVATTR);		\ 	ASSERT((xvap)->xva_magic == XVA_MAGIC);			\ 	(xvap)->xva_reqattrmap[XVA_INDEX(attr)]&= ~XVA_ATTRBIT(attr)
+value|{				\ 	ASSERT((xvap)->xva_vattr.va_mask | AT_XVATTR);		\ 	ASSERT((xvap)->xva_magic == XVA_MAGIC);			\ 	(xvap)->xva_reqattrmap[XVA_INDEX(attr)]&= ~XVA_ATTRBIT(attr); \ }
 end_define
 
 begin_comment
@@ -811,8 +809,7 @@ name|xvap
 parameter_list|,
 name|attr
 parameter_list|)
-define|\
-value|ASSERT((xvap)->xva_vattr.va_mask | AT_XVATTR);		\ 	ASSERT((xvap)->xva_magic == XVA_MAGIC);			\ 	(XVA_RTNATTRMAP(xvap))[XVA_INDEX(attr)] |= XVA_ATTRBIT(attr)
+value|{				\ 	ASSERT((xvap)->xva_vattr.va_mask | AT_XVATTR);		\ 	ASSERT((xvap)->xva_magic == XVA_MAGIC);			\ 	(XVA_RTNATTRMAP(xvap))[XVA_INDEX(attr)] |= XVA_ATTRBIT(attr); \ }
 end_define
 
 begin_comment
